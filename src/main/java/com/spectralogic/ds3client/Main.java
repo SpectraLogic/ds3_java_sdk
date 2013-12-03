@@ -1,0 +1,54 @@
+package com.spectralogic.ds3client;
+
+
+import com.spectralogic.ds3client.models.Credentials;
+import com.spectralogic.ds3client.models.Ds3Object;
+import com.spectralogic.ds3client.models.MasterObjectList;
+import org.apache.commons.io.IOUtils;
+
+import java.io.File;
+import java.io.InputStream;
+import java.io.StringReader;
+import java.io.StringWriter;
+import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.List;
+
+public class Main {
+
+    public static void main(String args[]) throws Exception {
+        final Ds3ClientBuilder builder = new Ds3ClientBuilder("192.168.56.101",new Credentials("cnlhbg==","Secureryan"));
+        final Ds3Client client = builder.withHttpSecure(false).withPort(8080).build();
+
+        final String bucket = "bulkTest6";
+
+        client.createBucket(bucket);
+
+        client.getService();
+
+
+        //client.listBucket("testBucket2");
+
+        final List<Ds3Object> objects = new ArrayList<Ds3Object>();
+        objects.add(new Ds3Object("file1",256));
+        objects.add(new Ds3Object("file2",1202));
+        objects.add(new Ds3Object("file3",2523));
+
+        final MasterObjectList masterObjectList =  client.bulkPut("/" + bucket + "/", objects);
+        System.out.println(masterObjectList);
+
+
+        /*
+        System.out.println("================= Starting put =================");
+        //client.putObject("testBucket2", "object2", new File("src/main/resources/testFile.txt"));
+
+        final InputStream inputStream = client.getObject("testBucket2", "object2");
+
+        final StringWriter writer = new StringWriter();
+        IOUtils.copy(inputStream, writer, Charset.forName("UTF-8"));
+        System.out.println("Result: " + writer.toString());
+
+        client.listBucket("testBucket2");
+        */
+    }
+}
