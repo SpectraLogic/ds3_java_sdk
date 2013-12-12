@@ -48,7 +48,7 @@ public class Ds3Client {
         return connectionDetails;
     }
 
-    public List<Ds3Bucket> getService() throws IOException, SignatureException {
+    public ListAllMyBucketsResult getService() throws IOException, SignatureException, FailedRequestException {
         final List<Ds3Bucket> buckets = new ArrayList<Ds3Bucket>();
         final CloseableHttpResponse response = sendGetRequest("/");
 
@@ -56,17 +56,17 @@ public class Ds3Client {
             final StringWriter writer = new StringWriter();
             IOUtils.copy(response.getEntity().getContent(), writer, Charset.forName(UTF8));
 
-            System.out.println(writer.toString());
-
-            for(Header header: response.getAllHeaders()) {
-                System.out.println(header.getName() + ": " + header.getValue());
+            final StatusLine statusLine = response.getStatusLine();
+            if (statusLine.getStatusCode() != 200) {
+                throw new FailedRequestException("Request failed with a non-200 status code.  Actual status code: " + statusLine.getStatusCode());
             }
+
+            return XmlOutput.fromXml(writer.toString(), ListAllMyBucketsResult.class);
         }
         finally {
             response.close();
         }
 
-        return buckets;
     }
 
     public Ds3Bucket createBucket(final String bucketName) throws IOException, SignatureException {
@@ -81,6 +81,7 @@ public class Ds3Client {
             IOUtils.copy(response.getEntity().getContent(),writer,Charset.forName(UTF8));
 
             System.out.println(writer.toString());
+            System.out.println("Response code: " + response.getStatusLine().getStatusCode());
         }
         finally {
             response.close();
@@ -124,7 +125,7 @@ public class Ds3Client {
                 throw new FailedRequestException("Request failed with a non-200 status code.  Actual status code: " + statusLine.getStatusCode());
             }
 
-            return XmlOutput.fromXml(writer.toString());
+            return XmlOutput.fromXml(writer.toString(), MasterObjectList.class);
         }
         finally {
             response.close();

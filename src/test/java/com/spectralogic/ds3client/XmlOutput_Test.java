@@ -18,7 +18,7 @@ public class XmlOutput_Test {
     public void singleList() throws IOException {
         final String xmlResponse = "<masterobjectlist><objects><object name='file1' size='256'/><object name='file2' size='1202'/><object name='file3' size='2523'/></objects></masterobjectlist>";
 
-        final MasterObjectList masterObjectList = XmlOutput.fromXml(xmlResponse);
+        final MasterObjectList masterObjectList = XmlOutput.fromXml(xmlResponse, MasterObjectList.class);
         assertThat(masterObjectList, is(notNullValue()));
         assertThat(masterObjectList.getObjects(), is(notNullValue()));
         final List<Objects> objectsList = masterObjectList.getObjects();

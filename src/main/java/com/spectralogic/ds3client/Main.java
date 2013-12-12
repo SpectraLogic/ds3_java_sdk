@@ -3,6 +3,7 @@ package com.spectralogic.ds3client;
 
 import com.spectralogic.ds3client.models.Credentials;
 import com.spectralogic.ds3client.models.Ds3Object;
+import com.spectralogic.ds3client.models.ListAllMyBucketsResult;
 import com.spectralogic.ds3client.models.MasterObjectList;
 import org.apache.commons.io.IOUtils;
 
@@ -20,12 +21,14 @@ public class Main {
         final Ds3ClientBuilder builder = new Ds3ClientBuilder("192.168.56.101",new Credentials("cnlhbg==","Secureryan"));
         final Ds3Client client = builder.withHttpSecure(false).withPort(8080).build();
 
-        final String bucket = "bulkTest6";
+        final String bucket = "testbucket";
 
-        client.createBucket(bucket);
+        //client.createBucket(bucket);
 
-        client.getService();
+        final ListAllMyBucketsResult result = client.getService();
 
+        System.out.println(result.toString());
+        /*
 
         //client.listBucket("testBucket2");
 
@@ -38,7 +41,6 @@ public class Main {
         System.out.println(masterObjectList);
 
 
-        /*
         System.out.println("================= Starting put =================");
         //client.putObject("testBucket2", "object2", new File("src/main/resources/testFile.txt"));
 

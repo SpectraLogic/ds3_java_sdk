@@ -27,8 +27,8 @@ public class XmlOutput {
         }
     }
 
-    public static MasterObjectList fromXml(String xmlString) throws IOException {
-        final MasterObjectList rootElement = mapper.readValue(xmlString, MasterObjectList.class);
+    public static<T> T fromXml(String xmlString, Class<T> type) throws IOException {
+        final T rootElement = mapper.readValue(xmlString, type);
         return rootElement;
     }
 }
