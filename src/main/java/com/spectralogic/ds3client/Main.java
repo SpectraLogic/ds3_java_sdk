@@ -28,7 +28,7 @@ public class Main {
         final ListAllMyBucketsResult result = client.getService();
 
         System.out.println(result.toString());
-        /*
+
 
         //client.listBucket("testBucket2");
 
@@ -37,6 +37,7 @@ public class Main {
         objects.add(new Ds3Object("file2",1202));
         objects.add(new Ds3Object("file3",2523));
 
+        System.out.println("Writing out files: " + objects);
         final MasterObjectList masterObjectList =  client.bulkPut("/" + bucket + "/", objects);
         System.out.println(masterObjectList);
 
@@ -47,10 +48,10 @@ public class Main {
         final InputStream inputStream = client.getObject("testBucket2", "object2");
 
         final StringWriter writer = new StringWriter();
-        IOUtils.copy(inputStream, writer, Charset.forName("UTF-8"));
+        IOUtils.copy(inputStream, writer, "UTF-8");
         System.out.println("Result: " + writer.toString());
 
         client.listBucket("testBucket2");
-        */
+
     }
 }

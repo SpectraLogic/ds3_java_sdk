@@ -2,10 +2,9 @@ apply plugin: 'java'
 apply plugin: 'maven'
 
 
-sourceCompatibility = 1.6
-targetCompatibility = 1.6
+sourceCompatibility = JavaVersion.VERSION_1_6
 
-version = '0.0.10-SNAPSHOT'
+version = '0.0.14-SNAPSHOT'
 group = 'com.spectralogic'
 
 repositories {
@@ -16,7 +15,7 @@ repositories {
 dependencies {
     compile     'org.apache.httpcomponents:httpclient:4.3.1'
     compile     'commons-codec:commons-codec:1.8'
-    compile     'commons-io:commons-io:2.4'
+    compile     'commons-io:commons-io:2.1'
     compile     'com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.2.3'
     testCompile 'junit:junit:4.11'
 }

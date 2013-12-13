@@ -54,7 +54,7 @@ public class Ds3Client {
 
         try {
             final StringWriter writer = new StringWriter();
-            IOUtils.copy(response.getEntity().getContent(), writer, Charset.forName(UTF8));
+            IOUtils.copy(response.getEntity().getContent(), writer, UTF8);
 
             final StatusLine statusLine = response.getStatusLine();
             if (statusLine.getStatusCode() != 200) {
@@ -78,7 +78,7 @@ public class Ds3Client {
 
         try {
             final StringWriter writer = new StringWriter();
-            IOUtils.copy(response.getEntity().getContent(),writer,Charset.forName(UTF8));
+            IOUtils.copy(response.getEntity().getContent(), writer, UTF8);
 
             System.out.println(writer.toString());
             System.out.println("Response code: " + response.getStatusLine().getStatusCode());
@@ -95,7 +95,7 @@ public class Ds3Client {
 
         try {
             final StringWriter writer = new StringWriter();
-            IOUtils.copy(response.getEntity().getContent(), writer, Charset.forName(UTF8));
+            IOUtils.copy(response.getEntity().getContent(), writer, UTF8);
 
             System.out.println(writer.toString());
 
@@ -118,11 +118,11 @@ public class Ds3Client {
         final CloseableHttpResponse response = sendBulkPut(bucketName,xmlOutput);
         try {
             final StringWriter writer = new StringWriter();
-            IOUtils.copy(response.getEntity().getContent(), writer, Charset.forName(UTF8));
+            IOUtils.copy(response.getEntity().getContent(), writer, UTF8);
 
             final StatusLine statusLine = response.getStatusLine();
             if (statusLine.getStatusCode() != 200) {
-                throw new FailedRequestException("Request failed with a non-200 status code.  Actual status code: " + statusLine.getStatusCode());
+                throw new FailedRequestException("Request failed with a non-200 status code.  Actual status code: " + statusLine.getStatusCode() + "\nMessage Body: " + writer.toString());
             }
 
             return XmlOutput.fromXml(writer.toString(), MasterObjectList.class);
@@ -138,7 +138,7 @@ public class Ds3Client {
         final CloseableHttpResponse response = sendPutRequest(objectPath,"",inStream, null, fileSize);
         try {
             final StringWriter writer = new StringWriter();
-            IOUtils.copy(response.getEntity().getContent(), writer, Charset.forName(UTF8));
+            IOUtils.copy(response.getEntity().getContent(), writer, UTF8);
 
             System.out.println(writer.toString());
             System.out.println(response.getStatusLine().toString());
@@ -153,7 +153,7 @@ public class Ds3Client {
         final CloseableHttpResponse response = sendPutRequest(objectPath, file);
         try {
             final StringWriter writer = new StringWriter();
-            IOUtils.copy(response.getEntity().getContent(), writer, Charset.forName(UTF8));
+            IOUtils.copy(response.getEntity().getContent(), writer, UTF8);
 
             System.out.println(writer.toString());
             System.out.println(response.getStatusLine().toString());
