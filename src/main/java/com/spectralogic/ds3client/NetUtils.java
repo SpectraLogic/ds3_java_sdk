@@ -48,7 +48,7 @@ public class NetUtils {
         } catch (Exception e) {
             throw new SignatureException("Failed to generate HMAC : " + e.getMessage());
         }
-        return result;
+        return result.trim();
     }
 
     /**

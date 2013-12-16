@@ -21,7 +21,7 @@ public class Main {
         final Ds3ClientBuilder builder = new Ds3ClientBuilder("192.168.56.101",new Credentials("cnlhbg==","R8ATmVhzTyGX"));
         final Ds3Client client = builder.withHttpSecure(false).withPort(8080).build();
 
-        final String bucket = "testbucket3";
+        final String bucket = "testbucket4";
 
         client.createBucket(bucket);
 
@@ -34,9 +34,9 @@ public class Main {
         //client.listBucket("testBucket2");
 
         final List<Ds3Object> objects = new ArrayList<Ds3Object>();
-        objects.add(new Ds3Object("file1",256));
-        objects.add(new Ds3Object("file2",1202));
-        objects.add(new Ds3Object("file3",2523));
+        objects.add(new Ds3Object("/user/hduser/gutenberg/20417.txt.utf-8",256));
+        objects.add(new Ds3Object("/user/hduser/gutenberg/4300.txt.utf-8",1202));
+        objects.add(new Ds3Object("/user/hduser/gutenberg/5000.txt.utf-8",2523));
 
         System.out.println("Writing out files: " + objects);
         final MasterObjectList masterObjectList =  client.bulkPut("/" + bucket + "/", objects);
