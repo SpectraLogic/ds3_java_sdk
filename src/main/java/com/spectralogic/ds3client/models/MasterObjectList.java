@@ -1,15 +1,17 @@
 package com.spectralogic.ds3client.models;
 
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+
 import java.util.List;
+import java.util.UUID;
 
 public class MasterObjectList {
     private List<Objects> objects;
 
-    public MasterObjectList() {}
+    @JacksonXmlProperty
+    private UUID jobid;
 
-    public MasterObjectList(List<Objects> objects) {
-        this.objects = objects;
-    }
+    public MasterObjectList() {}
 
     public List<Objects> getObjects() {
         return objects;
@@ -21,5 +23,13 @@ public class MasterObjectList {
 
     public String toString() {
         return objects.toString();
+    }
+
+    public UUID getJobid() {
+        return jobid;
+    }
+
+    public void setJobid(UUID jobid) {
+        this.jobid = jobid;
     }
 }

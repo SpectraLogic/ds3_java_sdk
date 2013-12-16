@@ -119,7 +119,7 @@ public class Ds3Client {
         try {
             final StringWriter writer = new StringWriter();
             IOUtils.copy(response.getEntity().getContent(), writer, UTF8);
-
+            System.out.println(writer.toString());
             final StatusLine statusLine = response.getStatusLine();
             if (statusLine.getStatusCode() != 200) {
                 throw new FailedRequestException("Request failed with a non-200 status code.  Actual status code: " + statusLine.getStatusCode() + "\nMessage Body: " + writer.toString());

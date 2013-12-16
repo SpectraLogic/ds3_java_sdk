@@ -21,15 +21,15 @@ public class Main {
         final Ds3ClientBuilder builder = new Ds3ClientBuilder("192.168.56.101",new Credentials("cnlhbg==","R8ATmVhzTyGX"));
         final Ds3Client client = builder.withHttpSecure(false).withPort(8080).build();
 
-        final String bucket = "testbucket";
+        final String bucket = "testbucket3";
 
-        //client.createBucket(bucket);
+        client.createBucket(bucket);
 
         final ListAllMyBucketsResult result = client.getService();
 
         System.out.println(result.toString());
 
-        /*
+
 
         //client.listBucket("testBucket2");
 
@@ -42,7 +42,7 @@ public class Main {
         final MasterObjectList masterObjectList =  client.bulkPut("/" + bucket + "/", objects);
         System.out.println(masterObjectList);
 
-
+        /*
         System.out.println("================= Starting put =================");
         //client.putObject("testBucket2", "object2", new File("src/main/resources/testFile.txt"));
 
@@ -53,6 +53,7 @@ public class Main {
         System.out.println("Result: " + writer.toString());
 
         client.listBucket("testBucket2");
-    */
+
+        */
     }
 }
