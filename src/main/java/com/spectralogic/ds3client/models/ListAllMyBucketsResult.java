@@ -35,7 +35,9 @@ public class ListAllMyBucketsResult {
     public String toString() {
         final StringBuilder builder = new StringBuilder();
         builder.append("{{owner:: ").append(owner.toString()).append("},\n");
-        builder.append("{buckets:: ").append(buckets.toString()).append("}}");
+        if(buckets != null) {
+            builder.append("{buckets:: ").append(buckets.toString()).append("}}");
+        }
 
         return builder.toString();
     }
