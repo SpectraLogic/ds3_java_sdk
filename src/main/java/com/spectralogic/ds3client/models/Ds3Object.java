@@ -1,7 +1,9 @@
 package com.spectralogic.ds3client.models;
 
+import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 
+@JsonFilter("sizeFilter")
 public class Ds3Object  {
     @JacksonXmlProperty(isAttribute=true)
     private String name;

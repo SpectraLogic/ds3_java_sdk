@@ -1,12 +1,12 @@
 package com.spectralogic.ds3client.serializer;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ser.FilterProvider;
+import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import com.fasterxml.jackson.dataformat.xml.JacksonXmlModule;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
-import com.spectralogic.ds3client.models.MasterObjectList;
 
 import java.io.IOException;
-import java.util.Map;
 
 public class XmlOutput {
     private static final JacksonXmlModule module;
@@ -16,11 +16,22 @@ public class XmlOutput {
         module = new JacksonXmlModule();
         module.setDefaultUseWrapper(false);
         mapper = new XmlMapper(module);
+        final SimpleFilterProvider filterProvider = new SimpleFilterProvider().setFailOnUnknownId(false);
+        mapper.setFilters(filterProvider);
     }
 
     public static String toXml(Object object) throws XmlProcessingException {
+        return toXml(object, null);
+    }
+
+    public static String toXml(Object object, FilterProvider filterProvider) throws XmlProcessingException {
         try {
-            return mapper.writeValueAsString(object);
+            if (filterProvider == null) {
+                return mapper.writeValueAsString(object);
+            }
+            else {
+                return mapper.writer(filterProvider).writeValueAsString(object);
+            }
         }
         catch(JsonProcessingException e) {
             throw new XmlProcessingException(e);

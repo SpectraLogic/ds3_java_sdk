@@ -1,5 +1,8 @@
 package com.spectralogic.ds3client;
 
+import com.fasterxml.jackson.databind.ser.FilterProvider;
+import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
+import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import com.spectralogic.ds3client.models.*;
 import com.spectralogic.ds3client.serializer.XmlOutput;
 import com.spectralogic.ds3client.serializer.XmlProcessingException;
@@ -19,7 +22,6 @@ import org.apache.http.message.BasicHeader;
 
 import java.io.*;
 import java.net.URL;
-import java.nio.charset.Charset;
 import java.security.SignatureException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -110,12 +112,24 @@ public class Ds3Client {
         return objects;
     }
 
+    public MasterObjectList bulkGet(final String bucketName, final List<Ds3Object> files)
+            throws XmlProcessingException, IOException, SignatureException, FailedRequestException {
+
+        return bulkCommands(bucketName, files, BulkCommand.GET);
+    }
+
     public MasterObjectList bulkPut(final String bucketName, final List<Ds3Object> files)
+            throws XmlProcessingException, IOException, SignatureException, FailedRequestException {
+        return bulkCommands(bucketName, files, BulkCommand.PUT);
+    }
+
+    private MasterObjectList bulkCommands(final String bucketName, final List<Ds3Object> files, final BulkCommand command)
             throws XmlProcessingException, IOException, SignatureException, FailedRequestException {
         final Objects objects = new Objects();
         objects.setObject(files);
-        final String xmlOutput = XmlOutput.toXml(objects);
-        final CloseableHttpResponse response = sendBulkPut(bucketName,xmlOutput);
+        final String xmlOutput = toXml(objects, command);
+
+        final CloseableHttpResponse response = sendBulkCommand(bucketName, xmlOutput, command);
         try {
             final StringWriter writer = new StringWriter();
             IOUtils.copy(response.getEntity().getContent(), writer, UTF8);
@@ -130,6 +144,15 @@ public class Ds3Client {
         finally {
             response.close();
         }
+    }
+
+    private String toXml(final Objects objects, final BulkCommand command) throws XmlProcessingException {
+        if (command == BulkCommand.GET) {
+            final FilterProvider filters = new SimpleFilterProvider().addFilter("sizeFilter",
+                    SimpleBeanPropertyFilter.serializeAllExcept("size"));
+            return XmlOutput.toXml(objects, filters);
+        }
+        return XmlOutput.toXml(objects);
     }
 
     public void putObject(final String bucketName, final String objectName, final long fileSize, final InputStream inStream) throws IOException, SignatureException {
@@ -230,12 +253,12 @@ public class Ds3Client {
         return httpClient.execute(putRequest);
     }
 
-    public CloseableHttpResponse sendBulkPut(final String bucketName, final String xmlBody) throws IOException, SignatureException {
+    public CloseableHttpResponse sendBulkCommand(final String bucketName, final String xmlBody, final BulkCommand command)
+            throws IOException, SignatureException {
         System.out.println(xmlBody);
         final CloseableHttpClient httpClient = HttpClients.createDefault();
         final Map<String, String> queryParams = new HashMap<String,String>();
-        queryParams.put("start-bulk-put",null);
-
+        queryParams.put(command.toString(), null);
         final URL url = NetUtils.buildUrl(bucketName, connectionDetails, queryParams);
         final HttpPut putRequest = new HttpPut(url.toString());
         final String date = NetUtils.dateToRfc882();
@@ -253,5 +276,18 @@ public class Ds3Client {
         putRequest.setEntity(entity);
 
         return httpClient.execute(putRequest);
+    }
+
+    private enum BulkCommand {
+        PUT, GET;
+
+        public String toString() {
+            if (this == PUT) {
+                return "start-bulk-put";
+            }
+            else {
+                return "start-bulk-get";
+            }
+        }
     }
 }
