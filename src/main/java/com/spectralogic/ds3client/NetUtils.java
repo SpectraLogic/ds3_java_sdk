@@ -79,6 +79,10 @@ public class NetUtils {
         builder.append(connectionDetails.isSecure()? "https": "http").append("://");
         builder.append(connectionDetails.getEndpoint()).append(':');
         builder.append(connectionDetails.getPort());
+        if(!path.startsWith("/")) {
+            builder.append('/');
+        }
+
         builder.append(path);
 
         if (params != null && params.size() > 0) {

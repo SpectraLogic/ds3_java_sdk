@@ -35,12 +35,12 @@ public class Main {
 
 
         final List<Ds3Object> objects = new ArrayList<Ds3Object>();
-        objects.add(new Ds3Object("user/hduser/gutenberg/20417.txt.utf-8",256));
-        objects.add(new Ds3Object("user/hduser/gutenberg/5000.txt.utf-8",1202));
-        objects.add(new Ds3Object("user/hduser/gutenberg/4300.txt.utf-8",2523));
+        objects.add(new Ds3Object("/user/hduser/gutenberg/20417.txt.utf-8",256));
+        objects.add(new Ds3Object("/user/hduser/gutenberg/5000.txt.utf-8",1202));
+        objects.add(new Ds3Object("/user/hduser/gutenberg/4300.txt.utf-8",2523));
 
         System.out.println("Writing out files: " + objects);
-        final MasterObjectList masterObjectList =  client.bulkGet("/" + bucket + "/", objects);
+        final MasterObjectList masterObjectList =  client.bulkGet(bucket + "/", objects);
         System.out.println(masterObjectList);
 
         /*
