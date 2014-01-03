@@ -1,10 +1,7 @@
 package com.spectralogic.ds3client;
 
 
-import com.spectralogic.ds3client.models.Credentials;
-import com.spectralogic.ds3client.models.Ds3Object;
-import com.spectralogic.ds3client.models.ListAllMyBucketsResult;
-import com.spectralogic.ds3client.models.MasterObjectList;
+import com.spectralogic.ds3client.models.*;
 import org.apache.commons.io.IOUtils;
 
 import java.io.File;
@@ -24,8 +21,9 @@ public class Main {
         final String bucket = "remoteTest16";
 
 
-        client.listBucket(bucket);
+        ListBucketResult objects = client.listBucket(bucket);
 
+        System.out.println(objects);
         //client.createBucket(bucket);
 
         //final ListAllMyBucketsResult result = client.getService();
@@ -33,7 +31,7 @@ public class Main {
         //System.out.println(result.toString());
 
 
-
+        /*
         final List<Ds3Object> objects = new ArrayList<Ds3Object>();
         objects.add(new Ds3Object("/user/hduser/gutenberg/20417.txt.utf-8",256));
         objects.add(new Ds3Object("/user/hduser/gutenberg/5000.txt.utf-8",1202));

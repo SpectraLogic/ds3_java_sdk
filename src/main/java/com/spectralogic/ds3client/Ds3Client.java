@@ -91,25 +91,21 @@ public class Ds3Client {
         return bucket;
     }
 
-    public List<Ds3Object> listBucket(final String bucketName) throws IOException, SignatureException {
-        final List<Ds3Object> objects = new ArrayList<Ds3Object>();
+    public ListBucketResult listBucket(final String bucketName) throws IOException, SignatureException {
+
         final CloseableHttpResponse response = sendGetRequest("/" + bucketName);
 
         try {
             final StringWriter writer = new StringWriter();
             IOUtils.copy(response.getEntity().getContent(), writer, UTF8);
 
-            System.out.println(writer.toString());
-
-            for(Header header: response.getAllHeaders()) {
-                System.out.println(header.getName() + ": " + header.getValue());
-            }
+            return XmlOutput.fromXml(writer.toString(), ListBucketResult.class);
         }
         finally {
             response.close();
         }
 
-        return objects;
+
     }
 
     public MasterObjectList bulkGet(final String bucketName, final List<Ds3Object> files)

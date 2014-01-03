@@ -1,6 +1,7 @@
 package com.spectralogic.ds3client;
 
 import com.spectralogic.ds3client.models.Ds3Object;
+import com.spectralogic.ds3client.models.ListBucketResult;
 import com.spectralogic.ds3client.models.MasterObjectList;
 import com.spectralogic.ds3client.models.Objects;
 import com.spectralogic.ds3client.serializer.XmlOutput;
@@ -26,5 +27,17 @@ public class XmlOutput_Test {
         final Objects objects = objectsList.get(0);
         final List<Ds3Object> objectList = objects.getObject();
         assertThat(objectList.size(), is(3));
+    }
+
+    @Test
+    public void bucketList() throws IOException {
+        final String xmlResponse = "<ListBucketResult xmlns=\"http://s3.amazonaws.com/doc/2006-03-01/\"><Name>remoteTest16</Name><Prefix/><Marker/><MaxKeys>1000</MaxKeys><IsTruncated>false</IsTruncated><Contents><Key>user/hduser/gutenberg/20417.txt.utf-8</Key><LastModified>2014-01-03T13:26:47.000Z</LastModified><ETag>NOTRETURNED</ETag><Size>674570</Size><StorageClass>STANDARD</StorageClass><Owner><ID>ryan</ID><DisplayName>ryan</DisplayName></Owner></Contents><Contents><Key>user/hduser/gutenberg/5000.txt.utf-8</Key><LastModified>2014-01-03T13:26:47.000Z</LastModified><ETag>NOTRETURNED</ETag><Size>1423803</Size><StorageClass>STANDARD</StorageClass><Owner><ID>ryan</ID><DisplayName>ryan</DisplayName></Owner></Contents><Contents><Key>user/hduser/gutenberg/4300.txt.utf-8</Key><LastModified>2014-01-03T13:26:47.000Z</LastModified><ETag>NOTRETURNED</ETag><Size>1573150</Size><StorageClass>STANDARD</StorageClass><Owner><ID>ryan</ID><DisplayName>ryan</DisplayName></Owner></Contents></ListBucketResult>";
+
+        final ListBucketResult result = XmlOutput.fromXml(xmlResponse, ListBucketResult.class);
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getName(), is("remoteTest16"));
+        assertThat(result.getContentsList(), is(notNullValue()));
+        assertThat(result.getContentsList().size(), is(3));
+        assertThat(result.getContentsList().get(0).getSize(), is(674570));
     }
 }
