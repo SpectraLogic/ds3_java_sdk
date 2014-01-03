@@ -259,7 +259,7 @@ public class Ds3Client {
         final CloseableHttpClient httpClient = HttpClients.createDefault();
         final Map<String, String> queryParams = new HashMap<String,String>();
         queryParams.put(command.toString(), null);
-        final URL url = NetUtils.buildUrl(bucketName, connectionDetails, queryParams);
+        final URL url = NetUtils.buildUrl(ensureBucketHasSlash(bucketName), connectionDetails, queryParams);
         final HttpPut putRequest = new HttpPut(url.toString());
         final String date = NetUtils.dateToRfc882();
 
@@ -289,5 +289,12 @@ public class Ds3Client {
                 return "start-bulk-get";
             }
         }
+    }
+
+    private String ensureBucketHasSlash(final String bucket) {
+        if(!bucket.endsWith("/")) {
+            return bucket + "/";
+        }
+        return bucket;
     }
 }

@@ -91,6 +91,7 @@ public class NetUtils {
             final Set<Map.Entry<String, String>> paramSet = params.entrySet();
             final Iterator<Map.Entry<String, String>> paramIterator = paramSet.iterator();
             Map.Entry<String, String> paramEntry = paramIterator.next();
+
             addQueryParam(builder, paramEntry);
             while(paramIterator.hasNext()) {
                 paramEntry = paramIterator.next();
