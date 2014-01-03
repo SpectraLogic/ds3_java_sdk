@@ -104,8 +104,6 @@ public class Ds3Client {
         finally {
             response.close();
         }
-
-
     }
 
     public MasterObjectList bulkGet(final String bucketName, final List<Ds3Object> files)
