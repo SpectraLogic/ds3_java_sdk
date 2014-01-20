@@ -82,8 +82,6 @@ public class Ds3Client {
             final StringWriter writer = new StringWriter();
             IOUtils.copy(response.getEntity().getContent(), writer, UTF8);
 
-            System.out.println(writer.toString());
-            System.out.println("Response code: " + response.getStatusLine().getStatusCode());
         }
         finally {
             response.close();
@@ -127,7 +125,7 @@ public class Ds3Client {
         try {
             final StringWriter writer = new StringWriter();
             IOUtils.copy(response.getEntity().getContent(), writer, UTF8);
-            System.out.println(writer.toString());
+
             final StatusLine statusLine = response.getStatusLine();
             if (statusLine.getStatusCode() != 200) {
                 throw new FailedRequestException("Request failed with a non-200 status code.  Actual status code: " + statusLine.getStatusCode() + "\nMessage Body: " + writer.toString());
@@ -249,7 +247,7 @@ public class Ds3Client {
 
     public CloseableHttpResponse sendBulkCommand(final String bucketName, final String xmlBody, final BulkCommand command)
             throws IOException, SignatureException {
-        System.out.println(xmlBody);
+
         final CloseableHttpClient httpClient = HttpClients.createDefault();
         final Map<String, String> queryParams = new HashMap<String,String>();
         queryParams.put(command.toString(), null);

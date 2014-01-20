@@ -15,7 +15,7 @@ import java.util.List;
 public class Main {
 
     public static void main(String args[]) throws Exception {
-        final Ds3ClientBuilder builder = new Ds3ClientBuilder("192.168.56.101",new Credentials("cnlhbg==","R8ATmVhzTyGX"));
+        final Ds3ClientBuilder builder = new Ds3ClientBuilder("192.168.56.102",new Credentials("cnlhbg==","R8ATmVhzTyGX"));
         final Ds3Client client = builder.withHttpSecure(false).withPort(8080).build();
 
         final String bucket = "remoteTest16";
