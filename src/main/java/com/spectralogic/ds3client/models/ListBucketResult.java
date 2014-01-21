@@ -75,7 +75,7 @@ public class ListBucketResult {
         final StringBuilder builder = new StringBuilder();
         builder.append("{{bucket:: ").append(name).append("},\n");
         builder.append("{numKeys:: ").append(maxKeys).append("},\n");
-        builder.append("{buckets:: ").append(contentsList).append("}}");
+        builder.append("{objects:: ").append(contentsList).append("}}");
         return builder.toString();
     }
 }

@@ -91,12 +91,12 @@ public class Ds3Client {
 
     public ListBucketResult listBucket(final String bucketName) throws IOException, SignatureException {
 
-        final CloseableHttpResponse response = sendGetRequest("/" + bucketName);
+        final CloseableHttpResponse response = sendGetRequest("/"+bucketName);
 
         try {
             final StringWriter writer = new StringWriter();
             IOUtils.copy(response.getEntity().getContent(), writer, UTF8);
-
+            System.out.println(writer.toString());
             return XmlOutput.fromXml(writer.toString(), ListBucketResult.class);
         }
         finally {
@@ -178,8 +178,39 @@ public class Ds3Client {
         }
     }
 
-    public InputStream getObject(String testBucket, String object) throws IOException, SignatureException {
-        final String objectPath = NetUtils.buildPath(testBucket,object);
+    public void listJobs(final String bucketName) throws IOException, SignatureException {
+        //final CloseableHttpResponse response = sendGetRequest("/_rest_/jobs/?bucket="+bucketName);
+        final CloseableHttpResponse response = sendGetRequest("/_rest_/jobs");
+
+        try {
+            final StringWriter writer = new StringWriter();
+            IOUtils.copy(response.getEntity().getContent(), writer, UTF8);
+
+            System.out.println(writer.toString());
+            //return XmlOutput.fromXml(writer.toString(), ListBucketResult.class);
+        }
+        finally {
+            response.close();
+        }
+    }
+
+    public void jobInfo(final String jobId) throws IOException, SignatureException {
+        final CloseableHttpResponse response = sendGetRequest("/_rest_/jobs/"+jobId);
+
+        try {
+            final StringWriter writer = new StringWriter();
+            IOUtils.copy(response.getEntity().getContent(), writer, UTF8);
+
+            System.out.println(writer.toString());
+            //return XmlOutput.fromXml(writer.toString(), ListBucketResult.class);
+        }
+        finally {
+            response.close();
+        }
+    }
+
+    public InputStream getObject(final String bucketName, final String object) throws IOException, SignatureException {
+        final String objectPath = NetUtils.buildPath(bucketName,object);
         final CloseableHttpResponse response = sendGetRequest(objectPath);
         return response.getEntity().getContent();
     }
@@ -249,9 +280,7 @@ public class Ds3Client {
             throws IOException, SignatureException {
 
         final CloseableHttpClient httpClient = HttpClients.createDefault();
-        final Map<String, String> queryParams = new HashMap<String,String>();
-        queryParams.put(command.toString(), null);
-        final URL url = NetUtils.buildUrl(ensureBucketHasSlash(bucketName), connectionDetails, queryParams);
+        final URL url = NetUtils.buildBucketPath(bucketName, connectionDetails, command);
         final HttpPut putRequest = new HttpPut(url.toString());
         final String date = NetUtils.dateToRfc882();
 
@@ -259,7 +288,7 @@ public class Ds3Client {
         putRequest.addHeader(DATE, date);
         putRequest.addHeader(CONTENT_TYPE, ContentType.APPLICATION_XML.toString());
         putRequest.addHeader(AUTHORIZATION, "AWS " + connectionDetails.getCredentials().getClientId() +":"
-                + NetUtils.signature(new SignatureDetails(PUT, "", ContentType.APPLICATION_XML.toString(), date, "", url.getPath() + "?" + url.getQuery(),
+                + NetUtils.signature(new SignatureDetails(PUT, "", ContentType.APPLICATION_XML.toString(), date, "", url.getPath(),
                 connectionDetails.getCredentials())));
         final HttpEntity entity = EntityBuilder.create().
                 setText(xmlBody).
@@ -268,25 +297,5 @@ public class Ds3Client {
         putRequest.setEntity(entity);
 
         return httpClient.execute(putRequest);
-    }
-
-    private enum BulkCommand {
-        PUT, GET;
-
-        public String toString() {
-            if (this == PUT) {
-                return "start-bulk-put";
-            }
-            else {
-                return "start-bulk-get";
-            }
-        }
-    }
-
-    private String ensureBucketHasSlash(final String bucket) {
-        if(!bucket.endsWith("/")) {
-            return bucket + "/";
-        }
-        return bucket;
     }
 }

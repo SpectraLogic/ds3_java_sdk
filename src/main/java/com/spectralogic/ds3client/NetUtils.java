@@ -10,10 +10,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.SignatureException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class NetUtils {
     final static private String HMAC_SHA1_ALGORITHM = "HmacSHA1";
@@ -154,5 +151,17 @@ public class NetUtils {
     public static String dateToRfc882(final Date date) {
         final SimpleDateFormat sdf = new SimpleDateFormat(RFC822FORMAT);
         return sdf.format(date);
+    }
+
+    public static URL buildBucketPath(final String bucketName, final ConnectionDetails connectionDetails, final BulkCommand command) throws MalformedURLException {
+        final Map<String, String> queryParams = new HashMap<String,String>();
+        queryParams.put("operation", command.toString());
+        return NetUtils.buildUrl(bucketPath(bucketName), connectionDetails, queryParams);
+    }
+
+    private static String bucketPath(final String bucket) {
+        final StringBuilder builder = new StringBuilder();
+        builder.append("/_rest_/buckets/").append(bucket);
+        return builder.toString();
     }
 }

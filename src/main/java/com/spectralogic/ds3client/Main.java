@@ -15,31 +15,31 @@ import java.util.List;
 public class Main {
 
     public static void main(String args[]) throws Exception {
-        final Ds3ClientBuilder builder = new Ds3ClientBuilder("192.168.56.102",new Credentials("cnlhbg==","R8ATmVhzTyGX"));
+        final Ds3ClientBuilder builder = new Ds3ClientBuilder("10.1.19.180",new Credentials("cnlhbg==","SSd6R45e"));
         final Ds3Client client = builder.withHttpSecure(false).withPort(8080).build();
 
-        final String bucket = "remoteTest16";
+        final ListAllMyBucketsResult result = client.getService();
+        System.out.println(result.toString());
 
+        final String bucket = "remoteTest03";
+        client.createBucket(bucket);
+        final ListBucketResult objectList = client.listBucket(bucket);
+        System.out.println(objectList);
 
-        ListBucketResult objects = client.listBucket(bucket);
+        client.listJobs(bucket);
 
-        System.out.println(objects);
-        //client.createBucket(bucket);
-
-        //final ListAllMyBucketsResult result = client.getService();
-
-        //System.out.println(result.toString());
-
-
-        /*
         final List<Ds3Object> objects = new ArrayList<Ds3Object>();
         objects.add(new Ds3Object("/user/hduser/gutenberg/20417.txt.utf-8",256));
         objects.add(new Ds3Object("/user/hduser/gutenberg/5000.txt.utf-8",1202));
         objects.add(new Ds3Object("/user/hduser/gutenberg/4300.txt.utf-8",2523));
 
         System.out.println("Writing out files: " + objects);
-        final MasterObjectList masterObjectList =  client.bulkGet(bucket, objects);
+        final MasterObjectList masterObjectList =  client.bulkPut(bucket, objects);
+        System.out.println(masterObjectList.getJobid());
         System.out.println(masterObjectList);
+
+
+        client.listJobs(bucket);
 
         /*
         System.out.println("================= Starting put =================");
