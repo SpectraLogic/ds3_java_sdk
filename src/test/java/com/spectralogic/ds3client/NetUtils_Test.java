@@ -2,13 +2,11 @@ package com.spectralogic.ds3client;
 
 
 import com.spectralogic.ds3client.fixtures.ConnectionFixture;
-import com.spectralogic.ds3client.models.ConnectionDetails;
+import com.spectralogic.ds3client.networking.NetUtils;
 import org.junit.Test;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.HashMap;
-import java.util.Map;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -17,7 +15,7 @@ public class NetUtils_Test {
 
     @Test
     public void pathBuilderValidPaths() {
-        final String result = NetUtils.buildPath("/basePath","file.xml");
+        final String result = NetUtils.buildPath("/basePath", "file.xml");
         assertThat(result,is("/basePath/file.xml"));
     }
 

@@ -2,6 +2,7 @@ package com.spectralogic.ds3client;
 
 import com.spectralogic.ds3client.models.ConnectionDetails;
 import com.spectralogic.ds3client.models.Credentials;
+import com.spectralogic.ds3client.networking.NetworkClient;
 
 public class Ds3ClientBuilder {
 
@@ -40,7 +41,8 @@ public class Ds3ClientBuilder {
     }
 
     public Ds3Client build() {
-        final Ds3Client client = new Ds3Client(new ConnectionDetails(endpoint, credentials, getPort(), secure));
+        final NetworkClient netClient = new NetworkClient(new ConnectionDetails(endpoint, credentials, getPort(), secure));
+        final Ds3Client client = new Ds3Client(netClient);
 
         return client;
     }

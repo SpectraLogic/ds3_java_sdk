@@ -2,9 +2,12 @@ package com.spectralogic.ds3client.serializer;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ser.FilterProvider;
+import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
 import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import com.fasterxml.jackson.dataformat.xml.JacksonXmlModule;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
+import com.spectralogic.ds3client.BulkCommand;
+import com.spectralogic.ds3client.models.Objects;
 
 import java.io.IOException;
 
@@ -20,11 +23,11 @@ public class XmlOutput {
         mapper.setFilters(filterProvider);
     }
 
-    public static String toXml(Object object) throws XmlProcessingException {
+    public static String toXml(final Object object) throws XmlProcessingException {
         return toXml(object, null);
     }
 
-    public static String toXml(Object object, FilterProvider filterProvider) throws XmlProcessingException {
+    public static String toXml(final Object object, final FilterProvider filterProvider) throws XmlProcessingException {
         try {
             if (filterProvider == null) {
                 return mapper.writeValueAsString(object);
@@ -38,7 +41,16 @@ public class XmlOutput {
         }
     }
 
-    public static<T> T fromXml(String xmlString, Class<T> type) throws IOException {
+    public static String toXml(final Objects objects, final BulkCommand command) throws XmlProcessingException {
+        if (command == BulkCommand.GET) {
+            final FilterProvider filters = new SimpleFilterProvider().addFilter("sizeFilter",
+                    SimpleBeanPropertyFilter.serializeAllExcept("size"));
+            return XmlOutput.toXml(objects, filters);
+        }
+        return XmlOutput.toXml(objects);
+    }
+
+    public static<T> T fromXml(final String xmlString, final Class<T> type) throws IOException {
         final T rootElement = mapper.readValue(xmlString, type);
         return rootElement;
     }

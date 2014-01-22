@@ -2,13 +2,7 @@ package com.spectralogic.ds3client;
 
 
 import com.spectralogic.ds3client.models.*;
-import org.apache.commons.io.IOUtils;
 
-import java.io.File;
-import java.io.InputStream;
-import java.io.StringReader;
-import java.io.StringWriter;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
