@@ -35,7 +35,7 @@ public class Ds3Client {
     }
 
     public ListAllMyBucketsResult getService() throws IOException, SignatureException, FailedRequestException {
-        final CloseableHttpResponse response = netClient.sendGetRequest("/");
+        final CloseableHttpResponse response = netClient.get("/");
 
         try {
             final StringWriter writer = new StringWriter();
@@ -59,7 +59,7 @@ public class Ds3Client {
         final List<Header> headers = new ArrayList<Header>();
         headers.add(new BasicHeader("bucket-name",bucketName));
 
-        final CloseableHttpResponse response = netClient.sendPutRequest("/", "", null, headers, 0);
+        final CloseableHttpResponse response = netClient.put("/", "", null, headers, 0);
 
         try {
             final StringWriter writer = new StringWriter();
@@ -74,7 +74,7 @@ public class Ds3Client {
 
     public ListBucketResult listBucket(final String bucketName) throws IOException, SignatureException {
 
-        final CloseableHttpResponse response = netClient.sendGetRequest("/" + bucketName);
+        final CloseableHttpResponse response = netClient.get("/" + bucketName);
 
         try {
             final StringWriter writer = new StringWriter();
@@ -104,7 +104,7 @@ public class Ds3Client {
         objects.setObject(files);
         final String xmlOutput = XmlOutput.toXml(objects, command);
 
-        final CloseableHttpResponse response = netClient.sendBulkCommand(bucketName, xmlOutput, command);
+        final CloseableHttpResponse response = netClient.bulk(bucketName, xmlOutput, command);
         try {
             final StringWriter writer = new StringWriter();
             IOUtils.copy(response.getEntity().getContent(), writer, UTF8);
@@ -123,14 +123,14 @@ public class Ds3Client {
 
     public InputStream getObject(final String bucketName, final String object) throws IOException, SignatureException {
         final String objectPath = NetUtils.buildPath(bucketName,object);
-        final CloseableHttpResponse response = netClient.sendGetRequest(objectPath);
+        final CloseableHttpResponse response = netClient.get(objectPath);
         return response.getEntity().getContent();
     }
 
     public void putObject(final String bucketName, final String objectName, final long fileSize, final InputStream inStream) throws IOException, SignatureException {
         final String objectPath = NetUtils.buildPath(bucketName, objectName);
 
-        final CloseableHttpResponse response = netClient.sendPutRequest(objectPath, "", inStream, null, fileSize);
+        final CloseableHttpResponse response = netClient.put(objectPath, "", inStream, null, fileSize);
         try {
             final StringWriter writer = new StringWriter();
             IOUtils.copy(response.getEntity().getContent(), writer, UTF8);
@@ -145,7 +145,7 @@ public class Ds3Client {
 
     public void putObject(final String bucketName, final String objectName, final File file) throws IOException, SignatureException {
         final String objectPath = NetUtils.buildPath(bucketName, objectName);
-        final CloseableHttpResponse response = netClient.sendPutRequest(objectPath, file);
+        final CloseableHttpResponse response = netClient.put(objectPath, file);
         try {
             final StringWriter writer = new StringWriter();
             IOUtils.copy(response.getEntity().getContent(), writer, UTF8);
@@ -161,7 +161,7 @@ public class Ds3Client {
     public void listJobs(final String bucketName) throws IOException, SignatureException {
         final Map<String, String> queryParams = new HashMap<String,String>();
         queryParams.put("bucket", bucketName);
-        final CloseableHttpResponse response = netClient.sendGetRequest("/_rest_/jobs", queryParams);
+        final CloseableHttpResponse response = netClient.get("/_rest_/jobs", queryParams);
 
         try {
             final StringWriter writer = new StringWriter();
@@ -176,7 +176,7 @@ public class Ds3Client {
     }
 
     public void jobInfo(final String jobId) throws IOException, SignatureException {
-        final CloseableHttpResponse response = netClient.sendGetRequest("/_rest_/jobs/" + jobId);
+        final CloseableHttpResponse response = netClient.get("/_rest_/jobs/" + jobId);
 
         try {
             final StringWriter writer = new StringWriter();

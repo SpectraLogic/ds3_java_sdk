@@ -16,11 +16,13 @@ public class Main {
         System.out.println(result.toString());
 
         final String bucket = "remoteTest03";
-        client.createBucket(bucket);
+        //client.createBucket(bucket);
         final ListBucketResult objectList = client.listBucket(bucket);
         System.out.println(objectList);
 
+        /*
         client.listJobs(bucket);
+
 
         final List<Ds3Object> objects = new ArrayList<Ds3Object>();
         objects.add(new Ds3Object("/user/hduser/gutenberg/20417.txt.utf-8",256));

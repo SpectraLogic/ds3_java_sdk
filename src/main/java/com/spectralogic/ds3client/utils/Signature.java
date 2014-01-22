@@ -22,7 +22,7 @@ public class Signature {
      * @throws
      * java.security.SignatureException when signature generation fails
      */
-    public static String calculateRFC2104HMAC(String data, String key)
+    public static String calculateRFC2104HMAC(final String data, final String key)
             throws java.security.SignatureException
     {
         final String result;
@@ -59,7 +59,9 @@ public class Signature {
         stringToSign.append(signatureDetails.getCanonicalizedAmzHeaders());
         stringToSign.append(signatureDetails.getCanonicalizedResource());
         System.out.println(stringToSign.toString());
-        return calculateRFC2104HMAC(stringToSign.toString(), signatureDetails.getCredentials().getKey());
+        final String signature = calculateRFC2104HMAC(stringToSign.toString(), signatureDetails.getCredentials().getKey());
+        System.out.println(signature);
+        return signature;
     }
 
 

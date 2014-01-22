@@ -46,8 +46,8 @@ public class NetworkClient {
         return connectionDetails;
     }
 
-    public CloseableHttpResponse sendGetRequest(final String path) throws IOException, SignatureException {
-        return sendGetRequest(path, null);
+    public CloseableHttpResponse get(final String path) throws IOException, SignatureException {
+        return get(path, null);
     }
 
     /**
@@ -55,7 +55,7 @@ public class NetworkClient {
      * @param path
      * @return
      */
-    public CloseableHttpResponse sendGetRequest(final String path, final Map<String,String> queryParams) throws IOException, SignatureException {
+    public CloseableHttpResponse get(final String path, final Map<String, String> queryParams) throws IOException, SignatureException {
         final CloseableHttpClient httpClient = HttpClients.createDefault();
         final HttpGet getRequest = new HttpGet(NetUtils.buildUrl(path, connectionDetails, queryParams).toString());
 
@@ -67,7 +67,7 @@ public class NetworkClient {
         return httpClient.execute(getRequest);
     }
 
-    public CloseableHttpResponse sendPutRequest(final String path, final File fileName) throws SignatureException, IOException {
+    public CloseableHttpResponse put(final String path, final File fileName) throws SignatureException, IOException {
         final CloseableHttpClient httpClient = HttpClients.createDefault();
         final HttpPut putRequest = new HttpPut(NetUtils.buildUrl(path, connectionDetails).toString());
 
@@ -83,7 +83,7 @@ public class NetworkClient {
         return httpClient.execute(putRequest);
     }
 
-    public CloseableHttpResponse sendPutRequest(final String path, final String mdf5, final InputStream dataStream, final List<Header> headers, final long fileSize) throws IOException, SignatureException {
+    public CloseableHttpResponse put(final String path, final String mdf5, final InputStream dataStream, final List<Header> headers, final long fileSize) throws IOException, SignatureException {
         final CloseableHttpClient httpClient = HttpClients.createDefault();
         final HttpPut putRequest = new HttpPut(NetUtils.buildUrl(path, connectionDetails).toString());
 
@@ -109,7 +109,7 @@ public class NetworkClient {
         return httpClient.execute(putRequest);
     }
 
-    public CloseableHttpResponse sendBulkCommand(final String bucketName, final String xmlBody, final BulkCommand command)
+    public CloseableHttpResponse bulk(final String bucketName, final String xmlBody, final BulkCommand command)
             throws IOException, SignatureException {
 
         final CloseableHttpClient httpClient = HttpClients.createDefault();
