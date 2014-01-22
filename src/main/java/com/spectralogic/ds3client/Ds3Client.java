@@ -20,8 +20,6 @@ import java.util.List;
 import java.util.Map;
 
 public class Ds3Client {
-
-
     final static private String UTF8 = "UTF-8";
 
     private final NetworkClient netClient;
@@ -41,10 +39,7 @@ public class Ds3Client {
             final StringWriter writer = new StringWriter();
             IOUtils.copy(response.getEntity().getContent(), writer, UTF8);
 
-            final StatusLine statusLine = response.getStatusLine();
-            if (statusLine.getStatusCode() != 200) {
-                throw new FailedRequestException("Request failed with a non-200 status code.  Actual status code: " + statusLine.getStatusCode());
-            }
+            checkStatusCode(response, 200);
 
             return XmlOutput.fromXml(writer.toString(), ListAllMyBucketsResult.class);
         }
@@ -79,10 +74,8 @@ public class Ds3Client {
         try {
             final StringWriter writer = new StringWriter();
             IOUtils.copy(response.getEntity().getContent(), writer, UTF8);
-            final StatusLine statusLine = response.getStatusLine();
-            if (statusLine.getStatusCode() != 200) {
-                throw new FailedRequestException("Request failed with a non-200 status code.  Actual status code: " + statusLine.getStatusCode());
-            }
+            checkStatusCode(response, 200);
+
             return XmlOutput.fromXml(writer.toString(), ListBucketResult.class);
         }
         finally {
@@ -106,16 +99,13 @@ public class Ds3Client {
         final Objects objects = new Objects();
         objects.setObject(files);
         final String xmlOutput = XmlOutput.toXml(objects, command);
-
+        System.out.println(xmlOutput);
         final CloseableHttpResponse response = netClient.bulk(bucketName, xmlOutput, command);
         try {
             final StringWriter writer = new StringWriter();
             IOUtils.copy(response.getEntity().getContent(), writer, UTF8);
 
-            final StatusLine statusLine = response.getStatusLine();
-            if (statusLine.getStatusCode() != 200) {
-                throw new FailedRequestException("Request failed with a non-200 status code.  Actual status code: " + statusLine.getStatusCode() + "\nMessage Body: " + writer.toString());
-            }
+            checkStatusCode(response, 200);
 
             return XmlOutput.fromXml(writer.toString(), MasterObjectList.class);
         }
@@ -124,10 +114,16 @@ public class Ds3Client {
         }
     }
 
-    public InputStream getObject(final String bucketName, final String object) throws IOException, SignatureException {
+    public InputStream getObject(final String bucketName, final String object) throws IOException, SignatureException, FailedRequestException {
         final String objectPath = NetUtils.buildPath(bucketName,object);
         final CloseableHttpResponse response = netClient.get(objectPath);
-        return response.getEntity().getContent();
+        try {
+            checkStatusCode(response, 200);
+            return response.getEntity().getContent();
+        }
+        finally {
+            response.close();
+        }
     }
 
     public void putObject(final String bucketName, final String objectName, final long fileSize, final InputStream inStream) throws IOException, SignatureException {
@@ -190,6 +186,13 @@ public class Ds3Client {
         }
         finally {
             response.close();
+        }
+    }
+
+    private void checkStatusCode(final CloseableHttpResponse response, int expectedStatus) throws FailedRequestException {
+        final StatusLine statusLine = response.getStatusLine();
+        if (statusLine.getStatusCode() != expectedStatus) {
+            throw new FailedRequestException("Request failed with a non-200 status code.  Actual status code: " + statusLine.getStatusCode());
         }
     }
 
