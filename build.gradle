@@ -18,5 +18,6 @@ dependencies {
     compile     'commons-io:commons-io:2.1'
     compile     'org.codehaus.woodstox:woodstox-core-asl:4.2.0'
     compile     'com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.2.3'
+    testCompile 'com.googlecode.jmockit:jmockit:1.4'
     testCompile 'junit:junit:4.11'
 }

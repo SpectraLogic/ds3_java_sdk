@@ -1,12 +1,15 @@
-package com.spectralogic.ds3client;
+package com.spectralogic.ds3client.utils;
 
 
+import com.spectralogic.ds3client.BulkCommand;
 import com.spectralogic.ds3client.fixtures.ConnectionFixture;
 import com.spectralogic.ds3client.networking.NetUtils;
 import org.junit.Test;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -58,7 +61,7 @@ public class NetUtils_Test {
 
     @Test
     public void buildPathWithoutSlash() throws MalformedURLException {
-        final URL result = NetUtils.buildUrl("path", ConnectionFixture.getConnection(), null);
+        final URL result = NetUtils.buildUrl("path", ConnectionFixture.getConnection());
         assertThat(result.getPath(), is("/path"));
     }
 
@@ -74,6 +77,15 @@ public class NetUtils_Test {
         final URL result = NetUtils.buildBucketPath("testBucket1", ConnectionFixture.getConnection(), BulkCommand.GET);
         assertThat(result.getPath(), is("/_rest_/buckets/testBucket1"));
         assertThat(result.toString(), is("http://localhost:8080/_rest_/buckets/testBucket1?operation=start_bulk_get"));
+    }
+
+    @Test
+    public void buildUrlWithMultipleQueryParams() throws MalformedURLException {
+        final Map<String, String> queryParams = new HashMap<String, String>();
+        queryParams.put("var", "2");
+        queryParams.put("foo", "bar");
+        final URL result = NetUtils.buildUrl("path", ConnectionFixture.getConnection(), queryParams);
+        assertThat(result.toString(), is("http://localhost:8080/path?var=2&foo=bar"));
     }
 
 }

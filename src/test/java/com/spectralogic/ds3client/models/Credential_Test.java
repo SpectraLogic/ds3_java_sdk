@@ -1,4 +1,4 @@
-package com.spectralogic.ds3client;
+package com.spectralogic.ds3client.models;
 
 
 import com.spectralogic.ds3client.models.Credentials;

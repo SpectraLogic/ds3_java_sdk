@@ -3,13 +3,10 @@ package com.spectralogic.ds3client;
 
 import com.spectralogic.ds3client.models.Credentials;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 
-@RunWith(JUnit4.class)
 public class Ds3ClientBuilder_Test {
 
     @Test
@@ -68,4 +65,25 @@ public class Ds3ClientBuilder_Test {
         assertThat(client.getNetClient().getConnectionDetails().getEndpoint(),is("myEndPoint"));
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void badEndpoint() throws Exception {
+        new Ds3ClientBuilder("", new Credentials("foo","bar"));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void badCredentials() throws Exception {
+        new Ds3ClientBuilder("myEndPoint", new Credentials("","bar"));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void negativePort() throws Exception {
+        final Ds3ClientBuilder builder = new Ds3ClientBuilder("myEndPoint", new Credentials("foo","bar"));
+        builder.withPort(-8080).build();
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void portTooHigh() throws Exception {
+        final Ds3ClientBuilder builder = new Ds3ClientBuilder("myEndPoint", new Credentials("foo","bar"));
+        builder.withPort(808000000).build();
+    }
 }

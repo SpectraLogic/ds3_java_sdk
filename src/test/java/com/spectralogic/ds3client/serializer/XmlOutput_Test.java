@@ -1,4 +1,4 @@
-package com.spectralogic.ds3client;
+package com.spectralogic.ds3client.serializer;
 
 import com.spectralogic.ds3client.models.Ds3Object;
 import com.spectralogic.ds3client.models.ListBucketResult;
