@@ -1,8 +1,11 @@
 package com.spectralogic.ds3client;
 
-import com.spectralogic.ds3client.models.ConnectionDetails;
+import com.spectralogic.ds3client.networking.ConnectionDetails;
 import com.spectralogic.ds3client.models.Credentials;
 import com.spectralogic.ds3client.networking.NetworkClient;
+
+import java.net.URI;
+import java.net.URISyntaxException;
 
 public class Ds3ClientBuilder {
 
@@ -10,6 +13,7 @@ public class Ds3ClientBuilder {
     final private Credentials credentials;
     private int port = 0;
     private boolean secure = true;
+    private URI proxy = null;
 
     public Ds3ClientBuilder(final String endpoint, final Credentials credentials) throws IllegalArgumentException {
         if (endpoint == null || endpoint.isEmpty()) {
@@ -40,8 +44,24 @@ public class Ds3ClientBuilder {
         return this;
     }
 
+    public Ds3ClientBuilder withProxy(final String proxy) throws IllegalArgumentException {
+        try {
+            final URI proxyUri;
+            if(!proxy.startsWith("http")) {
+                throw new IllegalArgumentException("Invalid proxy format.  The web address must start with either http or https.");
+            }
+            proxyUri = new URI(proxy);
+
+            this.proxy = proxyUri;
+        } catch (final URISyntaxException e) {
+            throw new IllegalArgumentException("Invalid proxy format.  Must be a web address.");
+        }
+
+        return this;
+    }
+
     public Ds3Client build() {
-        final NetworkClient netClient = new NetworkClient(new ConnectionDetails(endpoint, credentials, getPort(), secure));
+        final NetworkClient netClient = new NetworkClient(new ConnectionDetails(endpoint, credentials, getPort(), secure, proxy));
         final Ds3Client client = new Ds3Client(netClient);
 
         return client;

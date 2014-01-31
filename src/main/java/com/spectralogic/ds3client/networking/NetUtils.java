@@ -1,7 +1,6 @@
 package com.spectralogic.ds3client.networking;
 
 import com.spectralogic.ds3client.BulkCommand;
-import com.spectralogic.ds3client.models.ConnectionDetails;
 
 import java.net.MalformedURLException;
 import java.net.URL;

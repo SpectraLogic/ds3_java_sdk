@@ -1,12 +1,13 @@
 package com.spectralogic.ds3client.networking;
 
 import com.spectralogic.ds3client.BulkCommand;
-import com.spectralogic.ds3client.models.ConnectionDetails;
 import com.spectralogic.ds3client.models.SignatureDetails;
 import com.spectralogic.ds3client.utils.DateFormatter;
 import com.spectralogic.ds3client.utils.Signature;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
+import org.apache.http.HttpHost;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.entity.EntityBuilder;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -19,6 +20,7 @@ import org.apache.http.impl.client.HttpClients;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
 import java.net.URL;
 import java.security.SignatureException;
 import java.util.List;
@@ -58,8 +60,9 @@ public class NetworkClient {
     public CloseableHttpResponse get(final String path, final Map<String, String> queryParams) throws IOException, SignatureException {
         final CloseableHttpClient httpClient = HttpClients.createDefault();
         final HttpGet getRequest = new HttpGet(NetUtils.buildUrl(path, connectionDetails, queryParams).toString());
-
         final String date = DateFormatter.dateToRfc882();
+
+        getRequest.setConfig(getRequestConfig());
         getRequest.addHeader(HOST, connectionDetails.getEndpoint());
         getRequest.addHeader(DATE, date);
         getRequest.addHeader(AUTHORIZATION, getSignature(new SignatureDetails(GET, "", "", date, "", path,connectionDetails.getCredentials())));
@@ -70,8 +73,10 @@ public class NetworkClient {
     public CloseableHttpResponse put(final String path, final File fileName) throws SignatureException, IOException {
         final CloseableHttpClient httpClient = HttpClients.createDefault();
         final HttpPut putRequest = new HttpPut(NetUtils.buildUrl(path, connectionDetails).toString());
-
         final String date = DateFormatter.dateToRfc882();
+
+        putRequest.setConfig(getRequestConfig());
+
         putRequest.addHeader(PUT, connectionDetails.getEndpoint());
         putRequest.addHeader(DATE, date);
         putRequest.addHeader(CONTENT_TYPE, STREAM_TYPE);
@@ -86,6 +91,8 @@ public class NetworkClient {
     public CloseableHttpResponse put(final String path, final String mdf5, final InputStream dataStream, final List<Header> headers, final long fileSize) throws IOException, SignatureException {
         final CloseableHttpClient httpClient = HttpClients.createDefault();
         final HttpPut putRequest = new HttpPut(NetUtils.buildUrl(path, connectionDetails).toString());
+
+        putRequest.setConfig(getRequestConfig());
 
         if (dataStream != null) {
             putRequest.setEntity(new InputStreamEntity(dataStream, fileSize));
@@ -117,6 +124,8 @@ public class NetworkClient {
         final HttpPut putRequest = new HttpPut(url.toString());
         final String date = DateFormatter.dateToRfc882();
 
+        putRequest.setConfig(getRequestConfig());
+
         putRequest.addHeader(PUT, connectionDetails.getEndpoint());
         putRequest.addHeader(DATE, date);
         putRequest.addHeader(CONTENT_TYPE, ContentType.APPLICATION_XML.toString());
@@ -136,5 +145,15 @@ public class NetworkClient {
         builder.append("AWS ").append(connectionDetails.getCredentials().getClientId());
         builder.append(':').append(Signature.signature(details));
         return builder.toString();
+    }
+
+    private RequestConfig getRequestConfig() {
+        final URI proxyUri = connectionDetails.getProxy();
+        final RequestConfig.Builder configBuilder = RequestConfig.custom();
+        if(proxyUri != null) {
+            final HttpHost proxyHost = new HttpHost(proxyUri.getHost(), proxyUri.getPort(), proxyUri.getScheme());
+            configBuilder.setProxy(proxyHost);
+        }
+        return configBuilder.build();
     }
 }
