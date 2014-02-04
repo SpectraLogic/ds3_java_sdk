@@ -63,7 +63,7 @@ public class NetworkClient {
         final String date = DateFormatter.dateToRfc882();
 
         getRequest.setConfig(getRequestConfig());
-        getRequest.addHeader(HOST, connectionDetails.getEndpoint());
+        getRequest.addHeader(HOST, NetUtils.buildHostField(connectionDetails));
         getRequest.addHeader(DATE, date);
         getRequest.addHeader(AUTHORIZATION, getSignature(new SignatureDetails(GET, "", "", date, "", path,connectionDetails.getCredentials())));
 
@@ -77,6 +77,7 @@ public class NetworkClient {
 
         putRequest.setConfig(getRequestConfig());
 
+        putRequest.addHeader(HOST, NetUtils.buildHostField(connectionDetails));
         putRequest.addHeader(PUT, connectionDetails.getEndpoint());
         putRequest.addHeader(DATE, date);
         putRequest.addHeader(CONTENT_TYPE, STREAM_TYPE);
@@ -105,7 +106,7 @@ public class NetworkClient {
         }
 
         final String date = DateFormatter.dateToRfc882();
-        putRequest.addHeader(HOST, connectionDetails.getEndpoint());
+        putRequest.addHeader(HOST, NetUtils.buildHostField(connectionDetails));
         putRequest.addHeader(DATE,date);
         if(!mdf5.isEmpty()) {
             putRequest.addHeader(CONTENTMD5,mdf5);
@@ -126,7 +127,7 @@ public class NetworkClient {
 
         putRequest.setConfig(getRequestConfig());
 
-        putRequest.addHeader(PUT, connectionDetails.getEndpoint());
+        putRequest.addHeader(HOST, NetUtils.buildHostField(connectionDetails));
         putRequest.addHeader(DATE, date);
         putRequest.addHeader(CONTENT_TYPE, ContentType.APPLICATION_XML.toString());
         putRequest.addHeader(AUTHORIZATION, getSignature(new SignatureDetails(PUT, "", ContentType.APPLICATION_XML.toString(), date, "", url.getPath(),

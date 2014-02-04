@@ -88,4 +88,11 @@ public class NetUtils_Test {
         assertThat(result.toString(), is("http://localhost:8080/path?var=2&foo=bar"));
     }
 
+
+    @Test
+    public void buildHostField() {
+        final String result = NetUtils.buildHostField(ConnectionFixture.getConnection());
+        assertThat(result, is("localhost:8080"));
+    }
+
 }

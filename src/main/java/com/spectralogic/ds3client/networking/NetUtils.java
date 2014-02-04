@@ -92,4 +92,10 @@ public class NetUtils {
         builder.append("/_rest_/buckets/").append(bucket);
         return builder.toString();
     }
+
+    public static String buildHostField(final ConnectionDetails details) {
+        final StringBuilder builder = new StringBuilder();
+        builder.append(details.getEndpoint()).append(':').append(details.getPort());
+        return builder.toString();
+    }
 }

@@ -11,8 +11,8 @@ public class Main {
 
     public static void main(String args[]) throws Exception {
 
-        final Ds3ClientBuilder builder = new Ds3ClientBuilder("192.168.56.102", new Credentials("cnlhbg==","SSd6R45e"));
-        final Ds3Client client = builder.withHttpSecure(false).withPort(8080).withProxy("http://192.168.56.104").build();
+        final Ds3ClientBuilder builder = new Ds3ClientBuilder("10.1.19.180", new Credentials("cnlhbg==","VJ4sBGMu"));
+        final Ds3Client client = builder.withHttpSecure(false).withPort(8080).withProxy("http://192.168.56.104:8080").build();
         //final Ds3Client client = builder.withHttpSecure(false).withPort(8080).build();
 
         final ListAllMyBucketsResult result = client.getService();
