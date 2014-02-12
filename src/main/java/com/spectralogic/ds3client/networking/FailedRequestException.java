@@ -1,6 +1,8 @@
 package com.spectralogic.ds3client.networking;
 
-public class FailedRequestException extends Exception {
+import java.io.IOException;
+
+public class FailedRequestException extends IOException {
     public FailedRequestException(String message) {
         super(message);
     }
