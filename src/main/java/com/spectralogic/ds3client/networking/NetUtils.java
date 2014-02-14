@@ -15,8 +15,7 @@ public class NetUtils {
     public static URL buildUrl(final String path, final ConnectionDetails connectionDetails, final Map<String, String> params) throws MalformedURLException {
         final StringBuilder builder = new StringBuilder();
         builder.append(connectionDetails.isSecure()? "https": "http").append("://");
-        builder.append(connectionDetails.getEndpoint()).append(':');
-        builder.append(connectionDetails.getPort());
+        builder.append(connectionDetails.getEndpoint());
         if(!path.startsWith("/")) {
             builder.append('/');
         }
@@ -95,7 +94,7 @@ public class NetUtils {
 
     public static String buildHostField(final ConnectionDetails details) {
         final StringBuilder builder = new StringBuilder();
-        builder.append(details.getEndpoint()).append(':').append(details.getPort());
+        builder.append(details.getEndpoint());
         return builder.toString();
     }
 }

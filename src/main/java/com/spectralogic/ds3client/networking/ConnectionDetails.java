@@ -7,18 +7,16 @@ import java.net.URI;
 public class ConnectionDetails {
     private final String endpoint;
     private final Credentials credentials;
-    private final int port;
     private final boolean secure;
     private final URI proxy;
 
     public ConnectionDetails(final String endpoint, final Credentials credentials, final int port, final boolean secure) {
-        this(endpoint, credentials, port, secure, null);
+        this(endpoint, credentials, secure, null);
     }
 
-    public ConnectionDetails(final String endpoint, final Credentials credentials, final int port, final boolean secure, final URI proxy) {
+    public ConnectionDetails(final String endpoint, final Credentials credentials, final boolean secure, final URI proxy) {
         this.endpoint = endpoint;
         this.credentials = credentials;
-        this.port = port;
         this.secure = secure;
         this.proxy = proxy;
     }
@@ -29,10 +27,6 @@ public class ConnectionDetails {
 
     public Credentials getCredentials() {
         return credentials;
-    }
-
-    public int getPort() {
-        return port;
     }
 
     public boolean isSecure() {

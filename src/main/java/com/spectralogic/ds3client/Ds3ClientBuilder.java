@@ -11,7 +11,6 @@ public class Ds3ClientBuilder {
 
     final private String endpoint;
     final private Credentials credentials;
-    private int port = 0;
     private boolean secure = true;
     private URI proxy = null;
 
@@ -28,19 +27,6 @@ public class Ds3ClientBuilder {
 
     public Ds3ClientBuilder withHttpSecure(final boolean secure) {
         this.secure = secure;
-        return this;
-    }
-
-    public Ds3ClientBuilder withPort(final int port) throws IllegalArgumentException {
-        if (port > Short.MAX_VALUE) {
-            throw new IllegalArgumentException("Port must be less than " + Short.MAX_VALUE + ", it was " + port);
-        }
-
-        if (port < 3) {
-            throw new IllegalArgumentException("Port must be greater than 3");
-        }
-
-        this.port = port;
         return this;
     }
 
@@ -61,16 +47,11 @@ public class Ds3ClientBuilder {
     }
 
     public Ds3Client build() {
-        final NetworkClient netClient = new NetworkClient(new ConnectionDetails(endpoint, credentials, getPort(), secure, proxy));
+        final NetworkClient netClient = new NetworkClient(new ConnectionDetails(endpoint, credentials, secure, proxy));
         final Ds3Client client = new Ds3Client(netClient);
 
         return client;
     }
 
-    private int getPort() {
-        if(port == 0) {
-            return secure ? 443 : 80;
-        }
-        return port;
-    }
+
 }

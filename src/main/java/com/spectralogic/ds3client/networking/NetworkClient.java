@@ -78,7 +78,6 @@ public class NetworkClient {
         putRequest.setConfig(getRequestConfig());
 
         putRequest.addHeader(HOST, NetUtils.buildHostField(connectionDetails));
-        putRequest.addHeader(PUT, connectionDetails.getEndpoint());
         putRequest.addHeader(DATE, date);
         putRequest.addHeader(CONTENT_TYPE, STREAM_TYPE);
         putRequest.addHeader(AUTHORIZATION, getSignature(new SignatureDetails(PUT, "", STREAM_TYPE, date, "", path, connectionDetails.getCredentials())));
