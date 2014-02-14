@@ -18,6 +18,12 @@ public class ListBucketResult {
     private int maxKeys;
     @JsonProperty("IsTruncated")
     private boolean isTruncated;
+    @JsonProperty("CreationDate")
+    private String creationDate;
+    @JsonProperty("Delimiter")
+    private String delimiter;
+    @JsonProperty("NextMarker")
+    private String nextMarker;
 
     @JsonProperty("Contents")
     @JacksonXmlElementWrapper(useWrapping = false)
@@ -77,5 +83,29 @@ public class ListBucketResult {
         builder.append("{numKeys:: ").append(maxKeys).append("},\n");
         builder.append("{objects:: ").append(contentsList).append("}}");
         return builder.toString();
+    }
+
+    public String getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(String creationDate) {
+        this.creationDate = creationDate;
+    }
+
+    public String getDelimiter() {
+        return delimiter;
+    }
+
+    public void setDelimiter(String delimiter) {
+        this.delimiter = delimiter;
+    }
+
+    public String getNextMarker() {
+        return nextMarker;
+    }
+
+    public void setNextMarker(String nextMarker) {
+        this.nextMarker = nextMarker;
     }
 }

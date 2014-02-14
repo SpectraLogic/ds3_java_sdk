@@ -18,14 +18,14 @@ public class Main {
         final ListAllMyBucketsResult result = client.getService();
         System.out.println(result.toString());
 
-        /*
-        final String bucket = "remoteTest03";
+
+        final String bucket = "books3";
         //client.createBucket(bucket);
         final ListBucketResult objectList = client.listBucket(bucket);
         System.out.println(objectList);
 
 
-
+        /*
         client.listJobs(bucket);
 
 
