@@ -1,5 +1,6 @@
 package com.spectralogic.ds3client;
 
+import com.google.common.collect.Lists;
 import com.spectralogic.ds3client.models.*;
 import com.spectralogic.ds3client.networking.FailedRequestException;
 import com.spectralogic.ds3client.networking.NetUtils;
@@ -14,10 +15,7 @@ import org.apache.http.message.BasicHeader;
 
 import java.io.*;
 import java.security.SignatureException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Ds3Client {
     final static private String UTF8 = "UTF-8";
@@ -83,21 +81,21 @@ public class Ds3Client {
         }
     }
 
-    public MasterObjectList bulkGet(final String bucketName, final List<Ds3Object> files)
+    public MasterObjectList bulkGet(final String bucketName, final Iterator<Ds3Object> files)
             throws XmlProcessingException, IOException, SignatureException, FailedRequestException {
 
         return bulkCommands(bucketName, files, BulkCommand.GET);
     }
 
-    public MasterObjectList bulkPut(final String bucketName, final List<Ds3Object> files)
+    public MasterObjectList bulkPut(final String bucketName, final Iterator<Ds3Object> files)
             throws XmlProcessingException, IOException, SignatureException, FailedRequestException {
         return bulkCommands(bucketName, files, BulkCommand.PUT);
     }
 
-    private MasterObjectList bulkCommands(final String bucketName, final List<Ds3Object> files, final BulkCommand command)
+    private MasterObjectList bulkCommands(final String bucketName, final Iterator<Ds3Object> files, final BulkCommand command)
             throws XmlProcessingException, IOException, SignatureException, FailedRequestException {
         final Objects objects = new Objects();
-        objects.setObject(files);
+        objects.setObject(Lists.newArrayList(files));
         final String xmlOutput = XmlOutput.toXml(objects, command);
         System.out.println(xmlOutput);
         final CloseableHttpResponse response = netClient.bulk(bucketName, xmlOutput, command);
