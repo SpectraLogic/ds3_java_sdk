@@ -69,14 +69,14 @@ public class NetUtils_Test {
     public void buildBulkPutCommand() throws MalformedURLException {
         final URL result = NetUtils.buildBucketPath("testBucket", ConnectionFixture.getConnection(), BulkCommand.PUT);
         assertThat(result.getPath(), is("/_rest_/buckets/testBucket"));
-        assertThat(result.toString(), is("http://localhost:8080/_rest_/buckets/testBucket?operation=start_bulk_put"));
+        assertThat(result.toString(), is("http://localhost/_rest_/buckets/testBucket?operation=start_bulk_put"));
     }
 
     @Test
     public void buildBulkGetCommand() throws MalformedURLException {
         final URL result = NetUtils.buildBucketPath("testBucket1", ConnectionFixture.getConnection(), BulkCommand.GET);
         assertThat(result.getPath(), is("/_rest_/buckets/testBucket1"));
-        assertThat(result.toString(), is("http://localhost:8080/_rest_/buckets/testBucket1?operation=start_bulk_get"));
+        assertThat(result.toString(), is("http://localhost/_rest_/buckets/testBucket1?operation=start_bulk_get"));
     }
 
     @Test
@@ -85,14 +85,14 @@ public class NetUtils_Test {
         queryParams.put("var", "2");
         queryParams.put("foo", "bar");
         final URL result = NetUtils.buildUrl("path", ConnectionFixture.getConnection(), queryParams);
-        assertThat(result.toString(), is("http://localhost:8080/path?var=2&foo=bar"));
+        assertThat(result.toString(), is("http://localhost/path?var=2&foo=bar"));
     }
 
 
     @Test
     public void buildHostField() {
         final String result = NetUtils.buildHostField(ConnectionFixture.getConnection());
-        assertThat(result, is("localhost:8080"));
+        assertThat(result, is("localhost"));
     }
 
 }
