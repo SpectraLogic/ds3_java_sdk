@@ -4,7 +4,7 @@ apply plugin: 'application'
 
 sourceCompatibility = JavaVersion.VERSION_1_6
 
-version = '0.0.27-SNAPSHOT'
+version = '0.0.28-SNAPSHOT'
 group = 'com.spectralogic'
 mainClassName = 'com.spectralogic.ds3client.Main'
 
