@@ -40,23 +40,7 @@ public class Main {
         FileOutputStream out = new FileOutputStream("test.txt");
 
 
-        byte [] buff = new byte[1024*16];
-
-        boolean done = false;
-        int count = 0;
-
-        while(!done) {
-
-            int read= io.read(buff, 0, buff.length);
-            if (read == 0) {
-                done = true;
-            }
-            count+= read;
-            System.out.println("Count is:" + count);
-            out.write(buff, 0, buff.length);
-        }
-
-        //IOUtils.copy(io,out);
+        IOUtils.copy(io,out);
 
         out.close();
         io.close();

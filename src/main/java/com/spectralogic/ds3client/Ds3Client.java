@@ -112,16 +112,21 @@ public class Ds3Client {
         }
     }
 
+    /**
+     * The caller must close the InputStream that is returned.
+     * @param bucketName
+     * @param object
+     * @return
+     * @throws IOException
+     * @throws SignatureException
+     * @throws FailedRequestException
+     */
     public InputStream getObject(final String bucketName, final String object) throws IOException, SignatureException, FailedRequestException {
         final String objectPath = NetUtils.buildPath(bucketName,object);
         final CloseableHttpResponse response = netClient.get(objectPath);
-        try {
-            checkStatusCode(response, 200);
-            return response.getEntity().getContent();
-        }
-        finally {
-            response.close();
-        }
+
+        checkStatusCode(response, 200);
+        return response.getEntity().getContent();
     }
 
     public void putObject(final String bucketName, final String objectName, final long fileSize, final InputStream inStream) throws IOException, SignatureException {
