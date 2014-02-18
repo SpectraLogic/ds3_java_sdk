@@ -51,7 +51,7 @@ public class Ds3Client_Test {
             }.getMockInstance();
         }
 
-        @Mock(invocations = 1)
+        @Mock(maxInvocations = 1)
         public void close() {
             assertThat(true, is(true));
         }
