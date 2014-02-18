@@ -155,7 +155,7 @@ public class Ds3Client_Test {
             result = new MockedResponse(xmlResponse, 200).getMockInstance();
         }};
 
-        final MasterObjectList masterObjectList = client.bulkPut("bulkTest", objects);
+        final MasterObjectList masterObjectList = client.bulkPut("bulkTest", objects.iterator());
         assertThat(masterObjectList, is(notNullValue()));
         assertThat(masterObjectList.getObjects().size(), is(1));
         assertThat(masterObjectList.getObjects().get(0).getObject().size(), is(3));

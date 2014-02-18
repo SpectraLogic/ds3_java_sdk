@@ -94,7 +94,7 @@ public class Ds3Client {
 
     private MasterObjectList bulkCommands(final String bucketName, final Iterator<Ds3Object> files, final BulkCommand command)
             throws XmlProcessingException, IOException, SignatureException, FailedRequestException {
-        final Objects objects = new Objects();
+        final com.spectralogic.ds3client.models.Objects objects = new com.spectralogic.ds3client.models.Objects();
         objects.setObject(Lists.newArrayList(files));
         final String xmlOutput = XmlOutput.toXml(objects, command);
         System.out.println(xmlOutput);
