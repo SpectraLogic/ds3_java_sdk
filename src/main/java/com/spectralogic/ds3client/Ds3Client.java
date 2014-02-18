@@ -31,53 +31,38 @@ public class Ds3Client {
     }
 
     public ListAllMyBucketsResult getService() throws IOException, SignatureException, FailedRequestException {
-        final CloseableHttpResponse response = netClient.get("/");
-
-        try {
+        try(final CloseableHttpResponse response = netClient.get("/")) {
             final StringWriter writer = new StringWriter();
-            IOUtils.copy(response.getEntity().getContent(), writer, UTF8);
 
+            IOUtils.copy(response.getEntity().getContent(), writer, UTF8);
             checkStatusCode(response, 200);
 
             return XmlOutput.fromXml(writer.toString(), ListAllMyBucketsResult.class);
         }
-        finally {
-            response.close();
-        }
-
     }
 
     public Ds3Bucket createBucket(final String bucketName) throws IOException, SignatureException {
         final Ds3Bucket bucket = new Ds3Bucket(bucketName);
         final List<Header> headers = new ArrayList<Header>();
+
         headers.add(new BasicHeader("bucket-name",bucketName));
 
-        final CloseableHttpResponse response = netClient.put("/", "", null, headers, 0);
-
-        try {
+        try(final CloseableHttpResponse response = netClient.put("/", "", null, headers, 0)) {
             final StringWriter writer = new StringWriter();
             IOUtils.copy(response.getEntity().getContent(), writer, UTF8);
 
-        }
-        finally {
-            response.close();
         }
         return bucket;
     }
 
     public ListBucketResult listBucket(final String bucketName) throws IOException, SignatureException, FailedRequestException {
-
-        final CloseableHttpResponse response = netClient.get("/" + bucketName);
-
-        try {
+        try(final CloseableHttpResponse response = netClient.get("/" + bucketName)) {
             final StringWriter writer = new StringWriter();
+
             IOUtils.copy(response.getEntity().getContent(), writer, UTF8);
             checkStatusCode(response, 200);
 
             return XmlOutput.fromXml(writer.toString(), ListBucketResult.class);
-        }
-        finally {
-            response.close();
         }
     }
 
@@ -96,19 +81,16 @@ public class Ds3Client {
             throws XmlProcessingException, IOException, SignatureException, FailedRequestException {
         final com.spectralogic.ds3client.models.Objects objects = new com.spectralogic.ds3client.models.Objects();
         objects.setObject(Lists.newArrayList(files));
-        final String xmlOutput = XmlOutput.toXml(objects, command);
-        System.out.println(xmlOutput);
-        final CloseableHttpResponse response = netClient.bulk(bucketName, xmlOutput, command);
-        try {
-            final StringWriter writer = new StringWriter();
-            IOUtils.copy(response.getEntity().getContent(), writer, UTF8);
 
+        final String xmlOutput = XmlOutput.toXml(objects, command);
+
+        try(final CloseableHttpResponse response = netClient.bulk(bucketName, xmlOutput, command)) {
+            final StringWriter writer = new StringWriter();
+
+            IOUtils.copy(response.getEntity().getContent(), writer, UTF8);
             checkStatusCode(response, 200);
 
             return XmlOutput.fromXml(writer.toString(), MasterObjectList.class);
-        }
-        finally {
-            response.close();
         }
     }
 
@@ -132,63 +114,47 @@ public class Ds3Client {
     public void putObject(final String bucketName, final String objectName, final long fileSize, final InputStream inStream) throws IOException, SignatureException {
         final String objectPath = NetUtils.buildPath(bucketName, objectName);
 
-        final CloseableHttpResponse response = netClient.put(objectPath, "", inStream, null, fileSize);
-        try {
+        try(final CloseableHttpResponse response = netClient.put(objectPath, "", inStream, null, fileSize)) {
             final StringWriter writer = new StringWriter();
             IOUtils.copy(response.getEntity().getContent(), writer, UTF8);
 
             System.out.println(writer.toString());
             System.out.println(response.getStatusLine().toString());
-        }
-        finally {
-            response.close();
         }
     }
 
     public void putObject(final String bucketName, final String objectName, final File file) throws IOException, SignatureException {
         final String objectPath = NetUtils.buildPath(bucketName, objectName);
-        final CloseableHttpResponse response = netClient.put(objectPath, file);
-        try {
+
+        try(final CloseableHttpResponse response = netClient.put(objectPath, file)) {
             final StringWriter writer = new StringWriter();
             IOUtils.copy(response.getEntity().getContent(), writer, UTF8);
 
             System.out.println(writer.toString());
             System.out.println(response.getStatusLine().toString());
-        }
-        finally {
-            response.close();
         }
     }
 
     public void listJobs(final String bucketName) throws IOException, SignatureException {
         final Map<String, String> queryParams = new HashMap<String,String>();
         queryParams.put("bucket", bucketName);
-        final CloseableHttpResponse response = netClient.get("/_rest_/jobs", queryParams);
 
-        try {
+        try(final CloseableHttpResponse response = netClient.get("/_rest_/jobs", queryParams)) {
             final StringWriter writer = new StringWriter();
             IOUtils.copy(response.getEntity().getContent(), writer, UTF8);
 
             System.out.println(writer.toString());
             //return XmlOutput.fromXml(writer.toString(), ListBucketResult.class);
-        }
-        finally {
-            response.close();
         }
     }
 
     public void jobInfo(final String jobId) throws IOException, SignatureException {
-        final CloseableHttpResponse response = netClient.get("/_rest_/jobs/" + jobId);
-
-        try {
+        try(final CloseableHttpResponse response = netClient.get("/_rest_/jobs/" + jobId)) {
             final StringWriter writer = new StringWriter();
             IOUtils.copy(response.getEntity().getContent(), writer, UTF8);
 
             System.out.println(writer.toString());
             //return XmlOutput.fromXml(writer.toString(), ListBucketResult.class);
-        }
-        finally {
-            response.close();
         }
     }
 
@@ -198,5 +164,4 @@ public class Ds3Client {
             throw new FailedRequestException("Request failed with a non-200 status code.  Actual status code: " + statusLine.getStatusCode());
         }
     }
-
 }

@@ -22,7 +22,7 @@ public class NetUtils {
 
         builder.append(path);
 
-        if (params != null && params.size() > 0) {
+        if(params != null && params.size() > 0) {
             builder.append('?');
 
             final Set<Map.Entry<String, String>> paramSet = params.entrySet();
@@ -42,7 +42,7 @@ public class NetUtils {
 
     private static void addQueryParam(StringBuilder builder, Map.Entry<String, String> entry) {
         builder.append(entry.getKey());
-        if (entry.getValue() != null) {
+        if(entry.getValue() != null) {
             builder.append('=');
             builder.append(entry.getValue());
         }
@@ -53,10 +53,12 @@ public class NetUtils {
         if(basePath == null && path == null) {
             return "";
         }
-        if (basePath == null) {
+
+        if(basePath == null) {
             return path;
         }
-        if (path == null) {
+
+        if(path == null) {
             return basePath;
         }
 
@@ -73,7 +75,7 @@ public class NetUtils {
         if(path.startsWith("/") && basePath.endsWith("/")) {
             builder.append(path.substring(1));
         }
-        else {
+        else{
             builder.append(path);
         }
 
