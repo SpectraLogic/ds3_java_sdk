@@ -13,16 +13,20 @@ public class Main {
 
     public static void main(String args[]) throws Exception {
 
-        final Ds3ClientBuilder builder = new Ds3ClientBuilder("10.1.31.148:8080", new Credentials("cnlhbg==","T8NmDqUh"));
+        final Ds3ClientBuilder builder = new Ds3ClientBuilder("192.168.6.156:8080", new Credentials("cnlhbg==","4iDEhFRV"));
         //final Ds3Client client = builder.withHttpSecure(false).withPort(8080).withProxy("http://192.168.56.104:8080").build();
         final Ds3Client client = builder.withHttpSecure(false).build();
 
-        //final ListAllMyBucketsResult result = client.getService();
-        //System.out.println(result.toString());
+
+        final ListAllMyBucketsResult result = client.getService();
+        System.out.println(result.toString());
 
 
-        final String bucket = "books3";
+
+
+        //final String bucket = "test";
         //client.createBucket(bucket);
+        /*
         final ListBucketResult objectList = client.listBucket(bucket);
           System.out.println(objectList);
 
@@ -62,21 +66,4 @@ public class Main {
         */
     }
 
-    public static class StreamWrapper extends InputStream {
-        private final InputStream in;
-        public StreamWrapper(InputStream in){
-            this.in = in;
-        }
-
-        @Override
-        public int read() throws IOException {
-            return in.read();
-        }
-
-        @Override
-        public void close() throws IOException {
-            System.out.println("Socket was closed");
-            in.close();
-        }
-    }
 }

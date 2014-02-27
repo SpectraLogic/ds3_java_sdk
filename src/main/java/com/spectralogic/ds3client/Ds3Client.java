@@ -43,14 +43,11 @@ public class Ds3Client {
 
     public Ds3Bucket createBucket(final String bucketName) throws IOException, SignatureException {
         final Ds3Bucket bucket = new Ds3Bucket(bucketName);
-        final List<Header> headers = new ArrayList<Header>();
 
-        headers.add(new BasicHeader("bucket-name",bucketName));
-
-        try(final CloseableHttpResponse response = netClient.put("/", "", null, headers, 0)) {
+        try(final CloseableHttpResponse response = netClient.put("/" + bucketName, "", null, null, 0)) {
             final StringWriter writer = new StringWriter();
             IOUtils.copy(response.getEntity().getContent(), writer, UTF8);
-
+            checkStatusCode(response, 200);
         }
         return bucket;
     }
@@ -132,29 +129,6 @@ public class Ds3Client {
 
             System.out.println(writer.toString());
             System.out.println(response.getStatusLine().toString());
-        }
-    }
-
-    public void listJobs(final String bucketName) throws IOException, SignatureException {
-        final Map<String, String> queryParams = new HashMap<String,String>();
-        queryParams.put("bucket", bucketName);
-
-        try(final CloseableHttpResponse response = netClient.get("/_rest_/jobs", queryParams)) {
-            final StringWriter writer = new StringWriter();
-            IOUtils.copy(response.getEntity().getContent(), writer, UTF8);
-
-            System.out.println(writer.toString());
-            //return XmlOutput.fromXml(writer.toString(), ListBucketResult.class);
-        }
-    }
-
-    public void jobInfo(final String jobId) throws IOException, SignatureException {
-        try(final CloseableHttpResponse response = netClient.get("/_rest_/jobs/" + jobId)) {
-            final StringWriter writer = new StringWriter();
-            IOUtils.copy(response.getEntity().getContent(), writer, UTF8);
-
-            System.out.println(writer.toString());
-            //return XmlOutput.fromXml(writer.toString(), ListBucketResult.class);
         }
     }
 

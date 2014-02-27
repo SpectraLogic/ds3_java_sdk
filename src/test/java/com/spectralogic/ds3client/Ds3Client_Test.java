@@ -1,9 +1,6 @@
 package com.spectralogic.ds3client;
 
-import com.spectralogic.ds3client.models.Ds3Object;
-import com.spectralogic.ds3client.models.ListAllMyBucketsResult;
-import com.spectralogic.ds3client.models.ListBucketResult;
-import com.spectralogic.ds3client.models.MasterObjectList;
+import com.spectralogic.ds3client.models.*;
 import com.spectralogic.ds3client.networking.FailedRequestException;
 import com.spectralogic.ds3client.networking.NetworkClient;
 import com.spectralogic.ds3client.serializer.XmlProcessingException;
@@ -89,6 +86,16 @@ public class Ds3Client_Test {
 
         final ListAllMyBucketsResult result = client.getService();
         assertThat(result.getOwner().getDisplayName(), is("ryan"));
+    }
+
+    @Test
+    public void createBucket() throws IOException, SignatureException {
+        new Expectations() {{
+            netClient.put("/bucketName","",null, null,0);
+            result = new MockedResponse("", 200).getMockInstance();
+        }};
+        final Ds3Bucket bucket = client.createBucket("bucketName");
+        assertThat(bucket.getBucketName(), is("bucketName"));
     }
 
     @Test(expected = FailedRequestException.class)
