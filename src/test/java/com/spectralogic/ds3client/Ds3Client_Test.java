@@ -1,5 +1,6 @@
 package com.spectralogic.ds3client;
 
+import com.spectralogic.ds3client.commands.GetServiceRequest;
 import com.spectralogic.ds3client.models.*;
 import com.spectralogic.ds3client.networking.FailedRequestException;
 import com.spectralogic.ds3client.networking.NetworkClient;
@@ -38,7 +39,7 @@ public class Ds3Client_Test {
             this.statusCode = statusCode;
         }
 
-        @Mock(invocations = 1)
+        @Mock(maxInvocations = 1)
         public HttpEntity getEntity() {
             return new MockUp<HttpEntity>() {
                 @Mock(invocations = 1)
@@ -80,11 +81,11 @@ public class Ds3Client_Test {
         final String stringResponse = "<ListAllMyBucketsResult xmlns=\"http://doc.s3.amazonaws.com/2006-03-01\">\n" +
                 "<Owner><ID>ryan</ID><DisplayName>ryan</DisplayName></Owner><Buckets><Bucket><Name>testBucket2</Name><CreationDate>2013-12-11T23:20:09</CreationDate></Bucket><Bucket><Name>bulkTest</Name><CreationDate>2013-12-11T23:20:09</CreationDate></Bucket><Bucket><Name>bulkTest1</Name><CreationDate>2013-12-11T23:20:09</CreationDate></Bucket><Bucket><Name>bulkTest2</Name><CreationDate>2013-12-11T23:20:09</CreationDate></Bucket><Bucket><Name>bulkTest3</Name><CreationDate>2013-12-11T23:20:09</CreationDate></Bucket><Bucket><Name>bulkTest4</Name><CreationDate>2013-12-11T23:20:09</CreationDate></Bucket><Bucket><Name>bulkTest5</Name><CreationDate>2013-12-11T23:20:09</CreationDate></Bucket><Bucket><Name>bulkTest6</Name><CreationDate>2013-12-11T23:20:09</CreationDate></Bucket><Bucket><Name>testBucket3</Name><CreationDate>2013-12-11T23:20:09</CreationDate></Bucket><Bucket><Name>testBucket1</Name><CreationDate>2013-12-11T23:20:09</CreationDate></Bucket><Bucket><Name>testbucket</Name><CreationDate>2013-12-11T23:20:09</CreationDate></Bucket></Buckets></ListAllMyBucketsResult>";
         new Expectations() {{
-            netClient.get("/");
+            netClient.getResponse(withInstanceOf(GetServiceRequest.class));
             result = new MockedResponse(stringResponse, 200).getMockInstance();
         }};
 
-        final ListAllMyBucketsResult result = client.getService();
+        final ListAllMyBucketsResult result = client.getService(new GetServiceRequest()).getResult();
         assertThat(result.getOwner().getDisplayName(), is("ryan"));
     }
 
@@ -102,11 +103,11 @@ public class Ds3Client_Test {
     public void getBadService() throws IOException, SignatureException {
         final String stringResponse = "Failed";
         new Expectations() {{
-            netClient.get("/");
+            netClient.getResponse(withInstanceOf(GetServiceRequest.class));
             result = new MockedResponse(stringResponse, 400).getMockInstance();
         }};
 
-        client.getService();
+        client.getService(new GetServiceRequest());
     }
 
     @Test

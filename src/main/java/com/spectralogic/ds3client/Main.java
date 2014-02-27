@@ -1,6 +1,8 @@
 package com.spectralogic.ds3client;
 
 
+import com.spectralogic.ds3client.commands.GetServiceRequest;
+import com.spectralogic.ds3client.commands.GetServiceResponse;
 import com.spectralogic.ds3client.models.*;
 import com.spectralogic.ds3client.utils.DateFormatter;
 import org.apache.commons.io.IOUtils;
@@ -18,8 +20,13 @@ public class Main {
         final Ds3Client client = builder.withHttpSecure(false).build();
 
 
-        final ListAllMyBucketsResult result = client.getService();
-        System.out.println(result.toString());
+        try (final GetServiceResponse response = client.getService(new GetServiceRequest())) {
+            System.out.println(response.getResult());
+        }
+
+
+        //final ListAllMyBucketsResult result = client.getService();
+        //System.out.println(result.toString());
 
 
 

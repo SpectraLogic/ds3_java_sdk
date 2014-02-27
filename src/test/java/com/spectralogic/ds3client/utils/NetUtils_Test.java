@@ -5,6 +5,7 @@ import com.spectralogic.ds3client.BulkCommand;
 import com.spectralogic.ds3client.fixtures.ConnectionFixture;
 import com.spectralogic.ds3client.networking.NetUtils;
 import org.junit.Test;
+import sun.security.x509.NetscapeCertTypeExtension;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -61,7 +62,7 @@ public class NetUtils_Test {
 
     @Test
     public void buildPathWithoutSlash() throws MalformedURLException {
-        final URL result = NetUtils.buildUrl("path", ConnectionFixture.getConnection());
+        final URL result = NetUtils.buildUrl(ConnectionFixture.getConnection(), "path");
         assertThat(result.getPath(), is("/path"));
     }
 
@@ -84,7 +85,7 @@ public class NetUtils_Test {
         final Map<String, String> queryParams = new HashMap<String, String>();
         queryParams.put("var", "2");
         queryParams.put("foo", "bar");
-        final URL result = NetUtils.buildUrl("path", ConnectionFixture.getConnection(), queryParams);
+        final URL result = NetUtils.buildUrl(ConnectionFixture.getConnection(), "path", queryParams);
         assertThat(result.toString(), is("http://localhost/path?var=2&foo=bar"));
     }
 
@@ -93,6 +94,26 @@ public class NetUtils_Test {
     public void buildHostField() {
         final String result = NetUtils.buildHostField(ConnectionFixture.getConnection());
         assertThat(result, is("localhost"));
+    }
+
+    @Test
+    public void singleQueryParams() {
+        final Map<String, String> queryParams = new HashMap<>();
+        queryParams.put("foo","bar");
+
+        final String result = NetUtils.buildQueryString(queryParams);
+        assertThat(result, is("foo=bar"));
+    }
+
+    @Test
+    public void twoQueryParams() {
+        final Map<String, String> queryParams = new HashMap<>();
+        queryParams.put("foo","bar");
+        queryParams.put("char", "far");
+
+        final String result = NetUtils.buildQueryString(queryParams);
+        assertThat(result, is("char=far&foo=bar"));
+
     }
 
 }

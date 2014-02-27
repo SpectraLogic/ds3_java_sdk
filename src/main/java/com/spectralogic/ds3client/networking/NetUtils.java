@@ -1,5 +1,8 @@
 package com.spectralogic.ds3client.networking;
 
+import com.google.common.base.Function;
+import com.google.common.base.Joiner;
+import com.google.common.collect.Iterators;
 import com.spectralogic.ds3client.BulkCommand;
 
 import java.net.MalformedURLException;
@@ -8,11 +11,11 @@ import java.util.*;
 
 public class NetUtils {
 
-    public static URL buildUrl(final String path, final ConnectionDetails connectionDetails) throws MalformedURLException {
-        return buildUrl(path, connectionDetails, null);
+    public static URL buildUrl(final ConnectionDetails connectionDetails, final String path) throws MalformedURLException {
+        return buildUrl(connectionDetails, path, null);
     }
 
-    public static URL buildUrl(final String path, final ConnectionDetails connectionDetails, final Map<String, String> params) throws MalformedURLException {
+    public static URL buildUrl(final ConnectionDetails connectionDetails, final String path, final Map<String, String> params) throws MalformedURLException {
         final StringBuilder builder = new StringBuilder();
         builder.append(connectionDetails.isSecure()? "https": "http").append("://");
         builder.append(connectionDetails.getEndpoint());
@@ -38,6 +41,18 @@ public class NetUtils {
         }
 
         return new URL(builder.toString());
+    }
+
+    public static String buildQueryString(final Map<String, String> queryParams) {
+        final Iterator<String> stringIter = Iterators.transform(queryParams.entrySet().iterator(), new Function<Map.Entry<String, String>, String>() {
+            @Override
+            public String apply(Map.Entry<String, String> input) {
+                return input.getKey() + "=" + input.getValue();
+            }
+        });
+
+        final Joiner join = Joiner.on('&');
+        return join.join(stringIter);
     }
 
     private static void addQueryParam(StringBuilder builder, Map.Entry<String, String> entry) {
@@ -85,7 +100,7 @@ public class NetUtils {
     public static URL buildBucketPath(final String bucketName, final ConnectionDetails connectionDetails, final BulkCommand command) throws MalformedURLException {
         final Map<String, String> queryParams = new HashMap<String,String>();
         queryParams.put("operation", command.toString());
-        return NetUtils.buildUrl(bucketPath(bucketName), connectionDetails, queryParams);
+        return NetUtils.buildUrl(connectionDetails, bucketPath(bucketName), queryParams);
     }
 
     private static String bucketPath(final String bucket) {
