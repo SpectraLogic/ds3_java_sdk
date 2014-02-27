@@ -91,7 +91,7 @@ public class Ds3Client_Test {
     @Test
     public void createBucket() throws IOException, SignatureException {
         new Expectations() {{
-            netClient.put("/bucketName","",null, null,0);
+            netClient.put("/bucketName", "", null, null, 0);
             result = new MockedResponse("", 200).getMockInstance();
         }};
         final Ds3Bucket bucket = client.createBucket("bucketName");
@@ -149,7 +149,7 @@ public class Ds3Client_Test {
 
     @Test
     public void bulkPut() throws IOException, SignatureException, XmlProcessingException {
-        final List<Ds3Object> objects = new ArrayList<Ds3Object>();
+        final List<Ds3Object> objects = new ArrayList<>();
         objects.add(new Ds3Object("file1",256));
         objects.add(new Ds3Object("file2",1202));
         objects.add(new Ds3Object("file3",2523));
@@ -170,7 +170,7 @@ public class Ds3Client_Test {
 
     @Test
     public void bulkGet() throws IOException, SignatureException, XmlProcessingException {
-        final List<Ds3Object> objects = new ArrayList<Ds3Object>();
+        final List<Ds3Object> objects = new ArrayList<>();
         objects.add(new Ds3Object("file1",256));
         objects.add(new Ds3Object("file2",1202));
         objects.add(new Ds3Object("file3",2523));
@@ -187,5 +187,19 @@ public class Ds3Client_Test {
         assertThat(masterObjectList, is(notNullValue()));
         assertThat(masterObjectList.getObjects().size(), is(1));
         assertThat(masterObjectList.getObjects().get(0).getObject().size(), is(3));
+    }
+      
+    @Test
+    public void putObject() throws IOException, SignatureException {
+        final String output = "This is some data.";
+        final byte[] buf = output.getBytes();
+        final ByteArrayInputStream in = new ByteArrayInputStream(buf);
+
+        new Expectations() {{
+            netClient.put("/bucketName/objectName", "", in, null, buf.length);
+            result = new MockedResponse("", 200).getMockInstance();
+        }};
+
+        client.putObject("bucketName", "objectName", buf.length, in);
     }
 }

@@ -70,24 +70,6 @@ public class NetworkClient {
         return httpClient.execute(getRequest);
     }
 
-    public CloseableHttpResponse put(final String path, final File fileName) throws SignatureException, IOException {
-        final CloseableHttpClient httpClient = HttpClients.createDefault();
-        final HttpPut putRequest = new HttpPut(NetUtils.buildUrl(path, connectionDetails).toString());
-        final String date = DateFormatter.dateToRfc882();
-
-        putRequest.setConfig(getRequestConfig());
-
-        putRequest.addHeader(HOST, NetUtils.buildHostField(connectionDetails));
-        putRequest.addHeader(DATE, date);
-        putRequest.addHeader(CONTENT_TYPE, STREAM_TYPE);
-        putRequest.addHeader(AUTHORIZATION, getSignature(new SignatureDetails(PUT, "", STREAM_TYPE, date, "", path, connectionDetails.getCredentials())));
-
-        final HttpEntity entity = EntityBuilder.create().setFile(fileName).build();
-        putRequest.setEntity(entity);
-
-        return httpClient.execute(putRequest);
-    }
-
     public CloseableHttpResponse put(final String path, final String mdf5, final InputStream dataStream, final List<Header> headers, final long fileSize) throws IOException, SignatureException {
         final CloseableHttpClient httpClient = HttpClients.createDefault();
         final HttpPut putRequest = new HttpPut(NetUtils.buildUrl(path, connectionDetails).toString());

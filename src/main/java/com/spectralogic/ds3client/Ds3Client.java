@@ -98,7 +98,7 @@ public class Ds3Client {
      * @throws SignatureException
      * @throws FailedRequestException
      */
-    public InputStream getObject(final String bucketName, final String object) throws IOException, SignatureException, FailedRequestException {
+    public InputStream getObject(final String bucketName, final String object) throws IOException, SignatureException {
         final String objectPath = NetUtils.buildPath(bucketName,object);
         final CloseableHttpResponse response = netClient.get(objectPath);
 
@@ -113,20 +113,7 @@ public class Ds3Client {
             final StringWriter writer = new StringWriter();
             IOUtils.copy(response.getEntity().getContent(), writer, UTF8);
 
-            System.out.println(writer.toString());
-            System.out.println(response.getStatusLine().toString());
-        }
-    }
-
-    public void putObject(final String bucketName, final String objectName, final File file) throws IOException, SignatureException {
-        final String objectPath = NetUtils.buildPath(bucketName, objectName);
-
-        try(final CloseableHttpResponse response = netClient.put(objectPath, file)) {
-            final StringWriter writer = new StringWriter();
-            IOUtils.copy(response.getEntity().getContent(), writer, UTF8);
-
-            System.out.println(writer.toString());
-            System.out.println(response.getStatusLine().toString());
+            checkStatusCode(response, 200);
         }
     }
 
