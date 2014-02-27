@@ -76,7 +76,7 @@ public class Ds3Client_Test {
     }
 
     @Test
-    public void getService() throws IOException, SignatureException, FailedRequestException {
+    public void getService() throws IOException, SignatureException {
         final String stringResponse = "<ListAllMyBucketsResult xmlns=\"http://doc.s3.amazonaws.com/2006-03-01\">\n" +
                 "<Owner><ID>ryan</ID><DisplayName>ryan</DisplayName></Owner><Buckets><Bucket><Name>testBucket2</Name><CreationDate>2013-12-11T23:20:09</CreationDate></Bucket><Bucket><Name>bulkTest</Name><CreationDate>2013-12-11T23:20:09</CreationDate></Bucket><Bucket><Name>bulkTest1</Name><CreationDate>2013-12-11T23:20:09</CreationDate></Bucket><Bucket><Name>bulkTest2</Name><CreationDate>2013-12-11T23:20:09</CreationDate></Bucket><Bucket><Name>bulkTest3</Name><CreationDate>2013-12-11T23:20:09</CreationDate></Bucket><Bucket><Name>bulkTest4</Name><CreationDate>2013-12-11T23:20:09</CreationDate></Bucket><Bucket><Name>bulkTest5</Name><CreationDate>2013-12-11T23:20:09</CreationDate></Bucket><Bucket><Name>bulkTest6</Name><CreationDate>2013-12-11T23:20:09</CreationDate></Bucket><Bucket><Name>testBucket3</Name><CreationDate>2013-12-11T23:20:09</CreationDate></Bucket><Bucket><Name>testBucket1</Name><CreationDate>2013-12-11T23:20:09</CreationDate></Bucket><Bucket><Name>testbucket</Name><CreationDate>2013-12-11T23:20:09</CreationDate></Bucket></Buckets></ListAllMyBucketsResult>";
         new Expectations() {{
@@ -99,7 +99,7 @@ public class Ds3Client_Test {
     }
 
     @Test(expected = FailedRequestException.class)
-    public void getBadService() throws IOException, SignatureException, FailedRequestException {
+    public void getBadService() throws IOException, SignatureException {
         final String stringResponse = "Failed";
         new Expectations() {{
             netClient.get("/");
@@ -110,7 +110,7 @@ public class Ds3Client_Test {
     }
 
     @Test
-    public void getBucketList() throws IOException, SignatureException, FailedRequestException {
+    public void getBucketList() throws IOException, SignatureException {
         final String xmlResponse = "<ListBucketResult xmlns=\"http://s3.amazonaws.com/doc/2006-03-01/\"><Name>remoteTest16</Name><Prefix/><Marker/><MaxKeys>1000</MaxKeys><IsTruncated>false</IsTruncated><Contents><Key>user/hduser/gutenberg/20417.txt.utf-8</Key><LastModified>2014-01-03T13:26:47.000Z</LastModified><ETag>NOTRETURNED</ETag><Size>674570</Size><StorageClass>STANDARD</StorageClass><Owner><ID>ryan</ID><DisplayName>ryan</DisplayName></Owner></Contents><Contents><Key>user/hduser/gutenberg/5000.txt.utf-8</Key><LastModified>2014-01-03T13:26:47.000Z</LastModified><ETag>NOTRETURNED</ETag><Size>1423803</Size><StorageClass>STANDARD</StorageClass><Owner><ID>ryan</ID><DisplayName>ryan</DisplayName></Owner></Contents><Contents><Key>user/hduser/gutenberg/4300.txt.utf-8</Key><LastModified>2014-01-03T13:26:47.000Z</LastModified><ETag>NOTRETURNED</ETag><Size>1573150</Size><StorageClass>STANDARD</StorageClass><Owner><ID>ryan</ID><DisplayName>ryan</DisplayName></Owner></Contents></ListBucketResult>";
         new Expectations() {{
             netClient.get("/remoteTest16");
@@ -122,7 +122,7 @@ public class Ds3Client_Test {
     }
 
     @Test(expected = FailedRequestException.class)
-    public void getBadBucket() throws IOException, SignatureException, FailedRequestException {
+    public void getBadBucket() throws IOException, SignatureException {
         final String stringResponse = "Failed";
         new Expectations() {{
             netClient.get("/remoteTest16");
@@ -133,7 +133,7 @@ public class Ds3Client_Test {
     }
 
     @Test
-    public void getObject() throws IOException, SignatureException, FailedRequestException {
+    public void getObject() throws IOException, SignatureException {
         final String stringResponse = "Response";
         new Expectations() {{
             netClient.get("/bucketName/object");
@@ -148,7 +148,7 @@ public class Ds3Client_Test {
     }
 
     @Test
-    public void bulkPut() throws IOException, SignatureException, FailedRequestException, XmlProcessingException {
+    public void bulkPut() throws IOException, SignatureException, XmlProcessingException {
         final List<Ds3Object> objects = new ArrayList<Ds3Object>();
         objects.add(new Ds3Object("file1",256));
         objects.add(new Ds3Object("file2",1202));
@@ -163,6 +163,27 @@ public class Ds3Client_Test {
         }};
 
         final MasterObjectList masterObjectList = client.bulkPut("bulkTest", objects.iterator());
+        assertThat(masterObjectList, is(notNullValue()));
+        assertThat(masterObjectList.getObjects().size(), is(1));
+        assertThat(masterObjectList.getObjects().get(0).getObject().size(), is(3));
+    }
+
+    @Test
+    public void bulkGet() throws IOException, SignatureException, XmlProcessingException {
+        final List<Ds3Object> objects = new ArrayList<Ds3Object>();
+        objects.add(new Ds3Object("file1",256));
+        objects.add(new Ds3Object("file2",1202));
+        objects.add(new Ds3Object("file3",2523));
+
+        final String expectedXmlBody = "<objects><object name=\"file1\"/><object name=\"file2\"/><object name=\"file3\"/></objects>";
+        final String xmlResponse = "<masterobjectlist><objects><object name='file1'/><object name='file2'/><object name='file3'/></objects></masterobjectlist>";
+
+        new Expectations() {{
+            netClient.bulk("bulkTest",expectedXmlBody, BulkCommand.GET);
+            result = new MockedResponse(xmlResponse, 200).getMockInstance();
+        }};
+
+        final MasterObjectList masterObjectList = client.bulkGet("bulkTest", objects.iterator());
         assertThat(masterObjectList, is(notNullValue()));
         assertThat(masterObjectList.getObjects().size(), is(1));
         assertThat(masterObjectList.getObjects().get(0).getObject().size(), is(3));

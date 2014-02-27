@@ -95,8 +95,6 @@ public class NetUtils {
     }
 
     public static String buildHostField(final ConnectionDetails details) {
-        final StringBuilder builder = new StringBuilder();
-        builder.append(details.getEndpoint());
-        return builder.toString();
+        return details.getEndpoint();
     }
 }

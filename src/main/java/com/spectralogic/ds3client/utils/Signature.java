@@ -58,9 +58,8 @@ public class Signature {
         stringToSign.append(signatureDetails.getDate()).append('\n');
         stringToSign.append(signatureDetails.getCanonicalizedAmzHeaders());
         stringToSign.append(signatureDetails.getCanonicalizedResource());
-        System.out.println(stringToSign.toString());
+
         final String signature = calculateRFC2104HMAC(stringToSign.toString(), signatureDetails.getCredentials().getKey());
-        System.out.println(signature);
         return signature;
     }
 }

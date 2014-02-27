@@ -8,10 +8,8 @@ import com.spectralogic.ds3client.networking.NetworkClient;
 import com.spectralogic.ds3client.serializer.XmlOutput;
 import com.spectralogic.ds3client.serializer.XmlProcessingException;
 import org.apache.commons.io.IOUtils;
-import org.apache.http.Header;
 import org.apache.http.StatusLine;
 import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.message.BasicHeader;
 
 import java.io.*;
 import java.security.SignatureException;
@@ -30,7 +28,7 @@ public class Ds3Client {
         return netClient;
     }
 
-    public ListAllMyBucketsResult getService() throws IOException, SignatureException, FailedRequestException {
+    public ListAllMyBucketsResult getService() throws IOException, SignatureException {
         try(final CloseableHttpResponse response = netClient.get("/")) {
             final StringWriter writer = new StringWriter();
 
@@ -52,7 +50,7 @@ public class Ds3Client {
         return bucket;
     }
 
-    public ListBucketResult listBucket(final String bucketName) throws IOException, SignatureException, FailedRequestException {
+    public ListBucketResult listBucket(final String bucketName) throws IOException, SignatureException {
         try(final CloseableHttpResponse response = netClient.get("/" + bucketName)) {
             final StringWriter writer = new StringWriter();
 
@@ -64,18 +62,18 @@ public class Ds3Client {
     }
 
     public MasterObjectList bulkGet(final String bucketName, final Iterator<Ds3Object> files)
-            throws XmlProcessingException, IOException, SignatureException, FailedRequestException {
+            throws XmlProcessingException, IOException, SignatureException {
 
         return bulkCommands(bucketName, files, BulkCommand.GET);
     }
 
     public MasterObjectList bulkPut(final String bucketName, final Iterator<Ds3Object> files)
-            throws XmlProcessingException, IOException, SignatureException, FailedRequestException {
+            throws XmlProcessingException, IOException, SignatureException {
         return bulkCommands(bucketName, files, BulkCommand.PUT);
     }
 
     private MasterObjectList bulkCommands(final String bucketName, final Iterator<Ds3Object> files, final BulkCommand command)
-            throws XmlProcessingException, IOException, SignatureException, FailedRequestException {
+            throws XmlProcessingException, IOException, SignatureException {
         final com.spectralogic.ds3client.models.Objects objects = new com.spectralogic.ds3client.models.Objects();
         objects.setObject(Lists.newArrayList(files));
 
