@@ -1,5 +1,6 @@
 package com.spectralogic.ds3client.utils;
 
+import com.spectralogic.ds3client.HttpVerb;
 import com.spectralogic.ds3client.models.Credentials;
 import com.spectralogic.ds3client.models.SignatureDetails;
 import org.junit.Test;
@@ -20,7 +21,7 @@ public class Signature_Test {
         final Credentials credentials = new Credentials("AKIAIOSFODNN7EXAMPLE",
                 "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY");
         final SignatureDetails details =
-                new SignatureDetails("GET", "", "", "Tue, 27 Mar 2007 19:36:42 +0000",
+                new SignatureDetails(HttpVerb.GET, "", "", "Tue, 27 Mar 2007 19:36:42 +0000",
                         "", "/johnsmith/photos/puppy.jpg", credentials);
 
         assertThat(Signature.signature(details), is("bWq2s1WEIj+Ydj0vQ697zp+IXMU="));
@@ -35,7 +36,7 @@ public class Signature_Test {
         final Credentials credentials = new Credentials("AKIAIOSFODNN7EXAMPLE",
                 "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY");
         final SignatureDetails details =
-                new SignatureDetails("PUT", "", "image/jpeg", "Tue, 27 Mar 2007 21:15:45 +0000",
+                new SignatureDetails(HttpVerb.PUT, "", "image/jpeg", "Tue, 27 Mar 2007 21:15:45 +0000",
                         "", "/johnsmith/photos/puppy.jpg", credentials);
 
         assertThat(Signature.signature(details), is("MyyxeRY7whkBe+bq8fHCL/2kKUg="));

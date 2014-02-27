@@ -1,6 +1,7 @@
 package com.spectralogic.ds3client.networking;
 
 import com.spectralogic.ds3client.BulkCommand;
+import com.spectralogic.ds3client.HttpVerb;
 import com.spectralogic.ds3client.models.SignatureDetails;
 import com.spectralogic.ds3client.utils.DateFormatter;
 import com.spectralogic.ds3client.utils.Signature;
@@ -12,6 +13,7 @@ import org.apache.http.client.entity.EntityBuilder;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPut;
+import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.InputStreamEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -35,8 +37,6 @@ public class NetworkClient {
     final static private String CONTENTMD5 = "Content-MD5";
     final static private String CONTENT_TYPE = "Content-Type";
     final static private String STREAM_TYPE = "application/octet-stream";
-    final static private String GET = "GET";
-    final static private String PUT = "PUT";
 
     final private ConnectionDetails connectionDetails;
 
@@ -65,7 +65,7 @@ public class NetworkClient {
         getRequest.setConfig(getRequestConfig());
         getRequest.addHeader(HOST, NetUtils.buildHostField(connectionDetails));
         getRequest.addHeader(DATE, date);
-        getRequest.addHeader(AUTHORIZATION, getSignature(new SignatureDetails(GET, "", "", date, "", path,connectionDetails.getCredentials())));
+        getRequest.addHeader(AUTHORIZATION, getSignature(new SignatureDetails(HttpVerb.GET, "", "", date, "", path,connectionDetails.getCredentials())));
 
         return httpClient.execute(getRequest);
     }
@@ -93,7 +93,7 @@ public class NetworkClient {
             putRequest.addHeader(CONTENTMD5,mdf5);
         }
 
-        putRequest.addHeader(AUTHORIZATION,getSignature(new SignatureDetails(PUT, mdf5, "", date, "", path, connectionDetails.getCredentials())));
+        putRequest.addHeader(AUTHORIZATION,getSignature(new SignatureDetails(HttpVerb.PUT, mdf5, "", date, "", path, connectionDetails.getCredentials())));
 
         return httpClient.execute(putRequest);
     }
@@ -111,7 +111,7 @@ public class NetworkClient {
         putRequest.addHeader(HOST, NetUtils.buildHostField(connectionDetails));
         putRequest.addHeader(DATE, date);
         putRequest.addHeader(CONTENT_TYPE, ContentType.APPLICATION_XML.toString());
-        putRequest.addHeader(AUTHORIZATION, getSignature(new SignatureDetails(PUT, "", ContentType.APPLICATION_XML.toString(), date, "", url.getPath(),
+        putRequest.addHeader(AUTHORIZATION, getSignature(new SignatureDetails(HttpVerb.PUT, "", ContentType.APPLICATION_XML.toString(), date, "", url.getPath(),
                 connectionDetails.getCredentials())));
         final HttpEntity entity = EntityBuilder.create().
                 setText(xmlBody).

@@ -28,6 +28,7 @@ public class Ds3Client {
     }
 
     public ListAllMyBucketsResult getService() throws IOException, SignatureException {
+
         try(final CloseableHttpResponse response = netClient.get("/")) {
             final StringWriter writer = new StringWriter();
 
@@ -90,9 +91,9 @@ public class Ds3Client {
 
     /**
      * The caller must close the InputStream that is returned.
-     * @param bucketName
-     * @param object
-     * @return
+     * @param bucketName The name of the bucket where the bucket is located.
+     * @param object The name of the object to retrieve.
+     * @return The InputStream containing the data from the DS3 endpoint.  The Caller must close the InputStream.
      * @throws IOException
      * @throws SignatureException
      * @throws FailedRequestException

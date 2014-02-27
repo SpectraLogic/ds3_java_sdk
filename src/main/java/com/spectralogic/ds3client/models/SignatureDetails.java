@@ -1,7 +1,9 @@
 package com.spectralogic.ds3client.models;
 
+import com.spectralogic.ds3client.HttpVerb;
+
 public class SignatureDetails {
-    final private String verb;
+    final private HttpVerb verb;
     final private String contentMd5;
     final private String contentType;
     final private String date;
@@ -9,11 +11,11 @@ public class SignatureDetails {
     final private String canonicalizedResource;
     final private Credentials userCredentials;
 
-    public SignatureDetails(String verb, String contentMd5,
-                            String contentType, String date,
-                            String canonicalizedAmzHeaders,
-                            String canonicalizedResource,
-                            Credentials userCredentials) {
+    public SignatureDetails(final HttpVerb verb, final String contentMd5,
+                            final String contentType, final String date,
+                            final String canonicalizedAmzHeaders,
+                            final String canonicalizedResource,
+                            final Credentials userCredentials) {
         this.verb = verb;
         this.contentMd5 = contentMd5;
         this.contentType = contentType;
@@ -23,7 +25,7 @@ public class SignatureDetails {
         this.userCredentials = userCredentials;
     }
 
-    public String getVerb() {
+    public HttpVerb getVerb() {
         return verb;
     }
 
