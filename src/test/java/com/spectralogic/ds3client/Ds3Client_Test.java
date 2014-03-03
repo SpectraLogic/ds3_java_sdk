@@ -1,14 +1,13 @@
 package com.spectralogic.ds3client;
 
+import com.spectralogic.ds3client.commands.GetBucketRequest;
 import com.spectralogic.ds3client.commands.GetServiceRequest;
+import com.spectralogic.ds3client.commands.PutBucketRequest;
 import com.spectralogic.ds3client.models.*;
 import com.spectralogic.ds3client.networking.FailedRequestException;
 import com.spectralogic.ds3client.networking.NetworkClient;
 import com.spectralogic.ds3client.serializer.XmlProcessingException;
-import mockit.Expectations;
-import mockit.Mock;
-import mockit.MockUp;
-import mockit.Mocked;
+import mockit.*;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.StatusLine;
@@ -80,57 +79,78 @@ public class Ds3Client_Test {
     public void getService() throws IOException, SignatureException {
         final String stringResponse = "<ListAllMyBucketsResult xmlns=\"http://doc.s3.amazonaws.com/2006-03-01\">\n" +
                 "<Owner><ID>ryan</ID><DisplayName>ryan</DisplayName></Owner><Buckets><Bucket><Name>testBucket2</Name><CreationDate>2013-12-11T23:20:09</CreationDate></Bucket><Bucket><Name>bulkTest</Name><CreationDate>2013-12-11T23:20:09</CreationDate></Bucket><Bucket><Name>bulkTest1</Name><CreationDate>2013-12-11T23:20:09</CreationDate></Bucket><Bucket><Name>bulkTest2</Name><CreationDate>2013-12-11T23:20:09</CreationDate></Bucket><Bucket><Name>bulkTest3</Name><CreationDate>2013-12-11T23:20:09</CreationDate></Bucket><Bucket><Name>bulkTest4</Name><CreationDate>2013-12-11T23:20:09</CreationDate></Bucket><Bucket><Name>bulkTest5</Name><CreationDate>2013-12-11T23:20:09</CreationDate></Bucket><Bucket><Name>bulkTest6</Name><CreationDate>2013-12-11T23:20:09</CreationDate></Bucket><Bucket><Name>testBucket3</Name><CreationDate>2013-12-11T23:20:09</CreationDate></Bucket><Bucket><Name>testBucket1</Name><CreationDate>2013-12-11T23:20:09</CreationDate></Bucket><Bucket><Name>testbucket</Name><CreationDate>2013-12-11T23:20:09</CreationDate></Bucket></Buckets></ListAllMyBucketsResult>";
-        new Expectations() {{
+        new NonStrictExpectations() {{
             netClient.getResponse(withInstanceOf(GetServiceRequest.class));
             result = new MockedResponse(stringResponse, 200).getMockInstance();
+            forEachInvocation = new Object() {
+                void validate(GetServiceRequest request) {
+                    assertThat(request.getPath(), is("/"));
+                    assertThat(request.getVerb(), is(HttpVerb.GET));
+                }
+            };
         }};
 
         final ListAllMyBucketsResult result = client.getService(new GetServiceRequest()).getResult();
         assertThat(result.getOwner().getDisplayName(), is("ryan"));
     }
 
-    @Test
-    public void createBucket() throws IOException, SignatureException {
-        new Expectations() {{
-            netClient.put("/bucketName", "", null, null, 0);
-            result = new MockedResponse("", 200).getMockInstance();
-        }};
-        final Ds3Bucket bucket = client.createBucket("bucketName");
-        assertThat(bucket.getBucketName(), is("bucketName"));
-    }
-
     @Test(expected = FailedRequestException.class)
     public void getBadService() throws IOException, SignatureException {
-        final String stringResponse = "Failed";
         new Expectations() {{
             netClient.getResponse(withInstanceOf(GetServiceRequest.class));
-            result = new MockedResponse(stringResponse, 400).getMockInstance();
+            result = new MockedResponse("", 400).getMockInstance();
         }};
 
         client.getService(new GetServiceRequest());
     }
 
     @Test
-    public void getBucketList() throws IOException, SignatureException {
+    public void getBucket() throws IOException, SignatureException {
         final String xmlResponse = "<ListBucketResult xmlns=\"http://s3.amazonaws.com/doc/2006-03-01/\"><Name>remoteTest16</Name><Prefix/><Marker/><MaxKeys>1000</MaxKeys><IsTruncated>false</IsTruncated><Contents><Key>user/hduser/gutenberg/20417.txt.utf-8</Key><LastModified>2014-01-03T13:26:47.000Z</LastModified><ETag>NOTRETURNED</ETag><Size>674570</Size><StorageClass>STANDARD</StorageClass><Owner><ID>ryan</ID><DisplayName>ryan</DisplayName></Owner></Contents><Contents><Key>user/hduser/gutenberg/5000.txt.utf-8</Key><LastModified>2014-01-03T13:26:47.000Z</LastModified><ETag>NOTRETURNED</ETag><Size>1423803</Size><StorageClass>STANDARD</StorageClass><Owner><ID>ryan</ID><DisplayName>ryan</DisplayName></Owner></Contents><Contents><Key>user/hduser/gutenberg/4300.txt.utf-8</Key><LastModified>2014-01-03T13:26:47.000Z</LastModified><ETag>NOTRETURNED</ETag><Size>1573150</Size><StorageClass>STANDARD</StorageClass><Owner><ID>ryan</ID><DisplayName>ryan</DisplayName></Owner></Contents></ListBucketResult>";
-        new Expectations() {{
-            netClient.get("/remoteTest16");
+        new NonStrictExpectations() {{
+            netClient.getResponse(withInstanceOf(GetBucketRequest.class));
             result = new MockedResponse(xmlResponse, 200).getMockInstance();
+            forEachInvocation = new Object() {
+                void validate(GetBucketRequest request) {
+                    assertThat(request.getPath(), is("/remoteTest16"));
+                    assertThat(request.getVerb(), is(HttpVerb.GET));
+                }
+            };
         }};
 
-        final ListBucketResult result = client.listBucket("remoteTest16");
+        final ListBucketResult result = client.getBucket(new GetBucketRequest("remoteTest16")).getResult();
         assertThat(result.getName(), is("remoteTest16"));
+    }
+
+    @Test
+    public void putBucket() throws IOException, SignatureException {
+        new NonStrictExpectations() {{
+            netClient.getResponse(withInstanceOf(PutBucketRequest.class));
+            result = new MockedResponse("", 200).getMockInstance();
+            forEachInvocation = new Object() {
+                void validate(PutBucketRequest request) {
+                    assertThat(request.getPath(), is("/bucketName"));
+                    assertThat(request.getVerb(), is(HttpVerb.PUT));
+                }
+            };
+        }};
+        client.putBucket(new PutBucketRequest("bucketName"));
     }
 
     @Test(expected = FailedRequestException.class)
     public void getBadBucket() throws IOException, SignatureException {
-        final String stringResponse = "Failed";
-        new Expectations() {{
-            netClient.get("/remoteTest16");
-            result = new MockedResponse(stringResponse, 400).getMockInstance();
+        new NonStrictExpectations() {{
+            netClient.getResponse(withInstanceOf(GetBucketRequest.class));
+            result = new MockedResponse("", 400).getMockInstance();
+            forEachInvocation = new Object() {
+                void validate(GetBucketRequest request) {
+                    assertThat(request.getPath(), is("/remoteTest16"));
+                    assertThat(request.getVerb(), is(HttpVerb.GET));
+                }
+            };
         }};
 
-        client.listBucket("remoteTest16");
+        client.getBucket(new GetBucketRequest("remoteTest16"));
     }
 
     @Test

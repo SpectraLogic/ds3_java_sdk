@@ -1,8 +1,7 @@
 package com.spectralogic.ds3client;
 
 import com.google.common.collect.Lists;
-import com.spectralogic.ds3client.commands.GetServiceRequest;
-import com.spectralogic.ds3client.commands.GetServiceResponse;
+import com.spectralogic.ds3client.commands.*;
 import com.spectralogic.ds3client.models.*;
 import com.spectralogic.ds3client.networking.FailedRequestException;
 import com.spectralogic.ds3client.networking.NetUtils;
@@ -31,6 +30,14 @@ public class Ds3Client {
 
     public GetServiceResponse getService(final GetServiceRequest request) throws IOException, SignatureException {
         return new GetServiceResponse(netClient.getResponse(request));
+    }
+
+    public GetBucketResponse getBucket(final GetBucketRequest request) throws IOException, SignatureException {
+        return new GetBucketResponse(netClient.getResponse(request));
+    }
+
+    public PutBucketResponse putBucket(final PutBucketRequest request) throws IOException, SignatureException {
+        return new PutBucketResponse(netClient.getResponse(request));
     }
 
     public Ds3Bucket createBucket(final String bucketName) throws IOException, SignatureException {
