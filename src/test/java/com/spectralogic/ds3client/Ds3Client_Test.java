@@ -194,11 +194,11 @@ public class Ds3Client_Test {
         final ByteArrayInputStream in = new ByteArrayInputStream(buf);
 
         new Expectations() {{
-            netClient.put("/bucketName/objectName", "", in, null, buf.length);
+            netClient.getResponse(withInstanceOf(PutObjectRequest.class));
             result = new MockedResponse("", 200).getMockInstance();
         }};
 
-        client.putObject("bucketName", "objectName", buf.length, in);
+        client.putObject(new PutObjectRequest("bucketName", "objectName", in));
     }
 
     @Test
@@ -212,11 +212,18 @@ public class Ds3Client_Test {
         final String xmlResponse = "<masterobjectlist><objects><object name='file1' size='256'/><object name='file2' size='1202'/><object name='file3' size='2523'/></objects></masterobjectlist>";
 
         new Expectations() {{
-            netClient.bulk("bulkTest",expectedXmlBody, BulkCommand.PUT);
+            netClient.getResponse(withInstanceOf(BulkPutRequest.class));
             result = new MockedResponse(xmlResponse, 200).getMockInstance();
+            forEachInvocation = new Object() {
+                void validate(BulkPutRequest request) {
+                    assertThat(request.getPath(), is("/bulkTest"));
+                    assertThat(request.getVerb(), is(HttpVerb.PUT));
+                    assertThat(request.getCommand(), is(BulkCommand.PUT));
+                }
+            };
         }};
 
-        final MasterObjectList masterObjectList = client.bulkPut("bulkTest", objects.iterator());
+        final MasterObjectList masterObjectList = client.bulkPut( new BulkPutRequest("bulkTest", objects)).getResult();
         assertThat(masterObjectList, is(notNullValue()));
         assertThat(masterObjectList.getObjects().size(), is(1));
         assertThat(masterObjectList.getObjects().get(0).getObject().size(), is(3));
@@ -233,11 +240,18 @@ public class Ds3Client_Test {
         final String xmlResponse = "<masterobjectlist><objects><object name='file1'/><object name='file2'/><object name='file3'/></objects></masterobjectlist>";
 
         new Expectations() {{
-            netClient.bulk("bulkTest",expectedXmlBody, BulkCommand.GET);
+            netClient.getResponse(withInstanceOf(BulkGetRequest.class));
             result = new MockedResponse(xmlResponse, 200).getMockInstance();
+            forEachInvocation = new Object() {
+                void validate(BulkGetRequest request) {
+                    assertThat(request.getPath(), is("/bulkTest"));
+                    assertThat(request.getVerb(), is(HttpVerb.PUT));
+                    assertThat(request.getCommand(), is(BulkCommand.GET));
+                }
+            };
         }};
 
-        final MasterObjectList masterObjectList = client.bulkGet("bulkTest", objects.iterator());
+        final MasterObjectList masterObjectList = client.bulkGet(new BulkGetRequest("bulkTest", objects)).getResult();
         assertThat(masterObjectList, is(notNullValue()));
         assertThat(masterObjectList.getObjects().size(), is(1));
         assertThat(masterObjectList.getObjects().get(0).getObject().size(), is(3));

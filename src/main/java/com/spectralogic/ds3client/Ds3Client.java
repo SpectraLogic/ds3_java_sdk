@@ -48,6 +48,18 @@ public class Ds3Client {
         return new GetObjectResponse(netClient.getResponse(request));
     }
 
+    public PutObjectResponse putObject(final PutObjectRequest request) throws IOException, SignatureException {
+        return new PutObjectResponse(netClient.getResponse(request));
+    }
+
+    public BulkGetResponse bulkGet(final BulkGetRequest request) throws IOException, SignatureException {
+        return new BulkGetResponse(netClient.getResponse(request));
+    }
+
+    public BulkPutResponse bulkPut(final BulkPutRequest request) throws IOException, SignatureException {
+        return new BulkPutResponse(netClient.getResponse(request));
+    }
+
     public Ds3Bucket createBucket(final String bucketName) throws IOException, SignatureException {
         final Ds3Bucket bucket = new Ds3Bucket(bucketName);
 
