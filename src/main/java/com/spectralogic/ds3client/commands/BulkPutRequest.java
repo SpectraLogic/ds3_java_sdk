@@ -9,7 +9,7 @@ import java.util.List;
 public class BulkPutRequest extends BulkRequest {
     public BulkPutRequest(String bucket, List<Ds3Object> objects) throws XmlProcessingException {
         super(bucket, objects);
-        getHeaders().put("operation", "start_bulk_put");
+        getQueryParams().put("operation", "start_bulk_put");
     }
 
     @Override
