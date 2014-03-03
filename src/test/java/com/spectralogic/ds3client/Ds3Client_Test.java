@@ -1,9 +1,6 @@
 package com.spectralogic.ds3client;
 
-import com.spectralogic.ds3client.commands.DeleteBucketRequest;
-import com.spectralogic.ds3client.commands.GetBucketRequest;
-import com.spectralogic.ds3client.commands.GetServiceRequest;
-import com.spectralogic.ds3client.commands.PutBucketRequest;
+import com.spectralogic.ds3client.commands.*;
 import com.spectralogic.ds3client.models.*;
 import com.spectralogic.ds3client.networking.FailedRequestException;
 import com.spectralogic.ds3client.networking.NetworkClient;
@@ -173,15 +170,35 @@ public class Ds3Client_Test {
     public void getObject() throws IOException, SignatureException {
         final String stringResponse = "Response";
         new Expectations() {{
-            netClient.get("/bucketName/object");
+            netClient.getResponse(withInstanceOf(GetObjectRequest.class));
             result = new MockedResponse(stringResponse, 200).getMockInstance();
+            forEachInvocation = new Object() {
+                void validate(GetObjectRequest request) {
+                    assertThat(request.getPath(), is("/bucketName/object"));
+                    assertThat(request.getVerb(), is(HttpVerb.GET));
+                }
+            };
         }};
 
-        final InputStream stream = client.getObject("bucketName", "object");
+        final InputStream stream = client.getObject(new GetObjectRequest("bucketName", "object")).getContent();
         final StringWriter writer = new StringWriter();
         IOUtils.copy(stream, writer, "UTF-8");
 
         assertThat(writer.toString(), is("Response"));
+    }
+
+    @Test
+    public void putObject() throws IOException, SignatureException {
+        final String output = "This is some data.";
+        final byte[] buf = output.getBytes();
+        final ByteArrayInputStream in = new ByteArrayInputStream(buf);
+
+        new Expectations() {{
+            netClient.put("/bucketName/objectName", "", in, null, buf.length);
+            result = new MockedResponse("", 200).getMockInstance();
+        }};
+
+        client.putObject("bucketName", "objectName", buf.length, in);
     }
 
     @Test
@@ -226,17 +243,5 @@ public class Ds3Client_Test {
         assertThat(masterObjectList.getObjects().get(0).getObject().size(), is(3));
     }
       
-    @Test
-    public void putObject() throws IOException, SignatureException {
-        final String output = "This is some data.";
-        final byte[] buf = output.getBytes();
-        final ByteArrayInputStream in = new ByteArrayInputStream(buf);
 
-        new Expectations() {{
-            netClient.put("/bucketName/objectName", "", in, null, buf.length);
-            result = new MockedResponse("", 200).getMockInstance();
-        }};
-
-        client.putObject("bucketName", "objectName", buf.length, in);
-    }
 }
