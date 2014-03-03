@@ -40,6 +40,10 @@ public class Ds3Client {
         return new PutBucketResponse(netClient.getResponse(request));
     }
 
+    public DeleteBucketResponse deleteBucket(final DeleteBucketRequest request) throws IOException, SignatureException {
+        return new DeleteBucketResponse(netClient.getResponse(request));
+    }
+
     public Ds3Bucket createBucket(final String bucketName) throws IOException, SignatureException {
         final Ds3Bucket bucket = new Ds3Bucket(bucketName);
 

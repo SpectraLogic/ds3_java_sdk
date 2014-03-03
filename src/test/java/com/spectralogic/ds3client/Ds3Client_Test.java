@@ -1,5 +1,6 @@
 package com.spectralogic.ds3client;
 
+import com.spectralogic.ds3client.commands.DeleteBucketRequest;
 import com.spectralogic.ds3client.commands.GetBucketRequest;
 import com.spectralogic.ds3client.commands.GetServiceRequest;
 import com.spectralogic.ds3client.commands.PutBucketRequest;
@@ -135,6 +136,21 @@ public class Ds3Client_Test {
             };
         }};
         client.putBucket(new PutBucketRequest("bucketName"));
+    }
+
+    @Test
+    public void deleteBucket() throws IOException, SignatureException {
+        new NonStrictExpectations() {{
+            netClient.getResponse(withInstanceOf(DeleteBucketRequest.class));
+            result = new MockedResponse("", 200).getMockInstance();
+            forEachInvocation = new Object() {
+                void validate(DeleteBucketRequest request) {
+                    assertThat(request.getPath(), is("/bucketName"));
+                    assertThat(request.getVerb(), is(HttpVerb.DELETE));
+                }
+            };
+        }};
+        client.deleteBucket(new DeleteBucketRequest("bucketName"));
     }
 
     @Test(expected = FailedRequestException.class)
