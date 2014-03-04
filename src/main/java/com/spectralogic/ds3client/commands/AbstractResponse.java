@@ -26,7 +26,7 @@ public abstract class AbstractResponse implements Closeable {
     protected void checkStatusCode(int expectedStatus) throws FailedRequestException {
         final StatusLine statusLine = response.getStatusLine();
         if (statusLine.getStatusCode() != expectedStatus) {
-            throw new FailedRequestException("Request failed with a non-200 status code.  Actual status code: " + statusLine.getStatusCode());
+            throw new FailedRequestException("Request failed with a non-200 status code.  Actual status code: " + statusLine.getStatusCode(), statusLine.getStatusCode());
         }
     }
 

@@ -1,8 +1,7 @@
 package com.spectralogic.ds3client;
 
 
-import com.spectralogic.ds3client.commands.GetServiceRequest;
-import com.spectralogic.ds3client.commands.GetServiceResponse;
+import com.spectralogic.ds3client.commands.*;
 import com.spectralogic.ds3client.models.*;
 import com.spectralogic.ds3client.utils.DateFormatter;
 import org.apache.commons.io.IOUtils;
@@ -15,7 +14,7 @@ public class Main {
 
     public static void main(String args[]) throws Exception {
 
-        final Ds3ClientBuilder builder = new Ds3ClientBuilder("192.168.6.156:8080", new Credentials("cnlhbg==","4iDEhFRV"));
+        final Ds3ClientBuilder builder = new Ds3ClientBuilder("192.168.6.138:8080", new Credentials("cnlhbg==","4iDEhFRV"));
         //final Ds3Client client = builder.withHttpSecure(false).withPort(8080).withProxy("http://192.168.56.104:8080").build();
         final Ds3Client client = builder.withHttpSecure(false).build();
 
@@ -25,13 +24,21 @@ public class Main {
         }
 
 
-        //final ListAllMyBucketsResult result = client.getService();
-        //System.out.println(result.toString());
+        final String bucket = "bulkBucket2";
+
+        final GetBucketResponse bucketResponse = client.getBucket(new GetBucketRequest(bucket));
+        System.out.println(bucketResponse.getResult());
+
+        final GetObjectResponse objectResponse = client.getObject(new GetObjectRequest(bucket, "frankenstein.txt"));
+
+        try(final InputStream stream = objectResponse.getContent();
+            final FileOutputStream out = new FileOutputStream("frankenstein.txt")) {
+            IOUtils.copy(stream, out);
+        }
 
 
 
 
-        //final String bucket = "test";
         //client.createBucket(bucket);
         /*
         final ListBucketResult objectList = client.listBucket(bucket);
