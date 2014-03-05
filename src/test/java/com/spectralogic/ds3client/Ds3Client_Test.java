@@ -198,7 +198,7 @@ public class Ds3Client_Test {
             result = new MockedResponse("", 200).getMockInstance();
         }};
 
-        client.putObject(new PutObjectRequest("bucketName", "objectName", in));
+        client.putObject(new PutObjectRequest("bucketName", "objectName", buf.length, in));
     }
 
     @Test

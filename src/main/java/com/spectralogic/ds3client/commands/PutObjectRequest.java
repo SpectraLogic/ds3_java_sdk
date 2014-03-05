@@ -9,11 +9,18 @@ public class PutObjectRequest extends AbstractRequest {
     private final String bucketName;
     private final String objectName;
     private final InputStream stream;
+    private final int size;
 
-    public PutObjectRequest(final String bucketName, final String objectName, final InputStream stream) {
+    public PutObjectRequest(final String bucketName, final String objectName, final int size, final InputStream stream) {
         this.bucketName = bucketName;
         this.objectName = objectName;
         this.stream = stream;
+        this.size = size;
+    }
+
+    @Override
+    public int getSize() {
+        return size;
     }
 
     @Override
