@@ -36,7 +36,7 @@ public abstract class BulkRequest extends AbstractRequest {
 
     @Override
     public String getPath() {
-        return "/" + bucket;
+        return "/_rest_/" + bucket;
     }
 
     @Override
