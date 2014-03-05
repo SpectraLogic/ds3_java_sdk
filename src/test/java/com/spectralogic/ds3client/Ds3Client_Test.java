@@ -216,7 +216,7 @@ public class Ds3Client_Test {
             result = new MockedResponse(xmlResponse, 200).getMockInstance();
             forEachInvocation = new Object() {
                 void validate(BulkPutRequest request) {
-                    assertThat(request.getPath(), is("/bulkTest"));
+                    assertThat(request.getPath(), is("/_rest_/bulkTest"));
                     assertThat(request.getVerb(), is(HttpVerb.PUT));
                     assertThat(request.getCommand(), is(BulkCommand.PUT));
                 }
@@ -244,7 +244,7 @@ public class Ds3Client_Test {
             result = new MockedResponse(xmlResponse, 200).getMockInstance();
             forEachInvocation = new Object() {
                 void validate(BulkGetRequest request) {
-                    assertThat(request.getPath(), is("/bulkTest"));
+                    assertThat(request.getPath(), is("/_rest_/bulkTest"));
                     assertThat(request.getVerb(), is(HttpVerb.PUT));
                     assertThat(request.getCommand(), is(BulkCommand.GET));
                 }
