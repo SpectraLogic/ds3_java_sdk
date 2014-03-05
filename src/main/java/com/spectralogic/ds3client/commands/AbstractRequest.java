@@ -24,7 +24,7 @@ public abstract class AbstractRequest {
         return null;
     }
 
-    public int getSize() {
+    public long getSize() {
         return 0;
     }
 

@@ -9,9 +9,9 @@ public class PutObjectRequest extends AbstractRequest {
     private final String bucketName;
     private final String objectName;
     private final InputStream stream;
-    private final int size;
+    private final long size;
 
-    public PutObjectRequest(final String bucketName, final String objectName, final int size, final InputStream stream) {
+    public PutObjectRequest(final String bucketName, final String objectName, final long size, final InputStream stream) {
         this.bucketName = bucketName;
         this.objectName = objectName;
         this.stream = stream;
@@ -19,7 +19,7 @@ public class PutObjectRequest extends AbstractRequest {
     }
 
     @Override
-    public int getSize() {
+    public long getSize() {
         return size;
     }
 

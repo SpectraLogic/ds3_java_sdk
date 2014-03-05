@@ -1,6 +1,5 @@
 package com.spectralogic.ds3client.commands;
 
-import com.google.common.collect.Lists;
 import com.spectralogic.ds3client.BulkCommand;
 import com.spectralogic.ds3client.HttpVerb;
 import com.spectralogic.ds3client.models.Ds3Object;
@@ -17,7 +16,7 @@ public abstract class BulkRequest extends AbstractRequest {
     private final String bucket;
     private final List<Ds3Object> ds3Objects;
     private final InputStream stream;
-    private int size;
+    private long size;
 
     public BulkRequest(final String bucket, final List<Ds3Object> objects) throws XmlProcessingException {
         this.bucket = bucket;
@@ -37,7 +36,7 @@ public abstract class BulkRequest extends AbstractRequest {
     }
 
     @Override
-    public int getSize() {
+    public long getSize() {
         return size;
     }
 
