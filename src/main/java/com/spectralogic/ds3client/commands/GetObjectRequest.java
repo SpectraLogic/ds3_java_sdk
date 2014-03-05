@@ -1,6 +1,7 @@
 package com.spectralogic.ds3client.commands;
 
 import com.spectralogic.ds3client.HttpVerb;
+import org.apache.http.entity.ContentType;
 
 public class GetObjectRequest extends AbstractRequest{
 
@@ -15,6 +16,12 @@ public class GetObjectRequest extends AbstractRequest{
     @Override
     public String getPath() {
         return "/"+ bucketName + "/" + objectName;
+    }
+
+
+    @Override
+    public ContentType getContentType() {
+        return ContentType.APPLICATION_OCTET_STREAM;
     }
 
     @Override
