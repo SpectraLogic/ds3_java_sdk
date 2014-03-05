@@ -17,6 +17,7 @@ public abstract class BulkRequest extends AbstractRequest {
     private final String bucket;
     private final List<Ds3Object> ds3Objects;
     private final InputStream stream;
+    private int size;
 
     public BulkRequest(final String bucket, final List<Ds3Object> objects) throws XmlProcessingException {
         this.bucket = bucket;
@@ -31,12 +32,18 @@ public abstract class BulkRequest extends AbstractRequest {
         final String xmlOutput = XmlOutput.toXml(objects, getCommand());
 
         byte[] stringBytes = xmlOutput.getBytes();
+        this.size = stringBytes.length;
         return new ByteArrayInputStream(stringBytes);
     }
 
     @Override
+    public int getSize() {
+        return size;
+    }
+
+    @Override
     public String getPath() {
-        return "/_rest_/" + bucket;
+        return "/_rest_/buckets/" + bucket;
     }
 
     @Override

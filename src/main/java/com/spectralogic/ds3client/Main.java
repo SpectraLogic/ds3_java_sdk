@@ -14,17 +14,29 @@ public class Main {
 
     public static void main(String args[]) throws Exception {
 
-        final Ds3ClientBuilder builder = new Ds3ClientBuilder("192.168.6.138:8080", new Credentials("cnlhbg==","4iDEhFRV"));
+        final Ds3ClientBuilder builder = new Ds3ClientBuilder("192.168.6.128:8080", new Credentials("cnlhbg==","4iDEhFRV"));
         //final Ds3Client client = builder.withHttpSecure(false).withPort(8080).withProxy("http://192.168.56.104:8080").build();
         final Ds3Client client = builder.withHttpSecure(false).build();
 
 
-        try (final GetServiceResponse response = client.getService(new GetServiceRequest())) {
-            System.out.println(response.getResult());
-        }
+        //try (final GetServiceResponse response = client.getService(new GetServiceRequest())) {
+        //    System.out.println(response.getResult());
+        //}
 
+        final String bucket = "test5";
+        //final PutBucketResponse createBucket = client.putBucket(new PutBucketRequest(bucket));
 
-        final String bucket = "bulkBucket2";
+        final List<Ds3Object> bulkObjects = new ArrayList<>();
+
+        bulkObjects.add(new Ds3Object("file1", 64));
+        bulkObjects.add(new Ds3Object("file2", 128));
+        bulkObjects.add(new Ds3Object("file3", 256));
+
+        final MasterObjectList objectList = client.bulkPut(new BulkPutRequest(bucket, bulkObjects)).getResult();
+
+        System.out.println(objectList);
+
+        /*
 
         final GetBucketResponse bucketResponse = client.getBucket(new GetBucketRequest(bucket));
         System.out.println(bucketResponse.getResult());
@@ -37,9 +49,11 @@ public class Main {
         }
 
 
+        */
 
 
-        //client.createBucket(bucket);
+
+
         /*
         final ListBucketResult objectList = client.listBucket(bucket);
           System.out.println(objectList);

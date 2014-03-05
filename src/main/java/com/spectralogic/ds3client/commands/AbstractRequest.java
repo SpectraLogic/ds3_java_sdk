@@ -24,6 +24,10 @@ public abstract class AbstractRequest {
         return null;
     }
 
+    public int getSize() {
+        return 0;
+    }
+
     public String getMd5() {
         return "";
     }

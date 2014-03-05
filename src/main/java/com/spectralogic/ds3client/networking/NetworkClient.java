@@ -9,6 +9,7 @@ import org.apache.http.HttpHost;
 import org.apache.http.HttpRequest;
 import org.apache.http.client.entity.EntityBuilder;
 import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.entity.InputStreamEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicHttpEntityEnclosingRequest;
@@ -97,12 +98,10 @@ public class NetworkClient {
         }
 
         if(stream != null) {
-            final HttpEntity entity = EntityBuilder.create()
-                    .setStream(stream)
-                    .setContentType(request.getContentType())
-                    .build();
+            final HttpEntity entity = new InputStreamEntity(stream, request.getSize(), request.getContentType());
             final BasicHttpEntityEnclosingRequest httpRequest = new BasicHttpEntityEnclosingRequest(verb, path);
             httpRequest.setEntity(entity);
+            return httpRequest;
         }
 
         return new BasicHttpRequest(verb, path);
