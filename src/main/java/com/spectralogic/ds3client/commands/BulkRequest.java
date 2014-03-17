@@ -30,7 +30,7 @@ public abstract class BulkRequest extends AbstractRequest {
         objects.setObject(ds3Objects);
         final String xmlOutput = XmlOutput.toXml(objects, getCommand());
 
-        byte[] stringBytes = xmlOutput.getBytes();
+        final byte[] stringBytes = xmlOutput.getBytes();
         this.size = stringBytes.length;
         return new ByteArrayInputStream(stringBytes);
     }
