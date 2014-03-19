@@ -34,6 +34,10 @@ public class Ds3Client {
         return new DeleteBucketResponse(netClient.getResponse(request));
     }
 
+    public DeleteObjectResponse deleteObject(final DeleteObjectRequest request) throws IOException, SignatureException {
+        return new DeleteObjectResponse(netClient.getResponse(request));
+    }
+
     public GetObjectResponse getObject(final GetObjectRequest request) throws IOException, SignatureException {
         return new GetObjectResponse(netClient.getResponse(request));
     }
