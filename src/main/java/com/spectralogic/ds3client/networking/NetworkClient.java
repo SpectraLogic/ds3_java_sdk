@@ -7,13 +7,16 @@ import com.spectralogic.ds3client.utils.Signature;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpRequest;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.entity.EntityBuilder;
 import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.entity.InputStreamEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicHttpEntityEnclosingRequest;
 import org.apache.http.message.BasicHttpRequest;
+import sun.net.www.http.HttpClient;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -44,8 +47,8 @@ public class NetworkClient {
     public CloseableHttpResponse getResponse(final AbstractRequest request) throws IOException, SignatureException {
         final HttpHost host = getHost(connectionDetails);
         final HttpRequest httpRequest = getHttpRequest(request);
-
         final String date = DateFormatter.dateToRfc882();
+
         final CloseableHttpClient httpClient = HttpClients.createDefault();
 
         httpRequest.addHeader(HOST, NetUtils.buildHostField(connectionDetails));
@@ -58,7 +61,7 @@ public class NetworkClient {
         final SignatureDetails sigDetails = new SignatureDetails(request.getVerb(), request.getMd5(), request.getContentType().toString(), date, "", request.getPath(),connectionDetails.getCredentials());
         httpRequest.addHeader(AUTHORIZATION, getSignature(sigDetails));
 
-        return httpClient.execute(host, httpRequest);
+        return httpClient.execute(host, httpRequest, getContext());
     }
 
     private String getSignature(final SignatureDetails details) throws SignatureException {
@@ -74,6 +77,14 @@ public class NetworkClient {
         final URL url = NetUtils.buildUrl(connectionDetails, "/");
         final int port = getPort(url);
         return new HttpHost(url.getHost(), port, url.getProtocol());
+    }
+
+    private HttpClientContext getContext() {
+        final HttpClientContext context = new HttpClientContext();
+        final RequestConfig config = RequestConfig.custom().setCircularRedirectsAllowed(true).setMaxRedirects(5).build();
+
+        context.setRequestConfig(config);
+        return context;
     }
 
     private int getPort(final URL url) {

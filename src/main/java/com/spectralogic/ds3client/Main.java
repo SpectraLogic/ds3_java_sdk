@@ -14,14 +14,18 @@ public class Main {
 
     public static void main(String args[]) throws Exception {
 
-        final Ds3ClientBuilder builder = new Ds3ClientBuilder("192.168.6.128:8080", new Credentials("cnlhbg==","4iDEhFRV"));
+        final Ds3ClientBuilder builder = new Ds3ClientBuilder("192.168.56.104:8088", new Credentials("cnlhbg==","4iDEhFRV"));
+        //final Ds3ClientBuilder builder = new Ds3ClientBuilder("192.168.6.128:8080", new Credentials("cnlhbg==","4iDEhFRV"));
         //final Ds3Client client = builder.withHttpSecure(false).withPort(8080).withProxy("http://192.168.56.104:8080").build();
         final Ds3Client client = builder.withHttpSecure(false).build();
 
+        client.getObject(new GetObjectRequest("bucket", "file1"));
 
+        /*
         //try (final GetServiceResponse response = client.getService(new GetServiceRequest())) {
         //    System.out.println(response.getResult());
         //}
+
 
         final String bucket = "test5";
         //final PutBucketResponse createBucket = client.putBucket(new PutBucketRequest(bucket));
