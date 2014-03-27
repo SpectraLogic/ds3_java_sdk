@@ -1,8 +1,12 @@
-/.gradle
-/.idea
-/out
-/output
-/build
+.gradle/
+.idea/
+out/
+output/
+build/
+.settings/
+
+.project
+.classpath
 atlassian-ide-plugin.xml
 *.iml
 *.txt
