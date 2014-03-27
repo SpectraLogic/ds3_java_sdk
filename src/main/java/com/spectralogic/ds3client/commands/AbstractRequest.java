@@ -1,7 +1,6 @@
 package com.spectralogic.ds3client.commands;
 
 import com.spectralogic.ds3client.HttpVerb;
-import com.spectralogic.ds3client.serializer.XmlProcessingException;
 import org.apache.http.entity.ContentType;
 
 import java.io.InputStream;

@@ -3,7 +3,6 @@ package com.spectralogic.ds3client;
 
 import com.spectralogic.ds3client.commands.*;
 import com.spectralogic.ds3client.models.*;
-import com.spectralogic.ds3client.utils.DateFormatter;
 import org.apache.commons.io.IOUtils;
 
 import java.io.*;

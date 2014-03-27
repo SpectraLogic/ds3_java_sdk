@@ -3,7 +3,8 @@ package com.spectralogic.ds3client.networking;
 import java.io.IOException;
 
 public class FailedRequestException extends IOException {
-    private final int statusCode;
+	private static final long serialVersionUID = -2070737734216316074L;
+	private final int statusCode;
     public FailedRequestException(final String message, final int statusCode) {
         super(message);
         this.statusCode = statusCode;
