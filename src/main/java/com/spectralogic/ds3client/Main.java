@@ -13,8 +13,8 @@ public class Main {
 
     public static void main(String args[]) throws Exception {
 
-        final Ds3ClientBuilder builder = new Ds3ClientBuilder("192.168.56.104:8088", new Credentials("cnlhbg==","4iDEhFRV"));
-        //final Ds3ClientBuilder builder = new Ds3ClientBuilder("192.168.6.128:8080", new Credentials("cnlhbg==","4iDEhFRV"));
+        final Ds3Client.Builder builder = Ds3Client.builder("192.168.56.104:8088", new Credentials("cnlhbg==","4iDEhFRV"));
+        //final Ds3Client.Builder builder = Ds3Client.builder("192.168.6.128:8080", new Credentials("cnlhbg==","4iDEhFRV"));
         //final Ds3Client client = builder.withHttpSecure(false).withPort(8080).withProxy("http://192.168.56.104:8080").build();
         final Ds3Client client = builder.withHttpSecure(false).build();
 
