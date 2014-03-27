@@ -79,7 +79,7 @@ public class NetworkClient {
 
     private HttpClientContext getContext() {
         final HttpClientContext context = new HttpClientContext();
-        final RequestConfig config = RequestConfig.custom().setCircularRedirectsAllowed(true).setMaxRedirects(5).build();
+        final RequestConfig config = RequestConfig.custom().setCircularRedirectsAllowed(true).setMaxRedirects(connectionDetails.getRetries()).build();
 
         context.setRequestConfig(config);
         return context;

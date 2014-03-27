@@ -10,6 +10,6 @@ public class ConnectionFixture {
     }
 
     public static ConnectionDetails getConnection(final int port) {
-        return new ConnectionDetails("localhost", new Credentials("id", "key"), port, false);
+        return ConnectionDetails.builder("localhost:" + port, new Credentials("id", "key")).build();
     }
 }
