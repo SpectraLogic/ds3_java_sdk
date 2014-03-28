@@ -33,7 +33,8 @@ import com.spectralogic.ds3client.networking.NetworkClient;
  *
  * Here is an example showing how the Ds3Client class is used to get a list of buckets from a remote DS3 appliance.
  *
- * <code>
+ * <pre>
+ *     {@code
  *     final Ds3Client client = Ds3Client.builder("ds3Endpoint:8080",
  *                                  new Credentials("accessKey", "secretKey")).build();
  *
@@ -42,7 +43,8 @@ import com.spectralogic.ds3client.networking.NetworkClient;
  *     for(final Bucket bucket: response.getResult().getBuckets()) {
  *         System.out.println(bucket.getName());
  *     }
- * </code>
+ *     }
+ * </pre>
  */
 public class Ds3Client {
 
