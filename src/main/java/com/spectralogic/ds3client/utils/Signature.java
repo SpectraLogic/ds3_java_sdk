@@ -46,20 +46,10 @@ public class Signature {
     /**
      * Auth signature as described by AWS
      * @see <a href="http://docs.aws.amazon.com/AmazonS3/latest/dev/RESTAuthentication.html#ConstructingTheAuthenticationHeader">AWS Authentication Header</a>
-     * @param signatureDetails
-     * @return
      */
     public static String signature(final SignatureDetails signatureDetails)
             throws SignatureException {
-        final StringBuilder stringToSign = new StringBuilder();
-        stringToSign.append(signatureDetails.getVerb()).append('\n');
-        stringToSign.append(signatureDetails.getContentMd5()).append('\n');
-        stringToSign.append(signatureDetails.getContentType()).append('\n');
-        stringToSign.append(signatureDetails.getDate()).append('\n');
-        stringToSign.append(signatureDetails.getCanonicalizedAmzHeaders());
-        stringToSign.append(signatureDetails.getCanonicalizedResource());
 
-        final String signature = calculateRFC2104HMAC(stringToSign.toString(), signatureDetails.getCredentials().getKey());
-        return signature;
+        return calculateRFC2104HMAC(String.valueOf(signatureDetails.getVerb()) + '\n' + signatureDetails.getContentMd5() + '\n' + signatureDetails.getContentType() + '\n' + signatureDetails.getDate() + '\n' + signatureDetails.getCanonicalizedAmzHeaders() + signatureDetails.getCanonicalizedResource(), signatureDetails.getCredentials().getKey());
     }
 }

@@ -4,6 +4,7 @@ out/
 output/
 build/
 .settings/
+Main.java
 
 .project
 .classpath

@@ -1,12 +1,10 @@
 apply plugin: 'java'
 apply plugin: 'maven'
-apply plugin: 'application'
 
 sourceCompatibility = JavaVersion.VERSION_1_7
 
 version = '0.1.7-SNAPSHOT'
 group = 'com.spectralogic'
-mainClassName = 'com.spectralogic.ds3client.Main'
 
 repositories {
     mavenCentral()

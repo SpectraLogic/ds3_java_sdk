@@ -11,6 +11,10 @@ import java.util.*;
 
 public class NetUtils {
 
+    private NetUtils() {
+        throw new IllegalStateException("This component should never be initialized.");
+    }
+
     public static URL buildUrl(final ConnectionDetails connectionDetails, final String path) throws MalformedURLException {
         return buildUrl(connectionDetails, path, null);
     }
@@ -98,15 +102,13 @@ public class NetUtils {
     }
 
     public static URL buildBucketPath(final String bucketName, final ConnectionDetails connectionDetails, final BulkCommand command) throws MalformedURLException {
-        final Map<String, String> queryParams = new HashMap<String,String>();
+        final Map<String, String> queryParams = new HashMap<>();
         queryParams.put("operation", command.toString());
         return NetUtils.buildUrl(connectionDetails, bucketPath(bucketName), queryParams);
     }
 
     private static String bucketPath(final String bucket) {
-        final StringBuilder builder = new StringBuilder();
-        builder.append("/_rest_/buckets/").append(bucket);
-        return builder.toString();
+        return "/_rest_/buckets/" + bucket;
     }
 
     public static String buildHostField(final ConnectionDetails details) {
