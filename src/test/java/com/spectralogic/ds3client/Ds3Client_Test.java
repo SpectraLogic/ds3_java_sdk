@@ -139,7 +139,7 @@ public class Ds3Client_Test {
     public void deleteBucket() throws IOException, SignatureException {
         new NonStrictExpectations() {{
             netClient.getResponse(withInstanceOf(DeleteBucketRequest.class));
-            result = new MockedResponse("", 200).getMockInstance();
+            result = new MockedResponse("", 204).getMockInstance();
             forEachInvocation = new Object() {
                 void validate(DeleteBucketRequest request) {
                     assertThat(request.getPath(), is("/bucketName"));
@@ -154,7 +154,7 @@ public class Ds3Client_Test {
     public void deleteObject() throws IOException, SignatureException {
         new NonStrictExpectations() {{
             netClient.getResponse(withInstanceOf(DeleteObjectRequest.class));
-            result = new MockedResponse("", 200).getMockInstance();
+            result = new MockedResponse("", 204).getMockInstance();
             forEachInvocation = new Object() {
                 void validate(DeleteObjectRequest request) {
                     assertThat(request.getPath(), is("/bucketName/my/file.txt"));

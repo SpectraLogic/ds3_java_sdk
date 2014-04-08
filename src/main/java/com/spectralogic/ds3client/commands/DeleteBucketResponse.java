@@ -11,6 +11,6 @@ public class DeleteBucketResponse extends AbstractResponse{
 
     @Override
     protected void processResponse() throws IOException {
-        checkStatusCode(200);
+        checkStatusCode(204);
     }
 }
