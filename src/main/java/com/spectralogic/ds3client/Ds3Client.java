@@ -51,35 +51,35 @@ public class Ds3Client {
     /**
      * A Builder class used to create a Ds3Client instance.
      */
-	public static class Builder implements com.spectralogic.ds3client.utils.Builder<Ds3Client> {
+    public static class Builder implements com.spectralogic.ds3client.utils.Builder<Ds3Client> {
 
-	    final private String endpoint;
-	    final private Credentials credentials;
+        final private String endpoint;
+        final private Credentials credentials;
 
-	    private boolean secure = true;
-	    private URI proxy = null;
-	    private int retries = 5;
+        private boolean secure = true;
+        private URI proxy = null;
+        private int retries = 5;
 
-	    private Builder(final String endpoint, final Credentials credentials) throws IllegalArgumentException {
-	        if (endpoint == null || endpoint.isEmpty()) {
-	            throw new IllegalArgumentException("Endpoint must be non empty");
-	        }
-	        if(credentials == null || !credentials.isValid()) {
-	            throw new IllegalArgumentException("Credentials must be filled out.");
-	        }
-	        this.endpoint = endpoint;
-	        this.credentials = credentials;
-	    }
+        private Builder(final String endpoint, final Credentials credentials) throws IllegalArgumentException {
+            if (endpoint == null || endpoint.isEmpty()) {
+                throw new IllegalArgumentException("Endpoint must be non empty");
+            }
+            if(credentials == null || !credentials.isValid()) {
+                throw new IllegalArgumentException("Credentials must be filled out.");
+            }
+            this.endpoint = endpoint;
+            this.credentials = credentials;
+        }
 
         /**
          * Specifies if the library should use HTTP or HTTPS.  The default is HTTP.
          * @param secure True will use HTTPS, false will use HTTP.
          * @return The current builder.
          */
-	    public Builder withHttpSecure(final boolean secure) {
-	        this.secure = secure;
-	        return this;
-	    }
+        public Builder withHttpSecure(final boolean secure) {
+            this.secure = secure;
+            return this;
+        }
 
         /**
          * Sets a HTTP proxy.
@@ -87,21 +87,21 @@ public class Ds3Client {
          * @return The current builder.
          * @throws IllegalArgumentException This will be thrown if the proxy endpoint is not a valid URI.
          */
-	    public Builder withProxy(final String proxy) throws IllegalArgumentException {
-	        try {
-	            final URI proxyUri;
-	            if(!proxy.startsWith("http")) {
-	                throw new IllegalArgumentException("Invalid proxy format.  The web address must start with either http or https.");
-	            }
-	            proxyUri = new URI(proxy);
+        public Builder withProxy(final String proxy) throws IllegalArgumentException {
+            try {
+                final URI proxyUri;
+                if(!proxy.startsWith("http")) {
+                    throw new IllegalArgumentException("Invalid proxy format.  The web address must start with either http or https.");
+                }
+                proxyUri = new URI(proxy);
 
-	            this.proxy = proxyUri;
-	        } catch (final URISyntaxException e) {
-	            throw new IllegalArgumentException("Invalid proxy format.  Must be a web address.");
-	        }
+                this.proxy = proxyUri;
+            } catch (final URISyntaxException e) {
+                throw new IllegalArgumentException("Invalid proxy format.  Must be a web address.");
+            }
 
-	        return this;
-	    }
+            return this;
+        }
 
         /**
          * Sets the number of retries the library will attempt to perform when it receives 307 redirects from a
@@ -109,23 +109,23 @@ public class Ds3Client {
          * @param retries The number of times the library should perform retries on 307.
          * @return The current builder.
          */
-	    public Builder withRedirectRetries(final int retries) {
-	        this.retries = retries;
-	        return this;
-	    }
+        public Builder withRedirectRetries(final int retries) {
+            this.retries = retries;
+            return this;
+        }
 
         /**
          * Returns a new Ds3Client instance.
          */
         @Override
-	    public Ds3Client build() {
-	        final ConnectionDetails.Builder connBuilder = ConnectionDetails.builder(endpoint, credentials)
-	            .withProxy(proxy).withSecure(secure).withRedirectRetries(retries);
+        public Ds3Client build() {
+            final ConnectionDetails.Builder connBuilder = ConnectionDetails.builder(endpoint, credentials)
+                .withProxy(proxy).withSecure(secure).withRedirectRetries(retries);
 
-	        final NetworkClient netClient = new NetworkClient(connBuilder.build());
-	        return new Ds3Client(netClient);
-	    }
-	}
+            final NetworkClient netClient = new NetworkClient(connBuilder.build());
+            return new Ds3Client(netClient);
+        }
+    }
 
     /**
      * Returns a Builder which is used to customize the behavior of the Ds3Client library.
@@ -133,10 +133,10 @@ public class Ds3Client {
      * @param creds The {@link Credentials} used for connecting to a DS3 endpoint.
      * @return The Builder for the {@link Ds3Client} object.
      */
-	public static Builder builder(final String endpoint, final Credentials creds) {
-		return new Builder(endpoint, creds);
-	}
-	
+    public static Builder builder(final String endpoint, final Credentials creds) {
+        return new Builder(endpoint, creds);
+    }
+    
     private final NetworkClient netClient;
 
     Ds3Client(final NetworkClient netClient) {

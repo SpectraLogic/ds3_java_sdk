@@ -30,15 +30,15 @@ public abstract class AbstractResponse implements Closeable {
     protected void checkStatusCode(int expectedStatus) throws FailedRequestException {
         final int statusCode = response.getStatusLine().getStatusCode();
         if (statusCode != expectedStatus) {
-        	Error error;
-	        try(final StringWriter writer = new StringWriter();
-	            final InputStream content = response.getEntity().getContent()) {
-	            IOUtils.copy(content, writer, UTF8);
-	            error = XmlOutput.fromXml(writer.toString(), Error.class);
-	        } catch (IOException e) {
-	        	error = null;
-			}
-	        throw new FailedRequestException(expectedStatus, statusCode, error);
+            Error error;
+            try(final StringWriter writer = new StringWriter();
+                final InputStream content = response.getEntity().getContent()) {
+                IOUtils.copy(content, writer, UTF8);
+                error = XmlOutput.fromXml(writer.toString(), Error.class);
+            } catch (IOException e) {
+                error = null;
+            }
+            throw new FailedRequestException(expectedStatus, statusCode, error);
         }
     }
 
