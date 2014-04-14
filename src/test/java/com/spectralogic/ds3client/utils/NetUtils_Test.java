@@ -2,7 +2,7 @@ package com.spectralogic.ds3client.utils;
 
 
 import com.spectralogic.ds3client.BulkCommand;
-import com.spectralogic.ds3client.fixtures.ConnectionFixture;
+import com.spectralogic.ds3client.ConnectionFixture;
 import com.spectralogic.ds3client.networking.NetUtils;
 import org.junit.Test;
 

@@ -24,7 +24,6 @@ import com.spectralogic.ds3client.commands.PutBucketResponse;
 import com.spectralogic.ds3client.commands.PutObjectRequest;
 import com.spectralogic.ds3client.commands.PutObjectResponse;
 import com.spectralogic.ds3client.models.Credentials;
-import com.spectralogic.ds3client.networking.ConnectionDetails;
 import com.spectralogic.ds3client.networking.NetworkClient;
 
 /**
@@ -119,10 +118,10 @@ public class Ds3Client {
          */
         @Override
 	    public Ds3Client build() {
-	        final ConnectionDetails.Builder connBuilder = ConnectionDetails.builder(endpoint, credentials)
+	        final ConnectionDetailsImpl.Builder connBuilder = ConnectionDetailsImpl.builder(endpoint, credentials)
 	            .withProxy(proxy).withSecure(secure).withRedirectRetries(retries);
 
-	        final NetworkClient netClient = new NetworkClient(connBuilder.build());
+	        final NetworkClient netClient = new NetworkClientImpl(connBuilder.build());
 	        return new Ds3Client(netClient);
 	    }
 	}
