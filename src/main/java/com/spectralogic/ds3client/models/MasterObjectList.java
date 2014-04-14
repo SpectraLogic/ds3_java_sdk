@@ -17,7 +17,7 @@ public class MasterObjectList {
         return objects;
     }
 
-    public void setObjects(List<Objects> objects) {
+    public void setObjects(final List<Objects> objects) {
         this.objects = objects;
     }
 
@@ -29,7 +29,7 @@ public class MasterObjectList {
         return jobid;
     }
 
-    public void setJobid(UUID jobid) {
+    public void setJobid(final UUID jobid) {
         this.jobid = jobid;
     }
 }

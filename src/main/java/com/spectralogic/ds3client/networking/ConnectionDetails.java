@@ -15,5 +15,3 @@ public interface ConnectionDetails {
 
     public int getRetries();
 }
-	
-
