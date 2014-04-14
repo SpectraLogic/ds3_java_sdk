@@ -3,7 +3,7 @@ apply plugin: 'maven'
 
 sourceCompatibility = JavaVersion.VERSION_1_7
 
-version = '0.1.8-SNAPSHOT'
+version = '0.2.0-SNAPSHOT'
 group = 'com.spectralogic'
 
 repositories {
