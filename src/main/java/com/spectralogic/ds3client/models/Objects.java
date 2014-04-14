@@ -15,7 +15,7 @@ public class Objects {
         return object;
     }
 
-    public void setObject(List<Ds3Object> object) {
+    public void setObject(final List<Ds3Object> object) {
         this.object = object;
     }
 

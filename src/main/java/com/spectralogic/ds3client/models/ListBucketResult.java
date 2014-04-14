@@ -32,7 +32,7 @@ public class ListBucketResult {
         return name;
     }
 
-    public void setName(String name) {
+    public void setName(final String name) {
         this.name = name;
     }
 
@@ -40,7 +40,7 @@ public class ListBucketResult {
         return prefix;
     }
 
-    public void setPrefix(String prefix) {
+    public void setPrefix(final String prefix) {
         this.prefix = prefix;
     }
 
@@ -48,7 +48,7 @@ public class ListBucketResult {
         return marker;
     }
 
-    public void setMarker(String marker) {
+    public void setMarker(final String marker) {
         this.marker = marker;
     }
 
@@ -56,7 +56,7 @@ public class ListBucketResult {
         return maxKeys;
     }
 
-    public void setMaxKeys(int maxKeys) {
+    public void setMaxKeys(final int maxKeys) {
         this.maxKeys = maxKeys;
     }
 
@@ -64,7 +64,7 @@ public class ListBucketResult {
         return isTruncated;
     }
 
-    public void setTruncated(boolean isTruncated) {
+    public void setTruncated(final boolean isTruncated) {
         this.isTruncated = isTruncated;
     }
 
@@ -72,7 +72,7 @@ public class ListBucketResult {
         return contentsList;
     }
 
-    public void setContentsList(List<Contents> contentsList) {
+    public void setContentsList(final List<Contents> contentsList) {
         this.contentsList = contentsList;
     }
 
@@ -88,7 +88,7 @@ public class ListBucketResult {
         return creationDate;
     }
 
-    public void setCreationDate(String creationDate) {
+    public void setCreationDate(final String creationDate) {
         this.creationDate = creationDate;
     }
 
@@ -96,7 +96,7 @@ public class ListBucketResult {
         return delimiter;
     }
 
-    public void setDelimiter(String delimiter) {
+    public void setDelimiter(final String delimiter) {
         this.delimiter = delimiter;
     }
 
@@ -104,7 +104,7 @@ public class ListBucketResult {
         return nextMarker;
     }
 
-    public void setNextMarker(String nextMarker) {
+    public void setNextMarker(final String nextMarker) {
         this.nextMarker = nextMarker;
     }
 }

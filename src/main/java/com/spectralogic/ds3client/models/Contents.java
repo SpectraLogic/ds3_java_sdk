@@ -21,7 +21,7 @@ public class Contents {
         return key;
     }
 
-    public void setKey(String key) {
+    public void setKey(final String key) {
         this.key = key;
     }
 
@@ -29,7 +29,7 @@ public class Contents {
         return lastModified;
     }
 
-    public void setLastModified(String lastModified) {
+    public void setLastModified(final String lastModified) {
         this.lastModified = lastModified;
     }
 
@@ -37,7 +37,7 @@ public class Contents {
         return eTag;
     }
 
-    public void seteTag(String eTag) {
+    public void seteTag(final String eTag) {
         this.eTag = eTag;
     }
 
@@ -45,7 +45,7 @@ public class Contents {
         return storageClass;
     }
 
-    public void setStorageClass(String storageClass) {
+    public void setStorageClass(final String storageClass) {
         this.storageClass = storageClass;
     }
 
@@ -53,7 +53,7 @@ public class Contents {
         return owner;
     }
 
-    public void setOwner(Owner owner) {
+    public void setOwner(final Owner owner) {
         this.owner = owner;
     }
 
@@ -61,7 +61,7 @@ public class Contents {
         return size;
     }
 
-    public void setSize(int size) {
+    public void setSize(final int size) {
         this.size = size;
     }
 

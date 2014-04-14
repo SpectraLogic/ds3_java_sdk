@@ -23,7 +23,7 @@ public class Bucket {
         return creationDate;
     }
 
-    public void setCreationDate(String creationDate) {
+    public void setCreationDate(final String creationDate) {
         this.creationDate = creationDate;
     }
 

@@ -20,25 +20,25 @@ public class Error {
     public String getCode() {
         return code;
     }
-    public void setCode(String code) {
+    public void setCode(final String code) {
         this.code = code;
     }
     public String getMessage() {
         return message;
     }
-    public void setMessage(String message) {
+    public void setMessage(final String message) {
         this.message = message;
     }
     public String getResource() {
         return resource;
     }
-    public void setResource(String resource) {
+    public void setResource(final String resource) {
         this.resource = resource;
     }
     public String getRequestId() {
         return requestId;
     }
-    public void setRequestId(String requestId) {
+    public void setRequestId(final String requestId) {
         this.requestId = requestId;
     }
 }

@@ -24,7 +24,7 @@ public class Ds3Object  {
         return name;
     }
 
-    public void setName(String name) {
+    public void setName(final String name) {
         this.name = name;
     }
 
@@ -32,7 +32,7 @@ public class Ds3Object  {
         return size;
     }
 
-    public void setSize(long size) {
+    public void setSize(final long size) {
         this.size = size;
     }
 
