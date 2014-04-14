@@ -6,7 +6,7 @@ import java.net.URI;
 
 
 public class ConnectionDetails {
-	
+    
     public static class Builder implements com.spectralogic.ds3client.utils.Builder<ConnectionDetails> {
 
         private final String endpoint;
@@ -31,8 +31,8 @@ public class ConnectionDetails {
         }
         
         public Builder withRedirectRetries(final int retries) {
-        	this.retries = retries;
-        	return this;
+            this.retries = retries;
+            return this;
         }
 
         @Override
@@ -40,7 +40,7 @@ public class ConnectionDetails {
             return new ConnectionDetails(this);
         }
     }
-	
+    
     private final String endpoint;
     private final Credentials credentials;
     private final boolean secure;
@@ -76,7 +76,7 @@ public class ConnectionDetails {
     }
 
     public int getRetries() {
-    	return retries;
+        return retries;
     }
 
 }

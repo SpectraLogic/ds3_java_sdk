@@ -1,9 +1,9 @@
 package com.spectralogic.ds3client.serializer;
 
 public class XmlProcessingException extends Exception {
-	private static final long serialVersionUID = 2460557047729981074L;
+    private static final long serialVersionUID = 2460557047729981074L;
 
-	public XmlProcessingException(Exception e) {
+    public XmlProcessingException(Exception e) {
         super(e);
     }
 }
