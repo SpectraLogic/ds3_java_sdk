@@ -27,18 +27,33 @@ public abstract class AbstractResponse implements Closeable {
         return response;
     }
 
-    protected void checkStatusCode(int expectedStatus) throws FailedRequestException {
+    protected void checkStatusCode(final int expectedStatus) throws IOException {
         final int statusCode = response.getStatusLine().getStatusCode();
         if (statusCode != expectedStatus) {
-            Error error;
-            try(final StringWriter writer = new StringWriter();
-                final InputStream content = response.getEntity().getContent()) {
-                IOUtils.copy(content, writer, UTF8);
-                error = XmlOutput.fromXml(writer.toString(), Error.class);
-            } catch (IOException e) {
-                error = null;
-            }
-            throw new FailedRequestException(expectedStatus, statusCode, error);
+            final String responseString = readResponseString();
+            throw new FailedRequestException(
+                expectedStatus,
+                statusCode,
+                parseErrorResponse(responseString),
+                responseString
+            );
+        }
+    }
+    
+    private static Error parseErrorResponse(final String responseString) {
+        try {
+            return XmlOutput.fromXml(responseString, Error.class);
+        } catch (final IOException e) {
+            // It's likely the response string is not in a valid error format.
+            return null;
+        }
+    }
+    
+    private String readResponseString() throws IOException {
+        try(final StringWriter writer = new StringWriter();
+            final InputStream content = response.getEntity().getContent()) {
+            IOUtils.copy(content, writer, UTF8);
+            return writer.toString();
         }
     }
 
