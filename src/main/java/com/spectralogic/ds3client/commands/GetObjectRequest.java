@@ -58,11 +58,13 @@ public class GetObjectRequest extends AbstractRequest {
         if (byteRange == null) {
             this.getHeaders().remove("Range");
         } else {
-            final String range = String.format("bytes=%d-%d",
-                    byteRange.getStart(), byteRange.getEnd());
-            this.getHeaders().put("Range", range);
+            this.getHeaders().put("Range", buildRangeHeaderText(byteRange));
         }
         return this;
+    }
+    
+    private static String buildRangeHeaderText(Range byteRange) {
+        return String.format("bytes=%d-%d", byteRange.getStart(), byteRange.getEnd());
     }
 
     public Range getByteRange() {
