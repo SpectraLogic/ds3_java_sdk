@@ -13,28 +13,28 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3client.models;
+package com.spectralogic.ds3client.commands;
 
+import com.spectralogic.ds3client.HttpVerb;
+import org.apache.http.entity.ContentType;
 
-public class Credentials {
+import java.io.InputStream;
+import java.util.Map;
 
-    private final String clientId;
-    private final String key;
+public interface Ds3Request {
 
-    public Credentials(final String clientId, final String key) {
-        this.clientId = clientId;
-        this.key = key;
-    }
+    public String getPath();
+    public HttpVerb getVerb();
 
-    public String getClientId() {
-        return clientId;
-    }
+    public ContentType getContentType();
 
-    public String getKey() {
-        return key;
-    }
+    public InputStream getStream();
 
-    public boolean isValid() {
-        return !(clientId == null || clientId.isEmpty() || key == null || key.isEmpty());
-    }
+    public long getSize();
+
+    public String getMd5();
+
+    public Map<String, String> getQueryParams();
+
+    public Map<String, String> getHeaders();
 }

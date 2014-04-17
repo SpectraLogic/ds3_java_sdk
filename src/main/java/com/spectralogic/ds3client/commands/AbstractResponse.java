@@ -1,6 +1,20 @@
+/*
+ * ******************************************************************************
+ *   Copyright 2014 Spectra Logic Corporation. All Rights Reserved.
+ *   Licensed under the Apache License, Version 2.0 (the "License"). You may not use
+ *   this file except in compliance with the License. A copy of the License is located at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *   or in the "license" file accompanying this file.
+ *   This file is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+ *   CONDITIONS OF ANY KIND, either express or implied. See the License for the
+ *   specific language governing permissions and limitations under the License.
+ * ****************************************************************************
+ */
+
 package com.spectralogic.ds3client.commands;
 
-import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
@@ -12,22 +26,23 @@ import com.spectralogic.ds3client.networking.FailedRequestException;
 import com.spectralogic.ds3client.serializer.XmlOutput;
 import com.spectralogic.ds3client.models.Error;
 
-public abstract class AbstractResponse implements Closeable {
-    final static protected String UTF8 = "UTF-8";
-    final CloseableHttpResponse response;
+abstract class AbstractResponse implements Ds3Response{
+    final static String UTF8 = "UTF-8";
 
-    public AbstractResponse(final CloseableHttpResponse response) throws IOException {
+    final private CloseableHttpResponse response;
+
+    AbstractResponse(final CloseableHttpResponse response) throws IOException {
         this.response = response;
         processResponse();
     }
 
     protected abstract void processResponse() throws IOException;
 
-    protected CloseableHttpResponse getResponse() {
+    CloseableHttpResponse getResponse() {
         return response;
     }
 
-    protected void checkStatusCode(final int expectedStatus) throws IOException {
+    void checkStatusCode(final int expectedStatus) throws IOException {
         final int statusCode = response.getStatusLine().getStatusCode();
         if (statusCode != expectedStatus) {
             final String responseString = readResponseString();

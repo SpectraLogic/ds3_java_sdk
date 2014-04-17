@@ -13,28 +13,9 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3client.models;
+package com.spectralogic.ds3client.commands;
 
+import java.io.Closeable;
 
-public class Credentials {
-
-    private final String clientId;
-    private final String key;
-
-    public Credentials(final String clientId, final String key) {
-        this.clientId = clientId;
-        this.key = key;
-    }
-
-    public String getClientId() {
-        return clientId;
-    }
-
-    public String getKey() {
-        return key;
-    }
-
-    public boolean isValid() {
-        return !(clientId == null || clientId.isEmpty() || key == null || key.isEmpty());
-    }
+public interface Ds3Response extends Closeable {
 }
