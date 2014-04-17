@@ -3,7 +3,6 @@ package com.spectralogic.ds3client.networking;
 import com.google.common.base.Function;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Iterators;
-import com.google.common.collect.Lists;
 import com.spectralogic.ds3client.BulkCommand;
 
 import java.net.MalformedURLException;
