@@ -1,0 +1,6 @@
+com.spectralogic.ds3client
+com.spectralogic.ds3client.commands
+com.spectralogic.ds3client.models
+com.spectralogic.ds3client.networking
+com.spectralogic.ds3client.serializer
+com.spectralogic.ds3client.utils
