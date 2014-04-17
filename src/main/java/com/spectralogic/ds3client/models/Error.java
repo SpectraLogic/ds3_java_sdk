@@ -56,4 +56,9 @@ public class Error {
     public void setRequestId(final String requestId) {
         this.requestId = requestId;
     }
+
+    @Override
+    public String toString() {
+        return "Status Code (" + code + ") Message: " + message;
+    }
 }
