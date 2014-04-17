@@ -66,4 +66,14 @@ public class FailedRequestException extends IOException {
                 error.getMessage()
             );
     }
+
+    @Override
+    public String toString() {
+        if(error == null) {
+            return responseString;
+        }
+        else {
+            return error.toString();
+        }
+    }
 }
