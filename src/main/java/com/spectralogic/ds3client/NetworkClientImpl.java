@@ -1,6 +1,6 @@
 package com.spectralogic.ds3client;
 
-import com.spectralogic.ds3client.commands.AbstractRequest;
+import com.spectralogic.ds3client.commands.Ds3Request;
 import com.spectralogic.ds3client.models.SignatureDetails;
 import com.spectralogic.ds3client.networking.ConnectionDetails;
 import com.spectralogic.ds3client.networking.NetUtils;
@@ -43,7 +43,7 @@ class NetworkClientImpl implements NetworkClient {
         return connectionDetails;
     }
 
-    public CloseableHttpResponse getResponse(final AbstractRequest request) throws IOException, SignatureException {
+    public CloseableHttpResponse getResponse(final Ds3Request request) throws IOException, SignatureException {
         final HttpHost host = getHost(connectionDetails);
         final HttpRequest httpRequest = getHttpRequest(request);
         final String date = DateFormatter.dateToRfc882();
@@ -94,7 +94,7 @@ class NetworkClientImpl implements NetworkClient {
         return port;
     }
 
-    private HttpRequest getHttpRequest(final AbstractRequest request) {
+    private HttpRequest getHttpRequest(final Ds3Request request) {
         final String verb = request.getVerb().toString();
         final InputStream stream = request.getStream();
         final Map<String, String> queryParams = request.getQueryParams();

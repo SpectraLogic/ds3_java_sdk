@@ -1,6 +1,5 @@
 package com.spectralogic.ds3client.commands;
 
-import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
@@ -12,7 +11,7 @@ import com.spectralogic.ds3client.networking.FailedRequestException;
 import com.spectralogic.ds3client.serializer.XmlOutput;
 import com.spectralogic.ds3client.models.Error;
 
-abstract class AbstractResponse implements Closeable {
+abstract class AbstractResponse implements Ds3Response{
     final static String UTF8 = "UTF-8";
 
     final private CloseableHttpResponse response;
