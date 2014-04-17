@@ -3,6 +3,7 @@ package com.spectralogic.ds3client.networking;
 import com.google.common.base.Function;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Iterators;
+import com.google.common.collect.Lists;
 import com.spectralogic.ds3client.BulkCommand;
 
 import java.net.MalformedURLException;
@@ -48,7 +49,8 @@ public class NetUtils {
     }
 
     public static String buildQueryString(final Map<String, String> queryParams) {
-        final Iterator<String> stringIter = Iterators.transform(queryParams.entrySet().iterator(), new Function<Map.Entry<String, String>, String>() {
+        final SortedMap<String, String> sortedMap = new TreeMap<>(queryParams);
+        final Iterator<String> stringIter = Iterators.transform(sortedMap.entrySet().iterator(), new Function<Map.Entry<String, String>, String>() {
             @Override
             public String apply(Map.Entry<String, String> input) {
                 return input.getKey() + "=" + input.getValue();
