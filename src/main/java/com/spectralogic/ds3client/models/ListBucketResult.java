@@ -77,11 +77,7 @@ public class ListBucketResult {
     }
 
     public String toString() {
-        final StringBuilder builder = new StringBuilder();
-        builder.append("{{bucket:: ").append(name).append("},\n");
-        builder.append("{numKeys:: ").append(maxKeys).append("},\n");
-        builder.append("{objects:: ").append(contentsList).append("}}");
-        return builder.toString();
+        return "{{bucket:: " + name + "},\n" + "{numKeys:: " + maxKeys + "},\n" + "{objects:: " + contentsList + "}}";
     }
 
     public String getCreationDate() {

@@ -66,10 +66,6 @@ public class Contents {
     }
 
     public String toString() {
-        final StringBuilder builder = new StringBuilder();
-        builder.append("{{key:: ").append(key).append("}, ");
-        builder.append("{size:: ").append(size).append("}, ");
-        builder.append("{owner:: ").append(owner).append("}}");
-        return builder.toString();
+        return "{{key:: " + key + "}, " + "{size:: " + size + "}, " + "{owner:: " + owner + "}}";
     }
 }

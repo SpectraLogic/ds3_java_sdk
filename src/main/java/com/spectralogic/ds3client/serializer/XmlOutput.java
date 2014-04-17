@@ -51,7 +51,6 @@ public class XmlOutput {
     }
 
     public static<T> T fromXml(final String xmlString, final Class<T> type) throws IOException {
-        final T rootElement = mapper.readValue(xmlString, type);
-        return rootElement;
+        return mapper.readValue(xmlString, type);
     }
 }

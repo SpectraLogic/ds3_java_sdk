@@ -11,7 +11,7 @@ import java.io.InputStream;
 import java.util.List;
 
 
-public abstract class BulkRequest extends AbstractRequest {
+abstract class BulkRequest extends AbstractRequest {
 
     private final String bucket;
     private final List<Ds3Object> ds3Objects;

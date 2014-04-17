@@ -12,22 +12,23 @@ import com.spectralogic.ds3client.networking.FailedRequestException;
 import com.spectralogic.ds3client.serializer.XmlOutput;
 import com.spectralogic.ds3client.models.Error;
 
-public abstract class AbstractResponse implements Closeable {
-    final static protected String UTF8 = "UTF-8";
-    final CloseableHttpResponse response;
+abstract class AbstractResponse implements Closeable {
+    final static String UTF8 = "UTF-8";
 
-    public AbstractResponse(final CloseableHttpResponse response) throws IOException {
+    final private CloseableHttpResponse response;
+
+    AbstractResponse(final CloseableHttpResponse response) throws IOException {
         this.response = response;
         processResponse();
     }
 
     protected abstract void processResponse() throws IOException;
 
-    protected CloseableHttpResponse getResponse() {
+    CloseableHttpResponse getResponse() {
         return response;
     }
 
-    protected void checkStatusCode(final int expectedStatus) throws IOException {
+    void checkStatusCode(final int expectedStatus) throws IOException {
         final int statusCode = response.getStatusLine().getStatusCode();
         if (statusCode != expectedStatus) {
             final String responseString = readResponseString();
