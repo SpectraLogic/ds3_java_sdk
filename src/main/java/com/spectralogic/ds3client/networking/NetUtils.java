@@ -21,7 +21,6 @@ import com.google.common.collect.Iterators;
 import com.google.common.escape.Escaper;
 import com.google.common.net.UrlEscapers;
 import com.spectralogic.ds3client.BulkCommand;
-import org.apache.http.client.utils.URLEncodedUtils;
 
 import java.net.MalformedURLException;
 import java.net.URL;
