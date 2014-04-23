@@ -21,6 +21,9 @@ import com.spectralogic.ds3client.commands.GetServiceResponse;
 import com.spectralogic.ds3client.models.Credentials;
 import com.spectralogic.ds3client.models.Bucket;
 
+import java.io.IOException;
+import java.security.SignatureException;
+
 public class Ds3ServiceListExample {
 
     public static void main(final String args[]) throws IOException, SignatureException {
@@ -35,6 +38,75 @@ public class Ds3ServiceListExample {
         //Iterate through all the buckets and print them to the console.
         for(final Bucket bucket: response.getResult().getBuckets()) {
             System.out.println(bucket.getName());
+        }
+    }
+}
+
+```
+
+This next example is a little more complex and will perform a bulk get from a DS3 Appliance.  This example uses the [Apache Commons IO](http://commons.apache.org/proper/commons-io/) library.
+
+```java
+
+import com.spectralogic.ds3client.Ds3Client;
+import com.spectralogic.ds3client.commands.*;
+import com.spectralogic.ds3client.models.Contents;
+import com.spectralogic.ds3client.models.Credentials;
+import com.spectralogic.ds3client.models.Ds3Object;
+import com.spectralogic.ds3client.models.Objects;
+import com.spectralogic.ds3client.serializer.XmlProcessingException;
+
+import org.apache.commons.io.IOUtils;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.security.SignatureException;
+import java.util.ArrayList;
+import java.util.List;
+
+public class Ds3BulkGetExample {
+
+    public static void main(final String args[]) throws IOException, SignatureException, XmlProcessingException {
+        
+        //Get a client builder and then build a client instance.  This is the main entry point to the SDK.
+        final Ds3Client client = Ds3Client.builder("ds3Endpoint:8080",
+                                   new Credentials("accessKey", "secretKey")).build();
+
+        final String bucket = "bucketName"; //The bucket we are interested in getting objects from.
+
+        //Get the list of objects from the bucket that you want to perform the bulk get with.
+        final GetBucketResponse response = client.getBucket(new GetBucketRequest(bucket));
+
+        //We now need to generate the list of Ds3Objects that we want to get from DS3.
+        final List<Ds3Object> objectList = new ArrayList<>();
+        for (final Contents contents: response.getResult().getContentsList()){
+            objectList.add(new Ds3Object(contents.getKey()));
+        }
+
+        //We prime DS3 with the BulkGet command so that it can start to get objects off of tape.
+        final BulkGetResponse bulkResponse = client.bulkGet(new BulkGetRequest(bucket, objectList));
+
+        //The bulk response returns a list of lists which is designed to optimize data transmission from DS3.
+        for(final Objects objects: bulkResponse.getResult().getObjects()) {
+            for(final Ds3Object obj: objects) {
+
+                //Perform the operation to get the object from DS3.
+                final GetObjectResponse getObjectResponse = client.getObject(new GetObjectRequest(bucket, obj.getName()));
+
+                //We are writing all the objects out to the directory output
+                final Path filePath = FileSystems.getDefault().getPath("output", obj.getName());
+
+                //Here we are using automatic resource cleanup to make sure the streams we use are all cleaned up after use.
+                try(final InputStream objStream = getObjectResponse.getContent();
+                    final OutputStream fileOut = Files.newOutputStream(filePath)) {
+                    IOUtils.copy(objStream, fileOut); //Using IOUtils to copy the object contents to a file.
+                }
+
+            }
         }
     }
 }
