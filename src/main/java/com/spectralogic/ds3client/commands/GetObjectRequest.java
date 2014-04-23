@@ -18,26 +18,63 @@ package com.spectralogic.ds3client.commands;
 import com.spectralogic.ds3client.HttpVerb;
 import org.apache.http.entity.ContentType;
 
-public class GetObjectRequest extends AbstractRequest{
+public class GetObjectRequest extends AbstractRequest {
+    public static class Range {
+        private final long start;
+        private final long end;
+
+        public Range(final long start, final long end) {
+            this.start = start;
+            this.end = end;
+        }
+
+        public long getStart() {
+            return start;
+        }
+
+        public long getEnd() {
+            return end;
+        }
+    }
 
     private final String bucketName;
     private final String objectName;
+    private Range byteRange;
 
     /**
-     * We plan to mark this deprecated to encourage users to use the constructor that tacks a job Id.
-     * We will still need this method for single Put operations, but the preferred method is to use
-     * the put request in the context of a bulk request.
+     * We plan to mark this deprecated to encourage users to use the constructor
+     * that tacks a job Id. We will still need this method for single Put
+     * operations, but the preferred method is to use the put request in the
+     * context of a bulk request.
      */
     public GetObjectRequest(final String bucketName, final String objectName) {
-       this.bucketName = bucketName;
+        this.bucketName = bucketName;
         this.objectName = objectName;
+        this.byteRange = null;
+    }
+
+    public GetObjectRequest withByteRange(final Range byteRange) {
+        this.byteRange = byteRange;
+        if (byteRange == null) {
+            this.getHeaders().remove("Range");
+        } else {
+            this.getHeaders().put("Range", buildRangeHeaderText(byteRange));
+        }
+        return this;
+    }
+    
+    private static String buildRangeHeaderText(Range byteRange) {
+        return String.format("bytes=%d-%d", byteRange.getStart(), byteRange.getEnd());
+    }
+
+    public Range getByteRange() {
+        return byteRange;
     }
 
     @Override
     public String getPath() {
-        return "/"+ bucketName + "/" + objectName;
+        return "/" + bucketName + "/" + objectName;
     }
-
 
     @Override
     public ContentType getContentType() {
