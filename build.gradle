@@ -18,7 +18,8 @@ apply plugin: 'maven'
 
 sourceCompatibility = JavaVersion.VERSION_1_7
 
-version = '0.2.3-SNAPSHOT'
+jar.archiveName = 'ds3_java_sdk'
+version = '0.2.4-SNAPSHOT'
 group = 'com.spectralogic'
 
 repositories {

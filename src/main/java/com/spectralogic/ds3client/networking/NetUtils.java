@@ -18,6 +18,8 @@ package com.spectralogic.ds3client.networking;
 import com.google.common.base.Function;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Iterators;
+import com.google.common.escape.Escaper;
+import com.google.common.net.UrlEscapers;
 import com.spectralogic.ds3client.BulkCommand;
 
 import java.net.MalformedURLException;
@@ -42,23 +44,14 @@ public class NetUtils {
             builder.append('/');
         }
 
-        builder.append(path);
+        final Escaper urlEscaper = UrlEscapers.urlFragmentEscaper();
+
+        builder.append(urlEscaper.escape(path));
 
         if(params != null && params.size() > 0) {
             builder.append('?');
-
-            final Set<Map.Entry<String, String>> paramSet = params.entrySet();
-            final Iterator<Map.Entry<String, String>> paramIterator = paramSet.iterator();
-            Map.Entry<String, String> paramEntry = paramIterator.next();
-
-            addQueryParam(builder, paramEntry);
-            while(paramIterator.hasNext()) {
-                paramEntry = paramIterator.next();
-                builder.append('&');
-                addQueryParam(builder, paramEntry);
-            }
+            builder.append(urlEscaper.escape(buildQueryString(params)));
         }
-
         return new URL(builder.toString());
     }
 
@@ -73,14 +66,6 @@ public class NetUtils {
 
         final Joiner join = Joiner.on('&');
         return join.join(stringIter);
-    }
-
-    private static void addQueryParam(StringBuilder builder, Map.Entry<String, String> entry) {
-        builder.append(entry.getKey());
-        if(entry.getValue() != null) {
-            builder.append('=');
-            builder.append(entry.getValue());
-        }
     }
 
     public static String buildPath(final String basePath, final String path) {

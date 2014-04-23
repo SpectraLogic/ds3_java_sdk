@@ -18,10 +18,11 @@ package com.spectralogic.ds3client.models;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 
+import java.util.Iterator;
 import java.util.List;
 
 @JacksonXmlRootElement(localName="objects")
-public class Objects {
+public class Objects implements Iterable<Ds3Object> {
 
     @JsonProperty("")
     private List<Ds3Object> object;
@@ -36,5 +37,10 @@ public class Objects {
 
     public String toString() {
         return object.toString();
+    }
+
+    @Override
+    public Iterator<Ds3Object> iterator() {
+        return object.iterator();
     }
 }
