@@ -39,11 +39,11 @@ public class GetObjectRequest extends AbstractRequest {
 
     private final String bucketName;
     private final String objectName;
-    private Range byteRange;
+    private Range byteRange = null;
 
     /**
      * We plan to mark this deprecated to encourage users to use the constructor
-     * that tacks a job Id. We will still need this method for single Put
+     * that takes a job Id. We will still need this method for single Put
      * operations, but the preferred method is to use the put request in the
      * context of a bulk request.
      */
