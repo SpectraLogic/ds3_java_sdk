@@ -100,7 +100,7 @@ public class NetUtils_Test {
         queryParams.put("var", "2");
         queryParams.put("foo", "bar");
         final URL result = NetUtils.buildUrl(ConnectionFixture.getConnection(), "path", queryParams);
-        assertThat(result.toString(), is("http://localhost:8080/path?var=2&foo=bar"));
+        assertThat(result.toString(), is("http://localhost:8080/path?foo=bar&var=2"));
     }
 
 
@@ -130,4 +130,17 @@ public class NetUtils_Test {
 
     }
 
+    @Test
+    public void escapeSpacesInPath() throws MalformedURLException {
+        final URL result = NetUtils.buildUrl(ConnectionFixture.getConnection(), "path with space", null);
+        assertThat(result.toString(), is("http://localhost:8080/path%20with%20space"));
+    }
+
+    @Test
+    public void escapeSpacesInQueryParam() throws MalformedURLException {
+        final Map<String, String> queryParams = new HashMap<>();
+        queryParams.put("foo","bar val");
+        final URL result = NetUtils.buildUrl(ConnectionFixture.getConnection(), "path", queryParams);
+        assertThat(result.toString(), is("http://localhost:8080/path?foo=bar%20val"));
+    }
 }
