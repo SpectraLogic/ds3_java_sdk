@@ -25,14 +25,30 @@ public class Ds3Object  {
     @JacksonXmlProperty(isAttribute=true)
     private long size;
 
+    /**
+     * This constructor is used for XML Serialization.
+     * The preferred method is to use one of the other two constructors.
+     */
     public Ds3Object() {
-
+        //This constructor is used just for serialization.
     }
 
+    /**
+     * Use this constructor when putting files to DS3.
+     * @param name The name of the object that will be put to DS3
+     * @param size The size of the object that will be put to DS3
+     */
     public Ds3Object(final String name, long size) {
-
         this.name = name;
         this.size = size;
+    }
+
+    /**
+     * Use this constructor when getting files from DS3.
+     * @param name the name of the object to get from DS3
+     */
+    public Ds3Object(final String name) {
+        this.name = name;
     }
 
     public String getName() {

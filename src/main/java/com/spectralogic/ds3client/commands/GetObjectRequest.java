@@ -18,6 +18,10 @@ package com.spectralogic.ds3client.commands;
 import com.spectralogic.ds3client.HttpVerb;
 import org.apache.http.entity.ContentType;
 
+/**
+ * Retrieves an object from DS3.  This should always be used within the context of a BulkGet command.
+ * If not performance will be impacted.
+ */
 public class GetObjectRequest extends AbstractRequest {
     public static class Range {
         private final long start;
@@ -39,7 +43,7 @@ public class GetObjectRequest extends AbstractRequest {
 
     private final String bucketName;
     private final String objectName;
-    private Range byteRange = null;
+    private Range byteRange;
 
     /**
      * We plan to mark this deprecated to encourage users to use the constructor
@@ -53,6 +57,9 @@ public class GetObjectRequest extends AbstractRequest {
         this.byteRange = null;
     }
 
+    /**
+     * Sets a Range of bytes that should be retrieved from the object.
+     */
     public GetObjectRequest withByteRange(final Range byteRange) {
         this.byteRange = byteRange;
         if (byteRange == null) {
