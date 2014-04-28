@@ -18,19 +18,31 @@ package com.spectralogic.ds3client.commands;
 import com.spectralogic.ds3client.HttpVerb;
 
 import java.io.InputStream;
+import java.util.UUID;
 
 public class PutObjectRequest extends AbstractRequest {
 
     private final String bucketName;
     private final String objectName;
+    private final UUID jobId;
     private final InputStream stream;
     private final long size;
 
+    @Deprecated
     public PutObjectRequest(final String bucketName, final String objectName, final long size, final InputStream stream) {
+        this(bucketName,objectName, null, size, stream);
+    }
+
+    public PutObjectRequest(final String bucketName, final String objectName, final UUID jobId, final long size, final InputStream stream) {
         this.bucketName = bucketName;
         this.objectName = objectName;
         this.stream = stream;
         this.size = size;
+        this.jobId = jobId;
+
+        if(jobId != null) {
+            this.getQueryParams().put("job", jobId.toString());
+        }
     }
 
     @Override
@@ -51,5 +63,9 @@ public class PutObjectRequest extends AbstractRequest {
     @Override
     public InputStream getStream() {
         return stream;
+    }
+
+    public UUID getJobId() {
+        return this.jobId;
     }
 }
