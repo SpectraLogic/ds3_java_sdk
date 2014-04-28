@@ -49,6 +49,7 @@ public class Ds3Object  {
      */
     public Ds3Object(final String name) {
         this.name = name;
+        this.size = 0;
     }
 
     public String getName() {

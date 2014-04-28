@@ -57,11 +57,13 @@ public class XmlOutput {
     }
 
     public static String toXml(final Objects objects, final BulkCommand command) throws XmlProcessingException {
+        /*
         if (command == BulkCommand.GET) {
             final FilterProvider filters = new SimpleFilterProvider().addFilter("sizeFilter",
                     SimpleBeanPropertyFilter.serializeAllExcept("size"));
             return XmlOutput.toXml(objects, filters);
         }
+        */
         return XmlOutput.toXml(objects);
     }
 

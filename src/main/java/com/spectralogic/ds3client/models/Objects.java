@@ -16,6 +16,7 @@
 package com.spectralogic.ds3client.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 
 import java.util.Iterator;
@@ -23,6 +24,9 @@ import java.util.List;
 
 @JacksonXmlRootElement(localName="objects")
 public class Objects implements Iterable<Ds3Object> {
+
+    @JacksonXmlProperty
+    private String serverid; //This is not camel cased to match the xml attribute that is returned.
 
     @JsonProperty("")
     private List<Ds3Object> object;
@@ -33,6 +37,14 @@ public class Objects implements Iterable<Ds3Object> {
 
     public void setObject(final List<Ds3Object> object) {
         this.object = object;
+    }
+
+    public String getServerid() {
+        return serverid;
+    }
+
+    public void setServerid(final String serverid) {
+        this.serverid = serverid;
     }
 
     public String toString() {

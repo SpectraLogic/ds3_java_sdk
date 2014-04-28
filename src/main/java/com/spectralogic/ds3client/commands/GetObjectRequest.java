@@ -18,6 +18,8 @@ package com.spectralogic.ds3client.commands;
 import com.spectralogic.ds3client.HttpVerb;
 import org.apache.http.entity.ContentType;
 
+import java.util.UUID;
+
 /**
  * Retrieves an object from DS3.  This should always be used within the context of a BulkGet command.
  * If not performance will be impacted.
@@ -43,18 +45,22 @@ public class GetObjectRequest extends AbstractRequest {
 
     private final String bucketName;
     private final String objectName;
-    private Range byteRange;
+    private final UUID jobId;
+    private Range byteRange = null;
 
-    /**
-     * We plan to mark this deprecated to encourage users to use the constructor
-     * that takes a job Id. We will still need this method for single Put
-     * operations, but the preferred method is to use the put request in the
-     * context of a bulk request.
-     */
+    @Deprecated
     public GetObjectRequest(final String bucketName, final String objectName) {
+        this(bucketName, objectName, null);
+    }
+
+    public GetObjectRequest(final String bucketName, final String objectName, final UUID jobId) {
         this.bucketName = bucketName;
         this.objectName = objectName;
-        this.byteRange = null;
+        this.jobId = jobId;
+
+        if(jobId != null) {
+            this.getQueryParams().put("job", jobId.toString());
+        }
     }
 
     /**
@@ -91,5 +97,9 @@ public class GetObjectRequest extends AbstractRequest {
     @Override
     public HttpVerb getVerb() {
         return HttpVerb.GET;
+    }
+
+    public UUID getJobId() {
+        return this.jobId;
     }
 }
