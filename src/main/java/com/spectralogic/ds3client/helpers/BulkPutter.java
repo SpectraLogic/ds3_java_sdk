@@ -95,7 +95,7 @@ public class BulkPutter {
             final ObjectStreamGetter objectStreamGetter) {
         return new AsyncFunction<MasterObjectList, Integer>() {
             @Override
-            public ListenableFuture<Integer> apply(MasterObjectList input) throws Exception {
+            public ListenableFuture<Integer> apply(final MasterObjectList input) throws Exception {
                 final List<ListenableFuture<Integer>> results = new ArrayList<ListenableFuture<Integer>>();
                 for (final Objects objects : input.getObjects()) {
                     results.add(buildObjectListPutter(bucket, input.getJobid(), service, objectStreamGetter, objects));
@@ -144,7 +144,7 @@ public class BulkPutter {
     private static Function<Iterable<Integer>, Integer> buildSumFunction() {
         return new Function<Iterable<Integer>, Integer>() {
             @Override
-            public Integer apply(Iterable<Integer> input) {
+            public Integer apply(final Iterable<Integer> input) {
                 int total = 0;
                 for (final int count : input) {
                     total += count;

@@ -7,7 +7,7 @@ public class Ds3KeyNotFoundException extends Exception {
         super(buildExceptionMessage(objectKey));
     }
 
-    private static String buildExceptionMessage(String objectKey) {
+    private static String buildExceptionMessage(final String objectKey) {
         return String.format("The bulk response referenced an object key '%s' that was never provided to the request.", objectKey);
     }
 }
