@@ -34,7 +34,7 @@ public class Ds3BulkException extends Exception {
     public static Function<Exception, Ds3BulkException> buildMapper() {
         return new Function<Exception, Ds3BulkException>() {
             @Override
-            public Ds3BulkException apply(Exception input) {
+            public Ds3BulkException apply(final Exception input) {
                 return new Ds3BulkException(input);
             }
         };

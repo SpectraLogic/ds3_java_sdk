@@ -5,27 +5,29 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
+import com.spectralogic.ds3client.models.Ds3Object;
+
 public class FilePutObject implements PutObject {
-    private final String key;
+    private final Ds3Object ds3Object;
     private final File file;
 
     public FilePutObject(final String key, final File file) {
-        this.key = key;
+        this.ds3Object = new Ds3Object(key, file.length());
         this.file = file;
     }
-    
+
     @Override
     public String getKey() {
-        return key;
+        return this.ds3Object.getName();
     }
 
     @Override
-    public long getSize() {
-        return this.file.length();
+    public Ds3Object getObject() {
+        return this.ds3Object;
     }
 
     @Override
-    public InputStream getContents() throws IOException {
+    public InputStream getContent() throws IOException {
         return new FileInputStream(this.file);
     }
 }
