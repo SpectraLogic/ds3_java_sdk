@@ -35,7 +35,9 @@ public class Ds3BulkException extends Exception {
         return new Function<Exception, Ds3BulkException>() {
             @Override
             public Ds3BulkException apply(final Exception input) {
-                return new Ds3BulkException(input);
+                return input instanceof Ds3BulkException
+                    ? (Ds3BulkException)input
+                    : new Ds3BulkException(input);
             }
         };
     }
