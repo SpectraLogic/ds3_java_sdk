@@ -3,9 +3,7 @@ package com.spectralogic.ds3client.helpers;
 import java.io.IOException;
 import java.security.SignatureException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.Callable;
 
@@ -19,37 +17,33 @@ import com.spectralogic.ds3client.models.MasterObjectList;
 import com.spectralogic.ds3client.models.Objects;
 import com.spectralogic.ds3client.serializer.XmlProcessingException;
 
-class BulkTransferExecutor<T extends ObjectInfo> {
+class BulkTransferExecutor {
     private final ListeningExecutorService service;
-    private final Transferrer<T> transferrer;    
+    private final Transferrer transferrer;    
     
-    public interface Transferrer<T extends ObjectInfo> {
-        public MasterObjectList prime(final String bucket, final List<Ds3Object> ds3Objects)
+    public interface Transferrer {
+        public MasterObjectList prime(final String bucket, final Iterable<Ds3Object> ds3Objects)
                 throws SignatureException, IOException, XmlProcessingException;
-        public void transfer(final UUID jobId, final String bucket, final Ds3Object ds3Object, final T object)
+        public void transfer(final UUID jobId, final String bucket, final Ds3Object ds3Object)
                 throws Ds3KeyNotFoundException, IOException, SignatureException;
     }
 
-    public BulkTransferExecutor(final ListeningExecutorService service, final Transferrer<T> transferrer) {
+    public BulkTransferExecutor(final ListeningExecutorService service, final Transferrer transferrer) {
         this.service = service;
         this.transferrer = transferrer;
     }
 
-    public ListenableFuture<Integer> transfer(final String bucket, final Iterable<? extends T> objects) {
+    public ListenableFuture<Integer> transfer(final String bucket, final Iterable<Ds3Object> objects) {
         return Futures.transform(
             this.service.submit(this.prime(bucket, objects)),
-            this.buildJobStarter(bucket, new BulkObjectLookup(objects))
+            this.buildJobStarter(bucket)
         );
     }
 
-    private Callable<MasterObjectList> prime(final String bucket, final Iterable<? extends T> objects) {
+    private Callable<MasterObjectList> prime(final String bucket, final Iterable<Ds3Object> ds3Objects) {
         return new Callable<MasterObjectList>() {
             @Override
             public MasterObjectList call() throws Exception {
-                final List<Ds3Object> ds3Objects = new ArrayList<Ds3Object>();
-                for (final ObjectInfo putObject : objects) {
-                    ds3Objects.add(putObject.getObject());
-                }
                 return BulkTransferExecutor.this.transferrer.prime(bucket, ds3Objects);
             }
         };
@@ -58,17 +52,15 @@ class BulkTransferExecutor<T extends ObjectInfo> {
     /**
      * @param bucket
      * @param transferrer
-     * @param lookup
      * @return An async function that starts parallel put operations and returns the number of successful puts.
      */
-    private AsyncFunction<MasterObjectList, Integer> buildJobStarter(final String bucket, final BulkObjectLookup lookup) {
+    private AsyncFunction<MasterObjectList, Integer> buildJobStarter(final String bucket) {
         return new AsyncFunction<MasterObjectList, Integer>() {
             @Override
             public ListenableFuture<Integer> apply(final MasterObjectList input) throws Exception {
                 final List<ListenableFuture<Integer>> results = new ArrayList<ListenableFuture<Integer>>();
                 for (final Objects objects : input.getObjects()) {
                     results.add(BulkTransferExecutor.this.buildObjectListFuture(
-                        lookup,
                         input.getJobid(),
                         bucket,
                         objects
@@ -80,7 +72,6 @@ class BulkTransferExecutor<T extends ObjectInfo> {
     }
     
     private ListenableFuture<Integer> buildObjectListFuture(
-            final BulkObjectLookup lookup,
             final UUID jobid,
             final String bucket,
             final Objects objects) {
@@ -92,8 +83,7 @@ class BulkTransferExecutor<T extends ObjectInfo> {
                     BulkTransferExecutor.this.transferrer.transfer(
                         jobid,
                         bucket,
-                        ds3Object,
-                        lookup.get(ds3Object.getName())
+                        ds3Object
                     );
                     objectCount++;
                 }
@@ -116,29 +106,5 @@ class BulkTransferExecutor<T extends ObjectInfo> {
                 return total;
             }
         };
-    }
-    
-    class BulkObjectLookup {
-        private final Map<String, T> objectLookup;
-
-        public BulkObjectLookup(final Iterable<? extends T> objects) {
-            this.objectLookup = this.buildObjectLookup(objects);
-        }
-        
-        protected T get(final String key) throws Ds3KeyNotFoundException {
-            final T object = this.objectLookup.get(key);
-            if (object == null) {
-                throw new Ds3KeyNotFoundException(key);
-            }
-            return object;
-        }
-
-        private Map<String, T> buildObjectLookup(final Iterable<? extends T> objects) {
-            final Map<String, T> lookup = new HashMap<String, T>();
-            for (final T object : objects) {
-                lookup.put(object.getKey(), object);
-            }
-            return lookup;
-        }
     }
 }
