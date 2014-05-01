@@ -35,14 +35,14 @@ class BulkTransferExecutor<T extends ObjectInfo> {
         this.transferrer = transferrer;
     }
 
-    public ListenableFuture<Integer> transfer(final String bucket, final Iterable<T> objects) {
+    public ListenableFuture<Integer> transfer(final String bucket, final Iterable<? extends T> objects) {
         return Futures.transform(
             this.service.submit(this.prime(bucket, objects)),
             this.buildJobStarter(bucket, new BulkObjectLookup(objects))
         );
     }
 
-    private Callable<MasterObjectList> prime(final String bucket, final Iterable<T> objects) {
+    private Callable<MasterObjectList> prime(final String bucket, final Iterable<? extends T> objects) {
         return new Callable<MasterObjectList>() {
             @Override
             public MasterObjectList call() throws Exception {
@@ -121,7 +121,7 @@ class BulkTransferExecutor<T extends ObjectInfo> {
     class BulkObjectLookup {
         private final Map<String, T> objectLookup;
 
-        public BulkObjectLookup(final Iterable<T> objects) {
+        public BulkObjectLookup(final Iterable<? extends T> objects) {
             this.objectLookup = this.buildObjectLookup(objects);
         }
         
@@ -133,7 +133,7 @@ class BulkTransferExecutor<T extends ObjectInfo> {
             return object;
         }
 
-        private Map<String, T> buildObjectLookup(final Iterable<T> objects) {
+        private Map<String, T> buildObjectLookup(final Iterable<? extends T> objects) {
             final Map<String, T> lookup = new HashMap<String, T>();
             for (final T object : objects) {
                 lookup.put(object.getKey(), object);

@@ -14,11 +14,9 @@ import com.spectralogic.ds3client.serializer.XmlProcessingException;
 
 class BulkPutTransferrer implements BulkTransferExecutor.Transferrer<PutObject> {
     private final Ds3Client client;
-    private final String bucket;
 
-    public BulkPutTransferrer(final Ds3Client client, final String bucket) {
+    public BulkPutTransferrer(final Ds3Client client) {
         this.client = client;
-        this.bucket = bucket;
     }
 
     @Override
@@ -35,7 +33,7 @@ class BulkPutTransferrer implements BulkTransferExecutor.Transferrer<PutObject> 
             final PutObject putObject)
             throws Ds3KeyNotFoundException, IOException, SignatureException {
         this.client.putObject(new PutObjectRequest(
-            this.bucket,
+            bucket,
             ds3Object.getName(),
             jobId,
             ds3Object.getSize(),

@@ -14,7 +14,7 @@ import com.spectralogic.ds3client.Ds3Client;
 import com.spectralogic.ds3client.models.Contents;
 
 public class Ds3ClientHelpers {
-    private final ListeningExecutorService service;    
+    private final ListeningExecutorService service;
     private final Ds3Client client;
 
     public Ds3ClientHelpers(final ListeningExecutorService service, final Ds3Client client) {
@@ -31,7 +31,7 @@ public class Ds3ClientHelpers {
      */
     public CheckedFuture<Integer, Ds3BulkException> readObjects(
             final String bucket,
-            final Iterable<GetObject> objectsToGet) {
+            final Iterable<? extends GetObject> objectsToGet) {
         return checked(
             new BulkTransferExecutor<GetObject>(this.service, new BulkGetTransferrer(this.client))
                 .transfer(bucket, objectsToGet)
@@ -47,9 +47,9 @@ public class Ds3ClientHelpers {
      */
     public CheckedFuture<Integer, Ds3BulkException> writeObjects(
             final String bucket,
-            final Iterable<PutObject> objectsToPut) {
+            final Iterable<? extends PutObject> objectsToPut) {
         return checked(
-            new BulkTransferExecutor<PutObject>(this.service, new BulkPutTransferrer(this.client, bucket))
+            new BulkTransferExecutor<PutObject>(this.service, new BulkPutTransferrer(this.client))
                 .transfer(bucket, objectsToPut)
         );
     }
