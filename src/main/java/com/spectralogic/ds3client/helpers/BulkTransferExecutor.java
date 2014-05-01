@@ -8,82 +8,41 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.Callable;
-import java.util.concurrent.Executors;
 
 import com.google.common.base.Function;
 import com.google.common.util.concurrent.AsyncFunction;
-import com.google.common.util.concurrent.CheckedFuture;
-import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
-import com.google.common.util.concurrent.MoreExecutors;
-import com.spectralogic.ds3client.Ds3Client;
 import com.spectralogic.ds3client.models.Ds3Object;
 import com.spectralogic.ds3client.models.MasterObjectList;
 import com.spectralogic.ds3client.models.Objects;
 import com.spectralogic.ds3client.serializer.XmlProcessingException;
 
 class BulkTransferExecutor<T extends ObjectInfo> {
-    private static final int THREAD_COUNT = 10;
-
-    private final boolean isManagingService;
-    private final ListeningExecutorService service;    
-    private final Ds3Client client;
+    private final ListeningExecutorService service;
+    private final Transferrer<T> transferrer;    
     
     public interface Transferrer<T extends ObjectInfo> {
-        public MasterObjectList prime(final List<Ds3Object> ds3Objects)
+        public MasterObjectList prime(final String bucket, final List<Ds3Object> ds3Objects)
                 throws SignatureException, IOException, XmlProcessingException;
-        public void transfer(final UUID jobId, final Ds3Object ds3Object, final T object)
+        public void transfer(final UUID jobId, final String bucket, final Ds3Object ds3Object, final T object)
                 throws Ds3KeyNotFoundException, IOException, SignatureException;
     }
 
-    public BulkTransferExecutor(final Ds3Client client) {
-        this.isManagingService = true;
-        this.service = MoreExecutors.listeningDecorator(Executors.newFixedThreadPool(THREAD_COUNT));
-        this.client = client;
-    }
-
-    public BulkTransferExecutor(final ListeningExecutorService service, final Ds3Client client) {
-        this.isManagingService = false;
+    public BulkTransferExecutor(final ListeningExecutorService service, final Transferrer<T> transferrer) {
         this.service = service;
-        this.client = client;
+        this.transferrer = transferrer;
     }
 
-    public Ds3Client getClient() {
-        return this.client;
-    }
-
-    public CheckedFuture<Integer, Ds3BulkException> transfer(
-            final String bucket,
-            final Iterable<T> objects,
-            final Transferrer<T> transferrer) {
-        
-        final ListenableFuture<Integer> result = Futures.transform(
-            this.service.submit(this.prime(objects, transferrer)),
-            this.buildJobStarter(bucket, transferrer, new BulkObjectLookup(objects))
+    public ListenableFuture<Integer> transfer(final String bucket, final Iterable<T> objects) {
+        return Futures.transform(
+            this.service.submit(this.prime(bucket, objects)),
+            this.buildJobStarter(bucket, new BulkObjectLookup(objects))
         );
-        this.attachServiceShutdown(result);
-        return Futures.makeChecked(result, Ds3BulkException.buildMapper());
     }
 
-    private void attachServiceShutdown(final ListenableFuture<Integer> result) {
-        if (this.isManagingService) {
-            Futures.addCallback(result, new FutureCallback<Integer>() {
-                @Override
-                public void onSuccess(final Integer result) {
-                    BulkTransferExecutor.this.service.shutdown();
-                }
-
-                @Override
-                public void onFailure(final Throwable t) {
-                    BulkTransferExecutor.this.service.shutdown();
-                }
-            });
-        }
-    }
-
-    private Callable<MasterObjectList> prime(final Iterable<T> objects, final Transferrer<T> transferrer) {
+    private Callable<MasterObjectList> prime(final String bucket, final Iterable<T> objects) {
         return new Callable<MasterObjectList>() {
             @Override
             public MasterObjectList call() throws Exception {
@@ -91,7 +50,7 @@ class BulkTransferExecutor<T extends ObjectInfo> {
                 for (final ObjectInfo putObject : objects) {
                     ds3Objects.add(putObject.getObject());
                 }
-                return transferrer.prime(ds3Objects);
+                return BulkTransferExecutor.this.transferrer.prime(bucket, ds3Objects);
             }
         };
     }
@@ -102,38 +61,45 @@ class BulkTransferExecutor<T extends ObjectInfo> {
      * @param lookup
      * @return An async function that starts parallel put operations and returns the number of successful puts.
      */
-    private AsyncFunction<MasterObjectList, Integer> buildJobStarter(
-            final String bucket,
-            final Transferrer<T> transferrer,
-            final BulkObjectLookup lookup) {
+    private AsyncFunction<MasterObjectList, Integer> buildJobStarter(final String bucket, final BulkObjectLookup lookup) {
         return new AsyncFunction<MasterObjectList, Integer>() {
             @Override
             public ListenableFuture<Integer> apply(final MasterObjectList input) throws Exception {
                 final List<ListenableFuture<Integer>> results = new ArrayList<ListenableFuture<Integer>>();
                 for (final Objects objects : input.getObjects()) {
-                    results.add(BulkTransferExecutor.this.service.submit(BulkTransferExecutor.this.buildObjectListFuture(transferrer, lookup, input.getJobid(), objects)));
+                    results.add(BulkTransferExecutor.this.buildObjectListFuture(
+                        lookup,
+                        input.getJobid(),
+                        bucket,
+                        objects
+                    ));
                 }
                 return Futures.transform(Futures.allAsList(results), buildSumFunction());
             }
         };
     }
     
-    private Callable<Integer> buildObjectListFuture(
-            final Transferrer<T> transferrer,
+    private ListenableFuture<Integer> buildObjectListFuture(
             final BulkObjectLookup lookup,
             final UUID jobid,
+            final String bucket,
             final Objects objects) {
-        return new Callable<Integer>() {
+        return this.service.submit(new Callable<Integer>() {
             @Override
             public Integer call() throws Exception {
                 int objectCount = 0;
                 for (final Ds3Object ds3Object : objects) {
-                    transferrer.transfer(jobid, ds3Object, lookup.get(ds3Object.getName()));
+                    BulkTransferExecutor.this.transferrer.transfer(
+                        jobid,
+                        bucket,
+                        ds3Object,
+                        lookup.get(ds3Object.getName())
+                    );
                     objectCount++;
                 }
                 return objectCount;
             }
-        };
+        });
     }
 
     /**

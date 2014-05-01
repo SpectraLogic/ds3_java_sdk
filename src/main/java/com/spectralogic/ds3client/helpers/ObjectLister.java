@@ -3,20 +3,34 @@ package com.spectralogic.ds3client.helpers;
 import java.io.IOException;
 import java.security.SignatureException;
 import java.util.ArrayList;
+import java.util.concurrent.Callable;
 
+import com.google.common.util.concurrent.ListenableFuture;
+import com.google.common.util.concurrent.ListeningExecutorService;
 import com.spectralogic.ds3client.Ds3Client;
 import com.spectralogic.ds3client.commands.GetBucketRequest;
 import com.spectralogic.ds3client.models.Contents;
 import com.spectralogic.ds3client.models.ListBucketResult;
 
-public class ObjectListGetter {
+class ObjectLister {
+    private final ListeningExecutorService service;
     private final Ds3Client client;
 
-    public ObjectListGetter(final Ds3Client client) {
+    public ObjectLister(final ListeningExecutorService service, final Ds3Client client) {
+        this.service = service;
         this.client = client;
     }
+
+    public ListenableFuture<Iterable<Contents>> getAllObjects(final String bucket) {
+        return this.service.submit(new Callable<Iterable<Contents>>() {
+            @Override
+            public Iterable<Contents> call() throws Exception {
+                return ObjectLister.this.getAllObjectsSynchronous(bucket);
+            }
+        });
+    }
     
-    public Iterable<Contents> getAllObjects(final String bucket) throws SignatureException, IOException {
+    private Iterable<Contents> getAllObjectsSynchronous(final String bucket) throws SignatureException, IOException {
         // Create a result array.
         final ArrayList<Contents> result = new ArrayList<Contents>();
         
