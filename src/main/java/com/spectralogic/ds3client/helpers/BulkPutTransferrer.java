@@ -7,6 +7,7 @@ import java.util.UUID;
 import com.google.common.collect.Lists;
 import com.spectralogic.ds3client.Ds3Client;
 import com.spectralogic.ds3client.commands.BulkPutRequest;
+import com.spectralogic.ds3client.commands.BulkPutResponse;
 import com.spectralogic.ds3client.commands.PutObjectRequest;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.ObjectPutter;
 import com.spectralogic.ds3client.models.Ds3Object;
@@ -25,18 +26,22 @@ class BulkPutTransferrer implements BulkTransferExecutor.Transferrer {
     @Override
     public MasterObjectList prime(final String bucket, final Iterable<Ds3Object> ds3Objects)
             throws SignatureException, IOException, XmlProcessingException {
-        return this.client.bulkPut(new BulkPutRequest(bucket, Lists.newArrayList(ds3Objects))).getResult();
+        final BulkPutRequest request = new BulkPutRequest(bucket, Lists.newArrayList(ds3Objects));
+        try (final BulkPutResponse response = this.client.bulkPut(request)) {
+            return response.getResult();
+        }
     }
 
     @Override
     public void transfer(final UUID jobId, final String bucket, final Ds3Object ds3Object)
             throws SignatureException, IOException {
-        this.client.putObject(new PutObjectRequest(
+        final PutObjectRequest request = new PutObjectRequest(
             bucket,
             ds3Object.getName(),
             jobId,
             ds3Object.getSize(),
             this.putter.getContent(ds3Object.getName())
-        ));
+        );
+        this.client.putObject(request).close();
     }
 }

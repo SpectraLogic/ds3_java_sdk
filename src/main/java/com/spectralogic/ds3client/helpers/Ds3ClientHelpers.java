@@ -74,10 +74,16 @@ public class Ds3ClientHelpers {
      */
     public int readAllObjects(final String bucket, final ObjectGetter getter)
             throws SignatureException, IOException, XmlProcessingException {
+        // Get all of the Contents objects..
+        final Iterable<Contents> contentsList = this.listObjects(bucket);
+        
+        // Convert them all to Ds3Objects. (OMG Java)
         final List<Ds3Object> ds3Objects = new ArrayList<>();
-        for (final Contents contents : this.listObjects(bucket)) {
+        for (final Contents contents : contentsList) {
             ds3Objects.add(new Ds3Object(contents.getKey()));
         }
+        
+        // Perform the bulk read.
         return this.readObjects(bucket, ds3Objects, getter);
     }
     
@@ -89,7 +95,7 @@ public class Ds3ClientHelpers {
      */
     public Iterable<Contents> listObjects(final String bucket) throws SignatureException, IOException {
         // Create a result array.
-        final ArrayList<Contents> result = new ArrayList<Contents>();
+        final List<Contents> result = new ArrayList<>();
         
         // Create paging state.
         boolean isTruncated = false;
