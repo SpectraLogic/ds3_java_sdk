@@ -18,8 +18,17 @@ public class FileObjectGetter implements ObjectGetter {
 
     @Override
     public void writeContents(final String key, final InputStream contents) throws IOException {
-        try (final FileOutputStream output = new FileOutputStream(new File(this.root, key))) {
+        final File file = new File(this.root, key);
+        ensureParentDirectory(file);
+        try (final FileOutputStream output = new FileOutputStream(file)) {
             IOUtils.copy(contents, output);
+        }
+    }
+
+    private void ensureParentDirectory(final File file) {
+        final File parent = file.getParentFile();
+        if (!parent.exists()) {
+            parent.mkdirs();
         }
     }
 }
