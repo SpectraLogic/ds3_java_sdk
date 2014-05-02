@@ -25,7 +25,7 @@ public class Ds3ClientHelpers {
     }
     
     public interface ObjectPutter {
-        public InputStream getContent(String key);
+        public InputStream getContent(String key) throws IOException;
     }
 
     /**
