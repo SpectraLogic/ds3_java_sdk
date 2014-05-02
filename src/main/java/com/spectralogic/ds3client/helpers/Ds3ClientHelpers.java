@@ -1,91 +1,124 @@
 package com.spectralogic.ds3client.helpers;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.security.SignatureException;
+import java.util.ArrayList;
+import java.util.List;
 
-import com.google.common.base.Function;
-import com.google.common.collect.Iterables;
-import com.google.common.util.concurrent.AsyncFunction;
-import com.google.common.util.concurrent.CheckedFuture;
-import com.google.common.util.concurrent.Futures;
-import com.google.common.util.concurrent.ListenableFuture;
-import com.google.common.util.concurrent.ListeningExecutorService;
 import com.spectralogic.ds3client.Ds3Client;
+import com.spectralogic.ds3client.commands.GetBucketRequest;
 import com.spectralogic.ds3client.models.Contents;
 import com.spectralogic.ds3client.models.Ds3Object;
+import com.spectralogic.ds3client.models.ListBucketResult;
+import com.spectralogic.ds3client.serializer.XmlProcessingException;
 
 public class Ds3ClientHelpers {
-    private final ListeningExecutorService service;
     private final Ds3Client client;
 
-    public Ds3ClientHelpers(final ListeningExecutorService service, final Ds3Client client) {
-        this.service = service;
+    public Ds3ClientHelpers(final Ds3Client client) {
         this.client = client;
+    }
+    
+    public interface ObjectGetter {
+        public void writeContents(String key, InputStream contents) throws IOException;
+    }
+    
+    public interface ObjectPutter {
+        public InputStream getContent(String key);
     }
 
     /**
-     * Performs a bulk get of {@code objectsToPut} into {@code bucket}. 
+     * Performs a bulk get of {@code objectsToGet} from {@code bucket} using the given {@code getter}.
      * 
      * @param bucket
      * @param objectsToGet
-     * @param objectGetter
-     * @return A future containing the number of objects put or the resulting exception.
+     * @param getter
+     * @return The number of objects read.
+     * @throws SignatureException
+     * @throws IOException
+     * @throws XmlProcessingException
      */
-    public CheckedFuture<Integer, Ds3BulkException> readObjects(
-            final String bucket,
-            final Iterable<Ds3Object> objectsToGet,
-            final ObjectGetter objectGetter) {
-        return checked(
-            new BulkTransferExecutor(this.service, new BulkGetTransferrer(this.client, objectGetter))
-                .transfer(bucket, objectsToGet)
-        );
+    public int readObjects(final String bucket, final Iterable<Ds3Object> objectsToGet, final ObjectGetter getter)
+            throws SignatureException, IOException, XmlProcessingException {
+        return new BulkTransferExecutor(new BulkGetTransferrer(this.client, getter))
+            .transfer(bucket, objectsToGet);
     }
     
     /**
-     * Performs a bulk put of {@code objectsToPut} into {@code bucket}. 
+     * Performs a bulk put of {@code objectsToPut} into {@code bucket} using the given {@code putter}.
      * 
      * @param bucket
      * @param objectsToPut
      * @param putter
-     * @return A future containing the number of objects put or the resulting exception.
+     * @return The number of objects put.
+     * @throws SignatureException
+     * @throws IOException
+     * @throws XmlProcessingException
      */
-    public CheckedFuture<Integer, Ds3BulkException> writeObjects(
-            final String bucket,
-            final Iterable<Ds3Object> objectsToPut,
-            final ObjectPutter putter) {
-        return checked(
-            new BulkTransferExecutor(this.service, new BulkPutTransferrer(this.client, putter))
-                .transfer(bucket, objectsToPut)
-        );
+    public int writeObjects(final String bucket, final Iterable<Ds3Object> objectsToPut, final ObjectPutter putter)
+            throws SignatureException, IOException, XmlProcessingException {
+        return new BulkTransferExecutor(new BulkPutTransferrer(this.client, putter))
+            .transfer(bucket, objectsToPut);
     }
     
-    public CheckedFuture<Integer, Ds3BulkException> readAllObjects(final String bucket, final ObjectGetter getter) {
-        final BulkTransferExecutor bulkTransferExecutor =
-                new BulkTransferExecutor(this.service, new BulkGetTransferrer(this.client, getter));
-        return checked(Futures.transform(
-            new ObjectLister(this.service, this.client).getAllObjects(bucket),
-            new AsyncFunction<Iterable<Contents>, Integer>() {
-                @Override
-                public ListenableFuture<Integer> apply(final Iterable<Contents> input) throws Exception {
-                    return bulkTransferExecutor.transfer(bucket, Iterables.transform(input, new ContentsToDs3ObjectConverter()));
-                }
-            }
-        ));
-    }
-    
-    private final class ContentsToDs3ObjectConverter implements Function<Contents, Ds3Object> {
-        @Override
-        public Ds3Object apply(final Contents input) {
-            return new Ds3Object(input.getKey());
+    /**
+     * Reads all objects from the {@code bucket} using the given {@code getter}.
+     * 
+     * @param bucket
+     * @param getter
+     * @return The number of objects read.
+     * @throws SignatureException
+     * @throws IOException
+     * @throws XmlProcessingException
+     */
+    public int readAllObjects(final String bucket, final ObjectGetter getter)
+            throws SignatureException, IOException, XmlProcessingException {
+        final List<Ds3Object> ds3Objects = new ArrayList<>();
+        for (final Contents contents : this.listObjects(bucket)) {
+            ds3Objects.add(new Ds3Object(contents.getKey()));
         }
+        return this.readObjects(bucket, ds3Objects, getter);
     }
     
-    public CheckedFuture<Iterable<Contents>, Ds3BulkException> listObjects(final String bucket)
-            throws SignatureException, IOException {
-        return checked(new ObjectLister(this.service, this.client).getAllObjects(bucket));
-    }
-    
-    private static <T> CheckedFuture<T, Ds3BulkException> checked(final ListenableFuture<T> future) {
-        return Futures.makeChecked(future, Ds3BulkException.buildMapper());
+    /**
+     * @param bucket
+     * @return All of the objects in the bucket.
+     * @throws SignatureException
+     * @throws IOException
+     */
+    public Iterable<Contents> listObjects(final String bucket) throws SignatureException, IOException {
+        // Create a result array.
+        final ArrayList<Contents> result = new ArrayList<Contents>();
+        
+        // Create paging state.
+        boolean isTruncated = false;
+        String marker = null;
+        
+        // Start the loop.
+        do {
+            // Build the request.
+            final GetBucketRequest request = new GetBucketRequest(bucket);
+            if (isTruncated) {
+                request.withNextMarker(marker);
+            }
+            
+            // Submit the request.
+            final ListBucketResult response = this.client.getBucket(request).getResult();
+            
+            // Update paging state.
+            isTruncated = response.isTruncated();
+            marker = response.getNextMarker();
+            
+            // Add response items to result list.
+            for (final Contents contents : response.getContentsList()) {
+                result.add(contents);
+            }
+            
+        // Continue if there are still more things to get.
+        } while (isTruncated);
+        
+        // Return the result list.
+        return result;
     }
 }

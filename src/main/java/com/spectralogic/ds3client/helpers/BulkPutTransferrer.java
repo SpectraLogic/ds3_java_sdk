@@ -8,6 +8,7 @@ import com.google.common.collect.Lists;
 import com.spectralogic.ds3client.Ds3Client;
 import com.spectralogic.ds3client.commands.BulkPutRequest;
 import com.spectralogic.ds3client.commands.PutObjectRequest;
+import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.ObjectPutter;
 import com.spectralogic.ds3client.models.Ds3Object;
 import com.spectralogic.ds3client.models.MasterObjectList;
 import com.spectralogic.ds3client.serializer.XmlProcessingException;
@@ -29,7 +30,7 @@ class BulkPutTransferrer implements BulkTransferExecutor.Transferrer {
 
     @Override
     public void transfer(final UUID jobId, final String bucket, final Ds3Object ds3Object)
-            throws Ds3KeyNotFoundException, IOException, SignatureException {
+            throws SignatureException, IOException {
         this.client.putObject(new PutObjectRequest(
             bucket,
             ds3Object.getName(),
