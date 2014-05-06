@@ -27,7 +27,6 @@ import java.security.SignatureException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.Executors;
 
 import mockit.FullVerificationsInOrder;
 import mockit.Mocked;
@@ -40,8 +39,6 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.google.common.collect.Lists;
-import com.google.common.util.concurrent.ListeningExecutorService;
-import com.google.common.util.concurrent.MoreExecutors;
 import com.spectralogic.ds3client.Ds3Client;
 import com.spectralogic.ds3client.commands.BulkGetRequest;
 import com.spectralogic.ds3client.commands.BulkGetResponse;
@@ -91,13 +88,15 @@ public class Ds3ClientHelpers_Test {
             new Ds3Object("bar"),
             new Ds3Object("baz")
         );
-
-        // Create a list to keep track of the keys written.
-        final List<String> objectsGotten = new ArrayList<String>();
         
         // Run readObjects.
         final int objectCount = new Ds3ClientHelpers(this.ds3Client)
-            .readObjects("mybucket", objectsToGet, new ObjectGetterImplementation(objectsGotten));
+            .readObjects("mybucket", objectsToGet, new ObjectGetter() {
+                @Override
+                public void writeContents(final String key, final InputStream contents) throws IOException {
+                    assertThat(streamToString(contents), is(key + " contents"));
+                }
+            });
         
         // Check the results, including the call order.
         assertThat(objectCount, is(3));
@@ -160,9 +159,6 @@ public class Ds3ClientHelpers_Test {
             );
         }};
         
-        // Create the thread pool.
-        final ListeningExecutorService service = MoreExecutors.listeningDecorator(Executors.newFixedThreadPool(THREAD_COUNT));
-
         // Call the list objects method.
         final List<Contents> contentList = Lists.newArrayList(new Ds3ClientHelpers(this.ds3Client).listObjects("mybucket"));
         
@@ -171,9 +167,6 @@ public class Ds3ClientHelpers_Test {
         checkContents(contentList.get(0), "foo", "2cde576e5f5a613e6cee466a681f4929", "2009-10-12T17:50:30.000Z", 12);
         checkContents(contentList.get(1), "bar", "f3f98ff00be128139332bcf4b772be43", "2009-10-14T17:50:31.000Z", 12);
         checkContents(contentList.get(2), "baz", "802d45fcb9a3f7d00f1481362edc0ec9", "2009-10-18T17:50:35.000Z", 12);
-        
-        // Shut down the thread pool.
-        service.shutdown();
     }
     
     private static void checkContents(
@@ -213,23 +206,6 @@ public class Ds3ClientHelpers_Test {
         @Override
         public void describeTo(final Description description) {
             description.appendText("key: " + this.key + "\ncontents: " + this.contents);
-        }
-    }
-
-    private final class ObjectGetterImplementation implements ObjectGetter {
-        private final List<String> objectsGotten;
-
-        private ObjectGetterImplementation(final List<String> objectsGotten) {
-            this.objectsGotten = objectsGotten;
-        }
-
-        @Override
-        public void writeContents(final String key, final InputStream contents) throws IOException {
-            // Check the content.
-            assertThat(streamToString(contents), is(key + " contents"));
-            
-            // Record the key.
-            this.objectsGotten.add(key);
         }
     }
     
