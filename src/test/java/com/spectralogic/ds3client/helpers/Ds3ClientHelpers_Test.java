@@ -50,6 +50,8 @@ import com.spectralogic.ds3client.commands.GetObjectRequest;
 import com.spectralogic.ds3client.commands.GetObjectResponse;
 import com.spectralogic.ds3client.commands.PutObjectRequest;
 import com.spectralogic.ds3client.commands.PutObjectResponse;
+import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.IReadJob;
+import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.IWriteJob;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.ObjectGetter;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.ObjectPutter;
 import com.spectralogic.ds3client.models.Contents;
@@ -61,9 +63,10 @@ import com.spectralogic.ds3client.models.Owner;
 import com.spectralogic.ds3client.serializer.XmlProcessingException;
 
 public class Ds3ClientHelpers_Test {
+    private static final String MYBUCKET = "mybucket";
+    
     @Mocked
     private Ds3Client ds3Client;
-    private static final int THREAD_COUNT = 10;
     
     @Test
     public void testReadObjects() throws SignatureException, IOException, XmlProcessingException {
@@ -89,17 +92,17 @@ public class Ds3ClientHelpers_Test {
             new Ds3Object("baz")
         );
         
-        // Run readObjects.
-        final int objectCount = new Ds3ClientHelpers(this.ds3Client)
-            .readObjects("mybucket", objectsToGet, new ObjectGetter() {
-                @Override
-                public void writeContents(final String key, final InputStream contents) throws IOException {
-                    assertThat(streamToString(contents), is(key + " contents"));
-                }
-            });
+        final IReadJob job = new Ds3ClientHelpers(this.ds3Client).startReadJob(MYBUCKET, objectsToGet);
+            
+        assertThat(job.getJobId(), is(jobId));
+        assertThat(job.getBucketName(), is(MYBUCKET));
         
-        // Check the results, including the call order.
-        assertThat(objectCount, is(3));
+        job.read(new ObjectGetter() {
+            @Override
+            public void writeContents(final String key, final InputStream contents) throws IOException {
+                assertThat(streamToString(contents), is(key + " contents"));
+            }
+        });
         
         new FullVerificationsInOrder() {{
             Ds3ClientHelpers_Test.this.ds3Client.bulkGet(this.withInstanceOf(BulkGetRequest.class));
@@ -123,21 +126,22 @@ public class Ds3ClientHelpers_Test {
             times = 3;
         }};
         
-        // Perform the bulk put.
         final Iterable<Ds3Object> objectsToPut = Lists.newArrayList(
                 new Ds3Object("foo", 12),
                 new Ds3Object("bar", 12),
                 new Ds3Object("baz", 12)
         );
-        final int objectCount = new Ds3ClientHelpers(this.ds3Client).writeObjects("mybucket", objectsToPut, new ObjectPutter() {
+        final IWriteJob job = new Ds3ClientHelpers(this.ds3Client).startWriteJob(MYBUCKET, objectsToPut);
+        
+        assertThat(job.getJobId(), is(jobId));
+        assertThat(job.getBucketName(), is(MYBUCKET));
+        
+        job.write(new ObjectPutter() {
             @Override
             public InputStream getContent(final String key) {
                 return streamFromString(key + " contents");
             }
         });
-        
-        // Assert the return value.
-        assertThat(objectCount, is(3));
         
         // Verify the ds3 calls.
         new FullVerificationsInOrder() {{
@@ -160,7 +164,7 @@ public class Ds3ClientHelpers_Test {
         }};
         
         // Call the list objects method.
-        final List<Contents> contentList = Lists.newArrayList(new Ds3ClientHelpers(this.ds3Client).listObjects("mybucket"));
+        final List<Contents> contentList = Lists.newArrayList(new Ds3ClientHelpers(this.ds3Client).listObjects(MYBUCKET));
         
         // Check the results.
         assertThat(contentList.size(), is(3));
@@ -195,7 +199,7 @@ public class Ds3ClientHelpers_Test {
             if (item instanceof PutObjectRequest) {
                 final PutObjectRequest request = (PutObjectRequest) item;
                 return
-                    request.getPath().substring("/mybucket/".length()).equals(this.key)
+                    request.getPath().substring(("/" + MYBUCKET + "/").length()).equals(this.key)
                     && request.getSize() == this.contents.length()
                     && streamToString(request.getStream()).equals(this.contents);
             } else {
@@ -247,7 +251,7 @@ public class Ds3ClientHelpers_Test {
             listBucketResult.setDelimiter("");
             listBucketResult.setMarker(marker);
             listBucketResult.setMaxKeys(2);
-            listBucketResult.setName("mybucket");
+            listBucketResult.setName(MYBUCKET);
             listBucketResult.setNextMarker(nextMarker);
             listBucketResult.setPrefix("");
             listBucketResult.setTruncated(isTruncated);
@@ -323,10 +327,12 @@ public class Ds3ClientHelpers_Test {
             return buildMasterObjectList();
         }
     }
+    
+    private static UUID jobId = new UUID(0x0123456789abcdefl, 0xfedcba9876543210l);
 
     private static MasterObjectList buildMasterObjectList() {
         final MasterObjectList masterObjectList = new MasterObjectList();
-        masterObjectList.setJobid(new UUID(0x0123456789abcdefl, 0xfedcba9876543210l));
+        masterObjectList.setJobid(jobId);
         masterObjectList.setObjects(makeObjectLists());
         return masterObjectList;
     }

@@ -20,20 +20,23 @@ import java.io.InputStream;
 import java.security.SignatureException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
+import com.google.common.collect.Lists;
 import com.spectralogic.ds3client.Ds3Client;
+import com.spectralogic.ds3client.commands.BulkGetRequest;
+import com.spectralogic.ds3client.commands.BulkGetResponse;
+import com.spectralogic.ds3client.commands.BulkPutRequest;
+import com.spectralogic.ds3client.commands.BulkPutResponse;
 import com.spectralogic.ds3client.commands.GetBucketRequest;
 import com.spectralogic.ds3client.models.Contents;
 import com.spectralogic.ds3client.models.Ds3Object;
 import com.spectralogic.ds3client.models.ListBucketResult;
+import com.spectralogic.ds3client.models.MasterObjectList;
 import com.spectralogic.ds3client.serializer.XmlProcessingException;
 
 public class Ds3ClientHelpers {
     private final Ds3Client client;
-
-    public Ds3ClientHelpers(final Ds3Client client) {
-        this.client = client;
-    }
     
     public interface ObjectGetter {
         public void writeContents(String key, InputStream contents) throws IOException;
@@ -42,72 +45,52 @@ public class Ds3ClientHelpers {
     public interface ObjectPutter {
         public InputStream getContent(String key) throws IOException;
     }
+    
+    public interface IJob {
+        public UUID getJobId();
+        public String getBucketName();
+    }
+    
+    public interface IWriteJob extends IJob {
+        public void write(ObjectPutter putter) throws SignatureException, IOException, XmlProcessingException;
+    }
+    
+    public interface IReadJob extends IJob {
+        public void read(ObjectGetter getter) throws SignatureException, IOException, XmlProcessingException;
+    }
 
-    /**
-     * Performs a bulk get of {@code objectsToGet} from {@code bucket} using the given {@code getter}.
-     * 
-     * @param bucket
-     * @param objectsToGet
-     * @param getter
-     * @return The number of objects read.
-     * @throws SignatureException
-     * @throws IOException
-     * @throws XmlProcessingException
-     */
-    public int readObjects(final String bucket, final Iterable<Ds3Object> objectsToGet, final ObjectGetter getter)
-            throws SignatureException, IOException, XmlProcessingException {
-        return new BulkTransferExecutor(new BulkGetTransferrer(this.client, getter))
-            .transfer(bucket, objectsToGet);
+    public Ds3ClientHelpers(final Ds3Client client) {
+        this.client = client;
     }
     
-    /**
-     * Performs a bulk put of {@code objectsToPut} into {@code bucket} using the given {@code putter}.
-     * 
-     * @param bucket
-     * @param objectsToPut
-     * @param putter
-     * @return The number of objects put.
-     * @throws SignatureException
-     * @throws IOException
-     * @throws XmlProcessingException
-     */
-    public int writeObjects(final String bucket, final Iterable<Ds3Object> objectsToPut, final ObjectPutter putter)
+    public IWriteJob startWriteJob(final String bucket, final Iterable<Ds3Object> objectsToWrite)
             throws SignatureException, IOException, XmlProcessingException {
-        return new BulkTransferExecutor(new BulkPutTransferrer(this.client, putter))
-            .transfer(bucket, objectsToPut);
+        try(final BulkPutResponse prime = this.client.bulkPut(new BulkPutRequest(bucket, Lists.newArrayList(objectsToWrite)))) {
+            final MasterObjectList result = prime.getResult();
+            return new WriteJob(this.client, result.getJobid(), bucket, result.getObjects());
+        }
     }
     
-    /**
-     * Reads all objects from the {@code bucket} using the given {@code getter}.
-     * 
-     * @param bucket
-     * @param getter
-     * @return The number of objects read.
-     * @throws SignatureException
-     * @throws IOException
-     * @throws XmlProcessingException
-     */
-    public int readAllObjects(final String bucket, final ObjectGetter getter)
+    public IReadJob startReadJob(final String bucket, final Iterable<Ds3Object> objectsToRead)
             throws SignatureException, IOException, XmlProcessingException {
-        // Get all of the Contents objects..
+        try(final BulkGetResponse prime = this.client.bulkGet(new BulkGetRequest(bucket, Lists.newArrayList(objectsToRead)))) {
+            final MasterObjectList result = prime.getResult();
+            return new ReadJob(this.client, result.getJobid(), bucket, result.getObjects());
+        }
+    }
+    
+    public IReadJob startReadAllJob(final String bucket)
+            throws SignatureException, IOException, XmlProcessingException {
         final Iterable<Contents> contentsList = this.listObjects(bucket);
         
-        // Convert them all to Ds3Objects. (OMG Java)
         final List<Ds3Object> ds3Objects = new ArrayList<>();
         for (final Contents contents : contentsList) {
             ds3Objects.add(new Ds3Object(contents.getKey()));
         }
         
-        // Perform the bulk read.
-        return this.readObjects(bucket, ds3Objects, getter);
+        return this.startReadJob(bucket, ds3Objects);
     }
-    
-    /**
-     * @param bucket
-     * @return All of the objects in the bucket.
-     * @throws SignatureException
-     * @throws IOException
-     */
+
     public Iterable<Contents> listObjects(final String bucket) throws SignatureException, IOException {
         // Create a result array.
         final List<Contents> result = new ArrayList<>();
