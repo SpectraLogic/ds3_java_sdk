@@ -18,6 +18,7 @@ package com.spectralogic.ds3client.models;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ListBucketResult {
@@ -84,7 +85,7 @@ public class ListBucketResult {
     }
 
     public List<Contents> getContentsList() {
-        return contentsList;
+        return contentsList == null ? new ArrayList<Contents>() : contentsList;
     }
 
     public void setContentsList(final List<Contents> contentsList) {

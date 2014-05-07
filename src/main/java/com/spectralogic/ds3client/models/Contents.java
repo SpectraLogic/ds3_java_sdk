@@ -26,7 +26,7 @@ public class Contents {
     @JsonProperty("ETag")
     private String eTag;
     @JsonProperty("Size")
-    private int size;
+    private long size;
     @JsonProperty("StorageClass")
     private String storageClass;
     @JsonProperty("Owner")
@@ -72,11 +72,11 @@ public class Contents {
         this.owner = owner;
     }
 
-    public int getSize() {
+    public long getSize() {
         return size;
     }
 
-    public void setSize(final int size) {
+    public void setSize(final long size) {
         this.size = size;
     }
 
