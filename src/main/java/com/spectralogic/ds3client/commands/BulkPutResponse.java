@@ -20,7 +20,7 @@ import org.apache.http.client.methods.CloseableHttpResponse;
 import java.io.IOException;
 
 public class BulkPutResponse extends BulkResponse {
-    public BulkPutResponse(CloseableHttpResponse response) throws IOException {
+    public BulkPutResponse(final CloseableHttpResponse response) throws IOException {
         super(response);
     }
 }

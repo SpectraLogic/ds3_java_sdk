@@ -20,7 +20,7 @@ import org.apache.http.client.methods.CloseableHttpResponse;
 import java.io.IOException;
 
 public class PutBucketResponse extends AbstractResponse {
-    public PutBucketResponse(CloseableHttpResponse response) throws IOException {
+    public PutBucketResponse(final CloseableHttpResponse response) throws IOException {
         super(response);
     }
 

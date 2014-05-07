@@ -22,7 +22,7 @@ import com.spectralogic.ds3client.serializer.XmlProcessingException;
 import java.util.List;
 
 public class BulkPutRequest extends BulkRequest {
-    public BulkPutRequest(String bucket, List<Ds3Object> objects) throws XmlProcessingException {
+    public BulkPutRequest(final String bucket, final List<Ds3Object> objects) throws XmlProcessingException {
         super(bucket, objects);
         getQueryParams().put("operation", "start_bulk_put");
     }

@@ -28,7 +28,7 @@ public class GetServiceResponse extends AbstractResponse {
 
     private ListAllMyBucketsResult result;
 
-    public GetServiceResponse(CloseableHttpResponse response) throws IOException {
+    public GetServiceResponse(final CloseableHttpResponse response) throws IOException {
         super(response);
     }
 
