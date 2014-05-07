@@ -26,9 +26,16 @@ import org.apache.commons.io.IOUtils;
 
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.ObjectGetter;
 
+/**
+ * Writes files to the local file system preserving the path.
+ */
 public class FileObjectGetter implements ObjectGetter {
     private final Path root;
 
+    /**
+     * Creates a new FileObjectGetter to retrieve files from a remote DS3 system to the local file system.
+     * @param root The {@code root} directory of the local file system for all files being transferred.
+     */
     public FileObjectGetter(final Path root) {
         this.root = root;
     }

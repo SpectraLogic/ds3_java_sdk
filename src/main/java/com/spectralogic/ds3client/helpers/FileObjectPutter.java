@@ -23,10 +23,16 @@ import java.nio.file.StandardOpenOption;
 
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.ObjectPutter;
 
-
+/**
+ * Writes files to a remote DS3 appliance from a directory in the local filesystem.
+ */
 public class FileObjectPutter implements ObjectPutter {
     private final Path root;
 
+    /**
+     * Creates a new FileObjectPutter given a directory in the local file system.
+     * @param root The {@code root} directory for all the files being transferred.
+     */
     public FileObjectPutter(final Path root) {
         this.root = root;
     }
