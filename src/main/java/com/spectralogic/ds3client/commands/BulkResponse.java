@@ -26,7 +26,7 @@ import java.io.StringWriter;
 
 public abstract class BulkResponse extends AbstractResponse {
     private MasterObjectList result;
-    public BulkResponse(CloseableHttpResponse response) throws IOException {
+    public BulkResponse(final CloseableHttpResponse response) throws IOException {
         super(response);
     }
 

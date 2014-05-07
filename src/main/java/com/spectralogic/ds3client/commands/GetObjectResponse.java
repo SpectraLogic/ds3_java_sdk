@@ -24,7 +24,7 @@ public class GetObjectResponse extends AbstractResponse {
 
     private InputStream content;
 
-    public GetObjectResponse(CloseableHttpResponse response) throws IOException {
+    public GetObjectResponse(final CloseableHttpResponse response) throws IOException {
         super(response);
     }
 

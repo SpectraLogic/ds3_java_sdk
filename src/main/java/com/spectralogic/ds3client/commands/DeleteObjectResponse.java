@@ -20,7 +20,7 @@ import org.apache.http.client.methods.CloseableHttpResponse;
 import java.io.IOException;
 
 public class DeleteObjectResponse extends AbstractResponse {
-    public DeleteObjectResponse(CloseableHttpResponse response) throws IOException {
+    public DeleteObjectResponse(final CloseableHttpResponse response) throws IOException {
         super(response);
     }
 

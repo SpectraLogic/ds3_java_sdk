@@ -28,7 +28,7 @@ public class GetBucketResponse extends AbstractResponse {
 
     private ListBucketResult result;
 
-    public GetBucketResponse(CloseableHttpResponse response) throws IOException {
+    public GetBucketResponse(final CloseableHttpResponse response) throws IOException {
         super(response);
 
     }

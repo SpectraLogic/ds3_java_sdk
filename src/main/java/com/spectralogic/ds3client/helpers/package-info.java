@@ -13,19 +13,7 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3client.commands;
-
-import org.apache.http.client.methods.CloseableHttpResponse;
-
-import java.io.IOException;
-
-public class PutBucketResponse extends AbstractResponse {
-    public PutBucketResponse(final CloseableHttpResponse response) throws IOException {
-        super(response);
-    }
-
-    @Override
-    protected void processResponse() throws IOException {
-        checkStatusCode(200);
-    }
-}
+/**
+ * This package contains helper methods to automate common tasks with the SDK.
+ */
+package com.spectralogic.ds3client.helpers;

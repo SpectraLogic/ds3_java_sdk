@@ -41,6 +41,9 @@ import com.spectralogic.ds3client.models.ListBucketResult;
 import com.spectralogic.ds3client.models.MasterObjectList;
 import com.spectralogic.ds3client.serializer.XmlProcessingException;
 
+/**
+ * A wrapper around the {@link com.spectralogic.ds3client.Ds3Client} which automates common tasks.
+ */
 public class Ds3ClientHelpers {
     private static final int DEFAULT_MAX_KEYS = 1000;
     
@@ -50,8 +53,6 @@ public class Ds3ClientHelpers {
         /**
          * Must save the {@code contents} for the given {@code key}.
          * 
-         * @param key
-         * @param contents
          * @throws IOException
          */
         public void writeContents(String key, InputStream contents) throws IOException;
@@ -61,8 +62,6 @@ public class Ds3ClientHelpers {
         /**
          * Must return the contents to send over DS3 for the given {@code key}.
          * 
-         * @param key
-         * @return
          * @throws IOException
          */
         public InputStream getContent(String key) throws IOException;
@@ -80,10 +79,9 @@ public class Ds3ClientHelpers {
     
     public interface WriteJob extends Job {
         /**
-         * Calls the given @{code putter} for each object in the job remaining to be written.
+         * Calls the given {@code putter} for each object in the job remaining to be written.
          * Note that it's possible for the {@code putter} to be called simultaneously from multiple threads.
          * 
-         * @param putter
          * @throws SignatureException
          * @throws IOException
          * @throws XmlProcessingException
@@ -93,10 +91,9 @@ public class Ds3ClientHelpers {
     
     public interface ReadJob extends Job {
         /**
-         * Calls the given @{code getter} for each object in the job remaining to be read.
+         * Calls the given {@code getter} for each object in the job remaining to be read.
          * Note that it's possible for the {@code getter} to be called simultaneously from multiple threads.
          * 
-         * @param putter
          * @throws SignatureException
          * @throws IOException
          * @throws XmlProcessingException
@@ -104,17 +101,17 @@ public class Ds3ClientHelpers {
         public void read(ObjectGetter getter) throws SignatureException, IOException, XmlProcessingException;
     }
 
+    /**
+     * Wraps the given {@link com.spectralogic.ds3client.Ds3Client} with helper methods.
+     */
     public Ds3ClientHelpers(final Ds3Client client) {
         this.client = client;
     }
     
     /**
-     * Performs a bulk put job creation request and returns an @{code IWriteJob}.
-     * See {@code IWriteJob} for information on how to write the objects for the job.
+     * Performs a bulk put job creation request and returns an {@link WriteJob}.
+     * See {@link WriteJob} for information on how to write the objects for the job.
      * 
-     * @param bucket
-     * @param objectsToWrite
-     * @return
      * @throws SignatureException
      * @throws IOException
      * @throws XmlProcessingException
@@ -128,12 +125,9 @@ public class Ds3ClientHelpers {
     }
     
     /**
-     * Performs a bulk get job creation request and returns an @{code IReadJob}.
-     * See {@code IReadJob} for information on how to read the objects for the job.
+     * Performs a bulk get job creation request and returns an {@link ReadJob}.
+     * See {@link ReadJob} for information on how to read the objects for the job.
      * 
-     * @param bucket
-     * @param objectsToRead
-     * @return
      * @throws SignatureException
      * @throws IOException
      * @throws XmlProcessingException
@@ -147,10 +141,8 @@ public class Ds3ClientHelpers {
     }
     
     /**
-     * Performs a bulk get job creation request for all of the objects in the given bucket and returns an @{code IReadJob}.
+     * Performs a bulk get job creation request for all of the objects in the given bucket and returns an {@link ReadJob}.
      * 
-     * @param bucket
-     * @return
      * @throws SignatureException
      * @throws IOException
      * @throws XmlProcessingException
@@ -170,8 +162,6 @@ public class Ds3ClientHelpers {
     /**
      * Returns information about all of the objects in the bucket, regardless of how many objects the bucket contains.
      * 
-     * @param bucket
-     * @return
      * @throws SignatureException
      * @throws IOException
      */
@@ -182,9 +172,6 @@ public class Ds3ClientHelpers {
     /**
      * Returns information about all of the objects in the bucket, regardless of how many objects the bucket contains.
      * 
-     * @param bucket
-     * @param keyPrefix
-     * @return
      * @throws SignatureException
      * @throws IOException
      */
@@ -195,10 +182,6 @@ public class Ds3ClientHelpers {
     /**
      * Returns information about all of the objects in the bucket, regardless of how many objects the bucket contains.
      * 
-     * @param bucket
-     * @param keyPrefix
-     * @param maxKeys
-     * @return
      * @throws SignatureException
      * @throws IOException
      */
@@ -239,8 +222,6 @@ public class Ds3ClientHelpers {
      * Returns an object list with which you can call {@code startWriteJob} based on the files in a {@code directory}.
      * This method traverses the {@code directory} recursively.
      * 
-     * @param directory
-     * @return
      * @throws IOException
      */
     public Iterable<Ds3Object> listObjectsForDirectory(final Path directory) throws IOException {
