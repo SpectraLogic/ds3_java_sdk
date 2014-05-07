@@ -15,23 +15,24 @@
 
 package com.spectralogic.ds3client.helpers;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.ObjectPutter;
 
 
 public class FileObjectPutter implements ObjectPutter {
-    private final File root;
+    private final Path root;
 
-    public FileObjectPutter(final File root) {
+    public FileObjectPutter(final Path root) {
         this.root = root;
     }
 
     @Override
     public InputStream getContent(final String key) throws IOException {
-        return new FileInputStream(new File(this.root, key));
+        return Files.newInputStream(this.root.resolve(key), StandardOpenOption.READ);
     }
 }

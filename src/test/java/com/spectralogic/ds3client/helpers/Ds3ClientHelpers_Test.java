@@ -50,8 +50,8 @@ import com.spectralogic.ds3client.commands.GetObjectRequest;
 import com.spectralogic.ds3client.commands.GetObjectResponse;
 import com.spectralogic.ds3client.commands.PutObjectRequest;
 import com.spectralogic.ds3client.commands.PutObjectResponse;
-import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.IReadJob;
-import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.IWriteJob;
+import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.ReadJob;
+import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.WriteJob;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.ObjectGetter;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.ObjectPutter;
 import com.spectralogic.ds3client.models.Contents;
@@ -92,7 +92,7 @@ public class Ds3ClientHelpers_Test {
             new Ds3Object("baz")
         );
         
-        final IReadJob job = new Ds3ClientHelpers(this.ds3Client).startReadJob(MYBUCKET, objectsToGet);
+        final ReadJob job = new Ds3ClientHelpers(this.ds3Client).startReadJob(MYBUCKET, objectsToGet);
             
         assertThat(job.getJobId(), is(jobId));
         assertThat(job.getBucketName(), is(MYBUCKET));
@@ -131,7 +131,7 @@ public class Ds3ClientHelpers_Test {
                 new Ds3Object("bar", 12),
                 new Ds3Object("baz", 12)
         );
-        final IWriteJob job = new Ds3ClientHelpers(this.ds3Client).startWriteJob(MYBUCKET, objectsToPut);
+        final WriteJob job = new Ds3ClientHelpers(this.ds3Client).startWriteJob(MYBUCKET, objectsToPut);
         
         assertThat(job.getJobId(), is(jobId));
         assertThat(job.getBucketName(), is(MYBUCKET));

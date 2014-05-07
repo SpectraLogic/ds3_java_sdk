@@ -22,14 +22,14 @@ import java.util.UUID;
 import com.spectralogic.ds3client.Ds3Client;
 import com.spectralogic.ds3client.commands.GetObjectRequest;
 import com.spectralogic.ds3client.commands.GetObjectResponse;
-import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.IReadJob;
+import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.ReadJob;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.ObjectGetter;
 import com.spectralogic.ds3client.models.Ds3Object;
 import com.spectralogic.ds3client.models.Objects;
 import com.spectralogic.ds3client.serializer.XmlProcessingException;
 
-class ReadJob extends Job implements IReadJob {
-    public ReadJob(
+class ReadJobImpl extends JobImpl implements ReadJob {
+    public ReadJobImpl(
             final Ds3Client client,
             final UUID jobId,
             final String bucketName,

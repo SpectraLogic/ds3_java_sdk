@@ -15,35 +15,35 @@
 
 package com.spectralogic.ds3client.helpers;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 
 import org.apache.commons.io.IOUtils;
 
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.ObjectGetter;
 
 public class FileObjectGetter implements ObjectGetter {
-    private final File root;
+    private final Path root;
 
-    public FileObjectGetter(final File root) {
+    public FileObjectGetter(final Path root) {
         this.root = root;
     }
 
     @Override
     public void writeContents(final String key, final InputStream contents) throws IOException {
-        final File file = new File(this.root, key);
-        this.ensureParentDirectory(file);
-        try (final FileOutputStream output = new FileOutputStream(file)) {
+        final Path file = this.root.resolve(key);
+        Files.createDirectories(file.getParent());
+        try (final OutputStream output = Files.newOutputStream(
+                    file,
+                    StandardOpenOption.WRITE,
+                    StandardOpenOption.CREATE_NEW,
+                    StandardOpenOption.TRUNCATE_EXISTING
+                )) {
             IOUtils.copy(contents, output);
-        }
-    }
-
-    private void ensureParentDirectory(final File file) {
-        final File parent = file.getParentFile();
-        if (!parent.exists()) {
-            parent.mkdirs();
         }
     }
 }

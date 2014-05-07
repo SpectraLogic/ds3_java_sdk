@@ -29,12 +29,12 @@ import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;
 import com.spectralogic.ds3client.Ds3Client;
-import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.IJob;
+import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.Job;
 import com.spectralogic.ds3client.models.Ds3Object;
 import com.spectralogic.ds3client.models.Objects;
 import com.spectralogic.ds3client.serializer.XmlProcessingException;
 
-abstract class Job implements IJob {
+abstract class JobImpl implements Job {
     private static final int THREAD_COUNT = 10;
     
     private final Ds3Client client;
@@ -43,7 +43,7 @@ abstract class Job implements IJob {
     private final Iterable<Objects> objectLists;
 
     //TODO: client factory
-    public Job(
+    public JobImpl(
             final Ds3Client client,
             final UUID jobId,
             final String bucketName,
@@ -87,9 +87,9 @@ abstract class Job implements IJob {
         return new Callable<Object>() {
             @Override
             public Object call() throws Exception {
-                final Ds3Client client = Job.this.getClient(objects.getServerid());
+                final Ds3Client client = JobImpl.this.getClient(objects.getServerid());
                 for (final Ds3Object ds3Object : objects) {
-                    transferrer.Transfer(client, Job.this.jobId, Job.this.bucketName, ds3Object);
+                    transferrer.Transfer(client, JobImpl.this.jobId, JobImpl.this.bucketName, ds3Object);
                 }
                 return null;
             }

@@ -21,14 +21,14 @@ import java.util.UUID;
 
 import com.spectralogic.ds3client.Ds3Client;
 import com.spectralogic.ds3client.commands.PutObjectRequest;
-import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.IWriteJob;
+import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.WriteJob;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.ObjectPutter;
 import com.spectralogic.ds3client.models.Ds3Object;
 import com.spectralogic.ds3client.models.Objects;
 import com.spectralogic.ds3client.serializer.XmlProcessingException;
 
-class WriteJob extends Job implements IWriteJob {
-    public WriteJob(
+class WriteJobImpl extends JobImpl implements WriteJob {
+    public WriteJobImpl(
             final Ds3Client client,
             final UUID jobId,
             final String bucketName,
