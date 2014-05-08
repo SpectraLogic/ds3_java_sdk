@@ -187,7 +187,7 @@ public class Ds3Client {
     }
 
     /**
-     * Performs an HTTP HEAD for a bucket.  The HEAD will return information about if the bucket exists, or if the user
+     * Performs a HTTP HEAD for a bucket.  The HEAD will return information about if the bucket exists, or if the user
      * has access to that bucket.
      * @param request The Head Bucket Request object used to customize the HTTP request.  See {@link HeadBucketRequest}.
      * @return The response object is returned and contains the status of the bucket.  See {@link HeadBucketResponse} for
