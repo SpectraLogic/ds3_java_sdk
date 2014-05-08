@@ -44,7 +44,59 @@ public class Ds3ServiceListExample {
 
 ```
 
-This next example is a little more complex and will perform a bulk get from a DS3 Appliance.  This example uses the [Apache Commons IO](http://commons.apache.org/proper/commons-io/) library.
+The SDK contains many helper functions that can be used to ease initial development.  There are some cases where the helper functions cannot be used, but they are a great starting point when first learning to write applications targeting a DS3 Appliance.
+
+This example will explore a user specified diretory on the local filesystem and then send each file to be stored on a remote DS3 Appliance.
+
+```java
+
+import com.spectralogic.ds3client.Ds3Client;
+import com.spectralogic.ds3client.helpers.Ds3ClientHelpers;
+import com.spectralogic.ds3client.helpers.FileObjectPutter;
+import com.spectralogic.ds3client.models.Credentials;
+import com.spectralogic.ds3client.models.Ds3Object;
+import com.spectralogic.ds3client.serializer.XmlProcessingException;
+
+import java.io.IOException;
+import java.nio.file.FileSystems;
+import java.nio.file.Path;
+import java.security.SignatureException;
+
+public class BulkPutExample {
+
+    public static void main(final String args[]) throws IOException, SignatureException, XmlProcessingException {
+        final Ds3Client client = Ds3Client.builder("endpoint:8080",
+                new Credentials("accessId", "secretKey"))
+                .build();
+
+        // Wrap the Ds3Client with the helper functions
+        final Ds3ClientHelpers helper = Ds3ClientHelpers.wrap(client);
+
+        // The bucket that we will be writing to
+        final String bucketName = "my_bucket";
+
+        // Make sure that the bucket exists, if it does not this will create it
+        helper.ensureBucketExists(bucketName);
+
+        // Our input path which contains all the files that we want to transfer
+        final Path inputPath = FileSystems.getDefault().getPath("input");
+
+        // Get the list of files that are contained in the inputPath
+        final Iterable<Ds3Object> objects = helper.listObjectsForDirectory(inputPath);
+
+        // Create the write job with the bucket we want to write to and the list
+        // of objects that will be written
+        final Ds3ClientHelpers.WriteJob job = helper.startWriteJob(bucketName, objects);
+
+        // Start the write job using an Object Putter that will read the files
+        // from the local file system.
+        job.write(new FileObjectPutter(inputPath));
+    }
+}
+
+```
+
+This next example is a little more complex and will perform a bulk get from a DS3 Appliance using the commands that directly correspond to the REST commands that are actually made against the DS3 Appliance.  This example is meant to demonstrate the flexibilty of the SDK when writing applications where the helper functions cannot be used.  The [Apache Commons IO](http://commons.apache.org/proper/commons-io/) library is used in this example for dealing with IO Streams.
 
 ```java
 
