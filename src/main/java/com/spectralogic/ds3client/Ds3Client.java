@@ -20,24 +20,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.security.SignatureException;
 
-import com.spectralogic.ds3client.commands.BulkGetRequest;
-import com.spectralogic.ds3client.commands.BulkGetResponse;
-import com.spectralogic.ds3client.commands.BulkPutRequest;
-import com.spectralogic.ds3client.commands.BulkPutResponse;
-import com.spectralogic.ds3client.commands.DeleteBucketRequest;
-import com.spectralogic.ds3client.commands.DeleteBucketResponse;
-import com.spectralogic.ds3client.commands.DeleteObjectRequest;
-import com.spectralogic.ds3client.commands.DeleteObjectResponse;
-import com.spectralogic.ds3client.commands.GetBucketRequest;
-import com.spectralogic.ds3client.commands.GetBucketResponse;
-import com.spectralogic.ds3client.commands.GetObjectRequest;
-import com.spectralogic.ds3client.commands.GetObjectResponse;
-import com.spectralogic.ds3client.commands.GetServiceRequest;
-import com.spectralogic.ds3client.commands.GetServiceResponse;
-import com.spectralogic.ds3client.commands.PutBucketRequest;
-import com.spectralogic.ds3client.commands.PutBucketResponse;
-import com.spectralogic.ds3client.commands.PutObjectRequest;
-import com.spectralogic.ds3client.commands.PutObjectResponse;
+import com.spectralogic.ds3client.commands.*;
 import com.spectralogic.ds3client.models.Credentials;
 import com.spectralogic.ds3client.networking.NetworkClient;
 
@@ -201,6 +184,19 @@ public class Ds3Client {
      */
     public PutBucketResponse putBucket(final PutBucketRequest request) throws IOException, SignatureException {
         return new PutBucketResponse(netClient.getResponse(request));
+    }
+
+    /**
+     * Performs a HTTP HEAD for a bucket.  The HEAD will return information about if the bucket exists, or if the user
+     * has access to that bucket.
+     * @param request The Head Bucket Request object used to customize the HTTP request.  See {@link HeadBucketRequest}.
+     * @return The response object is returned and contains the status of the bucket.  See {@link HeadBucketResponse} for
+     *         the full list of status that a bucket can be in.
+     * @throws IOException
+     * @throws SignatureException
+     */
+    public HeadBucketResponse headBucket(final HeadBucketRequest request) throws IOException, SignatureException {
+        return new HeadBucketResponse(netClient.getResponse(request));
     }
 
     /**

@@ -16,23 +16,25 @@
 package com.spectralogic.ds3client.networking;
 
 import java.io.IOException;
+import java.util.Arrays;
+
 import com.spectralogic.ds3client.models.Error;
 
 public class FailedRequestException extends IOException {
     private static final long serialVersionUID = -2070737734216316074L;
     
     private final int statusCode;
-    private final int expectedStatusCode;
+    private final int[] expectedStatusCodes;
     private final Error error;
     private final String responseString;
 
-    public FailedRequestException(final int expectedStatusCode,
+    public FailedRequestException(final int[] expectedStatusCodes,
                                   final int statusCode,
                                   final Error error,
                                   final String responseString) {
-        super(buildExceptionMessage(error, expectedStatusCode, statusCode));
+        super(buildExceptionMessage(error, expectedStatusCodes, statusCode));
         this.statusCode = statusCode;
-        this.expectedStatusCode = expectedStatusCode;
+        this.expectedStatusCodes = expectedStatusCodes;
         this.error = error;
         this.responseString = responseString;
     }
@@ -40,8 +42,8 @@ public class FailedRequestException extends IOException {
     public int getStatusCode() {
         return statusCode;
     }
-    public int getExpectedStatusCode() {
-        return expectedStatusCode;
+    public int[] getExpectedStatusCodes() {
+        return expectedStatusCodes;
     }
     public Error getError() {
         return error;
@@ -51,17 +53,17 @@ public class FailedRequestException extends IOException {
     }
     
     private static String buildExceptionMessage(final Error error,
-                                                final int expectedStatusCode,
+                                                final int[] expectedStatusCodes,
                                                 final int statusCode) {
         return error == null
             ? String.format(
-                "Expected a status code of %d but got %d. Could not parse the response for additional information.",
-                expectedStatusCode,
+                "Expected a status code of %s but got %d. Could not parse the response for additional information.",
+                Arrays.toString(expectedStatusCodes),
                 statusCode
             )
             : String.format(
-                "Expected a status code of %d but got %d. Error message: \"%s\"",
-                expectedStatusCode,
+                "Expected a status code of %s but got %d. Error message: \"%s\"",
+                Arrays.toString(expectedStatusCodes),
                 statusCode,
                 error.getMessage()
             );

@@ -92,7 +92,7 @@ public class Ds3ClientHelpers_Test {
             new Ds3Object("baz")
         );
         
-        final ReadJob job = new Ds3ClientHelpers(this.ds3Client).startReadJob(MYBUCKET, objectsToGet);
+        final ReadJob job = Ds3ClientHelpers.wrap(this.ds3Client).startReadJob(MYBUCKET, objectsToGet);
             
         assertThat(job.getJobId(), is(jobId));
         assertThat(job.getBucketName(), is(MYBUCKET));
@@ -131,7 +131,7 @@ public class Ds3ClientHelpers_Test {
                 new Ds3Object("bar", 12),
                 new Ds3Object("baz", 12)
         );
-        final WriteJob job = new Ds3ClientHelpers(this.ds3Client).startWriteJob(MYBUCKET, objectsToPut);
+        final WriteJob job = Ds3ClientHelpers.wrap(this.ds3Client).startWriteJob(MYBUCKET, objectsToPut);
         
         assertThat(job.getJobId(), is(jobId));
         assertThat(job.getBucketName(), is(MYBUCKET));
@@ -164,7 +164,7 @@ public class Ds3ClientHelpers_Test {
         }};
         
         // Call the list objects method.
-        final List<Contents> contentList = Lists.newArrayList(new Ds3ClientHelpers(this.ds3Client).listObjects(MYBUCKET));
+        final List<Contents> contentList = Lists.newArrayList(Ds3ClientHelpers.wrap(this.ds3Client).listObjects(MYBUCKET));
         
         // Check the results.
         assertThat(contentList.size(), is(3));
@@ -338,7 +338,7 @@ public class Ds3ClientHelpers_Test {
     }
 
     private static List<Objects> makeObjectLists() {
-        final List<Objects> objectLists = new ArrayList<Objects>();
+        final List<Objects> objectLists = new ArrayList<>();
         objectLists.add(makeObjects1());
         return objectLists;
     }
@@ -351,7 +351,7 @@ public class Ds3ClientHelpers_Test {
     }
 
     private static ArrayList<Ds3Object> makeObjectList1() {
-        final ArrayList<Ds3Object> objectList1 = new ArrayList<Ds3Object>();
+        final ArrayList<Ds3Object> objectList1 = new ArrayList<>();
         objectList1.add(new Ds3Object("baz", 12));
         objectList1.add(new Ds3Object("foo", 12));
         objectList1.add(new Ds3Object("bar", 12));

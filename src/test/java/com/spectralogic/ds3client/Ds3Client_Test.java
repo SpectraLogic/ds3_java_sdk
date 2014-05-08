@@ -196,6 +196,7 @@ public class Ds3Client_Test {
         client.getBucket(new GetBucketRequest("remoteTest16"));
     }
 
+    @SuppressWarnings("deprecation")
     @Test
     public void getObject() throws IOException, SignatureException {
         final String stringResponse = "Response";
@@ -209,6 +210,7 @@ public class Ds3Client_Test {
                 }
             };
         }};
+
 
         final InputStream stream = client.getObject(new GetObjectRequest("bucketName", "object")).getContent();
         final StringWriter writer = new StringWriter();
