@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
 
+import com.google.common.collect.ImmutableSet;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.client.methods.CloseableHttpResponse;
 
@@ -42,19 +43,32 @@ abstract class AbstractResponse implements Ds3Response{
         return response;
     }
 
-    void checkStatusCode(final int expectedStatus) throws IOException {
-        final int statusCode = response.getStatusLine().getStatusCode();
-        if (statusCode != expectedStatus) {
+    void checkStatusCode(final int ... expectedStatuses) throws IOException {
+        final ImmutableSet<Integer> expectedSet = createExpectedSet(expectedStatuses);
+        final int statusCode = getStatusCode();
+        if (!expectedSet.contains(statusCode)) {
             final String responseString = readResponseString();
             throw new FailedRequestException(
-                expectedStatus,
+                expectedStatuses,
                 statusCode,
                 parseErrorResponse(responseString),
                 responseString
             );
         }
     }
-    
+
+    int getStatusCode() {
+        return response.getStatusLine().getStatusCode();
+    }
+
+    private ImmutableSet<Integer> createExpectedSet(final int[] expectedStatuses) {
+        final ImmutableSet.Builder<Integer> setBuilder = ImmutableSet.builder();
+        for(final int status: expectedStatuses) {
+            setBuilder.add(status);
+        }
+        return setBuilder.build();
+    }
+
     private static Error parseErrorResponse(final String responseString) {
         try {
             return XmlOutput.fromXml(responseString, Error.class);

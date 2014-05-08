@@ -29,12 +29,7 @@ import java.util.UUID;
 
 import com.google.common.collect.Lists;
 import com.spectralogic.ds3client.Ds3Client;
-import com.spectralogic.ds3client.commands.BulkGetRequest;
-import com.spectralogic.ds3client.commands.BulkGetResponse;
-import com.spectralogic.ds3client.commands.BulkPutRequest;
-import com.spectralogic.ds3client.commands.BulkPutResponse;
-import com.spectralogic.ds3client.commands.GetBucketRequest;
-import com.spectralogic.ds3client.commands.GetBucketResponse;
+import com.spectralogic.ds3client.commands.*;
 import com.spectralogic.ds3client.models.Contents;
 import com.spectralogic.ds3client.models.Ds3Object;
 import com.spectralogic.ds3client.models.ListBucketResult;
@@ -104,7 +99,11 @@ public class Ds3ClientHelpers {
     /**
      * Wraps the given {@link com.spectralogic.ds3client.Ds3Client} with helper methods.
      */
-    public Ds3ClientHelpers(final Ds3Client client) {
+    public static Ds3ClientHelpers wrap(final Ds3Client client) {
+        return new Ds3ClientHelpers(client);
+    }
+
+    Ds3ClientHelpers(final Ds3Client client) {
         this.client = client;
     }
     
@@ -157,6 +156,20 @@ public class Ds3ClientHelpers {
         }
         
         return this.startReadJob(bucket, ds3Objects);
+    }
+
+    /**
+     * Ensures that a bucket exists.  The the bucket does not exist, it will be created.
+     * @param bucket The name of the bucket to check that it exists.
+     * @throws IOException
+     * @throws SignatureException
+     */
+    public void ensureBucketExists(final String bucket) throws IOException, SignatureException {
+        try (final HeadBucketResponse response = client.headBucket(new HeadBucketRequest(bucket))) {
+            if (response.getStatus() == HeadBucketResponse.Status.DOESNTEXIST) {
+                client.putBucket(new PutBucketRequest(bucket)).close();
+            }
+        }
     }
 
     /**
