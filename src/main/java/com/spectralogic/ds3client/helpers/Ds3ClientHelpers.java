@@ -17,33 +17,20 @@ package com.spectralogic.ds3client.helpers;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.FileVisitResult;
-import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.SimpleFileVisitor;
-import java.nio.file.attribute.BasicFileAttributes;
 import java.security.SignatureException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
-import com.google.common.collect.Lists;
 import com.spectralogic.ds3client.Ds3Client;
-import com.spectralogic.ds3client.commands.*;
 import com.spectralogic.ds3client.models.Contents;
 import com.spectralogic.ds3client.models.Ds3Object;
-import com.spectralogic.ds3client.models.ListBucketResult;
-import com.spectralogic.ds3client.models.MasterObjectList;
 import com.spectralogic.ds3client.serializer.XmlProcessingException;
 
 /**
  * A wrapper around the {@link com.spectralogic.ds3client.Ds3Client} which automates common tasks.
  */
-public class Ds3ClientHelpers {
-    private static final int DEFAULT_MAX_KEYS = 1000;
-    
-    private final Ds3Client client;
-    
+public abstract class Ds3ClientHelpers {
+
     public interface ObjectGetter {
         /**
          * Must save the {@code contents} for the given {@code key}.
@@ -100,63 +87,40 @@ public class Ds3ClientHelpers {
      * Wraps the given {@link com.spectralogic.ds3client.Ds3Client} with helper methods.
      */
     public static Ds3ClientHelpers wrap(final Ds3Client client) {
-        return new Ds3ClientHelpers(client);
+        return new Ds3ClientHelpersImpl(client);
     }
 
-    Ds3ClientHelpers(final Ds3Client client) {
-        this.client = client;
-    }
-    
     /**
      * Performs a bulk put job creation request and returns an {@link WriteJob}.
      * See {@link WriteJob} for information on how to write the objects for the job.
-     * 
+     *
      * @throws SignatureException
      * @throws IOException
      * @throws XmlProcessingException
      */
-    public WriteJob startWriteJob(final String bucket, final Iterable<Ds3Object> objectsToWrite)
-            throws SignatureException, IOException, XmlProcessingException {
-        try(final BulkPutResponse prime = this.client.bulkPut(new BulkPutRequest(bucket, Lists.newArrayList(objectsToWrite)))) {
-            final MasterObjectList result = prime.getResult();
-            return new WriteJobImpl(this.client, result.getJobid(), bucket, result.getObjects());
-        }
-    }
-    
+    public abstract Ds3ClientHelpers.WriteJob startWriteJob(final String bucket, final Iterable<Ds3Object> objectsToWrite)
+            throws SignatureException, IOException, XmlProcessingException;
+
     /**
      * Performs a bulk get job creation request and returns an {@link ReadJob}.
      * See {@link ReadJob} for information on how to read the objects for the job.
-     * 
+     *
      * @throws SignatureException
      * @throws IOException
      * @throws XmlProcessingException
      */
-    public ReadJob startReadJob(final String bucket, final Iterable<Ds3Object> objectsToRead)
-            throws SignatureException, IOException, XmlProcessingException {
-        try(final BulkGetResponse prime = this.client.bulkGet(new BulkGetRequest(bucket, Lists.newArrayList(objectsToRead)))) {
-            final MasterObjectList result = prime.getResult();
-            return new ReadJobImpl(this.client, result.getJobid(), bucket, result.getObjects());
-        }
-    }
-    
+    public abstract Ds3ClientHelpers.ReadJob startReadJob(final String bucket, final Iterable<Ds3Object> objectsToRead)
+            throws SignatureException, IOException, XmlProcessingException;
+
     /**
      * Performs a bulk get job creation request for all of the objects in the given bucket and returns an {@link ReadJob}.
-     * 
+     *
      * @throws SignatureException
      * @throws IOException
      * @throws XmlProcessingException
      */
-    public ReadJob startReadAllJob(final String bucket)
-            throws SignatureException, IOException, XmlProcessingException {
-        final Iterable<Contents> contentsList = this.listObjects(bucket);
-        
-        final List<Ds3Object> ds3Objects = new ArrayList<>();
-        for (final Contents contents : contentsList) {
-            ds3Objects.add(new Ds3Object(contents.getKey()));
-        }
-        
-        return this.startReadJob(bucket, ds3Objects);
-    }
+    public abstract Ds3ClientHelpers.ReadJob startReadAllJob(final String bucket)
+            throws SignatureException, IOException, XmlProcessingException;
 
     /**
      * Ensures that a bucket exists.  The the bucket does not exist, it will be created.
@@ -164,88 +128,40 @@ public class Ds3ClientHelpers {
      * @throws IOException
      * @throws SignatureException
      */
-    public void ensureBucketExists(final String bucket) throws IOException, SignatureException {
-        try (final HeadBucketResponse response = client.headBucket(new HeadBucketRequest(bucket))) {
-            if (response.getStatus() == HeadBucketResponse.Status.DOESNTEXIST) {
-                client.putBucket(new PutBucketRequest(bucket)).close();
-            }
-        }
-    }
+    public abstract void ensureBucketExists(final String bucket) throws IOException, SignatureException;
 
     /**
      * Returns information about all of the objects in the bucket, regardless of how many objects the bucket contains.
-     * 
+     *
      * @throws SignatureException
      * @throws IOException
      */
-    public Iterable<Contents> listObjects(final String bucket) throws SignatureException, IOException {
-        return this.listObjects(bucket, null);
-    }
+    public abstract Iterable<Contents> listObjects(final String bucket) throws SignatureException, IOException;
 
     /**
      * Returns information about all of the objects in the bucket, regardless of how many objects the bucket contains.
-     * 
+     *
      * @throws SignatureException
      * @throws IOException
      */
-    public Iterable<Contents> listObjects(final String bucket, final String keyPrefix) throws SignatureException, IOException {
-        return this.listObjects(bucket, keyPrefix, Integer.MAX_VALUE);
-    }
+    public abstract Iterable<Contents> listObjects(final String bucket, final String keyPrefix)
+            throws SignatureException, IOException;
 
     /**
      * Returns information about all of the objects in the bucket, regardless of how many objects the bucket contains.
-     * 
+     *
      * @throws SignatureException
      * @throws IOException
      */
-    public Iterable<Contents> listObjects(final String bucket, final String keyPrefix, final int maxKeys) throws SignatureException, IOException {
-        final List<Contents> contentList = new ArrayList<>();
-        
-        int remainingKeys = maxKeys;
-        boolean isTruncated = false;
-        String marker = null;
-        
-        do {
-            final GetBucketRequest request = new GetBucketRequest(bucket);
-            request.withMaxKeys(Math.min(remainingKeys, DEFAULT_MAX_KEYS));
-            if (keyPrefix != null) {
-                request.withPrefix(keyPrefix);
-            }
-            if (isTruncated) {
-                request.withNextMarker(marker);
-            }
-            
-            try (final GetBucketResponse response = this.client.getBucket(request)) {
-                final ListBucketResult result = response.getResult();
-                
-                isTruncated = result.isTruncated();
-                marker = result.getNextMarker();
-                remainingKeys -= result.getContentsList().size();
-                
-                for (final Contents contents : result.getContentsList()) {
-                    contentList.add(contents);
-                }
-            }
-        } while (isTruncated && remainingKeys > 0);
-        
-        return contentList;
-    }
+    public abstract Iterable<Contents> listObjects(final String bucket, final String keyPrefix, final int maxKeys)
+            throws SignatureException, IOException;
 
     /**
      * Returns an object list with which you can call {@code startWriteJob} based on the files in a {@code directory}.
      * This method traverses the {@code directory} recursively.
-     * 
+     *
      * @throws IOException
      */
-    public Iterable<Ds3Object> listObjectsForDirectory(final Path directory) throws IOException {
-        final List<Ds3Object> objects = new ArrayList<>();
-        Files.walkFileTree(directory, new SimpleFileVisitor<Path>() {
-            @Override
-            public FileVisitResult visitFile(final Path file, final BasicFileAttributes attrs) throws IOException {
-                objects.add(new Ds3Object(directory.relativize(file).toString(), Files.size(file)));
-                return FileVisitResult.CONTINUE;
-            }
-        });
-        return objects;
-    }
+    public abstract Iterable<Ds3Object> listObjectsForDirectory(final Path directory) throws IOException;
 }
+
