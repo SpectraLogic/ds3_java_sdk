@@ -50,10 +50,10 @@ import com.spectralogic.ds3client.commands.GetObjectRequest;
 import com.spectralogic.ds3client.commands.GetObjectResponse;
 import com.spectralogic.ds3client.commands.PutObjectRequest;
 import com.spectralogic.ds3client.commands.PutObjectResponse;
-import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.ReadJob;
-import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.WriteJob;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.ObjectGetter;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.ObjectPutter;
+import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.ReadJob;
+import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.WriteJob;
 import com.spectralogic.ds3client.models.Contents;
 import com.spectralogic.ds3client.models.Ds3Object;
 import com.spectralogic.ds3client.models.ListBucketResult;
@@ -171,6 +171,46 @@ public class Ds3ClientHelpers_Test {
         checkContents(contentList.get(0), "foo", "2cde576e5f5a613e6cee466a681f4929", "2009-10-12T17:50:30.000Z", 12);
         checkContents(contentList.get(1), "bar", "f3f98ff00be128139332bcf4b772be43", "2009-10-14T17:50:31.000Z", 12);
         checkContents(contentList.get(2), "baz", "802d45fcb9a3f7d00f1481362edc0ec9", "2009-10-18T17:50:35.000Z", 12);
+    }
+    
+    @Test
+    public void testReadObjectsWithFailedPut() throws SignatureException, IOException, XmlProcessingException {
+        new NonStrictExpectations() {{
+            // Mock the bulk get method.
+            Ds3ClientHelpers_Test.this.ds3Client.bulkGet(this.withInstanceOf(BulkGetRequest.class));
+            result = new StubBulkGetResponse();
+            
+            // Mock the get object method.
+            Ds3ClientHelpers_Test.this.ds3Client.getObject(this.withInstanceOf(GetObjectRequest.class));
+            this.returns(
+                new StubFailedGetObjectResponse(),
+                new StubFailedGetObjectResponse(),
+                new StubGetObjectResponse(2)
+            );
+            maxTimes = 3;
+        }};
+        
+        // Build input list.
+        final ArrayList<Ds3Object> objectsToGet = Lists.newArrayList(
+            new Ds3Object("foo"),
+            new Ds3Object("bar"),
+            new Ds3Object("baz")
+        );
+        
+        final ReadJob job = Ds3ClientHelpers.wrap(this.ds3Client).startReadJob(MYBUCKET, objectsToGet);
+
+        try {
+            job.read(new ObjectGetter() {
+                @Override
+                public void writeContents(final String key, final InputStream contents) throws IOException {
+                    // We don't care about the contents since we just want to know that the exception handling works correctly.
+                }
+            });
+        } catch (final StubException e) {
+            // This is what we want.
+            return;
+        }
+        Assert.fail("Should have failed with an exception before we got here.");
     }
     
     private static void checkContents(
@@ -356,6 +396,29 @@ public class Ds3ClientHelpers_Test {
         objectList1.add(new Ds3Object("foo", 12));
         objectList1.add(new Ds3Object("bar", 12));
         return objectList1;
+    }
+    
+    private static final class StubException extends RuntimeException {
+        private static final long serialVersionUID = 5121719894916333278L;
+    }
+    
+    private static final class StubFailedGetObjectResponse extends GetObjectResponse {
+        public StubFailedGetObjectResponse() throws IOException {
+            super(null);
+        }
+
+        @Override
+        protected void processResponse() throws IOException {
+        }
+        
+        @Override
+        public void close() throws IOException {
+        }
+        
+        @Override
+        public InputStream getContent() {
+            throw new StubException();
+        }
     }
     
     private static final class StubGetObjectResponse extends GetObjectResponse {
