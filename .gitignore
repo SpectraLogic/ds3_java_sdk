@@ -1,6 +1,7 @@
 .gradle/
 .idea/
 out/
+coverage-report/
 output/
 build/
 .settings/
