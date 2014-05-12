@@ -72,15 +72,15 @@ abstract class JobImpl implements Job {
     protected void transferAll(final Transferrer transferrer)
             throws SignatureException, IOException, XmlProcessingException {
         final ListeningExecutorService service = MoreExecutors.listeningDecorator(Executors.newFixedThreadPool(THREAD_COUNT));
-        
-        final List<ListenableFuture<?>> tasks = new ArrayList<ListenableFuture<?>>();
-        for (final Objects objects : this.objectLists) {
-            tasks.add(service.submit(this.createObjectListTask(transferrer, objects)));
+        try {
+            final List<ListenableFuture<?>> tasks = new ArrayList<ListenableFuture<?>>();
+            for (final Objects objects : this.objectLists) {
+                tasks.add(service.submit(this.createObjectListTask(transferrer, objects)));
+            }
+            this.executeWithExceptionHandling(tasks);
+        } finally {
+            service.shutdown();
         }
-
-        this.executeWithExceptionHandling(tasks);
-        
-        service.shutdown();
     }
 
     private Callable<?> createObjectListTask(final Transferrer transferrer, final Objects objects) {
