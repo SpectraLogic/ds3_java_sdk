@@ -22,13 +22,11 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-import junit.framework.TestCase;
-
 import org.apache.commons.io.IOUtils;
 import org.junit.Assert;
 import org.junit.Test;
 
-public class ResettableFileInputStream_Test extends TestCase {
+public class ResettableFileInputStream_Test {
     @Test
     public void testReset() throws IOException {
         final byte[] expectedBytes = Files.readAllBytes(Paths.get(this.resource("LoremIpsumTwice.testdata")));
