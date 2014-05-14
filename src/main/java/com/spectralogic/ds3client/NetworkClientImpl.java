@@ -31,7 +31,6 @@ import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.entity.InputStreamEntity;
-import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicHttpEntityEnclosingRequest;
 import org.apache.http.message.BasicHttpRequest;
@@ -105,9 +104,7 @@ class NetworkClientImpl implements NetworkClient {
             
             final HttpRequest httpRequest = this.buildHttpRequest();
             this.addHeaders(httpRequest);
-            try (final CloseableHttpClient httpClient = HttpClients.createDefault()) {
-                return httpClient.execute(this.host, httpRequest, this.getContext());
-            }
+            return HttpClients.createDefault().execute(this.host, httpRequest, this.getContext());
         }
 
         private HttpHost buildHost() throws MalformedURLException {
@@ -199,7 +196,9 @@ class NetworkClientImpl implements NetworkClient {
 
         @Override
         public void close() throws IOException {
-            this.content.close();
+            if (this.content != null) {
+                this.content.close();
+            }
         }
     }
 }

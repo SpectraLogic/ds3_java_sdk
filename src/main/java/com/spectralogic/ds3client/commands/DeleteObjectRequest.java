@@ -26,10 +26,18 @@ public class DeleteObjectRequest extends AbstractRequest {
         this.bucketName = bucketName;
         this.objectName = objectName;
     }
+    
+    public String getBucketName() {
+        return this.bucketName;
+    }
+
+    public String getObjectName() {
+        return this.objectName;
+    }
 
     @Override
     public String getPath() {
-        return "/" + bucketName + "/" + objectName;
+        return "/" + this.bucketName + "/" + this.objectName;
     }
 
     @Override

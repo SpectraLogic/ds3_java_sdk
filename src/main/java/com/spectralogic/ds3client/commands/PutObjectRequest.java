@@ -52,6 +52,14 @@ public class PutObjectRequest extends AbstractRequest {
         return this;
     }
     
+    public String getBucketName() {
+        return this.bucketName;
+    }
+
+    public String getObjectName() {
+        return this.objectName;
+    }
+
     @Override
     public Checksum getChecksum() {
         return this.checksum;

@@ -65,17 +65,21 @@ public class GetBucketRequest extends AbstractRequest {
         this.getQueryParams().put("max-keys", Integer.toString(maxKeys));
         return this;
     }
+    
+    public String getBucket() {
+        return this.bucket;
+    }
 
     public String getNextMarker() {
-        return nextMarker;
+        return this.nextMarker;
     }
 
     public String getPrefix() {
-        return prefix;
+        return this.prefix;
     }
 
     public int getMaxKeys() {
-        return maxKeys;
+        return this.maxKeys;
     }
 
     @Override

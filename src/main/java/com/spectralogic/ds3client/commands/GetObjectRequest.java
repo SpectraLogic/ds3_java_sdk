@@ -15,10 +15,11 @@
 
 package com.spectralogic.ds3client.commands;
 
-import com.spectralogic.ds3client.HttpVerb;
+import java.util.UUID;
+
 import org.apache.http.entity.ContentType;
 
-import java.util.UUID;
+import com.spectralogic.ds3client.HttpVerb;
 
 /**
  * Retrieves an object from DS3.  This should always be used within the context of a BulkGet command.
@@ -35,11 +36,11 @@ public class GetObjectRequest extends AbstractRequest {
         }
 
         public long getStart() {
-            return start;
+            return this.start;
         }
 
         public long getEnd() {
-            return end;
+            return this.end;
         }
     }
 
@@ -76,17 +77,25 @@ public class GetObjectRequest extends AbstractRequest {
         return this;
     }
     
-    private static String buildRangeHeaderText(Range byteRange) {
+    public String getBucketName() {
+        return this.bucketName;
+    }
+
+    public String getObjectName() {
+        return this.objectName;
+    }
+
+    private static String buildRangeHeaderText(final Range byteRange) {
         return String.format("bytes=%d-%d", byteRange.getStart(), byteRange.getEnd());
     }
 
     public Range getByteRange() {
-        return byteRange;
+        return this.byteRange;
     }
 
     @Override
     public String getPath() {
-        return "/" + bucketName + "/" + objectName;
+        return "/" + this.bucketName + "/" + this.objectName;
     }
 
     @Override

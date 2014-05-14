@@ -13,32 +13,15 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3client.commands;
+package com.spectralogic.ds3client.helpers;
 
-import com.spectralogic.ds3client.HttpVerb;
+import com.spectralogic.ds3client.commands.PutObjectRequest;
+import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.PutRequestModifier;
+import com.spectralogic.ds3client.models.Checksum;
 
-/**
- * {@code HeadBucketRequest} is used to return back information on if a bucket exists, or if a user has access to that bucket.
- */
-public class HeadBucketRequest extends AbstractRequest {
-
-    private final String bucketName;
-
-    public HeadBucketRequest(final String bucketName) {
-        this.bucketName = bucketName;
-    }
-    
-    public String getBucketName() {
-        return this.bucketName;
-    }
-
+public class ComputedChecksumModifier implements PutRequestModifier {
     @Override
-    public String getPath() {
-        return "/" + this.bucketName;
-    }
-
-    @Override
-    public HttpVerb getVerb() {
-        return HttpVerb.HEAD;
+    public void modify(final PutObjectRequest request) {
+        request.withChecksum(Checksum.compute());
     }
 }
