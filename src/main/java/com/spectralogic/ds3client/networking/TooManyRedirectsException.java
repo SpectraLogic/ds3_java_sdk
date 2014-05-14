@@ -13,30 +13,18 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3client.commands;
+package com.spectralogic.ds3client.networking;
 
-import java.io.InputStream;
-import java.util.Map;
+import java.io.IOException;
 
-import org.apache.http.entity.ContentType;
+public class TooManyRedirectsException extends IOException {
+    private static final long serialVersionUID = 7016102751205744479L;
+    
+    public TooManyRedirectsException(final int redirectCount) {
+        super(buildMessage(redirectCount));
+    }
 
-import com.spectralogic.ds3client.HttpVerb;
-import com.spectralogic.ds3client.models.Checksum;
-
-public interface Ds3Request {
-
-    public String getPath();
-    public HttpVerb getVerb();
-
-    public ContentType getContentType();
-
-    public InputStream getStream();
-
-    public long getSize();
-
-    public Checksum getChecksum();
-
-    public Map<String, String> getQueryParams();
-
-    public Map<String, String> getHeaders();
+    private static String buildMessage(final int redirectCount) {
+        return String.format("Server responded with a 307 self-redirect the maximum client configured number of times %d.", redirectCount);
+    }
 }

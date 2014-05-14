@@ -13,30 +13,14 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3client.commands;
+package com.spectralogic.ds3client.networking;
 
-import java.io.InputStream;
-import java.util.Map;
+import java.io.IOException;
 
-import org.apache.http.entity.ContentType;
+public class RequiresMarkSupportedException extends IOException {
+    private static final long serialVersionUID = -8231059916399761296L;
 
-import com.spectralogic.ds3client.HttpVerb;
-import com.spectralogic.ds3client.models.Checksum;
-
-public interface Ds3Request {
-
-    public String getPath();
-    public HttpVerb getVerb();
-
-    public ContentType getContentType();
-
-    public InputStream getStream();
-
-    public long getSize();
-
-    public Checksum getChecksum();
-
-    public Map<String, String> getQueryParams();
-
-    public Map<String, String> getHeaders();
+    public RequiresMarkSupportedException() {
+        super("Streams passed into the API must return true from the 'markSupported' method.");
+    }
 }

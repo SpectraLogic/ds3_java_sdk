@@ -15,16 +15,18 @@
 
 package com.spectralogic.ds3client;
 
-import com.spectralogic.ds3client.commands.Ds3Request;
-import com.spectralogic.ds3client.models.SignatureDetails;
-import com.spectralogic.ds3client.networking.ConnectionDetails;
-import com.spectralogic.ds3client.networking.NetUtils;
-import com.spectralogic.ds3client.networking.NetworkClient;
-import com.spectralogic.ds3client.utils.DateFormatter;
-import com.spectralogic.ds3client.utils.Signature;
-import org.apache.http.HttpEntity;
+import java.io.Closeable;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URL;
+import java.security.SignatureException;
+import java.util.Map;
+
 import org.apache.http.HttpHost;
 import org.apache.http.HttpRequest;
+import org.apache.http.HttpStatus;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.protocol.HttpClientContext;
@@ -34,13 +36,15 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicHttpEntityEnclosingRequest;
 import org.apache.http.message.BasicHttpRequest;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URL;
-import java.security.SignatureException;
-import java.util.Map;
+import com.spectralogic.ds3client.commands.Ds3Request;
+import com.spectralogic.ds3client.models.SignatureDetails;
+import com.spectralogic.ds3client.networking.ConnectionDetails;
+import com.spectralogic.ds3client.networking.NetUtils;
+import com.spectralogic.ds3client.networking.NetworkClient;
+import com.spectralogic.ds3client.networking.RequiresMarkSupportedException;
+import com.spectralogic.ds3client.networking.TooManyRedirectsException;
+import com.spectralogic.ds3client.utils.DateFormatter;
+import com.spectralogic.ds3client.utils.Signature;
 
 class NetworkClientImpl implements NetworkClient {
     final static private String HOST = "HOST";
@@ -54,81 +58,151 @@ class NetworkClientImpl implements NetworkClient {
         this.connectionDetails = connectionDetails;
     }
 
+    @Override
     public ConnectionDetails getConnectionDetails() {
-        return connectionDetails;
+        return this.connectionDetails;
     }
 
+    @Override
     public CloseableHttpResponse getResponse(final Ds3Request request) throws IOException, SignatureException {
-        final HttpHost host = getHost(connectionDetails);
-        final HttpRequest httpRequest = getHttpRequest(request);
-        final String date = DateFormatter.dateToRfc882();
-
-        final CloseableHttpClient httpClient = HttpClients.createDefault();
-
-        httpRequest.addHeader(HOST, NetUtils.buildHostField(connectionDetails));
-        httpRequest.addHeader(DATE, date);
-        httpRequest.addHeader(CONTENT_TYPE, request.getContentType().toString());
-        for(final Map.Entry<String, String> header: request.getHeaders().entrySet()) {
-            httpRequest.addHeader(header.getKey(), header.getValue());
+        try (final RequestExecutor requestExecutor = new RequestExecutor(request)) {
+            boolean redirect = false;
+            int redirectCount = 0;
+            do {
+                final CloseableHttpResponse response = requestExecutor.execute();
+                if (response.getStatusLine().getStatusCode() == HttpStatus.SC_TEMPORARY_REDIRECT) {
+                    redirect = true;
+                    redirectCount++;
+                    continue;
+                }
+                return response;
+            } while (redirect && redirectCount < this.connectionDetails.getRetries());
+            
+            throw new TooManyRedirectsException(redirectCount);
         }
-
-        final SignatureDetails sigDetails = new SignatureDetails(request.getVerb(), request.getMd5(), request.getContentType().toString(), date, "", request.getPath(),connectionDetails.getCredentials());
-        httpRequest.addHeader(AUTHORIZATION, getSignature(sigDetails));
-
-        return httpClient.execute(host, httpRequest, getContext());
     }
+    
+    private class RequestExecutor implements Closeable {
+        private final CloseableHttpClient httpClient;
+        private final Ds3Request ds3Request;
+        private final InputStream content;
+        private final HttpHost host;
+        private final String hash;
 
-    private String getSignature(final SignatureDetails details) throws SignatureException {
-        return "AWS " + connectionDetails.getCredentials().getClientId() + ':' + Signature.signature(details);
-    }
-
-    private HttpHost getHost(final ConnectionDetails connectionDetails) throws MalformedURLException {
-        final URI proxyUri = connectionDetails.getProxy();
-        if(proxyUri != null) {
-            return new HttpHost(proxyUri.getHost(), proxyUri.getPort(), proxyUri.getScheme());
+        public RequestExecutor(final Ds3Request ds3Request) throws IOException {
+            this.ds3Request = ds3Request;
+            this.httpClient = HttpClients.createDefault();
+            this.host = this.buildHost();
+            this.content = ds3Request.getStream();
+            if (this.content != null && !this.content.markSupported()) {
+                throw new RequiresMarkSupportedException();
+            }
+            this.hash = this.buildHash();
+        }
+        
+        public CloseableHttpResponse execute() throws IOException, SignatureException {
+            if (this.content != null) {
+                this.content.reset();
+            }
+            
+            final HttpRequest httpRequest = this.buildHttpRequest();
+            this.addHeaders(httpRequest);
+            return this.httpClient.execute(this.host, httpRequest, this.getContext());
         }
 
-        final URL url = NetUtils.buildUrl(connectionDetails, "/");
-        final int port = getPort(url);
-        return new HttpHost(url.getHost(), port, url.getProtocol());
-    }
-
-    private HttpClientContext getContext() {
-        final HttpClientContext context = new HttpClientContext();
-        final RequestConfig config = RequestConfig.custom().setCircularRedirectsAllowed(true).setMaxRedirects(connectionDetails.getRetries()).build();
-
-        context.setRequestConfig(config);
-        return context;
-    }
-
-    private int getPort(final URL url) {
-        final int port = url.getPort();
-        if(port < 0) {
-            return 80;
-        }
-        return port;
-    }
-
-    private HttpRequest getHttpRequest(final Ds3Request request) {
-        final String verb = request.getVerb().toString();
-        final InputStream stream = request.getStream();
-        final Map<String, String> queryParams = request.getQueryParams();
-        final String path;
-
-        if(queryParams.isEmpty()) {
-            path = request.getPath();
-        }
-        else {
-            path = request.getPath() + "?" + NetUtils.buildQueryString(queryParams);
+        private HttpHost buildHost() throws MalformedURLException {
+            final URI proxyUri = NetworkClientImpl.this.connectionDetails.getProxy();
+            if (proxyUri != null) {
+                return new HttpHost(proxyUri.getHost(), proxyUri.getPort(), proxyUri.getScheme());
+            } else {
+                final URL url = NetUtils.buildUrl(NetworkClientImpl.this.connectionDetails, "/");
+                return new HttpHost(url.getHost(), this.getPort(url), url.getProtocol());
+            }
         }
 
-        if(stream != null) {
-            final HttpEntity entity = new InputStreamEntity(stream, request.getSize(), request.getContentType());
-            final BasicHttpEntityEnclosingRequest httpRequest = new BasicHttpEntityEnclosingRequest(verb, path);
-            httpRequest.setEntity(entity);
-            return httpRequest;
+        private int getPort(final URL url) {
+            final int port = url.getPort();
+            if(port < 0) {
+                return 80;
+            }
+            return port;
         }
 
-        return new BasicHttpRequest(verb, path);
+        private HttpRequest buildHttpRequest() throws IOException {
+            final String verb = this.ds3Request.getVerb().toString();
+            final String path = this.buildPath();
+            if (this.content != null) {
+                final BasicHttpEntityEnclosingRequest httpRequest = new BasicHttpEntityEnclosingRequest(verb, path);
+                httpRequest.setEntity(new InputStreamEntity(this.content, this.ds3Request.getSize(), this.ds3Request.getContentType()));
+                return httpRequest;
+            } else {
+                return new BasicHttpRequest(verb, path);
+            }
+        }
+
+        private String buildPath() {
+            String path = this.ds3Request.getPath();
+            final Map<String, String> queryParams = this.ds3Request.getQueryParams();
+            if (!queryParams.isEmpty()) {
+                path += "?" + NetUtils.buildQueryString(queryParams);
+            }
+            return path;
+        }
+
+        private void addHeaders(final HttpRequest httpRequest) throws IOException, SignatureException {
+            // Add common headers.
+            final String date = DateFormatter.dateToRfc882();
+            httpRequest.addHeader(HOST, NetUtils.buildHostField(NetworkClientImpl.this.connectionDetails));
+            httpRequest.addHeader(DATE, date);
+            httpRequest.addHeader(CONTENT_TYPE, this.ds3Request.getContentType().toString());
+            
+            // Add custom headers.
+            for(final Map.Entry<String, String> header: this.ds3Request.getHeaders().entrySet()) {
+                httpRequest.addHeader(header.getKey(), header.getValue());
+            }
+            
+            // Add the hash header.
+            if (this.hash != "") {
+                httpRequest.addHeader("Content-MD5", this.hash);
+            }
+            
+            // Add the signature header.
+            httpRequest.addHeader(AUTHORIZATION, this.getSignature(new SignatureDetails(
+                this.ds3Request.getVerb(),
+                this.hash,
+                this.ds3Request.getContentType().toString(),
+                date,
+                "",
+                this.ds3Request.getPath(),
+                NetworkClientImpl.this.connectionDetails.getCredentials()
+            )));
+        }
+
+        private String buildHash() throws IOException {
+            return this.ds3Request.getChecksum().match(new HashGeneratingMatchHandler(this.content));
+        }
+
+        private String getSignature(final SignatureDetails details) throws SignatureException {
+            return "AWS " + NetworkClientImpl.this.connectionDetails.getCredentials().getClientId() + ':' + Signature.signature(details);
+        }
+        
+        private HttpClientContext getContext() {
+            final HttpClientContext context = new HttpClientContext();
+            context.setRequestConfig(
+                RequestConfig
+                    .custom()
+                    .setRedirectsEnabled(false)
+                    .build()
+            );
+            return context;
+        }
+
+        @Override
+        public void close() throws IOException {
+            try (final InputStream _ = this.content) {
+            }
+            try (final CloseableHttpClient _ = this.httpClient) {
+            }
+        }
     }
 }
