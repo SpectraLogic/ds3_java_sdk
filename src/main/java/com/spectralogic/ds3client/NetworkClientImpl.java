@@ -83,7 +83,6 @@ class NetworkClientImpl implements NetworkClient {
     }
     
     private class RequestExecutor implements Closeable {
-        private final CloseableHttpClient httpClient;
         private final Ds3Request ds3Request;
         private final InputStream content;
         private final HttpHost host;
@@ -91,7 +90,6 @@ class NetworkClientImpl implements NetworkClient {
 
         public RequestExecutor(final Ds3Request ds3Request) throws IOException {
             this.ds3Request = ds3Request;
-            this.httpClient = HttpClients.createDefault();
             this.host = this.buildHost();
             this.content = ds3Request.getStream();
             if (this.content != null && !this.content.markSupported()) {
@@ -107,7 +105,9 @@ class NetworkClientImpl implements NetworkClient {
             
             final HttpRequest httpRequest = this.buildHttpRequest();
             this.addHeaders(httpRequest);
-            return this.httpClient.execute(this.host, httpRequest, this.getContext());
+            try (final CloseableHttpClient httpClient = HttpClients.createDefault()) {
+                return httpClient.execute(this.host, httpRequest, this.getContext());
+            }
         }
 
         private HttpHost buildHost() throws MalformedURLException {
@@ -199,10 +199,7 @@ class NetworkClientImpl implements NetworkClient {
 
         @Override
         public void close() throws IOException {
-            try (final InputStream _ = this.content) {
-            }
-            try (final CloseableHttpClient _ = this.httpClient) {
-            }
+            this.content.close();
         }
     }
 }
