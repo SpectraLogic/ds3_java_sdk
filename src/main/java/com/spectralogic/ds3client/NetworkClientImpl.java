@@ -50,6 +50,7 @@ class NetworkClientImpl implements NetworkClient {
     final static private String DATE = "DATE";
     final static private String AUTHORIZATION = "Authorization";
     final static private String CONTENT_TYPE = "Content-Type";
+    final static private String CONTENT_MD5 = "Content-MD5";
 
     final private ConnectionDetails connectionDetails;
 
@@ -159,8 +160,8 @@ class NetworkClientImpl implements NetworkClient {
             }
             
             // Add the hash header.
-            if (this.hash != "") {
-                httpRequest.addHeader("Content-MD5", this.hash);
+            if (!this.hash.isEmpty()) {
+                httpRequest.addHeader(CONTENT_MD5, this.hash);
             }
             
             // Add the signature header.
