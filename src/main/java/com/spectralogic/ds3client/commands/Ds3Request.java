@@ -15,11 +15,13 @@
 
 package com.spectralogic.ds3client.commands;
 
-import com.spectralogic.ds3client.HttpVerb;
-import org.apache.http.entity.ContentType;
-
 import java.io.InputStream;
 import java.util.Map;
+
+import org.apache.http.entity.ContentType;
+
+import com.spectralogic.ds3client.HttpVerb;
+import com.spectralogic.ds3client.models.Checksum;
 
 public interface Ds3Request {
 
@@ -32,7 +34,7 @@ public interface Ds3Request {
 
     public long getSize();
 
-    public String getMd5();
+    public Checksum getChecksum();
 
     public Map<String, String> getQueryParams();
 

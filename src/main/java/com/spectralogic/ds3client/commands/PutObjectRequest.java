@@ -15,10 +15,11 @@
 
 package com.spectralogic.ds3client.commands;
 
-import com.spectralogic.ds3client.HttpVerb;
-
 import java.io.InputStream;
 import java.util.UUID;
+
+import com.spectralogic.ds3client.HttpVerb;
+import com.spectralogic.ds3client.models.Checksum;
 
 public class PutObjectRequest extends AbstractRequest {
 
@@ -27,6 +28,7 @@ public class PutObjectRequest extends AbstractRequest {
     private final UUID jobId;
     private final InputStream stream;
     private final long size;
+    private Checksum checksum = Checksum.none();
 
     @Deprecated
     public PutObjectRequest(final String bucketName, final String objectName, final long size, final InputStream stream) {
@@ -44,15 +46,33 @@ public class PutObjectRequest extends AbstractRequest {
             this.getQueryParams().put("job", jobId.toString());
         }
     }
+    
+    public PutObjectRequest withChecksum(final Checksum checksum) {
+        this.checksum = checksum;
+        return this;
+    }
+    
+    public String getBucketName() {
+        return this.bucketName;
+    }
+
+    public String getObjectName() {
+        return this.objectName;
+    }
+
+    @Override
+    public Checksum getChecksum() {
+        return this.checksum;
+    }
 
     @Override
     public long getSize() {
-        return size;
+        return this.size;
     }
 
     @Override
     public String getPath() {
-        return "/" + bucketName + "/" + objectName;
+        return "/" + this.bucketName + "/" + this.objectName;
     }
 
     @Override
@@ -62,7 +82,7 @@ public class PutObjectRequest extends AbstractRequest {
 
     @Override
     public InputStream getStream() {
-        return stream;
+        return this.stream;
     }
 
     public UUID getJobId() {

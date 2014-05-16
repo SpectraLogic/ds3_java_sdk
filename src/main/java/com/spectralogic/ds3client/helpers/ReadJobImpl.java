@@ -22,13 +22,16 @@ import java.util.UUID;
 import com.spectralogic.ds3client.Ds3Client;
 import com.spectralogic.ds3client.commands.GetObjectRequest;
 import com.spectralogic.ds3client.commands.GetObjectResponse;
-import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.ReadJob;
+import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.GetRequestModifier;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.ObjectGetter;
+import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.ReadJob;
 import com.spectralogic.ds3client.models.Ds3Object;
 import com.spectralogic.ds3client.models.Objects;
 import com.spectralogic.ds3client.serializer.XmlProcessingException;
 
 class ReadJobImpl extends JobImpl implements ReadJob {
+    private GetRequestModifier modifier;
+
     public ReadJobImpl(
             final Ds3Client client,
             final UUID jobId,
@@ -52,10 +55,19 @@ class ReadJobImpl extends JobImpl implements ReadJob {
                     ds3Object.getName(),
                     jobId
                 );
+                if (ReadJobImpl.this.modifier != null) {
+                    ReadJobImpl.this.modifier.modify(request);
+                }
                 try (final GetObjectResponse response = client.getObject(request)) {
                     getter.writeContents(ds3Object.getName(), response.getContent());
                 }
             }
         });
+    }
+
+    @Override
+    public ReadJob withRequestModifier(final GetRequestModifier modifier) {
+        this.modifier = modifier;
+        return this;
     }
 }

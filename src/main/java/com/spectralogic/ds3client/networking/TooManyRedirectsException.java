@@ -13,32 +13,18 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3client.commands;
+package com.spectralogic.ds3client.networking;
 
-import com.spectralogic.ds3client.HttpVerb;
+import java.io.IOException;
 
-/**
- * {@code HeadBucketRequest} is used to return back information on if a bucket exists, or if a user has access to that bucket.
- */
-public class HeadBucketRequest extends AbstractRequest {
-
-    private final String bucketName;
-
-    public HeadBucketRequest(final String bucketName) {
-        this.bucketName = bucketName;
-    }
+public class TooManyRedirectsException extends IOException {
+    private static final long serialVersionUID = 7016102751205744479L;
     
-    public String getBucketName() {
-        return this.bucketName;
+    public TooManyRedirectsException(final int redirectCount) {
+        super(buildMessage(redirectCount));
     }
 
-    @Override
-    public String getPath() {
-        return "/" + this.bucketName;
-    }
-
-    @Override
-    public HttpVerb getVerb() {
-        return HttpVerb.HEAD;
+    private static String buildMessage(final int redirectCount) {
+        return String.format("Server responded with a 307 self-redirect the maximum client configured number of times %d.", redirectCount);
     }
 }

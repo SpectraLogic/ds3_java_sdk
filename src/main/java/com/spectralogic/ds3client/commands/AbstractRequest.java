@@ -15,11 +15,13 @@
 
 package com.spectralogic.ds3client.commands;
 
-import org.apache.http.entity.ContentType;
-
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
+
+import org.apache.http.entity.ContentType;
+
+import com.spectralogic.ds3client.models.Checksum;
 
 abstract class AbstractRequest implements Ds3Request {
 
@@ -42,17 +44,17 @@ abstract class AbstractRequest implements Ds3Request {
     }
 
     @Override
-    public String getMd5() {
-        return "";
+    public Checksum getChecksum() {
+        return Checksum.none();
     }
 
     @Override
     public final Map<String, String> getQueryParams() {
-        return queryParams;
+        return this.queryParams;
     }
 
     @Override
     public final Map<String, String> getHeaders() {
-        return headers;
+        return this.headers;
     }
 }

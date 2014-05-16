@@ -13,32 +13,14 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3client.commands;
+package com.spectralogic.ds3client.networking;
 
-import com.spectralogic.ds3client.HttpVerb;
+import java.io.IOException;
 
-/**
- * {@code HeadBucketRequest} is used to return back information on if a bucket exists, or if a user has access to that bucket.
- */
-public class HeadBucketRequest extends AbstractRequest {
+public class RequiresMarkSupportedException extends IOException {
+    private static final long serialVersionUID = -8231059916399761296L;
 
-    private final String bucketName;
-
-    public HeadBucketRequest(final String bucketName) {
-        this.bucketName = bucketName;
-    }
-    
-    public String getBucketName() {
-        return this.bucketName;
-    }
-
-    @Override
-    public String getPath() {
-        return "/" + this.bucketName;
-    }
-
-    @Override
-    public HttpVerb getVerb() {
-        return HttpVerb.HEAD;
+    public RequiresMarkSupportedException() {
+        super("Streams passed into the API must return true from the 'markSupported' method.");
     }
 }

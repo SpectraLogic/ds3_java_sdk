@@ -15,15 +15,15 @@
 
 package com.spectralogic.ds3client.commands;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.util.List;
+
 import com.spectralogic.ds3client.BulkCommand;
 import com.spectralogic.ds3client.HttpVerb;
 import com.spectralogic.ds3client.models.Ds3Object;
 import com.spectralogic.ds3client.serializer.XmlOutput;
 import com.spectralogic.ds3client.serializer.XmlProcessingException;
-
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
-import java.util.List;
 
 
 abstract class BulkRequest extends AbstractRequest {
@@ -36,28 +36,36 @@ abstract class BulkRequest extends AbstractRequest {
     public BulkRequest(final String bucket, final List<Ds3Object> objects) throws XmlProcessingException {
         this.bucket = bucket;
         this.ds3Objects = objects;
-        this.stream = generateStream();
+        this.stream = this.generateStream();
     }
 
     private InputStream generateStream() throws XmlProcessingException {
         final com.spectralogic.ds3client.models.Objects objects =
                 new com.spectralogic.ds3client.models.Objects();
-        objects.setObject(ds3Objects);
-        final String xmlOutput = XmlOutput.toXml(objects, getCommand());
+        objects.setObject(this.ds3Objects);
+        final String xmlOutput = XmlOutput.toXml(objects, this.getCommand());
 
         final byte[] stringBytes = xmlOutput.getBytes();
         this.size = stringBytes.length;
         return new ByteArrayInputStream(stringBytes);
     }
+    
+    public String getBucket() {
+        return this.bucket;
+    }
+
+    public List<Ds3Object> getDs3Objects() {
+        return this.ds3Objects;
+    }
 
     @Override
     public long getSize() {
-        return size;
+        return this.size;
     }
 
     @Override
     public String getPath() {
-        return "/_rest_/buckets/" + bucket;
+        return "/_rest_/buckets/" + this.bucket;
     }
 
     @Override
@@ -69,6 +77,6 @@ abstract class BulkRequest extends AbstractRequest {
 
     @Override
     public InputStream getStream() {
-        return stream;
+        return this.stream;
     }
 }

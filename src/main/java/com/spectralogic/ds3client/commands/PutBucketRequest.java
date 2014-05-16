@@ -24,10 +24,14 @@ public class PutBucketRequest extends AbstractRequest {
     public PutBucketRequest(final String bucket) {
         this.bucket = bucket;
     }
+    
+    public String getBucket() {
+        return this.bucket;
+    }
 
     @Override
     public String getPath() {
-        return "/" + bucket;
+        return "/" + this.bucket;
     }
 
     @Override

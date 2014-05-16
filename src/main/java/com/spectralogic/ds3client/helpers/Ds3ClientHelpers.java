@@ -22,6 +22,8 @@ import java.security.SignatureException;
 import java.util.UUID;
 
 import com.spectralogic.ds3client.Ds3Client;
+import com.spectralogic.ds3client.commands.GetObjectRequest;
+import com.spectralogic.ds3client.commands.PutObjectRequest;
 import com.spectralogic.ds3client.models.Contents;
 import com.spectralogic.ds3client.models.Ds3Object;
 import com.spectralogic.ds3client.serializer.XmlProcessingException;
@@ -49,6 +51,20 @@ public abstract class Ds3ClientHelpers {
         public InputStream getContent(String key) throws IOException;
     }
     
+    public interface GetRequestModifier {
+        /**
+         * Modifies a get request before it's sent to the server.
+         */
+        public void modify(GetObjectRequest request);
+    }
+    
+    public interface PutRequestModifier {
+        /**
+         * Modifies a put request before it's sent to the server.
+         */
+        public void modify(PutObjectRequest request);
+    }
+    
     /**
      * Represents a bulk job operation.
      * When you call one of the start* methods it's recommended that you save the
@@ -69,6 +85,12 @@ public abstract class Ds3ClientHelpers {
          * @throws XmlProcessingException
          */
         public void write(ObjectPutter putter) throws SignatureException, IOException, XmlProcessingException;
+        
+        /**
+         * Sets an object that knows how to modify put requests before they're executed.
+         * Note that it's possible for the {@code modifier} to be called simultaneously from multiple threads.
+         */
+        public WriteJob withRequestModifier(PutRequestModifier modifier);
     }
     
     public interface ReadJob extends Job {
@@ -81,6 +103,12 @@ public abstract class Ds3ClientHelpers {
          * @throws XmlProcessingException
          */
         public void read(ObjectGetter getter) throws SignatureException, IOException, XmlProcessingException;
+
+        /**
+         * Sets an object that knows how to modify get requests before they're executed.
+         * Note that it's possible for the {@code modifier} to be called simultaneously from multiple threads.
+         */
+        public ReadJob withRequestModifier(GetRequestModifier modifier);
     }
 
     /**

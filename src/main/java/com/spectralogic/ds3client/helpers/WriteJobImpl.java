@@ -21,13 +21,16 @@ import java.util.UUID;
 
 import com.spectralogic.ds3client.Ds3Client;
 import com.spectralogic.ds3client.commands.PutObjectRequest;
-import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.WriteJob;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.ObjectPutter;
+import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.PutRequestModifier;
+import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.WriteJob;
 import com.spectralogic.ds3client.models.Ds3Object;
 import com.spectralogic.ds3client.models.Objects;
 import com.spectralogic.ds3client.serializer.XmlProcessingException;
 
 class WriteJobImpl extends JobImpl implements WriteJob {
+    private PutRequestModifier modifier;
+
     public WriteJobImpl(
             final Ds3Client client,
             final UUID jobId,
@@ -53,8 +56,17 @@ class WriteJobImpl extends JobImpl implements WriteJob {
                     ds3Object.getSize(),
                     putter.getContent(ds3Object.getName())
                 );
+                if (WriteJobImpl.this.modifier != null) {
+                    WriteJobImpl.this.modifier.modify(request);
+                }
                 client.putObject(request).close();
             }
         });
+    }
+
+    @Override
+    public WriteJob withRequestModifier(final PutRequestModifier modifier) {
+        this.modifier = modifier;
+        return this;
     }
 }
