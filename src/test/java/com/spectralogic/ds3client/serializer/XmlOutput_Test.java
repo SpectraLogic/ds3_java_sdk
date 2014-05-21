@@ -19,7 +19,6 @@ import com.spectralogic.ds3client.models.Ds3Object;
 import com.spectralogic.ds3client.models.ListBucketResult;
 import com.spectralogic.ds3client.models.MasterObjectList;
 import com.spectralogic.ds3client.models.Objects;
-import com.spectralogic.ds3client.serializer.XmlOutput;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -54,5 +53,14 @@ public class XmlOutput_Test {
         assertThat(result.getContentsList(), is(notNullValue()));
         assertThat(result.getContentsList().size(), is(3));
         assertThat(result.getContentsList().get(0).getSize(), is(674570l));
+    }
+
+    @Test
+    public void bucketListWithEmptyContents() throws IOException {
+        final String xmlResponse = "<ListBucketResult xmlns=\"http://s3.amazonaws.com/doc/2006-03-01/\"><Name>remoteTest16</Name><Prefix/><Marker/><MaxKeys>1000</MaxKeys><IsTruncated>false</IsTruncated></ListBucketResult>";
+
+        final ListBucketResult result = XmlOutput.fromXml(xmlResponse, ListBucketResult.class);
+        assertThat(result, is(notNullValue()));
+        assertThat(result.getContentsList(), is(notNullValue()));
     }
 }

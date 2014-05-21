@@ -42,7 +42,7 @@ public class ListBucketResult {
 
     @JsonProperty("Contents")
     @JacksonXmlElementWrapper(useWrapping = false)
-    private List<Contents> contentsList;
+    private List<Contents> contentsList = new ArrayList<>();
 
     public String getName() {
         return name;
@@ -85,7 +85,7 @@ public class ListBucketResult {
     }
 
     public List<Contents> getContentsList() {
-        return contentsList == null ? new ArrayList<Contents>() : contentsList;
+        return contentsList;
     }
 
     public void setContentsList(final List<Contents> contentsList) {
