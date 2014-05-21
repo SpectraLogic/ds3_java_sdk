@@ -29,18 +29,14 @@ import org.junit.Test;
 public class ResettableFileInputStream_Test {
     @Test
     public void testReset() throws IOException {
-        final byte[] expectedBytes = Files.readAllBytes(Paths.get(this.resource("LoremIpsumTwice.testdata")));
+        final byte[] expectedBytes = Files.readAllBytes(Paths.get("src/test/resources/LoremIpsumTwice.testdata"));
         try (final ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream(expectedBytes.length)) {
-            try (final InputStream inputStream = new ResettableFileInputStream(new FileInputStream(this.resource("LoremIpsum.testdata")))) {
+            try (final InputStream inputStream = new ResettableFileInputStream(new FileInputStream("src/test/resources/LoremIpsum.testdata"))) {
                 IOUtils.copy(inputStream, byteArrayOutputStream);
                 inputStream.reset();
                 IOUtils.copy(inputStream, byteArrayOutputStream);
             }
             Assert.assertArrayEquals(expectedBytes, byteArrayOutputStream.toByteArray());
         }
-    }
-
-    private String resource(final String name) {
-        return this.getClass().getResource(name).getFile();
     }
 }
