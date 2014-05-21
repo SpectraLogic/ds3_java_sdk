@@ -22,6 +22,8 @@ jar.archiveName = 'ds3_java_sdk'
 version = '0.2.5-SNAPSHOT'
 group = 'com.spectralogic'
 
+install.dependsOn test //make sure that the tests get ran before attempting to install
+
 repositories {
     mavenCentral()
     mavenLocal()
