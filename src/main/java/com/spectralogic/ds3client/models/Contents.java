@@ -80,6 +80,7 @@ public class Contents {
         this.size = size;
     }
 
+    @Override
     public String toString() {
         return "{{key:: " + key + "}, " + "{size:: " + size + "}, " + "{owner:: " + owner + "}}";
     }

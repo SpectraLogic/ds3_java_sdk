@@ -15,17 +15,17 @@
 
 package com.spectralogic.ds3client.commands;
 
-import org.apache.http.client.methods.CloseableHttpResponse;
-
 import java.io.IOException;
 
+import com.spectralogic.ds3client.networking.WebResponse;
+
 public class DeleteBucketResponse extends AbstractResponse{
-    public DeleteBucketResponse(final CloseableHttpResponse response) throws IOException {
+    public DeleteBucketResponse(final WebResponse response) throws IOException {
         super(response);
     }
 
     @Override
     protected void processResponse() throws IOException {
-        checkStatusCode(204);
+        this.checkStatusCode(204);
     }
 }

@@ -13,15 +13,18 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3client.commands;
+package com.spectralogic.ds3client.models;
 
+import java.util.List;
 
-import java.io.IOException;
+public class JobObjects extends Objects {
+    private List<Ds3Object> objectsInCache;
 
-import com.spectralogic.ds3client.networking.WebResponse;
-
-public class BulkGetResponse extends BulkResponse {
-    public BulkGetResponse(final WebResponse response) throws IOException {
-        super(response);
+    public List<Ds3Object> getObjectsInCache() {
+        return this.objectsInCache;
+    }
+    
+    public void setObjectsInCache(final List<Ds3Object> objectsInCache) {
+        this.objectsInCache = objectsInCache;
     }
 }

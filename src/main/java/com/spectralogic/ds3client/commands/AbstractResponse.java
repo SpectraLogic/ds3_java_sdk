@@ -19,35 +19,35 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
 
-import com.google.common.collect.ImmutableSet;
 import org.apache.commons.io.IOUtils;
-import org.apache.http.client.methods.CloseableHttpResponse;
 
-import com.spectralogic.ds3client.networking.FailedRequestException;
-import com.spectralogic.ds3client.serializer.XmlOutput;
+import com.google.common.collect.ImmutableSet;
 import com.spectralogic.ds3client.models.Error;
+import com.spectralogic.ds3client.networking.FailedRequestException;
+import com.spectralogic.ds3client.networking.WebResponse;
+import com.spectralogic.ds3client.serializer.XmlOutput;
 
 abstract class AbstractResponse implements Ds3Response{
     final static String UTF8 = "UTF-8";
 
-    final private CloseableHttpResponse response;
+    final private WebResponse response;
 
-    AbstractResponse(final CloseableHttpResponse response) throws IOException {
+    AbstractResponse(final WebResponse response) throws IOException {
         this.response = response;
-        processResponse();
+        this.processResponse();
     }
 
     protected abstract void processResponse() throws IOException;
 
-    CloseableHttpResponse getResponse() {
-        return response;
+    WebResponse getResponse() {
+        return this.response;
     }
 
     void checkStatusCode(final int ... expectedStatuses) throws IOException {
-        final ImmutableSet<Integer> expectedSet = createExpectedSet(expectedStatuses);
-        final int statusCode = getStatusCode();
+        final ImmutableSet<Integer> expectedSet = this.createExpectedSet(expectedStatuses);
+        final int statusCode = this.getStatusCode();
         if (!expectedSet.contains(statusCode)) {
-            final String responseString = readResponseString();
+            final String responseString = this.readResponseString();
             throw new FailedRequestException(
                 expectedStatuses,
                 statusCode,
@@ -58,7 +58,7 @@ abstract class AbstractResponse implements Ds3Response{
     }
 
     int getStatusCode() {
-        return response.getStatusLine().getStatusCode();
+        return this.response.getStatusCode();
     }
 
     private ImmutableSet<Integer> createExpectedSet(final int[] expectedStatuses) {
@@ -80,7 +80,7 @@ abstract class AbstractResponse implements Ds3Response{
     
     private String readResponseString() throws IOException {
         try(final StringWriter writer = new StringWriter();
-            final InputStream content = response.getEntity().getContent()) {
+            final InputStream content = this.response.getResponseStream()) {
             IOUtils.copy(content, writer, UTF8);
             return writer.toString();
         }
@@ -88,6 +88,6 @@ abstract class AbstractResponse implements Ds3Response{
 
     @Override
     public void close() throws IOException {
-        response.close();
+        this.response.close();
     }
 }

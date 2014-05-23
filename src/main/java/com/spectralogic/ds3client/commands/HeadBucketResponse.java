@@ -15,9 +15,9 @@
 
 package com.spectralogic.ds3client.commands;
 
-import org.apache.http.client.methods.CloseableHttpResponse;
-
 import java.io.IOException;
+
+import com.spectralogic.ds3client.networking.WebResponse;
 
 public class HeadBucketResponse extends AbstractResponse {
 
@@ -27,19 +27,19 @@ public class HeadBucketResponse extends AbstractResponse {
 
     private Status status;
 
-    public HeadBucketResponse(final CloseableHttpResponse response) throws IOException {
+    public HeadBucketResponse(final WebResponse response) throws IOException {
         super(response);
     }
 
     public Status getStatus() {
-        return status;
+        return this.status;
     }
 
     @Override
     protected void processResponse() throws IOException {
-        checkStatusCode(200, 403, 404);
-        final int statusCode = getStatusCode();
-        setStatus(statusCode);
+        this.checkStatusCode(200, 403, 404);
+        final int statusCode = this.getStatusCode();
+        this.setStatus(statusCode);
     }
 
     private void setStatus(final int statusCode) {

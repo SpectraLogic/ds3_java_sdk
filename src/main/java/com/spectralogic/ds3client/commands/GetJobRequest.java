@@ -15,13 +15,24 @@
 
 package com.spectralogic.ds3client.commands;
 
+import java.util.UUID;
 
-import java.io.IOException;
+import com.spectralogic.ds3client.HttpVerb;
 
-import com.spectralogic.ds3client.networking.WebResponse;
+public class GetJobRequest extends AbstractRequest {
+    private final UUID jobId;
 
-public class BulkGetResponse extends BulkResponse {
-    public BulkGetResponse(final WebResponse response) throws IOException {
-        super(response);
+    public GetJobRequest(final UUID jobId) {
+        this.jobId = jobId;
+    }
+    
+    @Override
+    public String getPath() {
+        return "/_rest_/job/" + this.jobId.toString();
+    }
+
+    @Override
+    public HttpVerb getVerb() {
+        return HttpVerb.GET;
     }
 }

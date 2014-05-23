@@ -16,16 +16,42 @@
 package com.spectralogic.ds3client.commands;
 
 import java.io.IOException;
+import java.io.StringWriter;
+import java.util.List;
 
+import org.apache.commons.io.IOUtils;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.spectralogic.ds3client.models.JobInfo;
 import com.spectralogic.ds3client.networking.WebResponse;
+import com.spectralogic.ds3client.serializer.XmlOutput;
 
-public class PutBucketResponse extends AbstractResponse {
-    public PutBucketResponse(final WebResponse response) throws IOException {
+public class GetJobListResponse extends AbstractResponse {
+    private List<JobInfo> jobs;
+    
+    public GetJobListResponse(final WebResponse response) throws IOException {
         super(response);
     }
-
+    
     @Override
     protected void processResponse() throws IOException {
         this.checkStatusCode(200);
+        final StringWriter writer = new StringWriter();
+        IOUtils.copy(this.getResponse().getResponseStream(), writer, UTF8);
+        this.jobs = XmlOutput.fromXml(writer.toString(), InternalJobListResult.class).getJobs();
+    }
+
+    public List<JobInfo> getJobs() {
+        return this.jobs;
+        
+    }
+    
+    private static class InternalJobListResult {
+        @JsonProperty("Job")
+        private List<JobInfo> jobs;
+        
+        public List<JobInfo> getJobs() {
+            return this.jobs;
+        }
     }
 }

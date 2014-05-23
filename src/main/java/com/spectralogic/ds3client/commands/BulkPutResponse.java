@@ -15,12 +15,12 @@
 
 package com.spectralogic.ds3client.commands;
 
-import org.apache.http.client.methods.CloseableHttpResponse;
-
 import java.io.IOException;
 
+import com.spectralogic.ds3client.networking.WebResponse;
+
 public class BulkPutResponse extends BulkResponse {
-    public BulkPutResponse(final CloseableHttpResponse response) throws IOException {
+    public BulkPutResponse(final WebResponse response) throws IOException {
         super(response);
     }
 }

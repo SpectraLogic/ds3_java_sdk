@@ -13,15 +13,35 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3client.commands;
-
+package com.spectralogic.ds3client;
 
 import java.io.IOException;
+import java.io.InputStream;
+
+import org.apache.commons.io.IOUtils;
 
 import com.spectralogic.ds3client.networking.WebResponse;
 
-public class BulkGetResponse extends BulkResponse {
-    public BulkGetResponse(final WebResponse response) throws IOException {
-        super(response);
+public class MockedWebResponse implements WebResponse {
+    private final InputStream responseStream;
+    private final int statusCode;
+
+    public MockedWebResponse(final String responseString, final int statusCode) {
+        this.responseStream = IOUtils.toInputStream(responseString);
+        this.statusCode = statusCode;
+    }
+    
+    @Override
+    public InputStream getResponseStream() throws IOException {
+        return this.responseStream;
+    }
+
+    @Override
+    public int getStatusCode() {
+        return this.statusCode;
+    }
+    
+    @Override
+    public void close() throws IOException {
     }
 }

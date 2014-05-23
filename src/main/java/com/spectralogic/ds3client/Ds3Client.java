@@ -116,8 +116,8 @@ public class Ds3Client {
          */
         @Override
         public Ds3Client build() {
-            final ConnectionDetailsImpl.Builder connBuilder = ConnectionDetailsImpl.builder(endpoint, credentials)
-                .withProxy(proxy).withSecure(secure).withRedirectRetries(retries);
+            final ConnectionDetailsImpl.Builder connBuilder = ConnectionDetailsImpl.builder(this.endpoint, this.credentials)
+                .withProxy(this.proxy).withSecure(this.secure).withRedirectRetries(this.retries);
 
             final NetworkClient netClient = new NetworkClientImpl(connBuilder.build());
             return new Ds3Client(netClient);
@@ -141,7 +141,7 @@ public class Ds3Client {
     }
 
     NetworkClient getNetClient() {
-        return netClient;
+        return this.netClient;
     }
 
     /**
@@ -152,7 +152,7 @@ public class Ds3Client {
      * @throws SignatureException
      */
     public GetServiceResponse getService(final GetServiceRequest request) throws IOException, SignatureException {
-        return new GetServiceResponse(netClient.getResponse(request));
+        return new GetServiceResponse(this.netClient.getResponse(request));
     }
 
     /**
@@ -168,7 +168,7 @@ public class Ds3Client {
      * @throws SignatureException
      */
     public GetBucketResponse getBucket(final GetBucketRequest request) throws IOException, SignatureException {
-        return new GetBucketResponse(netClient.getResponse(request));
+        return new GetBucketResponse(this.netClient.getResponse(request));
     }
 
     /**
@@ -183,7 +183,7 @@ public class Ds3Client {
      * @throws SignatureException
      */
     public PutBucketResponse putBucket(final PutBucketRequest request) throws IOException, SignatureException {
-        return new PutBucketResponse(netClient.getResponse(request));
+        return new PutBucketResponse(this.netClient.getResponse(request));
     }
 
     /**
@@ -196,7 +196,7 @@ public class Ds3Client {
      * @throws SignatureException
      */
     public HeadBucketResponse headBucket(final HeadBucketRequest request) throws IOException, SignatureException {
-        return new HeadBucketResponse(netClient.getResponse(request));
+        return new HeadBucketResponse(this.netClient.getResponse(request));
     }
 
     /**
@@ -212,7 +212,7 @@ public class Ds3Client {
      * @throws SignatureException
      */
     public DeleteBucketResponse deleteBucket(final DeleteBucketRequest request) throws IOException, SignatureException {
-        return new DeleteBucketResponse(netClient.getResponse(request));
+        return new DeleteBucketResponse(this.netClient.getResponse(request));
     }
 
     /**
@@ -227,7 +227,7 @@ public class Ds3Client {
      * @throws SignatureException
      */
     public DeleteObjectResponse deleteObject(final DeleteObjectRequest request) throws IOException, SignatureException {
-        return new DeleteObjectResponse(netClient.getResponse(request));
+        return new DeleteObjectResponse(this.netClient.getResponse(request));
     }
 
     /**
@@ -241,7 +241,7 @@ public class Ds3Client {
      * @throws SignatureException
      */
     public GetObjectResponse getObject(final GetObjectRequest request) throws IOException, SignatureException {
-        return new GetObjectResponse(netClient.getResponse(request));
+        return new GetObjectResponse(this.netClient.getResponse(request));
     }
 
     /**
@@ -256,7 +256,7 @@ public class Ds3Client {
      * @throws SignatureException
      */
     public PutObjectResponse putObject(final PutObjectRequest request) throws IOException, SignatureException {
-        return new PutObjectResponse(netClient.getResponse(request));
+        return new PutObjectResponse(this.netClient.getResponse(request));
     }
 
     /**
@@ -271,7 +271,7 @@ public class Ds3Client {
      * @throws SignatureException
      */
     public BulkGetResponse bulkGet(final BulkGetRequest request) throws IOException, SignatureException {
-        return new BulkGetResponse(netClient.getResponse(request));
+        return new BulkGetResponse(this.netClient.getResponse(request));
     }
 
     /**
@@ -286,7 +286,17 @@ public class Ds3Client {
      * @throws SignatureException
      */
     public BulkPutResponse bulkPut(final BulkPutRequest request) throws IOException, SignatureException {
-        return new BulkPutResponse(netClient.getResponse(request));
+        return new BulkPutResponse(this.netClient.getResponse(request));
+    }
+
+    //TODO
+    public GetJobListResponse getJobList(final GetJobListRequest request) throws IOException, SignatureException {
+        return new GetJobListResponse(this.netClient.getResponse(request));
+    }
+
+    //TODO
+    public GetJobResponse getJob(final GetJobRequest request) throws IOException, SignatureException {
+        return new GetJobResponse(this.netClient.getResponse(request));
     }
 }
 

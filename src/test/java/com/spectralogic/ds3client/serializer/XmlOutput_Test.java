@@ -31,7 +31,7 @@ public class XmlOutput_Test {
 
     @Test
     public void singleList() throws IOException {
-        final String xmlResponse = "<masterobjectlist><objects><object name='file1' size='256'/><object name='file2' size='1202'/><object name='file3' size='2523'/></objects></masterobjectlist>";
+        final String xmlResponse = "<MasterObjectList><Objects><Object Name='file1' Size='256'/><Object Name='file2' Size='1202'/><Object Name='file3' Size='2523'/></Objects></MasterObjectList>";
 
         final MasterObjectList masterObjectList = XmlOutput.fromXml(xmlResponse, MasterObjectList.class);
         assertThat(masterObjectList, is(notNullValue()));

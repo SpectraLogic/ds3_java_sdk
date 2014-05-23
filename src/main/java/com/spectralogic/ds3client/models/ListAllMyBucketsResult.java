@@ -47,6 +47,7 @@ public class ListAllMyBucketsResult {
         this.buckets = buckets;
     }
 
+    @Override
     public String toString() {
         final StringBuilder builder = new StringBuilder();
         builder.append("{{owner:: ").append(owner.toString()).append("},\n");

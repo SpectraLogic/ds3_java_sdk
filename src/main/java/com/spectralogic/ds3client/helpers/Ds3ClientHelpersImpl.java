@@ -48,7 +48,7 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
             throws SignatureException, IOException, XmlProcessingException {
         try(final BulkPutResponse prime = this.client.bulkPut(new BulkPutRequest(bucket, Lists.newArrayList(objectsToWrite)))) {
             final MasterObjectList result = prime.getResult();
-            return new WriteJobImpl(this.client, result.getJobid(), bucket, result.getObjects());
+            return new WriteJobImpl(this.client, result.getJobId(), bucket, result.getObjects());
         }
     }
 
@@ -57,7 +57,7 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
             throws SignatureException, IOException, XmlProcessingException {
         try(final BulkGetResponse prime = this.client.bulkGet(new BulkGetRequest(bucket, Lists.newArrayList(objectsToRead)))) {
             final MasterObjectList result = prime.getResult();
-            return new ReadJobImpl(this.client, result.getJobid(), bucket, result.getObjects());
+            return new ReadJobImpl(this.client, result.getJobId(), bucket, result.getObjects());
         }
     }
 

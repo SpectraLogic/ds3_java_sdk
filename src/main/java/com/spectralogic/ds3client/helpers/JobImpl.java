@@ -87,7 +87,7 @@ abstract class JobImpl implements Job {
         return new Callable<Object>() {
             @Override
             public Object call() throws Exception {
-                final Ds3Client client = JobImpl.this.getClient(objects.getServerid());
+                final Ds3Client client = JobImpl.this.getClient(objects.getServerId());
                 for (final Ds3Object ds3Object : objects) {
                     transferrer.Transfer(client, JobImpl.this.jobId, JobImpl.this.bucketName, ds3Object);
                 }

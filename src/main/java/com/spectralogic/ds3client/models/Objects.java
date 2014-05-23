@@ -15,44 +15,45 @@
 
 package com.spectralogic.ds3client.models;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
-
 import java.util.Iterator;
 import java.util.List;
 
-@JacksonXmlRootElement(localName="objects")
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+
+@JsonIgnoreProperties("ChunkNumber")
 public class Objects implements Iterable<Ds3Object> {
 
-    @JacksonXmlProperty
-    private String serverid; //This is not camel cased to match the xml attribute that is returned.
+    @JacksonXmlProperty(isAttribute = true, localName = "ServerId")
+    private String serverId;
 
-    @JsonProperty("")
+    @JsonProperty("Object")
     private List<Ds3Object> object;
+    
+    public String getServerId() {
+        return this.serverId;
+    }
+
+    public void setServerId(final String serverId) {
+        this.serverId = serverId;
+    }
 
     public List<Ds3Object> getObject() {
-        return object;
+        return this.object;
     }
 
     public void setObject(final List<Ds3Object> object) {
         this.object = object;
     }
 
-    public String getServerid() {
-        return serverid;
-    }
-
-    public void setServerid(final String serverid) {
-        this.serverid = serverid;
-    }
-
+    @Override
     public String toString() {
-        return object.toString();
+        return this.object.toString();
     }
 
     @Override
     public Iterator<Ds3Object> iterator() {
-        return object.iterator();
+        return this.object.iterator();
     }
 }

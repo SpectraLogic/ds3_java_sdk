@@ -37,11 +37,7 @@ import org.apache.http.message.BasicHttpRequest;
 
 import com.spectralogic.ds3client.commands.Ds3Request;
 import com.spectralogic.ds3client.models.SignatureDetails;
-import com.spectralogic.ds3client.networking.ConnectionDetails;
-import com.spectralogic.ds3client.networking.NetUtils;
-import com.spectralogic.ds3client.networking.NetworkClient;
-import com.spectralogic.ds3client.networking.RequiresMarkSupportedException;
-import com.spectralogic.ds3client.networking.TooManyRedirectsException;
+import com.spectralogic.ds3client.networking.*;
 import com.spectralogic.ds3client.utils.DateFormatter;
 import com.spectralogic.ds3client.utils.Signature;
 
@@ -64,7 +60,7 @@ class NetworkClientImpl implements NetworkClient {
     }
 
     @Override
-    public CloseableHttpResponse getResponse(final Ds3Request request) throws IOException, SignatureException {
+    public WebResponse getResponse(final Ds3Request request) throws IOException, SignatureException {
         try (final RequestExecutor requestExecutor = new RequestExecutor(request)) {
             boolean redirect = false;
             int redirectCount = 0;
@@ -75,7 +71,7 @@ class NetworkClientImpl implements NetworkClient {
                     redirectCount++;
                     continue;
                 }
-                return response;
+                return new WebResponseImpl(response);
             } while (redirect && redirectCount < this.connectionDetails.getRetries());
             
             throw new TooManyRedirectsException(redirectCount);
