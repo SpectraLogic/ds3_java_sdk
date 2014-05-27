@@ -36,7 +36,7 @@ class ReadJobImpl extends JobImpl implements ReadJob {
             final Ds3Client client,
             final UUID jobId,
             final String bucketName,
-            final Iterable<Objects> objectLists) {
+            final Iterable<? extends Objects> objectLists) {
         super(client, jobId, bucketName, objectLists);
     }
 

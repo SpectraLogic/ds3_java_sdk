@@ -151,6 +151,26 @@ public abstract class Ds3ClientHelpers {
             throws SignatureException, IOException, XmlProcessingException;
 
     /**
+     * Queries job information based on job id and returns a {@link ReadJob} that can resume the job.
+     * @throws SignatureException
+     * @throws IOException
+     * @throws XmlProcessingException
+     * @throws JobRecoveryException
+     */
+    public abstract Ds3ClientHelpers.WriteJob recoverWriteJob(final UUID jobId)
+            throws SignatureException, IOException, XmlProcessingException, JobRecoveryException;
+
+    /**
+     * Queries job information based on job id and returns a {@link WriteJob} that can resume the job.
+     * @throws SignatureException
+     * @throws IOException
+     * @throws XmlProcessingException
+     * @throws JobRecoveryException
+     */
+    public abstract Ds3ClientHelpers.ReadJob recoverReadJob(final UUID jobId)
+            throws SignatureException, IOException, XmlProcessingException, JobRecoveryException;
+
+    /**
      * Ensures that a bucket exists.  The the bucket does not exist, it will be created.
      * @param bucket The name of the bucket to check that it exists.
      * @throws IOException

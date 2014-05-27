@@ -40,14 +40,14 @@ abstract class JobImpl implements Job {
     private final Ds3Client client;
     private final UUID jobId;
     private final String bucketName;
-    private final Iterable<Objects> objectLists;
+    private final Iterable<? extends Objects> objectLists;
 
     //TODO: client factory
     public JobImpl(
             final Ds3Client client,
             final UUID jobId,
             final String bucketName,
-            final Iterable<Objects> objectLists) {
+            final Iterable<? extends Objects> objectLists) {
         this.client = client;
         this.jobId = jobId;
         this.bucketName = bucketName;

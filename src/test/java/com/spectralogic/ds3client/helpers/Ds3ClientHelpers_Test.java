@@ -28,7 +28,6 @@ import java.util.List;
 import java.util.UUID;
 
 import org.apache.commons.io.IOUtils;
-import org.hamcrest.Description;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.ArgumentMatcher;
@@ -198,15 +197,6 @@ public class Ds3ClientHelpers_Test {
                         putObjectRequest.getBucketName().equals(MYBUCKET)
                         && putObjectRequest.getObjectName().equals(key)
                         && streamToString(stream).equals(contents);
-            }
-            
-            @Override
-            public void describeTo(final Description description) {
-                description.appendText("PutObjectRequest(\"");
-                description.appendText(key);
-                description.appendText("\", \"");
-                description.appendText(contents);
-                description.appendText("\")");
             }
         });
     }
