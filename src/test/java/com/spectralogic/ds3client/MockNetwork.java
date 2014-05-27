@@ -65,7 +65,7 @@ public class MockNetwork implements NetworkClient {
     }
     
     public Ds3Client asClient() {
-        return new Ds3Client(this);
+        return new Ds3ClientImpl(this);
     }
     
     @Override

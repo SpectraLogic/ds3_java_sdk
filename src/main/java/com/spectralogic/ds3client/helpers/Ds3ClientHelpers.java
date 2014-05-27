@@ -112,7 +112,7 @@ public abstract class Ds3ClientHelpers {
     }
 
     /**
-     * Wraps the given {@link com.spectralogic.ds3client.Ds3Client} with helper methods.
+     * Wraps the given {@link com.spectralogic.ds3client.Ds3ClientImpl} with helper methods.
      */
     public static Ds3ClientHelpers wrap(final Ds3Client client) {
         return new Ds3ClientHelpersImpl(client);

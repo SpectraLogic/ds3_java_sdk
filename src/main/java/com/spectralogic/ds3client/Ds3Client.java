@@ -16,23 +16,19 @@
 package com.spectralogic.ds3client;
 
 import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.security.SignatureException;
 
 import com.spectralogic.ds3client.commands.*;
-import com.spectralogic.ds3client.models.Credentials;
-import com.spectralogic.ds3client.networking.NetworkClient;
 
 /**
- * The main class for communicating with a DS3 appliance.  All communication with a DS3 appliance should start with
+ * The main interface for communicating with a DS3 appliance.  All communication with a DS3 appliance should start with
  * this class.
  *
- * Here is an example showing how the Ds3Client class is used to get a list of buckets from a remote DS3 appliance.
+ * Here is an example showing how the Ds3Client interface is used to get a list of buckets from a remote DS3 appliance.
  *
  * <pre>
  *     {@code
- *     final Ds3Client client = Ds3Client.builder("ds3Endpoint:8080",
+ *     final Ds3Client client = Ds3ClientBuilder.create("ds3Endpoint:8080",
  *                                  new Credentials("accessKey", "secretKey")).build();
  *
  *     final GetServiceResponse response = client.getService(new GetServiceRequest());
@@ -43,106 +39,7 @@ import com.spectralogic.ds3client.networking.NetworkClient;
  *     }
  * </pre>
  */
-public class Ds3Client {
-
-    /**
-     * A Builder class used to create a Ds3Client instance.
-     */
-    public static class Builder implements com.spectralogic.ds3client.utils.Builder<Ds3Client> {
-
-        final private String endpoint;
-        final private Credentials credentials;
-
-        private boolean secure = true;
-        private URI proxy = null;
-        private int retries = 5;
-
-        private Builder(final String endpoint, final Credentials credentials) throws IllegalArgumentException {
-            if (endpoint == null || endpoint.isEmpty()) {
-                throw new IllegalArgumentException("Endpoint must be non empty");
-            }
-            if(credentials == null || !credentials.isValid()) {
-                throw new IllegalArgumentException("Credentials must be filled out.");
-            }
-            this.endpoint = endpoint;
-            this.credentials = credentials;
-        }
-
-        /**
-         * Specifies if the library should use HTTP or HTTPS.  The default is HTTP.
-         * @param secure True will use HTTPS, false will use HTTP.
-         * @return The current builder.
-         */
-        public Builder withHttpSecure(final boolean secure) {
-            this.secure = secure;
-            return this;
-        }
-
-        /**
-         * Sets a HTTP proxy.
-         * @param proxy The endpoint of the HTTP proxy.
-         * @return The current builder.
-         * @throws IllegalArgumentException This will be thrown if the proxy endpoint is not a valid URI.
-         */
-        public Builder withProxy(final String proxy) throws IllegalArgumentException {
-            try {
-                final URI proxyUri;
-                if(!proxy.startsWith("http")) {
-                    throw new IllegalArgumentException("Invalid proxy format.  The web address must start with either http or https.");
-                }
-                proxyUri = new URI(proxy);
-
-                this.proxy = proxyUri;
-            } catch (final URISyntaxException e) {
-                throw new IllegalArgumentException("Invalid proxy format.  Must be a web address.");
-            }
-
-            return this;
-        }
-
-        /**
-         * Sets the number of retries the library will attempt to perform when it receives 307 redirects from a
-         * DS3 appliance.  The default is 5.
-         * @param retries The number of times the library should perform retries on 307.
-         * @return The current builder.
-         */
-        public Builder withRedirectRetries(final int retries) {
-            this.retries = retries;
-            return this;
-        }
-
-        /**
-         * Returns a new Ds3Client instance.
-         */
-        @Override
-        public Ds3Client build() {
-            final ConnectionDetailsImpl.Builder connBuilder = ConnectionDetailsImpl.builder(this.endpoint, this.credentials)
-                .withProxy(this.proxy).withSecure(this.secure).withRedirectRetries(this.retries);
-
-            final NetworkClient netClient = new NetworkClientImpl(connBuilder.build());
-            return new Ds3Client(netClient);
-        }
-    }
-
-    /**
-     * Returns a Builder which is used to customize the behavior of the Ds3Client library.
-     * @param endpoint The DS3 endpoint the library should connect to.
-     * @param creds The {@link Credentials} used for connecting to a DS3 endpoint.
-     * @return The Builder for the {@link Ds3Client} object.
-     */
-    public static Builder builder(final String endpoint, final Credentials creds) {
-        return new Builder(endpoint, creds);
-    }
-    
-    private final NetworkClient netClient;
-
-    Ds3Client(final NetworkClient netClient) {
-        this.netClient = netClient;
-    }
-
-    NetworkClient getNetClient() {
-        return this.netClient;
-    }
+public interface Ds3Client {
 
     /**
      * Gets the list of buckets.
@@ -151,9 +48,8 @@ public class Ds3Client {
      * @throws IOException
      * @throws SignatureException
      */
-    public GetServiceResponse getService(final GetServiceRequest request) throws IOException, SignatureException {
-        return new GetServiceResponse(this.netClient.getResponse(request));
-    }
+    public abstract GetServiceResponse getService(GetServiceRequest request)
+            throws IOException, SignatureException;
 
     /**
      * Gets the list of objects in a bucket.
@@ -167,9 +63,8 @@ public class Ds3Client {
      * @throws IOException
      * @throws SignatureException
      */
-    public GetBucketResponse getBucket(final GetBucketRequest request) throws IOException, SignatureException {
-        return new GetBucketResponse(this.netClient.getResponse(request));
-    }
+    public abstract GetBucketResponse getBucket(GetBucketRequest request)
+            throws IOException, SignatureException;
 
     /**
      * Puts a new bucket to a DS3 endpoint
@@ -182,9 +77,8 @@ public class Ds3Client {
      * @throws IOException
      * @throws SignatureException
      */
-    public PutBucketResponse putBucket(final PutBucketRequest request) throws IOException, SignatureException {
-        return new PutBucketResponse(this.netClient.getResponse(request));
-    }
+    public abstract PutBucketResponse putBucket(PutBucketRequest request)
+            throws IOException, SignatureException;
 
     /**
      * Performs a HTTP HEAD for a bucket.  The HEAD will return information about if the bucket exists, or if the user
@@ -195,9 +89,8 @@ public class Ds3Client {
      * @throws IOException
      * @throws SignatureException
      */
-    public HeadBucketResponse headBucket(final HeadBucketRequest request) throws IOException, SignatureException {
-        return new HeadBucketResponse(this.netClient.getResponse(request));
-    }
+    public abstract HeadBucketResponse headBucket(HeadBucketRequest request)
+            throws IOException, SignatureException;
 
     /**
      * Deletes a bucket from a DS3 endpoint.  <b>Note:</b> all objects must be deleted first before deleteBucket will
@@ -211,9 +104,8 @@ public class Ds3Client {
      * @throws IOException
      * @throws SignatureException
      */
-    public DeleteBucketResponse deleteBucket(final DeleteBucketRequest request) throws IOException, SignatureException {
-        return new DeleteBucketResponse(this.netClient.getResponse(request));
-    }
+    public abstract DeleteBucketResponse deleteBucket(
+            DeleteBucketRequest request) throws IOException, SignatureException;
 
     /**
      * Deletes an object in a bucket from a DS3 endpoint
@@ -226,9 +118,8 @@ public class Ds3Client {
      * @throws IOException
      * @throws SignatureException
      */
-    public DeleteObjectResponse deleteObject(final DeleteObjectRequest request) throws IOException, SignatureException {
-        return new DeleteObjectResponse(this.netClient.getResponse(request));
-    }
+    public abstract DeleteObjectResponse deleteObject(
+            DeleteObjectRequest request) throws IOException, SignatureException;
 
     /**
      * Get an object in a bucket from a DS3 endpoint
@@ -240,9 +131,8 @@ public class Ds3Client {
      * @throws IOException
      * @throws SignatureException
      */
-    public GetObjectResponse getObject(final GetObjectRequest request) throws IOException, SignatureException {
-        return new GetObjectResponse(this.netClient.getResponse(request));
-    }
+    public abstract GetObjectResponse getObject(GetObjectRequest request)
+            throws IOException, SignatureException;
 
     /**
      * Puts a new object to an existing bucket to a DS3 endpoint
@@ -255,9 +145,8 @@ public class Ds3Client {
      * @throws IOException
      * @throws SignatureException
      */
-    public PutObjectResponse putObject(final PutObjectRequest request) throws IOException, SignatureException {
-        return new PutObjectResponse(this.netClient.getResponse(request));
-    }
+    public abstract PutObjectResponse putObject(PutObjectRequest request)
+            throws IOException, SignatureException;
 
     /**
      * Primes the Ds3 appliance for a Bulk Get.  This does not perform the gets for each individual files.  See
@@ -270,9 +159,8 @@ public class Ds3Client {
      * @throws IOException
      * @throws SignatureException
      */
-    public BulkGetResponse bulkGet(final BulkGetRequest request) throws IOException, SignatureException {
-        return new BulkGetResponse(this.netClient.getResponse(request));
-    }
+    public abstract BulkGetResponse bulkGet(BulkGetRequest request)
+            throws IOException, SignatureException;
 
     /**
      * Primes the Ds3 appliance for a Bulk Put.  This does not perform the puts for each individual files.  See
@@ -285,18 +173,23 @@ public class Ds3Client {
      * @throws IOException
      * @throws SignatureException
      */
-    public BulkPutResponse bulkPut(final BulkPutRequest request) throws IOException, SignatureException {
-        return new BulkPutResponse(this.netClient.getResponse(request));
-    }
+    public abstract BulkPutResponse bulkPut(BulkPutRequest request)
+            throws IOException, SignatureException;
 
-    //TODO
-    public GetJobListResponse getJobList(final GetJobListRequest request) throws IOException, SignatureException {
-        return new GetJobListResponse(this.netClient.getResponse(request));
-    }
+    /**
+     * Queries the list of active jobs on the server.
+     * @throws IOException
+     * @throws SignatureException
+     */
+    public abstract GetJobListResponse getJobList(GetJobListRequest request)
+            throws IOException, SignatureException;
 
-    //TODO
-    public GetJobResponse getJob(final GetJobRequest request) throws IOException, SignatureException {
-        return new GetJobResponse(this.netClient.getResponse(request));
-    }
+    /**
+     * Queries the job details for a given job id.  Includes the objects that are in cache or haven't been transferred. 
+     * @throws IOException
+     * @throws SignatureException
+     */
+    public abstract GetJobResponse getJob(GetJobRequest request)
+            throws IOException, SignatureException;
+
 }
-
