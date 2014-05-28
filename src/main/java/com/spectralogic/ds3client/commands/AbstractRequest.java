@@ -25,8 +25,14 @@ import com.spectralogic.ds3client.models.Checksum;
 
 abstract class AbstractRequest implements Ds3Request {
 
-    private final Map<String, String> headers = new HashMap<>();
+    private final Map<String, String> headers = buildDefaultHeaders();
     private final Map<String, String> queryParams = new HashMap<>();
+    
+    private static Map<String, String> buildDefaultHeaders() {
+        final Map<String, String> headers = new HashMap<>();
+        headers.put("Naming-Convention", "s3");
+        return headers;
+    }
 
     @Override
     public ContentType getContentType() {
