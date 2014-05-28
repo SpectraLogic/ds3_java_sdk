@@ -272,7 +272,7 @@ public class Ds3Client_Test {
         queryParams.put("operation", command.toString());
         
         final Ds3Client client = MockNetwork
-                .expecting(HttpVerb.PUT, "/_rest_/buckets/bulkTest", queryParams, expectedXmlBody)
+                .expecting(HttpVerb.PUT, "/_rest_/bucket/bulkTest", queryParams, expectedXmlBody)
                 .returning(200, xmlResponse)
                 .asClient();
         

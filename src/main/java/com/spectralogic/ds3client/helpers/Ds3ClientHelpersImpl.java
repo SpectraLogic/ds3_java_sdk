@@ -48,7 +48,7 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
             throws SignatureException, IOException, XmlProcessingException {
         try(final BulkPutResponse prime = this.client.bulkPut(new BulkPutRequest(bucket, Lists.newArrayList(objectsToWrite)))) {
             final MasterObjectList result = prime.getResult();
-            return new WriteJobImpl(this.client, result.getJobId(), bucket, result.getObjects());
+            return new WriteJobImpl(new Ds3ClientFactoryImpl(this.client), result.getJobId(), bucket, result.getObjects());
         }
     }
 
@@ -57,7 +57,7 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
             throws SignatureException, IOException, XmlProcessingException {
         try(final BulkGetResponse prime = this.client.bulkGet(new BulkGetRequest(bucket, Lists.newArrayList(objectsToRead)))) {
             final MasterObjectList result = prime.getResult();
-            return new ReadJobImpl(this.client, result.getJobId(), bucket, result.getObjects());
+            return new ReadJobImpl(new Ds3ClientFactoryImpl(this.client), result.getJobId(), bucket, result.getObjects());
         }
     }
 
@@ -79,7 +79,12 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
         try (final GetJobResponse job = this.client.getJob(new GetJobRequest(jobId))) {
             final JobInfo jobInfo = job.getJobInfo();
             checkJobType(JOB_TYPE_PUT, jobInfo.getRequestType());
-            return new WriteJobImpl(this.client, jobInfo.getJobId(), jobInfo.getBucketName(), job.getObjectsList());
+            return new WriteJobImpl(
+                new Ds3ClientFactoryImpl(this.client),
+                jobInfo.getJobId(),
+                jobInfo.getBucketName(),
+                job.getObjectsList()
+            );
         }
     }
 
@@ -88,7 +93,12 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
         try (final GetJobResponse job = this.client.getJob(new GetJobRequest(jobId))) {
             final JobInfo jobInfo = job.getJobInfo();
             checkJobType(JOB_TYPE_GET, jobInfo.getRequestType());
-            return new ReadJobImpl(this.client, jobInfo.getJobId(), jobInfo.getBucketName(), convertFromJobObjectsList(job.getObjectsList()));
+            return new ReadJobImpl(
+                new Ds3ClientFactoryImpl(this.client),
+                jobInfo.getJobId(),
+                jobInfo.getBucketName(),
+                convertFromJobObjectsList(job.getObjectsList())
+            );
         }
     }
 

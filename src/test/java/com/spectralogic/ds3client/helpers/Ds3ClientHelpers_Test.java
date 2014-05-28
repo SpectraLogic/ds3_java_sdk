@@ -24,6 +24,7 @@ import static org.mockito.Mockito.*;
 import java.io.*;
 import java.security.SignatureException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
@@ -339,29 +340,19 @@ public class Ds3ClientHelpers_Test {
     private static MasterObjectList buildMasterObjectList() {
         final MasterObjectList masterObjectList = new MasterObjectList();
         masterObjectList.setJobId(jobId);
-        masterObjectList.setObjects(makeObjectLists());
+        masterObjectList.setObjects(Arrays.asList(
+            makeObjects("192.168.56.100", Arrays.asList(new Ds3Object("baz", 12))),
+            makeObjects("192.168.56.100", Arrays.asList(new Ds3Object("foo", 12))),
+            makeObjects("192.168.56.101", Arrays.asList(new Ds3Object("bar", 12)))
+        ));
         return masterObjectList;
     }
 
-    private static List<Objects> makeObjectLists() {
-        final List<Objects> objectLists = new ArrayList<>();
-        objectLists.add(makeObjects1());
-        return objectLists;
-    }
-
-    private static Objects makeObjects1() {
-        final Objects objects1 = new Objects();
-        objects1.setServerId("192.168.56.100");
-        objects1.setObject(makeObjectList1());
-        return objects1;
-    }
-
-    private static ArrayList<Ds3Object> makeObjectList1() {
-        final ArrayList<Ds3Object> objectList1 = new ArrayList<>();
-        objectList1.add(new Ds3Object("baz", 12));
-        objectList1.add(new Ds3Object("foo", 12));
-        objectList1.add(new Ds3Object("bar", 12));
-        return objectList1;
+    private static Objects makeObjects(final String serverId, final List<Ds3Object> objectList) {
+        final Objects objects = new Objects();
+        objects.setServerId(serverId);
+        objects.setObject(objectList);
+        return objects;
     }
     
     private static final class StubException extends RuntimeException {

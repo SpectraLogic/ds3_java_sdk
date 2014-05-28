@@ -33,11 +33,11 @@ class ReadJobImpl extends JobImpl implements ReadJob {
     private GetRequestModifier modifier;
 
     public ReadJobImpl(
-            final Ds3Client client,
+            final Ds3ClientFactory clientFactory,
             final UUID jobId,
             final String bucketName,
             final Iterable<? extends Objects> objectLists) {
-        super(client, jobId, bucketName, objectLists);
+        super(clientFactory, jobId, bucketName, objectLists);
     }
 
     @Override

@@ -37,18 +37,17 @@ import com.spectralogic.ds3client.serializer.XmlProcessingException;
 abstract class JobImpl implements Job {
     private static final int THREAD_COUNT = 10;
     
-    private final Ds3Client client;
+    private final Ds3ClientFactory clientFactory;
     private final UUID jobId;
     private final String bucketName;
     private final Iterable<? extends Objects> objectLists;
 
-    //TODO: client factory
     public JobImpl(
-            final Ds3Client client,
+            final Ds3ClientFactory clientFactory,
             final UUID jobId,
             final String bucketName,
             final Iterable<? extends Objects> objectLists) {
-        this.client = client;
+        this.clientFactory = clientFactory;
         this.jobId = jobId;
         this.bucketName = bucketName;
         this.objectLists = objectLists;
@@ -71,11 +70,19 @@ abstract class JobImpl implements Job {
     
     protected void transferAll(final Transferrer transferrer)
             throws SignatureException, IOException, XmlProcessingException {
+        for (final Objects objects : this.objectLists) {
+            this.transferObjects(transferrer, objects);
+        }
+    }
+
+    private void transferObjects(final Transferrer transferrer, final Objects objects)
+            throws SignatureException, IOException, XmlProcessingException {
         final ListeningExecutorService service = MoreExecutors.listeningDecorator(Executors.newFixedThreadPool(THREAD_COUNT));
         try {
-            final List<ListenableFuture<?>> tasks = new ArrayList<ListenableFuture<?>>();
-            for (final Objects objects : this.objectLists) {
-                tasks.add(service.submit(this.createObjectListTask(transferrer, objects)));
+            final Ds3Client client = this.clientFactory.GetClientForServerId(objects.getServerId());
+            final List<ListenableFuture<?>> tasks = new ArrayList<>();
+            for (final Ds3Object ds3Object : objects) {
+                tasks.add(this.createTransferTask(transferrer, service, client, ds3Object));
             }
             this.executeWithExceptionHandling(tasks);
         } finally {
@@ -83,22 +90,18 @@ abstract class JobImpl implements Job {
         }
     }
 
-    private Callable<?> createObjectListTask(final Transferrer transferrer, final Objects objects) {
-        return new Callable<Object>() {
+    private ListenableFuture<?> createTransferTask(
+            final Transferrer transferrer,
+            final ListeningExecutorService service,
+            final Ds3Client client,
+            final Ds3Object ds3Object) {
+        return service.submit(new Callable<Object>() {
             @Override
             public Object call() throws Exception {
-                final Ds3Client client = JobImpl.this.getClient(objects.getServerId());
-                for (final Ds3Object ds3Object : objects) {
-                    transferrer.Transfer(client, JobImpl.this.jobId, JobImpl.this.bucketName, ds3Object);
-                }
+                transferrer.Transfer(client, JobImpl.this.jobId, JobImpl.this.bucketName, ds3Object);
                 return null;
             }
-        };
-    }
-    
-    //TODO: this needs to come from a Ds3Client factory that knows how to update the server id.
-    private Ds3Client getClient(final String serverId) {
-        return this.client;
+        });
     }
     
     private void executeWithExceptionHandling(final List<ListenableFuture<?>> tasks)
