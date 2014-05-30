@@ -69,4 +69,10 @@ class WriteJobImpl extends JobImpl implements WriteJob {
         this.modifier = modifier;
         return this;
     }
+
+    @Override
+    public WriteJob withMaxParallelRequests(final int maxParallelRequests) {
+        this.setMaxParallelRequests(maxParallelRequests);
+        return this;
+    }
 }
