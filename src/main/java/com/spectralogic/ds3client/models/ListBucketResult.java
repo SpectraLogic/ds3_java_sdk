@@ -92,6 +92,7 @@ public class ListBucketResult {
         this.contentsList = contentsList;
     }
 
+    @Override
     public String toString() {
         return "{{bucket:: " + name + "},\n" + "{numKeys:: " + maxKeys + "},\n" + "{objects:: " + contentsList + "}}";
     }

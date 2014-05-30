@@ -16,122 +16,82 @@
 package com.spectralogic.ds3client.helpers;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.argThat;
+import static org.mockito.Mockito.*;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.StringWriter;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.security.SignatureException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-import mockit.FullVerificationsInOrder;
-import mockit.Mocked;
-import mockit.NonStrictExpectations;
-
 import org.apache.commons.io.IOUtils;
-import org.hamcrest.BaseMatcher;
-import org.hamcrest.Description;
 import org.junit.Assert;
 import org.junit.Test;
+import org.mockito.ArgumentMatcher;
+import org.mockito.InOrder;
 
 import com.google.common.collect.Lists;
 import com.spectralogic.ds3client.Ds3Client;
-import com.spectralogic.ds3client.commands.BulkGetRequest;
-import com.spectralogic.ds3client.commands.BulkGetResponse;
-import com.spectralogic.ds3client.commands.BulkPutRequest;
-import com.spectralogic.ds3client.commands.BulkPutResponse;
-import com.spectralogic.ds3client.commands.GetBucketRequest;
-import com.spectralogic.ds3client.commands.GetBucketResponse;
-import com.spectralogic.ds3client.commands.GetObjectRequest;
-import com.spectralogic.ds3client.commands.GetObjectResponse;
-import com.spectralogic.ds3client.commands.PutObjectRequest;
-import com.spectralogic.ds3client.commands.PutObjectResponse;
+import com.spectralogic.ds3client.commands.*;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.ObjectGetter;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.ObjectPutter;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.ReadJob;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.WriteJob;
-import com.spectralogic.ds3client.models.Contents;
-import com.spectralogic.ds3client.models.Ds3Object;
-import com.spectralogic.ds3client.models.ListBucketResult;
-import com.spectralogic.ds3client.models.MasterObjectList;
-import com.spectralogic.ds3client.models.Objects;
-import com.spectralogic.ds3client.models.Owner;
+import com.spectralogic.ds3client.models.*;
 import com.spectralogic.ds3client.serializer.XmlProcessingException;
 
 public class Ds3ClientHelpers_Test {
     private static final String MYBUCKET = "mybucket";
-    
-    @Mocked
-    private Ds3Client ds3Client;
-    
+
     @Test
     public void testReadObjects() throws SignatureException, IOException, XmlProcessingException {
-        new NonStrictExpectations() {{
-            // Mock the bulk get method.
-            Ds3ClientHelpers_Test.this.ds3Client.bulkGet(this.withInstanceOf(BulkGetRequest.class));
-            result = new StubBulkGetResponse();
-            
-            // Mock the get object method.
-            Ds3ClientHelpers_Test.this.ds3Client.getObject(this.withInstanceOf(GetObjectRequest.class));
-            this.returns(
-                new StubGetObjectResponse(0),
-                new StubGetObjectResponse(1),
-                new StubGetObjectResponse(2)
-            );
-            times = 3;
-        }};
+        final Ds3Client ds3Client = mock(Ds3Client.class);
+        when(ds3Client.bulkGet(any(BulkGetRequest.class))).thenReturn(new StubBulkGetResponse());
+        when(ds3Client.getObject(getRequestHas("foo"))).thenReturn(new StubGetObjectResponse("foo contents"));
+        when(ds3Client.getObject(getRequestHas("bar"))).thenReturn(new StubGetObjectResponse("bar contents"));
+        when(ds3Client.getObject(getRequestHas("baz"))).thenReturn(new StubGetObjectResponse("baz contents"));
         
-        // Build input list.
-        final ArrayList<Ds3Object> objectsToGet = Lists.newArrayList(
+        final List<Ds3Object> objectsToGet = Lists.newArrayList(
             new Ds3Object("foo"),
             new Ds3Object("bar"),
             new Ds3Object("baz")
         );
+        final ReadJob readJob = Ds3ClientHelpers.wrap(ds3Client).startReadJob(MYBUCKET, objectsToGet);
         
-        final ReadJob job = Ds3ClientHelpers.wrap(this.ds3Client).startReadJob(MYBUCKET, objectsToGet);
-            
-        assertThat(job.getJobId(), is(jobId));
-        assertThat(job.getBucketName(), is(MYBUCKET));
+        assertThat(readJob.getJobId(), is(jobId));
+        assertThat(readJob.getBucketName(), is(MYBUCKET));
         
-        job.read(new ObjectGetter() {
+        readJob.read(new ObjectGetter() {
             @Override
             public void writeContents(final String key, final InputStream contents) throws IOException {
                 assertThat(streamToString(contents), is(key + " contents"));
             }
         });
         
-        new FullVerificationsInOrder() {{
-            Ds3ClientHelpers_Test.this.ds3Client.bulkGet(this.withInstanceOf(BulkGetRequest.class));
-            Ds3ClientHelpers_Test.this.ds3Client.getObject(this.withInstanceOf(GetObjectRequest.class));
-            Ds3ClientHelpers_Test.this.ds3Client.getObject(this.withInstanceOf(GetObjectRequest.class));
-            Ds3ClientHelpers_Test.this.ds3Client.getObject(this.withInstanceOf(GetObjectRequest.class));
-        }};
+        final InOrder clientInOrder = inOrder(ds3Client);
+        clientInOrder.verify(ds3Client).bulkGet(any(BulkGetRequest.class));
+        clientInOrder.verify(ds3Client).getObject(getRequestHas("baz"));
+        clientInOrder.verify(ds3Client).getObject(getRequestHas("foo"));
+        clientInOrder.verify(ds3Client).getObject(getRequestHas("bar"));
+        clientInOrder.verifyNoMoreInteractions();
     }
-
+    
     @Test
     public void testWriteObjects() throws SignatureException, IOException, XmlProcessingException {
-        // Set up the mock responses.
-        new NonStrictExpectations() {{
-            // Mock the bulk put method.
-            Ds3ClientHelpers_Test.this.ds3Client.bulkPut(this.withInstanceOf(BulkPutRequest.class));
-            result = new StubBulkPutResponse();
-            
-            // Mock the put object method.
-            Ds3ClientHelpers_Test.this.ds3Client.putObject(this.withInstanceOf(PutObjectRequest.class));
-            result = new StubPutObjectResponse();
-            times = 3;
-        }};
+        final Ds3Client ds3Client = mock(Ds3Client.class);
+        when(ds3Client.bulkPut(any(BulkPutRequest.class))).thenReturn(new StubBulkPutResponse());
+        when(ds3Client.putObject(any(PutObjectRequest.class))).thenReturn(new StubPutObjectResponse());
         
         final Iterable<Ds3Object> objectsToPut = Lists.newArrayList(
                 new Ds3Object("foo", 12),
                 new Ds3Object("bar", 12),
                 new Ds3Object("baz", 12)
         );
-        final WriteJob job = Ds3ClientHelpers.wrap(this.ds3Client).startWriteJob(MYBUCKET, objectsToPut);
+        final WriteJob job = Ds3ClientHelpers.wrap(ds3Client).startWriteJob(MYBUCKET, objectsToPut);
         
         assertThat(job.getJobId(), is(jobId));
         assertThat(job.getBucketName(), is(MYBUCKET));
@@ -143,28 +103,22 @@ public class Ds3ClientHelpers_Test {
             }
         });
         
-        // Verify the ds3 calls.
-        new FullVerificationsInOrder() {{
-            Ds3ClientHelpers_Test.this.ds3Client.bulkPut(this.withInstanceOf(BulkPutRequest.class));
-            Ds3ClientHelpers_Test.this.ds3Client.putObject(this.<PutObjectRequest>with(new PutObjectRequestMatcher("baz", "baz contents")));
-            Ds3ClientHelpers_Test.this.ds3Client.putObject(this.<PutObjectRequest>with(new PutObjectRequestMatcher("foo", "foo contents")));
-            Ds3ClientHelpers_Test.this.ds3Client.putObject(this.<PutObjectRequest>with(new PutObjectRequestMatcher("bar", "bar contents")));
-        }};
+        final InOrder clientInOrder = inOrder(ds3Client);
+        clientInOrder.verify(ds3Client).bulkPut(any(BulkPutRequest.class));
+        clientInOrder.verify(ds3Client).putObject(putRequestHas("baz", "baz contents"));
+        clientInOrder.verify(ds3Client).putObject(putRequestHas("foo", "foo contents"));
+        clientInOrder.verify(ds3Client).putObject(putRequestHas("bar", "bar contents"));
+        clientInOrder.verifyNoMoreInteractions();
     }
 
     @Test
     public void testListObjects() throws SignatureException, IOException, XmlProcessingException {
-        new NonStrictExpectations() {{
-            // Mock the bulk get method.
-            Ds3ClientHelpers_Test.this.ds3Client.getBucket(this.withInstanceOf(GetBucketRequest.class));
-            this.returns(
-                new StubGetBucketResponse(0),
-                new StubGetBucketResponse(1)
-            );
-        }};
+        final Ds3Client ds3Client = mock(Ds3Client.class);
+        when(ds3Client.getBucket(getBucketHas(null))).thenReturn(new StubGetBucketResponse(0));
+        when(ds3Client.getBucket(getBucketHas("baz"))).thenReturn(new StubGetBucketResponse(1));
         
         // Call the list objects method.
-        final List<Contents> contentList = Lists.newArrayList(Ds3ClientHelpers.wrap(this.ds3Client).listObjects(MYBUCKET));
+        final List<Contents> contentList = Lists.newArrayList(Ds3ClientHelpers.wrap(ds3Client).listObjects(MYBUCKET));
         
         // Check the results.
         assertThat(contentList.size(), is(3));
@@ -172,23 +126,14 @@ public class Ds3ClientHelpers_Test {
         checkContents(contentList.get(1), "bar", "f3f98ff00be128139332bcf4b772be43", "2009-10-14T17:50:31.000Z", 12);
         checkContents(contentList.get(2), "baz", "802d45fcb9a3f7d00f1481362edc0ec9", "2009-10-18T17:50:35.000Z", 12);
     }
-    
+
     @Test
     public void testReadObjectsWithFailedPut() throws SignatureException, IOException, XmlProcessingException {
-        new NonStrictExpectations() {{
-            // Mock the bulk get method.
-            Ds3ClientHelpers_Test.this.ds3Client.bulkGet(this.withInstanceOf(BulkGetRequest.class));
-            result = new StubBulkGetResponse();
-            
-            // Mock the get object method.
-            Ds3ClientHelpers_Test.this.ds3Client.getObject(this.withInstanceOf(GetObjectRequest.class));
-            this.returns(
-                new StubFailedGetObjectResponse(),
-                new StubFailedGetObjectResponse(),
-                new StubGetObjectResponse(2)
-            );
-            maxTimes = 3;
-        }};
+        final Ds3Client ds3Client = mock(Ds3Client.class);
+        when(ds3Client.bulkGet(any(BulkGetRequest.class))).thenReturn(new StubBulkGetResponse());
+        when(ds3Client.getObject(getRequestHas("foo"))).thenReturn(new StubFailedGetObjectResponse());
+        when(ds3Client.getObject(getRequestHas("bar"))).thenReturn(new StubFailedGetObjectResponse());
+        when(ds3Client.getObject(getRequestHas("baz"))).thenReturn(new StubGetObjectResponse("baz contents"));
         
         // Build input list.
         final ArrayList<Ds3Object> objectsToGet = Lists.newArrayList(
@@ -197,7 +142,7 @@ public class Ds3ClientHelpers_Test {
             new Ds3Object("baz")
         );
         
-        final ReadJob job = Ds3ClientHelpers.wrap(this.ds3Client).startReadJob(MYBUCKET, objectsToGet);
+        final ReadJob job = Ds3ClientHelpers.wrap(ds3Client).startReadJob(MYBUCKET, objectsToGet);
 
         try {
             job.read(new ObjectGetter() {
@@ -224,33 +169,55 @@ public class Ds3ClientHelpers_Test {
         assertThat(contents.getLastModified(), is(lastModified));
         assertThat(contents.getSize(), is(size));
     }
-    
-    private final class PutObjectRequestMatcher extends BaseMatcher<PutObjectRequest> {
-        private final String key;
-        private final String contents;
 
-        public PutObjectRequestMatcher(final String key, final String contents) {
-            this.key = key;
-            this.contents = contents;
-        }
-        
-        @Override
-        public boolean matches(final Object item) {
-            if (item instanceof PutObjectRequest) {
-                final PutObjectRequest request = (PutObjectRequest) item;
+    private static GetObjectRequest getRequestHas(final String key) {
+        return argThat(new ArgumentMatcher<GetObjectRequest>() {
+            @Override
+            public boolean matches(final Object argument) {
+                if (!(argument instanceof GetObjectRequest)) {
+                    return false;
+                }
+                final GetObjectRequest getObjectRequest = (GetObjectRequest)argument;
                 return
-                    request.getPath().substring(("/" + MYBUCKET + "/").length()).equals(this.key)
-                    && request.getSize() == this.contents.length()
-                    && streamToString(request.getStream()).equals(this.contents);
-            } else {
-                return false;
+                        getObjectRequest.getBucketName().equals(MYBUCKET)
+                        && getObjectRequest.getObjectName().equals(key);
             }
-        }
+        });
+    }
 
-        @Override
-        public void describeTo(final Description description) {
-            description.appendText("key: " + this.key + "\ncontents: " + this.contents);
-        }
+    private static PutObjectRequest putRequestHas(final String key, final String contents) {
+        return argThat(new ArgumentMatcher<PutObjectRequest>() {
+            @Override
+            public boolean matches(final Object argument) {
+                if (!(argument instanceof PutObjectRequest)) {
+                    return false;
+                }
+                final PutObjectRequest putObjectRequest = (PutObjectRequest)argument;
+                final InputStream stream = putObjectRequest.getStream();
+                return
+                        putObjectRequest.getBucketName().equals(MYBUCKET)
+                        && putObjectRequest.getObjectName().equals(key)
+                        && streamToString(stream).equals(contents);
+            }
+        });
+    }
+    
+    private static GetBucketRequest getBucketHas(final String marker) {
+        return argThat(new ArgumentMatcher<GetBucketRequest>() {
+            @Override
+            public boolean matches(final Object argument) {
+                if (!(argument instanceof GetBucketRequest)) {
+                    return false;
+                }
+                final GetBucketRequest getBucketRequest = ((GetBucketRequest)argument);
+                return
+                        getBucketRequest.getBucket().equals(MYBUCKET)
+                        && (marker == null
+                            ? null == getBucketRequest.getNextMarker()
+                            : marker.equals(getBucketRequest.getNextMarker()));
+                
+            }
+        });
     }
     
     private static final class StubGetBucketResponse extends GetBucketResponse {
@@ -367,35 +334,25 @@ public class Ds3ClientHelpers_Test {
             return buildMasterObjectList();
         }
     }
-    
+
     private static UUID jobId = new UUID(0x0123456789abcdefl, 0xfedcba9876543210l);
 
     private static MasterObjectList buildMasterObjectList() {
         final MasterObjectList masterObjectList = new MasterObjectList();
-        masterObjectList.setJobid(jobId);
-        masterObjectList.setObjects(makeObjectLists());
+        masterObjectList.setJobId(jobId);
+        masterObjectList.setObjects(Arrays.asList(
+            makeObjects("192.168.56.100", Arrays.asList(new Ds3Object("baz", 12))),
+            makeObjects("192.168.56.100", Arrays.asList(new Ds3Object("foo", 12))),
+            makeObjects("192.168.56.101", Arrays.asList(new Ds3Object("bar", 12)))
+        ));
         return masterObjectList;
     }
 
-    private static List<Objects> makeObjectLists() {
-        final List<Objects> objectLists = new ArrayList<>();
-        objectLists.add(makeObjects1());
-        return objectLists;
-    }
-
-    private static Objects makeObjects1() {
-        final Objects objects1 = new Objects();
-        objects1.setServerid("192.168.56.100");
-        objects1.setObject(makeObjectList1());
-        return objects1;
-    }
-
-    private static ArrayList<Ds3Object> makeObjectList1() {
-        final ArrayList<Ds3Object> objectList1 = new ArrayList<>();
-        objectList1.add(new Ds3Object("baz", 12));
-        objectList1.add(new Ds3Object("foo", 12));
-        objectList1.add(new Ds3Object("bar", 12));
-        return objectList1;
+    private static Objects makeObjects(final String serverId, final List<Ds3Object> objectList) {
+        final Objects objects = new Objects();
+        objects.setServerId(serverId);
+        objects.setObject(objectList);
+        return objects;
     }
     
     private static final class StubException extends RuntimeException {
@@ -422,11 +379,11 @@ public class Ds3ClientHelpers_Test {
     }
     
     private static final class StubGetObjectResponse extends GetObjectResponse {
-        private final int invocationIndex;
+        private final String content;
 
-        public StubGetObjectResponse(final int invocationIndex) throws IOException {
+        public StubGetObjectResponse(final String content) throws IOException {
             super(null);
-            this.invocationIndex = invocationIndex;
+            this.content = content;
         }
 
         @Override
@@ -439,12 +396,7 @@ public class Ds3ClientHelpers_Test {
         
         @Override
         public InputStream getContent() {
-            final String[] contentItems = {
-                "baz contents",
-                "foo contents",
-                "bar contents"
-            };
-            return streamFromString(contentItems[this.invocationIndex]);
+            return streamFromString(this.content);
         }
     }
     
@@ -466,6 +418,7 @@ public class Ds3ClientHelpers_Test {
     private static String streamToString(final InputStream content) {
         final StringWriter writer = new StringWriter();
         try {
+            content.reset();
             IOUtils.copy(content, writer, "UTF-8");
         } catch (final IOException e) {
             throw new RuntimeException(e);

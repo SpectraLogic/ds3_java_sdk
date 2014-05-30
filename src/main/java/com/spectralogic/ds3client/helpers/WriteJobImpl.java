@@ -32,11 +32,11 @@ class WriteJobImpl extends JobImpl implements WriteJob {
     private PutRequestModifier modifier;
 
     public WriteJobImpl(
-            final Ds3Client client,
+            final Ds3ClientFactory clientFactory,
             final UUID jobId,
             final String bucketName,
-            final Iterable<Objects> objectLists) {
-        super(client, jobId, bucketName, objectLists);
+            final Iterable<? extends Objects> objectLists) {
+        super(clientFactory, jobId, bucketName, objectLists);
     }
 
     @Override

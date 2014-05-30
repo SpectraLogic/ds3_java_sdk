@@ -13,15 +13,10 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3client.commands;
+package com.spectralogic.ds3client.helpers;
 
+import com.spectralogic.ds3client.Ds3Client;
 
-import java.io.IOException;
-
-import com.spectralogic.ds3client.networking.WebResponse;
-
-public class BulkGetResponse extends BulkResponse {
-    public BulkGetResponse(final WebResponse response) throws IOException {
-        super(response);
-    }
+interface Ds3ClientFactory {
+    Ds3Client GetClientForServerId(String serverId);
 }

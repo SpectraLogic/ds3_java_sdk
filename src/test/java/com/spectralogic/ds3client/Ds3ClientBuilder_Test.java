@@ -15,59 +15,58 @@
 
 package com.spectralogic.ds3client;
 
-
-import com.spectralogic.ds3client.models.Credentials;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.junit.Assert.assertThat;
 
 import org.junit.Test;
 
-import static org.hamcrest.CoreMatchers.*;
-import static org.hamcrest.MatcherAssert.assertThat;
+import com.spectralogic.ds3client.models.Credentials;
 
 public class Ds3ClientBuilder_Test {
-
     @Test
     public void createBasicClient() throws Exception {
-        final Ds3Client.Builder builder = Ds3Client.builder("myEndPoint", new Credentials("foo","bar"));
-        final Ds3Client client = builder.build();
+        final Ds3ClientBuilder builder = Ds3ClientBuilder.create("myEndPoint", new Credentials("foo","bar"));
+        final Ds3ClientImpl client = (Ds3ClientImpl)builder.build();
         assertThat(client,is(notNullValue()));
     }
 
     @Test
     public void isNotSecure() throws Exception {
-        final Ds3Client.Builder builder = Ds3Client.builder("myEndPoint", new Credentials("foo","bar"));
-        final Ds3Client client = builder.withHttpSecure(false).build();
+        final Ds3ClientBuilder builder = Ds3ClientBuilder.create("myEndPoint", new Credentials("foo","bar"));
+        final Ds3ClientImpl client = (Ds3ClientImpl)builder.withHttpSecure(false).build();
         assertThat(client.getNetClient().getConnectionDetails().isSecure(),is(false));
     }
 
     @Test
     public void defaultSecure() throws Exception {
-        final Ds3Client.Builder builder = Ds3Client.builder("myEndPoint", new Credentials("foo","bar"));
-        final Ds3Client client = builder.build();
+        final Ds3ClientBuilder builder = Ds3ClientBuilder.create("myEndPoint", new Credentials("foo","bar"));
+        final Ds3ClientImpl client = (Ds3ClientImpl)builder.build();
         assertThat(client.getNetClient().getConnectionDetails().isSecure(),is(true));
     }
 
     @Test
     public void isSecure() throws Exception {
-        final Ds3Client.Builder builder = Ds3Client.builder("myEndPoint", new Credentials("foo","bar"));
-        final Ds3Client client = builder.withHttpSecure(true).build();
+        final Ds3ClientBuilder builder = Ds3ClientBuilder.create("myEndPoint", new Credentials("foo","bar"));
+        final Ds3ClientImpl client = (Ds3ClientImpl)builder.withHttpSecure(true).build();
         assertThat(client.getNetClient().getConnectionDetails().isSecure(),is(true));
     }
 
     @Test
     public void getClientEndpoint() throws Exception {
-        final Ds3Client.Builder builder = Ds3Client.builder("myEndPoint", new Credentials("foo","bar"));
-        final Ds3Client client = builder.build();
+        final Ds3ClientBuilder builder = Ds3ClientBuilder.create("myEndPoint", new Credentials("foo","bar"));
+        final Ds3ClientImpl client = (Ds3ClientImpl)builder.build();
         assertThat(client.getNetClient().getConnectionDetails().getEndpoint(),is("myEndPoint"));
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void badEndpoint() throws Exception {
-        Ds3Client.builder("", new Credentials("foo","bar"));
+        Ds3ClientBuilder.create("", new Credentials("foo","bar"));
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void badCredentials() throws Exception {
-        Ds3Client.builder("myEndPoint", new Credentials("","bar"));
+        Ds3ClientBuilder.create("myEndPoint", new Credentials("","bar"));
     }
 }
 

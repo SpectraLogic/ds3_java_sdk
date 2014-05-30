@@ -13,15 +13,13 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3client.commands;
+package com.spectralogic.ds3client.networking;
 
-
+import java.io.Closeable;
 import java.io.IOException;
+import java.io.InputStream;
 
-import com.spectralogic.ds3client.networking.WebResponse;
-
-public class BulkGetResponse extends BulkResponse {
-    public BulkGetResponse(final WebResponse response) throws IOException {
-        super(response);
-    }
+public interface WebResponse extends Closeable {
+    InputStream getResponseStream() throws IOException;
+    int getStatusCode();
 }

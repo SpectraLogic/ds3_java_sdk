@@ -15,36 +15,36 @@
 
 package com.spectralogic.ds3client.models;
 
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-
 import java.util.List;
 import java.util.UUID;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class MasterObjectList {
+    @JsonProperty("Objects")
     private List<Objects> objects;
 
-    @JacksonXmlProperty
-    private UUID jobid;
+    @JsonProperty("JobId")
+    private UUID jobId;
 
     public MasterObjectList() {}
 
     public List<Objects> getObjects() {
-        return objects;
+        return this.objects;
     }
-
     public void setObjects(final List<Objects> objects) {
         this.objects = objects;
     }
 
+    public UUID getJobId() {
+        return this.jobId;
+    }
+    public void setJobId(final UUID jobId) {
+        this.jobId = jobId;
+    }
+
+    @Override
     public String toString() {
-        return objects.toString();
-    }
-
-    public UUID getJobid() {
-        return jobid;
-    }
-
-    public void setJobid(final UUID jobid) {
-        this.jobid = jobid;
+        return this.objects.toString();
     }
 }

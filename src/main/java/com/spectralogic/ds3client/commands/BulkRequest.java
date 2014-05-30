@@ -65,7 +65,7 @@ abstract class BulkRequest extends AbstractRequest {
 
     @Override
     public String getPath() {
-        return "/_rest_/buckets/" + this.bucket;
+        return "/_rest_/bucket/" + this.bucket;
     }
 
     @Override

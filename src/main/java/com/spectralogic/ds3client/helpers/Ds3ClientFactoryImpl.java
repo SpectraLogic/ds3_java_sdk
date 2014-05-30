@@ -13,15 +13,20 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3client.commands;
+package com.spectralogic.ds3client.helpers;
 
+import com.spectralogic.ds3client.Ds3Client;
 
-import java.io.IOException;
+public class Ds3ClientFactoryImpl implements Ds3ClientFactory {
+    private final Ds3Client client;
 
-import com.spectralogic.ds3client.networking.WebResponse;
+    public Ds3ClientFactoryImpl(final Ds3Client client) {
+        this.client = client;
+    }
 
-public class BulkGetResponse extends BulkResponse {
-    public BulkGetResponse(final WebResponse response) throws IOException {
-        super(response);
+    //TODO: need to actually return a client that points to a particular server id.
+    @Override
+    public Ds3Client GetClientForServerId(final String serverId) {
+        return this.client;
     }
 }

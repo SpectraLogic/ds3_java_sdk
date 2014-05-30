@@ -15,32 +15,32 @@
 
 package com.spectralogic.ds3client.commands;
 
-import org.apache.http.client.methods.CloseableHttpResponse;
-
 import java.io.IOException;
 import java.io.InputStream;
+
+import com.spectralogic.ds3client.networking.WebResponse;
 
 public class GetObjectResponse extends AbstractResponse {
 
     private InputStream content;
 
-    public GetObjectResponse(final CloseableHttpResponse response) throws IOException {
+    public GetObjectResponse(final WebResponse response) throws IOException {
         super(response);
     }
 
     public InputStream getContent() {
-        return content;
+        return this.content;
     }
 
     @Override
     protected void processResponse() throws IOException {
-        checkStatusCode(200);
-        this.content = getResponse().getEntity().getContent();
+        this.checkStatusCode(200);
+        this.content = this.getResponse().getResponseStream();
     }
 
     @Override
     public void close() throws IOException {
-        content.close();
+        this.content.close();
         super.close();
     }
 }

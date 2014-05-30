@@ -15,279 +15,332 @@
 
 package com.spectralogic.ds3client;
 
-import com.spectralogic.ds3client.commands.*;
-import com.spectralogic.ds3client.models.*;
-import com.spectralogic.ds3client.networking.FailedRequestException;
-import com.spectralogic.ds3client.networking.NetworkClient;
-import com.spectralogic.ds3client.serializer.XmlProcessingException;
-import mockit.*;
-import org.apache.commons.io.IOUtils;
-import org.apache.http.HttpEntity;
-import org.apache.http.StatusLine;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.junit.Before;
-import org.junit.Test;
-
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.StringWriter;
 import java.security.SignatureException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+
+import org.apache.commons.io.IOUtils;
+import org.junit.Test;
+
+import com.spectralogic.ds3client.commands.*;
+import com.spectralogic.ds3client.models.*;
+import com.spectralogic.ds3client.models.Objects;
+import com.spectralogic.ds3client.networking.FailedRequestException;
+import com.spectralogic.ds3client.serializer.XmlProcessingException;
 
 public class Ds3Client_Test {
-
-    public static final class MockedResponse extends MockUp<CloseableHttpResponse> {
-
-        final String payload;
-        final int statusCode;
-
-        public MockedResponse(final String payload, final int statusCode) {
-            this.payload = payload;
-            this.statusCode = statusCode;
-        }
-
-        @Mock(maxInvocations = 1)
-        public HttpEntity getEntity() {
-            return new MockUp<HttpEntity>() {
-                @Mock(invocations = 1)
-                public InputStream getContent() throws IOException, IllegalStateException {
-                   return new ByteArrayInputStream(payload.getBytes());
-                }
-            }.getMockInstance();
-        }
-
-        @Mock(maxInvocations = 1)
-        public void close() {
-            assertThat(true, is(true));
-        }
-
-        @Mock(invocations = 1)
-        public StatusLine getStatusLine() {
-            return new MockUp<StatusLine>() {
-                @Mock(maxInvocations = 2, minInvocations = 1)
-                public int getStatusCode() {
-                    return statusCode;
-                }
-            }.getMockInstance();
-        }
-    }
-
-
-    @Mocked
-    private NetworkClient netClient;
-
-    private Ds3Client client;
-
-    @Before
-    public void setup() {
-        client = new Ds3Client(netClient);
-    }
-
     @Test
     public void getService() throws IOException, SignatureException {
         final String stringResponse = "<ListAllMyBucketsResult xmlns=\"http://doc.s3.amazonaws.com/2006-03-01\">\n" +
-                "<Owner><ID>ryan</ID><DisplayName>ryan</DisplayName></Owner><Buckets><Bucket><Name>testBucket2</Name><CreationDate>2013-12-11T23:20:09</CreationDate></Bucket><Bucket><Name>bulkTest</Name><CreationDate>2013-12-11T23:20:09</CreationDate></Bucket><Bucket><Name>bulkTest1</Name><CreationDate>2013-12-11T23:20:09</CreationDate></Bucket><Bucket><Name>bulkTest2</Name><CreationDate>2013-12-11T23:20:09</CreationDate></Bucket><Bucket><Name>bulkTest3</Name><CreationDate>2013-12-11T23:20:09</CreationDate></Bucket><Bucket><Name>bulkTest4</Name><CreationDate>2013-12-11T23:20:09</CreationDate></Bucket><Bucket><Name>bulkTest5</Name><CreationDate>2013-12-11T23:20:09</CreationDate></Bucket><Bucket><Name>bulkTest6</Name><CreationDate>2013-12-11T23:20:09</CreationDate></Bucket><Bucket><Name>testBucket3</Name><CreationDate>2013-12-11T23:20:09</CreationDate></Bucket><Bucket><Name>testBucket1</Name><CreationDate>2013-12-11T23:20:09</CreationDate></Bucket><Bucket><Name>testbucket</Name><CreationDate>2013-12-11T23:20:09</CreationDate></Bucket></Buckets></ListAllMyBucketsResult>";
-        new NonStrictExpectations() {{
-            netClient.getResponse(withInstanceOf(GetServiceRequest.class));
-            result = new MockedResponse(stringResponse, 200).getMockInstance();
-            forEachInvocation = new Object() {
-                void validate(GetServiceRequest request) {
-                    assertThat(request.getPath(), is("/"));
-                    assertThat(request.getVerb(), is(HttpVerb.GET));
-                }
-            };
-        }};
-
-        final ListAllMyBucketsResult result = client.getService(new GetServiceRequest()).getResult();
+                "<Owner><ID>ryanid</ID><DisplayName>ryan</DisplayName></Owner><Buckets><Bucket><Name>testBucket2</Name><CreationDate>2013-12-11T23:20:09</CreationDate></Bucket><Bucket><Name>bulkTest</Name><CreationDate>2013-12-11T23:20:09</CreationDate></Bucket><Bucket><Name>bulkTest1</Name><CreationDate>2013-12-11T23:20:09</CreationDate></Bucket><Bucket><Name>bulkTest2</Name><CreationDate>2013-12-11T23:20:09</CreationDate></Bucket><Bucket><Name>bulkTest3</Name><CreationDate>2013-12-11T23:20:09</CreationDate></Bucket><Bucket><Name>bulkTest4</Name><CreationDate>2013-12-11T23:20:09</CreationDate></Bucket><Bucket><Name>bulkTest5</Name><CreationDate>2013-12-11T23:20:09</CreationDate></Bucket><Bucket><Name>bulkTest6</Name><CreationDate>2013-12-11T23:20:09</CreationDate></Bucket><Bucket><Name>testBucket3</Name><CreationDate>2013-12-11T23:20:09</CreationDate></Bucket><Bucket><Name>testBucket1</Name><CreationDate>2013-12-11T23:20:09</CreationDate></Bucket><Bucket><Name>testbucket</Name><CreationDate>2013-12-11T23:20:09</CreationDate></Bucket></Buckets></ListAllMyBucketsResult>";
+        
+        final List<String> expectedBucketNames = Arrays.asList(
+            "testBucket2",
+            "bulkTest",
+            "bulkTest1",
+            "bulkTest2",
+            "bulkTest3",
+            "bulkTest4",
+            "bulkTest5",
+            "bulkTest6",
+            "testBucket3",
+            "testBucket1",
+            "testbucket"
+        );
+        
+        final GetServiceResponse response = MockNetwork
+                .expecting(HttpVerb.GET, "/", null, null)
+                .returning(200, stringResponse)
+                .asClient()
+                .getService(new GetServiceRequest());
+        final ListAllMyBucketsResult result = response.getResult();
         assertThat(result.getOwner().getDisplayName(), is("ryan"));
+        assertThat(result.getOwner().getId(), is("ryanid"));
+        
+        final List<Bucket> buckets = result.getBuckets();
+        final List<String> bucketNames = new ArrayList<>();
+        for (final Bucket bucket : buckets) {
+            bucketNames.add(bucket.getName());
+            assertThat(bucket.getCreationDate(), is("2013-12-11T23:20:09"));
+        }
+        assertThat(bucketNames, is(expectedBucketNames));
     }
 
     @Test(expected = FailedRequestException.class)
     public void getBadService() throws IOException, SignatureException {
-        new Expectations() {{
-            netClient.getResponse(withInstanceOf(GetServiceRequest.class));
-            result = new MockedResponse("", 400).getMockInstance();
-        }};
-
-        client.getService(new GetServiceRequest());
+        MockNetwork
+                .expecting(HttpVerb.GET, "/", null, null)
+                .returning(400, "")
+                .asClient()
+                .getService(new GetServiceRequest());
     }
 
     @Test
     public void getBucket() throws IOException, SignatureException {
-        final String xmlResponse = "<ListBucketResult xmlns=\"http://s3.amazonaws.com/doc/2006-03-01/\"><Name>remoteTest16</Name><Prefix/><Marker/><MaxKeys>1000</MaxKeys><IsTruncated>false</IsTruncated><Contents><Key>user/hduser/gutenberg/20417.txt.utf-8</Key><LastModified>2014-01-03T13:26:47.000Z</LastModified><ETag>NOTRETURNED</ETag><Size>674570</Size><StorageClass>STANDARD</StorageClass><Owner><ID>ryan</ID><DisplayName>ryan</DisplayName></Owner></Contents><Contents><Key>user/hduser/gutenberg/5000.txt.utf-8</Key><LastModified>2014-01-03T13:26:47.000Z</LastModified><ETag>NOTRETURNED</ETag><Size>1423803</Size><StorageClass>STANDARD</StorageClass><Owner><ID>ryan</ID><DisplayName>ryan</DisplayName></Owner></Contents><Contents><Key>user/hduser/gutenberg/4300.txt.utf-8</Key><LastModified>2014-01-03T13:26:47.000Z</LastModified><ETag>NOTRETURNED</ETag><Size>1573150</Size><StorageClass>STANDARD</StorageClass><Owner><ID>ryan</ID><DisplayName>ryan</DisplayName></Owner></Contents></ListBucketResult>";
-        new NonStrictExpectations() {{
-            netClient.getResponse(withInstanceOf(GetBucketRequest.class));
-            result = new MockedResponse(xmlResponse, 200).getMockInstance();
-            forEachInvocation = new Object() {
-                void validate(GetBucketRequest request) {
-                    assertThat(request.getPath(), is("/remoteTest16"));
-                    assertThat(request.getVerb(), is(HttpVerb.GET));
-                }
-            };
-        }};
-
-        final ListBucketResult result = client.getBucket(new GetBucketRequest("remoteTest16")).getResult();
+        final String xmlResponse = "<ListBucketResult xmlns=\"http://s3.amazonaws.com/doc/2006-03-01/\"><Name>remoteTest16</Name><Prefix/><Marker/><MaxKeys>1000</MaxKeys><IsTruncated>false</IsTruncated><Contents><Key>user/hduser/gutenberg/20417.txt.utf-8</Key><LastModified>2014-01-03T13:26:47.000Z</LastModified><ETag>8B19F3F41868106382A677C3435BDCE5</ETag><Size>674570</Size><StorageClass>STANDARD</StorageClass><Owner><ID>ryan</ID><DisplayName>ryan</DisplayName></Owner></Contents><Contents><Key>user/hduser/gutenberg/5000.txt.utf-8</Key><LastModified>2014-01-03T13:26:47.000Z</LastModified><ETag>9DE344878423E44B129730CE22B4B137</ETag><Size>1423803</Size><StorageClass>STANDARD</StorageClass><Owner><ID>ryan</ID><DisplayName>ryan</DisplayName></Owner></Contents><Contents><Key>user/hduser/gutenberg/4300.txt.utf-8</Key><LastModified>2014-01-03T13:26:47.000Z</LastModified><ETag>33EE4519EA7DDAB27CA4E2742326D70B</ETag><Size>1573150</Size><StorageClass>DEEP</StorageClass><Owner><ID>ryan</ID><DisplayName>ryan</DisplayName></Owner></Contents></ListBucketResult>";
+        
+        final ListBucketResult result = MockNetwork
+                .expecting(HttpVerb.GET, "/remoteTest16", null, null)
+                .returning(200, xmlResponse)
+                .asClient()
+                .getBucket(new GetBucketRequest("remoteTest16"))
+                .getResult();
+        
         assertThat(result.getName(), is("remoteTest16"));
+        assertThat(result.getPrefix(), is(nullValue()));
+        assertThat(result.getMarker(), is(nullValue()));
+        assertThat(result.getMaxKeys(), is(1000));
+
+        final List<Contents> contentsList = result.getContentsList();
+        assertThat(contentsList, is(notNullValue()));
+        assertThat(contentsList.size(), is(3));
+        this.assertContentsEquals(
+            contentsList.get(0),
+            "user/hduser/gutenberg/20417.txt.utf-8",
+            "2014-01-03T13:26:47.000Z",
+            "8B19F3F41868106382A677C3435BDCE5",
+            674570,
+            "STANDARD"
+        );
+        this.assertContentsEquals(
+            contentsList.get(1),
+            "user/hduser/gutenberg/5000.txt.utf-8",
+            "2014-01-03T13:26:47.000Z",
+            "9DE344878423E44B129730CE22B4B137",
+            1423803,
+            "STANDARD"
+        );
+        this.assertContentsEquals(
+            contentsList.get(2),
+            "user/hduser/gutenberg/4300.txt.utf-8",
+            "2014-01-03T13:26:47.000Z",
+            "33EE4519EA7DDAB27CA4E2742326D70B",
+            1573150,
+            "DEEP"
+        );
+    }
+
+    private void assertContentsEquals(
+            final Contents contents,
+            final String key,
+            final String lastModified,
+            final String eTag,
+            final long size,
+            final String storageClass) {
+        assertThat(contents.getKey(), is(key));
+        assertThat(contents.getLastModified(), is(lastModified));
+        assertThat(contents.geteTag(), is(eTag));
+        assertThat(contents.getSize(), is(size));
+        assertThat(contents.getStorageClass(), is(storageClass));
     }
 
     @Test
     public void putBucket() throws IOException, SignatureException {
-        new NonStrictExpectations() {{
-            netClient.getResponse(withInstanceOf(PutBucketRequest.class));
-            result = new MockedResponse("", 200).getMockInstance();
-            forEachInvocation = new Object() {
-                void validate(PutBucketRequest request) {
-                    assertThat(request.getPath(), is("/bucketName"));
-                    assertThat(request.getVerb(), is(HttpVerb.PUT));
-                }
-            };
-        }};
-        client.putBucket(new PutBucketRequest("bucketName"));
+        MockNetwork
+                .expecting(HttpVerb.PUT, "/bucketName", null, null)
+                .returning(200, "")
+                .asClient()
+                .putBucket(new PutBucketRequest("bucketName"));
     }
-
+    
     @Test
     public void deleteBucket() throws IOException, SignatureException {
-        new NonStrictExpectations() {{
-            netClient.getResponse(withInstanceOf(DeleteBucketRequest.class));
-            result = new MockedResponse("", 204).getMockInstance();
-            forEachInvocation = new Object() {
-                void validate(DeleteBucketRequest request) {
-                    assertThat(request.getPath(), is("/bucketName"));
-                    assertThat(request.getVerb(), is(HttpVerb.DELETE));
-                }
-            };
-        }};
-        client.deleteBucket(new DeleteBucketRequest("bucketName"));
+        MockNetwork
+                .expecting(HttpVerb.DELETE, "/bucketName", null, null)
+                .returning(204, "")
+                .asClient()
+                .deleteBucket(new DeleteBucketRequest("bucketName"));
     }
 
     @Test
     public void deleteObject() throws IOException, SignatureException {
-        new NonStrictExpectations() {{
-            netClient.getResponse(withInstanceOf(DeleteObjectRequest.class));
-            result = new MockedResponse("", 204).getMockInstance();
-            forEachInvocation = new Object() {
-                void validate(DeleteObjectRequest request) {
-                    assertThat(request.getPath(), is("/bucketName/my/file.txt"));
-                    assertThat(request.getVerb(), is(HttpVerb.DELETE));
-                }
-            };
-        }};
-        client.deleteObject(new DeleteObjectRequest("bucketName", "my/file.txt"));
+        MockNetwork
+                .expecting(HttpVerb.DELETE, "/bucketName/my/file.txt", null, null)
+                .returning(204, "")
+                .asClient()
+                .deleteObject(new DeleteObjectRequest("bucketName", "my/file.txt"));
     }
 
     @Test(expected = FailedRequestException.class)
     public void getBadBucket() throws IOException, SignatureException {
-        new NonStrictExpectations() {{
-            netClient.getResponse(withInstanceOf(GetBucketRequest.class));
-            result = new MockedResponse("", 400).getMockInstance();
-            forEachInvocation = new Object() {
-                void validate(GetBucketRequest request) {
-                    assertThat(request.getPath(), is("/remoteTest16"));
-                    assertThat(request.getVerb(), is(HttpVerb.GET));
-                }
-            };
-        }};
-
-        client.getBucket(new GetBucketRequest("remoteTest16"));
+        MockNetwork
+                .expecting(HttpVerb.GET, "/remoteTest16", null, null)
+                .returning(400, "")
+                .asClient()
+                .getBucket(new GetBucketRequest("remoteTest16"));
     }
 
     @SuppressWarnings("deprecation")
     @Test
-    public void getObject() throws IOException, SignatureException {
+    public void getObjectWithoutJobId() throws IOException, SignatureException {
         final String stringResponse = "Response";
-        new Expectations() {{
-            netClient.getResponse(withInstanceOf(GetObjectRequest.class));
-            result = new MockedResponse(stringResponse, 200).getMockInstance();
-            forEachInvocation = new Object() {
-                void validate(GetObjectRequest request) {
-                    assertThat(request.getPath(), is("/bucketName/object"));
-                    assertThat(request.getVerb(), is(HttpVerb.GET));
-                }
-            };
-        }};
-
-
-        final InputStream stream = client.getObject(new GetObjectRequest("bucketName", "object")).getContent();
-        final StringWriter writer = new StringWriter();
-        IOUtils.copy(stream, writer, "UTF-8");
-
-        assertThat(writer.toString(), is("Response"));
+        final InputStream content = MockNetwork
+                .expecting(HttpVerb.GET, "/bucketName/object", null, null)
+                .returning(200, stringResponse)
+                .asClient()
+                .getObject(new GetObjectRequest("bucketName", "object"))
+                .getContent();
+        assertThat(IOUtils.toString(content), is(stringResponse));
     }
 
+    @Test
+    public void getObject() throws IOException, SignatureException {
+        final String jobIdString = "a4a586a1-cb80-4441-84e2-48974e982d51";
+        final Map<String, String> queryParams = new HashMap<>();
+        queryParams.put("job", jobIdString);
+        
+        final String stringResponse = "Response";
+        final InputStream content = MockNetwork
+                .expecting(HttpVerb.GET, "/bucketName/object", queryParams, null)
+                .returning(200, stringResponse)
+                .asClient()
+                .getObject(new GetObjectRequest("bucketName", "object", UUID.fromString(jobIdString)))
+                .getContent();
+        assertThat(IOUtils.toString(content), is(stringResponse));
+    }
+    
+    @SuppressWarnings("deprecation")
+    @Test
+    public void putObjectWithoutJobId() throws IOException, SignatureException {
+        final String output = "This is some data.";
+        final ByteArrayInputStream requestStream = new ByteArrayInputStream(output.getBytes("UTF-8"));
+        MockNetwork
+                .expecting(HttpVerb.PUT, "/bucketName/objectName", null, output)
+                .returning(200, "")
+                .asClient()
+                .putObject(new PutObjectRequest("bucketName", "objectName", requestStream.available(), requestStream));
+    }
+    
     @Test
     public void putObject() throws IOException, SignatureException {
+        final String jobIdString = "a4a586a1-cb80-4441-84e2-48974e982d51";
+        final Map<String, String> queryParams = new HashMap<>();
+        queryParams.put("job", jobIdString);
+        
         final String output = "This is some data.";
-        final byte[] buf = output.getBytes();
-        final ByteArrayInputStream in = new ByteArrayInputStream(buf);
-
-        new Expectations() {{
-            netClient.getResponse(withInstanceOf(PutObjectRequest.class));
-            result = new MockedResponse("", 200).getMockInstance();
-        }};
-
-        client.putObject(new PutObjectRequest("bucketName", "objectName", buf.length, in));
+        final ByteArrayInputStream requestStream = new ByteArrayInputStream(output.getBytes("UTF-8"));
+        MockNetwork
+                .expecting(HttpVerb.PUT, "/bucketName/objectName", queryParams, output)
+                .returning(200, "")
+                .asClient()
+                .putObject(new PutObjectRequest("bucketName", "objectName", UUID.fromString(jobIdString), requestStream.available(), requestStream));
     }
-
+    
     @Test
     public void bulkPut() throws IOException, SignatureException, XmlProcessingException {
-        final List<Ds3Object> objects = new ArrayList<>();
-        objects.add(new Ds3Object("file1",256));
-        objects.add(new Ds3Object("file2",1202));
-        objects.add(new Ds3Object("file3",2523));
-
-        final String expectedXmlBody = "<objects><object name=\"file1\" size=\"256\"/><object name=\"file2\" size=\"1202\"/><object name=\"file3\" size=\"2523\"/></objects>";
-        final String xmlResponse = "<masterobjectlist><objects><object name='file1' size='256'/><object name='file2' size='1202'/><object name='file3' size='2523'/></objects></masterobjectlist>";
-
-        new Expectations() {{
-            netClient.getResponse(withInstanceOf(BulkPutRequest.class));
-            result = new MockedResponse(xmlResponse, 200).getMockInstance();
-            forEachInvocation = new Object() {
-                void validate(BulkPutRequest request) {
-                    assertThat(request.getPath(), is("/_rest_/buckets/bulkTest"));
-                    assertThat(request.getVerb(), is(HttpVerb.PUT));
-                    assertThat(request.getCommand(), is(BulkCommand.PUT));
-                }
-            };
-        }};
-
-        final MasterObjectList masterObjectList = client.bulkPut( new BulkPutRequest("bulkTest", objects)).getResult();
-        assertThat(masterObjectList, is(notNullValue()));
-        assertThat(masterObjectList.getObjects().size(), is(1));
-        assertThat(masterObjectList.getObjects().get(0).getObject().size(), is(3));
+        this.runBulkTest(BulkCommand.PUT, new BulkTestDriver() {
+            @Override
+            public MasterObjectList performRestCall(final Ds3Client client, final String bucket, final List<Ds3Object> objects)
+                    throws SignatureException, IOException, XmlProcessingException {
+                return client.bulkPut(new BulkPutRequest(bucket, objects)).getResult();
+            }
+        });
     }
-
+    
     @Test
     public void bulkGet() throws IOException, SignatureException, XmlProcessingException {
-        final List<Ds3Object> objects = new ArrayList<>();
-        objects.add(new Ds3Object("file1",256));
-        objects.add(new Ds3Object("file2",1202));
-        objects.add(new Ds3Object("file3",2523));
-
-        final String expectedXmlBody = "<objects><object name=\"file1\"/><object name=\"file2\"/><object name=\"file3\"/></objects>";
-        final String xmlResponse = "<masterobjectlist><objects><object name='file1'/><object name='file2'/><object name='file3'/></objects></masterobjectlist>";
-
-        new Expectations() {{
-            netClient.getResponse(withInstanceOf(BulkGetRequest.class));
-            result = new MockedResponse(xmlResponse, 200).getMockInstance();
-            forEachInvocation = new Object() {
-                void validate(BulkGetRequest request) {
-                    assertThat(request.getPath(), is("/_rest_/buckets/bulkTest"));
-                    assertThat(request.getVerb(), is(HttpVerb.PUT));
-                    assertThat(request.getCommand(), is(BulkCommand.GET));
-                }
-            };
-        }};
-
-        final MasterObjectList masterObjectList = client.bulkGet(new BulkGetRequest("bulkTest", objects)).getResult();
-        assertThat(masterObjectList, is(notNullValue()));
-        assertThat(masterObjectList.getObjects().size(), is(1));
-        assertThat(masterObjectList.getObjects().get(0).getObject().size(), is(3));
+        this.runBulkTest(BulkCommand.GET, new BulkTestDriver() {
+            @Override
+            public MasterObjectList performRestCall(final Ds3Client client, final String bucket, final List<Ds3Object> objects)
+                    throws SignatureException, IOException, XmlProcessingException {
+                return client.bulkGet(new BulkGetRequest(bucket, objects)).getResult();
+            }
+        });
     }
-      
+    
+    private interface BulkTestDriver {
+        MasterObjectList performRestCall(final Ds3Client client, final String bucket, final List<Ds3Object> objects)
+                throws SignatureException, IOException, XmlProcessingException;
+    }
+    
+    public void runBulkTest(final BulkCommand command, final BulkTestDriver driver) throws IOException, SignatureException, XmlProcessingException {
+        final List<Ds3Object> objects = Arrays.asList(
+            new Ds3Object("file1", 256),
+            new Ds3Object("file2", 1202),
+            new Ds3Object("file3", 2523)
+        );
 
+        final String expectedXmlBody = "<Objects><Object Name=\"file1\" Size=\"256\"/><Object Name=\"file2\" Size=\"1202\"/><Object Name=\"file3\" Size=\"2523\"/></Objects>";
+        final String xmlResponse = "<MasterObjectList JobId='00d3baf8-9e71-45dd-ba83-fb93eb793b04'><Objects><Object Name='file2' Size='1202'/><Object Name='file1' Size='256'/><Object Name='file3' Size='2523'/></Objects></MasterObjectList>";
+        
+        final Map<String, String> queryParams = new HashMap<>();
+        queryParams.put("operation", command.toString());
+        
+        final Ds3Client client = MockNetwork
+                .expecting(HttpVerb.PUT, "/_rest_/bucket/bulkTest", queryParams, expectedXmlBody)
+                .returning(200, xmlResponse)
+                .asClient();
+        
+        final List<Objects> objectListList = driver.performRestCall(client, "bulkTest", objects).getObjects();
+        assertThat(objectListList.size(), is(1));
+        
+        final List<Ds3Object> objectList = objectListList.get(0).getObject();
+        assertThat(objectList.size(), is(3));
+
+        assertObjectEquals(objectList.get(0), "file2", 1202);
+        assertObjectEquals(objectList.get(1), "file1", 256);
+        assertObjectEquals(objectList.get(2), "file3", 2523);
+    }
+    
+    @Test
+    public void getJobList() throws SignatureException, IOException {
+        final String responseContent = "<Jobs><Job BucketName=\"bucketName\" JobId=\"a4a586a1-cb80-4441-84e2-48974e982d51\" Priority=\"NORMAL\" RequestType=\"PUT\" StartDate=\"2014-05-22T18:24:00.000Z\"/></Jobs>";
+        final List<JobInfo> jobs = MockNetwork
+                .expecting(HttpVerb.GET, "/_rest_/job", null, null)
+                .returning(200, responseContent)
+                .asClient()
+                .getJobList(new GetJobListRequest())
+                .getJobs();
+        
+        assertThat(jobs.size(), is(1));
+        final JobInfo jobInfo = jobs.get(0);
+        assertThat(jobInfo.getBucketName(), is("bucketName"));
+        assertThat(jobInfo.getJobId(), is(UUID.fromString("a4a586a1-cb80-4441-84e2-48974e982d51")));
+        assertThat(jobInfo.getPriority(), is("NORMAL"));
+        assertThat(jobInfo.getRequestType(), is("PUT"));
+        assertThat(jobInfo.getStartDate(), is("2014-05-22T18:24:00.000Z"));
+    }
+    
+    @Test
+    public void getJob() throws SignatureException, IOException {
+        final UUID jobId = UUID.fromString("a4a586a1-cb80-4441-84e2-48974e982d51");
+        
+        final String responseContent = "<Job BucketName=\"bucketName\" JobId=\"a4a586a1-cb80-4441-84e2-48974e982d51\" Priority=\"NORMAL\" RequestType=\"PUT\" StartDate=\"2014-05-22T18:24:00.000Z\"><Objects ChunkNumber=\"0\" ServerId=\"FAILED_TO_DETERMINE_DATAPATH_IP_ADDRESS\"><Object Name=\"bar\" Size=\"12\" State=\"IN_CACHE\"/><Object Name=\"foo\" Size=\"12\" State=\"NOT_IN_CACHE\"/></Objects></Job>";
+        final GetJobResponse job = MockNetwork
+                .expecting(HttpVerb.GET, "/_rest_/job/a4a586a1-cb80-4441-84e2-48974e982d51", null, null)
+                .returning(200, responseContent)
+                .asClient()
+                .getJob(new GetJobRequest(jobId));
+
+        final JobInfo jobInfo = job.getJobInfo();
+        assertThat(jobInfo.getBucketName(), is("bucketName"));
+        assertThat(jobInfo.getJobId(), is(jobId));
+        assertThat(jobInfo.getPriority(), is("NORMAL"));
+        assertThat(jobInfo.getRequestType(), is("PUT"));
+        assertThat(jobInfo.getStartDate(), is("2014-05-22T18:24:00.000Z"));
+        
+        final List<JobObjects> objectListList = job.getObjectsList();
+        assertThat(objectListList.size(), is(1));
+        
+        final JobObjects objectList = objectListList.get(0);
+        assertThat(objectList.getServerId(), is("FAILED_TO_DETERMINE_DATAPATH_IP_ADDRESS"));
+        
+        final List<Ds3Object> notCachedObjectList = objectList.getObject();
+        assertThat(notCachedObjectList.size(), is(1));
+        assertObjectEquals(notCachedObjectList.get(0), "foo", 12);
+        
+        final List<Ds3Object> cachedObjectList = objectList.getObjectsInCache();
+        assertThat(cachedObjectList.size(), is(1));
+        assertObjectEquals(cachedObjectList.get(0), "bar", 12);
+    }
+    
+    private static void assertObjectEquals(final Ds3Object object, final String name, final long size) {
+        assertThat(object.getName(), is(name));
+        assertThat(object.getSize(), is(size));
+    }
 }

@@ -20,9 +20,9 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 
 @JsonFilter("sizeFilter")
 public class Ds3Object  {
-    @JacksonXmlProperty(isAttribute=true)
+    @JacksonXmlProperty(isAttribute = true, localName = "Name")
     private String name;
-    @JacksonXmlProperty(isAttribute=true)
+    @JacksonXmlProperty(isAttribute = true, localName = "Size")
     private long size;
 
     /**
@@ -38,7 +38,7 @@ public class Ds3Object  {
      * @param name The name of the object that will be put to DS3
      * @param size The size of the object that will be put to DS3
      */
-    public Ds3Object(final String name, long size) {
+    public Ds3Object(final String name, final long size) {
         this.name = name;
         this.size = size;
     }
@@ -53,7 +53,7 @@ public class Ds3Object  {
     }
 
     public String getName() {
-        return name;
+        return this.name;
     }
 
     public void setName(final String name) {
@@ -61,7 +61,7 @@ public class Ds3Object  {
     }
 
     public long getSize() {
-        return size;
+        return this.size;
     }
 
     public void setSize(final long size) {
@@ -70,16 +70,16 @@ public class Ds3Object  {
 
     @Override
     public String toString() {
-        return name + ":" + size;
+        return this.name + ":" + this.size;
     }
 
     @Override
     public int hashCode() {
-        return name.hashCode();
+        return this.name.hashCode();
     }
 
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(final Object obj) {
         if (obj instanceof Ds3Object) {
             final Ds3Object ds3Obj = (Ds3Object) obj;
             if (ds3Obj.getName().equals(this.getName()) &&

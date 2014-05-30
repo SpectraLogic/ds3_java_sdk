@@ -13,15 +13,16 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3client.commands;
+package com.spectralogic.ds3client.helpers;
 
+public class JobRecoveryException extends Exception {
+    private static final long serialVersionUID = -4418169724222972364L;
+    
+    JobRecoveryException(final String expectedType, final String actualType) {
+        super(buildMessage(expectedType, actualType));
+    }
 
-import java.io.IOException;
-
-import com.spectralogic.ds3client.networking.WebResponse;
-
-public class BulkGetResponse extends BulkResponse {
-    public BulkGetResponse(final WebResponse response) throws IOException {
-        super(response);
+    private static String buildMessage(final String expectedType, final String actualType) {
+        return String.format("Expected job type '%s' but the actual job was of type '%s'.", expectedType, actualType);
     }
 }

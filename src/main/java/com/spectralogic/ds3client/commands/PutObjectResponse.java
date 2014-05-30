@@ -15,17 +15,17 @@
 
 package com.spectralogic.ds3client.commands;
 
-import org.apache.http.client.methods.CloseableHttpResponse;
-
 import java.io.IOException;
 
+import com.spectralogic.ds3client.networking.WebResponse;
+
 public class PutObjectResponse extends AbstractResponse {
-    public PutObjectResponse(final CloseableHttpResponse response) throws IOException {
+    public PutObjectResponse(final WebResponse response) throws IOException {
         super(response);
     }
 
     @Override
     protected void processResponse() throws IOException {
-        checkStatusCode(200);
+        this.checkStatusCode(200);
     }
 }

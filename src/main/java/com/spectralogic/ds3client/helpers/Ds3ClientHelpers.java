@@ -112,7 +112,7 @@ public abstract class Ds3ClientHelpers {
     }
 
     /**
-     * Wraps the given {@link com.spectralogic.ds3client.Ds3Client} with helper methods.
+     * Wraps the given {@link com.spectralogic.ds3client.Ds3ClientImpl} with helper methods.
      */
     public static Ds3ClientHelpers wrap(final Ds3Client client) {
         return new Ds3ClientHelpersImpl(client);
@@ -149,6 +149,26 @@ public abstract class Ds3ClientHelpers {
      */
     public abstract Ds3ClientHelpers.ReadJob startReadAllJob(final String bucket)
             throws SignatureException, IOException, XmlProcessingException;
+
+    /**
+     * Queries job information based on job id and returns a {@link ReadJob} that can resume the job.
+     * @throws SignatureException
+     * @throws IOException
+     * @throws XmlProcessingException
+     * @throws JobRecoveryException
+     */
+    public abstract Ds3ClientHelpers.WriteJob recoverWriteJob(final UUID jobId)
+            throws SignatureException, IOException, XmlProcessingException, JobRecoveryException;
+
+    /**
+     * Queries job information based on job id and returns a {@link WriteJob} that can resume the job.
+     * @throws SignatureException
+     * @throws IOException
+     * @throws XmlProcessingException
+     * @throws JobRecoveryException
+     */
+    public abstract Ds3ClientHelpers.ReadJob recoverReadJob(final UUID jobId)
+            throws SignatureException, IOException, XmlProcessingException, JobRecoveryException;
 
     /**
      * Ensures that a bucket exists.  The the bucket does not exist, it will be created.

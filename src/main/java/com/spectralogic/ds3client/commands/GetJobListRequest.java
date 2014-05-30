@@ -15,13 +15,16 @@
 
 package com.spectralogic.ds3client.commands;
 
+import com.spectralogic.ds3client.HttpVerb;
 
-import java.io.IOException;
+public class GetJobListRequest extends AbstractRequest {
+    @Override
+    public String getPath() {
+        return "/_rest_/job";
+    }
 
-import com.spectralogic.ds3client.networking.WebResponse;
-
-public class BulkGetResponse extends BulkResponse {
-    public BulkGetResponse(final WebResponse response) throws IOException {
-        super(response);
+    @Override
+    public HttpVerb getVerb() {
+        return HttpVerb.GET;
     }
 }
