@@ -24,6 +24,7 @@ public class Ds3ClientFactoryImpl implements Ds3ClientFactory {
         this.client = client;
     }
 
+    //TODO: need to actually return a client that points to a particular server id.
     @Override
     public Ds3Client GetClientForServerId(final String serverId) {
         return this.client;
