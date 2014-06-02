@@ -35,7 +35,7 @@ import com.spectralogic.ds3client.models.Objects;
 import com.spectralogic.ds3client.serializer.XmlProcessingException;
 
 abstract class JobImpl implements Job {
-    private static final int THREAD_COUNT = 10;
+    private int maxParallelRequests = 20;
     
     private final Ds3ClientFactory clientFactory;
     private final UUID jobId;
@@ -63,6 +63,10 @@ abstract class JobImpl implements Job {
         return this.bucketName;
     }
     
+    protected void setMaxParallelRequests(final int maxParallelRequests) {
+        this.maxParallelRequests = maxParallelRequests;
+    }
+    
     interface Transferrer {
         public void Transfer(Ds3Client client, UUID jobId, String bucketName, Ds3Object ds3Object)
                 throws SignatureException, IOException;
@@ -77,7 +81,7 @@ abstract class JobImpl implements Job {
 
     private void transferObjects(final Transferrer transferrer, final Objects objects)
             throws SignatureException, IOException, XmlProcessingException {
-        final ListeningExecutorService service = MoreExecutors.listeningDecorator(Executors.newFixedThreadPool(THREAD_COUNT));
+        final ListeningExecutorService service = MoreExecutors.listeningDecorator(Executors.newFixedThreadPool(this.maxParallelRequests));
         try {
             final Ds3Client client = this.clientFactory.GetClientForServerId(objects.getServerId());
             final List<ListenableFuture<?>> tasks = new ArrayList<>();

@@ -70,4 +70,10 @@ class ReadJobImpl extends JobImpl implements ReadJob {
         this.modifier = modifier;
         return this;
     }
+
+    @Override
+    public ReadJob withMaxParallelRequests(final int maxParallelRequests) {
+        this.setMaxParallelRequests(maxParallelRequests);
+        return this;
+    }
 }

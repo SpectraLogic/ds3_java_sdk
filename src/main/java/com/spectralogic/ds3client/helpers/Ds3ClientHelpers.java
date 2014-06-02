@@ -91,6 +91,11 @@ public abstract class Ds3ClientHelpers {
          * Note that it's possible for the {@code modifier} to be called simultaneously from multiple threads.
          */
         public WriteJob withRequestModifier(PutRequestModifier modifier);
+
+        /**
+         * Sets the maximum number of requests to execute at a time when fulfilling the job.
+         */
+        public WriteJob withMaxParallelRequests(int maxParallelRequests);
     }
     
     public interface ReadJob extends Job {
@@ -109,6 +114,11 @@ public abstract class Ds3ClientHelpers {
          * Note that it's possible for the {@code modifier} to be called simultaneously from multiple threads.
          */
         public ReadJob withRequestModifier(GetRequestModifier modifier);
+        
+        /**
+         * Sets the maximum number of requests to execute at a time when fulfilling the job.
+         */
+        public ReadJob withMaxParallelRequests(int maxParallelRequests);
     }
 
     /**
