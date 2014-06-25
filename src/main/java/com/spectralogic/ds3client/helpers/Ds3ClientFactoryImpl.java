@@ -17,10 +17,10 @@ package com.spectralogic.ds3client.helpers;
 
 import com.spectralogic.ds3client.Ds3Client;
 
-public class Ds3ClientFactoryImpl implements Ds3ClientFactory {
+class Ds3ClientFactoryImpl implements Ds3ClientFactory {
     private final Ds3Client client;
 
-    public Ds3ClientFactoryImpl(final Ds3Client client) {
+    Ds3ClientFactoryImpl(final Ds3Client client) {
         this.client = client;
     }
 

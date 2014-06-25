@@ -14,6 +14,6 @@
  */
 
 /**
- * This package contains helper methods to automate common tasks with the SDK.
+ * This package contains helper methods to automate common operations within the SDK.
  */
 package com.spectralogic.ds3client.helpers;

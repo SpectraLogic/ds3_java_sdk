@@ -6,6 +6,7 @@ output/
 build/
 .settings/
 Main.java
+classes/
 
 .project
 .classpath
