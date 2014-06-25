@@ -7,7 +7,10 @@ import com.spectralogic.ds3client.models.Credentials;
 import com.spectralogic.ds3client.networking.NetworkClient;
 
 /**
- * A Builder class used to create a Ds3Client instance.
+ * A Builder class used to create a Ds3Client instance.  This allows you to customize the behavior of a {@link com.spectralogic.ds3client.Ds3Client}.
+ * For instance, the number of times that the Ds3Client instance will perform a 307 redirect before throwing an error
+ * can be customized with the {@link com.spectralogic.ds3client.Ds3ClientBuilder#withRedirectRetries(int)} as well as
+ * setting a proxy with {@link com.spectralogic.ds3client.Ds3ClientBuilder#withProxy(String)}.
  */
 public class Ds3ClientBuilder implements com.spectralogic.ds3client.utils.Builder<Ds3Client> {
 

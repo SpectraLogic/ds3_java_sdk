@@ -38,6 +38,8 @@ import com.spectralogic.ds3client.commands.*;
  *     }
  *     }
  * </pre>
+ *
+ * See {@link com.spectralogic.ds3client.Ds3ClientBuilder} on what options can be used to create a Ds3Client instance.
  */
 public interface Ds3Client {
 
@@ -135,7 +137,10 @@ public interface Ds3Client {
             throws IOException, SignatureException;
 
     /**
-     * Puts a new object to an existing bucket to a DS3 endpoint
+     * Puts a new object to an existing bucket to a DS3 endpoint.  If the InputStream passed into the PutObjectRequest
+     * is not seekable, meaning if InputStream.markSupported() returns false, the request will fail and throw a
+     * {@link com.spectralogic.ds3client.networking.RequiresMarkSupportedException}.  If using a FileInputStream see
+     * {@link com.spectralogic.ds3client.helpers.ResettableFileInputStream} to make seekable.
      * @param request The Put Object Request object used to customize the HTTP request.  The put object request object
      *                has some options for customizing the request.  See {@link PutObjectRequest} for the full list of
      *                options that can be configured.

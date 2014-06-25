@@ -14,6 +14,6 @@
  */
 
 /**
- * Internal networking handling classes.
+ * Internal network handling classes.
  */
 package com.spectralogic.ds3client.networking;

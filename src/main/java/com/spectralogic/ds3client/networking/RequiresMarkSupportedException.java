@@ -17,6 +17,10 @@ package com.spectralogic.ds3client.networking;
 
 import java.io.IOException;
 
+/**
+ * This is thrown by the {@link com.spectralogic.ds3client.Ds3Client#putObject(com.spectralogic.ds3client.commands.PutObjectRequest)}
+ * when the InputStream passed into {@link com.spectralogic.ds3client.commands.PutObjectRequest} is not seekable.
+ */
 public class RequiresMarkSupportedException extends IOException {
     private static final long serialVersionUID = -8231059916399761296L;
 

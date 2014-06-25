@@ -19,6 +19,9 @@ import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
 
+/**
+ * Ds3 abstraction for a WebResponse.  Used to abstract out how the internal networking is implemented.
+ */
 public interface WebResponse extends Closeable {
     InputStream getResponseStream() throws IOException;
     int getStatusCode();

@@ -20,6 +20,24 @@ import java.io.FilterInputStream;
 import java.io.IOException;
 import java.nio.channels.FileChannel;
 
+/**
+ * To better handle 307 redirects on HTTP PUTs the InputStream needs to be seekable.
+ * This class wraps a FileInputStream and makes it seekable using the underlying FileChannel.
+ *
+ * To use it simply pass the FileInputStream into the constructor for this, and then pass this to the PutObjectRequest.
+ *
+ * <pre>
+ *     {@code
+ *     final FileInputStream fileStream = new FileInputStream("filename");
+ *
+ *     final ResettableFileInputStream resettableStream = new ResettableFileInputStream(fileStream);
+ *
+ *     final PutObjectRequest request = new PutObjectRequest("bucketName", "filename", jobId, resettableStream);
+ *     }
+ *
+ *
+ * </pre>
+ */
 public class ResettableFileInputStream extends FilterInputStream {
     private long markLocation = 0;
     private long markReadLimit = 0;
