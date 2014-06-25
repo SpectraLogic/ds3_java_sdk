@@ -1,0 +1,6 @@
+*.iml
+classes/
+.gradle/
+build/
+.idea/
+coverage-report/
