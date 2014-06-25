@@ -16,6 +16,7 @@ This example lists all the buckets available to the specific user (specified by 
 ```java
 
 import com.spectralogic.ds3client.Ds3Client;
+import com.spectralogic.ds3client.Ds3ClientBuilder;
 import com.spectralogic.ds3client.commands.GetServiceRequest;
 import com.spectralogic.ds3client.commands.GetServiceResponse;
 import com.spectralogic.ds3client.models.Credentials;
@@ -29,7 +30,7 @@ public class Ds3ServiceListExample {
     public static void main(final String args[]) throws IOException, SignatureException {
     
         // Get a client builder and then build a client instance.  This is the main entry point to the SDK.
-        final Ds3Client client = Ds3Client.builder("ds3Endpoint:8080",
+        final Ds3Client client = Ds3ClientBuilder.create("ds3Endpoint:8080",
                                    new Credentials("accessKey", "secretKey")).build();
 
         // Tell the client to get us a list of all buckets, this is called a service list.
@@ -51,6 +52,7 @@ This example will explore a user specified diretory on the local filesystem and 
 ```java
 
 import com.spectralogic.ds3client.Ds3Client;
+import com.spectralogic.ds3client.Ds3ClientBuilder;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers;
 import com.spectralogic.ds3client.helpers.FileObjectPutter;
 import com.spectralogic.ds3client.models.Credentials;
@@ -65,7 +67,7 @@ import java.security.SignatureException;
 public class BulkPutExample {
 
     public static void main(final String args[]) throws IOException, SignatureException, XmlProcessingException {
-        final Ds3Client client = Ds3Client.builder("endpoint:8080",
+        final Ds3Client client = Ds3ClientBuilder.create("endpoint:8080",
                 new Credentials("accessId", "secretKey"))
                 .build();
 
@@ -101,6 +103,7 @@ This next example is a little more complex and will perform a bulk get from a DS
 ```java
 
 import com.spectralogic.ds3client.Ds3Client;
+import com.spectralogic.ds3client.Ds3ClientBuilder;
 import com.spectralogic.ds3client.commands.*;
 import com.spectralogic.ds3client.models.Contents;
 import com.spectralogic.ds3client.models.Credentials;
@@ -125,7 +128,7 @@ public class Ds3BulkGetExample {
     public static void main(final String args[]) throws IOException, SignatureException, XmlProcessingException {
         
         // Get a client builder and then build a client instance.  This is the main entry point to the SDK.
-        final Ds3Client client = Ds3Client.builder("ds3Endpoint:8080",
+        final Ds3Client client = Ds3ClientBuilder.create("ds3Endpoint:8080",
                                    new Credentials("accessKey", "secretKey")).build();
 
         final String bucket = "bucketName"; //The bucket we are interested in getting objects from.
