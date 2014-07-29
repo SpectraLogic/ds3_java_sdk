@@ -16,7 +16,7 @@
 package com.spectralogic.ds3client.commands;
 
 import com.spectralogic.ds3client.BulkCommand;
-import com.spectralogic.ds3client.models.Ds3Object;
+import com.spectralogic.ds3client.models.bulk.Ds3Object;
 import com.spectralogic.ds3client.serializer.XmlProcessingException;
 
 import java.util.List;

@@ -24,12 +24,15 @@ import java.io.InputStream;
 import java.security.SignatureException;
 import java.util.*;
 
+import com.spectralogic.ds3client.models.bulk.BulkObject;
+import com.spectralogic.ds3client.models.bulk.Ds3Object;
+import com.spectralogic.ds3client.models.bulk.MasterObjectList;
 import org.apache.commons.io.IOUtils;
 import org.junit.Test;
 
 import com.spectralogic.ds3client.commands.*;
 import com.spectralogic.ds3client.models.*;
-import com.spectralogic.ds3client.models.Objects;
+import com.spectralogic.ds3client.models.bulk.Objects;
 import com.spectralogic.ds3client.networking.FailedRequestException;
 import com.spectralogic.ds3client.serializer.XmlProcessingException;
 
@@ -266,7 +269,7 @@ public class Ds3Client_Test {
         );
 
         final String expectedXmlBody = "<Objects><Object Name=\"file1\" Size=\"256\"/><Object Name=\"file2\" Size=\"1202\"/><Object Name=\"file3\" Size=\"2523\"/></Objects>";
-        final String xmlResponse = "<MasterObjectList JobId='00d3baf8-9e71-45dd-ba83-fb93eb793b04'><Objects><Object Name='file2' Size='1202'/><Object Name='file1' Size='256'/><Object Name='file3' Size='2523'/></Objects></MasterObjectList>";
+        final String xmlResponse = "<MasterObjectList BucketName=\"lib\" JobId=\"9652a41a-218a-4158-af1b-064ab9e4ef71\" Priority=\"NORMAL\" RequestType=\"PUT\" StartDate=\"2014-07-29T16:08:39.000Z\"><Nodes><Node EndPoint=\"FAILED_TO_DETERMINE_DATAPATH_IP_ADDRESS\" HttpPort=\"80\" HttpsPort=\"443\" Id=\"b18ee082-1352-11e4-945e-080027ebeb6d\"/></Nodes><Objects ChunkId=\"cfa3153f-57de-41c7-b1fb-f30fa4154232\" ChunkNumber=\"0\"><Object Name=\"file2\" InCache=\"false\" Length=\"1202\" Offset=\"0\"/><Object Name=\"file1\" InCache=\"false\" Length=\"256\" Offset=\"0\"/><Object Name=\"file3\" InCache=\"false\" Length=\"2523\" Offset=\"0\"/></Objects></MasterObjectList>";
         
         final Map<String, String> queryParams = new HashMap<>();
         queryParams.put("operation", command.toString());
@@ -279,7 +282,7 @@ public class Ds3Client_Test {
         final List<Objects> objectListList = driver.performRestCall(client, "bulkTest", objects).getObjects();
         assertThat(objectListList.size(), is(1));
         
-        final List<Ds3Object> objectList = objectListList.get(0).getObject();
+        final List<BulkObject> objectList = objectListList.get(0).getObjects();
         assertThat(objectList.size(), is(3));
 
         assertObjectEquals(objectList.get(0), "file2", 1202);
@@ -287,60 +290,8 @@ public class Ds3Client_Test {
         assertObjectEquals(objectList.get(2), "file3", 2523);
     }
     
-    @Test
-    public void getJobList() throws SignatureException, IOException {
-        final String responseContent = "<Jobs><Job BucketName=\"bucketName\" JobId=\"a4a586a1-cb80-4441-84e2-48974e982d51\" Priority=\"NORMAL\" RequestType=\"PUT\" StartDate=\"2014-05-22T18:24:00.000Z\"/></Jobs>";
-        final List<JobInfo> jobs = MockNetwork
-                .expecting(HttpVerb.GET, "/_rest_/job", null, null)
-                .returning(200, responseContent)
-                .asClient()
-                .getJobList(new GetJobListRequest())
-                .getJobs();
-        
-        assertThat(jobs.size(), is(1));
-        final JobInfo jobInfo = jobs.get(0);
-        assertThat(jobInfo.getBucketName(), is("bucketName"));
-        assertThat(jobInfo.getJobId(), is(UUID.fromString("a4a586a1-cb80-4441-84e2-48974e982d51")));
-        assertThat(jobInfo.getPriority(), is("NORMAL"));
-        assertThat(jobInfo.getRequestType(), is("PUT"));
-        assertThat(jobInfo.getStartDate(), is("2014-05-22T18:24:00.000Z"));
-    }
-    
-    @Test
-    public void getJob() throws SignatureException, IOException {
-        final UUID jobId = UUID.fromString("a4a586a1-cb80-4441-84e2-48974e982d51");
-        
-        final String responseContent = "<Job BucketName=\"bucketName\" JobId=\"a4a586a1-cb80-4441-84e2-48974e982d51\" Priority=\"NORMAL\" RequestType=\"PUT\" StartDate=\"2014-05-22T18:24:00.000Z\"><Objects ChunkNumber=\"0\" ServerId=\"FAILED_TO_DETERMINE_DATAPATH_IP_ADDRESS\"><Object Name=\"bar\" Size=\"12\" State=\"IN_CACHE\"/><Object Name=\"foo\" Size=\"12\" State=\"NOT_IN_CACHE\"/></Objects></Job>";
-        final GetJobResponse job = MockNetwork
-                .expecting(HttpVerb.GET, "/_rest_/job/a4a586a1-cb80-4441-84e2-48974e982d51", null, null)
-                .returning(200, responseContent)
-                .asClient()
-                .getJob(new GetJobRequest(jobId));
-
-        final JobInfo jobInfo = job.getJobInfo();
-        assertThat(jobInfo.getBucketName(), is("bucketName"));
-        assertThat(jobInfo.getJobId(), is(jobId));
-        assertThat(jobInfo.getPriority(), is("NORMAL"));
-        assertThat(jobInfo.getRequestType(), is("PUT"));
-        assertThat(jobInfo.getStartDate(), is("2014-05-22T18:24:00.000Z"));
-        
-        final List<JobObjects> objectListList = job.getObjectsList();
-        assertThat(objectListList.size(), is(1));
-        
-        final JobObjects objectList = objectListList.get(0);
-        assertThat(objectList.getServerId(), is("FAILED_TO_DETERMINE_DATAPATH_IP_ADDRESS"));
-        
-        final List<Ds3Object> notCachedObjectList = objectList.getObject();
-        assertThat(notCachedObjectList.size(), is(1));
-        assertObjectEquals(notCachedObjectList.get(0), "foo", 12);
-        
-        final List<Ds3Object> cachedObjectList = objectList.getObjectsInCache();
-        assertThat(cachedObjectList.size(), is(1));
-        assertObjectEquals(cachedObjectList.get(0), "bar", 12);
-    }
-    
-    private static void assertObjectEquals(final Ds3Object object, final String name, final long size) {
+    private static void assertObjectEquals(final BulkObject object, final String name, final long size) {
         assertThat(object.getName(), is(name));
-        assertThat(object.getSize(), is(size));
+        assertThat(object.getLength(), is(size));
     }
 }

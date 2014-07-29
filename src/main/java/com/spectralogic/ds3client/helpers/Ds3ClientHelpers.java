@@ -25,7 +25,7 @@ import com.spectralogic.ds3client.Ds3Client;
 import com.spectralogic.ds3client.commands.GetObjectRequest;
 import com.spectralogic.ds3client.commands.PutObjectRequest;
 import com.spectralogic.ds3client.models.Contents;
-import com.spectralogic.ds3client.models.Ds3Object;
+import com.spectralogic.ds3client.models.bulk.Ds3Object;
 import com.spectralogic.ds3client.serializer.XmlProcessingException;
 
 /**

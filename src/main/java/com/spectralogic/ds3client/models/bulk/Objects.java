@@ -13,23 +13,30 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3client.models;
+package com.spectralogic.ds3client.models.bulk;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.UUID;
 
+import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 
-@JsonIgnoreProperties("ChunkNumber")
-public class Objects implements Iterable<Ds3Object> {
+public class Objects implements Iterable<BulkObject> {
 
     @JacksonXmlProperty(isAttribute = true, localName = "ServerId")
     private String serverId;
 
     @JsonProperty("Object")
-    private List<Ds3Object> object;
+    private List<BulkObject> objects;
+
+    @JsonProperty("ChunkNumber")
+    private long chunkNumber;
+
+    @JsonProperty("ChunkId")
+    private UUID chunkId;
     
     public String getServerId() {
         return this.serverId;
@@ -39,21 +46,21 @@ public class Objects implements Iterable<Ds3Object> {
         this.serverId = serverId;
     }
 
-    public List<Ds3Object> getObject() {
-        return this.object;
+    public List<BulkObject> getObjects() {
+        return this.objects;
     }
 
-    public void setObject(final List<Ds3Object> object) {
-        this.object = object;
+    public void setObjects(final List<BulkObject> object) {
+        this.objects = object;
     }
 
     @Override
     public String toString() {
-        return this.object.toString();
+        return this.objects.toString();
     }
 
     @Override
-    public Iterator<Ds3Object> iterator() {
-        return this.object.iterator();
+    public Iterator<BulkObject> iterator() {
+        return this.objects.iterator();
     }
 }

@@ -22,7 +22,8 @@ import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import com.fasterxml.jackson.dataformat.xml.JacksonXmlModule;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.spectralogic.ds3client.BulkCommand;
-import com.spectralogic.ds3client.models.Objects;
+import com.spectralogic.ds3client.models.bulk.Ds3ObjectList;
+import com.spectralogic.ds3client.models.bulk.Objects;
 
 import java.io.IOException;
 
@@ -56,7 +57,7 @@ public class XmlOutput {
         }
     }
 
-    public static String toXml(final Objects objects, final BulkCommand command) throws XmlProcessingException {
+    public static String toXml(final Ds3ObjectList objects, final BulkCommand command) throws XmlProcessingException {
         /*
         if (command == BulkCommand.GET) {
             final FilterProvider filters = new SimpleFilterProvider().addFilter("sizeFilter",
@@ -64,6 +65,8 @@ public class XmlOutput {
             return XmlOutput.toXml(objects, filters);
         }
         */
+        final FilterProvider filters = new SimpleFilterProvider().addFilter("sendFilter",
+                SimpleBeanPropertyFilter.serializeAllExcept("Sh"));
         return XmlOutput.toXml(objects);
     }
 

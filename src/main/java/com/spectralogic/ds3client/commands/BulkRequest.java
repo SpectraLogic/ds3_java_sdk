@@ -21,7 +21,8 @@ import java.util.List;
 
 import com.spectralogic.ds3client.BulkCommand;
 import com.spectralogic.ds3client.HttpVerb;
-import com.spectralogic.ds3client.models.Ds3Object;
+import com.spectralogic.ds3client.models.bulk.Ds3ObjectList;
+import com.spectralogic.ds3client.models.bulk.Ds3Object;
 import com.spectralogic.ds3client.serializer.XmlOutput;
 import com.spectralogic.ds3client.serializer.XmlProcessingException;
 
@@ -40,9 +41,9 @@ abstract class BulkRequest extends AbstractRequest {
     }
 
     private InputStream generateStream() throws XmlProcessingException {
-        final com.spectralogic.ds3client.models.Objects objects =
-                new com.spectralogic.ds3client.models.Objects();
-        objects.setObject(this.ds3Objects);
+        final Ds3ObjectList objects =
+                new Ds3ObjectList();
+        objects.setObjects(this.ds3Objects);
         final String xmlOutput = XmlOutput.toXml(objects, this.getCommand());
 
         final byte[] stringBytes = xmlOutput.getBytes();
@@ -54,7 +55,7 @@ abstract class BulkRequest extends AbstractRequest {
         return this.bucket;
     }
 
-    public List<Ds3Object> getDs3Objects() {
+    public List<Ds3Object> getObjects() {
         return this.ds3Objects;
     }
 

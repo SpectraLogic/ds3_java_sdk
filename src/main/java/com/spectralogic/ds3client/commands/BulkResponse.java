@@ -21,7 +21,7 @@ import java.io.StringWriter;
 
 import org.apache.commons.io.IOUtils;
 
-import com.spectralogic.ds3client.models.MasterObjectList;
+import com.spectralogic.ds3client.models.bulk.MasterObjectList;
 import com.spectralogic.ds3client.networking.WebResponse;
 import com.spectralogic.ds3client.serializer.XmlOutput;
 

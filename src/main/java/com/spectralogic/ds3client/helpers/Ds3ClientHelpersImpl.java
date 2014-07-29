@@ -30,7 +30,10 @@ import com.google.common.collect.Lists;
 import com.spectralogic.ds3client.Ds3Client;
 import com.spectralogic.ds3client.commands.*;
 import com.spectralogic.ds3client.models.*;
+import com.spectralogic.ds3client.models.bulk.Ds3Object;
+import com.spectralogic.ds3client.models.bulk.MasterObjectList;
 import com.spectralogic.ds3client.serializer.XmlProcessingException;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
 
@@ -76,47 +79,14 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
 
     @Override
     public WriteJob recoverWriteJob(final UUID jobId) throws SignatureException, IOException, XmlProcessingException, JobRecoveryException {
-        try (final GetJobResponse job = this.client.getJob(new GetJobRequest(jobId))) {
-            final JobInfo jobInfo = job.getJobInfo();
-            checkJobType(JOB_TYPE_PUT, jobInfo.getRequestType());
-            return new WriteJobImpl(
-                new Ds3ClientFactoryImpl(this.client),
-                jobInfo.getJobId(),
-                jobInfo.getBucketName(),
-                job.getObjectsList()
-            );
-        }
+        throw new NotImplementedException();
     }
 
     @Override
     public ReadJob recoverReadJob(final UUID jobId) throws SignatureException, IOException, XmlProcessingException, JobRecoveryException {
-        try (final GetJobResponse job = this.client.getJob(new GetJobRequest(jobId))) {
-            final JobInfo jobInfo = job.getJobInfo();
-            checkJobType(JOB_TYPE_GET, jobInfo.getRequestType());
-            return new ReadJobImpl(
-                new Ds3ClientFactoryImpl(this.client),
-                jobInfo.getJobId(),
-                jobInfo.getBucketName(),
-                convertFromJobObjectsList(job.getObjectsList())
-            );
-        }
+        throw new NotImplementedException();
     }
 
-    private static List<Objects> convertFromJobObjectsList(final List<JobObjects> jobObjectsList) {
-        final List<Objects> objectsList = new ArrayList<>(jobObjectsList.size());
-        for (final JobObjects jobObjects : jobObjectsList) {
-            objectsList.add(convertFromJobObjects(jobObjects));
-        }
-        return objectsList;
-    }
-
-    private static Objects convertFromJobObjects(final JobObjects jobObjects) {
-        final Objects objects = new Objects();
-        objects.setServerId(jobObjects.getServerId());
-        objects.setObject(concat(jobObjects.getObjectsInCache(), jobObjects.getObject()));
-        return objects;
-    }
-    
     @SafeVarargs
     private static <T> List<T> concat(final List<T>... lists) {
         final List<T> result = new ArrayList<>();

@@ -180,21 +180,4 @@ public interface Ds3Client {
      */
     public abstract BulkPutResponse bulkPut(BulkPutRequest request)
             throws IOException, SignatureException;
-
-    /**
-     * Queries the list of active jobs on the server.
-     * @throws IOException
-     * @throws SignatureException
-     */
-    public abstract GetJobListResponse getJobList(GetJobListRequest request)
-            throws IOException, SignatureException;
-
-    /**
-     * Queries the job details for a given job id.  Includes the objects that are in cache or haven't been transferred. 
-     * @throws IOException
-     * @throws SignatureException
-     */
-    public abstract GetJobResponse getJob(GetJobRequest request)
-            throws IOException, SignatureException;
-
 }

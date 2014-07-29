@@ -28,6 +28,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
+import com.spectralogic.ds3client.models.bulk.BulkObject;
+import com.spectralogic.ds3client.models.bulk.Ds3Object;
+import com.spectralogic.ds3client.models.bulk.MasterObjectList;
+import com.spectralogic.ds3client.models.bulk.Objects;
 import org.apache.commons.io.IOUtils;
 import org.junit.Assert;
 import org.junit.Test;
@@ -341,17 +345,17 @@ public class Ds3ClientHelpers_Test {
         final MasterObjectList masterObjectList = new MasterObjectList();
         masterObjectList.setJobId(jobId);
         masterObjectList.setObjects(Arrays.asList(
-            makeObjects("192.168.56.100", Arrays.asList(new Ds3Object("baz", 12))),
-            makeObjects("192.168.56.100", Arrays.asList(new Ds3Object("foo", 12))),
-            makeObjects("192.168.56.101", Arrays.asList(new Ds3Object("bar", 12)))
+            makeObjects("192.168.56.100", Arrays.asList(new BulkObject("baz", 12, false, 0))),
+            makeObjects("192.168.56.100", Arrays.asList(new BulkObject("foo", 12, false, 0))),
+            makeObjects("192.168.56.101", Arrays.asList(new BulkObject("bar", 12, false, 0)))
         ));
         return masterObjectList;
     }
 
-    private static Objects makeObjects(final String serverId, final List<Ds3Object> objectList) {
+    private static Objects makeObjects(final String serverId, final List<BulkObject> objectList) {
         final Objects objects = new Objects();
         objects.setServerId(serverId);
-        objects.setObject(objectList);
+        objects.setObjects(objectList);
         return objects;
     }
     

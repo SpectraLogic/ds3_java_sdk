@@ -82,14 +82,5 @@ class Ds3ClientImpl implements Ds3Client {
         return new BulkPutResponse(this.netClient.getResponse(request));
     }
 
-    @Override
-    public GetJobListResponse getJobList(final GetJobListRequest request) throws IOException, SignatureException {
-        return new GetJobListResponse(this.netClient.getResponse(request));
-    }
-
-    @Override
-    public GetJobResponse getJob(final GetJobRequest request) throws IOException, SignatureException {
-        return new GetJobResponse(this.netClient.getResponse(request));
-    }
 }
 

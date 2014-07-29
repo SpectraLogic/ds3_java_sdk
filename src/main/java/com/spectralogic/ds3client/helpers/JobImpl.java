@@ -30,8 +30,9 @@ import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;
 import com.spectralogic.ds3client.Ds3Client;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.Job;
-import com.spectralogic.ds3client.models.Ds3Object;
-import com.spectralogic.ds3client.models.Objects;
+import com.spectralogic.ds3client.models.bulk.BulkObject;
+import com.spectralogic.ds3client.models.bulk.Ds3Object;
+import com.spectralogic.ds3client.models.bulk.Objects;
 import com.spectralogic.ds3client.serializer.XmlProcessingException;
 
 abstract class JobImpl implements Job {
@@ -68,7 +69,7 @@ abstract class JobImpl implements Job {
     }
     
     interface Transferrer {
-        public void Transfer(Ds3Client client, UUID jobId, String bucketName, Ds3Object ds3Object)
+        public void Transfer(Ds3Client client, UUID jobId, String bucketName, BulkObject ds3Object)
                 throws SignatureException, IOException;
     }
     
@@ -85,7 +86,7 @@ abstract class JobImpl implements Job {
         try {
             final Ds3Client client = this.clientFactory.GetClientForServerId(objects.getServerId());
             final List<ListenableFuture<?>> tasks = new ArrayList<>();
-            for (final Ds3Object ds3Object : objects) {
+            for (final BulkObject ds3Object : objects) {
                 tasks.add(this.createTransferTask(transferrer, service, client, ds3Object));
             }
             this.executeWithExceptionHandling(tasks);
@@ -98,7 +99,7 @@ abstract class JobImpl implements Job {
             final Transferrer transferrer,
             final ListeningExecutorService service,
             final Ds3Client client,
-            final Ds3Object ds3Object) {
+            final BulkObject ds3Object) {
         return service.submit(new Callable<Object>() {
             @Override
             public Object call() throws Exception {

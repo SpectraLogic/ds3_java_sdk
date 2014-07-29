@@ -15,10 +15,11 @@
 
 package com.spectralogic.ds3client.serializer;
 
-import com.spectralogic.ds3client.models.Ds3Object;
+import com.spectralogic.ds3client.models.bulk.BulkObject;
+import com.spectralogic.ds3client.models.bulk.Ds3Object;
 import com.spectralogic.ds3client.models.ListBucketResult;
-import com.spectralogic.ds3client.models.MasterObjectList;
-import com.spectralogic.ds3client.models.Objects;
+import com.spectralogic.ds3client.models.bulk.MasterObjectList;
+import com.spectralogic.ds3client.models.bulk.Objects;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -31,7 +32,7 @@ public class XmlOutput_Test {
 
     @Test
     public void singleList() throws IOException {
-        final String xmlResponse = "<MasterObjectList><Objects><Object Name='file1' Size='256'/><Object Name='file2' Size='1202'/><Object Name='file3' Size='2523'/></Objects></MasterObjectList>";
+        final String xmlResponse = "<MasterObjectList BucketName=\"lib\" JobId=\"9652a41a-218a-4158-af1b-064ab9e4ef71\" Priority=\"NORMAL\" RequestType=\"PUT\" StartDate=\"2014-07-29T16:08:39.000Z\"><Nodes><Node EndPoint=\"FAILED_TO_DETERMINE_DATAPATH_IP_ADDRESS\" HttpPort=\"80\" HttpsPort=\"443\" Id=\"b18ee082-1352-11e4-945e-080027ebeb6d\"/></Nodes><Objects ChunkId=\"cfa3153f-57de-41c7-b1fb-f30fa4154232\" ChunkNumber=\"0\"><Object Name=\"file2\" InCache=\"false\" Length=\"1202\" Offset=\"0\"/><Object Name=\"file1\" InCache=\"false\" Length=\"256\" Offset=\"0\"/><Object Name=\"file3\" InCache=\"false\" Length=\"2523\" Offset=\"0\"/></Objects></MasterObjectList>";
 
         final MasterObjectList masterObjectList = XmlOutput.fromXml(xmlResponse, MasterObjectList.class);
         assertThat(masterObjectList, is(notNullValue()));
@@ -39,7 +40,7 @@ public class XmlOutput_Test {
         final List<Objects> objectsList = masterObjectList.getObjects();
         assertThat(objectsList.size(), is(1));
         final Objects objects = objectsList.get(0);
-        final List<Ds3Object> objectList = objects.getObject();
+        final List<BulkObject> objectList = objects.getObjects();
         assertThat(objectList.size(), is(3));
     }
 

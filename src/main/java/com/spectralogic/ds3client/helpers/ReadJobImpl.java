@@ -25,8 +25,8 @@ import com.spectralogic.ds3client.commands.GetObjectResponse;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.GetRequestModifier;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.ObjectGetter;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.ReadJob;
-import com.spectralogic.ds3client.models.Ds3Object;
-import com.spectralogic.ds3client.models.Objects;
+import com.spectralogic.ds3client.models.bulk.BulkObject;
+import com.spectralogic.ds3client.models.bulk.Objects;
 import com.spectralogic.ds3client.serializer.XmlProcessingException;
 
 class ReadJobImpl extends JobImpl implements ReadJob {
@@ -49,7 +49,7 @@ class ReadJobImpl extends JobImpl implements ReadJob {
                     final Ds3Client client,
                     final UUID jobId,
                     final String bucketName,
-                    final Ds3Object ds3Object) throws SignatureException, IOException {
+                    final BulkObject ds3Object) throws SignatureException, IOException {
                 final GetObjectRequest request = new GetObjectRequest(
                     bucketName,
                     ds3Object.getName(),
