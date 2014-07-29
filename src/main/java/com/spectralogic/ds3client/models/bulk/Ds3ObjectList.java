@@ -11,7 +11,10 @@ public class Ds3ObjectList {
     private List<Ds3Object> objects;
 
     public Ds3ObjectList() {
+    }
 
+    public Ds3ObjectList(final List<Ds3Object> objects) {
+        this.objects = objects;
     }
 
     public List<Ds3Object> getObjects() {

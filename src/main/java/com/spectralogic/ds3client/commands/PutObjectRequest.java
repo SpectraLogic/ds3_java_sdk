@@ -39,7 +39,16 @@ public class PutObjectRequest extends AbstractRequest {
 
     @Deprecated
     public PutObjectRequest(final String bucketName, final String objectName, final long size, final long offset, final InputStream stream) {
-        this(bucketName,objectName, null, size, offset, stream);
+        this(bucketName, objectName, null, size, offset, stream);
+    }
+
+    @Deprecated
+    public PutObjectRequest(final String bucketName, final String objectName, final long size, final InputStream stream) {
+        this(bucketName, objectName, null, size, 0, stream);
+    }
+
+    public PutObjectRequest(final String bucketName, final String objectName, final UUID jobId, final long size, final InputStream stream) {
+        this(bucketName, objectName, jobId, size, 0, stream);
     }
 
     public PutObjectRequest(final String bucketName, final String objectName, final UUID jobId, final long size, final long offset, final InputStream stream) {
@@ -96,5 +105,9 @@ public class PutObjectRequest extends AbstractRequest {
 
     public UUID getJobId() {
         return this.jobId;
+    }
+
+    public long getOffset() {
+        return offset;
     }
 }

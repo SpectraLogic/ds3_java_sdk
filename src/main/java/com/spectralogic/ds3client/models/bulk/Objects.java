@@ -63,4 +63,20 @@ public class Objects implements Iterable<BulkObject> {
     public Iterator<BulkObject> iterator() {
         return this.objects.iterator();
     }
+
+    public long getChunkNumber() {
+        return chunkNumber;
+    }
+
+    public void setChunkNumber(final long chunkNumber) {
+        this.chunkNumber = chunkNumber;
+    }
+
+    public UUID getChunkId() {
+        return chunkId;
+    }
+
+    public void setChunkId(final UUID chunkId) {
+        this.chunkId = chunkId;
+    }
 }
