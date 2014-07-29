@@ -196,6 +196,7 @@ public class Ds3Client_Test {
         final String jobIdString = "a4a586a1-cb80-4441-84e2-48974e982d51";
         final Map<String, String> queryParams = new HashMap<>();
         queryParams.put("job", jobIdString);
+        queryParams.put("offset", Long.toString(0));
         
         final String stringResponse = "Response";
         final InputStream content = MockNetwork
@@ -216,7 +217,7 @@ public class Ds3Client_Test {
                 .expecting(HttpVerb.PUT, "/bucketName/objectName", null, output)
                 .returning(200, "")
                 .asClient()
-                .putObject(new PutObjectRequest("bucketName", "objectName", requestStream.available(), requestStream));
+                .putObject(new PutObjectRequest("bucketName", "objectName", requestStream.available(), 0, requestStream));
     }
     
     @Test
@@ -224,6 +225,7 @@ public class Ds3Client_Test {
         final String jobIdString = "a4a586a1-cb80-4441-84e2-48974e982d51";
         final Map<String, String> queryParams = new HashMap<>();
         queryParams.put("job", jobIdString);
+        queryParams.put("offset", Long.toString(0));
         
         final String output = "This is some data.";
         final ByteArrayInputStream requestStream = new ByteArrayInputStream(output.getBytes("UTF-8"));
@@ -231,7 +233,7 @@ public class Ds3Client_Test {
                 .expecting(HttpVerb.PUT, "/bucketName/objectName", queryParams, output)
                 .returning(200, "")
                 .asClient()
-                .putObject(new PutObjectRequest("bucketName", "objectName", UUID.fromString(jobIdString), requestStream.available(), requestStream));
+                .putObject(new PutObjectRequest("bucketName", "objectName", UUID.fromString(jobIdString), requestStream.available(), 0, requestStream));
     }
     
     @Test

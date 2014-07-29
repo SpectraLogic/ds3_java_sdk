@@ -33,7 +33,6 @@ import com.spectralogic.ds3client.models.*;
 import com.spectralogic.ds3client.models.bulk.Ds3Object;
 import com.spectralogic.ds3client.models.bulk.MasterObjectList;
 import com.spectralogic.ds3client.serializer.XmlProcessingException;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
 
@@ -79,27 +78,12 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
 
     @Override
     public WriteJob recoverWriteJob(final UUID jobId) throws SignatureException, IOException, XmlProcessingException, JobRecoveryException {
-        throw new NotImplementedException();
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public ReadJob recoverReadJob(final UUID jobId) throws SignatureException, IOException, XmlProcessingException, JobRecoveryException {
-        throw new NotImplementedException();
-    }
-
-    @SafeVarargs
-    private static <T> List<T> concat(final List<T>... lists) {
-        final List<T> result = new ArrayList<>();
-        for (final List<T> list : lists) {
-            result.addAll(list);
-        }
-        return result;
-    }
-
-    private static void checkJobType(final String expectedJobType, final String actualJobType) throws JobRecoveryException {
-        if (!actualJobType.equals(expectedJobType)) {
-            throw new JobRecoveryException(expectedJobType, actualJobType);
-        }
+        throw new UnsupportedOperationException();
     }
 
     @Override

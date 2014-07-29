@@ -34,23 +34,26 @@ public class PutObjectRequest extends AbstractRequest {
     private final UUID jobId;
     private final InputStream stream;
     private final long size;
+    private final long offset;
     private Checksum checksum = Checksum.none();
 
     @Deprecated
-    public PutObjectRequest(final String bucketName, final String objectName, final long size, final InputStream stream) {
-        this(bucketName,objectName, null, size, stream);
+    public PutObjectRequest(final String bucketName, final String objectName, final long size, final long offset, final InputStream stream) {
+        this(bucketName,objectName, null, size, offset, stream);
     }
 
-    public PutObjectRequest(final String bucketName, final String objectName, final UUID jobId, final long size, final InputStream stream) {
+    public PutObjectRequest(final String bucketName, final String objectName, final UUID jobId, final long size, final long offset, final InputStream stream) {
         this.bucketName = bucketName;
         this.objectName = objectName;
         this.stream = stream;
         this.size = size;
         this.jobId = jobId;
+        this.offset = offset;
 
         if(jobId != null) {
             this.getQueryParams().put("job", jobId.toString());
         }
+        this.getQueryParams().put("offset", Long.toString(offset));
     }
     
     public PutObjectRequest withChecksum(final Checksum checksum) {

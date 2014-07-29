@@ -26,6 +26,10 @@ import com.spectralogic.ds3client.HttpVerb;
  * If not performance will be impacted.
  */
 public class GetObjectRequest extends AbstractRequest {
+    public long getOffset() {
+        return offset;
+    }
+
     public static class Range {
         private final long start;
         private final long end;
@@ -46,22 +50,34 @@ public class GetObjectRequest extends AbstractRequest {
 
     private final String bucketName;
     private final String objectName;
+    private final long offset;
     private final UUID jobId;
     private Range byteRange = null;
 
     @Deprecated
     public GetObjectRequest(final String bucketName, final String objectName) {
-        this(bucketName, objectName, null);
+        this(bucketName, objectName, 0, null);
+    }
+
+    @Deprecated
+    public GetObjectRequest(final String bucketName, final String objectName, final long offset) {
+        this(bucketName, objectName, offset, null);
     }
 
     public GetObjectRequest(final String bucketName, final String objectName, final UUID jobId) {
+        this(bucketName, objectName, 0, jobId);
+    }
+
+    public GetObjectRequest(final String bucketName, final String objectName, final long offset, final UUID jobId) {
         this.bucketName = bucketName;
         this.objectName = objectName;
         this.jobId = jobId;
+        this.offset = offset;
 
         if(jobId != null) {
             this.getQueryParams().put("job", jobId.toString());
         }
+        this.getQueryParams().put("offset", Long.toString(offset));
     }
 
     /**

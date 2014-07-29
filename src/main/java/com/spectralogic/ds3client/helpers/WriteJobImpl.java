@@ -54,6 +54,7 @@ class WriteJobImpl extends JobImpl implements WriteJob {
                     ds3Object.getName(),
                     jobId,
                     ds3Object.getLength(),
+                    ds3Object.getOffset(),
                     putter.getContent(ds3Object.getName())
                 );
                 if (WriteJobImpl.this.modifier != null) {
