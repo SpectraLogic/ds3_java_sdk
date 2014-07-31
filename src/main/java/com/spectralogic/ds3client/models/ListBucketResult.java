@@ -40,6 +40,10 @@ public class ListBucketResult {
     @JsonProperty("NextMarker")
     private String nextMarker;
 
+    @JsonProperty("CommonPrefixes")
+    @JacksonXmlElementWrapper(useWrapping = false)
+    private List<CommonPrefixes> commonPrefixes;
+
     @JsonProperty("Contents")
     @JacksonXmlElementWrapper(useWrapping = false)
     private List<Contents> contentsList = new ArrayList<>();
@@ -119,5 +123,13 @@ public class ListBucketResult {
 
     public void setNextMarker(final String nextMarker) {
         this.nextMarker = nextMarker;
+    }
+
+    public List<CommonPrefixes> getCommonPrefixes() {
+        return commonPrefixes;
+    }
+
+    public void setCommonPrefixes(final List<CommonPrefixes> commonPrefixes) {
+        this.commonPrefixes = commonPrefixes;
     }
 }

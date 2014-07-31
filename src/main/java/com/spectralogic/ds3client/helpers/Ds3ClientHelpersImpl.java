@@ -145,7 +145,7 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
         Files.walkFileTree(directory, new SimpleFileVisitor<Path>() {
             @Override
             public FileVisitResult visitFile(final Path file, final BasicFileAttributes attrs) throws IOException {
-                objects.add(new Ds3Object(directory.relativize(file).toString(), Files.size(file)));
+                objects.add(new Ds3Object(directory.relativize(file).toString().replace("\\", "/"), Files.size(file)));
                 return FileVisitResult.CONTINUE;
             }
         });
