@@ -15,11 +15,11 @@
 
 package com.spectralogic.ds3client.models.bulk;
 
-import java.util.List;
-import java.util.UUID;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
+
+import java.util.List;
+import java.util.UUID;
 
 public class MasterObjectList {
 

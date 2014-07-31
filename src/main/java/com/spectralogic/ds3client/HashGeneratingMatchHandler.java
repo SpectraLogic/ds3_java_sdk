@@ -15,14 +15,13 @@
 
 package com.spectralogic.ds3client;
 
+import com.spectralogic.ds3client.models.Checksum;
+import org.apache.commons.codec.binary.Base64;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-
-import org.apache.commons.codec.binary.Base64;
-
-import com.spectralogic.ds3client.models.Checksum;
 
 class HashGeneratingMatchHandler implements Checksum.MatchHandler<String, IOException> {
     private static final int READ_BUFFER_SIZE = 1024;

@@ -15,14 +15,12 @@
 
 package com.spectralogic.ds3client.models.bulk;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+
 import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
-
-import com.fasterxml.jackson.annotation.JsonFilter;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 
 public class Objects implements Iterable<BulkObject> {
 
@@ -37,6 +35,9 @@ public class Objects implements Iterable<BulkObject> {
 
     @JsonProperty("ChunkId")
     private UUID chunkId;
+
+    @JsonProperty("NodeId")
+    private UUID nodeId;
     
     public String getServerId() {
         return this.serverId;
@@ -78,5 +79,13 @@ public class Objects implements Iterable<BulkObject> {
 
     public void setChunkId(final UUID chunkId) {
         this.chunkId = chunkId;
+    }
+
+    public UUID getNodeId() {
+        return nodeId;
+    }
+
+    public void setNodeId(final UUID nodeId) {
+        this.nodeId = nodeId;
     }
 }

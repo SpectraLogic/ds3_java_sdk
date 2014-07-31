@@ -1,10 +1,10 @@
 package com.spectralogic.ds3client;
 
-import java.net.URI;
-import java.net.URISyntaxException;
-
 import com.spectralogic.ds3client.models.Credentials;
 import com.spectralogic.ds3client.networking.NetworkClient;
+
+import java.net.URI;
+import java.net.URISyntaxException;
 
 /**
  * A Builder class used to create a Ds3Client instance.  This allows you to customize the behavior of a {@link com.spectralogic.ds3client.Ds3Client}.

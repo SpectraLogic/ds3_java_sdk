@@ -15,16 +15,16 @@
 
 package com.spectralogic.ds3client.commands;
 
+import com.spectralogic.ds3client.BulkCommand;
+import com.spectralogic.ds3client.HttpVerb;
+import com.spectralogic.ds3client.models.bulk.Ds3Object;
+import com.spectralogic.ds3client.models.bulk.Ds3ObjectList;
+import com.spectralogic.ds3client.serializer.XmlOutput;
+import com.spectralogic.ds3client.serializer.XmlProcessingException;
+
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.List;
-
-import com.spectralogic.ds3client.BulkCommand;
-import com.spectralogic.ds3client.HttpVerb;
-import com.spectralogic.ds3client.models.bulk.Ds3ObjectList;
-import com.spectralogic.ds3client.models.bulk.Ds3Object;
-import com.spectralogic.ds3client.serializer.XmlOutput;
-import com.spectralogic.ds3client.serializer.XmlProcessingException;
 
 
 abstract class BulkRequest extends AbstractRequest {

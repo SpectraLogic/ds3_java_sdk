@@ -15,10 +15,10 @@
 
 package com.spectralogic.ds3client;
 
+import com.spectralogic.ds3client.commands.*;
+
 import java.io.IOException;
 import java.security.SignatureException;
-
-import com.spectralogic.ds3client.commands.*;
 
 /**
  * The main interface for communicating with a DS3 appliance.  All communication with a DS3 appliance should start with

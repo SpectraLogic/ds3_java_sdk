@@ -15,17 +15,16 @@
 
 package com.spectralogic.ds3client.commands;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.StringWriter;
-
-import org.apache.commons.io.IOUtils;
-
 import com.google.common.collect.ImmutableSet;
 import com.spectralogic.ds3client.models.Error;
 import com.spectralogic.ds3client.networking.FailedRequestException;
 import com.spectralogic.ds3client.networking.WebResponse;
 import com.spectralogic.ds3client.serializer.XmlOutput;
+import org.apache.commons.io.IOUtils;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.StringWriter;
 
 abstract class AbstractResponse implements Ds3Response{
     final static String UTF8 = "UTF-8";

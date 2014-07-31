@@ -15,11 +15,11 @@
 
 package com.spectralogic.ds3client.commands;
 
-import java.io.InputStream;
-import java.util.UUID;
-
 import com.spectralogic.ds3client.HttpVerb;
 import com.spectralogic.ds3client.models.Checksum;
+
+import java.io.InputStream;
+import java.util.UUID;
 
 /**
  * Maps to a DS3 Single Object Put request.  This request requires that the InputStream is seekable, that is the

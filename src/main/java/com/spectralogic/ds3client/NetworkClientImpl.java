@@ -15,15 +15,11 @@
 
 package com.spectralogic.ds3client;
 
-import java.io.Closeable;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URL;
-import java.security.SignatureException;
-import java.util.Map;
-
+import com.spectralogic.ds3client.commands.Ds3Request;
+import com.spectralogic.ds3client.models.SignatureDetails;
+import com.spectralogic.ds3client.networking.*;
+import com.spectralogic.ds3client.utils.DateFormatter;
+import com.spectralogic.ds3client.utils.Signature;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpRequest;
 import org.apache.http.HttpStatus;
@@ -35,11 +31,14 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicHttpEntityEnclosingRequest;
 import org.apache.http.message.BasicHttpRequest;
 
-import com.spectralogic.ds3client.commands.Ds3Request;
-import com.spectralogic.ds3client.models.SignatureDetails;
-import com.spectralogic.ds3client.networking.*;
-import com.spectralogic.ds3client.utils.DateFormatter;
-import com.spectralogic.ds3client.utils.Signature;
+import java.io.Closeable;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URL;
+import java.security.SignatureException;
+import java.util.Map;
 
 class NetworkClientImpl implements NetworkClient {
     final static private String HOST = "HOST";

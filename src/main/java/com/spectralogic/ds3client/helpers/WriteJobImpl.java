@@ -15,10 +15,6 @@
 
 package com.spectralogic.ds3client.helpers;
 
-import java.io.IOException;
-import java.security.SignatureException;
-import java.util.UUID;
-
 import com.spectralogic.ds3client.Ds3Client;
 import com.spectralogic.ds3client.commands.PutObjectRequest;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.ObjectPutter;
@@ -27,6 +23,10 @@ import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.WriteJob;
 import com.spectralogic.ds3client.models.bulk.BulkObject;
 import com.spectralogic.ds3client.models.bulk.Objects;
 import com.spectralogic.ds3client.serializer.XmlProcessingException;
+
+import java.io.IOException;
+import java.security.SignatureException;
+import java.util.UUID;
 
 class WriteJobImpl extends JobImpl implements WriteJob {
     private PutRequestModifier modifier;

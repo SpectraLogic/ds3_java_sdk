@@ -15,18 +15,18 @@
 
 package com.spectralogic.ds3client.helpers;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Path;
-import java.security.SignatureException;
-import java.util.UUID;
-
 import com.spectralogic.ds3client.Ds3Client;
 import com.spectralogic.ds3client.commands.GetObjectRequest;
 import com.spectralogic.ds3client.commands.PutObjectRequest;
 import com.spectralogic.ds3client.models.Contents;
 import com.spectralogic.ds3client.models.bulk.Ds3Object;
 import com.spectralogic.ds3client.serializer.XmlProcessingException;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Path;
+import java.security.SignatureException;
+import java.util.UUID;
 
 /**
  * A wrapper around the {@link com.spectralogic.ds3client.Ds3Client} which automates common tasks.

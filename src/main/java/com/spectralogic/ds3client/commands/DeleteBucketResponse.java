@@ -15,9 +15,9 @@
 
 package com.spectralogic.ds3client.commands;
 
-import java.io.IOException;
-
 import com.spectralogic.ds3client.networking.WebResponse;
+
+import java.io.IOException;
 
 public class DeleteBucketResponse extends AbstractResponse{
     public DeleteBucketResponse(final WebResponse response) throws IOException {

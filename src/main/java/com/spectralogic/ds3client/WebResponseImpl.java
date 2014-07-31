@@ -1,11 +1,10 @@
 package com.spectralogic.ds3client;
 
-import java.io.IOException;
-import java.io.InputStream;
-
+import com.spectralogic.ds3client.networking.WebResponse;
 import org.apache.http.client.methods.CloseableHttpResponse;
 
-import com.spectralogic.ds3client.networking.WebResponse;
+import java.io.IOException;
+import java.io.InputStream;
 
 class WebResponseImpl implements WebResponse {
     private final CloseableHttpResponse response;

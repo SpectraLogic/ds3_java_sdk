@@ -23,7 +23,6 @@ import com.fasterxml.jackson.dataformat.xml.JacksonXmlModule;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.spectralogic.ds3client.BulkCommand;
 import com.spectralogic.ds3client.models.bulk.Ds3ObjectList;
-import com.spectralogic.ds3client.models.bulk.Objects;
 
 import java.io.IOException;
 

@@ -15,6 +15,15 @@
 
 package com.spectralogic.ds3client.helpers;
 
+import com.google.common.collect.Lists;
+import com.spectralogic.ds3client.Ds3Client;
+import com.spectralogic.ds3client.commands.*;
+import com.spectralogic.ds3client.models.Contents;
+import com.spectralogic.ds3client.models.ListBucketResult;
+import com.spectralogic.ds3client.models.bulk.Ds3Object;
+import com.spectralogic.ds3client.models.bulk.MasterObjectList;
+import com.spectralogic.ds3client.serializer.XmlProcessingException;
+
 import java.io.IOException;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
@@ -25,14 +34,6 @@ import java.security.SignatureException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-
-import com.google.common.collect.Lists;
-import com.spectralogic.ds3client.Ds3Client;
-import com.spectralogic.ds3client.commands.*;
-import com.spectralogic.ds3client.models.*;
-import com.spectralogic.ds3client.models.bulk.Ds3Object;
-import com.spectralogic.ds3client.models.bulk.MasterObjectList;
-import com.spectralogic.ds3client.serializer.XmlProcessingException;
 
 class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
 

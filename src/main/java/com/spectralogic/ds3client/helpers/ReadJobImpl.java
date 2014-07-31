@@ -15,10 +15,6 @@
 
 package com.spectralogic.ds3client.helpers;
 
-import java.io.IOException;
-import java.security.SignatureException;
-import java.util.UUID;
-
 import com.spectralogic.ds3client.Ds3Client;
 import com.spectralogic.ds3client.commands.GetObjectRequest;
 import com.spectralogic.ds3client.commands.GetObjectResponse;
@@ -28,6 +24,10 @@ import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.ReadJob;
 import com.spectralogic.ds3client.models.bulk.BulkObject;
 import com.spectralogic.ds3client.models.bulk.Objects;
 import com.spectralogic.ds3client.serializer.XmlProcessingException;
+
+import java.io.IOException;
+import java.security.SignatureException;
+import java.util.UUID;
 
 class ReadJobImpl extends JobImpl implements ReadJob {
     private GetRequestModifier modifier;

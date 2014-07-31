@@ -15,16 +15,15 @@
 
 package com.spectralogic.ds3client.helpers;
 
+import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.ObjectGetter;
+import org.apache.commons.io.IOUtils;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
-
-import org.apache.commons.io.IOUtils;
-
-import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.ObjectGetter;
 
 /**
  * Writes files to the local file system preserving the path.

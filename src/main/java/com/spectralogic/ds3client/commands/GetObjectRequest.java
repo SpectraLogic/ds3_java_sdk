@@ -15,11 +15,10 @@
 
 package com.spectralogic.ds3client.commands;
 
-import java.util.UUID;
-
+import com.spectralogic.ds3client.HttpVerb;
 import org.apache.http.entity.ContentType;
 
-import com.spectralogic.ds3client.HttpVerb;
+import java.util.UUID;
 
 /**
  * Retrieves an object from DS3.  This should always be used within the context of a BulkGet command.

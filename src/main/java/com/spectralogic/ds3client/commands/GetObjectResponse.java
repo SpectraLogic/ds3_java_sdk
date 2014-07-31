@@ -15,10 +15,10 @@
 
 package com.spectralogic.ds3client.commands;
 
+import com.spectralogic.ds3client.networking.WebResponse;
+
 import java.io.IOException;
 import java.io.InputStream;
-
-import com.spectralogic.ds3client.networking.WebResponse;
 
 public class GetObjectResponse extends AbstractResponse {
 

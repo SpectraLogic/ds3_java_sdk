@@ -15,12 +15,12 @@
 
 package com.spectralogic.ds3client.helpers;
 
+import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.ObjectPutter;
+
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Path;
-
-import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.ObjectPutter;
 
 /**
  * Writes files to a remote DS3 appliance from a directory in the local filesystem.
