@@ -40,7 +40,12 @@ public class MockedWebResponse implements WebResponse {
     public int getStatusCode() {
         return this.statusCode;
     }
-    
+
+    @Override
+    public String getMd5() {
+        return null;
+    }
+
     @Override
     public void close() throws IOException {
     }

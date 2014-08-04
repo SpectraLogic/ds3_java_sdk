@@ -16,6 +16,7 @@
 package com.spectralogic.ds3client.helpers;
 
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.ObjectGetter;
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
 
 import java.io.IOException;
@@ -24,18 +25,21 @@ import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
+import java.security.DigestOutputStream;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 /**
  * Writes files to the local file system preserving the path.
  */
-public class FileObjectGetter implements ObjectGetter {
+public class VerifyingFileObjectGetter implements ObjectGetter {
     private final Path root;
 
     /**
      * Creates a new FileObjectGetter to retrieve files from a remote DS3 system to the local file system.
      * @param root The {@code root} directory of the local file system for all files being transferred.
      */
-    public FileObjectGetter(final Path root) {
+    public VerifyingFileObjectGetter(final Path root) {
         this.root = root;
     }
 
@@ -43,13 +47,22 @@ public class FileObjectGetter implements ObjectGetter {
     public void writeContents(final String key, final InputStream contents, final String md5) throws IOException {
         final Path file = this.root.resolve(key);
         Files.createDirectories(file.getParent());
-        try (final OutputStream output = Files.newOutputStream(
+        try {
+            final MessageDigest md5Digest = MessageDigest.getInstance("MD5");
+            try (final OutputStream output = new DigestOutputStream(Files.newOutputStream(
                     file,
                     StandardOpenOption.WRITE,
                     StandardOpenOption.CREATE_NEW,
                     StandardOpenOption.TRUNCATE_EXISTING
-                )) {
-            IOUtils.copy(contents, output);
+            ), md5Digest)) {
+                IOUtils.copy(contents, output);
+            }
+            final String hashedComputedDigest = Base64.encodeBase64String(md5Digest.digest());
+            if (!hashedComputedDigest.equalsIgnoreCase(md5)) {
+                throw new IOException("Computed MD5 " + hashedComputedDigest + " does not match the expected value " + md5 + " for object " + key);
+            }
+        } catch (final NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
         }
     }
 }

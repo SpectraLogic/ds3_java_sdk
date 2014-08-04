@@ -59,7 +59,7 @@ class ReadJobImpl extends JobImpl implements ReadJob {
                     ReadJobImpl.this.modifier.modify(request);
                 }
                 try (final GetObjectResponse response = client.getObject(request)) {
-                    getter.writeContents(ds3Object.getName(), response.getContent());
+                    getter.writeContents(ds3Object.getName(), response.getContent(), response.getMd5());
                 }
             }
         });

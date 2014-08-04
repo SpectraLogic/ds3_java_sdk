@@ -71,7 +71,7 @@ public class Ds3ClientHelpers_Test {
         
         readJob.read(new ObjectGetter() {
             @Override
-            public void writeContents(final String key, final InputStream contents) throws IOException {
+            public void writeContents(final String key, final InputStream contents, final String md5) throws IOException {
                 assertThat(streamToString(contents), is(key + " contents"));
             }
         });
@@ -151,7 +151,7 @@ public class Ds3ClientHelpers_Test {
         try {
             job.read(new ObjectGetter() {
                 @Override
-                public void writeContents(final String key, final InputStream contents) throws IOException {
+                public void writeContents(final String key, final InputStream contents, final String md5) throws IOException {
                     // We don't care about the contents since we just want to know that the exception handling works correctly.
                 }
             });
