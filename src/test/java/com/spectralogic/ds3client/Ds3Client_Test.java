@@ -203,7 +203,7 @@ public class Ds3Client_Test {
                 .expecting(HttpVerb.GET, "/bucketName/object", queryParams, null)
                 .returning(200, stringResponse)
                 .asClient()
-                .getObject(new GetObjectRequest("bucketName", "object", UUID.fromString(jobIdString)))
+                .getObject(new GetObjectRequest("bucketName", "object", 0,UUID.fromString(jobIdString)))
                 .getContent();
         assertThat(IOUtils.toString(content), is(stringResponse));
     }

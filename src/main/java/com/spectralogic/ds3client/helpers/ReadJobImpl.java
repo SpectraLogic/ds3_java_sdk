@@ -54,6 +54,7 @@ class ReadJobImpl extends JobImpl implements ReadJob {
                 final GetObjectRequest request = new GetObjectRequest(
                     bucketName,
                     ds3Object.getName(),
+                    ds3Object.getOffset(),
                     jobId
                 );
                 if (ReadJobImpl.this.modifier != null) {

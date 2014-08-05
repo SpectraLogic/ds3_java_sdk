@@ -55,16 +55,10 @@ public class GetObjectRequest extends AbstractRequest {
 
     @Deprecated
     public GetObjectRequest(final String bucketName, final String objectName) {
-        this(bucketName, objectName, 0, null);
-    }
-
-    @Deprecated
-    public GetObjectRequest(final String bucketName, final String objectName, final long offset) {
-        this(bucketName, objectName, offset, null);
-    }
-
-    public GetObjectRequest(final String bucketName, final String objectName, final UUID jobId) {
-        this(bucketName, objectName, 0, jobId);
+        this.bucketName = bucketName;
+        this.objectName = objectName;
+        this.jobId =  null;
+        this.offset = 0;
     }
 
     public GetObjectRequest(final String bucketName, final String objectName, final long offset, final UUID jobId) {
@@ -73,9 +67,7 @@ public class GetObjectRequest extends AbstractRequest {
         this.jobId = jobId;
         this.offset = offset;
 
-        if(jobId != null) {
-            this.getQueryParams().put("job", jobId.toString());
-        }
+        this.getQueryParams().put("job", jobId.toString());
         this.getQueryParams().put("offset", Long.toString(offset));
     }
 
