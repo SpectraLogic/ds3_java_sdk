@@ -16,6 +16,7 @@
 package com.spectralogic.ds3client.helpers;
 
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.ObjectGetter;
+import com.spectralogic.ds3client.utils.Md5Hash;
 import org.apache.commons.io.IOUtils;
 
 import java.io.IOException;
@@ -40,7 +41,7 @@ public class FileObjectGetter implements ObjectGetter {
     }
 
     @Override
-    public void writeContents(final String key, final InputStream contents, final String md5) throws IOException {
+    public void writeContents(final String key, final InputStream contents, final Md5Hash md5) throws IOException {
         final Path file = this.root.resolve(key);
         Files.createDirectories(file.getParent());
         try (final OutputStream output = Files.newOutputStream(

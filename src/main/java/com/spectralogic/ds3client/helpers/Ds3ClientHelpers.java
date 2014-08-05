@@ -21,6 +21,7 @@ import com.spectralogic.ds3client.commands.PutObjectRequest;
 import com.spectralogic.ds3client.models.Contents;
 import com.spectralogic.ds3client.models.bulk.Ds3Object;
 import com.spectralogic.ds3client.serializer.XmlProcessingException;
+import com.spectralogic.ds3client.utils.Md5Hash;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -41,7 +42,7 @@ public abstract class Ds3ClientHelpers {
          *            a part of the response.
          * @throws IOException
          */
-        public void writeContents(String key, InputStream contents, final String md5) throws IOException;
+        public void writeContents(String key, InputStream contents, final Md5Hash md5) throws IOException;
     }
     
     public interface ObjectPutter {

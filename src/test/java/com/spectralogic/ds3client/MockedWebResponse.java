@@ -18,6 +18,7 @@ package com.spectralogic.ds3client;
 import java.io.IOException;
 import java.io.InputStream;
 
+import com.spectralogic.ds3client.networking.Headers;
 import org.apache.commons.io.IOUtils;
 
 import com.spectralogic.ds3client.networking.WebResponse;
@@ -25,10 +26,12 @@ import com.spectralogic.ds3client.networking.WebResponse;
 public class MockedWebResponse implements WebResponse {
     private final InputStream responseStream;
     private final int statusCode;
+    private final Headers headers;
 
     public MockedWebResponse(final String responseString, final int statusCode) {
         this.responseStream = IOUtils.toInputStream(responseString);
         this.statusCode = statusCode;
+        this.headers = new MockedHeaders();
     }
     
     @Override
@@ -42,8 +45,8 @@ public class MockedWebResponse implements WebResponse {
     }
 
     @Override
-    public String getMd5() {
-        return null;
+    public Headers getHeaders() {
+        return headers;
     }
 
     @Override

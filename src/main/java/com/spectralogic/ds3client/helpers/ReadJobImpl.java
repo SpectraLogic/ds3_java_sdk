@@ -24,6 +24,7 @@ import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.ReadJob;
 import com.spectralogic.ds3client.models.bulk.BulkObject;
 import com.spectralogic.ds3client.models.bulk.Objects;
 import com.spectralogic.ds3client.serializer.XmlProcessingException;
+import com.spectralogic.ds3client.utils.Md5Hash;
 
 import java.io.IOException;
 import java.security.SignatureException;
@@ -59,7 +60,7 @@ class ReadJobImpl extends JobImpl implements ReadJob {
                     ReadJobImpl.this.modifier.modify(request);
                 }
                 try (final GetObjectResponse response = client.getObject(request)) {
-                    getter.writeContents(ds3Object.getName(), response.getContent(), response.getMd5());
+                    getter.writeContents(ds3Object.getName(), response.getContent(), Md5Hash.fromBase64String(response.getMd5()));
                 }
             }
         });

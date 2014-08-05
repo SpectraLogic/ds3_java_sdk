@@ -32,6 +32,7 @@ import com.spectralogic.ds3client.models.bulk.BulkObject;
 import com.spectralogic.ds3client.models.bulk.Ds3Object;
 import com.spectralogic.ds3client.models.bulk.MasterObjectList;
 import com.spectralogic.ds3client.models.bulk.Objects;
+import com.spectralogic.ds3client.utils.Md5Hash;
 import org.apache.commons.io.IOUtils;
 import org.junit.Assert;
 import org.junit.Test;
@@ -71,7 +72,7 @@ public class Ds3ClientHelpers_Test {
         
         readJob.read(new ObjectGetter() {
             @Override
-            public void writeContents(final String key, final InputStream contents, final String md5) throws IOException {
+            public void writeContents(final String key, final InputStream contents, final Md5Hash md5) throws IOException {
                 assertThat(streamToString(contents), is(key + " contents"));
             }
         });
@@ -151,7 +152,7 @@ public class Ds3ClientHelpers_Test {
         try {
             job.read(new ObjectGetter() {
                 @Override
-                public void writeContents(final String key, final InputStream contents, final String md5) throws IOException {
+                public void writeContents(final String key, final InputStream contents, final Md5Hash md5) throws IOException {
                     // We don't care about the contents since we just want to know that the exception handling works correctly.
                 }
             });

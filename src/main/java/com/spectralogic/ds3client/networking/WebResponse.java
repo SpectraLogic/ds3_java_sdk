@@ -25,5 +25,5 @@ import java.io.InputStream;
 public interface WebResponse extends Closeable {
     public InputStream getResponseStream() throws IOException;
     public int getStatusCode();
-    public String getMd5();
+    public Headers getHeaders();
 }

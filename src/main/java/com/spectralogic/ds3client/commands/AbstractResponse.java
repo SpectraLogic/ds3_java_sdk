@@ -35,7 +35,7 @@ abstract class AbstractResponse implements Ds3Response{
     AbstractResponse(final WebResponse response) throws IOException {
         this.response = response;
         if (response != null) {
-            this.md5 = this.response.getMd5();
+            this.md5 = this.response.getHeaders().get("Content-MD5");
         }
         else {
             this.md5 = null;

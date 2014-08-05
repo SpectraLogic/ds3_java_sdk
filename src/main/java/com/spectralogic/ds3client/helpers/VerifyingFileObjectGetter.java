@@ -16,6 +16,7 @@
 package com.spectralogic.ds3client.helpers;
 
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.ObjectGetter;
+import com.spectralogic.ds3client.utils.Md5Hash;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
 
@@ -44,7 +45,7 @@ public class VerifyingFileObjectGetter implements ObjectGetter {
     }
 
     @Override
-    public void writeContents(final String key, final InputStream contents, final String md5) throws IOException {
+    public void writeContents(final String key, final InputStream contents, final Md5Hash md5) throws IOException {
         final Path file = this.root.resolve(key);
         Files.createDirectories(file.getParent());
         try {
@@ -57,9 +58,9 @@ public class VerifyingFileObjectGetter implements ObjectGetter {
             ), md5Digest)) {
                 IOUtils.copy(contents, output);
             }
-            final String hashedComputedDigest = Base64.encodeBase64String(md5Digest.digest());
-            if (!hashedComputedDigest.equalsIgnoreCase(md5)) {
-                throw new IOException("Computed MD5 " + hashedComputedDigest + " does not match the expected value " + md5 + " for object " + key);
+            final Md5Hash computedHash = Md5Hash.fromByteArray(md5Digest.digest());
+            if (computedHash.equals(md5)) {
+                throw new IOException("Computed MD5 " + computedHash + " does not match the expected value " + md5 + " for object " + key);
             }
         } catch (final NoSuchAlgorithmException e) {
             throw new RuntimeException(e);

@@ -79,11 +79,13 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
 
     @Override
     public WriteJob recoverWriteJob(final UUID jobId) throws SignatureException, IOException, XmlProcessingException, JobRecoveryException {
+        // TODO - come back and re-implement this
         throw new UnsupportedOperationException();
     }
 
     @Override
     public ReadJob recoverReadJob(final UUID jobId) throws SignatureException, IOException, XmlProcessingException, JobRecoveryException {
+        // TODO - come back and re-implement this
         throw new UnsupportedOperationException();
     }
 
