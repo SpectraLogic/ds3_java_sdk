@@ -217,7 +217,7 @@ public class Ds3Client_Test {
                 .expecting(HttpVerb.PUT, "/bucketName/objectName", null, output)
                 .returning(200, "")
                 .asClient()
-                .putObject(new PutObjectRequest("bucketName", "objectName", requestStream.available(), 0, requestStream));
+                .putObject(new PutObjectRequest("bucketName", "objectName", requestStream.available(), requestStream));
     }
     
     @Test

@@ -38,17 +38,13 @@ public class PutObjectRequest extends AbstractRequest {
     private Checksum checksum = Checksum.none();
 
     @Deprecated
-    public PutObjectRequest(final String bucketName, final String objectName, final long size, final long offset, final InputStream stream) {
-        this(bucketName, objectName, null, size, offset, stream);
-    }
-
-    @Deprecated
     public PutObjectRequest(final String bucketName, final String objectName, final long size, final InputStream stream) {
-        this(bucketName, objectName, null, size, 0, stream);
-    }
-
-    public PutObjectRequest(final String bucketName, final String objectName, final UUID jobId, final long size, final InputStream stream) {
-        this(bucketName, objectName, jobId, size, 0, stream);
+        this.bucketName = bucketName;
+        this.objectName = objectName;
+        this.stream = stream;
+        this.size = size;
+        this.jobId = null;
+        this.offset = 0;
     }
 
     public PutObjectRequest(final String bucketName, final String objectName, final UUID jobId, final long size, final long offset, final InputStream stream) {
@@ -59,9 +55,7 @@ public class PutObjectRequest extends AbstractRequest {
         this.jobId = jobId;
         this.offset = offset;
 
-        if(jobId != null) {
-            this.getQueryParams().put("job", jobId.toString());
-        }
+        this.getQueryParams().put("job", jobId.toString());
         this.getQueryParams().put("offset", Long.toString(offset));
     }
     
