@@ -64,8 +64,6 @@ public class XmlOutput {
             return XmlOutput.toXml(objects, filters);
         }
         */
-        final FilterProvider filters = new SimpleFilterProvider().addFilter("sendFilter",
-                SimpleBeanPropertyFilter.serializeAllExcept("Sh"));
         return XmlOutput.toXml(objects);
     }
 
