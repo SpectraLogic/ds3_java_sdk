@@ -23,6 +23,7 @@ public class GetBucketRequest extends AbstractRequest {
     final private String bucket;
     private String nextMarker = null;
     private String prefix = null;
+    private String delimiter = null;
     private int maxKeys = 0;
 
     /**
@@ -65,6 +66,12 @@ public class GetBucketRequest extends AbstractRequest {
         this.getQueryParams().put("max-keys", Integer.toString(maxKeys));
         return this;
     }
+
+    public GetBucketRequest withDelimiter(final String delimiter) {
+        this.delimiter = delimiter;
+        this.getQueryParams().put("delimiter", delimiter);
+        return this;
+    }
     
     public String getBucket() {
         return this.bucket;
@@ -90,5 +97,9 @@ public class GetBucketRequest extends AbstractRequest {
     @Override
     public HttpVerb getVerb() {
         return HttpVerb.GET;
+    }
+
+    public String getDelimiter() {
+        return delimiter;
     }
 }

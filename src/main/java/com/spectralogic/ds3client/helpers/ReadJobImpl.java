@@ -15,19 +15,20 @@
 
 package com.spectralogic.ds3client.helpers;
 
-import java.io.IOException;
-import java.security.SignatureException;
-import java.util.UUID;
-
 import com.spectralogic.ds3client.Ds3Client;
 import com.spectralogic.ds3client.commands.GetObjectRequest;
 import com.spectralogic.ds3client.commands.GetObjectResponse;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.GetRequestModifier;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.ObjectGetter;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.ReadJob;
-import com.spectralogic.ds3client.models.Ds3Object;
-import com.spectralogic.ds3client.models.Objects;
+import com.spectralogic.ds3client.models.bulk.BulkObject;
+import com.spectralogic.ds3client.models.bulk.Objects;
 import com.spectralogic.ds3client.serializer.XmlProcessingException;
+import com.spectralogic.ds3client.utils.Md5Hash;
+
+import java.io.IOException;
+import java.security.SignatureException;
+import java.util.UUID;
 
 class ReadJobImpl extends JobImpl implements ReadJob {
     private GetRequestModifier modifier;
@@ -49,17 +50,18 @@ class ReadJobImpl extends JobImpl implements ReadJob {
                     final Ds3Client client,
                     final UUID jobId,
                     final String bucketName,
-                    final Ds3Object ds3Object) throws SignatureException, IOException {
+                    final BulkObject ds3Object) throws SignatureException, IOException {
                 final GetObjectRequest request = new GetObjectRequest(
                     bucketName,
                     ds3Object.getName(),
+                    ds3Object.getOffset(),
                     jobId
                 );
                 if (ReadJobImpl.this.modifier != null) {
                     ReadJobImpl.this.modifier.modify(request);
                 }
                 try (final GetObjectResponse response = client.getObject(request)) {
-                    getter.writeContents(ds3Object.getName(), response.getContent());
+                    getter.writeContents(ds3Object.getName(), response.getContent(), Md5Hash.fromBase64String(response.getMd5()));
                 }
             }
         });

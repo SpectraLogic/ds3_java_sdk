@@ -15,10 +15,10 @@
 
 package com.spectralogic.ds3client.networking;
 
+import com.spectralogic.ds3client.commands.Ds3Request;
+
 import java.io.IOException;
 import java.security.SignatureException;
-
-import com.spectralogic.ds3client.commands.Ds3Request;
 
 public interface NetworkClient {
     public WebResponse getResponse(final Ds3Request request) throws IOException, SignatureException;

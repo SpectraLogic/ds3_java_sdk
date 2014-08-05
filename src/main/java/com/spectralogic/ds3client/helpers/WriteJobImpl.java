@@ -15,18 +15,18 @@
 
 package com.spectralogic.ds3client.helpers;
 
-import java.io.IOException;
-import java.security.SignatureException;
-import java.util.UUID;
-
 import com.spectralogic.ds3client.Ds3Client;
 import com.spectralogic.ds3client.commands.PutObjectRequest;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.ObjectPutter;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.PutRequestModifier;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.WriteJob;
-import com.spectralogic.ds3client.models.Ds3Object;
-import com.spectralogic.ds3client.models.Objects;
+import com.spectralogic.ds3client.models.bulk.BulkObject;
+import com.spectralogic.ds3client.models.bulk.Objects;
 import com.spectralogic.ds3client.serializer.XmlProcessingException;
+
+import java.io.IOException;
+import java.security.SignatureException;
+import java.util.UUID;
 
 class WriteJobImpl extends JobImpl implements WriteJob {
     private PutRequestModifier modifier;
@@ -48,12 +48,13 @@ class WriteJobImpl extends JobImpl implements WriteJob {
                     final Ds3Client client,
                     final UUID jobId,
                     final String bucketName,
-                    final Ds3Object ds3Object) throws SignatureException, IOException {
+                    final BulkObject ds3Object) throws SignatureException, IOException {
                 final PutObjectRequest request = new PutObjectRequest(
                     bucketName,
                     ds3Object.getName(),
                     jobId,
-                    ds3Object.getSize(),
+                    ds3Object.getLength(),
+                    ds3Object.getOffset(),
                     putter.getContent(ds3Object.getName())
                 );
                 if (WriteJobImpl.this.modifier != null) {

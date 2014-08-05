@@ -13,19 +13,37 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3client.models;
+package com.spectralogic.ds3client.models.bulk;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 
 import java.util.List;
 import java.util.UUID;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 public class MasterObjectList {
+
     @JsonProperty("Objects")
     private List<Objects> objects;
 
+    @JsonProperty("Nodes")
+    @JacksonXmlElementWrapper
+    private List<Node> nodes;
+
+    @JsonProperty("BucketName")
+    private String bucketName;
+
     @JsonProperty("JobId")
     private UUID jobId;
+
+    @JsonProperty("Priority")
+    private Priority priority;
+
+    @JsonProperty("RequestType")
+    private RequestType requestType;
+
+    @JsonProperty("StartDate")
+    private String startDate;
 
     public MasterObjectList() {}
 

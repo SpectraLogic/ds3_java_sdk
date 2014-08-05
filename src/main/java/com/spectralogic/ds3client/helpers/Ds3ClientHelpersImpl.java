@@ -15,6 +15,15 @@
 
 package com.spectralogic.ds3client.helpers;
 
+import com.google.common.collect.Lists;
+import com.spectralogic.ds3client.Ds3Client;
+import com.spectralogic.ds3client.commands.*;
+import com.spectralogic.ds3client.models.Contents;
+import com.spectralogic.ds3client.models.ListBucketResult;
+import com.spectralogic.ds3client.models.bulk.Ds3Object;
+import com.spectralogic.ds3client.models.bulk.MasterObjectList;
+import com.spectralogic.ds3client.serializer.XmlProcessingException;
+
 import java.io.IOException;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
@@ -25,12 +34,6 @@ import java.security.SignatureException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-
-import com.google.common.collect.Lists;
-import com.spectralogic.ds3client.Ds3Client;
-import com.spectralogic.ds3client.commands.*;
-import com.spectralogic.ds3client.models.*;
-import com.spectralogic.ds3client.serializer.XmlProcessingException;
 
 class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
 
@@ -76,60 +79,14 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
 
     @Override
     public WriteJob recoverWriteJob(final UUID jobId) throws SignatureException, IOException, XmlProcessingException, JobRecoveryException {
-        try (final GetJobResponse job = this.client.getJob(new GetJobRequest(jobId))) {
-            final JobInfo jobInfo = job.getJobInfo();
-            checkJobType(JOB_TYPE_PUT, jobInfo.getRequestType());
-            return new WriteJobImpl(
-                new Ds3ClientFactoryImpl(this.client),
-                jobInfo.getJobId(),
-                jobInfo.getBucketName(),
-                job.getObjectsList()
-            );
-        }
+        // TODO - come back and re-implement this
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public ReadJob recoverReadJob(final UUID jobId) throws SignatureException, IOException, XmlProcessingException, JobRecoveryException {
-        try (final GetJobResponse job = this.client.getJob(new GetJobRequest(jobId))) {
-            final JobInfo jobInfo = job.getJobInfo();
-            checkJobType(JOB_TYPE_GET, jobInfo.getRequestType());
-            return new ReadJobImpl(
-                new Ds3ClientFactoryImpl(this.client),
-                jobInfo.getJobId(),
-                jobInfo.getBucketName(),
-                convertFromJobObjectsList(job.getObjectsList())
-            );
-        }
-    }
-
-    private static List<Objects> convertFromJobObjectsList(final List<JobObjects> jobObjectsList) {
-        final List<Objects> objectsList = new ArrayList<>(jobObjectsList.size());
-        for (final JobObjects jobObjects : jobObjectsList) {
-            objectsList.add(convertFromJobObjects(jobObjects));
-        }
-        return objectsList;
-    }
-
-    private static Objects convertFromJobObjects(final JobObjects jobObjects) {
-        final Objects objects = new Objects();
-        objects.setServerId(jobObjects.getServerId());
-        objects.setObject(concat(jobObjects.getObjectsInCache(), jobObjects.getObject()));
-        return objects;
-    }
-    
-    @SafeVarargs
-    private static <T> List<T> concat(final List<T>... lists) {
-        final List<T> result = new ArrayList<>();
-        for (final List<T> list : lists) {
-            result.addAll(list);
-        }
-        return result;
-    }
-
-    private static void checkJobType(final String expectedJobType, final String actualJobType) throws JobRecoveryException {
-        if (!actualJobType.equals(expectedJobType)) {
-            throw new JobRecoveryException(expectedJobType, actualJobType);
-        }
+        // TODO - come back and re-implement this
+        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -191,7 +148,7 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
         Files.walkFileTree(directory, new SimpleFileVisitor<Path>() {
             @Override
             public FileVisitResult visitFile(final Path file, final BasicFileAttributes attrs) throws IOException {
-                objects.add(new Ds3Object(directory.relativize(file).toString(), Files.size(file)));
+                objects.add(new Ds3Object(directory.relativize(file).toString().replace("\\", "/"), Files.size(file)));
                 return FileVisitResult.CONTINUE;
             }
         });

@@ -15,10 +15,10 @@
 
 package com.spectralogic.ds3client;
 
+import com.spectralogic.ds3client.commands.*;
+
 import java.io.IOException;
 import java.security.SignatureException;
-
-import com.spectralogic.ds3client.commands.*;
 
 /**
  * The main interface for communicating with a DS3 appliance.  All communication with a DS3 appliance should start with
@@ -180,21 +180,4 @@ public interface Ds3Client {
      */
     public abstract BulkPutResponse bulkPut(BulkPutRequest request)
             throws IOException, SignatureException;
-
-    /**
-     * Queries the list of active jobs on the server.
-     * @throws IOException
-     * @throws SignatureException
-     */
-    public abstract GetJobListResponse getJobList(GetJobListRequest request)
-            throws IOException, SignatureException;
-
-    /**
-     * Queries the job details for a given job id.  Includes the objects that are in cache or haven't been transferred. 
-     * @throws IOException
-     * @throws SignatureException
-     */
-    public abstract GetJobResponse getJob(GetJobRequest request)
-            throws IOException, SignatureException;
-
 }

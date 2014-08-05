@@ -15,18 +15,19 @@
 
 package com.spectralogic.ds3client.helpers;
 
+import com.spectralogic.ds3client.Ds3Client;
+import com.spectralogic.ds3client.commands.GetObjectRequest;
+import com.spectralogic.ds3client.commands.PutObjectRequest;
+import com.spectralogic.ds3client.models.Contents;
+import com.spectralogic.ds3client.models.bulk.Ds3Object;
+import com.spectralogic.ds3client.serializer.XmlProcessingException;
+import com.spectralogic.ds3client.utils.Md5Hash;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Path;
 import java.security.SignatureException;
 import java.util.UUID;
-
-import com.spectralogic.ds3client.Ds3Client;
-import com.spectralogic.ds3client.commands.GetObjectRequest;
-import com.spectralogic.ds3client.commands.PutObjectRequest;
-import com.spectralogic.ds3client.models.Contents;
-import com.spectralogic.ds3client.models.Ds3Object;
-import com.spectralogic.ds3client.serializer.XmlProcessingException;
 
 /**
  * A wrapper around the {@link com.spectralogic.ds3client.Ds3Client} which automates common tasks.
@@ -36,10 +37,12 @@ public abstract class Ds3ClientHelpers {
     public interface ObjectGetter {
         /**
          * Must save the {@code contents} for the given {@code key}.
-         * 
+         *
+         * @param md5 The MD5 hash of the contents.  This is only set if the DS3 Endpoint returned a 'Content-MD5' as
+         *            a part of the response.
          * @throws IOException
          */
-        public void writeContents(String key, InputStream contents) throws IOException;
+        public void writeContents(String key, InputStream contents, final Md5Hash md5) throws IOException;
     }
     
     public interface ObjectPutter {

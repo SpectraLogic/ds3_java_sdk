@@ -15,17 +15,20 @@
 
 package com.spectralogic.ds3client.commands;
 
-import java.util.UUID;
-
+import com.spectralogic.ds3client.HttpVerb;
 import org.apache.http.entity.ContentType;
 
-import com.spectralogic.ds3client.HttpVerb;
+import java.util.UUID;
 
 /**
  * Retrieves an object from DS3.  This should always be used within the context of a BulkGet command.
  * If not performance will be impacted.
  */
 public class GetObjectRequest extends AbstractRequest {
+    public long getOffset() {
+        return offset;
+    }
+
     public static class Range {
         private final long start;
         private final long end;
@@ -46,22 +49,26 @@ public class GetObjectRequest extends AbstractRequest {
 
     private final String bucketName;
     private final String objectName;
+    private final long offset;
     private final UUID jobId;
     private Range byteRange = null;
 
     @Deprecated
     public GetObjectRequest(final String bucketName, final String objectName) {
-        this(bucketName, objectName, null);
+        this.bucketName = bucketName;
+        this.objectName = objectName;
+        this.jobId =  null;
+        this.offset = 0;
     }
 
-    public GetObjectRequest(final String bucketName, final String objectName, final UUID jobId) {
+    public GetObjectRequest(final String bucketName, final String objectName, final long offset, final UUID jobId) {
         this.bucketName = bucketName;
         this.objectName = objectName;
         this.jobId = jobId;
+        this.offset = offset;
 
-        if(jobId != null) {
-            this.getQueryParams().put("job", jobId.toString());
-        }
+        this.getQueryParams().put("job", jobId.toString());
+        this.getQueryParams().put("offset", Long.toString(offset));
     }
 
     /**

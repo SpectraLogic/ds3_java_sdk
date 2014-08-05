@@ -15,25 +15,31 @@
 
 package com.spectralogic.ds3client.commands;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.StringWriter;
-
-import org.apache.commons.io.IOUtils;
-
 import com.google.common.collect.ImmutableSet;
 import com.spectralogic.ds3client.models.Error;
 import com.spectralogic.ds3client.networking.FailedRequestException;
 import com.spectralogic.ds3client.networking.WebResponse;
 import com.spectralogic.ds3client.serializer.XmlOutput;
+import org.apache.commons.io.IOUtils;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.StringWriter;
 
 abstract class AbstractResponse implements Ds3Response{
     final static String UTF8 = "UTF-8";
 
     final private WebResponse response;
+    final private String md5;
 
     AbstractResponse(final WebResponse response) throws IOException {
         this.response = response;
+        if (response != null) {
+            this.md5 = this.response.getHeaders().get("Content-MD5");
+        }
+        else {
+            this.md5 = null;
+        }
         this.processResponse();
     }
 
@@ -89,5 +95,9 @@ abstract class AbstractResponse implements Ds3Response{
     @Override
     public void close() throws IOException {
         this.response.close();
+    }
+
+    public String getMd5() {
+        return md5;
     }
 }

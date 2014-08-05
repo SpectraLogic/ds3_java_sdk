@@ -15,9 +15,9 @@
 
 package com.spectralogic.ds3client.commands;
 
-import java.io.IOException;
-
 import com.spectralogic.ds3client.networking.WebResponse;
+
+import java.io.IOException;
 
 public class HeadBucketResponse extends AbstractResponse {
 

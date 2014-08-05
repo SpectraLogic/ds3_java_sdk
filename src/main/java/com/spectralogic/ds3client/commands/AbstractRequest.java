@@ -15,13 +15,12 @@
 
 package com.spectralogic.ds3client.commands;
 
+import com.spectralogic.ds3client.models.Checksum;
+import org.apache.http.entity.ContentType;
+
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
-
-import org.apache.http.entity.ContentType;
-
-import com.spectralogic.ds3client.models.Checksum;
 
 abstract class AbstractRequest implements Ds3Request {
 

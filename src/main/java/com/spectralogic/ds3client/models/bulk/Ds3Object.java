@@ -13,12 +13,10 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3client.models;
+package com.spectralogic.ds3client.models.bulk;
 
-import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 
-@JsonFilter("sizeFilter")
 public class Ds3Object  {
     @JacksonXmlProperty(isAttribute = true, localName = "Name")
     private String name;

@@ -15,10 +15,10 @@
 
 package com.spectralogic.ds3client.networking;
 
+import com.spectralogic.ds3client.models.Error;
+
 import java.io.IOException;
 import java.util.Arrays;
-
-import com.spectralogic.ds3client.models.Error;
 
 public class FailedRequestException extends IOException {
     private static final long serialVersionUID = -2070737734216316074L;
