@@ -45,6 +45,9 @@ public class MasterObjectList {
     @JsonProperty("StartDate")
     private String startDate;
 
+    @JsonProperty("ChunkClientProcessingOrderGuarantee")
+    private ChunkClientProcessingOrderGuarantee chunkClientProcessingOrderGuarantee;
+
     public MasterObjectList() {}
 
     public List<Objects> getObjects() {
@@ -59,6 +62,54 @@ public class MasterObjectList {
     }
     public void setJobId(final UUID jobId) {
         this.jobId = jobId;
+    }
+
+    public ChunkClientProcessingOrderGuarantee getChunkClientProcessingOrderGuarantee() {
+        return chunkClientProcessingOrderGuarantee;
+    }
+
+    public void setChunkClientProcessingOrderGuarantee(final ChunkClientProcessingOrderGuarantee chunkClientProcessingOrderGuarantee) {
+        this.chunkClientProcessingOrderGuarantee = chunkClientProcessingOrderGuarantee;
+    }
+
+    public List<Node> getNodes() {
+        return nodes;
+    }
+
+    public void setNodes(final List<Node> nodes) {
+        this.nodes = nodes;
+    }
+
+    public String getBucketName() {
+        return bucketName;
+    }
+
+    public void setBucketName(final String bucketName) {
+        this.bucketName = bucketName;
+    }
+
+    public Priority getPriority() {
+        return priority;
+    }
+
+    public void setPriority(final Priority priority) {
+        this.priority = priority;
+    }
+
+    public RequestType getRequestType() {
+        return requestType;
+    }
+
+    public void setRequestType(final RequestType requestType) {
+        this.requestType = requestType;
+    }
+
+    public String getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(final String startDate) {
+        this.startDate = startDate;
     }
 
     @Override
