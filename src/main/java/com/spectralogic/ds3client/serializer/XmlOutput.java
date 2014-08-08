@@ -42,7 +42,7 @@ public class XmlOutput {
         return toXml(object, null);
     }
 
-    public static String toXml(final Object object, final FilterProvider filterProvider) throws XmlProcessingException {
+    private static String toXml(final Object object, final FilterProvider filterProvider) throws XmlProcessingException {
         try {
             if (filterProvider == null) {
                 return mapper.writeValueAsString(object);
@@ -57,13 +57,11 @@ public class XmlOutput {
     }
 
     public static String toXml(final Ds3ObjectList objects, final BulkCommand command) throws XmlProcessingException {
-        /*
         if (command == BulkCommand.GET) {
             final FilterProvider filters = new SimpleFilterProvider().addFilter("sizeFilter",
-                    SimpleBeanPropertyFilter.serializeAllExcept("size"));
+                    SimpleBeanPropertyFilter.serializeAllExcept("Size"));
             return XmlOutput.toXml(objects, filters);
         }
-        */
         return XmlOutput.toXml(objects);
     }
 

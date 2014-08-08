@@ -15,11 +15,10 @@
 
 package com.spectralogic.ds3client.serializer;
 
-import com.spectralogic.ds3client.models.bulk.BulkObject;
-import com.spectralogic.ds3client.models.bulk.Ds3Object;
+import com.google.common.collect.ImmutableList;
+import com.spectralogic.ds3client.BulkCommand;
+import com.spectralogic.ds3client.models.bulk.*;
 import com.spectralogic.ds3client.models.ListBucketResult;
-import com.spectralogic.ds3client.models.bulk.MasterObjectList;
-import com.spectralogic.ds3client.models.bulk.Objects;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -63,5 +62,26 @@ public class XmlOutput_Test {
         final ListBucketResult result = XmlOutput.fromXml(xmlResponse, ListBucketResult.class);
         assertThat(result, is(notNullValue()));
         assertThat(result.getContentsList(), is(notNullValue()));
+    }
+
+    @Test
+    public void toXmlWithNoFilter() throws XmlProcessingException {
+        final String expectedString = "<Objects><Object Name=\"file1\" Size=\"12\"/><Object Name=\"file2\" Size=\"5022\"/></Objects>";
+        final List<Ds3Object> objectList = ImmutableList.of(new Ds3Object("file1", 12), new Ds3Object("file2", 5022)).asList();
+        final Ds3ObjectList ds3ObjectList = new Ds3ObjectList(objectList);
+        final String result = XmlOutput.toXml(ds3ObjectList, BulkCommand.PUT);
+
+        assertThat(result, is(expectedString));
+    }
+
+    @Test
+    public void toXmlWithFilter() throws XmlProcessingException {
+        final String expectedString = "<Objects><Object Name=\"file1\"/><Object Name=\"file2\"/></Objects>";
+        final List<Ds3Object> objectList = ImmutableList.of(new Ds3Object("file1", 12), new Ds3Object("file2", 5022)).asList();
+        final Ds3ObjectList ds3ObjectList = new Ds3ObjectList(objectList);
+        final String result = XmlOutput.toXml(ds3ObjectList, BulkCommand.GET);
+
+        assertThat(result, is(expectedString));
+
     }
 }
