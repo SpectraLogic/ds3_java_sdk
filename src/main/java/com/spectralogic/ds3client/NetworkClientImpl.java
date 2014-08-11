@@ -61,17 +61,16 @@ class NetworkClientImpl implements NetworkClient {
     @Override
     public WebResponse getResponse(final Ds3Request request) throws IOException, SignatureException {
         try (final RequestExecutor requestExecutor = new RequestExecutor(request)) {
-            boolean redirect = false;
             int redirectCount = 0;
             do {
                 final CloseableHttpResponse response = requestExecutor.execute();
                 if (response.getStatusLine().getStatusCode() == HttpStatus.SC_TEMPORARY_REDIRECT) {
-                    redirect = true;
                     redirectCount++;
-                    continue;
                 }
-                return new WebResponseImpl(response);
-            } while (redirect && redirectCount < this.connectionDetails.getRetries());
+                else {
+                    return new WebResponseImpl(response);
+                }
+            } while (redirectCount < this.connectionDetails.getRetries());
             
             throw new TooManyRedirectsException(redirectCount);
         }
