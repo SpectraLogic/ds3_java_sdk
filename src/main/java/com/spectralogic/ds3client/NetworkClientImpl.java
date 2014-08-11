@@ -125,7 +125,7 @@ class NetworkClientImpl implements NetworkClient {
             final String path = this.buildPath();
             if (this.content != null) {
                 final BasicHttpEntityEnclosingRequest httpRequest = new BasicHttpEntityEnclosingRequest(verb, path);
-                httpRequest.setEntity(new InputStreamEntity(this.content, this.ds3Request.getSize(), this.ds3Request.getContentType()));
+                httpRequest.setEntity(new Ds3InputStreamEntity(this.content, this.ds3Request.getSize(), this.ds3Request.getContentType()));
                 return httpRequest;
             } else {
                 return new BasicHttpRequest(verb, path);
