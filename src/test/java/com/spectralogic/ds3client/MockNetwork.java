@@ -18,12 +18,14 @@ package com.spectralogic.ds3client;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.fail;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.SignatureException;
 import java.util.Map;
 
+import com.spectralogic.ds3client.serializer.XmlProcessingException;
 import org.apache.commons.io.IOUtils;
 
 import com.spectralogic.ds3client.commands.Ds3Request;
@@ -77,9 +79,14 @@ public class MockNetwork implements NetworkClient {
             this.assertMapsEqual(this.queryParams, request.getQueryParams());
         }
         if (this.requestContent != null) {
-            final InputStream stream = request.getStream();
-            assertThat(stream, is(notNullValue()));
-            assertThat(IOUtils.toString(stream), is(this.requestContent));
+            try {
+                final InputStream stream = request.getStream();
+                assertThat(stream, is(notNullValue()));
+                assertThat(IOUtils.toString(stream), is(this.requestContent));
+            }
+            catch(final XmlProcessingException e) {
+                fail("Received an xml processing exception.");
+            }
         }
         return new MockedWebResponse(this.responseContent, this.statusCode);
     }

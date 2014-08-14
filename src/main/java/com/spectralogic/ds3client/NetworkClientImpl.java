@@ -18,6 +18,7 @@ package com.spectralogic.ds3client;
 import com.spectralogic.ds3client.commands.Ds3Request;
 import com.spectralogic.ds3client.models.SignatureDetails;
 import com.spectralogic.ds3client.networking.*;
+import com.spectralogic.ds3client.serializer.XmlProcessingException;
 import com.spectralogic.ds3client.utils.DateFormatter;
 import com.spectralogic.ds3client.utils.Signature;
 import org.apache.http.HttpHost;
@@ -85,7 +86,12 @@ class NetworkClientImpl implements NetworkClient {
         public RequestExecutor(final Ds3Request ds3Request) throws IOException {
             this.ds3Request = ds3Request;
             this.host = this.buildHost();
-            this.content = ds3Request.getStream();
+            try {
+                this.content = ds3Request.getStream();
+            }
+            catch(final XmlProcessingException e) {
+                throw new RuntimeException(e);
+            }
             if (this.content != null && !this.content.markSupported()) {
                 throw new RequiresMarkSupportedException();
             }

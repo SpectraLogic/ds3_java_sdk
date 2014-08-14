@@ -1,6 +1,7 @@
 package com.spectralogic.ds3client.models.bulk;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 
 import java.util.List;
@@ -9,6 +10,12 @@ import java.util.List;
 public class Ds3ObjectList {
     @JsonProperty("Object")
     private List<Ds3Object> objects;
+
+    @JacksonXmlProperty(isAttribute = true, namespace = "", localName = "Priority")
+    private Priority priority;
+
+    @JacksonXmlProperty(isAttribute = true, namespace = "", localName = "WriteOptimization")
+    private WriteOptimization writeOptimization;
 
     public Ds3ObjectList() {
     }
@@ -23,5 +30,21 @@ public class Ds3ObjectList {
 
     public void setObjects(final List<Ds3Object> objects) {
         this.objects = objects;
+    }
+
+    public Priority getPriority() {
+        return priority;
+    }
+
+    public void setPriority(final Priority priority) {
+        this.priority = priority;
+    }
+
+    public WriteOptimization getWriteOptimization() {
+        return writeOptimization;
+    }
+
+    public void setWriteOptimization(final WriteOptimization writeOptimization) {
+        this.writeOptimization = writeOptimization;
     }
 }

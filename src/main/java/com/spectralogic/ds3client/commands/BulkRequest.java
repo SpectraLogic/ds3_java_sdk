@@ -19,6 +19,8 @@ import com.spectralogic.ds3client.BulkCommand;
 import com.spectralogic.ds3client.HttpVerb;
 import com.spectralogic.ds3client.models.bulk.Ds3Object;
 import com.spectralogic.ds3client.models.bulk.Ds3ObjectList;
+import com.spectralogic.ds3client.models.bulk.Priority;
+import com.spectralogic.ds3client.models.bulk.WriteOptimization;
 import com.spectralogic.ds3client.serializer.XmlOutput;
 import com.spectralogic.ds3client.serializer.XmlProcessingException;
 
@@ -26,24 +28,36 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.List;
 
-
 abstract class BulkRequest extends AbstractRequest {
 
     private final String bucket;
     private final List<Ds3Object> ds3Objects;
-    private final InputStream stream;
+    private InputStream stream;
     private long size;
+    private Priority priority;
+    private WriteOptimization writeOptimization;
 
-    public BulkRequest(final String bucket, final List<Ds3Object> objects) throws XmlProcessingException {
+    public BulkRequest(final String bucket, final List<Ds3Object> objects) {
         this.bucket = bucket;
         this.ds3Objects = objects;
-        this.stream = this.generateStream();
+    }
+
+    public BulkRequest withPriority(final Priority priority) {
+        this.priority = priority;
+        return this;
+    }
+
+    public BulkRequest withWriteOptimization(final WriteOptimization writeOptimization) {
+        this.writeOptimization = writeOptimization;
+        return this;
     }
 
     private InputStream generateStream() throws XmlProcessingException {
         final Ds3ObjectList objects =
                 new Ds3ObjectList();
         objects.setObjects(this.ds3Objects);
+        objects.setPriority(this.priority);
+        objects.setWriteOptimization(this.writeOptimization);
         final String xmlOutput = XmlOutput.toXml(objects, this.getCommand());
 
         final byte[] stringBytes = xmlOutput.getBytes();
@@ -77,7 +91,18 @@ abstract class BulkRequest extends AbstractRequest {
     public abstract BulkCommand getCommand ();
 
     @Override
-    public InputStream getStream() {
+    public InputStream getStream() throws XmlProcessingException {
+        if (this.stream == null) {
+            this.stream = generateStream();
+        }
         return this.stream;
+    }
+
+    public Priority getPriority() {
+        return priority;
+    }
+
+    public WriteOptimization getWriteOptimization() {
+        return writeOptimization;
     }
 }

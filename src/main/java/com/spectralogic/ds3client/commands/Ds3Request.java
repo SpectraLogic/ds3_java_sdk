@@ -17,6 +17,7 @@ package com.spectralogic.ds3client.commands;
 
 import com.spectralogic.ds3client.HttpVerb;
 import com.spectralogic.ds3client.models.Checksum;
+import com.spectralogic.ds3client.serializer.XmlProcessingException;
 import org.apache.http.entity.ContentType;
 
 import java.io.InputStream;
@@ -29,7 +30,7 @@ public interface Ds3Request {
 
     public ContentType getContentType();
 
-    public InputStream getStream();
+    public InputStream getStream() throws XmlProcessingException;
 
     public long getSize();
 

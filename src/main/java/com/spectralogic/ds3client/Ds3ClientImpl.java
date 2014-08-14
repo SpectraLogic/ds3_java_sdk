@@ -17,6 +17,7 @@ package com.spectralogic.ds3client;
 
 import com.spectralogic.ds3client.commands.*;
 import com.spectralogic.ds3client.networking.NetworkClient;
+import com.spectralogic.ds3client.serializer.XmlProcessingException;
 
 import java.io.IOException;
 import java.security.SignatureException;
