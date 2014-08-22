@@ -18,12 +18,14 @@ package com.spectralogic.ds3client;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.fail;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.SignatureException;
 import java.util.Map;
 
+import com.spectralogic.ds3client.serializer.XmlProcessingException;
 import org.apache.commons.io.IOUtils;
 
 import com.spectralogic.ds3client.commands.Ds3Request;

@@ -38,11 +38,11 @@ public class XmlOutput {
         mapper.setFilters(filterProvider);
     }
 
-    public static String toXml(final Object object) throws XmlProcessingException {
+    public static String toXml(final Object object) {
         return toXml(object, null);
     }
 
-    private static String toXml(final Object object, final FilterProvider filterProvider) throws XmlProcessingException {
+    private static String toXml(final Object object, final FilterProvider filterProvider) {
         try {
             if (filterProvider == null) {
                 return mapper.writeValueAsString(object);
@@ -51,12 +51,12 @@ public class XmlOutput {
                 return mapper.writer(filterProvider).writeValueAsString(object);
             }
         }
-        catch(JsonProcessingException e) {
-            throw new XmlProcessingException(e);
+        catch(final JsonProcessingException e) {
+            throw new RuntimeException(new XmlProcessingException(e));
         }
     }
 
-    public static String toXml(final Ds3ObjectList objects, final BulkCommand command) throws XmlProcessingException {
+    public static String toXml(final Ds3ObjectList objects, final BulkCommand command) {
         if (command == BulkCommand.GET) {
             final FilterProvider filters = new SimpleFilterProvider().addFilter("sizeFilter",
                     SimpleBeanPropertyFilter.serializeAllExcept("Size"));

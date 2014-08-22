@@ -17,6 +17,8 @@ package com.spectralogic.ds3client.commands;
 
 import com.spectralogic.ds3client.BulkCommand;
 import com.spectralogic.ds3client.models.bulk.Ds3Object;
+import com.spectralogic.ds3client.models.bulk.Priority;
+import com.spectralogic.ds3client.models.bulk.WriteOptimization;
 import com.spectralogic.ds3client.serializer.XmlProcessingException;
 
 import java.util.List;
@@ -25,6 +27,18 @@ public class BulkGetRequest extends BulkRequest {
     public BulkGetRequest(final String bucket, final List<Ds3Object> objects) throws XmlProcessingException {
         super(bucket, objects);
         getQueryParams().put("operation", "start_bulk_get");
+    }
+
+    @Override
+    public BulkGetRequest withPriority(final Priority priority) {
+        super.withPriority(priority);
+        return this;
+    }
+
+    @Override
+    public BulkGetRequest withWriteOptimization(final WriteOptimization writeOptimization) {
+        super.withWriteOptimization(writeOptimization);
+        return this;
     }
 
     @Override

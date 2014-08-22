@@ -62,4 +62,13 @@ abstract class AbstractRequest implements Ds3Request {
     public final Map<String, String> getHeaders() {
         return this.headers;
     }
+
+    final void updateQueryParam(final String name, final String param) {
+        if(param == null) {
+            this.queryParams.remove(name);
+        }
+        else {
+            this.queryParams.put(name, param);
+        }
+    }
 }

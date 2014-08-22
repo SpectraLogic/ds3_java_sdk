@@ -30,11 +30,29 @@ public class MasterObjectList {
     @JacksonXmlElementWrapper
     private List<Node> nodes;
 
+    @JsonProperty("CachedSizeInBytes")
+    private long cachedSizeInBytes;
+
+    @JsonProperty("CompletedSizeInBytes")
+    private long completedSizeInBytes;
+
+    @JsonProperty("OriginalSizeInBytes")
+    private long originalSizeInBytes;
+
     @JsonProperty("BucketName")
     private String bucketName;
 
     @JsonProperty("JobId")
     private UUID jobId;
+
+    @JsonProperty("UserId")
+    private UUID userId;
+
+    @JsonProperty("UserName")
+    private String userName;
+
+    @JsonProperty("WriteOptimization")
+    private WriteOptimization writeOptimization;
 
     @JsonProperty("Priority")
     private Priority priority;
@@ -115,5 +133,53 @@ public class MasterObjectList {
     @Override
     public String toString() {
         return this.objects.toString();
+    }
+
+    public long getCachedSizeInBytes() {
+        return cachedSizeInBytes;
+    }
+
+    public void setCachedSizeInBytes(final long cachedSizeInBytes) {
+        this.cachedSizeInBytes = cachedSizeInBytes;
+    }
+
+    public long getCompletedSizeInBytes() {
+        return completedSizeInBytes;
+    }
+
+    public void setCompletedSizeInBytes(final long completedSizeInBytes) {
+        this.completedSizeInBytes = completedSizeInBytes;
+    }
+
+    public long getOriginalSizeInBytes() {
+        return originalSizeInBytes;
+    }
+
+    public void setOriginalSizeInBytes(final long originalSizeInBytes) {
+        this.originalSizeInBytes = originalSizeInBytes;
+    }
+
+    public WriteOptimization getWriteOptimization() {
+        return writeOptimization;
+    }
+
+    public void setWriteOptimization(final WriteOptimization writeOptimization) {
+        this.writeOptimization = writeOptimization;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(final String userName) {
+        this.userName = userName;
+    }
+
+    public UUID getUserId() {
+        return userId;
+    }
+
+    public void setUserId(final UUID userId) {
+        this.userId = userId;
     }
 }

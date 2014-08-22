@@ -19,7 +19,7 @@ apply plugin: 'maven'
 sourceCompatibility = JavaVersion.VERSION_1_7
 
 jar.archiveName = 'ds3_java_sdk'
-version = '0.7.1-SNAPSHOT'
+version = '0.7.2-SNAPSHOT'
 group = 'com.spectralogic'
 
 install.dependsOn test //make sure that the tests get ran before attempting to install
