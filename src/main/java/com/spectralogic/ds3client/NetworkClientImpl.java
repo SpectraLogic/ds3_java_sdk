@@ -18,7 +18,6 @@ package com.spectralogic.ds3client;
 import com.spectralogic.ds3client.commands.Ds3Request;
 import com.spectralogic.ds3client.models.SignatureDetails;
 import com.spectralogic.ds3client.networking.*;
-import com.spectralogic.ds3client.serializer.XmlProcessingException;
 import com.spectralogic.ds3client.utils.DateFormatter;
 import com.spectralogic.ds3client.utils.Signature;
 import org.apache.http.HttpHost;
