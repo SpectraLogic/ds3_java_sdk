@@ -16,7 +16,6 @@
 package com.spectralogic.ds3client.commands;
 
 import com.spectralogic.ds3client.models.Checksum;
-import com.spectralogic.ds3client.serializer.XmlProcessingException;
 import org.apache.http.entity.ContentType;
 
 import java.io.InputStream;
@@ -40,7 +39,7 @@ abstract class AbstractRequest implements Ds3Request {
     }
 
     @Override
-    public InputStream getStream() throws XmlProcessingException {
+    public InputStream getStream() {
         return null;
     }
 

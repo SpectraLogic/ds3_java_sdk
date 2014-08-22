@@ -79,14 +79,9 @@ public class MockNetwork implements NetworkClient {
             this.assertMapsEqual(this.queryParams, request.getQueryParams());
         }
         if (this.requestContent != null) {
-            try {
-                final InputStream stream = request.getStream();
-                assertThat(stream, is(notNullValue()));
-                assertThat(IOUtils.toString(stream), is(this.requestContent));
-            }
-            catch(final XmlProcessingException e) {
-                fail("Received an xml processing exception.");
-            }
+            final InputStream stream = request.getStream();
+            assertThat(stream, is(notNullValue()));
+            assertThat(IOUtils.toString(stream), is(this.requestContent));
         }
         return new MockedWebResponse(this.responseContent, this.statusCode);
     }

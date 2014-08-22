@@ -85,12 +85,7 @@ class NetworkClientImpl implements NetworkClient {
         public RequestExecutor(final Ds3Request ds3Request) throws IOException {
             this.ds3Request = ds3Request;
             this.host = this.buildHost();
-            try {
-                this.content = ds3Request.getStream();
-            }
-            catch(final XmlProcessingException e) {
-                throw new RuntimeException(e);
-            }
+            this.content = ds3Request.getStream();
             if (this.content != null && !this.content.markSupported()) {
                 throw new RequiresMarkSupportedException();
             }

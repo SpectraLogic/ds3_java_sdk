@@ -52,7 +52,7 @@ abstract class BulkRequest extends AbstractRequest {
         return this;
     }
 
-    private InputStream generateStream() throws XmlProcessingException {
+    private InputStream generateStream() {
         final Ds3ObjectList objects =
                 new Ds3ObjectList();
         objects.setObjects(this.ds3Objects);
@@ -91,7 +91,7 @@ abstract class BulkRequest extends AbstractRequest {
     public abstract BulkCommand getCommand ();
 
     @Override
-    public InputStream getStream() throws XmlProcessingException {
+    public InputStream getStream() {
         if (this.stream == null) {
             this.stream = generateStream();
         }
