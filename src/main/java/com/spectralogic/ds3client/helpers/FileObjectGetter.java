@@ -17,7 +17,7 @@ package com.spectralogic.ds3client.helpers;
 
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.ObjectGetter;
 import com.spectralogic.ds3client.utils.Md5Hash;
-import org.apache.commons.io.IOUtils;
+import com.spectralogic.ds3client.utils.IOUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -50,7 +50,7 @@ public class FileObjectGetter implements ObjectGetter {
                     StandardOpenOption.CREATE_NEW,
                     StandardOpenOption.TRUNCATE_EXISTING
                 )) {
-            IOUtils.copy(contents, output);
+            IOUtils.copy(contents, output, 1024 * 1024);
         }
     }
 }

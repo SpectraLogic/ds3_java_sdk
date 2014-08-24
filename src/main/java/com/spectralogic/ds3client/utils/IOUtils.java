@@ -13,25 +13,23 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3client;
-
-import org.apache.http.entity.ContentType;
-import org.apache.http.entity.InputStreamEntity;
+package com.spectralogic.ds3client.utils;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import com.spectralogic.ds3client.utils.IOUtils;
-
-public class Ds3InputStreamEntity extends InputStreamEntity {
-
-    public Ds3InputStreamEntity(final InputStream inStream, final long length, final ContentType contentType) {
-        super(inStream, length, contentType);
-    }
-
-    @Override
-    public void writeTo(final OutputStream outStream) throws IOException {
-        IOUtils.copy(this.getContent(), outStream, 1024 * 1024);
+public class IOUtils {
+    public static void copy(
+        final InputStream inputStream,
+        final OutputStream outputStream,
+        final int bufferSize)
+            throws IOException {
+        final byte[] buffer = new byte[bufferSize];
+        int len;
+        while ((len = inputStream.read(buffer)) != -1) {
+            outputStream.write(buffer, 0, len);
+        }
     }
 }
+
