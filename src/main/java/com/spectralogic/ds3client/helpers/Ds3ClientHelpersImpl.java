@@ -18,10 +18,13 @@ package com.spectralogic.ds3client.helpers;
 import com.google.common.collect.Lists;
 import com.spectralogic.ds3client.Ds3Client;
 import com.spectralogic.ds3client.commands.*;
+import com.spectralogic.ds3client.helpers.options.ReadJobOptions;
+import com.spectralogic.ds3client.helpers.options.WriteJobOptions;
 import com.spectralogic.ds3client.models.Contents;
 import com.spectralogic.ds3client.models.ListBucketResult;
 import com.spectralogic.ds3client.models.bulk.Ds3Object;
 import com.spectralogic.ds3client.models.bulk.MasterObjectList;
+import com.spectralogic.ds3client.models.bulk.WriteOptimization;
 import com.spectralogic.ds3client.serializer.XmlProcessingException;
 
 import java.io.IOException;
@@ -49,7 +52,27 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
     @Override
     public Ds3ClientHelpers.WriteJob startWriteJob(final String bucket, final Iterable<Ds3Object> objectsToWrite)
             throws SignatureException, IOException, XmlProcessingException {
-        try(final BulkPutResponse prime = this.client.bulkPut(new BulkPutRequest(bucket, Lists.newArrayList(objectsToWrite)))) {
+        return innerStartWriteJob(bucket, objectsToWrite, WriteJobOptions.create());
+    }
+
+    @Override
+    public Ds3ClientHelpers.WriteJob startWriteJob(final String bucket,
+                                                   final Iterable<Ds3Object> objectsToWrite,
+                                                   final WriteJobOptions options)
+            throws SignatureException, IOException, XmlProcessingException {
+        if (options == null) {
+            return innerStartWriteJob(bucket, objectsToWrite, WriteJobOptions.create());
+        }
+        return innerStartWriteJob(bucket, objectsToWrite, options);
+    }
+
+    private Ds3ClientHelpers.WriteJob innerStartWriteJob(final String bucket,
+                                                         final Iterable<Ds3Object> objectsToWrite,
+                                                         final WriteJobOptions options)
+            throws SignatureException, IOException, XmlProcessingException {
+        try(final BulkPutResponse prime = this.client.bulkPut(new BulkPutRequest(bucket, Lists.newArrayList(objectsToWrite))
+                .withPriority(options.getPriority())
+                .withWriteOptimization(options.getWriteOptimization()))) {
             final MasterObjectList result = prime.getResult();
             return new WriteJobImpl(new Ds3ClientFactoryImpl(this.client), result.getJobId(), bucket, result.getObjects());
         }
@@ -58,7 +81,22 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
     @Override
     public Ds3ClientHelpers.ReadJob startReadJob(final String bucket, final Iterable<Ds3Object> objectsToRead)
             throws SignatureException, IOException, XmlProcessingException {
-        try(final BulkGetResponse prime = this.client.bulkGet(new BulkGetRequest(bucket, Lists.newArrayList(objectsToRead)))) {
+        return innerStartReadJob(bucket, objectsToRead, ReadJobOptions.create());
+    }
+
+    @Override
+    public Ds3ClientHelpers.ReadJob startReadJob(final String bucket, final Iterable<Ds3Object> objectsToRead, final ReadJobOptions options)
+            throws SignatureException, IOException, XmlProcessingException {
+        if (options == null) {
+            return innerStartReadJob(bucket, objectsToRead, ReadJobOptions.create());
+        }
+        return innerStartReadJob(bucket, objectsToRead, options);
+    }
+
+    private Ds3ClientHelpers.ReadJob innerStartReadJob(final String bucket, final Iterable<Ds3Object> objectsToRead, final ReadJobOptions options)
+            throws SignatureException, IOException, XmlProcessingException {
+        try(final BulkGetResponse prime = this.client.bulkGet(new BulkGetRequest(bucket, Lists.newArrayList(objectsToRead))
+                .withPriority(options.getPriority()))) {
             final MasterObjectList result = prime.getResult();
             return new ReadJobImpl(new Ds3ClientFactoryImpl(this.client), result.getJobId(), bucket, result.getObjects());
         }
@@ -66,6 +104,20 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
 
     @Override
     public Ds3ClientHelpers.ReadJob startReadAllJob(final String bucket)
+            throws SignatureException, IOException, XmlProcessingException {
+        return innerStartReadAllJob(bucket, ReadJobOptions.create());
+    }
+
+    @Override
+    public Ds3ClientHelpers.ReadJob startReadAllJob(final String bucket, final ReadJobOptions options)
+            throws SignatureException, IOException, XmlProcessingException {
+        if (options == null) {
+            return innerStartReadAllJob(bucket, ReadJobOptions.create());
+        }
+        return innerStartReadAllJob(bucket, options);
+    }
+
+    private Ds3ClientHelpers.ReadJob innerStartReadAllJob(final String bucket, final ReadJobOptions options)
             throws SignatureException, IOException, XmlProcessingException {
         final Iterable<Contents> contentsList = this.listObjects(bucket);
 

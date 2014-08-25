@@ -18,6 +18,8 @@ package com.spectralogic.ds3client.helpers;
 import com.spectralogic.ds3client.Ds3Client;
 import com.spectralogic.ds3client.commands.GetObjectRequest;
 import com.spectralogic.ds3client.commands.PutObjectRequest;
+import com.spectralogic.ds3client.helpers.options.ReadJobOptions;
+import com.spectralogic.ds3client.helpers.options.WriteJobOptions;
 import com.spectralogic.ds3client.models.Contents;
 import com.spectralogic.ds3client.models.bulk.Ds3Object;
 import com.spectralogic.ds3client.serializer.XmlProcessingException;
@@ -143,6 +145,17 @@ public abstract class Ds3ClientHelpers {
             throws SignatureException, IOException, XmlProcessingException;
 
     /**
+     * Performs a bulk put job creation request and returns an {@link WriteJob}.
+     * See {@link WriteJob} for information on how to write the objects for the job.
+     *
+     * @throws SignatureException
+     * @throws IOException
+     * @throws XmlProcessingException
+     */
+    public abstract Ds3ClientHelpers.WriteJob startWriteJob(final String bucket, final Iterable<Ds3Object> objectsToWrite, final WriteJobOptions options)
+            throws SignatureException, IOException, XmlProcessingException;
+
+    /**
      * Performs a bulk get job creation request and returns an {@link ReadJob}.
      * See {@link ReadJob} for information on how to read the objects for the job.
      *
@@ -154,6 +167,20 @@ public abstract class Ds3ClientHelpers {
             throws SignatureException, IOException, XmlProcessingException;
 
     /**
+     * Performs a bulk get job creation request and returns an {@link ReadJob}.
+     * See {@link ReadJob} for information on how to read the objects for the job.
+     *
+     * @throws SignatureException
+     * @throws IOException
+     * @throws XmlProcessingException
+     */
+    public abstract Ds3ClientHelpers.ReadJob startReadJob(
+            final String bucket,
+            final Iterable<Ds3Object> objectsToRead,
+            final ReadJobOptions options)
+            throws SignatureException, IOException, XmlProcessingException;
+
+    /**
      * Performs a bulk get job creation request for all of the objects in the given bucket and returns an {@link ReadJob}.
      *
      * @throws SignatureException
@@ -161,6 +188,16 @@ public abstract class Ds3ClientHelpers {
      * @throws XmlProcessingException
      */
     public abstract Ds3ClientHelpers.ReadJob startReadAllJob(final String bucket)
+            throws SignatureException, IOException, XmlProcessingException;
+
+    /**
+     * Performs a bulk get job creation request for all of the objects in the given bucket and returns an {@link ReadJob}.
+     *
+     * @throws SignatureException
+     * @throws IOException
+     * @throws XmlProcessingException
+     */
+    public abstract Ds3ClientHelpers.ReadJob startReadAllJob(final String bucket, final ReadJobOptions options)
             throws SignatureException, IOException, XmlProcessingException;
 
     /**
