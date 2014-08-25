@@ -13,22 +13,23 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3client.networking;
+package com.spectralogic.ds3client.utils;
 
-import com.spectralogic.ds3client.models.Credentials;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 
-import java.net.URI;
-
-public interface ConnectionDetails {
-    public String getEndpoint();
-
-    public Credentials getCredentials();
-
-    public boolean isSecure();
-
-    public URI getProxy();
-
-    public int getRetries();
-
-    public int getBufferSize();
+public class IOUtils {
+    public static void copy(
+        final InputStream inputStream,
+        final OutputStream outputStream,
+        final int bufferSize)
+            throws IOException {
+        final byte[] buffer = new byte[bufferSize];
+        int len;
+        while ((len = inputStream.read(buffer)) != -1) {
+            outputStream.write(buffer, 0, len);
+        }
+    }
 }
+

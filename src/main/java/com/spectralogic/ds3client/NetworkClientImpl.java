@@ -18,7 +18,6 @@ package com.spectralogic.ds3client;
 import com.spectralogic.ds3client.commands.Ds3Request;
 import com.spectralogic.ds3client.models.SignatureDetails;
 import com.spectralogic.ds3client.networking.*;
-import com.spectralogic.ds3client.serializer.XmlProcessingException;
 import com.spectralogic.ds3client.utils.DateFormatter;
 import com.spectralogic.ds3client.utils.Signature;
 import org.apache.http.HttpHost;
@@ -125,7 +124,10 @@ class NetworkClientImpl implements NetworkClient {
             final String path = this.buildPath();
             if (this.content != null) {
                 final BasicHttpEntityEnclosingRequest httpRequest = new BasicHttpEntityEnclosingRequest(verb, path);
-                httpRequest.setEntity(new Ds3InputStreamEntity(this.content, this.ds3Request.getSize(), this.ds3Request.getContentType()));
+
+                final Ds3InputStreamEntity entityStream = new Ds3InputStreamEntity(this.content, this.ds3Request.getSize(), this.ds3Request.getContentType());
+                entityStream.setBufferSize(NetworkClientImpl.this.connectionDetails.getBufferSize());
+                httpRequest.setEntity(entityStream);
                 return httpRequest;
             } else {
                 return new BasicHttpRequest(verb, path);

@@ -17,7 +17,7 @@ package com.spectralogic.ds3client.helpers;
 
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.ObjectGetter;
 import com.spectralogic.ds3client.utils.Md5Hash;
-import org.apache.commons.io.IOUtils;
+import com.spectralogic.ds3client.utils.IOUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -31,6 +31,7 @@ import java.nio.file.StandardOpenOption;
  */
 public class FileObjectGetter implements ObjectGetter {
     private final Path root;
+    private int bufferSize = 1024 * 1024;
 
     /**
      * Creates a new FileObjectGetter to retrieve files from a remote DS3 system to the local file system.
@@ -38,6 +39,16 @@ public class FileObjectGetter implements ObjectGetter {
      */
     public FileObjectGetter(final Path root) {
         this.root = root;
+    }
+
+    /**
+     * Sets the size of the buffer that will be used
+     * @param bufferSize
+     * @return
+     */
+    public FileObjectGetter withBufferSize(final int bufferSize) {
+        this.bufferSize = bufferSize;
+        return this;
     }
 
     @Override
@@ -50,7 +61,7 @@ public class FileObjectGetter implements ObjectGetter {
                     StandardOpenOption.CREATE_NEW,
                     StandardOpenOption.TRUNCATE_EXISTING
                 )) {
-            IOUtils.copy(contents, output);
+            IOUtils.copy(contents, output, bufferSize);
         }
     }
 }
