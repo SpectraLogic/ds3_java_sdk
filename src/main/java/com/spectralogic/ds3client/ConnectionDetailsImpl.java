@@ -28,6 +28,7 @@ class ConnectionDetailsImpl implements ConnectionDetails {
         private boolean secure = false;
         private URI proxy = null;
         private int retries = 5;
+        private int bufferSize = 1024 * 4;
 
         private Builder(final String endpoint, final Credentials credentials) {
             this.endpoint = endpoint;
@@ -49,6 +50,11 @@ class ConnectionDetailsImpl implements ConnectionDetails {
             return this;
         }
 
+        public Builder withBufferSize(final int bufferSize) {
+            this.bufferSize = bufferSize;
+            return this;
+        }
+
         @Override
         public ConnectionDetailsImpl build() {
             return new ConnectionDetailsImpl(this);
@@ -60,6 +66,7 @@ class ConnectionDetailsImpl implements ConnectionDetails {
     private final boolean secure;
     private final URI proxy;
     private final int retries;
+    private final int bufferSize;
 
     static Builder builder(final String uriEndpoint, final Credentials credentials) {
         return new Builder(uriEndpoint, credentials);
@@ -71,25 +78,36 @@ class ConnectionDetailsImpl implements ConnectionDetails {
         this.secure = builder.secure;
         this.proxy = builder.proxy;
         this.retries = builder.retries;
+        this.bufferSize = builder.bufferSize;
     }
 
+    @Override
     public String getEndpoint() {
         return endpoint;
     }
 
+    @Override
     public Credentials getCredentials() {
         return credentials;
     }
 
+    @Override
     public boolean isSecure() {
         return secure;
     }
 
+    @Override
     public URI getProxy() {
         return proxy;
     }
 
+    @Override
     public int getRetries() {
         return retries;
+    }
+
+    @Override
+    public int getBufferSize() {
+        return bufferSize;
     }
 }

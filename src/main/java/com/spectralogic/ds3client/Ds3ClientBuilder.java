@@ -20,6 +20,7 @@ public class Ds3ClientBuilder implements com.spectralogic.ds3client.utils.Builde
     private boolean secure = true;
     private URI proxy = null;
     private int retries = 5;
+    private int bufferSize = 1024 * 4;
 
     private Ds3ClientBuilder(final String endpoint, final Credentials credentials) throws IllegalArgumentException {
         if (endpoint == null || endpoint.isEmpty()) {
@@ -49,6 +50,15 @@ public class Ds3ClientBuilder implements com.spectralogic.ds3client.utils.Builde
      */
     public Ds3ClientBuilder withHttpSecure(final boolean secure) {
         this.secure = secure;
+        return this;
+    }
+
+    /**
+     * @param bufferSize The size of the buffer to be used when writing content out to DS3.
+     * @return The current builder.
+     */
+    public Ds3ClientBuilder withBufferSize(final int bufferSize) {
+        this.bufferSize = bufferSize;
         return this;
     }
 
@@ -91,7 +101,7 @@ public class Ds3ClientBuilder implements com.spectralogic.ds3client.utils.Builde
     @Override
     public Ds3Client build() {
         final ConnectionDetailsImpl.Builder connBuilder = ConnectionDetailsImpl.builder(this.endpoint, this.credentials)
-            .withProxy(this.proxy).withSecure(this.secure).withRedirectRetries(this.retries);
+            .withProxy(this.proxy).withSecure(this.secure).withRedirectRetries(this.retries).withBufferSize(this.bufferSize);
 
         final NetworkClient netClient = new NetworkClientImpl(connBuilder.build());
         return new Ds3ClientImpl(netClient);

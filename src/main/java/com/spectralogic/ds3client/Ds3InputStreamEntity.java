@@ -26,12 +26,22 @@ import com.spectralogic.ds3client.utils.IOUtils;
 
 public class Ds3InputStreamEntity extends InputStreamEntity {
 
+    private int bufferSize = 1024 *4;
+
     public Ds3InputStreamEntity(final InputStream inStream, final long length, final ContentType contentType) {
         super(inStream, length, contentType);
     }
 
+    public void setBufferSize(final int bufferSize) {
+        this.bufferSize = bufferSize;
+    }
+
+    public long getBufferSize() {
+        return bufferSize;
+    }
+
     @Override
     public void writeTo(final OutputStream outStream) throws IOException {
-        IOUtils.copy(this.getContent(), outStream, 1024 * 1024);
+        IOUtils.copy(this.getContent(), outStream, bufferSize);
     }
 }

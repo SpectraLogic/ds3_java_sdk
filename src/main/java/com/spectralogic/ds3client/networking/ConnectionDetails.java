@@ -29,4 +29,6 @@ public interface ConnectionDetails {
     public URI getProxy();
 
     public int getRetries();
+
+    public int getBufferSize();
 }
