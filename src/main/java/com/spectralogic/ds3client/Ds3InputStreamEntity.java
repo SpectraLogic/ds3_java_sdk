@@ -26,7 +26,7 @@ import com.spectralogic.ds3client.utils.IOUtils;
 
 public class Ds3InputStreamEntity extends InputStreamEntity {
 
-    private int bufferSize = 1024 *4;
+    private int bufferSize = 1024 * 1024;
 
     public Ds3InputStreamEntity(final InputStream inStream, final long length, final ContentType contentType) {
         super(inStream, length, contentType);

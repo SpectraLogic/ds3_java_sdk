@@ -28,7 +28,7 @@ class ConnectionDetailsImpl implements ConnectionDetails {
         private boolean secure = false;
         private URI proxy = null;
         private int retries = 5;
-        private int bufferSize = 1024 * 4;
+        private int bufferSize = 1024 * 1024;
 
         private Builder(final String endpoint, final Credentials credentials) {
             this.endpoint = endpoint;

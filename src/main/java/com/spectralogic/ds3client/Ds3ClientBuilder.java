@@ -20,7 +20,7 @@ public class Ds3ClientBuilder implements com.spectralogic.ds3client.utils.Builde
     private boolean secure = true;
     private URI proxy = null;
     private int retries = 5;
-    private int bufferSize = 1024 * 4;
+    private int bufferSize = 1024 * 1024;
 
     private Ds3ClientBuilder(final String endpoint, final Credentials credentials) throws IllegalArgumentException {
         if (endpoint == null || endpoint.isEmpty()) {
