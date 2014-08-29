@@ -13,33 +13,23 @@
  * ****************************************************************************
  */
 
-allprojects {
-    group = 'com.spectralogic'
-    version = '0.7.3-SNAPSHOT'
-}
+package com.spectralogic.ds3client.utils;
 
-subprojects {
-    apply plugin: 'java'
-    apply plugin: 'maven'
 
-    sourceCompatibility = JavaVersion.VERSION_1_7
-    repositories {
-        mavenCentral()
-        mavenLocal()
-    }
+import com.spectralogic.ds3client.utils.DateFormatter;
+import org.junit.Test;
 
-    dependencies {
-        testCompile 'org.mockito:mockito-all:1.9.5'
-        testCompile 'junit:junit:4.11'
-    }
-}
+import java.util.Date;
 
-task wrapper(type: Wrapper) {
-    gradleVersion = '2.0'
-}
+import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.MatcherAssert.assertThat;
 
-project(':integration') {
-    dependencies {
-        compile project(':sdk')
+public class DateFormatter_Test {
+
+    @Test
+    public void formatDate() {
+        final Date date = new Date(1390414308132L);
+
+        assertThat(DateFormatter.dateToRfc882(date), is("Wed, 22 Jan 2014 11:11:48 -0700"));
     }
 }

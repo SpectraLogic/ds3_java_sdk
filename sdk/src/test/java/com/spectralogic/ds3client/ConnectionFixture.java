@@ -13,33 +13,19 @@
  * ****************************************************************************
  */
 
-allprojects {
-    group = 'com.spectralogic'
-    version = '0.7.3-SNAPSHOT'
-}
+package com.spectralogic.ds3client;
 
-subprojects {
-    apply plugin: 'java'
-    apply plugin: 'maven'
+import com.spectralogic.ds3client.ConnectionDetailsImpl;
+import com.spectralogic.ds3client.networking.ConnectionDetails;
+import com.spectralogic.ds3client.models.Credentials;
 
-    sourceCompatibility = JavaVersion.VERSION_1_7
-    repositories {
-        mavenCentral()
-        mavenLocal()
+public class ConnectionFixture {
+
+    public static ConnectionDetails getConnection() {
+        return getConnection(8080);
     }
 
-    dependencies {
-        testCompile 'org.mockito:mockito-all:1.9.5'
-        testCompile 'junit:junit:4.11'
-    }
-}
-
-task wrapper(type: Wrapper) {
-    gradleVersion = '2.0'
-}
-
-project(':integration') {
-    dependencies {
-        compile project(':sdk')
+    public static ConnectionDetails getConnection(final int port) {
+        return ConnectionDetailsImpl.builder("localhost:" + port, new Credentials("id", "key")).build();
     }
 }

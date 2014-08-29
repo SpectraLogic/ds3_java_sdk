@@ -1,0 +1,12 @@
+install.dependsOn test //make sure that the tests get ran before attempting to install
+
+jar.archiveName = 'ds3_java_sdk'
+
+dependencies {
+    compile     'org.apache.httpcomponents:httpclient:4.3.2'
+    compile     'commons-codec:commons-codec:1.8'
+    compile     'commons-io:commons-io:2.1'
+    compile     'org.codehaus.woodstox:woodstox-core-asl:4.2.0'
+    compile     'com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.2.3'
+    compile     'com.google.guava:guava:16.0.1'
+}

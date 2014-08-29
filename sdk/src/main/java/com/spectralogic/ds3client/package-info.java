@@ -13,33 +13,8 @@
  * ****************************************************************************
  */
 
-allprojects {
-    group = 'com.spectralogic'
-    version = '0.7.3-SNAPSHOT'
-}
-
-subprojects {
-    apply plugin: 'java'
-    apply plugin: 'maven'
-
-    sourceCompatibility = JavaVersion.VERSION_1_7
-    repositories {
-        mavenCentral()
-        mavenLocal()
-    }
-
-    dependencies {
-        testCompile 'org.mockito:mockito-all:1.9.5'
-        testCompile 'junit:junit:4.11'
-    }
-}
-
-task wrapper(type: Wrapper) {
-    gradleVersion = '2.0'
-}
-
-project(':integration') {
-    dependencies {
-        compile project(':sdk')
-    }
-}
+/**
+ * Root package for communicating with a DS3 appliance, see {@link com.spectralogic.ds3client.Ds3ClientBuilder} to create a
+ * connection with a DS3 appliance.
+ */
+package main.java.com.spectralogic.ds3client;
