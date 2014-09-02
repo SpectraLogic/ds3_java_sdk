@@ -1,6 +1,6 @@
 install.dependsOn test //make sure that the tests get ran before attempting to install
 
-jar.archiveName = 'ds3_java_sdk'
+jar.baseName = 'ds3_java_sdk'
 
 dependencies {
     compile     'org.apache.httpcomponents:httpclient:4.3.2'
