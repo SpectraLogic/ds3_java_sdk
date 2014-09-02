@@ -3,7 +3,13 @@ ds3_java_sdk
 
 ## Install
 
-To install the latest ds3_java_sdk either download the latest release jar file from the [Releases](../../releases) page or clone the repository and run `./gradlew install` to install the sdk into your local maven repository.
+To install the latest ds3_java_sdk either download the latest release jar file from the [Releases](../../releases) page or clone the repository and run `./gradlew clean sdk:install` to install the sdk into your local maven repository.
+
+## Tests
+
+In addition to unit tests in the main `sdk` module, there are additional integration tests in the `integration` module.  Please see the integration [README](integration/README.md) for details on running the tests.  To just run the SDK's unit tests use:
+
+    ./gradlew clean sdk:test
 
 ## Javadoc
 
