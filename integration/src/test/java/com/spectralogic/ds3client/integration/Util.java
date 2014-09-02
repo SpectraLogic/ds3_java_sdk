@@ -10,11 +10,16 @@ import com.spectralogic.ds3client.models.Contents;
 import com.spectralogic.ds3client.models.Credentials;
 import com.spectralogic.ds3client.models.bulk.Ds3Object;
 import com.spectralogic.ds3client.serializer.XmlProcessingException;
+import com.spectralogic.ds3client.utils.ResourceUtils;
 
+import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.security.SignatureException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Util {
     private Util() {}
@@ -45,14 +50,22 @@ public class Util {
         return builder.build();
     }
 
-    public static void loadBookTestData(final Ds3Client client, final String bucketName) throws IOException, SignatureException, XmlProcessingException {
+    private static final String[] BOOKS = {"beowulf.txt", "sherlock_holmes.txt", "tale_of_two_cities.txt", "ulysses.txt"};
+    public static void loadBookTestData(final Ds3Client client, final String bucketName) throws IOException, SignatureException, XmlProcessingException, URISyntaxException {
+        final String resourceBaseName = "books/";
         final Ds3ClientHelpers helpers = Ds3ClientHelpers.wrap(client);
 
-        final Path basePath = FileSystems.getDefault().getPath("src/test/resource/books");
+        final List<Ds3Object> objects = new ArrayList<>();
 
-        final Iterable<Ds3Object> objects = helpers.listObjectsForDirectory(basePath);
+        for(final String book : BOOKS) {
+            final File objFile = ResourceUtils.loadFileResource(resourceBaseName + book);
+            final Ds3Object obj = new Ds3Object(book, objFile.length());
+
+            objects.add(obj);
+        }
+
         final Ds3ClientHelpers.WriteJob job = helpers.startWriteJob(bucketName, objects);
-        job.write(new FileObjectPutter(basePath));
+        job.write(new ResourceObjectPutter(resourceBaseName));
     }
 
     public static void deleteAllContents(final Ds3Client client, final String bucketName) throws IOException, SignatureException {

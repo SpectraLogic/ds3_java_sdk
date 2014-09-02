@@ -8,6 +8,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.security.SignatureException;
 
 import static org.hamcrest.CoreMatchers.*;
@@ -75,7 +76,7 @@ public class BucketIntegration_Test {
     }
 
     @Test
-    public void listContents() throws IOException, SignatureException, XmlProcessingException {
+    public void listContents() throws IOException, SignatureException, XmlProcessingException, URISyntaxException {
         final String bucketName = "test_contents_bucket";
 
         try {
