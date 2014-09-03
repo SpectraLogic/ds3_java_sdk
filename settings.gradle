@@ -1,0 +1,2 @@
+include 'integration', 'sdk'
+rootProject.name = 'ds3_java_sdk'
