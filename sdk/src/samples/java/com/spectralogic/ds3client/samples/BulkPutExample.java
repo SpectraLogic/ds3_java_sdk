@@ -1,12 +1,12 @@
 package com.spectralogic.ds3client.samples;
 
-import main.java.com.spectralogic.ds3client.Ds3Client;
-import main.java.com.spectralogic.ds3client.Ds3ClientBuilder;
-import main.java.com.spectralogic.ds3client.helpers.Ds3ClientHelpers;
-import main.java.com.spectralogic.ds3client.helpers.FileObjectPutter;
-import main.java.com.spectralogic.ds3client.models.Credentials;
-import main.java.com.spectralogic.ds3client.models.bulk.Ds3Object;
-import main.java.com.spectralogic.ds3client.serializer.XmlProcessingException;
+import com.spectralogic.ds3client.Ds3Client;
+import com.spectralogic.ds3client.Ds3ClientBuilder;
+import com.spectralogic.ds3client.helpers.Ds3ClientHelpers;
+import com.spectralogic.ds3client.helpers.FileObjectPutter;
+import com.spectralogic.ds3client.models.Credentials;
+import com.spectralogic.ds3client.models.bulk.Ds3Object;
+import com.spectralogic.ds3client.serializer.XmlProcessingException;
 
 import java.io.IOException;
 import java.nio.file.FileSystems;

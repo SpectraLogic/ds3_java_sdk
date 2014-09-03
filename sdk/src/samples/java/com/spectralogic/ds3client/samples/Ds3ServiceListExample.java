@@ -1,11 +1,11 @@
 package com.spectralogic.ds3client.samples;
 
-import main.java.com.spectralogic.ds3client.Ds3Client;
-import main.java.com.spectralogic.ds3client.Ds3ClientBuilder;
-import main.java.com.spectralogic.ds3client.commands.GetServiceRequest;
-import main.java.com.spectralogic.ds3client.commands.GetServiceResponse;
-import main.java.com.spectralogic.ds3client.models.Credentials;
-import main.java.com.spectralogic.ds3client.models.Bucket;
+import com.spectralogic.ds3client.Ds3Client;
+import com.spectralogic.ds3client.Ds3ClientBuilder;
+import com.spectralogic.ds3client.commands.GetServiceRequest;
+import com.spectralogic.ds3client.commands.GetServiceResponse;
+import com.spectralogic.ds3client.models.Credentials;
+import com.spectralogic.ds3client.models.Bucket;
 
 import java.io.IOException;
 import java.security.SignatureException;

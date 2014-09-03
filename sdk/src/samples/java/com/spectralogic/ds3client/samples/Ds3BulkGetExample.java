@@ -1,16 +1,16 @@
 package com.spectralogic.ds3client.samples;
 
-import main.java.com.spectralogic.ds3client.Ds3Client;
-import main.java.com.spectralogic.ds3client.Ds3ClientBuilder;
+import com.spectralogic.ds3client.Ds3Client;
+import com.spectralogic.ds3client.Ds3ClientBuilder;
 import com.spectralogic.ds3client.commands.*;
-import main.java.com.spectralogic.ds3client.commands.*;
-import main.java.com.spectralogic.ds3client.models.Contents;
-import main.java.com.spectralogic.ds3client.models.Credentials;
-import main.java.com.spectralogic.ds3client.models.bulk.BulkObject;
-import main.java.com.spectralogic.ds3client.models.bulk.Ds3Object;
-import main.java.com.spectralogic.ds3client.models.bulk.MasterObjectList;
-import main.java.com.spectralogic.ds3client.models.bulk.Objects;
-import main.java.com.spectralogic.ds3client.serializer.XmlProcessingException;
+import com.spectralogic.ds3client.commands.*;
+import com.spectralogic.ds3client.models.Contents;
+import com.spectralogic.ds3client.models.Credentials;
+import com.spectralogic.ds3client.models.bulk.BulkObject;
+import com.spectralogic.ds3client.models.bulk.Ds3Object;
+import com.spectralogic.ds3client.models.bulk.MasterObjectList;
+import com.spectralogic.ds3client.models.bulk.Objects;
+import com.spectralogic.ds3client.serializer.XmlProcessingException;
 
 import org.apache.commons.io.IOUtils;
 
