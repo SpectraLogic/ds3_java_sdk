@@ -16,12 +16,11 @@
 package com.spectralogic.ds3client.models;
 
 
-import com.spectralogic.ds3client.models.Credentials;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 @RunWith(JUnit4.class)

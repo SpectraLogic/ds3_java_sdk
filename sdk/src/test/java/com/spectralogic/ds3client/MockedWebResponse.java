@@ -15,13 +15,12 @@
 
 package com.spectralogic.ds3client;
 
-import java.io.IOException;
-import java.io.InputStream;
-
 import com.spectralogic.ds3client.networking.Headers;
+import com.spectralogic.ds3client.networking.WebResponse;
 import org.apache.commons.io.IOUtils;
 
-import com.spectralogic.ds3client.networking.WebResponse;
+import java.io.IOException;
+import java.io.InputStream;
 
 public class MockedWebResponse implements WebResponse {
     private final InputStream responseStream;

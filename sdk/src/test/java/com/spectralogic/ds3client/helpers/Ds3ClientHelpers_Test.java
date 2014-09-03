@@ -15,11 +15,27 @@
 
 package com.spectralogic.ds3client.helpers;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.argThat;
-import static org.mockito.Mockito.*;
+import com.google.common.collect.Lists;
+import com.spectralogic.ds3client.Ds3Client;
+import com.spectralogic.ds3client.commands.*;
+import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.ObjectGetter;
+import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.ObjectPutter;
+import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.ReadJob;
+import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.WriteJob;
+import com.spectralogic.ds3client.models.Contents;
+import com.spectralogic.ds3client.models.ListBucketResult;
+import com.spectralogic.ds3client.models.Owner;
+import com.spectralogic.ds3client.models.bulk.BulkObject;
+import com.spectralogic.ds3client.models.bulk.Ds3Object;
+import com.spectralogic.ds3client.models.bulk.MasterObjectList;
+import com.spectralogic.ds3client.models.bulk.Objects;
+import com.spectralogic.ds3client.serializer.XmlProcessingException;
+import com.spectralogic.ds3client.utils.Md5Hash;
+import org.apache.commons.io.IOUtils;
+import org.junit.Assert;
+import org.junit.Test;
+import org.mockito.ArgumentMatcher;
+import org.mockito.InOrder;
 
 import java.io.*;
 import java.security.SignatureException;
@@ -28,31 +44,11 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-import com.spectralogic.ds3client.commands.*;
-import com.spectralogic.ds3client.helpers.Ds3ClientHelpers;
-import com.spectralogic.ds3client.models.Contents;
-import com.spectralogic.ds3client.models.ListBucketResult;
-import com.spectralogic.ds3client.models.Owner;
-import com.spectralogic.ds3client.models.bulk.BulkObject;
-import com.spectralogic.ds3client.models.bulk.Ds3Object;
-import com.spectralogic.ds3client.models.bulk.MasterObjectList;
-import com.spectralogic.ds3client.models.bulk.Objects;
-import com.spectralogic.ds3client.utils.Md5Hash;
-import org.apache.commons.io.IOUtils;
-import org.junit.Assert;
-import org.junit.Test;
-import org.mockito.ArgumentMatcher;
-import org.mockito.InOrder;
-
-import com.google.common.collect.Lists;
-import com.spectralogic.ds3client.Ds3Client;
-import com.spectralogic.ds3client.commands.*;
-import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.ObjectGetter;
-import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.ObjectPutter;
-import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.ReadJob;
-import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.WriteJob;
-import com.spectralogic.ds3client.models.*;
-import com.spectralogic.ds3client.serializer.XmlProcessingException;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.argThat;
+import static org.mockito.Mockito.*;
 
 public class Ds3ClientHelpers_Test {
     private static final String MYBUCKET = "mybucket";

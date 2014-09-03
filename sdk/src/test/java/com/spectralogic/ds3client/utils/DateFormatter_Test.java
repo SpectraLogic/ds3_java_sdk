@@ -16,12 +16,11 @@
 package com.spectralogic.ds3client.utils;
 
 
-import com.spectralogic.ds3client.utils.DateFormatter;
 import org.junit.Test;
 
 import java.util.Date;
 
-import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 public class DateFormatter_Test {

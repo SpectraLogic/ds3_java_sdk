@@ -1,4 +1,4 @@
-package samples.java.com.spectralogic.ds3client.samples;
+package com.spectralogic.ds3client.samples;
 
 import main.java.com.spectralogic.ds3client.Ds3Client;
 import main.java.com.spectralogic.ds3client.Ds3ClientBuilder;

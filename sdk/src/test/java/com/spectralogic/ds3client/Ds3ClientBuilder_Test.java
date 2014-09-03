@@ -15,15 +15,12 @@
 
 package com.spectralogic.ds3client;
 
+import com.spectralogic.ds3client.models.Credentials;
+import org.junit.Test;
+
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
-
-import com.spectralogic.ds3client.Ds3ClientBuilder;
-import com.spectralogic.ds3client.Ds3ClientImpl;
-import org.junit.Test;
-
-import com.spectralogic.ds3client.models.Credentials;
 
 public class Ds3ClientBuilder_Test {
     @Test

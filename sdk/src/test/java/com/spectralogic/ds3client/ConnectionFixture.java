@@ -15,9 +15,8 @@
 
 package com.spectralogic.ds3client;
 
-import com.spectralogic.ds3client.ConnectionDetailsImpl;
-import com.spectralogic.ds3client.networking.ConnectionDetails;
 import com.spectralogic.ds3client.models.Credentials;
+import com.spectralogic.ds3client.networking.ConnectionDetails;
 
 public class ConnectionFixture {
 

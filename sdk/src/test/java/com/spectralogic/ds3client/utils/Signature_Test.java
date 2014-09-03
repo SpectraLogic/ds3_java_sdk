@@ -18,12 +18,11 @@ package com.spectralogic.ds3client.utils;
 import com.spectralogic.ds3client.HttpVerb;
 import com.spectralogic.ds3client.models.Credentials;
 import com.spectralogic.ds3client.models.SignatureDetails;
-import com.spectralogic.ds3client.utils.Signature;
 import org.junit.Test;
 
 import java.security.SignatureException;
 
-import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 public class Signature_Test {

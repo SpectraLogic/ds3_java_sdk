@@ -15,25 +15,20 @@
 
 package com.spectralogic.ds3client;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.Assert.fail;
+import com.spectralogic.ds3client.commands.Ds3Request;
+import com.spectralogic.ds3client.networking.ConnectionDetails;
+import com.spectralogic.ds3client.networking.NetworkClient;
+import com.spectralogic.ds3client.networking.WebResponse;
+import org.apache.commons.io.IOUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.SignatureException;
 import java.util.Map;
 
-import com.spectralogic.ds3client.Ds3Client;
-import com.spectralogic.ds3client.Ds3ClientImpl;
-import com.spectralogic.ds3client.HttpVerb;
-import org.apache.commons.io.IOUtils;
-
-import com.spectralogic.ds3client.commands.Ds3Request;
-import com.spectralogic.ds3client.networking.ConnectionDetails;
-import com.spectralogic.ds3client.networking.NetworkClient;
-import com.spectralogic.ds3client.networking.WebResponse;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 public class MockNetwork implements NetworkClient {
     

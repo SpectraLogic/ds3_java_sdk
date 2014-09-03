@@ -15,14 +15,14 @@
 
 package com.spectralogic.ds3client.helpers;
 
-import java.io.*;
-import java.net.URISyntaxException;
-import java.nio.file.Files;
-
 import com.spectralogic.ds3client.utils.ResourceUtils;
 import org.apache.commons.io.IOUtils;
 import org.junit.Assert;
 import org.junit.Test;
+
+import java.io.*;
+import java.net.URISyntaxException;
+import java.nio.file.Files;
 
 public class ResettableFileInputStream_Test {
     @Test

@@ -17,17 +17,15 @@ package com.spectralogic.ds3client.serializer;
 
 import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3client.BulkCommand;
-import com.spectralogic.ds3client.models.bulk.*;
 import com.spectralogic.ds3client.models.ListBucketResult;
 import com.spectralogic.ds3client.models.bulk.*;
-import com.spectralogic.ds3client.serializer.XmlOutput;
-import com.spectralogic.ds3client.serializer.XmlProcessingException;
 import org.junit.Test;
 
 import java.io.IOException;
 import java.util.List;
 
-import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 public class XmlOutput_Test {

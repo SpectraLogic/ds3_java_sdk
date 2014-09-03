@@ -15,18 +15,6 @@
 
 package com.spectralogic.ds3client;
 
-import static org.hamcrest.CoreMatchers.*;
-import static org.hamcrest.MatcherAssert.assertThat;
-
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.security.SignatureException;
-import java.util.*;
-
-import com.spectralogic.ds3client.BulkCommand;
-import com.spectralogic.ds3client.Ds3Client;
-import com.spectralogic.ds3client.HttpVerb;
 import com.spectralogic.ds3client.commands.*;
 import com.spectralogic.ds3client.models.Bucket;
 import com.spectralogic.ds3client.models.Contents;
@@ -35,14 +23,20 @@ import com.spectralogic.ds3client.models.ListBucketResult;
 import com.spectralogic.ds3client.models.bulk.BulkObject;
 import com.spectralogic.ds3client.models.bulk.Ds3Object;
 import com.spectralogic.ds3client.models.bulk.MasterObjectList;
-import org.apache.commons.io.IOUtils;
-import org.junit.Test;
-
-import com.spectralogic.ds3client.commands.*;
-import com.spectralogic.ds3client.models.*;
 import com.spectralogic.ds3client.models.bulk.Objects;
 import com.spectralogic.ds3client.networking.FailedRequestException;
 import com.spectralogic.ds3client.serializer.XmlProcessingException;
+import org.apache.commons.io.IOUtils;
+import org.junit.Test;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.security.SignatureException;
+import java.util.*;
+
+import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 public class Ds3Client_Test {
     @Test
