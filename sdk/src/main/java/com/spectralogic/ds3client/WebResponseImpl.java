@@ -2,7 +2,6 @@ package com.spectralogic.ds3client;
 
 import com.spectralogic.ds3client.networking.Headers;
 import com.spectralogic.ds3client.networking.WebResponse;
-import org.apache.http.Header;
 import org.apache.http.client.methods.CloseableHttpResponse;
 
 import java.io.IOException;

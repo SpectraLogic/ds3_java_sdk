@@ -16,8 +16,8 @@
 package com.spectralogic.ds3client.helpers;
 
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.ObjectGetter;
-import com.spectralogic.ds3client.utils.Md5Hash;
 import com.spectralogic.ds3client.utils.IOUtils;
+import com.spectralogic.ds3client.utils.Md5Hash;
 
 import java.io.IOException;
 import java.io.InputStream;

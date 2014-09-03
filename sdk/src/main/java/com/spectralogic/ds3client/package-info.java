@@ -17,4 +17,4 @@
  * Root package for communicating with a DS3 appliance, see {@link com.spectralogic.ds3client.Ds3ClientBuilder} to create a
  * connection with a DS3 appliance.
  */
-package main.java.com.spectralogic.ds3client;
+package com.spectralogic.ds3client;
