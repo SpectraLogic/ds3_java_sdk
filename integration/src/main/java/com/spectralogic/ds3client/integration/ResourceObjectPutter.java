@@ -4,7 +4,10 @@ import com.spectralogic.ds3client.helpers.Ds3ClientHelpers;
 import com.spectralogic.ds3client.helpers.ResettableFileInputStream;
 import com.spectralogic.ds3client.utils.ResourceUtils;
 
-import java.io.*;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URISyntaxException;
 
 public class ResourceObjectPutter implements Ds3ClientHelpers.ObjectPutter {

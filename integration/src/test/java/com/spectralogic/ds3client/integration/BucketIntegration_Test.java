@@ -11,7 +11,8 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.security.SignatureException;
 
-import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.*;
 
 public class BucketIntegration_Test {
