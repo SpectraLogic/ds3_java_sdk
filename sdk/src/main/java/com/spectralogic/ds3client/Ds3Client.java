@@ -180,4 +180,15 @@ public interface Ds3Client {
      */
     public abstract BulkPutResponse bulkPut(BulkPutRequest request)
             throws IOException, SignatureException;
+
+    /**
+     * Requests that the server allocate space for a given ChunkId in a BulkPutResponse.
+     * For best performance, run this call before putting objects for an object
+     * list.
+     * @return Whether the server responded with allocated, retry later, or not found.
+     * @throws IOException
+     * @throws SignatureException
+     */
+    public abstract AllocateJobChunkResponse allocateJobChunk(AllocateJobChunkRequest request)
+            throws IOException, SignatureException;
 }
