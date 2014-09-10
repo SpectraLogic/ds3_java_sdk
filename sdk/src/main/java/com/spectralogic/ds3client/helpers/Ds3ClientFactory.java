@@ -17,6 +17,8 @@ package com.spectralogic.ds3client.helpers;
 
 import com.spectralogic.ds3client.Ds3Client;
 
+import java.util.UUID;
+
 interface Ds3ClientFactory {
-    Ds3Client GetClientForServerId(String serverId);
+    Ds3Client GetClientForNodeId(UUID nodeId);
 }

@@ -83,7 +83,7 @@ abstract class JobImpl implements Job {
             throws SignatureException, IOException, XmlProcessingException {
         final ListeningExecutorService service = MoreExecutors.listeningDecorator(Executors.newFixedThreadPool(this.maxParallelRequests));
         try {
-            final Ds3Client client = this.clientFactory.GetClientForServerId(objects.getServerId());
+            final Ds3Client client = this.clientFactory.GetClientForNodeId(objects.getNodeId());
             final List<ListenableFuture<?>> tasks = new ArrayList<>();
             for (final BulkObject ds3Object : objects) {
                 tasks.add(this.createTransferTask(transferrer, service, client, ds3Object));
