@@ -86,5 +86,10 @@ class Ds3ClientImpl implements Ds3Client {
     public AllocateJobChunkResponse allocateJobChunk(final AllocateJobChunkRequest request) throws IOException, SignatureException {
         return new AllocateJobChunkResponse(this.netClient.getResponse(request));
     }
+
+    @Override
+    public GetAvailableJobChunksResponse getAvailableJobChunks(final GetAvailableJobChunksRequest request) throws IOException, SignatureException {
+        return new GetAvailableJobChunksResponse(this.netClient.getResponse(request));
+    }
 }
 

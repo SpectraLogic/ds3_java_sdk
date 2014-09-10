@@ -15,7 +15,7 @@
 
 package com.spectralogic.ds3client.commands;
 
-import com.spectralogic.ds3client.models.bulk.Objects;
+import com.spectralogic.ds3client.models.bulk.MasterObjectList;
 import com.spectralogic.ds3client.networking.WebResponse;
 import com.spectralogic.ds3client.serializer.XmlOutput;
 
@@ -25,43 +25,44 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
 
-public class AllocateJobChunkResponse extends AbstractResponse {
+public class GetAvailableJobChunksResponse extends AbstractResponse {
     private Status status;
-    private Objects objects;
+    private MasterObjectList masterObjectList;
     private int retryAfterSeconds;
 
     static public enum Status {
-        ALLOCATED, RETRYLATER, NOTFOUND
-    }
-
-    public AllocateJobChunkResponse(final WebResponse response) throws IOException {
-        super(response);
+        AVAILABLE, RETRYLATER, NOTFOUND
     }
     
     public Status getStatus() {
         return this.status;
     }
 
-    public Objects getObjects() {
-        return this.objects;
+    public MasterObjectList getMasterObjectList() {
+        return this.masterObjectList;
     }
     
     public int getRetryAfterSeconds() {
         return this.retryAfterSeconds;
     }
 
+    public GetAvailableJobChunksResponse(final WebResponse response) throws IOException {
+        super(response);
+    }
+
     @Override
     protected void processResponse() throws IOException {
-        checkStatusCode(200, 503, 404);
-        final WebResponse response = this.getResponse();
+        this.checkStatusCode(200, 404);
+        final WebResponse webResponse = this.getResponse();
         switch (this.getStatusCode()) {
         case 200:
-            this.status = Status.ALLOCATED;
-            this.objects = parseChunk(response);
-            break;
-        case 503:
-            this.status = Status.RETRYLATER;
-            this.retryAfterSeconds = parseRetryAfter(response);
+            this.masterObjectList = parseMasterObjectList(webResponse);
+            if (this.masterObjectList.getObjects() == null) {
+                this.status = Status.RETRYLATER;
+                this.retryAfterSeconds = parseRetryAfter(webResponse);
+            } else {
+                this.status = Status.AVAILABLE;
+            }
             break;
         case 404:
             this.status = Status.NOTFOUND;
@@ -71,15 +72,15 @@ public class AllocateJobChunkResponse extends AbstractResponse {
         }
     }
 
-    private static Objects parseChunk(final WebResponse webResponse) throws IOException {
+    private static MasterObjectList parseMasterObjectList(final WebResponse webResponse) throws IOException {
         try (final InputStream content = webResponse.getResponseStream();
              final StringWriter writer = new StringWriter()) {
             IOUtils.copy(content, writer, UTF8);
-            return XmlOutput.fromXml(writer.toString(), Objects.class);
+            return XmlOutput.fromXml(writer.toString(), MasterObjectList.class);
         }
     }
 
-    private static int parseRetryAfter(final WebResponse response) {
-        return Integer.parseInt(response.getHeaders().get("Retry-After"));
+    private static int parseRetryAfter(final WebResponse webResponse) {
+        return Integer.parseInt(webResponse.getHeaders().get("Retry-After"));
     }
 }

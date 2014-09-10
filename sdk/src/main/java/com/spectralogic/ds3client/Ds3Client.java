@@ -191,4 +191,14 @@ public interface Ds3Client {
      */
     public abstract AllocateJobChunkResponse allocateJobChunk(AllocateJobChunkRequest request)
             throws IOException, SignatureException;
+
+    /**
+     * Returns all of the chunks immediately available for get from the server
+     * for a given JobId in a BulkGetResponse.
+     * @return Whether the server responded with the available chunks, retry later, or not found.
+     * @throws IOException
+     * @throws SignatureException
+     */
+    public abstract GetAvailableJobChunksResponse getAvailableJobChunks(GetAvailableJobChunksRequest request)
+            throws IOException, SignatureException;
 }
