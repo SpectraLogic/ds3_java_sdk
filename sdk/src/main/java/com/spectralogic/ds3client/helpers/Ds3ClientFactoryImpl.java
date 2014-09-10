@@ -28,7 +28,7 @@ class Ds3ClientFactoryImpl implements Ds3ClientFactory {
 
     //TODO: need to actually return a client that points to a particular server id.
     @Override
-    public Ds3Client GetClientForNodeId(final UUID nodeId) {
+    public Ds3Client getClientForNodeId(final UUID nodeId) {
         return this.client;
     }
 }
