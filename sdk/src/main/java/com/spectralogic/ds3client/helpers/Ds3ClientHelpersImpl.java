@@ -40,8 +40,6 @@ import java.util.UUID;
 class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
 
     private static final int DEFAULT_MAX_KEYS = 1000;
-    private static final String JOB_TYPE_PUT = "PUT";
-    private static final String JOB_TYPE_GET = "GET";
     private final Ds3Client client;
 
     Ds3ClientHelpersImpl(final Ds3Client client) {
