@@ -82,5 +82,9 @@ class Ds3ClientImpl implements Ds3Client {
         return new BulkPutResponse(this.netClient.getResponse(request));
     }
 
+    @Override
+    public AllocateJobChunkResponse allocateJobChunk(final AllocateJobChunkRequest request) throws IOException, SignatureException {
+        return new AllocateJobChunkResponse(this.netClient.getResponse(request));
+    }
 }
 

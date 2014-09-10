@@ -16,6 +16,7 @@
 package com.spectralogic.ds3client;
 
 import com.spectralogic.ds3client.commands.*;
+import com.spectralogic.ds3client.commands.AllocateJobChunkResponse.Status;
 import com.spectralogic.ds3client.models.Bucket;
 import com.spectralogic.ds3client.models.Contents;
 import com.spectralogic.ds3client.models.ListAllMyBucketsResult;
@@ -26,6 +27,7 @@ import com.spectralogic.ds3client.models.bulk.MasterObjectList;
 import com.spectralogic.ds3client.models.bulk.Objects;
 import com.spectralogic.ds3client.networking.FailedRequestException;
 import com.spectralogic.ds3client.serializer.XmlProcessingException;
+
 import org.apache.commons.io.IOUtils;
 import org.junit.Test;
 
@@ -305,5 +307,92 @@ public class Ds3Client_Test {
     private static void assertObjectEquals(final BulkObject object, final String name, final long size) {
         assertThat(object.getName(), is(name));
         assertThat(object.getLength(), is(size));
+    }
+    
+    @Test
+    public void allocateJobChunk() throws SignatureException, IOException
+    {
+        final String responseString =
+            "<Objects ChunkId=\"203f6886-b058-4f7c-a012-8779176453b1\" ChunkNumber=\"3\" NodeId=\"a02053b9-0147-11e4-8d6a-002590c1177c\">"
+            + "  <Object Name=\"client00obj000004-8000000\" InCache=\"true\" Length=\"5368709120\" Offset=\"0\"/>"
+            + "  <Object Name=\"client00obj000004-8000000\" InCache=\"true\" Length=\"2823290880\" Offset=\"5368709120\"/>"
+            + "  <Object Name=\"client00obj000003-8000000\" InCache=\"true\" Length=\"2823290880\" Offset=\"5368709120\"/>"
+            + "  <Object Name=\"client00obj000003-8000000\" InCache=\"true\" Length=\"5368709120\" Offset=\"0\"/>"
+            + "</Objects>";
+        final UUID chunkId = UUID.fromString("203f6886-b058-4f7c-a012-8779176453b1");
+        final UUID nodeId = UUID.fromString("a02053b9-0147-11e4-8d6a-002590c1177c");
+
+        final Map<String, String> queryParams = new HashMap<>();
+        queryParams.put("operation", "allocate");
+        final AllocateJobChunkResponse response = MockNetwork
+            .expecting(HttpVerb.PUT, "/_rest_/job_chunk/203f6886-b058-4f7c-a012-8779176453b1", queryParams, null)
+            .returning(200, responseString)
+            .asClient()
+            .allocateJobChunk(new AllocateJobChunkRequest(chunkId));
+        
+        assertThat(response.getStatus(), is(Status.ALLOCATED));
+        final Objects chunk = response.getObjects();
+        
+        assertThat(chunk.getChunkId(), is(chunkId));
+        assertThat(chunk.getChunkNumber(), is(3L));
+        assertThat(chunk.getNodeId(), is(nodeId));
+        
+        final List<BulkObject> objects = chunk.getObjects();
+        assertThat(objects.size(), is(4));
+
+        final BulkObject object0 = objects.get(0);
+        assertThat(object0.getName(), is("client00obj000004-8000000"));
+        assertThat(object0.isInCache(), is(true));
+        assertThat(object0.getOffset(), is(0L));
+        assertThat(object0.getLength(), is(5368709120L));
+
+        final BulkObject object1 = objects.get(1);
+        assertThat(object1.getName(), is("client00obj000004-8000000"));
+        assertThat(object1.isInCache(), is(true));
+        assertThat(object1.getOffset(), is(5368709120L));
+        assertThat(object1.getLength(), is(2823290880L));
+
+        final BulkObject object2 = objects.get(2);
+        assertThat(object2.getName(), is("client00obj000003-8000000"));
+        assertThat(object2.isInCache(), is(true));
+        assertThat(object2.getOffset(), is(5368709120L));
+        assertThat(object2.getLength(), is(2823290880L));
+
+        final BulkObject object3 = objects.get(3);
+        assertThat(object3.getName(), is("client00obj000003-8000000"));
+        assertThat(object3.isInCache(), is(true));
+        assertThat(object3.getOffset(), is(0L));
+        assertThat(object3.getLength(), is(5368709120L));
+    }
+    
+    @Test
+    public void allocateJobChunkReturnsChunkNotFound() throws SignatureException, IOException
+    {
+        final Map<String, String> queryParams = new HashMap<>();
+        queryParams.put("operation", "allocate");
+        final AllocateJobChunkResponse response = MockNetwork
+            .expecting(HttpVerb.PUT, "/_rest_/job_chunk/203f6886-b058-4f7c-a012-8779176453b1", queryParams, null)
+            .returning(404, "")
+            .asClient()
+            .allocateJobChunk(new AllocateJobChunkRequest(UUID.fromString("203f6886-b058-4f7c-a012-8779176453b1")));
+        
+        assertThat(response.getStatus(), is(Status.NOTFOUND));
+    }
+    
+    @Test
+    public void allocateJobChunkReturnsRetryAfter() throws SignatureException, IOException
+    {
+        final Map<String, String> queryParams = new HashMap<>();
+        queryParams.put("operation", "allocate");
+        final Map<String, String> headers = new HashMap<>();
+        headers.put("retry-after", "300");
+        final AllocateJobChunkResponse response = MockNetwork
+            .expecting(HttpVerb.PUT, "/_rest_/job_chunk/203f6886-b058-4f7c-a012-8779176453b1", queryParams, null)
+            .returning(503, "", headers)
+            .asClient()
+            .allocateJobChunk(new AllocateJobChunkRequest(UUID.fromString("203f6886-b058-4f7c-a012-8779176453b1")));
+        
+        assertThat(response.getStatus(), is(Status.RETRYLATER));
+        assertThat(response.getRetryAfterSeconds(), is(300));
     }
 }

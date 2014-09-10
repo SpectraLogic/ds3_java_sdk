@@ -19,11 +19,13 @@ import com.spectralogic.ds3client.commands.Ds3Request;
 import com.spectralogic.ds3client.networking.ConnectionDetails;
 import com.spectralogic.ds3client.networking.NetworkClient;
 import com.spectralogic.ds3client.networking.WebResponse;
+
 import org.apache.commons.io.IOUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.SignatureException;
+import java.util.HashMap;
 import java.util.Map;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -38,6 +40,7 @@ public class MockNetwork implements NetworkClient {
     private String requestContent;
     private int statusCode;
     private String responseContent;
+    private Map<String, String> headers;
     
     private MockNetwork() {
     }
@@ -57,10 +60,18 @@ public class MockNetwork implements NetworkClient {
     
     public MockNetwork returning(
             final int statusCode,
-            final String responseContent) {
+            final String responseContent,
+            final Map<String, String> headers) {
         this.statusCode = statusCode;
         this.responseContent = responseContent;
+        this.headers = headers;
         return this;
+    }
+     
+    public MockNetwork returning(
+            final int statusCode,
+            final String responseContent) {
+        return returning(statusCode, responseContent, new HashMap<String, String>());
     }
     
     public Ds3Client asClient() {
@@ -80,7 +91,7 @@ public class MockNetwork implements NetworkClient {
             assertThat(stream, is(notNullValue()));
             assertThat(IOUtils.toString(stream), is(this.requestContent));
         }
-        return new MockedWebResponse(this.responseContent, this.statusCode);
+        return new MockedWebResponse(this.responseContent, this.statusCode, this.headers);
     }
 
     private void assertMapsEqual(final Map<String, String> expectedMap, final Map<String, String> actualMap) {

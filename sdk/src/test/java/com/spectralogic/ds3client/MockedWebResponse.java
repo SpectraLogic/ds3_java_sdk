@@ -17,20 +17,22 @@ package com.spectralogic.ds3client;
 
 import com.spectralogic.ds3client.networking.Headers;
 import com.spectralogic.ds3client.networking.WebResponse;
+
 import org.apache.commons.io.IOUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Map;
 
 public class MockedWebResponse implements WebResponse {
     private final InputStream responseStream;
     private final int statusCode;
     private final Headers headers;
 
-    public MockedWebResponse(final String responseString, final int statusCode) {
+    public MockedWebResponse(final String responseString, final int statusCode, final Map<String, String> headers) {
         this.responseStream = IOUtils.toInputStream(responseString);
         this.statusCode = statusCode;
-        this.headers = new MockedHeaders();
+        this.headers = new MockedHeaders(headers);
     }
     
     @Override
