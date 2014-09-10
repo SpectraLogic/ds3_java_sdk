@@ -3,7 +3,6 @@ package com.spectralogic.ds3client.samples;
 import com.spectralogic.ds3client.Ds3Client;
 import com.spectralogic.ds3client.Ds3ClientBuilder;
 import com.spectralogic.ds3client.commands.*;
-import com.spectralogic.ds3client.commands.*;
 import com.spectralogic.ds3client.models.Contents;
 import com.spectralogic.ds3client.models.Credentials;
 import com.spectralogic.ds3client.models.bulk.BulkObject;

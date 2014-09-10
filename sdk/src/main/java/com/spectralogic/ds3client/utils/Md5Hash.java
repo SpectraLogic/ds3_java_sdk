@@ -30,22 +30,24 @@ public class Md5Hash {
     }
 
     public byte[] getHash() {
-        return hash;
+        return this.hash;
     }
 
     public String toHexString() {
-        return Hex.encodeHexString(hash);
+        return Hex.encodeHexString(this.hash);
     }
 
     public String toBase64String() {
-        return Base64.encodeBase64String(hash);
+        return Base64.encodeBase64String(this.hash);
     }
 
+    @Override
     public String toString() {
-        return toBase64String();
+        return this.toBase64String();
     }
 
 
+    @Override
     public boolean equals(final Object obj) {
         if (!(obj instanceof Md5Hash)) {
             return false;
