@@ -217,6 +217,14 @@ public interface Ds3Client {
      * @throws IOException
      * @throws SignatureException
      */
-    public abstract GetJobResponse getJob(GetJobRequest getJobRequest)
+    public abstract GetJobResponse getJob(GetJobRequest request)
+            throws IOException, SignatureException;
+
+    /**
+     * Cancels an in-progress job.
+     * @throws IOException
+     * @throws SignatureException
+     */
+    public abstract CancelJobResponse cancelJob(CancelJobRequest request)
             throws IOException, SignatureException;
 }

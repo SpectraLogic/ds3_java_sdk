@@ -613,4 +613,14 @@ public class Ds3Client_Test {
         assertThat(bulkObject1_1.getLength(), is(5368709120L));
         assertThat(bulkObject1_1.isInCache(), is(true));
     }
+    
+    @Test
+    public void cancelJob() throws SignatureException, IOException {
+        final CancelJobResponse response = MockNetwork
+            .expecting(HttpVerb.DELETE, "/_rest_/job/1a85e743-ec8f-4789-afec-97e587a26936", null, null)
+            .returning(204, "")
+            .asClient()
+            .cancelJob(new CancelJobRequest(UUID.fromString("1a85e743-ec8f-4789-afec-97e587a26936")));
+        assertThat(response, notNullValue());
+    }
 }
