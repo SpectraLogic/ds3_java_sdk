@@ -514,4 +514,83 @@ public class Ds3Client_Test {
         
         assertThat(response.getStatus(), is(GetAvailableJobChunksResponse.Status.NOTFOUND));
     }
+    
+    @Test
+    public void getJobs() throws SignatureException, IOException {
+        final String responseString =
+            "<Jobs>"
+            + "  <Job BucketName=\"bucket_1\" CachedSizeInBytes=\"69880\" ChunkClientProcessingOrderGuarantee=\"IN_ORDER\" CompletedSizeInBytes=\"0\" JobId=\"0807ff11-a9f6-4d55-bb92-b452c1bb00c7\" OriginalSizeInBytes=\"69880\" Priority=\"NORMAL\" RequestType=\"PUT\" StartDate=\"2014-09-04T17:23:45.000Z\" UserId=\"a7d3eff9-e6d2-4e37-8a0b-84e76211a18a\" UserName=\"spectra\" WriteOptimization=\"PERFORMANCE\">"
+            + "    <Nodes>"
+            + "      <Node EndPoint=\"FAILED_TO_DETERMINE_DATAPATH_IP_ADDRESS\" HttpPort=\"80\" HttpsPort=\"443\" Id=\"edb8cc38-32f2-11e4-bce1-080027ecf0d4\"/>"
+            + "    </Nodes>"
+            + "  </Job>"
+            + "  <Job BucketName=\"bucket_2\" CachedSizeInBytes=\"0\" ChunkClientProcessingOrderGuarantee=\"IN_ORDER\" CompletedSizeInBytes=\"0\" JobId=\"c18554ba-e3a8-4905-91fd-3e6eec71bf45\" OriginalSizeInBytes=\"69880\" Priority=\"HIGH\" RequestType=\"GET\" StartDate=\"2014-09-04T17:24:04.000Z\" UserId=\"a7d3eff9-e6d2-4e37-8a0b-84e76211a18a\" UserName=\"spectra\" WriteOptimization=\"CAPACITY\">"
+            + "    <Nodes>"
+            + "      <Node EndPoint=\"FAILED_TO_DETERMINE_DATAPATH_IP_ADDRESS\" HttpPort=\"80\" HttpsPort=\"443\" Id=\"edb8cc38-32f2-11e4-bce1-080027ecf0d4\"/>"
+            + "    </Nodes>"
+            + "  </Job>"
+            + "</Jobs>";
+        final GetJobsResponse response = MockNetwork
+            .expecting(HttpVerb.GET, "/_rest_/job", null, null)
+            .returning(200, responseString)
+            .asClient()
+            .getJobs(new GetJobsRequest());
+        
+        final List<JobInfo> jobs = response.getJobs();
+        assertThat(jobs.size(), is(2));
+        checkJob(
+            jobs.get(0),
+            "bucket_1",
+            69880L,
+            ChunkClientProcessingOrderGuarantee.IN_ORDER,
+            0L,
+            UUID.fromString("0807ff11-a9f6-4d55-bb92-b452c1bb00c7"),
+            69880L,
+            Priority.NORMAL,
+            RequestType.PUT,
+            "2014-09-04T17:23:45.000Z",
+            UUID.fromString("a7d3eff9-e6d2-4e37-8a0b-84e76211a18a"),
+            "spectra",
+            WriteOptimization.PERFORMANCE
+        );
+        checkJob(
+            jobs.get(1),
+            "bucket_2",
+            0L,
+            ChunkClientProcessingOrderGuarantee.IN_ORDER,
+            0L,
+            UUID.fromString("c18554ba-e3a8-4905-91fd-3e6eec71bf45"),
+            69880L,
+            Priority.HIGH,
+            RequestType.GET,
+            "2014-09-04T17:24:04.000Z",
+            UUID.fromString("a7d3eff9-e6d2-4e37-8a0b-84e76211a18a"),
+            "spectra",
+            WriteOptimization.CAPACITY
+        );
+    }
+
+    private static void checkJob(
+            final JobInfo job,
+            final String bucketName,
+            final long cachedSizeInBytes,
+            final ChunkClientProcessingOrderGuarantee chunkProcessingOrderGuarantee,
+            final long completedSizeInBytes, final UUID jobId,
+            final long originalSizeInBytes, final Priority priority,
+            final RequestType requestType, final String startDate,
+            final UUID userId, final String userName,
+            final WriteOptimization writeOptimization) {
+        assertThat(job.getBucketName(), is(bucketName));
+        assertThat(job.getCachedSizeInBytes(), is(cachedSizeInBytes));
+        assertThat(job.getChunkClientProcessingOrderGuarantee(), is(chunkProcessingOrderGuarantee));
+        assertThat(job.getCompletedSizeInBytes(), is(completedSizeInBytes));
+        assertThat(job.getJobId(), is(jobId));
+        assertThat(job.getOriginalSizeInBytes(), is(originalSizeInBytes));
+        assertThat(job.getPriority(), is(priority));
+        assertThat(job.getRequestType(), is(requestType));
+        assertThat(job.getStartDate(), is(startDate));
+        assertThat(job.getUserId(), is(userId));
+        assertThat(job.getUserName(), is(userName));
+        assertThat(job.getWriteOptimization(), is(writeOptimization));
+    }
 }

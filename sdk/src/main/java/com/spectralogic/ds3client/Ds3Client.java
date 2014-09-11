@@ -201,4 +201,13 @@ public interface Ds3Client {
      */
     public abstract GetAvailableJobChunksResponse getAvailableJobChunks(GetAvailableJobChunksRequest request)
             throws IOException, SignatureException;
+
+    /**
+     * Returns all of the jobs currently on the black pearl.
+     * @return A list of jobs.
+     * @throws IOException
+     * @throws SignatureException
+     */
+    public abstract GetJobsResponse getJobs(GetJobsRequest request)
+            throws IOException, SignatureException;
 }
