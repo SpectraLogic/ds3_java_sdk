@@ -521,12 +521,12 @@ public class Ds3Client_Test {
             "<Jobs>"
             + "  <Job BucketName=\"bucket_1\" CachedSizeInBytes=\"69880\" ChunkClientProcessingOrderGuarantee=\"IN_ORDER\" CompletedSizeInBytes=\"0\" JobId=\"0807ff11-a9f6-4d55-bb92-b452c1bb00c7\" OriginalSizeInBytes=\"69880\" Priority=\"NORMAL\" RequestType=\"PUT\" StartDate=\"2014-09-04T17:23:45.000Z\" UserId=\"a7d3eff9-e6d2-4e37-8a0b-84e76211a18a\" UserName=\"spectra\" WriteOptimization=\"PERFORMANCE\">"
             + "    <Nodes>"
-            + "      <Node EndPoint=\"FAILED_TO_DETERMINE_DATAPATH_IP_ADDRESS\" HttpPort=\"80\" HttpsPort=\"443\" Id=\"edb8cc38-32f2-11e4-bce1-080027ecf0d4\"/>"
+            + "      <Node EndPoint=\"10.10.10.10\" HttpPort=\"80\" HttpsPort=\"443\" Id=\"edb8cc38-32f2-11e4-bce1-080027ecf0d4\"/>"
             + "    </Nodes>"
             + "  </Job>"
             + "  <Job BucketName=\"bucket_2\" CachedSizeInBytes=\"0\" ChunkClientProcessingOrderGuarantee=\"IN_ORDER\" CompletedSizeInBytes=\"0\" JobId=\"c18554ba-e3a8-4905-91fd-3e6eec71bf45\" OriginalSizeInBytes=\"69880\" Priority=\"HIGH\" RequestType=\"GET\" StartDate=\"2014-09-04T17:24:04.000Z\" UserId=\"a7d3eff9-e6d2-4e37-8a0b-84e76211a18a\" UserName=\"spectra\" WriteOptimization=\"CAPACITY\">"
             + "    <Nodes>"
-            + "      <Node EndPoint=\"FAILED_TO_DETERMINE_DATAPATH_IP_ADDRESS\" HttpPort=\"80\" HttpsPort=\"443\" Id=\"edb8cc38-32f2-11e4-bce1-080027ecf0d4\"/>"
+            + "      <Node EndPoint=\"10.10.10.10\" HttpPort=\"80\" HttpsPort=\"443\" Id=\"edb8cc38-32f2-11e4-bce1-080027ecf0d4\"/>"
             + "    </Nodes>"
             + "  </Job>"
             + "</Jobs>";
@@ -592,5 +592,9 @@ public class Ds3Client_Test {
         assertThat(job.getUserId(), is(userId));
         assertThat(job.getUserName(), is(userName));
         assertThat(job.getWriteOptimization(), is(writeOptimization));
+        final Node node = job.getNodes().get(0);
+        assertThat(node.getEndpoint(), is("10.10.10.10"));
+        assertThat(node.getHttpPort(), is(80));
+        assertThat(node.getHttpsPort(), is(443));
     }
 }
