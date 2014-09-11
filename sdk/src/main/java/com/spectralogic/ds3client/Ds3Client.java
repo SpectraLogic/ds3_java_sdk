@@ -210,4 +210,13 @@ public interface Ds3Client {
      */
     public abstract GetJobsResponse getJobs(GetJobsRequest request)
             throws IOException, SignatureException;
+
+    /**
+     * Returns details about a bulk job given a job id.
+     * @return A master object list.
+     * @throws IOException
+     * @throws SignatureException
+     */
+    public abstract GetJobResponse getJob(GetJobRequest getJobRequest)
+            throws IOException, SignatureException;
 }

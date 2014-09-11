@@ -96,4 +96,9 @@ class Ds3ClientImpl implements Ds3Client {
     public GetJobsResponse getJobs(final GetJobsRequest request) throws IOException, SignatureException {
         return new GetJobsResponse(this.netClient.getResponse(request));
     }
+
+    @Override
+    public GetJobResponse getJob(final GetJobRequest request) throws IOException, SignatureException {
+        return new GetJobResponse(this.netClient.getResponse(request));
+    }
 }
