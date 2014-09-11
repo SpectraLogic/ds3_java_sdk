@@ -623,4 +623,16 @@ public class Ds3Client_Test {
             .cancelJob(new CancelJobRequest(UUID.fromString("1a85e743-ec8f-4789-afec-97e587a26936")));
         assertThat(response, notNullValue());
     }
+    
+    @Test
+    public void modifyJob() throws SignatureException, IOException {
+        checkMasterObjectList(
+            MockNetwork
+                .expecting(HttpVerb.PUT, "/_rest_/job/1a85e743-ec8f-4789-afec-97e587a26936", null, null)
+                .returning(200, MASTER_OBJECT_LIST_XML)
+                .asClient()
+                .modifyJob(new ModifyJobRequest(MASTER_OBJECT_LIST_JOB_ID))
+                .getMasterObjectList()
+        );
+    }
 }

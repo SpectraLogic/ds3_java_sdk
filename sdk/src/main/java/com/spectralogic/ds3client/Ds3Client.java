@@ -227,4 +227,13 @@ public interface Ds3Client {
      */
     public abstract CancelJobResponse cancelJob(CancelJobRequest request)
             throws IOException, SignatureException;
+
+    /**
+     * Updates the last modified date of a job and returns the job details.
+     * @return A master object list.
+     * @throws IOException
+     * @throws SignatureException
+     */
+    public abstract ModifyJobResponse modifyJob(ModifyJobRequest request)
+            throws IOException, SignatureException;
 }
