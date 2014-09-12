@@ -201,4 +201,39 @@ public interface Ds3Client {
      */
     public abstract GetAvailableJobChunksResponse getAvailableJobChunks(GetAvailableJobChunksRequest request)
             throws IOException, SignatureException;
+
+    /**
+     * Returns all of the jobs currently on the black pearl.
+     * @return A list of jobs.
+     * @throws IOException
+     * @throws SignatureException
+     */
+    public abstract GetJobsResponse getJobs(GetJobsRequest request)
+            throws IOException, SignatureException;
+
+    /**
+     * Returns details about a bulk job given a job id.
+     * @return A master object list.
+     * @throws IOException
+     * @throws SignatureException
+     */
+    public abstract GetJobResponse getJob(GetJobRequest request)
+            throws IOException, SignatureException;
+
+    /**
+     * Cancels an in-progress job.
+     * @throws IOException
+     * @throws SignatureException
+     */
+    public abstract CancelJobResponse cancelJob(CancelJobRequest request)
+            throws IOException, SignatureException;
+
+    /**
+     * Updates the last modified date of a job and returns the job details.
+     * @return A master object list.
+     * @throws IOException
+     * @throws SignatureException
+     */
+    public abstract ModifyJobResponse modifyJob(ModifyJobRequest request)
+            throws IOException, SignatureException;
 }

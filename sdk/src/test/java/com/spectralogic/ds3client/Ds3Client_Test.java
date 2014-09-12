@@ -38,6 +38,23 @@ import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 public class Ds3Client_Test {
+    private static final UUID MASTER_OBJECT_LIST_JOB_ID = UUID.fromString("1a85e743-ec8f-4789-afec-97e587a26936");
+    private static final String MASTER_OBJECT_LIST_XML =
+        "<MasterObjectList BucketName=\"bucket8192000000\" JobId=\"1a85e743-ec8f-4789-afec-97e587a26936\" Priority=\"NORMAL\" RequestType=\"GET\" StartDate=\"2014-07-01T20:12:52.000Z\">"
+        + "  <Nodes>"
+        + "    <Node EndPoint=\"10.1.18.12\" HttpPort=\"80\" HttpsPort=\"443\" Id=\"a02053b9-0147-11e4-8d6a-002590c1177c\"/>"
+        + "    <Node EndPoint=\"10.1.18.13\" HttpsPort=\"443\" Id=\"95e97010-8e70-4733-926c-aeeb21796848\"/>"
+        + "  </Nodes>"
+        + "  <Objects ChunkId=\"f58370c2-2538-4e78-a9f8-e4d2676bdf44\" ChunkNumber=\"0\" NodeId=\"a02053b9-0147-11e4-8d6a-002590c1177c\">"
+        + "    <Object Name=\"client00obj000004-8000000\" InCache=\"true\" Length=\"5368709120\" Offset=\"0\"/>"
+        + "    <Object Name=\"client00obj000004-8000000\" InCache=\"true\" Length=\"2823290880\" Offset=\"5368709120\"/>"
+        + "  </Objects>"
+        + "  <Objects ChunkId=\"4137d768-25bb-4942-9d36-b92dfbe75e01\" ChunkNumber=\"1\" NodeId=\"95e97010-8e70-4733-926c-aeeb21796848\">"
+        + "    <Object Name=\"client00obj000008-8000000\" InCache=\"true\" Length=\"2823290880\" Offset=\"5368709120\"/>"
+        + "    <Object Name=\"client00obj000008-8000000\" InCache=\"true\" Length=\"5368709120\" Offset=\"0\"/>"
+        + "  </Objects>"
+        + "</MasterObjectList>";
+
     @Test
     public void getService() throws IOException, SignatureException {
         final String stringResponse = "<ListAllMyBucketsResult xmlns=\"http://doc.s3.amazonaws.com/2006-03-01\">\n" +
@@ -392,36 +409,158 @@ public class Ds3Client_Test {
     
     @Test
     public void getAvailableJobChunks() throws SignatureException, IOException {
+
+        final Map<String, String> queryParams = new HashMap<>();
+        queryParams.put("job", MASTER_OBJECT_LIST_JOB_ID.toString());
+        final GetAvailableJobChunksResponse response = MockNetwork
+            .expecting(HttpVerb.GET, "/_rest_/job_chunk", queryParams, null)
+            .returning(200, MASTER_OBJECT_LIST_XML)
+            .asClient()
+            .getAvailableJobChunks(new GetAvailableJobChunksRequest(MASTER_OBJECT_LIST_JOB_ID));
+        
+        assertThat(response.getStatus(), is(GetAvailableJobChunksResponse.Status.AVAILABLE));
+
+        checkMasterObjectList(response.getMasterObjectList());
+    }
+
+    @Test
+    public void getAvailableJobChunksReturnsRetryLater() throws SignatureException, IOException {
         final String responseString =
             "<MasterObjectList BucketName=\"bucket8192000000\" JobId=\"1a85e743-ec8f-4789-afec-97e587a26936\" Priority=\"NORMAL\" RequestType=\"GET\" StartDate=\"2014-07-01T20:12:52.000Z\">"
             + "  <Nodes>"
             + "    <Node EndPoint=\"10.1.18.12\" HttpPort=\"80\" HttpsPort=\"443\" Id=\"a02053b9-0147-11e4-8d6a-002590c1177c\"/>"
             + "    <Node EndPoint=\"10.1.18.13\" HttpsPort=\"443\" Id=\"95e97010-8e70-4733-926c-aeeb21796848\"/>"
             + "  </Nodes>"
-            + "  <Objects ChunkId=\"f58370c2-2538-4e78-a9f8-e4d2676bdf44\" ChunkNumber=\"0\" NodeId=\"a02053b9-0147-11e4-8d6a-002590c1177c\">"
-            + "    <Object Name=\"client00obj000004-8000000\" InCache=\"true\" Length=\"5368709120\" Offset=\"0\"/>"
-            + "    <Object Name=\"client00obj000004-8000000\" InCache=\"true\" Length=\"2823290880\" Offset=\"5368709120\"/>"
-            + "  </Objects>"
-            + "  <Objects ChunkId=\"4137d768-25bb-4942-9d36-b92dfbe75e01\" ChunkNumber=\"1\" NodeId=\"95e97010-8e70-4733-926c-aeeb21796848\">"
-            + "    <Object Name=\"client00obj000008-8000000\" InCache=\"true\" Length=\"2823290880\" Offset=\"5368709120\"/>"
-            + "    <Object Name=\"client00obj000008-8000000\" InCache=\"true\" Length=\"5368709120\" Offset=\"0\"/>"
-            + "  </Objects>"
             + "</MasterObjectList>";
+        final UUID jobId = UUID.fromString("1a85e743-ec8f-4789-afec-97e587a26936");
+
+        final Map<String, String> queryParams = new HashMap<>();
+        queryParams.put("job", jobId.toString());
+        final Map<String, String> headers = new HashMap<>();
+        headers.put("Retry-After", "300");
+        final GetAvailableJobChunksResponse response = MockNetwork
+            .expecting(HttpVerb.GET, "/_rest_/job_chunk", queryParams, null)
+            .returning(200, responseString, headers)
+            .asClient()
+            .getAvailableJobChunks(new GetAvailableJobChunksRequest(jobId));
+        
+        assertThat(response.getStatus(), is(GetAvailableJobChunksResponse.Status.RETRYLATER));
+        assertThat(response.getRetryAfterSeconds(), is(300));
+    }
+    
+    @Test
+    public void getAvailableJobChunksReturnsNotFound() throws SignatureException, IOException {
         final UUID jobId = UUID.fromString("1a85e743-ec8f-4789-afec-97e587a26936");
 
         final Map<String, String> queryParams = new HashMap<>();
         queryParams.put("job", jobId.toString());
         final GetAvailableJobChunksResponse response = MockNetwork
             .expecting(HttpVerb.GET, "/_rest_/job_chunk", queryParams, null)
-            .returning(200, responseString)
+            .returning(404, "")
             .asClient()
             .getAvailableJobChunks(new GetAvailableJobChunksRequest(jobId));
         
-        assertThat(response.getStatus(), is(GetAvailableJobChunksResponse.Status.AVAILABLE));
+        assertThat(response.getStatus(), is(GetAvailableJobChunksResponse.Status.NOTFOUND));
+    }
+    
+    @Test
+    public void getJobs() throws SignatureException, IOException {
+        final String responseString =
+            "<Jobs>"
+            + "  <Job BucketName=\"bucket_1\" CachedSizeInBytes=\"69880\" ChunkClientProcessingOrderGuarantee=\"IN_ORDER\" CompletedSizeInBytes=\"0\" JobId=\"0807ff11-a9f6-4d55-bb92-b452c1bb00c7\" OriginalSizeInBytes=\"69880\" Priority=\"NORMAL\" RequestType=\"PUT\" StartDate=\"2014-09-04T17:23:45.000Z\" UserId=\"a7d3eff9-e6d2-4e37-8a0b-84e76211a18a\" UserName=\"spectra\" WriteOptimization=\"PERFORMANCE\">"
+            + "    <Nodes>"
+            + "      <Node EndPoint=\"10.10.10.10\" HttpPort=\"80\" HttpsPort=\"443\" Id=\"edb8cc38-32f2-11e4-bce1-080027ecf0d4\"/>"
+            + "    </Nodes>"
+            + "  </Job>"
+            + "  <Job BucketName=\"bucket_2\" CachedSizeInBytes=\"0\" ChunkClientProcessingOrderGuarantee=\"IN_ORDER\" CompletedSizeInBytes=\"0\" JobId=\"c18554ba-e3a8-4905-91fd-3e6eec71bf45\" OriginalSizeInBytes=\"69880\" Priority=\"HIGH\" RequestType=\"GET\" StartDate=\"2014-09-04T17:24:04.000Z\" UserId=\"a7d3eff9-e6d2-4e37-8a0b-84e76211a18a\" UserName=\"spectra\" WriteOptimization=\"CAPACITY\">"
+            + "    <Nodes>"
+            + "      <Node EndPoint=\"10.10.10.10\" HttpPort=\"80\" HttpsPort=\"443\" Id=\"edb8cc38-32f2-11e4-bce1-080027ecf0d4\"/>"
+            + "    </Nodes>"
+            + "  </Job>"
+            + "</Jobs>";
+        final GetJobsResponse response = MockNetwork
+            .expecting(HttpVerb.GET, "/_rest_/job", null, null)
+            .returning(200, responseString)
+            .asClient()
+            .getJobs(new GetJobsRequest());
+        
+        final List<JobInfo> jobs = response.getJobs();
+        assertThat(jobs.size(), is(2));
+        checkJob(
+            jobs.get(0),
+            "bucket_1",
+            69880L,
+            ChunkClientProcessingOrderGuarantee.IN_ORDER,
+            0L,
+            UUID.fromString("0807ff11-a9f6-4d55-bb92-b452c1bb00c7"),
+            69880L,
+            Priority.NORMAL,
+            RequestType.PUT,
+            "2014-09-04T17:23:45.000Z",
+            UUID.fromString("a7d3eff9-e6d2-4e37-8a0b-84e76211a18a"),
+            "spectra",
+            WriteOptimization.PERFORMANCE
+        );
+        checkJob(
+            jobs.get(1),
+            "bucket_2",
+            0L,
+            ChunkClientProcessingOrderGuarantee.IN_ORDER,
+            0L,
+            UUID.fromString("c18554ba-e3a8-4905-91fd-3e6eec71bf45"),
+            69880L,
+            Priority.HIGH,
+            RequestType.GET,
+            "2014-09-04T17:24:04.000Z",
+            UUID.fromString("a7d3eff9-e6d2-4e37-8a0b-84e76211a18a"),
+            "spectra",
+            WriteOptimization.CAPACITY
+        );
+    }
 
-        final MasterObjectList masterObjectList = response.getMasterObjectList();
+    private static void checkJob(
+            final JobInfo job,
+            final String bucketName,
+            final long cachedSizeInBytes,
+            final ChunkClientProcessingOrderGuarantee chunkProcessingOrderGuarantee,
+            final long completedSizeInBytes, final UUID jobId,
+            final long originalSizeInBytes, final Priority priority,
+            final RequestType requestType, final String startDate,
+            final UUID userId, final String userName,
+            final WriteOptimization writeOptimization) {
+        assertThat(job.getBucketName(), is(bucketName));
+        assertThat(job.getCachedSizeInBytes(), is(cachedSizeInBytes));
+        assertThat(job.getChunkClientProcessingOrderGuarantee(), is(chunkProcessingOrderGuarantee));
+        assertThat(job.getCompletedSizeInBytes(), is(completedSizeInBytes));
+        assertThat(job.getJobId(), is(jobId));
+        assertThat(job.getOriginalSizeInBytes(), is(originalSizeInBytes));
+        assertThat(job.getPriority(), is(priority));
+        assertThat(job.getRequestType(), is(requestType));
+        assertThat(job.getStartDate(), is(startDate));
+        assertThat(job.getUserId(), is(userId));
+        assertThat(job.getUserName(), is(userName));
+        assertThat(job.getWriteOptimization(), is(writeOptimization));
+        final Node node = job.getNodes().get(0);
+        assertThat(node.getEndpoint(), is("10.10.10.10"));
+        assertThat(node.getHttpPort(), is(80));
+        assertThat(node.getHttpsPort(), is(443));
+    }
+    
+    @Test
+    public void getJob() throws SignatureException, IOException {
+        checkMasterObjectList(
+            MockNetwork
+                .expecting(HttpVerb.GET, "/_rest_/job/1a85e743-ec8f-4789-afec-97e587a26936", null, null)
+                .returning(200, MASTER_OBJECT_LIST_XML)
+                .asClient()
+                .getJob(new GetJobRequest(UUID.fromString("1a85e743-ec8f-4789-afec-97e587a26936")))
+                .getMasterObjectList()
+        );
+    }
+
+    private static void checkMasterObjectList(final MasterObjectList masterObjectList) {
         assertThat(masterObjectList.getBucketName(), is("bucket8192000000"));
-        assertThat(masterObjectList.getJobId(), is(jobId));
+        assertThat(masterObjectList.getJobId(), is(MASTER_OBJECT_LIST_JOB_ID));
         assertThat(masterObjectList.getPriority(), is(Priority.NORMAL));
         assertThat(masterObjectList.getRequestType(), is(RequestType.GET));
         assertThat(masterObjectList.getStartDate(), is("2014-07-01T20:12:52.000Z"));
@@ -476,42 +615,24 @@ public class Ds3Client_Test {
     }
     
     @Test
-    public void getAvailableJobChunksReturnsRetryLater() throws SignatureException, IOException {
-        final String responseString =
-            "<MasterObjectList BucketName=\"bucket8192000000\" JobId=\"1a85e743-ec8f-4789-afec-97e587a26936\" Priority=\"NORMAL\" RequestType=\"GET\" StartDate=\"2014-07-01T20:12:52.000Z\">"
-            + "  <Nodes>"
-            + "    <Node EndPoint=\"10.1.18.12\" HttpPort=\"80\" HttpsPort=\"443\" Id=\"a02053b9-0147-11e4-8d6a-002590c1177c\"/>"
-            + "    <Node EndPoint=\"10.1.18.13\" HttpsPort=\"443\" Id=\"95e97010-8e70-4733-926c-aeeb21796848\"/>"
-            + "  </Nodes>"
-            + "</MasterObjectList>";
-        final UUID jobId = UUID.fromString("1a85e743-ec8f-4789-afec-97e587a26936");
-
-        final Map<String, String> queryParams = new HashMap<>();
-        queryParams.put("job", jobId.toString());
-        final Map<String, String> headers = new HashMap<>();
-        headers.put("Retry-After", "300");
-        final GetAvailableJobChunksResponse response = MockNetwork
-            .expecting(HttpVerb.GET, "/_rest_/job_chunk", queryParams, null)
-            .returning(200, responseString, headers)
+    public void cancelJob() throws SignatureException, IOException {
+        final CancelJobResponse response = MockNetwork
+            .expecting(HttpVerb.DELETE, "/_rest_/job/1a85e743-ec8f-4789-afec-97e587a26936", null, null)
+            .returning(204, "")
             .asClient()
-            .getAvailableJobChunks(new GetAvailableJobChunksRequest(jobId));
-        
-        assertThat(response.getStatus(), is(GetAvailableJobChunksResponse.Status.RETRYLATER));
-        assertThat(response.getRetryAfterSeconds(), is(300));
+            .cancelJob(new CancelJobRequest(UUID.fromString("1a85e743-ec8f-4789-afec-97e587a26936")));
+        assertThat(response, notNullValue());
     }
     
     @Test
-    public void getAvailableJobChunksReturnsNotFound() throws SignatureException, IOException {
-        final UUID jobId = UUID.fromString("1a85e743-ec8f-4789-afec-97e587a26936");
-
-        final Map<String, String> queryParams = new HashMap<>();
-        queryParams.put("job", jobId.toString());
-        final GetAvailableJobChunksResponse response = MockNetwork
-            .expecting(HttpVerb.GET, "/_rest_/job_chunk", queryParams, null)
-            .returning(404, "")
-            .asClient()
-            .getAvailableJobChunks(new GetAvailableJobChunksRequest(jobId));
-        
-        assertThat(response.getStatus(), is(GetAvailableJobChunksResponse.Status.NOTFOUND));
+    public void modifyJob() throws SignatureException, IOException {
+        checkMasterObjectList(
+            MockNetwork
+                .expecting(HttpVerb.PUT, "/_rest_/job/1a85e743-ec8f-4789-afec-97e587a26936", null, null)
+                .returning(200, MASTER_OBJECT_LIST_XML)
+                .asClient()
+                .modifyJob(new ModifyJobRequest(MASTER_OBJECT_LIST_JOB_ID))
+                .getMasterObjectList()
+        );
     }
 }

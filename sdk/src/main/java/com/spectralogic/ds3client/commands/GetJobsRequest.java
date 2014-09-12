@@ -13,25 +13,18 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3client.models.bulk;
+package com.spectralogic.ds3client.commands;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.spectralogic.ds3client.HttpVerb;
 
-import java.util.List;
-
-public class MasterObjectList extends JobInfo {
-    @JsonProperty("Objects")
-    private List<Objects> objects;
-
-    public List<Objects> getObjects() {
-        return this.objects;
-    }
-    public void setObjects(final List<Objects> objects) {
-        this.objects = objects;
+public class GetJobsRequest extends AbstractRequest {
+    @Override
+    public String getPath() {
+        return "/_rest_/job";
     }
 
     @Override
-    public String toString() {
-        return this.objects.toString();
+    public HttpVerb getVerb() {
+        return HttpVerb.GET;
     }
 }

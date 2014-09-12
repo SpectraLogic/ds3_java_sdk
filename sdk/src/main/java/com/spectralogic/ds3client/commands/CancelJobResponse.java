@@ -13,25 +13,19 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3client.models.bulk;
+package com.spectralogic.ds3client.commands;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.spectralogic.ds3client.networking.WebResponse;
 
-import java.util.List;
+import java.io.IOException;
 
-public class MasterObjectList extends JobInfo {
-    @JsonProperty("Objects")
-    private List<Objects> objects;
-
-    public List<Objects> getObjects() {
-        return this.objects;
-    }
-    public void setObjects(final List<Objects> objects) {
-        this.objects = objects;
+public class CancelJobResponse extends AbstractResponse {
+    public CancelJobResponse(final WebResponse response) throws IOException {
+        super(response);
     }
 
     @Override
-    public String toString() {
-        return this.objects.toString();
+    protected void processResponse() throws IOException {
+        checkStatusCode(204);
     }
 }
