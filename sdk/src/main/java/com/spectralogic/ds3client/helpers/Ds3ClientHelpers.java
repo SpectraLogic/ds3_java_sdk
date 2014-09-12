@@ -27,6 +27,7 @@ import com.spectralogic.ds3client.utils.Md5Hash;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.channels.SeekableByteChannel;
 import java.nio.file.Path;
 import java.security.SignatureException;
 import java.util.UUID;
@@ -53,7 +54,7 @@ public abstract class Ds3ClientHelpers {
          * 
          * @throws IOException
          */
-        public InputStream getContent(String key) throws IOException;
+        public SeekableByteChannel getContent(String key) throws IOException;
     }
     
     public interface GetRequestModifier {

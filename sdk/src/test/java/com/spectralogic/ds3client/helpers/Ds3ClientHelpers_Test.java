@@ -39,11 +39,9 @@ import org.mockito.ArgumentMatcher;
 import org.mockito.InOrder;
 
 import java.io.*;
+import java.nio.channels.SeekableByteChannel;
 import java.security.SignatureException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -103,18 +101,23 @@ public class Ds3ClientHelpers_Test {
         assertThat(job.getJobId(), is(jobId));
         assertThat(job.getBucketName(), is(MYBUCKET));
         
+        final HashMap<String, SeekableByteChannel> channels = new HashMap<>();
+        channels.put("baz", mock(SeekableByteChannel.class));
+        channels.put("foo", mock(SeekableByteChannel.class));
+        channels.put("bar", mock(SeekableByteChannel.class));
+        
         job.write(new ObjectPutter() {
             @Override
-            public InputStream getContent(final String key) {
-                return streamFromString(key + " contents");
+            public SeekableByteChannel getContent(final String key) {
+                return channels.get(key);
             }
         });
         
         final InOrder clientInOrder = inOrder(ds3Client);
         clientInOrder.verify(ds3Client).bulkPut(any(BulkPutRequest.class));
-        clientInOrder.verify(ds3Client).putObject(putRequestHas("baz", "baz contents"));
-        clientInOrder.verify(ds3Client).putObject(putRequestHas("foo", "foo contents"));
-        clientInOrder.verify(ds3Client).putObject(putRequestHas("bar", "bar contents"));
+        clientInOrder.verify(ds3Client).putObject(putRequestHas("baz", channels.get("baz")));
+        clientInOrder.verify(ds3Client).putObject(putRequestHas("foo", channels.get("foo")));
+        clientInOrder.verify(ds3Client).putObject(putRequestHas("bar", channels.get("bar")));
         clientInOrder.verifyNoMoreInteractions();
     }
 
@@ -192,7 +195,7 @@ public class Ds3ClientHelpers_Test {
         });
     }
 
-    private static PutObjectRequest putRequestHas(final String key, final String contents) {
+    private static PutObjectRequest putRequestHas(final String key, final SeekableByteChannel channel) {
         return argThat(new ArgumentMatcher<PutObjectRequest>() {
             @Override
             public boolean matches(final Object argument) {
@@ -200,11 +203,10 @@ public class Ds3ClientHelpers_Test {
                     return false;
                 }
                 final PutObjectRequest putObjectRequest = (PutObjectRequest)argument;
-                final InputStream stream = putObjectRequest.getStream();
                 return
                         putObjectRequest.getBucketName().equals(MYBUCKET)
                         && putObjectRequest.getObjectName().equals(key)
-                        && streamToString(stream).equals(contents);
+                        && putObjectRequest.getChannel() == channel;
             }
         });
     }
