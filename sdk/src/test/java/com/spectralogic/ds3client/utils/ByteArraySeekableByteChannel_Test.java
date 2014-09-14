@@ -45,7 +45,7 @@ public class ByteArraySeekableByteChannel_Test {
     
     @Test
     public void testByteChannelCanWriteAndGetByteArray() throws IOException {
-        try (final ByteArraySeekableByteChannel channel = new ByteArraySeekableByteChannel()) {
+        try (final ByteArraySeekableByteChannel channel = new ByteArraySeekableByteChannel(5)) {
             writeToChannel(channel);
             assertArrayEquals(WRITTEN_DATA, channel.toByteArray());
             assertThat(channel.size(), is((long)WRITTEN_DATA.length));
@@ -54,7 +54,7 @@ public class ByteArraySeekableByteChannel_Test {
     
     @Test
     public void testByteChannelCanWriteSeekRead() throws IOException {
-        try (final ByteArraySeekableByteChannel channel = new ByteArraySeekableByteChannel()) {
+        try (final ByteArraySeekableByteChannel channel = new ByteArraySeekableByteChannel(10)) {
             writeToChannel(channel);
             assertThat(channel.position(5L), sameInstance((SeekableByteChannel)channel));
             assertThat(channel.position(), is(5L));
@@ -69,7 +69,7 @@ public class ByteArraySeekableByteChannel_Test {
     
     @Test
     public void truncate() throws IOException {
-        try (final ByteArraySeekableByteChannel channel = new ByteArraySeekableByteChannel()) {
+        try (final ByteArraySeekableByteChannel channel = new ByteArraySeekableByteChannel(15)) {
             writeToChannel(channel);
             assertThat(channel.truncate(30L), is((SeekableByteChannel)channel));
             assertThat(channel.size(), is(25L));

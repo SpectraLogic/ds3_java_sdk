@@ -50,6 +50,7 @@ public class ByteArraySeekableByteChannel implements SeekableByteChannel {
     public int read(final ByteBuffer dst) throws IOException {
         final int numberOfBytes = Math.min(dst.remaining(), this.limit - this.position);
         dst.put(this.backingArray, this.position, numberOfBytes);
+        this.position += numberOfBytes;
         return numberOfBytes;
     }
 
@@ -98,7 +99,9 @@ public class ByteArraySeekableByteChannel implements SeekableByteChannel {
             newArraySize *= 2;
         }
         if (newArraySize != this.backingArray.length) {
+            final byte[] oldArray = this.backingArray;
             this.backingArray = new byte[newArraySize];
+            System.arraycopy(oldArray, 0, this.backingArray, 0, oldArray.length);
         }
     }
 }
