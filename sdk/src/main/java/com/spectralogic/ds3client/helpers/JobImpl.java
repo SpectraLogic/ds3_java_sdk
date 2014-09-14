@@ -21,6 +21,7 @@ import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;
 import com.spectralogic.ds3client.Ds3Client;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.Job;
+import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.ObjectTransferrer;
 import com.spectralogic.ds3client.models.bulk.BulkObject;
 import com.spectralogic.ds3client.models.bulk.Objects;
 import com.spectralogic.ds3client.serializer.XmlProcessingException;
@@ -63,23 +64,28 @@ abstract class JobImpl implements Job {
         return this.bucketName;
     }
     
-    protected void setMaxParallelRequests(final int maxParallelRequests) {
+    @Override
+    public Job withMaxParallelRequests(final int maxParallelRequests) {
         this.maxParallelRequests = maxParallelRequests;
-    }
-    
-    interface Transferrer {
-        public void Transfer(Ds3Client client, UUID jobId, String bucketName, BulkObject ds3Object)
-                throws SignatureException, IOException;
-    }
-    
-    protected void transferAll(final Transferrer transferrer)
-            throws SignatureException, IOException, XmlProcessingException {
-        for (final Objects objects : this.objectLists) {
-            this.transferObjects(transferrer, objects);
-        }
+        return this;
     }
 
-    private void transferObjects(final Transferrer transferrer, final Objects objects)
+    @Override
+    public void transfer(final ObjectTransferrer transferrer)
+            throws SignatureException, IOException, XmlProcessingException {
+        for (final Objects chunk : this.objectLists) {
+            this.transferChunk(transferrer, chunk);
+        }
+    }
+    
+    protected abstract void transferItem(
+            final Ds3Client client,
+            final UUID jobId,
+            final String bucketName,
+            final BulkObject ds3Object,
+            final ObjectTransferrer transferrer) throws SignatureException, IOException;
+
+    private void transferChunk(final ObjectTransferrer transferrer, final Objects objects)
             throws SignatureException, IOException, XmlProcessingException {
         final ListeningExecutorService service = MoreExecutors.listeningDecorator(Executors.newFixedThreadPool(this.maxParallelRequests));
         try {
@@ -95,14 +101,14 @@ abstract class JobImpl implements Job {
     }
 
     private ListenableFuture<?> createTransferTask(
-            final Transferrer transferrer,
+            final ObjectTransferrer transferrer,
             final ListeningExecutorService service,
             final Ds3Client client,
             final BulkObject ds3Object) {
         return service.submit(new Callable<Object>() {
             @Override
             public Object call() throws Exception {
-                transferrer.Transfer(client, JobImpl.this.jobId, JobImpl.this.bucketName, ds3Object);
+                transferItem(client, JobImpl.this.jobId, JobImpl.this.bucketName, ds3Object, transferrer);
                 return null;
             }
         });

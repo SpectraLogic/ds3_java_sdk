@@ -16,8 +16,10 @@
 package com.spectralogic.ds3client.commands;
 
 import com.spectralogic.ds3client.HttpVerb;
+
 import org.apache.http.entity.ContentType;
 
+import java.nio.channels.WritableByteChannel;
 import java.util.UUID;
 
 /**
@@ -51,21 +53,24 @@ public class GetObjectRequest extends AbstractRequest {
     private final String objectName;
     private final long offset;
     private final UUID jobId;
+    private final WritableByteChannel channel;
     private Range byteRange = null;
 
     @Deprecated
-    public GetObjectRequest(final String bucketName, final String objectName) {
+    public GetObjectRequest(final String bucketName, final String objectName, final WritableByteChannel channel) {
         this.bucketName = bucketName;
         this.objectName = objectName;
         this.jobId =  null;
         this.offset = 0;
+        this.channel = channel;
     }
 
-    public GetObjectRequest(final String bucketName, final String objectName, final long offset, final UUID jobId) {
+    public GetObjectRequest(final String bucketName, final String objectName, final long offset, final UUID jobId, final WritableByteChannel channel) {
         this.bucketName = bucketName;
         this.objectName = objectName;
         this.jobId = jobId;
         this.offset = offset;
+        this.channel = channel;
 
         this.getQueryParams().put("job", jobId.toString());
         this.getQueryParams().put("offset", Long.toString(offset));
@@ -117,5 +122,9 @@ public class GetObjectRequest extends AbstractRequest {
 
     public UUID getJobId() {
         return this.jobId;
+    }
+
+    public WritableByteChannel getDestinationChannel() {
+        return this.channel;
     }
 }

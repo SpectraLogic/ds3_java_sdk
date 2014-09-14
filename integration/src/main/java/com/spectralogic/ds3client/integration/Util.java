@@ -61,8 +61,9 @@ public class Util {
             objects.add(obj);
         }
 
-        final Ds3ClientHelpers.WriteJob job = helpers.startWriteJob(bucketName, objects);
-        job.write(new ResourceObjectPutter(resourceBaseName));
+        helpers
+            .startWriteJob(bucketName, objects)
+            .transfer(new ResourceObjectPutter(resourceBaseName));
     }
 
     public static void deleteAllContents(final Ds3Client client, final String bucketName) throws IOException, SignatureException {

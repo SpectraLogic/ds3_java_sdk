@@ -24,14 +24,13 @@ import com.spectralogic.ds3client.models.bulk.*;
 import com.spectralogic.ds3client.models.bulk.Objects;
 import com.spectralogic.ds3client.networking.FailedRequestException;
 import com.spectralogic.ds3client.serializer.XmlProcessingException;
+import com.spectralogic.ds3client.utils.ByteArraySeekableByteChannel;
 import com.spectralogic.ds3client.utils.ResourceUtils;
 
-import org.apache.commons.io.IOUtils;
 import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.nio.channels.FileChannel;
 import java.nio.charset.Charset;
@@ -205,14 +204,15 @@ public class Ds3Client_Test {
     @SuppressWarnings("deprecation")
     @Test
     public void getObjectWithoutJobId() throws IOException, SignatureException {
+        final ByteArraySeekableByteChannel resultChannel = new ByteArraySeekableByteChannel();
         final String stringResponse = "Response";
-        final InputStream content = MockNetwork
+        MockNetwork
                 .expecting(HttpVerb.GET, "/bucketName/object", null, null)
                 .returning(200, stringResponse)
                 .asClient()
-                .getObject(new GetObjectRequest("bucketName", "object"))
-                .getContent();
-        assertThat(IOUtils.toString(content), is(stringResponse));
+                .getObject(new GetObjectRequest("bucketName", "object", resultChannel))
+                .close();
+        assertThat(resultChannel.toString(), is(stringResponse));
     }
 
     @Test
@@ -222,14 +222,15 @@ public class Ds3Client_Test {
         queryParams.put("job", jobIdString);
         queryParams.put("offset", Long.toString(0));
         
+        final ByteArraySeekableByteChannel resultChannel = new ByteArraySeekableByteChannel();
         final String stringResponse = "Response";
-        final InputStream content = MockNetwork
+        MockNetwork
                 .expecting(HttpVerb.GET, "/bucketName/object", queryParams, null)
                 .returning(200, stringResponse)
                 .asClient()
-                .getObject(new GetObjectRequest("bucketName", "object", 0,UUID.fromString(jobIdString)))
-                .getContent();
-        assertThat(IOUtils.toString(content), is(stringResponse));
+                .getObject(new GetObjectRequest("bucketName", "object", 0, UUID.fromString(jobIdString), resultChannel))
+                .close();
+        assertThat(resultChannel.toString(), is(stringResponse));
     }
     
     @SuppressWarnings("deprecation")

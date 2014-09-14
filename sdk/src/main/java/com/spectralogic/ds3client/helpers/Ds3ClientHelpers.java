@@ -16,17 +16,13 @@
 package com.spectralogic.ds3client.helpers;
 
 import com.spectralogic.ds3client.Ds3Client;
-import com.spectralogic.ds3client.commands.GetObjectRequest;
-import com.spectralogic.ds3client.commands.PutObjectRequest;
 import com.spectralogic.ds3client.helpers.options.ReadJobOptions;
 import com.spectralogic.ds3client.helpers.options.WriteJobOptions;
 import com.spectralogic.ds3client.models.Contents;
 import com.spectralogic.ds3client.models.bulk.Ds3Object;
 import com.spectralogic.ds3client.serializer.XmlProcessingException;
-import com.spectralogic.ds3client.utils.Md5Hash;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.channels.SeekableByteChannel;
 import java.nio.file.Path;
 import java.security.SignatureException;
@@ -37,38 +33,15 @@ import java.util.UUID;
  */
 public abstract class Ds3ClientHelpers {
 
-    public interface ObjectGetter {
+    public interface ObjectTransferrer {
         /**
-         * Must save the {@code contents} for the given {@code key}.
+         * Returns a channel for the given object key. Depending on whether the
+         * job is a GET or PUT, the returned channel must support either writing
+         * or reading, respectively.
          *
-         * @param md5 The MD5 hash of the contents.  This is only set if the DS3 Endpoint returned a 'Content-MD5' as
-         *            a part of the response.
          * @throws IOException
          */
-        public void writeContents(String key, InputStream contents, final Md5Hash md5) throws IOException;
-    }
-    
-    public interface ObjectPutter {
-        /**
-         * Must return the contents to send over DS3 for the given {@code key}.
-         * 
-         * @throws IOException
-         */
-        public SeekableByteChannel getContent(String key) throws IOException;
-    }
-    
-    public interface GetRequestModifier {
-        /**
-         * Modifies a get request before it's sent to the server.
-         */
-        public void modify(GetObjectRequest request);
-    }
-    
-    public interface PutRequestModifier {
-        /**
-         * Modifies a put request before it's sent to the server.
-         */
-        public void modify(PutObjectRequest request);
+        public SeekableByteChannel buildChannel(final String key) throws IOException;
     }
     
     /**
@@ -79,52 +52,20 @@ public abstract class Ds3ClientHelpers {
     public interface Job {
         public UUID getJobId();
         public String getBucketName();
-    }
-    
-    public interface WriteJob extends Job {
-        /**
-         * Calls the given {@code putter} for each object in the job remaining to be written.
-         * Note that it's possible for the {@code putter} to be called simultaneously from multiple threads.
-         * 
-         * @throws SignatureException
-         * @throws IOException
-         * @throws XmlProcessingException
-         */
-        public void write(ObjectPutter putter) throws SignatureException, IOException, XmlProcessingException;
-        
-        /**
-         * Sets an object that knows how to modify put requests before they're executed.
-         * Note that it's possible for the {@code modifier} to be called simultaneously from multiple threads.
-         */
-        public WriteJob withRequestModifier(PutRequestModifier modifier);
 
         /**
          * Sets the maximum number of requests to execute at a time when fulfilling the job.
          */
-        public WriteJob withMaxParallelRequests(int maxParallelRequests);
-    }
-    
-    public interface ReadJob extends Job {
+        public Job withMaxParallelRequests(int maxParallelRequests);
+        
         /**
-         * Calls the given {@code getter} for each object in the job remaining to be read.
-         * Note that it's possible for the {@code getter} to be called simultaneously from multiple threads.
-         * 
+         * Transfers the files in this job using the given seekable channel creator.
          * @throws SignatureException
          * @throws IOException
          * @throws XmlProcessingException
          */
-        public void read(ObjectGetter getter) throws SignatureException, IOException, XmlProcessingException;
-
-        /**
-         * Sets an object that knows how to modify get requests before they're executed.
-         * Note that it's possible for the {@code modifier} to be called simultaneously from multiple threads.
-         */
-        public ReadJob withRequestModifier(GetRequestModifier modifier);
-        
-        /**
-         * Sets the maximum number of requests to execute at a time when fulfilling the job.
-         */
-        public ReadJob withMaxParallelRequests(int maxParallelRequests);
+        public void transfer(final ObjectTransferrer transferrer)
+            throws SignatureException, IOException, XmlProcessingException;
     }
 
     /**
@@ -142,7 +83,7 @@ public abstract class Ds3ClientHelpers {
      * @throws IOException
      * @throws XmlProcessingException
      */
-    public abstract Ds3ClientHelpers.WriteJob startWriteJob(final String bucket, final Iterable<Ds3Object> objectsToWrite)
+    public abstract Ds3ClientHelpers.Job startWriteJob(final String bucket, final Iterable<Ds3Object> objectsToWrite)
             throws SignatureException, IOException, XmlProcessingException;
 
     /**
@@ -153,7 +94,7 @@ public abstract class Ds3ClientHelpers {
      * @throws IOException
      * @throws XmlProcessingException
      */
-    public abstract Ds3ClientHelpers.WriteJob startWriteJob(final String bucket, final Iterable<Ds3Object> objectsToWrite, final WriteJobOptions options)
+    public abstract Ds3ClientHelpers.Job startWriteJob(final String bucket, final Iterable<Ds3Object> objectsToWrite, final WriteJobOptions options)
             throws SignatureException, IOException, XmlProcessingException;
 
     /**
@@ -164,7 +105,7 @@ public abstract class Ds3ClientHelpers {
      * @throws IOException
      * @throws XmlProcessingException
      */
-    public abstract Ds3ClientHelpers.ReadJob startReadJob(final String bucket, final Iterable<Ds3Object> objectsToRead)
+    public abstract Ds3ClientHelpers.Job startReadJob(final String bucket, final Iterable<Ds3Object> objectsToRead)
             throws SignatureException, IOException, XmlProcessingException;
 
     /**
@@ -175,7 +116,7 @@ public abstract class Ds3ClientHelpers {
      * @throws IOException
      * @throws XmlProcessingException
      */
-    public abstract Ds3ClientHelpers.ReadJob startReadJob(
+    public abstract Ds3ClientHelpers.Job startReadJob(
             final String bucket,
             final Iterable<Ds3Object> objectsToRead,
             final ReadJobOptions options)
@@ -188,7 +129,7 @@ public abstract class Ds3ClientHelpers {
      * @throws IOException
      * @throws XmlProcessingException
      */
-    public abstract Ds3ClientHelpers.ReadJob startReadAllJob(final String bucket)
+    public abstract Ds3ClientHelpers.Job startReadAllJob(final String bucket)
             throws SignatureException, IOException, XmlProcessingException;
 
     /**
@@ -198,7 +139,7 @@ public abstract class Ds3ClientHelpers {
      * @throws IOException
      * @throws XmlProcessingException
      */
-    public abstract Ds3ClientHelpers.ReadJob startReadAllJob(final String bucket, final ReadJobOptions options)
+    public abstract Ds3ClientHelpers.Job startReadAllJob(final String bucket, final ReadJobOptions options)
             throws SignatureException, IOException, XmlProcessingException;
 
     /**
@@ -208,7 +149,7 @@ public abstract class Ds3ClientHelpers {
      * @throws XmlProcessingException
      * @throws JobRecoveryException
      */
-    public abstract Ds3ClientHelpers.WriteJob recoverWriteJob(final UUID jobId)
+    public abstract Ds3ClientHelpers.Job recoverWriteJob(final UUID jobId)
             throws SignatureException, IOException, XmlProcessingException, JobRecoveryException;
 
     /**
@@ -218,7 +159,7 @@ public abstract class Ds3ClientHelpers {
      * @throws XmlProcessingException
      * @throws JobRecoveryException
      */
-    public abstract Ds3ClientHelpers.ReadJob recoverReadJob(final UUID jobId)
+    public abstract Ds3ClientHelpers.Job recoverReadJob(final UUID jobId)
             throws SignatureException, IOException, XmlProcessingException, JobRecoveryException;
 
     /**

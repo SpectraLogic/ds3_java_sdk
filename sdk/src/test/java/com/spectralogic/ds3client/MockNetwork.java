@@ -31,6 +31,8 @@ import java.util.Map;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class MockNetwork implements NetworkClient {
     
@@ -104,6 +106,8 @@ public class MockNetwork implements NetworkClient {
 
     @Override
     public ConnectionDetails getConnectionDetails() {
-        throw new UnsupportedOperationException("Mock network doesn't need to support connection details.");
+        final ConnectionDetails connectionDetails = mock(ConnectionDetails.class);
+        when(connectionDetails.getBufferSize()).thenReturn(1024 * 1024);
+        return connectionDetails;
     }
 }
