@@ -40,8 +40,10 @@ public class FileObjectGetter implements ObjectTransferrer {
 
     @Override
     public SeekableByteChannel buildChannel(final String key) throws IOException {
+        final Path objectPath = this.root.resolve(key);
+        Files.createDirectories(objectPath.getParent());
         return FileChannel.open(
-            Files.createDirectories(this.root.resolve(key).getParent()),
+            objectPath,
             StandardOpenOption.WRITE,
             StandardOpenOption.CREATE_NEW,
             StandardOpenOption.TRUNCATE_EXISTING
