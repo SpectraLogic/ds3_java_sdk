@@ -18,6 +18,7 @@ package com.spectralogic.ds3client.utils;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.SeekableByteChannel;
+import java.nio.charset.Charset;
 import java.util.Arrays;
 
 public class ByteArraySeekableByteChannel implements SeekableByteChannel {
@@ -91,6 +92,15 @@ public class ByteArraySeekableByteChannel implements SeekableByteChannel {
 
     public byte[] toByteArray() {
         return Arrays.copyOfRange(this.backingArray, 0, this.limit);
+    }
+    
+    @Override
+    public String toString() {
+        return this.toString(Charset.forName("UTF-8"));
+    }
+    
+    public String toString(final Charset charset) {
+        return new String(this.backingArray, 0, this.limit, charset);
     }
 
     private void expandArray(final int amountToWrite) {

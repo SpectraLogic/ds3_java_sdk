@@ -53,6 +53,14 @@ public class ByteArraySeekableByteChannel_Test {
     }
     
     @Test
+    public void toStringReturnsData() throws IOException {
+        try (final ByteArraySeekableByteChannel channel = new ByteArraySeekableByteChannel(5)) {
+            writeToChannel(channel);
+            assertThat(channel.toString(), is("I gave a cry of astonishm"));
+        }
+    }
+    
+    @Test
     public void writeSeekRead() throws IOException {
         try (final ByteArraySeekableByteChannel channel = new ByteArraySeekableByteChannel(10)) {
             writeToChannel(channel);
