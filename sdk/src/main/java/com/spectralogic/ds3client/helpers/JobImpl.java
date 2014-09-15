@@ -28,9 +28,7 @@ import com.spectralogic.ds3client.serializer.XmlProcessingException;
 
 import java.io.IOException;
 import java.security.SignatureException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
@@ -71,10 +69,10 @@ abstract class JobImpl implements Job {
     }
 
     @Override
-    public void transfer(final ObjectChannelBuilder transferrer)
+    public void transfer(final ObjectTransferrer transferrer)
             throws SignatureException, IOException, XmlProcessingException {
         for (final Objects chunk : this.objectLists) {
-            this.transferChunk(transferrer, chunk);
+            this.transferChunks(transferrer, Arrays.asList(chunk));
         }
     }
     
@@ -83,16 +81,18 @@ abstract class JobImpl implements Job {
             final UUID jobId,
             final String bucketName,
             final BulkObject ds3Object,
-            final ObjectChannelBuilder transferrer) throws SignatureException, IOException;
-
-    private void transferChunk(final ObjectChannelBuilder transferrer, final Objects objects)
+            final ObjectTransferrer transferrer) throws SignatureException, IOException;
+    
+    private void transferChunks(final ObjectTransferrer transferrer, final Collection<Objects> chunkList)
             throws SignatureException, IOException, XmlProcessingException {
         final ListeningExecutorService service = MoreExecutors.listeningDecorator(Executors.newFixedThreadPool(this.maxParallelRequests));
+        final List<ListenableFuture<?>> tasks = new ArrayList<>();
         try {
-            final Ds3Client client = this.clientFactory.getClientForNodeId(objects.getNodeId());
-            final List<ListenableFuture<?>> tasks = new ArrayList<>();
-            for (final BulkObject ds3Object : objects) {
-                tasks.add(this.createTransferTask(transferrer, service, client, ds3Object));
+            for (final Objects chunk : chunkList) {
+                final Ds3Client client = this.clientFactory.getClientForNodeId(chunk.getNodeId());
+                for (final BulkObject ds3Object : chunk) {
+                    tasks.add(this.createTransferTask(transferrer, service, client, ds3Object));
+                }
             }
             this.executeWithExceptionHandling(tasks);
         } finally {
@@ -101,7 +101,7 @@ abstract class JobImpl implements Job {
     }
 
     private ListenableFuture<?> createTransferTask(
-            final ObjectChannelBuilder transferrer,
+            final ObjectTransferrer transferrer,
             final ListeningExecutorService service,
             final Ds3Client client,
             final BulkObject ds3Object) {
