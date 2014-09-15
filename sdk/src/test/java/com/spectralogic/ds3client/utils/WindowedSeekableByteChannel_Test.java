@@ -211,6 +211,41 @@ public class WindowedSeekableByteChannel_Test {
         }
     }
 
+    @Test(timeout = 1000)
+    public void interactAfterCloseNotAllowed() throws IOException {
+        try (final ByteArraySeekableByteChannel channel = new ByteArraySeekableByteChannel()) {
+            final Object lock = new Object();
+            try (final WindowedSeekableByteChannel window = new WindowedSeekableByteChannel(channel, lock, 2L, 7L)) {
+                window.close();
+                try {
+                    window.read(ByteBuffer.wrap(new byte[10]));
+                    fail();
+                } catch (final IllegalStateException e) {
+                }
+                try {
+                    window.write(ByteBuffer.wrap(new byte[10]));
+                    fail();
+                } catch (final IllegalStateException e) {
+                }
+                try {
+                    window.position();
+                    fail();
+                } catch (final IllegalStateException e) {
+                }
+                try {
+                    window.position(1L);
+                    fail();
+                } catch (final IllegalStateException e) {
+                }
+                try {
+                    window.size();
+                    fail();
+                } catch (final IllegalStateException e) {
+                }
+            }
+        }
+    }
+
     private static void writeToChannel(final String string, final SeekableByteChannel channel) throws IOException {
         final Writer writer = Channels.newWriter(channel, "UTF-8");
         writer.write(string);

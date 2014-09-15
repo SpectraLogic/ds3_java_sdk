@@ -42,12 +42,16 @@ public class WindowedSeekableByteChannel implements SeekableByteChannel {
 
     @Override
     public boolean isOpen() {
-        return this.isOpen;
+        synchronized (this.lock) {
+            return this.isOpen;
+        }
     }
 
     @Override
     public void close() throws IOException {
-        this.isOpen = false;
+        synchronized (this.lock) {
+            this.isOpen = false;
+        }
     }
 
     @Override
@@ -62,6 +66,9 @@ public class WindowedSeekableByteChannel implements SeekableByteChannel {
 
     private int copy(final ByteBuffer buffer, final Copy copy) throws IOException {
         synchronized (this.lock) {
+            if (!this.isOpen) {
+                throw new IllegalStateException("Object already closed");
+            }
             if (this.position >= this.length) {
                 return -1;
             }
@@ -85,6 +92,9 @@ public class WindowedSeekableByteChannel implements SeekableByteChannel {
     @Override
     public long position() throws IOException {
         synchronized (this.lock) {
+            if (!this.isOpen) {
+                throw new IllegalStateException("Object already closed");
+            }
             return this.position;
         }
     }
@@ -92,6 +102,9 @@ public class WindowedSeekableByteChannel implements SeekableByteChannel {
     @Override
     public SeekableByteChannel position(final long newPosition) throws IOException {
         synchronized (this.lock) {
+            if (!this.isOpen) {
+                throw new IllegalStateException("Object already closed");
+            }
             this.position = newPosition;
             return this;
         }
@@ -99,7 +112,12 @@ public class WindowedSeekableByteChannel implements SeekableByteChannel {
 
     @Override
     public long size() throws IOException {
-        return this.length;
+        synchronized (this.lock) {
+            if (!this.isOpen) {
+                throw new IllegalStateException("Object already closed");
+            }
+            return this.length;
+        }
     }
 
     @Override
