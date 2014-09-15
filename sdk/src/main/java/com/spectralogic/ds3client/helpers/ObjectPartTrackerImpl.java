@@ -33,30 +33,20 @@ class ObjectPartTrackerImpl implements ObjectPartTracker {
         validateParts();
     }
 
-    private void validateParts() {
-        long lastEnd = -1L;
-        for (final ObjectPart part : this.parts) {
-            if (part.getOffset() <= lastEnd) {
-                throw new InvalidParameterException();
-            }
-            lastEnd = part.getEnd();
-        }
-    }
-
     @Override
-    public ObjectPartTracker attachDataTransferredListener(final DataTransferredListener listener) {
+    public synchronized ObjectPartTracker attachDataTransferredListener(final DataTransferredListener listener) {
         this.dataTransferredListeners.add(listener);
         return this;
     }
 
     @Override
-    public ObjectPartTracker attachObjectCompletedListener(final ObjectCompletedListener listener) {
+    public synchronized ObjectPartTracker attachObjectCompletedListener(final ObjectCompletedListener listener) {
         this.objectCompletedListeners.add(listener);
         return this;
     }
 
     @Override
-    public void completePart(final ObjectPart part) {
+    public synchronized void completePart(final ObjectPart part) {
         final ObjectPart existingPart = this.parts.floor(part);
         if (existingPart == null) {
             throw new IllegalStateException("The object part was not available to be marked completed.");
@@ -76,6 +66,22 @@ class ObjectPartTrackerImpl implements ObjectPartTracker {
             onObjectCompleted();
         }
     }
+
+    @Override
+    public synchronized boolean containsPart(final ObjectPart part) {
+        final ObjectPart existingPart = this.parts.ceiling(part);
+        return existingPart != null && existingPart.getLength() == part.getLength();
+    }
+    
+    private void validateParts() {
+        long lastEnd = -1L;
+        for (final ObjectPart part : this.parts) {
+            if (part.getOffset() <= lastEnd) {
+                throw new InvalidParameterException();
+            }
+            lastEnd = part.getEnd();
+        }
+    }
     
     private void onDataTransferred(final long size) {
         for (final DataTransferredListener listener : this.dataTransferredListeners) {
@@ -87,11 +93,5 @@ class ObjectPartTrackerImpl implements ObjectPartTracker {
         for (final ObjectCompletedListener listener : this.objectCompletedListeners) {
             listener.objectCompleted(this.name);
         }
-    }
-
-    @Override
-    public boolean containsPart(final ObjectPart part) {
-        final ObjectPart existingPart = this.parts.ceiling(part);
-        return existingPart != null && existingPart.getLength() == part.getLength();
     }
 }
