@@ -17,8 +17,10 @@ package com.spectralogic.ds3client.commands;
 
 import com.spectralogic.ds3client.HttpVerb;
 import com.spectralogic.ds3client.models.Checksum;
+import com.spectralogic.ds3client.utils.SeekableByteChannelInputStream;
 
 import java.io.InputStream;
+import java.nio.channels.SeekableByteChannel;
 import java.util.UUID;
 
 /**
@@ -32,25 +34,28 @@ public class PutObjectRequest extends AbstractRequest {
     private final String bucketName;
     private final String objectName;
     private final UUID jobId;
+    private final SeekableByteChannel channel;
     private final InputStream stream;
     private final long size;
     private final long offset;
     private Checksum checksum = Checksum.none();
 
     @Deprecated
-    public PutObjectRequest(final String bucketName, final String objectName, final long size, final InputStream stream) {
+    public PutObjectRequest(final String bucketName, final String objectName, final long size, final SeekableByteChannel channel) {
         this.bucketName = bucketName;
         this.objectName = objectName;
-        this.stream = stream;
+        this.channel = channel;
+        this.stream = new SeekableByteChannelInputStream(channel);
         this.size = size;
         this.jobId = null;
         this.offset = 0;
     }
 
-    public PutObjectRequest(final String bucketName, final String objectName, final UUID jobId, final long size, final long offset, final InputStream stream) {
+    public PutObjectRequest(final String bucketName, final String objectName, final UUID jobId, final long size, final long offset, final SeekableByteChannel channel) {
         this.bucketName = bucketName;
         this.objectName = objectName;
-        this.stream = stream;
+        this.channel = channel;
+        this.stream = new SeekableByteChannelInputStream(channel);
         this.size = size;
         this.jobId = jobId;
         this.offset = offset;
@@ -95,6 +100,10 @@ public class PutObjectRequest extends AbstractRequest {
     @Override
     public InputStream getStream() {
         return this.stream;
+    }
+
+    public SeekableByteChannel getChannel() {
+        return this.channel;
     }
 
     public UUID getJobId() {

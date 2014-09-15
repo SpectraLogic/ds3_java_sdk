@@ -1,16 +1,16 @@
 package com.spectralogic.ds3client.integration;
 
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers;
-import com.spectralogic.ds3client.helpers.ResettableFileInputStream;
 import com.spectralogic.ds3client.utils.ResourceUtils;
 
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URISyntaxException;
+import java.nio.channels.FileChannel;
+import java.nio.channels.SeekableByteChannel;
+import java.nio.file.StandardOpenOption;
 
-public class ResourceObjectPutter implements Ds3ClientHelpers.ObjectPutter {
+public class ResourceObjectPutter implements Ds3ClientHelpers.ObjectTransferrer {
 
     private final String basePath;
 
@@ -19,10 +19,9 @@ public class ResourceObjectPutter implements Ds3ClientHelpers.ObjectPutter {
     }
 
     @Override
-    public InputStream getContent(final String key) throws IOException {
-
+    public SeekableByteChannel buildChannel(final String key) throws IOException {
         try {
-            return new ResettableFileInputStream(new FileInputStream(ResourceUtils.loadFileResource(basePath + key)));
+            return FileChannel.open(ResourceUtils.loadFileResource(basePath + key).toPath(), StandardOpenOption.READ);
         } catch (final URISyntaxException e) {
             e.printStackTrace();
             throw new FileNotFoundException(key);

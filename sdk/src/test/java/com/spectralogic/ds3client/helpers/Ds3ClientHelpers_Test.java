@@ -18,10 +18,8 @@ package com.spectralogic.ds3client.helpers;
 import com.google.common.collect.Lists;
 import com.spectralogic.ds3client.Ds3Client;
 import com.spectralogic.ds3client.commands.*;
-import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.ObjectGetter;
-import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.ObjectPutter;
-import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.ReadJob;
-import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.WriteJob;
+import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.Job;
+import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.ObjectTransferrer;
 import com.spectralogic.ds3client.models.Contents;
 import com.spectralogic.ds3client.models.ListBucketResult;
 import com.spectralogic.ds3client.models.Owner;
@@ -30,26 +28,29 @@ import com.spectralogic.ds3client.models.bulk.Ds3Object;
 import com.spectralogic.ds3client.models.bulk.MasterObjectList;
 import com.spectralogic.ds3client.models.bulk.Objects;
 import com.spectralogic.ds3client.serializer.XmlProcessingException;
-import com.spectralogic.ds3client.utils.Md5Hash;
+import com.spectralogic.ds3client.utils.ByteArraySeekableByteChannel;
 
-import org.apache.commons.io.IOUtils;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.ArgumentMatcher;
 import org.mockito.InOrder;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.Writer;
+import java.nio.channels.Channels;
+import java.nio.channels.SeekableByteChannel;
+import java.nio.channels.WritableByteChannel;
 import java.security.SignatureException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.argThat;
 import static org.mockito.Mockito.*;
+
 
 public class Ds3ClientHelpers_Test {
     private static final String MYBUCKET = "mybucket";
@@ -58,26 +59,35 @@ public class Ds3ClientHelpers_Test {
     public void testReadObjects() throws SignatureException, IOException, XmlProcessingException {
         final Ds3Client ds3Client = mock(Ds3Client.class);
         when(ds3Client.bulkGet(any(BulkGetRequest.class))).thenReturn(new StubBulkGetResponse());
-        when(ds3Client.getObject(getRequestHas("foo"))).thenReturn(new StubGetObjectResponse("foo contents"));
-        when(ds3Client.getObject(getRequestHas("bar"))).thenReturn(new StubGetObjectResponse("bar contents"));
-        when(ds3Client.getObject(getRequestHas("baz"))).thenReturn(new StubGetObjectResponse("baz contents"));
+        when(ds3Client.getObject(getRequestHas("foo"))).then(new GetObjectAnswer("foo"));
+        when(ds3Client.getObject(getRequestHas("bar"))).then(new GetObjectAnswer("bar"));
+        when(ds3Client.getObject(getRequestHas("baz"))).then(new GetObjectAnswer("baz"));
         
         final List<Ds3Object> objectsToGet = Lists.newArrayList(
             new Ds3Object("foo"),
             new Ds3Object("bar"),
             new Ds3Object("baz")
         );
-        final ReadJob readJob = Ds3ClientHelpers.wrap(ds3Client).startReadJob(MYBUCKET, objectsToGet);
+        final Job readJob = Ds3ClientHelpers.wrap(ds3Client).startReadJob(MYBUCKET, objectsToGet);
         
         assertThat(readJob.getJobId(), is(jobId));
         assertThat(readJob.getBucketName(), is(MYBUCKET));
         
-        readJob.read(new ObjectGetter() {
+        final HashMap<String, ByteArraySeekableByteChannel> channelMap = new HashMap<>();
+        channelMap.put("foo", new ByteArraySeekableByteChannel());
+        channelMap.put("bar", new ByteArraySeekableByteChannel());
+        channelMap.put("baz", new ByteArraySeekableByteChannel());
+        
+        readJob.transfer(new ObjectTransferrer() {
             @Override
-            public void writeContents(final String key, final InputStream contents, final Md5Hash md5) throws IOException {
-                assertThat(streamToString(contents), is(key + " contents"));
+            public SeekableByteChannel buildChannel(final String key) throws IOException {
+                return channelMap.get(key);
             }
         });
+        
+        for (final Map.Entry<String, ByteArraySeekableByteChannel> channelEntry : channelMap.entrySet()) {
+            assertThat(channelEntry.getValue().toString(), is(channelEntry.getKey() + " contents"));
+        }
         
         final InOrder clientInOrder = inOrder(ds3Client);
         clientInOrder.verify(ds3Client).bulkGet(any(BulkGetRequest.class));
@@ -98,23 +108,28 @@ public class Ds3ClientHelpers_Test {
                 new Ds3Object("bar", 12),
                 new Ds3Object("baz", 12)
         );
-        final WriteJob job = Ds3ClientHelpers.wrap(ds3Client).startWriteJob(MYBUCKET, objectsToPut);
+        final Job job = Ds3ClientHelpers.wrap(ds3Client).startWriteJob(MYBUCKET, objectsToPut);
         
         assertThat(job.getJobId(), is(jobId));
         assertThat(job.getBucketName(), is(MYBUCKET));
         
-        job.write(new ObjectPutter() {
+        final HashMap<String, SeekableByteChannel> channels = new HashMap<>();
+        channels.put("baz", mock(SeekableByteChannel.class));
+        channels.put("foo", mock(SeekableByteChannel.class));
+        channels.put("bar", mock(SeekableByteChannel.class));
+        
+        job.transfer(new ObjectTransferrer() {
             @Override
-            public InputStream getContent(final String key) {
-                return streamFromString(key + " contents");
+            public SeekableByteChannel buildChannel(final String key) throws IOException {
+                return channels.get(key);
             }
         });
         
         final InOrder clientInOrder = inOrder(ds3Client);
         clientInOrder.verify(ds3Client).bulkPut(any(BulkPutRequest.class));
-        clientInOrder.verify(ds3Client).putObject(putRequestHas("baz", "baz contents"));
-        clientInOrder.verify(ds3Client).putObject(putRequestHas("foo", "foo contents"));
-        clientInOrder.verify(ds3Client).putObject(putRequestHas("bar", "bar contents"));
+        clientInOrder.verify(ds3Client).putObject(putRequestHas("baz", channels.get("baz")));
+        clientInOrder.verify(ds3Client).putObject(putRequestHas("foo", channels.get("foo")));
+        clientInOrder.verify(ds3Client).putObject(putRequestHas("bar", channels.get("bar")));
         clientInOrder.verifyNoMoreInteractions();
     }
 
@@ -138,9 +153,9 @@ public class Ds3ClientHelpers_Test {
     public void testReadObjectsWithFailedPut() throws SignatureException, IOException, XmlProcessingException {
         final Ds3Client ds3Client = mock(Ds3Client.class);
         when(ds3Client.bulkGet(any(BulkGetRequest.class))).thenReturn(new StubBulkGetResponse());
-        when(ds3Client.getObject(getRequestHas("foo"))).thenReturn(new StubFailedGetObjectResponse());
-        when(ds3Client.getObject(getRequestHas("bar"))).thenReturn(new StubFailedGetObjectResponse());
-        when(ds3Client.getObject(getRequestHas("baz"))).thenReturn(new StubGetObjectResponse("baz contents"));
+        when(ds3Client.getObject(getRequestHas("foo"))).thenThrow(new StubException());
+        when(ds3Client.getObject(getRequestHas("bar"))).thenThrow(new StubException());
+        when(ds3Client.getObject(getRequestHas("baz"))).then(new GetObjectAnswer("baz"));
         
         // Build input list.
         final ArrayList<Ds3Object> objectsToGet = Lists.newArrayList(
@@ -149,13 +164,14 @@ public class Ds3ClientHelpers_Test {
             new Ds3Object("baz")
         );
         
-        final ReadJob job = Ds3ClientHelpers.wrap(ds3Client).startReadJob(MYBUCKET, objectsToGet);
+        final Job job = Ds3ClientHelpers.wrap(ds3Client).startReadJob(MYBUCKET, objectsToGet);
 
         try {
-            job.read(new ObjectGetter() {
+            job.transfer(new ObjectTransferrer() {
                 @Override
-                public void writeContents(final String key, final InputStream contents, final Md5Hash md5) throws IOException {
+                public SeekableByteChannel buildChannel(final String key) throws IOException {
                     // We don't care about the contents since we just want to know that the exception handling works correctly.
+                    return new ByteArraySeekableByteChannel();
                 }
             });
         } catch (final StubException e) {
@@ -192,7 +208,7 @@ public class Ds3ClientHelpers_Test {
         });
     }
 
-    private static PutObjectRequest putRequestHas(final String key, final String contents) {
+    private static PutObjectRequest putRequestHas(final String key, final SeekableByteChannel channel) {
         return argThat(new ArgumentMatcher<PutObjectRequest>() {
             @Override
             public boolean matches(final Object argument) {
@@ -200,11 +216,10 @@ public class Ds3ClientHelpers_Test {
                     return false;
                 }
                 final PutObjectRequest putObjectRequest = (PutObjectRequest)argument;
-                final InputStream stream = putObjectRequest.getStream();
                 return
                         putObjectRequest.getBucketName().equals(MYBUCKET)
                         && putObjectRequest.getObjectName().equals(key)
-                        && streamToString(stream).equals(contents);
+                        && putObjectRequest.getChannel() == channel;
             }
         });
     }
@@ -227,6 +242,24 @@ public class Ds3ClientHelpers_Test {
         });
     }
     
+    private static final class GetObjectAnswer implements Answer<GetObjectResponse> {
+        private final String key;
+
+        private GetObjectAnswer(final String key) {
+            this.key = key;
+        }
+
+        @Override
+        public GetObjectResponse answer(final InvocationOnMock invocation) throws Throwable {
+            final WritableByteChannel channel = ((GetObjectRequest)invocation.getArguments()[0]).getDestinationChannel();
+            final Writer writer = Channels.newWriter(channel, "UTF-8");
+            writer.write(key);
+            writer.write(" contents");
+            writer.flush();
+            return new StubGetObjectResponse();
+        }
+    }
+
     private static final class StubGetBucketResponse extends GetBucketResponse {
         private final int invocationIndex;
 
@@ -366,31 +399,9 @@ public class Ds3ClientHelpers_Test {
         private static final long serialVersionUID = 5121719894916333278L;
     }
     
-    private static final class StubFailedGetObjectResponse extends GetObjectResponse {
-        public StubFailedGetObjectResponse() throws IOException {
-            super(null);
-        }
-
-        @Override
-        protected void processResponse() throws IOException {
-        }
-        
-        @Override
-        public void close() throws IOException {
-        }
-        
-        @Override
-        public InputStream getContent() {
-            throw new StubException();
-        }
-    }
-    
     private static final class StubGetObjectResponse extends GetObjectResponse {
-        private final String content;
-
-        public StubGetObjectResponse(final String content) throws IOException {
-            super(null);
-            this.content = content;
+        public StubGetObjectResponse() throws IOException {
+            super(null, null, 0);
         }
 
         @Override
@@ -398,12 +409,11 @@ public class Ds3ClientHelpers_Test {
         }
         
         @Override
-        public void close() throws IOException {
+        protected void download(final WritableByteChannel destinationChannel, final int bufferSize) throws IOException {
         }
         
         @Override
-        public InputStream getContent() {
-            return streamFromString(this.content);
+        public void close() throws IOException {
         }
     }
     
@@ -419,25 +429,6 @@ public class Ds3ClientHelpers_Test {
         
         @Override
         public void close() throws IOException {
-        }
-    }
-
-    private static String streamToString(final InputStream content) {
-        final StringWriter writer = new StringWriter();
-        try {
-            content.reset();
-            IOUtils.copy(content, writer, "UTF-8");
-        } catch (final IOException e) {
-            throw new RuntimeException(e);
-        }
-        return writer.toString();
-    }
-
-    private static InputStream streamFromString(final String contents) {
-        try {
-            return new ByteArrayInputStream(contents.getBytes("UTF-8"));
-        } catch (final UnsupportedEncodingException e) {
-            throw new RuntimeException(e);
         }
     }
 }

@@ -15,13 +15,11 @@
 
 package com.spectralogic.ds3client.helpers;
 
-import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.ObjectGetter;
-import com.spectralogic.ds3client.utils.IOUtils;
-import com.spectralogic.ds3client.utils.Md5Hash;
+import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.ObjectTransferrer;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.nio.channels.FileChannel;
+import java.nio.channels.SeekableByteChannel;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
@@ -29,9 +27,8 @@ import java.nio.file.StandardOpenOption;
 /**
  * Writes files to the local file system preserving the path.
  */
-public class FileObjectGetter implements ObjectGetter {
+public class FileObjectGetter implements ObjectTransferrer {
     private final Path root;
-    private int bufferSize = 1024 * 1024;
 
     /**
      * Creates a new FileObjectGetter to retrieve files from a remote DS3 system to the local file system.
@@ -41,27 +38,15 @@ public class FileObjectGetter implements ObjectGetter {
         this.root = root;
     }
 
-    /**
-     * Sets the size of the buffer that will be used
-     * @param bufferSize
-     * @return
-     */
-    public FileObjectGetter withBufferSize(final int bufferSize) {
-        this.bufferSize = bufferSize;
-        return this;
-    }
-
     @Override
-    public void writeContents(final String key, final InputStream contents, final Md5Hash md5) throws IOException {
-        final Path file = this.root.resolve(key);
-        Files.createDirectories(file.getParent());
-        try (final OutputStream output = Files.newOutputStream(
-                    file,
-                    StandardOpenOption.WRITE,
-                    StandardOpenOption.CREATE_NEW,
-                    StandardOpenOption.TRUNCATE_EXISTING
-                )) {
-            IOUtils.copy(contents, output, bufferSize);
-        }
+    public SeekableByteChannel buildChannel(final String key) throws IOException {
+        final Path objectPath = this.root.resolve(key);
+        Files.createDirectories(objectPath.getParent());
+        return FileChannel.open(
+            objectPath,
+            StandardOpenOption.WRITE,
+            StandardOpenOption.CREATE_NEW,
+            StandardOpenOption.TRUNCATE_EXISTING
+        );
     }
 }

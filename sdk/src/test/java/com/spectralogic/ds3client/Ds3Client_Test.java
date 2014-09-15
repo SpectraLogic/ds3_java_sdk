@@ -24,13 +24,18 @@ import com.spectralogic.ds3client.models.bulk.*;
 import com.spectralogic.ds3client.models.bulk.Objects;
 import com.spectralogic.ds3client.networking.FailedRequestException;
 import com.spectralogic.ds3client.serializer.XmlProcessingException;
+import com.spectralogic.ds3client.utils.ByteArraySeekableByteChannel;
+import com.spectralogic.ds3client.utils.ResourceUtils;
 
-import org.apache.commons.io.IOUtils;
 import org.junit.Test;
 
-import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
+import java.net.URISyntaxException;
+import java.nio.channels.FileChannel;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.StandardOpenOption;
 import java.security.SignatureException;
 import java.util.*;
 
@@ -199,14 +204,15 @@ public class Ds3Client_Test {
     @SuppressWarnings("deprecation")
     @Test
     public void getObjectWithoutJobId() throws IOException, SignatureException {
+        final ByteArraySeekableByteChannel resultChannel = new ByteArraySeekableByteChannel();
         final String stringResponse = "Response";
-        final InputStream content = MockNetwork
+        MockNetwork
                 .expecting(HttpVerb.GET, "/bucketName/object", null, null)
                 .returning(200, stringResponse)
                 .asClient()
-                .getObject(new GetObjectRequest("bucketName", "object"))
-                .getContent();
-        assertThat(IOUtils.toString(content), is(stringResponse));
+                .getObject(new GetObjectRequest("bucketName", "object", resultChannel))
+                .close();
+        assertThat(resultChannel.toString(), is(stringResponse));
     }
 
     @Test
@@ -216,42 +222,47 @@ public class Ds3Client_Test {
         queryParams.put("job", jobIdString);
         queryParams.put("offset", Long.toString(0));
         
+        final ByteArraySeekableByteChannel resultChannel = new ByteArraySeekableByteChannel();
         final String stringResponse = "Response";
-        final InputStream content = MockNetwork
+        MockNetwork
                 .expecting(HttpVerb.GET, "/bucketName/object", queryParams, null)
                 .returning(200, stringResponse)
                 .asClient()
-                .getObject(new GetObjectRequest("bucketName", "object", 0,UUID.fromString(jobIdString)))
-                .getContent();
-        assertThat(IOUtils.toString(content), is(stringResponse));
+                .getObject(new GetObjectRequest("bucketName", "object", 0, UUID.fromString(jobIdString), resultChannel))
+                .close();
+        assertThat(resultChannel.toString(), is(stringResponse));
     }
     
     @SuppressWarnings("deprecation")
     @Test
-    public void putObjectWithoutJobId() throws IOException, SignatureException {
-        final String output = "This is some data.";
-        final ByteArrayInputStream requestStream = new ByteArrayInputStream(output.getBytes("UTF-8"));
+    public void putObjectWithoutJobId() throws IOException, SignatureException, URISyntaxException {
+        final File resourceFile = ResourceUtils.loadFileResource("LoremIpsumTwice.txt");
+        final byte[] fileBytes = Files.readAllBytes(resourceFile.toPath());
+        final String output = new String(fileBytes, Charset.forName("UTF-8"));
+        final FileChannel channel = FileChannel.open(resourceFile.toPath(), StandardOpenOption.READ);
         MockNetwork
                 .expecting(HttpVerb.PUT, "/bucketName/objectName", null, output)
                 .returning(200, "")
                 .asClient()
-                .putObject(new PutObjectRequest("bucketName", "objectName", requestStream.available(), requestStream));
+                .putObject(new PutObjectRequest("bucketName", "objectName", fileBytes.length, channel));
     }
     
     @Test
-    public void putObject() throws IOException, SignatureException {
+    public void putObject() throws IOException, SignatureException, URISyntaxException {
         final String jobIdString = "a4a586a1-cb80-4441-84e2-48974e982d51";
         final Map<String, String> queryParams = new HashMap<>();
         queryParams.put("job", jobIdString);
         queryParams.put("offset", Long.toString(0));
         
-        final String output = "This is some data.";
-        final ByteArrayInputStream requestStream = new ByteArrayInputStream(output.getBytes("UTF-8"));
+        final File resourceFile = ResourceUtils.loadFileResource("LoremIpsumTwice.txt");
+        final byte[] fileBytes = Files.readAllBytes(resourceFile.toPath());
+        final String output = new String(fileBytes, Charset.forName("UTF-8"));
+        final FileChannel channel = FileChannel.open(resourceFile.toPath(), StandardOpenOption.READ);
         MockNetwork
                 .expecting(HttpVerb.PUT, "/bucketName/objectName", queryParams, output)
                 .returning(200, "")
                 .asClient()
-                .putObject(new PutObjectRequest("bucketName", "objectName", UUID.fromString(jobIdString), requestStream.available(), 0, requestStream));
+                .putObject(new PutObjectRequest("bucketName", "objectName", UUID.fromString(jobIdString), fileBytes.length, 0, channel));
     }
     
     @Test

@@ -18,6 +18,8 @@ package com.spectralogic.ds3client.utils;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.ByteBuffer;
+import java.nio.channels.WritableByteChannel;
 
 public class IOUtils {
     public static void copy(
@@ -29,6 +31,21 @@ public class IOUtils {
         int len;
         while ((len = inputStream.read(buffer)) != -1) {
             outputStream.write(buffer, 0, len);
+        }
+    }
+
+    public static void copy(
+        final InputStream inputStream,
+        final WritableByteChannel writableByteChannel,
+        final int bufferSize)
+            throws IOException {
+        final byte[] buffer = new byte[bufferSize];
+        final ByteBuffer byteBuffer = ByteBuffer.wrap(buffer);
+        int len;
+        while ((len = inputStream.read(buffer)) != -1) {
+            byteBuffer.position(0);
+            byteBuffer.limit(len);
+            writableByteChannel.write(byteBuffer);
         }
     }
 }

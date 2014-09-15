@@ -15,17 +15,18 @@
 
 package com.spectralogic.ds3client.helpers;
 
-import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.ObjectPutter;
+import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.ObjectTransferrer;
 
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
+import java.nio.channels.FileChannel;
+import java.nio.channels.SeekableByteChannel;
 import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 
 /**
  * Writes files to a remote DS3 appliance from a directory in the local filesystem.
  */
-public class FileObjectPutter implements ObjectPutter {
+public class FileObjectPutter implements ObjectTransferrer {
     private final Path root;
 
     /**
@@ -37,7 +38,7 @@ public class FileObjectPutter implements ObjectPutter {
     }
 
     @Override
-    public InputStream getContent(final String key) throws IOException {
-        return new ResettableFileInputStream(new FileInputStream(this.root.resolve(key).toFile()));
+    public SeekableByteChannel buildChannel(final String key) throws IOException {
+        return FileChannel.open(this.root.resolve(key), StandardOpenOption.READ);
     }
 }

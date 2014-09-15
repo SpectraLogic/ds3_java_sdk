@@ -16,31 +16,32 @@
 package com.spectralogic.ds3client.commands;
 
 import com.spectralogic.ds3client.networking.WebResponse;
+import com.spectralogic.ds3client.utils.IOUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.channels.WritableByteChannel;
 
 public class GetObjectResponse extends AbstractResponse {
-
-    private InputStream content;
-
-    public GetObjectResponse(final WebResponse response) throws IOException {
+    public GetObjectResponse(final WebResponse response, final WritableByteChannel destinationChannel, final int bufferSize) throws IOException {
         super(response);
-    }
-
-    public InputStream getContent() {
-        return this.content;
+        download(destinationChannel, bufferSize);
     }
 
     @Override
     protected void processResponse() throws IOException {
         this.checkStatusCode(200);
-        this.content = this.getResponse().getResponseStream();
+    }
+
+    protected void download(final WritableByteChannel destinationChannel, final int bufferSize) throws IOException {
+        try (final InputStream responseStream = this.getResponse().getResponseStream()) {
+            IOUtils.copy(responseStream, destinationChannel, bufferSize);
+            destinationChannel.close();
+        }
     }
 
     @Override
     public void close() throws IOException {
-        this.content.close();
         super.close();
     }
 }

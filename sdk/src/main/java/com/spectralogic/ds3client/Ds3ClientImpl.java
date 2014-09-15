@@ -64,7 +64,11 @@ class Ds3ClientImpl implements Ds3Client {
 
     @Override
     public GetObjectResponse getObject(final GetObjectRequest request) throws IOException, SignatureException {
-        return new GetObjectResponse(this.netClient.getResponse(request));
+        return new GetObjectResponse(
+            this.netClient.getResponse(request),
+            request.getDestinationChannel(),
+            this.netClient.getConnectionDetails().getBufferSize()
+        );
     }
 
     @Override

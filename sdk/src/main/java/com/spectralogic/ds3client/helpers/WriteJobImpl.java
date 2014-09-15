@@ -17,20 +17,15 @@ package com.spectralogic.ds3client.helpers;
 
 import com.spectralogic.ds3client.Ds3Client;
 import com.spectralogic.ds3client.commands.PutObjectRequest;
-import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.ObjectPutter;
-import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.PutRequestModifier;
-import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.WriteJob;
+import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.ObjectTransferrer;
 import com.spectralogic.ds3client.models.bulk.BulkObject;
 import com.spectralogic.ds3client.models.bulk.Objects;
-import com.spectralogic.ds3client.serializer.XmlProcessingException;
 
 import java.io.IOException;
 import java.security.SignatureException;
 import java.util.UUID;
 
-class WriteJobImpl extends JobImpl implements WriteJob {
-    private PutRequestModifier modifier;
-
+class WriteJobImpl extends JobImpl {
     public WriteJobImpl(
             final Ds3ClientFactory clientFactory,
             final UUID jobId,
@@ -40,40 +35,21 @@ class WriteJobImpl extends JobImpl implements WriteJob {
     }
 
     @Override
-    public void write(final ObjectPutter putter)
-            throws SignatureException, IOException, XmlProcessingException {
-        this.transferAll(new Transferrer() {
-            @Override
-            public void Transfer(
-                    final Ds3Client client,
-                    final UUID jobId,
-                    final String bucketName,
-                    final BulkObject ds3Object) throws SignatureException, IOException {
-                final PutObjectRequest request = new PutObjectRequest(
-                    bucketName,
-                    ds3Object.getName(),
-                    jobId,
-                    ds3Object.getLength(),
-                    ds3Object.getOffset(),
-                    putter.getContent(ds3Object.getName())
-                );
-                if (WriteJobImpl.this.modifier != null) {
-                    WriteJobImpl.this.modifier.modify(request);
-                }
-                client.putObject(request).close();
-            }
-        });
-    }
-
-    @Override
-    public WriteJob withRequestModifier(final PutRequestModifier modifier) {
-        this.modifier = modifier;
-        return this;
-    }
-
-    @Override
-    public WriteJob withMaxParallelRequests(final int maxParallelRequests) {
-        this.setMaxParallelRequests(maxParallelRequests);
-        return this;
+    protected void transferItem(
+            final Ds3Client client,
+            final UUID jobId,
+            final String bucketName,
+            final BulkObject ds3Object,
+            final ObjectTransferrer transferrer) throws SignatureException, IOException {
+        client
+            .putObject(new PutObjectRequest(
+                bucketName,
+                ds3Object.getName(),
+                jobId,
+                ds3Object.getLength(),
+                ds3Object.getOffset(),
+                transferrer.buildChannel(ds3Object.getName())
+            ))
+            .close();
     }
 }
