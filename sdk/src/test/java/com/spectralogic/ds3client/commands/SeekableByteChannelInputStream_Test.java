@@ -13,7 +13,9 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3client.utils;
+package com.spectralogic.ds3client.commands;
+
+import com.spectralogic.ds3client.utils.ResourceUtils;
 
 import org.junit.Test;
 import org.mockito.Mockito;
