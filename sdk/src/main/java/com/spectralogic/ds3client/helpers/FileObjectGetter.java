@@ -15,7 +15,7 @@
 
 package com.spectralogic.ds3client.helpers;
 
-import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.ObjectTransferrer;
+import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.ObjectChannelBuilder;
 
 import java.io.IOException;
 import java.nio.channels.FileChannel;
@@ -27,7 +27,7 @@ import java.nio.file.StandardOpenOption;
 /**
  * Writes files to the local file system preserving the path.
  */
-public class FileObjectGetter implements ObjectTransferrer {
+public class FileObjectGetter implements ObjectChannelBuilder {
     private final Path root;
 
     /**

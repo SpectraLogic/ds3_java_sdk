@@ -17,7 +17,7 @@ package com.spectralogic.ds3client.helpers;
 
 import com.spectralogic.ds3client.Ds3Client;
 import com.spectralogic.ds3client.commands.PutObjectRequest;
-import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.ObjectTransferrer;
+import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.ObjectChannelBuilder;
 import com.spectralogic.ds3client.models.bulk.BulkObject;
 import com.spectralogic.ds3client.models.bulk.Objects;
 
@@ -40,7 +40,7 @@ class WriteJobImpl extends JobImpl {
             final UUID jobId,
             final String bucketName,
             final BulkObject ds3Object,
-            final ObjectTransferrer transferrer) throws SignatureException, IOException {
+            final ObjectChannelBuilder transferrer) throws SignatureException, IOException {
         client
             .putObject(new PutObjectRequest(
                 bucketName,
