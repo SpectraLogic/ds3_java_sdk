@@ -21,7 +21,7 @@ import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;
 import com.spectralogic.ds3client.Ds3Client;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.Job;
-import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.ObjectTransferrer;
+import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.ObjectChannelBuilder;
 import com.spectralogic.ds3client.models.bulk.BulkObject;
 import com.spectralogic.ds3client.models.bulk.Objects;
 import com.spectralogic.ds3client.serializer.XmlProcessingException;
@@ -71,7 +71,7 @@ abstract class JobImpl implements Job {
     }
 
     @Override
-    public void transfer(final ObjectTransferrer transferrer)
+    public void transfer(final ObjectChannelBuilder transferrer)
             throws SignatureException, IOException, XmlProcessingException {
         for (final Objects chunk : this.objectLists) {
             this.transferChunk(transferrer, chunk);
@@ -83,9 +83,9 @@ abstract class JobImpl implements Job {
             final UUID jobId,
             final String bucketName,
             final BulkObject ds3Object,
-            final ObjectTransferrer transferrer) throws SignatureException, IOException;
+            final ObjectChannelBuilder transferrer) throws SignatureException, IOException;
 
-    private void transferChunk(final ObjectTransferrer transferrer, final Objects objects)
+    private void transferChunk(final ObjectChannelBuilder transferrer, final Objects objects)
             throws SignatureException, IOException, XmlProcessingException {
         final ListeningExecutorService service = MoreExecutors.listeningDecorator(Executors.newFixedThreadPool(this.maxParallelRequests));
         try {
@@ -101,7 +101,7 @@ abstract class JobImpl implements Job {
     }
 
     private ListenableFuture<?> createTransferTask(
-            final ObjectTransferrer transferrer,
+            final ObjectChannelBuilder transferrer,
             final ListeningExecutorService service,
             final Ds3Client client,
             final BulkObject ds3Object) {

@@ -19,7 +19,7 @@ import com.google.common.collect.Lists;
 import com.spectralogic.ds3client.Ds3Client;
 import com.spectralogic.ds3client.commands.*;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.Job;
-import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.ObjectTransferrer;
+import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.ObjectChannelBuilder;
 import com.spectralogic.ds3client.models.Contents;
 import com.spectralogic.ds3client.models.ListBucketResult;
 import com.spectralogic.ds3client.models.Owner;
@@ -78,7 +78,7 @@ public class Ds3ClientHelpers_Test {
         channelMap.put("bar", new ByteArraySeekableByteChannel());
         channelMap.put("baz", new ByteArraySeekableByteChannel());
         
-        readJob.transfer(new ObjectTransferrer() {
+        readJob.transfer(new ObjectChannelBuilder() {
             @Override
             public SeekableByteChannel buildChannel(final String key) throws IOException {
                 return channelMap.get(key);
@@ -118,7 +118,7 @@ public class Ds3ClientHelpers_Test {
         channels.put("foo", mock(SeekableByteChannel.class));
         channels.put("bar", mock(SeekableByteChannel.class));
         
-        job.transfer(new ObjectTransferrer() {
+        job.transfer(new ObjectChannelBuilder() {
             @Override
             public SeekableByteChannel buildChannel(final String key) throws IOException {
                 return channels.get(key);
@@ -167,7 +167,7 @@ public class Ds3ClientHelpers_Test {
         final Job job = Ds3ClientHelpers.wrap(ds3Client).startReadJob(MYBUCKET, objectsToGet);
 
         try {
-            job.transfer(new ObjectTransferrer() {
+            job.transfer(new ObjectChannelBuilder() {
                 @Override
                 public SeekableByteChannel buildChannel(final String key) throws IOException {
                     // We don't care about the contents since we just want to know that the exception handling works correctly.

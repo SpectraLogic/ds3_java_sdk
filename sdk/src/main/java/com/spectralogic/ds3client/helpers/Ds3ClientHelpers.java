@@ -33,7 +33,7 @@ import java.util.UUID;
  */
 public abstract class Ds3ClientHelpers {
 
-    public interface ObjectTransferrer {
+    public interface ObjectChannelBuilder {
         /**
          * Returns a channel for the given object key. Depending on whether the
          * job is a GET or PUT, the returned channel must support either writing
@@ -64,7 +64,7 @@ public abstract class Ds3ClientHelpers {
          * @throws IOException
          * @throws XmlProcessingException
          */
-        public void transfer(final ObjectTransferrer transferrer)
+        public void transfer(final ObjectChannelBuilder transferrer)
             throws SignatureException, IOException, XmlProcessingException;
     }
 

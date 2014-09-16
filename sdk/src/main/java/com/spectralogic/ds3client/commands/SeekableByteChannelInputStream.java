@@ -13,14 +13,14 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3client.utils;
+package com.spectralogic.ds3client.commands;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.channels.SeekableByteChannel;
 
-public class SeekableByteChannelInputStream extends InputStream {
+class SeekableByteChannelInputStream extends InputStream {
     private final SeekableByteChannel seekableByteChannel;
     private long markPosition = 0L;
 
