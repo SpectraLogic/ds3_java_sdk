@@ -10,7 +10,7 @@ import java.nio.channels.FileChannel;
 import java.nio.channels.SeekableByteChannel;
 import java.nio.file.StandardOpenOption;
 
-public class ResourceObjectPutter implements Ds3ClientHelpers.ObjectTransferrer {
+public class ResourceObjectPutter implements Ds3ClientHelpers.ObjectChannelBuilder {
 
     private final String basePath;
 

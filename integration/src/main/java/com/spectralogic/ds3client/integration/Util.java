@@ -71,9 +71,9 @@ public class Util {
 
         final Iterable<Contents> objects = helpers.listObjects(bucketName);
         for(final Contents contents : objects) {
-            client.deleteObject(new DeleteObjectRequest(bucketName, contents.getKey())).close();
+            client.deleteObject(new DeleteObjectRequest(bucketName, contents.getKey()));
         }
 
-        client.deleteBucket(new DeleteBucketRequest(bucketName)).close();
+        client.deleteBucket(new DeleteBucketRequest(bucketName));
     }
 }
