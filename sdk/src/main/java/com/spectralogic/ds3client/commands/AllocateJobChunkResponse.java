@@ -52,22 +52,23 @@ public class AllocateJobChunkResponse extends AbstractResponse {
 
     @Override
     protected void processResponse() throws IOException {
-        checkStatusCode(200, 503, 404);
-        final WebResponse response = this.getResponse();
-        switch (this.getStatusCode()) {
-        case 200:
-            this.status = Status.ALLOCATED;
-            this.objects = parseChunk(response);
-            break;
-        case 503:
-            this.status = Status.RETRYLATER;
-            this.retryAfterSeconds = parseRetryAfter(response);
-            break;
-        case 404:
-            this.status = Status.NOTFOUND;
-            break;
-        default:
-            assert false : "checkStatusCode should have made it impossible to reach this line.";
+        try (final WebResponse response = this.getResponse()) {
+            checkStatusCode(200, 503, 404);
+            switch (this.getStatusCode()) {
+            case 200:
+                this.status = Status.ALLOCATED;
+                this.objects = parseChunk(response);
+                break;
+            case 503:
+                this.status = Status.RETRYLATER;
+                this.retryAfterSeconds = parseRetryAfter(response);
+                break;
+            case 404:
+                this.status = Status.NOTFOUND;
+                break;
+            default:
+                assert false : "checkStatusCode should have made it impossible to reach this line.";
+            }
         }
     }
 

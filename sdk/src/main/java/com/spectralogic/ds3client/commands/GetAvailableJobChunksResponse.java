@@ -52,23 +52,24 @@ public class GetAvailableJobChunksResponse extends AbstractResponse {
 
     @Override
     protected void processResponse() throws IOException {
-        this.checkStatusCode(200, 404);
-        final WebResponse webResponse = this.getResponse();
-        switch (this.getStatusCode()) {
-        case 200:
-            this.masterObjectList = parseMasterObjectList(webResponse);
-            if (this.masterObjectList.getObjects() == null) {
-                this.status = Status.RETRYLATER;
-                this.retryAfterSeconds = parseRetryAfter(webResponse);
-            } else {
-                this.status = Status.AVAILABLE;
+        try (final WebResponse webResponse = this.getResponse()) {
+            this.checkStatusCode(200, 404);
+            switch (this.getStatusCode()) {
+            case 200:
+                this.masterObjectList = parseMasterObjectList(webResponse);
+                if (this.masterObjectList.getObjects() == null) {
+                    this.status = Status.RETRYLATER;
+                    this.retryAfterSeconds = parseRetryAfter(webResponse);
+                } else {
+                    this.status = Status.AVAILABLE;
+                }
+                break;
+            case 404:
+                this.status = Status.NOTFOUND;
+                break;
+            default:
+                assert false : "checkStatusCode should have made it impossible to reach this line.";
             }
-            break;
-        case 404:
-            this.status = Status.NOTFOUND;
-            break;
-        default:
-            assert false : "checkStatusCode should have made it impossible to reach this line.";
         }
     }
 

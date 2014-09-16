@@ -49,7 +49,6 @@ class ReadJobImpl extends JobImpl {
                 ds3Object.getOffset(),
                 ReadJobImpl.this.getJobId(),
                 transferrer.buildChannel(ds3Object.getName())
-            ))
-            .close();
+            ));
     }
 }

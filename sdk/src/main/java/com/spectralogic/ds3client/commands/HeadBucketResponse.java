@@ -37,9 +37,12 @@ public class HeadBucketResponse extends AbstractResponse {
 
     @Override
     protected void processResponse() throws IOException {
-        this.checkStatusCode(200, 403, 404);
-        final int statusCode = this.getStatusCode();
-        this.setStatus(statusCode);
+        try {
+            this.checkStatusCode(200, 403, 404);
+            this.setStatus(this.getStatusCode());
+        } finally {
+            this.getResponse().close();
+        }
     }
 
     private void setStatus(final int statusCode) {

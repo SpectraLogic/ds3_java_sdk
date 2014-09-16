@@ -26,6 +26,10 @@ public class PutObjectResponse extends AbstractResponse {
 
     @Override
     protected void processResponse() throws IOException {
-        this.checkStatusCode(200);
+        try {
+            this.checkStatusCode(200);
+        } finally {
+            this.getResponse().close();
+        }
     }
 }

@@ -67,12 +67,11 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
                                                          final Iterable<Ds3Object> objectsToWrite,
                                                          final WriteJobOptions options)
             throws SignatureException, IOException, XmlProcessingException {
-        try(final BulkPutResponse prime = this.client.bulkPut(new BulkPutRequest(bucket, Lists.newArrayList(objectsToWrite))
+        final BulkPutResponse prime = this.client.bulkPut(new BulkPutRequest(bucket, Lists.newArrayList(objectsToWrite))
                 .withPriority(options.getPriority())
-                .withWriteOptimization(options.getWriteOptimization()))) {
-            final MasterObjectList result = prime.getResult();
-            return new WriteJobImpl(new Ds3ClientFactoryImpl(this.client), result.getJobId(), bucket, result.getObjects());
-        }
+                .withWriteOptimization(options.getWriteOptimization()));
+        final MasterObjectList result = prime.getResult();
+        return new WriteJobImpl(new Ds3ClientFactoryImpl(this.client), result.getJobId(), bucket, result.getObjects());
     }
 
     @Override
@@ -92,11 +91,10 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
 
     private Ds3ClientHelpers.Job innerStartReadJob(final String bucket, final Iterable<Ds3Object> objectsToRead, final ReadJobOptions options)
             throws SignatureException, IOException, XmlProcessingException {
-        try(final BulkGetResponse prime = this.client.bulkGet(new BulkGetRequest(bucket, Lists.newArrayList(objectsToRead))
-                .withPriority(options.getPriority()))) {
-            final MasterObjectList result = prime.getResult();
-            return new ReadJobImpl(new Ds3ClientFactoryImpl(this.client), result.getJobId(), bucket, result.getObjects());
-        }
+        final BulkGetResponse prime = this.client.bulkGet(new BulkGetRequest(bucket, Lists.newArrayList(objectsToRead))
+                .withPriority(options.getPriority()));
+        final MasterObjectList result = prime.getResult();
+        return new ReadJobImpl(new Ds3ClientFactoryImpl(this.client), result.getJobId(), bucket, result.getObjects());
     }
 
     @Override
@@ -140,10 +138,9 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
 
     @Override
     public void ensureBucketExists(final String bucket) throws IOException, SignatureException {
-        try (final HeadBucketResponse response = this.client.headBucket(new HeadBucketRequest(bucket))) {
-            if (response.getStatus() == HeadBucketResponse.Status.DOESNTEXIST) {
-                this.client.putBucket(new PutBucketRequest(bucket)).close();
-            }
+        final HeadBucketResponse response = this.client.headBucket(new HeadBucketRequest(bucket));
+        if (response.getStatus() == HeadBucketResponse.Status.DOESNTEXIST) {
+            this.client.putBucket(new PutBucketRequest(bucket));
         }
     }
 
@@ -175,16 +172,15 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
                 request.withNextMarker(marker);
             }
 
-            try (final GetBucketResponse response = this.client.getBucket(request)) {
-                final ListBucketResult result = response.getResult();
+            final GetBucketResponse response = this.client.getBucket(request);
+            final ListBucketResult result = response.getResult();
 
-                isTruncated = result.isTruncated();
-                marker = result.getNextMarker();
-                remainingKeys -= result.getContentsList().size();
+            isTruncated = result.isTruncated();
+            marker = result.getNextMarker();
+            remainingKeys -= result.getContentsList().size();
 
-                for (final Contents contents : result.getContentsList()) {
-                    contentList.add(contents);
-                }
+            for (final Contents contents : result.getContentsList()) {
+                contentList.add(contents);
             }
         } while (isTruncated && remainingKeys > 0);
 

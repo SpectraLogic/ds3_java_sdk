@@ -26,6 +26,10 @@ public class CancelJobResponse extends AbstractResponse {
 
     @Override
     protected void processResponse() throws IOException {
-        checkStatusCode(204);
+        try {
+            checkStatusCode(204);
+        } finally {
+            this.getResponse().close();
+        }
     }
 }

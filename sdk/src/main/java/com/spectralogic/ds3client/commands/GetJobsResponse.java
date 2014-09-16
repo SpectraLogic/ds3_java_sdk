@@ -36,8 +36,10 @@ public class GetJobsResponse extends AbstractResponse {
 
     @Override
     protected void processResponse() throws IOException {
-        checkStatusCode(200);
-        this.jobs = parseJobs(this.getResponse()).getJobs();
+        try (final WebResponse response = this.getResponse()) {
+            checkStatusCode(200);
+            this.jobs = parseJobs(response).getJobs();
+        }
     }
 
     public List<JobInfo> getJobs() {

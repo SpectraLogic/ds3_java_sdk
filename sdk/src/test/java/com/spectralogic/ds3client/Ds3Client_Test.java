@@ -210,8 +210,7 @@ public class Ds3Client_Test {
                 .expecting(HttpVerb.GET, "/bucketName/object", null, null)
                 .returning(200, stringResponse)
                 .asClient()
-                .getObject(new GetObjectRequest("bucketName", "object", resultChannel))
-                .close();
+                .getObject(new GetObjectRequest("bucketName", "object", resultChannel));
         assertThat(resultChannel.toString(), is(stringResponse));
     }
 
@@ -228,8 +227,7 @@ public class Ds3Client_Test {
                 .expecting(HttpVerb.GET, "/bucketName/object", queryParams, null)
                 .returning(200, stringResponse)
                 .asClient()
-                .getObject(new GetObjectRequest("bucketName", "object", 0, UUID.fromString(jobIdString), resultChannel))
-                .close();
+                .getObject(new GetObjectRequest("bucketName", "object", 0, UUID.fromString(jobIdString), resultChannel));
         assertThat(resultChannel.toString(), is(stringResponse));
     }
     

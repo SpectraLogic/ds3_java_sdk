@@ -34,14 +34,11 @@ public class GetObjectResponse extends AbstractResponse {
     }
 
     protected void download(final WritableByteChannel destinationChannel, final int bufferSize) throws IOException {
-        try (final InputStream responseStream = this.getResponse().getResponseStream()) {
+        try (
+                final WebResponse response = this.getResponse();
+                final InputStream responseStream = response.getResponseStream()) {
             IOUtils.copy(responseStream, destinationChannel, bufferSize);
             destinationChannel.close();
         }
-    }
-
-    @Override
-    public void close() throws IOException {
-        super.close();
     }
 }

@@ -26,6 +26,10 @@ public class DeleteObjectResponse extends AbstractResponse {
 
     @Override
     protected void processResponse() throws IOException {
-        this.checkStatusCode(204);
+        try {
+            this.checkStatusCode(204);
+        } finally {
+            this.getResponse().close();
+        }
     }
 }
