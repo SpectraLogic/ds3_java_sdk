@@ -13,13 +13,24 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3client.utils;
+package com.spectralogic.ds3client.helpers;
 
-import java.io.IOException;
+import java.nio.channels.SeekableByteChannel;
 
-public class TruncateNotAllowedException extends IOException {
-    private static final long serialVersionUID = -7378017389677465526L;
+class WindowedChannelFactory implements AutoCloseable {
+    private final SeekableByteChannel channel;
+    private final Object lock = new Object();
+
+    public WindowedChannelFactory(final SeekableByteChannel channel) {
+        this.channel = channel;
+    }
     
-    public TruncateNotAllowedException() {
+    public SeekableByteChannel get(final long offset, final long length) {
+        return new WindowedSeekableByteChannel(this.channel, this.lock, offset, length);
+    }
+
+    @Override
+    public void close() throws Exception {
+        this.channel.close();
     }
 }

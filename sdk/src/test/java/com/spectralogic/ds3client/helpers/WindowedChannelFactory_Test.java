@@ -13,7 +13,9 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3client.utils;
+package com.spectralogic.ds3client.helpers;
+
+import com.spectralogic.ds3client.utils.ByteArraySeekableByteChannel;
 
 import org.apache.commons.io.IOUtils;
 import org.junit.Test;

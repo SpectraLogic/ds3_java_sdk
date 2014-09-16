@@ -13,13 +13,13 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3client.utils;
+package com.spectralogic.ds3client.helpers;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.SeekableByteChannel;
 
-public class WindowedSeekableByteChannel implements SeekableByteChannel {
+class WindowedSeekableByteChannel implements SeekableByteChannel {
     private final SeekableByteChannel channel;
     private final Object lock;
     private final long offset;
