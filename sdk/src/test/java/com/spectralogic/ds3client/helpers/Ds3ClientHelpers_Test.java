@@ -271,10 +271,6 @@ public class Ds3ClientHelpers_Test {
         @Override
         protected void processResponse() throws IOException {
         }
-        
-        @Override
-        public void close() throws IOException {
-        }
 
         @Override
         public ListBucketResult getResult() {
@@ -347,10 +343,6 @@ public class Ds3ClientHelpers_Test {
         }
         
         @Override
-        public void close() throws IOException {
-        }
-        
-        @Override
         public MasterObjectList getResult() {
             return buildMasterObjectList();
         }
@@ -363,10 +355,6 @@ public class Ds3ClientHelpers_Test {
 
         @Override
         protected void processResponse() throws IOException {
-        }
-        
-        @Override
-        public void close() throws IOException {
         }
         
         @Override
@@ -411,10 +399,6 @@ public class Ds3ClientHelpers_Test {
         @Override
         protected void download(final WritableByteChannel destinationChannel, final int bufferSize) throws IOException {
         }
-        
-        @Override
-        public void close() throws IOException {
-        }
     }
     
     private static final class StubPutObjectResponse extends PutObjectResponse {
@@ -425,10 +409,6 @@ public class Ds3ClientHelpers_Test {
 
         @Override
         protected void processResponse() throws IOException {
-        }
-        
-        @Override
-        public void close() throws IOException {
         }
     }
 }

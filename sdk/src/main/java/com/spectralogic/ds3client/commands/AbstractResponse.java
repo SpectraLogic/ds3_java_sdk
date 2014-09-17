@@ -20,6 +20,7 @@ import com.spectralogic.ds3client.models.Error;
 import com.spectralogic.ds3client.networking.FailedRequestException;
 import com.spectralogic.ds3client.networking.WebResponse;
 import com.spectralogic.ds3client.serializer.XmlOutput;
+
 import org.apache.commons.io.IOUtils;
 
 import java.io.IOException;
@@ -90,11 +91,6 @@ abstract class AbstractResponse implements Ds3Response{
             IOUtils.copy(content, writer, UTF8);
             return writer.toString();
         }
-    }
-
-    @Override
-    public void close() throws IOException {
-        this.response.close();
     }
 
     public String getMd5() {

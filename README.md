@@ -27,8 +27,8 @@ import com.spectralogic.ds3client.Ds3Client;
 import com.spectralogic.ds3client.Ds3ClientBuilder;
 import com.spectralogic.ds3client.commands.GetServiceRequest;
 import com.spectralogic.ds3client.commands.GetServiceResponse;
-import com.spectralogic.ds3client.models.Credentials;
 import com.spectralogic.ds3client.models.Bucket;
+import com.spectralogic.ds3client.models.Credentials;
 
 import java.io.IOException;
 import java.security.SignatureException;
@@ -42,12 +42,11 @@ public class Ds3ServiceListExample {
                 new Credentials("accessKey", "secretKey")).withHttpSecure(false).build();
 
         // Tell the client to get us a list of all buckets, this is called a service list.
-        try (final GetServiceResponse response = client.getService(new GetServiceRequest())) {
+        final GetServiceResponse response = client.getService(new GetServiceRequest());
 
-            // Iterate through all the buckets and print them to the console.
-            for (final Bucket bucket : response.getResult().getBuckets()) {
-                System.out.println(bucket.getName());
-            }
+        // Iterate through all the buckets and print them to the console.
+        for (final Bucket bucket : response.getResult().getBuckets()) {
+            System.out.println(bucket.getName());
         }
     }
 }
@@ -100,17 +99,17 @@ public class BulkPutExample {
 
         // Create the write job with the bucket we want to write to and the list
         // of objects that will be written
-        final Ds3ClientHelpers.WriteJob job = helper.startWriteJob(bucketName, objects);
+        final Ds3ClientHelpers.Job job = helper.startWriteJob(bucketName, objects);
 
         // Start the write job using an Object Putter that will read the files
         // from the local file system.
-        job.write(new FileObjectPutter(inputPath));
+        job.transfer(new FileObjectPutter(inputPath));
     }
 }
 
 ```
 
-This next example is a little more complex and will perform a bulk get from a DS3 Appliance using the commands that directly correspond to the REST commands that are actually made against the DS3 Appliance.  This example is meant to demonstrate the flexibilty of the SDK when writing applications where the helper functions cannot be used.  The [Apache Commons IO](http://commons.apache.org/proper/commons-io/) library is used in this example for dealing with IO Streams.
+This next example is a little more complex and will perform a bulk get from a DS3 Appliance using the commands that directly correspond to the REST commands that are actually made against the DS3 Appliance.  This example is meant to demonstrate the flexibilty of the SDK when writing applications where the helper functions cannot be used.
 
 ```java
 
@@ -127,14 +126,12 @@ import com.spectralogic.ds3client.models.bulk.MasterObjectList;
 import com.spectralogic.ds3client.models.bulk.Objects;
 import com.spectralogic.ds3client.serializer.XmlProcessingException;
 
-import org.apache.commons.io.IOUtils;
-
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.nio.channels.FileChannel;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 import java.security.SignatureException;
 import java.util.ArrayList;
 import java.util.List;
@@ -167,26 +164,27 @@ public class Ds3BulkGetExample {
         }
 
         // Prime DS3 with the BulkGet command so that it can start to get objects off of tape.
-        // All Response objects to the SDK implement the Closeable interface and can be used in try-with-resource blocks
-        try (final BulkGetResponse bulkResponse = client.bulkGet(new BulkGetRequest(bucket, objectList))) {
+        final BulkGetResponse bulkResponse = client.bulkGet(new BulkGetRequest(bucket, objectList));
 
-            // The bulk response returns a list of lists which is designed to optimize data transmission from DS3.
-            final MasterObjectList list = bulkResponse.getResult();
-            for (final Objects objects : list.getObjects()) {
-                for (final BulkObject obj : objects) {
+        // The bulk response returns a list of lists which is designed to optimize data transmission from DS3.
+        final MasterObjectList list = bulkResponse.getResult();
+        for (final Objects objects : list.getObjects()) {
+            for (final BulkObject obj : objects) {
+                final FileChannel channel = FileChannel.open(
+                    dirPath.resolve(obj.getName()),
+                    StandardOpenOption.WRITE,
+                    StandardOpenOption.CREATE,
+                    StandardOpenOption.TRUNCATE_EXISTING
+                );
 
-                    // Perform the operation to get the object from DS3.
-                    try (final GetObjectResponse getObjectResponse = client.getObject(
-                            new GetObjectRequest(bucket, obj.getName(), obj.getOffset(), list.getJobId()))) {
-
-                        final Path filePath = dirPath.resolve(obj.getName());
-                        // Here we are using automatic resource cleanup to make sure the streams we use are cleaned up after use.
-                        try (final InputStream objStream = getObjectResponse.getContent();
-                             final OutputStream fileOut = Files.newOutputStream(filePath)) {
-                            IOUtils.copy(objStream, fileOut); //Using IOUtils to copy the object contents to a file.
-                        }
-                    }
-                }
+                // Perform the operation to get the object from DS3.
+                client.getObject(new GetObjectRequest(
+                    bucket,
+                    obj.getName(),
+                    obj.getOffset(),
+                    list.getJobId(),
+                    channel
+                ));
             }
         }
     }

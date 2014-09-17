@@ -34,8 +34,10 @@ public class ModifyJobResponse extends AbstractResponse {
 
     @Override
     protected void processResponse() throws IOException {
-        checkStatusCode(200);
-        this.masterObjectList = parseMasterObjectList(getResponse());
+        try (final WebResponse response = this.getResponse()) {
+            this.checkStatusCode(200);
+            this.masterObjectList = parseMasterObjectList(response);
+        }
     }
 
     public MasterObjectList getMasterObjectList() {

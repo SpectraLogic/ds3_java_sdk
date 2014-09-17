@@ -19,6 +19,7 @@ package com.spectralogic.ds3client.commands;
 import com.spectralogic.ds3client.models.ListBucketResult;
 import com.spectralogic.ds3client.networking.WebResponse;
 import com.spectralogic.ds3client.serializer.XmlOutput;
+
 import org.apache.commons.io.IOUtils;
 
 import java.io.IOException;
@@ -39,9 +40,11 @@ public class GetBucketResponse extends AbstractResponse {
 
     @Override
     protected void processResponse() throws IOException {
-        this.checkStatusCode(200);
-        final StringWriter writer = new StringWriter();
-        IOUtils.copy(this.getResponse().getResponseStream(), writer, UTF8);
-        this.result = XmlOutput.fromXml(writer.toString(), ListBucketResult.class);
+        try (final WebResponse response = this.getResponse()) {
+            this.checkStatusCode(200);
+            final StringWriter writer = new StringWriter();
+            IOUtils.copy(response.getResponseStream(), writer, UTF8);
+            this.result = XmlOutput.fromXml(writer.toString(), ListBucketResult.class);
+        }
     }
 }

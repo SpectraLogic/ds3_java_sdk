@@ -49,7 +49,6 @@ class WriteJobImpl extends JobImpl {
                 ds3Object.getLength(),
                 ds3Object.getOffset(),
                 transferrer.buildChannel(ds3Object.getName())
-            ))
-            .close();
+            ));
     }
 }
