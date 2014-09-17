@@ -16,39 +16,129 @@
 package com.spectralogic.ds3client.helpers;
 
 import com.spectralogic.ds3client.Ds3Client;
+import com.spectralogic.ds3client.commands.AllocateJobChunkRequest;
+import com.spectralogic.ds3client.commands.AllocateJobChunkResponse;
 import com.spectralogic.ds3client.commands.PutObjectRequest;
+import com.spectralogic.ds3client.helpers.ChunkTransferExecutor.Transferrer;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.ObjectChannelBuilder;
 import com.spectralogic.ds3client.models.bulk.BulkObject;
+import com.spectralogic.ds3client.models.bulk.MasterObjectList;
 import com.spectralogic.ds3client.models.bulk.Objects;
+import com.spectralogic.ds3client.serializer.XmlProcessingException;
+
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.io.IOException;
 import java.security.SignatureException;
-import java.util.UUID;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 class WriteJobImpl extends JobImpl {
     public WriteJobImpl(
-            final Ds3ClientFactory clientFactory,
-            final UUID jobId,
-            final String bucketName,
-            final Iterable<? extends Objects> objectLists) {
-        super(clientFactory, jobId, bucketName, objectLists);
+            final Ds3Client client,
+            final MasterObjectList masterObjectList) {
+        super(client, masterObjectList);
     }
 
     @Override
-    protected void transferItem(
-            final Ds3Client client,
-            final UUID jobId,
-            final String bucketName,
-            final BulkObject ds3Object,
-            final ObjectChannelBuilder transferrer) throws SignatureException, IOException {
-        client
-            .putObject(new PutObjectRequest(
-                bucketName,
+    public void transfer(final ObjectChannelBuilder channelBuilder)
+            throws SignatureException, IOException, XmlProcessingException {
+        final List<Objects> filteredChunks = filterChunks(this.masterObjectList.getObjects());
+        try (final JobState jobState = new JobState(channelBuilder, filteredChunks)) {
+            final ChunkTransferExecutor executor = new ChunkTransferExecutor(
+                new PutObjectTransferrer(jobState),
+                this.client,
+                jobState.getPartTracker(),
+                this.maxParallelRequests
+            );
+            for (final Objects chunk : filteredChunks) {
+                executor.transferChunks(this.masterObjectList.getNodes(), Arrays.asList(filterChunk(allocateChunk(chunk))));
+            }
+        } catch (final SignatureException | IOException | XmlProcessingException e) {
+            throw e;
+        } catch (final Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private Objects allocateChunk(final Objects filtered) throws IOException, SignatureException {
+        Objects chunk = null;
+        while (chunk == null) {
+            chunk = tryAllocateChunk(filtered);
+        }
+        return chunk;
+    }
+
+    private Objects tryAllocateChunk(final Objects filtered) throws IOException, SignatureException {
+        final AllocateJobChunkResponse response =
+                this.client.allocateJobChunk(new AllocateJobChunkRequest(filtered.getChunkId()));
+        switch (response.getStatus()) {
+        case ALLOCATED:
+            return response.getObjects();
+        case NOTFOUND:
+            //TODO: But why is the rum gone?
+            throw new NotImplementedException();
+        case RETRYLATER:
+            try {
+                Thread.sleep(response.getRetryAfterSeconds() * 1000);
+                return null;
+            } catch (final InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        default:
+            assert false : "This line of code should be impossible to hit."; return null;
+        }
+    }
+
+    private static List<Objects> filterChunks(final List<Objects> chunks) {
+        final List<Objects> filteredChunks = new ArrayList<>();
+        for (final Objects chunk : chunks) {
+            final Objects filteredChunk = filterChunk(chunk);
+            if (filteredChunk.getObjects().size() > 0) {
+                filteredChunks.add(filteredChunk);
+            }
+        }
+        return filteredChunks;
+    }
+
+    private static Objects filterChunk(final Objects chunk) {
+        final Objects newChunk = new Objects();
+        newChunk.setChunkId(chunk.getChunkId());
+        newChunk.setChunkNumber(chunk.getChunkNumber());
+        newChunk.setNodeId(chunk.getNodeId());
+        newChunk.setObjects(filterObjects(chunk.getObjects()));
+        return newChunk;
+    }
+
+    private static List<BulkObject> filterObjects(final List<BulkObject> list) {
+        final List<BulkObject> filtered = new ArrayList<>();
+        for (final BulkObject obj : list) {
+            if (!obj.isInCache()) {
+                filtered.add(obj);
+            }
+        }
+        return filtered;
+    }
+
+    private final class PutObjectTransferrer implements Transferrer {
+        private final JobState jobState;
+
+        private PutObjectTransferrer(final JobState jobState) {
+            this.jobState = jobState;
+        }
+
+        @Override
+        public void transferItem(final Ds3Client client, final BulkObject ds3Object)
+                throws SignatureException, IOException {
+            client.putObject(new PutObjectRequest(
+                WriteJobImpl.this.masterObjectList.getBucketName(),
                 ds3Object.getName(),
-                jobId,
+                WriteJobImpl.this.getJobId(),
                 ds3Object.getLength(),
                 ds3Object.getOffset(),
-                transferrer.buildChannel(ds3Object.getName())
+                jobState.getChannel(ds3Object.getName(), ds3Object.getOffset(), ds3Object.getLength())
             ));
+        }
     }
 }

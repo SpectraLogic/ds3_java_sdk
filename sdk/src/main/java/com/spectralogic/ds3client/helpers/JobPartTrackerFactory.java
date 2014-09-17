@@ -24,7 +24,7 @@ import java.util.Collection;
 import java.util.HashMap;
 
 class JobPartTrackerFactory {
-    public static JobPartTracker buildPartTracker(final Collection<BulkObject> objects) {
+    public static JobPartTracker buildPartTracker(final Iterable<BulkObject> objects) {
         final ArrayListMultimap<String, ObjectPart> multimap = ArrayListMultimap.create();
         for (final BulkObject bulkObject : objects) {
             multimap.put(bulkObject.getName(), new ObjectPart(bulkObject.getOffset(), bulkObject.getLength()));
