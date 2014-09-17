@@ -38,10 +38,10 @@ public class BulkPutExample {
 
         // Create the write job with the bucket we want to write to and the list
         // of objects that will be written
-        final Ds3ClientHelpers.WriteJob job = helper.startWriteJob(bucketName, objects);
+        final Ds3ClientHelpers.Job job = helper.startWriteJob(bucketName, objects);
 
         // Start the write job using an Object Putter that will read the files
         // from the local file system.
-        job.write(new FileObjectPutter(inputPath));
+        job.transfer(new FileObjectPutter(inputPath));
     }
 }

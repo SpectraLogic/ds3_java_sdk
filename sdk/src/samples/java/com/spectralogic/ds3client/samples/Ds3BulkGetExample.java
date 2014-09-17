@@ -11,14 +11,12 @@ import com.spectralogic.ds3client.models.bulk.MasterObjectList;
 import com.spectralogic.ds3client.models.bulk.Objects;
 import com.spectralogic.ds3client.serializer.XmlProcessingException;
 
-import org.apache.commons.io.IOUtils;
-
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.nio.channels.FileChannel;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 import java.security.SignatureException;
 import java.util.ArrayList;
 import java.util.List;
@@ -51,26 +49,27 @@ public class Ds3BulkGetExample {
         }
 
         // Prime DS3 with the BulkGet command so that it can start to get objects off of tape.
-        // All Response objects to the SDK implement the Closeable interface and can be used in try-with-resource blocks
-        try (final BulkGetResponse bulkResponse = client.bulkGet(new BulkGetRequest(bucket, objectList))) {
+        final BulkGetResponse bulkResponse = client.bulkGet(new BulkGetRequest(bucket, objectList));
 
-            // The bulk response returns a list of lists which is designed to optimize data transmission from DS3.
-            final MasterObjectList list = bulkResponse.getResult();
-            for (final Objects objects : list.getObjects()) {
-                for (final BulkObject obj : objects) {
+        // The bulk response returns a list of lists which is designed to optimize data transmission from DS3.
+        final MasterObjectList list = bulkResponse.getResult();
+        for (final Objects objects : list.getObjects()) {
+            for (final BulkObject obj : objects) {
+                final FileChannel channel = FileChannel.open(
+                    dirPath.resolve(obj.getName()),
+                    StandardOpenOption.WRITE,
+                    StandardOpenOption.CREATE,
+                    StandardOpenOption.TRUNCATE_EXISTING
+                );
 
-                    // Perform the operation to get the object from DS3.
-                    try (final GetObjectResponse getObjectResponse = client.getObject(
-                            new GetObjectRequest(bucket, obj.getName(), obj.getOffset(), list.getJobId()))) {
-
-                        final Path filePath = dirPath.resolve(obj.getName());
-                        // Here we are using automatic resource cleanup to make sure the streams we use are cleaned up after use.
-                        try (final InputStream objStream = getObjectResponse.getContent();
-                             final OutputStream fileOut = Files.newOutputStream(filePath)) {
-                            IOUtils.copy(objStream, fileOut); //Using IOUtils to copy the object contents to a file.
-                        }
-                    }
-                }
+                // Perform the operation to get the object from DS3.
+                client.getObject(new GetObjectRequest(
+                    bucket,
+                    obj.getName(),
+                    obj.getOffset(),
+                    list.getJobId(),
+                    channel
+                ));
             }
         }
     }
