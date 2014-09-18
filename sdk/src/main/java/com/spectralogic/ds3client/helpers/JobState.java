@@ -25,15 +25,15 @@ import java.io.IOException;
 import java.nio.channels.SeekableByteChannel;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.concurrent.atomic.AtomicInteger;
 
-//TODO: concurrency
 class JobState implements AutoCloseable {
-    private int objectsRemaining;
+    private final AtomicInteger objectsRemaining;
     private final AutoCloseableCache<String, WindowedChannelFactory> channelCache;
     private final JobPartTracker partTracker;
 
     public JobState(final ObjectChannelBuilder channelBuilder, final Collection<Objects> filteredChunks) {
-        this.objectsRemaining = getObjectCount(filteredChunks);
+        this.objectsRemaining = new AtomicInteger(getObjectCount(filteredChunks));
         this.channelCache = buildCache(channelBuilder);
         this.partTracker = JobPartTrackerFactory
             .buildPartTracker(Iterables.concat(filteredChunks))
@@ -41,7 +41,7 @@ class JobState implements AutoCloseable {
     }
     
     public boolean hasObjects() {
-        return this.objectsRemaining > 0;
+        return this.objectsRemaining.get() > 0;
     }
 
     private static int getObjectCount(final Collection<Objects> chunks) {
@@ -82,7 +82,7 @@ class JobState implements AutoCloseable {
     private final class ObjectCompletedListenerImplementation implements ObjectCompletedListener {
         @Override
         public void objectCompleted(final String name) {
-            JobState.this.objectsRemaining--;
+            JobState.this.objectsRemaining.decrementAndGet();
             try {
                 JobState.this.channelCache.close(name);
             } catch (final Exception e) {
