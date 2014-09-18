@@ -17,10 +17,7 @@ package com.spectralogic.ds3client.commands;
 
 import com.spectralogic.ds3client.BulkCommand;
 import com.spectralogic.ds3client.HttpVerb;
-import com.spectralogic.ds3client.models.bulk.Ds3Object;
-import com.spectralogic.ds3client.models.bulk.Ds3ObjectList;
-import com.spectralogic.ds3client.models.bulk.Priority;
-import com.spectralogic.ds3client.models.bulk.WriteOptimization;
+import com.spectralogic.ds3client.models.bulk.*;
 import com.spectralogic.ds3client.serializer.XmlOutput;
 
 import java.io.ByteArrayInputStream;
@@ -35,6 +32,7 @@ abstract class BulkRequest extends AbstractRequest {
     private long size;
     private Priority priority;
     private WriteOptimization writeOptimization;
+    protected ChunkClientProcessingOrderGuarantee chunkOrdering;
 
     public BulkRequest(final String bucket, final List<Ds3Object> objects) {
         this.bucket = bucket;
@@ -57,6 +55,7 @@ abstract class BulkRequest extends AbstractRequest {
         objects.setObjects(this.ds3Objects);
         objects.setPriority(this.priority);
         objects.setWriteOptimization(this.writeOptimization);
+        objects.setChunkClientProcessingOrderGuarantee(this.chunkOrdering);
         final String xmlOutput = XmlOutput.toXml(objects, this.getCommand());
 
         final byte[] stringBytes = xmlOutput.getBytes();

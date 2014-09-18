@@ -79,6 +79,10 @@ public class GetAvailableJobChunksResponse extends AbstractResponse {
     }
 
     private static int parseRetryAfter(final WebResponse webResponse) {
-        return Integer.parseInt(webResponse.getHeaders().get("Retry-After"));
+        final String retryAfter = webResponse.getHeaders().get("Retry-After");
+        if (retryAfter == null) {
+            throw new RetryAfterExpectedException();
+        }
+        return Integer.parseInt(retryAfter);
     }
 }

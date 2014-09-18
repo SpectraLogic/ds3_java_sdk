@@ -16,6 +16,7 @@
 package com.spectralogic.ds3client.helpers;
 
 import com.spectralogic.ds3client.commands.*;
+import com.spectralogic.ds3client.models.bulk.ChunkClientProcessingOrderGuarantee;
 
 import org.apache.commons.io.IOUtils;
 import org.hamcrest.Description;
@@ -30,6 +31,35 @@ import java.util.UUID;
 import static org.mockito.Matchers.*;
 
 public class RequestMatchers {
+    public static BulkGetRequest hasChunkOrdering(final ChunkClientProcessingOrderGuarantee chunkOrdering) {
+        return argThat(new TypeSafeMatcher<BulkGetRequest>() {
+            @Override
+            protected boolean matchesSafely(final BulkGetRequest item) {
+                return item.getChunkOrdering() == null
+                        ? chunkOrdering == null
+                        : item.getChunkOrdering().equals(chunkOrdering);
+            }
+
+            @Override
+            public void describeTo(final Description description) {
+                describe(chunkOrdering, description);
+            }
+            
+            @Override
+            protected void describeMismatchSafely(final BulkGetRequest item, final Description mismatchDescription) {
+                describe(item.getChunkOrdering(), mismatchDescription);
+            }
+
+            private void describe(
+                    final ChunkClientProcessingOrderGuarantee chunkOrdering,
+                    final Description description) {
+                description
+                        .appendText("BulkGetRequest with Chunk Ordering: ")
+                        .appendValue(chunkOrdering);
+            }
+        });
+    }
+
     public static GetAvailableJobChunksRequest hasJobId(final UUID jobId) {
         return argThat(new TypeSafeMatcher<GetAvailableJobChunksRequest>() {
             @Override

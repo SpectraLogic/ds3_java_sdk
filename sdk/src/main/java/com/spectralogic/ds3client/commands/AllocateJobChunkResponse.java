@@ -77,7 +77,11 @@ public class AllocateJobChunkResponse extends AbstractResponse {
         }
     }
 
-    private static int parseRetryAfter(final WebResponse response) {
-        return Integer.parseInt(response.getHeaders().get("Retry-After"));
+    private static int parseRetryAfter(final WebResponse webResponse) {
+        final String retryAfter = webResponse.getHeaders().get("Retry-After");
+        if (retryAfter == null) {
+            throw new RetryAfterExpectedException();
+        }
+        return Integer.parseInt(retryAfter);
     }
 }

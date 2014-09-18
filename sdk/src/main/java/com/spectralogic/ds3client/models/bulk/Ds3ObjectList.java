@@ -17,6 +17,9 @@ public class Ds3ObjectList {
     @JacksonXmlProperty(isAttribute = true, namespace = "", localName = "WriteOptimization")
     private WriteOptimization writeOptimization;
 
+    @JacksonXmlProperty(isAttribute = true, namespace = "", localName = "ChunkClientProcessingOrderGuarantee")
+    private ChunkClientProcessingOrderGuarantee chunkClientProcessingOrderGuarantee;
+
     public Ds3ObjectList() {
     }
 
@@ -41,10 +44,18 @@ public class Ds3ObjectList {
     }
 
     public WriteOptimization getWriteOptimization() {
-        return writeOptimization;
+        return this.writeOptimization;
     }
 
     public void setWriteOptimization(final WriteOptimization writeOptimization) {
         this.writeOptimization = writeOptimization;
+    }
+
+    public ChunkClientProcessingOrderGuarantee getChunkClientProcessingOrderGuarantee() {
+        return this.chunkClientProcessingOrderGuarantee;
+    }
+
+    public void setChunkClientProcessingOrderGuarantee(final ChunkClientProcessingOrderGuarantee chunkClientProcessingOrderGuarantee) {
+        this.chunkClientProcessingOrderGuarantee = chunkClientProcessingOrderGuarantee;
     }
 }

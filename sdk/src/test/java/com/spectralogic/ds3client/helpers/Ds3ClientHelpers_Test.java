@@ -53,7 +53,7 @@ public class Ds3ClientHelpers_Test {
         final Ds3Client ds3Client = buildDs3ClientForBulk();
 
         final BulkGetResponse buildBulkGetResponse = buildBulkGetResponse();
-        Mockito.when(ds3Client.bulkGet(Mockito.any(BulkGetRequest.class))).thenReturn(buildBulkGetResponse);
+        Mockito.when(ds3Client.bulkGet(hasChunkOrdering(ChunkClientProcessingOrderGuarantee.NONE))).thenReturn(buildBulkGetResponse);
 
         Mockito.when(ds3Client.getObject(getRequestHas(MYBUCKET, "foo", jobId, 0))).then(getObjectAnswer("foo co"));
         Mockito.when(ds3Client.getObject(getRequestHas(MYBUCKET, "bar", jobId, 0))).then(getObjectAnswer("bar contents"));
@@ -97,7 +97,7 @@ public class Ds3ClientHelpers_Test {
         Mockito.when(ds3Client.buildFactory(Mockito.<Iterable<Node>>any())).thenReturn(ds3ClientFactory);
 
         final BulkGetResponse buildBulkGetResponse = buildBulkGetResponse();
-        Mockito.when(ds3Client.bulkGet(Mockito.any(BulkGetRequest.class))).thenReturn(buildBulkGetResponse);
+        Mockito.when(ds3Client.bulkGet(hasChunkOrdering(ChunkClientProcessingOrderGuarantee.NONE))).thenReturn(buildBulkGetResponse);
 
         final GetAvailableJobChunksResponse jobChunksResponse = buildJobChunksResponse2();
         Mockito.when(ds3Client.getAvailableJobChunks(hasJobId(jobId))).thenReturn(jobChunksResponse);
