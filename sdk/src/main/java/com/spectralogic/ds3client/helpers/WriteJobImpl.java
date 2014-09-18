@@ -26,8 +26,6 @@ import com.spectralogic.ds3client.models.bulk.MasterObjectList;
 import com.spectralogic.ds3client.models.bulk.Objects;
 import com.spectralogic.ds3client.serializer.XmlProcessingException;
 
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
-
 import java.io.IOException;
 import java.security.SignatureException;
 import java.util.ArrayList;
@@ -57,6 +55,8 @@ class WriteJobImpl extends JobImpl {
             }
         } catch (final SignatureException | IOException | XmlProcessingException e) {
             throw e;
+        } catch (final RuntimeException e) {
+            throw e;
         } catch (final Exception e) {
             throw new RuntimeException(e);
         }
@@ -76,9 +76,6 @@ class WriteJobImpl extends JobImpl {
         switch (response.getStatus()) {
         case ALLOCATED:
             return response.getObjects();
-        case NOTFOUND:
-            //TODO: But why is the rum gone?
-            throw new NotImplementedException();
         case RETRYLATER:
             try {
                 Thread.sleep(response.getRetryAfterSeconds() * 1000);

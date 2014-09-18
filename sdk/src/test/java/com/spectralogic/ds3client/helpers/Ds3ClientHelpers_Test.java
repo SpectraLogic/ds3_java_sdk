@@ -15,156 +15,101 @@
 
 package com.spectralogic.ds3client.helpers;
 
+import com.google.common.base.Stopwatch;
 import com.google.common.collect.Lists;
 import com.spectralogic.ds3client.Ds3Client;
+import com.spectralogic.ds3client.Ds3ClientFactory;
 import com.spectralogic.ds3client.commands.*;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.Job;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.ObjectChannelBuilder;
 import com.spectralogic.ds3client.models.Contents;
 import com.spectralogic.ds3client.models.ListBucketResult;
 import com.spectralogic.ds3client.models.Owner;
-import com.spectralogic.ds3client.models.bulk.BulkObject;
-import com.spectralogic.ds3client.models.bulk.Ds3Object;
-import com.spectralogic.ds3client.models.bulk.MasterObjectList;
+import com.spectralogic.ds3client.models.bulk.*;
 import com.spectralogic.ds3client.models.bulk.Objects;
 import com.spectralogic.ds3client.serializer.XmlProcessingException;
 import com.spectralogic.ds3client.utils.ByteArraySeekableByteChannel;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.mockito.ArgumentMatcher;
-import org.mockito.InOrder;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
+import org.mockito.Mockito;
 
 import java.io.IOException;
-import java.io.Writer;
-import java.nio.channels.Channels;
 import java.nio.channels.SeekableByteChannel;
-import java.nio.channels.WritableByteChannel;
 import java.security.SignatureException;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.argThat;
-import static org.mockito.Mockito.*;
-
+import static com.spectralogic.ds3client.helpers.RequestMatchers.*;
+import static com.spectralogic.ds3client.helpers.ResponseBuilders.*;
+import static org.hamcrest.Matchers.*;
+import static org.junit.Assert.*;
 
 public class Ds3ClientHelpers_Test {
     private static final String MYBUCKET = "mybucket";
-
+    
     @Test
     public void testReadObjects() throws SignatureException, IOException, XmlProcessingException {
-        final Ds3Client ds3Client = mock(Ds3Client.class);
-        when(ds3Client.bulkGet(any(BulkGetRequest.class))).thenReturn(new StubBulkGetResponse());
-        when(ds3Client.getObject(getRequestHas("foo"))).then(new GetObjectAnswer("foo"));
-        when(ds3Client.getObject(getRequestHas("bar"))).then(new GetObjectAnswer("bar"));
-        when(ds3Client.getObject(getRequestHas("baz"))).then(new GetObjectAnswer("baz"));
+        final Ds3Client ds3Client = buildDs3ClientForBulk();
+
+        final BulkGetResponse buildBulkGetResponse = buildBulkGetResponse();
+        Mockito.when(ds3Client.bulkGet(Mockito.any(BulkGetRequest.class))).thenReturn(buildBulkGetResponse);
+
+        Mockito.when(ds3Client.getObject(getRequestHas(MYBUCKET, "foo", jobId, 0))).then(getObjectAnswer("foo co"));
+        Mockito.when(ds3Client.getObject(getRequestHas(MYBUCKET, "bar", jobId, 0))).then(getObjectAnswer("bar contents"));
+        Mockito.when(ds3Client.getObject(getRequestHas(MYBUCKET, "baz", jobId, 0))).then(getObjectAnswer("baz co"));
+        Mockito.when(ds3Client.getObject(getRequestHas(MYBUCKET, "foo", jobId, 6))).then(getObjectAnswer("ntents"));
+        Mockito.when(ds3Client.getObject(getRequestHas(MYBUCKET, "baz", jobId, 6))).then(getObjectAnswer("ntents"));
         
-        final List<Ds3Object> objectsToGet = Lists.newArrayList(
+        final Job job = Ds3ClientHelpers.wrap(ds3Client).startReadJob(MYBUCKET, Lists.newArrayList(
             new Ds3Object("foo"),
             new Ds3Object("bar"),
             new Ds3Object("baz")
-        );
-        final Job readJob = Ds3ClientHelpers.wrap(ds3Client).startReadJob(MYBUCKET, objectsToGet);
+        ));
         
-        assertThat(readJob.getJobId(), is(jobId));
-        assertThat(readJob.getBucketName(), is(MYBUCKET));
+        assertThat(job.getJobId(), is(jobId));
+        assertThat(job.getBucketName(), is(MYBUCKET));
         
         final HashMap<String, ByteArraySeekableByteChannel> channelMap = new HashMap<>();
         channelMap.put("foo", new ByteArraySeekableByteChannel());
         channelMap.put("bar", new ByteArraySeekableByteChannel());
         channelMap.put("baz", new ByteArraySeekableByteChannel());
         
-        readJob.transfer(new ObjectChannelBuilder() {
+        final Stopwatch stopwatch = Stopwatch.createStarted();
+        job.transfer(new ObjectChannelBuilder() {
             @Override
             public SeekableByteChannel buildChannel(final String key) throws IOException {
                 return channelMap.get(key);
             }
         });
+        assertThat(stopwatch.stop().elapsed(TimeUnit.MILLISECONDS), is(both(greaterThan(1000L)).and(lessThan(1250L))));
         
         for (final Map.Entry<String, ByteArraySeekableByteChannel> channelEntry : channelMap.entrySet()) {
             assertThat(channelEntry.getValue().toString(), is(channelEntry.getKey() + " contents"));
         }
-        
-        final InOrder clientInOrder = inOrder(ds3Client);
-        clientInOrder.verify(ds3Client).bulkGet(any(BulkGetRequest.class));
-        clientInOrder.verify(ds3Client).getObject(getRequestHas("baz"));
-        clientInOrder.verify(ds3Client).getObject(getRequestHas("foo"));
-        clientInOrder.verify(ds3Client).getObject(getRequestHas("bar"));
-        clientInOrder.verifyNoMoreInteractions();
-    }
-    
-    @Test
-    public void testWriteObjects() throws SignatureException, IOException, XmlProcessingException {
-        final Ds3Client ds3Client = mock(Ds3Client.class);
-        when(ds3Client.bulkPut(any(BulkPutRequest.class))).thenReturn(new StubBulkPutResponse());
-        when(ds3Client.putObject(any(PutObjectRequest.class))).thenReturn(new StubPutObjectResponse());
-        
-        final Iterable<Ds3Object> objectsToPut = Lists.newArrayList(
-                new Ds3Object("foo", 12),
-                new Ds3Object("bar", 12),
-                new Ds3Object("baz", 12)
-        );
-        final Job job = Ds3ClientHelpers.wrap(ds3Client).startWriteJob(MYBUCKET, objectsToPut);
-        
-        assertThat(job.getJobId(), is(jobId));
-        assertThat(job.getBucketName(), is(MYBUCKET));
-        
-        final HashMap<String, SeekableByteChannel> channels = new HashMap<>();
-        channels.put("baz", mock(SeekableByteChannel.class));
-        channels.put("foo", mock(SeekableByteChannel.class));
-        channels.put("bar", mock(SeekableByteChannel.class));
-        
-        job.transfer(new ObjectChannelBuilder() {
-            @Override
-            public SeekableByteChannel buildChannel(final String key) throws IOException {
-                return channels.get(key);
-            }
-        });
-        
-        final InOrder clientInOrder = inOrder(ds3Client);
-        clientInOrder.verify(ds3Client).bulkPut(any(BulkPutRequest.class));
-        clientInOrder.verify(ds3Client).putObject(putRequestHas("baz", channels.get("baz")));
-        clientInOrder.verify(ds3Client).putObject(putRequestHas("foo", channels.get("foo")));
-        clientInOrder.verify(ds3Client).putObject(putRequestHas("bar", channels.get("bar")));
-        clientInOrder.verifyNoMoreInteractions();
     }
 
     @Test
-    public void testListObjects() throws SignatureException, IOException, XmlProcessingException {
-        final Ds3Client ds3Client = mock(Ds3Client.class);
-        when(ds3Client.getBucket(getBucketHas(null))).thenReturn(new StubGetBucketResponse(0));
-        when(ds3Client.getBucket(getBucketHas("baz"))).thenReturn(new StubGetBucketResponse(1));
-        
-        // Call the list objects method.
-        final List<Contents> contentList = Lists.newArrayList(Ds3ClientHelpers.wrap(ds3Client).listObjects(MYBUCKET));
-        
-        // Check the results.
-        assertThat(contentList.size(), is(3));
-        checkContents(contentList.get(0), "foo", "2cde576e5f5a613e6cee466a681f4929", "2009-10-12T17:50:30.000Z", 12);
-        checkContents(contentList.get(1), "bar", "f3f98ff00be128139332bcf4b772be43", "2009-10-14T17:50:31.000Z", 12);
-        checkContents(contentList.get(2), "baz", "802d45fcb9a3f7d00f1481362edc0ec9", "2009-10-18T17:50:35.000Z", 12);
-    }
+    public void testReadObjectsWithFailedGet() throws SignatureException, IOException, XmlProcessingException {
+        final Ds3Client ds3Client = Mockito.mock(Ds3Client.class);
 
-    @Test
-    public void testReadObjectsWithFailedPut() throws SignatureException, IOException, XmlProcessingException {
-        final Ds3Client ds3Client = mock(Ds3Client.class);
-        when(ds3Client.bulkGet(any(BulkGetRequest.class))).thenReturn(new StubBulkGetResponse());
-        when(ds3Client.getObject(getRequestHas("foo"))).thenThrow(new StubException());
-        when(ds3Client.getObject(getRequestHas("bar"))).thenThrow(new StubException());
-        when(ds3Client.getObject(getRequestHas("baz"))).then(new GetObjectAnswer("baz"));
+        final Ds3ClientFactory ds3ClientFactory = ds3ClientFactory(ds3Client);
+        Mockito.when(ds3Client.buildFactory(Mockito.<Iterable<Node>>any())).thenReturn(ds3ClientFactory);
+
+        final BulkGetResponse buildBulkGetResponse = buildBulkGetResponse();
+        Mockito.when(ds3Client.bulkGet(Mockito.any(BulkGetRequest.class))).thenReturn(buildBulkGetResponse);
+
+        final GetAvailableJobChunksResponse jobChunksResponse = buildJobChunksResponse2();
+        Mockito.when(ds3Client.getAvailableJobChunks(hasJobId(jobId))).thenReturn(jobChunksResponse);
+
+        Mockito.when(ds3Client.getObject(getRequestHas(MYBUCKET, "foo", jobId, 6))).thenThrow(new StubException());
+        Mockito.when(ds3Client.getObject(getRequestHas(MYBUCKET, "baz", jobId, 6))).then(getObjectAnswer("ntents"));
         
-        // Build input list.
-        final ArrayList<Ds3Object> objectsToGet = Lists.newArrayList(
+        final Job job = Ds3ClientHelpers.wrap(ds3Client).startReadJob(MYBUCKET, Lists.newArrayList(
             new Ds3Object("foo"),
             new Ds3Object("bar"),
             new Ds3Object("baz")
-        );
-        
-        final Job job = Ds3ClientHelpers.wrap(ds3Client).startReadJob(MYBUCKET, objectsToGet);
+        ));
 
         try {
             job.transfer(new ObjectChannelBuilder() {
@@ -174,11 +119,116 @@ public class Ds3ClientHelpers_Test {
                     return new ByteArraySeekableByteChannel();
                 }
             });
+            Assert.fail("Should have failed with an exception before we got here.");
         } catch (final StubException e) {
-            // This is what we want.
-            return;
         }
-        Assert.fail("Should have failed with an exception before we got here.");
+    }
+    
+    @Test
+    public void testWriteObjects() throws SignatureException, IOException, XmlProcessingException {
+        final Ds3Client ds3Client = buildDs3ClientForBulk();
+        
+        final BulkPutResponse bulkPutResponse = buildBulkPutResponse();
+        Mockito.when(ds3Client.bulkPut(Mockito.any(BulkPutRequest.class))).thenReturn(bulkPutResponse);
+        
+        final AllocateJobChunkResponse allocateResponse1 = buildAllocateResponse1();
+        final AllocateJobChunkResponse allocateResponse2 = buildAllocateResponse2();
+        final AllocateJobChunkResponse allocateResponse3 = buildAllocateResponse3();
+        Mockito.when(ds3Client.allocateJobChunk(hasChunkId(CHUNK_ID_1)))
+            .thenReturn(allocateResponse1)
+            .thenReturn(allocateResponse2);
+        Mockito.when(ds3Client.allocateJobChunk(hasChunkId(CHUNK_ID_2)))
+            .thenReturn(allocateResponse3);
+
+        final PutObjectResponse response = Mockito.mock(PutObjectResponse.class);
+        Mockito.when(ds3Client.putObject(putRequestHas(MYBUCKET, "foo", jobId, 0, "foo co"))).thenReturn(response);
+        Mockito.when(ds3Client.putObject(putRequestHas(MYBUCKET, "bar", jobId, 0, "bar contents"))).thenReturn(response);
+        Mockito.when(ds3Client.putObject(putRequestHas(MYBUCKET, "baz", jobId, 0, "baz co"))).thenReturn(response);
+        Mockito.when(ds3Client.putObject(putRequestHas(MYBUCKET, "foo", jobId, 6, "ntents"))).thenReturn(response);
+        Mockito.when(ds3Client.putObject(putRequestHas(MYBUCKET, "baz", jobId, 6, "ntents"))).thenReturn(response);
+        
+        final Job job = Ds3ClientHelpers.wrap(ds3Client).startWriteJob(MYBUCKET, Lists.newArrayList(
+                new Ds3Object("foo", 12),
+                new Ds3Object("bar", 12),
+                new Ds3Object("baz", 12)
+        ));
+        
+        assertThat(job.getJobId(), is(jobId));
+        assertThat(job.getBucketName(), is(MYBUCKET));
+        
+        final HashMap<String, SeekableByteChannel> channelMap = new HashMap<>();
+        channelMap.put("foo", channelWithContents("foo contents"));
+        channelMap.put("bar", channelWithContents("bar contents"));
+        channelMap.put("baz", channelWithContents("baz contents"));
+        
+        final Stopwatch stopwatch = Stopwatch.createStarted();
+        job.transfer(new ObjectChannelBuilder() {
+            @Override
+            public SeekableByteChannel buildChannel(final String key) throws IOException {
+                return channelMap.get(key);
+            }
+        });
+        assertThat(stopwatch.stop().elapsed(TimeUnit.MILLISECONDS), is(both(greaterThan(1000L)).and(lessThan(1250L))));
+    }
+    
+    @Test
+    public void testWriteObjectsWithFailedPut() throws SignatureException, IOException, XmlProcessingException {
+        final Ds3Client ds3Client = Mockito.mock(Ds3Client.class);
+
+        final Ds3ClientFactory ds3ClientFactory = ds3ClientFactory(ds3Client);
+        Mockito.when(ds3Client.buildFactory(Mockito.<Iterable<Node>>any())).thenReturn(ds3ClientFactory);
+
+        final BulkPutResponse buildBulkPutResponse = buildBulkPutResponse();
+        Mockito.when(ds3Client.bulkPut(Mockito.any(BulkPutRequest.class))).thenReturn(buildBulkPutResponse);
+
+        final AllocateJobChunkResponse allocateResponse = buildAllocateResponse2();
+        Mockito.when(ds3Client.allocateJobChunk(hasChunkId(CHUNK_ID_1))).thenReturn(allocateResponse);
+
+        final PutObjectResponse putResponse = Mockito.mock(PutObjectResponse.class);
+        Mockito.when(ds3Client.putObject(putRequestHas(MYBUCKET, "foo", jobId, 0, "foo co"))).thenThrow(new StubException());
+        Mockito.when(ds3Client.putObject(putRequestHas(MYBUCKET, "baz", jobId, 0, "baz co"))).thenReturn(putResponse);
+        
+        final Job job = Ds3ClientHelpers.wrap(ds3Client).startWriteJob(MYBUCKET, Lists.newArrayList(
+            new Ds3Object("foo"),
+            new Ds3Object("bar"),
+            new Ds3Object("baz")
+        ));
+
+        final HashMap<String, SeekableByteChannel> channelMap = new HashMap<>();
+        channelMap.put("foo", channelWithContents("foo contents"));
+        channelMap.put("bar", channelWithContents("bar contents"));
+        channelMap.put("baz", channelWithContents("baz contents"));
+        
+        try {
+            job.transfer(new ObjectChannelBuilder() {
+                @Override
+                public SeekableByteChannel buildChannel(final String key) throws IOException {
+                    return channelMap.get(key);
+                }
+            });
+            Assert.fail("Should have failed with an exception before we got here.");
+        } catch (final StubException e) {
+        }
+    }
+    
+    private static final class StubException extends RuntimeException {
+        private static final long serialVersionUID = 5121719894916333278L;
+    }
+
+    @Test
+    public void testListObjects() throws SignatureException, IOException, XmlProcessingException {
+        final Ds3Client ds3Client = Mockito.mock(Ds3Client.class);
+        Mockito.when(ds3Client.getBucket(getBucketHas(MYBUCKET, null))).thenReturn(new StubGetBucketResponse(0));
+        Mockito.when(ds3Client.getBucket(getBucketHas(MYBUCKET, "baz"))).thenReturn(new StubGetBucketResponse(1));
+        
+        // Call the list objects method.
+        final List<Contents> contentList = Lists.newArrayList(Ds3ClientHelpers.wrap(ds3Client).listObjects(MYBUCKET));
+        
+        // Check the results.
+        assertThat(contentList.size(), is(3));
+        checkContents(contentList.get(0), "foo", "2cde576e5f5a613e6cee466a681f4929", "2009-10-12T17:50:30.000Z", 12);
+        checkContents(contentList.get(1), "bar", "f3f98ff00be128139332bcf4b772be43", "2009-10-14T17:50:31.000Z", 12);
+        checkContents(contentList.get(2), "baz", "802d45fcb9a3f7d00f1481362edc0ec9", "2009-10-18T17:50:35.000Z", 12);
     }
     
     private static void checkContents(
@@ -192,74 +242,7 @@ public class Ds3ClientHelpers_Test {
         assertThat(contents.getLastModified(), is(lastModified));
         assertThat(contents.getSize(), is(size));
     }
-
-    private static GetObjectRequest getRequestHas(final String key) {
-        return argThat(new ArgumentMatcher<GetObjectRequest>() {
-            @Override
-            public boolean matches(final Object argument) {
-                if (!(argument instanceof GetObjectRequest)) {
-                    return false;
-                }
-                final GetObjectRequest getObjectRequest = (GetObjectRequest)argument;
-                return
-                        getObjectRequest.getBucketName().equals(MYBUCKET)
-                        && getObjectRequest.getObjectName().equals(key);
-            }
-        });
-    }
-
-    private static PutObjectRequest putRequestHas(final String key, final SeekableByteChannel channel) {
-        return argThat(new ArgumentMatcher<PutObjectRequest>() {
-            @Override
-            public boolean matches(final Object argument) {
-                if (!(argument instanceof PutObjectRequest)) {
-                    return false;
-                }
-                final PutObjectRequest putObjectRequest = (PutObjectRequest)argument;
-                return
-                        putObjectRequest.getBucketName().equals(MYBUCKET)
-                        && putObjectRequest.getObjectName().equals(key)
-                        && putObjectRequest.getChannel() == channel;
-            }
-        });
-    }
     
-    private static GetBucketRequest getBucketHas(final String marker) {
-        return argThat(new ArgumentMatcher<GetBucketRequest>() {
-            @Override
-            public boolean matches(final Object argument) {
-                if (!(argument instanceof GetBucketRequest)) {
-                    return false;
-                }
-                final GetBucketRequest getBucketRequest = ((GetBucketRequest)argument);
-                return
-                        getBucketRequest.getBucket().equals(MYBUCKET)
-                        && (marker == null
-                            ? null == getBucketRequest.getNextMarker()
-                            : marker.equals(getBucketRequest.getNextMarker()));
-                
-            }
-        });
-    }
-    
-    private static final class GetObjectAnswer implements Answer<GetObjectResponse> {
-        private final String key;
-
-        private GetObjectAnswer(final String key) {
-            this.key = key;
-        }
-
-        @Override
-        public GetObjectResponse answer(final InvocationOnMock invocation) throws Throwable {
-            final WritableByteChannel channel = ((GetObjectRequest)invocation.getArguments()[0]).getDestinationChannel();
-            final Writer writer = Channels.newWriter(channel, "UTF-8");
-            writer.write(key);
-            writer.write(" contents");
-            writer.flush();
-            return new StubGetObjectResponse();
-        }
-    }
-
     private static final class StubGetBucketResponse extends GetBucketResponse {
         private final int invocationIndex;
 
@@ -333,82 +316,129 @@ public class Ds3ClientHelpers_Test {
         }
     }
     
-    private static final class StubBulkGetResponse extends BulkGetResponse {
-        public StubBulkGetResponse() throws IOException {
-            super(null);
-        }
+    private static final UUID jobId = new UUID(0x0123456789abcdefl, 0xfedcba9876543210l);
+    private static final UUID nodeId = UUID.fromString("29bf5a53-d891-407f-8f3f-749ee7e636f3");
 
-        @Override
-        protected void processResponse() throws IOException {
-        }
-        
-        @Override
-        public MasterObjectList getResult() {
-            return buildMasterObjectList();
-        }
-    }
-    
-    private static final class StubBulkPutResponse extends BulkPutResponse {
-        public StubBulkPutResponse() throws IOException {
-            super(null);
-        }
+    private static Ds3Client buildDs3ClientForBulk() throws IOException,
+            SignatureException {
+        final Ds3Client ds3Client = Mockito.mock(Ds3Client.class);
 
-        @Override
-        protected void processResponse() throws IOException {
-        }
-        
-        @Override
-        public MasterObjectList getResult() {
-            return buildMasterObjectList();
-        }
+        final Ds3ClientFactory ds3ClientFactory = ds3ClientFactory(ds3Client);
+        Mockito.when(ds3Client.buildFactory(Mockito.<Iterable<Node>>any())).thenReturn(ds3ClientFactory);
+
+        final GetAvailableJobChunksResponse jobChunksResponse1 = buildJobChunksResponse1();
+        final GetAvailableJobChunksResponse jobChunksResponse2 = buildJobChunksResponse2();
+        final GetAvailableJobChunksResponse jobChunksResponse3 = buildJobChunksResponse3();
+        Mockito.when(ds3Client.getAvailableJobChunks(hasJobId(jobId)))
+            .thenReturn(jobChunksResponse1)
+            .thenReturn(jobChunksResponse2)
+            .thenReturn(jobChunksResponse3);
+
+        return ds3Client;
     }
 
-    private static UUID jobId = new UUID(0x0123456789abcdefl, 0xfedcba9876543210l);
-
-    private static MasterObjectList buildMasterObjectList() {
-        final MasterObjectList masterObjectList = new MasterObjectList();
-        masterObjectList.setJobId(jobId);
-        masterObjectList.setObjects(Arrays.asList(
-            makeObjects("020c860d-9bb4-4e42-86ff-a1779da0bf16", Arrays.asList(new BulkObject("baz", 12, false, 0))),
-            makeObjects("47b83776-7cfd-4f2c-b439-c264bba354cc", Arrays.asList(new BulkObject("foo", 12, false, 0))),
-            makeObjects("66a2414a-6690-410b-86c9-dd79be4d72ae", Arrays.asList(new BulkObject("bar", 12, false, 0)))
+    private static BulkGetResponse buildBulkGetResponse() {
+        return bulkGetResponse(buildJobResponse(
+                RequestType.GET,
+                ChunkClientProcessingOrderGuarantee.NONE,
+                0L,
+                0L,
+                chunk1(false),
+                chunk2(false)
         ));
-        return masterObjectList;
-    }
-
-    private static Objects makeObjects(final String nodeId, final List<BulkObject> objectList) {
-        final Objects objects = new Objects();
-        objects.setNodeId(UUID.fromString(nodeId));
-        objects.setObjects(objectList);
-        return objects;
     }
     
-    private static final class StubException extends RuntimeException {
-        private static final long serialVersionUID = 5121719894916333278L;
+    private static GetAvailableJobChunksResponse buildJobChunksResponse1() {
+        return retryGetAvailableAfter(1);
     }
     
-    private static final class StubGetObjectResponse extends GetObjectResponse {
-        public StubGetObjectResponse() throws IOException {
-            super(null, null, 0);
-        }
-
-        @Override
-        protected void processResponse() throws IOException {
-        }
-        
-        @Override
-        protected void download(final WritableByteChannel destinationChannel, final int bufferSize) throws IOException {
-        }
+    private static GetAvailableJobChunksResponse buildJobChunksResponse2() {
+        return availableJobChunks(buildJobResponse(
+                RequestType.GET,
+                ChunkClientProcessingOrderGuarantee.NONE,
+                12L,
+                0L,
+                chunk2(true)
+        ));
     }
     
-    private static final class StubPutObjectResponse extends PutObjectResponse {
+    private static GetAvailableJobChunksResponse buildJobChunksResponse3() {
+        return availableJobChunks(buildJobResponse(
+                RequestType.GET,
+                ChunkClientProcessingOrderGuarantee.NONE,
+                24L,
+                12L,
+                chunk1(true)
+        ));
+    }
 
-        public StubPutObjectResponse() throws IOException {
-            super(null);
-        }
+    private static BulkPutResponse buildBulkPutResponse() {
+        return bulkPutResponse(buildJobResponse(
+                RequestType.PUT,
+                ChunkClientProcessingOrderGuarantee.IN_ORDER,
+                0L,
+                0L,
+                chunk1(false),
+                chunk2(false)
+        ));
+    }
+    
+    private static AllocateJobChunkResponse buildAllocateResponse1() {
+        return retryAllocateLater(1);
+    }
+    
+    private static AllocateJobChunkResponse buildAllocateResponse2() {
+        return allocated(chunk1(false));
+    }
+    
+    private static AllocateJobChunkResponse buildAllocateResponse3() {
+        return allocated(chunk2(false));
+    }
 
-        @Override
-        protected void processResponse() throws IOException {
-        }
+    private static MasterObjectList buildJobResponse(
+            final RequestType requestType,
+            final ChunkClientProcessingOrderGuarantee chunkOrdering,
+            final long cachedSizeInBytes,
+            final long completedSizeInBytes,
+            final Objects ... chunks) {
+        return ResponseBuilders.jobResponse(
+            jobId,
+            MYBUCKET,
+            requestType,
+            36L,
+            cachedSizeInBytes,
+            completedSizeInBytes,
+            chunkOrdering,
+            Priority.VERY_HIGH,
+            "9/17/2014 1:03:54 PM",
+            UUID.fromString("57919d2d-448c-4e2a-8886-0413af22243e"),
+            "spectra",
+            WriteOptimization.CAPACITY,
+            Arrays.asList(basicNode(nodeId, "black-pearl")),
+            Arrays.asList(chunks)
+        );
+    }
+
+    private static final UUID CHUNK_ID_1 = UUID.fromString("f44f1aab-f365-4814-883f-037d6afa6bcf");
+    private static Objects chunk1(final boolean inCache) {
+        return chunk(
+                1,
+                CHUNK_ID_1,
+                nodeId,
+                object("bar", 0, 12, inCache),
+                object("baz", 0, 6, inCache),
+                object("foo", 0, 6, inCache)
+        );
+    }
+
+    private static final UUID CHUNK_ID_2 = UUID.fromString("7cda9f1a-3a7d-44a5-813e-29535228c40c");
+    private static Objects chunk2(final boolean inCache) {
+        return chunk(
+                2,
+                CHUNK_ID_2,
+                nodeId,
+                object("foo", 6, 6, inCache),
+                object("baz", 6, 6, inCache)
+        );
     }
 }

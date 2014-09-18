@@ -31,7 +31,7 @@ public class AllocateJobChunkResponse extends AbstractResponse {
     private int retryAfterSeconds;
 
     static public enum Status {
-        ALLOCATED, RETRYLATER, NOTFOUND
+        ALLOCATED, RETRYLATER
     }
 
     public AllocateJobChunkResponse(final WebResponse response) throws IOException {
@@ -53,7 +53,7 @@ public class AllocateJobChunkResponse extends AbstractResponse {
     @Override
     protected void processResponse() throws IOException {
         try (final WebResponse response = this.getResponse()) {
-            checkStatusCode(200, 503, 404);
+            checkStatusCode(200, 503);
             switch (this.getStatusCode()) {
             case 200:
                 this.status = Status.ALLOCATED;
@@ -62,9 +62,6 @@ public class AllocateJobChunkResponse extends AbstractResponse {
             case 503:
                 this.status = Status.RETRYLATER;
                 this.retryAfterSeconds = parseRetryAfter(response);
-                break;
-            case 404:
-                this.status = Status.NOTFOUND;
                 break;
             default:
                 assert false : "checkStatusCode should have made it impossible to reach this line.";

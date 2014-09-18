@@ -31,7 +31,7 @@ public class GetAvailableJobChunksResponse extends AbstractResponse {
     private int retryAfterSeconds;
 
     static public enum Status {
-        AVAILABLE, RETRYLATER, NOTFOUND
+        AVAILABLE, RETRYLATER
     }
     
     public Status getStatus() {
@@ -53,7 +53,7 @@ public class GetAvailableJobChunksResponse extends AbstractResponse {
     @Override
     protected void processResponse() throws IOException {
         try (final WebResponse webResponse = this.getResponse()) {
-            this.checkStatusCode(200, 404);
+            this.checkStatusCode(200);
             switch (this.getStatusCode()) {
             case 200:
                 this.masterObjectList = parseMasterObjectList(webResponse);
@@ -63,9 +63,6 @@ public class GetAvailableJobChunksResponse extends AbstractResponse {
                 } else {
                     this.status = Status.AVAILABLE;
                 }
-                break;
-            case 404:
-                this.status = Status.NOTFOUND;
                 break;
             default:
                 assert false : "checkStatusCode should have made it impossible to reach this line.";

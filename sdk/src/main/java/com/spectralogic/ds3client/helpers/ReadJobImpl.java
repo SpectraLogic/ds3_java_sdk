@@ -48,14 +48,15 @@ class ReadJobImpl extends JobImpl {
             }
         } catch (final SignatureException | IOException | XmlProcessingException e) {
             throw e;
+        } catch (final RuntimeException e) {
+            throw e;
         } catch (final Exception e) {
             throw new RuntimeException(e);
         }
     }
 
     private void transferNextChunks(final ChunkTransferExecutor executor)
-            throws IOException, SignatureException, XmlProcessingException,
-            InterruptedException {
+            throws IOException, SignatureException, XmlProcessingException, InterruptedException {
         final GetAvailableJobChunksResponse availableJobChunks =
             this.client.getAvailableJobChunks(new GetAvailableJobChunksRequest(this.masterObjectList.getJobId()));
         switch(availableJobChunks.getStatus()) {
@@ -63,9 +64,6 @@ class ReadJobImpl extends JobImpl {
             final MasterObjectList availableMol = availableJobChunks.getMasterObjectList();
             executor.transferChunks(availableMol.getNodes(), availableMol.getObjects());
             break;
-        case NOTFOUND:
-            //TODO: this is a job cancellation condition.
-            throw new IllegalStateException();
         case RETRYLATER:
             Thread.sleep(availableJobChunks.getRetryAfterSeconds() * 1000);
             break;

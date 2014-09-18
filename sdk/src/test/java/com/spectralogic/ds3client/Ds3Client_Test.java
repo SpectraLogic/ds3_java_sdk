@@ -40,7 +40,7 @@ import java.security.SignatureException;
 import java.util.*;
 
 import static org.hamcrest.CoreMatchers.*;
-import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.MatcherAssert.*;
 
 public class Ds3Client_Test {
     private static final UUID MASTER_OBJECT_LIST_JOB_ID = UUID.fromString("1a85e743-ec8f-4789-afec-97e587a26936");
@@ -388,19 +388,6 @@ public class Ds3Client_Test {
     }
     
     @Test
-    public void allocateJobChunkReturnsChunkNotFound() throws SignatureException, IOException {
-        final Map<String, String> queryParams = new HashMap<>();
-        queryParams.put("operation", "allocate");
-        final AllocateJobChunkResponse response = MockNetwork
-            .expecting(HttpVerb.PUT, "/_rest_/job_chunk/203f6886-b058-4f7c-a012-8779176453b1", queryParams, null)
-            .returning(404, "")
-            .asClient()
-            .allocateJobChunk(new AllocateJobChunkRequest(UUID.fromString("203f6886-b058-4f7c-a012-8779176453b1")));
-        
-        assertThat(response.getStatus(), is(AllocateJobChunkResponse.Status.NOTFOUND));
-    }
-    
-    @Test
     public void allocateJobChunkReturnsRetryAfter() throws SignatureException, IOException {
         final Map<String, String> queryParams = new HashMap<>();
         queryParams.put("operation", "allocate");
@@ -455,21 +442,6 @@ public class Ds3Client_Test {
         
         assertThat(response.getStatus(), is(GetAvailableJobChunksResponse.Status.RETRYLATER));
         assertThat(response.getRetryAfterSeconds(), is(300));
-    }
-    
-    @Test
-    public void getAvailableJobChunksReturnsNotFound() throws SignatureException, IOException {
-        final UUID jobId = UUID.fromString("1a85e743-ec8f-4789-afec-97e587a26936");
-
-        final Map<String, String> queryParams = new HashMap<>();
-        queryParams.put("job", jobId.toString());
-        final GetAvailableJobChunksResponse response = MockNetwork
-            .expecting(HttpVerb.GET, "/_rest_/job_chunk", queryParams, null)
-            .returning(404, "")
-            .asClient()
-            .getAvailableJobChunks(new GetAvailableJobChunksRequest(jobId));
-        
-        assertThat(response.getStatus(), is(GetAvailableJobChunksResponse.Status.NOTFOUND));
     }
     
     @Test

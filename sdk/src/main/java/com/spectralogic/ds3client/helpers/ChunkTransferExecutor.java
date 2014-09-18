@@ -38,7 +38,7 @@ class ChunkTransferExecutor {
     private final Transferrer transferrer;
     private final Ds3Client mainClient;
     private final JobPartTracker partTracker;
-    private final ListeningExecutorService executor;
+    private final int maxParallelRequests;
 
     public static interface Transferrer {
         void transferItem(Ds3Client client, BulkObject ds3Object) throws SignatureException, IOException;
@@ -52,13 +52,14 @@ class ChunkTransferExecutor {
         this.transferrer = transferrer;
         this.mainClient = mainClient;
         this.partTracker = partTracker;
-        this.executor = MoreExecutors.listeningDecorator(Executors.newFixedThreadPool(maxParallelRequests));
+        this.maxParallelRequests = maxParallelRequests;
     }
     
     public void transferChunks(
             final Iterable<Node> nodes,
             final Iterable<Objects> chunks)
                 throws SignatureException, IOException, XmlProcessingException {
+        final ListeningExecutorService executor = MoreExecutors.listeningDecorator(Executors.newFixedThreadPool(maxParallelRequests));
         try {
             final List<ListenableFuture<?>> tasks = new ArrayList<>();
             final Ds3ClientFactory clientFactory = this.mainClient.buildFactory(nodes);
@@ -67,7 +68,7 @@ class ChunkTransferExecutor {
                 for (final BulkObject ds3Object : chunk) {
                     final ObjectPart part = new ObjectPart(ds3Object.getOffset(), ds3Object.getLength());
                     if (this.partTracker.containsPart(ds3Object.getName(), part)) {
-                        tasks.add(this.executor.submit(new Callable<Object>() {
+                        tasks.add(executor.submit(new Callable<Object>() {
                             @Override
                             public Object call() throws Exception {
                                 ChunkTransferExecutor.this.transferrer.transferItem(client, ds3Object);
@@ -80,7 +81,7 @@ class ChunkTransferExecutor {
             }
             executeWithExceptionHandling(tasks);
         } finally {
-            this.executor.shutdown();
+            executor.shutdown();
         }
     }
 
