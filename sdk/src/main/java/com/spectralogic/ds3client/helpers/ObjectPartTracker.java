@@ -15,10 +15,10 @@
 
 package com.spectralogic.ds3client.helpers;
 
-import com.spectralogic.ds3client.Ds3Client;
+interface ObjectPartTracker {
+    ObjectPartTracker attachDataTransferredListener(final DataTransferredListener listener);
+    ObjectPartTracker attachObjectCompletedListener(final ObjectCompletedListener listener);
 
-import java.util.UUID;
-
-interface Ds3ClientFactory {
-    Ds3Client getClientForNodeId(UUID nodeId);
+    void completePart(final ObjectPart part);
+    boolean containsPart(final ObjectPart part);
 }

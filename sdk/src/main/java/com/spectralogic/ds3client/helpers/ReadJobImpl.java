@@ -16,39 +16,79 @@
 package com.spectralogic.ds3client.helpers;
 
 import com.spectralogic.ds3client.Ds3Client;
+import com.spectralogic.ds3client.commands.GetAvailableJobChunksRequest;
+import com.spectralogic.ds3client.commands.GetAvailableJobChunksResponse;
 import com.spectralogic.ds3client.commands.GetObjectRequest;
+import com.spectralogic.ds3client.helpers.ChunkTransferrer.ItemTransferrer;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.ObjectChannelBuilder;
 import com.spectralogic.ds3client.models.bulk.BulkObject;
-import com.spectralogic.ds3client.models.bulk.Objects;
+import com.spectralogic.ds3client.models.bulk.MasterObjectList;
+import com.spectralogic.ds3client.serializer.XmlProcessingException;
 
 import java.io.IOException;
 import java.security.SignatureException;
-import java.util.UUID;
 
 class ReadJobImpl extends JobImpl {
-    public ReadJobImpl(
-            final Ds3ClientFactory clientFactory,
-            final UUID jobId,
-            final String bucketName,
-            final Iterable<? extends Objects> objectLists) {
-        super(clientFactory, jobId, bucketName, objectLists);
+    public ReadJobImpl(final Ds3Client client, final MasterObjectList masterObjectList) {
+        super(client, masterObjectList);
     }
 
     @Override
-    protected void transferItem(
-        final Ds3Client client,
-        final UUID jobId,
-        final String bucketName,
-        final BulkObject ds3Object,
-        final ObjectChannelBuilder transferrer)
-            throws SignatureException, IOException {
-        client
-            .getObject(new GetObjectRequest(
-                bucketName,
+    public void transfer(final ObjectChannelBuilder channelBuilder)
+            throws SignatureException, IOException, XmlProcessingException {
+        try (final JobState jobState = new JobState(channelBuilder, this.masterObjectList.getObjects())) {
+            final ChunkTransferrer chunkTransferrer = new ChunkTransferrer(
+                new GetObjectTransferrer(jobState),
+                this.client,
+                jobState.getPartTracker(),
+                this.maxParallelRequests
+            );
+            while (jobState.hasObjects()) {
+                transferNextChunks(chunkTransferrer);
+            }
+        } catch (final SignatureException | IOException | XmlProcessingException e) {
+            throw e;
+        } catch (final RuntimeException e) {
+            throw e;
+        } catch (final Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void transferNextChunks(final ChunkTransferrer chunkTransferrer)
+            throws IOException, SignatureException, XmlProcessingException, InterruptedException {
+        final GetAvailableJobChunksResponse availableJobChunks =
+            this.client.getAvailableJobChunks(new GetAvailableJobChunksRequest(this.masterObjectList.getJobId()));
+        switch(availableJobChunks.getStatus()) {
+        case AVAILABLE:
+            final MasterObjectList availableMol = availableJobChunks.getMasterObjectList();
+            chunkTransferrer.transferChunks(availableMol.getNodes(), availableMol.getObjects());
+            break;
+        case RETRYLATER:
+            Thread.sleep(availableJobChunks.getRetryAfterSeconds() * 1000);
+            break;
+        default:
+            assert false : "This line of code should be impossible to hit.";
+        }
+    }
+
+    private final class GetObjectTransferrer implements ItemTransferrer {
+        private final JobState jobState;
+
+        private GetObjectTransferrer(final JobState jobState) {
+            this.jobState = jobState;
+        }
+
+        @Override
+        public void transferItem(final Ds3Client client, final BulkObject ds3Object)
+                throws SignatureException, IOException {
+            client.getObject(new GetObjectRequest(
+                ReadJobImpl.this.masterObjectList.getBucketName(),
                 ds3Object.getName(),
                 ds3Object.getOffset(),
                 ReadJobImpl.this.getJobId(),
-                transferrer.buildChannel(ds3Object.getName())
+                jobState.getChannel(ds3Object.getName(), ds3Object.getOffset(), ds3Object.getLength())
             ));
+        }
     }
 }

@@ -16,6 +16,7 @@
 package com.spectralogic.ds3client.commands;
 
 import com.spectralogic.ds3client.BulkCommand;
+import com.spectralogic.ds3client.models.bulk.ChunkClientProcessingOrderGuarantee;
 import com.spectralogic.ds3client.models.bulk.Ds3Object;
 import com.spectralogic.ds3client.models.bulk.Priority;
 import com.spectralogic.ds3client.models.bulk.WriteOptimization;
@@ -39,6 +40,15 @@ public class BulkGetRequest extends BulkRequest {
     public BulkGetRequest withWriteOptimization(final WriteOptimization writeOptimization) {
         super.withWriteOptimization(writeOptimization);
         return this;
+    }
+    
+    public BulkGetRequest withChunkOrdering(final ChunkClientProcessingOrderGuarantee chunkOrdering) {
+        this.chunkOrdering = chunkOrdering;
+        return this;
+    }
+    
+    public ChunkClientProcessingOrderGuarantee getChunkOrdering() {
+        return this.chunkOrdering;
     }
 
     @Override

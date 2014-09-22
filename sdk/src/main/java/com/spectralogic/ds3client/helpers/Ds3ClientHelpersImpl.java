@@ -22,8 +22,8 @@ import com.spectralogic.ds3client.helpers.options.ReadJobOptions;
 import com.spectralogic.ds3client.helpers.options.WriteJobOptions;
 import com.spectralogic.ds3client.models.Contents;
 import com.spectralogic.ds3client.models.ListBucketResult;
+import com.spectralogic.ds3client.models.bulk.ChunkClientProcessingOrderGuarantee;
 import com.spectralogic.ds3client.models.bulk.Ds3Object;
-import com.spectralogic.ds3client.models.bulk.MasterObjectList;
 import com.spectralogic.ds3client.serializer.XmlProcessingException;
 
 import java.io.IOException;
@@ -70,8 +70,7 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
         final BulkPutResponse prime = this.client.bulkPut(new BulkPutRequest(bucket, Lists.newArrayList(objectsToWrite))
                 .withPriority(options.getPriority())
                 .withWriteOptimization(options.getWriteOptimization()));
-        final MasterObjectList result = prime.getResult();
-        return new WriteJobImpl(new Ds3ClientFactoryImpl(this.client), result.getJobId(), bucket, result.getObjects());
+        return new WriteJobImpl(this.client, prime.getResult());
     }
 
     @Override
@@ -92,9 +91,9 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
     private Ds3ClientHelpers.Job innerStartReadJob(final String bucket, final Iterable<Ds3Object> objectsToRead, final ReadJobOptions options)
             throws SignatureException, IOException, XmlProcessingException {
         final BulkGetResponse prime = this.client.bulkGet(new BulkGetRequest(bucket, Lists.newArrayList(objectsToRead))
+                .withChunkOrdering(ChunkClientProcessingOrderGuarantee.NONE)
                 .withPriority(options.getPriority()));
-        final MasterObjectList result = prime.getResult();
-        return new ReadJobImpl(new Ds3ClientFactoryImpl(this.client), result.getJobId(), bucket, result.getObjects());
+        return new ReadJobImpl(this.client, prime.getResult());
     }
 
     @Override

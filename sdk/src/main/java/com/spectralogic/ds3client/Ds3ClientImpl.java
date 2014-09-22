@@ -16,10 +16,12 @@
 package com.spectralogic.ds3client;
 
 import com.spectralogic.ds3client.commands.*;
+import com.spectralogic.ds3client.models.bulk.Node;
 import com.spectralogic.ds3client.networking.NetworkClient;
 
 import java.io.IOException;
 import java.security.SignatureException;
+import java.util.UUID;
 
 class Ds3ClientImpl implements Ds3Client {
     private final NetworkClient netClient;
@@ -114,5 +116,16 @@ class Ds3ClientImpl implements Ds3Client {
     @Override
     public ModifyJobResponse modifyJob(final ModifyJobRequest request) throws IOException, SignatureException {
         return new ModifyJobResponse(this.netClient.getResponse(request));
+    }
+
+    @Override
+    public Ds3ClientFactory buildFactory(final Iterable<Node> nodes) {
+        return new Ds3ClientFactory() {
+            @Override
+            public Ds3Client getClientForNodeId(final UUID nodeId) {
+                //TODO: pay attention to actual nodes.
+                return Ds3ClientImpl.this;
+            }
+        };
     }
 }

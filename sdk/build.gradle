@@ -9,4 +9,5 @@ dependencies {
     compile     'org.codehaus.woodstox:woodstox-core-asl:4.2.0'
     compile     'com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.2.3'
     compile     'com.google.guava:guava:16.0.1'
+    compile     'org.hamcrest:hamcrest-library:1.3'
 }

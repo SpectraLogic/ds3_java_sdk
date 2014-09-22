@@ -64,7 +64,7 @@ public abstract class Ds3ClientHelpers {
          * @throws IOException
          * @throws XmlProcessingException
          */
-        public void transfer(final ObjectChannelBuilder transferrer)
+        public void transfer(final ObjectChannelBuilder channelBuilder)
             throws SignatureException, IOException, XmlProcessingException;
     }
 

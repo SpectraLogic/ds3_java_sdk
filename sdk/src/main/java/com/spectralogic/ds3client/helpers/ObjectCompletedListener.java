@@ -15,20 +15,6 @@
 
 package com.spectralogic.ds3client.helpers;
 
-import com.spectralogic.ds3client.Ds3Client;
-
-import java.util.UUID;
-
-class Ds3ClientFactoryImpl implements Ds3ClientFactory {
-    private final Ds3Client client;
-
-    Ds3ClientFactoryImpl(final Ds3Client client) {
-        this.client = client;
-    }
-
-    //TODO: need to actually return a client that points to a particular server id.
-    @Override
-    public Ds3Client getClientForNodeId(final UUID nodeId) {
-        return this.client;
-    }
+interface ObjectCompletedListener {
+    void objectCompleted(final String name);
 }

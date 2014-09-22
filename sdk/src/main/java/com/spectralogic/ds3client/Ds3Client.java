@@ -16,6 +16,7 @@
 package com.spectralogic.ds3client;
 
 import com.spectralogic.ds3client.commands.*;
+import com.spectralogic.ds3client.models.bulk.Node;
 
 import java.io.IOException;
 import java.security.SignatureException;
@@ -236,4 +237,9 @@ public interface Ds3Client {
      */
     public abstract ModifyJobResponse modifyJob(ModifyJobRequest request)
             throws IOException, SignatureException;
+
+    /**
+     * Creates a factory based on a set of nodes that can return clients by node id.
+     */
+    public abstract Ds3ClientFactory buildFactory(Iterable<Node> nodes);
 }
