@@ -19,7 +19,7 @@ import com.spectralogic.ds3client.Ds3Client;
 import com.spectralogic.ds3client.commands.GetAvailableJobChunksRequest;
 import com.spectralogic.ds3client.commands.GetAvailableJobChunksResponse;
 import com.spectralogic.ds3client.commands.GetObjectRequest;
-import com.spectralogic.ds3client.helpers.ChunkTransferExecutor.Transferrer;
+import com.spectralogic.ds3client.helpers.ChunkTransferrer.ItemTransferrer;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.ObjectChannelBuilder;
 import com.spectralogic.ds3client.models.bulk.BulkObject;
 import com.spectralogic.ds3client.models.bulk.MasterObjectList;
@@ -37,14 +37,14 @@ class ReadJobImpl extends JobImpl {
     public void transfer(final ObjectChannelBuilder channelBuilder)
             throws SignatureException, IOException, XmlProcessingException {
         try (final JobState jobState = new JobState(channelBuilder, this.masterObjectList.getObjects())) {
-            final ChunkTransferExecutor executor = new ChunkTransferExecutor(
+            final ChunkTransferrer chunkTransferrer = new ChunkTransferrer(
                 new GetObjectTransferrer(jobState),
                 this.client,
                 jobState.getPartTracker(),
                 this.maxParallelRequests
             );
             while (jobState.hasObjects()) {
-                transferNextChunks(executor);
+                transferNextChunks(chunkTransferrer);
             }
         } catch (final SignatureException | IOException | XmlProcessingException e) {
             throw e;
@@ -55,14 +55,14 @@ class ReadJobImpl extends JobImpl {
         }
     }
 
-    private void transferNextChunks(final ChunkTransferExecutor executor)
+    private void transferNextChunks(final ChunkTransferrer chunkTransferrer)
             throws IOException, SignatureException, XmlProcessingException, InterruptedException {
         final GetAvailableJobChunksResponse availableJobChunks =
             this.client.getAvailableJobChunks(new GetAvailableJobChunksRequest(this.masterObjectList.getJobId()));
         switch(availableJobChunks.getStatus()) {
         case AVAILABLE:
             final MasterObjectList availableMol = availableJobChunks.getMasterObjectList();
-            executor.transferChunks(availableMol.getNodes(), availableMol.getObjects());
+            chunkTransferrer.transferChunks(availableMol.getNodes(), availableMol.getObjects());
             break;
         case RETRYLATER:
             Thread.sleep(availableJobChunks.getRetryAfterSeconds() * 1000);
@@ -72,7 +72,7 @@ class ReadJobImpl extends JobImpl {
         }
     }
 
-    private final class GetObjectTransferrer implements Transferrer {
+    private final class GetObjectTransferrer implements ItemTransferrer {
         private final JobState jobState;
 
         private GetObjectTransferrer(final JobState jobState) {

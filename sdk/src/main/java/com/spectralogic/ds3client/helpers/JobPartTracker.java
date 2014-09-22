@@ -17,6 +17,11 @@ package com.spectralogic.ds3client.helpers;
 
 import java.util.Map;
 
+/**
+ * This class manages parts for all of the objects in the job. It aggregates
+ * ObjectPartTracker implementations, which manage the parts for a single
+ * object.
+ */
 public class JobPartTracker {
     private final Map<String, ObjectPartTracker> trackers;
 

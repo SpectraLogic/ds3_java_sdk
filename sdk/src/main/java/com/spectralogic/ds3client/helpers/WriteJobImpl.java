@@ -19,7 +19,7 @@ import com.spectralogic.ds3client.Ds3Client;
 import com.spectralogic.ds3client.commands.AllocateJobChunkRequest;
 import com.spectralogic.ds3client.commands.AllocateJobChunkResponse;
 import com.spectralogic.ds3client.commands.PutObjectRequest;
-import com.spectralogic.ds3client.helpers.ChunkTransferExecutor.Transferrer;
+import com.spectralogic.ds3client.helpers.ChunkTransferrer.ItemTransferrer;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.ObjectChannelBuilder;
 import com.spectralogic.ds3client.models.bulk.BulkObject;
 import com.spectralogic.ds3client.models.bulk.MasterObjectList;
@@ -44,14 +44,14 @@ class WriteJobImpl extends JobImpl {
             throws SignatureException, IOException, XmlProcessingException {
         final List<Objects> filteredChunks = filterChunks(this.masterObjectList.getObjects());
         try (final JobState jobState = new JobState(channelBuilder, filteredChunks)) {
-            final ChunkTransferExecutor executor = new ChunkTransferExecutor(
+            final ChunkTransferrer chunkTransferrer = new ChunkTransferrer(
                 new PutObjectTransferrer(jobState),
                 this.client,
                 jobState.getPartTracker(),
                 this.maxParallelRequests
             );
             for (final Objects chunk : filteredChunks) {
-                executor.transferChunks(this.masterObjectList.getNodes(), Arrays.asList(filterChunk(allocateChunk(chunk))));
+                chunkTransferrer.transferChunks(this.masterObjectList.getNodes(), Arrays.asList(filterChunk(allocateChunk(chunk))));
             }
         } catch (final SignatureException | IOException | XmlProcessingException e) {
             throw e;
@@ -118,7 +118,7 @@ class WriteJobImpl extends JobImpl {
         return filtered;
     }
 
-    private final class PutObjectTransferrer implements Transferrer {
+    private final class PutObjectTransferrer implements ItemTransferrer {
         private final JobState jobState;
 
         private PutObjectTransferrer(final JobState jobState) {

@@ -34,22 +34,22 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 
-class ChunkTransferExecutor {
-    private final Transferrer transferrer;
+class ChunkTransferrer {
+    private final ItemTransferrer itemTransferrer;
     private final Ds3Client mainClient;
     private final JobPartTracker partTracker;
     private final int maxParallelRequests;
 
-    public static interface Transferrer {
+    public static interface ItemTransferrer {
         void transferItem(Ds3Client client, BulkObject ds3Object) throws SignatureException, IOException;
     }
     
-    public ChunkTransferExecutor(
-            final Transferrer transferrer,
+    public ChunkTransferrer(
+            final ItemTransferrer transferrer,
             final Ds3Client mainClient,
             final JobPartTracker partTracker,
             final int maxParallelRequests) {
-        this.transferrer = transferrer;
+        this.itemTransferrer = transferrer;
         this.mainClient = mainClient;
         this.partTracker = partTracker;
         this.maxParallelRequests = maxParallelRequests;
@@ -71,8 +71,8 @@ class ChunkTransferExecutor {
                         tasks.add(executor.submit(new Callable<Object>() {
                             @Override
                             public Object call() throws Exception {
-                                ChunkTransferExecutor.this.transferrer.transferItem(client, ds3Object);
-                                ChunkTransferExecutor.this.partTracker.completePart(ds3Object.getName(), part);
+                                ChunkTransferrer.this.itemTransferrer.transferItem(client, ds3Object);
+                                ChunkTransferrer.this.partTracker.completePart(ds3Object.getName(), part);
                                 return null;
                             }
                         }));

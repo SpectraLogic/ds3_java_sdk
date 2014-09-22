@@ -37,7 +37,7 @@ class JobState implements AutoCloseable {
         this.channelCache = buildCache(channelBuilder);
         this.partTracker = JobPartTrackerFactory
             .buildPartTracker(Iterables.concat(filteredChunks))
-            .attachObjectCompletedListener(new ObjectCompletedListenerImplementation());
+            .attachObjectCompletedListener(new ObjectCompletedListenerImpl());
     }
     
     public boolean hasObjects() {
@@ -79,7 +79,7 @@ class JobState implements AutoCloseable {
         return partTracker;
     }
 
-    private final class ObjectCompletedListenerImplementation implements ObjectCompletedListener {
+    private final class ObjectCompletedListenerImpl implements ObjectCompletedListener {
         @Override
         public void objectCompleted(final String name) {
             JobState.this.objectsRemaining.decrementAndGet();
