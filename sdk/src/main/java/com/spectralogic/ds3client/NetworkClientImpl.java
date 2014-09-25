@@ -15,11 +15,13 @@
 
 package com.spectralogic.ds3client;
 
+import com.google.common.net.UrlEscapers;
 import com.spectralogic.ds3client.commands.Ds3Request;
 import com.spectralogic.ds3client.models.SignatureDetails;
 import com.spectralogic.ds3client.networking.*;
 import com.spectralogic.ds3client.utils.DateFormatter;
 import com.spectralogic.ds3client.utils.Signature;
+
 import org.apache.http.HttpHost;
 import org.apache.http.HttpRequest;
 import org.apache.http.HttpStatus;
@@ -167,7 +169,7 @@ class NetworkClientImpl implements NetworkClient {
                 this.ds3Request.getContentType().toString(),
                 date,
                 "",
-                this.ds3Request.getPath(),
+                UrlEscapers.urlFragmentEscaper().escape(this.ds3Request.getPath()),
                 NetworkClientImpl.this.connectionDetails.getCredentials()
             )));
         }
