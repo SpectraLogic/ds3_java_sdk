@@ -16,11 +16,13 @@
 package com.spectralogic.ds3client.utils;
 
 import com.spectralogic.ds3client.models.SignatureDetails;
+
 import org.apache.commons.codec.binary.Base64;
+
+import java.security.SignatureException;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
-import java.security.SignatureException;
 
 public class Signature {
 
@@ -52,7 +54,7 @@ public class Signature {
             // compute the hmac on input data bytes
             final byte[] rawHmac = mac.doFinal(data.getBytes());
             result = Base64.encodeBase64String(rawHmac);
-        } catch (Exception e) {
+        } catch (final Exception e) {
             throw new SignatureException("Failed to generate HMAC : " + e.getMessage());
         }
         return result.trim();
@@ -64,7 +66,14 @@ public class Signature {
      */
     public static String signature(final SignatureDetails signatureDetails)
             throws SignatureException {
-
-        return calculateRFC2104HMAC(String.valueOf(signatureDetails.getVerb()) + '\n' + signatureDetails.getContentMd5() + '\n' + signatureDetails.getContentType() + '\n' + signatureDetails.getDate() + '\n' + signatureDetails.getCanonicalizedAmzHeaders() + signatureDetails.getCanonicalizedResource(), signatureDetails.getCredentials().getKey());
+        return calculateRFC2104HMAC(
+                String.valueOf(signatureDetails.getVerb()) + '\n'
+                    + signatureDetails.getContentMd5() + '\n'
+                    + signatureDetails.getContentType() + '\n'
+                    + signatureDetails.getDate() + '\n'
+                    + signatureDetails.getCanonicalizedAmzHeaders()
+                    + signatureDetails.getCanonicalizedResource(),
+                signatureDetails.getCredentials().getKey()
+        );
     }
 }
