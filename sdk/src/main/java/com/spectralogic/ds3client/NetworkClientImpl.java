@@ -137,7 +137,7 @@ class NetworkClientImpl implements NetworkClient {
         }
 
         private String buildPath() {
-            String path = this.ds3Request.getPath();
+            String path = UrlEscapers.urlFragmentEscaper().escape(this.ds3Request.getPath());
             final Map<String, String> queryParams = this.ds3Request.getQueryParams();
             if (!queryParams.isEmpty()) {
                 path += "?" + NetUtils.buildQueryString(queryParams);
