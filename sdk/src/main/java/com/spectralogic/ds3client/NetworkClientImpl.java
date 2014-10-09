@@ -115,7 +115,7 @@ class NetworkClientImpl implements NetworkClient {
                 return new HttpHost(proxyUri.getHost(), proxyUri.getPort(), proxyUri.getScheme());
             } else {
                 final URL url = NetUtils.buildUrl(NetworkClientImpl.this.connectionDetails, "/");
-                return new HttpHost(url.getHost(), this.getPort(url), url.getProtocol());
+                return new HttpHost(url.getHost(), NetUtils.getPort(url), url.getProtocol());
             }
         }
 
@@ -140,18 +140,6 @@ class NetworkClientImpl implements NetworkClient {
             } catch (final NoSuchAlgorithmException | KeyStoreException | KeyManagementException e) {
                 throw new SSLSetupException(e);
             }
-        }
-
-        private int getPort(final URL url) {
-            final int port = url.getPort();
-            if(port > 0) {
-                return port;
-            }
-
-            if (url.getProtocol().equals("https")) {
-                return 443;
-            }
-            return 80;
         }
 
         private HttpRequest buildHttpRequest() throws IOException {

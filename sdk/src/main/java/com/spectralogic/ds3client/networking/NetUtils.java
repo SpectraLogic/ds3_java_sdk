@@ -115,4 +115,17 @@ public class NetUtils {
     public static String buildHostField(final ConnectionDetails details) {
         return details.getEndpoint();
     }
+
+    public static int getPort(final URL url) {
+        final int port = url.getPort();
+        if(port > 0) {
+            return port;
+        }
+
+        if (url.getProtocol().equals("https")) {
+            return 443;
+        }
+        return 80;
+    }
+
 }
