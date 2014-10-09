@@ -25,18 +25,19 @@ class ConnectionDetailsImpl implements ConnectionDetails {
 
         private final String endpoint;
         private final Credentials credentials;
-        private boolean secure = false;
+        private boolean https = false;
         private URI proxy = null;
         private int retries = 5;
         private int bufferSize = 1024 * 1024;
+        private boolean secure;
 
         private Builder(final String endpoint, final Credentials credentials) {
             this.endpoint = endpoint;
             this.credentials = credentials;
         }
 
-        public Builder withSecure(final boolean secure) {
-            this.secure = secure;
+        public Builder withHttps(final boolean secure) {
+            this.https = secure;
             return this;
         }
 
@@ -55,18 +56,25 @@ class ConnectionDetailsImpl implements ConnectionDetails {
             return this;
         }
 
+        public Builder withSecure(final boolean secure) {
+            this.secure = secure;
+            return this;
+        }
+
         @Override
         public ConnectionDetailsImpl build() {
             return new ConnectionDetailsImpl(this);
         }
+
     }
 
     private final String endpoint;
     private final Credentials credentials;
-    private final boolean secure;
+    private final boolean https;
     private final URI proxy;
     private final int retries;
     private final int bufferSize;
+    private final boolean secure;
 
     static Builder builder(final String uriEndpoint, final Credentials credentials) {
         return new Builder(uriEndpoint, credentials);
@@ -75,10 +83,11 @@ class ConnectionDetailsImpl implements ConnectionDetails {
     private ConnectionDetailsImpl(final Builder builder) {
         this.endpoint = builder.endpoint;
         this.credentials = builder.credentials;
-        this.secure = builder.secure;
+        this.https = builder.https;
         this.proxy = builder.proxy;
         this.retries = builder.retries;
         this.bufferSize = builder.bufferSize;
+        this.secure = builder.secure;
     }
 
     @Override
@@ -92,8 +101,8 @@ class ConnectionDetailsImpl implements ConnectionDetails {
     }
 
     @Override
-    public boolean isSecure() {
-        return secure;
+    public boolean isHttps() {
+        return https;
     }
 
     @Override
@@ -110,4 +119,10 @@ class ConnectionDetailsImpl implements ConnectionDetails {
     public int getBufferSize() {
         return bufferSize;
     }
+
+    @Override
+    public boolean isSecure() {
+        return secure;
+    }
+
 }

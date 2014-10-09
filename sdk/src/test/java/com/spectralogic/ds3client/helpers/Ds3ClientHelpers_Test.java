@@ -89,7 +89,7 @@ public class Ds3ClientHelpers_Test {
         }
     }
 
-    @Test
+    @Test(expected = StubException.class)
     public void testReadObjectsWithFailedGet() throws SignatureException, IOException, XmlProcessingException {
         final Ds3Client ds3Client = Mockito.mock(Ds3Client.class);
 
@@ -111,17 +111,14 @@ public class Ds3ClientHelpers_Test {
             new Ds3Object("baz")
         ));
 
-        try {
-            job.transfer(new ObjectChannelBuilder() {
-                @Override
-                public SeekableByteChannel buildChannel(final String key) throws IOException {
-                    // We don't care about the contents since we just want to know that the exception handling works correctly.
-                    return new ByteArraySeekableByteChannel();
-                }
-            });
-            Assert.fail("Should have failed with an exception before we got here.");
-        } catch (final StubException e) {
-        }
+        job.transfer(new ObjectChannelBuilder() {
+            @Override
+            public SeekableByteChannel buildChannel(final String key) throws IOException {
+                // We don't care about the contents since we just want to know that the exception handling works correctly.
+                return new ByteArraySeekableByteChannel();
+            }
+        });
+        Assert.fail("Should have failed with an exception before we got here.");
     }
     
     @Test
@@ -187,7 +184,7 @@ public class Ds3ClientHelpers_Test {
         final PutObjectResponse putResponse = Mockito.mock(PutObjectResponse.class);
         Mockito.when(ds3Client.putObject(putRequestHas(MYBUCKET, "foo", jobId, 0, "foo co"))).thenThrow(new StubException());
         Mockito.when(ds3Client.putObject(putRequestHas(MYBUCKET, "baz", jobId, 0, "baz co"))).thenReturn(putResponse);
-        
+
         final Job job = Ds3ClientHelpers.wrap(ds3Client).startWriteJob(MYBUCKET, Lists.newArrayList(
             new Ds3Object("foo"),
             new Ds3Object("bar"),

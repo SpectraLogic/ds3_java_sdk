@@ -33,22 +33,22 @@ public class Ds3ClientBuilder_Test {
     @Test
     public void isNotSecure() throws Exception {
         final Ds3ClientBuilder builder = Ds3ClientBuilder.create("myEndPoint", new Credentials("foo","bar"));
-        final Ds3ClientImpl client = (Ds3ClientImpl)builder.withHttpSecure(false).build();
-        assertThat(client.getNetClient().getConnectionDetails().isSecure(),is(false));
+        final Ds3ClientImpl client = (Ds3ClientImpl)builder.withHttps(false).build();
+        assertThat(client.getNetClient().getConnectionDetails().isHttps(),is(false));
     }
 
     @Test
     public void defaultSecure() throws Exception {
         final Ds3ClientBuilder builder = Ds3ClientBuilder.create("myEndPoint", new Credentials("foo","bar"));
         final Ds3ClientImpl client = (Ds3ClientImpl)builder.build();
-        assertThat(client.getNetClient().getConnectionDetails().isSecure(),is(true));
+        assertThat(client.getNetClient().getConnectionDetails().isHttps(),is(true));
     }
 
     @Test
     public void isSecure() throws Exception {
         final Ds3ClientBuilder builder = Ds3ClientBuilder.create("myEndPoint", new Credentials("foo","bar"));
-        final Ds3ClientImpl client = (Ds3ClientImpl)builder.withHttpSecure(true).build();
-        assertThat(client.getNetClient().getConnectionDetails().isSecure(),is(true));
+        final Ds3ClientImpl client = (Ds3ClientImpl)builder.withHttps(true).build();
+        assertThat(client.getNetClient().getConnectionDetails().isHttps(),is(true));
     }
 
     @Test

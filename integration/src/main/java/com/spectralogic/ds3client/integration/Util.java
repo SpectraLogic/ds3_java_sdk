@@ -10,6 +10,7 @@ import com.spectralogic.ds3client.models.Credentials;
 import com.spectralogic.ds3client.models.bulk.Ds3Object;
 import com.spectralogic.ds3client.serializer.XmlProcessingException;
 import com.spectralogic.ds3client.utils.ResourceUtils;
+import com.spectralogic.ds3client.utils.SSLSetupException;
 
 import java.io.File;
 import java.io.IOException;
@@ -22,6 +23,18 @@ public class Util {
     private Util() {}
 
     public static Ds3Client fromEnv() {
+        final Ds3ClientBuilder builder = clientBuilder();
+        builder.withHttps(false);
+        return builder.build();
+    }
+
+    public static Ds3Client insecureFromEnv() {
+        final Ds3ClientBuilder builder = clientBuilder();
+        builder.withSecure(false);
+        return builder.build();
+    }
+
+    private static Ds3ClientBuilder clientBuilder() {
         final String endpoint = System.getenv("DS3_ENDPOINT");
         final String accessKey = System.getenv("DS3_ACCESS_KEY");
         final String secretKey = System.getenv("DS3_SECRET_KEY");
@@ -40,15 +53,14 @@ public class Util {
         }
 
         final Ds3ClientBuilder builder = Ds3ClientBuilder.create(endpoint,new Credentials(accessKey, secretKey));
-        builder.withHttpSecure(false);
         if (httpProxy != null) {
             builder.withProxy(httpProxy);
         }
-        return builder.build();
+        return builder;
     }
 
     private static final String[] BOOKS = {"beowulf.txt", "sherlock_holmes.txt", "tale_of_two_cities.txt", "ulysses.txt"};
-    public static void loadBookTestData(final Ds3Client client, final String bucketName) throws IOException, SignatureException, XmlProcessingException, URISyntaxException {
+    public static void loadBookTestData(final Ds3Client client, final String bucketName) throws IOException, SignatureException, XmlProcessingException, URISyntaxException, SSLSetupException {
         final String resourceBaseName = "books/";
         final Ds3ClientHelpers helpers = Ds3ClientHelpers.wrap(client);
 
@@ -66,7 +78,7 @@ public class Util {
             .transfer(new ResourceObjectPutter(resourceBaseName));
     }
 
-    public static void deleteAllContents(final Ds3Client client, final String bucketName) throws IOException, SignatureException {
+    public static void deleteAllContents(final Ds3Client client, final String bucketName) throws IOException, SignatureException, SSLSetupException {
         final Ds3ClientHelpers helpers = Ds3ClientHelpers.wrap(client);
 
         final Iterable<Contents> objects = helpers.listObjects(bucketName);

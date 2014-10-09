@@ -27,7 +27,7 @@ public class Ds3BulkGetExample {
 
         // Get a client builder and then build a client instance.  This is the main entry point to the SDK.
         final Ds3Client client = Ds3ClientBuilder.create("ds3Endpoint:8080",
-                                   new Credentials("accessKey", "secretKey")).withHttpSecure(false).build();
+                                   new Credentials("accessKey", "secretKey")).withHttps(false).build();
 
         final String bucket = "bucketName"; //The bucket we are interested in getting objects from.
 

@@ -528,7 +528,7 @@ public class Ds3Client_Test {
     }
     
     @Test
-    public void getJob() throws SignatureException, IOException {
+    public void getJob() throws SignatureException, IOException{
         checkMasterObjectList(
             MockNetwork
                 .expecting(HttpVerb.GET, "/_rest_/job/1a85e743-ec8f-4789-afec-97e587a26936", null, null)

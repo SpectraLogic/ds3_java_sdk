@@ -5,6 +5,7 @@ import com.spectralogic.ds3client.commands.*;
 import com.spectralogic.ds3client.models.ListBucketResult;
 import com.spectralogic.ds3client.serializer.XmlProcessingException;
 
+import com.spectralogic.ds3client.utils.SSLSetupException;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -26,7 +27,7 @@ public class BucketIntegration_Test {
     }
 
     @Test
-    public void createBucket() throws IOException, SignatureException {
+    public void createBucket() throws IOException, SignatureException, SSLSetupException {
         final String bucketName = "test_create_bucket";
         client.putBucket(new PutBucketRequest(bucketName));
 
@@ -43,7 +44,7 @@ public class BucketIntegration_Test {
     }
 
     @Test
-    public void deleteBucket() throws IOException, SignatureException {
+    public void deleteBucket() throws IOException, SignatureException, SSLSetupException {
         final String bucketName = "test_delete_bucket";
         client.putBucket(new PutBucketRequest(bucketName));
 
@@ -57,7 +58,7 @@ public class BucketIntegration_Test {
     }
 
     @Test
-    public void emptyBucket() throws IOException, SignatureException {
+    public void emptyBucket() throws IOException, SignatureException, SSLSetupException {
         final String bucketName = "test_empty_bucket";
 
         try {
@@ -74,7 +75,7 @@ public class BucketIntegration_Test {
     }
 
     @Test
-    public void listContents() throws IOException, SignatureException, XmlProcessingException, URISyntaxException {
+    public void listContents() throws IOException, SignatureException, XmlProcessingException, URISyntaxException, SSLSetupException {
         final String bucketName = "test_contents_bucket";
 
         try {

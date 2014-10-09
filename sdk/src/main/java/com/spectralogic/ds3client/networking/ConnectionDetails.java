@@ -24,11 +24,21 @@ public interface ConnectionDetails {
 
     public Credentials getCredentials();
 
-    public boolean isSecure();
+    /**
+     * If true the network layer will use Https.
+     * @return
+     */
+    public boolean isHttps();
 
     public URI getProxy();
 
     public int getRetries();
 
     public int getBufferSize();
+
+    /**
+     * Returns true if the network layer should perform certificate authentication for SSL.  False will disable
+     * certificate authentication.
+     */
+    boolean isSecure();
 }
