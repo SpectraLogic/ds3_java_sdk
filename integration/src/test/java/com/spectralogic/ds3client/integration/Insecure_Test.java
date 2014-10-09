@@ -3,7 +3,6 @@ package com.spectralogic.ds3client.integration;
 import com.spectralogic.ds3client.Ds3Client;
 import com.spectralogic.ds3client.commands.GetServiceRequest;
 import com.spectralogic.ds3client.commands.GetServiceResponse;
-import com.spectralogic.ds3client.utils.SSLSetupException;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -28,7 +27,7 @@ public class Insecure_Test {
     }
 
     @Test
-    public void getService() throws SignatureException, IOException, SSLSetupException {
+    public void getService() throws SignatureException, IOException{
         final GetServiceResponse response = client.getService(new GetServiceRequest());
 
         assertThat(response, is(notNullValue()));

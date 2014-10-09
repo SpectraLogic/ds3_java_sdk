@@ -10,7 +10,6 @@ import com.spectralogic.ds3client.models.Credentials;
 import com.spectralogic.ds3client.models.bulk.Ds3Object;
 import com.spectralogic.ds3client.serializer.XmlProcessingException;
 import com.spectralogic.ds3client.utils.ResourceUtils;
-import com.spectralogic.ds3client.utils.SSLSetupException;
 
 import java.io.File;
 import java.io.IOException;
@@ -60,7 +59,7 @@ public class Util {
     }
 
     private static final String[] BOOKS = {"beowulf.txt", "sherlock_holmes.txt", "tale_of_two_cities.txt", "ulysses.txt"};
-    public static void loadBookTestData(final Ds3Client client, final String bucketName) throws IOException, SignatureException, XmlProcessingException, URISyntaxException, SSLSetupException {
+    public static void loadBookTestData(final Ds3Client client, final String bucketName) throws IOException, SignatureException, XmlProcessingException, URISyntaxException {
         final String resourceBaseName = "books/";
         final Ds3ClientHelpers helpers = Ds3ClientHelpers.wrap(client);
 
@@ -78,7 +77,7 @@ public class Util {
             .transfer(new ResourceObjectPutter(resourceBaseName));
     }
 
-    public static void deleteAllContents(final Ds3Client client, final String bucketName) throws IOException, SignatureException, SSLSetupException {
+    public static void deleteAllContents(final Ds3Client client, final String bucketName) throws IOException, SignatureException {
         final Ds3ClientHelpers helpers = Ds3ClientHelpers.wrap(client);
 
         final Iterable<Contents> objects = helpers.listObjects(bucketName);
