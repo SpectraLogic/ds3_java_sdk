@@ -29,7 +29,7 @@ class ConnectionDetailsImpl implements ConnectionDetails {
         private URI proxy = null;
         private int retries = 5;
         private int bufferSize = 1024 * 1024;
-        private boolean secure;
+        private boolean certificateVerification;
 
         private Builder(final String endpoint, final Credentials credentials) {
             this.endpoint = endpoint;
@@ -56,8 +56,8 @@ class ConnectionDetailsImpl implements ConnectionDetails {
             return this;
         }
 
-        public Builder withSecure(final boolean secure) {
-            this.secure = secure;
+        public Builder withCertificateVerification(final boolean certificateVerification) {
+            this.certificateVerification = certificateVerification;
             return this;
         }
 
@@ -74,7 +74,7 @@ class ConnectionDetailsImpl implements ConnectionDetails {
     private final URI proxy;
     private final int retries;
     private final int bufferSize;
-    private final boolean secure;
+    private final boolean certificateVerification;
 
     static Builder builder(final String uriEndpoint, final Credentials credentials) {
         return new Builder(uriEndpoint, credentials);
@@ -87,7 +87,7 @@ class ConnectionDetailsImpl implements ConnectionDetails {
         this.proxy = builder.proxy;
         this.retries = builder.retries;
         this.bufferSize = builder.bufferSize;
-        this.secure = builder.secure;
+        this.certificateVerification = builder.certificateVerification;
     }
 
     @Override
@@ -121,8 +121,8 @@ class ConnectionDetailsImpl implements ConnectionDetails {
     }
 
     @Override
-    public boolean isSecure() {
-        return secure;
+    public boolean isCertificateVerification() {
+        return certificateVerification;
     }
 
 }

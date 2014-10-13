@@ -118,7 +118,6 @@ public class Ds3ClientHelpers_Test {
                 return new ByteArraySeekableByteChannel();
             }
         });
-        Assert.fail("Should have failed with an exception before we got here.");
     }
     
     @Test

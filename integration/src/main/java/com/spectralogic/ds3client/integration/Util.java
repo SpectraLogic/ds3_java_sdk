@@ -29,7 +29,7 @@ public class Util {
 
     public static Ds3Client insecureFromEnv() {
         final Ds3ClientBuilder builder = clientBuilder();
-        builder.withSecure(false);
+        builder.withCertificateVerification(false);
         return builder.build();
     }
 

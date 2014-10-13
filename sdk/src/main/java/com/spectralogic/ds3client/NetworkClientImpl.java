@@ -120,25 +120,26 @@ class NetworkClientImpl implements NetworkClient {
         }
 
         private CloseableHttpClient getClient() {
-            if (!NetworkClientImpl.this.getConnectionDetails().isHttps()) {
-                return HttpClients.createDefault();
+            if (NetworkClientImpl.this.getConnectionDetails().isHttps() && !NetworkClientImpl.this.getConnectionDetails().isCertificateVerification()) {
+                try {
+
+                    final SSLContext sslContext = SSLContexts.custom().loadTrustMaterial(null, new TrustStrategy() {
+                        @Override
+                        public boolean isTrusted(final X509Certificate[] chain, final String authType) throws CertificateException {
+                            return true;
+                        }
+                    }).useTLS().build();
+
+                    final SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(sslContext, new AllowAllHostnameVerifier());
+                    return HttpClients.custom().setSSLSocketFactory(
+                            sslsf).build();
+
+                } catch (final NoSuchAlgorithmException | KeyStoreException | KeyManagementException e) {
+                    throw new SSLSetupException(e);
+                }
             }
-
-            try {
-
-                final SSLContext sslContext = SSLContexts.custom().loadTrustMaterial(null, new TrustStrategy() {
-                    @Override
-                    public boolean isTrusted(final X509Certificate[] chain, final String authType) throws CertificateException {
-                        return true;
-                    }
-                }).useTLS().build();
-
-                final SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(sslContext, new AllowAllHostnameVerifier());
-                return HttpClients.custom().setSSLSocketFactory(
-                        sslsf).build();
-
-            } catch (final NoSuchAlgorithmException | KeyStoreException | KeyManagementException e) {
-                throw new SSLSetupException(e);
+            else {
+                return HttpClients.createDefault();
             }
         }
 
