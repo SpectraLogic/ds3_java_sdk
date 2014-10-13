@@ -28,7 +28,7 @@ class ObjectPartTrackerImpl implements ObjectPartTracker {
 
     public ObjectPartTrackerImpl(final String name, final Collection<ObjectPart> parts) {
         this.name = name;
-        this.parts = new TreeSet<ObjectPart>(ObjectPartComparator.instance());
+        this.parts = new TreeSet<>(ObjectPartComparator.instance());
         this.parts.addAll(parts);
         validateParts();
     }
