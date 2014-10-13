@@ -53,9 +53,7 @@ class WriteJobImpl extends JobImpl {
             for (final Objects chunk : filteredChunks) {
                 chunkTransferrer.transferChunks(this.masterObjectList.getNodes(), Arrays.asList(filterChunk(allocateChunk(chunk))));
             }
-        } catch (final SignatureException | IOException | XmlProcessingException e) {
-            throw e;
-        } catch (final RuntimeException e) {
+        } catch (final SignatureException | IOException | XmlProcessingException | RuntimeException e) {
             throw e;
         } catch (final Exception e) {
             throw new RuntimeException(e);
@@ -88,6 +86,12 @@ class WriteJobImpl extends JobImpl {
         }
     }
 
+    /**
+     * Filters out chunks that have already been completed.  We will get the same chunk name back from the server, but it
+     * will not have any objects in it, so we remove that from the list of objects that are returned.
+     * @param chunks The list to be filtered
+     * @return The filtered list
+     */
     private static List<Objects> filterChunks(final List<Objects> chunks) {
         final List<Objects> filteredChunks = new ArrayList<>();
         for (final Objects chunk : chunks) {

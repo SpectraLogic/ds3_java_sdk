@@ -20,6 +20,7 @@ import com.spectralogic.ds3client.commands.Ds3Request;
 import com.spectralogic.ds3client.models.SignatureDetails;
 import com.spectralogic.ds3client.networking.*;
 import com.spectralogic.ds3client.utils.DateFormatter;
+import com.spectralogic.ds3client.utils.SSLSetupException;
 import com.spectralogic.ds3client.utils.Signature;
 
 import org.apache.http.HttpHost;
@@ -28,17 +29,22 @@ import org.apache.http.HttpStatus;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.protocol.HttpClientContext;
+import org.apache.http.conn.ssl.*;
+import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicHttpEntityEnclosingRequest;
 import org.apache.http.message.BasicHttpRequest;
 
+import javax.net.ssl.SSLContext;
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
-import java.security.SignatureException;
+import java.security.*;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
 import java.util.Map;
 
 class NetworkClientImpl implements NetworkClient {
@@ -100,7 +106,7 @@ class NetworkClientImpl implements NetworkClient {
             
             final HttpRequest httpRequest = this.buildHttpRequest();
             this.addHeaders(httpRequest);
-            return HttpClients.createDefault().execute(this.host, httpRequest, this.getContext());
+            return getClient().execute(this.host, httpRequest, this.getContext());
         }
 
         private HttpHost buildHost() throws MalformedURLException {
@@ -109,16 +115,32 @@ class NetworkClientImpl implements NetworkClient {
                 return new HttpHost(proxyUri.getHost(), proxyUri.getPort(), proxyUri.getScheme());
             } else {
                 final URL url = NetUtils.buildUrl(NetworkClientImpl.this.connectionDetails, "/");
-                return new HttpHost(url.getHost(), this.getPort(url), url.getProtocol());
+                return new HttpHost(url.getHost(), NetUtils.getPort(url), url.getProtocol());
             }
         }
 
-        private int getPort(final URL url) {
-            final int port = url.getPort();
-            if(port < 0) {
-                return 80;
+        private CloseableHttpClient getClient() {
+            if (NetworkClientImpl.this.getConnectionDetails().isHttps() && !NetworkClientImpl.this.getConnectionDetails().isCertificateVerification()) {
+                try {
+
+                    final SSLContext sslContext = SSLContexts.custom().loadTrustMaterial(null, new TrustStrategy() {
+                        @Override
+                        public boolean isTrusted(final X509Certificate[] chain, final String authType) throws CertificateException {
+                            return true;
+                        }
+                    }).useTLS().build();
+
+                    final SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(sslContext, new AllowAllHostnameVerifier());
+                    return HttpClients.custom().setSSLSocketFactory(
+                            sslsf).build();
+
+                } catch (final NoSuchAlgorithmException | KeyStoreException | KeyManagementException e) {
+                    throw new SSLSetupException(e);
+                }
             }
-            return port;
+            else {
+                return HttpClients.createDefault();
+            }
         }
 
         private HttpRequest buildHttpRequest() throws IOException {

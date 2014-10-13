@@ -46,9 +46,7 @@ class ReadJobImpl extends JobImpl {
             while (jobState.hasObjects()) {
                 transferNextChunks(chunkTransferrer);
             }
-        } catch (final SignatureException | IOException | XmlProcessingException e) {
-            throw e;
-        } catch (final RuntimeException e) {
+        } catch (final RuntimeException | SignatureException | IOException | XmlProcessingException e) {
             throw e;
         } catch (final Exception e) {
             throw new RuntimeException(e);

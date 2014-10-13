@@ -18,7 +18,8 @@ public class Ds3ClientBuilder implements Builder<Ds3Client> {
     final private String endpoint;
     final private Credentials credentials;
 
-    private boolean secure = true;
+    private boolean https = true;
+    private boolean certificateVerification = true;
     private URI proxy = null;
     private int retries = 5;
     private int bufferSize = 1024 * 1024;
@@ -49,8 +50,8 @@ public class Ds3ClientBuilder implements Builder<Ds3Client> {
      * @param secure True will use HTTPS, false will use HTTP.
      * @return The current builder.
      */
-    public Ds3ClientBuilder withHttpSecure(final boolean secure) {
-        this.secure = secure;
+    public Ds3ClientBuilder withHttps(final boolean secure) {
+        this.https = secure;
         return this;
     }
 
@@ -60,6 +61,14 @@ public class Ds3ClientBuilder implements Builder<Ds3Client> {
      */
     public Ds3ClientBuilder withBufferSize(final int bufferSize) {
         this.bufferSize = bufferSize;
+        return this;
+    }
+
+    /**
+     * Specifies if the library should perform SSL certificate validation.
+     */
+    public Ds3ClientBuilder withCertificateVerification(final boolean certificateVerification) {
+        this.certificateVerification = certificateVerification;
         return this;
     }
 
@@ -102,7 +111,7 @@ public class Ds3ClientBuilder implements Builder<Ds3Client> {
     @Override
     public Ds3Client build() {
         final ConnectionDetailsImpl.Builder connBuilder = ConnectionDetailsImpl.builder(this.endpoint, this.credentials)
-            .withProxy(this.proxy).withSecure(this.secure).withRedirectRetries(this.retries).withBufferSize(this.bufferSize);
+            .withProxy(this.proxy).withHttps(this.https).withCertificateVerification(this.certificateVerification).withRedirectRetries(this.retries).withBufferSize(this.bufferSize);
 
         final NetworkClient netClient = new NetworkClientImpl(connBuilder.build());
         return new Ds3ClientImpl(netClient);

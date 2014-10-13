@@ -16,7 +16,7 @@ public class Ds3ServiceListExample {
 
         // Get a client builder and then build a client instance.  This is the main entry point to the SDK.
         final Ds3Client client = Ds3ClientBuilder.create("ds3Endpoint:8080",
-                new Credentials("accessKey", "secretKey")).withHttpSecure(false).build();
+                new Credentials("accessKey", "secretKey")).withHttps(false).build();
 
         // Tell the client to get us a list of all buckets, this is called a service list.
         final GetServiceResponse response = client.getService(new GetServiceRequest());

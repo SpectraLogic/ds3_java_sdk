@@ -56,7 +56,7 @@ class JobState implements AutoCloseable {
 
     private static AutoCloseableCache<String, WindowedChannelFactory> buildCache(
             final ObjectChannelBuilder channelBuilder) {
-        return new AutoCloseableCache<String, WindowedChannelFactory>(
+        return new AutoCloseableCache<>(
             new ValueBuilder<String, WindowedChannelFactory>() {
                 @Override
                 public WindowedChannelFactory get(final String key) {

@@ -15,9 +15,9 @@
 
 package com.spectralogic.ds3client.utils;
 
-
 import com.spectralogic.ds3client.BulkCommand;
 import com.spectralogic.ds3client.ConnectionFixture;
+import com.spectralogic.ds3client.networking.ConnectionDetails;
 import com.spectralogic.ds3client.networking.NetUtils;
 import org.junit.Test;
 
@@ -26,8 +26,9 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 public class NetUtils_Test {
 
@@ -142,5 +143,26 @@ public class NetUtils_Test {
         queryParams.put("foo","bar val");
         final URL result = NetUtils.buildUrl(ConnectionFixture.getConnection(), "path", queryParams);
         assertThat(result.toString(), is("http://localhost:8080/path?foo=bar%20val"));
+    }
+
+    @Test
+    public void getPortBack() throws MalformedURLException {
+        final URL url = new URL("http://localhost:8080/path");
+        int port = NetUtils.getPort(url);
+        assertTrue(port == 8080);
+    }
+
+    @Test
+    public void getHttpsDefaultPort() throws MalformedURLException {
+        final URL url = new URL("https://localhost/path");
+        int port = NetUtils.getPort(url);
+        assertTrue(port == 443);
+    }
+
+    @Test
+    public void getHttpDefaultPort() throws MalformedURLException {
+        final URL url = new URL("http://localhost/path");
+        int port = NetUtils.getPort(url);
+        assertTrue(port == 80);
     }
 }

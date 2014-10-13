@@ -18,7 +18,7 @@ public class BulkPutExample {
     public static void main(final String args[]) throws IOException, SignatureException, XmlProcessingException {
         final Ds3Client client = Ds3ClientBuilder.create("endpoint:8080",
                 new Credentials("accessId", "secretKey"))
-                .withHttpSecure(false)
+                .withHttps(false)
                 .build();
 
         // Wrap the Ds3Client with the helper functions
