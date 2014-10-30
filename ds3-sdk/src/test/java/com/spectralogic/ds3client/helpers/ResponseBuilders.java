@@ -15,13 +15,10 @@
 
 package com.spectralogic.ds3client.helpers;
 
-import com.spectralogic.ds3client.Ds3Client;
-import com.spectralogic.ds3client.Ds3ClientFactory;
 import com.spectralogic.ds3client.commands.*;
 import com.spectralogic.ds3client.models.bulk.*;
 import com.spectralogic.ds3client.utils.ByteArraySeekableByteChannel;
 
-import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
@@ -161,12 +158,6 @@ public class ResponseBuilders {
                 return mock(GetObjectResponse.class);
             }
         };
-    }
-    
-    public static Ds3ClientFactory ds3ClientFactory(final Ds3Client client) {
-        final Ds3ClientFactory factory = mock(Ds3ClientFactory.class);
-        when(factory.getClientForNodeId(Mockito.<UUID>any())).thenReturn(client);
-        return factory;
     }
     
     public static SeekableByteChannel channelWithContents(final String contents) {

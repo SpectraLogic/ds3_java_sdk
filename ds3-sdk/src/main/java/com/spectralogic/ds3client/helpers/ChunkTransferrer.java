@@ -20,7 +20,7 @@ import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;
 import com.spectralogic.ds3client.Ds3Client;
-import com.spectralogic.ds3client.Ds3ClientFactory;
+import com.spectralogic.ds3client.Ds3ClientBuilder;
 import com.spectralogic.ds3client.models.bulk.BulkObject;
 import com.spectralogic.ds3client.models.bulk.Node;
 import com.spectralogic.ds3client.models.bulk.Objects;
@@ -28,8 +28,7 @@ import com.spectralogic.ds3client.serializer.XmlProcessingException;
 
 import java.io.IOException;
 import java.security.SignatureException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
@@ -59,12 +58,12 @@ class ChunkTransferrer {
             final Iterable<Node> nodes,
             final Iterable<Objects> chunks)
                 throws SignatureException, IOException, XmlProcessingException {
+        final Map<UUID, Node> nodeMap = buildNodeMap(nodes);
         final ListeningExecutorService executor = MoreExecutors.listeningDecorator(Executors.newFixedThreadPool(maxParallelRequests));
         try {
             final List<ListenableFuture<?>> tasks = new ArrayList<>();
-            final Ds3ClientFactory clientFactory = this.mainClient.buildFactory(nodes);
             for (final Objects chunk : chunks) {
-                final Ds3Client client = clientFactory.getClientForNodeId(chunk.getNodeId());
+                final Ds3Client client = mainClient.newForNode(nodeMap.get(chunk.getNodeId()));
                 for (final BulkObject ds3Object : chunk) {
                     final ObjectPart part = new ObjectPart(ds3Object.getOffset(), ds3Object.getLength());
                     if (this.partTracker.containsPart(ds3Object.getName(), part)) {
@@ -83,6 +82,14 @@ class ChunkTransferrer {
         } finally {
             executor.shutdown();
         }
+    }
+
+    private static Map<UUID, Node> buildNodeMap(final Iterable<Node> nodes) {
+        final Map<UUID, Node> nodeMap = new HashMap<>();
+        for(final Node node: nodes) {
+            nodeMap.put(node.getId(), node);
+        }
+        return nodeMap;
     }
 
     private static void executeWithExceptionHandling(final List<ListenableFuture<?>> tasks)

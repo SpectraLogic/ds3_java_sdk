@@ -18,7 +18,6 @@ package com.spectralogic.ds3client.helpers;
 import com.google.common.base.Stopwatch;
 import com.google.common.collect.Lists;
 import com.spectralogic.ds3client.Ds3Client;
-import com.spectralogic.ds3client.Ds3ClientFactory;
 import com.spectralogic.ds3client.commands.*;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.Job;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.ObjectChannelBuilder;
@@ -44,6 +43,7 @@ import static com.spectralogic.ds3client.helpers.RequestMatchers.*;
 import static com.spectralogic.ds3client.helpers.ResponseBuilders.*;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.mock;
 
 public class Ds3ClientHelpers_Test {
     private static final String MYBUCKET = "mybucket";
@@ -51,6 +51,7 @@ public class Ds3ClientHelpers_Test {
     @Test
     public void testReadObjects() throws SignatureException, IOException, XmlProcessingException {
         final Ds3Client ds3Client = buildDs3ClientForBulk();
+
 
         final BulkGetResponse buildBulkGetResponse = buildBulkGetResponse();
         Mockito.when(ds3Client.bulkGet(hasChunkOrdering(ChunkClientProcessingOrderGuarantee.NONE))).thenReturn(buildBulkGetResponse);
@@ -91,10 +92,9 @@ public class Ds3ClientHelpers_Test {
 
     @Test(expected = StubException.class)
     public void testReadObjectsWithFailedGet() throws SignatureException, IOException, XmlProcessingException {
-        final Ds3Client ds3Client = Mockito.mock(Ds3Client.class);
+        final Ds3Client ds3Client = mock(Ds3Client.class);
 
-        final Ds3ClientFactory ds3ClientFactory = ds3ClientFactory(ds3Client);
-        Mockito.when(ds3Client.buildFactory(Mockito.<Iterable<Node>>any())).thenReturn(ds3ClientFactory);
+        Mockito.when(ds3Client.newForNode(Mockito.<Node>any())).thenReturn(ds3Client);
 
         final BulkGetResponse buildBulkGetResponse = buildBulkGetResponse();
         Mockito.when(ds3Client.bulkGet(hasChunkOrdering(ChunkClientProcessingOrderGuarantee.NONE))).thenReturn(buildBulkGetResponse);
@@ -136,7 +136,7 @@ public class Ds3ClientHelpers_Test {
         Mockito.when(ds3Client.allocateJobChunk(hasChunkId(CHUNK_ID_2)))
             .thenReturn(allocateResponse3);
 
-        final PutObjectResponse response = Mockito.mock(PutObjectResponse.class);
+        final PutObjectResponse response = mock(PutObjectResponse.class);
         Mockito.when(ds3Client.putObject(putRequestHas(MYBUCKET, "foo", jobId, 0, "foo co"))).thenReturn(response);
         Mockito.when(ds3Client.putObject(putRequestHas(MYBUCKET, "bar", jobId, 0, "bar contents"))).thenReturn(response);
         Mockito.when(ds3Client.putObject(putRequestHas(MYBUCKET, "baz", jobId, 0, "baz co"))).thenReturn(response);
@@ -169,10 +169,9 @@ public class Ds3ClientHelpers_Test {
     
     @Test
     public void testWriteObjectsWithFailedPut() throws SignatureException, IOException, XmlProcessingException {
-        final Ds3Client ds3Client = Mockito.mock(Ds3Client.class);
+        final Ds3Client ds3Client = mock(Ds3Client.class);
 
-        final Ds3ClientFactory ds3ClientFactory = ds3ClientFactory(ds3Client);
-        Mockito.when(ds3Client.buildFactory(Mockito.<Iterable<Node>>any())).thenReturn(ds3ClientFactory);
+        Mockito.when(ds3Client.newForNode(Mockito.<Node>any())).thenReturn(ds3Client);
 
         final BulkPutResponse buildBulkPutResponse = buildBulkPutResponse();
         Mockito.when(ds3Client.bulkPut(Mockito.any(BulkPutRequest.class))).thenReturn(buildBulkPutResponse);
@@ -180,7 +179,7 @@ public class Ds3ClientHelpers_Test {
         final AllocateJobChunkResponse allocateResponse = buildAllocateResponse2();
         Mockito.when(ds3Client.allocateJobChunk(hasChunkId(CHUNK_ID_1))).thenReturn(allocateResponse);
 
-        final PutObjectResponse putResponse = Mockito.mock(PutObjectResponse.class);
+        final PutObjectResponse putResponse = mock(PutObjectResponse.class);
         Mockito.when(ds3Client.putObject(putRequestHas(MYBUCKET, "foo", jobId, 0, "foo co"))).thenThrow(new StubException());
         Mockito.when(ds3Client.putObject(putRequestHas(MYBUCKET, "baz", jobId, 0, "baz co"))).thenReturn(putResponse);
 
@@ -213,7 +212,7 @@ public class Ds3ClientHelpers_Test {
 
     @Test
     public void testListObjects() throws SignatureException, IOException, XmlProcessingException {
-        final Ds3Client ds3Client = Mockito.mock(Ds3Client.class);
+        final Ds3Client ds3Client = mock(Ds3Client.class);
         Mockito.when(ds3Client.getBucket(getBucketHas(MYBUCKET, null))).thenReturn(new StubGetBucketResponse(0));
         Mockito.when(ds3Client.getBucket(getBucketHas(MYBUCKET, "baz"))).thenReturn(new StubGetBucketResponse(1));
         
@@ -317,10 +316,7 @@ public class Ds3ClientHelpers_Test {
 
     private static Ds3Client buildDs3ClientForBulk() throws IOException,
             SignatureException {
-        final Ds3Client ds3Client = Mockito.mock(Ds3Client.class);
-
-        final Ds3ClientFactory ds3ClientFactory = ds3ClientFactory(ds3Client);
-        Mockito.when(ds3Client.buildFactory(Mockito.<Iterable<Node>>any())).thenReturn(ds3ClientFactory);
+        final Ds3Client ds3Client = mock(Ds3Client.class);
 
         final GetAvailableJobChunksResponse jobChunksResponse1 = buildJobChunksResponse1();
         final GetAvailableJobChunksResponse jobChunksResponse2 = buildJobChunksResponse2();
@@ -329,6 +325,8 @@ public class Ds3ClientHelpers_Test {
             .thenReturn(jobChunksResponse1)
             .thenReturn(jobChunksResponse2)
             .thenReturn(jobChunksResponse3);
+
+        Mockito.when(ds3Client.newForNode(Mockito.<Node>any())).thenReturn(ds3Client);
 
         return ds3Client;
     }

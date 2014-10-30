@@ -1,2 +1,3 @@
-include 'integration', 'sdk'
-rootProject.name = 'ds3_java_sdk'
+include 'ds3-sdk-integration', 'ds3-sdk', 'ds3-sdk-samples'
+rootProject.name = 'ds3-java-sdk'
+

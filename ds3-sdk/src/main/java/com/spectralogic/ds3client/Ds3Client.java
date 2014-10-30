@@ -17,6 +17,7 @@ package com.spectralogic.ds3client;
 
 import com.spectralogic.ds3client.commands.*;
 import com.spectralogic.ds3client.models.bulk.Node;
+import com.spectralogic.ds3client.networking.ConnectionDetails;
 
 import java.io.IOException;
 import java.security.SignatureException;
@@ -43,6 +44,8 @@ import java.security.SignatureException;
  * See {@link Ds3ClientBuilder} on what options can be used to create a Ds3Client instance.
  */
 public interface Ds3Client {
+
+    public abstract ConnectionDetails getConnectionDetails();
 
     /**
      * Gets the list of buckets.
@@ -239,7 +242,7 @@ public interface Ds3Client {
             throws IOException, SignatureException;
 
     /**
-     * Creates a factory based on a set of nodes that can return clients by node id.
+     * Creates a new Ds3Client instance for the system pointed to by Node.
      */
-    public abstract Ds3ClientFactory buildFactory(Iterable<Node> nodes);
+    public abstract Ds3Client newForNode(Node node);
 }

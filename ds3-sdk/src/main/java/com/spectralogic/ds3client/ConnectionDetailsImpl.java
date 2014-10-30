@@ -16,6 +16,7 @@
 package com.spectralogic.ds3client;
 
 import com.spectralogic.ds3client.models.Credentials;
+import com.spectralogic.ds3client.models.bulk.Node;
 import com.spectralogic.ds3client.networking.ConnectionDetails;
 
 import java.net.URI;
@@ -66,6 +67,17 @@ class ConnectionDetailsImpl implements ConnectionDetails {
             return new ConnectionDetailsImpl(this);
         }
 
+    }
+
+    public static ConnectionDetails newForNode(final Node node, final ConnectionDetails connectionDetails) {
+        final Builder connectionBuilder = builder(node.getEndpoint(), connectionDetails.getCredentials())
+            .withRedirectRetries(connectionDetails.getRetries())
+            .withHttps(connectionDetails.isHttps())
+            .withCertificateVerification(connectionDetails.isCertificateVerification())
+            .withBufferSize(connectionDetails.getBufferSize())
+            .withProxy(connectionDetails.getProxy());
+
+        return connectionBuilder.build();
     }
 
     private final String endpoint;
