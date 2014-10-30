@@ -16,10 +16,7 @@
 package com.spectralogic.ds3client;
 
 import com.spectralogic.ds3client.commands.*;
-import com.spectralogic.ds3client.models.Bucket;
-import com.spectralogic.ds3client.models.Contents;
-import com.spectralogic.ds3client.models.ListAllMyBucketsResult;
-import com.spectralogic.ds3client.models.ListBucketResult;
+import com.spectralogic.ds3client.models.*;
 import com.spectralogic.ds3client.models.bulk.*;
 import com.spectralogic.ds3client.models.bulk.Objects;
 import com.spectralogic.ds3client.networking.FailedRequestException;
@@ -615,5 +612,18 @@ public class Ds3Client_Test {
                 .modifyJob(new ModifyJobRequest(MASTER_OBJECT_LIST_JOB_ID))
                 .getMasterObjectList()
         );
+    }
+
+    @Test
+    public void newForNode() {
+        final Ds3Client client = Ds3ClientBuilder.create("endpoint", new Credentials("access", "key")).build();
+
+        final Node node = new Node();
+        node.setEndpoint("newEndpoint");
+
+        final Ds3Client newClient = client.newForNode(node);
+        assertThat(newClient.getConnectionDetails().getEndpoint(), is("newEndpoint"));
+        assertThat(newClient.getConnectionDetails().getCredentials().getClientId(), is("access"));
+        assertThat(newClient.getConnectionDetails().getCredentials().getKey(), is("key"));
     }
 }

@@ -16,6 +16,8 @@
 package com.spectralogic.ds3client;
 
 import com.spectralogic.ds3client.models.Credentials;
+import com.spectralogic.ds3client.models.bulk.Node;
+import com.spectralogic.ds3client.networking.ConnectionDetails;
 import com.spectralogic.ds3client.networking.NetworkClient;
 import com.spectralogic.ds3client.utils.Builder;
 

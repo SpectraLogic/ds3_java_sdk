@@ -125,13 +125,10 @@ class Ds3ClientImpl implements Ds3Client {
     }
 
     @Override
-    public Ds3ClientFactory buildFactory(final Iterable<Node> nodes) {
-        return new Ds3ClientFactory() {
-            @Override
-            public Ds3Client getClientForNodeId(final UUID nodeId) {
-                //TODO: pay attention to actual nodes.
-                return Ds3ClientImpl.this;
-            }
-        };
+    public Ds3Client newForNode(final Node node) {
+        final ConnectionDetails newConnectionDetails = ConnectionDetailsImpl.newForNode(node, this.getConnectionDetails());
+        final NetworkClient netClient = new NetworkClientImpl(newConnectionDetails);
+
+        return new Ds3ClientImpl(netClient);
     }
 }

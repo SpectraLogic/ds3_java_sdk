@@ -242,7 +242,7 @@ public interface Ds3Client {
             throws IOException, SignatureException;
 
     /**
-     * Creates a factory based on a set of nodes that can return clients by node id.
+     * Creates a new Ds3Client instance for the system pointed to by Node.
      */
-    public abstract Ds3ClientFactory buildFactory(Iterable<Node> nodes);
+    public abstract Ds3Client newForNode(Node node);
 }
