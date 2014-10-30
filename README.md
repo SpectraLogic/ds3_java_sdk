@@ -31,6 +31,26 @@ The SDK can also be included directly into a Maven or Gradle build.  To include 
 
 ```
 
+To include the sdk into Gradle include the following in the `build.gradle` file:
+
+```groovy
+
+repositories {
+    ...
+    maven {
+        url 'https://spectralogic.github.io/java/repository'
+    }
+    ...
+}
+
+dependencies {
+    ...
+    compile 'com.spectralogic.ds3:ds3-sdk:0.7.6-SNAPSHOT'
+    ...
+}
+
+```
+
 ## Tests
 
 In addition to unit tests in the main `sdk` module, there are additional integration tests in the `integration` module.  Please see the integration [README](integration/README.md) for details on running the tests.  To just run the SDK's unit tests use:
