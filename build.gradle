@@ -43,3 +43,9 @@ project(':ds3-sdk-integration') {
         compile project(':ds3-sdk')
     }
 }
+
+project(':ds3-sdk-samples') {
+    dependencies {
+        compile project(':ds3-sdk')
+    }
+}
