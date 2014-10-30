@@ -17,6 +17,7 @@ package com.spectralogic.ds3client;
 
 import com.spectralogic.ds3client.commands.*;
 import com.spectralogic.ds3client.models.bulk.Node;
+import com.spectralogic.ds3client.networking.ConnectionDetails;
 import com.spectralogic.ds3client.networking.NetworkClient;
 
 import java.io.IOException;
@@ -32,6 +33,11 @@ class Ds3ClientImpl implements Ds3Client {
 
     NetworkClient getNetClient() {
         return this.netClient;
+    }
+
+    @Override
+    public ConnectionDetails getConnectionDetails() {
+        return this.netClient.getConnectionDetails();
     }
 
     @Override
