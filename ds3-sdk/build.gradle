@@ -8,11 +8,11 @@ buildscript {
 apply plugin: 'com.github.johnrengelman.shadow'
 
 shadowJar {
-    relocate 'com.google', 'ds3fatjar.com.google'
-    relocate 'commons-io', 'ds3fatjar.commons-io'
+    relocate 'com.google', 'ds3fatjar.google'
+    relocate 'commons-io', 'ds3fatjar.c-io'
 }
 
-install.dependsOn test //make sure that the tests get ran before attempting to install
+//install.dependsOn test //make sure that the tests get ran before attempting to install
 
 artifacts {
     archives shadowJar
