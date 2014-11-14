@@ -70,8 +70,14 @@ class ConnectionDetailsImpl implements ConnectionDetails {
     }
 
     public static ConnectionDetails newForNode(final Node node, final ConnectionDetails connectionDetails) {
-        final Builder connectionBuilder = builder(node.getEndpoint(), connectionDetails.getCredentials())
-            .withRedirectRetries(connectionDetails.getRetries())
+        final Builder connectionBuilder;
+        if (node.getEndpoint() == null || node.getEndpoint().equals("FAILED_TO_DETERMINE_DATAPATH_IP_ADDRESS")) {
+            connectionBuilder = builder(connectionDetails.getEndpoint(), connectionDetails.getCredentials());
+        }
+        else {
+            connectionBuilder = builder(node.getEndpoint(), connectionDetails.getCredentials());
+        }
+        connectionBuilder.withRedirectRetries(connectionDetails.getRetries())
             .withHttps(connectionDetails.isHttps())
             .withCertificateVerification(connectionDetails.isCertificateVerification())
             .withBufferSize(connectionDetails.getBufferSize())
@@ -135,6 +141,10 @@ class ConnectionDetailsImpl implements ConnectionDetails {
     @Override
     public boolean isCertificateVerification() {
         return certificateVerification;
+    }
+
+    public String toString() {
+        return "Endpoint: " + this.endpoint + " | Https?: " + this.https;
     }
 
 }

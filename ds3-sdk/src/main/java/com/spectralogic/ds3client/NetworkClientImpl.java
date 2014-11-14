@@ -39,6 +39,7 @@ import javax.net.ssl.SSLContext;
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.AssertionError;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
@@ -57,6 +58,7 @@ class NetworkClientImpl implements NetworkClient {
     final private ConnectionDetails connectionDetails;
 
     NetworkClientImpl(final ConnectionDetails connectionDetails) {
+        if (connectionDetails == null) throw new AssertionError(connectionDetails);
         this.connectionDetails = connectionDetails;
     }
 
