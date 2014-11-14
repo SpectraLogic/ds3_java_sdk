@@ -23,23 +23,8 @@ import java.io.IOException;
 import java.security.SignatureException;
 
 /**
- * The main interface for communicating with a DS3 appliance.  All communication with a DS3 appliance should start with
+ * The main interface for communicating with a DS3 appliance.  All communication with a DS3 appliance starts with
  * this class.
- *
- * Here is an example showing how the Ds3Client interface is used to get a list of buckets from a remote DS3 appliance.
- *
- * <pre>
- *     {@code
- *     final Ds3Client client = Ds3ClientBuilder.create("ds3Endpoint:8080",
- *                                  new Credentials("accessKey", "secretKey")).build();
- *
- *     final GetServiceResponse response = client.getService(new GetServiceRequest());
- *
- *     for(final Bucket bucket: response.getResult().getBuckets()) {
- *         System.out.println(bucket.getName());
- *     }
- *     }
- * </pre>
  *
  * See {@link Ds3ClientBuilder} on what options can be used to create a Ds3Client instance.
  */
@@ -128,7 +113,7 @@ public interface Ds3Client {
             DeleteObjectRequest request) throws IOException, SignatureException;
 
     /**
-     * Get an object in a bucket from a DS3 endpoint
+     * Retrieves an object from DS3
      * @param request The Get Object Request object used to customize the HTTP request.  The get object request object
      *                has some options for customizing the request.  See {@link GetObjectRequest} for the full list of
      *                options that can be configured.
@@ -141,10 +126,7 @@ public interface Ds3Client {
             throws IOException, SignatureException;
 
     /**
-     * Puts a new object to an existing bucket to a DS3 endpoint.  If the InputStream passed into the PutObjectRequest
-     * is not seekable, meaning if InputStream.markSupported() returns false, the request will fail and throw a
-     * {@link com.spectralogic.ds3client.networking.RequiresMarkSupportedException}.  If using a FileInputStream see
-     * {@link com.spectralogic.ds3client.helpers.ResettableFileInputStream} to make seekable.
+     * Puts a new object to an existing bucket.  The call will fail if the bucket does not exist.
      * @param request The Put Object Request object used to customize the HTTP request.  The put object request object
      *                has some options for customizing the request.  See {@link PutObjectRequest} for the full list of
      *                options that can be configured.

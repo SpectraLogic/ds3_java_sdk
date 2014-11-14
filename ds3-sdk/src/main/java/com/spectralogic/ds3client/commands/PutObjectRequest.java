@@ -23,10 +23,7 @@ import java.nio.channels.SeekableByteChannel;
 import java.util.UUID;
 
 /**
- * Maps to a DS3 Single Object Put request.  This request requires that the InputStream is seekable, that is the
- * InputStream.markSupported() method must return true.  By default the Java FileInputStream does not do this.  To
- * use a FileInputStream see {@link com.spectralogic.ds3client.helpers.ResettableFileInputStream} which wraps a
- * FileInputStream and makes it seekable.
+ * Maps to a DS3 Single Object Put request.
  */
 public class PutObjectRequest extends AbstractRequest {
 

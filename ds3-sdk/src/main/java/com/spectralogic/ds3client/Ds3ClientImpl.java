@@ -127,8 +127,7 @@ class Ds3ClientImpl implements Ds3Client {
     @Override
     public Ds3Client newForNode(final Node node) {
         final ConnectionDetails newConnectionDetails = ConnectionDetailsImpl.newForNode(node, this.getConnectionDetails());
-        final NetworkClient netClient = new NetworkClientImpl(newConnectionDetails);
-
-        return new Ds3ClientImpl(netClient);
+        final NetworkClient newNetClient = new NetworkClientImpl(newConnectionDetails);
+        return new Ds3ClientImpl(newNetClient);
     }
 }
