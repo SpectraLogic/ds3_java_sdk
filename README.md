@@ -23,7 +23,7 @@ The SDK can also be included directly into a Maven or Gradle build.  To include 
       <dependency>
         <groupId>com.spectralogic.ds3</groupId>
         <artifactId>ds3-sdk</artifactId>
-        <version>0.7.6-SNAPSHOT</version>
+        <version>0.7.7-SNAPSHOT</version>
       </dependency>
     ...  
     </dependencies>
@@ -45,7 +45,7 @@ repositories {
 
 dependencies {
     ...
-    compile 'com.spectralogic.ds3:ds3-sdk:0.7.6-SNAPSHOT'
+    compile 'com.spectralogic.ds3:ds3-sdk:0.7.7-SNAPSHOT'
     ...
 }
 
