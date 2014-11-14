@@ -23,23 +23,8 @@ import java.io.IOException;
 import java.security.SignatureException;
 
 /**
- * The main interface for communicating with a DS3 appliance.  All communication with a DS3 appliance should start with
+ * The main interface for communicating with a DS3 appliance.  All communication with a DS3 appliance starts with
  * this class.
- *
- * Here is an example showing how the Ds3Client interface is used to get a list of buckets from a remote DS3 appliance.
- *
- * <pre>
- *     {@code
- *     final Ds3Client client = Ds3ClientBuilder.create("ds3Endpoint:8080",
- *                                  new Credentials("accessKey", "secretKey")).build();
- *
- *     final GetServiceResponse response = client.getService(new GetServiceRequest());
- *
- *     for(final Bucket bucket: response.getResult().getBuckets()) {
- *         System.out.println(bucket.getName());
- *     }
- *     }
- * </pre>
  *
  * See {@link Ds3ClientBuilder} on what options can be used to create a Ds3Client instance.
  */
