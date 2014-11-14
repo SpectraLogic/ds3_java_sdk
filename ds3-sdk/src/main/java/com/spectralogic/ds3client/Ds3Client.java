@@ -128,7 +128,7 @@ public interface Ds3Client {
             DeleteObjectRequest request) throws IOException, SignatureException;
 
     /**
-     * Get an object in a bucket from a DS3 endpoint
+     * Retrieves an object from DS3
      * @param request The Get Object Request object used to customize the HTTP request.  The get object request object
      *                has some options for customizing the request.  See {@link GetObjectRequest} for the full list of
      *                options that can be configured.
@@ -141,9 +141,7 @@ public interface Ds3Client {
             throws IOException, SignatureException;
 
     /**
-     * Puts a new object to an existing bucket to a DS3 endpoint.  If the InputStream passed into the PutObjectRequest
-     * is not seekable, meaning if InputStream.markSupported() returns false, the request will fail and throw a
-     * {@link com.spectralogic.ds3client.networking.RequiresMarkSupportedException}.
+     * Puts a new object to an existing bucket.  The call will fail if the bucket does not exist.
      * @param request The Put Object Request object used to customize the HTTP request.  The put object request object
      *                has some options for customizing the request.  See {@link PutObjectRequest} for the full list of
      *                options that can be configured.
