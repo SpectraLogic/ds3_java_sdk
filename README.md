@@ -1,6 +1,10 @@
 ds3_java_sdk
 ============
 
+## Contact Us
+
+Join us at our [Google Groups](https://groups.google.com/d/forum/spectralogicds3-sdks) forum to ask questions, or see frequently asked questions.
+
 ## Install
 
 To install the latest ds3_java_sdk either download the latest release jar file from the [Releases](../../releases) page or clone the repository with `git clone https://github.com/SpectraLogic/ds3_java_sdk.git`, cd to `ds3_java_sdk` and run `./gradlew clean sdk:install` to install the sdk into your local maven repository.
