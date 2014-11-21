@@ -15,6 +15,8 @@
 
 package com.spectralogic.ds3client.commands;
 
+import com.google.common.collect.Multimap;
+import com.google.common.collect.TreeMultimap;
 import com.spectralogic.ds3client.models.Checksum;
 import org.apache.http.entity.ContentType;
 
@@ -24,11 +26,11 @@ import java.util.Map;
 
 abstract class AbstractRequest implements Ds3Request {
 
-    private final Map<String, String> headers = buildDefaultHeaders();
+    private final Multimap<String, String> headers = buildDefaultHeaders();
     private final Map<String, String> queryParams = new HashMap<>();
     
-    private static Map<String, String> buildDefaultHeaders() {
-        final Map<String, String> headers = new HashMap<>();
+    private static Multimap<String, String> buildDefaultHeaders() {
+        final Multimap<String, String> headers = TreeMultimap.create();
         headers.put("Naming-Convention", "s3");
         return headers;
     }
@@ -59,7 +61,7 @@ abstract class AbstractRequest implements Ds3Request {
     }
 
     @Override
-    public final Map<String, String> getHeaders() {
+    public final Multimap<String, String> getHeaders() {
         return this.headers;
     }
 

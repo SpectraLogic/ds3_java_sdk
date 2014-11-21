@@ -81,9 +81,7 @@ public class GetObjectRequest extends AbstractRequest {
      */
     public GetObjectRequest withByteRange(final Range byteRange) {
         this.byteRange = byteRange;
-        if (byteRange == null) {
-            this.getHeaders().remove("Range");
-        } else {
+        if (byteRange != null) {
             this.getHeaders().put("Range", buildRangeHeaderText(byteRange));
         }
         return this;

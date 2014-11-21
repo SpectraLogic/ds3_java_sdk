@@ -58,7 +58,7 @@ class NetworkClientImpl implements NetworkClient {
     final private ConnectionDetails connectionDetails;
 
     NetworkClientImpl(final ConnectionDetails connectionDetails) {
-        if (connectionDetails == null) throw new AssertionError(connectionDetails);
+        if (connectionDetails == null) throw new AssertionError("Connection Details cannot be null");
         this.connectionDetails = connectionDetails;
     }
 
@@ -177,7 +177,7 @@ class NetworkClientImpl implements NetworkClient {
             httpRequest.addHeader(CONTENT_TYPE, this.ds3Request.getContentType().toString());
             
             // Add custom headers.
-            for(final Map.Entry<String, String> header: this.ds3Request.getHeaders().entrySet()) {
+            for(final Map.Entry<String, String> header: this.ds3Request.getHeaders().entries()) {
                 httpRequest.addHeader(header.getKey(), header.getValue());
             }
             

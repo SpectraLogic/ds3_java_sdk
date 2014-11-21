@@ -15,6 +15,7 @@
 
 package com.spectralogic.ds3client.commands;
 
+import com.google.common.collect.Multimap;
 import com.spectralogic.ds3client.HttpVerb;
 import com.spectralogic.ds3client.models.Checksum;
 import org.apache.http.entity.ContentType;
@@ -37,5 +38,5 @@ public interface Ds3Request {
 
     public Map<String, String> getQueryParams();
 
-    public Map<String, String> getHeaders();
+    public Multimap<String, String> getHeaders();
 }
