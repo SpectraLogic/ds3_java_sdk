@@ -58,17 +58,16 @@ dependencies {
 }
 
 ```
+## Javadoc
+
+The latest javadoc is located at [http://spectralogic.github.io/ds3_java_sdkj/javadoc/v0.7.7/](http://spectralogic.github.io/ds3_java_sdk/javadoc/v0.7.7/)
+
+## Examples
+
+All the examples are listed in the [ds3-sdk-samples](ds3-sdk-samples/src/main/java/com/spectralogic/ds3client/samples/) module.
 
 ## Tests
 
 In addition to unit tests in the main `sdk` module, there are additional integration tests in the `integration` module.  Please see the integration [README](ds3-sdk-integration/README.md) for details on running the tests.  To just run the SDK's unit tests use:
 
     ./gradlew clean ds3-sdk:test
-
-## Javadoc
-
-The latest javadoc is located at [http://spectralogic.github.io/ds3_java_sdk/](http://spectralogic.github.io/ds3_java_sdk/)
-
-## Examples
-
-All the examples are listed in the [ds3-sdk-samples](ds3-sdk-samples/src/main/java/com/spectralogic/ds3client/samples/) module.
