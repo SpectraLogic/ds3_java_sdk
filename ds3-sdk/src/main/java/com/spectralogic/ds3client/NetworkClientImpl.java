@@ -204,18 +204,18 @@ class NetworkClientImpl implements NetworkClient {
         
 		private String canonicalizeAmzHeaders(
 				final Multimap<String, String> customHeaders) {
-			String ret = "";
+			StringBuilder ret = new StringBuilder();
 			for (final Map.Entry<String, Collection<String>> header : customHeaders
 					.asMap().entrySet()) {
 				final String key = header.getKey().toLowerCase();
 				if (key.startsWith(PutObjectRequest.AMZ_META_HEADER)
 						&& header.getValue().size() > 0) {
-					ret += key + ":";
-					ret += Joiner.on(",").join(header.getValue());
-					ret += '\n';
+					ret.append(key).append(":");
+					ret.append(Joiner.on(",").join(header.getValue()));
+					ret.append('\n');
 				}
 			}
-			return ret;
+			return ret.toString();
 		}
 
         private String buildHash() throws IOException {
