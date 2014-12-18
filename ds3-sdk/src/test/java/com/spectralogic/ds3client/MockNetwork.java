@@ -113,7 +113,7 @@ public class MockNetwork implements NetworkClient {
         if(this.requestHeaders != null){
         	assertThat(this.requestHeaders.size(), is(request.getHeaders().size()));
         	assertTrue(Iterables.elementsEqual(this.requestHeaders.keySet(), request.getHeaders().keySet()));
-        	for (String key : this.requestHeaders.keySet()){
+        	for (final String key : this.requestHeaders.keySet()){
         		assertThat(this.requestHeaders.get(key), is(notNullValue()));
         		assertThat(request.getHeaders().get(key), is(notNullValue()));
         		assertTrue(Iterables.elementsEqual(this.requestHeaders.get(key), request.getHeaders().get(key)));

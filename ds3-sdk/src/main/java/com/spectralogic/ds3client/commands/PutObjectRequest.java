@@ -66,11 +66,14 @@ public class PutObjectRequest extends AbstractRequest {
         return this;
     }
 
-	public PutObjectRequest withMetaData(String key, String value) {
+	public PutObjectRequest withMetaData(final String key, final String value) {
+		final String modifiedKey;
 		if (!key.startsWith(AMZ_META_HEADER)){
-			key = AMZ_META_HEADER + key;
+			modifiedKey = AMZ_META_HEADER + key;
+		} else {
+			modifiedKey = key;
 		}
-		this.getHeaders().put(key, value);
+		this.getHeaders().put(modifiedKey, value);
 		return this;
 	}
 
