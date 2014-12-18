@@ -35,6 +35,7 @@ public class PutObjectRequest extends AbstractRequest {
     private final long size;
     private final long offset;
     private Checksum checksum = Checksum.none();
+    public final static String AMZ_META_HEADER = "x-amz-meta-";
 
     @Deprecated
     public PutObjectRequest(final String bucketName, final String objectName, final long size, final SeekableByteChannel channel) {
@@ -64,6 +65,15 @@ public class PutObjectRequest extends AbstractRequest {
         this.checksum = checksum;
         return this;
     }
+
+	public PutObjectRequest withMetaData(String key, String value) {
+		if (!key.startsWith(AMZ_META_HEADER)){
+			key = AMZ_META_HEADER + key;
+		}
+		this.getHeaders().put(key, value);
+		return this;
+	}
+
     
     public String getBucketName() {
         return this.bucketName;

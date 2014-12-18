@@ -15,8 +15,11 @@
 
 package com.spectralogic.ds3client;
 
+import com.google.common.base.Joiner;
+import com.google.common.collect.Multimap;
 import com.google.common.net.UrlEscapers;
 import com.spectralogic.ds3client.commands.Ds3Request;
+import com.spectralogic.ds3client.commands.PutObjectRequest;
 import com.spectralogic.ds3client.models.SignatureDetails;
 import com.spectralogic.ds3client.networking.*;
 import com.spectralogic.ds3client.utils.DateFormatter;
@@ -36,6 +39,7 @@ import org.apache.http.message.BasicHttpEntityEnclosingRequest;
 import org.apache.http.message.BasicHttpRequest;
 
 import javax.net.ssl.SSLContext;
+
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
@@ -46,6 +50,7 @@ import java.net.URL;
 import java.security.*;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
+import java.util.Collection;
 import java.util.Map;
 
 class NetworkClientImpl implements NetworkClient {
@@ -192,11 +197,28 @@ class NetworkClientImpl implements NetworkClient {
                 this.hash,
                 this.ds3Request.getContentType().toString(),
                 date,
-                "",
+                canonicalizeAmzHeaders(this.ds3Request.getHeaders()),
                 UrlEscapers.urlFragmentEscaper().escape(this.ds3Request.getPath()),
                 NetworkClientImpl.this.connectionDetails.getCredentials()
             )));
         }
+        
+		private String canonicalizeAmzHeaders(
+				final Multimap<String, String> customHeaders) {
+			String ret = "";
+			for (final Map.Entry<String, Collection<String>> header : customHeaders
+					.asMap().entrySet()) {
+				final String key = header.getKey().toLowerCase();
+				if (key.startsWith(PutObjectRequest.AMZ_META_HEADER)
+						&& header.getValue().size() > 0) {
+					ret += key + ":";
+					ret += Joiner.on(",").join(header.getValue());
+					ret += '\n';
+				}
+			}
+			System.out.println(ret);
+			return ret;
+		}
 
         private String buildHash() throws IOException {
             return this.ds3Request.getChecksum().match(new HashGeneratingMatchHandler(this.content));

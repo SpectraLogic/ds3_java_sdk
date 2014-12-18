@@ -15,12 +15,16 @@
 
 package com.spectralogic.ds3client;
 
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Multimap;
 import com.spectralogic.ds3client.commands.Ds3Request;
 import com.spectralogic.ds3client.networking.ConnectionDetails;
 import com.spectralogic.ds3client.networking.NetworkClient;
 import com.spectralogic.ds3client.networking.WebResponse;
 
 import org.apache.commons.io.IOUtils;
+
+import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -43,6 +47,7 @@ public class MockNetwork implements NetworkClient {
     private int statusCode;
     private String responseContent;
     private Map<String, String> headers;
+    private Multimap <String, String> requestHeaders;
     
     private MockNetwork() {
     }
@@ -57,6 +62,22 @@ public class MockNetwork implements NetworkClient {
         mock.path = path;
         mock.queryParams = queryParams;
         mock.requestContent = requestContent;
+        mock.requestHeaders = null;
+        return mock;
+    }
+    
+    public static MockNetwork expecting(
+            final HttpVerb verb,
+            final String path,
+            final Map<String, String> queryParams,
+            final Multimap<String, String> requestHeaders,
+            final String requestContent) {
+        final MockNetwork mock = new MockNetwork();
+        mock.verb = verb;
+        mock.path = path;
+        mock.queryParams = queryParams;
+        mock.requestContent = requestContent;
+        mock.requestHeaders = requestHeaders;
         return mock;
     }
     
@@ -88,6 +109,18 @@ public class MockNetwork implements NetworkClient {
         if (this.queryParams != null) {
             this.assertMapsEqual(this.queryParams, request.getQueryParams());
         }
+        
+        if(this.requestHeaders != null){
+        	assertThat(this.requestHeaders.size(), is(request.getHeaders().size()));
+        	assertTrue(Iterables.elementsEqual(this.requestHeaders.keySet(), request.getHeaders().keySet()));
+        	for (String key : this.requestHeaders.keySet()){
+        		assertThat(this.requestHeaders.get(key), is(notNullValue()));
+        		assertThat(request.getHeaders().get(key), is(notNullValue()));
+        		assertTrue(Iterables.elementsEqual(this.requestHeaders.get(key), request.getHeaders().get(key)));
+
+        	}
+        }
+        
         if (this.requestContent != null) {
             final InputStream stream = request.getStream();
             assertThat(stream, is(notNullValue()));
@@ -103,6 +136,8 @@ public class MockNetwork implements NetworkClient {
             assertThat(actualMap.get(entry.getKey()), is(entry.getValue()));
         }
     }
+    
+    
 
     @Override
     public ConnectionDetails getConnectionDetails() {

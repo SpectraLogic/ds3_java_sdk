@@ -15,6 +15,8 @@
 
 package com.spectralogic.ds3client;
 
+import com.google.common.collect.Multimap;
+import com.google.common.collect.TreeMultimap;
 import com.spectralogic.ds3client.commands.*;
 import com.spectralogic.ds3client.models.*;
 import com.spectralogic.ds3client.models.bulk.*;
@@ -258,6 +260,36 @@ public class Ds3Client_Test {
                 .returning(200, "")
                 .asClient()
                 .putObject(new PutObjectRequest("bucketName", "objectName", UUID.fromString(jobIdString), fileBytes.length, 0, channel));
+    }
+    
+    @Test
+    public void putObjectWithMetadata() throws IOException, SignatureException, URISyntaxException {
+        final String jobIdString = "a4a586a1-cb80-4441-84e2-48974e982d51";
+        final Map<String, String> queryParams = new HashMap<>();
+        queryParams.put("job", jobIdString);
+        queryParams.put("offset", Long.toString(0));
+        
+        final File resourceFile = ResourceUtils.loadFileResource("LoremIpsumTwice.txt");
+        final byte[] fileBytes = Files.readAllBytes(resourceFile.toPath());
+        final String output = new String(fileBytes, Charset.forName("UTF-8"));
+        final FileChannel channel = FileChannel.open(resourceFile.toPath(), StandardOpenOption.READ);
+
+        PutObjectRequest por = new PutObjectRequest("bucketName", "objectName", UUID.fromString(jobIdString), fileBytes.length, 0, channel);
+        
+        final Multimap<String, String> expectedRequestHeaders = TreeMultimap.create();
+        expectedRequestHeaders.put("Naming-Convention", "s3"); //default from AbstractRequest
+        expectedRequestHeaders.put("x-amz-meta-test1", "test1value");
+        expectedRequestHeaders.put("x-amz-meta-test2", "test2value");
+        expectedRequestHeaders.put("x-amz-meta-test2", "test2value2");
+        
+        por.withMetaData("x-amz-meta-test1", "test1value");
+        por.withMetaData("test2", "test2value");
+        por.withMetaData("test2", "test2value2");
+        MockNetwork
+                .expecting(HttpVerb.PUT, "/bucketName/objectName", queryParams, expectedRequestHeaders, output)
+                .returning(200, "")
+                .asClient()
+                .putObject(por);
     }
     
     @Test
