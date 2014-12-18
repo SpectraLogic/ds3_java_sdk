@@ -68,7 +68,7 @@ public class PutObjectRequest extends AbstractRequest {
 
 	public PutObjectRequest withMetaData(final String key, final String value) {
 		final String modifiedKey;
-		if (!key.startsWith(AMZ_META_HEADER)){
+		if (!key.toLowerCase().startsWith(AMZ_META_HEADER)){
 			modifiedKey = AMZ_META_HEADER + key;
 		} else {
 			modifiedKey = key;

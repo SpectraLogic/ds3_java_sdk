@@ -215,7 +215,6 @@ class NetworkClientImpl implements NetworkClient {
 					ret += '\n';
 				}
 			}
-			System.out.println(ret);
 			return ret;
 		}
 
