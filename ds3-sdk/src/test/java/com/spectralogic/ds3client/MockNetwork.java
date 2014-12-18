@@ -137,8 +137,6 @@ public class MockNetwork implements NetworkClient {
         }
     }
     
-    
-
     @Override
     public ConnectionDetails getConnectionDetails() {
         final ConnectionDetails connectionDetails = mock(ConnectionDetails.class);

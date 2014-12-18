@@ -74,7 +74,6 @@ public class PutObjectRequest extends AbstractRequest {
 		return this;
 	}
 
-    
     public String getBucketName() {
         return this.bucketName;
     }

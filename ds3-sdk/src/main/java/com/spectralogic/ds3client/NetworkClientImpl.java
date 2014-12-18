@@ -39,7 +39,6 @@ import org.apache.http.message.BasicHttpEntityEnclosingRequest;
 import org.apache.http.message.BasicHttpRequest;
 
 import javax.net.ssl.SSLContext;
-
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
