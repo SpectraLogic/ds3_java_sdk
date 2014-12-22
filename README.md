@@ -11,7 +11,7 @@ See our [Setup Guide](./SETUP.md) which explains how to setup Eclipse with all t
 
 ## Install
 
-To install the latest ds3_java_sdk either download the latest release jar file from the [Releases](../../releases) page or clone the repository with `git clone https://github.com/SpectraLogic/ds3_java_sdk.git`, cd to `ds3_java_sdk` and run `./gradlew clean sdk:install` to install the sdk into your local maven repository.
+To install the latest ds3_java_sdk either download the latest release jar file from the [Releases](../../releases) page or clone the repository with `git clone https://github.com/SpectraLogic/ds3_java_sdk.git`, cd to `ds3_java_sdk` and run `./gradlew clean ds3-sdk:install` to install the sdk into your local maven repository.
 
 The SDK can also be included directly into a Maven or Gradle build.  To include the SDK  into maven add the following to the `pom.xml` file:
 
