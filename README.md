@@ -68,6 +68,6 @@ All the examples are listed in the [ds3-sdk-samples](ds3-sdk-samples/src/main/ja
 
 ## Tests
 
-In addition to unit tests in the main `sdk` module, there are additional integration tests in the `integration` module.  Please see the integration [README](ds3-sdk-integration/README.md) for details on running the tests.  To just run the SDK's unit tests use:
+In addition to unit tests in the main `ds3-sdk` module, there are additional integration tests in the `integration` module.  Please see the integration [README](ds3-sdk-integration/README.md) for details on running the tests.  To just run the SDK's unit tests use:
 
     ./gradlew clean ds3-sdk:test
