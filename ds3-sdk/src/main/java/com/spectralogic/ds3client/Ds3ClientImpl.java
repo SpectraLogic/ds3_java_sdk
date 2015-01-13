@@ -15,14 +15,14 @@
 
 package com.spectralogic.ds3client;
 
+import java.io.IOException;
+import java.security.SignatureException;
+
+
 import com.spectralogic.ds3client.commands.*;
 import com.spectralogic.ds3client.models.bulk.Node;
 import com.spectralogic.ds3client.networking.ConnectionDetails;
 import com.spectralogic.ds3client.networking.NetworkClient;
-
-import java.io.IOException;
-import java.security.SignatureException;
-import java.util.UUID;
 
 class Ds3ClientImpl implements Ds3Client {
     private final NetworkClient netClient;
