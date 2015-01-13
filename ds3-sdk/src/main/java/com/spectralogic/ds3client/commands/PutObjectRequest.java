@@ -38,6 +38,11 @@ public class PutObjectRequest extends AbstractRequest {
     public final static String AMZ_META_HEADER = "x-amz-meta-";
 
     @Deprecated
+    /**
+     * Creates a request for use when putting a single object.  This request should generally not be used, since for each request
+     * made with this constructor will create a naked bulk put implicitly, which if called over and over, will cause performance
+     * issues.
+    */
     public PutObjectRequest(final String bucketName, final String objectName, final long size, final SeekableByteChannel channel) {
         this.bucketName = bucketName;
         this.objectName = objectName;
@@ -48,6 +53,10 @@ public class PutObjectRequest extends AbstractRequest {
         this.offset = 0;
     }
 
+    /**
+     * Creates a request to put a request within the context of a bulk job.  This is the preferred method of creating a put object request.
+     * See {@link BulkPutRequest} for more information on creating a bulk put request.
+    */
     public PutObjectRequest(final String bucketName, final String objectName, final UUID jobId, final long size, final long offset, final SeekableByteChannel channel) {
         this.bucketName = bucketName;
         this.objectName = objectName;
