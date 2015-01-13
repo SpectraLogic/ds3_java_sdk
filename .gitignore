@@ -14,5 +14,6 @@ atlassian-ide-plugin.xml
 *.iml
 *.class
 .*.swp
-/bin
+bin/
 *.log
+*.rc
