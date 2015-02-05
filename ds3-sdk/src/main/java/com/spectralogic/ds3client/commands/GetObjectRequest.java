@@ -57,6 +57,11 @@ public class GetObjectRequest extends AbstractRequest {
     private Range byteRange = null;
 
     @Deprecated
+    /**
+     * Creates a request for use when getting a single object.  This requet should generally not be used, since for each request
+     * made with this constructor will create a naked bulk get implicitly, which if called over and over, will cause performance
+     * issues.
+    */
     public GetObjectRequest(final String bucketName, final String objectName, final WritableByteChannel channel) {
         this.bucketName = bucketName;
         this.objectName = objectName;
@@ -65,6 +70,10 @@ public class GetObjectRequest extends AbstractRequest {
         this.channel = channel;
     }
 
+    /**
+     * Creates a request to get an object within the context of a bulk job.  This is the preferred method of creating a get object request.
+     * See {@link BulkGetRequest} for more information on creating a bulk get request.
+    */
     public GetObjectRequest(final String bucketName, final String objectName, final long offset, final UUID jobId, final WritableByteChannel channel) {
         this.bucketName = bucketName;
         this.objectName = objectName;
