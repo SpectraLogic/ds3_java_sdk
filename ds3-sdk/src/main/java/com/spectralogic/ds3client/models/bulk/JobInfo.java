@@ -62,9 +62,13 @@ public class JobInfo {
     @JsonProperty("ChunkClientProcessingOrderGuarantee")
     private ChunkClientProcessingOrderGuarantee chunkClientProcessingOrderGuarantee;
 
+    @JsonProperty("Status")
+    private JobStatus status;
+
     public UUID getJobId() {
         return this.jobId;
     }
+
     public void setJobId(final UUID jobId) {
         this.jobId = jobId;
     }
@@ -163,5 +167,13 @@ public class JobInfo {
 
     public void setUserId(final UUID userId) {
         this.userId = userId;
+    }
+
+    public JobStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(JobStatus status) {
+        this.status = status;
     }
 }
