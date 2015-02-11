@@ -9,18 +9,20 @@ import static org.junit.Assert.fail;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.nio.channels.SeekableByteChannel;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 import java.security.SignatureException;
+import java.util.UUID;
 
+import com.spectralogic.ds3client.commands.*;
+import com.spectralogic.ds3client.helpers.Ds3ClientHelpers;
+import com.spectralogic.ds3client.models.bulk.JobStatus;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.spectralogic.ds3client.Ds3Client;
-import com.spectralogic.ds3client.commands.DeleteBucketRequest;
-import com.spectralogic.ds3client.commands.GetBucketRequest;
-import com.spectralogic.ds3client.commands.GetBucketResponse;
-import com.spectralogic.ds3client.commands.HeadBucketRequest;
-import com.spectralogic.ds3client.commands.HeadBucketResponse;
-import com.spectralogic.ds3client.commands.PutBucketRequest;
 import com.spectralogic.ds3client.models.ListBucketResult;
 import com.spectralogic.ds3client.networking.FailedRequestException;
 import com.spectralogic.ds3client.serializer.XmlProcessingException;
@@ -104,6 +106,38 @@ public class BucketIntegration_Test {
 			Util.deleteAllContents(client, bucketName);
 		}
 	}
+
+    @Test
+    public void getContents() throws IOException, SignatureException, URISyntaxException, XmlProcessingException {
+        final String bucketName = "test_get_contents";
+
+        try {
+            client.putBucket(new PutBucketRequest(bucketName));
+            Util.loadBookTestData(client, bucketName);
+
+            final Ds3ClientHelpers helpers = Ds3ClientHelpers.wrap(client);
+
+            final Ds3ClientHelpers.Job job = helpers.startReadAllJob(bucketName);
+
+            final UUID jobId = job.getJobId();
+
+            job.transfer(new Ds3ClientHelpers.ObjectChannelBuilder() {
+                @Override
+                public SeekableByteChannel buildChannel(final String key) throws IOException {
+
+                    final Path filePath = Files.createTempFile("ds3", key);
+
+                    return Files.newByteChannel(filePath, StandardOpenOption.DELETE_ON_CLOSE, StandardOpenOption.WRITE);
+                }
+            });
+
+            final GetJobResponse jobResponse = client.getJob(new GetJobRequest(jobId));
+            assertThat(jobResponse.getMasterObjectList().getStatus(), is(JobStatus.COMPLETED));
+
+        } finally {
+            Util.deleteAllContents(client, bucketName);
+        }
+    }
 
 	@Test
 	public void negativeDeleteNonEmptyBucket() throws IOException,
