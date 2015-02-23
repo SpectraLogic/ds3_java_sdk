@@ -58,6 +58,9 @@ public class JobInfo {
 
     @JsonProperty("StartDate")
     private String startDate;
+    
+    @JsonProperty("Status")
+    private JobStatus status;
 
     @JsonProperty("ChunkClientProcessingOrderGuarantee")
     private ChunkClientProcessingOrderGuarantee chunkClientProcessingOrderGuarantee;
