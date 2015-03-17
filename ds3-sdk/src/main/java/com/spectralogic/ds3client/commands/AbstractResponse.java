@@ -64,7 +64,7 @@ public abstract class AbstractResponse implements Ds3Response{
         }
     }
 
-    int getStatusCode() {
+    public int getStatusCode() {
         return this.response.getStatusCode();
     }
 
