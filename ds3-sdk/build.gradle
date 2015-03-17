@@ -43,7 +43,7 @@ dependencies {
     compile     'commons-codec:commons-codec:1.8'
     compile     'commons-io:commons-io:2.1'
     compile     'org.codehaus.woodstox:woodstox-core-asl:4.2.0'
-    compile     'com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.2.3'
+    compile     'com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.5.0'
     compile     'com.google.guava:guava:18.0'
     testCompile 'org.hamcrest:hamcrest-library:1.3'
 }

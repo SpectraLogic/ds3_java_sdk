@@ -1,0 +1,97 @@
+package com.spectralogic.ds3client.integration;
+
+import com.spectralogic.ds3client.Ds3Client;
+import com.spectralogic.ds3client.commands.PutBucketRequest;
+import com.spectralogic.ds3client.commands.notifications.*;
+import com.spectralogic.ds3client.helpers.Ds3ClientHelpers;
+import com.spectralogic.ds3client.serializer.XmlProcessingException;
+import org.junit.BeforeClass;
+import org.junit.Test;
+
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.security.SignatureException;
+import java.util.UUID;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.junit.Assert.assertThat;
+
+public class NotificationsIntegration_test {
+
+    private static Ds3Client client;
+
+    @BeforeClass
+    public static void startup() {
+        client = Util.fromEnv();
+    }
+
+    @Test
+    public void objectCompletionRegistration() throws IOException, SignatureException {
+        final CreateNotificationResponse response = client.createObjectCachedNotification(new CreateObjectCachedNotificationRequest("192.168.56.101"));
+        assertThat(response, is(notNullValue()));
+        assertThat(response.getRegistration(), is(notNullValue()));
+
+        final UUID registrationId = response.getRegistration().getId();
+
+        assertThat(client.deleteObjectCachedNotification(new DeleteObjectCachedNotificationRequest(registrationId)), is(notNullValue()));
+
+    }
+
+    @Test
+    public void jobCompletionRegistration() throws IOException, SignatureException {
+        final CreateNotificationResponse response = client.createJobCompletedNotification(new CreateJobCompletedNotificationRequest("192.168.56.101/other"));
+        assertThat(response, is(notNullValue()));
+        assertThat(response.getRegistration(), is(notNullValue()));
+
+        final UUID registrationId = response.getRegistration().getId();
+
+        assertThat(client.deleteJobCompleteNotification(new DeleteJobCompletedNotificationRequest(registrationId)), is(notNullValue()));
+    }
+
+    @Test
+    public void jobCreateRegistration() throws IOException, SignatureException {
+        final CreateNotificationResponse response = client.createJobCreatedNotification(new CreateJobCreatedNotificationRequest("192.168.56.101/other"));
+        assertThat(response, is(notNullValue()));
+        assertThat(response.getRegistration(), is(notNullValue()));
+
+        final UUID registrationId = response.getRegistration().getId();
+
+        assertThat(client.deleteJobCreatedNotification(new DeleteJobCreatedNotificationRequest(registrationId)), is(notNullValue()));
+    }
+
+    @Test
+    public void objectLostRegistration() throws IOException, SignatureException {
+        final CreateNotificationResponse response = client.createObjectLostNotification(new CreateObjectLostNotificationRequest("192.168.56.101/other"));
+        assertThat(response, is(notNullValue()));
+        assertThat(response.getRegistration(), is(notNullValue()));
+
+        final UUID registrationId = response.getRegistration().getId();
+
+        assertThat(client.deleteObjectLostNotification(new DeleteObjectLostNotificationRequest(registrationId)), is(notNullValue()));
+    }
+
+    @Test
+    public void objectPersistedRegistration() throws IOException, SignatureException, URISyntaxException, XmlProcessingException {
+        final String bucketName = "test_bucket";
+
+        try {
+            client.putBucket(new PutBucketRequest(bucketName));
+            final Ds3ClientHelpers.Job job = Util.getLoadJob(client, bucketName, Util.RESOURCE_BASE_NAME);
+
+            final CreateNotificationResponse response = client.createObjectPersistedNotification(new CreateObjectPersistedNotificationRequest("192.168.56.101/other", job.getJobId()));
+            assertThat(response, is(notNullValue()));
+            assertThat(response.getRegistration(), is(notNullValue()));
+
+            job.transfer(new ResourceObjectPutter(Util.RESOURCE_BASE_NAME));
+
+            final UUID registrationId = response.getRegistration().getId();
+
+            assertThat(client.deleteObjectPersistedNotification(new DeleteObjectPersistedNotificationRequest(registrationId)), is(notNullValue()));
+        }
+        finally {
+            Util.deleteAllContents(client, bucketName);
+        }
+    }
+}

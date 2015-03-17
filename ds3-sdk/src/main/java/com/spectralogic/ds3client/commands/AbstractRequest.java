@@ -24,7 +24,7 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
-abstract class AbstractRequest implements Ds3Request {
+public abstract class AbstractRequest implements Ds3Request {
 
     private final Multimap<String, String> headers = buildDefaultHeaders();
     private final Map<String, String> queryParams = new HashMap<>();

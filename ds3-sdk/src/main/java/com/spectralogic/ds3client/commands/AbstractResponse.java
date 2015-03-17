@@ -27,13 +27,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
 
-abstract class AbstractResponse implements Ds3Response{
-    final static String UTF8 = "UTF-8";
+public abstract class AbstractResponse implements Ds3Response{
+    final public static String UTF8 = "UTF-8";
 
     final private WebResponse response;
     final private String md5;
 
-    AbstractResponse(final WebResponse response) throws IOException {
+    public AbstractResponse(final WebResponse response) throws IOException {
         this.response = response;
         if (response != null) {
             this.md5 = this.response.getHeaders().get("Content-MD5");
@@ -46,11 +46,11 @@ abstract class AbstractResponse implements Ds3Response{
 
     protected abstract void processResponse() throws IOException;
 
-    WebResponse getResponse() {
+    public  WebResponse getResponse() {
         return this.response;
     }
 
-    void checkStatusCode(final int ... expectedStatuses) throws IOException {
+    public void checkStatusCode(final int ... expectedStatuses) throws IOException {
         final ImmutableSet<Integer> expectedSet = this.createExpectedSet(expectedStatuses);
         final int statusCode = this.getStatusCode();
         if (!expectedSet.contains(statusCode)) {

@@ -20,6 +20,7 @@ import java.security.SignatureException;
 
 
 import com.spectralogic.ds3client.commands.*;
+import com.spectralogic.ds3client.commands.notifications.*;
 import com.spectralogic.ds3client.models.bulk.Node;
 import com.spectralogic.ds3client.networking.ConnectionDetails;
 import com.spectralogic.ds3client.networking.NetworkClient;
@@ -122,6 +123,76 @@ class Ds3ClientImpl implements Ds3Client {
     @Override
     public ModifyJobResponse modifyJob(final ModifyJobRequest request) throws IOException, SignatureException {
         return new ModifyJobResponse(this.netClient.getResponse(request));
+    }
+
+    @Override
+    public CreateNotificationResponse createObjectCachedNotification(final CreateObjectCachedNotificationRequest request) throws IOException, SignatureException {
+        return new CreateNotificationResponse(this.netClient.getResponse(request));
+    }
+
+    @Override
+    public DeleteNotificationResponse deleteObjectCachedNotification(final DeleteObjectCachedNotificationRequest request) throws IOException, SignatureException {
+        return new DeleteNotificationResponse(this.netClient.getResponse(request));
+    }
+
+    @Override
+    public CreateNotificationResponse createJobCompletedNotification(final CreateJobCompletedNotificationRequest request) throws IOException, SignatureException {
+        return new CreateNotificationResponse(this.netClient.getResponse(request));
+    }
+
+    @Override
+    public DeleteNotificationResponse deleteJobCompleteNotification(final DeleteJobCompletedNotificationRequest request) throws IOException, SignatureException {
+        return new DeleteNotificationResponse(this.netClient.getResponse(request));
+    }
+
+    @Override
+    public CreateNotificationResponse createJobCreatedNotification(CreateJobCreatedNotificationRequest request) throws IOException, SignatureException {
+        return new CreateNotificationResponse(this.netClient.getResponse(request));
+    }
+
+    @Override
+    public DeleteNotificationResponse deleteJobCreatedNotification(DeleteJobCreatedNotificationRequest request) throws IOException, SignatureException {
+        return new DeleteNotificationResponse(this.netClient.getResponse(request));
+    }
+
+    @Override
+    public CreateNotificationResponse createObjectLostNotification(CreateObjectLostNotificationRequest request) throws IOException, SignatureException {
+        return new CreateNotificationResponse(this.netClient.getResponse(request));
+    }
+
+    @Override
+    public DeleteNotificationResponse deleteObjectLostNotification(DeleteObjectLostNotificationRequest request) throws IOException, SignatureException {
+        return new DeleteNotificationResponse(this.netClient.getResponse(request));
+    }
+
+    @Override
+    public CreateNotificationResponse createObjectPersistedNotification(CreateObjectPersistedNotificationRequest request) throws IOException, SignatureException {
+        return new CreateNotificationResponse(this.netClient.getResponse(request));
+    }
+
+    @Override
+    public DeleteNotificationResponse deleteObjectPersistedNotification(DeleteObjectPersistedNotificationRequest request) throws IOException, SignatureException {
+        return new DeleteNotificationResponse(this.netClient.getResponse(request));
+    }
+
+    @Override
+    public CreateNotificationResponse createPartitionFailureNotification(CreatePartitionFailureNotificationRequest request) throws IOException, SignatureException {
+        return new CreateNotificationResponse(this.netClient.getResponse(request));
+    }
+
+    @Override
+    public DeleteNotificationResponse deletePartitionFailureNotification(DeletePartitionFailureNotificationRequest request) throws IOException, SignatureException {
+        return new DeleteNotificationResponse(this.netClient.getResponse(request));
+    }
+
+    @Override
+    public CreateNotificationResponse createTapeFailureNotification(CreateTapeFailureNotificationRequest request) throws IOException, SignatureException {
+        return new CreateNotificationResponse(this.netClient.getResponse(request));
+    }
+
+    @Override
+    public DeleteNotificationResponse deleteTapeFailureNotification(DeleteTapeFailureNotificationRequest request) throws IOException, SignatureException {
+        return new DeleteNotificationResponse(this.netClient.getResponse(request));
     }
 
     @Override
