@@ -2,7 +2,7 @@ package com.spectralogic.ds3client.commands.notifications;
 
 import java.util.UUID;
 
-public class CreateObjectPersistedNotificationRequest extends AbstractCreateNotification{
+public class CreateObjectPersistedNotificationRequest extends AbstractCreateNotificationRequest {
 
     public CreateObjectPersistedNotificationRequest(final String endpoint, final UUID jobId) {
         super(endpoint);

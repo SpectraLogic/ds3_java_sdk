@@ -1,7 +1,12 @@
 package com.spectralogic.ds3client.commands.notifications;
 
-/**
- * Created by ryanmo on 1/22/15.
- */
-public class CreatePartitionFailureNotificationRequest {
+public class CreatePartitionFailureNotificationRequest extends AbstractCreateNotificationRequest {
+    public CreatePartitionFailureNotificationRequest(final String endpoint) {
+        super(endpoint);
+    }
+
+    @Override
+    public String getPath() {
+        return "/_rest_/tape_partition_failure_notification_registration";
+    }
 }

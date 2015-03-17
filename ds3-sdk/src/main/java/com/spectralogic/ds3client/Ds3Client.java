@@ -16,6 +16,7 @@
 package com.spectralogic.ds3client;
 
 import com.spectralogic.ds3client.commands.*;
+import com.spectralogic.ds3client.commands.notifications.*;
 import com.spectralogic.ds3client.models.bulk.Node;
 import com.spectralogic.ds3client.networking.ConnectionDetails;
 
@@ -223,6 +224,47 @@ public interface Ds3Client {
     public abstract ModifyJobResponse modifyJob(ModifyJobRequest request)
             throws IOException, SignatureException;
 
+    public abstract CreateNotificationResponse createObjectCachedNotification(CreateObjectCachedNotificationRequest request)
+            throws IOException, SignatureException;
+
+    public abstract DeleteNotificationResponse deleteObjectCachedNotification(DeleteObjectCachedNotificationRequest request)
+            throws IOException, SignatureException;
+
+    public abstract CreateNotificationResponse createJobCompletedNotification(CreateJobCompletedNotificationRequest request)
+            throws IOException, SignatureException;
+
+    public abstract DeleteNotificationResponse deleteJobCompleteNotification(DeleteJobCompletedNotificationRequest request)
+            throws IOException, SignatureException;
+
+    public abstract CreateNotificationResponse createJobCreatedNotification(CreateJobCreatedNotificationRequest request)
+            throws IOException, SignatureException;
+
+    public abstract DeleteNotificationResponse deleteJobCreatedNotification(DeleteJobCreatedNotificationRequest request)
+            throws IOException, SignatureException;
+
+    public abstract CreateNotificationResponse createObjectLostNotification(CreateObjectLostNotificationRequest request)
+            throws IOException, SignatureException;
+
+    public abstract DeleteNotificationResponse deleteObjectLostNotification(DeleteObjectLostNotificationRequest request)
+            throws IOException, SignatureException;
+
+    public abstract CreateNotificationResponse createObjectPersistedNotification(CreateObjectPersistedNotificationRequest request)
+            throws IOException, SignatureException;
+
+    public abstract DeleteNotificationResponse deleteObjectPersistedNotification(DeleteObjectPersistedNotificationRequest request)
+            throws IOException, SignatureException;
+
+    public abstract CreateNotificationResponse createPartitionFailureNotification(CreatePartitionFailureNotificationRequest request)
+            throws IOException, SignatureException;
+
+    public abstract DeleteNotificationResponse deletePartitionFailureNotification(DeletePartitionFailureNotificationRequest request)
+            throws IOException, SignatureException;
+
+    public abstract CreateNotificationResponse createTapeFailureNotification(CreateTapeFailureNotificationRequest request)
+            throws IOException, SignatureException;
+
+    public abstract DeleteNotificationResponse deleteTapeFailureNotification(DeleteTapeFailureNotificationRequest request)
+            throws IOException, SignatureException;
     /**
      * Creates a new Ds3Client instance for the system pointed to by Node.
      */

@@ -34,6 +34,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Util {
+    public static final String RESOURCE_BASE_NAME = "books/";
+
     private Util() {}
 
     public static Ds3Client fromEnv() {
@@ -75,7 +77,12 @@ public class Util {
 
     private static final String[] BOOKS = {"beowulf.txt", "sherlock_holmes.txt", "tale_of_two_cities.txt", "ulysses.txt"};
     public static void loadBookTestData(final Ds3Client client, final String bucketName) throws IOException, SignatureException, XmlProcessingException, URISyntaxException {
-        final String resourceBaseName = "books/";
+
+        getLoadJob(client, bucketName, RESOURCE_BASE_NAME)
+            .transfer(new ResourceObjectPutter(RESOURCE_BASE_NAME));
+    }
+
+    public static Ds3ClientHelpers.Job getLoadJob(final Ds3Client client, final String bucketName, final String resourceBaseName) throws IOException, SignatureException, XmlProcessingException, URISyntaxException {
         final Ds3ClientHelpers helpers = Ds3ClientHelpers.wrap(client);
 
         final List<Ds3Object> objects = new ArrayList<>();
@@ -87,9 +94,8 @@ public class Util {
             objects.add(obj);
         }
 
-        helpers
-            .startWriteJob(bucketName, objects)
-            .transfer(new ResourceObjectPutter(resourceBaseName));
+        return helpers
+                .startWriteJob(bucketName, objects);
     }
 
     public static void deleteAllContents(final Ds3Client client, final String bucketName) throws IOException, SignatureException {

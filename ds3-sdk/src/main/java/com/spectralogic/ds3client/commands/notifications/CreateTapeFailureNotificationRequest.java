@@ -1,7 +1,12 @@
 package com.spectralogic.ds3client.commands.notifications;
 
-/**
- * Created by ryanmo on 1/22/15.
- */
-public class CreateTapeFailureNotificationRequest {
+public class CreateTapeFailureNotificationRequest extends AbstractCreateNotificationRequest {
+    public CreateTapeFailureNotificationRequest(final String endpoint) {
+        super(endpoint);
+    }
+
+    @Override
+    public String getPath() {
+        return "/_rest_/tape_failure_notification_registration";
+    }
 }

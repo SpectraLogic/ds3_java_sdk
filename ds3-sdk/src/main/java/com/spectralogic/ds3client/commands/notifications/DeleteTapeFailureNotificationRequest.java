@@ -1,7 +1,14 @@
 package com.spectralogic.ds3client.commands.notifications;
 
-/**
- * Created by ryanmo on 1/22/15.
- */
-public class DeleteTapeFailureNotificationRequest {
+import java.util.UUID;
+
+public class DeleteTapeFailureNotificationRequest extends AbstractDeleteNotificationRequest {
+    public DeleteTapeFailureNotificationRequest(final UUID notificationId) {
+        super(notificationId);
+    }
+
+    @Override
+    public String getPath() {
+        return "/_rest_/tape_failure_notification_registration/" + this.getNotificationId().toString();
+    }
 }

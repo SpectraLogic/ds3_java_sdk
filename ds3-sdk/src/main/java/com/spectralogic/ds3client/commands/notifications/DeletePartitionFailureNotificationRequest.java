@@ -1,7 +1,14 @@
 package com.spectralogic.ds3client.commands.notifications;
 
-/**
- * Created by ryanmo on 1/22/15.
- */
-public class DeletePartitionFailureNotificationRequest {
+import java.util.UUID;
+
+public class DeletePartitionFailureNotificationRequest extends AbstractDeleteNotificationRequest {
+    public DeletePartitionFailureNotificationRequest(final UUID notificationId) {
+        super(notificationId);
+    }
+
+    @Override
+    public String getPath() {
+        return "/_rest_/tape_partition_failure_notification_registration/" + this.getNotificationId().toString();
+    }
 }

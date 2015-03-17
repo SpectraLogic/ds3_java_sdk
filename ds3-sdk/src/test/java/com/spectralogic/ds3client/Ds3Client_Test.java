@@ -200,19 +200,6 @@ public class Ds3Client_Test {
                 .getBucket(new GetBucketRequest("remoteTest16"));
     }
 
-    @SuppressWarnings("deprecation")
-    @Test
-    public void getObjectWithoutJobId() throws IOException, SignatureException {
-        final ByteArraySeekableByteChannel resultChannel = new ByteArraySeekableByteChannel();
-        final String stringResponse = "Response";
-        MockNetwork
-                .expecting(HttpVerb.GET, "/bucketName/object", null, null)
-                .returning(200, stringResponse)
-                .asClient()
-                .getObject(new GetObjectRequest("bucketName", "object", resultChannel));
-        assertThat(resultChannel.toString(), is(stringResponse));
-    }
-
     @Test
     public void getObject() throws IOException, SignatureException {
         final String jobIdString = "a4a586a1-cb80-4441-84e2-48974e982d51";
@@ -228,20 +215,6 @@ public class Ds3Client_Test {
                 .asClient()
                 .getObject(new GetObjectRequest("bucketName", "object", 0, UUID.fromString(jobIdString), resultChannel));
         assertThat(resultChannel.toString(), is(stringResponse));
-    }
-    
-    @SuppressWarnings("deprecation")
-    @Test
-    public void putObjectWithoutJobId() throws IOException, SignatureException, URISyntaxException {
-        final File resourceFile = ResourceUtils.loadFileResource("LoremIpsumTwice.txt");
-        final byte[] fileBytes = Files.readAllBytes(resourceFile.toPath());
-        final String output = new String(fileBytes, Charset.forName("UTF-8"));
-        final FileChannel channel = FileChannel.open(resourceFile.toPath(), StandardOpenOption.READ);
-        MockNetwork
-                .expecting(HttpVerb.PUT, "/bucketName/objectName", null, output)
-                .returning(200, "")
-                .asClient()
-                .putObject(new PutObjectRequest("bucketName", "objectName", fileBytes.length, channel));
     }
     
     @Test

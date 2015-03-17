@@ -1,7 +1,12 @@
 package com.spectralogic.ds3client.commands.notifications;
 
-/**
- * Created by ryanmo on 1/22/15.
- */
-public class CreateObjectLostNotificationRequest {
+public class CreateObjectLostNotificationRequest extends AbstractCreateNotificationRequest {
+    public CreateObjectLostNotificationRequest(final String endpoint) {
+        super(endpoint);
+    }
+
+    @Override
+    public String getPath() {
+        return "/_rest_/object_lost_notification_registration";
+    }
 }

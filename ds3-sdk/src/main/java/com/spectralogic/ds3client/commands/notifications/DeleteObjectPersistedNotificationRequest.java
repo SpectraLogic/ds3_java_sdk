@@ -2,17 +2,15 @@ package com.spectralogic.ds3client.commands.notifications;
 
 import java.util.UUID;
 
-public class DeleteObjectPersistedNotificationRequest extends AbstractDeleteNotification {
+public class DeleteObjectPersistedNotificationRequest extends AbstractDeleteNotificationRequest {
 
-    private final UUID notificationId;
 
     public DeleteObjectPersistedNotificationRequest(final UUID notificationId) {
-        super();
-        this.notificationId = notificationId;
+        super(notificationId);
     }
 
     @Override
     public String getPath() {
-        return "/_rest_/job_completed_notification_registration/" + notificationId.toString();
+        return "/_rest_/job_completed_notification_registration/" + this.getNotificationId().toString();
     }
 }
