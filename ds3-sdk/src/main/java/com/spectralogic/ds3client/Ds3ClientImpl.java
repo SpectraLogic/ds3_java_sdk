@@ -126,8 +126,13 @@ class Ds3ClientImpl implements Ds3Client {
     }
 
     @Override
-    public CreateNotificationResponse createObjectCachedNotification(final CreateObjectCachedNotificationRequest request) throws IOException, SignatureException {
-        return new CreateNotificationResponse(this.netClient.getResponse(request));
+    public NotificationResponse createObjectCachedNotification(final CreateObjectCachedNotificationRequest request) throws IOException, SignatureException {
+        return new NotificationResponse(this.netClient.getResponse(request));
+    }
+
+    @Override
+    public NotificationResponse getObjectCachedNotification(GetObjectCachedNotificationRequest request) throws IOException, SignatureException {
+        return new NotificationResponse(this.netClient.getResponse(request));
     }
 
     @Override
@@ -136,8 +141,13 @@ class Ds3ClientImpl implements Ds3Client {
     }
 
     @Override
-    public CreateNotificationResponse createJobCompletedNotification(final CreateJobCompletedNotificationRequest request) throws IOException, SignatureException {
-        return new CreateNotificationResponse(this.netClient.getResponse(request));
+    public NotificationResponse createJobCompletedNotification(final CreateJobCompletedNotificationRequest request) throws IOException, SignatureException {
+        return new NotificationResponse(this.netClient.getResponse(request));
+    }
+
+    @Override
+    public NotificationResponse getJobCompletedNotification(GetJobCompletedNotificationRequest request) throws IOException, SignatureException {
+        return new NotificationResponse(this.netClient.getResponse(request));
     }
 
     @Override
@@ -146,8 +156,13 @@ class Ds3ClientImpl implements Ds3Client {
     }
 
     @Override
-    public CreateNotificationResponse createJobCreatedNotification(CreateJobCreatedNotificationRequest request) throws IOException, SignatureException {
-        return new CreateNotificationResponse(this.netClient.getResponse(request));
+    public NotificationResponse createJobCreatedNotification(CreateJobCreatedNotificationRequest request) throws IOException, SignatureException {
+        return new NotificationResponse(this.netClient.getResponse(request));
+    }
+
+    @Override
+    public NotificationResponse getJobCreatedNotification(GetJobCreatedNotificationRequest request) throws IOException, SignatureException {
+        return new NotificationResponse(this.netClient.getResponse(request));
     }
 
     @Override
@@ -156,8 +171,13 @@ class Ds3ClientImpl implements Ds3Client {
     }
 
     @Override
-    public CreateNotificationResponse createObjectLostNotification(CreateObjectLostNotificationRequest request) throws IOException, SignatureException {
-        return new CreateNotificationResponse(this.netClient.getResponse(request));
+    public NotificationResponse createObjectLostNotification(CreateObjectLostNotificationRequest request) throws IOException, SignatureException {
+        return new NotificationResponse(this.netClient.getResponse(request));
+    }
+
+    @Override
+    public NotificationResponse getObjectLostNotification(GetObjectLostNotificationRequest request) throws IOException, SignatureException {
+        return new NotificationResponse(this.netClient.getResponse(request));
     }
 
     @Override
@@ -166,8 +186,13 @@ class Ds3ClientImpl implements Ds3Client {
     }
 
     @Override
-    public CreateNotificationResponse createObjectPersistedNotification(CreateObjectPersistedNotificationRequest request) throws IOException, SignatureException {
-        return new CreateNotificationResponse(this.netClient.getResponse(request));
+    public NotificationResponse createObjectPersistedNotification(CreateObjectPersistedNotificationRequest request) throws IOException, SignatureException {
+        return new NotificationResponse(this.netClient.getResponse(request));
+    }
+
+    @Override
+    public NotificationResponse getObjectPersistedNotification(GetObjectPersistedNotificationRequest request) throws IOException, SignatureException {
+        return new NotificationResponse(this.netClient.getResponse(request));
     }
 
     @Override
@@ -176,8 +201,13 @@ class Ds3ClientImpl implements Ds3Client {
     }
 
     @Override
-    public CreateNotificationResponse createPartitionFailureNotification(CreatePartitionFailureNotificationRequest request) throws IOException, SignatureException {
-        return new CreateNotificationResponse(this.netClient.getResponse(request));
+    public NotificationResponse createPartitionFailureNotification(CreatePartitionFailureNotificationRequest request) throws IOException, SignatureException {
+        return new NotificationResponse(this.netClient.getResponse(request));
+    }
+
+    @Override
+    public NotificationResponse getPartitionFailureNotification(GetPartitionFailureNotificationRequest request) throws IOException, SignatureException {
+        return new NotificationResponse(this.netClient.getResponse(request));
     }
 
     @Override
@@ -186,8 +216,13 @@ class Ds3ClientImpl implements Ds3Client {
     }
 
     @Override
-    public CreateNotificationResponse createTapeFailureNotification(CreateTapeFailureNotificationRequest request) throws IOException, SignatureException {
-        return new CreateNotificationResponse(this.netClient.getResponse(request));
+    public NotificationResponse createTapeFailureNotification(CreateTapeFailureNotificationRequest request) throws IOException, SignatureException {
+        return new NotificationResponse(this.netClient.getResponse(request));
+    }
+
+    @Override
+    public NotificationResponse getTapeFailureNotification(GetTapeFailureNotificationRequest request) throws IOException, SignatureException {
+        return new NotificationResponse(this.netClient.getResponse(request));
     }
 
     @Override

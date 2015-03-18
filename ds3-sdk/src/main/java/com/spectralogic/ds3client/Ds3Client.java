@@ -224,43 +224,64 @@ public interface Ds3Client {
     public abstract ModifyJobResponse modifyJob(ModifyJobRequest request)
             throws IOException, SignatureException;
 
-    public abstract CreateNotificationResponse createObjectCachedNotification(CreateObjectCachedNotificationRequest request)
+    public abstract NotificationResponse createObjectCachedNotification(CreateObjectCachedNotificationRequest request)
+            throws IOException, SignatureException;
+
+    public abstract NotificationResponse getObjectCachedNotification(GetObjectCachedNotificationRequest request)
             throws IOException, SignatureException;
 
     public abstract DeleteNotificationResponse deleteObjectCachedNotification(DeleteObjectCachedNotificationRequest request)
             throws IOException, SignatureException;
 
-    public abstract CreateNotificationResponse createJobCompletedNotification(CreateJobCompletedNotificationRequest request)
+    public abstract NotificationResponse createJobCompletedNotification(CreateJobCompletedNotificationRequest request)
+            throws IOException, SignatureException;
+
+    public abstract NotificationResponse getJobCompletedNotification(GetJobCompletedNotificationRequest request)
             throws IOException, SignatureException;
 
     public abstract DeleteNotificationResponse deleteJobCompleteNotification(DeleteJobCompletedNotificationRequest request)
             throws IOException, SignatureException;
 
-    public abstract CreateNotificationResponse createJobCreatedNotification(CreateJobCreatedNotificationRequest request)
+    public abstract NotificationResponse createJobCreatedNotification(CreateJobCreatedNotificationRequest request)
+            throws IOException, SignatureException;
+
+    public abstract NotificationResponse getJobCreatedNotification(GetJobCreatedNotificationRequest request)
             throws IOException, SignatureException;
 
     public abstract DeleteNotificationResponse deleteJobCreatedNotification(DeleteJobCreatedNotificationRequest request)
             throws IOException, SignatureException;
 
-    public abstract CreateNotificationResponse createObjectLostNotification(CreateObjectLostNotificationRequest request)
+    public abstract NotificationResponse createObjectLostNotification(CreateObjectLostNotificationRequest request)
+            throws IOException, SignatureException;
+
+    public abstract NotificationResponse getObjectLostNotification(GetObjectLostNotificationRequest request)
             throws IOException, SignatureException;
 
     public abstract DeleteNotificationResponse deleteObjectLostNotification(DeleteObjectLostNotificationRequest request)
             throws IOException, SignatureException;
 
-    public abstract CreateNotificationResponse createObjectPersistedNotification(CreateObjectPersistedNotificationRequest request)
+    public abstract NotificationResponse createObjectPersistedNotification(CreateObjectPersistedNotificationRequest request)
+            throws IOException, SignatureException;
+
+    public abstract NotificationResponse getObjectPersistedNotification(GetObjectPersistedNotificationRequest request)
             throws IOException, SignatureException;
 
     public abstract DeleteNotificationResponse deleteObjectPersistedNotification(DeleteObjectPersistedNotificationRequest request)
             throws IOException, SignatureException;
 
-    public abstract CreateNotificationResponse createPartitionFailureNotification(CreatePartitionFailureNotificationRequest request)
+    public abstract NotificationResponse createPartitionFailureNotification(CreatePartitionFailureNotificationRequest request)
+            throws IOException, SignatureException;
+
+    public abstract NotificationResponse getPartitionFailureNotification(GetPartitionFailureNotificationRequest request)
             throws IOException, SignatureException;
 
     public abstract DeleteNotificationResponse deletePartitionFailureNotification(DeletePartitionFailureNotificationRequest request)
             throws IOException, SignatureException;
 
-    public abstract CreateNotificationResponse createTapeFailureNotification(CreateTapeFailureNotificationRequest request)
+    public abstract NotificationResponse createTapeFailureNotification(CreateTapeFailureNotificationRequest request)
+            throws IOException, SignatureException;
+
+    public abstract NotificationResponse getTapeFailureNotification(GetTapeFailureNotificationRequest request)
             throws IOException, SignatureException;
 
     public abstract DeleteNotificationResponse deleteTapeFailureNotification(DeleteTapeFailureNotificationRequest request)

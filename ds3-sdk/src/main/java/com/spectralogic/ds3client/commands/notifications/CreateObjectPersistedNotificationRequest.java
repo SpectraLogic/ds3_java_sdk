@@ -11,7 +11,7 @@ public class CreateObjectPersistedNotificationRequest extends AbstractCreateNoti
 
     @Override
     public String getPath() {
-        return "/_rest_/object_persisted_notification_registration";
+        return "/_rest_/object_persisted_notification_registration/";
     }
 
 }
