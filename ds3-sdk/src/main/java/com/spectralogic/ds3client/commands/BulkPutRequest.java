@@ -24,14 +24,33 @@ import com.spectralogic.ds3client.serializer.XmlProcessingException;
 import java.util.List;
 
 public class BulkPutRequest extends BulkRequest {
+
+    private static final String MAX_UPLOAD_SIZE_IN_BYTES = "100000000000";
+    public static final int MIN_UPLOAD_SIZE_IN_BYTES = 10485760;
+
     public BulkPutRequest(final String bucket, final List<Ds3Object> objects) throws XmlProcessingException {
         super(bucket, objects);
-        getQueryParams().put("operation", "start_bulk_put");
+        this.getQueryParams().put("operation", "start_bulk_put");
     }
 
     @Override
     public BulkPutRequest withPriority(final Priority priority) {
         super.withPriority(priority);
+        return this;
+    }
+
+    /**
+     * Sets the chunk size for this job.
+     * @param size The chunk size in bytes.  If the value passed in is less than MIN_UPLOAD_SIZE_IN_BYTES, then
+     *             the default size will be used.
+     */
+    public BulkPutRequest withMaxUploadSize(final int size) {
+        if (size > MIN_UPLOAD_SIZE_IN_BYTES) {
+            this.getQueryParams().put("max_upload_size", Long.toString(size));
+        }
+        else {
+            this.getQueryParams().put("max_upload_size", MAX_UPLOAD_SIZE_IN_BYTES);
+        }
         return this;
     }
 
