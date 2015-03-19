@@ -9,16 +9,25 @@ import static org.junit.Assert.fail;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.nio.ByteBuffer;
 import java.nio.channels.SeekableByteChannel;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.security.SignatureException;
+import java.util.Iterator;
+import java.util.List;
 import java.util.UUID;
 
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
 import com.spectralogic.ds3client.commands.*;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers;
+import com.spectralogic.ds3client.models.Contents;
+import com.spectralogic.ds3client.models.bulk.Ds3Object;
 import com.spectralogic.ds3client.models.bulk.JobStatus;
+import com.spectralogic.ds3client.utils.ByteArraySeekableByteChannel;
+import org.apache.commons.io.IOUtils;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -226,4 +235,49 @@ public class BucketIntegration_Test {
 			Util.deleteAllContents(client, bucketName);
 		}
 	}
+
+    @Test
+    public void deleteDirectory() throws IOException, SignatureException, XmlProcessingException {
+        final String bucketName = "delete_directory";
+        final Ds3ClientHelpers helpers = Ds3ClientHelpers.wrap(client);
+
+        try {
+            helpers.ensureBucketExists(bucketName);
+
+            final List<Ds3Object> objects = Lists.newArrayList(
+                    new Ds3Object("dirA/obj1.txt", 1024),
+                    new Ds3Object("dirA/obj2.txt", 1024),
+                    new Ds3Object("dirA/obj3.txt", 1024),
+                    new Ds3Object("obj1.txt", 1024));
+
+            final Ds3ClientHelpers.Job putJob = helpers.startWriteJob(bucketName, objects);
+
+            putJob.transfer(new Ds3ClientHelpers.ObjectChannelBuilder() {
+                @Override
+                public SeekableByteChannel buildChannel(String key) throws IOException {
+                    final byte[] randomData = IOUtils.toByteArray(new RandomDataInputStream(120, 1024));
+                    final ByteBuffer randomBuffer = ByteBuffer.wrap(randomData);
+
+                    final ByteArraySeekableByteChannel channel = new ByteArraySeekableByteChannel(1024);
+                    channel.write(randomBuffer);
+
+                    return channel;
+                }
+            });
+
+            final Iterable<Contents> objs = helpers.listObjects(bucketName, "dirA");
+
+            for (final Contents objContents : objs) {
+                client.deleteObject(new DeleteObjectRequest(bucketName, objContents.getKey()));
+            }
+
+            final Iterable<Contents> filesLeft = helpers.listObjects(bucketName);
+
+            assertTrue(Iterables.size(filesLeft) == 1);
+        }
+        finally {
+            Util.deleteAllContents(client, bucketName);
+        }
+
+    }
 }
