@@ -10,9 +10,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
 
-public class CreateNotificationResponse extends AbstractResponse {
+public class NotificationResponse extends AbstractResponse {
     private NotificationRegistration registration;
-    public CreateNotificationResponse(final WebResponse response) throws IOException {
+    public NotificationResponse(final WebResponse response) throws IOException {
         super(response);
     }
 
@@ -22,7 +22,7 @@ public class CreateNotificationResponse extends AbstractResponse {
             if (response == null) {
                 throw new IOException("response was null");
             }
-            this.checkStatusCode(201);
+            this.checkStatusCode(200, 201);
 
             try (final InputStream content = response.getResponseStream()) {
                 final StringWriter writer = new StringWriter();

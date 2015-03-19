@@ -29,11 +29,16 @@ public class NotificationsIntegration_test {
 
     @Test
     public void objectCompletionRegistration() throws IOException, SignatureException {
-        final CreateNotificationResponse response = client.createObjectCachedNotification(new CreateObjectCachedNotificationRequest("192.168.56.101"));
+        final NotificationResponse response = client.createObjectCachedNotification(new CreateObjectCachedNotificationRequest("192.168.56.101"));
         assertThat(response, is(notNullValue()));
         assertThat(response.getRegistration(), is(notNullValue()));
 
         final UUID registrationId = response.getRegistration().getId();
+
+        final NotificationResponse getResponse = client.getObjectCachedNotification(new GetObjectCachedNotificationRequest(registrationId));
+        assertThat(getResponse, is(notNullValue()));
+        assertThat(getResponse.getRegistration(), is(notNullValue()));
+        assertThat(getResponse.getRegistration().getId(), is(notNullValue()));
 
         assertThat(client.deleteObjectCachedNotification(new DeleteObjectCachedNotificationRequest(registrationId)), is(notNullValue()));
 
@@ -41,33 +46,48 @@ public class NotificationsIntegration_test {
 
     @Test
     public void jobCompletionRegistration() throws IOException, SignatureException {
-        final CreateNotificationResponse response = client.createJobCompletedNotification(new CreateJobCompletedNotificationRequest("192.168.56.101/other"));
+        final NotificationResponse response = client.createJobCompletedNotification(new CreateJobCompletedNotificationRequest("192.168.56.101/other"));
         assertThat(response, is(notNullValue()));
         assertThat(response.getRegistration(), is(notNullValue()));
 
         final UUID registrationId = response.getRegistration().getId();
+
+        final NotificationResponse getResponse = client.getJobCompletedNotification(new GetJobCompletedNotificationRequest(registrationId));
+        assertThat(getResponse, is(notNullValue()));
+        assertThat(getResponse.getRegistration(), is(notNullValue()));
+        assertThat(getResponse.getRegistration().getId(), is(notNullValue()));
 
         assertThat(client.deleteJobCompleteNotification(new DeleteJobCompletedNotificationRequest(registrationId)), is(notNullValue()));
     }
 
     @Test
     public void jobCreateRegistration() throws IOException, SignatureException {
-        final CreateNotificationResponse response = client.createJobCreatedNotification(new CreateJobCreatedNotificationRequest("192.168.56.101/other"));
+        final NotificationResponse response = client.createJobCreatedNotification(new CreateJobCreatedNotificationRequest("192.168.56.101/other"));
         assertThat(response, is(notNullValue()));
         assertThat(response.getRegistration(), is(notNullValue()));
 
         final UUID registrationId = response.getRegistration().getId();
+
+        final NotificationResponse getResponse = client.getJobCreatedNotification(new GetJobCreatedNotificationRequest(registrationId));
+        assertThat(getResponse, is(notNullValue()));
+        assertThat(getResponse.getRegistration(), is(notNullValue()));
+        assertThat(getResponse.getRegistration().getId(), is(notNullValue()));
 
         assertThat(client.deleteJobCreatedNotification(new DeleteJobCreatedNotificationRequest(registrationId)), is(notNullValue()));
     }
 
     @Test
     public void objectLostRegistration() throws IOException, SignatureException {
-        final CreateNotificationResponse response = client.createObjectLostNotification(new CreateObjectLostNotificationRequest("192.168.56.101/other"));
+        final NotificationResponse response = client.createObjectLostNotification(new CreateObjectLostNotificationRequest("192.168.56.101/other"));
         assertThat(response, is(notNullValue()));
         assertThat(response.getRegistration(), is(notNullValue()));
 
         final UUID registrationId = response.getRegistration().getId();
+
+        final NotificationResponse getResponse = client.getObjectLostNotification(new GetObjectLostNotificationRequest(registrationId));
+        assertThat(getResponse, is(notNullValue()));
+        assertThat(getResponse.getRegistration(), is(notNullValue()));
+        assertThat(getResponse.getRegistration().getId(), is(notNullValue()));
 
         assertThat(client.deleteObjectLostNotification(new DeleteObjectLostNotificationRequest(registrationId)), is(notNullValue()));
     }
@@ -80,7 +100,7 @@ public class NotificationsIntegration_test {
             client.putBucket(new PutBucketRequest(bucketName));
             final Ds3ClientHelpers.Job job = Util.getLoadJob(client, bucketName, Util.RESOURCE_BASE_NAME);
 
-            final CreateNotificationResponse response = client.createObjectPersistedNotification(new CreateObjectPersistedNotificationRequest("192.168.56.101/other", job.getJobId()));
+            final NotificationResponse response = client.createObjectPersistedNotification(new CreateObjectPersistedNotificationRequest("192.168.56.101/other", job.getJobId()));
             assertThat(response, is(notNullValue()));
             assertThat(response.getRegistration(), is(notNullValue()));
 
@@ -88,10 +108,47 @@ public class NotificationsIntegration_test {
 
             final UUID registrationId = response.getRegistration().getId();
 
+            final NotificationResponse getResponse = client.getObjectPersistedNotification(new GetObjectPersistedNotificationRequest(registrationId));
+            assertThat(getResponse, is(notNullValue()));
+            assertThat(getResponse.getRegistration(), is(notNullValue()));
+            assertThat(getResponse.getRegistration().getId(), is(notNullValue()));
+
             assertThat(client.deleteObjectPersistedNotification(new DeleteObjectPersistedNotificationRequest(registrationId)), is(notNullValue()));
         }
         finally {
             Util.deleteAllContents(client, bucketName);
         }
+    }
+
+    @Test
+    public void partitionFailureRegistration() throws IOException, SignatureException {
+        final NotificationResponse response = client.createPartitionFailureNotification(new CreatePartitionFailureNotificationRequest("192.168.56.101/other"));
+        assertThat(response, is(notNullValue()));
+        assertThat(response.getRegistration(), is(notNullValue()));
+
+        final UUID registrationId = response.getRegistration().getId();
+
+        final NotificationResponse getResponse = client.getPartitionFailureNotification(new GetPartitionFailureNotificationRequest(registrationId));
+        assertThat(getResponse, is(notNullValue()));
+        assertThat(getResponse.getRegistration(), is(notNullValue()));
+        assertThat(getResponse.getRegistration().getId(), is(notNullValue()));
+
+        assertThat(client.deletePartitionFailureNotification(new DeletePartitionFailureNotificationRequest(registrationId)), is(notNullValue()));
+    }
+
+    @Test
+    public void tapeFailureRegistration() throws IOException, SignatureException {
+        final NotificationResponse response = client.createTapeFailureNotification(new CreateTapeFailureNotificationRequest("192.168.56.101/other"));
+        assertThat(response, is(notNullValue()));
+        assertThat(response.getRegistration(), is(notNullValue()));
+
+        final UUID registrationId = response.getRegistration().getId();
+
+        final NotificationResponse getResponse = client.getTapeFailureNotification(new GetTapeFailureNotificationRequest(registrationId));
+        assertThat(getResponse, is(notNullValue()));
+        assertThat(getResponse.getRegistration(), is(notNullValue()));
+        assertThat(getResponse.getRegistration().getId(), is(notNullValue()));
+
+        assertThat(client.deleteTapeFailureNotification(new DeleteTapeFailureNotificationRequest(registrationId)), is(notNullValue()));
     }
 }
