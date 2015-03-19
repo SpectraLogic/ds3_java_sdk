@@ -69,7 +69,8 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
             throws SignatureException, IOException, XmlProcessingException {
         final BulkPutResponse prime = this.client.bulkPut(new BulkPutRequest(bucket, Lists.newArrayList(objectsToWrite))
                 .withPriority(options.getPriority())
-                .withWriteOptimization(options.getWriteOptimization()));
+                .withWriteOptimization(options.getWriteOptimization())
+                .withMaxUploadSize(options.getMaxUploadSize()));
         return new WriteJobImpl(this.client, prime.getResult());
     }
 

@@ -21,14 +21,25 @@ import com.spectralogic.ds3client.models.bulk.WriteOptimization;
 public class WriteJobOptions {
     private Priority priority;
     private WriteOptimization writeOptimization;
+    private int maxUploadSize;
 
     private WriteJobOptions() {
         this.priority = null;
         this.writeOptimization = null;
+        this.maxUploadSize = 0;
     }
 
     public static WriteJobOptions create() {
         return new WriteJobOptions();
+    }
+
+    public WriteJobOptions withMaxUploadSize(final int maxUploadSize) {
+        this.maxUploadSize = maxUploadSize;
+        return this;
+    }
+
+    public int getMaxUploadSize() {
+        return this.maxUploadSize;
     }
 
     public WriteJobOptions withWriteOptimization(final WriteOptimization writeOptimization) {
