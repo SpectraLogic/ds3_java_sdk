@@ -29,6 +29,6 @@ public class DateFormatter_Test {
     public void formatDate() {
         final Date date = new Date(1390414308132L);
 
-        assertThat(DateFormatter.dateToRfc882(date), is("Wed, 22 Jan 2014 11:11:48 -0700"));
+        assertThat(DateFormatter.dateToRfc882(date), is("Wed, 22 Jan 2014 18:11:48 +0000"));
     }
 }
