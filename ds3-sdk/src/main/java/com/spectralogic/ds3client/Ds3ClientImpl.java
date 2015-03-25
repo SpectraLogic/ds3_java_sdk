@@ -72,6 +72,11 @@ class Ds3ClientImpl implements Ds3Client {
     }
 
     @Override
+    public DeleteMultipleObjectsResponse deleteMultipleObjects(final DeleteMultipleObjectsRequest request) throws IOException, SignatureException {
+        return new DeleteMultipleObjectsResponse(this.netClient.getResponse(request));
+    }
+
+    @Override
     public GetObjectResponse getObject(final GetObjectRequest request) throws IOException, SignatureException {
         return new GetObjectResponse(
             this.netClient.getResponse(request),

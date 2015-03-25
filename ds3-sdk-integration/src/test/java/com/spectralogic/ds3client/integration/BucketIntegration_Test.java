@@ -17,6 +17,7 @@ package com.spectralogic.ds3client.integration;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
@@ -30,7 +31,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.security.SignatureException;
-import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 
@@ -146,14 +146,12 @@ public class BucketIntegration_Test {
             final UUID jobId = job.getJobId();
 
             job.transfer(new Ds3ClientHelpers.ObjectChannelBuilder() {
-                @Override
-                public SeekableByteChannel buildChannel(final String key) throws IOException {
-
-                    final Path filePath = Files.createTempFile("ds3", key);
-
-                    return Files.newByteChannel(filePath, StandardOpenOption.DELETE_ON_CLOSE, StandardOpenOption.WRITE);
-                }
-            });
+				@Override
+				public SeekableByteChannel buildChannel(final String key) throws IOException {
+					final Path filePath = Files.createTempFile("ds3", key);
+					return Files.newByteChannel(filePath, StandardOpenOption.DELETE_ON_CLOSE, StandardOpenOption.WRITE);
+				}
+			});
 
             final GetJobResponse jobResponse = client.getJob(new GetJobRequest(jobId));
             assertThat(jobResponse.getMasterObjectList().getStatus(), is(JobStatus.COMPLETED));
@@ -268,17 +266,17 @@ public class BucketIntegration_Test {
             final Ds3ClientHelpers.Job putJob = helpers.startWriteJob(bucketName, objects);
 
             putJob.transfer(new Ds3ClientHelpers.ObjectChannelBuilder() {
-                @Override
-                public SeekableByteChannel buildChannel(String key) throws IOException {
-                    final byte[] randomData = IOUtils.toByteArray(new RandomDataInputStream(120, 1024));
-                    final ByteBuffer randomBuffer = ByteBuffer.wrap(randomData);
+				@Override
+				public SeekableByteChannel buildChannel(String key) throws IOException {
+					final byte[] randomData = IOUtils.toByteArray(new RandomDataInputStream(120, 1024));
+					final ByteBuffer randomBuffer = ByteBuffer.wrap(randomData);
 
-                    final ByteArraySeekableByteChannel channel = new ByteArraySeekableByteChannel(1024);
-                    channel.write(randomBuffer);
+					final ByteArraySeekableByteChannel channel = new ByteArraySeekableByteChannel(1024);
+					channel.write(randomBuffer);
 
-                    return channel;
-                }
-            });
+					return channel;
+				}
+			});
 
             final Iterable<Contents> objs = helpers.listObjects(bucketName, "dirA");
 
@@ -293,6 +291,73 @@ public class BucketIntegration_Test {
         finally {
             Util.deleteAllContents(client, bucketName);
         }
-
     }
+
+	@Test
+	public void multiObjectDeleteNotQuiet() throws IOException, SignatureException, URISyntaxException, XmlProcessingException {
+		final String bucketName = "multi_object_delete";
+		final Ds3ClientHelpers wrapper = Ds3ClientHelpers.wrap(client);
+
+		try {
+			wrapper.ensureBucketExists(bucketName);
+			Util.loadBookTestData(client, bucketName);
+
+			final Iterable<Contents> objs = wrapper.listObjects(bucketName);
+			final DeleteMultipleObjectsResponse response =  client.deleteMultipleObjects(new DeleteMultipleObjectsRequest(bucketName, objs).withQuiet(false));
+			assertThat(response, is(notNullValue()));
+			assertThat(response.getResult(), is(notNullValue()));
+			assertThat(response.getResult().getDeletedList().size(), is(4));
+
+			final Iterable<Contents> filesLeft = wrapper.listObjects(bucketName);
+			assertTrue(Iterables.size(filesLeft) == 0);
+		}
+		finally {
+			Util.deleteAllContents(client, bucketName);
+		}
+	}
+
+	@Test
+	public void multiObjectDeleteQuiet() throws IOException, SignatureException, URISyntaxException, XmlProcessingException {
+		final String bucketName = "multi_object_delete";
+		final Ds3ClientHelpers wrapper = Ds3ClientHelpers.wrap(client);
+
+		try {
+			wrapper.ensureBucketExists(bucketName);
+			Util.loadBookTestData(client, bucketName);
+
+			final Iterable<Contents> objs = wrapper.listObjects(bucketName);
+			final DeleteMultipleObjectsResponse response =  client.deleteMultipleObjects(new DeleteMultipleObjectsRequest(bucketName, objs).withQuiet(true));
+			assertThat(response, is(notNullValue()));
+			assertThat(response.getResult(), is(notNullValue()));
+			assertThat(response.getResult().getDeletedList(), is(nullValue()));
+
+			final Iterable<Contents> filesLeft = wrapper.listObjects(bucketName);
+			assertTrue(Iterables.size(filesLeft) == 0);
+		}
+		finally {
+			Util.deleteAllContents(client, bucketName);
+		}
+	}
+
+	@Test
+	public void multiObjectDeleteOfUnknownObjects() throws IOException, SignatureException {
+		final String bucketName = "unknown_objects_delete";
+		final Ds3ClientHelpers wrapper = Ds3ClientHelpers.wrap(client);
+
+		try {
+			wrapper.ensureBucketExists(bucketName);
+
+			final List<String> objList = Lists.newArrayList("badObj1.txt", "badObj2.txt", "badObj3.txt");
+			final DeleteMultipleObjectsResponse response =  client.deleteMultipleObjects(new DeleteMultipleObjectsRequest(bucketName, objList));
+			assertThat(response, is(notNullValue()));
+			assertThat(response.getResult(), is(notNullValue()));
+			assertThat(response.getResult().getDeletedList(), is(nullValue()));
+			assertThat(response.getResult().getErrorList(), is(notNullValue()));
+			assertThat(response.getResult().getErrorList().size(), is(3));
+
+		}
+		finally {
+			Util.deleteAllContents(client, bucketName);
+		}
+	}
 }

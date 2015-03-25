@@ -110,8 +110,11 @@ public interface Ds3Client {
      * @throws IOException
      * @throws SignatureException
      */
-    public abstract DeleteObjectResponse deleteObject(
-            DeleteObjectRequest request) throws IOException, SignatureException;
+    public abstract DeleteObjectResponse deleteObject(DeleteObjectRequest request)
+            throws IOException, SignatureException;
+
+    public abstract DeleteMultipleObjectsResponse deleteMultipleObjects(DeleteMultipleObjectsRequest request)
+            throws IOException, SignatureException;
 
     /**
      * Retrieves an object from DS3
