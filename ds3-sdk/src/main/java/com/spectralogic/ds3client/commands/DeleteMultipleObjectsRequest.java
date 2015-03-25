@@ -31,7 +31,7 @@ public class DeleteMultipleObjectsRequest extends AbstractRequest {
     private final String bucketName;
     private final List<String> objects;
 
-    private boolean quiet = true;
+    private boolean quiet = false;
 
     private long size;
 

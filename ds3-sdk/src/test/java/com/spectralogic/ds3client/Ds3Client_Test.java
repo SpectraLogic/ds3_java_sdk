@@ -15,6 +15,7 @@
 
 package com.spectralogic.ds3client;
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.TreeMultimap;
 import com.spectralogic.ds3client.commands.*;
@@ -191,6 +192,31 @@ public class Ds3Client_Test {
                 .deleteObject(new DeleteObjectRequest("bucketName", "my/file.txt"));
     }
 
+    @Test
+    public void multiObjectDelete() throws IOException, SignatureException {
+        final List<String> objsToDelete = Lists.newArrayList("sample1.txt", "sample2.txt");
+        final Map<String, String> queryParams = new HashMap<>();
+        queryParams.put("delete", null);
+        final String payload = "<Delete><Quiet>false</Quiet><Object><Key>sample1.txt</Key></Object><Object><Key>sample2.txt</Key></Object></Delete>";
+
+        final DeleteMultipleObjectsResponse response = MockNetwork
+                .expecting(HttpVerb.POST, "/bucketName", queryParams, payload)
+                .returning(200, "<DeleteResult>\n" +
+                        "  <Deleted>\n" +
+                        "    <Key>sample1.txt</Key>\n" +
+                        "  </Deleted>\n" +
+                        "  <Error>\n" +
+                        "    <Key>sample2.txt</Key>\n" +
+                        "    <Code>AccessDenied</Code>\n" +
+                        "    <Message>Access Denied</Message>\n" +
+                        "  </Error>\n" +
+                        "</DeleteResult>")
+                .asClient()
+                .deleteMultipleObjects(new DeleteMultipleObjectsRequest("bucketName", objsToDelete));
+        assertThat(response.getResult().getDeletedList().size(), is(1));
+        assertThat(response.getResult().getErrorList().size(), is(1));
+    }
+
     @Test(expected = FailedRequestException.class)
     public void getBadBucket() throws IOException, SignatureException {
         MockNetwork
@@ -264,7 +290,7 @@ public class Ds3Client_Test {
                 .asClient()
                 .putObject(por);
     }
-    
+
     @Test
     public void bulkPut() throws IOException, SignatureException, XmlProcessingException {
         this.runBulkTest(BulkCommand.PUT, new BulkTestDriver() {
@@ -275,7 +301,7 @@ public class Ds3Client_Test {
             }
         });
     }
-    
+
     @Test
     public void bulkGet() throws IOException, SignatureException, XmlProcessingException {
         this.runBulkTest(BulkCommand.GET, new BulkTestDriver() {
