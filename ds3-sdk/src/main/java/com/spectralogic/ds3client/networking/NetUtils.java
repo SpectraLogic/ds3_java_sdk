@@ -59,7 +59,10 @@ public class NetUtils {
         final SortedMap<String, String> sortedMap = new TreeMap<>(queryParams);
         final Iterator<String> stringIter = Iterators.transform(sortedMap.entrySet().iterator(), new Function<Map.Entry<String, String>, String>() {
             @Override
-            public String apply(Map.Entry<String, String> input) {
+            public String apply(final Map.Entry<String, String> input) {
+                if (input.getValue() == null || input.getValue().isEmpty()) {
+                    return input.getKey();
+                }
                 return input.getKey() + "=" + input.getValue();
             }
         });

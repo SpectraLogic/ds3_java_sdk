@@ -124,7 +124,8 @@ public class MockNetwork implements NetworkClient {
         if (this.requestContent != null) {
             final InputStream stream = request.getStream();
             assertThat(stream, is(notNullValue()));
-            assertThat(IOUtils.toString(stream), is(this.requestContent));
+            final String computedStream = IOUtils.toString(stream);
+            assertThat(computedStream, is(this.requestContent));
         }
         return new MockedWebResponse(this.responseContent, this.statusCode, this.headers);
     }

@@ -76,8 +76,7 @@ public class DataIntegrity_Test {
 
             final String secondDigest = DigestUtils.sha256Hex(Files.newInputStream(tempDir.resolve(book)));
             assertThat(secondDigest, is(equalTo(digest)));
-        }
-        finally {
+        } finally {
             Util.deleteAllContents(client, bucketName);
         }
     }
@@ -89,7 +88,7 @@ public class DataIntegrity_Test {
         final long seed = 12345689;
         final int length = 2048;
 
-       sendAndVerifySingleFile(bucketName, randomFileName, seed, length);
+        sendAndVerifySingleFile(bucketName, randomFileName, seed, length);
     }
 
     @Test
@@ -173,8 +172,7 @@ public class DataIntegrity_Test {
 
             final String secondDigest = DigestUtils.sha256Hex(Files.newInputStream(tempDir.resolve(fileName)));
             assertThat(secondDigest, is(equalTo(digest)));
-        }
-        finally {
+        } finally {
             Util.deleteAllContents(client, bucketName);
         }
     }

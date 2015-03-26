@@ -129,8 +129,7 @@ public class NotificationsIntegration_test {
             assertThat(getResponse.getRegistration().getId(), is(notNullValue()));
 
             assertThat(client.deleteObjectPersistedNotification(new DeleteObjectPersistedNotificationRequest(registrationId)), is(notNullValue()));
-        }
-        finally {
+        } finally {
             Util.deleteAllContents(client, bucketName);
         }
     }

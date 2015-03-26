@@ -197,11 +197,24 @@ class NetworkClientImpl implements NetworkClient {
                 this.ds3Request.getContentType().toString(),
                 date,
                 canonicalizeAmzHeaders(this.ds3Request.getHeaders()),
-                UrlEscapers.urlFragmentEscaper().escape(this.ds3Request.getPath()),
+                canonicalizeResource(this.ds3Request.getPath(), this.ds3Request.getQueryParams()),
                 NetworkClientImpl.this.connectionDetails.getCredentials()
             )));
         }
-        
+
+
+        private String canonicalizeResource(final String path, final Map<String, String> queryParams) {
+
+            final StringBuilder canonicalizedResource = new StringBuilder();
+            canonicalizedResource.append(UrlEscapers.urlFragmentEscaper().escape(path));
+
+            if (queryParams.containsKey("delete")) {
+                canonicalizedResource.append("?delete");
+            }
+
+            return canonicalizedResource.toString();
+        }
+
 		private String canonicalizeAmzHeaders(
 				final Multimap<String, String> customHeaders) {
 			StringBuilder ret = new StringBuilder();

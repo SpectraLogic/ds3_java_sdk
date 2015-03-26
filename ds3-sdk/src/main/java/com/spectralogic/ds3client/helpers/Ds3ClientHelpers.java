@@ -59,7 +59,7 @@ public abstract class Ds3ClientHelpers {
         public Job withMaxParallelRequests(int maxParallelRequests);
         
         /**
-         * Transfers the files in this job using the given seekable channel creator.
+         * Transfers the files in this job using the given seekable channel creator.  The is a blocking call.
          * @throws SignatureException
          * @throws IOException
          * @throws XmlProcessingException
