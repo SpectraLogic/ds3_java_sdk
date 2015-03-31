@@ -27,6 +27,7 @@ import com.spectralogic.ds3client.utils.ByteArraySeekableByteChannel;
 import com.spectralogic.ds3client.utils.ResourceUtils;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.IOUtils;
+import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -50,6 +51,11 @@ public class DataIntegrity_Test {
     @BeforeClass
     public static void startup() {
         client = Util.fromEnv();
+    }
+
+    @AfterClass
+    public static void teardown() throws IOException {
+        client.close();
     }
 
     @Test

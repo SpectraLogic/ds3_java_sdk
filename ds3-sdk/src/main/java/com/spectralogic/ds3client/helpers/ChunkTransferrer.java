@@ -38,7 +38,7 @@ class ChunkTransferrer {
     private final JobPartTracker partTracker;
     private final int maxParallelRequests;
 
-    public static interface ItemTransferrer {
+    public interface ItemTransferrer {
         void transferItem(Ds3Client client, BulkObject ds3Object) throws SignatureException, IOException;
     }
     

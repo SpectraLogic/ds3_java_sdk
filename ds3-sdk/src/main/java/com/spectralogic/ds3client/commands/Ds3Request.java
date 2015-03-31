@@ -25,18 +25,18 @@ import java.util.Map;
 
 public interface Ds3Request {
 
-    public String getPath();
-    public HttpVerb getVerb();
+    String getPath();
+    HttpVerb getVerb();
 
-    public ContentType getContentType();
+    ContentType getContentType();
 
-    public InputStream getStream();
+    InputStream getStream();
 
-    public long getSize();
+    long getSize();
 
-    public Checksum getChecksum();
+    Checksum getChecksum();
 
-    public Map<String, String> getQueryParams();
+    Map<String, String> getQueryParams();
 
-    public Multimap<String, String> getHeaders();
+    Multimap<String, String> getHeaders();
 }

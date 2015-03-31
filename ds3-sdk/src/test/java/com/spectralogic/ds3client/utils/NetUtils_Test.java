@@ -96,7 +96,7 @@ public class NetUtils_Test {
 
     @Test
     public void buildUrlWithMultipleQueryParams() throws MalformedURLException {
-        final Map<String, String> queryParams = new HashMap<String, String>();
+        final Map<String, String> queryParams = new HashMap<>();
         queryParams.put("var", "2");
         queryParams.put("foo", "bar");
         final URL result = NetUtils.buildUrl(ConnectionFixture.getConnection(), "path", queryParams);

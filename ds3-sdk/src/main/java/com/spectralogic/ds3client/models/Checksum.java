@@ -33,10 +33,10 @@ public abstract class Checksum {
     
     public abstract <T, E extends Throwable> T match(final MatchHandler<T, E> handler) throws E;
     
-    public static interface MatchHandler<T, E extends Throwable> {
-        public T none() throws E;
-        public T compute() throws E;
-        public T value(final byte[] hash) throws E;
+    public interface MatchHandler<T, E extends Throwable> {
+        T none() throws E;
+        T compute() throws E;
+        T value(final byte[] hash) throws E;
     }
     
     private Checksum() {

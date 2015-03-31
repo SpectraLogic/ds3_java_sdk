@@ -18,6 +18,7 @@ package com.spectralogic.ds3client.helpers;
 import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
 import static org.junit.Assert.assertThat;
 
 public class ObjectPart_Test {
@@ -37,11 +38,11 @@ public class ObjectPart_Test {
         final Object other3 = new ObjectPart(10L, 12L);
         final Object other4 = new ObjectPart(15L, 15L);
         final Object other5 = "foo";
-        assertThat(original.equals(original), is(true));
-        assertThat(original.equals(other1), is(true));
-        assertThat(original.equals(other2), is(false));
-        assertThat(original.equals(other3), is(false));
-        assertThat(original.equals(other4), is(false));
-        assertThat(original.equals(other5), is(false));
+        assertThat(original, is(original));
+        assertThat(original, is(other1));
+        assertThat(original, is(not(other2)));
+        assertThat(original, is(not(other3)));
+        assertThat(original, is(not(other4)));
+        assertThat(original, is(not(other5)));
     }
 }

@@ -18,6 +18,7 @@ package com.spectralogic.ds3client.integration;
 import com.spectralogic.ds3client.Ds3Client;
 import com.spectralogic.ds3client.commands.GetServiceRequest;
 import com.spectralogic.ds3client.commands.GetServiceResponse;
+import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -39,6 +40,11 @@ public class Insecure_Test {
     @BeforeClass
     public static void startup() {
         client = Util.insecureFromEnv();
+    }
+
+    @AfterClass
+    public static void teardown() throws IOException {
+        client.close();
     }
 
     @Test

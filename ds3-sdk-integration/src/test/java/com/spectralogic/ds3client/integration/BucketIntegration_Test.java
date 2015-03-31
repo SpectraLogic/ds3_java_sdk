@@ -43,6 +43,7 @@ import com.spectralogic.ds3client.models.bulk.Ds3Object;
 import com.spectralogic.ds3client.models.bulk.JobStatus;
 import com.spectralogic.ds3client.utils.ByteArraySeekableByteChannel;
 import org.apache.commons.io.IOUtils;
+import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -58,6 +59,11 @@ public class BucketIntegration_Test {
     @BeforeClass
     public static void startup() {
         client = Util.fromEnv();
+    }
+
+    @AfterClass
+    public static void teardown() throws IOException {
+        client.close();
     }
 
     @Test

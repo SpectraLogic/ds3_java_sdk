@@ -28,7 +28,7 @@ public class MockedHeaders implements Headers {
     }
 
     private static Map<String, String> normalizeHeaderValues(final Map<String, String> headerValues) {
-        final HashMap<String, String> headers = new HashMap<String, String>();
+        final HashMap<String, String> headers = new HashMap<>();
         for (final Map.Entry<String, String> entry : headerValues.entrySet()) {
             headers.put(entry.getKey().toLowerCase(), entry.getValue());
         }

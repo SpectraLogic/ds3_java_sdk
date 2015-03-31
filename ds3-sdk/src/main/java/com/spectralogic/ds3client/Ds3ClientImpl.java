@@ -241,4 +241,9 @@ class Ds3ClientImpl implements Ds3Client {
         final NetworkClient newNetClient = new NetworkClientImpl(newConnectionDetails);
         return new Ds3ClientImpl(newNetClient);
     }
+
+    @Override
+    public void close() throws IOException {
+        this.netClient.close();
+    }
 }

@@ -23,6 +23,7 @@ import com.spectralogic.ds3client.serializer.XmlOutput;
 import org.apache.commons.io.IOUtils;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.StringWriter;
 
 public class GetBucketResponse extends AbstractResponse {
@@ -40,10 +41,11 @@ public class GetBucketResponse extends AbstractResponse {
 
     @Override
     protected void processResponse() throws IOException {
-        try (final WebResponse response = this.getResponse()) {
+        try (final WebResponse response = this.getResponse();
+             final InputStream contentStream = response.getResponseStream()) {
             this.checkStatusCode(200);
             final StringWriter writer = new StringWriter();
-            IOUtils.copy(response.getResponseStream(), writer, UTF8);
+            IOUtils.copy(contentStream, writer, UTF8);
             this.result = XmlOutput.fromXml(writer.toString(), ListBucketResult.class);
         }
     }

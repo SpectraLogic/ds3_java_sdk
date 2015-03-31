@@ -98,7 +98,7 @@ public class ObjectPartTrackerImpl_CompletePart_Test {
         tracker.attachDataTransferredListener(new DataTransferredListener() {
             @Override
             public void dataTransferred(final long size) {
-                events.add(Long.valueOf(size));
+                events.add(size);
             }
         });
         tracker.attachObjectCompletedListener(new ObjectCompletedListener() {

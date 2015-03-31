@@ -30,7 +30,7 @@ public class AllocateJobChunkResponse extends AbstractResponse {
     private Objects objects;
     private int retryAfterSeconds;
 
-    static public enum Status {
+    public enum Status {
         ALLOCATED, RETRYLATER
     }
 

@@ -17,10 +17,11 @@ package com.spectralogic.ds3client.networking;
 
 import com.spectralogic.ds3client.commands.Ds3Request;
 
+import java.io.Closeable;
 import java.io.IOException;
 import java.security.SignatureException;
 
-public interface NetworkClient {
-    public WebResponse getResponse(final Ds3Request request) throws IOException, SignatureException;
-    public ConnectionDetails getConnectionDetails();
+public interface NetworkClient extends Closeable {
+    WebResponse getResponse(final Ds3Request request) throws IOException, SignatureException;
+    ConnectionDetails getConnectionDetails();
 }

@@ -61,9 +61,36 @@ class NetworkClientImpl implements NetworkClient {
 
     final private ConnectionDetails connectionDetails;
 
+    final private CloseableHttpClient client;
+
     NetworkClientImpl(final ConnectionDetails connectionDetails) {
         if (connectionDetails == null) throw new AssertionError("Connection Details cannot be null");
         this.connectionDetails = connectionDetails;
+        this.client = createClient(connectionDetails);
+    }
+
+    private static CloseableHttpClient createClient(final ConnectionDetails connectionDetails) {
+        if (connectionDetails.isHttps() && !connectionDetails.isCertificateVerification()) {
+            try {
+
+                final SSLContext sslContext = SSLContexts.custom().loadTrustMaterial(null, new TrustStrategy() {
+                    @Override
+                    public boolean isTrusted(final X509Certificate[] chain, final String authType) throws CertificateException {
+                        return true;
+                    }
+                }).useTLS().build();
+
+                final SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(sslContext, new AllowAllHostnameVerifier());
+                return HttpClients.custom().setSSLSocketFactory(
+                        sslsf).build();
+
+            } catch (final NoSuchAlgorithmException | KeyStoreException | KeyManagementException e) {
+                throw new SSLSetupException(e);
+            }
+        }
+        else {
+            return HttpClients.createDefault();
+        }
     }
 
     @Override
@@ -73,7 +100,7 @@ class NetworkClientImpl implements NetworkClient {
 
     @Override
     public WebResponse getResponse(final Ds3Request request) throws IOException, SignatureException {
-        try (final RequestExecutor requestExecutor = new RequestExecutor(request)) {
+        try (final RequestExecutor requestExecutor = new RequestExecutor(this.client, request)) {
             int redirectCount = 0;
             do {
                 final CloseableHttpResponse response = requestExecutor.execute();
@@ -88,14 +115,21 @@ class NetworkClientImpl implements NetworkClient {
             throw new TooManyRedirectsException(redirectCount);
         }
     }
-    
+
+    @Override
+    public void close() throws IOException {
+        this.client.close();
+    }
+
     private class RequestExecutor implements Closeable {
         private final Ds3Request ds3Request;
         private final InputStream content;
         private final HttpHost host;
         private final String hash;
+        private final CloseableHttpClient client;
 
-        public RequestExecutor(final Ds3Request ds3Request) throws IOException {
+        public RequestExecutor(final CloseableHttpClient client, final Ds3Request ds3Request) throws IOException {
+            this.client = client;
             this.ds3Request = ds3Request;
             this.host = this.buildHost();
             this.content = ds3Request.getStream();
@@ -112,7 +146,7 @@ class NetworkClientImpl implements NetworkClient {
             
             final HttpRequest httpRequest = this.buildHttpRequest();
             this.addHeaders(httpRequest);
-            return getClient().execute(this.host, httpRequest, this.getContext());
+            return client.execute(this.host, httpRequest, this.getContext());
         }
 
         private HttpHost buildHost() throws MalformedURLException {
@@ -122,30 +156,6 @@ class NetworkClientImpl implements NetworkClient {
             } else {
                 final URL url = NetUtils.buildUrl(NetworkClientImpl.this.connectionDetails, "/");
                 return new HttpHost(url.getHost(), NetUtils.getPort(url), url.getProtocol());
-            }
-        }
-
-        private CloseableHttpClient getClient() {
-            if (NetworkClientImpl.this.getConnectionDetails().isHttps() && !NetworkClientImpl.this.getConnectionDetails().isCertificateVerification()) {
-                try {
-
-                    final SSLContext sslContext = SSLContexts.custom().loadTrustMaterial(null, new TrustStrategy() {
-                        @Override
-                        public boolean isTrusted(final X509Certificate[] chain, final String authType) throws CertificateException {
-                            return true;
-                        }
-                    }).useTLS().build();
-
-                    final SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(sslContext, new AllowAllHostnameVerifier());
-                    return HttpClients.custom().setSSLSocketFactory(
-                            sslsf).build();
-
-                } catch (final NoSuchAlgorithmException | KeyStoreException | KeyManagementException e) {
-                    throw new SSLSetupException(e);
-                }
-            }
-            else {
-                return HttpClients.createDefault();
             }
         }
 
