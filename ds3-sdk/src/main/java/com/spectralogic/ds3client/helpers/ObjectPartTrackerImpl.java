@@ -73,7 +73,7 @@ class ObjectPartTrackerImpl implements ObjectPartTracker {
         return existingPart != null && existingPart.getLength() == part.getLength();
     }
     
-    private void validateParts() {
+    private synchronized void validateParts() {
         long lastEnd = -1L;
         for (final ObjectPart part : this.parts) {
             if (part.getOffset() <= lastEnd) {
