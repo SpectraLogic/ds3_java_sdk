@@ -41,7 +41,7 @@ public abstract class Ds3ClientHelpers {
          *
          * @throws IOException
          */
-        public SeekableByteChannel buildChannel(final String key) throws IOException;
+        SeekableByteChannel buildChannel(final String key) throws IOException;
     }
     
     /**
@@ -50,13 +50,13 @@ public abstract class Ds3ClientHelpers {
      * JobId so the job can be recovered in the event of a failure.
      */
     public interface Job {
-        public UUID getJobId();
-        public String getBucketName();
+        UUID getJobId();
+        String getBucketName();
 
         /**
          * Sets the maximum number of requests to execute at a time when fulfilling the job.
          */
-        public Job withMaxParallelRequests(int maxParallelRequests);
+        Job withMaxParallelRequests(int maxParallelRequests);
         
         /**
          * Transfers the files in this job using the given seekable channel creator.  The is a blocking call.
@@ -64,7 +64,7 @@ public abstract class Ds3ClientHelpers {
          * @throws IOException
          * @throws XmlProcessingException
          */
-        public void transfer(final ObjectChannelBuilder channelBuilder)
+        void transfer(final ObjectChannelBuilder channelBuilder)
             throws SignatureException, IOException, XmlProcessingException;
     }
 
