@@ -20,25 +20,25 @@ import com.spectralogic.ds3client.models.Credentials;
 import java.net.URI;
 
 public interface ConnectionDetails {
-    public String getEndpoint();
+    String getEndpoint();
 
-    public Credentials getCredentials();
+    Credentials getCredentials();
 
     /**
      * If true the network layer will use Https.
      * @return
      */
-    public boolean isHttps();
+    boolean isHttps();
 
-    public URI getProxy();
+    URI getProxy();
 
-    public int getRetries();
+    int getRetries();
 
-    public int getBufferSize();
+    int getBufferSize();
 
     /**
      * Returns true if the network layer should perform certificate authentication for SSL.  False will disable
      * certificate authentication.
      */
-    public boolean isCertificateVerification();
+    boolean isCertificateVerification();
 }

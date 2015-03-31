@@ -144,4 +144,9 @@ public class MockNetwork implements NetworkClient {
         when(connectionDetails.getBufferSize()).thenReturn(1024 * 1024);
         return connectionDetails;
     }
+
+    @Override
+    public void close() throws IOException {
+
+    }
 }

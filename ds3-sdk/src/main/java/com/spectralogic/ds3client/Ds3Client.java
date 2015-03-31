@@ -20,6 +20,7 @@ import com.spectralogic.ds3client.commands.notifications.*;
 import com.spectralogic.ds3client.models.bulk.Node;
 import com.spectralogic.ds3client.networking.ConnectionDetails;
 
+import java.io.Closeable;
 import java.io.IOException;
 import java.security.SignatureException;
 
@@ -29,9 +30,9 @@ import java.security.SignatureException;
  *
  * See {@link Ds3ClientBuilder} on what options can be used to create a Ds3Client instance.
  */
-public interface Ds3Client {
+public interface Ds3Client extends Closeable {
 
-    public abstract ConnectionDetails getConnectionDetails();
+    ConnectionDetails getConnectionDetails();
 
     /**
      * Gets the list of buckets.
@@ -40,7 +41,7 @@ public interface Ds3Client {
      * @throws IOException
      * @throws SignatureException
      */
-    public abstract GetServiceResponse getService(GetServiceRequest request)
+    GetServiceResponse getService(GetServiceRequest request)
             throws IOException, SignatureException;
 
     /**
@@ -55,7 +56,7 @@ public interface Ds3Client {
      * @throws IOException
      * @throws SignatureException
      */
-    public abstract GetBucketResponse getBucket(GetBucketRequest request)
+    GetBucketResponse getBucket(GetBucketRequest request)
             throws IOException, SignatureException;
 
     /**
@@ -69,7 +70,7 @@ public interface Ds3Client {
      * @throws IOException
      * @throws SignatureException
      */
-    public abstract PutBucketResponse putBucket(PutBucketRequest request)
+    PutBucketResponse putBucket(PutBucketRequest request)
             throws IOException, SignatureException;
 
     /**
@@ -81,7 +82,7 @@ public interface Ds3Client {
      * @throws IOException
      * @throws SignatureException
      */
-    public abstract HeadBucketResponse headBucket(HeadBucketRequest request)
+    HeadBucketResponse headBucket(HeadBucketRequest request)
             throws IOException, SignatureException;
 
     /**
@@ -96,7 +97,7 @@ public interface Ds3Client {
      * @throws IOException
      * @throws SignatureException
      */
-    public abstract DeleteBucketResponse deleteBucket(
+    DeleteBucketResponse deleteBucket(
             DeleteBucketRequest request) throws IOException, SignatureException;
 
     /**
@@ -110,10 +111,10 @@ public interface Ds3Client {
      * @throws IOException
      * @throws SignatureException
      */
-    public abstract DeleteObjectResponse deleteObject(DeleteObjectRequest request)
+    DeleteObjectResponse deleteObject(DeleteObjectRequest request)
             throws IOException, SignatureException;
 
-    public abstract DeleteMultipleObjectsResponse deleteMultipleObjects(DeleteMultipleObjectsRequest request)
+    DeleteMultipleObjectsResponse deleteMultipleObjects(DeleteMultipleObjectsRequest request)
             throws IOException, SignatureException;
 
     /**
@@ -126,7 +127,7 @@ public interface Ds3Client {
      * @throws IOException
      * @throws SignatureException
      */
-    public abstract GetObjectResponse getObject(GetObjectRequest request)
+    GetObjectResponse getObject(GetObjectRequest request)
             throws IOException, SignatureException;
 
     /**
@@ -140,7 +141,7 @@ public interface Ds3Client {
      * @throws IOException
      * @throws SignatureException
      */
-    public abstract PutObjectResponse putObject(PutObjectRequest request)
+    PutObjectResponse putObject(PutObjectRequest request)
             throws IOException, SignatureException;
 
     /**
@@ -154,7 +155,7 @@ public interface Ds3Client {
      * @throws IOException
      * @throws SignatureException
      */
-    public abstract BulkGetResponse bulkGet(BulkGetRequest request)
+    BulkGetResponse bulkGet(BulkGetRequest request)
             throws IOException, SignatureException;
 
     /**
@@ -168,7 +169,7 @@ public interface Ds3Client {
      * @throws IOException
      * @throws SignatureException
      */
-    public abstract BulkPutResponse bulkPut(BulkPutRequest request)
+    BulkPutResponse bulkPut(BulkPutRequest request)
             throws IOException, SignatureException;
 
     /**
@@ -179,7 +180,7 @@ public interface Ds3Client {
      * @throws IOException
      * @throws SignatureException
      */
-    public abstract AllocateJobChunkResponse allocateJobChunk(AllocateJobChunkRequest request)
+    AllocateJobChunkResponse allocateJobChunk(AllocateJobChunkRequest request)
             throws IOException, SignatureException;
 
     /**
@@ -189,7 +190,7 @@ public interface Ds3Client {
      * @throws IOException
      * @throws SignatureException
      */
-    public abstract GetAvailableJobChunksResponse getAvailableJobChunks(GetAvailableJobChunksRequest request)
+    GetAvailableJobChunksResponse getAvailableJobChunks(GetAvailableJobChunksRequest request)
             throws IOException, SignatureException;
 
     /**
@@ -198,7 +199,7 @@ public interface Ds3Client {
      * @throws IOException
      * @throws SignatureException
      */
-    public abstract GetJobsResponse getJobs(GetJobsRequest request)
+    GetJobsResponse getJobs(GetJobsRequest request)
             throws IOException, SignatureException;
 
     /**
@@ -207,7 +208,7 @@ public interface Ds3Client {
      * @throws IOException
      * @throws SignatureException
      */
-    public abstract GetJobResponse getJob(GetJobRequest request)
+    GetJobResponse getJob(GetJobRequest request)
             throws IOException, SignatureException;
 
     /**
@@ -215,7 +216,7 @@ public interface Ds3Client {
      * @throws IOException
      * @throws SignatureException
      */
-    public abstract CancelJobResponse cancelJob(CancelJobRequest request)
+    CancelJobResponse cancelJob(CancelJobRequest request)
             throws IOException, SignatureException;
 
     /**
@@ -224,73 +225,73 @@ public interface Ds3Client {
      * @throws IOException
      * @throws SignatureException
      */
-    public abstract ModifyJobResponse modifyJob(ModifyJobRequest request)
+    ModifyJobResponse modifyJob(ModifyJobRequest request)
             throws IOException, SignatureException;
 
-    public abstract NotificationResponse createObjectCachedNotification(CreateObjectCachedNotificationRequest request)
+    NotificationResponse createObjectCachedNotification(CreateObjectCachedNotificationRequest request)
             throws IOException, SignatureException;
 
-    public abstract NotificationResponse getObjectCachedNotification(GetObjectCachedNotificationRequest request)
+    NotificationResponse getObjectCachedNotification(GetObjectCachedNotificationRequest request)
             throws IOException, SignatureException;
 
-    public abstract DeleteNotificationResponse deleteObjectCachedNotification(DeleteObjectCachedNotificationRequest request)
+    DeleteNotificationResponse deleteObjectCachedNotification(DeleteObjectCachedNotificationRequest request)
             throws IOException, SignatureException;
 
-    public abstract NotificationResponse createJobCompletedNotification(CreateJobCompletedNotificationRequest request)
+    NotificationResponse createJobCompletedNotification(CreateJobCompletedNotificationRequest request)
             throws IOException, SignatureException;
 
-    public abstract NotificationResponse getJobCompletedNotification(GetJobCompletedNotificationRequest request)
+    NotificationResponse getJobCompletedNotification(GetJobCompletedNotificationRequest request)
             throws IOException, SignatureException;
 
-    public abstract DeleteNotificationResponse deleteJobCompleteNotification(DeleteJobCompletedNotificationRequest request)
+    DeleteNotificationResponse deleteJobCompleteNotification(DeleteJobCompletedNotificationRequest request)
             throws IOException, SignatureException;
 
-    public abstract NotificationResponse createJobCreatedNotification(CreateJobCreatedNotificationRequest request)
+    NotificationResponse createJobCreatedNotification(CreateJobCreatedNotificationRequest request)
             throws IOException, SignatureException;
 
-    public abstract NotificationResponse getJobCreatedNotification(GetJobCreatedNotificationRequest request)
+    NotificationResponse getJobCreatedNotification(GetJobCreatedNotificationRequest request)
             throws IOException, SignatureException;
 
-    public abstract DeleteNotificationResponse deleteJobCreatedNotification(DeleteJobCreatedNotificationRequest request)
+    DeleteNotificationResponse deleteJobCreatedNotification(DeleteJobCreatedNotificationRequest request)
             throws IOException, SignatureException;
 
-    public abstract NotificationResponse createObjectLostNotification(CreateObjectLostNotificationRequest request)
+    NotificationResponse createObjectLostNotification(CreateObjectLostNotificationRequest request)
             throws IOException, SignatureException;
 
-    public abstract NotificationResponse getObjectLostNotification(GetObjectLostNotificationRequest request)
+    NotificationResponse getObjectLostNotification(GetObjectLostNotificationRequest request)
             throws IOException, SignatureException;
 
-    public abstract DeleteNotificationResponse deleteObjectLostNotification(DeleteObjectLostNotificationRequest request)
+    DeleteNotificationResponse deleteObjectLostNotification(DeleteObjectLostNotificationRequest request)
             throws IOException, SignatureException;
 
-    public abstract NotificationResponse createObjectPersistedNotification(CreateObjectPersistedNotificationRequest request)
+    NotificationResponse createObjectPersistedNotification(CreateObjectPersistedNotificationRequest request)
             throws IOException, SignatureException;
 
-    public abstract NotificationResponse getObjectPersistedNotification(GetObjectPersistedNotificationRequest request)
+    NotificationResponse getObjectPersistedNotification(GetObjectPersistedNotificationRequest request)
             throws IOException, SignatureException;
 
-    public abstract DeleteNotificationResponse deleteObjectPersistedNotification(DeleteObjectPersistedNotificationRequest request)
+    DeleteNotificationResponse deleteObjectPersistedNotification(DeleteObjectPersistedNotificationRequest request)
             throws IOException, SignatureException;
 
-    public abstract NotificationResponse createPartitionFailureNotification(CreatePartitionFailureNotificationRequest request)
+    NotificationResponse createPartitionFailureNotification(CreatePartitionFailureNotificationRequest request)
             throws IOException, SignatureException;
 
-    public abstract NotificationResponse getPartitionFailureNotification(GetPartitionFailureNotificationRequest request)
+    NotificationResponse getPartitionFailureNotification(GetPartitionFailureNotificationRequest request)
             throws IOException, SignatureException;
 
-    public abstract DeleteNotificationResponse deletePartitionFailureNotification(DeletePartitionFailureNotificationRequest request)
+    DeleteNotificationResponse deletePartitionFailureNotification(DeletePartitionFailureNotificationRequest request)
             throws IOException, SignatureException;
 
-    public abstract NotificationResponse createTapeFailureNotification(CreateTapeFailureNotificationRequest request)
+    NotificationResponse createTapeFailureNotification(CreateTapeFailureNotificationRequest request)
             throws IOException, SignatureException;
 
-    public abstract NotificationResponse getTapeFailureNotification(GetTapeFailureNotificationRequest request)
+    NotificationResponse getTapeFailureNotification(GetTapeFailureNotificationRequest request)
             throws IOException, SignatureException;
 
-    public abstract DeleteNotificationResponse deleteTapeFailureNotification(DeleteTapeFailureNotificationRequest request)
+    DeleteNotificationResponse deleteTapeFailureNotification(DeleteTapeFailureNotificationRequest request)
             throws IOException, SignatureException;
     /**
      * Creates a new Ds3Client instance for the system pointed to by Node.
      */
-    public abstract Ds3Client newForNode(Node node);
+    Ds3Client newForNode(Node node);
 }

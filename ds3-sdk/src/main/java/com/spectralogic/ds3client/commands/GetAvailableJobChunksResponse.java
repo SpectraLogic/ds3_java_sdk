@@ -30,7 +30,7 @@ public class GetAvailableJobChunksResponse extends AbstractResponse {
     private MasterObjectList masterObjectList;
     private int retryAfterSeconds;
 
-    static public enum Status {
+    public enum Status {
         AVAILABLE, RETRYLATER
     }
     

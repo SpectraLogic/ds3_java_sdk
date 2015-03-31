@@ -21,7 +21,7 @@ import java.io.IOException;
 
 public class HeadBucketResponse extends AbstractResponse {
 
-    static public enum Status {
+    public enum Status {
         EXISTS, DOESNTEXIST, NOTAUTHORIZED
     }
 

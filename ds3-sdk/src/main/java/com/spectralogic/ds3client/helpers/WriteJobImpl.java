@@ -30,6 +30,7 @@ import java.io.IOException;
 import java.security.SignatureException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 class WriteJobImpl extends JobImpl {
@@ -51,7 +52,7 @@ class WriteJobImpl extends JobImpl {
                 this.maxParallelRequests
             );
             for (final Objects chunk : filteredChunks) {
-                chunkTransferrer.transferChunks(this.masterObjectList.getNodes(), Arrays.asList(filterChunk(allocateChunk(chunk))));
+                chunkTransferrer.transferChunks(this.masterObjectList.getNodes(), Collections.singletonList(filterChunk(allocateChunk(chunk))));
             }
         } catch (final SignatureException | IOException | XmlProcessingException | RuntimeException e) {
             throw e;

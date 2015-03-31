@@ -20,6 +20,7 @@ import com.spectralogic.ds3client.commands.PutBucketRequest;
 import com.spectralogic.ds3client.commands.notifications.*;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers;
 import com.spectralogic.ds3client.serializer.XmlProcessingException;
+import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -29,7 +30,6 @@ import java.security.SignatureException;
 import java.util.UUID;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 
@@ -40,6 +40,11 @@ public class NotificationsIntegration_test {
     @BeforeClass
     public static void startup() {
         client = Util.fromEnv();
+    }
+
+    @AfterClass
+    public static void teardown() throws IOException {
+        client.close();
     }
 
     @Test
