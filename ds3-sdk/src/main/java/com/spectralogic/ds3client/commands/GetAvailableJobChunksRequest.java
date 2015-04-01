@@ -21,6 +21,8 @@ import java.util.UUID;
 public class GetAvailableJobChunksRequest extends AbstractRequest {
     private final UUID jobId;
 
+    private int preferredNumberOfChunks = 3;
+
     public UUID getJobId() {
         return jobId;
     }
@@ -28,6 +30,12 @@ public class GetAvailableJobChunksRequest extends AbstractRequest {
     public GetAvailableJobChunksRequest(final UUID jobId) {
         this.jobId = jobId;
         getQueryParams().put("job", jobId.toString());
+    }
+
+    public GetAvailableJobChunksRequest withPreferredNumberOfChunks(final int numberOfChunks) {
+        this.preferredNumberOfChunks = numberOfChunks;
+        this.getQueryParams().put("preferred_number_of_chunks", Integer.toString(numberOfChunks));
+        return this;
     }
 
     @Override
@@ -38,5 +46,9 @@ public class GetAvailableJobChunksRequest extends AbstractRequest {
     @Override
     public HttpVerb getVerb() {
         return HttpVerb.GET;
+    }
+
+    public int getPreferredNumberOfChunks() {
+        return preferredNumberOfChunks;
     }
 }
