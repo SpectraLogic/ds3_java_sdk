@@ -16,39 +16,21 @@ package com.spectralogic.ds3client.commands;
 
 import com.spectralogic.ds3client.HttpVerb;
 
-import java.util.UUID;
+public class DeleteTapePartitionRequest extends AbstractRequest {
 
-public class GetAvailableJobChunksRequest extends AbstractRequest {
-    private final UUID jobId;
+    private final String id;
 
-    private int preferredNumberOfChunks = 3;
-
-    public UUID getJobId() {
-        return jobId;
-    }
-
-    public GetAvailableJobChunksRequest(final UUID jobId) {
-        this.jobId = jobId;
-        getQueryParams().put("job", jobId.toString());
-    }
-
-    public GetAvailableJobChunksRequest withPreferredNumberOfChunks(final int numberOfChunks) {
-        this.preferredNumberOfChunks = numberOfChunks;
-        this.getQueryParams().put("preferred_number_of_chunks", Integer.toString(numberOfChunks));
-        return this;
+    public DeleteTapePartitionRequest(final String id) {
+        this.id = id;
     }
 
     @Override
     public String getPath() {
-        return "/_rest_/job_chunk";
+        return "/_rest_/tape_partition/" + this.id;
     }
 
     @Override
     public HttpVerb getVerb() {
-        return HttpVerb.GET;
-    }
-
-    public int getPreferredNumberOfChunks() {
-        return preferredNumberOfChunks;
+        return HttpVerb.DELETE;
     }
 }

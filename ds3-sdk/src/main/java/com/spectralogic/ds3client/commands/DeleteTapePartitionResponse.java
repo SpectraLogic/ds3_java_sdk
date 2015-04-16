@@ -12,41 +12,23 @@
  *   specific language governing permissions and limitations under the License.
  * ****************************************************************************
  */
+package com.spectralogic.ds3client.commands;
 
-allprojects {
-    group = 'com.spectralogic.ds3'
-    version = '1.1.0-RC2'
-}
+import com.spectralogic.ds3client.networking.WebResponse;
 
-subprojects {
-    apply plugin: 'maven'
-    apply plugin: 'java'
-    apply plugin: 'findbugs'
+import java.io.IOException;
 
-    sourceCompatibility = JavaVersion.VERSION_1_7
-    repositories {
-        mavenCentral()
-        mavenLocal()
+public class DeleteTapePartitionResponse extends AbstractResponse {
+    public DeleteTapePartitionResponse(final WebResponse response) throws IOException {
+        super(response);
     }
 
-    dependencies {
-        testCompile 'org.mockito:mockito-all:1.9.5'
-        testCompile 'junit:junit:4.11'
-    }
-}
-
-task wrapper(type: Wrapper) {
-    gradleVersion = '2.3'
-}
-
-project(':ds3-sdk-integration') {
-    dependencies {
-        compile project(':ds3-sdk')
-    }
-}
-
-project(':ds3-sdk-samples') {
-    dependencies {
-        compile project(':ds3-sdk')
+    @Override
+    protected void processResponse() throws IOException {
+        try {
+            this.checkStatusCode(204);
+        } finally {
+            this.getResponse().close();
+        }
     }
 }

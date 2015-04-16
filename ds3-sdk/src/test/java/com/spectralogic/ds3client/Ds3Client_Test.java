@@ -80,10 +80,10 @@ public class Ds3Client_Test {
         );
         
         final GetServiceResponse response = MockNetwork
-                .expecting(HttpVerb.GET, "/", null, null)
-                .returning(200, stringResponse)
-                .asClient()
-                .getService(new GetServiceRequest());
+            .expecting(HttpVerb.GET, "/", null, null)
+            .returning(200, stringResponse)
+            .asClient()
+            .getService(new GetServiceRequest());
         final ListAllMyBucketsResult result = response.getResult();
         assertThat(result.getOwner().getDisplayName(), is("ryan"));
         assertThat(result.getOwner().getId(), is("ryanid"));
@@ -100,10 +100,10 @@ public class Ds3Client_Test {
     @Test(expected = FailedRequestException.class)
     public void getBadService() throws IOException, SignatureException {
         MockNetwork
-                .expecting(HttpVerb.GET, "/", null, null)
-                .returning(400, "")
-                .asClient()
-                .getService(new GetServiceRequest());
+            .expecting(HttpVerb.GET, "/", null, null)
+            .returning(400, "")
+            .asClient()
+            .getService(new GetServiceRequest());
     }
 
     @Test
@@ -111,11 +111,11 @@ public class Ds3Client_Test {
         final String xmlResponse = "<ListBucketResult xmlns=\"http://s3.amazonaws.com/doc/2006-03-01/\"><Name>remoteTest16</Name><Prefix/><Marker/><MaxKeys>1000</MaxKeys><IsTruncated>false</IsTruncated><Contents><Key>user/hduser/gutenberg/20417.txt.utf-8</Key><LastModified>2014-01-03T13:26:47.000Z</LastModified><ETag>8B19F3F41868106382A677C3435BDCE5</ETag><Size>674570</Size><StorageClass>STANDARD</StorageClass><Owner><ID>ryan</ID><DisplayName>ryan</DisplayName></Owner></Contents><Contents><Key>user/hduser/gutenberg/5000.txt.utf-8</Key><LastModified>2014-01-03T13:26:47.000Z</LastModified><ETag>9DE344878423E44B129730CE22B4B137</ETag><Size>1423803</Size><StorageClass>STANDARD</StorageClass><Owner><ID>ryan</ID><DisplayName>ryan</DisplayName></Owner></Contents><Contents><Key>user/hduser/gutenberg/4300.txt.utf-8</Key><LastModified>2014-01-03T13:26:47.000Z</LastModified><ETag>33EE4519EA7DDAB27CA4E2742326D70B</ETag><Size>1573150</Size><StorageClass>DEEP</StorageClass><Owner><ID>ryan</ID><DisplayName>ryan</DisplayName></Owner></Contents></ListBucketResult>";
         
         final ListBucketResult result = MockNetwork
-                .expecting(HttpVerb.GET, "/remoteTest16", null, null)
-                .returning(200, xmlResponse)
-                .asClient()
-                .getBucket(new GetBucketRequest("remoteTest16"))
-                .getResult();
+            .expecting(HttpVerb.GET, "/remoteTest16", null, null)
+            .returning(200, xmlResponse)
+            .asClient()
+            .getBucket(new GetBucketRequest("remoteTest16"))
+            .getResult();
         
         assertThat(result.getName(), is("remoteTest16"));
         assertThat(result.getPrefix(), is(nullValue()));
@@ -168,28 +168,28 @@ public class Ds3Client_Test {
     @Test
     public void putBucket() throws IOException, SignatureException {
         MockNetwork
-                .expecting(HttpVerb.PUT, "/bucketName", null, null)
-                .returning(200, "")
-                .asClient()
-                .putBucket(new PutBucketRequest("bucketName"));
+            .expecting(HttpVerb.PUT, "/bucketName", null, null)
+            .returning(200, "")
+            .asClient()
+            .putBucket(new PutBucketRequest("bucketName"));
     }
     
     @Test
     public void deleteBucket() throws IOException, SignatureException {
         MockNetwork
-                .expecting(HttpVerb.DELETE, "/bucketName", null, null)
-                .returning(204, "")
-                .asClient()
-                .deleteBucket(new DeleteBucketRequest("bucketName"));
+            .expecting(HttpVerb.DELETE, "/bucketName", null, null)
+            .returning(204, "")
+            .asClient()
+            .deleteBucket(new DeleteBucketRequest("bucketName"));
     }
 
     @Test
     public void deleteObject() throws IOException, SignatureException {
         MockNetwork
-                .expecting(HttpVerb.DELETE, "/bucketName/my/file.txt", null, null)
-                .returning(204, "")
-                .asClient()
-                .deleteObject(new DeleteObjectRequest("bucketName", "my/file.txt"));
+            .expecting(HttpVerb.DELETE, "/bucketName/my/file.txt", null, null)
+            .returning(204, "")
+            .asClient()
+            .deleteObject(new DeleteObjectRequest("bucketName", "my/file.txt"));
     }
 
     @Test
@@ -200,19 +200,19 @@ public class Ds3Client_Test {
         final String payload = "<Delete><Quiet>false</Quiet><Object><Key>sample1.txt</Key></Object><Object><Key>sample2.txt</Key></Object></Delete>";
 
         final DeleteMultipleObjectsResponse response = MockNetwork
-                .expecting(HttpVerb.POST, "/bucketName", queryParams, payload)
-                .returning(200, "<DeleteResult>\n" +
-                        "  <Deleted>\n" +
-                        "    <Key>sample1.txt</Key>\n" +
-                        "  </Deleted>\n" +
-                        "  <Error>\n" +
-                        "    <Key>sample2.txt</Key>\n" +
-                        "    <Code>AccessDenied</Code>\n" +
-                        "    <Message>Access Denied</Message>\n" +
-                        "  </Error>\n" +
-                        "</DeleteResult>")
-                .asClient()
-                .deleteMultipleObjects(new DeleteMultipleObjectsRequest("bucketName", objsToDelete));
+            .expecting(HttpVerb.POST, "/bucketName", queryParams, payload)
+            .returning(200, "<DeleteResult>\n" +
+                "  <Deleted>\n" +
+                "    <Key>sample1.txt</Key>\n" +
+                "  </Deleted>\n" +
+                "  <Error>\n" +
+                "    <Key>sample2.txt</Key>\n" +
+                "    <Code>AccessDenied</Code>\n" +
+                "    <Message>Access Denied</Message>\n" +
+                "  </Error>\n" +
+                "</DeleteResult>")
+            .asClient()
+            .deleteMultipleObjects(new DeleteMultipleObjectsRequest("bucketName", objsToDelete));
         assertThat(response.getResult().getDeletedList().size(), is(1));
         assertThat(response.getResult().getErrorList().size(), is(1));
     }
@@ -220,10 +220,10 @@ public class Ds3Client_Test {
     @Test(expected = FailedRequestException.class)
     public void getBadBucket() throws IOException, SignatureException {
         MockNetwork
-                .expecting(HttpVerb.GET, "/remoteTest16", null, null)
-                .returning(400, "")
-                .asClient()
-                .getBucket(new GetBucketRequest("remoteTest16"));
+            .expecting(HttpVerb.GET, "/remoteTest16", null, null)
+            .returning(400, "")
+            .asClient()
+            .getBucket(new GetBucketRequest("remoteTest16"));
     }
 
     @Test
@@ -236,10 +236,10 @@ public class Ds3Client_Test {
         final ByteArraySeekableByteChannel resultChannel = new ByteArraySeekableByteChannel();
         final String stringResponse = "Response";
         MockNetwork
-                .expecting(HttpVerb.GET, "/bucketName/object", queryParams, null)
-                .returning(200, stringResponse)
-                .asClient()
-                .getObject(new GetObjectRequest("bucketName", "object", 0, UUID.fromString(jobIdString), resultChannel));
+            .expecting(HttpVerb.GET, "/bucketName/object", queryParams, null)
+            .returning(200, stringResponse)
+            .asClient()
+            .getObject(new GetObjectRequest("bucketName", "object", 0, UUID.fromString(jobIdString), resultChannel));
         assertThat(resultChannel.toString(), is(stringResponse));
     }
     
@@ -255,10 +255,10 @@ public class Ds3Client_Test {
         final String output = new String(fileBytes, Charset.forName("UTF-8"));
         final FileChannel channel = FileChannel.open(resourceFile.toPath(), StandardOpenOption.READ);
         MockNetwork
-                .expecting(HttpVerb.PUT, "/bucketName/objectName", queryParams, output)
-                .returning(200, "")
-                .asClient()
-                .putObject(new PutObjectRequest("bucketName", "objectName", UUID.fromString(jobIdString), fileBytes.length, 0, channel));
+            .expecting(HttpVerb.PUT, "/bucketName/objectName", queryParams, output)
+            .returning(200, "")
+            .asClient()
+            .putObject(new PutObjectRequest("bucketName", "objectName", UUID.fromString(jobIdString), fileBytes.length, 0, channel));
     }
     
     @Test
@@ -285,10 +285,10 @@ public class Ds3Client_Test {
         por.withMetaData("test2", "test2value");
         por.withMetaData("test2", "test2value2");
         MockNetwork
-                .expecting(HttpVerb.PUT, "/bucketName/objectName", queryParams, expectedRequestHeaders, output)
-                .returning(200, "")
-                .asClient()
-                .putObject(por);
+            .expecting(HttpVerb.PUT, "/bucketName/objectName", queryParams, expectedRequestHeaders, output)
+            .returning(200, "")
+            .asClient()
+            .putObject(por);
     }
 
     @Test
@@ -340,9 +340,9 @@ public class Ds3Client_Test {
         queryParams.put("operation", command.toString());
         
         final Ds3Client client = MockNetwork
-                .expecting(HttpVerb.PUT, "/_rest_/bucket/bulkTest", queryParams, expectedXmlBody)
-                .returning(200, xmlResponse)
-                .asClient();
+            .expecting(HttpVerb.PUT, "/_rest_/bucket/bulkTest", queryParams, expectedXmlBody)
+            .returning(200, xmlResponse)
+            .asClient();
         
         final List<Objects> objectListList = driver.performRestCall(client, "bulkTest", objects).getObjects();
         assertThat(objectListList.size(), is(1));
@@ -645,6 +645,25 @@ public class Ds3Client_Test {
         );
     }
 
+    @Test
+    public void deleteTapeDrive() throws IOException, SignatureException {
+        final DeleteTapeDriveResponse response = MockNetwork
+            .expecting(HttpVerb.DELETE, "/_rest_/tape_drive/30a8dbf8-12e1-49dd-bede-0b4a7e1dd773", null, null)
+            .returning(204, "")
+            .asClient()
+            .deleteTapeDrive(new DeleteTapeDriveRequest("30a8dbf8-12e1-49dd-bede-0b4a7e1dd773"));
+        assertThat(response, notNullValue());
+    }
+
+    @Test
+    public void deleteTapePartition() throws IOException, SignatureException {
+        final DeleteTapePartitionResponse response = MockNetwork
+            .expecting(HttpVerb.DELETE, "/_rest_/tape_partition/30a8dbf8-12e1-49dd-bede-0b4a7e1dd773", null, null)
+            .returning(204, "")
+            .asClient()
+            .deleteTapePartition(new DeleteTapePartitionRequest("30a8dbf8-12e1-49dd-bede-0b4a7e1dd773"));
+        assertThat(response, notNullValue());
+    }
     @Test
     public void newForNode() {
         final Ds3Client client = Ds3ClientBuilder.create("endpoint", new Credentials("access", "key")).build();

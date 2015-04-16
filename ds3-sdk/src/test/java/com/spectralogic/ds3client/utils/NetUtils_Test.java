@@ -127,7 +127,6 @@ public class NetUtils_Test {
 
         final String result = NetUtils.buildQueryString(queryParams);
         assertThat(result, is("char=far&foo=bar"));
-
     }
 
     @Test
