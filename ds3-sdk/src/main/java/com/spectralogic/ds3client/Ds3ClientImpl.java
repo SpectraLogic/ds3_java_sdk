@@ -131,6 +131,11 @@ class Ds3ClientImpl implements Ds3Client {
     }
 
     @Override
+    public DeleteTapeDriveResponse deleteTapeDrive(final DeleteTapeDriveRequest request) throws IOException, SignatureException {
+        return new DeleteTapeDriveResponse(this.netClient.getResponse(request));
+    }
+
+    @Override
     public NotificationResponse createObjectCachedNotification(final CreateObjectCachedNotificationRequest request) throws IOException, SignatureException {
         return new NotificationResponse(this.netClient.getResponse(request));
     }
