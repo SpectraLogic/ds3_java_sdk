@@ -228,7 +228,11 @@ public interface Ds3Client extends Closeable {
     ModifyJobResponse modifyJob(ModifyJobRequest request)
             throws IOException, SignatureException;
 
-    DeleteTapeDriveResponse deleteTapeDrive(DeleteTapeDriveRequest request) throws IOException, SignatureException;
+    DeleteTapeDriveResponse deleteTapeDrive(DeleteTapeDriveRequest request)
+            throws IOException, SignatureException;
+
+    DeleteTapePartitionResponse deleteTapePartition(DeleteTapePartitionRequest request)
+            throws IOException, SignatureException;
 
     NotificationResponse createObjectCachedNotification(CreateObjectCachedNotificationRequest request)
             throws IOException, SignatureException;
