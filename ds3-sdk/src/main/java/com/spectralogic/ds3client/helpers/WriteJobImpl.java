@@ -136,7 +136,6 @@ class WriteJobImpl extends JobImpl {
         @Override
         public void transferItem(final Ds3Client client, final BulkObject ds3Object)
                 throws SignatureException, IOException {
-            LOG.info("Preparing to send to: ", client.getConnectionDetails().getEndpoint());
             client.putObject(new PutObjectRequest(
                 WriteJobImpl.this.masterObjectList.getBucketName(),
                 ds3Object.getName(),

@@ -81,7 +81,7 @@ class ConnectionDetailsImpl implements ConnectionDetails {
             connectionBuilder = builder(connectionDetails.getEndpoint(), connectionDetails.getCredentials());
         }
         else {
-            LOG.info("Creating new Connection Details for endpoint: " + node.getEndpoint());
+            LOG.trace("Creating new Connection Details for endpoint: " + node.getEndpoint());
             connectionBuilder = builder(node.getEndpoint() + ":" + getPort(node, connectionDetails), connectionDetails.getCredentials());
         }
         connectionBuilder.withRedirectRetries(connectionDetails.getRetries())
