@@ -82,7 +82,7 @@ class ConnectionDetailsImpl implements ConnectionDetails {
         }
         else {
             LOG.trace("Creating new Connection Details for endpoint: " + node.getEndpoint());
-            connectionBuilder = builder(node.getEndpoint() + ":" + getPort(node, connectionDetails), connectionDetails.getCredentials());
+            connectionBuilder = builder(buildAuthority(node, connectionDetails), connectionDetails.getCredentials());
         }
         connectionBuilder.withRedirectRetries(connectionDetails.getRetries())
             .withHttps(connectionDetails.isHttps())
@@ -93,13 +93,9 @@ class ConnectionDetailsImpl implements ConnectionDetails {
         return connectionBuilder.build();
     }
 
-    private static String getPort(final Node node, final ConnectionDetails connectionDetails) {
-        if (connectionDetails.isHttps()) {
-            return Integer.toString(node.getHttpsPort());
-        }
-        else {
-            return Integer.toString(node.getHttpPort());
-        }
+    private static String buildAuthority(final Node node, final ConnectionDetails connectionDetails) {
+        return node.getEndpoint() + ":" + Integer.toString(
+                (connectionDetails.isHttps() ? node.getHttpsPort() : node.getHttpPort()));
     }
 
     private final String endpoint;
