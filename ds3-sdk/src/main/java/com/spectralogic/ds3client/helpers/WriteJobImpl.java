@@ -25,6 +25,8 @@ import com.spectralogic.ds3client.models.bulk.BulkObject;
 import com.spectralogic.ds3client.models.bulk.MasterObjectList;
 import com.spectralogic.ds3client.models.bulk.Objects;
 import com.spectralogic.ds3client.serializer.XmlProcessingException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.security.SignatureException;
@@ -34,6 +36,7 @@ import java.util.Collections;
 import java.util.List;
 
 class WriteJobImpl extends JobImpl {
+    static private final Logger LOG = LoggerFactory.getLogger(WriteJobImpl.class);
     public WriteJobImpl(
             final Ds3Client client,
             final MasterObjectList masterObjectList) {

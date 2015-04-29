@@ -18,10 +18,15 @@ package com.spectralogic.ds3client;
 import com.spectralogic.ds3client.models.Credentials;
 import com.spectralogic.ds3client.models.bulk.Node;
 import com.spectralogic.ds3client.networking.ConnectionDetails;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.net.URI;
+import java.sql.Connection;
 
 class ConnectionDetailsImpl implements ConnectionDetails {
+    static private final Logger LOG = LoggerFactory.getLogger(ConnectionDetailsImpl.class);
+
     static class Builder implements com.spectralogic.ds3client.utils.Builder<ConnectionDetailsImpl> {
 
         private final String endpoint;
@@ -72,10 +77,12 @@ class ConnectionDetailsImpl implements ConnectionDetails {
     public static ConnectionDetails newForNode(final Node node, final ConnectionDetails connectionDetails) {
         final Builder connectionBuilder;
         if (node.getEndpoint() == null || node.getEndpoint().equals("FAILED_TO_DETERMINE_DATAPATH_IP_ADDRESS")) {
+            LOG.trace("Running against an old version of the DS3 API, reusing existing endpoint configuration");
             connectionBuilder = builder(connectionDetails.getEndpoint(), connectionDetails.getCredentials());
         }
         else {
-            connectionBuilder = builder(node.getEndpoint(), connectionDetails.getCredentials());
+            LOG.trace("Creating new Connection Details for endpoint: " + node.getEndpoint());
+            connectionBuilder = builder(buildAuthority(node, connectionDetails), connectionDetails.getCredentials());
         }
         connectionBuilder.withRedirectRetries(connectionDetails.getRetries())
             .withHttps(connectionDetails.isHttps())
@@ -84,6 +91,11 @@ class ConnectionDetailsImpl implements ConnectionDetails {
             .withProxy(connectionDetails.getProxy());
 
         return connectionBuilder.build();
+    }
+
+    private static String buildAuthority(final Node node, final ConnectionDetails connectionDetails) {
+        return node.getEndpoint() + ":" + Integer.toString(
+                (connectionDetails.isHttps() ? node.getHttpsPort() : node.getHttpPort()));
     }
 
     private final String endpoint;

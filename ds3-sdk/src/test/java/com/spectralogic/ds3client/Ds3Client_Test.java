@@ -670,9 +670,11 @@ public class Ds3Client_Test {
 
         final Node node = new Node();
         node.setEndpoint("newEndpoint");
+        node.setHttpPort(80);
+        node.setHttpsPort(443);
 
         final Ds3Client newClient = client.newForNode(node);
-        assertThat(newClient.getConnectionDetails().getEndpoint(), is("newEndpoint"));
+        assertThat(newClient.getConnectionDetails().getEndpoint(), is("newEndpoint:443"));
         assertThat(newClient.getConnectionDetails().getCredentials().getClientId(), is("access"));
         assertThat(newClient.getConnectionDetails().getCredentials().getKey(), is("key"));
     }
