@@ -26,6 +26,7 @@ import com.spectralogic.ds3client.models.ListBucketResult;
 import com.spectralogic.ds3client.models.Owner;
 import com.spectralogic.ds3client.models.bulk.*;
 import com.spectralogic.ds3client.models.bulk.Objects;
+import com.spectralogic.ds3client.networking.ConnectionDetails;
 import com.spectralogic.ds3client.serializer.XmlProcessingException;
 import com.spectralogic.ds3client.utils.ByteArraySeekableByteChannel;
 
@@ -36,6 +37,7 @@ import org.mockito.Mockito;
 import java.io.IOException;
 import java.nio.channels.SeekableByteChannel;
 import java.security.SignatureException;
+import java.sql.Connection;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
@@ -170,8 +172,11 @@ public class Ds3ClientHelpers_Test {
     @Test
     public void testWriteObjectsWithFailedPut() throws SignatureException, IOException, XmlProcessingException {
         final Ds3Client ds3Client = mock(Ds3Client.class);
+        final ConnectionDetails details = mock(ConnectionDetails.class);
+        Mockito.when(details.getEndpoint()).thenReturn("localhost");
 
         Mockito.when(ds3Client.newForNode(Mockito.<Node>any())).thenReturn(ds3Client);
+        Mockito.when(ds3Client.getConnectionDetails()).thenReturn(details);
 
         final BulkPutResponse buildBulkPutResponse = buildBulkPutResponse();
         Mockito.when(ds3Client.bulkPut(Mockito.any(BulkPutRequest.class))).thenReturn(buildBulkPutResponse);
@@ -317,7 +322,8 @@ public class Ds3ClientHelpers_Test {
     private static Ds3Client buildDs3ClientForBulk() throws IOException,
             SignatureException {
         final Ds3Client ds3Client = mock(Ds3Client.class);
-
+        final ConnectionDetails details = mock(ConnectionDetails.class);
+        Mockito.when(details.getEndpoint()).thenReturn("localhost");
         final GetAvailableJobChunksResponse jobChunksResponse1 = buildJobChunksResponse1();
         final GetAvailableJobChunksResponse jobChunksResponse2 = buildJobChunksResponse2();
         final GetAvailableJobChunksResponse jobChunksResponse3 = buildJobChunksResponse3();
@@ -327,7 +333,7 @@ public class Ds3ClientHelpers_Test {
             .thenReturn(jobChunksResponse3);
 
         Mockito.when(ds3Client.newForNode(Mockito.<Node>any())).thenReturn(ds3Client);
-
+        Mockito.when(ds3Client.getConnectionDetails()).thenReturn(details);
         return ds3Client;
     }
 

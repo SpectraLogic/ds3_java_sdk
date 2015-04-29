@@ -18,6 +18,8 @@ package com.spectralogic.ds3client;
 import com.spectralogic.ds3client.models.Credentials;
 import com.spectralogic.ds3client.networking.NetworkClient;
 import com.spectralogic.ds3client.utils.Builder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -29,6 +31,8 @@ import java.net.URISyntaxException;
  * setting a proxy with {@link Ds3ClientBuilder#withProxy(String)}.
  */
 public class Ds3ClientBuilder implements Builder<Ds3Client> {
+
+    static final private Logger LOG = LoggerFactory.getLogger(Ds3ClientBuilder.class);
 
     final private String endpoint;
     final private Credentials credentials;
@@ -125,6 +129,7 @@ public class Ds3ClientBuilder implements Builder<Ds3Client> {
      */
     @Override
     public Ds3Client build() {
+        LOG.info("Making connection details for endpoint: " + this.endpoint);
         final ConnectionDetailsImpl.Builder connBuilder = ConnectionDetailsImpl.builder(this.endpoint, this.credentials)
             .withProxy(this.proxy).withHttps(this.https).withCertificateVerification(this.certificateVerification).withRedirectRetries(this.retries).withBufferSize(this.bufferSize);
 

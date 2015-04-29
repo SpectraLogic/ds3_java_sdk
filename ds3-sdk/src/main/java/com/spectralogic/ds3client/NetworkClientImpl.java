@@ -37,6 +37,8 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicHttpEntityEnclosingRequest;
 import org.apache.http.message.BasicHttpRequest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.net.ssl.SSLContext;
 import java.io.Closeable;
@@ -53,6 +55,7 @@ import java.util.Collection;
 import java.util.Map;
 
 class NetworkClientImpl implements NetworkClient {
+    final static private Logger LOG = LoggerFactory.getLogger(NetworkClientImpl.class);
     final static private String HOST = "HOST";
     final static private String DATE = "DATE";
     final static private String AUTHORIZATION = "Authorization";
@@ -136,6 +139,8 @@ class NetworkClientImpl implements NetworkClient {
             if (this.content != null && !this.content.markSupported()) {
                 throw new RequiresMarkSupportedException();
             }
+
+            LOG.info("Sending request: " + this.ds3Request.getVerb() + " " + this.host.toString() + "" + this.ds3Request.getPath());
             this.hash = this.buildHash();
         }
         
