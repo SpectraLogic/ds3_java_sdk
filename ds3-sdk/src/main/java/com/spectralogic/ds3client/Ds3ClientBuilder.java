@@ -34,6 +34,10 @@ public class Ds3ClientBuilder implements Builder<Ds3Client> {
 
     static final private Logger LOG = LoggerFactory.getLogger(Ds3ClientBuilder.class);
 
+    static final private String ENDPOINT = "DS3_ENDPOINT";
+    static final private String ACCESS_KEY = "DS3_ACCESS_KEY";
+    static final private String SECRET_KEY = "DS3_SECRET_KEY";
+
     final private String endpoint;
     final private Credentials credentials;
 
@@ -62,6 +66,38 @@ public class Ds3ClientBuilder implements Builder<Ds3Client> {
      */
     public static Ds3ClientBuilder create(final String endpoint, final Credentials creds) {
         return new Ds3ClientBuilder(endpoint, creds);
+    }
+
+    /**
+     * Returns a Build which already has the endpoint and credentials populated from environment variables.
+     * DS3_ENDPOINT, DS3_ACCESS_KEY, and DS3_SECRET_KEY are all used when creating the builder.  This will
+     * also detect if http_proxy is set, and if it is will us it when creating the client and set the proxy
+     * variable accordingly.
+     * @return
+     * @throws IllegalArgumentException
+     */
+    public static Ds3ClientBuilder fromEnv() throws IllegalArgumentException {
+        final String endpoint = System.getenv(ENDPOINT);
+        if (endpoint == null) {
+            throw new IllegalArgumentException("Missing " + ENDPOINT + " environment variable");
+        }
+        final String accessKey = System.getenv(ACCESS_KEY);
+        if (accessKey == null) {
+            throw new IllegalArgumentException("Missing " + ACCESS_KEY + " environment variable");
+        }
+        final String secretKey = System.getenv(SECRET_KEY);
+        if (secretKey == null) {
+            throw new IllegalArgumentException("Missing " + SECRET_KEY + " environment variable");
+        }
+
+        final Ds3ClientBuilder builder = create(endpoint, new Credentials(accessKey, secretKey));
+
+        final String httpProxy = System.getenv("http_proxy");
+
+        if (httpProxy != null) {
+            builder.withProxy(httpProxy);
+        }
+        return builder;
     }
 
     /**
