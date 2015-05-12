@@ -22,6 +22,7 @@ import com.spectralogic.ds3client.commands.*;
 import com.spectralogic.ds3client.models.*;
 import com.spectralogic.ds3client.models.bulk.*;
 import com.spectralogic.ds3client.models.bulk.Objects;
+import com.spectralogic.ds3client.models.tape.TapeLibrary;
 import com.spectralogic.ds3client.networking.FailedRequestException;
 import com.spectralogic.ds3client.serializer.XmlProcessingException;
 import com.spectralogic.ds3client.utils.ByteArraySeekableByteChannel;
@@ -704,5 +705,36 @@ public class Ds3Client_Test {
                 .getSystemInformation(new GetSystemInformationRequest());
 
         assertThat(response.getSystemInformation(), is(notNullValue()));
+    }
+
+    @Test
+    public void getTapeLibraries() throws IOException, SignatureException {
+        final String responsePayload = "<Data><TapeLibrary><Id>f4dae25d-e52a-4430-82bd-525e4f15493c</Id><ManagementUrl>a</ManagementUrl><Name>test library</Name><SerialNumber>test library</SerialNumber></TapeLibrary><TapeLibrary><Id>82bdab72-d79a-4b43-95d7-f2c16cd9aa45</Id><ManagementUrl>a</ManagementUrl><Name>test library 2</Name><SerialNumber>test library 2</SerialNumber></TapeLibrary></Data>";
+
+        final GetTapeLibrariesResponse response = MockNetwork
+                .expecting(HttpVerb.GET, "/_rest_/tape_library", null, null)
+                .returning(200, responsePayload)
+                .asClient()
+                .getTapeLibraries(new GetTapeLibrariesRequest());
+
+        final List<TapeLibrary> libraries = response.getTapeLibraries();
+
+        assertThat(libraries.size(), is(2));
+        assertThat(libraries.get(0).getId().toString(), is("f4dae25d-e52a-4430-82bd-525e4f15493c"));
+    }
+
+    @Test
+    public void getTapeLibrary() throws IOException, SignatureException {
+        final String responsePayload = "<Data><Id>e23030e5-9b8d-4594-bdd1-15d3c45abb9f</Id><ManagementUrl>a</ManagementUrl><Name>125ca16e-60e3-43b2-a26f-0bc81843745f</Name><SerialNumber>test library</SerialNumber></Data>";
+
+        final GetTapeLibraryResponse response = MockNetwork
+                .expecting(HttpVerb.GET, "/_rest_/tape_library/e23030e5-9b8d-4594-bdd1-15d3c45abb9f", null, null)
+                .returning(200, responsePayload)
+                .asClient()
+                .getTapeLibrary(new GetTapeLibraryRequest(UUID.fromString("e23030e5-9b8d-4594-bdd1-15d3c45abb9f")));
+
+        assertThat(response.getTapeLibrary(), is(notNullValue()));
+        assertThat(response.getTapeLibrary().getId().toString(), is("e23030e5-9b8d-4594-bdd1-15d3c45abb9f"));
+
     }
 }

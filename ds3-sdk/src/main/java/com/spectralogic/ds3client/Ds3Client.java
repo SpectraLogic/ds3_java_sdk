@@ -303,6 +303,11 @@ public interface Ds3Client extends Closeable {
     GetSystemInformationResponse getSystemInformation(GetSystemInformationRequest request)
             throws IOException, SignatureException;
 
+    GetTapeLibrariesResponse getTapeLibraries(GetTapeLibrariesRequest request)
+            throws IOException, SignatureException;
+
+    GetTapeLibraryResponse getTapeLibrary(GetTapeLibraryRequest request)
+            throws IOException, SignatureException;
 
     /**
      * Creates a new Ds3Client instance for the system pointed to by Node.
