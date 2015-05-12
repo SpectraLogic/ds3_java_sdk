@@ -296,6 +296,14 @@ public interface Ds3Client extends Closeable {
 
     DeleteNotificationResponse deleteTapeFailureNotification(DeleteTapeFailureNotificationRequest request)
             throws IOException, SignatureException;
+
+    GetSystemHealthResponse getSystemHealth(GetSystemHealthRequest request)
+            throws IOException, SignatureException;
+
+    GetSystemInformationResponse getSystemInformation(GetSystemInformationRequest request)
+            throws IOException, SignatureException;
+
+
     /**
      * Creates a new Ds3Client instance for the system pointed to by Node.
      */

@@ -246,6 +246,16 @@ class Ds3ClientImpl implements Ds3Client {
     }
 
     @Override
+    public GetSystemHealthResponse getSystemHealth(final GetSystemHealthRequest request) throws IOException, SignatureException {
+        return new GetSystemHealthResponse(this.netClient.getResponse(request));
+    }
+
+    @Override
+    public GetSystemInformationResponse getSystemInformation(final GetSystemInformationRequest request) throws IOException, SignatureException {
+        return new GetSystemInformationResponse(this.netClient.getResponse(request));
+    }
+
+    @Override
     public Ds3Client newForNode(final Node node) {
         final ConnectionDetails newConnectionDetails = ConnectionDetailsImpl.newForNode(node, this.getConnectionDetails());
         final NetworkClient newNetClient = new NetworkClientImpl(newConnectionDetails);

@@ -496,34 +496,34 @@ public class Ds3Client_Test {
         final List<JobInfo> jobs = response.getJobs();
         assertThat(jobs.size(), is(2));
         checkJob(
-            jobs.get(0),
-            "bucket_1",
-            69880L,
-            ChunkClientProcessingOrderGuarantee.IN_ORDER,
-            0L,
-            UUID.fromString("0807ff11-a9f6-4d55-bb92-b452c1bb00c7"),
-            69880L,
-            Priority.NORMAL,
-            RequestType.PUT,
-            "2014-09-04T17:23:45.000Z",
-            UUID.fromString("a7d3eff9-e6d2-4e37-8a0b-84e76211a18a"),
-            "spectra",
-            WriteOptimization.PERFORMANCE
+                jobs.get(0),
+                "bucket_1",
+                69880L,
+                ChunkClientProcessingOrderGuarantee.IN_ORDER,
+                0L,
+                UUID.fromString("0807ff11-a9f6-4d55-bb92-b452c1bb00c7"),
+                69880L,
+                Priority.NORMAL,
+                RequestType.PUT,
+                "2014-09-04T17:23:45.000Z",
+                UUID.fromString("a7d3eff9-e6d2-4e37-8a0b-84e76211a18a"),
+                "spectra",
+                WriteOptimization.PERFORMANCE
         );
         checkJob(
-            jobs.get(1),
-            "bucket_2",
-            0L,
-            ChunkClientProcessingOrderGuarantee.IN_ORDER,
-            0L,
-            UUID.fromString("c18554ba-e3a8-4905-91fd-3e6eec71bf45"),
-            69880L,
-            Priority.HIGH,
-            RequestType.GET,
-            "2014-09-04T17:24:04.000Z",
-            UUID.fromString("a7d3eff9-e6d2-4e37-8a0b-84e76211a18a"),
-            "spectra",
-            WriteOptimization.CAPACITY
+                jobs.get(1),
+                "bucket_2",
+                0L,
+                ChunkClientProcessingOrderGuarantee.IN_ORDER,
+                0L,
+                UUID.fromString("c18554ba-e3a8-4905-91fd-3e6eec71bf45"),
+                69880L,
+                Priority.HIGH,
+                RequestType.GET,
+                "2014-09-04T17:24:04.000Z",
+                UUID.fromString("a7d3eff9-e6d2-4e37-8a0b-84e76211a18a"),
+                "spectra",
+                WriteOptimization.CAPACITY
         );
     }
 
@@ -636,12 +636,12 @@ public class Ds3Client_Test {
     @Test
     public void modifyJob() throws SignatureException, IOException {
         checkMasterObjectList(
-            MockNetwork
-                .expecting(HttpVerb.PUT, "/_rest_/job/1a85e743-ec8f-4789-afec-97e587a26936", null, null)
-                .returning(200, MASTER_OBJECT_LIST_XML)
-                .asClient()
-                .modifyJob(new ModifyJobRequest(MASTER_OBJECT_LIST_JOB_ID))
-                .getMasterObjectList()
+                MockNetwork
+                        .expecting(HttpVerb.PUT, "/_rest_/job/1a85e743-ec8f-4789-afec-97e587a26936", null, null)
+                        .returning(200, MASTER_OBJECT_LIST_XML)
+                        .asClient()
+                        .modifyJob(new ModifyJobRequest(MASTER_OBJECT_LIST_JOB_ID))
+                        .getMasterObjectList()
         );
     }
 
@@ -677,5 +677,32 @@ public class Ds3Client_Test {
         assertThat(newClient.getConnectionDetails().getEndpoint(), is("newEndpoint:443"));
         assertThat(newClient.getConnectionDetails().getCredentials().getClientId(), is("access"));
         assertThat(newClient.getConnectionDetails().getCredentials().getKey(), is("key"));
+    }
+
+    @Test
+    public void systemHealth() throws IOException, SignatureException {
+        final String responsePayload = "<Data><MsRequiredToVerifyDataPlannerHealth>0</MsRequiredToVerifyDataPlannerHealth></Data>";
+
+        final GetSystemHealthResponse response = MockNetwork
+                .expecting(HttpVerb.GET, "/_rest_/system_health", null, null)
+                .returning(200, responsePayload)
+                .asClient()
+                .getSystemHealth(new GetSystemHealthRequest());
+
+        assertThat(response.getSystemHealth(), is(notNullValue()));
+        assertThat(response.getSystemHealth().getTimeToVerifyHealth(), is(0L));
+    }
+
+    @Test
+    public void systemInformation() throws IOException, SignatureException {
+        final String responsePayload = "<Data><ApiVersion>518B3F2A95B71AC7325EFB12B2937376.15F3CC0489CBCD4648ECFF0FBF371B8A</ApiVersion><BuildInformation><Branch/><Revision/><Version/></BuildInformation><SerialNumber>UNKNOWN</SerialNumber></Data>";
+
+        final GetSystemInformationResponse response = MockNetwork
+                .expecting(HttpVerb.GET, "/_rest_/system_information", null, null)
+                .returning(200, responsePayload)
+                .asClient()
+                .getSystemInformation(new GetSystemInformationRequest());
+
+        assertThat(response.getSystemInformation(), is(notNullValue()));
     }
 }

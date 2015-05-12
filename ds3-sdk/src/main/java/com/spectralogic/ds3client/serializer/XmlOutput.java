@@ -25,6 +25,7 @@ import com.spectralogic.ds3client.BulkCommand;
 import com.spectralogic.ds3client.models.bulk.Ds3ObjectList;
 
 import java.io.IOException;
+import java.io.InputStream;
 
 public class XmlOutput {
     private static final JacksonXmlModule module;
@@ -67,5 +68,9 @@ public class XmlOutput {
 
     public static<T> T fromXml(final String xmlString, final Class<T> type) throws IOException {
         return mapper.readValue(xmlString, type);
+    }
+
+    public static<T> T fromXml(final InputStream stream, final Class<T> type) throws IOException {
+        return mapper.readValue(stream, type);
     }
 }
