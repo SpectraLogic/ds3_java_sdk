@@ -266,6 +266,21 @@ class Ds3ClientImpl implements Ds3Client {
     }
 
     @Override
+    public GetTapeDrivesResponse getTapeDrives(final GetTapeDrivesRequest request) throws IOException, SignatureException {
+        return new GetTapeDrivesResponse(this.netClient.getResponse(request));
+    }
+
+    @Override
+    public GetTapeDriveResponse getTapeDrive(final GetTapeDriveRequest request) throws IOException, SignatureException {
+        return new GetTapeDriveResponse(this.netClient.getResponse(request));
+    }
+
+    @Override
+    public GetTapeFailureResponse getTapeFailure(final GetTapeFailureRequest request) throws IOException, SignatureException {
+        return new GetTapeFailureResponse(this.netClient.getResponse(request));
+    }
+
+    @Override
     public Ds3Client newForNode(final Node node) {
         final ConnectionDetails newConnectionDetails = ConnectionDetailsImpl.newForNode(node, this.getConnectionDetails());
         final NetworkClient newNetClient = new NetworkClientImpl(newConnectionDetails);

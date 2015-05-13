@@ -22,6 +22,8 @@ import com.spectralogic.ds3client.commands.*;
 import com.spectralogic.ds3client.models.*;
 import com.spectralogic.ds3client.models.bulk.*;
 import com.spectralogic.ds3client.models.bulk.Objects;
+import com.spectralogic.ds3client.models.tape.TapeDrive;
+import com.spectralogic.ds3client.models.tape.TapeFailure;
 import com.spectralogic.ds3client.models.tape.TapeLibrary;
 import com.spectralogic.ds3client.networking.FailedRequestException;
 import com.spectralogic.ds3client.serializer.XmlProcessingException;
@@ -735,6 +737,55 @@ public class Ds3Client_Test {
 
         assertThat(response.getTapeLibrary(), is(notNullValue()));
         assertThat(response.getTapeLibrary().getId().toString(), is("e23030e5-9b8d-4594-bdd1-15d3c45abb9f"));
+    }
 
+    @Test
+    public void getTapeFailures() throws IOException, SignatureException {
+        final String responsePayload = "<Data><TapeFailure><Date>2015-03-11 16:23:29.741</Date><ErrorMessage>AAA</ErrorMessage><Id>375ae624-d39f-47d8-95c0-0aaec4494ad2</Id><TapeDriveId>b06c8900-6d88-4a29-9a03-d0c4494b29ff</TapeDriveId><TapeId>badbb1e7-8654-4b38-8d3b-112c9fd68d58</TapeId><Type>BLOB_READ_FAILED</Type></TapeFailure></Data>";
+
+        final GetTapeFailureResponse response = MockNetwork
+                .expecting(HttpVerb.GET, "/_rest_/tape_failure", null, null)
+                .returning(200, responsePayload)
+                .asClient()
+                .getTapeFailure(new GetTapeFailureRequest());
+
+        final List<TapeFailure> tapeFailures = response.getTapeFailures();
+
+        assertThat(tapeFailures, is(notNullValue()));
+        assertThat(tapeFailures.size(), is(1));
+        assertThat(tapeFailures.get(0).getId().toString(), is("375ae624-d39f-47d8-95c0-0aaec4494ad2"));
+    }
+
+    @Test
+    public void getTapeDrives() throws IOException, SignatureException {
+        final String responsePayload = "<Data><TapeDrive><ErrorMessage/><ForceTapeRemoval>false</ForceTapeRemoval><Id>ebeb0ec7-7912-4870-a0da-bbeb270ac049</Id><PartitionId>aa947aaa-23bf-4301-8173-2553bb1a3f1c</PartitionId><SerialNumber>test tape drive</SerialNumber><State>NORMAL</State><TapeId>b9085cd3-f1fd-4193-8763-c013d25cd135</TapeId><Type>UNKNOWN</Type></TapeDrive><TapeDrive><ErrorMessage/><ForceTapeRemoval>false</ForceTapeRemoval><Id>5dc2add1-b6e7-42a9-b551-a46339176c4b</Id><PartitionId>aa947aaa-23bf-4301-8173-2553bb1a3f1c</PartitionId><SerialNumber>test tape drive 2</SerialNumber><State>NORMAL</State><TapeId/><Type>UNKNOWN</Type></TapeDrive></Data>";
+
+        final GetTapeDrivesResponse response = MockNetwork
+                .expecting(HttpVerb.GET, "/_rest_/tape_drive", null, null)
+                .returning(200, responsePayload)
+                .asClient()
+                .getTapeDrives(new GetTapeDrivesRequest());
+
+        final List<TapeDrive> tapeDrives = response.getTapeDrives();
+
+        assertThat(tapeDrives, is(notNullValue()));
+        assertThat(tapeDrives.size(), is(2));
+        assertThat(tapeDrives.get(0).getId().toString(), is("ebeb0ec7-7912-4870-a0da-bbeb270ac049"));
+    }
+
+    @Test
+    public void getTapeDrive() throws IOException, SignatureException {
+        final String responsePayload = "<Data><ErrorMessage/><ForceTapeRemoval>false</ForceTapeRemoval><Id>ff5df6c8-7e24-4e4f-815d-a8a1a4cddc98</Id><PartitionId>ca69b187-47cf-425e-b92f-c09bacc7d3b3</PartitionId><SerialNumber>test tape drive</SerialNumber><State>NORMAL</State><TapeId>0ea07c32-8ff6-443f-b7c8-420667b0df84</TapeId><Type>UNKNOWN</Type></Data>";
+
+        final GetTapeDriveResponse response = MockNetwork
+                .expecting(HttpVerb.GET, "/_rest_/tape_drive/ff5df6c8-7e24-4e4f-815d-a8a1a4cddc98", null, null)
+                .returning(200, responsePayload)
+                .asClient()
+                .getTapeDrive(new GetTapeDriveRequest(UUID.fromString("ff5df6c8-7e24-4e4f-815d-a8a1a4cddc98")));
+
+        final TapeDrive tapeDrive = response.getTapeDrive();
+
+        assertThat(tapeDrive, is(notNullValue()));
+        assertThat(tapeDrive.getId().toString(), is("ff5df6c8-7e24-4e4f-815d-a8a1a4cddc98"));
     }
 }
