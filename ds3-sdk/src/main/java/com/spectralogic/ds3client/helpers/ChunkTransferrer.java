@@ -24,6 +24,8 @@ import com.spectralogic.ds3client.models.bulk.BulkObject;
 import com.spectralogic.ds3client.models.bulk.Node;
 import com.spectralogic.ds3client.models.bulk.Objects;
 import com.spectralogic.ds3client.serializer.XmlProcessingException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.security.SignatureException;
@@ -33,6 +35,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 
 class ChunkTransferrer {
+    private final static Logger LOG = LoggerFactory.getLogger(ChunkTransferrer.class);
     private final ItemTransferrer itemTransferrer;
     private final Ds3Client mainClient;
     private final JobPartTracker partTracker;
@@ -57,18 +60,24 @@ class ChunkTransferrer {
             final Iterable<Node> nodes,
             final Iterable<Objects> chunks)
                 throws SignatureException, IOException, XmlProcessingException {
+        LOG.debug("Getting ready to process chunks");
         final Map<UUID, Node> nodeMap = buildNodeMap(nodes);
+        LOG.debug("Starting executor service");
         final ListeningExecutorService executor = MoreExecutors.listeningDecorator(Executors.newFixedThreadPool(maxParallelRequests));
+        LOG.debug("Executor service started");
         try {
             final List<ListenableFuture<?>> tasks = new ArrayList<>();
             for (final Objects chunk : chunks) {
+                LOG.debug("Processing parts for chunk: " + chunk.getChunkId().toString());
                 final Ds3Client client = mainClient.newForNode(nodeMap.get(chunk.getNodeId()));
                 for (final BulkObject ds3Object : chunk) {
                     final ObjectPart part = new ObjectPart(ds3Object.getOffset(), ds3Object.getLength());
                     if (this.partTracker.containsPart(ds3Object.getName(), part)) {
+                        LOG.debug("Adding " + ds3Object.getName() + " to executor for processing");
                         tasks.add(executor.submit(new Callable<Object>() {
                             @Override
                             public Object call() throws Exception {
+                                LOG.debug("Processing " + ds3Object.getName());
                                 ChunkTransferrer.this.itemTransferrer.transferItem(client, ds3Object);
                                 ChunkTransferrer.this.partTracker.completePart(ds3Object.getName(), part);
                                 return null;
@@ -79,6 +88,7 @@ class ChunkTransferrer {
             }
             executeWithExceptionHandling(tasks);
         } finally {
+            LOG.debug("Shutting down executor");
             executor.shutdown();
         }
     }
