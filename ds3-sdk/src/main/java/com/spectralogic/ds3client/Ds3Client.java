@@ -296,6 +296,28 @@ public interface Ds3Client extends Closeable {
 
     DeleteNotificationResponse deleteTapeFailureNotification(DeleteTapeFailureNotificationRequest request)
             throws IOException, SignatureException;
+
+    GetSystemHealthResponse getSystemHealth(GetSystemHealthRequest request)
+            throws IOException, SignatureException;
+
+    GetSystemInformationResponse getSystemInformation(GetSystemInformationRequest request)
+            throws IOException, SignatureException;
+
+    GetTapeLibrariesResponse getTapeLibraries(GetTapeLibrariesRequest request)
+            throws IOException, SignatureException;
+
+    GetTapeLibraryResponse getTapeLibrary(GetTapeLibraryRequest request)
+            throws IOException, SignatureException;
+
+    GetTapeDrivesResponse getTapeDrives(GetTapeDrivesRequest request)
+            throws IOException, SignatureException;
+
+    GetTapeDriveResponse getTapeDrive(GetTapeDriveRequest request)
+            throws IOException, SignatureException;
+
+    GetTapeFailureResponse getTapeFailure(GetTapeFailureRequest request)
+            throws IOException, SignatureException;
+
     /**
      * Creates a new Ds3Client instance for the system pointed to by Node.
      */

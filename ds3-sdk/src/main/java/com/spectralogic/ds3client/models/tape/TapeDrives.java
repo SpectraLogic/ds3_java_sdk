@@ -13,42 +13,23 @@
  * ****************************************************************************
  */
 
-allprojects {
-    group = 'com.spectralogic.ds3'
-    version = '1.1.0-RC5'
-}
+package com.spectralogic.ds3client.models.tape;
 
-subprojects {
-    apply plugin: 'maven'
-    apply plugin: 'java'
-    apply plugin: 'findbugs'
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 
-    sourceCompatibility = JavaVersion.VERSION_1_7
-    repositories {
-        mavenCentral()
-        mavenLocal()
+import java.util.List;
+
+@JacksonXmlRootElement(namespace = "Data")
+public class TapeDrives {
+    @JsonProperty("TapeDrive")
+    private List<TapeDrive> tapeDrives;
+
+    public List<TapeDrive> getTapeDrives() {
+        return tapeDrives;
     }
 
-    dependencies {
-        compile     'org.slf4j:slf4j-api:1.7.12'
-        testCompile 'org.mockito:mockito-all:1.9.5'
-        testCompile 'junit:junit:4.11'
-        testCompile 'org.slf4j:slf4j-simple:1.7.12'
-    }
-}
-
-task wrapper(type: Wrapper) {
-    gradleVersion = '2.4'
-}
-
-project(':ds3-sdk-integration') {
-    dependencies {
-        compile project(':ds3-sdk')
-    }
-}
-
-project(':ds3-sdk-samples') {
-    dependencies {
-        compile project(':ds3-sdk')
+    public void setTapeDrives(List<TapeDrive> tapeDrives) {
+        this.tapeDrives = tapeDrives;
     }
 }

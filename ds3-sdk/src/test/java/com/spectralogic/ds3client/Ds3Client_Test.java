@@ -22,6 +22,9 @@ import com.spectralogic.ds3client.commands.*;
 import com.spectralogic.ds3client.models.*;
 import com.spectralogic.ds3client.models.bulk.*;
 import com.spectralogic.ds3client.models.bulk.Objects;
+import com.spectralogic.ds3client.models.tape.TapeDrive;
+import com.spectralogic.ds3client.models.tape.TapeFailure;
+import com.spectralogic.ds3client.models.tape.TapeLibrary;
 import com.spectralogic.ds3client.networking.FailedRequestException;
 import com.spectralogic.ds3client.serializer.XmlProcessingException;
 import com.spectralogic.ds3client.utils.ByteArraySeekableByteChannel;
@@ -496,34 +499,34 @@ public class Ds3Client_Test {
         final List<JobInfo> jobs = response.getJobs();
         assertThat(jobs.size(), is(2));
         checkJob(
-            jobs.get(0),
-            "bucket_1",
-            69880L,
-            ChunkClientProcessingOrderGuarantee.IN_ORDER,
-            0L,
-            UUID.fromString("0807ff11-a9f6-4d55-bb92-b452c1bb00c7"),
-            69880L,
-            Priority.NORMAL,
-            RequestType.PUT,
-            "2014-09-04T17:23:45.000Z",
-            UUID.fromString("a7d3eff9-e6d2-4e37-8a0b-84e76211a18a"),
-            "spectra",
-            WriteOptimization.PERFORMANCE
+                jobs.get(0),
+                "bucket_1",
+                69880L,
+                ChunkClientProcessingOrderGuarantee.IN_ORDER,
+                0L,
+                UUID.fromString("0807ff11-a9f6-4d55-bb92-b452c1bb00c7"),
+                69880L,
+                Priority.NORMAL,
+                RequestType.PUT,
+                "2014-09-04T17:23:45.000Z",
+                UUID.fromString("a7d3eff9-e6d2-4e37-8a0b-84e76211a18a"),
+                "spectra",
+                WriteOptimization.PERFORMANCE
         );
         checkJob(
-            jobs.get(1),
-            "bucket_2",
-            0L,
-            ChunkClientProcessingOrderGuarantee.IN_ORDER,
-            0L,
-            UUID.fromString("c18554ba-e3a8-4905-91fd-3e6eec71bf45"),
-            69880L,
-            Priority.HIGH,
-            RequestType.GET,
-            "2014-09-04T17:24:04.000Z",
-            UUID.fromString("a7d3eff9-e6d2-4e37-8a0b-84e76211a18a"),
-            "spectra",
-            WriteOptimization.CAPACITY
+                jobs.get(1),
+                "bucket_2",
+                0L,
+                ChunkClientProcessingOrderGuarantee.IN_ORDER,
+                0L,
+                UUID.fromString("c18554ba-e3a8-4905-91fd-3e6eec71bf45"),
+                69880L,
+                Priority.HIGH,
+                RequestType.GET,
+                "2014-09-04T17:24:04.000Z",
+                UUID.fromString("a7d3eff9-e6d2-4e37-8a0b-84e76211a18a"),
+                "spectra",
+                WriteOptimization.CAPACITY
         );
     }
 
@@ -636,12 +639,12 @@ public class Ds3Client_Test {
     @Test
     public void modifyJob() throws SignatureException, IOException {
         checkMasterObjectList(
-            MockNetwork
-                .expecting(HttpVerb.PUT, "/_rest_/job/1a85e743-ec8f-4789-afec-97e587a26936", null, null)
-                .returning(200, MASTER_OBJECT_LIST_XML)
-                .asClient()
-                .modifyJob(new ModifyJobRequest(MASTER_OBJECT_LIST_JOB_ID))
-                .getMasterObjectList()
+                MockNetwork
+                        .expecting(HttpVerb.PUT, "/_rest_/job/1a85e743-ec8f-4789-afec-97e587a26936", null, null)
+                        .returning(200, MASTER_OBJECT_LIST_XML)
+                        .asClient()
+                        .modifyJob(new ModifyJobRequest(MASTER_OBJECT_LIST_JOB_ID))
+                        .getMasterObjectList()
         );
     }
 
@@ -677,5 +680,112 @@ public class Ds3Client_Test {
         assertThat(newClient.getConnectionDetails().getEndpoint(), is("newEndpoint:443"));
         assertThat(newClient.getConnectionDetails().getCredentials().getClientId(), is("access"));
         assertThat(newClient.getConnectionDetails().getCredentials().getKey(), is("key"));
+    }
+
+    @Test
+    public void systemHealth() throws IOException, SignatureException {
+        final String responsePayload = "<Data><MsRequiredToVerifyDataPlannerHealth>0</MsRequiredToVerifyDataPlannerHealth></Data>";
+
+        final GetSystemHealthResponse response = MockNetwork
+                .expecting(HttpVerb.GET, "/_rest_/system_health", null, null)
+                .returning(200, responsePayload)
+                .asClient()
+                .getSystemHealth(new GetSystemHealthRequest());
+
+        assertThat(response.getSystemHealth(), is(notNullValue()));
+        assertThat(response.getSystemHealth().getTimeToVerifyHealth(), is(0L));
+    }
+
+    @Test
+    public void systemInformation() throws IOException, SignatureException {
+        final String responsePayload = "<Data><ApiVersion>518B3F2A95B71AC7325EFB12B2937376.15F3CC0489CBCD4648ECFF0FBF371B8A</ApiVersion><BuildInformation><Branch/><Revision/><Version/></BuildInformation><SerialNumber>UNKNOWN</SerialNumber></Data>";
+
+        final GetSystemInformationResponse response = MockNetwork
+                .expecting(HttpVerb.GET, "/_rest_/system_information", null, null)
+                .returning(200, responsePayload)
+                .asClient()
+                .getSystemInformation(new GetSystemInformationRequest());
+
+        assertThat(response.getSystemInformation(), is(notNullValue()));
+    }
+
+    @Test
+    public void getTapeLibraries() throws IOException, SignatureException {
+        final String responsePayload = "<Data><TapeLibrary><Id>f4dae25d-e52a-4430-82bd-525e4f15493c</Id><ManagementUrl>a</ManagementUrl><Name>test library</Name><SerialNumber>test library</SerialNumber></TapeLibrary><TapeLibrary><Id>82bdab72-d79a-4b43-95d7-f2c16cd9aa45</Id><ManagementUrl>a</ManagementUrl><Name>test library 2</Name><SerialNumber>test library 2</SerialNumber></TapeLibrary></Data>";
+
+        final GetTapeLibrariesResponse response = MockNetwork
+                .expecting(HttpVerb.GET, "/_rest_/tape_library", null, null)
+                .returning(200, responsePayload)
+                .asClient()
+                .getTapeLibraries(new GetTapeLibrariesRequest());
+
+        final List<TapeLibrary> libraries = response.getTapeLibraries();
+
+        assertThat(libraries.size(), is(2));
+        assertThat(libraries.get(0).getId().toString(), is("f4dae25d-e52a-4430-82bd-525e4f15493c"));
+    }
+
+    @Test
+    public void getTapeLibrary() throws IOException, SignatureException {
+        final String responsePayload = "<Data><Id>e23030e5-9b8d-4594-bdd1-15d3c45abb9f</Id><ManagementUrl>a</ManagementUrl><Name>125ca16e-60e3-43b2-a26f-0bc81843745f</Name><SerialNumber>test library</SerialNumber></Data>";
+
+        final GetTapeLibraryResponse response = MockNetwork
+                .expecting(HttpVerb.GET, "/_rest_/tape_library/e23030e5-9b8d-4594-bdd1-15d3c45abb9f", null, null)
+                .returning(200, responsePayload)
+                .asClient()
+                .getTapeLibrary(new GetTapeLibraryRequest(UUID.fromString("e23030e5-9b8d-4594-bdd1-15d3c45abb9f")));
+
+        assertThat(response.getTapeLibrary(), is(notNullValue()));
+        assertThat(response.getTapeLibrary().getId().toString(), is("e23030e5-9b8d-4594-bdd1-15d3c45abb9f"));
+    }
+
+    @Test
+    public void getTapeFailures() throws IOException, SignatureException {
+        final String responsePayload = "<Data><TapeFailure><Date>2015-03-11 16:23:29.741</Date><ErrorMessage>AAA</ErrorMessage><Id>375ae624-d39f-47d8-95c0-0aaec4494ad2</Id><TapeDriveId>b06c8900-6d88-4a29-9a03-d0c4494b29ff</TapeDriveId><TapeId>badbb1e7-8654-4b38-8d3b-112c9fd68d58</TapeId><Type>BLOB_READ_FAILED</Type></TapeFailure></Data>";
+
+        final GetTapeFailureResponse response = MockNetwork
+                .expecting(HttpVerb.GET, "/_rest_/tape_failure", null, null)
+                .returning(200, responsePayload)
+                .asClient()
+                .getTapeFailure(new GetTapeFailureRequest());
+
+        final List<TapeFailure> tapeFailures = response.getTapeFailures();
+
+        assertThat(tapeFailures, is(notNullValue()));
+        assertThat(tapeFailures.size(), is(1));
+        assertThat(tapeFailures.get(0).getId().toString(), is("375ae624-d39f-47d8-95c0-0aaec4494ad2"));
+    }
+
+    @Test
+    public void getTapeDrives() throws IOException, SignatureException {
+        final String responsePayload = "<Data><TapeDrive><ErrorMessage/><ForceTapeRemoval>false</ForceTapeRemoval><Id>ebeb0ec7-7912-4870-a0da-bbeb270ac049</Id><PartitionId>aa947aaa-23bf-4301-8173-2553bb1a3f1c</PartitionId><SerialNumber>test tape drive</SerialNumber><State>NORMAL</State><TapeId>b9085cd3-f1fd-4193-8763-c013d25cd135</TapeId><Type>UNKNOWN</Type></TapeDrive><TapeDrive><ErrorMessage/><ForceTapeRemoval>false</ForceTapeRemoval><Id>5dc2add1-b6e7-42a9-b551-a46339176c4b</Id><PartitionId>aa947aaa-23bf-4301-8173-2553bb1a3f1c</PartitionId><SerialNumber>test tape drive 2</SerialNumber><State>NORMAL</State><TapeId/><Type>UNKNOWN</Type></TapeDrive></Data>";
+
+        final GetTapeDrivesResponse response = MockNetwork
+                .expecting(HttpVerb.GET, "/_rest_/tape_drive", null, null)
+                .returning(200, responsePayload)
+                .asClient()
+                .getTapeDrives(new GetTapeDrivesRequest());
+
+        final List<TapeDrive> tapeDrives = response.getTapeDrives();
+
+        assertThat(tapeDrives, is(notNullValue()));
+        assertThat(tapeDrives.size(), is(2));
+        assertThat(tapeDrives.get(0).getId().toString(), is("ebeb0ec7-7912-4870-a0da-bbeb270ac049"));
+    }
+
+    @Test
+    public void getTapeDrive() throws IOException, SignatureException {
+        final String responsePayload = "<Data><ErrorMessage/><ForceTapeRemoval>false</ForceTapeRemoval><Id>ff5df6c8-7e24-4e4f-815d-a8a1a4cddc98</Id><PartitionId>ca69b187-47cf-425e-b92f-c09bacc7d3b3</PartitionId><SerialNumber>test tape drive</SerialNumber><State>NORMAL</State><TapeId>0ea07c32-8ff6-443f-b7c8-420667b0df84</TapeId><Type>UNKNOWN</Type></Data>";
+
+        final GetTapeDriveResponse response = MockNetwork
+                .expecting(HttpVerb.GET, "/_rest_/tape_drive/ff5df6c8-7e24-4e4f-815d-a8a1a4cddc98", null, null)
+                .returning(200, responsePayload)
+                .asClient()
+                .getTapeDrive(new GetTapeDriveRequest(UUID.fromString("ff5df6c8-7e24-4e4f-815d-a8a1a4cddc98")));
+
+        final TapeDrive tapeDrive = response.getTapeDrive();
+
+        assertThat(tapeDrive, is(notNullValue()));
+        assertThat(tapeDrive.getId().toString(), is("ff5df6c8-7e24-4e4f-815d-a8a1a4cddc98"));
     }
 }
