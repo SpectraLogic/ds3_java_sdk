@@ -18,11 +18,9 @@ package com.spectralogic.ds3client.commands;
 import com.spectralogic.ds3client.models.delete.DeleteResult;
 import com.spectralogic.ds3client.networking.WebResponse;
 import com.spectralogic.ds3client.serializer.XmlOutput;
-import org.apache.commons.io.IOUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.StringWriter;
 
 public class DeleteMultipleObjectsResponse extends AbstractResponse {
 
@@ -40,10 +38,8 @@ public class DeleteMultipleObjectsResponse extends AbstractResponse {
     protected void processResponse() throws IOException {
         try {
             this.checkStatusCode(200);
-            try (final InputStream content = getResponse().getResponseStream();
-                 final StringWriter writer = new StringWriter()) {
-                IOUtils.copy(content, writer, UTF8);
-                this.result = XmlOutput.fromXml(writer.toString(), DeleteResult.class);
+            try (final InputStream content = getResponse().getResponseStream()) {
+                this.result = XmlOutput.fromXml(content, DeleteResult.class);
             }
         } finally {
             this.getResponse().close();

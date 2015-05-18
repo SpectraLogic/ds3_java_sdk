@@ -43,8 +43,8 @@ dependencies {
     compile     'org.apache.httpcomponents:httpclient:4.3.2'
     compile     'commons-codec:commons-codec:1.10'
     compile     'commons-io:commons-io:2.1'
-    compile     'org.codehaus.woodstox:woodstox-core-asl:4.2.0'
-    compile     'com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.5.0'
+    compile     'org.codehaus.woodstox:woodstox-core-asl:4.4.1'
+    compile     'com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.5.3'
     compile     'com.google.guava:guava:18.0'
     testCompile 'org.hamcrest:hamcrest-library:1.3'
 }
