@@ -20,12 +20,15 @@ import com.spectralogic.ds3client.networking.WebResponse;
 import com.spectralogic.ds3client.serializer.XmlOutput;
 
 import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
 
 public abstract class BulkResponse extends AbstractResponse {
+    private final static Logger LOG = LoggerFactory.getLogger(BulkResponse.class);
     private MasterObjectList result;
     public BulkResponse(final WebResponse response) throws IOException {
         super(response);
@@ -39,10 +42,10 @@ public abstract class BulkResponse extends AbstractResponse {
     protected void processResponse() throws IOException {
         try (final WebResponse response = this.getResponse()) {
             this.checkStatusCode(200);
-            try(final StringWriter writer = new StringWriter();
-                final InputStream content = response.getResponseStream()) {
-                IOUtils.copy(content, writer, UTF8);
-                this.result = XmlOutput.fromXml(writer.toString(), MasterObjectList.class);
+            try(final InputStream content = response.getResponseStream()) {
+                LOG.debug("Starting bulk response parsing");
+                this.result = XmlOutput.fromXml(content, MasterObjectList.class);
+                LOG.debug("Finished bulk response parsing");
             }
         }
     }
