@@ -19,15 +19,14 @@ package com.spectralogic.ds3client.commands;
 import com.spectralogic.ds3client.models.ListBucketResult;
 import com.spectralogic.ds3client.networking.WebResponse;
 import com.spectralogic.ds3client.serializer.XmlOutput;
-
-import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.StringWriter;
 
 public class GetBucketResponse extends AbstractResponse {
-
+    private final static Logger LOG = LoggerFactory.getLogger(GetBucketResponse.class);
     private ListBucketResult result;
 
     public GetBucketResponse(final WebResponse response) throws IOException {
@@ -44,9 +43,9 @@ public class GetBucketResponse extends AbstractResponse {
         try (final WebResponse response = this.getResponse();
              final InputStream contentStream = response.getResponseStream()) {
             this.checkStatusCode(200);
-            final StringWriter writer = new StringWriter();
-            IOUtils.copy(contentStream, writer, UTF8);
-            this.result = XmlOutput.fromXml(writer.toString(), ListBucketResult.class);
+            LOG.debug("Starting bucket xml parsing");
+            this.result = XmlOutput.fromXml(contentStream, ListBucketResult.class);
+            LOG.debug("Finished bucket xml parsing");
         }
     }
 }

@@ -19,11 +19,8 @@ import com.spectralogic.ds3client.models.bulk.MasterObjectList;
 import com.spectralogic.ds3client.networking.WebResponse;
 import com.spectralogic.ds3client.serializer.XmlOutput;
 
-import org.apache.commons.io.IOUtils;
-
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.StringWriter;
 
 public class ModifyJobResponse extends AbstractResponse {
     private MasterObjectList masterObjectList;
@@ -45,10 +42,8 @@ public class ModifyJobResponse extends AbstractResponse {
     }
 
     private static MasterObjectList parseMasterObjectList(final WebResponse webResponse) throws IOException {
-        try (final InputStream content = webResponse.getResponseStream();
-             final StringWriter writer = new StringWriter()) {
-            IOUtils.copy(content, writer, UTF8);
-            return XmlOutput.fromXml(writer.toString(), MasterObjectList.class);
+        try (final InputStream content = webResponse.getResponseStream()) {
+            return XmlOutput.fromXml(content, MasterObjectList.class);
         }
     }
 }
