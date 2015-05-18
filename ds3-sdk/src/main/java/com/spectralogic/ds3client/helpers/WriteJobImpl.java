@@ -31,7 +31,6 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.security.SignatureException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -41,11 +40,13 @@ class WriteJobImpl extends JobImpl {
             final Ds3Client client,
             final MasterObjectList masterObjectList) {
         super(client, masterObjectList);
+        LOG.info("Ready to start transfer for job " + masterObjectList.getJobId().toString() + " with " + masterObjectList.getObjects().size() + " chunks");
     }
 
     @Override
     public void transfer(final ObjectChannelBuilder channelBuilder)
             throws SignatureException, IOException, XmlProcessingException {
+        LOG.debug("Starting job transfer");
         final List<Objects> filteredChunks = filterChunks(this.masterObjectList.getObjects());
         try (final JobState jobState = new JobState(channelBuilder, filteredChunks)) {
             final ChunkTransferrer chunkTransferrer = new ChunkTransferrer(
@@ -55,6 +56,7 @@ class WriteJobImpl extends JobImpl {
                 this.maxParallelRequests
             );
             for (final Objects chunk : filteredChunks) {
+                LOG.debug("Allocating chunk: " + chunk.getChunkId().toString());
                 chunkTransferrer.transferChunks(this.masterObjectList.getNodes(), Collections.singletonList(filterChunk(allocateChunk(chunk))));
             }
         } catch (final SignatureException | IOException | XmlProcessingException | RuntimeException e) {
@@ -75,12 +77,16 @@ class WriteJobImpl extends JobImpl {
     private Objects tryAllocateChunk(final Objects filtered) throws IOException, SignatureException {
         final AllocateJobChunkResponse response =
                 this.client.allocateJobChunk(new AllocateJobChunkRequest(filtered.getChunkId()));
+
+        LOG.info("AllocatedJobChunkResponse status: " + response.getStatus().toString());
         switch (response.getStatus()) {
         case ALLOCATED:
             return response.getObjects();
         case RETRYLATER:
             try {
-                Thread.sleep(response.getRetryAfterSeconds() * 1000);
+                final int retryAfter = response.getRetryAfterSeconds() * 1000;
+                LOG.debug("Will retry allocate chunk call after " + retryAfter + " seconds");
+                Thread.sleep(retryAfter);
                 return null;
             } catch (final InterruptedException e) {
                 throw new RuntimeException(e);
