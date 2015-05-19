@@ -28,7 +28,7 @@ The SDK can also be included directly into a Maven or Gradle build.  To include 
   <repositories>
     <repository>
       <id>Spectra-Github</id>
-      <url>https://spectralogic.github.io/java/repository</url>
+      <url>http://dl.bintray.com/spectralogic/ds3</url>
     </repository>
   </repositories>
   ...
@@ -37,7 +37,7 @@ The SDK can also be included directly into a Maven or Gradle build.  To include 
       <dependency>
         <groupId>com.spectralogic.ds3</groupId>
         <artifactId>ds3-sdk</artifactId>
-        <version>0.7.7-SNAPSHOT</version>
+        <version>1.1.0-RC6</version>
       </dependency>
     ...  
     </dependencies>
@@ -52,14 +52,14 @@ To include the sdk into Gradle include the following in the `build.gradle` file:
 repositories {
     ...
     maven {
-        url 'https://spectralogic.github.io/java/repository'
+        url 'http://dl.bintray.com/spectralogic/ds3'
     }
     ...
 }
 
 dependencies {
     ...
-    compile 'com.spectralogic.ds3:ds3-sdk:0.7.7-SNAPSHOT'
+    compile 'com.spectralogic.ds3:ds3-sdk:1.1.0-RC6'
     ...
 }
 
