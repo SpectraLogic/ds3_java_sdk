@@ -39,6 +39,10 @@ artifacts {
     archives shadowJar
 }
 
+jar {
+    from sourceSets.main.allJava
+}
+
 dependencies {
     compile     'org.apache.httpcomponents:httpclient:4.3.2'
     compile     'commons-codec:commons-codec:1.10'

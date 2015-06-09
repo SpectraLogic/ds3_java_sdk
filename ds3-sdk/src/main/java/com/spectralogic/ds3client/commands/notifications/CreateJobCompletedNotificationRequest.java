@@ -17,11 +17,22 @@ package com.spectralogic.ds3client.commands.notifications;
 
 import java.util.UUID;
 
+/**
+ * Creates a NotificationRequest to receive notifications when either a specific job is completed
+ * or when any job completes.
+ */
 public class CreateJobCompletedNotificationRequest extends AbstractCreateNotificationRequest {
+    /**
+     * Create a NotificationRequest that will receive all JobCompleted Notifications
+     */
     public CreateJobCompletedNotificationRequest(final String endpoint) {
         super(endpoint);
     }
 
+    /**
+     * Create a NotificationRequest that will receive the JobCompleted Notification only for
+     * the job specified by {@param jobId}
+     */
     public CreateJobCompletedNotificationRequest(final String endpoint, final UUID jobId) {
         super(endpoint);
         this.getQueryParams().put("job_id", jobId.toString());
