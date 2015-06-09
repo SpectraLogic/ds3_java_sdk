@@ -39,4 +39,11 @@ public class GetJobRequest extends AbstractRequest {
     public HttpVerb getVerb() {
         return HttpVerb.GET;
     }
+
+    @Override
+    public boolean equals(final Object obj) {
+        if (!obj.getClass().equals(GetJobRequest.class)) return false;
+        final GetJobRequest other = (GetJobRequest) obj;
+        return other.getJobId().equals(this.getJobId());
+    }
 }

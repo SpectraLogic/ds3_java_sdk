@@ -15,6 +15,9 @@
 
 package com.spectralogic.ds3client.commands.notifications;
 
+/**
+ * Creates a NotificationRequest to receive notifications for when any Job is Created.
+ */
 public class CreateJobCreatedNotificationRequest extends AbstractCreateNotificationRequest {
     public CreateJobCreatedNotificationRequest(final String endpoint) {
         super(endpoint);

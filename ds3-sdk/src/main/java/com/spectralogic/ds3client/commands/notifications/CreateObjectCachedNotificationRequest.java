@@ -17,13 +17,22 @@ package com.spectralogic.ds3client.commands.notifications;
 
 import java.util.UUID;
 
+/**
+ * Creates a NotificationRequest to receive notifications for when an object is finished being written to cache
+ */
 public class CreateObjectCachedNotificationRequest extends AbstractCreateNotificationRequest {
 
+    /**
+     * Creates a NotificationRequest to receive all object cached notifications
+     */
     public CreateObjectCachedNotificationRequest(final String endpoint) {
         super(endpoint);
     }
 
-        public CreateObjectCachedNotificationRequest(final String endpoint, final UUID jobId) {
+    /**
+     * Creates a NotificationRequest to receive object cached notifications for the job specified by {@param jobId}
+     */
+    public CreateObjectCachedNotificationRequest(final String endpoint, final UUID jobId) {
         super(endpoint);
         this.getQueryParams().put("job_id", jobId.toString());
     }

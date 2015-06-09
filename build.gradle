@@ -15,7 +15,7 @@
 
 allprojects {
     group = 'com.spectralogic.ds3'
-    version = '1.1.0-RC6'
+    version = '1.1.0-RC7'
 }
 
 subprojects {
@@ -31,6 +31,7 @@ subprojects {
 
     dependencies {
         compile     'org.slf4j:slf4j-api:1.7.12'
+        compile     'org.slf4j:jcl-over-slf4j:1.7.12'
         testCompile 'org.mockito:mockito-all:1.9.5'
         testCompile 'junit:junit:4.11'
         testCompile 'org.slf4j:slf4j-simple:1.7.12'
