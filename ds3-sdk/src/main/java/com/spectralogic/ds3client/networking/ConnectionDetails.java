@@ -26,7 +26,6 @@ public interface ConnectionDetails {
 
     /**
      * If true the network layer will use Https.
-     * @return
      */
     boolean isHttps();
 

@@ -15,10 +15,13 @@
 
 package com.spectralogic.ds3client;
 
+import com.google.common.collect.Lists;
 import com.spectralogic.ds3client.networking.Headers;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class MockedHeaders implements Headers {
     private final Map<String, String> headerValues;
@@ -36,7 +39,12 @@ public class MockedHeaders implements Headers {
     }
 
     @Override
-    public String get(final String key) {
-        return this.headerValues.get(key.toLowerCase());
+    public List<String> get(final String key) {
+        return Lists.newArrayList(this.headerValues.get(key.toLowerCase()));
+    }
+
+    @Override
+    public Set<String> keys() {
+        return null;
     }
 }

@@ -17,6 +17,13 @@ import java.util.UUID;
 
 public class JobUtils {
 
+    private JobUtils() {}
+
+    /**
+     * Finds all the jobs that have any of the files in {@param fileNames} contained in them.  When {@param type} is PUT
+     * only one job ID should be returned.  It is possible that when {@param type} is GET that there could be multiple
+     * job IDs returned.
+     */
     public static List<UUID> findJob(final Ds3Client client, final RequestType type, final String bucketName, final Set<String> fileNames) throws IOException, SignatureException {
         final ImmutableSet<String> files = ImmutableSet.copyOf(fileNames);
         final GetJobsResponse response = client.getJobs(new GetJobsRequest());

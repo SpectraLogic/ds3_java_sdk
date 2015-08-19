@@ -45,7 +45,12 @@ class SeekableByteChannelInputStream extends InputStream {
         final ByteBuffer buffer = ByteBuffer.wrap(b);
         buffer.position(off);
         buffer.limit(off + len);
-        return this.seekableByteChannel.read(buffer);
+        final int bytesRead = this.seekableByteChannel.read(buffer);
+        if (bytesRead > 0) {
+            return bytesRead;
+        } else {
+            return -1;
+        }
     }
     
     @Override

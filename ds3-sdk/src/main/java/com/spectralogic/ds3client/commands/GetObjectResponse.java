@@ -15,6 +15,7 @@
 
 package com.spectralogic.ds3client.commands;
 
+import com.spectralogic.ds3client.networking.Metadata;
 import com.spectralogic.ds3client.networking.WebResponse;
 import com.spectralogic.ds3client.utils.IOUtils;
 
@@ -26,6 +27,10 @@ public class GetObjectResponse extends AbstractResponse {
     public GetObjectResponse(final WebResponse response, final WritableByteChannel destinationChannel, final int bufferSize) throws IOException {
         super(response);
         download(destinationChannel, bufferSize);
+    }
+
+    public Metadata getMetadata() {
+        return new MetadataImpl(this.getResponse().getHeaders());
     }
 
     @Override

@@ -18,16 +18,22 @@ package com.spectralogic.ds3client.commands;
 import com.google.common.collect.ImmutableSet;
 import com.spectralogic.ds3client.models.Error;
 import com.spectralogic.ds3client.networking.FailedRequestException;
+import com.spectralogic.ds3client.networking.Headers;
 import com.spectralogic.ds3client.networking.WebResponse;
 import com.spectralogic.ds3client.serializer.XmlOutput;
 
 import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
+import java.util.List;
 
 public abstract class AbstractResponse implements Ds3Response{
+    final private static Logger LOG = LoggerFactory.getLogger(AbstractResponse.class);
+
     final public static String UTF8 = "UTF-8";
 
     final private WebResponse response;
@@ -36,12 +42,21 @@ public abstract class AbstractResponse implements Ds3Response{
     public AbstractResponse(final WebResponse response) throws IOException {
         this.response = response;
         if (response != null) {
-            this.md5 = this.response.getHeaders().get("Content-MD5");
+            this.md5 = getFirstHeaderValue(this.response.getHeaders(), "Content-MD5");
         }
         else {
             this.md5 = null;
         }
         this.processResponse();
+    }
+
+    final protected String getFirstHeaderValue(final Headers headers, final String key) {
+        final List<String> valueList = headers.get(key);
+        if (valueList == null || valueList.isEmpty()) {
+            return null;
+        } else {
+            return valueList.get(0);
+        }
     }
 
     protected abstract void processResponse() throws IOException;
@@ -81,6 +96,7 @@ public abstract class AbstractResponse implements Ds3Response{
             return XmlOutput.fromXml(responseString, Error.class);
         } catch (final IOException e) {
             // It's likely the response string is not in a valid error format.
+            LOG.error("Failed to parse error response", e);
             return null;
         }
     }

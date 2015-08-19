@@ -145,6 +145,17 @@ public interface Ds3Client extends Closeable {
             throws IOException, SignatureException;
 
     /**
+     * Performs an HTTP HEAD for an object.  If the object exists then a successful response is returned and any metadata
+     * associated with the object.
+     * @param request The Object to perform the HTTP HEAD for.
+     * @return If successful a response is returned with any metadata that was assigned with the object was created.
+     * @throws IOException
+     * @throws SignatureException
+     */
+    HeadObjectResponse headObject(HeadObjectRequest request)
+            throws IOException, SignatureException;
+
+    /**
      * Primes the Ds3 appliance for a Bulk Get.  This does not perform the gets for each individual files.  See
      * {@link #getObject(GetObjectRequest)} for performing the get.
      * @param request The Bulk Get Request object used to customize the HTTP request.  The bulk get request object
