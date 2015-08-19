@@ -91,6 +91,11 @@ class Ds3ClientImpl implements Ds3Client {
     }
 
     @Override
+    public HeadObjectResponse headObject(final HeadObjectRequest request) throws IOException, SignatureException {
+        return new HeadObjectResponse(this.netClient.getResponse(request));
+    }
+
+    @Override
     public BulkGetResponse bulkGet(final BulkGetRequest request) throws IOException, SignatureException {
         return new BulkGetResponse(this.netClient.getResponse(request));
     }

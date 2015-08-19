@@ -295,6 +295,40 @@ public class Ds3Client_Test {
     }
 
     @Test
+    public void headObjectWithMetadata() throws IOException, SignatureException {
+
+        final Map<String, String> responseHeaders = new HashMap<>();
+        responseHeaders.put("x-amz-meta-key", "value");
+
+
+        final HeadObjectRequest request = new HeadObjectRequest("bucket", "obj");
+
+        MockNetwork
+                .expecting(HttpVerb.HEAD, "/bucket/obj", null, null, null)
+                .returning(200, "", responseHeaders)
+                .asClient()
+                .headObject(request);
+    }
+
+    @Test
+    public void getObjectWithMetaData() throws IOException, SignatureException {
+
+        final Map<String, String> responseHeaders = new HashMap<>();
+        responseHeaders.put("x-amz-meta-key", "value");
+
+        final ByteArraySeekableByteChannel resultChannel = new ByteArraySeekableByteChannel();
+        final GetObjectRequest request = new GetObjectRequest("bucket", "obj", 0, UUID.randomUUID(), resultChannel);
+
+        MockNetwork
+                .expecting(HttpVerb.GET, "/bucket/obj", null, null, null)
+                .returning(200, "response", responseHeaders)
+                .asClient()
+                .getObject(request);
+
+        assertThat(resultChannel.toString(), is("response"));
+    }
+
+    @Test
     public void bulkPut() throws IOException, SignatureException, XmlProcessingException {
         this.runBulkTest(BulkCommand.PUT, new BulkTestDriver() {
             @Override

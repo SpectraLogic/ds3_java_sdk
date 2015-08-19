@@ -20,24 +20,27 @@ import org.apache.http.Header;
 import org.apache.http.message.BasicHeader;
 import org.junit.Test;
 
+import java.util.List;
+
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 public class HeadersImpl_Test {
 
     @Test
     public void findHeader() {
         final Headers headers = genHeaders(new BasicHeader("Content-MD5", "Q2hlY2sgSW50ZWdyaXR5IQ=="));
-        final String value = headers.get("Content-MD5");
+        final String value = headers.get("Content-MD5").get(0);
         assertThat(value, is("Q2hlY2sgSW50ZWdyaXR5IQ=="));
     }
 
     @Test
     public void unknownHeader() {
         final Headers headers = genHeaders();
-        final String value = headers.get("Content-MD5");
-        assertNull(value);
+        final List<String> value = headers.get("Content-MD5");
+        assertTrue(value.isEmpty());
     }
 
     public Headers genHeaders(final Header... headers) {

@@ -15,29 +15,41 @@
 
 package com.spectralogic.ds3client;
 
+import com.google.common.collect.ImmutableMultimap;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import com.spectralogic.ds3client.networking.Headers;
 import org.apache.http.Header;
 
-public class HeadersImpl implements Headers {
+import java.util.List;
+import java.util.Set;
 
-    private final Header[] headers;
+class HeadersImpl implements Headers {
+
+    private final ImmutableMultimap<String, String> headers;
+
 
     HeadersImpl(final Header[] allHeaders){
-        this.headers = allHeaders;
+        this.headers = toMultiMap(allHeaders);
+    }
+
+    private static ImmutableMultimap<String, String> toMultiMap(final Header[] headers){
+        final ImmutableMultimap.Builder<String, String> builder = ImmutableMultimap.builder();
+
+        for (final Header header : headers) {
+            builder.put(header.getName(), header.getValue());
+        }
+
+        return builder.build();
     }
 
     @Override
-    public String get(final String key) {
-        return findHeader(key);
+    public List<String> get(final String key) {
+        return Lists.newArrayList(headers.get(key));
     }
 
-    private String findHeader(final String key) {
-
-        for (final Header header : headers) {
-            if (header.getName().equalsIgnoreCase(key)) {
-                return header.getValue();
-            }
-        }
-        return null;
+    @Override
+    public Set<String> keys() {
+        return Sets.newHashSet(headers.keySet());
     }
 }

@@ -15,7 +15,7 @@
 
 allprojects {
     group = 'com.spectralogic.ds3'
-    version = '1.1.0-RC7'
+    version = '1.1.0-RC8'
 }
 
 subprojects {
@@ -32,14 +32,17 @@ subprojects {
     dependencies {
         compile     'org.slf4j:slf4j-api:1.7.12'
         compile     'org.slf4j:jcl-over-slf4j:1.7.12'
-        testCompile 'org.mockito:mockito-all:1.9.5'
-        testCompile 'junit:junit:4.11'
+        testCompile ('org.mockito:mockito-core:1.9.5') {
+            exclude group: 'org.hamcrest'
+        }
+
+        testCompile 'junit:junit:4.12'
         testCompile 'org.slf4j:slf4j-simple:1.7.12'
     }
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '2.4'
+    gradleVersion = '2.6'
 }
 
 project(':ds3-sdk-integration') {

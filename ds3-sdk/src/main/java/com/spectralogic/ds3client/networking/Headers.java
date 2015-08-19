@@ -15,6 +15,13 @@
 
 package com.spectralogic.ds3client.networking;
 
+import java.util.List;
+import java.util.Set;
+
 public interface Headers {
-    String get(final String key);
+    /**
+     * If the key is not a header then an empty list will be returned.
+     */
+    List<String> get(final String key);
+    Set<String> keys();
 }
