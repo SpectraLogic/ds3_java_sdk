@@ -6,6 +6,7 @@ ds3_java_sdk
   <img alt="Coverity Scan Build Status"
        src="https://scan.coverity.com/projects/4624/badge.svg"/>
 </a>
+[ ![Download](https://api.bintray.com/packages/spectralogic/ds3/ds3_java_sdk/images/download.svg) ](https://bintray.com/spectralogic/ds3/ds3_java_sdk/_latestVersion)
 
 ## Contact Us
 
