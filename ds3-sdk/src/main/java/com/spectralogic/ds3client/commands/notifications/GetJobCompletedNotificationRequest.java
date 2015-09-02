@@ -18,7 +18,7 @@ package com.spectralogic.ds3client.commands.notifications;
 import java.util.UUID;
 
 public class GetJobCompletedNotificationRequest extends AbstractGetNotificationRequest {
-    public GetJobCompletedNotificationRequest(UUID notificationId) {
+    public GetJobCompletedNotificationRequest(final UUID notificationId) {
         super(notificationId);
     }
 
