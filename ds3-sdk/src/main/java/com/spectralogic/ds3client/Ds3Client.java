@@ -100,6 +100,9 @@ public interface Ds3Client extends Closeable {
     DeleteBucketResponse deleteBucket(
             DeleteBucketRequest request) throws IOException, SignatureException;
 
+    DeleteFolderResponse deleteFolder(
+            DeleteFolderRequest request) throws IOException, SignatureException;
+
     /**
      * Deletes an object in a bucket from a DS3 endpoint
      * @param request The Put Bucket Request object used to customize the HTTP request.  The put bucket request object
