@@ -187,6 +187,19 @@ public class Ds3Client_Test {
     }
 
     @Test
+    public void deleteFolder() throws IOException, SignatureException {
+        final Map<String, String> queryParams = new HashMap<>();
+        queryParams.put("bucketId", "bucketName");
+        queryParams.put("recursive", null);
+
+        MockNetwork
+                .expecting(HttpVerb.DELETE, "/_rest_/folder/folderName", queryParams, null)
+                .returning(204, "")
+                .asClient()
+                .deleteFolder(new DeleteFolderRequest("bucketName","folderName"));
+    }
+
+    @Test
     public void deleteObject() throws IOException, SignatureException {
         MockNetwork
             .expecting(HttpVerb.DELETE, "/bucketName/my/file.txt", null, null)

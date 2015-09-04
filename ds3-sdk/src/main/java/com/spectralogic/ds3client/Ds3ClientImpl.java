@@ -67,6 +67,11 @@ class Ds3ClientImpl implements Ds3Client {
     }
 
     @Override
+    public DeleteFolderResponse deleteFolder(final DeleteFolderRequest request) throws IOException, SignatureException {
+        return new DeleteFolderResponse(this.netClient.getResponse(request));
+    }
+
+    @Override
     public DeleteObjectResponse deleteObject(final DeleteObjectRequest request) throws IOException, SignatureException {
         return new DeleteObjectResponse(this.netClient.getResponse(request));
     }
