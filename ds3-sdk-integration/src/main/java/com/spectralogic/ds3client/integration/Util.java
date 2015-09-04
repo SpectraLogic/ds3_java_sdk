@@ -21,7 +21,6 @@ import com.spectralogic.ds3client.commands.DeleteBucketRequest;
 import com.spectralogic.ds3client.commands.DeleteObjectRequest;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers;
 import com.spectralogic.ds3client.models.Contents;
-import com.spectralogic.ds3client.models.Credentials;
 import com.spectralogic.ds3client.models.bulk.Ds3Object;
 import com.spectralogic.ds3client.serializer.XmlProcessingException;
 import com.spectralogic.ds3client.utils.ResourceUtils;
@@ -72,6 +71,23 @@ public class Util {
         return helpers
                 .startWriteJob(bucketName, objects);
     }
+
+    public static void loadBookTestDataWithPrefix(final Ds3Client client, final String bucketName, final String prefix) throws XmlProcessingException, SignatureException, IOException, URISyntaxException {
+        final Ds3ClientHelpers helpers = Ds3ClientHelpers.wrap(client);
+
+        final List<Ds3Object> objects = new ArrayList<>();
+
+        for(final String book : BOOKS) {
+            final File objFile = ResourceUtils.loadFileResource(RESOURCE_BASE_NAME + book);
+            final Ds3Object obj = new Ds3Object(prefix + book, objFile.length());
+
+            objects.add(obj);
+        }
+
+        helpers.startWriteJob(bucketName, objects).transfer(new PrefixedObjectPutter(new ResourceObjectPutter(RESOURCE_BASE_NAME), prefix));
+
+    }
+
 
     public static void deleteAllContents(final Ds3Client client, final String bucketName) throws IOException, SignatureException {
         final Ds3ClientHelpers helpers = Ds3ClientHelpers.wrap(client);
