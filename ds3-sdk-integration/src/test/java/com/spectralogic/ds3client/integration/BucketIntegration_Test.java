@@ -104,8 +104,7 @@ public class BucketIntegration_Test {
         final String bucketName = "test_delete_folder";
         try {
             client.putBucket(new PutBucketRequest(bucketName));
-            Util.getLoadJob(client, bucketName, "folder_delete/folder/")
-                    .transfer(new ResourceObjectPutter("folder_delete/folder/"));
+            Util.loadBookTestDataWithPrefix(client, bucketName, "folder/");
 
             HeadObjectResponse response = client.headObject(new HeadObjectRequest(
                     bucketName, "folder/beowulf.txt"));
@@ -119,7 +118,7 @@ public class BucketIntegration_Test {
             assertThat(response.getStatus(),
                     is(HeadObjectResponse.Status.DOESNTEXIST));
         } finally {
-            //Util.deleteAllContents(client, bucketName);
+            Util.deleteAllContents(client, bucketName);
         }
     }
 
