@@ -100,6 +100,17 @@ public interface Ds3Client extends Closeable {
     DeleteBucketResponse deleteBucket(
             DeleteBucketRequest request) throws IOException, SignatureException;
 
+    /**
+     * Recursively deletes the specified folder from a DS3 endpoint.
+     * @param request The Delete Folder Request object used to customize the HTTP request.  The put bucket request object
+     *                has some options for customizing the request.  See {@link DeleteFolderRequest} for the full list of
+     *                options that can be configured.
+     * @return The response object is returned primarily to be consistent with the rest of the API.  Additional data
+     *         may be returned here in the future but nothing is currently.  See {@link DeleteFolderResponse} for the most
+     *         up to date information on what is returned.
+     * @throws IOException
+     * @throws SignatureException
+     */
     DeleteFolderResponse deleteFolder(
             DeleteFolderRequest request) throws IOException, SignatureException;
 
