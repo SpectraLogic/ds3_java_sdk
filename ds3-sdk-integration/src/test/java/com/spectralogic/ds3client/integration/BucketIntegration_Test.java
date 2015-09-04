@@ -100,6 +100,30 @@ public class BucketIntegration_Test {
     }
 
     @Test
+    public void deleteFolder() throws IOException, SignatureException, URISyntaxException, XmlProcessingException {
+        final String bucketName = "test_delete_folder";
+        try {
+            client.putBucket(new PutBucketRequest(bucketName));
+            Util.getLoadJob(client, bucketName, "folder_delete/folder/")
+                    .transfer(new ResourceObjectPutter("folder_delete/folder/"));
+
+            HeadObjectResponse response = client.headObject(new HeadObjectRequest(
+                    bucketName, "folder/beowulf.txt"));
+            assertThat(response.getStatus(),
+                    is(HeadObjectResponse.Status.EXISTS));
+
+            client.deleteFolder(new DeleteFolderRequest(bucketName, "folder"));
+
+            response = client.headObject(new HeadObjectRequest(
+                    bucketName, "folder/beowulf.txt"));
+            assertThat(response.getStatus(),
+                    is(HeadObjectResponse.Status.DOESNTEXIST));
+        } finally {
+            //Util.deleteAllContents(client, bucketName);
+        }
+    }
+
+    @Test
     public void emptyBucket() throws IOException, SignatureException {
         final String bucketName = "test_empty_bucket";
 
