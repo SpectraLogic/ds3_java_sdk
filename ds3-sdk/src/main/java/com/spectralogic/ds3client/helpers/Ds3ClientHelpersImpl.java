@@ -22,8 +22,7 @@ import com.spectralogic.ds3client.helpers.options.ReadJobOptions;
 import com.spectralogic.ds3client.helpers.options.WriteJobOptions;
 import com.spectralogic.ds3client.models.Contents;
 import com.spectralogic.ds3client.models.ListBucketResult;
-import com.spectralogic.ds3client.models.bulk.ChunkClientProcessingOrderGuarantee;
-import com.spectralogic.ds3client.models.bulk.Ds3Object;
+import com.spectralogic.ds3client.models.bulk.*;
 import com.spectralogic.ds3client.serializer.XmlProcessingException;
 
 import java.io.IOException;
@@ -126,14 +125,22 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
 
     @Override
     public Job recoverWriteJob(final UUID jobId) throws SignatureException, IOException, XmlProcessingException, JobRecoveryException {
-        // TODO - come back and re-implement this
-        throw new UnsupportedOperationException();
+        ModifyJobResponse jobResponse = this.client.modifyJob(new ModifyJobRequest(jobId));
+        if (RequestType.PUT != jobResponse.getMasterObjectList().getRequestType()){
+            throw new JobRecoveryException("PUT", jobResponse.getMasterObjectList().getRequestType().toString() );
+        }
+
+        return new WriteJobImpl(this.client, jobResponse.getMasterObjectList());
     }
 
     @Override
     public Job recoverReadJob(final UUID jobId) throws SignatureException, IOException, XmlProcessingException, JobRecoveryException {
-        // TODO - come back and re-implement this
-        throw new UnsupportedOperationException();
+        ModifyJobResponse jobResponse = this.client.modifyJob(new ModifyJobRequest(jobId));
+        if (RequestType.GET != jobResponse.getMasterObjectList().getRequestType()){
+            throw new JobRecoveryException("GET", jobResponse.getMasterObjectList().getRequestType().toString() );
+        }
+
+        return new ReadJobImpl(this.client, jobResponse.getMasterObjectList());
     }
 
     @Override

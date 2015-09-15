@@ -15,18 +15,19 @@
 
 package com.spectralogic.ds3client.integration;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.hamcrest.CoreMatchers.nullValue;
+import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.ByteBuffer;
+import java.nio.channels.FileChannel;
 import java.nio.channels.SeekableByteChannel;
+import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
@@ -38,10 +39,12 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.spectralogic.ds3client.commands.*;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers;
+import com.spectralogic.ds3client.helpers.JobRecoveryException;
 import com.spectralogic.ds3client.models.Contents;
 import com.spectralogic.ds3client.models.bulk.Ds3Object;
 import com.spectralogic.ds3client.models.bulk.JobStatus;
 import com.spectralogic.ds3client.utils.ByteArraySeekableByteChannel;
+import com.spectralogic.ds3client.utils.ResourceUtils;
 import org.apache.commons.io.IOUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -383,6 +386,110 @@ public class BucketIntegration_Test {
 
         } finally {
             Util.deleteAllContents(client, bucketName);
+        }
+    }
+
+    @Test
+    public void testRecoverWriteJob() throws SignatureException, IOException, XmlProcessingException, JobRecoveryException, URISyntaxException {
+        final String bucketName = "test_recover_write_job_bucket";
+        final String book1 = "beowulf.txt";
+        final String book2 = "ulysses.txt";
+        final Ds3ClientHelpers helpers = Ds3ClientHelpers.wrap(client);
+
+        try {
+            client.putBucket(new PutBucketRequest(bucketName));
+            helpers.ensureBucketExists(bucketName);
+
+            final File objFile1 = ResourceUtils.loadFileResource(Util.RESOURCE_BASE_NAME + book1);
+            final File objFile2 = ResourceUtils.loadFileResource(Util.RESOURCE_BASE_NAME + book2);
+            final Ds3Object obj1 = new Ds3Object(book1, objFile1.length());
+            final Ds3Object obj2 = new Ds3Object(book2, objFile2.length());
+
+            final Ds3ClientHelpers.Job job = Ds3ClientHelpers.wrap(client).startWriteJob(bucketName, Lists.newArrayList(obj1, obj2));
+
+            final PutObjectResponse putResponse1 = client.putObject(new PutObjectRequest(
+                    job.getBucketName(),
+                    book1,
+                    job.getJobId(),
+                    objFile1.length(),
+                    0,
+                    new ResourceObjectPutter(Util.RESOURCE_BASE_NAME).buildChannel(book1)
+            ));
+            assertThat(putResponse1, is(notNullValue()));
+            assertThat(putResponse1.getStatusCode(), is(equalTo(200)));
+
+            // Interuption...
+            final Ds3ClientHelpers.Job recoverJob = Ds3ClientHelpers.wrap(client).recoverWriteJob(job.getJobId());
+
+            final PutObjectResponse putResponse2 = client.putObject(new PutObjectRequest(
+                    recoverJob.getBucketName(),
+                    book2,
+                    recoverJob.getJobId(),
+                    objFile2.length(),
+                    0,
+                    new ResourceObjectPutter(Util.RESOURCE_BASE_NAME).buildChannel(book2)
+            ));
+            assertThat(putResponse2, is(notNullValue()));
+            assertThat(putResponse2.getStatusCode(), is(equalTo(200)));
+        } finally {
+            Util.deleteAllContents(client, bucketName);
+        }
+    }
+
+    @Test
+    public void testRecoverReadJob() throws SignatureException, IOException, XmlProcessingException, JobRecoveryException, URISyntaxException {
+        final String bucketName = "test_recover_read_job_bucket";
+        final String book1 = "beowulf.txt";
+        final String book2 = "ulysses.txt";
+        final File objFile1 = ResourceUtils.loadFileResource(Util.RESOURCE_BASE_NAME + book1);
+        final File objFile2 = ResourceUtils.loadFileResource(Util.RESOURCE_BASE_NAME + book2);
+        final Ds3Object obj1 = new Ds3Object(book1, objFile1.length());
+        final Ds3Object obj2 = new Ds3Object(book2, objFile2.length());
+
+        final Path dirPath = FileSystems.getDefault().getPath("output");
+        if (!Files.exists(dirPath)) {
+            Files.createDirectory(dirPath);
+        }
+
+        try {
+            client.putBucket(new PutBucketRequest(bucketName));
+            Ds3ClientHelpers.wrap(client).ensureBucketExists(bucketName);
+
+            final Ds3ClientHelpers.Job putJob = Ds3ClientHelpers.wrap(client).startWriteJob(bucketName, Lists.newArrayList(obj1, obj2));
+            putJob.transfer(new ResourceObjectPutter(Util.RESOURCE_BASE_NAME));
+
+            final FileChannel channel1 = FileChannel.open(
+                    dirPath.resolve(book1),
+                    StandardOpenOption.WRITE,
+                    StandardOpenOption.CREATE,
+                    StandardOpenOption.TRUNCATE_EXISTING
+            );
+
+            final Ds3ClientHelpers.Job readJob = Ds3ClientHelpers.wrap(client).startReadJob(bucketName, Lists.newArrayList(obj1, obj2));
+            final GetObjectResponse readResponse1 = client.getObject(new GetObjectRequest(bucketName, book1, 0, readJob.getJobId(), channel1));
+
+            assertThat(readResponse1, is(notNullValue()));
+            assertThat(readResponse1.getStatusCode(), is(equalTo(200)));
+
+            // Interuption...
+            final Ds3ClientHelpers.Job recoverJob = Ds3ClientHelpers.wrap(client).recoverReadJob(readJob.getJobId());
+
+            final FileChannel channel2 = FileChannel.open(
+                    dirPath.resolve(book2),
+                    StandardOpenOption.WRITE,
+                    StandardOpenOption.CREATE,
+                    StandardOpenOption.TRUNCATE_EXISTING
+            );
+            final GetObjectResponse readResponse2 = client.getObject(new GetObjectRequest(bucketName, book2, 0, recoverJob.getJobId(), channel2));
+            assertThat(readResponse2, is(notNullValue()));
+            assertThat(readResponse2.getStatusCode(), is(equalTo(200)));
+
+        } finally {
+            Util.deleteAllContents(client, bucketName);
+            for( final Path tempFile : Files.newDirectoryStream(dirPath) ){
+                Files.delete(tempFile);
+            }
+            Files.delete(dirPath);
         }
     }
 }
