@@ -242,17 +242,7 @@ public class Ds3ClientHelpers_Test {
         assertThat(contents.getSize(), is(size));
     }
 
-    /*
-        @Override
-    public Ds3ClientHelpers.Job recoverWriteJob(final UUID jobId) throws SignatureException, IOException, XmlProcessingException, JobRecoveryException {
-        final ModifyJobResponse jobResponse = this.client.modifyJob(new ModifyJobRequest(jobId));
-        if (RequestType.PUT != jobResponse.getMasterObjectList().getRequestType()){
-            throw new JobRecoveryException(RequestType.PUT.toString(), jobResponse.getMasterObjectList().getRequestType().toString() );
-        }
-
-        return new WriteJobImpl(this.client, jobResponse.getMasterObjectList());
-    }
-     */
+    
     @Test
     public void testRecoverWriteJob() throws SignatureException, IOException, XmlProcessingException, JobRecoveryException {
         final Ds3Client ds3Client = buildDs3ClientForBulk();
