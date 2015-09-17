@@ -37,7 +37,6 @@ import org.mockito.Mockito;
 import java.io.IOException;
 import java.nio.channels.SeekableByteChannel;
 import java.security.SignatureException;
-import java.sql.Connection;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
@@ -242,7 +241,71 @@ public class Ds3ClientHelpers_Test {
         assertThat(contents.getLastModified(), is(lastModified));
         assertThat(contents.getSize(), is(size));
     }
-    
+
+    /*
+        @Override
+    public Ds3ClientHelpers.Job recoverWriteJob(final UUID jobId) throws SignatureException, IOException, XmlProcessingException, JobRecoveryException {
+        final ModifyJobResponse jobResponse = this.client.modifyJob(new ModifyJobRequest(jobId));
+        if (RequestType.PUT != jobResponse.getMasterObjectList().getRequestType()){
+            throw new JobRecoveryException(RequestType.PUT.toString(), jobResponse.getMasterObjectList().getRequestType().toString() );
+        }
+
+        return new WriteJobImpl(this.client, jobResponse.getMasterObjectList());
+    }
+     */
+    @Test
+    public void testRecoverWriteJob() throws SignatureException, IOException, XmlProcessingException, JobRecoveryException {
+        final Ds3Client ds3Client = buildDs3ClientForBulk();
+
+        final ModifyJobResponse modifyWriteJobResponse = buildModifyWriteJobResponse();
+        Mockito.when(ds3Client.modifyJob(Mockito.any(ModifyJobRequest.class))).thenReturn(modifyWriteJobResponse);
+
+        final Job job = Ds3ClientHelpers.wrap(ds3Client).recoverWriteJob(jobId);
+        //Mockito.verify(ds3Client, Mockito.times(1)).modifyJob(new ModifyJobRequest(jobId));
+        assertThat(job.getJobId(), is(jobId));
+        assertThat(job.getBucketName(), is(MYBUCKET));
+    }
+
+    @Test
+    public void testRecoverWriteJobThrowsJobRecoveryExceptionForWrongRequestType() throws SignatureException, IOException, XmlProcessingException {
+        final Ds3Client ds3Client = buildDs3ClientForBulk();
+
+        final ModifyJobResponse modifyReadJobResponse = buildModifyReadJobResponse();
+        Mockito.when(ds3Client.modifyJob(Mockito.any(ModifyJobRequest.class))).thenReturn(modifyReadJobResponse);
+
+        try {
+            Ds3ClientHelpers.wrap(ds3Client).recoverWriteJob(jobId);
+            Assert.fail("Should have failed with a JobRecoveryException before we got here.");
+        } catch (final JobRecoveryException e) {
+        }
+    }
+
+    @Test
+    public void testRecoverReadJob() throws SignatureException, IOException, XmlProcessingException, JobRecoveryException {
+        final Ds3Client ds3Client = buildDs3ClientForBulk();
+
+        final ModifyJobResponse modifyReadJobResponse = buildModifyReadJobResponse();
+        Mockito.when(ds3Client.modifyJob(Mockito.any(ModifyJobRequest.class))).thenReturn(modifyReadJobResponse);
+
+        final Job job = Ds3ClientHelpers.wrap(ds3Client).recoverReadJob(jobId);
+        assertThat(job.getJobId(), is(jobId));
+        assertThat(job.getBucketName(), is(MYBUCKET));
+    }
+
+    @Test
+    public void testRecoverReadJobThrowsJobRecoveryExceptionForWrongRequestType() throws SignatureException, IOException, XmlProcessingException {
+        final Ds3Client ds3Client = buildDs3ClientForBulk();
+
+        final ModifyJobResponse modifyWriteJobResponse = buildModifyWriteJobResponse();
+        Mockito.when(ds3Client.modifyJob(Mockito.any(ModifyJobRequest.class))).thenReturn(modifyWriteJobResponse);
+
+        try {
+            Ds3ClientHelpers.wrap(ds3Client).recoverReadJob(jobId);
+            Assert.fail("Should have failed with a JobRecoveryException before we got here.");
+        } catch (final JobRecoveryException e) {
+        }
+    }
+
     private static final class StubGetBucketResponse extends GetBucketResponse {
         private final int invocationIndex;
 
@@ -382,7 +445,29 @@ public class Ds3ClientHelpers_Test {
                 chunk2(false)
         ));
     }
-    
+
+    private static ModifyJobResponse buildModifyWriteJobResponse() {
+        return modifyJobResponse(buildJobResponse(
+                RequestType.PUT,
+                ChunkClientProcessingOrderGuarantee.IN_ORDER,
+                0L,
+                0L,
+                chunk1(false),
+                chunk2(false)
+        ));
+    }
+
+    private static ModifyJobResponse buildModifyReadJobResponse() {
+        return modifyJobResponse(buildJobResponse(
+                RequestType.GET,
+                ChunkClientProcessingOrderGuarantee.IN_ORDER,
+                0L,
+                0L,
+                chunk1(false),
+                chunk2(false)
+        ));
+    }
+
     private static AllocateJobChunkResponse buildAllocateResponse1() {
         return retryAllocateLater(1);
     }
@@ -416,6 +501,30 @@ public class Ds3ClientHelpers_Test {
             WriteOptimization.CAPACITY,
             Arrays.asList(basicNode(nodeId, "black-pearl")),
             Arrays.asList(chunks)
+        );
+    }
+
+    private static MasterObjectList buildModifyJobResponse(
+            final RequestType requestType,
+            final ChunkClientProcessingOrderGuarantee chunkOrdering,
+            final long cachedSizeInBytes,
+            final long completedSizeInBytes,
+            final Objects ... chunks) {
+        return ResponseBuilders.jobResponse(
+                jobId,
+                MYBUCKET,
+                requestType,
+                36L,
+                cachedSizeInBytes,
+                completedSizeInBytes,
+                chunkOrdering,
+                Priority.VERY_HIGH,
+                "9/16/2015 1:42:42 PM",
+                UUID.fromString("57919d2d-448c-4e2a-8886-0413af22243e"),
+                "spectra",
+                WriteOptimization.CAPACITY,
+                Arrays.asList(basicNode(nodeId, "black-pearl")),
+                Arrays.asList(chunks)
         );
     }
 

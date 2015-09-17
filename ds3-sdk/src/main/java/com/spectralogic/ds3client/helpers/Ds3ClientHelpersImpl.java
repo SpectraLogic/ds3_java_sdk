@@ -124,20 +124,20 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
     }
 
     @Override
-    public Job recoverWriteJob(final UUID jobId) throws SignatureException, IOException, XmlProcessingException, JobRecoveryException {
-        ModifyJobResponse jobResponse = this.client.modifyJob(new ModifyJobRequest(jobId));
+    public Ds3ClientHelpers.Job recoverWriteJob(final UUID jobId) throws SignatureException, IOException, XmlProcessingException, JobRecoveryException {
+        final ModifyJobResponse jobResponse = this.client.modifyJob(new ModifyJobRequest(jobId));
         if (RequestType.PUT != jobResponse.getMasterObjectList().getRequestType()){
-            throw new JobRecoveryException("PUT", jobResponse.getMasterObjectList().getRequestType().toString() );
+            throw new JobRecoveryException(RequestType.PUT.toString(), jobResponse.getMasterObjectList().getRequestType().toString() );
         }
 
         return new WriteJobImpl(this.client, jobResponse.getMasterObjectList());
     }
 
     @Override
-    public Job recoverReadJob(final UUID jobId) throws SignatureException, IOException, XmlProcessingException, JobRecoveryException {
-        ModifyJobResponse jobResponse = this.client.modifyJob(new ModifyJobRequest(jobId));
+    public Ds3ClientHelpers.Job recoverReadJob(final UUID jobId) throws SignatureException, IOException, XmlProcessingException, JobRecoveryException {
+        final ModifyJobResponse jobResponse = this.client.modifyJob(new ModifyJobRequest(jobId));
         if (RequestType.GET != jobResponse.getMasterObjectList().getRequestType()){
-            throw new JobRecoveryException("GET", jobResponse.getMasterObjectList().getRequestType().toString() );
+            throw new JobRecoveryException(RequestType.GET.toString(), jobResponse.getMasterObjectList().getRequestType().toString() );
         }
 
         return new ReadJobImpl(this.client, jobResponse.getMasterObjectList());

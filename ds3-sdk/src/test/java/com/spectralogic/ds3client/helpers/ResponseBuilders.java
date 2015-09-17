@@ -45,7 +45,13 @@ public class ResponseBuilders {
         when(response.getResult()).thenReturn(masterObjectList);
         return response;
     }
-    
+
+    public static ModifyJobResponse modifyJobResponse(final MasterObjectList masterObjectList) {
+        final ModifyJobResponse response = mock(ModifyJobResponse.class);
+        when(response.getMasterObjectList()).thenReturn(masterObjectList);
+        return response;
+    }
+
     public static GetAvailableJobChunksResponse availableJobChunks(final MasterObjectList masterObjectList) {
         final GetAvailableJobChunksResponse response = mock(GetAvailableJobChunksResponse.class);
         when(response.getStatus()).thenReturn(GetAvailableJobChunksResponse.Status.AVAILABLE);
