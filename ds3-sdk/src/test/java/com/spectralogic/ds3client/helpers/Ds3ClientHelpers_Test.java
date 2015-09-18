@@ -242,7 +242,7 @@ public class Ds3ClientHelpers_Test {
         assertThat(contents.getSize(), is(size));
     }
 
-    
+
     @Test
     public void testRecoverWriteJob() throws SignatureException, IOException, XmlProcessingException, JobRecoveryException {
         final Ds3Client ds3Client = buildDs3ClientForBulk();
@@ -251,23 +251,18 @@ public class Ds3ClientHelpers_Test {
         Mockito.when(ds3Client.modifyJob(Mockito.any(ModifyJobRequest.class))).thenReturn(modifyWriteJobResponse);
 
         final Job job = Ds3ClientHelpers.wrap(ds3Client).recoverWriteJob(jobId);
-        //Mockito.verify(ds3Client, Mockito.times(1)).modifyJob(new ModifyJobRequest(jobId));
         assertThat(job.getJobId(), is(jobId));
         assertThat(job.getBucketName(), is(MYBUCKET));
     }
 
-    @Test
+    @Test(expect = JobRecoveryException.class)
     public void testRecoverWriteJobThrowsJobRecoveryExceptionForWrongRequestType() throws SignatureException, IOException, XmlProcessingException {
         final Ds3Client ds3Client = buildDs3ClientForBulk();
 
         final ModifyJobResponse modifyReadJobResponse = buildModifyReadJobResponse();
         Mockito.when(ds3Client.modifyJob(Mockito.any(ModifyJobRequest.class))).thenReturn(modifyReadJobResponse);
 
-        try {
-            Ds3ClientHelpers.wrap(ds3Client).recoverWriteJob(jobId);
-            Assert.fail("Should have failed with a JobRecoveryException before we got here.");
-        } catch (final JobRecoveryException e) {
-        }
+        Ds3ClientHelpers.wrap(ds3Client).recoverWriteJob(jobId);
     }
 
     @Test
@@ -282,18 +277,14 @@ public class Ds3ClientHelpers_Test {
         assertThat(job.getBucketName(), is(MYBUCKET));
     }
 
-    @Test
+    @Test(expect = JobRecoveryException.class)
     public void testRecoverReadJobThrowsJobRecoveryExceptionForWrongRequestType() throws SignatureException, IOException, XmlProcessingException {
         final Ds3Client ds3Client = buildDs3ClientForBulk();
 
         final ModifyJobResponse modifyWriteJobResponse = buildModifyWriteJobResponse();
         Mockito.when(ds3Client.modifyJob(Mockito.any(ModifyJobRequest.class))).thenReturn(modifyWriteJobResponse);
 
-        try {
-            Ds3ClientHelpers.wrap(ds3Client).recoverReadJob(jobId);
-            Assert.fail("Should have failed with a JobRecoveryException before we got here.");
-        } catch (final JobRecoveryException e) {
-        }
+        Ds3ClientHelpers.wrap(ds3Client).recoverReadJob(jobId);
     }
 
     private static final class StubGetBucketResponse extends GetBucketResponse {
