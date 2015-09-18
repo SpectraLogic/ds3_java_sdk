@@ -255,7 +255,7 @@ public class Ds3ClientHelpers_Test {
         assertThat(job.getBucketName(), is(MYBUCKET));
     }
 
-    @Test(expect = JobRecoveryException.class)
+    @Test(expect = com.spectralogic.ds3client.helpers.JobRecoveryException.class)
     public void testRecoverWriteJobThrowsJobRecoveryExceptionForWrongRequestType() throws SignatureException, IOException, XmlProcessingException {
         final Ds3Client ds3Client = buildDs3ClientForBulk();
 
@@ -277,7 +277,7 @@ public class Ds3ClientHelpers_Test {
         assertThat(job.getBucketName(), is(MYBUCKET));
     }
 
-    @Test(expect = JobRecoveryException.class)
+    @Test(expect = com.spectralogic.ds3client.helpers.JobRecoveryException.class)
     public void testRecoverReadJobThrowsJobRecoveryExceptionForWrongRequestType() throws SignatureException, IOException, XmlProcessingException {
         final Ds3Client ds3Client = buildDs3ClientForBulk();
 
