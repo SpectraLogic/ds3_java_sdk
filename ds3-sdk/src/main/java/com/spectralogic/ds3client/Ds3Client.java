@@ -145,6 +145,19 @@ public interface Ds3Client extends Closeable {
             throws IOException, SignatureException;
 
     /**
+     * Retrieves all objects from DS3
+     * @param request The Get Objects Request object used to customize the HTTP request.  The get objects request object
+     *                has some options for customizing the request.  See {@link GetObjectsRequest} for the full list of
+     *                options that can be configured.
+     * @return The response object contains a list of objects.  See {@link GetObjectsResponse} for the most up to date
+     *         information on what is returned.
+     * @throws IOException
+     * @throws SignatureException
+     */
+    GetObjectsResponse getObjects(GetObjectsRequest request)
+        throws IOException, SignatureException;
+
+    /**
      * Puts a new object to an existing bucket.  The call will fail if the bucket does not exist.
      * @param request The Put Object Request object used to customize the HTTP request.  The put object request object
      *                has some options for customizing the request.  See {@link PutObjectRequest} for the full list of

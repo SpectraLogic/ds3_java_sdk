@@ -39,6 +39,7 @@ import com.google.common.collect.Lists;
 import com.spectralogic.ds3client.commands.*;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers;
 import com.spectralogic.ds3client.models.Contents;
+import com.spectralogic.ds3client.models.S3Object;
 import com.spectralogic.ds3client.models.bulk.Ds3Object;
 import com.spectralogic.ds3client.models.bulk.JobStatus;
 import com.spectralogic.ds3client.utils.ByteArraySeekableByteChannel;
@@ -97,6 +98,40 @@ public class BucketIntegration_Test {
         response = client.headBucket(new HeadBucketRequest(bucketName));
         assertThat(response.getStatus(),
                 is(HeadBucketResponse.Status.DOESNTEXIST));
+    }
+
+    @Test
+    public void getObjects() throws IOException, SignatureException, URISyntaxException, XmlProcessingException {
+        final String bucketName = "test_get_objs";
+        try {
+            client.putBucket(new PutBucketRequest(bucketName));
+            Util.loadBookTestData(client, bucketName);
+
+            HeadObjectResponse headResponse = client.headObject(new HeadObjectRequest(
+                    bucketName, "beowulf.txt"));
+            assertThat(headResponse.getStatus(),
+                    is(HeadObjectResponse.Status.EXISTS));
+
+            final GetObjectsResponse response = client
+                    .getObjects(new GetObjectsRequest().withBucket("test_get_objs"));
+
+            assertFalse(response.getS3ObjectList().getObjects().isEmpty());
+            assertThat(response.getS3ObjectList().getObjects().size(), is(4));
+            assertTrue(s3ObjectExists(response.getS3ObjectList().getObjects(), "beowulf.txt"));
+
+        } finally {
+            Util.deleteAllContents(client,bucketName);
+        }
+
+    }
+
+    private boolean s3ObjectExists(List<S3Object> objects, final String fileName) {
+        for(S3Object o : objects) {
+            if(o.getName().compareTo(fileName) == 0) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Test
