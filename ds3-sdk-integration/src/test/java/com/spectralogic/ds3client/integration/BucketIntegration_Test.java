@@ -32,6 +32,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.security.SignatureException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -40,10 +41,12 @@ import com.google.common.collect.Lists;
 import com.spectralogic.ds3client.commands.*;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers;
 import com.spectralogic.ds3client.helpers.JobRecoveryException;
+import com.spectralogic.ds3client.helpers.options.WriteJobOptions;
 import com.spectralogic.ds3client.models.Contents;
 import com.spectralogic.ds3client.models.S3Object;
 import com.spectralogic.ds3client.models.bulk.Ds3Object;
 import com.spectralogic.ds3client.models.bulk.JobStatus;
+import com.spectralogic.ds3client.models.bulk.Priority;
 import com.spectralogic.ds3client.utils.ByteArraySeekableByteChannel;
 import com.spectralogic.ds3client.utils.ResourceUtils;
 import org.apache.commons.io.IOUtils;
@@ -101,6 +104,33 @@ public class BucketIntegration_Test {
         response = client.headBucket(new HeadBucketRequest(bucketName));
         assertThat(response.getStatus(),
                 is(HeadBucketResponse.Status.DOESNTEXIST));
+    }
+
+    @Test
+    public void modifyJob() throws IOException, SignatureException, XmlProcessingException, URISyntaxException {
+        final String bucketName = "test_modify_job";
+        try {
+            client.putBucket(new PutBucketRequest(bucketName));
+
+            List<Ds3Object> objects = new ArrayList<>();
+            final File objFile = ResourceUtils.loadFileResource("books/beowulf.txt");
+            final Ds3Object obj = new Ds3Object("beowulf.txt", objFile.length());
+            objects.add(obj);
+
+            WriteJobOptions jobOptions = WriteJobOptions.create().withPriority(Priority.LOW);
+
+            Ds3ClientHelpers.Job job = com.spectralogic.ds3client.helpers.Ds3ClientHelpers
+                    .wrap(client).startWriteJob(bucketName, objects, jobOptions);
+
+            client.modifyJob(new ModifyJobRequest(job.getJobId()).withPriority(Priority.HIGH));
+
+            GetJobResponse response = client.getJob(new GetJobRequest(job.getJobId()));
+
+            assertThat(response.getMasterObjectList().getPriority(), is(Priority.HIGH));
+
+        } finally {
+            Util.deleteAllContents(client, bucketName);
+        }
     }
 
     @Test
