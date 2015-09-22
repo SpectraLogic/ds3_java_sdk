@@ -286,6 +286,9 @@ public interface Ds3Client extends Closeable {
     GetTapesResponse getTapes(GetTapesRequest request)
             throws IOException, SignatureException;
 
+    DeleteTapeResponse deleteTape(DeleteTapeRequest request)
+            throws IOException, SignatureException;
+
     NotificationResponse createObjectCachedNotification(CreateObjectCachedNotificationRequest request)
             throws IOException, SignatureException;
 

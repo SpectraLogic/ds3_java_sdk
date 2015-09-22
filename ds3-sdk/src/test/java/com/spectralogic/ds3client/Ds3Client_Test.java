@@ -130,28 +130,28 @@ public class Ds3Client_Test {
         assertThat(contentsList, is(notNullValue()));
         assertThat(contentsList.size(), is(3));
         this.assertContentsEquals(
-            contentsList.get(0),
-            "user/hduser/gutenberg/20417.txt.utf-8",
-            "2014-01-03T13:26:47.000Z",
-            "8B19F3F41868106382A677C3435BDCE5",
-            674570,
-            "STANDARD"
+                contentsList.get(0),
+                "user/hduser/gutenberg/20417.txt.utf-8",
+                "2014-01-03T13:26:47.000Z",
+                "8B19F3F41868106382A677C3435BDCE5",
+                674570,
+                "STANDARD"
         );
         this.assertContentsEquals(
-            contentsList.get(1),
-            "user/hduser/gutenberg/5000.txt.utf-8",
-            "2014-01-03T13:26:47.000Z",
-            "9DE344878423E44B129730CE22B4B137",
-            1423803,
-            "STANDARD"
+                contentsList.get(1),
+                "user/hduser/gutenberg/5000.txt.utf-8",
+                "2014-01-03T13:26:47.000Z",
+                "9DE344878423E44B129730CE22B4B137",
+                1423803,
+                "STANDARD"
         );
         this.assertContentsEquals(
-            contentsList.get(2),
-            "user/hduser/gutenberg/4300.txt.utf-8",
-            "2014-01-03T13:26:47.000Z",
-            "33EE4519EA7DDAB27CA4E2742326D70B",
-            1573150,
-            "DEEP"
+                contentsList.get(2),
+                "user/hduser/gutenberg/4300.txt.utf-8",
+                "2014-01-03T13:26:47.000Z",
+                "33EE4519EA7DDAB27CA4E2742326D70B",
+                1573150,
+                "DEEP"
         );
     }
 
@@ -235,7 +235,7 @@ public class Ds3Client_Test {
                 .expecting(HttpVerb.DELETE, "/_rest_/folder/folderName", queryParams, null)
                 .returning(204, "")
                 .asClient()
-                .deleteFolder(new DeleteFolderRequest("bucketName","folderName"));
+                .deleteFolder(new DeleteFolderRequest("bucketName", "folderName"));
     }
 
     @Test
@@ -889,5 +889,19 @@ public class Ds3Client_Test {
 
         assertThat(tapes.size(), is(not(0)));
         assertThat(tapes.get(0).getId(), is(notNullValue()));
+    }
+
+    @Test
+    public void deleteTape() throws IOException, SignatureException {
+
+        final UUID id = UUID.randomUUID();
+
+        final DeleteTapeResponse response = MockNetwork
+                .expecting(HttpVerb.DELETE, "/_rest_/tape/" + id.toString(), null, null)
+                .returning(204, "")
+                .asClient()
+                .deleteTape(new DeleteTapeRequest(id));
+
+        assertThat(response, is(notNullValue()));
     }
 }
