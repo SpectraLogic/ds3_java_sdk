@@ -278,12 +278,13 @@ public interface Ds3Client extends Closeable {
 
     /**
      * Returns a list of tapes.
-     * @param request
-     * @return
      * @throws IOException
      * @throws SignatureException
      */
     GetTapesResponse getTapes(GetTapesRequest request)
+            throws IOException, SignatureException;
+
+    GetTapeResponse getTape(GetTapeRequest request)
             throws IOException, SignatureException;
 
     NotificationResponse createObjectCachedNotification(CreateObjectCachedNotificationRequest request)
