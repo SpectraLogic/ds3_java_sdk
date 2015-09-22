@@ -85,10 +85,10 @@ public class S3Object {
 
         final S3Object s3obj = (S3Object)obj;
 
-        if (this.bucketId.equals(s3obj.getBucketId()) //.compareTo(s3obj.getBucketId()) == 0
-                && this.creationDate.equals(s3obj.getCreationDate()) //.compareTo(s3obj.getCreationDate()) == 0
+        if (this.bucketId.equals(s3obj.getBucketId())
+                && this.creationDate.equals(s3obj.getCreationDate())
                 && this.id.equals(s3obj.getId())
-                && this.name.equals(s3obj.getName()) //.compareTo(s3obj.getName()) == 0
+                && this.name.equals(s3obj.getName())
                 && this.type == s3obj.getType()
                 && this.version == s3obj.getVersion()) {
             return true;
