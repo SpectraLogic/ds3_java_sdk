@@ -110,7 +110,7 @@ public class BucketIntegration_Test {
             client.putBucket(new PutBucketRequest(bucketName));
             Util.loadBookTestData(client, bucketName);
 
-            HeadObjectResponse headResponse = client.headObject(new HeadObjectRequest(
+            final HeadObjectResponse headResponse = client.headObject(new HeadObjectRequest(
                     bucketName, "beowulf.txt"));
             assertThat(headResponse.getStatus(),
                     is(HeadObjectResponse.Status.EXISTS));
@@ -128,9 +128,9 @@ public class BucketIntegration_Test {
 
     }
 
-    private boolean s3ObjectExists(List<S3Object> objects, final String fileName) {
-        for(S3Object o : objects) {
-            if(o.getName().compareTo(fileName) == 0) {
+    private boolean s3ObjectExists(final List<S3Object> objects, final String fileName) {
+        for(S3Object obj : objects) {
+            if(obj.getName().compareTo(fileName) == 0) {
                 return true;
             }
         }

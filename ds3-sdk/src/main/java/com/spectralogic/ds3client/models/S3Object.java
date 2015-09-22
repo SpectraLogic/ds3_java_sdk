@@ -78,21 +78,21 @@ public class S3Object {
                 + "</S3Object>";
     }
 
-    public boolean equals(final Object o) {
-        if (!(o instanceof S3Object)) {
+    public boolean equals(final Object obj) {
+        if (!(obj instanceof S3Object)) {
             return false;
         }
 
-        S3Object s3o = (S3Object)o;
+        final S3Object s3obj = (S3Object)obj;
 
-        if (this.bucketId.compareTo(s3o.getBucketId()) != 0
-                || this.creationDate.compareTo(s3o.getCreationDate()) != 0
-                || !this.id.equals(s3o.getId())
-                || this.name.compareTo(s3o.getName()) != 0
-                || this.type != s3o.getType()
-                || this.version != s3o.version) {
-            return false;
+        if (this.bucketId.equals(s3obj.getBucketId()) //.compareTo(s3obj.getBucketId()) == 0
+                && this.creationDate.equals(s3obj.getCreationDate()) //.compareTo(s3obj.getCreationDate()) == 0
+                && this.id.equals(s3obj.getId())
+                && this.name.equals(s3obj.getName()) //.compareTo(s3obj.getName()) == 0
+                && this.type == s3obj.getType()
+                && this.version == s3obj.getVersion()) {
+            return true;
         }
-        return true;
+        return false;
     }
 }

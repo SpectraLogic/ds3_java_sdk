@@ -176,7 +176,7 @@ public class Ds3Client_Test {
 
         final String stringResponse = "<Data><S3Object><BucketId>a24d14f3-e2f0-4bfb-ab71-f99d5ef43745</BucketId><CreationDate>2015-09-21 20:06:47.694</CreationDate><Id>e37c3ce0-12aa-4f54-87e3-42532aca0e5e</Id><Name>beowulf.txt</Name><Type>DATA</Type><Version>1</Version></S3Object><S3Object><BucketId>a24d14f3-e2f0-4bfb-ab71-f99d5ef43745</BucketId><CreationDate>2015-09-21 20:06:47.779</CreationDate><Id>dc628815-c723-4c4e-b68b-5f5d10f38af5</Id><Name>sherlock_holmes.txt</Name><Type>DATA</Type><Version>1</Version></S3Object><S3Object><BucketId>a24d14f3-e2f0-4bfb-ab71-f99d5ef43745</BucketId><CreationDate>2015-09-21 20:06:47.772</CreationDate><Id>4f6985fd-fbae-4421-ba27-66fdb96187c5</Id><Name>tale_of_two_cities.txt</Name><Type>DATA</Type><Version>1</Version></S3Object><S3Object><BucketId>a24d14f3-e2f0-4bfb-ab71-f99d5ef43745</BucketId><CreationDate>2015-09-21 20:06:47.696</CreationDate><Id>82c18910-fadb-4461-a152-bf714ae91b55</Id><Name>ulysses.txt</Name><Type>DATA</Type><Version>1</Version></S3Object></Data>";
 
-        List<S3Object> objects = MockNetwork
+        final List<S3Object> objects = MockNetwork
                 .expecting(HttpVerb.GET, "/_rest_/object/", queryParams, null)
                 .returning(200, stringResponse)
                 .asClient()
@@ -184,11 +184,11 @@ public class Ds3Client_Test {
                 .getS3ObjectList()
                 .getObjects();
 
-        S3Object beowulf = new S3Object("a24d14f3-e2f0-4bfb-ab71-f99d5ef43745", "2015-09-21 20:06:47.694",
+        final S3Object beowulf = new S3Object("a24d14f3-e2f0-4bfb-ab71-f99d5ef43745", "2015-09-21 20:06:47.694",
                 UUID.fromString("e37c3ce0-12aa-4f54-87e3-42532aca0e5e"), "beowulf.txt",
                 GetObjectsRequest.ObjectType.DATA, 1);
 
-        S3Object notBeowulf = new S3Object("a24d14f3-e2f0-4bfb-ab71-f99d5ef43745", "2015-09-21 20:06:47.694",
+        final S3Object notBeowulf = new S3Object("a24d14f3-e2f0-4bfb-ab71-f99d5ef43745", "2015-09-21 20:06:47.694",
                 UUID.fromString("e37c3ce0-12aa-4f54-87e3-42532aca0e5e"), "notBeowulf.txt",
                 GetObjectsRequest.ObjectType.DATA, 1);
 
@@ -197,9 +197,9 @@ public class Ds3Client_Test {
         assertThat(s3ObjectExists(objects, notBeowulf), is(false));
     }
 
-    private boolean s3ObjectExists(final List<S3Object> objects, final S3Object obj) {
-        for (S3Object o : objects) {
-            if (obj.equals(o)) {
+    private boolean s3ObjectExists(final List<S3Object> objects, final S3Object s3obj) {
+        for (final S3Object obj : objects) {
+            if (s3obj.equals(obj)) {
                 return true;
             }
         }
