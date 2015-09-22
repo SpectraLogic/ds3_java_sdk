@@ -16,15 +16,25 @@
 package com.spectralogic.ds3client.commands;
 
 import com.spectralogic.ds3client.HttpVerb;
+import com.spectralogic.ds3client.models.bulk.Priority;
 
 import java.util.UUID;
 
 public class ModifyJobRequest extends AbstractRequest {
     private final UUID jobId;
+    private Priority priority;
 
     public ModifyJobRequest(final UUID jobId) {
         this.jobId = jobId;
     }
+
+    public ModifyJobRequest withPriority(final Priority priority) {
+        this.priority = priority;
+        this.getQueryParams().put("priority", priority.toString().toLowerCase());
+        return this;
+    }
+
+    public Priority getPriority() { return this.priority; }
     
     public UUID getJobId() {
         return this.jobId;
