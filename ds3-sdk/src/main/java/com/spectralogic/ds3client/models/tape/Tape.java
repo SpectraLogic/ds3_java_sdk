@@ -1,9 +1,11 @@
 package com.spectralogic.ds3client.models.tape;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 
 import java.util.UUID;
 
+@JacksonXmlRootElement(namespace = "Data")
 public class Tape {
 
     @JsonProperty("AssignedToBucket")

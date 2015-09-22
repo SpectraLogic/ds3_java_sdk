@@ -890,4 +890,20 @@ public class Ds3Client_Test {
         assertThat(tapes.size(), is(not(0)));
         assertThat(tapes.get(0).getId(), is(notNullValue()));
     }
+
+    @Test
+    public void getTape() throws IOException, SignatureException {
+        final String responsePayload = "<Data><AssignedToBucket>false</AssignedToBucket><AvailableRawCapacity>2408082046976</AvailableRawCapacity><BarCode>101000L6</BarCode><BucketId/><DescriptionForIdentification/><EjectDate/><EjectLabel/><EjectLocation/><EjectPending/><FullOfData>false</FullOfData><Id>c7c431df-f95d-4533-b350-ffd7a8a5caac</Id><LastAccessed>2015-09-04 06:53:08.236</LastAccessed><LastCheckpoint>eb77ea67-3c83-47ec-8714-cd46a97dc392:2</LastCheckpoint><LastModified>2015-08-21 16:14:30.714</LastModified><LastVerified/><PartitionId>4f8a5cbb-9837-41d9-afd1-cebed41f18f7</PartitionId><PreviousState/><SerialNumber>HP-W130501213</SerialNumber><State>NORMAL</State><TotalRawCapacity>2408088338432</TotalRawCapacity><Type>LTO6</Type><WriteProtected>false</WriteProtected></Data>";
+
+        final GetTapeResponse response = MockNetwork
+                .expecting(HttpVerb.GET, "/_rest_/tape/c7c431df-f95d-4533-b350-ffd7a8a5caac", null, null)
+                .returning(200, responsePayload)
+                .asClient()
+                .getTape(new GetTapeRequest(UUID.fromString("c7c431df-f95d-4533-b350-ffd7a8a5caac")));
+
+        final Tape tape = response.getTape();
+
+        assertThat(tape.getId(), is(notNullValue()));
+        assertThat(tape.getId(), is(UUID.fromString("c7c431df-f95d-4533-b350-ffd7a8a5caac")));
+    }
 }
