@@ -129,8 +129,8 @@ public class BucketIntegration_Test {
     }
 
     private boolean s3ObjectExists(final List<S3Object> objects, final String fileName) {
-        for(S3Object obj : objects) {
-            if(obj.getName().compareTo(fileName) == 0) {
+        for (final S3Object obj : objects) {
+            if (obj.getName().equals(fileName)) {
                 return true;
             }
         }
