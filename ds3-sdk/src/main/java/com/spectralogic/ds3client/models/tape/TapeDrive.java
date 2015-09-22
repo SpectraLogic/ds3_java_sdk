@@ -20,7 +20,6 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 
 import java.util.UUID;
 
-@JacksonXmlRootElement(namespace = "Data")
 public class TapeDrive {
     @JsonProperty("ErrorMessage")
     private String errorMessage;

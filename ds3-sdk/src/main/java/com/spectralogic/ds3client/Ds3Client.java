@@ -276,6 +276,16 @@ public interface Ds3Client extends Closeable {
     DeleteTapePartitionResponse deleteTapePartition(DeleteTapePartitionRequest request)
             throws IOException, SignatureException;
 
+    /**
+     * Returns a list of tapes.
+     * @param request
+     * @return
+     * @throws IOException
+     * @throws SignatureException
+     */
+    GetTapesResponse getTapes(GetTapesRequest request)
+            throws IOException, SignatureException;
+
     NotificationResponse createObjectCachedNotification(CreateObjectCachedNotificationRequest request)
             throws IOException, SignatureException;
 
