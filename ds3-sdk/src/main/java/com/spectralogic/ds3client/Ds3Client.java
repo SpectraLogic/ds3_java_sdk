@@ -17,16 +17,12 @@ package com.spectralogic.ds3client;
 
 import com.spectralogic.ds3client.commands.*;
 import com.spectralogic.ds3client.commands.notifications.*;
-import com.spectralogic.ds3client.helpers.Ds3ClientHelpers;
-import com.spectralogic.ds3client.helpers.JobRecoveryException;
 import com.spectralogic.ds3client.models.bulk.Node;
 import com.spectralogic.ds3client.networking.ConnectionDetails;
-import com.spectralogic.ds3client.serializer.XmlProcessingException;
 
 import java.io.Closeable;
 import java.io.IOException;
 import java.security.SignatureException;
-import java.util.UUID;
 
 /**
  * The main interface for communicating with a DS3 appliance.  All communication with a DS3 appliance starts with
