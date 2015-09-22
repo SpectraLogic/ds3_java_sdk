@@ -146,12 +146,12 @@ public class Ds3Client_Test {
             "STANDARD"
         );
         this.assertContentsEquals(
-                contentsList.get(2),
-                "user/hduser/gutenberg/4300.txt.utf-8",
-                "2014-01-03T13:26:47.000Z",
-                "33EE4519EA7DDAB27CA4E2742326D70B",
-                1573150,
-                "DEEP"
+            contentsList.get(2),
+            "user/hduser/gutenberg/4300.txt.utf-8",
+            "2014-01-03T13:26:47.000Z",
+            "33EE4519EA7DDAB27CA4E2742326D70B",
+            1573150,
+            "DEEP"
         );
     }
 
