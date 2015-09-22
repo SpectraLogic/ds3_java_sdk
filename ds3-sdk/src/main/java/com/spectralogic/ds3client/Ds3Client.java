@@ -284,6 +284,11 @@ public interface Ds3Client extends Closeable {
     GetTapesResponse getTapes(GetTapesRequest request)
             throws IOException, SignatureException;
 
+    /**
+     * Returns the information for a single tape.
+     * @throws IOException
+     * @throws SignatureException
+     */
     GetTapeResponse getTape(GetTapeRequest request)
             throws IOException, SignatureException;
 
