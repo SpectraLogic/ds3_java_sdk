@@ -112,19 +112,19 @@ public class BucketIntegration_Test {
         try {
             client.putBucket(new PutBucketRequest(bucketName));
 
-            List<Ds3Object> objects = new ArrayList<>();
+            final List<Ds3Object> objects = new ArrayList<>();
             final File objFile = ResourceUtils.loadFileResource("books/beowulf.txt");
             final Ds3Object obj = new Ds3Object("beowulf.txt", objFile.length());
             objects.add(obj);
 
-            WriteJobOptions jobOptions = WriteJobOptions.create().withPriority(Priority.LOW);
+            final WriteJobOptions jobOptions = WriteJobOptions.create().withPriority(Priority.LOW);
 
-            Ds3ClientHelpers.Job job = com.spectralogic.ds3client.helpers.Ds3ClientHelpers
+            final Ds3ClientHelpers.Job job = com.spectralogic.ds3client.helpers.Ds3ClientHelpers
                     .wrap(client).startWriteJob(bucketName, objects, jobOptions);
 
             client.modifyJob(new ModifyJobRequest(job.getJobId()).withPriority(Priority.HIGH));
 
-            GetJobResponse response = client.getJob(new GetJobRequest(job.getJobId()));
+            final GetJobResponse response = client.getJob(new GetJobRequest(job.getJobId()));
 
             assertThat(response.getMasterObjectList().getPriority(), is(Priority.HIGH));
 
