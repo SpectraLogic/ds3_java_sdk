@@ -20,6 +20,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
+import static org.junit.Assume.assumeThat;
 
 import java.io.File;
 import java.io.IOException;
@@ -47,6 +48,8 @@ import com.spectralogic.ds3client.models.S3Object;
 import com.spectralogic.ds3client.models.bulk.Ds3Object;
 import com.spectralogic.ds3client.models.bulk.JobStatus;
 import com.spectralogic.ds3client.models.bulk.Priority;
+import com.spectralogic.ds3client.models.tape.Tape;
+import com.spectralogic.ds3client.models.tape.Tapes;
 import com.spectralogic.ds3client.utils.ByteArraySeekableByteChannel;
 import com.spectralogic.ds3client.utils.ResourceUtils;
 import org.apache.commons.io.IOUtils;
@@ -499,6 +502,32 @@ public class BucketIntegration_Test {
         } finally {
             Util.deleteAllContents(client, bucketName);
         }
+    }
+
+    @Test
+    public void getTapes() throws IOException, SignatureException {
+        final GetTapesResponse response = client.getTapes(new GetTapesRequest());
+        final Tapes tapes = response.getTapes();
+
+        assumeThat(tapes.getTapes().size(), is(not(0)));
+
+        assertThat(tapes.getTapes().get(0).getId(), is(notNullValue()));
+    }
+
+    @Test
+    public void getTape() throws IOException, SignatureException {
+        final GetTapesResponse tapesResponse = client.getTapes(new GetTapesRequest());
+        final Tapes tapes = tapesResponse.getTapes();
+
+        assumeThat(tapes.getTapes().size(), is(not(0)));
+
+        final GetTapeResponse tapeResponse = client.getTape(new GetTapeRequest(tapes.getTapes().get(0).getId()));
+
+        final Tape tape = tapeResponse.getTape();
+
+        assertThat(tape, is(notNullValue()));
+        assertThat(tape.getId(), is(notNullValue()));
+
     }
 
     @Test
