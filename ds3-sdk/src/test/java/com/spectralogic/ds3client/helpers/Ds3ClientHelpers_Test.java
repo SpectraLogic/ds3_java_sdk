@@ -475,37 +475,13 @@ public class Ds3ClientHelpers_Test {
             cachedSizeInBytes,
             completedSizeInBytes,
             chunkOrdering,
-            Priority.VERY_HIGH,
+            Priority.CRITICAL,
             "9/17/2014 1:03:54 PM",
             UUID.fromString("57919d2d-448c-4e2a-8886-0413af22243e"),
             "spectra",
             WriteOptimization.CAPACITY,
             Arrays.asList(basicNode(nodeId, "black-pearl")),
             Arrays.asList(chunks)
-        );
-    }
-
-    private static MasterObjectList buildModifyJobResponse(
-            final RequestType requestType,
-            final ChunkClientProcessingOrderGuarantee chunkOrdering,
-            final long cachedSizeInBytes,
-            final long completedSizeInBytes,
-            final Objects ... chunks) {
-        return ResponseBuilders.jobResponse(
-                jobId,
-                MYBUCKET,
-                requestType,
-                36L,
-                cachedSizeInBytes,
-                completedSizeInBytes,
-                chunkOrdering,
-                Priority.VERY_HIGH,
-                "9/16/2015 1:42:42 PM",
-                UUID.fromString("57919d2d-448c-4e2a-8886-0413af22243e"),
-                "spectra",
-                WriteOptimization.CAPACITY,
-                Arrays.asList(basicNode(nodeId, "black-pearl")),
-                Arrays.asList(chunks)
         );
     }
 

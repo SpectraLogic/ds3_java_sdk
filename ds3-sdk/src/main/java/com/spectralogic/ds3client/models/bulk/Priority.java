@@ -23,12 +23,11 @@ import java.util.ArrayList;
 
 public enum Priority {
     CRITICAL,
-    VERY_HIGH,
+    URGENT,
     HIGH,
     NORMAL,
     LOW,
-    BACKGROUND,
-    MINIMIZED_DUE_TO_TOO_MANY_RETRIES;
+    BACKGROUND;
 
     public static String valuesString() {
         final ArrayList<Priority> list = Lists.newArrayList(Priority.values());
