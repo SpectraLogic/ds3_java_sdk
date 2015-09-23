@@ -116,8 +116,7 @@ public class BucketIntegration_Test {
             client.putBucket(new PutBucketRequest(bucketName));
 
             final List<Ds3Object> objects = new ArrayList<>();
-            final File objFile = ResourceUtils.loadFileResource("books/beowulf.txt");
-            final Ds3Object obj = new Ds3Object("beowulf.txt", objFile.length());
+            final Ds3Object obj = new Ds3Object("test", 2);
             objects.add(obj);
 
             final WriteJobOptions jobOptions = WriteJobOptions.create().withPriority(Priority.LOW);
