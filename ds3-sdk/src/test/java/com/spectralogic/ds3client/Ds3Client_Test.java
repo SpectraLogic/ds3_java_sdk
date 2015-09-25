@@ -235,7 +235,7 @@ public class Ds3Client_Test {
                 .expecting(HttpVerb.DELETE, "/_rest_/folder/folderName", queryParams, null)
                 .returning(204, "")
                 .asClient()
-                .deleteFolder(new DeleteFolderRequest("bucketName","folderName"));
+                .deleteFolder(new DeleteFolderRequest("bucketName", "folderName"));
     }
 
     @Test
@@ -889,6 +889,20 @@ public class Ds3Client_Test {
 
         assertThat(tapes.size(), is(not(0)));
         assertThat(tapes.get(0).getId(), is(notNullValue()));
+    }
+
+    @Test
+    public void deleteTape() throws IOException, SignatureException {
+
+        final UUID id = UUID.randomUUID();
+
+        final DeleteTapeResponse response = MockNetwork
+                .expecting(HttpVerb.DELETE, "/_rest_/tape/" + id.toString(), null, null)
+                .returning(204, "")
+                .asClient()
+                .deleteTape(new DeleteTapeRequest(id));
+
+        assertThat(response, is(notNullValue()));
     }
 
     @Test
