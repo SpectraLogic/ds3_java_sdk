@@ -232,7 +232,7 @@ public class GetTapesRequest extends AbstractRequest {
 
     public GetTapesRequest withFullDetails(final boolean fullDetails) {
         this.fullDetails = fullDetails;
-        if (fullDetails) {
+        if (this.fullDetails) {
             this.getQueryParams().put("full_details", null);
         } else {
             this.getQueryParams().remove("full_details");

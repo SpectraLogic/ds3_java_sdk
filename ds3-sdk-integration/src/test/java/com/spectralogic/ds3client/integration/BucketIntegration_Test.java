@@ -33,6 +33,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.security.SignatureException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -41,10 +42,13 @@ import com.google.common.collect.Lists;
 import com.spectralogic.ds3client.commands.*;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers;
 import com.spectralogic.ds3client.helpers.JobRecoveryException;
+import com.spectralogic.ds3client.helpers.options.WriteJobOptions;
 import com.spectralogic.ds3client.models.Contents;
 import com.spectralogic.ds3client.models.S3Object;
 import com.spectralogic.ds3client.models.bulk.Ds3Object;
 import com.spectralogic.ds3client.models.bulk.JobStatus;
+import com.spectralogic.ds3client.models.bulk.Priority;
+import com.spectralogic.ds3client.models.tape.Tape;
 import com.spectralogic.ds3client.models.tape.Tapes;
 import com.spectralogic.ds3client.utils.ByteArraySeekableByteChannel;
 import com.spectralogic.ds3client.utils.ResourceUtils;
@@ -103,6 +107,32 @@ public class BucketIntegration_Test {
         response = client.headBucket(new HeadBucketRequest(bucketName));
         assertThat(response.getStatus(),
                 is(HeadBucketResponse.Status.DOESNTEXIST));
+    }
+
+    @Test
+    public void modifyJob() throws IOException, SignatureException, XmlProcessingException, URISyntaxException {
+        final String bucketName = "test_modify_job";
+        try {
+            client.putBucket(new PutBucketRequest(bucketName));
+
+            final List<Ds3Object> objects = new ArrayList<>();
+            final Ds3Object obj = new Ds3Object("test", 2);
+            objects.add(obj);
+
+            final WriteJobOptions jobOptions = WriteJobOptions.create().withPriority(Priority.LOW);
+
+            final Ds3ClientHelpers.Job job = com.spectralogic.ds3client.helpers.Ds3ClientHelpers
+                    .wrap(client).startWriteJob(bucketName, objects, jobOptions);
+
+            client.modifyJob(new ModifyJobRequest(job.getJobId()).withPriority(Priority.HIGH));
+
+            final GetJobResponse response = client.getJob(new GetJobRequest(job.getJobId()));
+
+            assertThat(response.getMasterObjectList().getPriority(), is(Priority.HIGH));
+
+        } finally {
+            Util.deleteAllContents(client, bucketName);
+        }
     }
 
     @Test
@@ -481,6 +511,22 @@ public class BucketIntegration_Test {
         assumeThat(tapes.getTapes().size(), is(not(0)));
 
         assertThat(tapes.getTapes().get(0).getId(), is(notNullValue()));
+    }
+
+    @Test
+    public void getTape() throws IOException, SignatureException {
+        final GetTapesResponse tapesResponse = client.getTapes(new GetTapesRequest());
+        final Tapes tapes = tapesResponse.getTapes();
+
+        assumeThat(tapes.getTapes().size(), is(not(0)));
+
+        final GetTapeResponse tapeResponse = client.getTape(new GetTapeRequest(tapes.getTapes().get(0).getId()));
+
+        final Tape tape = tapeResponse.getTape();
+
+        assertThat(tape, is(notNullValue()));
+        assertThat(tape.getId(), is(notNullValue()));
+
     }
 
     @Test

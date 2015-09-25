@@ -1,9 +1,11 @@
 package com.spectralogic.ds3client.models.tape;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 
 import java.util.UUID;
 
+@JacksonXmlRootElement(namespace = "Data")
 public class Tape {
 
     @JsonProperty("AssignedToBucket")
@@ -260,7 +262,7 @@ public class Tape {
     }
 
     public enum State {
-        NORMAL, BAD, BARCODE_MISSING, DATA_CHECKPOINT_MISSING, DATA_CHECKPOINT_FAILURE, EJECT_FROM_EE_PENDING, EJECT_TO_EE_IN_PROGRESS, FORMAT_PENDING, IMPORT_IN_PROGRESS, LOST, LTFS_WITH_FOREIGN_DATA, OFFLINE, ONLINE_IN_PROGRESS, ONLINE_PENDING, PENDING_INSPECTION, SERIAL_NUMBER_MISMATCH, UNKNOWN
+        NORMAL, BAD, BARCODE_MISSING, DATA_CHECKPOINT_MISSING, DATA_CHECKPOINT_FAILURE, EJECT_FROM_EE_PENDING, EJECT_TO_EE_IN_PROGRESS, FORMAT_PENDING, IMPORT_IN_PROGRESS, LOST, LTFS_WITH_FOREIGN_DATA, OFFLINE, ONLINE_IN_PROGRESS, ONLINE_PENDING, PENDING_INSPECTION, SERIAL_NUMBER_MISMATCH, FORMAT_IN_PROGRESS, UNKNOWN, FOREIGN
     }
 
     public enum TapeType {
