@@ -18,6 +18,23 @@ package com.spectralogic.ds3client.commands;
 import com.spectralogic.ds3client.HttpVerb;
 
 public class GetJobsRequest extends AbstractRequest {
+
+    private boolean fullDetails;
+
+    public GetJobsRequest() {}
+
+    public GetJobsRequest withFullDetails(final boolean fullDetails) {
+        this.fullDetails = fullDetails;
+        if(this.fullDetails) {
+            this.getQueryParams().put("full_details", null);
+        } else {
+            this.getQueryParams().remove("full_details");
+        }
+        return this;
+    }
+
+    public boolean isFullDetails() { return this.fullDetails; }
+
     @Override
     public String getPath() {
         return "/_rest_/job";
