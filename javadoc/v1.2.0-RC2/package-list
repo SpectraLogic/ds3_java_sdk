@@ -1,0 +1,13 @@
+com.spectralogic.ds3client
+com.spectralogic.ds3client.commands
+com.spectralogic.ds3client.commands.notifications
+com.spectralogic.ds3client.helpers
+com.spectralogic.ds3client.helpers.options
+com.spectralogic.ds3client.models
+com.spectralogic.ds3client.models.bulk
+com.spectralogic.ds3client.models.delete
+com.spectralogic.ds3client.models.notification
+com.spectralogic.ds3client.models.tape
+com.spectralogic.ds3client.networking
+com.spectralogic.ds3client.serializer
+com.spectralogic.ds3client.utils
