@@ -29,9 +29,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+
 public class XmlOutput {
     private static final JacksonXmlModule module;
     private static final XmlMapper mapper;
+    static private final Logger LOG = LoggerFactory.getLogger(XmlOutput.class);
 
     static {
         module = new JacksonXmlModule();
@@ -48,7 +53,7 @@ public class XmlOutput {
         final Properties props = new Properties();
         final InputStream input = XmlOutput.class.getClassLoader().getResourceAsStream("/config.properties");
         if (input == null) {
-            System.err.println("Could not find property file.");
+            LOG.error("Could not find property file.");
         }
         else {
             try {
@@ -58,10 +63,10 @@ public class XmlOutput {
                     return true;
                 }
                 else {
-                    System.err.println("Unknown productionBuild value[" + productionBuild + "].  Defaulting to fail for unknown XML elements.");
+                    LOG.error("Unknown productionBuild value[" + productionBuild + "].  Defaulting to fail for unknown XML elements.");
                 }
             } catch (final IOException e) {
-                System.err.println("Failed to load property file.");
+                LOG.error("Failed to load property file.");
             }
         }
 

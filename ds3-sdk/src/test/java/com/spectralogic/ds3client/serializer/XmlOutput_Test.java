@@ -97,13 +97,16 @@ public class XmlOutput_Test {
         assertThat(result, is(expectedString));
     }
 
-    @Test
-    public void verifyProductionBuildProperty() {
-        assumeTrue(XmlOutput.isProductionBuild());
+    @Test(expected = java.io.IOException.class)
+    public void fromXmlWithInvalidElementThrowsExceptionInDevBuild() throws IOException {
+        final String xmlResponse = "<Object Name=\"file1\" InCache=\"false\" Length=\"256\" Offset=\"0\" TheAnswerToEverything=\"42\" />";
+        XmlOutput.fromXml(xmlResponse, BulkObject.class);
     }
 
-    @Test(expected = java.io.IOException.class)
-    public void fromXmlWithInvalidElement() throws IOException {
+    @Test
+    public void fromXmlWithInvalidElementIgnoredInProductionBuild() throws IOException {
+        assumeTrue(XmlOutput.isProductionBuild());
+
         final String xmlResponse = "<Object Name=\"file1\" InCache=\"false\" Length=\"256\" Offset=\"0\" TheAnswerToEverything=\"42\" />";
         XmlOutput.fromXml(xmlResponse, BulkObject.class);
     }
