@@ -27,6 +27,7 @@ import java.util.List;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assume.assumeTrue;
 
 public class XmlOutput_Test {
 
@@ -94,5 +95,16 @@ public class XmlOutput_Test {
         final String result = XmlOutput.toXml(ds3ObjectList, BulkCommand.PUT);
 
         assertThat(result, is(expectedString));
+    }
+
+    @Test
+    public void verifyProductionBuildProperty() {
+        assumeTrue(XmlOutput.isProductionBuild());
+    }
+
+    @Test(expected = java.io.IOException.class)
+    public void fromXmlWithInvalidElement() throws IOException {
+        final String xmlResponse = "<Object Name=\"file1\" InCache=\"false\" Length=\"256\" Offset=\"0\" TheAnswerToEverything=\"42\" />";
+        XmlOutput.fromXml(xmlResponse, BulkObject.class);
     }
 }
