@@ -186,7 +186,7 @@ public interface Ds3Client extends Closeable {
      * Performs an HTTP HEAD for an object.  If the object exists then a successful response is returned and any metadata
      * associated with the object.
      * @param request The Object to perform the HTTP HEAD for.
-     * @return If successful a response is returned with any metadata that was assigned with the object was created.
+     * @return If successful, a response is returned with any metadata that was assigned with the object that was created.
      * @throws IOException
      * @throws SignatureException
      */
@@ -277,9 +277,21 @@ public interface Ds3Client extends Closeable {
     ModifyJobResponse modifyJob(ModifyJobRequest request)
             throws IOException, SignatureException;
 
+    /**
+     * Deletes the specified offline tape drive.
+     * @throws IOException
+     * @throws SignatureException
+     */
     DeleteTapeDriveResponse deleteTapeDrive(DeleteTapeDriveRequest request)
             throws IOException, SignatureException;
 
+    /**
+     * Deletes the specified offline tape partition.  Any tapes that had data on them in that partition will be
+     * de-associated from the partition.  Any tapes without data on them and tape drives that were associated
+     * with the partition will be deleted.
+     * @throws IOException
+     * @throws SignatureException
+     */
     DeleteTapePartitionResponse deleteTapePartition(DeleteTapePartitionRequest request)
             throws IOException, SignatureException;
 
@@ -291,6 +303,11 @@ public interface Ds3Client extends Closeable {
     GetTapesResponse getTapes(GetTapesRequest request)
             throws IOException, SignatureException;
 
+    /**
+     * Deletes the specified offline tape drive.
+     * @throws IOException
+     * @throws SignatureException
+     */
     DeleteTapeResponse deleteTape(DeleteTapeRequest request)
             throws IOException, SignatureException;
 
