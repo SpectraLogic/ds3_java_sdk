@@ -66,7 +66,7 @@ public class XmlOutput {
                     LOG.error("Unknown productionBuild value[" + productionBuild + "].  Defaulting to fail for unknown XML elements.");
                 }
             } catch (final IOException e) {
-                LOG.error("Failed to load property file.");
+                LOG.error("Failed to load property file: ", e);
             }
         }
 
