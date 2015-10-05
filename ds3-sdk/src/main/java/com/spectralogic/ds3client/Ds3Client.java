@@ -116,8 +116,8 @@ public interface Ds3Client extends Closeable {
 
     /**
      * Deletes an object in a bucket from a DS3 endpoint
-     * @param request The Put Bucket Request object used to customize the HTTP request.  The put bucket request object
-     *                has some options for customizing the request.  See {@link PutBucketRequest} for the full list of
+     * @param request The Delete Object Request object used to customize the HTTP request.  The delete object request object
+     *                has some options for customizing the request.  See {@link DeleteObjectRequest} for the full list of
      *                options that can be configured.
      * @return The response object is returned primarily to be consistent with the rest of the API.  Additional data
      *         may be returned here in the future but nothing is currently.  See {@link DeleteObjectResponse} for the most
@@ -128,6 +128,17 @@ public interface Ds3Client extends Closeable {
     DeleteObjectResponse deleteObject(DeleteObjectRequest request)
             throws IOException, SignatureException;
 
+    /**
+     * Deletes multiple objects in a bucket from a DS3 endpoint
+     * @param request The Delete Multiple  Objects Request object used to customize the HTTP request.  The delete multiple
+     *                objects request has some options for customizing the request.  See {@link DeleteMultipleObjectsRequest}
+     *                for the most up to date information on what is returned.  
+     * @return The response object is returned primarily to be consistent with the rest of the API.  Additional data
+     *         may be returned here in the future but nothing is currently.  See {@link DeleteMultipleObjectsResponse} for
+     *         the most up to date information on what is returned.
+     * @throws IOException
+     * @throws SignatureException
+     */
     DeleteMultipleObjectsResponse deleteMultipleObjects(DeleteMultipleObjectsRequest request)
             throws IOException, SignatureException;
 
