@@ -3,7 +3,10 @@ DS3 Integration Tests
 
 This module will run through a suite of tests which uses the SDK to interact with a real DS3 endpoint.
 
-In order to run the tests the same environment variables that can be used with the CLI **must** be used to configure which DS3 appliance to run the tests against.
+In order to run the tests the following environment variables **must** be used to configure which DS3 appliance to run the tests against:
+    DS3_ENDPOINT
+    DS3_ACCESS_KEY
+    DS3_SECRET_KEY
 
 ## Run
 
