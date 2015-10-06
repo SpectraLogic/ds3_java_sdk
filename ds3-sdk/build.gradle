@@ -1,3 +1,6 @@
+import java.nio.file.Files
+import java.nio.file.Path
+
 /*
  * ******************************************************************************
  *   Copyright 2014-2015 Spectra Logic Corporation. All Rights Reserved.
@@ -39,9 +42,26 @@ artifacts {
     archives shadowJar
 }
 
+task genConfigProperties << {
+    def productionBuild = System.getenv('productionBuild')
+    if (productionBuild == null) { productionBuild = 'false' }
+
+    File configFile = new File(sourceSets.main.output.resourcesDir, "/config.properties")
+    Path configPath = sourceSets.main.output.resourcesDir.toPath()
+    if (!Files.exists(configPath)) {
+        Files.createDirectories(configPath)
+    }
+
+    configFile.withWriter{out ->
+        out.writeLine("productionBuild=" + productionBuild.toString())
+    }
+}
+
 jar {
     from sourceSets.main.allJava
 }
+
+jar.dependsOn genConfigProperties
 
 dependencies {
     compile     'org.apache.httpcomponents:httpclient:4.3.2'
