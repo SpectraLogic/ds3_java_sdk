@@ -13,8 +13,10 @@ ds3_java_sdk
 Join us at our [Google Groups](https://groups.google.com/d/forum/spectralogicds3-sdks) forum to ask questions, or see frequently asked questions.
 
 ## Setup
- 
+
 See our [Setup Guide](./SETUP.md) which explains how to setup Eclipse with all the dependencies that you will need to build the sdk from source.
+
+If using Intellij, simply import the project as a Gradle project.
 
 ## Install
 
