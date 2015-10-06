@@ -116,8 +116,8 @@ public interface Ds3Client extends Closeable {
 
     /**
      * Deletes an object in a bucket from a DS3 endpoint
-     * @param request The Put Bucket Request object used to customize the HTTP request.  The put bucket request object
-     *                has some options for customizing the request.  See {@link PutBucketRequest} for the full list of
+     * @param request The Delete Object Request object used to customize the HTTP request.  The delete object request object
+     *                has some options for customizing the request.  See {@link DeleteObjectRequest} for the full list of
      *                options that can be configured.
      * @return The response object is returned primarily to be consistent with the rest of the API.  Additional data
      *         may be returned here in the future but nothing is currently.  See {@link DeleteObjectResponse} for the most
@@ -128,6 +128,17 @@ public interface Ds3Client extends Closeable {
     DeleteObjectResponse deleteObject(DeleteObjectRequest request)
             throws IOException, SignatureException;
 
+    /**
+     * Deletes multiple objects in a bucket from a DS3 endpoint
+     * @param request The Delete Multiple  Objects Request object used to customize the HTTP request.  The delete multiple
+     *                objects request has some options for customizing the request.  See {@link DeleteMultipleObjectsRequest}
+     *                for the most up to date information on what is returned.  
+     * @return The response object is returned primarily to be consistent with the rest of the API.  Additional data
+     *         may be returned here in the future but nothing is currently.  See {@link DeleteMultipleObjectsResponse} for
+     *         the most up to date information on what is returned.
+     * @throws IOException
+     * @throws SignatureException
+     */
     DeleteMultipleObjectsResponse deleteMultipleObjects(DeleteMultipleObjectsRequest request)
             throws IOException, SignatureException;
 
@@ -175,7 +186,7 @@ public interface Ds3Client extends Closeable {
      * Performs an HTTP HEAD for an object.  If the object exists then a successful response is returned and any metadata
      * associated with the object.
      * @param request The Object to perform the HTTP HEAD for.
-     * @return If successful a response is returned with any metadata that was assigned with the object was created.
+     * @return If successful, a response is returned with any metadata that was assigned with the object that was created.
      * @throws IOException
      * @throws SignatureException
      */
@@ -266,9 +277,21 @@ public interface Ds3Client extends Closeable {
     ModifyJobResponse modifyJob(ModifyJobRequest request)
             throws IOException, SignatureException;
 
+    /**
+     * Deletes the specified offline tape drive.
+     * @throws IOException
+     * @throws SignatureException
+     */
     DeleteTapeDriveResponse deleteTapeDrive(DeleteTapeDriveRequest request)
             throws IOException, SignatureException;
 
+    /**
+     * Deletes the specified offline tape partition.  Any tapes that had data on them in that partition will be
+     * de-associated from the partition.  Any tapes without data on them and tape drives that were associated
+     * with the partition will be deleted.
+     * @throws IOException
+     * @throws SignatureException
+     */
     DeleteTapePartitionResponse deleteTapePartition(DeleteTapePartitionRequest request)
             throws IOException, SignatureException;
 
@@ -280,6 +303,11 @@ public interface Ds3Client extends Closeable {
     GetTapesResponse getTapes(GetTapesRequest request)
             throws IOException, SignatureException;
 
+    /**
+     * Deletes the specified offline tape drive.
+     * @throws IOException
+     * @throws SignatureException
+     */
     DeleteTapeResponse deleteTape(DeleteTapeRequest request)
             throws IOException, SignatureException;
 
