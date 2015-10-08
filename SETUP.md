@@ -8,5 +8,5 @@ In order to get started developing with the ds3_java_sdk you need to make sure t
 * Once Eclipse has been extracted to a directory of your choosing, navigate to that directory and start Eclipse.  On Windows you will see `eclipse.exe`
 * Accept either the default workspace directory, or select one of your choosing.
 * Once eclipse finishing loading, navigate to `Help -> Eclipse Marketplace...`.  In the dialog that pops up in the Search Tab, type in 'Gradle' and hit Enter (or Click `Go`)
-* In the results that are returned install `Gradle Integration for Eclipse (4.4) 3.6.2.RELEASE`.  Clicking `Install` will take you to the 'Confirm Selected Features' dialog.  In this dialog de-select the 2 optional Spring checkboxes.  `Gradle IDE` and `org.gradle.toolingapi.feature` should both be selected.  Accept any dialogs that popup.
+* In the results that are returned install `Gradle Integration for Eclipse (4.4) 3.7.1.RELEASE` or current version.  Clicking `Install` will take you to the 'Confirm Selected Features' dialog.  (De-select the two optional Spring checkboxes on older versions).  `Gradle IDE` and `org.gradle.toolingapi.feature` should both be selected.  Accept any dialogs that popup.
 * After Gradle has been installed into eclipse and git has been installed, you should be able to clone the repo and import that project into eclipse
