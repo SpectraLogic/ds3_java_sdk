@@ -26,6 +26,7 @@ import java.io.IOException;
 import java.nio.channels.SeekableByteChannel;
 import java.nio.file.Path;
 import java.security.SignatureException;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -43,7 +44,8 @@ public abstract class Ds3ClientHelpers {
          */
         SeekableByteChannel buildChannel(final String key) throws IOException;
     }
-    
+
+
     /**
      * Represents a bulk job operation.
      * When you call one of the start* methods it's recommended that you save the
@@ -203,5 +205,34 @@ public abstract class Ds3ClientHelpers {
      * @throws IOException
      */
     public abstract Iterable<Ds3Object> listObjectsForDirectory(final Path directory) throws IOException;
-}
 
+    /**
+     *
+     * @param objectsList
+     * @param prefix
+     * @return
+     */
+    public abstract Iterable<Ds3Object> addPrefixToDs3ObjectsList(final Iterable<Ds3Object> objectsList, final String prefix);
+
+    /**
+     *
+     * @param objectsList
+     * @param prefix
+     * @return
+     */
+    public abstract Iterable<Ds3Object> removePrefixFromDs3ObjectsList(final Iterable<Ds3Object> objectsList, final String prefix);
+
+    /**
+     * Strip prefix from the beginning of objectName.  If objectName does not start with prefix, return objectName unmodified.
+     * @param objectName
+     * @param prefix
+     * @return
+     */
+    public static String stripLeadingPath( final String objectName, final String prefix) {
+        String returnString = objectName;
+        if (objectName.startsWith(prefix)) {
+            returnString = objectName.substring(prefix.length());
+        }
+        return returnString;
+    }
+}
