@@ -17,18 +17,16 @@ package com.spectralogic.ds3client.samples;
 
 import com.spectralogic.ds3client.Ds3Client;
 import com.spectralogic.ds3client.Ds3ClientBuilder;
-import com.spectralogic.ds3client.commands.*;
+import com.spectralogic.ds3client.commands.GetBucketRequest;
+import com.spectralogic.ds3client.commands.GetBucketResponse;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers;
+import com.spectralogic.ds3client.helpers.PrefixedFileObjectGetter;
 import com.spectralogic.ds3client.helpers.PrefixedFileObjectPutter;
 import com.spectralogic.ds3client.models.Contents;
-import com.spectralogic.ds3client.models.bulk.BulkObject;
 import com.spectralogic.ds3client.models.bulk.Ds3Object;
-import com.spectralogic.ds3client.models.bulk.MasterObjectList;
-import com.spectralogic.ds3client.models.bulk.Objects;
 import com.spectralogic.ds3client.serializer.XmlProcessingException;
 
 import java.io.IOException;
-import java.nio.channels.FileChannel;
 import java.nio.file.*;
 import java.security.SignatureException;
 import java.util.ArrayList;
@@ -47,25 +45,17 @@ public class Ds3PutObjectRelativePathExample {
             Prerequisites:
               DirA/DirB/* must exist in the working directory
             *************************************************************************************************/
-            System.out.println("Scenario 1: Move files from a subdirectory and leave off some of the local path");
             final String rootDirectory = "DirA/";
-            final String targetDirectory = "DirB/";
             final String bucketName = "BucketA";
             final String remoteFolder = "Dir1/Dir2/";
-            System.out.println("Root Directory[" + rootDirectory + "]");
-            System.out.println("Target Directory[" + targetDirectory + "]");
-            System.out.println("Bucket[" + bucketName + "]");
-            System.out.println("RemoteFolderPath[" + remoteFolder  + "]");
 
             final Ds3ClientHelpers helper = Ds3ClientHelpers.wrap(client);
 
             // Find the desired objects to PUT
             final Iterable<Ds3Object> putObjectList = helper.listObjectsForDirectory(Paths.get(rootDirectory));
-            System.out.println("objectList" + putObjectList.toString());
 
             // Create a list of all objects in DirB, relative to DirA
             final Iterable<Ds3Object> remotePathObjectList = helper.addPrefixToDs3ObjectsList(putObjectList, remoteFolder);
-            System.out.println("remotePathObjectList" + remotePathObjectList.toString());
 
             // Make sure that the bucket exists, if it does not this will create it
             helper.ensureBucketExists(bucketName);
@@ -84,55 +74,26 @@ public class Ds3PutObjectRelativePathExample {
             my Windows machine. I want to be able to put DirB (and only DirB) into ./DirC, so that the final
             path will be ./DirC/DirB. I don't want Dir1 or Dir2 to move as well.
             *************************************************************************************************/
-            System.out.println("\n");
-            System.out.println("Scenario 2: Get files from a remote bucket and leave off some of the remote path");
             final String localDir = "DirC/";
 
             // Get the list of objects from the bucket that you want to perform the bulk get with.
-            System.out.println("GET BucketA");
             final GetBucketResponse response = client.getBucket(new GetBucketRequest(bucketName));
 
             // We now need to generate the list of Ds3Objects that we want to get from DS3.
             final List<Ds3Object> objectList = new ArrayList<>();
             for (final Contents contents : response.getResult().getContentsList()) {
-                System.out.println("  content[" + contents.getKey() + "]");
                 objectList.add(new Ds3Object(contents.getKey(), contents.getSize()));
             }
 
-            // Prime DS3 with the BulkGet command so that it can start to get objects off of tape.
-            final BulkGetResponse bulkResponse = client.bulkGet(new BulkGetRequest(bucketName, objectList));
+            // Create the read job with the bucket we want to read from and the list
+            // of objects that will be received.
+            final Ds3ClientHelpers.Job getJob = helper.startReadJob(bucketName, objectList);
 
-            // The bulk response returns a list of lists which is designed to optimize data transmission from DS3.
-            final MasterObjectList list = bulkResponse.getResult();
-            for (final Objects objects : list.getObjects()) {
-                for (final BulkObject obj : objects) {
-                    System.out.println("getObjectName[" + obj.getName() + "]");
+            // Start the read job using a PrefixedObjectGetter that will strip off the remote path before
+            // reading the files from the local file system.
+            getJob.transfer(new PrefixedFileObjectGetter(Paths.get(localDir), remoteFolder, ""));
 
-                    final String localName = helper.stripLeadingPath(obj.getName(), remoteFolder);
-                    System.out.println("localName[" + localName + "]");
 
-                    final Path localFilePath = Paths.get(localDir + localName);
-                    System.out.println("localFilePath[" + localFilePath + "]");
-
-                    Files.createDirectories(localFilePath.getParent());
-
-                    final FileChannel channel = FileChannel.open(
-                            localFilePath,
-                            StandardOpenOption.WRITE,
-                            StandardOpenOption.CREATE,
-                            StandardOpenOption.TRUNCATE_EXISTING
-                    );
-
-                    // Perform the operation to get the object from DS3.
-                    client.getObject(new GetObjectRequest(
-                            bucketName,
-                            obj.getName(),
-                            obj.getOffset(),
-                            list.getJobId(),
-                            channel
-                    ));
-                }
-            }
             /*************************************************************************************************
             Additionally, it would be very useful to be able to rename the directory when moved from client to
             BlackPearl and visa versa. The use case I ran into for this was for downloading video from a USB
@@ -146,22 +107,17 @@ public class Ds3PutObjectRelativePathExample {
             Prerequisites:
               DirC/* must exist in the working directory
             *************************************************************************************************/
-            System.out.println("\n");
-            System.out.println("Scenario 3: Move files from a subdirectory and change the remote path");
-
             final String rootDirectory3 = "DirC/DirB/";
             final String remoteFolder3 = "policeBodyCamera/2015-10-12_ChiefWiggum/";
 
             // Find the desired objects to PUT
             final Iterable<Ds3Object> putObjectList3 = helper.listObjectsForDirectory(Paths.get(rootDirectory3));
-            System.out.println("objectList" + putObjectList3.toString());
 
+            // Remove the local path from all objects to be PUT
             helper.removePrefixFromDs3ObjectsList(putObjectList3,rootDirectory3);
-            System.out.println("shortenedObjectList" + putObjectList3.toString());
 
-            // Create a list of all objects in DirB, relative to DirA
+            // Add the desired remote path
             final Iterable<Ds3Object> remotePathObjectList3 = helper.addPrefixToDs3ObjectsList(putObjectList3, remoteFolder3);
-            System.out.println("remotePathObjectList" + remotePathObjectList3.toString());
 
             // Make sure that the bucket exists, if it does not this will create it
             helper.ensureBucketExists(bucketName);
@@ -173,6 +129,6 @@ public class Ds3PutObjectRelativePathExample {
             // Start the write job using a PrefixedObjectPutter that will strip off the remote path before
             // reading the files from the local file system.
             job3.transfer(new PrefixedFileObjectPutter(rootDirectory3, remoteFolder3));
-        } // End try{ Ds3ClientBuilder
+        }
     }
 }
