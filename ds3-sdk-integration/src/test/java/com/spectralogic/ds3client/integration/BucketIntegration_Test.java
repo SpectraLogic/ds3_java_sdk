@@ -508,6 +508,8 @@ public class BucketIntegration_Test {
         final GetTapesResponse response = client.getTapes(new GetTapesRequest());
         final Tapes tapes = response.getTapes();
 
+        assumeThat(tapes, is(notNullValue()));
+        assumeThat(tapes.getTapes(), is(notNullValue()));
         assumeThat(tapes.getTapes().size(), is(not(0)));
 
         assertThat(tapes.getTapes().get(0).getId(), is(notNullValue()));
@@ -518,6 +520,8 @@ public class BucketIntegration_Test {
         final GetTapesResponse tapesResponse = client.getTapes(new GetTapesRequest());
         final Tapes tapes = tapesResponse.getTapes();
 
+        assumeThat(tapes, is(notNullValue()));
+        assumeThat(tapes.getTapes(), is(notNullValue()));
         assumeThat(tapes.getTapes().size(), is(not(0)));
 
         final GetTapeResponse tapeResponse = client.getTape(new GetTapeRequest(tapes.getTapes().get(0).getId()));
