@@ -28,10 +28,7 @@ import java.net.URISyntaxException;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.channels.SeekableByteChannel;
-import java.nio.file.FileSystems;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.StandardOpenOption;
+import java.nio.file.*;
 import java.security.SignatureException;
 import java.util.ArrayList;
 import java.util.List;
@@ -41,6 +38,7 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.spectralogic.ds3client.commands.*;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers;
+import com.spectralogic.ds3client.helpers.FileObjectPutter;
 import com.spectralogic.ds3client.helpers.JobRecoveryException;
 import com.spectralogic.ds3client.helpers.options.WriteJobOptions;
 import com.spectralogic.ds3client.models.Contents;
@@ -250,6 +248,10 @@ public class BucketIntegration_Test {
                     final Path filePath = Files.createTempFile("ds3", key);
                     return Files.newByteChannel(filePath, StandardOpenOption.DELETE_ON_CLOSE, StandardOpenOption.WRITE);
                 }
+                @Override
+                public Path getRoot() {
+                    return Paths.get("");
+                }
             });
 
             final GetJobResponse jobResponse = client.getJob(new GetJobRequest(jobId));
@@ -374,6 +376,10 @@ public class BucketIntegration_Test {
                     channel.write(randomBuffer);
 
                     return channel;
+                }
+                @Override
+                public Path getRoot() {
+                    return Paths.get("");
                 }
             });
 
