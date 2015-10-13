@@ -233,13 +233,11 @@ public abstract class Ds3ClientHelpers {
      * @param prefix
      * @return
      */
-    public static String stripLeadingPath( final String objectName, final String prefix) {
+    public static String stripLeadingPath(final String objectName, final String prefix) {
         String returnString = objectName;
         if (objectName.startsWith(prefix)) {
             returnString = objectName.substring(prefix.length());
         }
         return returnString;
     }
-
-
 }
