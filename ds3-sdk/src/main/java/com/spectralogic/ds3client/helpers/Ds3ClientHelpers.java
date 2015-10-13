@@ -43,11 +43,6 @@ public abstract class Ds3ClientHelpers {
          * @throws IOException
          */
         SeekableByteChannel buildChannel(final String key) throws IOException;
-
-        /**
-         * @return Path to directory of objects to PUT or GET
-         */
-        Path getRoot();
     }
 
 

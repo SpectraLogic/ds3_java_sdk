@@ -23,8 +23,6 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.channels.FileChannel;
 import java.nio.channels.SeekableByteChannel;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 
 public class ResourceObjectPutter implements Ds3ClientHelpers.ObjectChannelBuilder {
@@ -42,10 +40,5 @@ public class ResourceObjectPutter implements Ds3ClientHelpers.ObjectChannelBuild
             e.printStackTrace();
             throw new FileNotFoundException(key);
         }
-    }
-
-    @Override
-    public Path getRoot() {
-        return Paths.get(this.basePath);
     }
 }

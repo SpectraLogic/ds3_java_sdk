@@ -20,7 +20,6 @@ import com.spectralogic.ds3client.Ds3Client;
 import com.spectralogic.ds3client.commands.BulkPutRequest;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers;
 import com.spectralogic.ds3client.helpers.FileObjectGetter;
-import com.spectralogic.ds3client.helpers.FileObjectPutter;
 import com.spectralogic.ds3client.helpers.options.WriteJobOptions;
 import com.spectralogic.ds3client.models.bulk.Ds3Object;
 import com.spectralogic.ds3client.serializer.XmlProcessingException;
@@ -40,7 +39,6 @@ import java.nio.ByteBuffer;
 import java.nio.channels.SeekableByteChannel;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.security.SignatureException;
 
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -170,10 +168,6 @@ public class DataIntegrity_Test {
                     channel.write(randomBuffer);
 
                     return channel;
-                }
-                @Override
-                public Path getRoot() {
-                    return Paths.get("./");
                 }
             });
 
