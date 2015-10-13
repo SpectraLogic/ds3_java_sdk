@@ -18,44 +18,33 @@ package com.spectralogic.ds3client.helpers;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.ObjectChannelBuilder;
 
 import java.io.IOException;
-import java.nio.channels.FileChannel;
 import java.nio.channels.SeekableByteChannel;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
 
 /**
  * Writes files to the local file system with a different path by first stripping off a remote prefix
  * and then adding a local prefix.
  */
-public class PrefixedFileObjectGetter implements ObjectChannelBuilder {
-    private final Path root;
-    private final String remotePrefix;
-    private final String localPrefix;
+public class PrefixRemoverObjectChannelBuilder implements ObjectChannelBuilder {
+    final private Ds3ClientHelpers.ObjectChannelBuilder channelBuilder;
+    private String prefix;
 
-    /**
-     * Creates a new FileObjectGetter to retrieve files from a remote DS3 system to the local file system.
-     * @param root The {@code root} directory of the local file system for all files being transferred.
-     */
-    public PrefixedFileObjectGetter(final Path root, final String remotePrefix, final String localPrefix) {
-        this.root = root;
-        this.remotePrefix = remotePrefix;
-        this.localPrefix = localPrefix;
+    public PrefixRemoverObjectChannelBuilder(final Ds3ClientHelpers.ObjectChannelBuilder channelBuilder, final String prefix) {
+        this.channelBuilder = channelBuilder;
+        this.prefix = prefix;
     }
 
     @Override
     public SeekableByteChannel buildChannel(final String key) throws IOException {
-        final String strippedRemoteObject = Ds3ClientHelpers.stripLeadingPath(key, remotePrefix);
-        final String localObject = localPrefix + strippedRemoteObject;
-        final Path objectPath = Paths.get(this.root.resolve(localObject).toString());
+        final String strippedKey = Ds3ClientHelpers.stripLeadingPath(key, prefix);
 
-        Files.createDirectories(objectPath.getParent());
-        return FileChannel.open(
-                objectPath,
-                StandardOpenOption.WRITE,
-                StandardOpenOption.CREATE_NEW,
-                StandardOpenOption.TRUNCATE_EXISTING
-        );
+        Files.createDirectories(this.channelBuilder.getRoot());
+        return this.channelBuilder.buildChannel(strippedKey);
+    }
+
+    @Override
+    public Path getRoot() {
+        return this.channelBuilder.getRoot();
     }
 }

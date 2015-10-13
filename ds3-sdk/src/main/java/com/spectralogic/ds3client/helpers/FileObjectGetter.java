@@ -38,7 +38,10 @@ public class FileObjectGetter implements ObjectChannelBuilder {
         this.root = root;
     }
 
-    @Override
+    public Path getRoot() {
+        return this.root;
+    }
+
     public SeekableByteChannel buildChannel(final String key) throws IOException {
         final Path objectPath = this.root.resolve(key);
         Files.createDirectories(objectPath.getParent());

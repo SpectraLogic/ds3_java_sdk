@@ -19,9 +19,7 @@ import com.spectralogic.ds3client.Ds3Client;
 import com.spectralogic.ds3client.Ds3ClientBuilder;
 import com.spectralogic.ds3client.commands.GetBucketRequest;
 import com.spectralogic.ds3client.commands.GetBucketResponse;
-import com.spectralogic.ds3client.helpers.Ds3ClientHelpers;
-import com.spectralogic.ds3client.helpers.PrefixedFileObjectGetter;
-import com.spectralogic.ds3client.helpers.PrefixedFileObjectPutter;
+import com.spectralogic.ds3client.helpers.*;
 import com.spectralogic.ds3client.models.Contents;
 import com.spectralogic.ds3client.models.bulk.Ds3Object;
 import com.spectralogic.ds3client.serializer.XmlProcessingException;
@@ -51,14 +49,14 @@ public class Ds3PutObjectRelativePathExample {
 
             final Ds3ClientHelpers helper = Ds3ClientHelpers.wrap(client);
 
+            // Make sure that the bucket exists, if it does not this will create it
+            helper.ensureBucketExists(bucketName);
+
             // Find the desired objects to PUT
             final Iterable<Ds3Object> putObjectList = helper.listObjectsForDirectory(Paths.get(rootDirectory));
 
-            // Create a list of all objects in DirB, relative to DirA
+            // Add the desired destination prefix to all objects
             final Iterable<Ds3Object> remotePathObjectList = helper.addPrefixToDs3ObjectsList(putObjectList, remoteFolder);
-
-            // Make sure that the bucket exists, if it does not this will create it
-            helper.ensureBucketExists(bucketName);
 
             // Create the write job with the bucket we want to write to and the list
             // of objects that will be written
@@ -66,7 +64,7 @@ public class Ds3PutObjectRelativePathExample {
 
             // Start the write job using a PrefixedObjectPutter that will strip off the remote path before
             // reading the files from the local file system.
-            job.transfer(new PrefixedFileObjectPutter(rootDirectory, remoteFolder));
+            job.transfer(new ObjectChannelBuilderLogger(new PrefixAdderObjectChannelBuilder(new FileObjectPutter(Paths.get(rootDirectory)), remoteFolder)));
 
 
             /*************************************************************************************************
@@ -91,7 +89,7 @@ public class Ds3PutObjectRelativePathExample {
 
             // Start the read job using a PrefixedObjectGetter that will strip off the remote path before
             // reading the files from the local file system.
-            getJob.transfer(new PrefixedFileObjectGetter(Paths.get(localDir), remoteFolder, ""));
+            getJob.transfer(new PrefixRemoverObjectChannelBuilder(new FileObjectGetter(Paths.get(localDir)), remoteFolder));
 
 
             /*************************************************************************************************
@@ -99,10 +97,10 @@ public class Ds3PutObjectRelativePathExample {
             BlackPearl and visa versa. The use case I ran into for this was for downloading video from a USB
             police body camera. The idea would be that every day the police officer would plug the camera
             into the computer to download the video files to BlackPearl. Unfortunately every time the camera
-            is plugged in, the video files would always be in the same directory (e.g. e:\DCIM). We need to
+            is plugged in, the video files would always be in the same directory (e.g. ./DirC/DirB). We need to
             be able to give this directory a new name every time it is moved to BlackPearl. So while the
-            local directory might e:\DCIM, when moved to BlackPearl we might
-            want it to be BucketA\policeBodyCamera\DCIM-20150326-OfficerBob\
+            local directory might ./DirC/DirB, when moved to BlackPearl we might
+            want it to be BucketA/policeBodyCamera/DCIM-20150326-ChiefWiggum/
 
             Prerequisites:
               DirC/* must exist in the working directory
@@ -110,25 +108,25 @@ public class Ds3PutObjectRelativePathExample {
             final String rootDirectory3 = "DirC/DirB/";
             final String remoteFolder3 = "policeBodyCamera/2015-10-12_ChiefWiggum/";
 
+            // Make sure that the bucket exists, if it does not this will create it
+            helper.ensureBucketExists("BucketA");
+
             // Find the desired objects to PUT
             final Iterable<Ds3Object> putObjectList3 = helper.listObjectsForDirectory(Paths.get(rootDirectory3));
 
             // Remove the local path from all objects to be PUT
-            helper.removePrefixFromDs3ObjectsList(putObjectList3,rootDirectory3);
+            helper.removePrefixFromDs3ObjectsList(putObjectList3, rootDirectory3);
 
             // Add the desired remote path
             final Iterable<Ds3Object> remotePathObjectList3 = helper.addPrefixToDs3ObjectsList(putObjectList3, remoteFolder3);
 
-            // Make sure that the bucket exists, if it does not this will create it
-            helper.ensureBucketExists(bucketName);
-
             // Create the write job with the bucket we want to write to and the list
             // of objects that will be written
-            final Ds3ClientHelpers.Job job3 = helper.startWriteJob(bucketName, remotePathObjectList3);
+            final Ds3ClientHelpers.Job job3 = helper.startWriteJob("BucketA", remotePathObjectList3);
 
             // Start the write job using a PrefixedObjectPutter that will strip off the remote path before
             // reading the files from the local file system.
-            job3.transfer(new PrefixedFileObjectPutter(rootDirectory3, remoteFolder3));
+            job3.transfer(new ObjectChannelBuilderLogger(new PrefixAdderObjectChannelBuilder(new FileObjectPutter(Paths.get(rootDirectory3)), remoteFolder3)));
         }
     }
 }
