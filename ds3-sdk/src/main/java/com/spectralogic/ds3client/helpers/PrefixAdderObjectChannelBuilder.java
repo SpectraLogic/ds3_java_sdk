@@ -2,7 +2,6 @@ package com.spectralogic.ds3client.helpers;
 
 import java.io.IOException;
 import java.nio.channels.SeekableByteChannel;
-import java.nio.file.Path;
 
 public class PrefixAdderObjectChannelBuilder implements Ds3ClientHelpers.ObjectChannelBuilder {
     final private Ds3ClientHelpers.ObjectChannelBuilder channelBuilder;
@@ -15,12 +14,6 @@ public class PrefixAdderObjectChannelBuilder implements Ds3ClientHelpers.ObjectC
 
     @Override
     public SeekableByteChannel buildChannel(final String s) throws IOException {
-
         return channelBuilder.buildChannel(Ds3ClientHelpers.stripLeadingPath(s, prefix));
-    }
-
-    @Override
-    public Path getRoot() {
-        return this.channelBuilder.getRoot();
     }
 }

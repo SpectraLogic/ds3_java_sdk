@@ -36,8 +36,6 @@ import org.mockito.Mockito;
 
 import java.io.IOException;
 import java.nio.channels.SeekableByteChannel;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.security.SignatureException;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -85,8 +83,6 @@ public class Ds3ClientHelpers_Test {
             public SeekableByteChannel buildChannel(final String key) throws IOException {
                 return channelMap.get(key);
             }
-            @Override
-            public Path getRoot() { return Paths.get("");}
         });
         assertThat(stopwatch.stop().elapsed(TimeUnit.MILLISECONDS), is(both(greaterThan(1000L)).and(lessThan(1250L))));
         
@@ -122,8 +118,6 @@ public class Ds3ClientHelpers_Test {
                 // We don't care about the contents since we just want to know that the exception handling works correctly.
                 return new ByteArraySeekableByteChannel();
             }
-            @Override
-            public Path getRoot() { return Paths.get("");}
         });
     }
     
@@ -170,8 +164,6 @@ public class Ds3ClientHelpers_Test {
             public SeekableByteChannel buildChannel(final String key) throws IOException {
                 return channelMap.get(key);
             }
-            @Override
-            public Path getRoot() { return Paths.get("");}
         });
         assertThat(stopwatch.stop().elapsed(TimeUnit.MILLISECONDS), is(both(greaterThan(1000L)).and(lessThan(1250L))));
     }
@@ -212,8 +204,6 @@ public class Ds3ClientHelpers_Test {
                 public SeekableByteChannel buildChannel(final String key) throws IOException {
                     return channelMap.get(key);
                 }
-                @Override
-                public Path getRoot() { return Paths.get("");}
             });
             Assert.fail("Should have failed with an exception before we got here.");
         } catch (final StubException e) {
