@@ -37,6 +37,7 @@ public class FileObjectPutter implements ObjectChannelBuilder {
         this.root = root;
     }
 
+    @Override
     public SeekableByteChannel buildChannel(final String key) throws IOException {
         return FileChannel.open(this.root.resolve(key), StandardOpenOption.READ);
     }
