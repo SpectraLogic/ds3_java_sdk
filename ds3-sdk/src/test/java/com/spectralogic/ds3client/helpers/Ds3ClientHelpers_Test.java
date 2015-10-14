@@ -517,7 +517,7 @@ public class Ds3ClientHelpers_Test {
         boolean foundBazFoo = false;
         boolean foundBazBar = false;
 
-        for (Ds3Object obj : modifiedDs3ObjectList) {
+        for (final Ds3Object obj : modifiedDs3ObjectList) {
             if (obj.getName().equals("baz/foo")) {
                 foundBazFoo = true;
             } else if (obj.getName().equals("baz/bar")) {
@@ -538,7 +538,7 @@ public class Ds3ClientHelpers_Test {
         boolean foundBar = false;
         boolean foundBaz = false;
 
-        for (Ds3Object obj : modifiedDs3ObjectList) {
+        for (final Ds3Object obj : modifiedDs3ObjectList) {
             if (obj.getName().equals("bar")) {
                 foundBar = true;
             } else if (obj.getName().equals("baz")) {

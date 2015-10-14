@@ -19,8 +19,6 @@ import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.ObjectChannelBuilder;
 
 import java.io.IOException;
 import java.nio.channels.SeekableByteChannel;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 
 /**
  * Writes files to the local file system with a different path by first stripping off a remote prefix
@@ -37,9 +35,6 @@ public class PrefixRemoverObjectChannelBuilder implements ObjectChannelBuilder {
 
     @Override
     public SeekableByteChannel buildChannel(final String key) throws IOException {
-        final String strippedKey = Ds3ClientHelpers.stripLeadingPath(key, prefix);
-
-        Files.createDirectories(Paths.get(strippedKey).getParent());
-        return this.channelBuilder.buildChannel(strippedKey);
+        return this.channelBuilder.buildChannel(Ds3ClientHelpers.stripLeadingPath(key, prefix));
     }
 }
