@@ -206,7 +206,7 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
 
     public Iterable<Ds3Object> addPrefixToDs3ObjectsList(final Iterable<Ds3Object> objectsList, final String prefix) {
         final List<Ds3Object> newObjectsList = new ArrayList<>();
-        for ( final Ds3Object object: objectsList ) {
+        for (final Ds3Object object: objectsList) {
             final Ds3Object tmpObj = new Ds3Object( prefix + object.getName(), object.getSize());
             newObjectsList.add(tmpObj);
         }
@@ -215,7 +215,7 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
 
     public Iterable<Ds3Object> removePrefixFromDs3ObjectsList(final Iterable<Ds3Object> objectsList, final String prefix) {
         final List<Ds3Object> newObjectsList = new ArrayList<>();
-        for ( final Ds3Object object: objectsList ) {
+        for (final Ds3Object object: objectsList) {
             newObjectsList.add(new Ds3Object(stripLeadingPath(object.getName(), prefix), object.getSize()));
         }
         return newObjectsList;
