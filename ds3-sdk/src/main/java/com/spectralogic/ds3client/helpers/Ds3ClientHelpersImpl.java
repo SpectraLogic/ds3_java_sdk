@@ -26,10 +26,7 @@ import com.spectralogic.ds3client.models.bulk.*;
 import com.spectralogic.ds3client.serializer.XmlProcessingException;
 
 import java.io.IOException;
-import java.nio.file.FileVisitResult;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.SimpleFileVisitor;
+import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.security.SignatureException;
 import java.util.ArrayList;
@@ -205,5 +202,22 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
             }
         });
         return objects;
+    }
+
+    public Iterable<Ds3Object> addPrefixToDs3ObjectsList(final Iterable<Ds3Object> objectsList, final String prefix) {
+        final List<Ds3Object> newObjectsList = new ArrayList<>();
+        for (final Ds3Object object: objectsList) {
+            final Ds3Object tmpObj = new Ds3Object( prefix + object.getName(), object.getSize());
+            newObjectsList.add(tmpObj);
+        }
+        return newObjectsList;
+    }
+
+    public Iterable<Ds3Object> removePrefixFromDs3ObjectsList(final Iterable<Ds3Object> objectsList, final String prefix) {
+        final List<Ds3Object> newObjectsList = new ArrayList<>();
+        for (final Ds3Object object: objectsList) {
+            newObjectsList.add(new Ds3Object(stripLeadingPath(object.getName(), prefix), object.getSize()));
+        }
+        return newObjectsList;
     }
 }

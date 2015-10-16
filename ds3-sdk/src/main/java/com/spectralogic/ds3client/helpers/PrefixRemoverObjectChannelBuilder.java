@@ -13,32 +13,28 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3client.integration;
+package com.spectralogic.ds3client.helpers;
 
-import com.spectralogic.ds3client.helpers.Ds3ClientHelpers;
-import com.spectralogic.ds3client.utils.ResourceUtils;
+import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.ObjectChannelBuilder;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.net.URISyntaxException;
-import java.nio.channels.FileChannel;
 import java.nio.channels.SeekableByteChannel;
-import java.nio.file.StandardOpenOption;
 
-public class ResourceObjectPutter implements Ds3ClientHelpers.ObjectChannelBuilder {
-    private final String basePath;
+/**
+ * Writes files to the local file system with a different path by first stripping off a remote prefix
+ * and then adding a local prefix.
+ */
+public class PrefixRemoverObjectChannelBuilder implements ObjectChannelBuilder {
+    final private Ds3ClientHelpers.ObjectChannelBuilder channelBuilder;
+    final private String prefix;
 
-    public ResourceObjectPutter(final String basePath) {
-        this.basePath = basePath;
+    public PrefixRemoverObjectChannelBuilder(final Ds3ClientHelpers.ObjectChannelBuilder channelBuilder, final String prefix) {
+        this.channelBuilder = channelBuilder;
+        this.prefix = prefix;
     }
 
     @Override
     public SeekableByteChannel buildChannel(final String key) throws IOException {
-        try {
-            return FileChannel.open(ResourceUtils.loadFileResource(basePath + key).toPath(), StandardOpenOption.READ);
-        } catch (final URISyntaxException e) {
-            e.printStackTrace();
-            throw new FileNotFoundException(key);
-        }
+        return this.channelBuilder.buildChannel(Ds3ClientHelpers.stripLeadingPath(key, prefix));
     }
 }

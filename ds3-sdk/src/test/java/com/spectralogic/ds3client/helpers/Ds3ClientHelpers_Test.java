@@ -507,4 +507,53 @@ public class Ds3ClientHelpers_Test {
                 object("baz", 6, 6, inCache)
         );
     }
+
+    @Test
+    public void testAddPrefixToDs3ObjectsList() throws IOException, SignatureException {
+        final List<Ds3Object> ds3ObjectList = Lists.newArrayList(new Ds3Object("foo"), new Ds3Object("bar"));
+        final Ds3ClientHelpers helper = Ds3ClientHelpers.wrap(buildDs3ClientForBulk());
+        final Iterable<Ds3Object> modifiedDs3ObjectList = helper.addPrefixToDs3ObjectsList(ds3ObjectList, "baz/");
+
+        boolean foundBazFoo = false;
+        boolean foundBazBar = false;
+
+        for (final Ds3Object obj : modifiedDs3ObjectList) {
+            if (obj.getName().equals("baz/foo")) {
+                foundBazFoo = true;
+            } else if (obj.getName().equals("baz/bar")) {
+                foundBazBar = true;
+            }
+        }
+
+        assertTrue(foundBazFoo);
+        assertTrue(foundBazBar);
+    }
+
+    @Test
+    public void testRemovePrefixToDs3ObjectsList() throws IOException, SignatureException {
+        final List<Ds3Object> ds3ObjectList = Lists.newArrayList(new Ds3Object("foo/bar"), new Ds3Object("foo/baz"));
+        final Ds3ClientHelpers helper = Ds3ClientHelpers.wrap(buildDs3ClientForBulk());
+        final Iterable<Ds3Object> modifiedDs3ObjectList = helper.removePrefixFromDs3ObjectsList(ds3ObjectList, "foo/");
+
+        boolean foundBar = false;
+        boolean foundBaz = false;
+
+        for (final Ds3Object obj : modifiedDs3ObjectList) {
+            if (obj.getName().equals("bar")) {
+                foundBar = true;
+            } else if (obj.getName().equals("baz")) {
+                foundBaz = true;
+            }
+        }
+
+        assertTrue(foundBar);
+        assertTrue(foundBaz);
+    }
+
+    @Test
+    public void testStripLeadingPath() {
+        assertEquals(Ds3ClientHelpers.stripLeadingPath("foo/bar", "foo/"), "bar");
+        assertEquals(Ds3ClientHelpers.stripLeadingPath("bar", "foo/"), "bar");
+    }
+
 }

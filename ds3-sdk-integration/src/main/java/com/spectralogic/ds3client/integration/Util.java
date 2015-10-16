@@ -20,6 +20,8 @@ import com.spectralogic.ds3client.Ds3ClientBuilder;
 import com.spectralogic.ds3client.commands.DeleteBucketRequest;
 import com.spectralogic.ds3client.commands.DeleteObjectRequest;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers;
+import com.spectralogic.ds3client.helpers.FileObjectPutter;
+import com.spectralogic.ds3client.helpers.PrefixAdderObjectChannelBuilder;
 import com.spectralogic.ds3client.models.Contents;
 import com.spectralogic.ds3client.models.bulk.Ds3Object;
 import com.spectralogic.ds3client.serializer.XmlProcessingException;
@@ -28,6 +30,7 @@ import com.spectralogic.ds3client.utils.ResourceUtils;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.nio.file.Paths;
 import java.security.SignatureException;
 import java.util.ArrayList;
 import java.util.List;
@@ -84,8 +87,7 @@ public class Util {
             objects.add(obj);
         }
 
-        helpers.startWriteJob(bucketName, objects).transfer(new PrefixedObjectPutter(new ResourceObjectPutter(RESOURCE_BASE_NAME), prefix));
-
+        helpers.startWriteJob(bucketName, objects).transfer(new PrefixAdderObjectChannelBuilder(new ResourceObjectPutter(RESOURCE_BASE_NAME), prefix));
     }
 
 
