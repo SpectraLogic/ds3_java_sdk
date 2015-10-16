@@ -26,7 +26,7 @@ import java.nio.channels.SeekableByteChannel;
  */
 public class PrefixRemoverObjectChannelBuilder implements ObjectChannelBuilder {
     final private Ds3ClientHelpers.ObjectChannelBuilder channelBuilder;
-    private String prefix;
+    final private String prefix;
 
     public PrefixRemoverObjectChannelBuilder(final Ds3ClientHelpers.ObjectChannelBuilder channelBuilder, final String prefix) {
         this.channelBuilder = channelBuilder;
