@@ -20,6 +20,7 @@ import com.google.common.collect.Multimap;
 import com.google.common.net.UrlEscapers;
 import com.spectralogic.ds3client.commands.Ds3Request;
 import com.spectralogic.ds3client.commands.PutObjectRequest;
+import com.spectralogic.ds3client.models.Checksum;
 import com.spectralogic.ds3client.models.SignatureDetails;
 import com.spectralogic.ds3client.networking.*;
 import com.spectralogic.ds3client.utils.DateFormatter;
@@ -61,6 +62,10 @@ class NetworkClientImpl implements NetworkClient {
     final static private String AUTHORIZATION = "Authorization";
     final static private String CONTENT_TYPE = "Content-Type";
     final static private String CONTENT_MD5 = "Content-MD5";
+    final static private String CONTENT_SHA256 = "Content-SHA256";
+    final static private String CONTENT_SHA512 = "Content-SHA512";
+    final static private String CONTENT_CRC32 = "Content-CRC32";
+    final static private String CONTENT_CRC32C = "Content-CRC32C";
 
     final private ConnectionDetails connectionDetails;
 
@@ -131,6 +136,7 @@ class NetworkClientImpl implements NetworkClient {
         private final InputStream content;
         private final HttpHost host;
         private final String hash;
+        private final Checksum.Type checksumType;
         private final CloseableHttpClient client;
 
         public RequestExecutor(final CloseableHttpClient client, final Ds3Request ds3Request) throws IOException {
@@ -143,6 +149,7 @@ class NetworkClientImpl implements NetworkClient {
             }
 
             LOG.info("Sending request: " + this.ds3Request.getVerb() + " " + this.host.toString() + "" + this.ds3Request.getPath());
+            this.checksumType = ds3Request.getChecksumType();
             this.hash = this.buildHash();
         }
         
@@ -204,7 +211,7 @@ class NetworkClientImpl implements NetworkClient {
             
             // Add the hash header.
             if (!this.hash.isEmpty()) {
-                httpRequest.addHeader(CONTENT_MD5, this.hash);
+                httpRequest.addHeader(getHashType(ds3Request.getChecksumType()), this.hash);
             }
             
             // Add the signature header.
@@ -217,6 +224,19 @@ class NetworkClientImpl implements NetworkClient {
                 canonicalizeResource(this.ds3Request.getPath(), this.ds3Request.getQueryParams()),
                 NetworkClientImpl.this.connectionDetails.getCredentials()
             )));
+        }
+
+        private String getHashType(final Checksum.Type checksumType) {
+            switch (checksumType) {
+                case MD5: return CONTENT_MD5;
+                case SHA256: return CONTENT_SHA256;
+                case SHA512: return CONTENT_SHA512;
+                case CRC32: return CONTENT_CRC32;
+                case CRC32C: return CONTENT_CRC32C;
+                case NONE:
+                default:
+                    return "";
+            }
         }
 
 
@@ -249,7 +269,7 @@ class NetworkClientImpl implements NetworkClient {
 		}
 
         private String buildHash() throws IOException {
-            return this.ds3Request.getChecksum().match(new HashGeneratingMatchHandler(this.content));
+            return this.ds3Request.getChecksum().match(new HashGeneratingMatchHandler(this.content, this.checksumType));
         }
 
         private String getSignature(final SignatureDetails details) throws SignatureException {

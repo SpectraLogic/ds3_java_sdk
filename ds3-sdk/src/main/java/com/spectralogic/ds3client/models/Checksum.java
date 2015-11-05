@@ -16,6 +16,11 @@
 package com.spectralogic.ds3client.models;
 
 public abstract class Checksum {
+
+    public enum Type {
+        MD5, SHA256, SHA512, CRC32, CRC32C, NONE
+    }
+
     private static final Checksum none = new None();
     private static final Checksum compute = new Compute();
     

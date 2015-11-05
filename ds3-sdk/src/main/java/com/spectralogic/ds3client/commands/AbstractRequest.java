@@ -45,6 +45,7 @@ public abstract class AbstractRequest implements Ds3Request {
         return null;
     }
 
+
     @Override
     public long getSize() {
         return 0;
@@ -55,6 +56,10 @@ public abstract class AbstractRequest implements Ds3Request {
         return Checksum.none();
     }
 
+    @Override
+    public Checksum.Type getChecksumType() {
+        return Checksum.Type.NONE;
+    }
     @Override
     public final Map<String, String> getQueryParams() {
         return this.queryParams;
