@@ -16,6 +16,7 @@
 package com.spectralogic.ds3client;
 
 import com.spectralogic.ds3client.models.Checksum;
+import com.spectralogic.ds3client.utils.hashing.*;
 import org.apache.commons.codec.binary.Base64;
 
 import java.io.IOException;
@@ -27,9 +28,11 @@ class HashGeneratingMatchHandler implements Checksum.MatchHandler<String, IOExce
     private static final int READ_BUFFER_SIZE = 1024;
     
     private final InputStream content;
+    private final Checksum.Type checksumType;
     
-    public HashGeneratingMatchHandler(final InputStream content) {
+    public HashGeneratingMatchHandler(final InputStream content, final Checksum.Type checksumType) {
         this.content = content;
+        this.checksumType = checksumType;
     }
     
     @Override
@@ -39,15 +42,16 @@ class HashGeneratingMatchHandler implements Checksum.MatchHandler<String, IOExce
     
     @Override
     public String compute() throws IOException {
-        return Base64.encodeBase64String(this.hashInputStream(this.getMd5Hasher(), this.content));
+        return hashInputStream(getHasher(this.checksumType), this.content);
     }
-    
+
+
     @Override
     public String value(final byte[] hash) throws IOException {
         return Base64.encodeBase64String(hash);
     }
     
-    private byte[] hashInputStream(final MessageDigest digest, final InputStream stream) throws IOException {
+    private String hashInputStream(final Hasher digest, final InputStream stream) throws IOException {
         final byte[] buffer = new byte[READ_BUFFER_SIZE];
         int bytesRead = 0;
         
@@ -64,11 +68,14 @@ class HashGeneratingMatchHandler implements Checksum.MatchHandler<String, IOExce
         return digest.digest();
     }
 
-    private MessageDigest getMd5Hasher() {
-        try {
-            return MessageDigest.getInstance("MD5");
-        } catch (final NoSuchAlgorithmException e) {
-            throw new RuntimeException(e);
+    private Hasher getHasher(final Checksum.Type checksumType) {
+        switch (checksumType) {
+            case MD5: return new MD5Hasher();
+            case SHA256: return new SHA256Hasher();
+            case SHA512: return new SHA512Hasher();
+            case CRC32: return new CRC32Hasher();
+            case CRC32C: return new CRC32CHasher();
+            default: throw new RuntimeException("Unknown checksum type " + checksumType.toString());
         }
     }
 }

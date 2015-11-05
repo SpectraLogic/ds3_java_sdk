@@ -15,6 +15,7 @@
 
 package com.spectralogic.ds3client.utils;
 
+import com.spectralogic.ds3client.utils.hashing.Md5Hash;
 import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.is;

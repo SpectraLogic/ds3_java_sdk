@@ -13,8 +13,9 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3client.utils;
+package com.spectralogic.ds3client.utils.hashing;
 
+import com.spectralogic.ds3client.utils.InvalidMd5Exception;
 import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.binary.Hex;

@@ -17,6 +17,7 @@ package com.spectralogic.ds3client.commands;
 
 import com.spectralogic.ds3client.HttpVerb;
 import com.spectralogic.ds3client.models.Checksum;
+import com.sun.tools.javac.comp.Check;
 
 import java.io.InputStream;
 import java.nio.channels.SeekableByteChannel;
@@ -35,6 +36,7 @@ public class PutObjectRequest extends AbstractRequest {
     private final long size;
     private final long offset;
     private Checksum checksum = Checksum.none();
+    private Checksum.Type checksumType = Checksum.Type.NONE;
     public final static String AMZ_META_HEADER = "x-amz-meta-";
 
     /**
@@ -53,9 +55,17 @@ public class PutObjectRequest extends AbstractRequest {
         this.getQueryParams().put("job", jobId.toString());
         this.getQueryParams().put("offset", Long.toString(offset));
     }
-    
+
+    /**
+     * Set a md5 checksum for the request.
+     */
     public PutObjectRequest withChecksum(final Checksum checksum) {
+        return withChecksum(checksum, Checksum.Type.MD5);
+    }
+
+    public PutObjectRequest withChecksum(final Checksum checksum, final Checksum.Type checksumType) {
         this.checksum = checksum;
+        this.checksumType = checksumType;
         return this;
     }
 
@@ -81,6 +91,11 @@ public class PutObjectRequest extends AbstractRequest {
     @Override
     public Checksum getChecksum() {
         return this.checksum;
+    }
+
+    @Override
+    public Checksum.Type getChecksumType() {
+        return this.checksumType;
     }
 
     @Override

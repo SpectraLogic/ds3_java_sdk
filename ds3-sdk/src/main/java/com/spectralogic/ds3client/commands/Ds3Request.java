@@ -36,6 +36,8 @@ public interface Ds3Request {
 
     Checksum getChecksum();
 
+    Checksum.Type getChecksumType();
+
     Map<String, String> getQueryParams();
 
     Multimap<String, String> getHeaders();
