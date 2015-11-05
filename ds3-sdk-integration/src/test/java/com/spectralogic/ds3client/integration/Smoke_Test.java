@@ -62,7 +62,7 @@ import com.spectralogic.ds3client.models.ListBucketResult;
 import com.spectralogic.ds3client.networking.FailedRequestException;
 import com.spectralogic.ds3client.serializer.XmlProcessingException;
 
-public class BucketIntegration_Test {
+public class Smoke_Test {
 
     private static Ds3Client client;
 
