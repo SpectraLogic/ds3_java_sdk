@@ -60,6 +60,7 @@ public abstract class AbstractRequest implements Ds3Request {
     public Checksum.Type getChecksumType() {
         return Checksum.Type.NONE;
     }
+
     @Override
     public final Map<String, String> getQueryParams() {
         return this.queryParams;
