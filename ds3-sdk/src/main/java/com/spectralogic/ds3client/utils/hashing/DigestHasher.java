@@ -4,7 +4,7 @@ import org.apache.commons.codec.binary.Base64;
 
 import java.security.MessageDigest;
 
-public abstract class DigestHasher implements Hasher {
+abstract class DigestHasher implements Hasher {
 
     private final MessageDigest digest;
 

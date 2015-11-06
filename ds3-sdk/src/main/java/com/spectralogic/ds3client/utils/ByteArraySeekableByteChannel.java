@@ -37,6 +37,10 @@ public class ByteArraySeekableByteChannel implements SeekableByteChannel {
         this.backingArray = new byte[size];
     }
 
+    public ByteArraySeekableByteChannel(final byte[] bytes) {
+        this.backingArray = bytes;
+    }
+
     @Override
     public boolean isOpen() {
         return this.isOpen;

@@ -8,7 +8,7 @@ import java.util.zip.Checksum;
  * This code was taken from https://github.com/googlearchive/crc32c-java/blob/master/src/com/google/cloud/Crc32c.java which is licensed as Apache 2.
  *
  */
-public final class Crc32c implements Checksum {
+final class Crc32c implements Checksum {
 
   private static final long[] CRC_TABLE = {
       0x00000000, 0xf26b8303, 0xe13b70f7, 0x1350f3f4,
