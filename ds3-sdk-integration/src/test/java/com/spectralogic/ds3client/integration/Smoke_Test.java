@@ -506,7 +506,7 @@ public class Smoke_Test {
     }
 
     @Test
-    public void crc32() throws IOException, SignatureException, XmlProcessingException, URISyntaxException {
+    public void verifySendCrc32cChecksum() throws IOException, SignatureException, XmlProcessingException, URISyntaxException {
         final String bucketName = "crc32Bucket";
 
         try {
