@@ -34,6 +34,7 @@ import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.conn.ssl.*;
+import org.apache.http.entity.ContentType;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicHttpEntityEnclosingRequest;
@@ -179,7 +180,7 @@ class NetworkClientImpl implements NetworkClient {
             if (this.content != null) {
                 final BasicHttpEntityEnclosingRequest httpRequest = new BasicHttpEntityEnclosingRequest(verb, path);
 
-                final Ds3InputStreamEntity entityStream = new Ds3InputStreamEntity(this.content, this.ds3Request.getSize(), this.ds3Request.getContentType());
+                final Ds3InputStreamEntity entityStream = new Ds3InputStreamEntity(this.content, this.ds3Request.getSize(), ContentType.create(this.ds3Request.getContentType()));
                 entityStream.setBufferSize(NetworkClientImpl.this.connectionDetails.getBufferSize());
                 httpRequest.setEntity(entityStream);
                 return httpRequest;
@@ -202,7 +203,7 @@ class NetworkClientImpl implements NetworkClient {
             final String date = DateFormatter.dateToRfc882();
             httpRequest.addHeader(HOST, NetUtils.buildHostField(NetworkClientImpl.this.connectionDetails));
             httpRequest.addHeader(DATE, date);
-            httpRequest.addHeader(CONTENT_TYPE, this.ds3Request.getContentType().toString());
+            httpRequest.addHeader(CONTENT_TYPE, this.ds3Request.getContentType());
             
             // Add custom headers.
             for(final Map.Entry<String, String> header: this.ds3Request.getHeaders().entries()) {

@@ -43,10 +43,12 @@ import com.spectralogic.ds3client.commands.*;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers;
 import com.spectralogic.ds3client.helpers.JobRecoveryException;
 import com.spectralogic.ds3client.helpers.options.WriteJobOptions;
+import com.spectralogic.ds3client.models.Checksum;
 import com.spectralogic.ds3client.models.Contents;
 import com.spectralogic.ds3client.models.S3Object;
 import com.spectralogic.ds3client.models.bulk.Ds3Object;
 import com.spectralogic.ds3client.models.bulk.JobStatus;
+import com.spectralogic.ds3client.models.bulk.MasterObjectList;
 import com.spectralogic.ds3client.models.bulk.Priority;
 import com.spectralogic.ds3client.models.tape.Tape;
 import com.spectralogic.ds3client.models.tape.Tapes;
@@ -160,7 +162,7 @@ public class Smoke_Test {
 
     }
 
-    private boolean s3ObjectExists(final List<S3Object> objects, final String fileName) {
+    private static boolean s3ObjectExists(final List<S3Object> objects, final String fileName) {
         for (final S3Object obj : objects) {
             if (obj.getName().equals(fileName)) {
                 return true;
@@ -498,6 +500,33 @@ public class Smoke_Test {
             ));
             assertThat(putResponse2, is(notNullValue()));
             assertThat(putResponse2.getStatusCode(), is(equalTo(200)));
+        } finally {
+            Util.deleteAllContents(client, bucketName);
+        }
+    }
+
+    @Test
+    public void crc32() throws IOException, SignatureException, XmlProcessingException, URISyntaxException {
+        final String bucketName = "crc32Bucket";
+
+        try {
+            final Ds3ClientHelpers helpers = Ds3ClientHelpers.wrap(client);
+
+            helpers.ensureBucketExists(bucketName);
+
+            final List<Ds3Object> objs = new ArrayList<>();
+            objs.add(new Ds3Object("beowulf.txt", 294059));
+
+            final MasterObjectList mol = client.bulkPut(new BulkPutRequest(bucketName, objs)).getResult();
+
+
+            final FileChannel channel = FileChannel.open(ResourceUtils.loadFileResource("books/beowulf.txt").toPath(), StandardOpenOption.READ);
+
+            final PutObjectResponse response = client.putObject(new PutObjectRequest(bucketName, "beowulf.txt", mol.getJobId(), 294059, 0, channel).withChecksum(Checksum.compute(), Checksum.Type.CRC32C));
+
+            assertThat(response.getChecksumType(), is(Checksum.Type.CRC32C));
+            assertThat(response.getChecksum(), is("+ZBZbQ=="));
+
         } finally {
             Util.deleteAllContents(client, bucketName);
         }

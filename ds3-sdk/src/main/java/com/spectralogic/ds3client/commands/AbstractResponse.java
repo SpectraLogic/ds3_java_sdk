@@ -16,9 +16,11 @@
 package com.spectralogic.ds3client.commands;
 
 import com.google.common.collect.ImmutableSet;
+import com.spectralogic.ds3client.models.Checksum;
 import com.spectralogic.ds3client.models.Error;
 import com.spectralogic.ds3client.networking.FailedRequestException;
 import com.spectralogic.ds3client.networking.Headers;
+import com.spectralogic.ds3client.networking.ResponseProcessingException;
 import com.spectralogic.ds3client.networking.WebResponse;
 import com.spectralogic.ds3client.serializer.XmlOutput;
 
@@ -37,20 +39,37 @@ public abstract class AbstractResponse implements Ds3Response{
     final public static String UTF8 = "UTF-8";
 
     final private WebResponse response;
-    final private String md5;
+    final private String checksum;
+    final private Checksum.Type checksumType;
 
     public AbstractResponse(final WebResponse response) throws IOException {
         this.response = response;
         if (response != null) {
-            this.md5 = getFirstHeaderValue(this.response.getHeaders(), "Content-MD5");
+            this.checksumType = determineChecksumType(this.response.getHeaders());
+            if (this.checksumType != null) {
+                this.checksum = getFirstHeaderValue(this.response.getHeaders(), "Content-" + checksumType.toString());
+            } else {
+                this.checksum = null;
+            }
         }
         else {
-            this.md5 = null;
+            this.checksum = null;
+            this.checksumType = Checksum.Type.NONE;
         }
         this.processResponse();
     }
 
-    final protected String getFirstHeaderValue(final Headers headers, final String key) {
+    private static Checksum.Type determineChecksumType(final Headers headers) throws ResponseProcessingException {
+        for (final Checksum.Type type : Checksum.Type.values()) {
+            if (getFirstHeaderValue(headers, "Content-" + type.toString()) != null) {
+                return type;
+            }
+        }
+        LOG.debug("Did not find a content checksum header");
+        return null;
+    }
+
+    static protected String getFirstHeaderValue(final Headers headers, final String key) {
         final List<String> valueList = headers.get(key);
         if (valueList == null || valueList.isEmpty()) {
             return null;
@@ -109,7 +128,11 @@ public abstract class AbstractResponse implements Ds3Response{
         }
     }
 
-    public String getMd5() {
-        return md5;
+    public String getChecksum() {
+        return checksum;
+    }
+
+    public Checksum.Type getChecksumType() {
+        return checksumType;
     }
 }

@@ -36,8 +36,8 @@ public abstract class AbstractRequest implements Ds3Request {
     }
 
     @Override
-    public ContentType getContentType() {
-        return ContentType.APPLICATION_XML;
+    public String getContentType() {
+        return ContentType.APPLICATION_XML.toString();
     }
 
     @Override

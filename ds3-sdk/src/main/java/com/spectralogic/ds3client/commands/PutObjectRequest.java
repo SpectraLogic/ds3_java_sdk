@@ -17,7 +17,6 @@ package com.spectralogic.ds3client.commands;
 
 import com.spectralogic.ds3client.HttpVerb;
 import com.spectralogic.ds3client.models.Checksum;
-import com.sun.tools.javac.comp.Check;
 
 import java.io.InputStream;
 import java.nio.channels.SeekableByteChannel;
@@ -38,6 +37,7 @@ public class PutObjectRequest extends AbstractRequest {
     private Checksum checksum = Checksum.none();
     private Checksum.Type checksumType = Checksum.Type.NONE;
     public final static String AMZ_META_HEADER = "x-amz-meta-";
+    public String contentType = "application/octet-stream";
 
     /**
      * Creates a request to put a request within the context of a bulk job.  This is the preferred method of creating a put object request.
@@ -57,7 +57,7 @@ public class PutObjectRequest extends AbstractRequest {
     }
 
     /**
-     * Set a md5 checksum for the request.
+     * Set a MD5 checksum for the request.
      */
     public PutObjectRequest withChecksum(final Checksum checksum) {
         return withChecksum(checksum, Checksum.Type.MD5);
@@ -86,6 +86,16 @@ public class PutObjectRequest extends AbstractRequest {
 
     public String getObjectName() {
         return this.objectName;
+    }
+
+    @Override
+    public String getContentType() {
+        return contentType;
+    }
+
+    public PutObjectRequest withContentType(final String contentType) {
+        this.contentType = contentType;
+        return this;
     }
 
     @Override

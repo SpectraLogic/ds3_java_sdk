@@ -3,9 +3,10 @@ package com.spectralogic.ds3client.utils.hashing;
 import org.apache.commons.codec.binary.Base64;
 
 import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.util.zip.Checksum;
 
-public abstract class ChecksumHasher implements Hasher {
+abstract class ChecksumHasher implements Hasher {
 
     private final Checksum checksum;
 
@@ -20,15 +21,23 @@ public abstract class ChecksumHasher implements Hasher {
         checksum.update(bytes, offset, length);
     }
 
+    /**
+     * This must return a string where the checksum is an int in network byte ordering that is base64 encoded
+     */
     @Override
     public String digest() {
-        return Base64.encodeBase64String(longToBytes(checksum.getValue()));
+        return Base64.encodeBase64String(toBytes(checksum.getValue()));
     }
 
-    private byte[] longToBytes(long x) {
+    private byte[] toBytes(long x) {
         final ByteBuffer buffer = ByteBuffer.allocate(Long.BYTES);
+        buffer.order(ByteOrder.BIG_ENDIAN);
         buffer.putLong(x);
-        return buffer.array();
+
+        final byte[] bytes = new byte[Integer.BYTES];
+        System.arraycopy(buffer.array(), 4, bytes, 0, 4);
+
+        return bytes;
     }
 
 }
