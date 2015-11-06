@@ -29,7 +29,7 @@ abstract class ChecksumHasher implements Hasher {
         return Base64.encodeBase64String(toBytes(checksum.getValue()));
     }
 
-    private byte[] toBytes(long x) {
+    private byte[] toBytes(final long x) {
         final ByteBuffer buffer = ByteBuffer.allocate(8);
         buffer.order(ByteOrder.BIG_ENDIAN);
         buffer.putLong(x);
