@@ -30,11 +30,11 @@ abstract class ChecksumHasher implements Hasher {
     }
 
     private byte[] toBytes(long x) {
-        final ByteBuffer buffer = ByteBuffer.allocate(Long.BYTES);
+        final ByteBuffer buffer = ByteBuffer.allocate(8);
         buffer.order(ByteOrder.BIG_ENDIAN);
         buffer.putLong(x);
 
-        final byte[] bytes = new byte[Integer.BYTES];
+        final byte[] bytes = new byte[4];
         System.arraycopy(buffer.array(), 4, bytes, 0, 4);
 
         return bytes;
