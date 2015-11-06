@@ -104,8 +104,8 @@ public class GetObjectRequest extends AbstractRequest {
     }
 
     @Override
-    public ContentType getContentType() {
-        return ContentType.APPLICATION_OCTET_STREAM;
+    public String getContentType() {
+        return ContentType.APPLICATION_OCTET_STREAM.toString();
     }
 
     @Override

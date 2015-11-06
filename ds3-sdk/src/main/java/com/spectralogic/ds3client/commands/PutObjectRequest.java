@@ -35,7 +35,9 @@ public class PutObjectRequest extends AbstractRequest {
     private final long size;
     private final long offset;
     private Checksum checksum = Checksum.none();
+    private Checksum.Type checksumType = Checksum.Type.NONE;
     public final static String AMZ_META_HEADER = "x-amz-meta-";
+    public String contentType = "application/octet-stream";
 
     /**
      * Creates a request to put a request within the context of a bulk job.  This is the preferred method of creating a put object request.
@@ -53,9 +55,17 @@ public class PutObjectRequest extends AbstractRequest {
         this.getQueryParams().put("job", jobId.toString());
         this.getQueryParams().put("offset", Long.toString(offset));
     }
-    
+
+    /**
+     * Set a MD5 checksum for the request.
+     */
     public PutObjectRequest withChecksum(final Checksum checksum) {
+        return withChecksum(checksum, Checksum.Type.MD5);
+    }
+
+    public PutObjectRequest withChecksum(final Checksum checksum, final Checksum.Type checksumType) {
         this.checksum = checksum;
+        this.checksumType = checksumType;
         return this;
     }
 
@@ -79,8 +89,23 @@ public class PutObjectRequest extends AbstractRequest {
     }
 
     @Override
+    public String getContentType() {
+        return contentType;
+    }
+
+    public PutObjectRequest withContentType(final String contentType) {
+        this.contentType = contentType;
+        return this;
+    }
+
+    @Override
     public Checksum getChecksum() {
         return this.checksum;
+    }
+
+    @Override
+    public Checksum.Type getChecksumType() {
+        return this.checksumType;
     }
 
     @Override
