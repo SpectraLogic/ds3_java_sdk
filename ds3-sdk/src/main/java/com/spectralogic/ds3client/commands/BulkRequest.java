@@ -58,7 +58,7 @@ abstract class BulkRequest extends AbstractRequest {
         objects.setChunkClientProcessingOrderGuarantee(this.chunkOrdering);
         
         final StringBuilder xmlOutputBuilder = new StringBuilder();
-        if (this.getCommand() == BulkCommand.GET) {
+        if (this.getCommand() == BulkCommand.PUT) {
             xmlOutputBuilder.append(XmlOutput.toXml(objects, true));
         } else {
             xmlOutputBuilder.append(XmlOutput.toXml(objects, false));
