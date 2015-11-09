@@ -92,13 +92,13 @@ public class XmlOutput {
         }
     }
 
-    public static String toXml(final Ds3ObjectList objects, final BulkCommand command) {
-        if (command == BulkCommand.GET) {
-            final FilterProvider filters = new SimpleFilterProvider().addFilter("sizeFilter",
-                    SimpleBeanPropertyFilter.serializeAllExcept("Size"));
-            return XmlOutput.toXml(objects, filters);
+    public static String toXml(final Ds3ObjectList objects, final boolean isBulkPut) {
+        if (isBulkPut) {
+            return XmlOutput.toXml(objects);
         }
-        return XmlOutput.toXml(objects);
+        final FilterProvider filters = new SimpleFilterProvider().addFilter("sizeFilter",
+                SimpleBeanPropertyFilter.serializeAllExcept("Size"));
+        return XmlOutput.toXml(objects, filters);
     }
 
     public static<T> T fromXml(final String xmlString, final Class<T> type) throws IOException {
