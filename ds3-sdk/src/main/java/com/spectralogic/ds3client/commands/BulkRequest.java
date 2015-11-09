@@ -56,9 +56,15 @@ abstract class BulkRequest extends AbstractRequest {
         objects.setPriority(this.priority);
         objects.setWriteOptimization(this.writeOptimization);
         objects.setChunkClientProcessingOrderGuarantee(this.chunkOrdering);
-        final String xmlOutput = XmlOutput.toXml(objects, this.getCommand());
+        
+        final StringBuilder xmlOutputBuilder = new StringBuilder();
+        if (this.getCommand() == BulkCommand.GET) {
+            xmlOutputBuilder.append(XmlOutput.toXml(objects, true));
+        } else {
+            xmlOutputBuilder.append(XmlOutput.toXml(objects, false));
+        }
 
-        final byte[] stringBytes = xmlOutput.getBytes();
+        final byte[] stringBytes = xmlOutputBuilder.toString().getBytes();
         this.size = stringBytes.length;
         return new ByteArrayInputStream(stringBytes);
     }

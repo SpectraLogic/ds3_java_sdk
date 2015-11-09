@@ -92,8 +92,8 @@ public class XmlOutput {
         }
     }
 
-    public static String toXml(final Ds3ObjectList objects, final BulkCommand command) {
-        if (command == BulkCommand.GET) {
+    public static String toXml(final Ds3ObjectList objects, final boolean isBulkGet) {
+        if (isBulkGet) {
             final FilterProvider filters = new SimpleFilterProvider().addFilter("sizeFilter",
                     SimpleBeanPropertyFilter.serializeAllExcept("Size"));
             return XmlOutput.toXml(objects, filters);
