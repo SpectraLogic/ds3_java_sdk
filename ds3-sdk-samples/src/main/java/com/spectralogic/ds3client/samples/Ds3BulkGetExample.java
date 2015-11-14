@@ -19,7 +19,6 @@ import com.spectralogic.ds3client.Ds3Client;
 import com.spectralogic.ds3client.Ds3ClientBuilder;
 import com.spectralogic.ds3client.commands.*;
 import com.spectralogic.ds3client.models.Contents;
-import com.spectralogic.ds3client.models.Credentials;
 import com.spectralogic.ds3client.models.bulk.BulkObject;
 import com.spectralogic.ds3client.models.bulk.Ds3Object;
 import com.spectralogic.ds3client.models.bulk.MasterObjectList;
@@ -41,8 +40,7 @@ public class Ds3BulkGetExample {
     public static void main(final String args[]) throws IOException, SignatureException, XmlProcessingException {
 
         // Get a client builder and then build a client instance.  This is the main entry point to the SDK.
-        try (final Ds3Client client = Ds3ClientBuilder.create("ds3Endpoint:8080",
-                new Credentials("accessKey", "secretKey")).withHttps(false).build()) {
+        try (final Ds3Client client = Ds3ClientBuilder.fromEnv().withHttps(false).build()) {
 
             final String bucket = "bucketName"; //The bucket we are interested in getting objects from.
 
@@ -73,9 +71,13 @@ public class Ds3BulkGetExample {
                     final FileChannel channel = FileChannel.open(
                             dirPath.resolve(obj.getName()),
                             StandardOpenOption.WRITE,
-                            StandardOpenOption.CREATE,
-                            StandardOpenOption.TRUNCATE_EXISTING
+                            StandardOpenOption.CREATE
                     );
+
+                    // To handle the case where a file has been chunked we need to seek to the correct offset
+                    // before we make the GetObject call so that when the request writes to the channel it is
+                    // writing at the correct offset in the file.
+                    channel.position(obj.getOffset());
 
                     // Perform the operation to get the object from DS3.
                     client.getObject(new GetObjectRequest(
