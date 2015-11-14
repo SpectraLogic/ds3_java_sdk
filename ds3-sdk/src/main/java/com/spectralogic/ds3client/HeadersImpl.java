@@ -37,7 +37,7 @@ class HeadersImpl implements Headers {
         final ImmutableMultimap.Builder<String, String> builder = ImmutableMultimap.builder();
 
         for (final Header header : headers) {
-            builder.put(header.getName(), header.getValue());
+            builder.put(header.getName().toLowerCase(), header.getValue());
         }
 
         return builder.build();

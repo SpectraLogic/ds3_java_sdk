@@ -31,15 +31,15 @@ public class HeadersImpl_Test {
 
     @Test
     public void findHeader() {
-        final Headers headers = genHeaders(new BasicHeader("Content-MD5", "Q2hlY2sgSW50ZWdyaXR5IQ=="));
-        final String value = headers.get("Content-MD5").get(0);
+        final Headers headers = genHeaders(new BasicHeader("content-md5", "Q2hlY2sgSW50ZWdyaXR5IQ=="));
+        final String value = headers.get("content-md5").get(0);
         assertThat(value, is("Q2hlY2sgSW50ZWdyaXR5IQ=="));
     }
 
     @Test
     public void unknownHeader() {
         final Headers headers = genHeaders();
-        final List<String> value = headers.get("Content-MD5");
+        final List<String> value = headers.get("content-md5");
         assertTrue(value.isEmpty());
     }
 
