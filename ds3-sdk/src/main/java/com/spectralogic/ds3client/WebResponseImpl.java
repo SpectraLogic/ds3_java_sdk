@@ -19,6 +19,7 @@ import com.spectralogic.ds3client.networking.Headers;
 import com.spectralogic.ds3client.networking.WebResponse;
 import org.apache.http.client.methods.CloseableHttpResponse;
 
+import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -26,13 +27,16 @@ class WebResponseImpl implements WebResponse {
     private final CloseableHttpResponse response;
     private final Headers headers;
 
-    public WebResponseImpl(final CloseableHttpResponse response) {
+    public WebResponseImpl(@Nonnull final CloseableHttpResponse response) {
         this.response = response;
         this.headers = new HeadersImpl(this.response.getAllHeaders());
     }
 
     @Override
     public InputStream getResponseStream() throws IOException {
+        if (this.response.getEntity() == null) {
+            return null;
+        }
         return this.response.getEntity().getContent();
     }
 

@@ -15,6 +15,7 @@
 
 package com.spectralogic.ds3client.commands;
 
+import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.spectralogic.ds3client.models.Checksum;
@@ -25,6 +26,7 @@ import com.spectralogic.ds3client.networking.ResponseProcessingException;
 import com.spectralogic.ds3client.networking.WebResponse;
 import com.spectralogic.ds3client.serializer.XmlOutput;
 
+import org.apache.commons.codec.binary.StringUtils;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -121,6 +123,9 @@ public abstract class AbstractResponse implements Ds3Response{
     }
 
     private static Error parseErrorResponse(final String responseString) {
+        if (Strings.isNullOrEmpty(responseString)) {
+            return null;
+        }
         try {
             return XmlOutput.fromXml(responseString, Error.class);
         } catch (final IOException e) {
@@ -131,6 +136,9 @@ public abstract class AbstractResponse implements Ds3Response{
     }
     
     private String readResponseString() throws IOException {
+        if (this.response == null || this.response.getResponseStream() == null) {
+            return "";
+        }
         try(final StringWriter writer = new StringWriter();
             final InputStream content = this.response.getResponseStream()) {
             IOUtils.copy(content, writer, UTF8);
