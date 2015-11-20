@@ -64,7 +64,7 @@ public class FailedRequestException extends IOException {
                                                 final ImmutableList<Integer> expectedStatusCodes,
                                                 final int statusCode) {
 
-        final Joiner joiner = Joiner.on(',');
+        final Joiner joiner = Joiner.on(", ");
         return error == null
             ? String.format(
                 "Expected a status code of %s but got %d. Could not parse the response for additional information.",
