@@ -39,7 +39,7 @@ public class HeadersImpl_Test {
     @Test
     public void unknownHeader() {
         final Headers headers = genHeaders();
-        final List<String> value = headers.get("content-md5");
+        final List<String> value = headers.get("Content-Md5");
         assertTrue(value.isEmpty());
     }
 

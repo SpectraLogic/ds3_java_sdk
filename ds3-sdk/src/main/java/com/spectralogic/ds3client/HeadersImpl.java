@@ -45,7 +45,7 @@ class HeadersImpl implements Headers {
 
     @Override
     public List<String> get(final String key) {
-        return Lists.newArrayList(headers.get(key));
+        return Lists.newArrayList(headers.get(key.toLowerCase()));
     }
 
     @Override
