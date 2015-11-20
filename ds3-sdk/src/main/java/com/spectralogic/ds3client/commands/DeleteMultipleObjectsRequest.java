@@ -23,6 +23,7 @@ import com.spectralogic.ds3client.serializer.XmlOutput;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -72,7 +73,7 @@ public class DeleteMultipleObjectsRequest extends AbstractRequest {
         delete.setDeleteObjectList(deleteObjects);
 
         final String xmlOutput = XmlOutput.toXml(delete);
-        final byte[] stringBytes = xmlOutput.getBytes();
+        final byte[] stringBytes = xmlOutput.getBytes(Charset.forName("UTF-8"));
         this.size = stringBytes.length;
 
         return new ByteArrayInputStream(stringBytes);

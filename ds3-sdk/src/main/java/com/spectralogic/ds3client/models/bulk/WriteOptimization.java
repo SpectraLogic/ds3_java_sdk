@@ -19,6 +19,7 @@ import com.google.common.base.Function;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 
 public enum WriteOptimization {
@@ -28,7 +29,7 @@ public enum WriteOptimization {
         final ArrayList<WriteOptimization> list = Lists.newArrayList(WriteOptimization.values());
         return Joiner.on(", ").join(Lists.transform(list, new Function<WriteOptimization, String>() {
             @Override
-            public String apply(final WriteOptimization input) {
+            public String apply(@Nonnull final WriteOptimization input) {
                 return input.toString().toLowerCase();
             }
         }));

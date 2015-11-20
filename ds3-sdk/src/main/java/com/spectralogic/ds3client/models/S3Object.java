@@ -18,6 +18,7 @@ package com.spectralogic.ds3client.models;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.spectralogic.ds3client.commands.GetObjectsRequest.ObjectType;
 
+import java.util.Objects;
 import java.util.UUID;
 
 public class S3Object {
@@ -78,6 +79,12 @@ public class S3Object {
                 + "</S3Object>";
     }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(bucketId, name, id, creationDate, type, version);
+    }
+
+    @Override
     public boolean equals(final Object obj) {
         if (!(obj instanceof S3Object)) {
             return false;

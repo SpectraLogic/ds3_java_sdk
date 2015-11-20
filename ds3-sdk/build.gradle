@@ -70,5 +70,6 @@ dependencies {
     compile     'org.codehaus.woodstox:woodstox-core-asl:4.4.1'
     compile     'com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.5.3'
     compile     'com.google.guava:guava:18.0'
+    compile     'com.google.code.findbugs:annotations:3.0.0'
     testCompile 'org.hamcrest:hamcrest-library:1.3'
 }
