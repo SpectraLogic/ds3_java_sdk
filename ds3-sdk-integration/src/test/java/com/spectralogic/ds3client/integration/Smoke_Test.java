@@ -28,6 +28,7 @@ import java.net.URISyntaxException;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.channels.SeekableByteChannel;
+import java.nio.charset.Charset;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -36,6 +37,7 @@ import java.security.SignatureException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
@@ -597,7 +599,7 @@ public class Smoke_Test {
             assertThat(readResponse1, is(notNullValue()));
             assertThat(readResponse1.getStatusCode(), is(equalTo(200)));
 
-            // Interuption...
+            // Interruption...
             final Ds3ClientHelpers.Job recoverJob = Ds3ClientHelpers.wrap(client).recoverReadJob(readJob.getJobId());
 
             final FileChannel channel2 = FileChannel.open(
@@ -616,6 +618,74 @@ public class Smoke_Test {
                 Files.delete(tempFile);
             }
             Files.delete(dirPath);
+        }
+    }
+
+    @Test
+    public void putDirectory() throws IOException, SignatureException, XmlProcessingException {
+        final String bucketName = "putDir";
+
+        try {
+
+            final List<Ds3Object> objs = Lists.newArrayList(new Ds3Object("dir/"));
+
+            final Ds3ClientHelpers helpers = Ds3ClientHelpers.wrap(client);
+
+            helpers.ensureBucketExists(bucketName);
+
+            final Ds3ClientHelpers.Job job = helpers.startWriteJob(bucketName, objs);
+
+            job.transfer(new Ds3ClientHelpers.ObjectChannelBuilder() {
+                @Override
+                public SeekableByteChannel buildChannel(final String key) throws IOException {
+                    fail("This should not be called");
+                    return null;
+                }
+            });
+
+            final GetBucketResponse response = client.getBucket(new GetBucketRequest(bucketName));
+
+            assertThat(response.getResult().getContentsList().size(), is(1));
+            assertThat(response.getResult().getContentsList().get(0).getKey(), is("dir/"));
+
+        } finally {
+            Util.deleteAllContents(client, bucketName);
+        }
+    }
+
+    @Test
+    public void putDirectoryWithOtherObjects() throws IOException, SignatureException, XmlProcessingException {
+        final String bucketName = "mixedPutDir";
+
+        try {
+
+            final byte[] content = "I'm text with some more data so that it gets flushed to the output cache.".getBytes(Charset.forName("UTF-8"));
+
+            final List<Ds3Object> objs = Lists.newArrayList(new Ds3Object("dir/"), new Ds3Object("obj.txt", content.length));
+
+            final Ds3ClientHelpers helpers = Ds3ClientHelpers.wrap(client);
+
+            helpers.ensureBucketExists(bucketName);
+
+            final Ds3ClientHelpers.Job job = helpers.startWriteJob(bucketName, objs);
+
+            final AtomicInteger counter = new AtomicInteger(0);
+
+            job.transfer(new Ds3ClientHelpers.ObjectChannelBuilder() {
+                @Override
+                public SeekableByteChannel buildChannel(final String key) throws IOException {
+                    counter.incrementAndGet();
+                    return new ByteArraySeekableByteChannel(content);
+                }
+            });
+
+            final GetBucketResponse response = client.getBucket(new GetBucketRequest(bucketName));
+
+            assertThat(response.getResult().getContentsList().size(), is(2));
+            assertThat(counter.get(), is(1));
+
+        } finally {
+            Util.deleteAllContents(client, bucketName);
         }
     }
 }
