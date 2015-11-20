@@ -38,7 +38,7 @@ public class ByteArraySeekableByteChannel implements SeekableByteChannel {
     }
 
     public ByteArraySeekableByteChannel(final byte[] bytes) {
-        this.backingArray = bytes;
+        this.backingArray = Arrays.copyOfRange(bytes, 0, bytes.length);
     }
 
     @Override

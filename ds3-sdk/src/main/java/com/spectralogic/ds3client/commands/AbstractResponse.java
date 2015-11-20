@@ -15,6 +15,7 @@
 
 package com.spectralogic.ds3client.commands;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.spectralogic.ds3client.models.Checksum;
 import com.spectralogic.ds3client.models.Error;
@@ -47,7 +48,7 @@ public abstract class AbstractResponse implements Ds3Response{
         if (response != null) {
             this.checksumType = determineChecksumType(this.response.getHeaders());
             if (this.checksumType != null) {
-                this.checksum = getFirstHeaderValue(this.response.getHeaders(), "Content-" + checksumType.toString());
+                this.checksum = getFirstHeaderValue(this.response.getHeaders(), "content-" + checksumType.toString().toLowerCase());
             } else {
                 this.checksum = null;
             }
@@ -61,7 +62,7 @@ public abstract class AbstractResponse implements Ds3Response{
 
     private static Checksum.Type determineChecksumType(final Headers headers) throws ResponseProcessingException {
         for (final Checksum.Type type : Checksum.Type.values()) {
-            if (getFirstHeaderValue(headers, "Content-" + type.toString()) != null) {
+            if (getFirstHeaderValue(headers, "content-" + type.toString().toLowerCase()) != null) {
                 return type;
             }
         }
@@ -90,12 +91,21 @@ public abstract class AbstractResponse implements Ds3Response{
         if (!expectedSet.contains(statusCode)) {
             final String responseString = this.readResponseString();
             throw new FailedRequestException(
-                expectedStatuses,
+                toImmutableIntList(expectedStatuses),
                 statusCode,
                 parseErrorResponse(responseString),
                 responseString
             );
         }
+    }
+
+    private static ImmutableList<Integer> toImmutableIntList(final int[] expectedStatuses) {
+        final ImmutableList.Builder<Integer> integerBuilder = ImmutableList.builder();
+
+        for (final int status : expectedStatuses) {
+            integerBuilder.add(status);
+        }
+        return integerBuilder.build();
     }
 
     public int getStatusCode() {

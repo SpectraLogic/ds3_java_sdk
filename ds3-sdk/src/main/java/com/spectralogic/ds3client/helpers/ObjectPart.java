@@ -15,6 +15,8 @@
 
 package com.spectralogic.ds3client.helpers;
 
+import java.util.Objects;
+
 public final class ObjectPart {
     private final long offset;
     private final long length;
@@ -35,7 +37,12 @@ public final class ObjectPart {
     public long getEnd() {
         return this.offset + this.length - 1;
     }
-    
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(offset, length);
+    }
+
     @Override
     public boolean equals(final Object obj) {
         if (obj instanceof ObjectPart) {

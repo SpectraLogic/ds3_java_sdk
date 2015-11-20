@@ -19,6 +19,7 @@ import com.google.common.base.Function;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 
 public enum Priority {
@@ -33,7 +34,7 @@ public enum Priority {
         final ArrayList<Priority> list = Lists.newArrayList(Priority.values());
         return Joiner.on(", ").join(Lists.transform(list, new Function<Priority, String>() {
             @Override
-            public String apply(final Priority input) {
+            public String apply(@Nonnull final Priority input) {
 	        return input.toString().toLowerCase();
             }
         }));
