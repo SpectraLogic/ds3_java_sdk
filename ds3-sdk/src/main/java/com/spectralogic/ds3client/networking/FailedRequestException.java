@@ -15,20 +15,21 @@
 
 package com.spectralogic.ds3client.networking;
 
+import com.google.common.base.Joiner;
+import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3client.models.Error;
 
 import java.io.IOException;
-import java.util.Arrays;
 
 public class FailedRequestException extends IOException {
     private static final long serialVersionUID = -2070737734216316074L;
     
     private final int statusCode;
-    private final int[] expectedStatusCodes;
+    private final ImmutableList<Integer> expectedStatusCodes;
     private final Error error;
     private final String responseString;
 
-    public FailedRequestException(final int[] expectedStatusCodes,
+    public FailedRequestException(final ImmutableList<Integer> expectedStatusCodes,
                                   final int statusCode,
                                   final Error error,
                                   final String responseString) {
@@ -42,8 +43,15 @@ public class FailedRequestException extends IOException {
     public int getStatusCode() {
         return statusCode;
     }
-    public int[] getExpectedStatusCodes() {
-        return expectedStatusCodes;
+
+    public ImmutableList<Integer> getExpectedStatusCodes() {
+
+        final ImmutableList.Builder<Integer> builder = ImmutableList.builder();
+        for (final int status : expectedStatusCodes) {
+            builder.add(status);
+        }
+
+        return builder.build();
     }
     public Error getError() {
         return error;
@@ -53,17 +61,19 @@ public class FailedRequestException extends IOException {
     }
     
     private static String buildExceptionMessage(final Error error,
-                                                final int[] expectedStatusCodes,
+                                                final ImmutableList<Integer> expectedStatusCodes,
                                                 final int statusCode) {
+
+        final Joiner joiner = Joiner.on(',');
         return error == null
             ? String.format(
                 "Expected a status code of %s but got %d. Could not parse the response for additional information.",
-                Arrays.toString(expectedStatusCodes),
+                joiner.join(expectedStatusCodes),
                 statusCode
             )
             : String.format(
                 "Expected a status code of %s but got %d. Error message: \"%s\"",
-                Arrays.toString(expectedStatusCodes),
+                joiner.join(expectedStatusCodes),
                 statusCode,
                 error.getMessage()
             );

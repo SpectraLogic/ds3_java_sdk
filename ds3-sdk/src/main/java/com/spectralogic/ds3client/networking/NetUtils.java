@@ -22,6 +22,7 @@ import com.google.common.escape.Escaper;
 import com.google.common.net.UrlEscapers;
 import com.spectralogic.ds3client.BulkCommand;
 
+import javax.annotation.Nonnull;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.*;
@@ -59,7 +60,7 @@ public class NetUtils {
         final SortedMap<String, String> sortedMap = new TreeMap<>(queryParams);
         final Iterator<String> stringIter = Iterators.transform(sortedMap.entrySet().iterator(), new Function<Map.Entry<String, String>, String>() {
             @Override
-            public String apply(final Map.Entry<String, String> input) {
+            public String apply(@Nonnull final Map.Entry<String, String> input) {
                 if (input.getValue() == null || input.getValue().isEmpty()) {
                     return input.getKey();
                 }

@@ -22,6 +22,7 @@ import com.spectralogic.ds3client.serializer.XmlOutput;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.nio.charset.Charset;
 import java.util.List;
 
 abstract class BulkRequest extends AbstractRequest {
@@ -64,7 +65,7 @@ abstract class BulkRequest extends AbstractRequest {
             xmlOutputBuilder.append(XmlOutput.toXml(objects, false));
         }
 
-        final byte[] stringBytes = xmlOutputBuilder.toString().getBytes();
+        final byte[] stringBytes = xmlOutputBuilder.toString().getBytes(Charset.forName("UTF-8"));
         this.size = stringBytes.length;
         return new ByteArrayInputStream(stringBytes);
     }

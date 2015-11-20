@@ -21,6 +21,7 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.binary.Hex;
 
 import java.util.Arrays;
+import java.util.Objects;
 
 public class Md5Hash {
     private final byte[] hash;
@@ -46,7 +47,7 @@ public class Md5Hash {
     }
 
     public byte[] getHash() {
-        return this.hash;
+        return Arrays.copyOfRange(this.hash, 0, this.hash.length);
     }
 
     public String toHexString() {
@@ -62,6 +63,10 @@ public class Md5Hash {
         return this.toBase64String();
     }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(hash);
+    }
 
     @Override
     public boolean equals(final Object obj) {

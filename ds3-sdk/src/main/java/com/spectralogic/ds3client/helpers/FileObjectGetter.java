@@ -41,7 +41,10 @@ public class FileObjectGetter implements ObjectChannelBuilder {
     @Override
     public SeekableByteChannel buildChannel(final String key) throws IOException {
         final Path objectPath = this.root.resolve(key);
-        Files.createDirectories(objectPath.getParent());
+        final Path parentPath = objectPath.getParent();
+        if (parentPath != null) {
+            Files.createDirectories(parentPath);
+        }
         return FileChannel.open(
             objectPath,
             StandardOpenOption.WRITE,

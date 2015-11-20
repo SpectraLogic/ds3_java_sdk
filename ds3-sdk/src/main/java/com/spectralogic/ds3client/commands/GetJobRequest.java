@@ -41,8 +41,13 @@ public class GetJobRequest extends AbstractRequest {
     }
 
     @Override
+    public int hashCode() {
+        return jobId.hashCode();
+    }
+
+    @Override
     public boolean equals(final Object obj) {
-        if (!obj.getClass().equals(GetJobRequest.class)) return false;
+        if (! (obj instanceof GetJobRequest)) return false;
         final GetJobRequest other = (GetJobRequest) obj;
         return other.getJobId().equals(this.getJobId());
     }

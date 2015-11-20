@@ -19,6 +19,7 @@ import com.spectralogic.ds3client.models.SignatureDetails;
 
 import org.apache.commons.codec.binary.Base64;
 
+import java.nio.charset.Charset;
 import java.security.SignatureException;
 
 import javax.crypto.Mac;
@@ -45,14 +46,14 @@ public class Signature {
         final String result;
         try {
             // get an hmac_sha1 key from the raw key bytes
-            final SecretKeySpec signingKey = new SecretKeySpec(key.getBytes(), HMAC_SHA1_ALGORITHM);
+            final SecretKeySpec signingKey = new SecretKeySpec(key.getBytes(Charset.forName("UTF-8")), HMAC_SHA1_ALGORITHM);
 
             // get an hmac_sha1 Mac instance and initialize with the signing key
             final Mac mac = Mac.getInstance(HMAC_SHA1_ALGORITHM);
             mac.init(signingKey);
 
             // compute the hmac on input data bytes
-            final byte[] rawHmac = mac.doFinal(data.getBytes());
+            final byte[] rawHmac = mac.doFinal(data.getBytes(Charset.forName("UTF-8")));
             result = Base64.encodeBase64String(rawHmac);
         } catch (final Exception e) {
             throw new SignatureException("Failed to generate HMAC : " + e.getMessage());
