@@ -41,7 +41,12 @@ public abstract class BulkResponse extends AbstractResponse {
     @Override
     protected void processResponse() throws IOException {
         try (final WebResponse response = this.getResponse()) {
-            this.checkStatusCode(200);
+            this.checkStatusCode(200, 204);
+            if (response.getResponseStream() == null) {
+                LOG.info("Job has nothing to do, returning empty master object list");
+                result = null;
+                return;
+            }
             try(final InputStream content = response.getResponseStream()) {
                 LOG.debug("Starting bulk response parsing");
                 this.result = XmlOutput.fromXml(content, MasterObjectList.class);

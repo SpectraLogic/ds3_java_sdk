@@ -40,13 +40,21 @@ class WriteJobImpl extends JobImpl {
             final Ds3Client client,
             final MasterObjectList masterObjectList) {
         super(client, masterObjectList);
-        LOG.info("Ready to start transfer for job " + masterObjectList.getJobId().toString() + " with " + masterObjectList.getObjects().size() + " chunks");
+        if (masterObjectList == null) {
+            LOG.info("An empty job was created");
+        } else {
+            LOG.info("Ready to start transfer for job " + masterObjectList.getJobId().toString() + " with " + masterObjectList.getObjects().size() + " chunks");
+        }
     }
 
     @Override
     public void transfer(final ObjectChannelBuilder channelBuilder)
             throws SignatureException, IOException, XmlProcessingException {
         LOG.debug("Starting job transfer");
+        if (masterObjectList == null) {
+            LOG.info("There is nothing to transfer");
+            return;
+        }
         final List<Objects> filteredChunks = filterChunks(this.masterObjectList.getObjects());
         try (final JobState jobState = new JobState(channelBuilder, filteredChunks)) {
             final ChunkTransferrer chunkTransferrer = new ChunkTransferrer(

@@ -115,7 +115,7 @@ class NetworkClientImpl implements NetworkClient {
                 final CloseableHttpResponse response = requestExecutor.execute();
                 if (response.getStatusLine().getStatusCode() == HttpStatus.SC_TEMPORARY_REDIRECT) {
                     redirectCount++;
-                    LOG.debug("Performing retry - attempt: " + redirectCount);
+                    LOG.info("Performing retry - attempt: " + redirectCount);
                 }
                 else {
                     LOG.info("Got response from server");
