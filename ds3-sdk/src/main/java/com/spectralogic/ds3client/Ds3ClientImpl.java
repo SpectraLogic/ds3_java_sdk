@@ -25,10 +25,10 @@ import com.spectralogic.ds3client.models.bulk.Node;
 import com.spectralogic.ds3client.networking.ConnectionDetails;
 import com.spectralogic.ds3client.networking.NetworkClient;
 
-class Ds3ClientImpl implements Ds3Client {
+public class Ds3ClientImpl implements Ds3Client {
     private final NetworkClient netClient;
 
-    Ds3ClientImpl(final NetworkClient netClient) {
+    public Ds3ClientImpl(final NetworkClient netClient) {
         this.netClient = netClient;
     }
 

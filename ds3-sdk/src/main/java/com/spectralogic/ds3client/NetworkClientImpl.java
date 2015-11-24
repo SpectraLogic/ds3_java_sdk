@@ -56,7 +56,7 @@ import java.security.cert.X509Certificate;
 import java.util.Collection;
 import java.util.Map;
 
-class NetworkClientImpl implements NetworkClient {
+public class NetworkClientImpl implements NetworkClient {
     final static private Logger LOG = LoggerFactory.getLogger(NetworkClientImpl.class);
     final static private String HOST = "HOST";
     final static private String DATE = "DATE";
@@ -72,13 +72,20 @@ class NetworkClientImpl implements NetworkClient {
 
     final private CloseableHttpClient client;
 
-    NetworkClientImpl(final ConnectionDetails connectionDetails) {
-        if (connectionDetails == null) throw new AssertionError("Connection Details cannot be null");
+    public NetworkClientImpl(final ConnectionDetails connectionDetails) {
+        if (connectionDetails == null) throw new AssertionError("ConnectionDetails cannot be null");
         this.connectionDetails = connectionDetails;
-        this.client = createClient(connectionDetails);
+        this.client = createDefaultClient(connectionDetails);
     }
 
-    private static CloseableHttpClient createClient(final ConnectionDetails connectionDetails) {
+    public NetworkClientImpl(final ConnectionDetails connectionDetails, final CloseableHttpClient client) {
+        if (connectionDetails == null) throw new AssertionError("ConnectionDetails cannot be null");
+        if (client == null) throw new AssertionError("CloseableHttpClient cannot be null");
+        this.connectionDetails = connectionDetails;
+        this.client = client;
+    }
+
+    private static CloseableHttpClient createDefaultClient(final ConnectionDetails connectionDetails) {
         if (connectionDetails.isHttps() && !connectionDetails.isCertificateVerification()) {
             try {
 
