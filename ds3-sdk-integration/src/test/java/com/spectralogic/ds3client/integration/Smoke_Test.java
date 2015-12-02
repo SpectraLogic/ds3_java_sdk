@@ -732,6 +732,7 @@ public class Smoke_Test {
             Util.deleteAllContents(client, bucketName);
         }
     }
+
     @Test
     public void eventHandlerRegistrationAndDeregistration() throws IOException, SignatureException, URISyntaxException, XmlProcessingException {
         final String bucketName = "eventBucket";
