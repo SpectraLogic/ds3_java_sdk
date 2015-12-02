@@ -15,16 +15,18 @@
 
 package com.spectralogic.ds3client.helpers;
 
+import com.google.common.collect.Sets;
+
 import java.security.InvalidParameterException;
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Set;
 import java.util.TreeSet;
 
 class ObjectPartTrackerImpl implements ObjectPartTracker {
     private final String name;
     private final TreeSet<ObjectPart> parts;
-    private final Collection<DataTransferredListener> dataTransferredListeners = new ArrayList<>();
-    private final Collection<ObjectCompletedListener> objectCompletedListeners = new ArrayList<>();
+    private final Set<DataTransferredListener> dataTransferredListeners = Sets.newIdentityHashSet();
+    private final Set<ObjectCompletedListener> objectCompletedListeners = Sets.newIdentityHashSet();
 
     public ObjectPartTrackerImpl(final String name, final Collection<ObjectPart> parts) {
         this.name = name;
@@ -43,6 +45,16 @@ class ObjectPartTrackerImpl implements ObjectPartTracker {
     public synchronized ObjectPartTracker attachObjectCompletedListener(final ObjectCompletedListener listener) {
         this.objectCompletedListeners.add(listener);
         return this;
+    }
+
+    @Override
+    public void removeDataTransferredListener(final DataTransferredListener listener) {
+        this.dataTransferredListeners.remove(listener);
+    }
+
+    @Override
+    public void removeObjectCompletedListener(final ObjectCompletedListener listener) {
+        this.objectCompletedListeners.remove(listener);
     }
 
     @Override

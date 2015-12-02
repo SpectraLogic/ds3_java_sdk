@@ -15,6 +15,7 @@
 
 package com.spectralogic.ds3client.helpers;
 
+import com.google.common.collect.Iterables;
 import com.spectralogic.ds3client.Ds3Client;
 import com.spectralogic.ds3client.commands.AllocateJobChunkRequest;
 import com.spectralogic.ds3client.commands.AllocateJobChunkResponse;
@@ -36,15 +37,46 @@ import java.util.List;
 
 class WriteJobImpl extends JobImpl {
     static private final Logger LOG = LoggerFactory.getLogger(WriteJobImpl.class);
+    private final JobPartTracker partTracker;
+    private final List<Objects> filteredChunks;
+
     public WriteJobImpl(
             final Ds3Client client,
             final MasterObjectList masterObjectList) {
         super(client, masterObjectList);
         if (masterObjectList == null) {
             LOG.info("An empty job was created");
+            this.filteredChunks = null;
+            this.partTracker = null;
         } else {
             LOG.info("Ready to start transfer for job " + masterObjectList.getJobId().toString() + " with " + masterObjectList.getObjects().size() + " chunks");
+            this.filteredChunks = filterChunks(this.masterObjectList.getObjects());
+            this.partTracker = JobPartTrackerFactory
+                    .buildPartTracker(Iterables.concat(filteredChunks));
         }
+
+    }
+
+    @Override
+    public void attachDataTransferredListener(final DataTransferredListener listener) {
+        this.partTracker.attachDataTransferredListener(listener);
+    }
+
+    @Override
+    public void attachObjectCompletedListener(final ObjectCompletedListener listener) {
+        this.partTracker.attachObjectCompletedListener(listener);
+
+    }
+
+    @Override
+    public void removeDataTransferredListener(final DataTransferredListener listener) {
+        this.partTracker.removeDataTransferredListener(listener);
+    }
+
+    @Override
+    public void removeObjectCompletedListener(final ObjectCompletedListener listener) {
+        this.partTracker.removeObjectCompletedListener(listener);
+
     }
 
     @Override
@@ -55,8 +87,7 @@ class WriteJobImpl extends JobImpl {
             LOG.info("There is nothing to transfer");
             return;
         }
-        final List<Objects> filteredChunks = filterChunks(this.masterObjectList.getObjects());
-        try (final JobState jobState = new JobState(channelBuilder, filteredChunks)) {
+        try (final JobState jobState = new JobState(channelBuilder, filteredChunks, partTracker)) {
             final ChunkTransferrer chunkTransferrer = new ChunkTransferrer(
                 new PutObjectTransferrer(jobState),
                 this.client,

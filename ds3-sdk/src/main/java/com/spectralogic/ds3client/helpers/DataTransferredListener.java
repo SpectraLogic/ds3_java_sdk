@@ -15,6 +15,6 @@
 
 package com.spectralogic.ds3client.helpers;
 
-interface DataTransferredListener {
+public interface DataTransferredListener {
     void dataTransferred(final long size);
 }

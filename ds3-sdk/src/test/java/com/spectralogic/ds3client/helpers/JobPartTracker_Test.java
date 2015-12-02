@@ -138,6 +138,16 @@ public class JobPartTracker_Test {
         }
 
         @Override
+        public void removeDataTransferredListener(final DataTransferredListener listener) {
+
+        }
+
+        @Override
+        public void removeObjectCompletedListener(final ObjectCompletedListener listener) {
+
+        }
+
+        @Override
         public void completePart(final ObjectPart partToRemove)
         {
             this._partsRemoved.add(partToRemove);
