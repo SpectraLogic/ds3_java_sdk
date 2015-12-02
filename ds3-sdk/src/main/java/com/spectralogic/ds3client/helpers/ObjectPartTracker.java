@@ -18,6 +18,8 @@ package com.spectralogic.ds3client.helpers;
 interface ObjectPartTracker {
     ObjectPartTracker attachDataTransferredListener(final DataTransferredListener listener);
     ObjectPartTracker attachObjectCompletedListener(final ObjectCompletedListener listener);
+    void removeDataTransferredListener(final DataTransferredListener listener);
+    void removeObjectCompletedListener(final ObjectCompletedListener listener);
 
     void completePart(final ObjectPart part);
     boolean containsPart(final ObjectPart part);

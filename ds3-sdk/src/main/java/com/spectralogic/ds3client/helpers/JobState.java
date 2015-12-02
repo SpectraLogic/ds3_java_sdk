@@ -15,11 +15,12 @@
 
 package com.spectralogic.ds3client.helpers;
 
-import com.google.common.collect.Iterables;
 import com.spectralogic.ds3client.helpers.AutoCloseableCache.ValueBuilder;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.ObjectChannelBuilder;
 import com.spectralogic.ds3client.models.bulk.BulkObject;
 import com.spectralogic.ds3client.models.bulk.Objects;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.nio.channels.SeekableByteChannel;
@@ -28,16 +29,17 @@ import java.util.HashSet;
 import java.util.concurrent.atomic.AtomicInteger;
 
 class JobState implements AutoCloseable {
+
+    private static final Logger LOG = LoggerFactory.getLogger(JobState.class);
+
     private final AtomicInteger objectsRemaining;
     private final AutoCloseableCache<String, WindowedChannelFactory> channelCache;
     private final JobPartTracker partTracker;
 
-    public JobState(final ObjectChannelBuilder channelBuilder, final Collection<Objects> filteredChunks) {
+    public JobState(final ObjectChannelBuilder channelBuilder, final Collection<Objects> filteredChunks, final JobPartTracker partTracker) {
         this.objectsRemaining = new AtomicInteger(getObjectCount(filteredChunks));
         this.channelCache = buildCache(channelBuilder);
-        this.partTracker = JobPartTrackerFactory
-            .buildPartTracker(Iterables.concat(filteredChunks))
-            .attachObjectCompletedListener(new ObjectCompletedListenerImpl());
+        this.partTracker = partTracker.attachObjectCompletedListener(new ObjectCompletedListenerImpl());
     }
     
     public boolean hasObjects() {
@@ -61,6 +63,7 @@ class JobState implements AutoCloseable {
                 @Override
                 public WindowedChannelFactory get(final String key) {
                     try {
+                        LOG.debug("Opening channel for : " + key);
                         return new WindowedChannelFactory(channelBuilder.buildChannel(key));
                     } catch (final IOException e) {
                         throw new RuntimeException(e);
@@ -84,6 +87,7 @@ class JobState implements AutoCloseable {
         public void objectCompleted(final String name) {
             JobState.this.objectsRemaining.decrementAndGet();
             try {
+                LOG.debug("Closing file: "  + name);
                 JobState.this.channelCache.close(name);
             } catch (final Exception e) {
                 throw new RuntimeException(e);

@@ -44,6 +44,7 @@ import com.google.common.collect.Lists;
 import com.spectralogic.ds3client.commands.*;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers;
 import com.spectralogic.ds3client.helpers.JobRecoveryException;
+import com.spectralogic.ds3client.helpers.ObjectCompletedListener;
 import com.spectralogic.ds3client.helpers.options.WriteJobOptions;
 import com.spectralogic.ds3client.models.Checksum;
 import com.spectralogic.ds3client.models.Contents;
@@ -65,8 +66,12 @@ import com.spectralogic.ds3client.Ds3Client;
 import com.spectralogic.ds3client.models.ListBucketResult;
 import com.spectralogic.ds3client.networking.FailedRequestException;
 import com.spectralogic.ds3client.serializer.XmlProcessingException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class Smoke_Test {
+
+    private static final Logger LOG = LoggerFactory.getLogger(Smoke_Test.class);
 
     private static Ds3Client client;
 
@@ -684,6 +689,88 @@ public class Smoke_Test {
             assertThat(response.getResult().getContentsList().size(), is(2));
             assertThat(counter.get(), is(1));
 
+        } finally {
+            Util.deleteAllContents(client, bucketName);
+        }
+    }
+
+    @Test
+    public void eventHandlerTriggers() throws IOException, SignatureException, URISyntaxException, XmlProcessingException {
+        final String bucketName = "eventBucket";
+
+        try {
+
+            final AtomicInteger counter = new AtomicInteger(0);
+
+            final Ds3ClientHelpers helpers = Ds3ClientHelpers.wrap(client);
+
+            helpers.ensureBucketExists(bucketName);
+
+            Util.loadBookTestData(client, bucketName);
+
+            final List<Ds3Object> objs = Lists.newArrayList(new Ds3Object("beowulf.txt"));
+
+            final Ds3ClientHelpers.Job job = helpers.startReadJob(bucketName, objs);
+
+            job.attachObjectCompletedListener(new ObjectCompletedListener() {
+                @Override
+                public void objectCompleted(final String name) {
+                    LOG.info("finished getting: " + name);
+                    counter.incrementAndGet();
+                }
+            });
+
+            job.transfer(new Ds3ClientHelpers.ObjectChannelBuilder() {
+                @Override
+                public SeekableByteChannel buildChannel(final String key) throws IOException {
+                    return new NullChannel();
+                }
+            });
+
+            assertThat(counter.get(), is(1));
+        } finally {
+            Util.deleteAllContents(client, bucketName);
+        }
+    }
+
+    @Test
+    public void eventHandlerRegistrationAndDeregistration() throws IOException, SignatureException, URISyntaxException, XmlProcessingException {
+        final String bucketName = "eventBucket";
+
+        try {
+
+            final AtomicInteger counter = new AtomicInteger(0);
+
+            final Ds3ClientHelpers helpers = Ds3ClientHelpers.wrap(client);
+
+            helpers.ensureBucketExists(bucketName);
+
+            Util.loadBookTestData(client, bucketName);
+
+            final List<Ds3Object> objs = Lists.newArrayList(new Ds3Object("beowulf.txt"));
+
+            final Ds3ClientHelpers.Job job = helpers.startReadJob(bucketName, objs);
+
+            final ObjectCompletedListener eventHandler = new ObjectCompletedListener() {
+                @Override
+                public void objectCompleted(final String name) {
+                    LOG.info("finished getting: " + name);
+                    counter.incrementAndGet();
+                }
+            };
+
+            job.attachObjectCompletedListener(eventHandler);
+
+            job.removeObjectCompletedListener(eventHandler);
+
+            job.transfer(new Ds3ClientHelpers.ObjectChannelBuilder() {
+                @Override
+                public SeekableByteChannel buildChannel(final String key) throws IOException {
+                    return new NullChannel();
+                }
+            });
+
+            assertThat(counter.get(), is(0));
         } finally {
             Util.deleteAllContents(client, bucketName);
         }
