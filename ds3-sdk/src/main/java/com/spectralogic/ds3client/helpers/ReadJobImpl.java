@@ -15,6 +15,7 @@
 
 package com.spectralogic.ds3client.helpers;
 
+import com.google.common.collect.Iterables;
 import com.spectralogic.ds3client.Ds3Client;
 import com.spectralogic.ds3client.commands.GetAvailableJobChunksRequest;
 import com.spectralogic.ds3client.commands.GetAvailableJobChunksResponse;
@@ -23,20 +24,50 @@ import com.spectralogic.ds3client.helpers.ChunkTransferrer.ItemTransferrer;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.ObjectChannelBuilder;
 import com.spectralogic.ds3client.models.bulk.BulkObject;
 import com.spectralogic.ds3client.models.bulk.MasterObjectList;
+import com.spectralogic.ds3client.models.bulk.Objects;
 import com.spectralogic.ds3client.serializer.XmlProcessingException;
 
 import java.io.IOException;
 import java.security.SignatureException;
+import java.util.List;
 
 class ReadJobImpl extends JobImpl {
+
+    private final JobPartTracker partTracker;
+    private final List<Objects> chunks;
+
     public ReadJobImpl(final Ds3Client client, final MasterObjectList masterObjectList) {
         super(client, masterObjectList);
+
+        this.chunks = this.masterObjectList.getObjects();
+        this.partTracker = JobPartTrackerFactory
+                .buildPartTracker(Iterables.concat(chunks));
+    }
+
+    @Override
+    public void attachDataTransferredListener(final DataTransferredListener listener) {
+        this.partTracker.attachDataTransferredListener(listener);
+    }
+
+    @Override
+    public void attachObjectCompletedListener(final ObjectCompletedListener listener) {
+        this.partTracker.attachObjectCompletedListener(listener);
+    }
+
+    @Override
+    public void removeDataTransferredListener(final DataTransferredListener listener) {
+        this.partTracker.removeDataTransferredListener(listener);
+    }
+
+    @Override
+    public void removeObjectCompletedListener(final ObjectCompletedListener listener) {
+        this.partTracker.removeObjectCompletedListener(listener);
     }
 
     @Override
     public void transfer(final ObjectChannelBuilder channelBuilder)
             throws SignatureException, IOException, XmlProcessingException {
-        try (final JobState jobState = new JobState(channelBuilder, this.masterObjectList.getObjects())) {
+        try (final JobState jobState = new JobState(channelBuilder, this.masterObjectList.getObjects(), partTracker)) {
             final ChunkTransferrer chunkTransferrer = new ChunkTransferrer(
                 new GetObjectTransferrer(jobState),
                 this.client,

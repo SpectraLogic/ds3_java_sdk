@@ -15,6 +15,6 @@
 
 package com.spectralogic.ds3client.helpers;
 
-interface ObjectCompletedListener {
+public interface ObjectCompletedListener {
     void objectCompleted(final String name);
 }

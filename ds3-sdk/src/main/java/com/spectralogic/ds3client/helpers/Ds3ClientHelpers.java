@@ -55,6 +55,11 @@ public abstract class Ds3ClientHelpers {
         UUID getJobId();
         String getBucketName();
 
+        void attachDataTransferredListener(final DataTransferredListener listener);
+        void attachObjectCompletedListener(final ObjectCompletedListener listener);
+        void removeDataTransferredListener(final DataTransferredListener listener);
+        void removeObjectCompletedListener(final ObjectCompletedListener listener);
+
         /**
          * Sets the maximum number of requests to execute at a time when fulfilling the job.
          */

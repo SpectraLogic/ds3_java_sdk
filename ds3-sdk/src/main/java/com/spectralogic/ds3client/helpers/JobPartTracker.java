@@ -50,4 +50,16 @@ public class JobPartTracker {
         }
         return this;
     }
+
+    public void removeDataTransferredListener(final DataTransferredListener listener) {
+        for (final ObjectPartTracker tracker : this.trackers.values()) {
+            tracker.removeDataTransferredListener(listener);
+        }
+    }
+
+    public void removeObjectCompletedListener(final ObjectCompletedListener listener) {
+        for (final ObjectPartTracker tracker : this.trackers.values()) {
+            tracker.removeObjectCompletedListener(listener);
+        }
+    }
 }
