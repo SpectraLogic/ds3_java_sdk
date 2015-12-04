@@ -59,12 +59,16 @@ public class GetObjectRequest extends AbstractRequest {
      * format: 'Range: bytes=[start]-[end],...'.
      */
     public GetObjectRequest withByteRanges(final Range... byteRanges) {
-        this.setRanges(ImmutableList.copyOf(byteRanges));
+        if (byteRanges != null) {
+            this.setRanges(ImmutableList.copyOf(byteRanges));
+        }
         return this;
     }
 
     public GetObjectRequest withByteRanges(final List<Range> byteRanges) {
-        this.setRanges(ImmutableList.copyOf(byteRanges));
+        if (byteRanges != null) {
+            this.setRanges(ImmutableList.copyOf(byteRanges));
+        }
         return this;
     }
 
