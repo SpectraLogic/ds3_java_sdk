@@ -34,8 +34,8 @@ public final class Range {
     }
 
     public long getStart() {
-                         return this.start;
-                                           }
+         return this.start;
+    }
 
     public long getEnd() {
        return this.end;
