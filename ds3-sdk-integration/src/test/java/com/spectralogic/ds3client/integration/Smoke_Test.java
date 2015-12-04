@@ -46,13 +46,8 @@ import com.spectralogic.ds3client.helpers.Ds3ClientHelpers;
 import com.spectralogic.ds3client.helpers.JobRecoveryException;
 import com.spectralogic.ds3client.helpers.ObjectCompletedListener;
 import com.spectralogic.ds3client.helpers.options.WriteJobOptions;
-import com.spectralogic.ds3client.models.Checksum;
-import com.spectralogic.ds3client.models.Contents;
-import com.spectralogic.ds3client.models.S3Object;
-import com.spectralogic.ds3client.models.bulk.Ds3Object;
-import com.spectralogic.ds3client.models.bulk.JobStatus;
-import com.spectralogic.ds3client.models.bulk.MasterObjectList;
-import com.spectralogic.ds3client.models.bulk.Priority;
+import com.spectralogic.ds3client.models.*;
+import com.spectralogic.ds3client.models.bulk.*;
 import com.spectralogic.ds3client.models.tape.Tape;
 import com.spectralogic.ds3client.models.tape.Tapes;
 import com.spectralogic.ds3client.utils.ByteArraySeekableByteChannel;
@@ -63,7 +58,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.spectralogic.ds3client.Ds3Client;
-import com.spectralogic.ds3client.models.ListBucketResult;
 import com.spectralogic.ds3client.networking.FailedRequestException;
 import com.spectralogic.ds3client.serializer.XmlProcessingException;
 import org.slf4j.Logger;
@@ -771,6 +765,37 @@ public class Smoke_Test {
             });
 
             assertThat(counter.get(), is(0));
+        } finally {
+            Util.deleteAllContents(client, bucketName);
+        }
+    }
+
+    @Test
+    public void paritalObjectGet() throws IOException, SignatureException, URISyntaxException, XmlProcessingException {
+        final String bucketName = "partialObjectGet";
+
+        try {
+            final Ds3ClientHelpers helpers = Ds3ClientHelpers.wrap(client);
+            helpers.ensureBucketExists(bucketName);
+
+            Util.loadBookTestData(client, bucketName);
+
+            final List<Ds3Object> objs = Lists.newArrayList();
+            objs.add(new PartialDs3Object("beowulf.txt", Range.byLength(100, 100)));
+
+            final Ds3ClientHelpers.Job job = helpers.startReadJob(bucketName, objs);
+
+            final ByteArraySeekableByteChannel contents = new ByteArraySeekableByteChannel();
+
+            job.transfer(new Ds3ClientHelpers.ObjectChannelBuilder() {
+                @Override
+                public SeekableByteChannel buildChannel(final String key) throws IOException {
+                    return contents;
+                }
+            });
+
+            assertThat(contents.size(), is(100L));
+
         } finally {
             Util.deleteAllContents(client, bucketName);
         }
