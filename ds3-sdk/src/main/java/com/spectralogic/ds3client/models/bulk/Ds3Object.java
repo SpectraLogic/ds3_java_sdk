@@ -75,7 +75,7 @@ public class Ds3Object  {
 
     @Override
     public int hashCode() {
-        return this.name.hashCode();
+        return java.util.Objects.hash(this.name, this.size);
     }
 
     @Override

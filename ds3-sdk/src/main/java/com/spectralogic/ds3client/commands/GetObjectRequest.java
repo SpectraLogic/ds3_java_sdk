@@ -15,11 +15,15 @@
 
 package com.spectralogic.ds3client.commands;
 
+import com.google.common.base.Joiner;
+import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3client.HttpVerb;
 
+import com.spectralogic.ds3client.models.Range;
 import org.apache.http.entity.ContentType;
 
 import java.nio.channels.WritableByteChannel;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -27,34 +31,13 @@ import java.util.UUID;
  * If not performance will be impacted.
  */
 public class GetObjectRequest extends AbstractRequest {
-    public long getOffset() {
-        return offset;
-    }
-
-    public static class Range {
-        private final long start;
-        private final long end;
-
-        public Range(final long start, final long end) {
-            this.start = start;
-            this.end = end;
-        }
-
-        public long getStart() {
-            return this.start;
-        }
-
-        public long getEnd() {
-            return this.end;
-        }
-    }
 
     private final String bucketName;
     private final String objectName;
     private final long offset;
     private final UUID jobId;
     private final WritableByteChannel channel;
-    private Range byteRange = null;
+    private ImmutableList<Range> byteRanges = null;
 
     /**
      * Creates a request to get an object within the context of a bulk job.  This is the preferred method of creating a get object request.
@@ -72,16 +55,42 @@ public class GetObjectRequest extends AbstractRequest {
     }
 
     /**
-     * Sets a Range of bytes that should be retrieved from the object.
+     * Sets a Range of bytes that should be retrieved from the object in the
+     * format: 'Range: bytes=[start]-[end],...'.
      */
-    public GetObjectRequest withByteRange(final Range byteRange) {
-        this.byteRange = byteRange;
-        if (byteRange != null) {
-            this.getHeaders().put("Range", buildRangeHeaderText(byteRange));
-        }
+    public GetObjectRequest withByteRanges(final Range... byteRanges) {
+        this.setRanges(ImmutableList.copyOf(byteRanges));
         return this;
     }
-    
+
+    public GetObjectRequest withByteRanges(final List<Range> byteRanges) {
+        this.setRanges(ImmutableList.copyOf(byteRanges));
+        return this;
+    }
+
+    private void setRanges(final ImmutableList<Range> byteRanges) {
+        this.byteRanges = byteRanges;
+
+        if (this.getHeaders().containsKey("Range")) {
+            this.getHeaders().removeAll("Range");
+        }
+
+        this.getHeaders().put("Range", buildRangeHeaderText(byteRanges));
+    }
+
+    private static String buildRangeHeaderText(final ImmutableList<Range> byteRanges) {
+
+        final ImmutableList.Builder<String> builder = ImmutableList.builder();
+
+        for (final Range range : byteRanges) {
+            builder.add(String.format("%d-%d", range.getStart(), range.getEnd()));
+        }
+
+        final Joiner stringJoiner = Joiner.on(",");
+
+        return "bytes=" + stringJoiner.join(builder.build());
+    }
+
     public String getBucketName() {
         return this.bucketName;
     }
@@ -90,14 +99,13 @@ public class GetObjectRequest extends AbstractRequest {
         return this.objectName;
     }
 
-    private static String buildRangeHeaderText(final Range byteRange) {
-        return String.format("bytes=%d-%d", byteRange.getStart(), byteRange.getEnd());
+    public ImmutableList<Range> getByteRanges() {
+        return this.byteRanges;
     }
 
-    public Range getByteRange() {
-        return this.byteRange;
+    public long getOffset() {
+        return offset;
     }
-
     @Override
     public String getPath() {
         return "/" + this.bucketName + "/" + this.objectName;
