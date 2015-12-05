@@ -16,6 +16,7 @@
 package com.spectralogic.ds3client.commands;
 
 
+import com.google.common.net.UrlEscapers;
 import com.spectralogic.ds3client.HttpVerb;
 
 public class GetBucketRequest extends AbstractRequest {
@@ -40,7 +41,7 @@ public class GetBucketRequest extends AbstractRequest {
      */
     public GetBucketRequest withNextMarker(final String nextMarker) {
         this.nextMarker = nextMarker;
-        this.getQueryParams().put("marker", nextMarker);
+        this.getQueryParams().put("marker", UrlEscapers.urlFragmentEscaper().escape(nextMarker));
         return this;
     }
 
@@ -52,7 +53,7 @@ public class GetBucketRequest extends AbstractRequest {
      */
     public GetBucketRequest withPrefix(final String prefix) {
         this.prefix = prefix;
-        this.getQueryParams().put("prefix", prefix);
+        this.getQueryParams().put("prefix", UrlEscapers.urlFragmentEscaper().escape(prefix));
         return this;
     }
 
