@@ -68,4 +68,24 @@ public class BulkObject {
     public void setOffset(final long offset) {
         this.offset = offset;
     }
+
+    @Override
+    public int hashCode() {
+        return java.util.Objects.hash(name, length, inCache, offset);
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        if (obj instanceof BulkObject) {
+            final BulkObject bulkObject = (BulkObject) obj;
+
+            if (this.getName().equals(bulkObject.getName()) &&
+                this.getLength() == bulkObject.getLength() &&
+                this.getOffset() == bulkObject.getOffset() &&
+                this.isInCache() == bulkObject.isInCache()) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

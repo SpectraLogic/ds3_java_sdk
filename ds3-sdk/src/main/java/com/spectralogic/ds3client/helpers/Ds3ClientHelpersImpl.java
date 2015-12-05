@@ -90,6 +90,8 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
         final BulkGetResponse prime = this.client.bulkGet(new BulkGetRequest(bucket, Lists.newArrayList(objectsToRead))
                 .withChunkOrdering(ChunkClientProcessingOrderGuarantee.NONE)
                 .withPriority(options.getPriority()));
+        // Need to get the list of objects that are partial objects
+
         return new ReadJobImpl(this.client, prime.getResult());
     }
 
@@ -117,7 +119,7 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
             ds3Objects.add(new Ds3Object(contents.getKey()));
         }
 
-        return this.startReadJob(bucket, ds3Objects);
+        return this.startReadJob(bucket, ds3Objects, options);
     }
 
     @Override

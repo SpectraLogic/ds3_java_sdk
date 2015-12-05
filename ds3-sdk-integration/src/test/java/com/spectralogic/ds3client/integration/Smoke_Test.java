@@ -800,4 +800,36 @@ public class Smoke_Test {
             Util.deleteAllContents(client, bucketName);
         }
     }
+
+    @Test
+    public void paritalObjectMultiRangeGet() throws IOException, SignatureException, URISyntaxException, XmlProcessingException {
+        final String bucketName = "partialObjectGet";
+
+        try {
+            final Ds3ClientHelpers helpers = Ds3ClientHelpers.wrap(client);
+            helpers.ensureBucketExists(bucketName);
+
+            Util.loadBookTestData(client, bucketName);
+
+            final List<Ds3Object> objs = Lists.newArrayList();
+            objs.add(new PartialDs3Object("beowulf.txt", Range.byLength(100, 100)));
+            objs.add(new PartialDs3Object("beowulf.txt", Range.byLength(1000, 200)));
+
+            final Ds3ClientHelpers.Job job = helpers.startReadJob(bucketName, objs);
+
+            final ByteArraySeekableByteChannel contents = new ByteArraySeekableByteChannel();
+
+            job.transfer(new Ds3ClientHelpers.ObjectChannelBuilder() {
+                @Override
+                public SeekableByteChannel buildChannel(final String key) throws IOException {
+                    return contents;
+                }
+            });
+
+            assertThat(contents.size(), is(300L));
+
+        } finally {
+            Util.deleteAllContents(client, bucketName);
+        }
+    }
 }

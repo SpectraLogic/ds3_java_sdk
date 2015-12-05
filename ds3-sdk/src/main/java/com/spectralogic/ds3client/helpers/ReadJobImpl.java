@@ -89,13 +89,15 @@ class ReadJobImpl extends JobImpl {
         final GetAvailableJobChunksResponse availableJobChunks =
             this.client.getAvailableJobChunks(new GetAvailableJobChunksRequest(this.masterObjectList.getJobId()));
         switch(availableJobChunks.getStatus()) {
-        case AVAILABLE:
+        case AVAILABLE: {
             final MasterObjectList availableMol = availableJobChunks.getMasterObjectList();
             chunkTransferrer.transferChunks(availableMol.getNodes(), availableMol.getObjects());
             break;
-        case RETRYLATER:
+        }
+        case RETRYLATER: {
             Thread.sleep(availableJobChunks.getRetryAfterSeconds() * 1000);
             break;
+        }
         default:
             assert false : "This line of code should be impossible to hit.";
         }
