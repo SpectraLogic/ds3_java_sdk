@@ -832,4 +832,58 @@ public class Smoke_Test {
             Util.deleteAllContents(client, bucketName);
         }
     }
+
+    @Test
+    public void partialObjectGetOverChunkBoundry() throws IOException, SignatureException, XmlProcessingException {
+        final String bucketName = "partialGetOverBoundry";
+        final String testFile = "testObject.txt";
+        final Path filePath = Files.createTempFile("ds3", testFile);
+        final int seed = 12345;
+        LOG.info("Test file: " + filePath.toAbsolutePath());
+        try {
+            final Ds3ClientHelpers helpers = Ds3ClientHelpers.wrap(client);
+
+            helpers.ensureBucketExists(bucketName);
+
+            final int objectSize = BulkPutRequest.MIN_UPLOAD_SIZE_IN_BYTES * 2;
+
+            final List<Ds3Object> objs = Lists.newArrayList(new Ds3Object(testFile, objectSize));
+
+            final Ds3ClientHelpers.Job putJob = helpers.startWriteJob(bucketName, objs, WriteJobOptions.create().withMaxUploadSize(BulkPutRequest.MIN_UPLOAD_SIZE_IN_BYTES));
+
+            putJob.transfer(new Ds3ClientHelpers.ObjectChannelBuilder() {
+                @Override
+                public SeekableByteChannel buildChannel(final String key) throws IOException {
+                    final byte[] randomData = IOUtils.toByteArray(new RandomDataInputStream(seed, objectSize));
+                    final ByteBuffer randomBuffer = ByteBuffer.wrap(randomData);
+
+                    final ByteArraySeekableByteChannel channel = new ByteArraySeekableByteChannel(objectSize);
+                    channel.write(randomBuffer);
+
+                    return channel;
+
+                }
+            });
+
+            final List<Ds3Object> partialObjectGet = Lists.newArrayList();
+            partialObjectGet.add(new PartialDs3Object(testFile, Range.byPosition(BulkPutRequest.MIN_UPLOAD_SIZE_IN_BYTES - 100, BulkPutRequest.MIN_UPLOAD_SIZE_IN_BYTES + 99)));
+
+            final Ds3ClientHelpers.Job getJob = helpers.startReadJob(bucketName, partialObjectGet);
+
+
+            getJob.transfer(new Ds3ClientHelpers.ObjectChannelBuilder() {
+                @Override
+                public SeekableByteChannel buildChannel(final String key) throws IOException {
+                    return Files.newByteChannel(filePath, StandardOpenOption.WRITE, StandardOpenOption.CREATE);
+                }
+            });
+
+            assertThat(Files.size(filePath), is(200L));
+
+
+        } finally {
+            Files.delete(filePath);
+            Util.deleteAllContents(client, bucketName);
+        }
+    }
 }
