@@ -71,7 +71,7 @@ public class BulkObject {
 
     @Override
     public int hashCode() {
-        return java.util.Objects.hash(name, length, inCache, offset);
+        return java.util.Objects.hash(name, length, offset);
     }
 
     @Override
@@ -81,8 +81,7 @@ public class BulkObject {
 
             if (this.getName().equals(bulkObject.getName()) &&
                 this.getLength() == bulkObject.getLength() &&
-                this.getOffset() == bulkObject.getOffset() &&
-                this.isInCache() == bulkObject.isInCache()) {
+                this.getOffset() == bulkObject.getOffset()) {
                 return true;
             }
         }

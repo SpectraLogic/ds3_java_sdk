@@ -35,7 +35,7 @@ public class GetObjectResponse extends AbstractResponse {
 
     @Override
     protected void processResponse() throws IOException {
-        this.checkStatusCode(200);
+        this.checkStatusCode(200, 206);
     }
 
     protected void download(final WritableByteChannel destinationChannel, final int bufferSize) throws IOException {

@@ -16,6 +16,7 @@
 package com.spectralogic.ds3client.commands;
 
 import com.google.common.base.Joiner;
+import com.google.common.collect.ImmutableCollection;
 import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3client.HttpVerb;
 
@@ -23,6 +24,7 @@ import com.spectralogic.ds3client.models.Range;
 import org.apache.http.entity.ContentType;
 
 import java.nio.channels.WritableByteChannel;
+import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
@@ -37,7 +39,7 @@ public class GetObjectRequest extends AbstractRequest {
     private final long offset;
     private final UUID jobId;
     private final WritableByteChannel channel;
-    private ImmutableList<Range> byteRanges = null;
+    private ImmutableCollection<Range> byteRanges = null;
 
     /**
      * Creates a request to get an object within the context of a bulk job.  This is the preferred method of creating a get object request.
@@ -65,7 +67,7 @@ public class GetObjectRequest extends AbstractRequest {
         return this;
     }
 
-    public GetObjectRequest withByteRanges(final List<Range> byteRanges) {
+    public GetObjectRequest withByteRanges(final Collection<Range> byteRanges) {
         if (byteRanges != null) {
             this.setRanges(ImmutableList.copyOf(byteRanges));
         }
@@ -103,7 +105,7 @@ public class GetObjectRequest extends AbstractRequest {
         return this.objectName;
     }
 
-    public ImmutableList<Range> getByteRanges() {
+    public ImmutableCollection<Range> getByteRanges() {
         return this.byteRanges;
     }
 

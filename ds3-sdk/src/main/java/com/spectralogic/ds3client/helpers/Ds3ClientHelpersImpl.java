@@ -15,6 +15,7 @@
 
 package com.spectralogic.ds3client.helpers;
 
+import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Lists;
 import com.spectralogic.ds3client.Ds3Client;
 import com.spectralogic.ds3client.commands.*;
@@ -22,6 +23,7 @@ import com.spectralogic.ds3client.helpers.options.ReadJobOptions;
 import com.spectralogic.ds3client.helpers.options.WriteJobOptions;
 import com.spectralogic.ds3client.models.Contents;
 import com.spectralogic.ds3client.models.ListBucketResult;
+import com.spectralogic.ds3client.models.Range;
 import com.spectralogic.ds3client.models.bulk.*;
 import com.spectralogic.ds3client.serializer.XmlProcessingException;
 
@@ -87,12 +89,18 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
 
     private Ds3ClientHelpers.Job innerStartReadJob(final String bucket, final Iterable<Ds3Object> objectsToRead, final ReadJobOptions options)
             throws SignatureException, IOException, XmlProcessingException {
-        final BulkGetResponse prime = this.client.bulkGet(new BulkGetRequest(bucket, Lists.newArrayList(objectsToRead))
+        final List<Ds3Object> objects = Lists.newArrayList(objectsToRead);
+        final BulkGetResponse prime = this.client.bulkGet(new BulkGetRequest(bucket, objects)
                 .withChunkOrdering(ChunkClientProcessingOrderGuarantee.NONE)
                 .withPriority(options.getPriority()));
-        // Need to get the list of objects that are partial objects
 
-        return new ReadJobImpl(this.client, prime.getResult());
+        final ImmutableMultimap<String, Range> partialRanges = PartialObjectHelpers.getPartialObjectsRanges(objects);
+
+        final MasterObjectList mob = prime.getResult();
+
+        final ImmutableMultimap<BulkObject, Range> blobtoRanges = PartialObjectHelpers.mapRangesToBlob(mob.getObjects(), partialRanges);
+
+        return new ReadJobImpl(this.client, mob, blobtoRanges);
     }
 
     @Override
@@ -133,13 +141,14 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
     }
 
     @Override
+    //TODO add a partial object read recovery method.  That method will require the list of partial objects.
     public Ds3ClientHelpers.Job recoverReadJob(final UUID jobId) throws SignatureException, IOException, XmlProcessingException, JobRecoveryException {
         final ModifyJobResponse jobResponse = this.client.modifyJob(new ModifyJobRequest(jobId));
         if (RequestType.GET != jobResponse.getMasterObjectList().getRequestType()){
             throw new JobRecoveryException(RequestType.GET.toString(), jobResponse.getMasterObjectList().getRequestType().toString() );
         }
 
-        return new ReadJobImpl(this.client, jobResponse.getMasterObjectList());
+        return new ReadJobImpl(this.client, jobResponse.getMasterObjectList(), ImmutableMultimap.<BulkObject, Range>of());
     }
 
     @Override

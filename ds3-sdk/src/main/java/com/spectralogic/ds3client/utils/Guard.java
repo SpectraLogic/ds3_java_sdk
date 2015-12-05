@@ -11,4 +11,8 @@ public final class Guard {
     public static boolean isNullOrEmpty(final Collection<?> collection) {
         return collection == null || collection.isEmpty();
     }
+
+    public static boolean isNotNullAndNotEmpty(final Collection<?> collection) {
+        return !isNullOrEmpty(collection);
+    }
 }
