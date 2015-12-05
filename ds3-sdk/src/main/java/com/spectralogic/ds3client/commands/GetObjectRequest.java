@@ -25,7 +25,6 @@ import org.apache.http.entity.ContentType;
 
 import java.nio.channels.WritableByteChannel;
 import java.util.Collection;
-import java.util.List;
 import java.util.UUID;
 
 /**
