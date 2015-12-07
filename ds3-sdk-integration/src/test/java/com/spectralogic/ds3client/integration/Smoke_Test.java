@@ -951,4 +951,24 @@ public class Smoke_Test {
             Util.deleteAllContents(client, bucketName);
         }
     }
+
+    @Test
+    public void headObjectSize() throws IOException, SignatureException, URISyntaxException, XmlProcessingException {
+        final String bucketName = "headObjectSize";
+
+        try {
+            final Ds3ClientHelpers helpers = Ds3ClientHelpers.wrap(client);
+
+            helpers.ensureBucketExists(bucketName);
+
+            Util.loadBookTestData(client, bucketName);
+
+            final HeadObjectResponse headObjectResponse = client.headObject(new HeadObjectRequest(bucketName, "beowulf.txt"));
+
+            assertThat(headObjectResponse.getObjectSize(), is(294059L));
+
+        } finally {
+            Util.deleteAllContents(client, bucketName);
+        }
+    }
 }
