@@ -1,7 +1,8 @@
-package com.spectralogic.ds3client.helpers;
+package com.spectralogic.ds3client.helpers.util;
 
 import com.google.common.collect.ImmutableCollection;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMultimap;
 import com.spectralogic.ds3client.models.Range;
 import com.spectralogic.ds3client.models.bulk.BulkObject;
@@ -10,9 +11,11 @@ import com.spectralogic.ds3client.models.bulk.Objects;
 import com.spectralogic.ds3client.models.bulk.PartialDs3Object;
 import com.spectralogic.ds3client.utils.Guard;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-final class PartialObjectHelpers {
+public final class PartialObjectHelpers {
     private PartialObjectHelpers() {
        //pass
     }
@@ -29,8 +32,9 @@ final class PartialObjectHelpers {
         return builder.build();
     }
 
-    public static ImmutableMultimap<BulkObject, Range> mapRangesToBlob(final List<Objects> chunks, final ImmutableMultimap<String, Range> partialObjects) {
-        final ImmutableMultimap.Builder<BulkObject, Range> builder = ImmutableMultimap.builder();
+    public static ImmutableMap<String, ImmutableMultimap<BulkObject, Range>> mapRangesToBlob(final List<Objects> chunks, final ImmutableMultimap<String, Range> partialObjects) {
+
+        final Map<String, ImmutableMultimap.Builder<BulkObject, Range>> objectMapperBuilders = new HashMap<>();
 
         for (final Objects chunk : chunks) {
             for (final BulkObject blob : chunk.getObjects()) {
@@ -39,12 +43,27 @@ final class PartialObjectHelpers {
                 if (Guard.isNullOrEmpty(ranges)) continue;
 
                 final ImmutableList<Range> rangesForBlob = getRangesForBlob(blob, ranges);
-
-                builder.putAll(blob, rangesForBlob);
+                getMultiMapBuilder(objectMapperBuilders, blob.getName()).putAll(blob, rangesForBlob);
             }
         }
 
+        final ImmutableMap.Builder<String, ImmutableMultimap<BulkObject, Range>> builder = ImmutableMap.builder();
+
+        for(final Map.Entry<String, ImmutableMultimap.Builder<BulkObject, Range>> entry : objectMapperBuilders.entrySet()) {
+            builder.put(entry.getKey(), entry.getValue().build());
+        }
+
         return builder.build();
+    }
+
+    private static ImmutableMultimap.Builder<BulkObject, Range> getMultiMapBuilder(final Map<String, ImmutableMultimap.Builder<BulkObject, Range>> mapper, final String file) {
+        if (mapper.containsKey(file)) {
+            return mapper.get(file);
+        } else {
+            final ImmutableMultimap.Builder<BulkObject, Range> builder = ImmutableMultimap.builder();
+            mapper.put(file, builder);
+            return builder;
+        }
     }
 
     private static ImmutableList<Range> getRangesForBlob(final BulkObject object, final ImmutableCollection<Range> ranges) {

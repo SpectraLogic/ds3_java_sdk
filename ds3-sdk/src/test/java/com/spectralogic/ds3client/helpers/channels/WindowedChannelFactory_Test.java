@@ -13,7 +13,7 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3client.helpers;
+package com.spectralogic.ds3client.helpers.channels;
 
 import com.spectralogic.ds3client.utils.ByteArraySeekableByteChannel;
 

@@ -13,8 +13,9 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3client.helpers;
+package com.spectralogic.ds3client.helpers.channels;
 
+import com.spectralogic.ds3client.helpers.TruncateNotAllowedException;
 import com.spectralogic.ds3client.utils.ByteArraySeekableByteChannel;
 
 import org.apache.commons.io.IOUtils;

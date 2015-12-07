@@ -16,6 +16,7 @@
 package com.spectralogic.ds3client.helpers;
 
 import com.google.common.collect.ImmutableCollection;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Iterables;
 import com.spectralogic.ds3client.Ds3Client;
@@ -24,6 +25,7 @@ import com.spectralogic.ds3client.commands.GetAvailableJobChunksResponse;
 import com.spectralogic.ds3client.commands.GetObjectRequest;
 import com.spectralogic.ds3client.helpers.ChunkTransferrer.ItemTransferrer;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.ObjectChannelBuilder;
+import com.spectralogic.ds3client.helpers.util.PartialObjectHelpers;
 import com.spectralogic.ds3client.models.Range;
 import com.spectralogic.ds3client.models.bulk.BulkObject;
 import com.spectralogic.ds3client.models.bulk.MasterObjectList;
@@ -39,15 +41,15 @@ class ReadJobImpl extends JobImpl {
 
     private final JobPartTracker partTracker;
     private final List<Objects> chunks;
-    private final ImmutableMultimap<BulkObject, Range> blobToRanges;
+    private final ImmutableMap<String, ImmutableMultimap<BulkObject, Range>> blobToRanges;
 
-    public ReadJobImpl(final Ds3Client client, final MasterObjectList masterObjectList, final ImmutableMultimap<BulkObject, Range> blobToRanges) {
+    public ReadJobImpl(final Ds3Client client, final MasterObjectList masterObjectList, final ImmutableMultimap<String, Range> objectRanges) {
         super(client, masterObjectList);
 
         this.chunks = this.masterObjectList.getObjects();
         this.partTracker = JobPartTrackerFactory
                 .buildPartTracker(Iterables.concat(chunks));
-        this.blobToRanges = blobToRanges;
+        this.blobToRanges = PartialObjectHelpers.mapRangesToBlob(masterObjectList.getObjects(), objectRanges);
     }
 
     @Override
@@ -73,7 +75,7 @@ class ReadJobImpl extends JobImpl {
     @Override
     public void transfer(final ObjectChannelBuilder channelBuilder)
             throws SignatureException, IOException, XmlProcessingException {
-        try (final JobState jobState = new JobState(channelBuilder, this.masterObjectList.getObjects(), partTracker)) {
+        try (final JobState jobState = new JobState(channelBuilder, this.masterObjectList.getObjects(), partTracker, blobToRanges)) {
             final ChunkTransferrer chunkTransferrer = new ChunkTransferrer(
                 new GetObjectTransferrer(jobState),
                 this.client,
@@ -120,7 +122,7 @@ class ReadJobImpl extends JobImpl {
         public void transferItem(final Ds3Client client, final BulkObject ds3Object)
                 throws SignatureException, IOException {
 
-            final ImmutableCollection<Range> ranges = blobToRanges.get(ds3Object);
+            final ImmutableCollection<Range> ranges = getRangesForBlob(blobToRanges, ds3Object);
 
             final GetObjectRequest request = new GetObjectRequest(
                 ReadJobImpl.this.masterObjectList.getBucketName(),
@@ -136,5 +138,11 @@ class ReadJobImpl extends JobImpl {
 
             client.getObject(request);
         }
+    }
+
+    private static ImmutableCollection<Range> getRangesForBlob(final ImmutableMap<String, ImmutableMultimap<BulkObject, Range>> blobToRanges, final BulkObject ds3Object) {
+        final ImmutableMultimap<BulkObject, Range> ranges =  blobToRanges.get(ds3Object.getName());
+        if (ranges == null) return null;
+        return ranges.get(ds3Object);
     }
 }

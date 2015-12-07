@@ -13,8 +13,9 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3client.helpers;
+package com.spectralogic.ds3client.helpers.channelbuilders;
 
+import com.spectralogic.ds3client.helpers.Ds3ClientHelpers;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.ObjectChannelBuilder;
 
 import java.io.IOException;
@@ -25,10 +26,10 @@ import java.nio.channels.SeekableByteChannel;
  * and then adding a local prefix.
  */
 public class PrefixRemoverObjectChannelBuilder implements ObjectChannelBuilder {
-    final private Ds3ClientHelpers.ObjectChannelBuilder channelBuilder;
+    final private ObjectChannelBuilder channelBuilder;
     final private String prefix;
 
-    public PrefixRemoverObjectChannelBuilder(final Ds3ClientHelpers.ObjectChannelBuilder channelBuilder, final String prefix) {
+    public PrefixRemoverObjectChannelBuilder(final ObjectChannelBuilder channelBuilder, final String prefix) {
         this.channelBuilder = channelBuilder;
         this.prefix = prefix;
     }

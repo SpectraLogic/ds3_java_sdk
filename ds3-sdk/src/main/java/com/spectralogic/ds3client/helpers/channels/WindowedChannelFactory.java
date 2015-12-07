@@ -13,11 +13,11 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3client.helpers;
+package com.spectralogic.ds3client.helpers.channels;
 
 import java.nio.channels.SeekableByteChannel;
 
-class WindowedChannelFactory implements AutoCloseable {
+public class WindowedChannelFactory implements AutoCloseable {
     private final SeekableByteChannel channel;
     private final Object lock = new Object();
 

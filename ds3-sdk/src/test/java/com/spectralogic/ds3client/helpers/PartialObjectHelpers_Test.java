@@ -1,9 +1,7 @@
 package com.spectralogic.ds3client.helpers;
 
-import com.google.common.collect.ImmutableCollection;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMultimap;
-import com.google.common.collect.Lists;
+import com.google.common.collect.*;
+import com.spectralogic.ds3client.helpers.util.PartialObjectHelpers;
 import com.spectralogic.ds3client.models.Range;
 import com.spectralogic.ds3client.models.bulk.BulkObject;
 import com.spectralogic.ds3client.models.bulk.Ds3Object;
@@ -119,12 +117,12 @@ public class PartialObjectHelpers_Test {
         chunks.add(chunk1);
         chunks.add(chunk2);
 
-        final ImmutableMultimap<BulkObject, Range> blobToRangeMapping = PartialObjectHelpers.mapRangesToBlob(chunks, ranges);
+        final ImmutableMap<String, ImmutableMultimap<BulkObject, Range>> blobToRangeMapping = PartialObjectHelpers.mapRangesToBlob(chunks, ranges);
 
         assertFalse(blobToRangeMapping.isEmpty());
-        assertThat(blobToRangeMapping.size(), is(4));
+        assertThat(blobToRangeMapping.size(), is(2));
 
-        final ImmutableCollection<Range> obj1Blob = blobToRangeMapping.get(new BulkObject("obj1.txt", 100, true, 0));
+        final ImmutableCollection<Range> obj1Blob = blobToRangeMapping.get("obj1.txt").get(new BulkObject("obj1.txt", 100, true, 0));
         assertThat(obj1Blob, is(notNullValue()));
         assertThat(obj1Blob.size(), is(1));
 
@@ -132,7 +130,7 @@ public class PartialObjectHelpers_Test {
         assertThat(range.getStart(), is(0L));
         assertThat(range.getEnd(), is(99L));
 
-        final ImmutableCollection<Range> obj2Blob1 = blobToRangeMapping.get(new BulkObject("obj2.txt", 100, true, 0));
+        final ImmutableCollection<Range> obj2Blob1 = blobToRangeMapping.get("obj2.txt").get(new BulkObject("obj2.txt", 100, true, 0));
         assertThat(obj2Blob1, is(notNullValue()));
         assertThat(obj2Blob1.size(), is(2));
 
@@ -144,7 +142,7 @@ public class PartialObjectHelpers_Test {
         assertThat(range.getStart(), is(10L));
         assertThat(range.getEnd(), is(99L));
 
-        final ImmutableCollection<Range> obj2Blob2 = blobToRangeMapping.get(new BulkObject("obj2.txt", 200, true, 100));
+        final ImmutableCollection<Range> obj2Blob2 = blobToRangeMapping.get("obj2.txt").get(new BulkObject("obj2.txt", 200, true, 100));
         assertThat(obj2Blob2, is(notNullValue()));
         assertThat(obj2Blob2.size(), is(1));
 

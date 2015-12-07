@@ -226,7 +226,7 @@ public class NetworkClientImpl implements NetworkClient {
             httpRequest.addHeader(AUTHORIZATION, this.getSignature(new SignatureDetails(
                 this.ds3Request.getVerb(),
                 this.hash,
-                this.ds3Request.getContentType().toString(),
+                this.ds3Request.getContentType(),
                 date,
                 canonicalizeAmzHeaders(this.ds3Request.getHeaders()),
                 canonicalizeResource(this.ds3Request.getPath(), this.ds3Request.getQueryParams()),

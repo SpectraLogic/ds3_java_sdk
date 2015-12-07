@@ -15,6 +15,8 @@
 
 package com.spectralogic.ds3client.helpers;
 
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Iterables;
 import com.spectralogic.ds3client.Ds3Client;
 import com.spectralogic.ds3client.commands.AllocateJobChunkRequest;
@@ -22,6 +24,7 @@ import com.spectralogic.ds3client.commands.AllocateJobChunkResponse;
 import com.spectralogic.ds3client.commands.PutObjectRequest;
 import com.spectralogic.ds3client.helpers.ChunkTransferrer.ItemTransferrer;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.ObjectChannelBuilder;
+import com.spectralogic.ds3client.models.Range;
 import com.spectralogic.ds3client.models.bulk.BulkObject;
 import com.spectralogic.ds3client.models.bulk.MasterObjectList;
 import com.spectralogic.ds3client.models.bulk.Objects;
@@ -87,7 +90,7 @@ class WriteJobImpl extends JobImpl {
             LOG.info("There is nothing to transfer");
             return;
         }
-        try (final JobState jobState = new JobState(channelBuilder, filteredChunks, partTracker)) {
+        try (final JobState jobState = new JobState(channelBuilder, filteredChunks, partTracker, ImmutableMap.<String, ImmutableMultimap<BulkObject,Range>>of())) {
             final ChunkTransferrer chunkTransferrer = new ChunkTransferrer(
                 new PutObjectTransferrer(jobState),
                 this.client,

@@ -21,6 +21,7 @@ import com.spectralogic.ds3client.Ds3Client;
 import com.spectralogic.ds3client.commands.*;
 import com.spectralogic.ds3client.helpers.options.ReadJobOptions;
 import com.spectralogic.ds3client.helpers.options.WriteJobOptions;
+import com.spectralogic.ds3client.helpers.util.PartialObjectHelpers;
 import com.spectralogic.ds3client.models.Contents;
 import com.spectralogic.ds3client.models.ListBucketResult;
 import com.spectralogic.ds3client.models.Range;
@@ -98,9 +99,7 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
 
         final MasterObjectList mob = prime.getResult();
 
-        final ImmutableMultimap<BulkObject, Range> blobtoRanges = PartialObjectHelpers.mapRangesToBlob(mob.getObjects(), partialRanges);
-
-        return new ReadJobImpl(this.client, mob, blobtoRanges);
+        return new ReadJobImpl(this.client, prime.getResult(), partialRanges);
     }
 
     @Override
@@ -148,7 +147,7 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
             throw new JobRecoveryException(RequestType.GET.toString(), jobResponse.getMasterObjectList().getRequestType().toString() );
         }
 
-        return new ReadJobImpl(this.client, jobResponse.getMasterObjectList(), ImmutableMultimap.<BulkObject, Range>of());
+        return new ReadJobImpl(this.client, jobResponse.getMasterObjectList(), ImmutableMultimap.<String, Range>of());
     }
 
     @Override

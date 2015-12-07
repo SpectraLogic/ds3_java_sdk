@@ -1,0 +1,196 @@
+package com.spectralogic.ds3client.helpers.channels;
+
+import com.google.common.collect.*;
+import com.spectralogic.ds3client.helpers.TruncateNotAllowedException;
+import com.spectralogic.ds3client.models.Range;
+import com.spectralogic.ds3client.models.bulk.BulkObject;
+import com.spectralogic.ds3client.utils.Guard;
+
+import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.channels.SeekableByteChannel;
+import java.util.HashMap;
+import java.util.Map;
+
+public class RangedSeekableByteChannel implements SeekableByteChannel {
+
+    private final SeekableByteChannel byteChannel;
+    private final ImmutableMultimap<BulkObject, Range> ranges;
+    private final ImmutableMap<BulkObject, Long> blobSizes;
+    private final ImmutableMap<BulkObject, Long> startingOffsetForBlob;
+    private final long size;
+
+    private long position;
+    private boolean open;
+
+    public static RangedSeekableByteChannel wrap(final SeekableByteChannel byteChannel, final ImmutableMultimap<BulkObject, Range> ranges) throws IOException {
+        return new RangedSeekableByteChannel(byteChannel, ranges);
+    }
+
+    public RangedSeekableByteChannel(final SeekableByteChannel byteChannel, final ImmutableMultimap<BulkObject, Range> ranges) throws IOException {
+        this.byteChannel = byteChannel;
+        this.ranges = ranges;
+        this.position = 0;
+        this.open = true;
+        this.size = getSize(byteChannel.size(), ranges);
+        this.blobSizes = computesBlobSize(ranges);
+        this.startingOffsetForBlob = computeRealBlobOffset(this.blobSizes);
+    }
+
+    private static ImmutableMap<BulkObject,Long> computeRealBlobOffset(final ImmutableMap<BulkObject, Long> blobLengths) {
+        if (Guard.isMapNullOrEmpty(blobLengths)) {
+            return ImmutableMap.of();
+        }
+        final Map<BulkObject, Long> realOffsets = new HashMap<>();
+
+        final ImmutableSortedSet<BulkObject> bulkObjects = ImmutableSortedSet.copyOf(BlobComparator.create(), blobLengths.keySet());
+        final ImmutableList<BulkObject> sortedList = ImmutableList.copyOf(bulkObjects);
+
+        final int listLength = sortedList.size();
+
+        for(int i = 0; i < listLength; i++) {
+            if(i == 0) {
+                realOffsets.put(sortedList.get(0), 0L);
+                continue;
+            }
+
+            // get previous real offset, and add it's size, that's the current channels 'real' offset
+            final BulkObject previous = sortedList.get(i-1);
+
+            final long previousOffset = realOffsets.get(previous);
+            final long previousSize = blobLengths.get(previous);
+
+            realOffsets.put(sortedList.get(i), previousOffset + previousSize);
+        }
+
+        return ImmutableMap.copyOf(realOffsets);
+    }
+
+    private static ImmutableMap<BulkObject, Long> computesBlobSize(final ImmutableMultimap<BulkObject, Range> ranges) {
+        if (Guard.isMultiMapNullOrEmpty(ranges)) {
+            return ImmutableMap.of();
+        }
+
+        final ImmutableMap.Builder<BulkObject, Long> builder = ImmutableMap.builder();
+
+        for (final BulkObject blob : ranges.keySet()) {
+            builder.put(blob, sizeOfBulkRange(ranges.get(blob)));
+        }
+
+        return builder.build();
+    }
+
+    private static long getSize(final long channelSize, final ImmutableMultimap<BulkObject, Range> ranges) {
+        if (Guard.isMultiMapNullOrEmpty(ranges)) {
+            return channelSize;
+        } else {
+            return sizeOfBulkRange(ranges.values());
+        }
+    }
+
+    private static long sizeOfBulkRange(final ImmutableCollection<Range> ranges) {
+        long rangeSize = 0;
+        for (final Range range : ranges) {
+            rangeSize += range.getLength();
+        }
+        return rangeSize;
+    }
+
+    @Override
+    public int read(final ByteBuffer dst) throws IOException {
+        checkClosed();
+        final int bytesRead = byteChannel.read(dst);
+        this.position += bytesRead;
+        return bytesRead;
+    }
+
+    @Override
+    public int write(final ByteBuffer src) throws IOException {
+        checkClosed();
+        final int bytesWritten = byteChannel.write(src);
+        this.position += bytesWritten;
+        return bytesWritten;
+    }
+
+    @Override
+    public long position() throws IOException {
+        checkClosed();
+        return this.position;
+    }
+
+    @Override
+    public SeekableByteChannel position(final long newPosition) throws IOException {
+        checkClosed();
+        if (!checkRange(newPosition)) {
+            throw new IllegalStateException("The requested position is outside the acceptable ranges for this stream");
+        }
+        this.position = newPosition;
+
+        final BulkObject blob = getBlobFromPosition(ranges, newPosition);
+        if (blob == null) {
+            byteChannel.position(newPosition);
+        } else {
+            final long offsetInBlob = newPosition - blob.getOffset();
+            final long blobOffset = startingOffsetForBlob.get(blob);
+
+            byteChannel.position(blobOffset + offsetInBlob);
+        }
+
+        return this;
+    }
+
+    private boolean checkRange(final long position) {
+        if (Guard.isMultiMapNullOrEmpty(ranges)) return true;  // this means we are reading from the stream and we do not any range checks
+
+        final BulkObject blob = getBlobFromPosition(ranges, position);
+        if (blob == null) return false; // this means that the position we are seeking to is not in any of the blobs that we know about
+
+        // Check to make sure that the position we are seeking to is within the size of the ranges contained in a blob
+        final long blobSize = blobSizes.get(blob);
+        return blob.getOffset() <= position && position <= blob.getOffset() + blobSize - 1;
+    }
+
+    private static BulkObject getBlobFromPosition(final ImmutableMultimap<BulkObject, Range> blobs, final long position) {
+        if (Guard.isMultiMapNullOrEmpty(blobs)) {
+            return null;
+        }
+
+        for (final BulkObject bulkObject : blobs.keySet()) {
+            if (bulkObject.getOffset() <= position && position <= (bulkObject.getOffset() + bulkObject.getLength() - 1)) {
+                return bulkObject;
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public long size() throws IOException {
+        checkClosed();
+        return this.size;
+    }
+
+    @Override
+    public SeekableByteChannel truncate(final long size) throws IOException {
+        throw new TruncateNotAllowedException();
+    }
+
+    @Override
+    public boolean isOpen() {
+        return this.open;
+    }
+
+    @Override
+    public void close() throws IOException {
+        try {
+            this.byteChannel.close();
+        } finally {
+            this.open = false;
+        }
+    }
+
+    private void checkClosed() {
+        if (!this.open) {
+            throw new IllegalStateException("Object already closed");
+        }
+    }
+}

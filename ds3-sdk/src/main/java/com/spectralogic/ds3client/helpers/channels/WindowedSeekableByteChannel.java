@@ -13,13 +13,15 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3client.helpers;
+package com.spectralogic.ds3client.helpers.channels;
+
+import com.spectralogic.ds3client.helpers.TruncateNotAllowedException;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.SeekableByteChannel;
 
-class WindowedSeekableByteChannel implements SeekableByteChannel {
+public class WindowedSeekableByteChannel implements SeekableByteChannel {
     private final SeekableByteChannel channel;
     private final Object lock;
     private final long offset;
@@ -66,9 +68,7 @@ class WindowedSeekableByteChannel implements SeekableByteChannel {
 
     private int copy(final ByteBuffer buffer, final Copy copy) throws IOException {
         synchronized (this.lock) {
-            if (!this.isOpen) {
-                throw new IllegalStateException("Object already closed");
-            }
+            checkClosed();
             if (this.position >= this.length) {
                 return -1;
             }
@@ -92,9 +92,7 @@ class WindowedSeekableByteChannel implements SeekableByteChannel {
     @Override
     public long position() throws IOException {
         synchronized (this.lock) {
-            if (!this.isOpen) {
-                throw new IllegalStateException("Object already closed");
-            }
+            checkClosed();
             return this.position;
         }
     }
@@ -102,9 +100,7 @@ class WindowedSeekableByteChannel implements SeekableByteChannel {
     @Override
     public SeekableByteChannel position(final long newPosition) throws IOException {
         synchronized (this.lock) {
-            if (!this.isOpen) {
-                throw new IllegalStateException("Object already closed");
-            }
+            checkClosed();
             this.position = newPosition;
             return this;
         }
@@ -113,9 +109,7 @@ class WindowedSeekableByteChannel implements SeekableByteChannel {
     @Override
     public long size() throws IOException {
         synchronized (this.lock) {
-            if (!this.isOpen) {
-                throw new IllegalStateException("Object already closed");
-            }
+            checkClosed();
             return this.length;
         }
     }
@@ -124,7 +118,13 @@ class WindowedSeekableByteChannel implements SeekableByteChannel {
     public SeekableByteChannel truncate(final long size) throws IOException {
         throw new TruncateNotAllowedException();
     }
-    
+
+    private void checkClosed() {
+        if (!this.isOpen) {
+            throw new IllegalStateException("Object already closed");
+        }
+    }
+
     private interface Copy {
         int copy(final ByteBuffer buffer) throws IOException;
     }
