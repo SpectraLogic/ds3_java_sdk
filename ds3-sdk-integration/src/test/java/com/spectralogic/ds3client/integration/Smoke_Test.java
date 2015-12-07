@@ -146,6 +146,7 @@ public class Smoke_Test {
                     bucketName, "beowulf.txt"));
             assertThat(headResponse.getStatus(),
                     is(HeadObjectResponse.Status.EXISTS));
+            assertThat(headResponse.getObjectSize(), is(294059L));
 
             final GetObjectsResponse response = client
                     .getObjects(new GetObjectsRequest().withBucket("test_get_objs"));
