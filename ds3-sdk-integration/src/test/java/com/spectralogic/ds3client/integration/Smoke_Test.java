@@ -771,7 +771,7 @@ public class Smoke_Test {
     }
 
     @Test
-    public void paritalObjectGet() throws IOException, SignatureException, URISyntaxException, XmlProcessingException {
+    public void partialObjectGet() throws IOException, SignatureException, URISyntaxException, XmlProcessingException {
         final String bucketName = "partialObjectGet";
 
         try {
@@ -802,7 +802,7 @@ public class Smoke_Test {
     }
 
     @Test
-    public void paritalObjectMultiRangeGet() throws IOException, SignatureException, URISyntaxException, XmlProcessingException {
+    public void partialObjectMultiRangeGet() throws IOException, SignatureException, URISyntaxException, XmlProcessingException {
         final String bucketName = "partialObjectGet";
 
         try {
@@ -869,7 +869,6 @@ public class Smoke_Test {
             partialObjectGet.add(new PartialDs3Object(testFile, Range.byPosition(BulkPutRequest.MIN_UPLOAD_SIZE_IN_BYTES - 100, BulkPutRequest.MIN_UPLOAD_SIZE_IN_BYTES + 99)));
 
             final Ds3ClientHelpers.Job getJob = helpers.startReadJob(bucketName, partialObjectGet);
-
 
             getJob.transfer(new Ds3ClientHelpers.ObjectChannelBuilder() {
                 @Override
