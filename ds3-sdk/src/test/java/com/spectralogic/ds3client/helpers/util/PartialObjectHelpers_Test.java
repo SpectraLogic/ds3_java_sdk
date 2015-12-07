@@ -1,7 +1,6 @@
-package com.spectralogic.ds3client.helpers;
+package com.spectralogic.ds3client.helpers.util;
 
 import com.google.common.collect.*;
-import com.spectralogic.ds3client.helpers.util.PartialObjectHelpers;
 import com.spectralogic.ds3client.models.Range;
 import com.spectralogic.ds3client.models.bulk.BulkObject;
 import com.spectralogic.ds3client.models.bulk.Ds3Object;
@@ -149,5 +148,59 @@ public class PartialObjectHelpers_Test {
         range = obj2Blob2.asList().get(0);
         assertThat(range.getStart(), is(100L));
         assertThat(range.getEnd(), is(209L));
+    }
+
+    @Test
+    public void combineTwoOverlappingRanges() {
+        final ImmutableList<Range> ranges = PartialObjectHelpers.dedupRanges(ImmutableList.of(Range.byPosition(5, 10), Range.byPosition(9, 14)));
+
+        assertThat(ranges.size(), is(1));
+        final Range range = ranges.get(0);
+        assertThat(range.getStart(), is(5L));
+        assertThat(range.getEnd(), is(14L));
+    }
+
+    @Test
+    public void combineThreeOverlappingRanges() {
+        final ImmutableList<Range> ranges = PartialObjectHelpers.dedupRanges(ImmutableList.of(Range.byPosition(5, 10), Range.byPosition(9, 14), Range.byPosition(11, 20)));
+
+        assertThat(ranges.size(), is(1));
+        final Range range = ranges.get(0);
+        assertThat(range.getStart(), is(5L));
+        assertThat(range.getEnd(), is(20L));
+    }
+
+    @Test
+    public void combineThreeOverlappingRangesInRandomOrder() {
+        final ImmutableList<Range> ranges = PartialObjectHelpers.dedupRanges(ImmutableList.of(Range.byPosition(11, 20), Range.byPosition(5, 10), Range.byPosition(9, 14)));
+
+        assertThat(ranges.size(), is(1));
+        final Range range = ranges.get(0);
+        assertThat(range.getStart(), is(5L));
+        assertThat(range.getEnd(), is(20L));
+    }
+
+    @Test
+    public void checkSorted() {
+        final ImmutableList<Range> ranges = PartialObjectHelpers.dedupRanges(ImmutableList.of(Range.byPosition(11, 20), Range.byPosition(5, 10)));
+
+        assertThat(ranges.size(), is(2));
+        Range range = ranges.get(0);
+        assertThat(range.getStart(), is(5L));
+        assertThat(range.getEnd(), is(10L));
+
+        range = ranges.get(1);
+        assertThat(range.getStart(), is(11L));
+        assertThat(range.getEnd(), is(20L));
+    }
+
+    @Test
+    public void singleRangeValue() {
+        final ImmutableList<Range> ranges = PartialObjectHelpers.dedupRanges(ImmutableList.of(Range.byPosition(5, 20)));
+
+        assertThat(ranges.size(), is(1));
+        final Range range = ranges.get(0);
+        assertThat(range.getStart(), is(5L));
+        assertThat(range.getEnd(), is(20L));
     }
 }

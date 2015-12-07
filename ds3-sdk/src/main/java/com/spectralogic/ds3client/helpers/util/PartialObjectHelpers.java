@@ -1,9 +1,6 @@
 package com.spectralogic.ds3client.helpers.util;
 
-import com.google.common.collect.ImmutableCollection;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableMultimap;
+import com.google.common.collect.*;
 import com.spectralogic.ds3client.models.Range;
 import com.spectralogic.ds3client.models.bulk.BulkObject;
 import com.spectralogic.ds3client.models.bulk.Ds3Object;
@@ -43,7 +40,8 @@ public final class PartialObjectHelpers {
                 if (Guard.isNullOrEmpty(ranges)) continue;
 
                 final ImmutableList<Range> rangesForBlob = getRangesForBlob(blob, ranges);
-                getMultiMapBuilder(objectMapperBuilders, blob.getName()).putAll(blob, rangesForBlob);
+                final ImmutableList<Range> nonDuplicateRanges = dedupRanges(rangesForBlob);
+                getMultiMapBuilder(objectMapperBuilders, blob.getName()).putAll(blob, nonDuplicateRanges);
             }
         }
 
@@ -54,6 +52,45 @@ public final class PartialObjectHelpers {
         }
 
         return builder.build();
+    }
+
+    static ImmutableList<Range> dedupRanges(final ImmutableList<Range> rangesForBlob) {
+
+        final ImmutableList.Builder<Range> builder = ImmutableList.builder();
+        final ImmutableSortedSet<Range> sortedRanges = ImmutableSortedSet.copyOf(rangesForBlob);
+
+        Range currentRange = null;
+        Range nextRange;
+        final UnmodifiableIterator<Range> rangeIterator = sortedRanges.iterator();
+
+        while (rangeIterator.hasNext()) {
+            nextRange = rangeIterator.next();
+            if (currentRange == null) {
+                // This will only be called on the first iteration of the loop
+                currentRange = nextRange;
+                continue;
+            }
+
+            // If the currentRange ends after the nextRange starts, combine the ranges
+            if (currentRange.getEnd() >= nextRange.getStart()) {
+                final long start = Math.min(currentRange.getStart(), nextRange.getStart());
+                final long end = Math.max(currentRange.getEnd(), nextRange.getEnd());
+                currentRange = Range.byPosition(start, end);
+                // Do not add the range here.  The next range could also intersect.
+                // Continue looking until there is a range that does not intersect.
+                continue;
+            }
+            builder.add(currentRange);
+            currentRange = nextRange;
+        }
+
+        // We need to make sure to add the last item in the list
+        if (currentRange != null) {
+            builder.add(currentRange);
+        }
+
+        // Return the ranges sorted
+        return Ordering.natural().immutableSortedCopy(builder.build());
     }
 
     private static ImmutableMultimap.Builder<BulkObject, Range> getMultiMapBuilder(final Map<String, ImmutableMultimap.Builder<BulkObject, Range>> mapper, final String file) {
