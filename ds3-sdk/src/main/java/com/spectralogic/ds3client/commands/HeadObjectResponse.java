@@ -12,6 +12,8 @@ public class HeadObjectResponse extends AbstractResponse {
     private static final Logger LOG = LoggerFactory.getLogger(HeadObjectResponse.class);
 
     private Status status;
+    private Metadata metadata;
+    private long objectSize;
 
     public enum Status {
         EXISTS, DOESNTEXIST, NOTAUTHORIZED, UNKNOWN
@@ -26,13 +28,19 @@ public class HeadObjectResponse extends AbstractResponse {
     }
 
     public Metadata getMetadata() {
-        return new MetadataImpl(this.getResponse().getHeaders());
+        return metadata;
+    }
+
+    public long getObjectSize() {
+        return this.objectSize;
     }
 
     @Override
     protected void processResponse() throws IOException {
         try {
             this.checkStatusCode(200, 403, 404);
+            this.metadata = new MetadataImpl(this.getResponse().getHeaders());
+            this.objectSize = getSizeFromHeaders(this.getResponse().getHeaders());
             this.setStatus(this.getStatusCode());
         } finally {
             this.getResponse().close();

@@ -24,18 +24,22 @@ import java.io.InputStream;
 import java.nio.channels.WritableByteChannel;
 
 public class GetObjectResponse extends AbstractResponse {
+    private Metadata metadata;
+    private long objectSize;
     public GetObjectResponse(final WebResponse response, final WritableByteChannel destinationChannel, final int bufferSize) throws IOException {
         super(response);
         download(destinationChannel, bufferSize);
     }
 
     public Metadata getMetadata() {
-        return new MetadataImpl(this.getResponse().getHeaders());
+        return metadata;
     }
 
     @Override
     protected void processResponse() throws IOException {
         this.checkStatusCode(200, 206);
+        this.metadata = new MetadataImpl(this.getResponse().getHeaders());
+        this.objectSize = getSizeFromHeaders(this.getResponse().getHeaders());
     }
 
     protected void download(final WritableByteChannel destinationChannel, final int bufferSize) throws IOException {
@@ -45,5 +49,9 @@ public class GetObjectResponse extends AbstractResponse {
             IOUtils.copy(responseStream, destinationChannel, bufferSize);
             destinationChannel.close();
         }
+    }
+
+    public long getObjectSize() {
+        return objectSize;
     }
 }

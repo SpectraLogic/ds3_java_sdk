@@ -146,6 +146,7 @@ public class Smoke_Test {
                     bucketName, "beowulf.txt"));
             assertThat(headResponse.getStatus(),
                     is(HeadObjectResponse.Status.EXISTS));
+            assertThat(headResponse.getObjectSize(), is(294059L));
 
             final GetObjectsResponse response = client
                     .getObjects(new GetObjectsRequest().withBucket("test_get_objs"));
@@ -922,6 +923,52 @@ public class Smoke_Test {
         } finally {
             Util.deleteAllContents(client, bucketName);
             Files.delete(filePath);
+        }
+    }
+
+    @Test
+    public void getObjectSize() throws IOException, SignatureException, URISyntaxException, XmlProcessingException {
+        final String bucketName = "getObjectSize";
+
+        try {
+            final Ds3ClientHelpers helpers = Ds3ClientHelpers.wrap(client);
+
+            helpers.ensureBucketExists(bucketName);
+
+            Util.loadBookTestData(client, bucketName);
+
+            final List<Ds3Object> objects = Lists.newArrayList(new Ds3Object("beowulf.txt"));
+
+            final BulkResponse bulkResponse = client.bulkGet(new BulkGetRequest(bucketName, objects));
+
+            final UUID jobId = bulkResponse.getResult().getJobId();
+
+            final GetObjectResponse getObjectResponse = client.getObject(new GetObjectRequest(bucketName, "beowulf.txt", 0, jobId, new NullChannel()));
+
+            assertThat(getObjectResponse.getObjectSize(), is(294059L));
+
+        } finally {
+            Util.deleteAllContents(client, bucketName);
+        }
+    }
+
+    @Test
+    public void headObjectSize() throws IOException, SignatureException, URISyntaxException, XmlProcessingException {
+        final String bucketName = "headObjectSize";
+
+        try {
+            final Ds3ClientHelpers helpers = Ds3ClientHelpers.wrap(client);
+
+            helpers.ensureBucketExists(bucketName);
+
+            Util.loadBookTestData(client, bucketName);
+
+            final HeadObjectResponse headObjectResponse = client.headObject(new HeadObjectRequest(bucketName, "beowulf.txt"));
+
+            assertThat(headObjectResponse.getObjectSize(), is(294059L));
+
+        } finally {
+            Util.deleteAllContents(client, bucketName);
         }
     }
 }
