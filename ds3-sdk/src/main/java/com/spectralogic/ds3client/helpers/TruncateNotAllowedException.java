@@ -17,7 +17,7 @@ package com.spectralogic.ds3client.helpers;
 
 import java.io.IOException;
 
-class TruncateNotAllowedException extends IOException {
+public class TruncateNotAllowedException extends IOException {
     private static final long serialVersionUID = -7378017389677465526L;
     
     public TruncateNotAllowedException() {

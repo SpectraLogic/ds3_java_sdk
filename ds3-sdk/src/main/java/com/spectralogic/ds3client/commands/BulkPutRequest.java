@@ -45,7 +45,7 @@ public class BulkPutRequest extends BulkRequest {
      *             the default size will be used.
      */
     public BulkPutRequest withMaxUploadSize(final int size) {
-        if (size > MIN_UPLOAD_SIZE_IN_BYTES) {
+        if (size >= MIN_UPLOAD_SIZE_IN_BYTES) {
             this.getQueryParams().put("max_upload_size", Long.toString(size));
         }
         else {

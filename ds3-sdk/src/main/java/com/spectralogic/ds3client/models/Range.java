@@ -5,7 +5,7 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 
 import java.util.Objects;
 
-public final class Range {
+public final class Range implements Comparable<Range> {
     @JacksonXmlProperty(localName = "Offset", isAttribute = true)
     private final long start;
 
@@ -57,4 +57,8 @@ public final class Range {
         return false;
     }
 
+    @Override
+    public int compareTo(final Range o) {
+        return Long.compare(this.getStart(), o.getStart());
+    }
 }

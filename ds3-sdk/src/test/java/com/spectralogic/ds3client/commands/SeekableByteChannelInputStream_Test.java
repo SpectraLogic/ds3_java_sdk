@@ -45,7 +45,7 @@ public class SeekableByteChannelInputStream_Test {
     @Test
     public void readAllByByteWorks() throws IOException, URISyntaxException {
         try (final InputStream inputStream = buildSystemUnderTest()) {
-            int b = 0;
+            int b;
             final byte[] expectedBytes = getFileContents();
             final byte[] buffer = new byte[expectedBytes.length];
             for (int i = 0; -1 != (b = inputStream.read()); i++)

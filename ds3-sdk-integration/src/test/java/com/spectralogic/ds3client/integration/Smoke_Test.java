@@ -29,10 +29,7 @@ import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.channels.SeekableByteChannel;
 import java.nio.charset.Charset;
-import java.nio.file.FileSystems;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.StandardOpenOption;
+import java.nio.file.*;
 import java.security.SignatureException;
 import java.util.ArrayList;
 import java.util.List;
@@ -46,13 +43,8 @@ import com.spectralogic.ds3client.helpers.Ds3ClientHelpers;
 import com.spectralogic.ds3client.helpers.JobRecoveryException;
 import com.spectralogic.ds3client.helpers.ObjectCompletedListener;
 import com.spectralogic.ds3client.helpers.options.WriteJobOptions;
-import com.spectralogic.ds3client.models.Checksum;
-import com.spectralogic.ds3client.models.Contents;
-import com.spectralogic.ds3client.models.S3Object;
-import com.spectralogic.ds3client.models.bulk.Ds3Object;
-import com.spectralogic.ds3client.models.bulk.JobStatus;
-import com.spectralogic.ds3client.models.bulk.MasterObjectList;
-import com.spectralogic.ds3client.models.bulk.Priority;
+import com.spectralogic.ds3client.models.*;
+import com.spectralogic.ds3client.models.bulk.*;
 import com.spectralogic.ds3client.models.tape.Tape;
 import com.spectralogic.ds3client.models.tape.Tapes;
 import com.spectralogic.ds3client.utils.ByteArraySeekableByteChannel;
@@ -63,7 +55,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.spectralogic.ds3client.Ds3Client;
-import com.spectralogic.ds3client.models.ListBucketResult;
 import com.spectralogic.ds3client.networking.FailedRequestException;
 import com.spectralogic.ds3client.serializer.XmlProcessingException;
 import org.slf4j.Logger;
@@ -773,6 +764,164 @@ public class Smoke_Test {
             assertThat(counter.get(), is(0));
         } finally {
             Util.deleteAllContents(client, bucketName);
+        }
+    }
+
+    @Test
+    public void partialObjectGet() throws IOException, SignatureException, URISyntaxException, XmlProcessingException {
+        final String bucketName = "partialObjectGet";
+
+        try {
+            final Ds3ClientHelpers helpers = Ds3ClientHelpers.wrap(client);
+            helpers.ensureBucketExists(bucketName);
+
+            Util.loadBookTestData(client, bucketName);
+
+            final List<Ds3Object> objs = Lists.newArrayList();
+            objs.add(new PartialDs3Object("beowulf.txt", Range.byLength(100, 100)));
+
+            final Ds3ClientHelpers.Job job = helpers.startReadJob(bucketName, objs);
+
+            final ByteArraySeekableByteChannel contents = new ByteArraySeekableByteChannel();
+
+            job.transfer(new Ds3ClientHelpers.ObjectChannelBuilder() {
+                @Override
+                public SeekableByteChannel buildChannel(final String key) throws IOException {
+                    return contents;
+                }
+            });
+
+            assertThat(contents.size(), is(100L));
+
+        } finally {
+            Util.deleteAllContents(client, bucketName);
+        }
+    }
+
+    @Test
+    public void partialObjectMultiRangeGet() throws IOException, SignatureException, URISyntaxException, XmlProcessingException {
+        final String bucketName = "partialObjectGet";
+
+        try {
+            final Ds3ClientHelpers helpers = Ds3ClientHelpers.wrap(client);
+            helpers.ensureBucketExists(bucketName);
+
+            Util.loadBookTestData(client, bucketName);
+
+            final List<Ds3Object> objs = Lists.newArrayList();
+            objs.add(new PartialDs3Object("beowulf.txt", Range.byLength(100, 100)));
+            objs.add(new PartialDs3Object("beowulf.txt", Range.byLength(1000, 200)));
+
+            final Ds3ClientHelpers.Job job = helpers.startReadJob(bucketName, objs);
+
+            final ByteArraySeekableByteChannel contents = new ByteArraySeekableByteChannel();
+
+            job.transfer(new Ds3ClientHelpers.ObjectChannelBuilder() {
+                @Override
+                public SeekableByteChannel buildChannel(final String key) throws IOException {
+                    return contents;
+                }
+            });
+
+            assertThat(contents.size(), is(300L));
+
+        } finally {
+            Util.deleteAllContents(client, bucketName);
+        }
+    }
+
+    @Test
+    public void partialObjectGetOverChunkBoundry() throws IOException, SignatureException, XmlProcessingException {
+        final String bucketName = "partialGetOverBoundry";
+        final String testFile = "testObject.txt";
+        final Path filePath = Files.createTempFile("ds3", testFile);
+        final int seed = 12345;
+        LOG.info("Test file: " + filePath.toAbsolutePath());
+        try {
+            final Ds3ClientHelpers helpers = Ds3ClientHelpers.wrap(client);
+
+            helpers.ensureBucketExists(bucketName);
+
+            final int objectSize = BulkPutRequest.MIN_UPLOAD_SIZE_IN_BYTES * 2;
+
+            final List<Ds3Object> objs = Lists.newArrayList(new Ds3Object(testFile, objectSize));
+
+            final Ds3ClientHelpers.Job putJob = helpers.startWriteJob(bucketName, objs, WriteJobOptions.create().withMaxUploadSize(BulkPutRequest.MIN_UPLOAD_SIZE_IN_BYTES));
+
+            putJob.transfer(new Ds3ClientHelpers.ObjectChannelBuilder() {
+                @Override
+                public SeekableByteChannel buildChannel(final String key) throws IOException {
+                    final byte[] randomData = IOUtils.toByteArray(new RandomDataInputStream(seed, objectSize));
+                    final ByteBuffer randomBuffer = ByteBuffer.wrap(randomData);
+
+                    final ByteArraySeekableByteChannel channel = new ByteArraySeekableByteChannel(objectSize);
+                    channel.write(randomBuffer);
+
+                    return channel;
+
+                }
+            });
+
+            final List<Ds3Object> partialObjectGet = Lists.newArrayList();
+            partialObjectGet.add(new PartialDs3Object(testFile, Range.byPosition(BulkPutRequest.MIN_UPLOAD_SIZE_IN_BYTES - 100, BulkPutRequest.MIN_UPLOAD_SIZE_IN_BYTES + 99)));
+
+            final Ds3ClientHelpers.Job getJob = helpers.startReadJob(bucketName, partialObjectGet);
+
+            getJob.transfer(new Ds3ClientHelpers.ObjectChannelBuilder() {
+                @Override
+                public SeekableByteChannel buildChannel(final String key) throws IOException {
+                    return Files.newByteChannel(filePath, StandardOpenOption.WRITE, StandardOpenOption.CREATE);
+                }
+            });
+
+            assertThat(Files.size(filePath), is(200L));
+
+
+        } finally {
+            Files.delete(filePath);
+            Util.deleteAllContents(client, bucketName);
+        }
+    }
+
+    @Test
+    public void partialGetWithBookOverChunkBoundry() throws IOException, SignatureException, XmlProcessingException, URISyntaxException {
+        final String bucketName = "partialGetOnBook";
+        final Path filePath = Files.createTempFile("ds3", "lesmis-copies.txt");
+        LOG.info("TempFile for partial get of book: " + filePath.toAbsolutePath().toString());
+
+        try {
+
+            final Ds3ClientHelpers wrapper = Ds3ClientHelpers.wrap(client);
+
+            wrapper.ensureBucketExists(bucketName);
+
+            final List<Ds3Object> putObjects = Lists.newArrayList(new Ds3Object("lesmis-copies.txt", 13290604));
+
+            final Ds3ClientHelpers.Job putJob = wrapper.startWriteJob(bucketName, putObjects, WriteJobOptions.create().withMaxUploadSize(BulkPutRequest.MIN_UPLOAD_SIZE_IN_BYTES));
+
+            putJob.transfer(new ResourceObjectPutter("largeFiles/"));
+
+            final List<Ds3Object> getObjects = Lists.newArrayList();
+            getObjects.add(new PartialDs3Object("lesmis-copies.txt", Range.byLength(1048476, 200)));
+
+            final Ds3ClientHelpers.Job getJob = wrapper.startReadJob(bucketName, getObjects);
+
+            getJob.transfer(new Ds3ClientHelpers.ObjectChannelBuilder() {
+                @Override
+                public SeekableByteChannel buildChannel(final String key) throws IOException {
+                    return Files.newByteChannel(filePath, StandardOpenOption.WRITE, StandardOpenOption.CREATE);
+                }
+            });
+
+            final Path expectedResultPath = Paths.get(Smoke_Test.class.getResource("/largeFiles/output").toURI());
+
+            assertThat(Files.size(filePath), is(200L));
+            final String partialFile = new String(Files.readAllBytes(filePath), Charset.forName("UTF-8"));
+            final String expectedResult = new String(Files.readAllBytes(expectedResultPath), Charset.forName("UTF-8"));
+            assertThat(partialFile, is(expectedResult.substring(0, expectedResult.length() - 1))); // need the trim to remove a newline that is added by the os
+        } finally {
+            Util.deleteAllContents(client, bucketName);
+            Files.delete(filePath);
         }
     }
 }

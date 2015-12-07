@@ -92,14 +92,11 @@ public class S3Object {
 
         final S3Object s3obj = (S3Object)obj;
 
-        if (this.bucketId.equals(s3obj.getBucketId())
+        return this.bucketId.equals(s3obj.getBucketId())
                 && this.creationDate.equals(s3obj.getCreationDate())
                 && this.id.equals(s3obj.getId())
                 && this.name.equals(s3obj.getName())
                 && this.type == s3obj.getType()
-                && this.version == s3obj.getVersion()) {
-            return true;
-        }
-        return false;
+                && this.version == s3obj.getVersion();
     }
 }

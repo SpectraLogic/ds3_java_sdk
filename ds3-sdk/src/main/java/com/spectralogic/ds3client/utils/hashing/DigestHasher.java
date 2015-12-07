@@ -8,7 +8,7 @@ abstract class DigestHasher implements Hasher {
 
     private final MessageDigest digest;
 
-    public DigestHasher() {
+    DigestHasher() {
         this.digest = getDigest();
     }
 

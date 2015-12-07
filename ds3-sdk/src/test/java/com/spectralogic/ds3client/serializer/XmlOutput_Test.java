@@ -55,7 +55,7 @@ public class XmlOutput_Test {
         assertThat(result.getName(), is("remoteTest16"));
         assertThat(result.getContentsList(), is(notNullValue()));
         assertThat(result.getContentsList().size(), is(3));
-        assertThat(result.getContentsList().get(0).getSize(), is(674570l));
+        assertThat(result.getContentsList().get(0).getSize(), is(674570L));
     }
 
     @Test
