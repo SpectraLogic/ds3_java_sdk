@@ -46,12 +46,14 @@ public class XmlOutput {
         mapper.setFilters(filterProvider);
         if (isProductionBuild()) {
             mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        } else {
+            LOG.info("Non-production build: Asserting on Deserializing invalid XML elements in responses.");
         }
     }
 
     protected static boolean isProductionBuild() {
         final Properties props = new Properties();
-        final InputStream input = XmlOutput.class.getClassLoader().getResourceAsStream("/config.properties");
+        final InputStream input = XmlOutput.class.getClassLoader().getResourceAsStream("config.properties");
         if (input == null) {
             LOG.error("Could not find property file.");
         }
