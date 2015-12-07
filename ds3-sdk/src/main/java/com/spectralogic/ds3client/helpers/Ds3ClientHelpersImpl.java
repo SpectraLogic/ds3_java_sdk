@@ -157,6 +157,7 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
     public Iterable<Contents> listObjects(final String bucket, final String keyPrefix) throws SignatureException, IOException {
         return this.listObjects(bucket, keyPrefix, null, Integer.MAX_VALUE);
     }
+
     @Override
     public Iterable<Contents> listObjects(final String bucket, final String keyPrefix, final String nextMarker) throws SignatureException, IOException {
         return this.listObjects(bucket, keyPrefix, nextMarker, Integer.MAX_VALUE);

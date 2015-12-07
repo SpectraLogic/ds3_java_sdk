@@ -375,7 +375,7 @@ public class Smoke_Test {
 
             putJob.transfer(new Ds3ClientHelpers.ObjectChannelBuilder() {
                 @Override
-                public SeekableByteChannel buildChannel(String key) throws IOException {
+                final public SeekableByteChannel buildChannel(String key) throws IOException {
                     final byte[] randomData = IOUtils.toByteArray(new RandomDataInputStream(120, 1024));
                     final ByteBuffer randomBuffer = ByteBuffer.wrap(randomData);
 

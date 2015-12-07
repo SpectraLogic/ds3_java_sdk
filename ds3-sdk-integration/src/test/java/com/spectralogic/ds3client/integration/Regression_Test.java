@@ -3,7 +3,6 @@ package com.spectralogic.ds3client.integration;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.spectralogic.ds3client.Ds3Client;
-import com.spectralogic.ds3client.commands.DeleteObjectRequest;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers;
 import com.spectralogic.ds3client.models.Contents;
 import com.spectralogic.ds3client.models.bulk.Ds3Object;
@@ -59,7 +58,7 @@ public class Regression_Test {
 
             putJob.transfer(new Ds3ClientHelpers.ObjectChannelBuilder() {
                 @Override
-                public SeekableByteChannel buildChannel(String key) throws IOException {
+                final public SeekableByteChannel buildChannel(String key) throws IOException {
                     final byte[] randomData = IOUtils.toByteArray(new RandomDataInputStream(120, 1024));
                     final ByteBuffer randomBuffer = ByteBuffer.wrap(randomData);
 
@@ -72,7 +71,7 @@ public class Regression_Test {
 
             final Iterable<Contents> objs = helpers.listObjects(bucketName, null, "obj3 has spaces.txt");
             boolean foundObj4 = false;
-            for( Contents obj : objs ) {
+            for (final Contents obj : objs) {
                 LOG.info("marker with spaces name: " + obj.getKey());
                 if (obj.getKey().equals("obj4 also has spaces.txt")) foundObj4 = true;
                 LOG.info("marker with spaces size: " + obj.getSize());
@@ -102,7 +101,7 @@ public class Regression_Test {
 
             putJob.transfer(new Ds3ClientHelpers.ObjectChannelBuilder() {
                 @Override
-                public SeekableByteChannel buildChannel(String key) throws IOException {
+                final public SeekableByteChannel buildChannel(String key) throws IOException {
                     final byte[] randomData = IOUtils.toByteArray(new RandomDataInputStream(120, 1024));
                     final ByteBuffer randomBuffer = ByteBuffer.wrap(randomData);
 
@@ -116,7 +115,7 @@ public class Regression_Test {
             final Iterable<Contents> objs = helpers.listObjects(bucketName, "has spaces");
             boolean foundObj2 = false;
             boolean foundObj4 = false;
-            for( Contents obj : objs ) {
+            for (final Contents obj : objs) {
                 LOG.info("prefix with spaces name: " + obj.getKey());
                 LOG.info("prefix with spaces size: " + obj.getSize());
                 if (obj.getKey().equals("has spaces obj2.txt")) foundObj2 = true;
@@ -125,7 +124,6 @@ public class Regression_Test {
             assertTrue(Iterables.size(objs) == 2);
             assertTrue(foundObj2);
             assertTrue(foundObj4);
-
         } finally {
             Util.deleteAllContents(client, bucketName);
         }
