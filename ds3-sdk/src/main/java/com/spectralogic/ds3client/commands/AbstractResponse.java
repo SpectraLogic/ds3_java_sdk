@@ -26,7 +26,7 @@ import com.spectralogic.ds3client.networking.ResponseProcessingException;
 import com.spectralogic.ds3client.networking.WebResponse;
 import com.spectralogic.ds3client.serializer.XmlOutput;
 
-import org.apache.commons.codec.binary.StringUtils;
+import com.spectralogic.ds3client.utils.Guard;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -74,11 +74,24 @@ public abstract class AbstractResponse implements Ds3Response{
 
     static protected String getFirstHeaderValue(final Headers headers, final String key) {
         final List<String> valueList = headers.get(key);
-        if (valueList == null || valueList.isEmpty()) {
+        if (Guard.isNullOrEmpty(valueList)) {
             return null;
         } else {
             return valueList.get(0);
         }
+    }
+
+    protected static long getSizeFromHeaders(final Headers headers) {
+        if (headers == null) {
+            LOG.debug("Could not get the headers to determine the content-length");
+            return -1;
+        }
+        final List<String> contentLength = headers.get("Content-Length");
+        if (Guard.isNullOrEmpty(contentLength) || contentLength.get(0) == null) {
+            LOG.debug("Could not find the content-length header to determine the size of the request");
+            return -1;
+        }
+        return Long.parseLong(contentLength.get(0));
     }
 
     protected abstract void processResponse() throws IOException;

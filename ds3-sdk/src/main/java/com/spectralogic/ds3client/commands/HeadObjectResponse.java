@@ -1,13 +1,11 @@
 package com.spectralogic.ds3client.commands;
 
-import com.spectralogic.ds3client.networking.Headers;
 import com.spectralogic.ds3client.networking.Metadata;
 import com.spectralogic.ds3client.networking.WebResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.util.List;
 
 public class HeadObjectResponse extends AbstractResponse {
 
@@ -47,19 +45,6 @@ public class HeadObjectResponse extends AbstractResponse {
         } finally {
             this.getResponse().close();
         }
-    }
-
-    private static long getSizeFromHeaders(final Headers headers) {
-        if (headers == null) {
-            LOG.debug("Could not get the headers to determine the content-length");
-            return 0;
-        }
-        final List<String> contentLength = headers.get("Content-Length");
-        if (contentLength == null) {
-            LOG.debug("Could not find the content-length header to determine the size of the object");
-            return 0;
-        }
-        return Long.parseLong(contentLength.get(0));
     }
 
     private void setStatus(final int statusCode) {

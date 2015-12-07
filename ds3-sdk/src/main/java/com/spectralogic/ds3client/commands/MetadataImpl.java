@@ -6,6 +6,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.spectralogic.ds3client.networking.Headers;
 import com.spectralogic.ds3client.networking.Metadata;
+import com.spectralogic.ds3client.utils.Guard;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -22,6 +23,11 @@ class MetadataImpl implements Metadata {
     }
 
     private static ImmutableMultimap<String, String> genMetadata(final Headers headers) {
+
+        if (headers == null || Guard.isNullOrEmpty(headers.keys())) {
+            return ImmutableMultimap.of();
+        }
+
         final ImmutableMultimap.Builder<String, String> mapBuilder = ImmutableMultimap.builder();
 
         for (final String key : headers.keys()) {
