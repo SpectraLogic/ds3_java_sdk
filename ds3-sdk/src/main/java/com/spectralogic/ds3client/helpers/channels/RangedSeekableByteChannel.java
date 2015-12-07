@@ -48,12 +48,11 @@ public class RangedSeekableByteChannel implements SeekableByteChannel {
 
         final int listLength = sortedList.size();
 
-        for(int i = 0; i < listLength; i++) {
-            if(i == 0) {
-                realOffsets.put(sortedList.get(0), 0L);
-                continue;
-            }
 
+
+        realOffsets.put(sortedList.get(0), 0L);
+
+        for(int i = 1; i < listLength; i++) {
             // get previous real offset, and add it's size, that's the current channels 'real' offset
             final BulkObject previous = sortedList.get(i-1);
 
@@ -140,14 +139,14 @@ public class RangedSeekableByteChannel implements SeekableByteChannel {
     }
 
     private boolean checkRange(final long position) {
-        if (Guard.isMultiMapNullOrEmpty(ranges)) return true;  // this means we are reading from the stream and we do not any range checks
+        if (Guard.isMultiMapNullOrEmpty(ranges)) return true;  // this means we are reading from the stream and we do not need any range checks
 
         final BulkObject blob = getBlobFromPosition(ranges, position);
         if (blob == null) return false; // this means that the position we are seeking to is not in any of the blobs that we know about
 
         // Check to make sure that the position we are seeking to is within the size of the ranges contained in a blob
         final long blobSize = blobSizes.get(blob);
-        return blob.getOffset() <= position && position <= blob.getOffset() + blobSize - 1;
+        return blob.getOffset() <= position && position < blob.getOffset() + blobSize;
     }
 
     private static BulkObject getBlobFromPosition(final ImmutableMultimap<BulkObject, Range> blobs, final long position) {
@@ -156,7 +155,7 @@ public class RangedSeekableByteChannel implements SeekableByteChannel {
         }
 
         for (final BulkObject bulkObject : blobs.keySet()) {
-            if (bulkObject.getOffset() <= position && position <= (bulkObject.getOffset() + bulkObject.getLength() - 1)) {
+            if (bulkObject.getOffset() <= position && position < bulkObject.getOffset() + bulkObject.getLength()) {
                 return bulkObject;
             }
         }

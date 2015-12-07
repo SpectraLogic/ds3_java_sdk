@@ -47,7 +47,7 @@ public final class PartialObjectHelpers {
 
         final ImmutableMap.Builder<String, ImmutableMultimap<BulkObject, Range>> builder = ImmutableMap.builder();
 
-        for(final Map.Entry<String, ImmutableMultimap.Builder<BulkObject, Range>> entry : objectMapperBuilders.entrySet()) {
+        for (final Map.Entry<String, ImmutableMultimap.Builder<BulkObject, Range>> entry : objectMapperBuilders.entrySet()) {
             builder.put(entry.getKey(), entry.getValue().build());
         }
 

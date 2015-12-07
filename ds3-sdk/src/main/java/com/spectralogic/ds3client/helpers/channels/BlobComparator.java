@@ -6,7 +6,7 @@ import java.util.Comparator;
 
 /**
  * Used to sort BulkObjects (Blobs).  We only care about the starting
- * offset, so that it what it used to compare.
+ * offset, so that is what is used to compare.
  */
 public class BlobComparator implements Comparator<BulkObject> {
     @Override
