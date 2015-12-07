@@ -17,21 +17,6 @@ import static org.junit.Assert.fail;
 public class RangedSeekableByteChannel_Test {
 
     @Test
-    public void noRanges() {
-
-    }
-
-    @Test
-    public void singleBlobWithRange() {
-
-    }
-
-    @Test
-    public void multipleRangesWithSingleBlob() {
-
-    }
-
-    @Test
     public void multipleRangesWithMultipleBlobs() throws IOException {
         final String firstPartialBlob = "First blob text";
         final String secondPartialBlob = "Second Blob text";
