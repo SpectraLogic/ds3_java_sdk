@@ -163,16 +163,22 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
 
     @Override
     public Iterable<Contents> listObjects(final String bucket, final String keyPrefix) throws SignatureException, IOException {
-        return this.listObjects(bucket, keyPrefix, Integer.MAX_VALUE);
+        return this.listObjects(bucket, keyPrefix, null, Integer.MAX_VALUE);
     }
 
     @Override
-    public Iterable<Contents> listObjects(final String bucket, final String keyPrefix, final int maxKeys) throws SignatureException, IOException {
+    public Iterable<Contents> listObjects(final String bucket, final String keyPrefix, final String nextMarker) throws SignatureException, IOException {
+        return this.listObjects(bucket, keyPrefix, nextMarker, Integer.MAX_VALUE);
+    }
+
+    @Override
+    public Iterable<Contents> listObjects(final String bucket, final String keyPrefix, final String nextMarker, final int maxKeys) throws SignatureException, IOException {
         final List<Contents> contentList = new ArrayList<>();
 
         int remainingKeys = maxKeys;
         boolean isTruncated = false;
-        String marker = null;
+        String marker = nextMarker;
+        if (nextMarker != null) isTruncated = true;
 
         do {
             final GetBucketRequest request = new GetBucketRequest(bucket);
