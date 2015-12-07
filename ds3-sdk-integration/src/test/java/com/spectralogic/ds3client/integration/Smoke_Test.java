@@ -916,9 +916,9 @@ public class Smoke_Test {
             final Path expectedResultPath = Paths.get(Smoke_Test.class.getResource("/largeFiles/output").toURI());
 
             assertThat(Files.size(filePath), is(200L));
-            final String partialFile = new String(Files.readAllBytes(filePath), Charset.forName("UTF-8")).trim();
-            final String expectedResult = new String(Files.readAllBytes(expectedResultPath), Charset.forName("UTF-8")).trim();
-            assertThat(partialFile, is(expectedResult));
+            final String partialFile = new String(Files.readAllBytes(filePath), Charset.forName("UTF-8"));
+            final String expectedResult = new String(Files.readAllBytes(expectedResultPath), Charset.forName("UTF-8"));
+            assertThat(partialFile, is(expectedResult.substring(0, expectedResult.length() - 1))); // need the trim to remove a newline that is added by the os
         } finally {
             Util.deleteAllContents(client, bucketName);
             Files.delete(filePath);
