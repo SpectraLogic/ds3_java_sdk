@@ -508,6 +508,11 @@ public class Smoke_Test {
     public void verifySendCrc32cChecksum() throws IOException, SignatureException, XmlProcessingException, URISyntaxException {
         final String bucketName = "crc32Bucket";
 
+        final int majorVersion = Integer.parseInt(client.getSystemInformation(
+                new GetSystemInformationRequest()).getSystemInformation().getBuildInformation().getVersion().split("\\.")[0]);
+
+        assumeThat(majorVersion, is(1));
+
         try {
             final Ds3ClientHelpers helpers = Ds3ClientHelpers.wrap(client);
 
