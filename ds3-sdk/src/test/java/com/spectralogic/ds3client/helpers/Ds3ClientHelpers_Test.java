@@ -360,7 +360,7 @@ public class Ds3ClientHelpers_Test {
         }
     }
     
-    private static final UUID jobId = new UUID(0x0123456789abcdefl, 0xfedcba9876543210l);
+    private static final UUID jobId = new UUID(0x0123456789abcdefL, 0xfedcba9876543210L);
     private static final UUID nodeId = UUID.fromString("29bf5a53-d891-407f-8f3f-749ee7e636f3");
 
     private static Ds3Client buildDs3ClientForBulk() throws IOException,

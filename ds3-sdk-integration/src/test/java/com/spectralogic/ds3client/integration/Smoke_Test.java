@@ -29,10 +29,7 @@ import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.channels.SeekableByteChannel;
 import java.nio.charset.Charset;
-import java.nio.file.FileSystems;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.StandardOpenOption;
+import java.nio.file.*;
 import java.security.SignatureException;
 import java.util.ArrayList;
 import java.util.List;
@@ -883,6 +880,48 @@ public class Smoke_Test {
         } finally {
             Files.delete(filePath);
             Util.deleteAllContents(client, bucketName);
+        }
+    }
+
+    @Test
+    public void partialGetWithBookOverChunkBoundry() throws IOException, SignatureException, XmlProcessingException, URISyntaxException {
+        final String bucketName = "partialGetOnBook";
+        final Path filePath = Files.createTempFile("ds3", "lesmis-copies.txt");
+        LOG.info("TempFile for partial get of book: " + filePath.toAbsolutePath().toString());
+
+        try {
+
+            final Ds3ClientHelpers wrapper = Ds3ClientHelpers.wrap(client);
+
+            wrapper.ensureBucketExists(bucketName);
+
+            final List<Ds3Object> putObjects = Lists.newArrayList(new Ds3Object("lesmis-copies.txt", 13290604));
+
+            final Ds3ClientHelpers.Job putJob = wrapper.startWriteJob(bucketName, putObjects, WriteJobOptions.create().withMaxUploadSize(BulkPutRequest.MIN_UPLOAD_SIZE_IN_BYTES));
+
+            putJob.transfer(new ResourceObjectPutter("largeFiles/"));
+
+            final List<Ds3Object> getObjects = Lists.newArrayList();
+            getObjects.add(new PartialDs3Object("lesmis-copies.txt", Range.byLength(1048476, 200)));
+
+            final Ds3ClientHelpers.Job getJob = wrapper.startReadJob(bucketName, getObjects);
+
+            getJob.transfer(new Ds3ClientHelpers.ObjectChannelBuilder() {
+                @Override
+                public SeekableByteChannel buildChannel(final String key) throws IOException {
+                    return Files.newByteChannel(filePath, StandardOpenOption.WRITE, StandardOpenOption.CREATE);
+                }
+            });
+
+            final Path expectedResultPath = Paths.get(Smoke_Test.class.getResource("/largeFiles/output").toURI());
+
+            assertThat(Files.size(filePath), is(200L));
+            final String partialFile = new String(Files.readAllBytes(filePath), Charset.forName("UTF-8")).trim();
+            final String expectedResult = new String(Files.readAllBytes(expectedResultPath), Charset.forName("UTF-8")).trim();
+            assertThat(partialFile, is(expectedResult));
+        } finally {
+            Util.deleteAllContents(client, bucketName);
+            Files.delete(filePath);
         }
     }
 }

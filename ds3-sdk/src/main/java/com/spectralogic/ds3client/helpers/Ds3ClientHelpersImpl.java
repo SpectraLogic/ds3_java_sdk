@@ -97,8 +97,6 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
 
         final ImmutableMultimap<String, Range> partialRanges = PartialObjectHelpers.getPartialObjectsRanges(objects);
 
-        final MasterObjectList mob = prime.getResult();
-
         return new ReadJobImpl(this.client, prime.getResult(), partialRanges);
     }
 

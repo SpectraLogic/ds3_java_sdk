@@ -53,7 +53,7 @@ class HashGeneratingMatchHandler implements Checksum.MatchHandler<String, IOExce
     
     private String hashInputStream(final Hasher digest, final InputStream stream) throws IOException {
         final byte[] buffer = new byte[READ_BUFFER_SIZE];
-        int bytesRead = 0;
+        int bytesRead;
         
         while (true) {
             bytesRead = stream.read(buffer);
