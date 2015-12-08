@@ -19,6 +19,7 @@ import com.spectralogic.ds3client.Ds3Client;
 import com.spectralogic.ds3client.Ds3ClientBuilder;
 import com.spectralogic.ds3client.commands.DeleteBucketRequest;
 import com.spectralogic.ds3client.commands.DeleteObjectRequest;
+import com.spectralogic.ds3client.commands.GetSystemInformationRequest;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers;
 import com.spectralogic.ds3client.helpers.channelbuilders.PrefixAdderObjectChannelBuilder;
 import com.spectralogic.ds3client.models.Contents;
@@ -32,6 +33,10 @@ import java.net.URISyntaxException;
 import java.security.SignatureException;
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assume.assumeThat;
+
 
 public class Util {
     public static final String RESOURCE_BASE_NAME = "books/";
@@ -48,6 +53,12 @@ public class Util {
         final Ds3ClientBuilder builder = Ds3ClientBuilder.fromEnv();
         builder.withCertificateVerification(false);
         return builder.build();
+    }
+
+    public static void assumeVersion1_2(final Ds3Client client) throws IOException, SignatureException {
+        final int majorVersion = Integer.parseInt(client.getSystemInformation(
+                new GetSystemInformationRequest()).getSystemInformation().getBuildInformation().getVersion().split("\\.")[0]);
+        assumeThat(majorVersion, is(1));
     }
 
     private static final String[] BOOKS = {"beowulf.txt", "sherlock_holmes.txt", "tale_of_two_cities.txt", "ulysses.txt"};
