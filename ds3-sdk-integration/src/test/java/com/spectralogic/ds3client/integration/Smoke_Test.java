@@ -506,12 +506,9 @@ public class Smoke_Test {
 
     @Test
     public void verifySendCrc32cChecksum() throws IOException, SignatureException, XmlProcessingException, URISyntaxException {
+        Util.assumeVersion1_2(client);
+
         final String bucketName = "crc32Bucket";
-
-        final int majorVersion = Integer.parseInt(client.getSystemInformation(
-                new GetSystemInformationRequest()).getSystemInformation().getBuildInformation().getVersion().split("\\.")[0]);
-
-        assumeThat(majorVersion, is(1));
 
         try {
             final Ds3ClientHelpers helpers = Ds3ClientHelpers.wrap(client);
@@ -625,6 +622,8 @@ public class Smoke_Test {
 
     @Test
     public void putDirectory() throws IOException, SignatureException, XmlProcessingException {
+        Util.assumeVersion1_2(client);
+
         final String bucketName = "putDir";
 
         try {
@@ -657,6 +656,8 @@ public class Smoke_Test {
 
     @Test
     public void putDirectoryWithOtherObjects() throws IOException, SignatureException, XmlProcessingException {
+        Util.assumeVersion1_2(client);
+
         final String bucketName = "mixedPutDir";
 
         try {
