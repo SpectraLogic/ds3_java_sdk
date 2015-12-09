@@ -21,9 +21,12 @@ public class ResponseUtils {
     public static ImmutableList<Integer> toImmutableIntList(final int[] expectedStatuses) {
         final ImmutableList.Builder<Integer> integerBuilder = ImmutableList.builder();
 
-        for (final int status : expectedStatuses) {
-            integerBuilder.add(status);
+        if (expectedStatuses != null) {
+            for (final int status : expectedStatuses) {
+                integerBuilder.add(status);
+            }
         }
+        
         return integerBuilder.build();
     }
 }
