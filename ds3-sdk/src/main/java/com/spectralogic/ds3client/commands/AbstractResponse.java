@@ -16,7 +16,6 @@
 package com.spectralogic.ds3client.commands;
 
 import com.google.common.base.Strings;
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.spectralogic.ds3client.models.Checksum;
 import com.spectralogic.ds3client.models.Error;
@@ -27,6 +26,7 @@ import com.spectralogic.ds3client.networking.WebResponse;
 import com.spectralogic.ds3client.serializer.XmlOutput;
 
 import com.spectralogic.ds3client.utils.Guard;
+import com.spectralogic.ds3client.utils.ResponseUtils;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -106,21 +106,12 @@ public abstract class AbstractResponse implements Ds3Response{
         if (!expectedSet.contains(statusCode)) {
             final String responseString = this.readResponseString();
             throw new FailedRequestException(
-                toImmutableIntList(expectedStatuses),
-                statusCode,
-                parseErrorResponse(responseString),
-                responseString
+                    ResponseUtils.toImmutableIntList(expectedStatuses),
+                    statusCode,
+                    parseErrorResponse(responseString),
+                    responseString
             );
         }
-    }
-
-    private static ImmutableList<Integer> toImmutableIntList(final int[] expectedStatuses) {
-        final ImmutableList.Builder<Integer> integerBuilder = ImmutableList.builder();
-
-        for (final int status : expectedStatuses) {
-            integerBuilder.add(status);
-        }
-        return integerBuilder.build();
     }
 
     public int getStatusCode() {
