@@ -116,11 +116,8 @@ public final class PartialObjectHelpers {
             if (rangeStart > end || rangeEnd < start) continue;
             if (rangeStart >= start && rangeEnd <= end) {
                 builder.add(range);
-            } else if (rangeStart < start) {
-                builder.add(Range.byPosition(start, rangeEnd));
-            }
-            else {
-                builder.add(Range.byPosition(rangeStart, end));
+            } else {
+                builder.add(Range.byPosition(Math.max(rangeStart, start), Math.min(end, rangeEnd)));
             }
         }
 

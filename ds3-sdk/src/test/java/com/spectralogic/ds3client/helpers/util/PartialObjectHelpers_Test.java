@@ -203,4 +203,33 @@ public class PartialObjectHelpers_Test {
         assertThat(range.getStart(), is(5L));
         assertThat(range.getEnd(), is(20L));
     }
+
+    @Test
+    public void multiBlobSingleRangeMapping() {
+
+        final List<Objects> objects = Lists.newArrayList();
+        final Objects objs1 = new Objects();
+        objs1.setObjects(Lists.newArrayList(new BulkObject("obj1.txt", 10, true, 0)));
+        final Objects objs2 = new Objects();
+        objs2.setObjects(Lists.newArrayList(new BulkObject("obj1.txt", 10, true, 10)));
+        final Objects objs3 = new Objects();
+        objs3.setObjects(Lists.newArrayList(new BulkObject("obj1.txt", 10, true, 20)));
+
+        objects.add(objs1);
+        objects.add(objs2);
+        objects.add(objs3);
+
+        final ImmutableMap<String, ImmutableMultimap<BulkObject, Range>> ranges = PartialObjectHelpers.mapRangesToBlob(objects, ImmutableMultimap.of("obj1.txt", Range.byLength(0, 30)));
+        assertThat(ranges.size(), is(1));
+        final ImmutableMultimap<BulkObject, Range> object = ranges.get("obj1.txt");
+        for (final BulkObject obj : object.keySet()) {
+            assertThat(object.get(obj).size(), is(1));
+            if (obj.getOffset() == 10) {
+                final Range range = object.get(obj).asList().get(0);
+                assertThat(range.getStart(), is(10L));
+                assertThat(range.getLength(), is(10L));
+                assertThat(range.getEnd(), is(19L));
+            }
+        }
+    }
 }
