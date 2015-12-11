@@ -467,10 +467,10 @@ public class Smoke_Test {
             client.putBucket(new PutBucketRequest(bucketName));
             helpers.ensureBucketExists(bucketName);
 
-            final Path objFile1 = ResourceUtils.loadFileResource(Util.RESOURCE_BASE_NAME + book1);
-            final Path objFile2 = ResourceUtils.loadFileResource(Util.RESOURCE_BASE_NAME + book2);
-            final Ds3Object obj1 = new Ds3Object(book1, Files.size(objFile1));
-            final Ds3Object obj2 = new Ds3Object(book2, Files.size(objFile2));
+            final Path objPath1 = ResourceUtils.loadFileResource(Util.RESOURCE_BASE_NAME + book1);
+            final Path objPath2 = ResourceUtils.loadFileResource(Util.RESOURCE_BASE_NAME + book2);
+            final Ds3Object obj1 = new Ds3Object(book1, Files.size(objPath1));
+            final Ds3Object obj2 = new Ds3Object(book2, Files.size(objPath2));
 
             final Ds3ClientHelpers.Job job = Ds3ClientHelpers.wrap(client).startWriteJob(bucketName, Lists.newArrayList(obj1, obj2));
 
@@ -478,7 +478,7 @@ public class Smoke_Test {
                     job.getBucketName(),
                     book1,
                     job.getJobId(),
-                    Files.size(objFile1),
+                    Files.size(objPath1),
                     0,
                     new ResourceObjectPutter(Util.RESOURCE_BASE_NAME).buildChannel(book1)
             ));
@@ -492,7 +492,7 @@ public class Smoke_Test {
                     recoverJob.getBucketName(),
                     book2,
                     recoverJob.getJobId(),
-                    Files.size(objFile2),
+                    Files.size(objPath2),
                     0,
                     new ResourceObjectPutter(Util.RESOURCE_BASE_NAME).buildChannel(book2)
             ));
@@ -567,10 +567,10 @@ public class Smoke_Test {
         final String bucketName = "test_recover_read_job_bucket";
         final String book1 = "beowulf.txt";
         final String book2 = "ulysses.txt";
-        final Path objFile1 = ResourceUtils.loadFileResource(Util.RESOURCE_BASE_NAME + book1);
-        final Path objFile2 = ResourceUtils.loadFileResource(Util.RESOURCE_BASE_NAME + book2);
-        final Ds3Object obj1 = new Ds3Object(book1, Files.size(objFile1));
-        final Ds3Object obj2 = new Ds3Object(book2, Files.size(objFile2));
+        final Path objPath1 = ResourceUtils.loadFileResource(Util.RESOURCE_BASE_NAME + book1);
+        final Path objPath2 = ResourceUtils.loadFileResource(Util.RESOURCE_BASE_NAME + book2);
+        final Ds3Object obj1 = new Ds3Object(book1, Files.size(objPath1));
+        final Ds3Object obj2 = new Ds3Object(book2, Files.size(objPath2));
 
         final Path dirPath = FileSystems.getDefault().getPath("output");
         if (!Files.exists(dirPath)) {

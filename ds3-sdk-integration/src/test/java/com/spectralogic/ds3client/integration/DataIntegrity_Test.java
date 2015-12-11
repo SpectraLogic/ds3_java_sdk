@@ -66,9 +66,9 @@ public class DataIntegrity_Test {
         try {
             helpers.ensureBucketExists(bucketName);
 
-            final Path objFile = ResourceUtils.loadFileResource(Util.RESOURCE_BASE_NAME + book);
-            final String digest = DigestUtils.sha256Hex(Files.newInputStream(objFile));
-            final Ds3Object obj = new Ds3Object(book, Files.size(objFile));
+            final Path objPath = ResourceUtils.loadFileResource(Util.RESOURCE_BASE_NAME + book);
+            final String digest = DigestUtils.sha256Hex(Files.newInputStream(objPath));
+            final Ds3Object obj = new Ds3Object(book, Files.size(objPath));
 
             final Ds3ClientHelpers.Job putJob = helpers.startWriteJob(bucketName, Lists.newArrayList(obj));
             putJob.transfer(new ResourceObjectPutter(Util.RESOURCE_BASE_NAME));
