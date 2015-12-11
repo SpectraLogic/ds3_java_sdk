@@ -75,8 +75,8 @@ public class Util {
         final List<Ds3Object> objects = new ArrayList<>();
 
         for(final String book : BOOKS) {
-            final Path objFile = ResourceUtils.loadFileResource(resourceBaseName + book);
-            final Ds3Object obj = new Ds3Object(book, Files.size(objFile));
+            final Path objPath = ResourceUtils.loadFileResource(resourceBaseName + book);
+            final Ds3Object obj = new Ds3Object(book, Files.size(objPath));
 
             objects.add(obj);
         }
@@ -91,8 +91,8 @@ public class Util {
         final List<Ds3Object> objects = new ArrayList<>();
 
         for(final String book : BOOKS) {
-            final Path objFile = ResourceUtils.loadFileResource(RESOURCE_BASE_NAME + book);
-            final Ds3Object obj = new Ds3Object(prefix + book, Files.size(objFile));
+            final Path objPath = ResourceUtils.loadFileResource(RESOURCE_BASE_NAME + book);
+            final Ds3Object obj = new Ds3Object(prefix + book, Files.size(objPath));
 
             objects.add(obj);
         }
