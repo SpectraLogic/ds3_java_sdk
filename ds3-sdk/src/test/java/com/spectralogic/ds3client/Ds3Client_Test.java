@@ -306,10 +306,10 @@ public class Ds3Client_Test {
         queryParams.put("job", jobIdString);
         queryParams.put("offset", Long.toString(0));
         
-        final Path resourceFile = ResourceUtils.loadFileResource("LoremIpsumTwice.txt");
-        final byte[] fileBytes = Files.readAllBytes(resourceFile);
+        final Path resourcePath = ResourceUtils.loadFileResource("LoremIpsumTwice.txt");
+        final byte[] fileBytes = Files.readAllBytes(resourcePath);
         final String output = new String(fileBytes, Charset.forName("UTF-8"));
-        final FileChannel channel = FileChannel.open(resourceFile, StandardOpenOption.READ);
+        final FileChannel channel = FileChannel.open(resourcePath, StandardOpenOption.READ);
         MockNetwork
             .expecting(HttpVerb.PUT, "/bucketName/objectName", queryParams, output)
             .returning(200, "")
