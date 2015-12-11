@@ -39,6 +39,7 @@ import java.net.URISyntaxException;
 import java.nio.channels.FileChannel;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.security.SignatureException;
 import java.util.*;
@@ -305,10 +306,10 @@ public class Ds3Client_Test {
         queryParams.put("job", jobIdString);
         queryParams.put("offset", Long.toString(0));
         
-        final File resourceFile = ResourceUtils.loadFileResource("LoremIpsumTwice.txt");
-        final byte[] fileBytes = Files.readAllBytes(resourceFile.toPath());
+        final Path resourceFile = ResourceUtils.loadFileResource("LoremIpsumTwice.txt");
+        final byte[] fileBytes = Files.readAllBytes(resourceFile);
         final String output = new String(fileBytes, Charset.forName("UTF-8"));
-        final FileChannel channel = FileChannel.open(resourceFile.toPath(), StandardOpenOption.READ);
+        final FileChannel channel = FileChannel.open(resourceFile, StandardOpenOption.READ);
         MockNetwork
             .expecting(HttpVerb.PUT, "/bucketName/objectName", queryParams, output)
             .returning(200, "")
@@ -323,10 +324,10 @@ public class Ds3Client_Test {
         queryParams.put("job", jobIdString);
         queryParams.put("offset", Long.toString(0));
         
-        final File resourceFile = ResourceUtils.loadFileResource("LoremIpsumTwice.txt");
-        final byte[] fileBytes = Files.readAllBytes(resourceFile.toPath());
+        final Path resourceFile = ResourceUtils.loadFileResource("LoremIpsumTwice.txt");
+        final byte[] fileBytes = Files.readAllBytes(resourceFile);
         final String output = new String(fileBytes, Charset.forName("UTF-8"));
-        final FileChannel channel = FileChannel.open(resourceFile.toPath(), StandardOpenOption.READ);
+        final FileChannel channel = FileChannel.open(resourceFile, StandardOpenOption.READ);
 
         PutObjectRequest por = new PutObjectRequest("bucketName", "objectName", UUID.fromString(jobIdString), fileBytes.length, 0, channel);
         

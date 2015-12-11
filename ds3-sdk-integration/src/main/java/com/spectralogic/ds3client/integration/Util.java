@@ -27,9 +27,10 @@ import com.spectralogic.ds3client.models.bulk.Ds3Object;
 import com.spectralogic.ds3client.serializer.XmlProcessingException;
 import com.spectralogic.ds3client.utils.ResourceUtils;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.security.SignatureException;
 import java.util.ArrayList;
 import java.util.List;
@@ -74,8 +75,8 @@ public class Util {
         final List<Ds3Object> objects = new ArrayList<>();
 
         for(final String book : BOOKS) {
-            final File objFile = ResourceUtils.loadFileResource(resourceBaseName + book);
-            final Ds3Object obj = new Ds3Object(book, objFile.length());
+            final Path objFile = ResourceUtils.loadFileResource(resourceBaseName + book);
+            final Ds3Object obj = new Ds3Object(book, Files.size(objFile));
 
             objects.add(obj);
         }
@@ -90,8 +91,8 @@ public class Util {
         final List<Ds3Object> objects = new ArrayList<>();
 
         for(final String book : BOOKS) {
-            final File objFile = ResourceUtils.loadFileResource(RESOURCE_BASE_NAME + book);
-            final Ds3Object obj = new Ds3Object(prefix + book, objFile.length());
+            final Path objFile = ResourceUtils.loadFileResource(RESOURCE_BASE_NAME + book);
+            final Ds3Object obj = new Ds3Object(prefix + book, Files.size(objFile));
 
             objects.add(obj);
         }

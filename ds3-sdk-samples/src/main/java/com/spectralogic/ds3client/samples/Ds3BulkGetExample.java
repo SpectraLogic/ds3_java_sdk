@@ -27,10 +27,7 @@ import com.spectralogic.ds3client.serializer.XmlProcessingException;
 
 import java.io.IOException;
 import java.nio.channels.FileChannel;
-import java.nio.file.FileSystems;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.StandardOpenOption;
+import java.nio.file.*;
 import java.security.SignatureException;
 import java.util.ArrayList;
 import java.util.List;
@@ -54,7 +51,7 @@ public class Ds3BulkGetExample {
             }
 
             // We are writing all the objects out to the directory output
-            final Path dirPath = FileSystems.getDefault().getPath("output");
+            final Path dirPath = Paths.get("output");
 
             // Check to make sure output exists, if not create the directory
             if (!Files.exists(dirPath)) {
