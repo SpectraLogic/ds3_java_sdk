@@ -24,8 +24,8 @@ import com.spectralogic.ds3client.models.bulk.Ds3Object;
 import com.spectralogic.ds3client.serializer.XmlProcessingException;
 
 import java.io.IOException;
-import java.nio.file.FileSystems;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.security.SignatureException;
 
 public class BulkPutExample {
@@ -47,7 +47,7 @@ public class BulkPutExample {
             helper.ensureBucketExists(bucketName);
 
             // Our input path which contains all the files that we want to transfer
-            final Path inputPath = FileSystems.getDefault().getPath("input");
+            final Path inputPath = Paths.get("input");
 
             // Get the list of files that are contained in the inputPath
             final Iterable<Ds3Object> objects = helper.listObjectsForDirectory(inputPath);

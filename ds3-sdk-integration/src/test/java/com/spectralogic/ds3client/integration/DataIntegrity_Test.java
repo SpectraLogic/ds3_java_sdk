@@ -31,8 +31,6 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.ByteBuffer;
@@ -68,9 +66,9 @@ public class DataIntegrity_Test {
         try {
             helpers.ensureBucketExists(bucketName);
 
-            final File objFile = ResourceUtils.loadFileResource(Util.RESOURCE_BASE_NAME + book);
-            final String digest = DigestUtils.sha256Hex(new FileInputStream(objFile));
-            final Ds3Object obj = new Ds3Object(book, objFile.length());
+            final Path objPath = ResourceUtils.loadFileResource(Util.RESOURCE_BASE_NAME + book);
+            final String digest = DigestUtils.sha256Hex(Files.newInputStream(objPath));
+            final Ds3Object obj = new Ds3Object(book, Files.size(objPath));
 
             final Ds3ClientHelpers.Job putJob = helpers.startWriteJob(bucketName, Lists.newArrayList(obj));
             putJob.transfer(new ResourceObjectPutter(Util.RESOURCE_BASE_NAME));

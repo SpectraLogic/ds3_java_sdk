@@ -110,11 +110,11 @@ public class SeekableByteChannelInputStream_Test {
     }
     
     private static byte[] getFileContents() throws IOException, URISyntaxException {
-        return Files.readAllBytes(ResourceUtils.loadFileResource("LoremIpsumTwice.txt").toPath());
+        return Files.readAllBytes(ResourceUtils.loadFileResource("LoremIpsumTwice.txt"));
     }
     
     private static InputStream buildSystemUnderTest() throws IOException, URISyntaxException {
-        final Path path = ResourceUtils.loadFileResource("LoremIpsumTwice.txt").toPath();
+        final Path path = ResourceUtils.loadFileResource("LoremIpsumTwice.txt");
         return new SeekableByteChannelInputStream(FileChannel.open(path, StandardOpenOption.READ));
     }
 }

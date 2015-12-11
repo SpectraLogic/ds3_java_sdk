@@ -35,7 +35,7 @@ public class ResourceObjectPutter implements Ds3ClientHelpers.ObjectChannelBuild
     @Override
     public SeekableByteChannel buildChannel(final String key) throws IOException {
         try {
-            return FileChannel.open(ResourceUtils.loadFileResource(basePath + key).toPath(), StandardOpenOption.READ);
+            return FileChannel.open(ResourceUtils.loadFileResource(basePath + key), StandardOpenOption.READ);
         } catch (final URISyntaxException e) {
             e.printStackTrace();
             throw new FileNotFoundException(key);
