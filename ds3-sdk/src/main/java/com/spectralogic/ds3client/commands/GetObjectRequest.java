@@ -104,7 +104,7 @@ public class GetObjectRequest extends AbstractRequest {
         return this.objectName;
     }
 
-    public ImmutableCollection<Range> getByteRanges() {
+    public Collection<Range> getByteRanges() {
         return this.byteRanges;
     }
 

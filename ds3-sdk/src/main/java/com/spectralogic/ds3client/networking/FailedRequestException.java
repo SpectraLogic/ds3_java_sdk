@@ -20,6 +20,7 @@ import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3client.models.Error;
 
 import java.io.IOException;
+import java.util.List;
 
 public class FailedRequestException extends IOException {
     private static final long serialVersionUID = -2070737734216316074L;
@@ -44,7 +45,7 @@ public class FailedRequestException extends IOException {
         return statusCode;
     }
 
-    public ImmutableList<Integer> getExpectedStatusCodes() {
+    public List<Integer> getExpectedStatusCodes() {
 
         final ImmutableList.Builder<Integer> builder = ImmutableList.builder();
         for (final int status : expectedStatusCodes) {

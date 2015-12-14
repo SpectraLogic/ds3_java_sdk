@@ -1,15 +1,11 @@
 package com.spectralogic.ds3client.commands;
 
 import com.google.common.collect.ImmutableMultimap;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
 import com.spectralogic.ds3client.networking.Headers;
 import com.spectralogic.ds3client.networking.Metadata;
 import com.spectralogic.ds3client.utils.Guard;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -61,11 +57,11 @@ class MetadataImpl implements Metadata {
 
     @Override
     public List<String> get(final String name) {
-        return Lists.newArrayList(metadata.get(name));
+        return metadata.get(name).asList();
     }
 
     @Override
     public Set<String> keys() {
-        return Sets.newHashSet(metadata.keySet());
+        return metadata.keySet();
     }
 }

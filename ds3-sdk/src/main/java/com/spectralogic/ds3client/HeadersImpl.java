@@ -16,8 +16,6 @@
 package com.spectralogic.ds3client;
 
 import com.google.common.collect.ImmutableMultimap;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
 import com.spectralogic.ds3client.networking.Headers;
 import org.apache.http.Header;
 
@@ -45,11 +43,11 @@ class HeadersImpl implements Headers {
 
     @Override
     public List<String> get(final String key) {
-        return Lists.newArrayList(headers.get(key.toLowerCase()));
+        return headers.get(key.toLowerCase()).asList();
     }
 
     @Override
     public Set<String> keys() {
-        return Sets.newHashSet(headers.keySet());
+        return headers.keySet();
     }
 }
