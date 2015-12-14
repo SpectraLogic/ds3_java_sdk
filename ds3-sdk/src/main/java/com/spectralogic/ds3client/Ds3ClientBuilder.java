@@ -18,6 +18,7 @@ package com.spectralogic.ds3client;
 import com.spectralogic.ds3client.models.Credentials;
 import com.spectralogic.ds3client.networking.NetworkClient;
 import com.spectralogic.ds3client.utils.Builder;
+import com.spectralogic.ds3client.utils.Guard;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -48,7 +49,7 @@ public class Ds3ClientBuilder implements Builder<Ds3Client> {
     private int bufferSize = 1024 * 1024;
 
     private Ds3ClientBuilder(final String endpoint, final Credentials credentials) throws IllegalArgumentException {
-        if (endpoint == null || endpoint.isEmpty()) {
+        if (Guard.isStringNullOrEmpty(endpoint)) {
             throw new IllegalArgumentException("Endpoint must be non empty");
         }
         if(credentials == null || !credentials.isValid()) {
@@ -78,15 +79,15 @@ public class Ds3ClientBuilder implements Builder<Ds3Client> {
      */
     public static Ds3ClientBuilder fromEnv() throws IllegalArgumentException {
         final String endpoint = System.getenv(ENDPOINT);
-        if (endpoint == null) {
+        if (Guard.isStringNullOrEmpty(endpoint)) {
             throw new IllegalArgumentException("Missing " + ENDPOINT + " environment variable");
         }
         final String accessKey = System.getenv(ACCESS_KEY);
-        if (accessKey == null) {
+        if (Guard.isStringNullOrEmpty(accessKey)) {
             throw new IllegalArgumentException("Missing " + ACCESS_KEY + " environment variable");
         }
         final String secretKey = System.getenv(SECRET_KEY);
-        if (secretKey == null) {
+        if (Guard.isStringNullOrEmpty(secretKey)) {
             throw new IllegalArgumentException("Missing " + SECRET_KEY + " environment variable");
         }
 

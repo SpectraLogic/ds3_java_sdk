@@ -16,6 +16,8 @@
 package com.spectralogic.ds3client.models;
 
 
+import com.spectralogic.ds3client.utils.Guard;
+
 public class Credentials {
 
     private final String clientId;
@@ -35,6 +37,6 @@ public class Credentials {
     }
 
     public boolean isValid() {
-        return !(clientId == null || clientId.isEmpty() || key == null || key.isEmpty());
+        return !(Guard.isStringNullOrEmpty(clientId) || Guard.isStringNullOrEmpty(key));
     }
 }
