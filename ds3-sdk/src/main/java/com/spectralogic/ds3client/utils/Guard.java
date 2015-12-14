@@ -16,6 +16,10 @@ public final class Guard {
         return collection == null || collection.isEmpty();
     }
 
+    public static boolean isStringNullOrEmpty(final String str) {
+        return str == null || str.isEmpty();
+    }
+
     public static boolean isNotNullAndNotEmpty(final Collection<?> collection) {
         return !isNullOrEmpty(collection);
     }
