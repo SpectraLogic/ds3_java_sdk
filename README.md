@@ -6,7 +6,8 @@ ds3_java_sdk
   <img alt="Coverity Scan Build Status"
        src="https://scan.coverity.com/projects/4624/badge.svg"/>
 </a>
-[ ![Download](https://api.bintray.com/packages/spectralogic/ds3/ds3_java_sdk/images/download.svg) ](https://bintray.com/spectralogic/ds3/ds3_java_sdk/_latestVersion)
+[![Download](https://api.bintray.com/packages/spectralogic/ds3/ds3_java_sdk/images/download.svg) ](https://bintray.com/spectralogic/ds3/ds3_java_sdk/_latestVersion) 
+[![Apache V2 License](http://img.shields.io/badge/license-Apache%20V2-blue.svg)](https://github.com/SpectraLogic/ds3_java_sdk/blob/master/LICENSE.md)
 
 ## Contact Us
 
