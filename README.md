@@ -72,7 +72,7 @@ dependencies {
 ```
 ## Javadoc
 
-The latest javadoc is located at [http://spectralogic.github.io/ds3_java_sdkj/javadoc/v1.2.0-RC2/](http://spectralogic.github.io/ds3_java_sdk/javadoc/v1.2.0-RC2/)
+The latest javadoc is located at [http://spectralogic.github.io/ds3_java_sdkj/javadoc/](http://spectralogic.github.io/ds3_java_sdk/javadoc/)
 
 ## Examples
 
