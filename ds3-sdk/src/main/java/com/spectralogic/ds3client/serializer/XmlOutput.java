@@ -37,6 +37,7 @@ public class XmlOutput {
     private static final JacksonXmlModule module;
     private static final XmlMapper mapper;
     static private final Logger LOG = LoggerFactory.getLogger(XmlOutput.class);
+    public static final String PRODUCTION_BUILD = "productionBuild";
 
     static {
         module = new JacksonXmlModule();
@@ -52,7 +53,7 @@ public class XmlOutput {
     }
 
     protected static boolean isProductionBuild() {
-        String productionBuild = System.getenv("productionBuild");
+        String productionBuild = System.getenv(PRODUCTION_BUILD);
         if (productionBuild != null) {
             if (productionBuild.equals("true")) {
                 return true;
@@ -61,15 +62,15 @@ public class XmlOutput {
         }
 
         final Properties props = new Properties();
-        final InputStream input = XmlOutput.class.getClassLoader().getResourceAsStream("config.properties");
+        final InputStream input = XmlOutput.class.getClassLoader().getResourceAsStream("ds3_sdk.properties");
         if (input == null) {
             LOG.error("Could not find property file.");
         }
         else {
             try {
                 props.load(input);
-                productionBuild = (String) props.get("productionBuild");
-                if (productionBuild.equals("true")) {
+                productionBuild = (String) props.get(PRODUCTION_BUILD);
+                if (productionBuild != null && productionBuild.equals("true")) {
                     return true;
                 }
                 else {

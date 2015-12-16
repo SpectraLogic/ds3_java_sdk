@@ -46,7 +46,7 @@ task genConfigProperties << {
     def productionBuild = System.getenv('productionBuild')
     if (productionBuild == null) { productionBuild = 'false' }
 
-    File configFile = new File(sourceSets.main.output.resourcesDir, "/config.properties")
+    File configFile = new File(sourceSets.main.output.resourcesDir, "/ds3_sdk.properties")
     Path configPath = sourceSets.main.output.resourcesDir.toPath()
     if (!Files.exists(configPath)) {
         Files.createDirectories(configPath)
