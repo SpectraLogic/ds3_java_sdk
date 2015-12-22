@@ -47,7 +47,7 @@ public class XmlOutput {
         if (isProductionBuild()) {
             mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         } else {
-            LOG.info("Non-production build: Asserting on Deserializing invalid XML elements in responses.");
+            LOG.info("Non-production build: Asserting on de-serializing unknown elements and attributes in XML response payloads.");
         }
     }
 
