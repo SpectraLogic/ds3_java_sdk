@@ -16,6 +16,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.nio.channels.SeekableByteChannel;
 import java.security.SignatureException;
 import java.util.Collections;
 import java.util.List;
@@ -232,6 +233,13 @@ public class Regression_Test {
                 assertThat(e.getStatusCode(), is(404)); // this returns 410 in bp 3.0
             }
 
+            job.transfer(new Ds3ClientHelpers.ObjectChannelBuilder() {
+                @Override
+                public SeekableByteChannel buildChannel(final String key) throws IOException {
+                    fail("This call should never be hit");
+                    return new NullChannel();
+                }
+            });
         } finally {
             Util.deleteAllContents(client, bucketName);
         }

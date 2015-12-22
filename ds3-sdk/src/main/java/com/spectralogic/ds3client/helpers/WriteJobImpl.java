@@ -48,7 +48,7 @@ class WriteJobImpl extends JobImpl {
             final MasterObjectList masterObjectList) {
         super(client, masterObjectList);
         if (this.masterObjectList == null || this.masterObjectList.getObjects() == null) {
-            LOG.info("An empty job was created");
+            LOG.info("Job has no data to transfer");
             this.filteredChunks = null;
             this.partTracker = null;
         } else {
@@ -86,8 +86,8 @@ class WriteJobImpl extends JobImpl {
     public void transfer(final ObjectChannelBuilder channelBuilder)
             throws SignatureException, IOException, XmlProcessingException {
         LOG.debug("Starting job transfer");
-        if (masterObjectList == null) {
-            LOG.info("There is nothing to transfer");
+        if (this.masterObjectList == null || this.masterObjectList.getObjects() == null) {
+            LOG.info("There is nothing to transfer for job" + ((this.getJobId() == null) ? "" : " " + this.getJobId().toString()));
             return;
         }
         try (final JobState jobState = new JobState(channelBuilder, filteredChunks, partTracker, ImmutableMap.<String, ImmutableMultimap<BulkObject,Range>>of())) {
