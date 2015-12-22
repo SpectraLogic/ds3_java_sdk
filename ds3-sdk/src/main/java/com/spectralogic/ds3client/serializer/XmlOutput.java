@@ -22,7 +22,6 @@ import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
 import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import com.fasterxml.jackson.dataformat.xml.JacksonXmlModule;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
-import com.spectralogic.ds3client.BulkCommand;
 import com.spectralogic.ds3client.models.bulk.Ds3ObjectList;
 
 import java.io.IOException;
@@ -44,21 +43,18 @@ public class XmlOutput {
         module.setDefaultUseWrapper(false);
         mapper = new XmlMapper(module);
         final SimpleFilterProvider filterProvider = new SimpleFilterProvider().setFailOnUnknownId(false);
-        mapper.setFilters(filterProvider);
+        mapper.setFilterProvider(filterProvider);
         if (isProductionBuild()) {
             mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         } else {
-            LOG.info("Non-production build: Asserting on Deserializing invalid XML elements in responses.");
+            LOG.info("Non-production build: Asserting on de-serializing unknown elements and attributes in XML response payloads.");
         }
     }
 
     protected static boolean isProductionBuild() {
         String productionBuild = System.getenv(PRODUCTION_BUILD);
         if (productionBuild != null) {
-            if (productionBuild.equals("true")) {
-                return true;
-            }
-            return false;
+            return productionBuild.equals("true");
         }
 
         final Properties props = new Properties();
@@ -74,7 +70,7 @@ public class XmlOutput {
                     return true;
                 }
                 else {
-                    LOG.error("Unknown productionBuild value[" + productionBuild + "].  Defaulting to fail for unknown XML elements.");
+                    LOG.error("Unknown productionBuild value[" + productionBuild + "].  Defaulting to false for unknown XML elements.");
                 }
             } catch (final IOException e) {
                 LOG.error("Failed to load property file: ", e);

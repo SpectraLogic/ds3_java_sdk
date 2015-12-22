@@ -33,11 +33,17 @@ abstract class JobImpl implements Job {
     
     @Override
     public UUID getJobId() {
+        if (this.masterObjectList == null) {
+            return null;
+        }
         return this.masterObjectList.getJobId();
     }
 
     @Override
     public String getBucketName() {
+        if (this.masterObjectList == null) {
+            return null;
+        }
         return this.masterObjectList.getBucketName();
     }
     
