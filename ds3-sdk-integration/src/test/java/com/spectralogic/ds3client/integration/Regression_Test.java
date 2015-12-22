@@ -5,9 +5,11 @@ import com.google.common.collect.Lists;
 import com.spectralogic.ds3client.Ds3Client;
 import com.spectralogic.ds3client.commands.CancelJobRequest;
 import com.spectralogic.ds3client.commands.CancelJobResponse;
+import com.spectralogic.ds3client.commands.GetAvailableJobChunksRequest;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers;
 import com.spectralogic.ds3client.models.Contents;
 import com.spectralogic.ds3client.models.bulk.Ds3Object;
+import com.spectralogic.ds3client.networking.FailedRequestException;
 import com.spectralogic.ds3client.serializer.XmlProcessingException;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -15,13 +17,15 @@ import org.junit.Test;
 
 import java.io.IOException;
 import java.security.SignatureException;
+import java.util.Collections;
 import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.junit.Assert.*;
 
 public class Regression_Test {
 
@@ -204,5 +208,33 @@ public class Regression_Test {
         } finally {
             Util.deleteAllContents(client, bucketName);
         }
+    }
+
+    @Test
+    public void emptyObjectTest() throws IOException, SignatureException, XmlProcessingException {
+        final String bucketName = "emptyObject";
+        final List<Ds3Object> objects = Collections.singletonList(new Ds3Object("obj1.txt", 0));
+
+        try {
+
+            final Ds3ClientHelpers helpers = Ds3ClientHelpers.wrap(client);
+
+            helpers.ensureBucketExists(bucketName);
+
+            final Ds3ClientHelpers.Job job = helpers.startWriteJob(bucketName, objects);
+
+            assertThat(job, is(notNullValue()));
+
+            try {
+                client.getAvailableJobChunks(new GetAvailableJobChunksRequest(job.getJobId()));
+                fail();
+            } catch(final FailedRequestException e) {
+                assertThat(e.getStatusCode(), is(404)); // this returns 410 in bp 3.0
+            }
+
+        } finally {
+            Util.deleteAllContents(client, bucketName);
+        }
+
     }
 }

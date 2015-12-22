@@ -47,7 +47,7 @@ class WriteJobImpl extends JobImpl {
             final Ds3Client client,
             final MasterObjectList masterObjectList) {
         super(client, masterObjectList);
-        if (masterObjectList == null) {
+        if (this.masterObjectList == null || this.masterObjectList.getObjects() == null) {
             LOG.info("An empty job was created");
             this.filteredChunks = null;
             this.partTracker = null;
