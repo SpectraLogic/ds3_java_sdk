@@ -187,7 +187,7 @@ public class NetworkClientImpl implements NetworkClient {
             if (this.content != null) {
                 final BasicHttpEntityEnclosingRequest httpRequest = new BasicHttpEntityEnclosingRequest(verb, path);
 
-                final Ds3InputStreamEntity entityStream = new Ds3InputStreamEntity(this.content, this.ds3Request.getSize(), ContentType.create(this.ds3Request.getContentType()));
+                final Ds3InputStreamEntity entityStream = new Ds3InputStreamEntity(this.content, this.ds3Request.getSize(), ContentType.create(this.ds3Request.getContentType()), this.ds3Request.getPath());
                 entityStream.setBufferSize(NetworkClientImpl.this.connectionDetails.getBufferSize());
                 httpRequest.setEntity(entityStream);
                 return httpRequest;
@@ -260,21 +260,21 @@ public class NetworkClientImpl implements NetworkClient {
             return canonicalizedResource.toString();
         }
 
-		private String canonicalizeAmzHeaders(
-				final Multimap<String, String> customHeaders) {
-			StringBuilder ret = new StringBuilder();
-			for (final Map.Entry<String, Collection<String>> header : customHeaders
-					.asMap().entrySet()) {
-				final String key = header.getKey().toLowerCase();
-				if (key.startsWith(PutObjectRequest.AMZ_META_HEADER)
-						&& header.getValue().size() > 0) {
-					ret.append(key).append(":");
-					ret.append(Joiner.on(",").join(header.getValue()));
-					ret.append('\n');
-				}
-			}
-			return ret.toString();
-		}
+        private String canonicalizeAmzHeaders(
+                final Multimap<String, String> customHeaders) {
+            final StringBuilder ret = new StringBuilder();
+            for (final Map.Entry<String, Collection<String>> header : customHeaders
+                    .asMap().entrySet()) {
+                final String key = header.getKey().toLowerCase();
+                if (key.startsWith(PutObjectRequest.AMZ_META_HEADER)
+                        && header.getValue().size() > 0) {
+                    ret.append(key).append(":");
+                    ret.append(Joiner.on(",").join(header.getValue()));
+                    ret.append('\n');
+                }
+            }
+            return ret.toString();
+        }
 
         private String buildHash() throws IOException {
             return this.ds3Request.getChecksum().match(new HashGeneratingMatchHandler(this.content, this.checksumType));

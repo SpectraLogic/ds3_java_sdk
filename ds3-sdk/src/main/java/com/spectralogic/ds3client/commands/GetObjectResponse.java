@@ -26,9 +26,9 @@ import java.nio.channels.WritableByteChannel;
 public class GetObjectResponse extends AbstractResponse {
     private Metadata metadata;
     private long objectSize;
-    public GetObjectResponse(final WebResponse response, final WritableByteChannel destinationChannel, final int bufferSize) throws IOException {
+    public GetObjectResponse(final WebResponse response, final WritableByteChannel destinationChannel, final int bufferSize, final String objName) throws IOException {
         super(response);
-        download(destinationChannel, bufferSize);
+        download(destinationChannel, bufferSize, objName);
     }
 
     public Metadata getMetadata() {
@@ -42,11 +42,11 @@ public class GetObjectResponse extends AbstractResponse {
         this.objectSize = getSizeFromHeaders(this.getResponse().getHeaders());
     }
 
-    protected void download(final WritableByteChannel destinationChannel, final int bufferSize) throws IOException {
+    protected void download(final WritableByteChannel destinationChannel, final int bufferSize, final String objName) throws IOException {
         try (
                 final WebResponse response = this.getResponse();
                 final InputStream responseStream = response.getResponseStream()) {
-            IOUtils.copy(responseStream, destinationChannel, bufferSize);
+            IOUtils.copy(responseStream, destinationChannel, bufferSize, objName);
             destinationChannel.close();
         }
     }
