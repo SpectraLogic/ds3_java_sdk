@@ -26,7 +26,7 @@ import java.io.OutputStream;
 public class Ds3InputStreamEntity extends InputStreamEntity {
 
     private int bufferSize = 1024 * 1024;
-	private final String path;
+    private final String path;
 
     public Ds3InputStreamEntity(final InputStream inStream, final long length, final ContentType contentType, final String path) {
         super(inStream, length, contentType);
