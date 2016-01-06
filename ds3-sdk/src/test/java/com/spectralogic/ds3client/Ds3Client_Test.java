@@ -30,10 +30,8 @@ import com.spectralogic.ds3client.networking.FailedRequestException;
 import com.spectralogic.ds3client.serializer.XmlProcessingException;
 import com.spectralogic.ds3client.utils.ByteArraySeekableByteChannel;
 import com.spectralogic.ds3client.utils.ResourceUtils;
-
 import org.junit.Test;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.channels.FileChannel;
@@ -45,7 +43,7 @@ import java.security.SignatureException;
 import java.util.*;
 
 import static org.hamcrest.CoreMatchers.*;
-import static org.hamcrest.MatcherAssert.*;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 public class Ds3Client_Test {
     private static final UUID MASTER_OBJECT_LIST_JOB_ID = UUID.fromString("1a85e743-ec8f-4789-afec-97e587a26936");
@@ -368,6 +366,7 @@ public class Ds3Client_Test {
 
         final Map<String, String> responseHeaders = new HashMap<>();
         responseHeaders.put("x-amz-meta-key", "value");
+        responseHeaders.put("Content-Length", "8");
 
         final ByteArraySeekableByteChannel resultChannel = new ByteArraySeekableByteChannel();
         final GetObjectRequest request = new GetObjectRequest("bucket", "obj", 0, UUID.randomUUID(), resultChannel);
