@@ -286,12 +286,15 @@ public class Ds3Client_Test {
         final Map<String, String> queryParams = new HashMap<>();
         queryParams.put("job", jobIdString);
         queryParams.put("offset", Long.toString(0));
-        
+
+        final Map<String, String> responseHeaders = new HashMap<>();
+        responseHeaders.put("Content-Length", "8");
+
         final ByteArraySeekableByteChannel resultChannel = new ByteArraySeekableByteChannel();
         final String stringResponse = "Response";
         MockNetwork
             .expecting(HttpVerb.GET, "/bucketName/object", queryParams, null)
-            .returning(200, stringResponse)
+            .returning(200, stringResponse, responseHeaders)
             .asClient()
             .getObject(new GetObjectRequest("bucketName", "object", 0, UUID.fromString(jobIdString), resultChannel));
         assertThat(resultChannel.toString(), is(stringResponse));
