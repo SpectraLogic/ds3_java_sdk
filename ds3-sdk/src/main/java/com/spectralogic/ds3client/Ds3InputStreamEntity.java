@@ -47,10 +47,12 @@ public class Ds3InputStreamEntity extends InputStreamEntity {
     public void writeTo(final OutputStream outStream) throws IOException {
         final long startTime = PerformanceUtils.getCurrentTime();
         final long totalBytes = IOUtils.copy(this.getContent(), outStream, bufferSize);
-        if (totalBytes != this.getContentLength()) {
+        final long endTime = PerformanceUtils.getCurrentTime();
+
+        if (this.getContentLength() != -1 && totalBytes != this.getContentLength()) {
             throw new ContentLengthNotMatchException(String.format("The Content length (%d) not match the number of byte read (%d)", this.getContentLength(), totalBytes));
         }
-        final long endTime = PerformanceUtils.getCurrentTime();
+
         PerformanceUtils.logMbps(startTime, endTime, totalBytes, path, true);
     }
 }

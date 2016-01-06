@@ -287,14 +287,11 @@ public class Ds3Client_Test {
         queryParams.put("job", jobIdString);
         queryParams.put("offset", Long.toString(0));
 
-        final Map<String, String> responseHeaders = new HashMap<>();
-        responseHeaders.put("Content-Length", "8");
-
         final ByteArraySeekableByteChannel resultChannel = new ByteArraySeekableByteChannel();
         final String stringResponse = "Response";
         MockNetwork
             .expecting(HttpVerb.GET, "/bucketName/object", queryParams, null)
-            .returning(200, stringResponse, responseHeaders)
+            .returning(200, stringResponse)
             .asClient()
             .getObject(new GetObjectRequest("bucketName", "object", 0, UUID.fromString(jobIdString), resultChannel));
         assertThat(resultChannel.toString(), is(stringResponse));
@@ -330,7 +327,7 @@ public class Ds3Client_Test {
         final String output = new String(fileBytes, Charset.forName("UTF-8"));
         final FileChannel channel = FileChannel.open(resourcePath, StandardOpenOption.READ);
 
-        PutObjectRequest por = new PutObjectRequest("bucketName", "objectName", UUID.fromString(jobIdString), fileBytes.length, 0, channel);
+        final PutObjectRequest por = new PutObjectRequest("bucketName", "objectName", UUID.fromString(jobIdString), fileBytes.length, 0, channel);
         
         final Multimap<String, String> expectedRequestHeaders = TreeMultimap.create();
         expectedRequestHeaders.put("Naming-Convention", "s3"); //default from AbstractRequest
@@ -369,7 +366,6 @@ public class Ds3Client_Test {
 
         final Map<String, String> responseHeaders = new HashMap<>();
         responseHeaders.put("x-amz-meta-key", "value");
-        responseHeaders.put("Content-Length", "8");
 
         final ByteArraySeekableByteChannel resultChannel = new ByteArraySeekableByteChannel();
         final GetObjectRequest request = new GetObjectRequest("bucket", "obj", 0, UUID.randomUUID(), resultChannel);
