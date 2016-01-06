@@ -15,9 +15,11 @@
 
 package com.spectralogic.ds3client.commands;
 
+import com.spectralogic.ds3client.exceptions.ContentLengthNotMatchException;
 import com.spectralogic.ds3client.networking.Metadata;
 import com.spectralogic.ds3client.networking.WebResponse;
 import com.spectralogic.ds3client.utils.IOUtils;
+import com.spectralogic.ds3client.utils.PerformanceUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -46,8 +48,15 @@ public class GetObjectResponse extends AbstractResponse {
         try (
                 final WebResponse response = this.getResponse();
                 final InputStream responseStream = response.getResponseStream()) {
-            IOUtils.copy(responseStream, destinationChannel, bufferSize, objName);
+            final long startTime = PerformanceUtils.getCurrentTime();
+            final long totalBytes = IOUtils.copy(responseStream, destinationChannel, bufferSize);
             destinationChannel.close();
+            if (totalBytes != objectSize) {
+                throw new ContentLengthNotMatchException(String.format("The Content length (%d) not match the number of byte read (%d)", objectSize, totalBytes));
+            }
+
+            final long endTime = PerformanceUtils.getCurrentTime();
+            PerformanceUtils.logMbps(startTime, endTime, totalBytes, objName, false);
         }
     }
 

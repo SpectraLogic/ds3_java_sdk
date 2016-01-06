@@ -19,7 +19,6 @@ import com.spectralogic.ds3client.Ds3Client;
 import com.spectralogic.ds3client.Ds3ClientBuilder;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers;
 import com.spectralogic.ds3client.helpers.FileObjectPutter;
-import com.spectralogic.ds3client.models.Credentials;
 import com.spectralogic.ds3client.models.bulk.Ds3Object;
 import com.spectralogic.ds3client.serializer.XmlProcessingException;
 
@@ -32,10 +31,7 @@ public class BulkPutExample {
 
     public static void main(final String args[]) throws IOException, SignatureException, XmlProcessingException {
 
-        try (final Ds3Client client = Ds3ClientBuilder.create("endpoint:8080",
-                new Credentials("accessId", "secretKey"))
-                .withHttps(false)
-                .build()) {
+        try (final Ds3Client client = Ds3ClientBuilder.fromEnv().withHttps(false).build()) {
 
             // Wrap the Ds3Client with the helper functions
             final Ds3ClientHelpers helper = Ds3ClientHelpers.wrap(client);
