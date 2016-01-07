@@ -20,6 +20,7 @@ import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.ObjectChannelBuilder;
 import java.io.IOException;
 import java.nio.channels.FileChannel;
 import java.nio.channels.SeekableByteChannel;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 
@@ -39,6 +40,16 @@ public class FileObjectPutter implements ObjectChannelBuilder {
 
     @Override
     public SeekableByteChannel buildChannel(final String key) throws IOException {
-        return FileChannel.open(this.root.resolve(key), StandardOpenOption.READ);
+
+        final Path path = this.root.resolve(key);
+
+        return FileChannel.open(resolveForSymbolic(path), StandardOpenOption.READ);
+    }
+
+    private static Path resolveForSymbolic(final Path path) throws IOException {
+        if (Files.isSymbolicLink(path)) {
+            return Files.readSymbolicLink(path);
+        }
+        return path;
     }
 }
