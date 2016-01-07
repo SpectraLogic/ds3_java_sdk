@@ -31,11 +31,14 @@ public class PerformanceUtils {
         final double content = totalBytes/1024D/1024D;
         final double mbps = content / time;
 
+        final String messagePrefix;
         if (isPutCommand) {
-            LOG.info(String.format("Putting %s statistics: Length (%.03f MB), Time (%.03f sec), Mbps (%.03f)", objName, content, time, mbps));
+            messagePrefix = "Putting";
         }
         else {
-            LOG.info(String.format("Getting %s statistics: Length (%.03f MB), Time (%.03f sec), Mbps (%.03f)", objName, content, time, mbps));
+            messagePrefix = "Getting";
         }
+        
+        LOG.info(String.format("%s %s statistics: Length (%.03f MB), Time (%.03f sec), Mbps (%.03f)", messagePrefix, objName, content, time, mbps));
     }
 }
