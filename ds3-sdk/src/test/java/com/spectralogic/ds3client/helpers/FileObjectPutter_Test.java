@@ -50,4 +50,29 @@ public class FileObjectPutter_Test {
             Files.deleteIfExists(tempDir);
         }
     }
+
+    @Test
+    public void testRegularFile() throws IOException {
+        final Path tempDir = Files.createTempDirectory("ds3_file_object_putter_");
+        final Path tempPath = Files.createTempFile(tempDir, "temp_", ".txt");
+
+        try {
+            try (final SeekableByteChannel channel = Files.newByteChannel(tempPath, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.WRITE)) {
+                channel.write(ByteBuffer.wrap(testData));
+            }
+            final FileObjectPutter putter = new FileObjectPutter(tempDir);
+
+            final SeekableByteChannel newChannel = putter.buildChannel(tempPath.getFileName().toString());
+            assertThat(newChannel, is(notNullValue()));
+
+            final ByteBuffer buff = ByteBuffer.allocate(testData.length);
+            assertThat(newChannel.read(buff), is(testData.length));
+
+            assertThat(new String(buff.array(), Charset.forName("UTF-8")), is(testString));
+
+        } finally {
+            Files.deleteIfExists(tempPath);
+            Files.deleteIfExists(tempDir);
+        }
+    }
 }
