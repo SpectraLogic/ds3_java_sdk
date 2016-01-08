@@ -22,19 +22,25 @@ import java.nio.ByteBuffer;
 import java.nio.channels.WritableByteChannel;
 
 public class IOUtils {
-    public static void copy(
+
+    public static long copy(
         final InputStream inputStream,
         final OutputStream outputStream,
         final int bufferSize)
             throws IOException {
         final byte[] buffer = new byte[bufferSize];
         int len;
+        long totalBytes = 0;
+
         while ((len = inputStream.read(buffer)) != -1) {
+            totalBytes += len;
             outputStream.write(buffer, 0, len);
         }
+
+       return totalBytes;
     }
 
-    public static void copy(
+    public static long copy(
         final InputStream inputStream,
         final WritableByteChannel writableByteChannel,
         final int bufferSize)
@@ -42,11 +48,15 @@ public class IOUtils {
         final byte[] buffer = new byte[bufferSize];
         final ByteBuffer byteBuffer = ByteBuffer.wrap(buffer);
         int len;
+        long totalBytes = 0;
+
         while ((len = inputStream.read(buffer)) != -1) {
+            totalBytes += len;
             byteBuffer.position(0);
             byteBuffer.limit(len);
             writableByteChannel.write(byteBuffer);
         }
+        return totalBytes;
     }
 }
 

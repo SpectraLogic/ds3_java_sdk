@@ -15,9 +15,11 @@
 
 package com.spectralogic.ds3client.commands;
 
+import com.spectralogic.ds3client.exceptions.ContentLengthNotMatchException;
 import com.spectralogic.ds3client.networking.Metadata;
 import com.spectralogic.ds3client.networking.WebResponse;
 import com.spectralogic.ds3client.utils.IOUtils;
+import com.spectralogic.ds3client.utils.PerformanceUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -26,9 +28,9 @@ import java.nio.channels.WritableByteChannel;
 public class GetObjectResponse extends AbstractResponse {
     private Metadata metadata;
     private long objectSize;
-    public GetObjectResponse(final WebResponse response, final WritableByteChannel destinationChannel, final int bufferSize) throws IOException {
+    public GetObjectResponse(final WebResponse response, final WritableByteChannel destinationChannel, final int bufferSize, final String objName) throws IOException {
         super(response);
-        download(destinationChannel, bufferSize);
+        download(destinationChannel, bufferSize, objName);
     }
 
     public Metadata getMetadata() {
@@ -42,12 +44,20 @@ public class GetObjectResponse extends AbstractResponse {
         this.objectSize = getSizeFromHeaders(this.getResponse().getHeaders());
     }
 
-    protected void download(final WritableByteChannel destinationChannel, final int bufferSize) throws IOException {
+    protected void download(final WritableByteChannel destinationChannel, final int bufferSize, final String objName) throws IOException {
         try (
                 final WebResponse response = this.getResponse();
                 final InputStream responseStream = response.getResponseStream()) {
-            IOUtils.copy(responseStream, destinationChannel, bufferSize);
+            final long startTime = PerformanceUtils.getCurrentTime();
+            final long totalBytes = IOUtils.copy(responseStream, destinationChannel, bufferSize);
             destinationChannel.close();
+            final long endTime = PerformanceUtils.getCurrentTime();
+
+            if (this.objectSize != -1 && totalBytes != this.objectSize) {
+                throw new ContentLengthNotMatchException(objName, objectSize, totalBytes);
+            }
+
+            PerformanceUtils.logMbps(startTime, endTime, totalBytes, objName, false);
         }
     }
 

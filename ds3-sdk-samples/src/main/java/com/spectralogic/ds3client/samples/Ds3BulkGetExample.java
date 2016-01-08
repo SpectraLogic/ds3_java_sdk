@@ -39,7 +39,7 @@ public class Ds3BulkGetExample {
         // Get a client builder and then build a client instance.  This is the main entry point to the SDK.
         try (final Ds3Client client = Ds3ClientBuilder.fromEnv().withHttps(false).build()) {
 
-            final String bucket = "bucketName"; //The bucket we are interested in getting objects from.
+            final String bucket = "my_bucket"; //The bucket we are interested in getting objects from.
 
             // Get the list of objects from the bucket that you want to perform the bulk get with.
             final GetBucketResponse response = client.getBucket(new GetBucketRequest(bucket));

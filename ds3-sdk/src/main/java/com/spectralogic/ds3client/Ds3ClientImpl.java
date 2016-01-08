@@ -15,15 +15,14 @@
 
 package com.spectralogic.ds3client;
 
-import java.io.IOException;
-import java.security.SignatureException;
-
-
 import com.spectralogic.ds3client.commands.*;
 import com.spectralogic.ds3client.commands.notifications.*;
 import com.spectralogic.ds3client.models.bulk.Node;
 import com.spectralogic.ds3client.networking.ConnectionDetails;
 import com.spectralogic.ds3client.networking.NetworkClient;
+
+import java.io.IOException;
+import java.security.SignatureException;
 
 public class Ds3ClientImpl implements Ds3Client {
     private final NetworkClient netClient;
@@ -86,7 +85,8 @@ public class Ds3ClientImpl implements Ds3Client {
         return new GetObjectResponse(
             this.netClient.getResponse(request),
             request.getDestinationChannel(),
-            this.netClient.getConnectionDetails().getBufferSize()
+            this.netClient.getConnectionDetails().getBufferSize(),
+            request.getObjectName()
         );
     }
 
@@ -176,7 +176,7 @@ public class Ds3ClientImpl implements Ds3Client {
     }
 
     @Override
-    public NotificationResponse getObjectCachedNotification(GetObjectCachedNotificationRequest request) throws IOException, SignatureException {
+    public NotificationResponse getObjectCachedNotification(final GetObjectCachedNotificationRequest request) throws IOException, SignatureException {
         return new NotificationResponse(this.netClient.getResponse(request));
     }
 
@@ -191,7 +191,7 @@ public class Ds3ClientImpl implements Ds3Client {
     }
 
     @Override
-    public NotificationResponse getJobCompletedNotification(GetJobCompletedNotificationRequest request) throws IOException, SignatureException {
+    public NotificationResponse getJobCompletedNotification(final GetJobCompletedNotificationRequest request) throws IOException, SignatureException {
         return new NotificationResponse(this.netClient.getResponse(request));
     }
 
@@ -201,77 +201,77 @@ public class Ds3ClientImpl implements Ds3Client {
     }
 
     @Override
-    public NotificationResponse createJobCreatedNotification(CreateJobCreatedNotificationRequest request) throws IOException, SignatureException {
+    public NotificationResponse createJobCreatedNotification(final CreateJobCreatedNotificationRequest request) throws IOException, SignatureException {
         return new NotificationResponse(this.netClient.getResponse(request));
     }
 
     @Override
-    public NotificationResponse getJobCreatedNotification(GetJobCreatedNotificationRequest request) throws IOException, SignatureException {
+    public NotificationResponse getJobCreatedNotification(final GetJobCreatedNotificationRequest request) throws IOException, SignatureException {
         return new NotificationResponse(this.netClient.getResponse(request));
     }
 
     @Override
-    public DeleteNotificationResponse deleteJobCreatedNotification(DeleteJobCreatedNotificationRequest request) throws IOException, SignatureException {
+    public DeleteNotificationResponse deleteJobCreatedNotification(final DeleteJobCreatedNotificationRequest request) throws IOException, SignatureException {
         return new DeleteNotificationResponse(this.netClient.getResponse(request));
     }
 
     @Override
-    public NotificationResponse createObjectLostNotification(CreateObjectLostNotificationRequest request) throws IOException, SignatureException {
+    public NotificationResponse createObjectLostNotification(final CreateObjectLostNotificationRequest request) throws IOException, SignatureException {
         return new NotificationResponse(this.netClient.getResponse(request));
     }
 
     @Override
-    public NotificationResponse getObjectLostNotification(GetObjectLostNotificationRequest request) throws IOException, SignatureException {
+    public NotificationResponse getObjectLostNotification(final GetObjectLostNotificationRequest request) throws IOException, SignatureException {
         return new NotificationResponse(this.netClient.getResponse(request));
     }
 
     @Override
-    public DeleteNotificationResponse deleteObjectLostNotification(DeleteObjectLostNotificationRequest request) throws IOException, SignatureException {
+    public DeleteNotificationResponse deleteObjectLostNotification(final DeleteObjectLostNotificationRequest request) throws IOException, SignatureException {
         return new DeleteNotificationResponse(this.netClient.getResponse(request));
     }
 
     @Override
-    public NotificationResponse createObjectPersistedNotification(CreateObjectPersistedNotificationRequest request) throws IOException, SignatureException {
+    public NotificationResponse createObjectPersistedNotification(final CreateObjectPersistedNotificationRequest request) throws IOException, SignatureException {
         return new NotificationResponse(this.netClient.getResponse(request));
     }
 
     @Override
-    public NotificationResponse getObjectPersistedNotification(GetObjectPersistedNotificationRequest request) throws IOException, SignatureException {
+    public NotificationResponse getObjectPersistedNotification(final GetObjectPersistedNotificationRequest request) throws IOException, SignatureException {
         return new NotificationResponse(this.netClient.getResponse(request));
     }
 
     @Override
-    public DeleteNotificationResponse deleteObjectPersistedNotification(DeleteObjectPersistedNotificationRequest request) throws IOException, SignatureException {
+    public DeleteNotificationResponse deleteObjectPersistedNotification(final DeleteObjectPersistedNotificationRequest request) throws IOException, SignatureException {
         return new DeleteNotificationResponse(this.netClient.getResponse(request));
     }
 
     @Override
-    public NotificationResponse createPartitionFailureNotification(CreatePartitionFailureNotificationRequest request) throws IOException, SignatureException {
+    public NotificationResponse createPartitionFailureNotification(final CreatePartitionFailureNotificationRequest request) throws IOException, SignatureException {
         return new NotificationResponse(this.netClient.getResponse(request));
     }
 
     @Override
-    public NotificationResponse getPartitionFailureNotification(GetPartitionFailureNotificationRequest request) throws IOException, SignatureException {
+    public NotificationResponse getPartitionFailureNotification(final GetPartitionFailureNotificationRequest request) throws IOException, SignatureException {
         return new NotificationResponse(this.netClient.getResponse(request));
     }
 
     @Override
-    public DeleteNotificationResponse deletePartitionFailureNotification(DeletePartitionFailureNotificationRequest request) throws IOException, SignatureException {
+    public DeleteNotificationResponse deletePartitionFailureNotification(final DeletePartitionFailureNotificationRequest request) throws IOException, SignatureException {
         return new DeleteNotificationResponse(this.netClient.getResponse(request));
     }
 
     @Override
-    public NotificationResponse createTapeFailureNotification(CreateTapeFailureNotificationRequest request) throws IOException, SignatureException {
+    public NotificationResponse createTapeFailureNotification(final CreateTapeFailureNotificationRequest request) throws IOException, SignatureException {
         return new NotificationResponse(this.netClient.getResponse(request));
     }
 
     @Override
-    public NotificationResponse getTapeFailureNotification(GetTapeFailureNotificationRequest request) throws IOException, SignatureException {
+    public NotificationResponse getTapeFailureNotification(final GetTapeFailureNotificationRequest request) throws IOException, SignatureException {
         return new NotificationResponse(this.netClient.getResponse(request));
     }
 
     @Override
-    public DeleteNotificationResponse deleteTapeFailureNotification(DeleteTapeFailureNotificationRequest request) throws IOException, SignatureException {
+    public DeleteNotificationResponse deleteTapeFailureNotification(final DeleteTapeFailureNotificationRequest request) throws IOException, SignatureException {
         return new DeleteNotificationResponse(this.netClient.getResponse(request));
     }
 

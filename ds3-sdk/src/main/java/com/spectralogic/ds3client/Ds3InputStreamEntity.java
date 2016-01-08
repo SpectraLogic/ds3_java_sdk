@@ -15,7 +15,9 @@
 
 package com.spectralogic.ds3client;
 
+import com.spectralogic.ds3client.exceptions.ContentLengthNotMatchException;
 import com.spectralogic.ds3client.utils.IOUtils;
+import com.spectralogic.ds3client.utils.PerformanceUtils;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.InputStreamEntity;
 
@@ -26,9 +28,11 @@ import java.io.OutputStream;
 public class Ds3InputStreamEntity extends InputStreamEntity {
 
     private int bufferSize = 1024 * 1024;
+    private final String path;
 
-    public Ds3InputStreamEntity(final InputStream inStream, final long length, final ContentType contentType) {
+    public Ds3InputStreamEntity(final InputStream inStream, final long length, final ContentType contentType, final String path) {
         super(inStream, length, contentType);
+        this.path = path;
     }
 
     public void setBufferSize(final int bufferSize) {
@@ -41,6 +45,14 @@ public class Ds3InputStreamEntity extends InputStreamEntity {
 
     @Override
     public void writeTo(final OutputStream outStream) throws IOException {
-        IOUtils.copy(this.getContent(), outStream, bufferSize);
+        final long startTime = PerformanceUtils.getCurrentTime();
+        final long totalBytes = IOUtils.copy(this.getContent(), outStream, bufferSize);
+        final long endTime = PerformanceUtils.getCurrentTime();
+
+        if (this.getContentLength() != -1 && totalBytes != this.getContentLength()) {
+            throw new ContentLengthNotMatchException(path, this.getContentLength(), totalBytes);
+        }
+
+        PerformanceUtils.logMbps(startTime, endTime, totalBytes, path, true);
     }
 }

@@ -30,10 +30,8 @@ import com.spectralogic.ds3client.networking.FailedRequestException;
 import com.spectralogic.ds3client.serializer.XmlProcessingException;
 import com.spectralogic.ds3client.utils.ByteArraySeekableByteChannel;
 import com.spectralogic.ds3client.utils.ResourceUtils;
-
 import org.junit.Test;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.channels.FileChannel;
@@ -45,7 +43,7 @@ import java.security.SignatureException;
 import java.util.*;
 
 import static org.hamcrest.CoreMatchers.*;
-import static org.hamcrest.MatcherAssert.*;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 public class Ds3Client_Test {
     private static final UUID MASTER_OBJECT_LIST_JOB_ID = UUID.fromString("1a85e743-ec8f-4789-afec-97e587a26936");
@@ -288,7 +286,7 @@ public class Ds3Client_Test {
         final Map<String, String> queryParams = new HashMap<>();
         queryParams.put("job", jobIdString);
         queryParams.put("offset", Long.toString(0));
-        
+
         final ByteArraySeekableByteChannel resultChannel = new ByteArraySeekableByteChannel();
         final String stringResponse = "Response";
         MockNetwork
@@ -329,7 +327,7 @@ public class Ds3Client_Test {
         final String output = new String(fileBytes, Charset.forName("UTF-8"));
         final FileChannel channel = FileChannel.open(resourcePath, StandardOpenOption.READ);
 
-        PutObjectRequest por = new PutObjectRequest("bucketName", "objectName", UUID.fromString(jobIdString), fileBytes.length, 0, channel);
+        final PutObjectRequest por = new PutObjectRequest("bucketName", "objectName", UUID.fromString(jobIdString), fileBytes.length, 0, channel);
         
         final Multimap<String, String> expectedRequestHeaders = TreeMultimap.create();
         expectedRequestHeaders.put("Naming-Convention", "s3"); //default from AbstractRequest
