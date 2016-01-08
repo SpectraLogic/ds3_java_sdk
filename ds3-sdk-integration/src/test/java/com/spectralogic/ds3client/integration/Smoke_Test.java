@@ -15,12 +15,28 @@
 
 package com.spectralogic.ds3client.integration;
 
-import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-import static org.junit.Assume.assumeThat;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
+import com.spectralogic.ds3client.Ds3Client;
+import com.spectralogic.ds3client.commands.*;
+import com.spectralogic.ds3client.helpers.Ds3ClientHelpers;
+import com.spectralogic.ds3client.helpers.JobRecoveryException;
+import com.spectralogic.ds3client.helpers.ObjectCompletedListener;
+import com.spectralogic.ds3client.helpers.options.WriteJobOptions;
+import com.spectralogic.ds3client.models.*;
+import com.spectralogic.ds3client.models.bulk.*;
+import com.spectralogic.ds3client.models.tape.Tape;
+import com.spectralogic.ds3client.models.tape.Tapes;
+import com.spectralogic.ds3client.networking.FailedRequestException;
+import com.spectralogic.ds3client.serializer.XmlProcessingException;
+import com.spectralogic.ds3client.utils.ByteArraySeekableByteChannel;
+import com.spectralogic.ds3client.utils.ResourceUtils;
+import org.apache.commons.io.IOUtils;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
+import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -35,29 +51,10 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
-import com.spectralogic.ds3client.commands.*;
-import com.spectralogic.ds3client.helpers.Ds3ClientHelpers;
-import com.spectralogic.ds3client.helpers.JobRecoveryException;
-import com.spectralogic.ds3client.helpers.ObjectCompletedListener;
-import com.spectralogic.ds3client.helpers.options.WriteJobOptions;
-import com.spectralogic.ds3client.models.*;
-import com.spectralogic.ds3client.models.bulk.*;
-import com.spectralogic.ds3client.models.tape.Tape;
-import com.spectralogic.ds3client.models.tape.Tapes;
-import com.spectralogic.ds3client.utils.ByteArraySeekableByteChannel;
-import com.spectralogic.ds3client.utils.ResourceUtils;
-import org.apache.commons.io.IOUtils;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
-
-import com.spectralogic.ds3client.Ds3Client;
-import com.spectralogic.ds3client.networking.FailedRequestException;
-import com.spectralogic.ds3client.serializer.XmlProcessingException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import static com.spectralogic.ds3client.integration.Util.*;
+import static org.hamcrest.CoreMatchers.*;
+import static org.junit.Assert.*;
+import static org.junit.Assume.assumeThat;
 
 public class Smoke_Test {
 
@@ -67,7 +64,7 @@ public class Smoke_Test {
 
     @BeforeClass
     public static void startup() {
-        client = Util.fromEnv();
+        client = fromEnv();
     }
 
     @AfterClass
@@ -130,7 +127,7 @@ public class Smoke_Test {
             assertThat(response.getMasterObjectList().getPriority(), is(Priority.HIGH));
 
         } finally {
-            Util.deleteAllContents(client, bucketName);
+            deleteAllContents(client, bucketName);
         }
     }
 
@@ -139,7 +136,7 @@ public class Smoke_Test {
         final String bucketName = "test_get_objs";
         try {
             client.putBucket(new PutBucketRequest(bucketName));
-            Util.loadBookTestData(client, bucketName);
+            loadBookTestData(client, bucketName);
 
             final HeadObjectResponse headResponse = client.headObject(new HeadObjectRequest(
                     bucketName, "beowulf.txt"));
@@ -155,7 +152,7 @@ public class Smoke_Test {
             assertTrue(s3ObjectExists(response.getS3ObjectList().getObjects(), "beowulf.txt"));
 
         } finally {
-            Util.deleteAllContents(client,bucketName);
+            deleteAllContents(client,bucketName);
         }
 
     }
@@ -174,7 +171,7 @@ public class Smoke_Test {
         final String bucketName = "test_delete_folder";
         try {
             client.putBucket(new PutBucketRequest(bucketName));
-            Util.loadBookTestDataWithPrefix(client, bucketName, "folder/");
+            loadBookTestDataWithPrefix(client, bucketName, "folder/");
 
             HeadObjectResponse response = client.headObject(new HeadObjectRequest(
                     bucketName, "folder/beowulf.txt"));
@@ -188,7 +185,7 @@ public class Smoke_Test {
             assertThat(response.getStatus(),
                     is(HeadObjectResponse.Status.DOESNTEXIST));
         } finally {
-            Util.deleteAllContents(client, bucketName);
+            deleteAllContents(client, bucketName);
         }
     }
 
@@ -216,7 +213,7 @@ public class Smoke_Test {
 
         try {
             client.putBucket(new PutBucketRequest(bucketName));
-            Util.loadBookTestData(client, bucketName);
+            loadBookTestData(client, bucketName);
 
             final GetBucketResponse response = client
                     .getBucket(new GetBucketRequest(bucketName));
@@ -226,7 +223,7 @@ public class Smoke_Test {
             assertFalse(result.getContentsList().isEmpty());
             assertThat(result.getContentsList().size(), is(4));
         } finally {
-            Util.deleteAllContents(client, bucketName);
+            deleteAllContents(client, bucketName);
         }
     }
 
@@ -236,7 +233,7 @@ public class Smoke_Test {
 
         try {
             client.putBucket(new PutBucketRequest(bucketName));
-            Util.loadBookTestData(client, bucketName);
+            loadBookTestData(client, bucketName);
 
             final Ds3ClientHelpers helpers = Ds3ClientHelpers.wrap(client);
 
@@ -256,7 +253,7 @@ public class Smoke_Test {
             assertThat(jobResponse.getMasterObjectList().getStatus(), is(JobStatus.COMPLETED));
 
         } finally {
-            Util.deleteAllContents(client, bucketName);
+            deleteAllContents(client, bucketName);
         }
     }
 
@@ -268,7 +265,7 @@ public class Smoke_Test {
         try {
             // Create bucket and put objects (4 book .txt files) to it
             client.putBucket(new PutBucketRequest(bucketName));
-            Util.loadBookTestData(client, bucketName);
+            loadBookTestData(client, bucketName);
 
             final GetBucketResponse get_response = client
                     .getBucket(new GetBucketRequest(bucketName));
@@ -281,11 +278,11 @@ public class Smoke_Test {
             try {
                 client.deleteBucket(new DeleteBucketRequest(bucketName));
                 fail("Should have thrown a FailedRequestException when trying to delete a non-empty bucket.");
-            } catch (FailedRequestException e) {
+            } catch (final FailedRequestException e) {
                 assertTrue(409 == e.getStatusCode());
             }
         } finally {
-            Util.deleteAllContents(client, bucketName);
+            deleteAllContents(client, bucketName);
         }
     }
 
@@ -301,7 +298,7 @@ public class Smoke_Test {
         try {
             client.putBucket(new PutBucketRequest(bucketName));
             fail("Should have thrown a FailedRequestException when trying to create a bucket with a duplicate name.");
-        } catch (FailedRequestException e) {
+        } catch (final FailedRequestException e) {
             assertTrue(409 == e.getStatusCode());
         } finally {
             client.deleteBucket(new DeleteBucketRequest(bucketName));
@@ -317,7 +314,7 @@ public class Smoke_Test {
         try {
             client.deleteBucket(new DeleteBucketRequest(bucketName));
             fail("Should have thrown a FailedRequestException when trying to delete a non-existent bucket.");
-        } catch (FailedRequestException e) {
+        } catch (final FailedRequestException e) {
             assertTrue(404 == e.getStatusCode());
         }
     }
@@ -329,7 +326,7 @@ public class Smoke_Test {
 
         try {
             client.putBucket(new PutBucketRequest(bucketName));
-            Util.loadBookTestData(client, bucketName);
+            loadBookTestData(client, bucketName);
 
             final GetBucketResponse response = client
                     .getBucket(new GetBucketRequest(bucketName));
@@ -338,13 +335,13 @@ public class Smoke_Test {
             assertThat(result.getContentsList().size(), is(4));
 
             try {
-                Util.loadBookTestData(client, bucketName);
+                loadBookTestData(client, bucketName);
                 fail("Should have thrown a FailedRequestException when trying to put duplicate objects.");
-            } catch (FailedRequestException e) {
+            } catch (final FailedRequestException e) {
                 assertTrue(409 == e.getStatusCode());
             }
         } finally {
-            Util.deleteAllContents(client, bucketName);
+            deleteAllContents(client, bucketName);
         }
     }
 
@@ -366,7 +363,7 @@ public class Smoke_Test {
 
             putJob.transfer(new Ds3ClientHelpers.ObjectChannelBuilder() {
                 @Override
-                final public SeekableByteChannel buildChannel(String key) throws IOException {
+                final public SeekableByteChannel buildChannel(final String key) throws IOException {
                     final byte[] randomData = IOUtils.toByteArray(new RandomDataInputStream(120, 1024));
                     final ByteBuffer randomBuffer = ByteBuffer.wrap(randomData);
 
@@ -387,7 +384,7 @@ public class Smoke_Test {
 
             assertTrue(Iterables.size(filesLeft) == 1);
         } finally {
-            Util.deleteAllContents(client, bucketName);
+            deleteAllContents(client, bucketName);
         }
     }
 
@@ -398,7 +395,7 @@ public class Smoke_Test {
 
         try {
             wrapper.ensureBucketExists(bucketName);
-            Util.loadBookTestData(client, bucketName);
+            loadBookTestData(client, bucketName);
 
             final Iterable<Contents> objs = wrapper.listObjects(bucketName);
             final DeleteMultipleObjectsResponse response = client.deleteMultipleObjects(new DeleteMultipleObjectsRequest(bucketName, objs).withQuiet(false));
@@ -409,7 +406,7 @@ public class Smoke_Test {
             final Iterable<Contents> filesLeft = wrapper.listObjects(bucketName);
             assertTrue(Iterables.size(filesLeft) == 0);
         } finally {
-            Util.deleteAllContents(client, bucketName);
+            deleteAllContents(client, bucketName);
         }
     }
 
@@ -420,7 +417,7 @@ public class Smoke_Test {
 
         try {
             wrapper.ensureBucketExists(bucketName);
-            Util.loadBookTestData(client, bucketName);
+            loadBookTestData(client, bucketName);
 
             final Iterable<Contents> objs = wrapper.listObjects(bucketName);
             final DeleteMultipleObjectsResponse response = client.deleteMultipleObjects(new DeleteMultipleObjectsRequest(bucketName, objs).withQuiet(true));
@@ -431,7 +428,7 @@ public class Smoke_Test {
             final Iterable<Contents> filesLeft = wrapper.listObjects(bucketName);
             assertTrue(Iterables.size(filesLeft) == 0);
         } finally {
-            Util.deleteAllContents(client, bucketName);
+            deleteAllContents(client, bucketName);
         }
     }
 
@@ -452,7 +449,7 @@ public class Smoke_Test {
             assertThat(response.getResult().getErrorList().size(), is(3));
 
         } finally {
-            Util.deleteAllContents(client, bucketName);
+            deleteAllContents(client, bucketName);
         }
     }
 
@@ -467,8 +464,8 @@ public class Smoke_Test {
             client.putBucket(new PutBucketRequest(bucketName));
             helpers.ensureBucketExists(bucketName);
 
-            final Path objPath1 = ResourceUtils.loadFileResource(Util.RESOURCE_BASE_NAME + book1);
-            final Path objPath2 = ResourceUtils.loadFileResource(Util.RESOURCE_BASE_NAME + book2);
+            final Path objPath1 = ResourceUtils.loadFileResource(RESOURCE_BASE_NAME + book1);
+            final Path objPath2 = ResourceUtils.loadFileResource(RESOURCE_BASE_NAME + book2);
             final Ds3Object obj1 = new Ds3Object(book1, Files.size(objPath1));
             final Ds3Object obj2 = new Ds3Object(book2, Files.size(objPath2));
 
@@ -480,7 +477,7 @@ public class Smoke_Test {
                     job.getJobId(),
                     Files.size(objPath1),
                     0,
-                    new ResourceObjectPutter(Util.RESOURCE_BASE_NAME).buildChannel(book1)
+                    new ResourceObjectPutter(RESOURCE_BASE_NAME).buildChannel(book1)
             ));
             assertThat(putResponse1, is(notNullValue()));
             assertThat(putResponse1.getStatusCode(), is(equalTo(200)));
@@ -494,18 +491,18 @@ public class Smoke_Test {
                     recoverJob.getJobId(),
                     Files.size(objPath2),
                     0,
-                    new ResourceObjectPutter(Util.RESOURCE_BASE_NAME).buildChannel(book2)
+                    new ResourceObjectPutter(RESOURCE_BASE_NAME).buildChannel(book2)
             ));
             assertThat(putResponse2, is(notNullValue()));
             assertThat(putResponse2.getStatusCode(), is(equalTo(200)));
         } finally {
-            Util.deleteAllContents(client, bucketName);
+            deleteAllContents(client, bucketName);
         }
     }
 
     @Test
     public void verifySendCrc32cChecksum() throws IOException, SignatureException, XmlProcessingException, URISyntaxException {
-        Util.assumeVersion1_2(client);
+        assumeVersion1_2(client);
 
         final String bucketName = "crc32Bucket";
 
@@ -528,7 +525,7 @@ public class Smoke_Test {
             assertThat(response.getChecksum(), is("+ZBZbQ=="));
 
         } finally {
-            Util.deleteAllContents(client, bucketName);
+            deleteAllContents(client, bucketName);
         }
     }
 
@@ -567,8 +564,8 @@ public class Smoke_Test {
         final String bucketName = "test_recover_read_job_bucket";
         final String book1 = "beowulf.txt";
         final String book2 = "ulysses.txt";
-        final Path objPath1 = ResourceUtils.loadFileResource(Util.RESOURCE_BASE_NAME + book1);
-        final Path objPath2 = ResourceUtils.loadFileResource(Util.RESOURCE_BASE_NAME + book2);
+        final Path objPath1 = ResourceUtils.loadFileResource(RESOURCE_BASE_NAME + book1);
+        final Path objPath2 = ResourceUtils.loadFileResource(RESOURCE_BASE_NAME + book2);
         final Ds3Object obj1 = new Ds3Object(book1, Files.size(objPath1));
         final Ds3Object obj2 = new Ds3Object(book2, Files.size(objPath2));
 
@@ -582,7 +579,7 @@ public class Smoke_Test {
             Ds3ClientHelpers.wrap(client).ensureBucketExists(bucketName);
 
             final Ds3ClientHelpers.Job putJob = Ds3ClientHelpers.wrap(client).startWriteJob(bucketName, Lists.newArrayList(obj1, obj2));
-            putJob.transfer(new ResourceObjectPutter(Util.RESOURCE_BASE_NAME));
+            putJob.transfer(new ResourceObjectPutter(RESOURCE_BASE_NAME));
 
             final FileChannel channel1 = FileChannel.open(
                     dirPath.resolve(book1),
@@ -611,7 +608,7 @@ public class Smoke_Test {
             assertThat(readResponse2.getStatusCode(), is(equalTo(200)));
 
         } finally {
-            Util.deleteAllContents(client, bucketName);
+            deleteAllContents(client, bucketName);
             for( final Path tempFile : Files.newDirectoryStream(dirPath) ){
                 Files.delete(tempFile);
             }
@@ -621,7 +618,7 @@ public class Smoke_Test {
 
     @Test
     public void putDirectory() throws IOException, SignatureException, XmlProcessingException {
-        Util.assumeVersion1_2(client);
+        assumeVersion1_2(client);
 
         final String bucketName = "putDir";
 
@@ -649,13 +646,13 @@ public class Smoke_Test {
             assertThat(response.getResult().getContentsList().get(0).getKey(), is("dir/"));
 
         } finally {
-            Util.deleteAllContents(client, bucketName);
+            deleteAllContents(client, bucketName);
         }
     }
 
     @Test
     public void putDirectoryWithOtherObjects() throws IOException, SignatureException, XmlProcessingException {
-        Util.assumeVersion1_2(client);
+        assumeVersion1_2(client);
 
         final String bucketName = "mixedPutDir";
 
@@ -687,7 +684,7 @@ public class Smoke_Test {
             assertThat(counter.get(), is(1));
 
         } finally {
-            Util.deleteAllContents(client, bucketName);
+            deleteAllContents(client, bucketName);
         }
     }
 
@@ -703,7 +700,7 @@ public class Smoke_Test {
 
             helpers.ensureBucketExists(bucketName);
 
-            Util.loadBookTestData(client, bucketName);
+            loadBookTestData(client, bucketName);
 
             final List<Ds3Object> objs = Lists.newArrayList(new Ds3Object("beowulf.txt"));
 
@@ -726,7 +723,7 @@ public class Smoke_Test {
 
             assertThat(counter.get(), is(1));
         } finally {
-            Util.deleteAllContents(client, bucketName);
+            deleteAllContents(client, bucketName);
         }
     }
 
@@ -742,7 +739,7 @@ public class Smoke_Test {
 
             helpers.ensureBucketExists(bucketName);
 
-            Util.loadBookTestData(client, bucketName);
+            loadBookTestData(client, bucketName);
 
             final List<Ds3Object> objs = Lists.newArrayList(new Ds3Object("beowulf.txt"));
 
@@ -769,7 +766,7 @@ public class Smoke_Test {
 
             assertThat(counter.get(), is(0));
         } finally {
-            Util.deleteAllContents(client, bucketName);
+            deleteAllContents(client, bucketName);
         }
     }
 
@@ -781,7 +778,7 @@ public class Smoke_Test {
             final Ds3ClientHelpers helpers = Ds3ClientHelpers.wrap(client);
             helpers.ensureBucketExists(bucketName);
 
-            Util.loadBookTestData(client, bucketName);
+            loadBookTestData(client, bucketName);
 
             final List<Ds3Object> objs = Lists.newArrayList();
             objs.add(new PartialDs3Object("beowulf.txt", Range.byLength(100, 100)));
@@ -800,7 +797,7 @@ public class Smoke_Test {
             assertThat(contents.size(), is(100L));
 
         } finally {
-            Util.deleteAllContents(client, bucketName);
+            deleteAllContents(client, bucketName);
         }
     }
 
@@ -812,7 +809,7 @@ public class Smoke_Test {
             final Ds3ClientHelpers helpers = Ds3ClientHelpers.wrap(client);
             helpers.ensureBucketExists(bucketName);
 
-            Util.loadBookTestData(client, bucketName);
+            loadBookTestData(client, bucketName);
 
             final List<Ds3Object> objs = Lists.newArrayList();
             objs.add(new PartialDs3Object("beowulf.txt", Range.byLength(100, 100)));
@@ -832,7 +829,7 @@ public class Smoke_Test {
             assertThat(contents.size(), is(300L));
 
         } finally {
-            Util.deleteAllContents(client, bucketName);
+            deleteAllContents(client, bucketName);
         }
     }
 
@@ -885,7 +882,7 @@ public class Smoke_Test {
 
         } finally {
             Files.delete(filePath);
-            Util.deleteAllContents(client, bucketName);
+            deleteAllContents(client, bucketName);
         }
     }
 
@@ -926,7 +923,7 @@ public class Smoke_Test {
             final String expectedResult = new String(Files.readAllBytes(expectedResultPath), Charset.forName("UTF-8"));
             assertThat(partialFile, is(expectedResult.substring(0, expectedResult.length() - 1))); // need the trim to remove a newline that is added by the os
         } finally {
-            Util.deleteAllContents(client, bucketName);
+            deleteAllContents(client, bucketName);
             Files.delete(filePath);
         }
     }
@@ -940,7 +937,7 @@ public class Smoke_Test {
 
             helpers.ensureBucketExists(bucketName);
 
-            Util.loadBookTestData(client, bucketName);
+            loadBookTestData(client, bucketName);
 
             final List<Ds3Object> objects = Lists.newArrayList(new Ds3Object("beowulf.txt"));
 
@@ -953,7 +950,7 @@ public class Smoke_Test {
             assertThat(getObjectResponse.getObjectSize(), is(294059L));
 
         } finally {
-            Util.deleteAllContents(client, bucketName);
+            deleteAllContents(client, bucketName);
         }
     }
 
@@ -966,14 +963,50 @@ public class Smoke_Test {
 
             helpers.ensureBucketExists(bucketName);
 
-            Util.loadBookTestData(client, bucketName);
+            loadBookTestData(client, bucketName);
 
             final HeadObjectResponse headObjectResponse = client.headObject(new HeadObjectRequest(bucketName, "beowulf.txt"));
 
             assertThat(headObjectResponse.getObjectSize(), is(294059L));
 
         } finally {
-            Util.deleteAllContents(client, bucketName);
+            deleteAllContents(client, bucketName);
         }
     }
+
+    @Test
+    public void attachDataTransferredListenerTest() throws IOException, SignatureException, URISyntaxException, XmlProcessingException {
+        final String bucketName = "test_attachDataTransferredListener";
+        try {
+            client.putBucket(new PutBucketRequest(bucketName));
+
+            final Ds3ClientHelpers helpers = Ds3ClientHelpers.wrap(client);
+
+            final List<Ds3Object> objects = new ArrayList<>();
+            long booksSize = 0;
+            for(final String book : BOOKS) {
+                final Path objPath = ResourceUtils.loadFileResource(RESOURCE_BASE_NAME + book);
+                final long bookSize = Files.size(objPath);
+                booksSize += bookSize;
+                final Ds3Object obj = new Ds3Object(book, bookSize);
+
+                objects.add(obj);
+            }
+
+            final Ds3ClientHelpers.Job job = helpers.startWriteJob(bucketName, objects);
+            final TransferredListener transferredListener = new TransferredListener();
+
+            job.attachObjectCompletedListener(transferredListener);
+            job.attachDataTransferredListener(transferredListener);
+
+            job.transfer(new ResourceObjectPutter(RESOURCE_BASE_NAME));
+
+            assertThat(transferredListener.getTotalBytes(), is(booksSize));
+            assertThat(transferredListener.getNumberOfFiles(), is(BOOKS.length));
+
+        } finally {
+            deleteAllContents(client,bucketName);
+        }
+    }
+
 }
