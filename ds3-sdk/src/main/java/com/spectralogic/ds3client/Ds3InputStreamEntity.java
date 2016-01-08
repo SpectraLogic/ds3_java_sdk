@@ -50,7 +50,7 @@ public class Ds3InputStreamEntity extends InputStreamEntity {
         final long endTime = PerformanceUtils.getCurrentTime();
 
         if (this.getContentLength() != -1 && totalBytes != this.getContentLength()) {
-            throw new ContentLengthNotMatchException(String.format("The Content length (%d) not match the number of byte read (%d)", this.getContentLength(), totalBytes));
+            throw new ContentLengthNotMatchException(path, this.getContentLength(), totalBytes);
         }
 
         PerformanceUtils.logMbps(startTime, endTime, totalBytes, path, true);

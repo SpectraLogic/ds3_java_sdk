@@ -54,7 +54,7 @@ public class GetObjectResponse extends AbstractResponse {
             final long endTime = PerformanceUtils.getCurrentTime();
 
             if (this.objectSize != -1 && totalBytes != this.objectSize) {
-                throw new ContentLengthNotMatchException(String.format("The Content length (%d) not match the number of byte read (%d)", objectSize, totalBytes));
+                throw new ContentLengthNotMatchException(objName, objectSize, totalBytes);
             }
 
             PerformanceUtils.logMbps(startTime, endTime, totalBytes, objName, false);
