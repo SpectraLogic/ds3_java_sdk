@@ -41,6 +41,7 @@ import static org.junit.Assume.assumeThat;
 
 public class Util {
     public static final String RESOURCE_BASE_NAME = "books/";
+    public static final String[] BOOKS = {"beowulf.txt", "sherlock_holmes.txt", "tale_of_two_cities.txt", "ulysses.txt"};
 
     private Util() {}
 
@@ -62,7 +63,6 @@ public class Util {
         assumeThat(majorVersion, is(1));
     }
 
-    private static final String[] BOOKS = {"beowulf.txt", "sherlock_holmes.txt", "tale_of_two_cities.txt", "ulysses.txt"};
     public static void loadBookTestData(final Ds3Client client, final String bucketName) throws IOException, SignatureException, XmlProcessingException, URISyntaxException {
 
         getLoadJob(client, bucketName, RESOURCE_BASE_NAME)
@@ -99,7 +99,6 @@ public class Util {
 
         helpers.startWriteJob(bucketName, objects).transfer(new PrefixAdderObjectChannelBuilder(new ResourceObjectPutter(RESOURCE_BASE_NAME), prefix));
     }
-
 
     public static void deleteAllContents(final Ds3Client client, final String bucketName) throws IOException, SignatureException {
         final Ds3ClientHelpers helpers = Ds3ClientHelpers.wrap(client);
