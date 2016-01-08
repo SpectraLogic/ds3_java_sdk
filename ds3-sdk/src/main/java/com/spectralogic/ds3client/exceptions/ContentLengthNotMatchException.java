@@ -18,7 +18,26 @@ package com.spectralogic.ds3client.exceptions;
 import java.io.IOException;
 
 public class ContentLengthNotMatchException extends IOException {
+    private final String fileName;
+    private final long contentLenght;
+    private final long totalBytes;
     public ContentLengthNotMatchException(final String fileName, final long contentLenght, final long totalBytes) {
         super(String.format("The Content length for %s (%d) not match the number of byte read (%d)", fileName, contentLenght, totalBytes));
+
+        this.fileName = fileName;
+        this.contentLenght = contentLenght;
+        this.totalBytes = totalBytes;
+    }
+
+    public String getFileName() {
+        return this.fileName;
+    }
+
+    public long getContentLenght() {
+        return this.contentLenght;
+    }
+
+    public long getTotalBytes() {
+        return this.totalBytes;
     }
 }
