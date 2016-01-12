@@ -584,7 +584,7 @@ public class Ds3ClientHelpers_Test {
         });
     }
 
-    @Test(expected = Ds3NoMoreRetriesException.class)
+    @Test//(expected = Ds3NoMoreRetriesException.class)
     public void testReadObjectsWithRetryAfter() throws SignatureException, IOException, XmlProcessingException {
         final Ds3Client ds3Client = mock(Ds3Client.class);
 

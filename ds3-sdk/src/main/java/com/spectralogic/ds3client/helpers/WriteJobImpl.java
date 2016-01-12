@@ -129,7 +129,7 @@ class WriteJobImpl extends JobImpl {
         case RETRYLATER:
             try {
                 if (retryAfterLeft == 0) {
-                    throw new Ds3NoMoreRetriesException();
+                    throw new Ds3NoMoreRetriesException(this.retryAfter);
                 }
                 retryAfterLeft--;
 

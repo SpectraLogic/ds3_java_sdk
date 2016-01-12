@@ -19,7 +19,7 @@ import java.io.IOException;
 
 public class Ds3NoMoreRetriesException extends IOException {
 
-    public Ds3NoMoreRetriesException () {
-        super ("Reached the limit number of retries request");
+    public Ds3NoMoreRetriesException (final int retryAfter) {
+        super (String.format("Reached the maximum number of retries (%d)", retryAfter));
     }
 }
