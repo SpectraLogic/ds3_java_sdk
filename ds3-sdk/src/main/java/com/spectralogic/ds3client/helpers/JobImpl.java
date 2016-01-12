@@ -18,7 +18,6 @@ package com.spectralogic.ds3client.helpers;
 import com.spectralogic.ds3client.Ds3Client;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.Job;
 import com.spectralogic.ds3client.models.JobWithChunksApiBean;
-import com.spectralogic.ds3client.models.bulk.MasterObjectList;
 
 import java.util.UUID;
 

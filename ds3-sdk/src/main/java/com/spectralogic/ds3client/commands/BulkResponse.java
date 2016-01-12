@@ -15,26 +15,23 @@
 
 package com.spectralogic.ds3client.commands;
 
-import com.spectralogic.ds3client.models.bulk.MasterObjectList;
+import com.spectralogic.ds3client.models.JobWithChunksApiBean;
 import com.spectralogic.ds3client.networking.WebResponse;
 import com.spectralogic.ds3client.serializer.XmlOutput;
-
-import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.StringWriter;
 
 public abstract class BulkResponse extends AbstractResponse {
     private final static Logger LOG = LoggerFactory.getLogger(BulkResponse.class);
-    private MasterObjectList result;
+    private JobWithChunksApiBean result;
     public BulkResponse(final WebResponse response) throws IOException {
         super(response);
     }
 
-    public MasterObjectList getResult() {
+    public JobWithChunksApiBean getResult() {
         return this.result;
     }
 
@@ -49,7 +46,7 @@ public abstract class BulkResponse extends AbstractResponse {
             }
             try(final InputStream content = response.getResponseStream()) {
                 LOG.debug("Starting bulk response parsing");
-                this.result = XmlOutput.fromXml(content, MasterObjectList.class);
+                this.result = XmlOutput.fromXml(content, JobWithChunksApiBean.class);
                 LOG.debug("Finished bulk response parsing");
             }
         }

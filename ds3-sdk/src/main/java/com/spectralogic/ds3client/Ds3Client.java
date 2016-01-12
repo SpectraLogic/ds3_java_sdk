@@ -17,10 +17,9 @@
 package com.spectralogic.ds3client;
 
 import com.spectralogic.ds3client.commands.*;
-import com.spectralogic.ds3client.commands.notifications.*;
 import com.spectralogic.ds3client.commands.spectrads3.*;
 import com.spectralogic.ds3client.commands.spectrads3.notifications.*;
-import com.spectralogic.ds3client.models.bulk.Node;
+import com.spectralogic.ds3client.models.NodeApiBean;
 import com.spectralogic.ds3client.networking.ConnectionDetails;
 
 import java.io.Closeable;
@@ -496,5 +495,5 @@ public interface Ds3Client extends Closeable {
     RegenerateUserSecretKeySpectraS3Response regenerateUserSecretKeySpectraS3(RegenerateUserSecretKeySpectraS3Request request)
             throws IOException, SignatureException;
 
-    Ds3Client newForNode(Node node);
+    Ds3Client newForNode(NodeApiBean node);
 }

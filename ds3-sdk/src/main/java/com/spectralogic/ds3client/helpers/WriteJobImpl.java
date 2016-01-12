@@ -56,7 +56,7 @@ class WriteJobImpl extends JobImpl {
                     + jobWithChunksApiBean.getObjects().size() + " chunks");
             this.filteredChunks = filterChunks(this.jobWithChunksApiBean.getObjects());
             this.partTracker = JobPartTrackerFactory
-                    .buildPartTracker(Iterables.concat(filteredChunks));
+                    .buildPartTracker(Iterables.concat(ReadJobImpl.getAllBlobApiBeans(filteredChunks)));
         }
 
     }

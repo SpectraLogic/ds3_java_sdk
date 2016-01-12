@@ -16,13 +16,12 @@
 package com.spectralogic.ds3client;
 
 import com.spectralogic.ds3client.models.Credentials;
-import com.spectralogic.ds3client.models.bulk.Node;
+import com.spectralogic.ds3client.models.NodeApiBean;
 import com.spectralogic.ds3client.networking.ConnectionDetails;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.net.URI;
-import java.sql.Connection;
 
 class ConnectionDetailsImpl implements ConnectionDetails {
     static private final Logger LOG = LoggerFactory.getLogger(ConnectionDetailsImpl.class);
@@ -74,14 +73,14 @@ class ConnectionDetailsImpl implements ConnectionDetails {
 
     }
 
-    public static ConnectionDetails newForNode(final Node node, final ConnectionDetails connectionDetails) {
+    public static ConnectionDetails newForNode(final NodeApiBean node, final ConnectionDetails connectionDetails) {
         final Builder connectionBuilder;
-        if (node.getEndpoint() == null || node.getEndpoint().equals("FAILED_TO_DETERMINE_DATAPATH_IP_ADDRESS")) {
+        if (node.getEndPoint() == null || node.getEndPoint().equals("FAILED_TO_DETERMINE_DATAPATH_IP_ADDRESS")) {
             LOG.trace("Running against an old version of the DS3 API, reusing existing endpoint configuration");
             connectionBuilder = builder(connectionDetails.getEndpoint(), connectionDetails.getCredentials());
         }
         else {
-            LOG.trace("Creating new Connection Details for endpoint: " + node.getEndpoint());
+            LOG.trace("Creating new Connection Details for endpoint: " + node.getEndPoint());
             connectionBuilder = builder(buildAuthority(node, connectionDetails), connectionDetails.getCredentials());
         }
         connectionBuilder.withRedirectRetries(connectionDetails.getRetries())
@@ -93,8 +92,8 @@ class ConnectionDetailsImpl implements ConnectionDetails {
         return connectionBuilder.build();
     }
 
-    private static String buildAuthority(final Node node, final ConnectionDetails connectionDetails) {
-        return node.getEndpoint() + ":" + Integer.toString(
+    private static String buildAuthority(final NodeApiBean node, final ConnectionDetails connectionDetails) {
+        return node.getEndPoint() + ":" + Integer.toString(
                 (connectionDetails.isHttps() ? node.getHttpsPort() : node.getHttpPort()));
     }
 

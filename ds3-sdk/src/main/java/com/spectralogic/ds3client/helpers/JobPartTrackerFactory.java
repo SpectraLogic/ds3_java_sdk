@@ -20,7 +20,6 @@ import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Maps.EntryTransformer;
 import com.spectralogic.ds3client.models.BlobApiBean;
-import com.spectralogic.ds3client.models.bulk.BulkObject;
 
 import javax.annotation.Nonnull;
 import java.util.Collection;

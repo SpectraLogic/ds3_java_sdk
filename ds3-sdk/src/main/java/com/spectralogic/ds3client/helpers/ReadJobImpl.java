@@ -15,10 +15,7 @@
 
 package com.spectralogic.ds3client.helpers;
 
-import com.google.common.collect.ImmutableCollection;
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableMultimap;
-import com.google.common.collect.Iterables;
+import com.google.common.collect.*;
 import com.spectralogic.ds3client.Ds3Client;
 import com.spectralogic.ds3client.commands.GetObjectRequest;
 import com.spectralogic.ds3client.commands.spectrads3.GetJobChunksReadyForClientProcessingSpectraS3Request;
@@ -51,8 +48,16 @@ class ReadJobImpl extends JobImpl {
 
         this.chunks = this.jobWithChunksApiBean.getObjects();
         this.partTracker = JobPartTrackerFactory
-                .buildPartTracker(Iterables.concat(chunks));
+                .buildPartTracker(getAllBlobApiBeans(chunks));
         this.blobToRanges = PartialObjectHelpers.mapRangesToBlob(jobWithChunksApiBean.getObjects(), objectRanges);
+    }
+
+    protected static ImmutableList<BlobApiBean> getAllBlobApiBeans(final List<JobChunkApiBean> jobWithChunksApiBeans) {
+        ImmutableList.Builder<BlobApiBean> builder = ImmutableList.builder();
+        for (final JobChunkApiBean jobChunkApiBean : jobWithChunksApiBeans) {
+            builder.addAll(jobChunkApiBean.getObjects());
+        }
+        return builder.build();
     }
 
     @Override

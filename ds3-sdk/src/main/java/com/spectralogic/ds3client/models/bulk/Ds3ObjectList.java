@@ -19,6 +19,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import com.spectralogic.ds3client.models.BlobStoreTaskPriority;
+import com.spectralogic.ds3client.models.JobChunkClientProcessingOrderGuarantee;
 import com.spectralogic.ds3client.models.WriteOptimization;
 
 import java.util.List;
@@ -35,7 +36,7 @@ public class Ds3ObjectList {
     private WriteOptimization writeOptimization;
 
     @JacksonXmlProperty(isAttribute = true, namespace = "", localName = "ChunkClientProcessingOrderGuarantee")
-    private ChunkClientProcessingOrderGuarantee chunkClientProcessingOrderGuarantee;
+    private JobChunkClientProcessingOrderGuarantee chunkClientProcessingOrderGuarantee;
 
     public Ds3ObjectList() {
     }
@@ -68,11 +69,11 @@ public class Ds3ObjectList {
         this.writeOptimization = writeOptimization;
     }
 
-    public ChunkClientProcessingOrderGuarantee getChunkClientProcessingOrderGuarantee() {
+    public JobChunkClientProcessingOrderGuarantee getChunkClientProcessingOrderGuarantee() {
         return this.chunkClientProcessingOrderGuarantee;
     }
 
-    public void setChunkClientProcessingOrderGuarantee(final ChunkClientProcessingOrderGuarantee chunkClientProcessingOrderGuarantee) {
+    public void setChunkClientProcessingOrderGuarantee(final JobChunkClientProcessingOrderGuarantee chunkClientProcessingOrderGuarantee) {
         this.chunkClientProcessingOrderGuarantee = chunkClientProcessingOrderGuarantee;
     }
 }
