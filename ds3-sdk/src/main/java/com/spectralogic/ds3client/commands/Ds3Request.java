@@ -17,7 +17,7 @@ package com.spectralogic.ds3client.commands;
 
 import com.google.common.collect.Multimap;
 import com.spectralogic.ds3client.HttpVerb;
-import com.spectralogic.ds3client.models.Checksum;
+import com.spectralogic.ds3client.models.ChecksumType;
 
 import java.io.InputStream;
 import java.util.Map;
@@ -33,9 +33,9 @@ public interface Ds3Request {
 
     long getSize();
 
-    Checksum getChecksum();
+    ChecksumType getChecksum();
 
-    Checksum.Type getChecksumType();
+    ChecksumType.Type getChecksumType();
 
     Map<String, String> getQueryParams();
 

@@ -13,22 +13,34 @@
  * ****************************************************************************
  */
 
+// This code is auto-generated, do not modify
 package com.spectralogic.ds3client.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
-
+import com.spectralogic.ds3client.models.S3Object;
 import java.util.List;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 
-@JacksonXmlRootElement(namespace = "Data")
 public class S3ObjectList {
 
+    // Variables
     @JsonProperty("S3Object")
-    private List<S3Object> objects;
+    @JacksonXmlElementWrapper
+    private List<S3Object> s3Object;
 
-    public List<S3Object> getObjects() { return this.objects; }
-    public void setObjects(final List<S3Object> objects) { this.objects = objects; }
+    // Constructor
+    public S3ObjectList(final List<S3Object> s3Object) {
+        this.s3Object = s3Object;
+    }
 
-    @Override
-    public String toString() { return this.objects.toString(); }
+    // Getters and Setters
+    
+    public List<S3Object> getS3Object() {
+        return this.s3Object;
+    }
+
+    public void setS3Object(final List<S3Object> s3Object) {
+        this.s3Object = s3Object;
+    }
+
 }

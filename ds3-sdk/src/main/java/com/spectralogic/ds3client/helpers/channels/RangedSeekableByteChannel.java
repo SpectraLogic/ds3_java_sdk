@@ -2,8 +2,8 @@ package com.spectralogic.ds3client.helpers.channels;
 
 import com.google.common.collect.*;
 import com.spectralogic.ds3client.helpers.TruncateNotAllowedException;
+import com.spectralogic.ds3client.models.BlobApiBean;
 import com.spectralogic.ds3client.models.Range;
-import com.spectralogic.ds3client.models.bulk.BulkObject;
 import com.spectralogic.ds3client.utils.Guard;
 
 import java.io.IOException;
@@ -15,19 +15,23 @@ import java.util.Map;
 public class RangedSeekableByteChannel implements SeekableByteChannel {
 
     private final SeekableByteChannel byteChannel;
-    private final ImmutableMultimap<BulkObject, Range> ranges;
-    private final ImmutableMap<BulkObject, Long> blobSizes;
-    private final ImmutableMap<BulkObject, Long> startingOffsetForBlob;
+    private final ImmutableMultimap<BlobApiBean, Range> ranges;
+    private final ImmutableMap<BlobApiBean, Long> blobSizes;
+    private final ImmutableMap<BlobApiBean, Long> startingOffsetForBlob;
     private final long size;
 
     private long position;
     private boolean open;
 
-    public static RangedSeekableByteChannel wrap(final SeekableByteChannel byteChannel, final ImmutableMultimap<BulkObject, Range> ranges) throws IOException {
+    public static RangedSeekableByteChannel wrap(
+            final SeekableByteChannel byteChannel,
+            final ImmutableMultimap<BlobApiBean, Range> ranges) throws IOException {
         return new RangedSeekableByteChannel(byteChannel, ranges);
     }
 
-    public RangedSeekableByteChannel(final SeekableByteChannel byteChannel, final ImmutableMultimap<BulkObject, Range> ranges) throws IOException {
+    public RangedSeekableByteChannel(
+            final SeekableByteChannel byteChannel,
+            final ImmutableMultimap<BlobApiBean, Range> ranges) throws IOException {
         this.byteChannel = byteChannel;
         this.ranges = ranges;
         this.position = 0;
@@ -37,14 +41,14 @@ public class RangedSeekableByteChannel implements SeekableByteChannel {
         this.startingOffsetForBlob = computeRealBlobOffset(this.blobSizes);
     }
 
-    private static ImmutableMap<BulkObject,Long> computeRealBlobOffset(final ImmutableMap<BulkObject, Long> blobLengths) {
+    private static ImmutableMap<BlobApiBean,Long> computeRealBlobOffset(final ImmutableMap<BlobApiBean, Long> blobLengths) {
         if (Guard.isMapNullOrEmpty(blobLengths)) {
             return ImmutableMap.of();
         }
-        final Map<BulkObject, Long> realOffsets = new HashMap<>();
+        final Map<BlobApiBean, Long> realOffsets = new HashMap<>();
 
-        final ImmutableSortedSet<BulkObject> bulkObjects = ImmutableSortedSet.copyOf(BlobComparator.create(), blobLengths.keySet());
-        final ImmutableList<BulkObject> sortedList = ImmutableList.copyOf(bulkObjects);
+        final ImmutableSortedSet<BlobApiBean> bulkObjects = ImmutableSortedSet.copyOf(BlobComparator.create(), blobLengths.keySet());
+        final ImmutableList<BlobApiBean> sortedList = ImmutableList.copyOf(bulkObjects);
 
         final int listLength = sortedList.size();
 
@@ -54,7 +58,7 @@ public class RangedSeekableByteChannel implements SeekableByteChannel {
 
         for(int i = 1; i < listLength; i++) {
             // get previous real offset, and add it's size, that's the current channels 'real' offset
-            final BulkObject previous = sortedList.get(i-1);
+            final BlobApiBean previous = sortedList.get(i-1);
 
             final long previousOffset = realOffsets.get(previous);
             final long previousSize = blobLengths.get(previous);
@@ -65,21 +69,21 @@ public class RangedSeekableByteChannel implements SeekableByteChannel {
         return ImmutableMap.copyOf(realOffsets);
     }
 
-    private static ImmutableMap<BulkObject, Long> computesBlobSize(final ImmutableMultimap<BulkObject, Range> ranges) {
+    private static ImmutableMap<BlobApiBean, Long> computesBlobSize(final ImmutableMultimap<BlobApiBean, Range> ranges) {
         if (Guard.isMultiMapNullOrEmpty(ranges)) {
             return ImmutableMap.of();
         }
 
-        final ImmutableMap.Builder<BulkObject, Long> builder = ImmutableMap.builder();
+        final ImmutableMap.Builder<BlobApiBean, Long> builder = ImmutableMap.builder();
 
-        for (final BulkObject blob : ranges.keySet()) {
+        for (final BlobApiBean blob : ranges.keySet()) {
             builder.put(blob, sizeOfBulkRange(ranges.get(blob)));
         }
 
         return builder.build();
     }
 
-    private static long getSize(final long channelSize, final ImmutableMultimap<BulkObject, Range> ranges) {
+    private static long getSize(final long channelSize, final ImmutableMultimap<BlobApiBean, Range> ranges) {
         if (Guard.isMultiMapNullOrEmpty(ranges)) {
             return channelSize;
         } else {
@@ -125,7 +129,7 @@ public class RangedSeekableByteChannel implements SeekableByteChannel {
         }
         this.position = newPosition;
 
-        final BulkObject blob = getBlobFromPosition(ranges, newPosition);
+        final BlobApiBean blob = getBlobFromPosition(ranges, newPosition);
         if (blob == null) {
             byteChannel.position(newPosition);
         } else {
@@ -141,7 +145,7 @@ public class RangedSeekableByteChannel implements SeekableByteChannel {
     private boolean checkRange(final long position) {
         if (Guard.isMultiMapNullOrEmpty(ranges)) return true;  // this means we are reading from the stream and we do not need any range checks
 
-        final BulkObject blob = getBlobFromPosition(ranges, position);
+        final BlobApiBean blob = getBlobFromPosition(ranges, position);
         if (blob == null) return false; // this means that the position we are seeking to is not in any of the blobs that we know about
 
         // Check to make sure that the position we are seeking to is within the size of the ranges contained in a blob
@@ -149,12 +153,12 @@ public class RangedSeekableByteChannel implements SeekableByteChannel {
         return blob.getOffset() <= position && position < blob.getOffset() + blobSize;
     }
 
-    private static BulkObject getBlobFromPosition(final ImmutableMultimap<BulkObject, Range> blobs, final long position) {
+    private static BlobApiBean getBlobFromPosition(final ImmutableMultimap<BlobApiBean, Range> blobs, final long position) {
         if (Guard.isMultiMapNullOrEmpty(blobs)) {
             return null;
         }
 
-        for (final BulkObject bulkObject : blobs.keySet()) {
+        for (final BlobApiBean bulkObject : blobs.keySet()) {
             if (bulkObject.getOffset() <= position && position < bulkObject.getOffset() + bulkObject.getLength()) {
                 return bulkObject;
             }

@@ -17,7 +17,7 @@ package com.spectralogic.ds3client.commands;
 
 import com.google.common.collect.Multimap;
 import com.google.common.collect.TreeMultimap;
-import com.spectralogic.ds3client.models.Checksum;
+import com.spectralogic.ds3client.models.ChecksumType;
 import org.apache.http.entity.ContentType;
 
 import java.io.InputStream;
@@ -52,13 +52,13 @@ public abstract class AbstractRequest implements Ds3Request {
     }
 
     @Override
-    public Checksum getChecksum() {
-        return Checksum.none();
+    public ChecksumType getChecksum() {
+        return ChecksumType.none();
     }
 
     @Override
-    public Checksum.Type getChecksumType() {
-        return Checksum.Type.NONE;
+    public ChecksumType.Type getChecksumType() {
+        return ChecksumType.Type.NONE;
     }
 
     @Override
@@ -71,7 +71,7 @@ public abstract class AbstractRequest implements Ds3Request {
         return this.headers;
     }
 
-    final void updateQueryParam(final String name, final String param) {
+    protected final void updateQueryParam(final String name, final String param) {
         if(param == null) {
             this.queryParams.remove(name);
         }

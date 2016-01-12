@@ -20,9 +20,9 @@ import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;
 import com.spectralogic.ds3client.Ds3Client;
-import com.spectralogic.ds3client.models.bulk.BulkObject;
-import com.spectralogic.ds3client.models.bulk.Node;
-import com.spectralogic.ds3client.models.bulk.Objects;
+import com.spectralogic.ds3client.models.BlobApiBean;
+import com.spectralogic.ds3client.models.JobChunkApiBean;
+import com.spectralogic.ds3client.models.NodeApiBean;
 import com.spectralogic.ds3client.serializer.XmlProcessingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,7 +42,7 @@ class ChunkTransferrer {
     private final int maxParallelRequests;
 
     public interface ItemTransferrer {
-        void transferItem(Ds3Client client, BulkObject ds3Object) throws SignatureException, IOException;
+        void transferItem(Ds3Client client, BlobApiBean ds3Object) throws SignatureException, IOException;
     }
     
     public ChunkTransferrer(
@@ -57,20 +57,20 @@ class ChunkTransferrer {
     }
     
     public void transferChunks(
-            final Iterable<Node> nodes,
-            final Iterable<Objects> chunks)
+            final Iterable<NodeApiBean> nodes,
+            final Iterable<JobChunkApiBean> chunks)
                 throws SignatureException, IOException, XmlProcessingException {
         LOG.debug("Getting ready to process chunks");
-        final Map<UUID, Node> nodeMap = buildNodeMap(nodes);
+        final Map<UUID, NodeApiBean> nodeMap = buildNodeMap(nodes);
         LOG.debug("Starting executor service");
         final ListeningExecutorService executor = MoreExecutors.listeningDecorator(Executors.newFixedThreadPool(maxParallelRequests));
         LOG.debug("Executor service started");
         try {
             final List<ListenableFuture<?>> tasks = new ArrayList<>();
-            for (final Objects chunk : chunks) {
+            for (final JobChunkApiBean chunk : chunks) {
                 LOG.debug("Processing parts for chunk: " + chunk.getChunkId().toString());
                 final Ds3Client client = mainClient.newForNode(nodeMap.get(chunk.getNodeId()));
-                for (final BulkObject ds3Object : chunk) {
+                for (final BlobApiBean ds3Object : chunk.getObjects()) {
                     final ObjectPart part = new ObjectPart(ds3Object.getOffset(), ds3Object.getLength());
                     if (this.partTracker.containsPart(ds3Object.getName(), part)) {
                         LOG.debug("Adding " + ds3Object.getName() + " to executor for processing");
@@ -93,9 +93,9 @@ class ChunkTransferrer {
         }
     }
 
-    private static Map<UUID, Node> buildNodeMap(final Iterable<Node> nodes) {
-        final Map<UUID, Node> nodeMap = new HashMap<>();
-        for(final Node node: nodes) {
+    private static Map<UUID, NodeApiBean> buildNodeMap(final Iterable<NodeApiBean> nodes) {
+        final Map<UUID, NodeApiBean> nodeMap = new HashMap<>();
+        for(final NodeApiBean node: nodes) {
             nodeMap.put(node.getId(), node);
         }
         return nodeMap;

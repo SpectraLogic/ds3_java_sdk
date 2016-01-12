@@ -13,28 +13,37 @@
  * ****************************************************************************
  */
 
+// This code is auto-generated, do not modify
 package com.spectralogic.ds3client.commands;
 
 import com.spectralogic.ds3client.HttpVerb;
 
 public class DeleteBucketRequest extends AbstractRequest {
 
-    private final String bucket;
-    public DeleteBucketRequest(final String bucket) {
-        this.bucket  = bucket;
-    }
+    // Variables
     
-    public String getBucket() {
-        return this.bucket;
-    }
+    private final String bucketName;
 
-    @Override
-    public String getPath() {
-        return "/"+ this.bucket;
+
+    // Constructor
+    public DeleteBucketRequest(final String bucketName) {
+        this.bucketName = bucketName;
+        
     }
 
     @Override
     public HttpVerb getVerb() {
         return HttpVerb.DELETE;
     }
+
+    @Override
+    public String getPath() {
+        return "/" + this.bucketName;
+    }
+    
+    public String getBucketName() {
+        return this.bucketName;
+    }
+
+
 }

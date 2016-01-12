@@ -1,0 +1,145 @@
+/*
+ * ******************************************************************************
+ *   Copyright 2014-2015 Spectra Logic Corporation. All Rights Reserved.
+ *   Licensed under the Apache License, Version 2.0 (the "License"). You may not use
+ *   this file except in compliance with the License. A copy of the License is located at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *   or in the "license" file accompanying this file.
+ *   This file is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+ *   CONDITIONS OF ANY KIND, either express or implied. See the License for the
+ *   specific language governing permissions and limitations under the License.
+ * ****************************************************************************
+ */
+
+// This code is auto-generated, do not modify
+package com.spectralogic.ds3client.commands.spectrads3;
+
+import com.spectralogic.ds3client.commands.AbstractRequest;
+import com.spectralogic.ds3client.HttpVerb;
+import java.lang.String;
+import java.util.UUID;
+import com.spectralogic.ds3client.models.TapeFailureType;
+
+public class GetTapeFailuresSpectraS3Request extends AbstractRequest {
+
+    // Variables
+    
+    private final String tapeFailure;
+
+    private String errorMessage;
+    private boolean lastPage;
+    private int pageLength;
+    private int pageOffset;
+    private UUID pageStartMarker;
+    private UUID tapeDriveId;
+    private UUID tapeId;
+    private TapeFailureType type;
+
+    // Constructor
+    public GetTapeFailuresSpectraS3Request(final String tapeFailure) {
+        this.tapeFailure = tapeFailure;
+        
+    }
+    public GetTapeFailuresSpectraS3Request withErrorMessage(final String errorMessage) {
+        this.errorMessage = errorMessage;
+        this.updateQueryParam("error_message", errorMessage);
+        return this;
+    }
+
+    public GetTapeFailuresSpectraS3Request withLastPage(final boolean lastPage) {
+        this.lastPage = lastPage;
+        if (this.lastPage) {
+            this.getQueryParams().put("last_page", null);
+        } else {
+            this.getQueryParams().remove("last_page");
+        }
+        return this;
+    }
+
+    public GetTapeFailuresSpectraS3Request withPageLength(final int pageLength) {
+        this.pageLength = pageLength;
+        this.updateQueryParam("page_length", Integer.toString(pageLength));
+        return this;
+    }
+
+    public GetTapeFailuresSpectraS3Request withPageOffset(final int pageOffset) {
+        this.pageOffset = pageOffset;
+        this.updateQueryParam("page_offset", Integer.toString(pageOffset));
+        return this;
+    }
+
+    public GetTapeFailuresSpectraS3Request withPageStartMarker(final UUID pageStartMarker) {
+        this.pageStartMarker = pageStartMarker;
+        this.updateQueryParam("page_start_marker", pageStartMarker.toString());
+        return this;
+    }
+
+    public GetTapeFailuresSpectraS3Request withTapeDriveId(final UUID tapeDriveId) {
+        this.tapeDriveId = tapeDriveId;
+        this.updateQueryParam("tape_drive_id", tapeDriveId.toString());
+        return this;
+    }
+
+    public GetTapeFailuresSpectraS3Request withTapeId(final UUID tapeId) {
+        this.tapeId = tapeId;
+        this.updateQueryParam("tape_id", tapeId.toString());
+        return this;
+    }
+
+    public GetTapeFailuresSpectraS3Request withType(final TapeFailureType type) {
+        this.type = type;
+        this.updateQueryParam("type", type.toString());
+        return this;
+    }
+
+
+    @Override
+    public HttpVerb getVerb() {
+        return HttpVerb.GET;
+    }
+
+    @Override
+    public String getPath() {
+        return "/_rest_/tape_failure/" + tapeFailure;
+    }
+    
+    public String getTapeFailure() {
+        return this.tapeFailure;
+    }
+
+
+    public String getErrorMessage() {
+        return this.errorMessage;
+    }
+
+    public boolean getLastPage() {
+        return this.lastPage;
+    }
+
+    public int getPageLength() {
+        return this.pageLength;
+    }
+
+    public int getPageOffset() {
+        return this.pageOffset;
+    }
+
+    public UUID getPageStartMarker() {
+        return this.pageStartMarker;
+    }
+
+    public UUID getTapeDriveId() {
+        return this.tapeDriveId;
+    }
+
+    public UUID getTapeId() {
+        return this.tapeId;
+    }
+
+    public TapeFailureType getType() {
+        return this.type;
+    }
+
+}

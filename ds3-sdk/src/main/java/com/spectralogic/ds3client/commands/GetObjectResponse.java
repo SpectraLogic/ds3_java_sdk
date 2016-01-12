@@ -13,55 +13,49 @@
  * ****************************************************************************
  */
 
+// This code is auto-generated, do not modify
 package com.spectralogic.ds3client.commands;
 
-import com.spectralogic.ds3client.exceptions.ContentLengthNotMatchException;
-import com.spectralogic.ds3client.networking.Metadata;
 import com.spectralogic.ds3client.networking.WebResponse;
-import com.spectralogic.ds3client.utils.IOUtils;
-import com.spectralogic.ds3client.utils.PerformanceUtils;
-
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.channels.WritableByteChannel;
+import com.spectralogic.ds3client.models.HttpErrorResultApiBean;
+import com.spectralogic.ds3client.serializer.XmlOutput;
 
 public class GetObjectResponse extends AbstractResponse {
-    private Metadata metadata;
-    private long objectSize;
-    public GetObjectResponse(final WebResponse response, final WritableByteChannel destinationChannel, final int bufferSize, final String objName) throws IOException {
-        super(response);
-        download(destinationChannel, bufferSize, objName);
-    }
 
-    public Metadata getMetadata() {
-        return metadata;
+    private HttpErrorResultApiBean httpErrorResultApiBeanResult;
+
+    public GetObjectResponse(final WebResponse response) throws IOException {
+        super(response);
     }
 
     @Override
     protected void processResponse() throws IOException {
-        this.checkStatusCode(200, 206);
-        this.metadata = new MetadataImpl(this.getResponse().getHeaders());
-        this.objectSize = getSizeFromHeaders(this.getResponse().getHeaders());
-    }
+        try {
+            this.checkStatusCode(200, 206, 307);
 
-    protected void download(final WritableByteChannel destinationChannel, final int bufferSize, final String objName) throws IOException {
-        try (
-                final WebResponse response = this.getResponse();
-                final InputStream responseStream = response.getResponseStream()) {
-            final long startTime = PerformanceUtils.getCurrentTime();
-            final long totalBytes = IOUtils.copy(responseStream, destinationChannel, bufferSize);
-            destinationChannel.close();
-            final long endTime = PerformanceUtils.getCurrentTime();
-
-            if (this.objectSize != -1 && totalBytes != this.objectSize) {
-                throw new ContentLengthNotMatchException(objName, objectSize, totalBytes);
+            switch (this.getStatusCode()) {
+            case 200:
+                //Do nothing, payload is null
+                break;
+            case 206:
+                //Do nothing, payload is null
+                break;
+            case 307:
+                try (final InputStream content = getResponse().getResponseStream()) {
+                    this.httpErrorResultApiBeanResult = XmlOutput.fromXml(content, HttpErrorResultApiBean.class);
+                }
+            default:
+                assert false : "checkStatusCode should have made it impossible to reach this line.";
             }
-
-            PerformanceUtils.logMbps(startTime, endTime, totalBytes, objName, false);
+        } finally {
+            this.getResponse().close();
         }
     }
 
-    public long getObjectSize() {
-        return objectSize;
+    public HttpErrorResultApiBean getHttpErrorResultApiBeanResult() {
+        return this.httpErrorResultApiBeanResult;
     }
+
 }

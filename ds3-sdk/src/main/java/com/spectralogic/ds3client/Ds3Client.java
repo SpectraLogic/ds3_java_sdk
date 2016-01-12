@@ -13,10 +13,13 @@
  * ****************************************************************************
  */
 
+// This code is auto-generated, do not modify
 package com.spectralogic.ds3client;
 
 import com.spectralogic.ds3client.commands.*;
 import com.spectralogic.ds3client.commands.notifications.*;
+import com.spectralogic.ds3client.commands.spectrads3.*;
+import com.spectralogic.ds3client.commands.spectrads3.notifications.*;
 import com.spectralogic.ds3client.models.bulk.Node;
 import com.spectralogic.ds3client.networking.ConnectionDetails;
 
@@ -24,387 +27,474 @@ import java.io.Closeable;
 import java.io.IOException;
 import java.security.SignatureException;
 
-/**
- * The main interface for communicating with a DS3 appliance.  All communication with a DS3 appliance starts with
- * this class.
- *
- * See {@link Ds3ClientBuilder} on what options can be used to create a Ds3Client instance.
- */
 public interface Ds3Client extends Closeable {
 
     ConnectionDetails getConnectionDetails();
 
-    /**
-     * Gets the list of buckets.
-     * @param request The Service Request object used to customize the HTTP request, {@link com.spectralogic.ds3client.commands.GetServiceRequest}
-     * @return The response object contains the list of buckets that the user has access to.
-     * @throws IOException
-     * @throws SignatureException
-     */
-    GetServiceResponse getService(GetServiceRequest request)
+    AbortMultiPartUploadResponse abortMultiPartUpload(AbortMultiPartUploadRequest request)
             throws IOException, SignatureException;
-
-    /**
-     * Gets the list of objects in a bucket.
-     * @param request The Get Bucket Request object used to customize the HTTP request.  The bucket request object has
-     *                several options for customizing the request.  See {@link com.spectralogic.ds3client.commands.GetBucketRequest} for the full list of options
-     *                that can be configured.
-     * @return The response object contains the list of objects that a bucket contains.  There is some additional
-     *         information that is returned which is used for pagination, {@link GetBucketResponse} for the full
-     *         list of properties
-     * that are returned.
-     * @throws IOException
-     * @throws SignatureException
-     */
-    GetBucketResponse getBucket(GetBucketRequest request)
+    CompleteMultiPartUploadResponse completeMultiPartUpload(CompleteMultiPartUploadRequest request)
             throws IOException, SignatureException;
-
-    /**
-     * Puts a new bucket to a DS3 endpoint
-     * @param request The Put Bucket Request object used to customize the HTTP request.  The put bucket request object
-     *                has some options for customizing the request.  See {@link PutBucketRequest} for the full list of
-     *                options that can be configured.
-     * @return The response object is returned primarily to be consistent with the rest of the API.  Additional data
-     *         may be returned here in the future but nothing is currently.  See {@link PutBucketResponse} for the most
-     *         up to date information on what is returned.
-     * @throws IOException
-     * @throws SignatureException
-     */
-    PutBucketResponse putBucket(PutBucketRequest request)
+    CreateBucketResponse createBucket(CreateBucketRequest request)
             throws IOException, SignatureException;
-
-    /**
-     * Performs a HTTP HEAD for a bucket.  The HEAD will return information about if the bucket exists, or if the user
-     * has access to that bucket.
-     * @param request The Head Bucket Request object used to customize the HTTP request.  See {@link HeadBucketRequest}.
-     * @return The response object is returned and contains the status of the bucket.  See {@link HeadBucketResponse} for
-     *         the full list of status that a bucket can be in.
-     * @throws IOException
-     * @throws SignatureException
-     */
-    HeadBucketResponse headBucket(HeadBucketRequest request)
+    CreateMultiPartUploadPartResponse createMultiPartUploadPart(CreateMultiPartUploadPartRequest request)
             throws IOException, SignatureException;
-
-    /**
-     * Deletes a bucket from a DS3 endpoint.  <b>Note:</b> all objects must be deleted first before deleteBucket will
-     * succeed.
-     * @param request The Delete Bucket Request object used to customize the HTTP request.  The delete bucket request object
-     *                has some options for customizing the request.  See {@link DeleteBucketRequest} for the full list of
-     *                options that can be configured.
-     * @return The response object is returned primarily to be consistent with the rest of the API.  Additional data
-     *         may be returned here in the future but nothing is currently.  See {@link com.spectralogic.ds3client.commands.DeleteBucketResponse} for the most
-     *         up to date information on what is returned.
-     * @throws IOException
-     * @throws SignatureException
-     */
-    DeleteBucketResponse deleteBucket(
-            DeleteBucketRequest request) throws IOException, SignatureException;
-
-    /**
-     * Recursively deletes the specified folder from a DS3 endpoint.
-     * @param request The Delete Folder Request object used to customize the HTTP request.  The put bucket request object
-     *                has some options for customizing the request.  See {@link DeleteFolderRequest} for the full list of
-     *                options that can be configured.
-     * @return The response object is returned primarily to be consistent with the rest of the API.  Additional data
-     *         may be returned here in the future but nothing is currently.  See {@link DeleteFolderResponse} for the most
-     *         up to date information on what is returned.
-     * @throws IOException
-     * @throws SignatureException
-     */
-    DeleteFolderResponse deleteFolder(
-            DeleteFolderRequest request) throws IOException, SignatureException;
-
-    /**
-     * Deletes an object in a bucket from a DS3 endpoint
-     * @param request The Delete Object Request object used to customize the HTTP request.  The delete object request object
-     *                has some options for customizing the request.  See {@link DeleteObjectRequest} for the full list of
-     *                options that can be configured.
-     * @return The response object is returned primarily to be consistent with the rest of the API.  Additional data
-     *         may be returned here in the future but nothing is currently.  See {@link DeleteObjectResponse} for the most
-     *         up to date information on what is returned.
-     * @throws IOException
-     * @throws SignatureException
-     */
+    CreateObjectResponse createObject(CreateObjectRequest request)
+            throws IOException, SignatureException;
+    DeleteBucketResponse deleteBucket(DeleteBucketRequest request)
+            throws IOException, SignatureException;
     DeleteObjectResponse deleteObject(DeleteObjectRequest request)
             throws IOException, SignatureException;
-
-    /**
-     * Deletes multiple objects in a bucket from a DS3 endpoint
-     * @param request The Delete Multiple  Objects Request object used to customize the HTTP request.  The delete multiple
-     *                objects request has some options for customizing the request.  See {@link DeleteMultipleObjectsRequest}
-     *                for the most up to date information on what is returned.  
-     * @return The response object is returned primarily to be consistent with the rest of the API.  Additional data
-     *         may be returned here in the future but nothing is currently.  See {@link DeleteMultipleObjectsResponse} for
-     *         the most up to date information on what is returned.
-     * @throws IOException
-     * @throws SignatureException
-     */
-    DeleteMultipleObjectsResponse deleteMultipleObjects(DeleteMultipleObjectsRequest request)
+    DeleteObjectsResponse deleteObjects(DeleteObjectsRequest request)
             throws IOException, SignatureException;
-
-    /**
-     * Retrieves an object from DS3
-     * @param request The Get Object Request object used to customize the HTTP request.  The get object request object
-     *                has some options for customizing the request.  See {@link GetObjectRequest} for the full list of
-     *                options that can be configured.
-     * @return The response object contains a stream that can be used to read the contents of the object from.  See
-     *         {@link com.spectralogic.ds3client.commands.GetObjectResponse} for any other properties.
-     * @throws IOException
-     * @throws SignatureException
-     */
+    GetBucketResponse getBucket(GetBucketRequest request)
+            throws IOException, SignatureException;
+    GetBucketsResponse getBuckets(GetBucketsRequest request)
+            throws IOException, SignatureException;
     GetObjectResponse getObject(GetObjectRequest request)
             throws IOException, SignatureException;
-
-    /**
-     * Retrieves all objects from DS3
-     * @param request The Get Objects Request object used to customize the HTTP request.  The get objects request object
-     *                has some options for customizing the request.  See {@link GetObjectsRequest} for the full list of
-     *                options that can be configured.
-     * @return The response object contains a list of objects.  See {@link GetObjectsResponse} for the most up to date
-     *         information on what is returned.
-     * @throws IOException
-     * @throws SignatureException
-     */
-    GetObjectsResponse getObjects(GetObjectsRequest request)
-        throws IOException, SignatureException;
-
-    /**
-     * Puts a new object to an existing bucket.  The call will fail if the bucket does not exist.
-     * @param request The Put Object Request object used to customize the HTTP request.  The put object request object
-     *                has some options for customizing the request.  See {@link PutObjectRequest} for the full list of
-     *                options that can be configured.
-     * @return The response object is returned primarily to be consistent with the rest of the API.  Additional data
-     *         may be returned here in the future but nothing is currently.  See {@link PutObjectResponse} for the most
-     *         up to date information on what is returned.
-     * @throws IOException
-     * @throws SignatureException
-     */
-    PutObjectResponse putObject(PutObjectRequest request)
+    HeadBucketResponse headBucket(HeadBucketRequest request)
             throws IOException, SignatureException;
-
-    /**
-     * Performs an HTTP HEAD for an object.  If the object exists then a successful response is returned and any metadata
-     * associated with the object.
-     * @param request The Object to perform the HTTP HEAD for.
-     * @return If successful, a response is returned with any metadata that was assigned with the object that was created.
-     * @throws IOException
-     * @throws SignatureException
-     */
     HeadObjectResponse headObject(HeadObjectRequest request)
             throws IOException, SignatureException;
-
-    /**
-     * Primes the Ds3 appliance for a Bulk Get.  This does not perform the gets for each individual files.  See
-     * {@link #getObject(GetObjectRequest)} for performing the get.
-     * @param request The Bulk Get Request object used to customize the HTTP request.  The bulk get request object
-     *                has some options for customizing the request.  See {@link BulkGetRequest} for the full list of
-     *                options that can be configured.
-     * @return The response object contains a list of lists of files to get from the DS3 endpoint.  Make sure that the
-     *         files are gotten in the order specified in the response.
-     * @throws IOException
-     * @throws SignatureException
-     */
-    BulkGetResponse bulkGet(BulkGetRequest request)
+    InitiateMultiPartUploadResponse initiateMultiPartUpload(InitiateMultiPartUploadRequest request)
+            throws IOException, SignatureException;
+    ListMultiPartUploadPartsResponse listMultiPartUploadParts(ListMultiPartUploadPartsRequest request)
+            throws IOException, SignatureException;
+    ListMultiPartUploadsResponse listMultiPartUploads(ListMultiPartUploadsRequest request)
+            throws IOException, SignatureException;
+    CreateBucketAclForGroupSpectraS3Response createBucketAclForGroupSpectraS3(CreateBucketAclForGroupSpectraS3Request request)
+            throws IOException, SignatureException;
+    CreateBucketAclForUserSpectraS3Response createBucketAclForUserSpectraS3(CreateBucketAclForUserSpectraS3Request request)
+            throws IOException, SignatureException;
+    CreateDataPolicyAclForGroupSpectraS3Response createDataPolicyAclForGroupSpectraS3(CreateDataPolicyAclForGroupSpectraS3Request request)
+            throws IOException, SignatureException;
+    CreateDataPolicyAclForUserSpectraS3Response createDataPolicyAclForUserSpectraS3(CreateDataPolicyAclForUserSpectraS3Request request)
+            throws IOException, SignatureException;
+    CreateGlobalBucketAclForGroupSpectraS3Response createGlobalBucketAclForGroupSpectraS3(CreateGlobalBucketAclForGroupSpectraS3Request request)
+            throws IOException, SignatureException;
+    CreateGlobalBucketAclForUserSpectraS3Response createGlobalBucketAclForUserSpectraS3(CreateGlobalBucketAclForUserSpectraS3Request request)
+            throws IOException, SignatureException;
+    CreateGlobalDataPolicyAclForGroupSpectraS3Response createGlobalDataPolicyAclForGroupSpectraS3(CreateGlobalDataPolicyAclForGroupSpectraS3Request request)
+            throws IOException, SignatureException;
+    CreateGlobalDataPolicyAclForUserSpectraS3Response createGlobalDataPolicyAclForUserSpectraS3(CreateGlobalDataPolicyAclForUserSpectraS3Request request)
+            throws IOException, SignatureException;
+    DeleteBucketAclSpectraS3Response deleteBucketAclSpectraS3(DeleteBucketAclSpectraS3Request request)
+            throws IOException, SignatureException;
+    DeleteDataPolicyAclSpectraS3Response deleteDataPolicyAclSpectraS3(DeleteDataPolicyAclSpectraS3Request request)
+            throws IOException, SignatureException;
+    GetBucketAclSpectraS3Response getBucketAclSpectraS3(GetBucketAclSpectraS3Request request)
+            throws IOException, SignatureException;
+    GetBucketAclsSpectraS3Response getBucketAclsSpectraS3(GetBucketAclsSpectraS3Request request)
+            throws IOException, SignatureException;
+    GetDataPolicyAclSpectraS3Response getDataPolicyAclSpectraS3(GetDataPolicyAclSpectraS3Request request)
+            throws IOException, SignatureException;
+    GetDataPolicyAclsSpectraS3Response getDataPolicyAclsSpectraS3(GetDataPolicyAclsSpectraS3Request request)
+            throws IOException, SignatureException;
+    CreateBucketSpectraS3Response createBucketSpectraS3(CreateBucketSpectraS3Request request)
+            throws IOException, SignatureException;
+    DeleteBucketSpectraS3Response deleteBucketSpectraS3(DeleteBucketSpectraS3Request request)
+            throws IOException, SignatureException;
+    GetBucketSpectraS3Response getBucketSpectraS3(GetBucketSpectraS3Request request)
+            throws IOException, SignatureException;
+    GetBucketsSpectraS3Response getBucketsSpectraS3(GetBucketsSpectraS3Request request)
+            throws IOException, SignatureException;
+    ModifyBucketSpectraS3Response modifyBucketSpectraS3(ModifyBucketSpectraS3Request request)
+            throws IOException, SignatureException;
+    ForceFullCacheReclaimSpectraS3Response forceFullCacheReclaimSpectraS3(ForceFullCacheReclaimSpectraS3Request request)
+            throws IOException, SignatureException;
+    GetCacheFilesystemSpectraS3Response getCacheFilesystemSpectraS3(GetCacheFilesystemSpectraS3Request request)
+            throws IOException, SignatureException;
+    GetCacheFilesystemsSpectraS3Response getCacheFilesystemsSpectraS3(GetCacheFilesystemsSpectraS3Request request)
+            throws IOException, SignatureException;
+    GetCacheStateSpectraS3Response getCacheStateSpectraS3(GetCacheStateSpectraS3Request request)
+            throws IOException, SignatureException;
+    ModifyCacheFilesystemSpectraS3Response modifyCacheFilesystemSpectraS3(ModifyCacheFilesystemSpectraS3Request request)
+            throws IOException, SignatureException;
+    GetBucketCapacitySummarySpectraS3Response getBucketCapacitySummarySpectraS3(GetBucketCapacitySummarySpectraS3Request request)
+            throws IOException, SignatureException;
+    GetStorageDomainCapacitySummarySpectraS3Response getStorageDomainCapacitySummarySpectraS3(GetStorageDomainCapacitySummarySpectraS3Request request)
+            throws IOException, SignatureException;
+    GetSystemCapacitySummarySpectraS3Response getSystemCapacitySummarySpectraS3(GetSystemCapacitySummarySpectraS3Request request)
+            throws IOException, SignatureException;
+    GetDataPathBackendSpectraS3Response getDataPathBackendSpectraS3(GetDataPathBackendSpectraS3Request request)
+            throws IOException, SignatureException;
+    GetDataPlannerBlobStoreTasksSpectraS3Response getDataPlannerBlobStoreTasksSpectraS3(GetDataPlannerBlobStoreTasksSpectraS3Request request)
+            throws IOException, SignatureException;
+    ModifyDataPathBackendSpectraS3Response modifyDataPathBackendSpectraS3(ModifyDataPathBackendSpectraS3Request request)
+            throws IOException, SignatureException;
+    CreateDataPersistenceRuleSpectraS3Response createDataPersistenceRuleSpectraS3(CreateDataPersistenceRuleSpectraS3Request request)
+            throws IOException, SignatureException;
+    CreateDataPolicySpectraS3Response createDataPolicySpectraS3(CreateDataPolicySpectraS3Request request)
+            throws IOException, SignatureException;
+    DeleteDataPersistenceRuleSpectraS3Response deleteDataPersistenceRuleSpectraS3(DeleteDataPersistenceRuleSpectraS3Request request)
+            throws IOException, SignatureException;
+    DeleteDataPolicySpectraS3Response deleteDataPolicySpectraS3(DeleteDataPolicySpectraS3Request request)
+            throws IOException, SignatureException;
+    GetDataPersistenceRuleSpectraS3Response getDataPersistenceRuleSpectraS3(GetDataPersistenceRuleSpectraS3Request request)
+            throws IOException, SignatureException;
+    GetDataPersistenceRulesSpectraS3Response getDataPersistenceRulesSpectraS3(GetDataPersistenceRulesSpectraS3Request request)
+            throws IOException, SignatureException;
+    GetDataPoliciesSpectraS3Response getDataPoliciesSpectraS3(GetDataPoliciesSpectraS3Request request)
+            throws IOException, SignatureException;
+    GetDataPolicySpectraS3Response getDataPolicySpectraS3(GetDataPolicySpectraS3Request request)
+            throws IOException, SignatureException;
+    ModifyDataPersistenceRuleSpectraS3Response modifyDataPersistenceRuleSpectraS3(ModifyDataPersistenceRuleSpectraS3Request request)
+            throws IOException, SignatureException;
+    ModifyDataPolicySpectraS3Response modifyDataPolicySpectraS3(ModifyDataPolicySpectraS3Request request)
+            throws IOException, SignatureException;
+    GetDegradedBucketsSpectraS3Response getDegradedBucketsSpectraS3(GetDegradedBucketsSpectraS3Request request)
+            throws IOException, SignatureException;
+    GetDegradedDataPersistenceRulesSpectraS3Response getDegradedDataPersistenceRulesSpectraS3(GetDegradedDataPersistenceRulesSpectraS3Request request)
+            throws IOException, SignatureException;
+    CreateGroupGroupMemberSpectraS3Response createGroupGroupMemberSpectraS3(CreateGroupGroupMemberSpectraS3Request request)
+            throws IOException, SignatureException;
+    CreateGroupSpectraS3Response createGroupSpectraS3(CreateGroupSpectraS3Request request)
+            throws IOException, SignatureException;
+    CreateUserGroupMemberSpectraS3Response createUserGroupMemberSpectraS3(CreateUserGroupMemberSpectraS3Request request)
+            throws IOException, SignatureException;
+    DeleteGroupMemberSpectraS3Response deleteGroupMemberSpectraS3(DeleteGroupMemberSpectraS3Request request)
+            throws IOException, SignatureException;
+    DeleteGroupSpectraS3Response deleteGroupSpectraS3(DeleteGroupSpectraS3Request request)
+            throws IOException, SignatureException;
+    GetGroupMemberSpectraS3Response getGroupMemberSpectraS3(GetGroupMemberSpectraS3Request request)
+            throws IOException, SignatureException;
+    GetGroupMembersSpectraS3Response getGroupMembersSpectraS3(GetGroupMembersSpectraS3Request request)
+            throws IOException, SignatureException;
+    GetGroupSpectraS3Response getGroupSpectraS3(GetGroupSpectraS3Request request)
+            throws IOException, SignatureException;
+    GetGroupsSpectraS3Response getGroupsSpectraS3(GetGroupsSpectraS3Request request)
+            throws IOException, SignatureException;
+    ModifyGroupSpectraS3Response modifyGroupSpectraS3(ModifyGroupSpectraS3Request request)
+            throws IOException, SignatureException;
+    VerifyUserIsMemberOfGroupSpectraS3Response verifyUserIsMemberOfGroupSpectraS3(VerifyUserIsMemberOfGroupSpectraS3Request request)
+            throws IOException, SignatureException;
+    AllocateJobChunkSpectraS3Response allocateJobChunkSpectraS3(AllocateJobChunkSpectraS3Request request)
+            throws IOException, SignatureException;
+    CancelAllJobsSpectraS3Response cancelAllJobsSpectraS3(CancelAllJobsSpectraS3Request request)
+            throws IOException, SignatureException;
+    CancelJobSpectraS3Response cancelJobSpectraS3(CancelJobSpectraS3Request request)
+            throws IOException, SignatureException;
+    ClearAllCanceledJobsSpectraS3Response clearAllCanceledJobsSpectraS3(ClearAllCanceledJobsSpectraS3Request request)
+            throws IOException, SignatureException;
+    ClearAllCompletedJobsSpectraS3Response clearAllCompletedJobsSpectraS3(ClearAllCompletedJobsSpectraS3Request request)
+            throws IOException, SignatureException;
+    CreateGetJobSpectraS3Response createGetJobSpectraS3(CreateGetJobSpectraS3Request request)
+            throws IOException, SignatureException;
+    CreatePutJobSpectraS3Response createPutJobSpectraS3(CreatePutJobSpectraS3Request request)
+            throws IOException, SignatureException;
+    CreateVerifyJobSpectraS3Response createVerifyJobSpectraS3(CreateVerifyJobSpectraS3Request request)
+            throws IOException, SignatureException;
+    GetActiveJobsSpectraS3Response getActiveJobsSpectraS3(GetActiveJobsSpectraS3Request request)
+            throws IOException, SignatureException;
+    GetCanceledJobsSpectraS3Response getCanceledJobsSpectraS3(GetCanceledJobsSpectraS3Request request)
+            throws IOException, SignatureException;
+    GetCompletedJobsSpectraS3Response getCompletedJobsSpectraS3(GetCompletedJobsSpectraS3Request request)
+            throws IOException, SignatureException;
+    GetJobChunkSpectraS3Response getJobChunkSpectraS3(GetJobChunkSpectraS3Request request)
+            throws IOException, SignatureException;
+    GetJobChunksReadyForClientProcessingSpectraS3Response getJobChunksReadyForClientProcessingSpectraS3(GetJobChunksReadyForClientProcessingSpectraS3Request request)
+            throws IOException, SignatureException;
+    GetJobSpectraS3Response getJobSpectraS3(GetJobSpectraS3Request request)
+            throws IOException, SignatureException;
+    GetJobsSpectraS3Response getJobsSpectraS3(GetJobsSpectraS3Request request)
+            throws IOException, SignatureException;
+    GetPutJobToReplicateSpectraS3Response getPutJobToReplicateSpectraS3(GetPutJobToReplicateSpectraS3Request request)
+            throws IOException, SignatureException;
+    ModifyJobSpectraS3Response modifyJobSpectraS3(ModifyJobSpectraS3Request request)
+            throws IOException, SignatureException;
+    ReplicatePutJobSpectraS3Response replicatePutJobSpectraS3(ReplicatePutJobSpectraS3Request request)
+            throws IOException, SignatureException;
+    GetNodeSpectraS3Response getNodeSpectraS3(GetNodeSpectraS3Request request)
+            throws IOException, SignatureException;
+    GetNodesSpectraS3Response getNodesSpectraS3(GetNodesSpectraS3Request request)
+            throws IOException, SignatureException;
+    ModifyNodeSpectraS3Response modifyNodeSpectraS3(ModifyNodeSpectraS3Request request)
+            throws IOException, SignatureException;
+    CreateJobCompletedNotificationRegistrationSpectraS3Response createJobCompletedNotificationRegistrationSpectraS3(CreateJobCompletedNotificationRegistrationSpectraS3Request request)
+            throws IOException, SignatureException;
+    CreateJobCreatedNotificationRegistrationSpectraS3Response createJobCreatedNotificationRegistrationSpectraS3(CreateJobCreatedNotificationRegistrationSpectraS3Request request)
+            throws IOException, SignatureException;
+    CreateObjectCachedNotificationRegistrationSpectraS3Response createObjectCachedNotificationRegistrationSpectraS3(CreateObjectCachedNotificationRegistrationSpectraS3Request request)
+            throws IOException, SignatureException;
+    CreateObjectLostNotificationRegistrationSpectraS3Response createObjectLostNotificationRegistrationSpectraS3(CreateObjectLostNotificationRegistrationSpectraS3Request request)
+            throws IOException, SignatureException;
+    CreateObjectPersistedNotificationRegistrationSpectraS3Response createObjectPersistedNotificationRegistrationSpectraS3(CreateObjectPersistedNotificationRegistrationSpectraS3Request request)
+            throws IOException, SignatureException;
+    CreatePoolFailureNotificationRegistrationSpectraS3Response createPoolFailureNotificationRegistrationSpectraS3(CreatePoolFailureNotificationRegistrationSpectraS3Request request)
+            throws IOException, SignatureException;
+    CreateStorageDomainFailureNotificationRegistrationSpectraS3Response createStorageDomainFailureNotificationRegistrationSpectraS3(CreateStorageDomainFailureNotificationRegistrationSpectraS3Request request)
+            throws IOException, SignatureException;
+    CreateSystemFailureNotificationRegistrationSpectraS3Response createSystemFailureNotificationRegistrationSpectraS3(CreateSystemFailureNotificationRegistrationSpectraS3Request request)
+            throws IOException, SignatureException;
+    CreateTapeFailureNotificationRegistrationSpectraS3Response createTapeFailureNotificationRegistrationSpectraS3(CreateTapeFailureNotificationRegistrationSpectraS3Request request)
+            throws IOException, SignatureException;
+    CreateTapePartitionFailureNotificationRegistrationSpectraS3Response createTapePartitionFailureNotificationRegistrationSpectraS3(CreateTapePartitionFailureNotificationRegistrationSpectraS3Request request)
+            throws IOException, SignatureException;
+    DeleteJobCompletedNotificationRegistrationSpectraS3Response deleteJobCompletedNotificationRegistrationSpectraS3(DeleteJobCompletedNotificationRegistrationSpectraS3Request request)
+            throws IOException, SignatureException;
+    DeleteJobCreatedNotificationRegistrationSpectraS3Response deleteJobCreatedNotificationRegistrationSpectraS3(DeleteJobCreatedNotificationRegistrationSpectraS3Request request)
+            throws IOException, SignatureException;
+    DeleteObjectCachedNotificationRegistrationSpectraS3Response deleteObjectCachedNotificationRegistrationSpectraS3(DeleteObjectCachedNotificationRegistrationSpectraS3Request request)
+            throws IOException, SignatureException;
+    DeleteObjectLostNotificationRegistrationSpectraS3Response deleteObjectLostNotificationRegistrationSpectraS3(DeleteObjectLostNotificationRegistrationSpectraS3Request request)
+            throws IOException, SignatureException;
+    DeleteObjectPersistedNotificationRegistrationSpectraS3Response deleteObjectPersistedNotificationRegistrationSpectraS3(DeleteObjectPersistedNotificationRegistrationSpectraS3Request request)
+            throws IOException, SignatureException;
+    DeletePoolFailureNotificationRegistrationSpectraS3Response deletePoolFailureNotificationRegistrationSpectraS3(DeletePoolFailureNotificationRegistrationSpectraS3Request request)
+            throws IOException, SignatureException;
+    DeleteStorageDomainFailureNotificationRegistrationSpectraS3Response deleteStorageDomainFailureNotificationRegistrationSpectraS3(DeleteStorageDomainFailureNotificationRegistrationSpectraS3Request request)
+            throws IOException, SignatureException;
+    DeleteSystemFailureNotificationRegistrationSpectraS3Response deleteSystemFailureNotificationRegistrationSpectraS3(DeleteSystemFailureNotificationRegistrationSpectraS3Request request)
+            throws IOException, SignatureException;
+    DeleteTapeFailureNotificationRegistrationSpectraS3Response deleteTapeFailureNotificationRegistrationSpectraS3(DeleteTapeFailureNotificationRegistrationSpectraS3Request request)
+            throws IOException, SignatureException;
+    DeleteTapePartitionFailureNotificationRegistrationSpectraS3Response deleteTapePartitionFailureNotificationRegistrationSpectraS3(DeleteTapePartitionFailureNotificationRegistrationSpectraS3Request request)
+            throws IOException, SignatureException;
+    GetJobCompletedNotificationRegistrationSpectraS3Response getJobCompletedNotificationRegistrationSpectraS3(GetJobCompletedNotificationRegistrationSpectraS3Request request)
+            throws IOException, SignatureException;
+    GetJobCompletedNotificationRegistrationsSpectraS3Response getJobCompletedNotificationRegistrationsSpectraS3(GetJobCompletedNotificationRegistrationsSpectraS3Request request)
+            throws IOException, SignatureException;
+    GetJobCreatedNotificationRegistrationSpectraS3Response getJobCreatedNotificationRegistrationSpectraS3(GetJobCreatedNotificationRegistrationSpectraS3Request request)
+            throws IOException, SignatureException;
+    GetJobCreatedNotificationRegistrationsSpectraS3Response getJobCreatedNotificationRegistrationsSpectraS3(GetJobCreatedNotificationRegistrationsSpectraS3Request request)
+            throws IOException, SignatureException;
+    GetObjectCachedNotificationRegistrationSpectraS3Response getObjectCachedNotificationRegistrationSpectraS3(GetObjectCachedNotificationRegistrationSpectraS3Request request)
+            throws IOException, SignatureException;
+    GetObjectCachedNotificationRegistrationsSpectraS3Response getObjectCachedNotificationRegistrationsSpectraS3(GetObjectCachedNotificationRegistrationsSpectraS3Request request)
+            throws IOException, SignatureException;
+    GetObjectLostNotificationRegistrationSpectraS3Response getObjectLostNotificationRegistrationSpectraS3(GetObjectLostNotificationRegistrationSpectraS3Request request)
+            throws IOException, SignatureException;
+    GetObjectLostNotificationRegistrationsSpectraS3Response getObjectLostNotificationRegistrationsSpectraS3(GetObjectLostNotificationRegistrationsSpectraS3Request request)
+            throws IOException, SignatureException;
+    GetObjectPersistedNotificationRegistrationSpectraS3Response getObjectPersistedNotificationRegistrationSpectraS3(GetObjectPersistedNotificationRegistrationSpectraS3Request request)
+            throws IOException, SignatureException;
+    GetObjectPersistedNotificationRegistrationsSpectraS3Response getObjectPersistedNotificationRegistrationsSpectraS3(GetObjectPersistedNotificationRegistrationsSpectraS3Request request)
+            throws IOException, SignatureException;
+    GetPoolFailureNotificationRegistrationSpectraS3Response getPoolFailureNotificationRegistrationSpectraS3(GetPoolFailureNotificationRegistrationSpectraS3Request request)
+            throws IOException, SignatureException;
+    GetPoolFailureNotificationRegistrationsSpectraS3Response getPoolFailureNotificationRegistrationsSpectraS3(GetPoolFailureNotificationRegistrationsSpectraS3Request request)
+            throws IOException, SignatureException;
+    GetStorageDomainFailureNotificationRegistrationSpectraS3Response getStorageDomainFailureNotificationRegistrationSpectraS3(GetStorageDomainFailureNotificationRegistrationSpectraS3Request request)
+            throws IOException, SignatureException;
+    GetStorageDomainFailureNotificationRegistrationsSpectraS3Response getStorageDomainFailureNotificationRegistrationsSpectraS3(GetStorageDomainFailureNotificationRegistrationsSpectraS3Request request)
+            throws IOException, SignatureException;
+    GetSystemFailureNotificationRegistrationSpectraS3Response getSystemFailureNotificationRegistrationSpectraS3(GetSystemFailureNotificationRegistrationSpectraS3Request request)
+            throws IOException, SignatureException;
+    GetSystemFailureNotificationRegistrationsSpectraS3Response getSystemFailureNotificationRegistrationsSpectraS3(GetSystemFailureNotificationRegistrationsSpectraS3Request request)
+            throws IOException, SignatureException;
+    GetTapeFailureNotificationRegistrationSpectraS3Response getTapeFailureNotificationRegistrationSpectraS3(GetTapeFailureNotificationRegistrationSpectraS3Request request)
+            throws IOException, SignatureException;
+    GetTapeFailureNotificationRegistrationsSpectraS3Response getTapeFailureNotificationRegistrationsSpectraS3(GetTapeFailureNotificationRegistrationsSpectraS3Request request)
+            throws IOException, SignatureException;
+    GetTapePartitionFailureNotificationRegistrationSpectraS3Response getTapePartitionFailureNotificationRegistrationSpectraS3(GetTapePartitionFailureNotificationRegistrationSpectraS3Request request)
+            throws IOException, SignatureException;
+    GetTapePartitionFailureNotificationRegistrationsSpectraS3Response getTapePartitionFailureNotificationRegistrationsSpectraS3(GetTapePartitionFailureNotificationRegistrationsSpectraS3Request request)
+            throws IOException, SignatureException;
+    DeleteFolderRecursivelySpectraS3Response deleteFolderRecursivelySpectraS3(DeleteFolderRecursivelySpectraS3Request request)
+            throws IOException, SignatureException;
+    GetObjectSpectraS3Response getObjectSpectraS3(GetObjectSpectraS3Request request)
+            throws IOException, SignatureException;
+    GetObjectsSpectraS3Response getObjectsSpectraS3(GetObjectsSpectraS3Request request)
+            throws IOException, SignatureException;
+    GetPhysicalPlacementForObjectsSpectraS3Response getPhysicalPlacementForObjectsSpectraS3(GetPhysicalPlacementForObjectsSpectraS3Request request)
+            throws IOException, SignatureException;
+    GetPhysicalPlacementForObjectsFullDetailsSpectraS3Response getPhysicalPlacementForObjectsFullDetailsSpectraS3(GetPhysicalPlacementForObjectsFullDetailsSpectraS3Request request)
+            throws IOException, SignatureException;
+    VerifyPhysicalPlacementForObjectsSpectraS3Response verifyPhysicalPlacementForObjectsSpectraS3(VerifyPhysicalPlacementForObjectsSpectraS3Request request)
+            throws IOException, SignatureException;
+    VerifyPhysicalPlacementForObjectsFullDetailsSpectraS3Response verifyPhysicalPlacementForObjectsFullDetailsSpectraS3(VerifyPhysicalPlacementForObjectsFullDetailsSpectraS3Request request)
+            throws IOException, SignatureException;
+    CancelImportOnAllPoolsSpectraS3Response cancelImportOnAllPoolsSpectraS3(CancelImportOnAllPoolsSpectraS3Request request)
+            throws IOException, SignatureException;
+    CancelImportPoolSpectraS3Response cancelImportPoolSpectraS3(CancelImportPoolSpectraS3Request request)
+            throws IOException, SignatureException;
+    CompactAllPoolsSpectraS3Response compactAllPoolsSpectraS3(CompactAllPoolsSpectraS3Request request)
+            throws IOException, SignatureException;
+    CompactPoolSpectraS3Response compactPoolSpectraS3(CompactPoolSpectraS3Request request)
+            throws IOException, SignatureException;
+    CreatePoolPartitionSpectraS3Response createPoolPartitionSpectraS3(CreatePoolPartitionSpectraS3Request request)
+            throws IOException, SignatureException;
+    DeallocatePoolSpectraS3Response deallocatePoolSpectraS3(DeallocatePoolSpectraS3Request request)
+            throws IOException, SignatureException;
+    DeletePermanentlyLostPoolSpectraS3Response deletePermanentlyLostPoolSpectraS3(DeletePermanentlyLostPoolSpectraS3Request request)
+            throws IOException, SignatureException;
+    DeletePoolFailureSpectraS3Response deletePoolFailureSpectraS3(DeletePoolFailureSpectraS3Request request)
+            throws IOException, SignatureException;
+    DeletePoolPartitionSpectraS3Response deletePoolPartitionSpectraS3(DeletePoolPartitionSpectraS3Request request)
+            throws IOException, SignatureException;
+    ForcePoolEnvironmentRefreshSpectraS3Response forcePoolEnvironmentRefreshSpectraS3(ForcePoolEnvironmentRefreshSpectraS3Request request)
+            throws IOException, SignatureException;
+    FormatAllForeignPoolsSpectraS3Response formatAllForeignPoolsSpectraS3(FormatAllForeignPoolsSpectraS3Request request)
+            throws IOException, SignatureException;
+    FormatForeignPoolSpectraS3Response formatForeignPoolSpectraS3(FormatForeignPoolSpectraS3Request request)
+            throws IOException, SignatureException;
+    GetBlobsOnPoolSpectraS3Response getBlobsOnPoolSpectraS3(GetBlobsOnPoolSpectraS3Request request)
+            throws IOException, SignatureException;
+    GetPoolFailuresSpectraS3Response getPoolFailuresSpectraS3(GetPoolFailuresSpectraS3Request request)
+            throws IOException, SignatureException;
+    GetPoolPartitionSpectraS3Response getPoolPartitionSpectraS3(GetPoolPartitionSpectraS3Request request)
+            throws IOException, SignatureException;
+    GetPoolPartitionsSpectraS3Response getPoolPartitionsSpectraS3(GetPoolPartitionsSpectraS3Request request)
+            throws IOException, SignatureException;
+    GetPoolSpectraS3Response getPoolSpectraS3(GetPoolSpectraS3Request request)
+            throws IOException, SignatureException;
+    GetPoolsSpectraS3Response getPoolsSpectraS3(GetPoolsSpectraS3Request request)
+            throws IOException, SignatureException;
+    ImportAllPoolsSpectraS3Response importAllPoolsSpectraS3(ImportAllPoolsSpectraS3Request request)
+            throws IOException, SignatureException;
+    ImportPoolSpectraS3Response importPoolSpectraS3(ImportPoolSpectraS3Request request)
+            throws IOException, SignatureException;
+    ModifyAllPoolsSpectraS3Response modifyAllPoolsSpectraS3(ModifyAllPoolsSpectraS3Request request)
+            throws IOException, SignatureException;
+    ModifyPoolPartitionSpectraS3Response modifyPoolPartitionSpectraS3(ModifyPoolPartitionSpectraS3Request request)
+            throws IOException, SignatureException;
+    ModifyPoolSpectraS3Response modifyPoolSpectraS3(ModifyPoolSpectraS3Request request)
+            throws IOException, SignatureException;
+    VerifyAllPoolsSpectraS3Response verifyAllPoolsSpectraS3(VerifyAllPoolsSpectraS3Request request)
+            throws IOException, SignatureException;
+    VerifyPoolSpectraS3Response verifyPoolSpectraS3(VerifyPoolSpectraS3Request request)
+            throws IOException, SignatureException;
+    CreatePoolStorageDomainMemberSpectraS3Response createPoolStorageDomainMemberSpectraS3(CreatePoolStorageDomainMemberSpectraS3Request request)
+            throws IOException, SignatureException;
+    CreateStorageDomainSpectraS3Response createStorageDomainSpectraS3(CreateStorageDomainSpectraS3Request request)
+            throws IOException, SignatureException;
+    CreateTapeStorageDomainMemberSpectraS3Response createTapeStorageDomainMemberSpectraS3(CreateTapeStorageDomainMemberSpectraS3Request request)
+            throws IOException, SignatureException;
+    DeleteStorageDomainFailureSpectraS3Response deleteStorageDomainFailureSpectraS3(DeleteStorageDomainFailureSpectraS3Request request)
+            throws IOException, SignatureException;
+    DeleteStorageDomainMemberSpectraS3Response deleteStorageDomainMemberSpectraS3(DeleteStorageDomainMemberSpectraS3Request request)
+            throws IOException, SignatureException;
+    DeleteStorageDomainSpectraS3Response deleteStorageDomainSpectraS3(DeleteStorageDomainSpectraS3Request request)
+            throws IOException, SignatureException;
+    GetStorageDomainFailuresSpectraS3Response getStorageDomainFailuresSpectraS3(GetStorageDomainFailuresSpectraS3Request request)
+            throws IOException, SignatureException;
+    GetStorageDomainMemberSpectraS3Response getStorageDomainMemberSpectraS3(GetStorageDomainMemberSpectraS3Request request)
+            throws IOException, SignatureException;
+    GetStorageDomainMembersSpectraS3Response getStorageDomainMembersSpectraS3(GetStorageDomainMembersSpectraS3Request request)
+            throws IOException, SignatureException;
+    GetStorageDomainSpectraS3Response getStorageDomainSpectraS3(GetStorageDomainSpectraS3Request request)
+            throws IOException, SignatureException;
+    GetStorageDomainsSpectraS3Response getStorageDomainsSpectraS3(GetStorageDomainsSpectraS3Request request)
+            throws IOException, SignatureException;
+    ModifyStorageDomainMemberSpectraS3Response modifyStorageDomainMemberSpectraS3(ModifyStorageDomainMemberSpectraS3Request request)
+            throws IOException, SignatureException;
+    ModifyStorageDomainSpectraS3Response modifyStorageDomainSpectraS3(ModifyStorageDomainSpectraS3Request request)
+            throws IOException, SignatureException;
+    GetSystemFailuresSpectraS3Response getSystemFailuresSpectraS3(GetSystemFailuresSpectraS3Request request)
+            throws IOException, SignatureException;
+    GetSystemInformationSpectraS3Response getSystemInformationSpectraS3(GetSystemInformationSpectraS3Request request)
+            throws IOException, SignatureException;
+    VerifySystemHealthSpectraS3Response verifySystemHealthSpectraS3(VerifySystemHealthSpectraS3Request request)
+            throws IOException, SignatureException;
+    CancelEjectOnAllTapesSpectraS3Response cancelEjectOnAllTapesSpectraS3(CancelEjectOnAllTapesSpectraS3Request request)
+            throws IOException, SignatureException;
+    CancelEjectTapeSpectraS3Response cancelEjectTapeSpectraS3(CancelEjectTapeSpectraS3Request request)
+            throws IOException, SignatureException;
+    CancelFormatOnAllTapesSpectraS3Response cancelFormatOnAllTapesSpectraS3(CancelFormatOnAllTapesSpectraS3Request request)
+            throws IOException, SignatureException;
+    CancelFormatTapeSpectraS3Response cancelFormatTapeSpectraS3(CancelFormatTapeSpectraS3Request request)
+            throws IOException, SignatureException;
+    CancelImportOnAllTapesSpectraS3Response cancelImportOnAllTapesSpectraS3(CancelImportOnAllTapesSpectraS3Request request)
+            throws IOException, SignatureException;
+    CancelImportTapeSpectraS3Response cancelImportTapeSpectraS3(CancelImportTapeSpectraS3Request request)
+            throws IOException, SignatureException;
+    CancelOnlineOnAllTapesSpectraS3Response cancelOnlineOnAllTapesSpectraS3(CancelOnlineOnAllTapesSpectraS3Request request)
+            throws IOException, SignatureException;
+    CancelOnlineTapeSpectraS3Response cancelOnlineTapeSpectraS3(CancelOnlineTapeSpectraS3Request request)
+            throws IOException, SignatureException;
+    CleanTapeDriveSpectraS3Response cleanTapeDriveSpectraS3(CleanTapeDriveSpectraS3Request request)
+            throws IOException, SignatureException;
+    CreateTapeDensityDirectiveSpectraS3Response createTapeDensityDirectiveSpectraS3(CreateTapeDensityDirectiveSpectraS3Request request)
+            throws IOException, SignatureException;
+    DeletePermanentlyLostTapeSpectraS3Response deletePermanentlyLostTapeSpectraS3(DeletePermanentlyLostTapeSpectraS3Request request)
+            throws IOException, SignatureException;
+    DeleteTapeDensityDirectiveSpectraS3Response deleteTapeDensityDirectiveSpectraS3(DeleteTapeDensityDirectiveSpectraS3Request request)
+            throws IOException, SignatureException;
+    DeleteTapeDriveSpectraS3Response deleteTapeDriveSpectraS3(DeleteTapeDriveSpectraS3Request request)
+            throws IOException, SignatureException;
+    DeleteTapeFailureSpectraS3Response deleteTapeFailureSpectraS3(DeleteTapeFailureSpectraS3Request request)
+            throws IOException, SignatureException;
+    DeleteTapePartitionFailureSpectraS3Response deleteTapePartitionFailureSpectraS3(DeleteTapePartitionFailureSpectraS3Request request)
+            throws IOException, SignatureException;
+    DeleteTapePartitionSpectraS3Response deleteTapePartitionSpectraS3(DeleteTapePartitionSpectraS3Request request)
+            throws IOException, SignatureException;
+    EjectAllTapesSpectraS3Response ejectAllTapesSpectraS3(EjectAllTapesSpectraS3Request request)
+            throws IOException, SignatureException;
+    EjectStorageDomainBlobsSpectraS3Response ejectStorageDomainBlobsSpectraS3(EjectStorageDomainBlobsSpectraS3Request request)
+            throws IOException, SignatureException;
+    EjectStorageDomainSpectraS3Response ejectStorageDomainSpectraS3(EjectStorageDomainSpectraS3Request request)
+            throws IOException, SignatureException;
+    EjectTapeSpectraS3Response ejectTapeSpectraS3(EjectTapeSpectraS3Request request)
+            throws IOException, SignatureException;
+    ForceTapeEnvironmentRefreshSpectraS3Response forceTapeEnvironmentRefreshSpectraS3(ForceTapeEnvironmentRefreshSpectraS3Request request)
+            throws IOException, SignatureException;
+    FormatAllTapesSpectraS3Response formatAllTapesSpectraS3(FormatAllTapesSpectraS3Request request)
+            throws IOException, SignatureException;
+    FormatTapeSpectraS3Response formatTapeSpectraS3(FormatTapeSpectraS3Request request)
+            throws IOException, SignatureException;
+    GetBlobsOnTapeSpectraS3Response getBlobsOnTapeSpectraS3(GetBlobsOnTapeSpectraS3Request request)
+            throws IOException, SignatureException;
+    GetTapeDensityDirectiveSpectraS3Response getTapeDensityDirectiveSpectraS3(GetTapeDensityDirectiveSpectraS3Request request)
+            throws IOException, SignatureException;
+    GetTapeDensityDirectivesSpectraS3Response getTapeDensityDirectivesSpectraS3(GetTapeDensityDirectivesSpectraS3Request request)
+            throws IOException, SignatureException;
+    GetTapeDriveSpectraS3Response getTapeDriveSpectraS3(GetTapeDriveSpectraS3Request request)
+            throws IOException, SignatureException;
+    GetTapeDrivesSpectraS3Response getTapeDrivesSpectraS3(GetTapeDrivesSpectraS3Request request)
+            throws IOException, SignatureException;
+    GetTapeFailuresSpectraS3Response getTapeFailuresSpectraS3(GetTapeFailuresSpectraS3Request request)
+            throws IOException, SignatureException;
+    GetTapeLibrariesSpectraS3Response getTapeLibrariesSpectraS3(GetTapeLibrariesSpectraS3Request request)
+            throws IOException, SignatureException;
+    GetTapeLibrarySpectraS3Response getTapeLibrarySpectraS3(GetTapeLibrarySpectraS3Request request)
+            throws IOException, SignatureException;
+    GetTapePartitionFailuresSpectraS3Response getTapePartitionFailuresSpectraS3(GetTapePartitionFailuresSpectraS3Request request)
+            throws IOException, SignatureException;
+    GetTapePartitionSpectraS3Response getTapePartitionSpectraS3(GetTapePartitionSpectraS3Request request)
+            throws IOException, SignatureException;
+    GetTapePartitionFullDetailsSpectraS3Response getTapePartitionFullDetailsSpectraS3(GetTapePartitionFullDetailsSpectraS3Request request)
+            throws IOException, SignatureException;
+    GetTapePartitionsSpectraS3Response getTapePartitionsSpectraS3(GetTapePartitionsSpectraS3Request request)
+            throws IOException, SignatureException;
+    GetTapeSpectraS3Response getTapeSpectraS3(GetTapeSpectraS3Request request)
+            throws IOException, SignatureException;
+    GetTapeFullDetailsSpectraS3Response getTapeFullDetailsSpectraS3(GetTapeFullDetailsSpectraS3Request request)
+            throws IOException, SignatureException;
+    GetTapesSpectraS3Response getTapesSpectraS3(GetTapesSpectraS3Request request)
+            throws IOException, SignatureException;
+    ImportAllTapesSpectraS3Response importAllTapesSpectraS3(ImportAllTapesSpectraS3Request request)
+            throws IOException, SignatureException;
+    ImportTapeSpectraS3Response importTapeSpectraS3(ImportTapeSpectraS3Request request)
+            throws IOException, SignatureException;
+    InspectAllTapesSpectraS3Response inspectAllTapesSpectraS3(InspectAllTapesSpectraS3Request request)
+            throws IOException, SignatureException;
+    InspectTapeSpectraS3Response inspectTapeSpectraS3(InspectTapeSpectraS3Request request)
+            throws IOException, SignatureException;
+    ModifyAllTapePartitionsSpectraS3Response modifyAllTapePartitionsSpectraS3(ModifyAllTapePartitionsSpectraS3Request request)
+            throws IOException, SignatureException;
+    ModifyTapePartitionSpectraS3Response modifyTapePartitionSpectraS3(ModifyTapePartitionSpectraS3Request request)
+            throws IOException, SignatureException;
+    ModifyTapeSpectraS3Response modifyTapeSpectraS3(ModifyTapeSpectraS3Request request)
+            throws IOException, SignatureException;
+    OnlineAllTapesSpectraS3Response onlineAllTapesSpectraS3(OnlineAllTapesSpectraS3Request request)
+            throws IOException, SignatureException;
+    OnlineTapeSpectraS3Response onlineTapeSpectraS3(OnlineTapeSpectraS3Request request)
+            throws IOException, SignatureException;
+    ReplacePermanentlyOfflineTapePartitionSpectraS3Response replacePermanentlyOfflineTapePartitionSpectraS3(ReplacePermanentlyOfflineTapePartitionSpectraS3Request request)
+            throws IOException, SignatureException;
+    VerifyAllTapesSpectraS3Response verifyAllTapesSpectraS3(VerifyAllTapesSpectraS3Request request)
+            throws IOException, SignatureException;
+    VerifyTapeSpectraS3Response verifyTapeSpectraS3(VerifyTapeSpectraS3Request request)
+            throws IOException, SignatureException;
+    GetUserSpectraS3Response getUserSpectraS3(GetUserSpectraS3Request request)
+            throws IOException, SignatureException;
+    GetUsersSpectraS3Response getUsersSpectraS3(GetUsersSpectraS3Request request)
+            throws IOException, SignatureException;
+    ModifyUserSpectraS3Response modifyUserSpectraS3(ModifyUserSpectraS3Request request)
+            throws IOException, SignatureException;
+    RegenerateUserSecretKeySpectraS3Response regenerateUserSecretKeySpectraS3(RegenerateUserSecretKeySpectraS3Request request)
             throws IOException, SignatureException;
 
-    /**
-     * Primes the Ds3 appliance for a Bulk Put.  This does not perform the puts for each individual files.  See
-     * {@link #putObject(PutObjectRequest)} for performing the put.
-     * @param request The Bulk Put Request object used to customize the HTTP request.  The bulk put request object
-     *                has some options for customizing the request.  See {@link BulkPutRequest} for the full list of
-     *                options that can be configured.
-     * @return The response object contains a list of lists of files to put to the DS3 endpoint.  Make sure that the
-     *         files are put in the order specified in the response.
-     * @throws IOException
-     * @throws SignatureException
-     */
-    BulkPutResponse bulkPut(BulkPutRequest request)
-            throws IOException, SignatureException;
-
-    /**
-     * Requests that the server allocate space for a given ChunkId in a BulkPutResponse.
-     * For best performance, run this call before putting objects for an object
-     * list.
-     * @return Whether the server responded with allocated, retry later, or not found.
-     * @throws IOException
-     * @throws SignatureException
-     */
-    AllocateJobChunkResponse allocateJobChunk(AllocateJobChunkRequest request)
-            throws IOException, SignatureException;
-
-    /**
-     * Returns all of the chunks immediately available for get from the server
-     * for a given JobId in a BulkGetResponse.
-     * @return Whether the server responded with the available chunks, retry later, or not found.
-     * @throws IOException
-     * @throws SignatureException
-     */
-    GetAvailableJobChunksResponse getAvailableJobChunks(GetAvailableJobChunksRequest request)
-            throws IOException, SignatureException;
-
-    /**
-     * Returns all of the jobs currently on the black pearl.
-     * @return A list of jobs.
-     * @throws IOException
-     * @throws SignatureException
-     */
-    GetJobsResponse getJobs(GetJobsRequest request)
-            throws IOException, SignatureException;
-
-    /**
-     * Returns details about a bulk job given a job id.
-     * @return A master object list.
-     * @throws IOException
-     * @throws SignatureException
-     */
-    GetJobResponse getJob(GetJobRequest request)
-            throws IOException, SignatureException;
-
-    /**
-     * Cancels an in-progress job.
-     * @throws IOException
-     * @throws SignatureException
-     */
-    CancelJobResponse cancelJob(CancelJobRequest request)
-            throws IOException, SignatureException;
-
-    /**
-     * Updates the last modified date of a job and returns the job details.
-     * @return A master object list.
-     * @throws IOException
-     * @throws SignatureException
-     */
-    ModifyJobResponse modifyJob(ModifyJobRequest request)
-            throws IOException, SignatureException;
-
-    /**
-     * Deletes the specified offline tape drive.
-     * @throws IOException
-     * @throws SignatureException
-     */
-    DeleteTapeDriveResponse deleteTapeDrive(DeleteTapeDriveRequest request)
-            throws IOException, SignatureException;
-
-    /**
-     * Deletes the specified offline tape partition.  Any tapes that had data on them in that partition will be
-     * de-associated from the partition.  Any tapes without data on them and tape drives that were associated
-     * with the partition will be deleted.
-     * @throws IOException
-     * @throws SignatureException
-     */
-    DeleteTapePartitionResponse deleteTapePartition(DeleteTapePartitionRequest request)
-            throws IOException, SignatureException;
-
-    /**
-     * Returns a list of tapes.
-     * @throws IOException
-     * @throws SignatureException
-     */
-    GetTapesResponse getTapes(GetTapesRequest request)
-            throws IOException, SignatureException;
-
-    /**
-     * Deletes the specified offline tape drive.
-     * @throws IOException
-     * @throws SignatureException
-     */
-    DeleteTapeResponse deleteTape(DeleteTapeRequest request)
-            throws IOException, SignatureException;
-
-    /**
-     * Returns the information for a single tape.
-     * @throws IOException
-     * @throws SignatureException
-     */
-    GetTapeResponse getTape(GetTapeRequest request)
-            throws IOException, SignatureException;
-
-    NotificationResponse createObjectCachedNotification(CreateObjectCachedNotificationRequest request)
-            throws IOException, SignatureException;
-
-    NotificationResponse getObjectCachedNotification(GetObjectCachedNotificationRequest request)
-            throws IOException, SignatureException;
-
-    DeleteNotificationResponse deleteObjectCachedNotification(DeleteObjectCachedNotificationRequest request)
-            throws IOException, SignatureException;
-
-    NotificationResponse createJobCompletedNotification(CreateJobCompletedNotificationRequest request)
-            throws IOException, SignatureException;
-
-    NotificationResponse getJobCompletedNotification(GetJobCompletedNotificationRequest request)
-            throws IOException, SignatureException;
-
-    DeleteNotificationResponse deleteJobCompleteNotification(DeleteJobCompletedNotificationRequest request)
-            throws IOException, SignatureException;
-
-    NotificationResponse createJobCreatedNotification(CreateJobCreatedNotificationRequest request)
-            throws IOException, SignatureException;
-
-    NotificationResponse getJobCreatedNotification(GetJobCreatedNotificationRequest request)
-            throws IOException, SignatureException;
-
-    DeleteNotificationResponse deleteJobCreatedNotification(DeleteJobCreatedNotificationRequest request)
-            throws IOException, SignatureException;
-
-    NotificationResponse createObjectLostNotification(CreateObjectLostNotificationRequest request)
-            throws IOException, SignatureException;
-
-    NotificationResponse getObjectLostNotification(GetObjectLostNotificationRequest request)
-            throws IOException, SignatureException;
-
-    DeleteNotificationResponse deleteObjectLostNotification(DeleteObjectLostNotificationRequest request)
-            throws IOException, SignatureException;
-
-    NotificationResponse createObjectPersistedNotification(CreateObjectPersistedNotificationRequest request)
-            throws IOException, SignatureException;
-
-    NotificationResponse getObjectPersistedNotification(GetObjectPersistedNotificationRequest request)
-            throws IOException, SignatureException;
-
-    DeleteNotificationResponse deleteObjectPersistedNotification(DeleteObjectPersistedNotificationRequest request)
-            throws IOException, SignatureException;
-
-    NotificationResponse createPartitionFailureNotification(CreatePartitionFailureNotificationRequest request)
-            throws IOException, SignatureException;
-
-    NotificationResponse getPartitionFailureNotification(GetPartitionFailureNotificationRequest request)
-            throws IOException, SignatureException;
-
-    DeleteNotificationResponse deletePartitionFailureNotification(DeletePartitionFailureNotificationRequest request)
-            throws IOException, SignatureException;
-
-    NotificationResponse createTapeFailureNotification(CreateTapeFailureNotificationRequest request)
-            throws IOException, SignatureException;
-
-    NotificationResponse getTapeFailureNotification(GetTapeFailureNotificationRequest request)
-            throws IOException, SignatureException;
-
-    DeleteNotificationResponse deleteTapeFailureNotification(DeleteTapeFailureNotificationRequest request)
-            throws IOException, SignatureException;
-
-    GetSystemHealthResponse getSystemHealth(GetSystemHealthRequest request)
-            throws IOException, SignatureException;
-
-    GetSystemInformationResponse getSystemInformation(GetSystemInformationRequest request)
-            throws IOException, SignatureException;
-
-    GetTapeLibrariesResponse getTapeLibraries(GetTapeLibrariesRequest request)
-            throws IOException, SignatureException;
-
-    GetTapeLibraryResponse getTapeLibrary(GetTapeLibraryRequest request)
-            throws IOException, SignatureException;
-
-    GetTapeDrivesResponse getTapeDrives(GetTapeDrivesRequest request)
-            throws IOException, SignatureException;
-
-    GetTapeDriveResponse getTapeDrive(GetTapeDriveRequest request)
-            throws IOException, SignatureException;
-
-    GetTapeFailureResponse getTapeFailure(GetTapeFailureRequest request)
-            throws IOException, SignatureException;
-
-    /**
-     * Creates a new Ds3Client instance for the system pointed to by Node.
-     */
     Ds3Client newForNode(Node node);
 }

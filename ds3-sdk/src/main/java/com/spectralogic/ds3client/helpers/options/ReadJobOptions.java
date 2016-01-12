@@ -15,11 +15,11 @@
 
 package com.spectralogic.ds3client.helpers.options;
 
-import com.spectralogic.ds3client.models.bulk.Priority;
+import com.spectralogic.ds3client.models.BlobStoreTaskPriority;
 
 public class ReadJobOptions {
 
-    private Priority priority;
+    private BlobStoreTaskPriority priority;
 
     private ReadJobOptions() {}
 
@@ -27,16 +27,16 @@ public class ReadJobOptions {
         return new ReadJobOptions();
     }
 
-    public ReadJobOptions withPriority(final Priority priority) {
+    public ReadJobOptions withPriority(final BlobStoreTaskPriority priority) {
         this.priority = priority;
         return this;
     }
 
-    public Priority getPriority() {
+    public BlobStoreTaskPriority getPriority() {
         return priority;
     }
 
-    public void setPriority(final Priority priority) {
+    public void setPriority(final BlobStoreTaskPriority priority) {
         this.priority = priority;
     }
 }

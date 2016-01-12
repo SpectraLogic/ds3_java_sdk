@@ -13,35 +13,60 @@
  * ****************************************************************************
  */
 
+// This code is auto-generated, do not modify
 package com.spectralogic.ds3client.commands;
 
 import com.spectralogic.ds3client.HttpVerb;
 
 public class DeleteObjectRequest extends AbstractRequest {
 
+    // Variables
+    
     private final String bucketName;
+
     private final String objectName;
 
+    private boolean rollBack;
+
+    // Constructor
     public DeleteObjectRequest(final String bucketName, final String objectName) {
         this.bucketName = bucketName;
         this.objectName = objectName;
+        
     }
-    
-    public String getBucketName() {
-        return this.bucketName;
+    public DeleteObjectRequest withRollBack(final boolean rollBack) {
+        this.rollBack = rollBack;
+        if (this.rollBack) {
+            this.getQueryParams().put("roll_back", null);
+        } else {
+            this.getQueryParams().remove("roll_back");
+        }
+        return this;
     }
 
-    public String getObjectName() {
-        return this.objectName;
+
+    @Override
+    public HttpVerb getVerb() {
+        return HttpVerb.DELETE;
     }
 
     @Override
     public String getPath() {
         return "/" + this.bucketName + "/" + this.objectName;
     }
-
-    @Override
-    public HttpVerb getVerb() {
-        return HttpVerb.DELETE;
+    
+    public String getBucketName() {
+        return this.bucketName;
     }
+
+
+    public String getObjectName() {
+        return this.objectName;
+    }
+
+
+    public boolean getRollBack() {
+        return this.rollBack;
+    }
+
 }

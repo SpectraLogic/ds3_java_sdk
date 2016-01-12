@@ -19,6 +19,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Maps.EntryTransformer;
+import com.spectralogic.ds3client.models.BlobApiBean;
 import com.spectralogic.ds3client.models.bulk.BulkObject;
 
 import javax.annotation.Nonnull;
@@ -26,9 +27,9 @@ import java.util.Collection;
 import java.util.HashMap;
 
 class JobPartTrackerFactory {
-    public static JobPartTracker buildPartTracker(final Iterable<BulkObject> objects) {
+    public static JobPartTracker buildPartTracker(final Iterable<BlobApiBean> objects) {
         final ArrayListMultimap<String, ObjectPart> multimap = ArrayListMultimap.create();
-        for (final BulkObject bulkObject : Preconditions.checkNotNull(objects)) {
+        for (final BlobApiBean bulkObject : Preconditions.checkNotNull(objects)) {
             multimap.put(bulkObject.getName(), new ObjectPart(bulkObject.getOffset(), bulkObject.getLength()));
         }
         return new JobPartTracker(new HashMap<>(Maps.transformEntries(

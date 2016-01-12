@@ -15,13 +15,13 @@
 
 package com.spectralogic.ds3client.helpers.options;
 
-import com.spectralogic.ds3client.models.bulk.Priority;
-import com.spectralogic.ds3client.models.bulk.WriteOptimization;
+import com.spectralogic.ds3client.models.BlobStoreTaskPriority;
+import com.spectralogic.ds3client.models.WriteOptimization;
 
 public class WriteJobOptions {
-    private Priority priority;
+    private BlobStoreTaskPriority priority;
     private WriteOptimization writeOptimization;
-    private int maxUploadSize;
+    private long maxUploadSize;
 
     private WriteJobOptions() {
         this.priority = null;
@@ -38,7 +38,7 @@ public class WriteJobOptions {
         return this;
     }
 
-    public int getMaxUploadSize() {
+    public long getMaxUploadSize() {
         return this.maxUploadSize;
     }
 
@@ -55,16 +55,16 @@ public class WriteJobOptions {
         this.writeOptimization = writeOptimization;
     }
 
-    public WriteJobOptions withPriority(final Priority priority) {
+    public WriteJobOptions withPriority(final BlobStoreTaskPriority priority) {
         this.priority = priority;
         return this;
     }
 
-    public Priority getPriority() {
+    public BlobStoreTaskPriority getPriority() {
         return priority;
     }
 
-    public void setPriority(final Priority priority) {
+    public void setPriority(final BlobStoreTaskPriority priority) {
         this.priority = priority;
     }
 

@@ -19,15 +19,15 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Iterables;
 import com.spectralogic.ds3client.Ds3Client;
-import com.spectralogic.ds3client.commands.AllocateJobChunkRequest;
-import com.spectralogic.ds3client.commands.AllocateJobChunkResponse;
-import com.spectralogic.ds3client.commands.PutObjectRequest;
+import com.spectralogic.ds3client.commands.CreateObjectRequest;
+import com.spectralogic.ds3client.commands.spectrads3.AllocateJobChunkSpectraS3Request;
+import com.spectralogic.ds3client.commands.spectrads3.AllocateJobChunkSpectraS3Response;
 import com.spectralogic.ds3client.helpers.ChunkTransferrer.ItemTransferrer;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.ObjectChannelBuilder;
+import com.spectralogic.ds3client.models.BlobApiBean;
+import com.spectralogic.ds3client.models.JobChunkApiBean;
+import com.spectralogic.ds3client.models.JobWithChunksApiBean;
 import com.spectralogic.ds3client.models.Range;
-import com.spectralogic.ds3client.models.bulk.BulkObject;
-import com.spectralogic.ds3client.models.bulk.MasterObjectList;
-import com.spectralogic.ds3client.models.bulk.Objects;
 import com.spectralogic.ds3client.serializer.XmlProcessingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,19 +41,20 @@ import java.util.List;
 class WriteJobImpl extends JobImpl {
     static private final Logger LOG = LoggerFactory.getLogger(WriteJobImpl.class);
     private final JobPartTracker partTracker;
-    private final List<Objects> filteredChunks;
+    private final List<JobChunkApiBean> filteredChunks;
 
     public WriteJobImpl(
             final Ds3Client client,
-            final MasterObjectList masterObjectList) {
-        super(client, masterObjectList);
-        if (this.masterObjectList == null || this.masterObjectList.getObjects() == null) {
+            final JobWithChunksApiBean jobWithChunksApiBean) {
+        super(client, jobWithChunksApiBean);
+        if (this.jobWithChunksApiBean == null || this.jobWithChunksApiBean.getObjects() == null) {
             LOG.info("Job has no data to transfer");
             this.filteredChunks = null;
             this.partTracker = null;
         } else {
-            LOG.info("Ready to start transfer for job " + masterObjectList.getJobId().toString() + " with " + masterObjectList.getObjects().size() + " chunks");
-            this.filteredChunks = filterChunks(this.masterObjectList.getObjects());
+            LOG.info("Ready to start transfer for job " + jobWithChunksApiBean.getJobId().toString() + " with "
+                    + jobWithChunksApiBean.getObjects().size() + " chunks");
+            this.filteredChunks = filterChunks(this.jobWithChunksApiBean.getObjects());
             this.partTracker = JobPartTrackerFactory
                     .buildPartTracker(Iterables.concat(filteredChunks));
         }
@@ -86,20 +87,24 @@ class WriteJobImpl extends JobImpl {
     public void transfer(final ObjectChannelBuilder channelBuilder)
             throws SignatureException, IOException, XmlProcessingException {
         LOG.debug("Starting job transfer");
-        if (this.masterObjectList == null || this.masterObjectList.getObjects() == null) {
-            LOG.info("There is nothing to transfer for job" + ((this.getJobId() == null) ? "" : " " + this.getJobId().toString()));
+        if (this.jobWithChunksApiBean == null || this.jobWithChunksApiBean.getObjects() == null) {
+            LOG.info("There is nothing to transfer for job"
+                    + ((this.getJobId() == null) ? "" : " " + this.getJobId().toString()));
             return;
         }
-        try (final JobState jobState = new JobState(channelBuilder, filteredChunks, partTracker, ImmutableMap.<String, ImmutableMultimap<BulkObject,Range>>of())) {
+        try (final JobState jobState = new JobState(channelBuilder, filteredChunks, partTracker,
+                ImmutableMap.<String, ImmutableMultimap<BlobApiBean,Range>>of())) {
             final ChunkTransferrer chunkTransferrer = new ChunkTransferrer(
                 new PutObjectTransferrer(jobState),
                 this.client,
                 jobState.getPartTracker(),
                 this.maxParallelRequests
             );
-            for (final Objects chunk : filteredChunks) {
+            for (final JobChunkApiBean chunk : filteredChunks) {
                 LOG.debug("Allocating chunk: " + chunk.getChunkId().toString());
-                chunkTransferrer.transferChunks(this.masterObjectList.getNodes(), Collections.singletonList(filterChunk(allocateChunk(chunk))));
+                chunkTransferrer.transferChunks(
+                        this.jobWithChunksApiBean.getNodes(),
+                        Collections.singletonList(filterChunk(allocateChunk(chunk))));
             }
         } catch (final SignatureException | IOException | XmlProcessingException | RuntimeException e) {
             throw e;
@@ -108,22 +113,22 @@ class WriteJobImpl extends JobImpl {
         }
     }
 
-    private Objects allocateChunk(final Objects filtered) throws IOException, SignatureException {
-        Objects chunk = null;
+    private JobChunkApiBean allocateChunk(final JobChunkApiBean filtered) throws IOException, SignatureException {
+        JobChunkApiBean chunk = null;
         while (chunk == null) {
             chunk = tryAllocateChunk(filtered);
         }
         return chunk;
     }
 
-    private Objects tryAllocateChunk(final Objects filtered) throws IOException, SignatureException {
-        final AllocateJobChunkResponse response =
-                this.client.allocateJobChunk(new AllocateJobChunkRequest(filtered.getChunkId()));
+    private JobChunkApiBean tryAllocateChunk(final JobChunkApiBean filtered) throws IOException, SignatureException {
+        final AllocateJobChunkSpectraS3Response response =
+                this.client.allocateJobChunkSpectraS3(new AllocateJobChunkSpectraS3Request(filtered.getChunkId()));
 
         LOG.info("AllocatedJobChunkResponse status: " + response.getStatus().toString());
         switch (response.getStatus()) {
         case ALLOCATED:
-            return response.getObjects();
+            return response.getJobChunkContainerApiBeanResult().getJobChunk();
         case RETRYLATER:
             try {
                 final int retryAfter = response.getRetryAfterSeconds() * 1000;
@@ -141,13 +146,13 @@ class WriteJobImpl extends JobImpl {
     /**
      * Filters out chunks that have already been completed.  We will get the same chunk name back from the server, but it
      * will not have any objects in it, so we remove that from the list of objects that are returned.
-     * @param chunks The list to be filtered
+     * @param jobChunkApiBeanList The list to be filtered
      * @return The filtered list
      */
-    private static List<Objects> filterChunks(final List<Objects> chunks) {
-        final List<Objects> filteredChunks = new ArrayList<>();
-        for (final Objects chunk : chunks) {
-            final Objects filteredChunk = filterChunk(chunk);
+    private static List<JobChunkApiBean> filterChunks(final List<JobChunkApiBean> jobChunkApiBeanList) {
+        final List<JobChunkApiBean> filteredChunks = new ArrayList<>();
+        for (final JobChunkApiBean jobChunkApiBean : jobChunkApiBeanList) {
+            final JobChunkApiBean filteredChunk = filterChunk(jobChunkApiBean);
             if (filteredChunk.getObjects().size() > 0) {
                 filteredChunks.add(filteredChunk);
             }
@@ -155,19 +160,19 @@ class WriteJobImpl extends JobImpl {
         return filteredChunks;
     }
 
-    private static Objects filterChunk(final Objects chunk) {
-        final Objects newChunk = new Objects();
-        newChunk.setChunkId(chunk.getChunkId());
-        newChunk.setChunkNumber(chunk.getChunkNumber());
-        newChunk.setNodeId(chunk.getNodeId());
-        newChunk.setObjects(filterObjects(chunk.getObjects()));
-        return newChunk;
+    private static JobChunkApiBean filterChunk(final JobChunkApiBean jobChunkApiBean) {
+        return new  JobChunkApiBean(
+                jobChunkApiBean.getChunkId(),
+                jobChunkApiBean.getChunkNumber(),
+                jobChunkApiBean.getNodeId(),
+                filterObjects(jobChunkApiBean.getObjects())
+        );
     }
 
-    private static List<BulkObject> filterObjects(final List<BulkObject> list) {
-        final List<BulkObject> filtered = new ArrayList<>();
-        for (final BulkObject obj : list) {
-            if (!obj.isInCache()) {
+    private static List<BlobApiBean> filterObjects(final List<BlobApiBean> list) {
+        final List<BlobApiBean> filtered = new ArrayList<>();
+        for (final BlobApiBean obj : list) {
+            if (!obj.getInCache()) {
                 filtered.add(obj);
             }
         }
@@ -182,15 +187,15 @@ class WriteJobImpl extends JobImpl {
         }
 
         @Override
-        public void transferItem(final Ds3Client client, final BulkObject ds3Object)
+        public void transferItem(final Ds3Client client, final BlobApiBean ds3Object)
                 throws SignatureException, IOException {
-            client.putObject(new PutObjectRequest(
-                WriteJobImpl.this.masterObjectList.getBucketName(),
-                ds3Object.getName(),
-                WriteJobImpl.this.getJobId(),
-                ds3Object.getLength(),
-                ds3Object.getOffset(),
-                jobState.getChannel(ds3Object.getName(), ds3Object.getOffset(), ds3Object.getLength())
+            client.createObject(new CreateObjectRequest(
+                    WriteJobImpl.this.jobWithChunksApiBean.getBucketName(),
+                    ds3Object.getName(),
+                    jobState.getChannel(ds3Object.getName(), ds3Object.getOffset(), ds3Object.getLength()),
+                    WriteJobImpl.this.getJobId(),
+                    ds3Object.getOffset(),
+                    ds3Object.getLength()
             ));
         }
     }

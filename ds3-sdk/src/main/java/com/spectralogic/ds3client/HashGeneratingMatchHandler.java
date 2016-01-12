@@ -15,22 +15,20 @@
 
 package com.spectralogic.ds3client;
 
-import com.spectralogic.ds3client.models.Checksum;
+import com.spectralogic.ds3client.models.ChecksumType;
 import com.spectralogic.ds3client.utils.hashing.*;
 import org.apache.commons.codec.binary.Base64;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 
-class HashGeneratingMatchHandler implements Checksum.MatchHandler<String, IOException> {
+class HashGeneratingMatchHandler implements ChecksumType.MatchHandler<String, IOException> {
     private static final int READ_BUFFER_SIZE = 1024;
     
     private final InputStream content;
-    private final Checksum.Type checksumType;
+    private final ChecksumType.Type checksumType;
     
-    public HashGeneratingMatchHandler(final InputStream content, final Checksum.Type checksumType) {
+    public HashGeneratingMatchHandler(final InputStream content, final ChecksumType.Type checksumType) {
         this.content = content;
         this.checksumType = checksumType;
     }
@@ -68,13 +66,13 @@ class HashGeneratingMatchHandler implements Checksum.MatchHandler<String, IOExce
         return digest.digest();
     }
 
-    private Hasher getHasher(final Checksum.Type checksumType) {
+    private Hasher getHasher(final ChecksumType.Type checksumType) {
         switch (checksumType) {
             case MD5: return new MD5Hasher();
-            case SHA256: return new SHA256Hasher();
-            case SHA512: return new SHA512Hasher();
-            case CRC32: return new CRC32Hasher();
-            case CRC32C: return new CRC32CHasher();
+            case SHA_256: return new SHA256Hasher();
+            case SHA_512: return new SHA512Hasher();
+            case CRC_32: return new CRC32Hasher();
+            case CRC_32C: return new CRC32CHasher();
             default: throw new RuntimeException("Unknown checksum type " + checksumType.toString());
         }
     }

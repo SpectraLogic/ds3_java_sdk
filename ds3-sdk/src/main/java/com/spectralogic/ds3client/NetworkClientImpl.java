@@ -18,22 +18,24 @@ package com.spectralogic.ds3client;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Multimap;
 import com.google.common.net.UrlEscapers;
+import com.spectralogic.ds3client.commands.CreateObjectRequest;
 import com.spectralogic.ds3client.commands.Ds3Request;
-import com.spectralogic.ds3client.commands.PutObjectRequest;
-import com.spectralogic.ds3client.models.Checksum;
+import com.spectralogic.ds3client.models.ChecksumType;
 import com.spectralogic.ds3client.models.SignatureDetails;
 import com.spectralogic.ds3client.networking.*;
 import com.spectralogic.ds3client.utils.DateFormatter;
 import com.spectralogic.ds3client.utils.SSLSetupException;
 import com.spectralogic.ds3client.utils.Signature;
-
 import org.apache.http.HttpHost;
 import org.apache.http.HttpRequest;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.protocol.HttpClientContext;
-import org.apache.http.conn.ssl.*;
+import org.apache.http.conn.ssl.AllowAllHostnameVerifier;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.conn.ssl.SSLContexts;
+import org.apache.http.conn.ssl.TrustStrategy;
 import org.apache.http.entity.ContentType;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
@@ -46,11 +48,13 @@ import javax.net.ssl.SSLContext;
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.AssertionError;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
-import java.security.*;
+import java.security.KeyManagementException;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.SignatureException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.Collection;
@@ -144,7 +148,7 @@ public class NetworkClientImpl implements NetworkClient {
         private final InputStream content;
         private final HttpHost host;
         private final String hash;
-        private final Checksum.Type checksumType;
+        private final ChecksumType.Type checksumType;
         private final CloseableHttpClient client;
 
         public RequestExecutor(final CloseableHttpClient client, final Ds3Request ds3Request) throws IOException {
@@ -234,13 +238,13 @@ public class NetworkClientImpl implements NetworkClient {
             )));
         }
 
-        private String getHashType(final Checksum.Type checksumType) {
+        private String getHashType(final ChecksumType.Type checksumType) {
             switch (checksumType) {
                 case MD5: return CONTENT_MD5;
-                case SHA256: return CONTENT_SHA256;
-                case SHA512: return CONTENT_SHA512;
-                case CRC32: return CONTENT_CRC32;
-                case CRC32C: return CONTENT_CRC32C;
+                case SHA_256: return CONTENT_SHA256;
+                case SHA_512: return CONTENT_SHA512;
+                case CRC_32: return CONTENT_CRC32;
+                case CRC_32C: return CONTENT_CRC32C;
                 case NONE:
                 default:
                     return "";
@@ -266,7 +270,7 @@ public class NetworkClientImpl implements NetworkClient {
             for (final Map.Entry<String, Collection<String>> header : customHeaders
                     .asMap().entrySet()) {
                 final String key = header.getKey().toLowerCase();
-                if (key.startsWith(PutObjectRequest.AMZ_META_HEADER)
+                if (key.startsWith(CreateObjectRequest.AMZ_META_HEADER)
                         && header.getValue().size() > 0) {
                     ret.append(key).append(":");
                     ret.append(Joiner.on(",").join(header.getValue()));

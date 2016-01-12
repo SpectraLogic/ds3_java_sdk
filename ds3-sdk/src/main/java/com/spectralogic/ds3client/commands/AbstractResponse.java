@@ -17,14 +17,13 @@ package com.spectralogic.ds3client.commands;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableSet;
-import com.spectralogic.ds3client.models.Checksum;
+import com.spectralogic.ds3client.models.ChecksumType;
 import com.spectralogic.ds3client.models.Error;
 import com.spectralogic.ds3client.networking.FailedRequestException;
 import com.spectralogic.ds3client.networking.Headers;
 import com.spectralogic.ds3client.networking.ResponseProcessingException;
 import com.spectralogic.ds3client.networking.WebResponse;
 import com.spectralogic.ds3client.serializer.XmlOutput;
-
 import com.spectralogic.ds3client.utils.Guard;
 import com.spectralogic.ds3client.utils.ResponseUtils;
 import org.apache.commons.io.IOUtils;
@@ -43,7 +42,7 @@ public abstract class AbstractResponse implements Ds3Response{
 
     final private WebResponse response;
     final private String checksum;
-    final private Checksum.Type checksumType;
+    final private ChecksumType.Type checksumType;
 
     public AbstractResponse(final WebResponse response) throws IOException {
         this.response = response;
@@ -57,13 +56,13 @@ public abstract class AbstractResponse implements Ds3Response{
         }
         else {
             this.checksum = null;
-            this.checksumType = Checksum.Type.NONE;
+            this.checksumType = ChecksumType.Type.NONE;
         }
         this.processResponse();
     }
 
-    private static Checksum.Type determineChecksumType(final Headers headers) throws ResponseProcessingException {
-        for (final Checksum.Type type : Checksum.Type.values()) {
+    private static ChecksumType.Type determineChecksumType(final Headers headers) throws ResponseProcessingException {
+        for (final ChecksumType.Type type : ChecksumType.Type.values()) {
             if (getFirstHeaderValue(headers, "content-" + type.toString().toLowerCase()) != null) {
                 return type;
             }
@@ -154,7 +153,7 @@ public abstract class AbstractResponse implements Ds3Response{
         return checksum;
     }
 
-    public Checksum.Type getChecksumType() {
+    public ChecksumType.Type getChecksumType() {
         return checksumType;
     }
 }

@@ -21,9 +21,9 @@ import com.spectralogic.ds3client.helpers.AutoCloseableCache.ValueBuilder;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.ObjectChannelBuilder;
 import com.spectralogic.ds3client.helpers.channels.RangedSeekableByteChannel;
 import com.spectralogic.ds3client.helpers.channels.WindowedChannelFactory;
+import com.spectralogic.ds3client.models.BlobApiBean;
+import com.spectralogic.ds3client.models.JobChunkApiBean;
 import com.spectralogic.ds3client.models.Range;
-import com.spectralogic.ds3client.models.bulk.BulkObject;
-import com.spectralogic.ds3client.models.bulk.Objects;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,7 +41,11 @@ class JobState implements AutoCloseable {
     private final AutoCloseableCache<String, WindowedChannelFactory> channelCache;
     private final JobPartTracker partTracker;
 
-    public JobState(final ObjectChannelBuilder channelBuilder, final Collection<Objects> filteredChunks, final JobPartTracker partTracker, final ImmutableMap<String, ImmutableMultimap<BulkObject, Range>> objectRanges) {
+    public JobState(
+            final ObjectChannelBuilder channelBuilder,
+            final Collection<JobChunkApiBean> filteredChunks,
+            final JobPartTracker partTracker,
+            final ImmutableMap<String, ImmutableMultimap<BlobApiBean, Range>> objectRanges) {
         this.objectsRemaining = new AtomicInteger(getObjectCount(filteredChunks));
         this.channelCache = buildCache(channelBuilder, objectRanges);
         this.partTracker = partTracker.attachObjectCompletedListener(new ObjectCompletedListenerImpl());
@@ -51,10 +55,10 @@ class JobState implements AutoCloseable {
         return this.objectsRemaining.get() > 0;
     }
 
-    private static int getObjectCount(final Collection<Objects> chunks) {
+    private static int getObjectCount(final Collection<JobChunkApiBean> chunks) {
         final HashSet<String> result = new HashSet<>();
-        for (final Objects chunk : chunks) {
-            for (final BulkObject bulkObject : chunk.getObjects()) {
+        for (final JobChunkApiBean chunk : chunks) {
+            for (final BlobApiBean bulkObject : chunk.getObjects()) {
                 result.add(bulkObject.getName());
             }
         }
@@ -63,14 +67,15 @@ class JobState implements AutoCloseable {
 
     private static AutoCloseableCache<String, WindowedChannelFactory> buildCache(
             final ObjectChannelBuilder channelBuilder,
-            final ImmutableMap<String, ImmutableMultimap<BulkObject, Range>> objectRanges) {
+            final ImmutableMap<String, ImmutableMultimap<BlobApiBean, Range>> objectRanges) {
         return new AutoCloseableCache<>(
             new ValueBuilder<String, WindowedChannelFactory>() {
                 @Override
                 public WindowedChannelFactory get(final String key) {
                     try {
                         LOG.debug("Opening channel for : " + key);
-                        return new WindowedChannelFactory(RangedSeekableByteChannel.wrap(channelBuilder.buildChannel(key), objectRanges.get(key)));
+                        return new WindowedChannelFactory(RangedSeekableByteChannel
+                                .wrap(channelBuilder.buildChannel(key), objectRanges.get(key)));
                     } catch (final IOException e) {
                         throw new RuntimeException(e);
                     }

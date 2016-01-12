@@ -17,6 +17,7 @@ package com.spectralogic.ds3client.helpers;
 
 import com.spectralogic.ds3client.Ds3Client;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.Job;
+import com.spectralogic.ds3client.models.JobWithChunksApiBean;
 import com.spectralogic.ds3client.models.bulk.MasterObjectList;
 
 import java.util.UUID;
@@ -24,27 +25,27 @@ import java.util.UUID;
 abstract class JobImpl implements Job {
     protected int maxParallelRequests = 20;
     protected final Ds3Client client;
-    protected final MasterObjectList masterObjectList;
+    protected final JobWithChunksApiBean jobWithChunksApiBean;
 
-    public JobImpl(final Ds3Client client, final MasterObjectList masterObjectList) {
+    public JobImpl(final Ds3Client client, final JobWithChunksApiBean jobWithChunksApiBean) {
         this.client = client;
-        this.masterObjectList = masterObjectList;
+        this.jobWithChunksApiBean = jobWithChunksApiBean;
     }
     
     @Override
     public UUID getJobId() {
-        if (this.masterObjectList == null) {
+        if (this.jobWithChunksApiBean == null) {
             return null;
         }
-        return this.masterObjectList.getJobId();
+        return this.jobWithChunksApiBean.getJobId();
     }
 
     @Override
     public String getBucketName() {
-        if (this.masterObjectList == null) {
+        if (this.jobWithChunksApiBean == null) {
             return null;
         }
-        return this.masterObjectList.getBucketName();
+        return this.jobWithChunksApiBean.getBucketName();
     }
     
     @Override

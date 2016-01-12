@@ -13,94 +13,82 @@
  * ****************************************************************************
  */
 
+// This code is auto-generated, do not modify
 package com.spectralogic.ds3client.commands;
 
-
-import com.google.common.net.UrlEscapers;
 import com.spectralogic.ds3client.HttpVerb;
+import java.lang.String;
 
 public class GetBucketRequest extends AbstractRequest {
 
-    final private String bucket;
-    private String nextMarker = null;
-    private String prefix = null;
-    private String delimiter = null;
-    private int maxKeys = 0;
+    // Variables
+    
+    private final String bucketName;
 
-    /**
-     * @param bucket The name of the bucket that will have it's objects listed.
-     */
-    public GetBucketRequest(final String bucket) {
-        this.bucket = bucket;
+    private String delimiter;
+    private String marker;
+    private int maxKeys;
+    private String prefix;
+
+    // Constructor
+    public GetBucketRequest(final String bucketName) {
+        this.bucketName = bucketName;
+        
     }
-
-    /**
-     * If a GetBucketRequest has been paginated this method is used to get the next set of objects.
-     * @param nextMarker The marker specified in {@link GetBucketResponse#getResult()}
-     * @return The current request object.
-     */
-    public GetBucketRequest withNextMarker(final String nextMarker) {
-        this.nextMarker = nextMarker;
-        this.getQueryParams().put("marker", UrlEscapers.urlFragmentEscaper().escape(nextMarker));
-        return this;
-    }
-
-    /**
-     * Use the prefix method for getting a list of 'directories' without getting the objects within that directory.  For
-     * example to get the root level directories the prefix should be set to '/'
-     * @param prefix The prefix to filter the objects for.
-     * @return The current request object.
-     */
-    public GetBucketRequest withPrefix(final String prefix) {
-        this.prefix = prefix;
-        this.getQueryParams().put("prefix", UrlEscapers.urlFragmentEscaper().escape(prefix));
-        return this;
-    }
-
-    /**
-     * Limit how many objects will be returned in a request before pagination is enforced.
-     * @param maxKeys The number of objects to request in a single request from DS3.
-     * @return The current request object.
-     */
-    public GetBucketRequest withMaxKeys(final int maxKeys) {
-        this.maxKeys = maxKeys;
-        this.getQueryParams().put("max-keys", Integer.toString(maxKeys));
-        return this;
-    }
-
     public GetBucketRequest withDelimiter(final String delimiter) {
         this.delimiter = delimiter;
-        this.getQueryParams().put("delimiter", delimiter);
+        this.updateQueryParam("delimiter", delimiter);
         return this;
     }
-    
-    public String getBucket() {
-        return this.bucket;
+
+    public GetBucketRequest withMarker(final String marker) {
+        this.marker = marker;
+        this.updateQueryParam("marker", marker);
+        return this;
     }
 
-    public String getNextMarker() {
-        return this.nextMarker;
+    public GetBucketRequest withMaxKeys(final int maxKeys) {
+        this.maxKeys = maxKeys;
+        this.updateQueryParam("max_keys", Integer.toString(maxKeys));
+        return this;
     }
 
-    public String getPrefix() {
-        return this.prefix;
+    public GetBucketRequest withPrefix(final String prefix) {
+        this.prefix = prefix;
+        this.updateQueryParam("prefix", prefix);
+        return this;
     }
 
-    public int getMaxKeys() {
-        return this.maxKeys;
-    }
-
-    @Override
-    public String getPath() {
-        return "/" + this.bucket;
-    }
 
     @Override
     public HttpVerb getVerb() {
         return HttpVerb.GET;
     }
 
-    public String getDelimiter() {
-        return delimiter;
+    @Override
+    public String getPath() {
+        return "/" + this.bucketName;
     }
+    
+    public String getBucketName() {
+        return this.bucketName;
+    }
+
+
+    public String getDelimiter() {
+        return this.delimiter;
+    }
+
+    public String getMarker() {
+        return this.marker;
+    }
+
+    public int getMaxKeys() {
+        return this.maxKeys;
+    }
+
+    public String getPrefix() {
+        return this.prefix;
+    }
+
 }

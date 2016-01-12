@@ -13,90 +13,112 @@
  * ****************************************************************************
  */
 
+// This code is auto-generated, do not modify
 package com.spectralogic.ds3client.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.spectralogic.ds3client.commands.GetObjectsRequest.ObjectType;
-
-import java.util.Objects;
 import java.util.UUID;
+import java.util.Date;
+import java.lang.String;
+import com.spectralogic.ds3client.models.S3ObjectType;
 
 public class S3Object {
 
+    // Variables
     @JsonProperty("BucketId")
-    private String bucketId;
+    private UUID bucketId;
+
     @JsonProperty("CreationDate")
-    private String creationDate;
+    private Date creationDate;
+
     @JsonProperty("Id")
     private UUID id;
+
+    @JsonProperty("Latest")
+    private boolean latest;
+
     @JsonProperty("Name")
     private String name;
+
     @JsonProperty("Type")
-    private ObjectType type;
+    private S3ObjectType type;
+
     @JsonProperty("Version")
     private long version;
 
-    public S3Object() {
-    }
-
-    public S3Object(final String bucketId, final String creationDate, final UUID id, final String name,
-                    final ObjectType type, final long version) {
+    // Constructor
+    public S3Object(final UUID bucketId, final Date creationDate, final UUID id, final boolean latest, final String name, final S3ObjectType type, final long version) {
         this.bucketId = bucketId;
         this.creationDate = creationDate;
         this.id = id;
+        this.latest = latest;
         this.name = name;
         this.type = type;
         this.version = version;
     }
 
-    public String getBucketId() { return this.bucketId; }
-    public void setBucketId(final String bucketId) { this.bucketId = bucketId; }
-
-    public String getCreationDate() { return this.creationDate; }
-    public void setCreationDate(final String creationDate) { this.creationDate = creationDate; }
-
-    public UUID getId() { return this.id; }
-    public void setId(final UUID id) { this.id = id; }
-
-    public String getName() { return this.name; }
-    public void setName(final String name) { this.name = name; }
-
-    public ObjectType getType() { return this.type; }
-    public void setType(final ObjectType type) { this.type = type; }
-
-    public long getVersion() { return this.version; }
-    public void setVersion(final long version) { this.version = version; }
-
-    @Override
-    public String toString() {
-        return "<S3Object>"
-                + "<BucketID>" + bucketId + "</BucketID>"
-                + "<CreationDate>" + creationDate + "</CreationDate>"
-                + "<Id>" + id.toString() + "</Id>"
-                + "<Name>" + name + "</Name>"
-                + "<Type>" + type.toString() + "</Type>"
-                + "<Version>" + Long.toString(version) + "</Version>"
-                + "</S3Object>";
+    // Getters and Setters
+    
+    public UUID getBucketId() {
+        return this.bucketId;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(bucketId, name, id, creationDate, type, version);
+    public void setBucketId(final UUID bucketId) {
+        this.bucketId = bucketId;
     }
 
-    @Override
-    public boolean equals(final Object obj) {
-        if (!(obj instanceof S3Object)) {
-            return false;
-        }
 
-        final S3Object s3obj = (S3Object)obj;
-
-        return this.bucketId.equals(s3obj.getBucketId())
-                && this.creationDate.equals(s3obj.getCreationDate())
-                && this.id.equals(s3obj.getId())
-                && this.name.equals(s3obj.getName())
-                && this.type == s3obj.getType()
-                && this.version == s3obj.getVersion();
+    public Date getCreationDate() {
+        return this.creationDate;
     }
+
+    public void setCreationDate(final Date creationDate) {
+        this.creationDate = creationDate;
+    }
+
+
+    public UUID getId() {
+        return this.id;
+    }
+
+    public void setId(final UUID id) {
+        this.id = id;
+    }
+
+
+    public boolean getLatest() {
+        return this.latest;
+    }
+
+    public void setLatest(final boolean latest) {
+        this.latest = latest;
+    }
+
+
+    public String getName() {
+        return this.name;
+    }
+
+    public void setName(final String name) {
+        this.name = name;
+    }
+
+
+    public S3ObjectType getType() {
+        return this.type;
+    }
+
+    public void setType(final S3ObjectType type) {
+        this.type = type;
+    }
+
+
+    public long getVersion() {
+        return this.version;
+    }
+
+    public void setVersion(final long version) {
+        this.version = version;
+    }
+
 }
