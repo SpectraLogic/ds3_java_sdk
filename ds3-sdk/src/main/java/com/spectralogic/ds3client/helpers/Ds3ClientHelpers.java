@@ -82,6 +82,10 @@ public abstract class Ds3ClientHelpers {
         return new Ds3ClientHelpersImpl(client);
     }
 
+    public static Ds3ClientHelpers wrap(final Ds3Client client, final int retryAfter) {
+        return new Ds3ClientHelpersImpl(client, retryAfter);
+    }
+
     /**
      * Performs a bulk put job creation request and returns an {@link WriteJob}.
      * See {@link WriteJob} for information on how to write the objects for the job.

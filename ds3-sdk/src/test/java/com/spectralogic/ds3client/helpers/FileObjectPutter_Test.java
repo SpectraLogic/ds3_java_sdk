@@ -10,17 +10,21 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assume.assumeThat;
 
 public class FileObjectPutter_Test {
 
     final private static String testString = "This is some test data.";
     final private static byte[] testData = testString.getBytes(Charset.forName("UTF-8"));
 
+    /**
+     * This test cannot run on Windows without extra privileges
+     */
     @Test
     public void testSymlink() throws IOException {
+        assumeThat(System.getProperty("os.name"), not(containsString("Windows")));
         final Path tempDir = Files.createTempDirectory("ds3_file_object_putter_");
         final Path tempPath = Files.createTempFile(tempDir, "temp_", ".txt");
 
@@ -62,14 +66,14 @@ public class FileObjectPutter_Test {
             }
             final FileObjectPutter putter = new FileObjectPutter(tempDir);
 
-            final SeekableByteChannel newChannel = putter.buildChannel(tempPath.getFileName().toString());
-            assertThat(newChannel, is(notNullValue()));
+             try (final SeekableByteChannel newChannel = putter.buildChannel(tempPath.getFileName().toString())) {
+                 assertThat(newChannel, is(notNullValue()));
 
-            final ByteBuffer buff = ByteBuffer.allocate(testData.length);
-            assertThat(newChannel.read(buff), is(testData.length));
+                 final ByteBuffer buff = ByteBuffer.allocate(testData.length);
+                 assertThat(newChannel.read(buff), is(testData.length));
 
-            assertThat(new String(buff.array(), Charset.forName("UTF-8")), is(testString));
-
+                 assertThat(new String(buff.array(), Charset.forName("UTF-8")), is(testString));
+             }
         } finally {
             Files.deleteIfExists(tempPath);
             Files.deleteIfExists(tempDir);
