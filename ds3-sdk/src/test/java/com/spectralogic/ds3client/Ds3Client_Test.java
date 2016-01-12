@@ -921,7 +921,7 @@ public class Ds3Client_Test {
         assertThat(tape.getId(), is(UUID.fromString("c7c431df-f95d-4533-b350-ffd7a8a5caac")));
     }
 
-    @Test
+    @Test(expected = ContentLengthNotMatchException.class)
     public void getObjectVerifyFullPayload() throws IOException, SignatureException {
         final String jobIdString = "a4a586a1-cb80-4441-84e2-48974e982d51";
         final Map<String, String> queryParams = new HashMap<>();
@@ -934,14 +934,10 @@ public class Ds3Client_Test {
         final ByteArraySeekableByteChannel resultChannel = new ByteArraySeekableByteChannel();
         final String stringResponse = "Response";
 
-        try {
-            MockNetwork
-                    .expecting(HttpVerb.GET, "/bucketName/object", queryParams, null)
-                    .returning(200, stringResponse, responseHeaders)
-                    .asClient()
-                    .getObject(new GetObjectRequest("bucketName", "object", 0, UUID.fromString(jobIdString), resultChannel));
-        } catch (final ContentLengthNotMatchException ex) {
-            assertThat(ex.getMessage(), is("The Content length for object (4) not match the number of byte read (8)"));
-        }
+        MockNetwork
+                .expecting(HttpVerb.GET, "/bucketName/object", queryParams, null)
+                .returning(200, stringResponse, responseHeaders)
+                .asClient()
+                .getObject(new GetObjectRequest("bucketName", "object", 0, UUID.fromString(jobIdString), resultChannel));
     }
 }
