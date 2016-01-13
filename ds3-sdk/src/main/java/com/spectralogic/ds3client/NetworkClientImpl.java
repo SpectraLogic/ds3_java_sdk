@@ -154,12 +154,13 @@ public class NetworkClientImpl implements NetworkClient {
 
     @Override
     public WebResponse getResponse(final Ds3Request request) throws IOException, SignatureException {
-        try (final RequestExecutor requestExecutor = new RequestExecutor(this.client, request)) {
+        try (final RequestExecutor requestExecutor = new RequestExecutor(this.client, host, request)) {
             int redirectCount = 0;
             do {
                 final CloseableHttpResponse response = requestExecutor.execute();
                 if (response.getStatusLine().getStatusCode() == HttpStatus.SC_TEMPORARY_REDIRECT) {
                     redirectCount++;
+                    response.close();
                     LOG.info("Performing retry - attempt: " + redirectCount);
                 }
                 else {
@@ -185,10 +186,10 @@ public class NetworkClientImpl implements NetworkClient {
         private final Checksum.Type checksumType;
         private final CloseableHttpClient client;
 
-        public RequestExecutor(final CloseableHttpClient client, final Ds3Request ds3Request) throws IOException {
+        public RequestExecutor(final CloseableHttpClient client, final HttpHost host, final Ds3Request ds3Request) throws IOException {
             this.client = client;
             this.ds3Request = ds3Request;
-            this.host = this.buildHost();
+            this.host = host;
             this.content = ds3Request.getStream();
             if (this.content != null && !this.content.markSupported()) {
                 throw new RequiresMarkSupportedException();
@@ -207,16 +208,6 @@ public class NetworkClientImpl implements NetworkClient {
             final HttpRequest httpRequest = this.buildHttpRequest();
             this.addHeaders(httpRequest);
             return client.execute(this.host, httpRequest, this.getContext());
-        }
-
-        private HttpHost buildHost() throws MalformedURLException {
-            final URI proxyUri = NetworkClientImpl.this.connectionDetails.getProxy();
-            if (proxyUri != null) {
-                return new HttpHost(proxyUri.getHost(), proxyUri.getPort(), proxyUri.getScheme());
-            } else {
-                final URL url = NetUtils.buildUrl(NetworkClientImpl.this.connectionDetails, "/");
-                return new HttpHost(url.getHost(), NetUtils.getPort(url), url.getProtocol());
-            }
         }
 
         private HttpRequest buildHttpRequest() throws IOException {
