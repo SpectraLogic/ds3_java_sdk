@@ -85,8 +85,10 @@ public class NetworkClientImpl implements NetworkClient {
         try {
             this.connectionDetails = connectionDetails;
             this.host = buildHost(connectionDetails);
-            this.client = createDefaultClient(connectionDetails, host);
+            this.client = createDefaultClient(connectionDetails);
         } catch (final MalformedURLException e) {
+            // TODO In 3.0 we should remove this try catch and expose the exception so that
+            // we do not create a client that has a bad host url
             throw new RuntimeException(e);
         }
     }
@@ -105,7 +107,7 @@ public class NetworkClientImpl implements NetworkClient {
     }
 
 
-    private static CloseableHttpClient createDefaultClient(final ConnectionDetails connectionDetails, final HttpHost host) {
+    private static CloseableHttpClient createDefaultClient(final ConnectionDetails connectionDetails) {
         final PoolingHttpClientConnectionManager connectionManager = new PoolingHttpClientConnectionManager();
         connectionManager.setDefaultMaxPerRoute(MAX_CONNECTION_PER_ROUTE);
         connectionManager.setMaxTotal(MAX_CONNECTION_TOTAL);
