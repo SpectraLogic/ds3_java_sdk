@@ -19,6 +19,7 @@ import com.google.common.base.Stopwatch;
 import com.google.common.collect.Lists;
 import com.spectralogic.ds3client.Ds3Client;
 import com.spectralogic.ds3client.commands.*;
+import com.spectralogic.ds3client.exceptions.Ds3NoMoreRetriesException;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.Job;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.ObjectChannelBuilder;
 import com.spectralogic.ds3client.models.Contents;
@@ -29,7 +30,6 @@ import com.spectralogic.ds3client.models.bulk.Objects;
 import com.spectralogic.ds3client.networking.ConnectionDetails;
 import com.spectralogic.ds3client.serializer.XmlProcessingException;
 import com.spectralogic.ds3client.utils.ByteArraySeekableByteChannel;
-
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -45,6 +45,7 @@ import static com.spectralogic.ds3client.helpers.ResponseBuilders.*;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class Ds3ClientHelpers_Test {
     private static final String MYBUCKET = "mybucket";
@@ -556,4 +557,56 @@ public class Ds3ClientHelpers_Test {
         assertEquals(Ds3ClientHelpers.stripLeadingPath("bar", "foo/"), "bar");
     }
 
+    @Test(expected = Ds3NoMoreRetriesException.class)
+    public void testWriteObjectsWithRetryAfter() throws SignatureException, IOException, XmlProcessingException {
+        final Ds3Client ds3Client = buildDs3ClientForBulk();
+
+        final BulkPutResponse bulkPutResponse = buildBulkPutResponse();
+        Mockito.when(ds3Client.bulkPut(Mockito.any(BulkPutRequest.class))).thenReturn(bulkPutResponse);
+
+        final AllocateJobChunkResponse allocateResponse1 = buildAllocateResponse1();
+        Mockito.when(ds3Client.allocateJobChunk(hasChunkId(CHUNK_ID_1)))
+                .thenReturn(allocateResponse1);
+
+        final PutObjectResponse response = mock(PutObjectResponse.class);
+        Mockito.when(ds3Client.putObject(putRequestHas(MYBUCKET, "foo", jobId, 0, "foo co"))).thenReturn(response);
+
+        final Job job = Ds3ClientHelpers.wrap(ds3Client, 1).startWriteJob(MYBUCKET, Lists.newArrayList(
+                new Ds3Object("foo", 12)
+        ));
+
+        job.transfer(new ObjectChannelBuilder() {
+            @Override
+            public SeekableByteChannel buildChannel(final String key) throws IOException {
+                // We don't care about the contents since we just want to know that the exception handling works correctly.
+                return new ByteArraySeekableByteChannel();
+            }
+        });
+    }
+
+    @Test(expected = Ds3NoMoreRetriesException.class)
+    public void testReadObjectsWithRetryAfter() throws SignatureException, IOException, XmlProcessingException {
+        final Ds3Client ds3Client = mock(Ds3Client.class);
+
+        final BulkGetResponse buildBulkGetResponse = buildBulkGetResponse();
+        Mockito.when(ds3Client.bulkGet(hasChunkOrdering(ChunkClientProcessingOrderGuarantee.NONE))).thenReturn(buildBulkGetResponse);
+
+        final GetAvailableJobChunksResponse jobChunksResponse = mock(GetAvailableJobChunksResponse.class);
+        when(jobChunksResponse.getStatus()).thenReturn(GetAvailableJobChunksResponse.Status.RETRYLATER);
+
+        Mockito.when(ds3Client.getAvailableJobChunks(hasJobId(jobId))).thenReturn(jobChunksResponse);
+
+        final Job job = Ds3ClientHelpers.wrap(ds3Client, 1).startReadJob(MYBUCKET, Lists.newArrayList(
+                new Ds3Object("foo")
+        ));
+
+        job.transfer(new ObjectChannelBuilder() {
+            @Override
+            public SeekableByteChannel buildChannel(final String key) throws IOException {
+                // We don't care about the contents since we just want to know that the exception handling works correctly.
+                return new ByteArraySeekableByteChannel();
+            }
+        });
+
+    }
 }

@@ -22,6 +22,7 @@ import com.spectralogic.ds3client.Ds3Client;
 import com.spectralogic.ds3client.commands.AllocateJobChunkRequest;
 import com.spectralogic.ds3client.commands.AllocateJobChunkResponse;
 import com.spectralogic.ds3client.commands.PutObjectRequest;
+import com.spectralogic.ds3client.exceptions.Ds3NoMoreRetriesException;
 import com.spectralogic.ds3client.helpers.ChunkTransferrer.ItemTransferrer;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.ObjectChannelBuilder;
 import com.spectralogic.ds3client.models.Range;
@@ -42,10 +43,10 @@ class WriteJobImpl extends JobImpl {
     static private final Logger LOG = LoggerFactory.getLogger(WriteJobImpl.class);
     private final JobPartTracker partTracker;
     private final List<Objects> filteredChunks;
+    private final int retryAfter; // Negative retryAfter value represent infinity retries
+    private int retryAfterLeft; // The number of retries left
 
-    public WriteJobImpl(
-            final Ds3Client client,
-            final MasterObjectList masterObjectList) {
+    public WriteJobImpl(final Ds3Client client, final MasterObjectList masterObjectList, final int retryAfter) {
         super(client, masterObjectList);
         if (this.masterObjectList == null || this.masterObjectList.getObjects() == null) {
             LOG.info("Job has no data to transfer");
@@ -57,7 +58,7 @@ class WriteJobImpl extends JobImpl {
             this.partTracker = JobPartTrackerFactory
                     .buildPartTracker(Iterables.concat(filteredChunks));
         }
-
+        this.retryAfter = this.retryAfterLeft = retryAfter;
     }
 
     @Override
@@ -123,9 +124,15 @@ class WriteJobImpl extends JobImpl {
         LOG.info("AllocatedJobChunkResponse status: " + response.getStatus().toString());
         switch (response.getStatus()) {
         case ALLOCATED:
+            retryAfterLeft = retryAfter; // Reset the number of retries to the initial value
             return response.getObjects();
         case RETRYLATER:
             try {
+                if (retryAfterLeft == 0) {
+                    throw new Ds3NoMoreRetriesException(this.retryAfter);
+                }
+                retryAfterLeft--;
+
                 final int retryAfter = response.getRetryAfterSeconds() * 1000;
                 LOG.debug("Will retry allocate chunk call after " + retryAfter + " seconds");
                 Thread.sleep(retryAfter);

@@ -23,6 +23,7 @@ import com.spectralogic.ds3client.Ds3Client;
 import com.spectralogic.ds3client.commands.GetAvailableJobChunksRequest;
 import com.spectralogic.ds3client.commands.GetAvailableJobChunksResponse;
 import com.spectralogic.ds3client.commands.GetObjectRequest;
+import com.spectralogic.ds3client.exceptions.Ds3NoMoreRetriesException;
 import com.spectralogic.ds3client.helpers.ChunkTransferrer.ItemTransferrer;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.ObjectChannelBuilder;
 import com.spectralogic.ds3client.helpers.util.PartialObjectHelpers;
@@ -42,14 +43,17 @@ class ReadJobImpl extends JobImpl {
     private final JobPartTracker partTracker;
     private final List<Objects> chunks;
     private final ImmutableMap<String, ImmutableMultimap<BulkObject, Range>> blobToRanges;
+    private final int retryAfter; // Negative retryAfter value represent infinity retries
+    private int retryAfterLeft; // The number of retries left
 
-    public ReadJobImpl(final Ds3Client client, final MasterObjectList masterObjectList, final ImmutableMultimap<String, Range> objectRanges) {
+    public ReadJobImpl(final Ds3Client client, final MasterObjectList masterObjectList, final ImmutableMultimap<String, Range> objectRanges, final int retryAfter) {
         super(client, masterObjectList);
 
         this.chunks = this.masterObjectList.getObjects();
         this.partTracker = JobPartTrackerFactory
                 .buildPartTracker(Iterables.concat(chunks));
         this.blobToRanges = PartialObjectHelpers.mapRangesToBlob(masterObjectList.getObjects(), objectRanges);
+        this.retryAfter = this.retryAfterLeft = retryAfter;
     }
 
     @Override
@@ -100,9 +104,15 @@ class ReadJobImpl extends JobImpl {
         case AVAILABLE: {
             final MasterObjectList availableMol = availableJobChunks.getMasterObjectList();
             chunkTransferrer.transferChunks(availableMol.getNodes(), availableMol.getObjects());
+            retryAfterLeft = retryAfter; // Reset the number of retries to the initial value
             break;
         }
         case RETRYLATER: {
+            if (retryAfterLeft == 0) {
+                throw new Ds3NoMoreRetriesException(this.retryAfter);
+            }
+            retryAfterLeft--;
+
             Thread.sleep(availableJobChunks.getRetryAfterSeconds() * 1000);
             break;
         }
