@@ -26,17 +26,20 @@ import com.spectralogic.ds3client.networking.*;
 import com.spectralogic.ds3client.utils.DateFormatter;
 import com.spectralogic.ds3client.utils.SSLSetupException;
 import com.spectralogic.ds3client.utils.Signature;
-
 import org.apache.http.HttpHost;
 import org.apache.http.HttpRequest;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.protocol.HttpClientContext;
-import org.apache.http.conn.ssl.*;
+import org.apache.http.conn.ssl.AllowAllHostnameVerifier;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.conn.ssl.SSLContexts;
+import org.apache.http.conn.ssl.TrustStrategy;
 import org.apache.http.entity.ContentType;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
+import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.message.BasicHttpEntityEnclosingRequest;
 import org.apache.http.message.BasicHttpRequest;
 import org.slf4j.Logger;
@@ -46,11 +49,13 @@ import javax.net.ssl.SSLContext;
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.AssertionError;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
-import java.security.*;
+import java.security.KeyManagementException;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.SignatureException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.Collection;
@@ -67,25 +72,44 @@ public class NetworkClientImpl implements NetworkClient {
     final static private String CONTENT_SHA512 = "Content-SHA512";
     final static private String CONTENT_CRC32 = "Content-CRC32";
     final static private String CONTENT_CRC32C = "Content-CRC32C";
+    final static private int MAX_CONNECTION_PER_ROUTE = 50;
+    final static private int MAX_CONNECTION_TOTAL = 100;
 
     final private ConnectionDetails connectionDetails;
 
     final private CloseableHttpClient client;
+    final private HttpHost host;
 
     public NetworkClientImpl(final ConnectionDetails connectionDetails) {
         if (connectionDetails == null) throw new AssertionError("ConnectionDetails cannot be null");
-        this.connectionDetails = connectionDetails;
-        this.client = createDefaultClient(connectionDetails);
+        try {
+            this.connectionDetails = connectionDetails;
+            this.host = buildHost(connectionDetails);
+            this.client = createDefaultClient(connectionDetails, host);
+        } catch (final MalformedURLException e) {
+            throw new RuntimeException(e);
+        }
     }
+
 
     public NetworkClientImpl(final ConnectionDetails connectionDetails, final CloseableHttpClient client) {
         if (connectionDetails == null) throw new AssertionError("ConnectionDetails cannot be null");
         if (client == null) throw new AssertionError("CloseableHttpClient cannot be null");
-        this.connectionDetails = connectionDetails;
-        this.client = client;
+        try {
+            this.connectionDetails = connectionDetails;
+            this.host = buildHost(connectionDetails);
+            this.client = client;
+        } catch (final MalformedURLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    private static CloseableHttpClient createDefaultClient(final ConnectionDetails connectionDetails) {
+
+    private static CloseableHttpClient createDefaultClient(final ConnectionDetails connectionDetails, final HttpHost host) {
+        final PoolingHttpClientConnectionManager connectionManager = new PoolingHttpClientConnectionManager();
+        connectionManager.setDefaultMaxPerRoute(MAX_CONNECTION_PER_ROUTE);
+        connectionManager.setMaxTotal(MAX_CONNECTION_TOTAL);
+
         if (connectionDetails.isHttps() && !connectionDetails.isCertificateVerification()) {
             try {
 
@@ -97,7 +121,9 @@ public class NetworkClientImpl implements NetworkClient {
                 }).useTLS().build();
 
                 final SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(sslContext, new AllowAllHostnameVerifier());
-                return HttpClients.custom().setSSLSocketFactory(
+                return HttpClients.custom()
+                        .setConnectionManager(connectionManager)
+                        .setSSLSocketFactory(
                         sslsf).build();
 
             } catch (final NoSuchAlgorithmException | KeyStoreException | KeyManagementException e) {
@@ -105,7 +131,19 @@ public class NetworkClientImpl implements NetworkClient {
             }
         }
         else {
-            return HttpClients.createDefault();
+            return HttpClients.custom()
+                    .setConnectionManager(connectionManager)
+                    .build();
+        }
+    }
+
+    private static HttpHost buildHost(final ConnectionDetails connectionDetails) throws MalformedURLException {
+        final URI proxyUri = connectionDetails.getProxy();
+        if (proxyUri != null) {
+            return new HttpHost(proxyUri.getHost(), proxyUri.getPort(), proxyUri.getScheme());
+        } else {
+            final URL url = NetUtils.buildUrl(connectionDetails, "/");
+            return new HttpHost(url.getHost(), NetUtils.getPort(url), url.getProtocol());
         }
     }
 
