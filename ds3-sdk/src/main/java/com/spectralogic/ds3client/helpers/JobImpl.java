@@ -22,7 +22,7 @@ import com.spectralogic.ds3client.models.bulk.MasterObjectList;
 import java.util.UUID;
 
 abstract class JobImpl implements Job {
-    protected int maxParallelRequests = 20;
+    protected int maxParallelRequests = 10;
     protected final Ds3Client client;
     protected final MasterObjectList masterObjectList;
 
