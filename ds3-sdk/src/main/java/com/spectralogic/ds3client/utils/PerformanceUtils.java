@@ -39,6 +39,6 @@ public class PerformanceUtils {
             messagePrefix = "Getting";
         }
         
-        LOG.info(String.format("%s %s statistics: Length (%.03f MB), Time (%.03f sec), Mbps (%.03f)", messagePrefix, objName, content, time, mbps));
+        LOG.info(String.format("%s %s statistics: Length (%.03f MB), Time (%.03f sec), MBps (%.03f)", messagePrefix, objName, content, time, mbps));
     }
 }
