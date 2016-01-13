@@ -40,9 +40,15 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
 
     private static final int DEFAULT_MAX_KEYS = 1000;
     private final Ds3Client client;
+    private final int retryAfter;
 
-    Ds3ClientHelpersImpl(final Ds3Client client) {
+    public Ds3ClientHelpersImpl(final Ds3Client client) {
+        this(client, -1);
+    }
+
+    public Ds3ClientHelpersImpl(final Ds3Client client, final int retryAfter) {
         this.client = client;
+        this.retryAfter = retryAfter;
     }
 
     @Override
@@ -70,7 +76,7 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
                 .withPriority(options.getPriority())
                 .withWriteOptimization(options.getWriteOptimization())
                 .withMaxUploadSize(options.getMaxUploadSize()));
-        return new WriteJobImpl(this.client, prime.getResult());
+        return new WriteJobImpl(this.client, prime.getResult(), this.retryAfter);
     }
 
     @Override
@@ -97,7 +103,7 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
 
         final ImmutableMultimap<String, Range> partialRanges = PartialObjectHelpers.getPartialObjectsRanges(objects);
 
-        return new ReadJobImpl(this.client, prime.getResult(), partialRanges);
+        return new ReadJobImpl(this.client, prime.getResult(), partialRanges, this.retryAfter);
     }
 
     @Override
@@ -134,7 +140,7 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
             throw new JobRecoveryException(RequestType.PUT.toString(), jobResponse.getMasterObjectList().getRequestType().toString() );
         }
 
-        return new WriteJobImpl(this.client, jobResponse.getMasterObjectList());
+        return new WriteJobImpl(this.client, jobResponse.getMasterObjectList(), this.retryAfter);
     }
 
     @Override
@@ -145,7 +151,7 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
             throw new JobRecoveryException(RequestType.GET.toString(), jobResponse.getMasterObjectList().getRequestType().toString() );
         }
 
-        return new ReadJobImpl(this.client, jobResponse.getMasterObjectList(), ImmutableMultimap.<String, Range>of());
+        return new ReadJobImpl(this.client, jobResponse.getMasterObjectList(), ImmutableMultimap.<String, Range>of(), this.retryAfter);
     }
 
     @Override
