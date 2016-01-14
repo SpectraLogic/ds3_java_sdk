@@ -41,6 +41,7 @@ public class GetTapePartitionFailuresSpectraS3Response extends AbstractResponse 
                 try (final InputStream content = getResponse().getResponseStream()) {
                     this.tapePartitionFailureListResult = XmlOutput.fromXml(content, TapePartitionFailureList.class);
                 }
+                break;
             default:
                 assert false : "checkStatusCode should have made it impossible to reach this line.";
             }

@@ -24,8 +24,6 @@ public class GetDataPolicyAclsSpectraS3Request extends AbstractRequest {
 
     // Variables
     
-    private final String dataPolicyAcl;
-
     private UUID dataPolicyId;
     private UUID groupId;
     private boolean lastPage;
@@ -35,8 +33,7 @@ public class GetDataPolicyAclsSpectraS3Request extends AbstractRequest {
     private UUID userId;
 
     // Constructor
-    public GetDataPolicyAclsSpectraS3Request(final String dataPolicyAcl) {
-        this.dataPolicyAcl = dataPolicyAcl;
+    public GetDataPolicyAclsSpectraS3Request() {
         
     }
     public GetDataPolicyAclsSpectraS3Request withDataPolicyId(final UUID dataPolicyId) {
@@ -93,14 +90,9 @@ public class GetDataPolicyAclsSpectraS3Request extends AbstractRequest {
 
     @Override
     public String getPath() {
-        return "/_rest_/data_policy_acl/" + dataPolicyAcl;
+        return "/_rest_/data_policy_acl/";
     }
     
-    public String getDataPolicyAcl() {
-        return this.dataPolicyAcl;
-    }
-
-
     public UUID getDataPolicyId() {
         return this.dataPolicyId;
     }

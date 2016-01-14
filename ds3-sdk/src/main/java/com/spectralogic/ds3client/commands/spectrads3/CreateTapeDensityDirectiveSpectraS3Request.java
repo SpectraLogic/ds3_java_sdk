@@ -26,8 +26,6 @@ public class CreateTapeDensityDirectiveSpectraS3Request extends AbstractRequest 
 
     // Variables
     
-    private final String tapeDensityDirective;
-
     private final TapeDriveType density;
 
     private final UUID partitionId;
@@ -36,8 +34,7 @@ public class CreateTapeDensityDirectiveSpectraS3Request extends AbstractRequest 
 
 
     // Constructor
-    public CreateTapeDensityDirectiveSpectraS3Request(final TapeDriveType density, final UUID partitionId, final String tapeDensityDirective, final TapeType tapeType) {
-        this.tapeDensityDirective = tapeDensityDirective;
+    public CreateTapeDensityDirectiveSpectraS3Request(final TapeDriveType density, final UUID partitionId, final TapeType tapeType) {
         this.density = density;
         this.partitionId = partitionId;
         this.tapeType = tapeType;
@@ -46,19 +43,14 @@ public class CreateTapeDensityDirectiveSpectraS3Request extends AbstractRequest 
 
     @Override
     public HttpVerb getVerb() {
-        return HttpVerb.PUT;
+        return HttpVerb.POST;
     }
 
     @Override
     public String getPath() {
-        return "/_rest_/tape_density_directive/" + tapeDensityDirective;
+        return "/_rest_/tape_density_directive/";
     }
     
-    public String getTapeDensityDirective() {
-        return this.tapeDensityDirective;
-    }
-
-
     public TapeDriveType getDensity() {
         return this.density;
     }

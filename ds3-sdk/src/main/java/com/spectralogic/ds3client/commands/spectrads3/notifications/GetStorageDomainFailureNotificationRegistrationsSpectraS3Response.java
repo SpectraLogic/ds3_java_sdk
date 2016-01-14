@@ -41,6 +41,7 @@ public class GetStorageDomainFailureNotificationRegistrationsSpectraS3Response e
                 try (final InputStream content = getResponse().getResponseStream()) {
                     this.storageDomainFailureNotificationRegistrationListResult = XmlOutput.fromXml(content, StorageDomainFailureNotificationRegistrationList.class);
                 }
+                break;
             default:
                 assert false : "checkStatusCode should have made it impossible to reach this line.";
             }

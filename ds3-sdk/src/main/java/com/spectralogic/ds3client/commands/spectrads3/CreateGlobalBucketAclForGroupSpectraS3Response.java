@@ -41,6 +41,7 @@ public class CreateGlobalBucketAclForGroupSpectraS3Response extends AbstractResp
                 try (final InputStream content = getResponse().getResponseStream()) {
                     this.bucketAclResult = XmlOutput.fromXml(content, BucketAcl.class);
                 }
+                break;
             default:
                 assert false : "checkStatusCode should have made it impossible to reach this line.";
             }

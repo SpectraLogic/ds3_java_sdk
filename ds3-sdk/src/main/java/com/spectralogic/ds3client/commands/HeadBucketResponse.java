@@ -19,8 +19,22 @@ package com.spectralogic.ds3client.commands;
 import com.spectralogic.ds3client.networking.WebResponse;
 import java.io.IOException;
 import java.io.InputStream;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class HeadBucketResponse extends AbstractResponse {
+
+    private static final Logger LOG = LoggerFactory.getLogger(HeadBucketResponse.class);
+    private Status status;
+
+    public enum Status {
+        EXISTS, DOESNTEXIST, NOTAUTHORIZED, UNKNOWN
+    }
+
+    public Status getStatus() {
+        return this.status;
+    }
+
 
 
 
@@ -31,17 +45,23 @@ public class HeadBucketResponse extends AbstractResponse {
     @Override
     protected void processResponse() throws IOException {
         try {
-            this.checkStatusCode(200);
-
-            switch (this.getStatusCode()) {
-            case 200:
-                //Do nothing, payload is null
-                break;
-            default:
-                assert false : "checkStatusCode should have made it impossible to reach this line.";
-            }
+            this.checkStatusCode(200, 403, 404);
+            this.setStatus(this.getStatusCode());
         } finally {
             this.getResponse().close();
+        }
+    }
+
+    private void setStatus(final int statusCode) {
+        switch(statusCode) {
+            case 200: this.status = Status.EXISTS; break;
+            case 403: this.status = Status.NOTAUTHORIZED; break;
+            case 404: this.status = Status.DOESNTEXIST; break;
+            default: {
+                LOG.error("Unexpected status code: " + Integer.toString(statusCode));
+                this.status = Status.UNKNOWN;
+                break;
+            }
         }
     }
 

@@ -25,8 +25,6 @@ public class GetTapeLibrariesSpectraS3Request extends AbstractRequest {
 
     // Variables
     
-    private final UUID tapeLibraryId;
-
     private boolean lastPage;
     private String managementUrl;
     private String name;
@@ -36,8 +34,7 @@ public class GetTapeLibrariesSpectraS3Request extends AbstractRequest {
     private String serialNumber;
 
     // Constructor
-    public GetTapeLibrariesSpectraS3Request(final UUID tapeLibraryId) {
-        this.tapeLibraryId = tapeLibraryId;
+    public GetTapeLibrariesSpectraS3Request() {
         
     }
     public GetTapeLibrariesSpectraS3Request withLastPage(final boolean lastPage) {
@@ -94,14 +91,9 @@ public class GetTapeLibrariesSpectraS3Request extends AbstractRequest {
 
     @Override
     public String getPath() {
-        return "/_rest_/tape_library/" + tapeLibraryId.toString();
+        return "/_rest_/tape_library/";
     }
     
-    public UUID getTapeLibraryId() {
-        return this.tapeLibraryId;
-    }
-
-
     public boolean getLastPage() {
         return this.lastPage;
     }

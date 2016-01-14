@@ -48,6 +48,9 @@ public class JobWithChunksApiBean {
     @JsonProperty("JobId")
     private UUID jobId;
 
+    @JsonProperty("Name")
+    private String name;
+
     @JsonProperty("Nodes")
     @JacksonXmlElementWrapper
     private List<NodeApiBean> nodes;
@@ -81,12 +84,13 @@ public class JobWithChunksApiBean {
     private WriteOptimization writeOptimization;
 
     // Constructor
-    public JobWithChunksApiBean(final String bucketName, final long cachedSizeInBytes, final JobChunkClientProcessingOrderGuarantee chunkClientProcessingOrderGuarantee, final long completedSizeInBytes, final UUID jobId, final List<NodeApiBean> nodes, final List<JobChunkApiBean> objects, final long originalSizeInBytes, final BlobStoreTaskPriority priority, final JobRequestType requestType, final Date startDate, final JobStatus status, final UUID userId, final String userName, final WriteOptimization writeOptimization) {
+    public JobWithChunksApiBean(final String bucketName, final long cachedSizeInBytes, final JobChunkClientProcessingOrderGuarantee chunkClientProcessingOrderGuarantee, final long completedSizeInBytes, final UUID jobId, final String name, final List<NodeApiBean> nodes, final List<JobChunkApiBean> objects, final long originalSizeInBytes, final BlobStoreTaskPriority priority, final JobRequestType requestType, final Date startDate, final JobStatus status, final UUID userId, final String userName, final WriteOptimization writeOptimization) {
         this.bucketName = bucketName;
         this.cachedSizeInBytes = cachedSizeInBytes;
         this.chunkClientProcessingOrderGuarantee = chunkClientProcessingOrderGuarantee;
         this.completedSizeInBytes = completedSizeInBytes;
         this.jobId = jobId;
+        this.name = name;
         this.nodes = nodes;
         this.objects = objects;
         this.originalSizeInBytes = originalSizeInBytes;
@@ -143,6 +147,15 @@ public class JobWithChunksApiBean {
 
     public void setJobId(final UUID jobId) {
         this.jobId = jobId;
+    }
+
+
+    public String getName() {
+        return this.name;
+    }
+
+    public void setName(final String name) {
+        this.name = name;
     }
 
 

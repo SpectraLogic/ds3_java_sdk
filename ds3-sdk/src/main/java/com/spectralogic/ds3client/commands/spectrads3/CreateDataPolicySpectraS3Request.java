@@ -28,8 +28,6 @@ public class CreateDataPolicySpectraS3Request extends AbstractRequest {
 
     // Variables
     
-    private final String dataPolicy;
-
     private final String name;
 
     private boolean blobbingEnabled;
@@ -43,8 +41,7 @@ public class CreateDataPolicySpectraS3Request extends AbstractRequest {
     private VersioningLevel versioning;
 
     // Constructor
-    public CreateDataPolicySpectraS3Request(final String dataPolicy, final String name) {
-        this.dataPolicy = dataPolicy;
+    public CreateDataPolicySpectraS3Request(final String name) {
         this.name = name;
         
     }
@@ -105,19 +102,14 @@ public class CreateDataPolicySpectraS3Request extends AbstractRequest {
 
     @Override
     public HttpVerb getVerb() {
-        return HttpVerb.PUT;
+        return HttpVerb.POST;
     }
 
     @Override
     public String getPath() {
-        return "/_rest_/data_policy/" + dataPolicy;
+        return "/_rest_/data_policy/";
     }
     
-    public String getDataPolicy() {
-        return this.dataPolicy;
-    }
-
-
     public String getName() {
         return this.name;
     }

@@ -24,14 +24,11 @@ public class ModifyAllPoolsSpectraS3Request extends AbstractRequest {
 
     // Variables
     
-    private final String pool;
-
     private final Quiesced quiesced;
 
 
     // Constructor
-    public ModifyAllPoolsSpectraS3Request(final String pool, final Quiesced quiesced) {
-        this.pool = pool;
+    public ModifyAllPoolsSpectraS3Request(final Quiesced quiesced) {
         this.quiesced = quiesced;
         
     }
@@ -43,14 +40,9 @@ public class ModifyAllPoolsSpectraS3Request extends AbstractRequest {
 
     @Override
     public String getPath() {
-        return "/_rest_/pool/" + pool;
+        return "/_rest_/pool/";
     }
     
-    public String getPool() {
-        return this.pool;
-    }
-
-
     public Quiesced getQuiesced() {
         return this.quiesced;
     }

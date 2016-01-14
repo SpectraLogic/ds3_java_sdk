@@ -47,6 +47,9 @@ public class JobApiBean {
     @JsonProperty("JobId")
     private UUID jobId;
 
+    @JsonProperty("Name")
+    private String name;
+
     @JsonProperty("Nodes")
     @JacksonXmlElementWrapper
     private List<NodeApiBean> nodes;
@@ -76,12 +79,13 @@ public class JobApiBean {
     private WriteOptimization writeOptimization;
 
     // Constructor
-    public JobApiBean(final String bucketName, final long cachedSizeInBytes, final JobChunkClientProcessingOrderGuarantee chunkClientProcessingOrderGuarantee, final long completedSizeInBytes, final UUID jobId, final List<NodeApiBean> nodes, final long originalSizeInBytes, final BlobStoreTaskPriority priority, final JobRequestType requestType, final Date startDate, final JobStatus status, final UUID userId, final String userName, final WriteOptimization writeOptimization) {
+    public JobApiBean(final String bucketName, final long cachedSizeInBytes, final JobChunkClientProcessingOrderGuarantee chunkClientProcessingOrderGuarantee, final long completedSizeInBytes, final UUID jobId, final String name, final List<NodeApiBean> nodes, final long originalSizeInBytes, final BlobStoreTaskPriority priority, final JobRequestType requestType, final Date startDate, final JobStatus status, final UUID userId, final String userName, final WriteOptimization writeOptimization) {
         this.bucketName = bucketName;
         this.cachedSizeInBytes = cachedSizeInBytes;
         this.chunkClientProcessingOrderGuarantee = chunkClientProcessingOrderGuarantee;
         this.completedSizeInBytes = completedSizeInBytes;
         this.jobId = jobId;
+        this.name = name;
         this.nodes = nodes;
         this.originalSizeInBytes = originalSizeInBytes;
         this.priority = priority;
@@ -137,6 +141,15 @@ public class JobApiBean {
 
     public void setJobId(final UUID jobId) {
         this.jobId = jobId;
+    }
+
+
+    public String getName() {
+        return this.name;
+    }
+
+    public void setName(final String name) {
+        this.name = name;
     }
 
 

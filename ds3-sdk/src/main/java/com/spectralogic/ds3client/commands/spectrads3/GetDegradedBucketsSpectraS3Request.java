@@ -25,8 +25,6 @@ public class GetDegradedBucketsSpectraS3Request extends AbstractRequest {
 
     // Variables
     
-    private final String degradedBucket;
-
     private UUID dataPolicyId;
     private boolean lastPage;
     private String name;
@@ -36,8 +34,7 @@ public class GetDegradedBucketsSpectraS3Request extends AbstractRequest {
     private UUID userId;
 
     // Constructor
-    public GetDegradedBucketsSpectraS3Request(final String degradedBucket) {
-        this.degradedBucket = degradedBucket;
+    public GetDegradedBucketsSpectraS3Request() {
         
     }
     public GetDegradedBucketsSpectraS3Request withDataPolicyId(final UUID dataPolicyId) {
@@ -94,14 +91,9 @@ public class GetDegradedBucketsSpectraS3Request extends AbstractRequest {
 
     @Override
     public String getPath() {
-        return "/_rest_/degraded_bucket/" + degradedBucket;
+        return "/_rest_/degraded_bucket/";
     }
     
-    public String getDegradedBucket() {
-        return this.degradedBucket;
-    }
-
-
     public UUID getDataPolicyId() {
         return this.dataPolicyId;
     }

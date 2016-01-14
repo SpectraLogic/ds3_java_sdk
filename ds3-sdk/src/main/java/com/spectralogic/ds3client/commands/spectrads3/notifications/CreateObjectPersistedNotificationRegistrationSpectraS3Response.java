@@ -41,6 +41,7 @@ public class CreateObjectPersistedNotificationRegistrationSpectraS3Response exte
                 try (final InputStream content = getResponse().getResponseStream()) {
                     this.s3ObjectPersistedNotificationRegistrationResult = XmlOutput.fromXml(content, S3ObjectPersistedNotificationRegistration.class);
                 }
+                break;
             default:
                 assert false : "checkStatusCode should have made it impossible to reach this line.";
             }

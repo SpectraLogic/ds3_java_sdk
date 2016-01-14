@@ -41,6 +41,7 @@ public class GetTapeFailuresSpectraS3Response extends AbstractResponse {
                 try (final InputStream content = getResponse().getResponseStream()) {
                     this.tapeFailureListResult = XmlOutput.fromXml(content, TapeFailureList.class);
                 }
+                break;
             default:
                 assert false : "checkStatusCode should have made it impossible to reach this line.";
             }

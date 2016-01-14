@@ -41,6 +41,7 @@ public class GetCompletedJobsSpectraS3Response extends AbstractResponse {
                 try (final InputStream content = getResponse().getResponseStream()) {
                     this.completedJobListResult = XmlOutput.fromXml(content, CompletedJobList.class);
                 }
+                break;
             default:
                 assert false : "checkStatusCode should have made it impossible to reach this line.";
             }

@@ -495,5 +495,5 @@ public interface Ds3Client extends Closeable {
     RegenerateUserSecretKeySpectraS3Response regenerateUserSecretKeySpectraS3(RegenerateUserSecretKeySpectraS3Request request)
             throws IOException, SignatureException;
 
-    Ds3Client newForNode(NodeApiBean node);
+    Ds3Client newForNode(final NodeApiBean node);
 }

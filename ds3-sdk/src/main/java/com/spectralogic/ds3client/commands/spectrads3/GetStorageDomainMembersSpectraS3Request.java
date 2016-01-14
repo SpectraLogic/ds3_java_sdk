@@ -27,8 +27,6 @@ public class GetStorageDomainMembersSpectraS3Request extends AbstractRequest {
 
     // Variables
     
-    private final String storageDomainMember;
-
     private boolean lastPage;
     private int pageLength;
     private int pageOffset;
@@ -41,8 +39,7 @@ public class GetStorageDomainMembersSpectraS3Request extends AbstractRequest {
     private WritePreferenceLevel writePreference;
 
     // Constructor
-    public GetStorageDomainMembersSpectraS3Request(final String storageDomainMember) {
-        this.storageDomainMember = storageDomainMember;
+    public GetStorageDomainMembersSpectraS3Request() {
         
     }
     public GetStorageDomainMembersSpectraS3Request withLastPage(final boolean lastPage) {
@@ -117,14 +114,9 @@ public class GetStorageDomainMembersSpectraS3Request extends AbstractRequest {
 
     @Override
     public String getPath() {
-        return "/_rest_/storage_domain_member/" + storageDomainMember;
+        return "/_rest_/storage_domain_member/";
     }
     
-    public String getStorageDomainMember() {
-        return this.storageDomainMember;
-    }
-
-
     public boolean getLastPage() {
         return this.lastPage;
     }

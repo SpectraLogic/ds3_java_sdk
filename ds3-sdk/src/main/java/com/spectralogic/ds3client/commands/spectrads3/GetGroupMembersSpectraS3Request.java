@@ -24,8 +24,6 @@ public class GetGroupMembersSpectraS3Request extends AbstractRequest {
 
     // Variables
     
-    private final String groupMember;
-
     private UUID groupId;
     private boolean lastPage;
     private UUID memberGroupId;
@@ -35,8 +33,7 @@ public class GetGroupMembersSpectraS3Request extends AbstractRequest {
     private UUID pageStartMarker;
 
     // Constructor
-    public GetGroupMembersSpectraS3Request(final String groupMember) {
-        this.groupMember = groupMember;
+    public GetGroupMembersSpectraS3Request() {
         
     }
     public GetGroupMembersSpectraS3Request withGroupId(final UUID groupId) {
@@ -93,14 +90,9 @@ public class GetGroupMembersSpectraS3Request extends AbstractRequest {
 
     @Override
     public String getPath() {
-        return "/_rest_/group_member/" + groupMember;
+        return "/_rest_/group_member/";
     }
     
-    public String getGroupMember() {
-        return this.groupMember;
-    }
-
-
     public UUID getGroupId() {
         return this.groupId;
     }

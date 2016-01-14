@@ -26,8 +26,6 @@ public class CreateTapeStorageDomainMemberSpectraS3Request extends AbstractReque
 
     // Variables
     
-    private final String storageDomainMember;
-
     private final UUID storageDomainId;
 
     private final UUID tapePartitionId;
@@ -37,8 +35,7 @@ public class CreateTapeStorageDomainMemberSpectraS3Request extends AbstractReque
     private WritePreferenceLevel writePreference;
 
     // Constructor
-    public CreateTapeStorageDomainMemberSpectraS3Request(final UUID storageDomainId, final String storageDomainMember, final UUID tapePartitionId, final TapeType tapeType) {
-        this.storageDomainMember = storageDomainMember;
+    public CreateTapeStorageDomainMemberSpectraS3Request(final UUID storageDomainId, final UUID tapePartitionId, final TapeType tapeType) {
         this.storageDomainId = storageDomainId;
         this.tapePartitionId = tapePartitionId;
         this.tapeType = tapeType;
@@ -53,19 +50,14 @@ public class CreateTapeStorageDomainMemberSpectraS3Request extends AbstractReque
 
     @Override
     public HttpVerb getVerb() {
-        return HttpVerb.PUT;
+        return HttpVerb.POST;
     }
 
     @Override
     public String getPath() {
-        return "/_rest_/storage_domain_member/" + storageDomainMember;
+        return "/_rest_/storage_domain_member/";
     }
     
-    public String getStorageDomainMember() {
-        return this.storageDomainMember;
-    }
-
-
     public UUID getStorageDomainId() {
         return this.storageDomainId;
     }

@@ -54,6 +54,9 @@ public class CanceledJob {
     @JsonProperty("Naked")
     private boolean naked;
 
+    @JsonProperty("Name")
+    private String name;
+
     @JsonProperty("OriginalSizeInBytes")
     private long originalSizeInBytes;
 
@@ -73,7 +76,7 @@ public class CanceledJob {
     private UUID userId;
 
     // Constructor
-    public CanceledJob(final UUID bucketId, final long cachedSizeInBytes, final JobChunkClientProcessingOrderGuarantee chunkClientProcessingOrderGuarantee, final long completedSizeInBytes, final Date createdAt, final Date dateCanceled, final String errorMessage, final UUID id, final boolean naked, final long originalSizeInBytes, final BlobStoreTaskPriority priority, final Date rechunked, final JobRequestType requestType, final boolean truncated, final UUID userId) {
+    public CanceledJob(final UUID bucketId, final long cachedSizeInBytes, final JobChunkClientProcessingOrderGuarantee chunkClientProcessingOrderGuarantee, final long completedSizeInBytes, final Date createdAt, final Date dateCanceled, final String errorMessage, final UUID id, final boolean naked, final String name, final long originalSizeInBytes, final BlobStoreTaskPriority priority, final Date rechunked, final JobRequestType requestType, final boolean truncated, final UUID userId) {
         this.bucketId = bucketId;
         this.cachedSizeInBytes = cachedSizeInBytes;
         this.chunkClientProcessingOrderGuarantee = chunkClientProcessingOrderGuarantee;
@@ -83,6 +86,7 @@ public class CanceledJob {
         this.errorMessage = errorMessage;
         this.id = id;
         this.naked = naked;
+        this.name = name;
         this.originalSizeInBytes = originalSizeInBytes;
         this.priority = priority;
         this.rechunked = rechunked;
@@ -171,6 +175,15 @@ public class CanceledJob {
 
     public void setNaked(final boolean naked) {
         this.naked = naked;
+    }
+
+
+    public String getName() {
+        return this.name;
+    }
+
+    public void setName(final String name) {
+        this.name = name;
     }
 
 

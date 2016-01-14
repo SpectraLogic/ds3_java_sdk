@@ -25,16 +25,13 @@ public class ImportAllTapesSpectraS3Request extends AbstractRequest {
 
     // Variables
     
-    private final UUID tapeId;
-
     private ImportConflictResolutionMode conflictResolutionMode;
     private UUID dataPolicyId;
     private UUID storageDomainId;
     private UUID userId;
 
     // Constructor
-    public ImportAllTapesSpectraS3Request(final UUID tapeId) {
-        this.tapeId = tapeId;
+    public ImportAllTapesSpectraS3Request() {
         this.getQueryParams().put("operation", "import");
         
     }
@@ -70,14 +67,9 @@ public class ImportAllTapesSpectraS3Request extends AbstractRequest {
 
     @Override
     public String getPath() {
-        return "/_rest_/tape/" + tapeId.toString();
+        return "/_rest_/tape/";
     }
     
-    public UUID getTapeId() {
-        return this.tapeId;
-    }
-
-
     public ImportConflictResolutionMode getConflictResolutionMode() {
         return this.conflictResolutionMode;
     }

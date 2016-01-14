@@ -25,16 +25,13 @@ public class CreateBucketSpectraS3Request extends AbstractRequest {
 
     // Variables
     
-    private final String bucketName;
-
     private final String name;
 
     private UUID dataPolicyId;
     private UUID userId;
 
     // Constructor
-    public CreateBucketSpectraS3Request(final String bucketName, final String name) {
-        this.bucketName = bucketName;
+    public CreateBucketSpectraS3Request(final String name) {
         this.name = name;
         
     }
@@ -53,19 +50,14 @@ public class CreateBucketSpectraS3Request extends AbstractRequest {
 
     @Override
     public HttpVerb getVerb() {
-        return HttpVerb.PUT;
+        return HttpVerb.POST;
     }
 
     @Override
     public String getPath() {
-        return "/_rest_/bucket/" + bucketName;
+        return "/_rest_/bucket/";
     }
     
-    public String getBucketName() {
-        return this.bucketName;
-    }
-
-
     public String getName() {
         return this.name;
     }

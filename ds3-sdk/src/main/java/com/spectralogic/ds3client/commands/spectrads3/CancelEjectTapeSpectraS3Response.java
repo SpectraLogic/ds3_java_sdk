@@ -41,6 +41,7 @@ public class CancelEjectTapeSpectraS3Response extends AbstractResponse {
                 try (final InputStream content = getResponse().getResponseStream()) {
                     this.tapeResult = XmlOutput.fromXml(content, Tape.class);
                 }
+                break;
             default:
                 assert false : "checkStatusCode should have made it impossible to reach this line.";
             }

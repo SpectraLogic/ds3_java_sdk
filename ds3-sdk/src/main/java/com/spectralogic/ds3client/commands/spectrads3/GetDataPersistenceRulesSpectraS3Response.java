@@ -41,6 +41,7 @@ public class GetDataPersistenceRulesSpectraS3Response extends AbstractResponse {
                 try (final InputStream content = getResponse().getResponseStream()) {
                     this.dataPersistenceRuleListResult = XmlOutput.fromXml(content, DataPersistenceRuleList.class);
                 }
+                break;
             default:
                 assert false : "checkStatusCode should have made it impossible to reach this line.";
             }

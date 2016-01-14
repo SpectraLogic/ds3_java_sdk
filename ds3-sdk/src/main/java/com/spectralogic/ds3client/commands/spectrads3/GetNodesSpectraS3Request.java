@@ -24,16 +24,13 @@ public class GetNodesSpectraS3Request extends AbstractRequest {
 
     // Variables
     
-    private final String node;
-
     private boolean lastPage;
     private int pageLength;
     private int pageOffset;
     private UUID pageStartMarker;
 
     // Constructor
-    public GetNodesSpectraS3Request(final String node) {
-        this.node = node;
+    public GetNodesSpectraS3Request() {
         
     }
     public GetNodesSpectraS3Request withLastPage(final boolean lastPage) {
@@ -72,14 +69,9 @@ public class GetNodesSpectraS3Request extends AbstractRequest {
 
     @Override
     public String getPath() {
-        return "/_rest_/node/" + node;
+        return "/_rest_/node/";
     }
     
-    public String getNode() {
-        return this.node;
-    }
-
-
     public boolean getLastPage() {
         return this.lastPage;
     }

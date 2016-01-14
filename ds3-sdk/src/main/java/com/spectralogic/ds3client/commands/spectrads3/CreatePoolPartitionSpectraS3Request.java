@@ -25,16 +25,13 @@ public class CreatePoolPartitionSpectraS3Request extends AbstractRequest {
 
     // Variables
     
-    private final String poolPartition;
-
     private final String name;
 
     private final PoolType type;
 
 
     // Constructor
-    public CreatePoolPartitionSpectraS3Request(final String name, final String poolPartition, final PoolType type) {
-        this.poolPartition = poolPartition;
+    public CreatePoolPartitionSpectraS3Request(final String name, final PoolType type) {
         this.name = name;
         this.type = type;
         
@@ -42,19 +39,14 @@ public class CreatePoolPartitionSpectraS3Request extends AbstractRequest {
 
     @Override
     public HttpVerb getVerb() {
-        return HttpVerb.PUT;
+        return HttpVerb.POST;
     }
 
     @Override
     public String getPath() {
-        return "/_rest_/pool_partition/" + poolPartition;
+        return "/_rest_/pool_partition/";
     }
     
-    public String getPoolPartition() {
-        return this.poolPartition;
-    }
-
-
     public String getName() {
         return this.name;
     }

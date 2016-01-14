@@ -41,6 +41,7 @@ public class CreatePoolStorageDomainMemberSpectraS3Response extends AbstractResp
                 try (final InputStream content = getResponse().getResponseStream()) {
                     this.storageDomainMemberResult = XmlOutput.fromXml(content, StorageDomainMember.class);
                 }
+                break;
             default:
                 assert false : "checkStatusCode should have made it impossible to reach this line.";
             }

@@ -27,8 +27,6 @@ public class GetTapesSpectraS3Request extends AbstractRequest {
 
     // Variables
     
-    private final UUID tapeId;
-
     private boolean assignedToStorageDomain;
     private String barCode;
     private UUID bucketId;
@@ -49,8 +47,7 @@ public class GetTapesSpectraS3Request extends AbstractRequest {
     private boolean writeProtected;
 
     // Constructor
-    public GetTapesSpectraS3Request(final UUID tapeId) {
-        this.tapeId = tapeId;
+    public GetTapesSpectraS3Request() {
         
     }
     public GetTapesSpectraS3Request withAssignedToStorageDomain(final boolean assignedToStorageDomain) {
@@ -177,14 +174,9 @@ public class GetTapesSpectraS3Request extends AbstractRequest {
 
     @Override
     public String getPath() {
-        return "/_rest_/tape/" + tapeId.toString();
+        return "/_rest_/tape/";
     }
     
-    public UUID getTapeId() {
-        return this.tapeId;
-    }
-
-
     public boolean getAssignedToStorageDomain() {
         return this.assignedToStorageDomain;
     }

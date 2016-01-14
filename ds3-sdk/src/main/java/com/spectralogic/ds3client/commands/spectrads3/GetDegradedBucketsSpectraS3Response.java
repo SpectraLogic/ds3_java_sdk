@@ -41,6 +41,7 @@ public class GetDegradedBucketsSpectraS3Response extends AbstractResponse {
                 try (final InputStream content = getResponse().getResponseStream()) {
                     this.bucketListResult = XmlOutput.fromXml(content, BucketList.class);
                 }
+                break;
             default:
                 assert false : "checkStatusCode should have made it impossible to reach this line.";
             }

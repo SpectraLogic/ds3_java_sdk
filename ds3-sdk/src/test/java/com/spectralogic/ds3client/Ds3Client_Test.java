@@ -64,7 +64,7 @@ public class Ds3Client_Test {
         + "</MasterObjectList>";
 
     @Test
-    public void getService() throws IOException, SignatureException {
+    public void getBuckets() throws IOException, SignatureException {
         final String stringResponse = "<ListAllMyBucketsResult xmlns=\"http://doc.s3.amazonaws.com/2006-03-01\">\n" +
                 "<Owner><ID>ryanid</ID><DisplayName>ryan</DisplayName></Owner><Buckets><Bucket><Name>testBucket2</Name><CreationDate>2013-12-11T23:20:09</CreationDate></Bucket><Bucket><Name>bulkTest</Name><CreationDate>2013-12-11T23:20:09</CreationDate></Bucket><Bucket><Name>bulkTest1</Name><CreationDate>2013-12-11T23:20:09</CreationDate></Bucket><Bucket><Name>bulkTest2</Name><CreationDate>2013-12-11T23:20:09</CreationDate></Bucket><Bucket><Name>bulkTest3</Name><CreationDate>2013-12-11T23:20:09</CreationDate></Bucket><Bucket><Name>bulkTest4</Name><CreationDate>2013-12-11T23:20:09</CreationDate></Bucket><Bucket><Name>bulkTest5</Name><CreationDate>2013-12-11T23:20:09</CreationDate></Bucket><Bucket><Name>bulkTest6</Name><CreationDate>2013-12-11T23:20:09</CreationDate></Bucket><Bucket><Name>testBucket3</Name><CreationDate>2013-12-11T23:20:09</CreationDate></Bucket><Bucket><Name>testBucket1</Name><CreationDate>2013-12-11T23:20:09</CreationDate></Bucket><Bucket><Name>testbucket</Name><CreationDate>2013-12-11T23:20:09</CreationDate></Bucket></Buckets></ListAllMyBucketsResult>";
         
@@ -82,18 +82,18 @@ public class Ds3Client_Test {
             "testbucket"
         );
         
-        final GetServiceResponse response = MockNetwork
+        final GetBucketsResponse response = MockNetwork
             .expecting(HttpVerb.GET, "/", null, null)
             .returning(200, stringResponse)
             .asClient()
-            .getService(new GetServiceRequest());
-        final ListAllMyBucketsResult result = response.getResult();
+            .getBuckets(new GetBucketsRequest());
+        final BucketsApiBean result = response.getBucketsApiBeanResult();
         assertThat(result.getOwner().getDisplayName(), is("ryan"));
         assertThat(result.getOwner().getId(), is("ryanid"));
         
-        final List<Bucket> buckets = result.getBuckets();
+        final List<BucketApiBean> buckets = result.getBuckets();
         final List<String> bucketNames = new ArrayList<>();
-        for (final Bucket bucket : buckets) {
+        for (final BucketApiBean bucket : buckets) {
             bucketNames.add(bucket.getName());
             assertThat(bucket.getCreationDate(), is("2013-12-11T23:20:09"));
         }

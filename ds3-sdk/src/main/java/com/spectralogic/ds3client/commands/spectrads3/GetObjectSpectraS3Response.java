@@ -41,6 +41,7 @@ public class GetObjectSpectraS3Response extends AbstractResponse {
                 try (final InputStream content = getResponse().getResponseStream()) {
                     this.s3ObjectResult = XmlOutput.fromXml(content, S3Object.class);
                 }
+                break;
             default:
                 assert false : "checkStatusCode should have made it impossible to reach this line.";
             }

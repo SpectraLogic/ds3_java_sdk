@@ -25,8 +25,6 @@ public class GetUsersSpectraS3Request extends AbstractRequest {
 
     // Variables
     
-    private final UUID userId;
-
     private String authId;
     private UUID defaultDataPolicyId;
     private boolean lastPage;
@@ -36,8 +34,7 @@ public class GetUsersSpectraS3Request extends AbstractRequest {
     private UUID pageStartMarker;
 
     // Constructor
-    public GetUsersSpectraS3Request(final UUID userId) {
-        this.userId = userId;
+    public GetUsersSpectraS3Request() {
         
     }
     public GetUsersSpectraS3Request withAuthId(final String authId) {
@@ -94,14 +91,9 @@ public class GetUsersSpectraS3Request extends AbstractRequest {
 
     @Override
     public String getPath() {
-        return "/_rest_/user/" + userId.toString();
+        return "/_rest_/user/";
     }
     
-    public UUID getUserId() {
-        return this.userId;
-    }
-
-
     public String getAuthId() {
         return this.authId;
     }

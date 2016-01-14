@@ -20,6 +20,7 @@ import com.spectralogic.ds3client.commands.AbstractRequest;
 import com.spectralogic.ds3client.HttpVerb;
 import java.util.UUID;
 import com.spectralogic.ds3client.models.JobChunkClientProcessingOrderGuarantee;
+import java.lang.String;
 import com.spectralogic.ds3client.models.BlobStoreTaskPriority;
 import java.util.Date;
 import com.spectralogic.ds3client.models.JobRequestType;
@@ -28,11 +29,10 @@ public class GetCompletedJobsSpectraS3Request extends AbstractRequest {
 
     // Variables
     
-    private final String completedJob;
-
     private UUID bucketId;
     private JobChunkClientProcessingOrderGuarantee chunkClientProcessingOrderGuarantee;
     private boolean lastPage;
+    private String name;
     private int pageLength;
     private int pageOffset;
     private UUID pageStartMarker;
@@ -43,8 +43,7 @@ public class GetCompletedJobsSpectraS3Request extends AbstractRequest {
     private UUID userId;
 
     // Constructor
-    public GetCompletedJobsSpectraS3Request(final String completedJob) {
-        this.completedJob = completedJob;
+    public GetCompletedJobsSpectraS3Request() {
         
     }
     public GetCompletedJobsSpectraS3Request withBucketId(final UUID bucketId) {
@@ -66,6 +65,12 @@ public class GetCompletedJobsSpectraS3Request extends AbstractRequest {
         } else {
             this.getQueryParams().remove("last_page");
         }
+        return this;
+    }
+
+    public GetCompletedJobsSpectraS3Request withName(final String name) {
+        this.name = name;
+        this.updateQueryParam("name", name);
         return this;
     }
 
@@ -125,14 +130,9 @@ public class GetCompletedJobsSpectraS3Request extends AbstractRequest {
 
     @Override
     public String getPath() {
-        return "/_rest_/completed_job/" + completedJob;
+        return "/_rest_/completed_job/";
     }
     
-    public String getCompletedJob() {
-        return this.completedJob;
-    }
-
-
     public UUID getBucketId() {
         return this.bucketId;
     }
@@ -143,6 +143,10 @@ public class GetCompletedJobsSpectraS3Request extends AbstractRequest {
 
     public boolean getLastPage() {
         return this.lastPage;
+    }
+
+    public String getName() {
+        return this.name;
     }
 
     public int getPageLength() {

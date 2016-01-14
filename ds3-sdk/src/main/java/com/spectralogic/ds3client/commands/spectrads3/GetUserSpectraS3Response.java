@@ -41,6 +41,7 @@ public class GetUserSpectraS3Response extends AbstractResponse {
                 try (final InputStream content = getResponse().getResponseStream()) {
                     this.userResult = XmlOutput.fromXml(content, User.class);
                 }
+                break;
             default:
                 assert false : "checkStatusCode should have made it impossible to reach this line.";
             }

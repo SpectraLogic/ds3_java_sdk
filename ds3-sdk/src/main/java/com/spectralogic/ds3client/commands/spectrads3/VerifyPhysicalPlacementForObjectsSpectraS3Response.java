@@ -41,6 +41,7 @@ public class VerifyPhysicalPlacementForObjectsSpectraS3Response extends Abstract
                 try (final InputStream content = getResponse().getResponseStream()) {
                     this.physicalPlacementApiBeanResult = XmlOutput.fromXml(content, PhysicalPlacementApiBean.class);
                 }
+                break;
             default:
                 assert false : "checkStatusCode should have made it impossible to reach this line.";
             }

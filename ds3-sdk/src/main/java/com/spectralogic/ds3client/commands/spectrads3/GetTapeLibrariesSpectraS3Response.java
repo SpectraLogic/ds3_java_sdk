@@ -41,6 +41,7 @@ public class GetTapeLibrariesSpectraS3Response extends AbstractResponse {
                 try (final InputStream content = getResponse().getResponseStream()) {
                     this.tapeLibraryListResult = XmlOutput.fromXml(content, TapeLibraryList.class);
                 }
+                break;
             default:
                 assert false : "checkStatusCode should have made it impossible to reach this line.";
             }

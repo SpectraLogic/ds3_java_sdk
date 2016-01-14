@@ -25,8 +25,6 @@ public class GetBucketAclsSpectraS3Request extends AbstractRequest {
 
     // Variables
     
-    private final String bucketAcl;
-
     private UUID bucketId;
     private UUID groupId;
     private boolean lastPage;
@@ -37,8 +35,7 @@ public class GetBucketAclsSpectraS3Request extends AbstractRequest {
     private UUID userId;
 
     // Constructor
-    public GetBucketAclsSpectraS3Request(final String bucketAcl) {
-        this.bucketAcl = bucketAcl;
+    public GetBucketAclsSpectraS3Request() {
         
     }
     public GetBucketAclsSpectraS3Request withBucketId(final UUID bucketId) {
@@ -101,14 +98,9 @@ public class GetBucketAclsSpectraS3Request extends AbstractRequest {
 
     @Override
     public String getPath() {
-        return "/_rest_/bucket_acl/" + bucketAcl;
+        return "/_rest_/bucket_acl/";
     }
     
-    public String getBucketAcl() {
-        return this.bucketAcl;
-    }
-
-
     public UUID getBucketId() {
         return this.bucketId;
     }

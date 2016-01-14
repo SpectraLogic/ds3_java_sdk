@@ -25,16 +25,13 @@ public class CreateGlobalBucketAclForGroupSpectraS3Request extends AbstractReque
 
     // Variables
     
-    private final String bucketAcl;
-
     private final UUID groupId;
 
     private final BucketAclPermission permission;
 
 
     // Constructor
-    public CreateGlobalBucketAclForGroupSpectraS3Request(final String bucketAcl, final UUID groupId, final BucketAclPermission permission) {
-        this.bucketAcl = bucketAcl;
+    public CreateGlobalBucketAclForGroupSpectraS3Request(final UUID groupId, final BucketAclPermission permission) {
         this.groupId = groupId;
         this.permission = permission;
         
@@ -42,19 +39,14 @@ public class CreateGlobalBucketAclForGroupSpectraS3Request extends AbstractReque
 
     @Override
     public HttpVerb getVerb() {
-        return HttpVerb.PUT;
+        return HttpVerb.POST;
     }
 
     @Override
     public String getPath() {
-        return "/_rest_/bucket_acl/" + bucketAcl;
+        return "/_rest_/bucket_acl/";
     }
     
-    public String getBucketAcl() {
-        return this.bucketAcl;
-    }
-
-
     public UUID getGroupId() {
         return this.groupId;
     }

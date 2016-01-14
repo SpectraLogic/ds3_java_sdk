@@ -23,13 +23,10 @@ public class GetDataPlannerBlobStoreTasksSpectraS3Request extends AbstractReques
 
     // Variables
     
-    private final String blobStoreTask;
-
     private boolean fullDetails;
 
     // Constructor
-    public GetDataPlannerBlobStoreTasksSpectraS3Request(final String blobStoreTask) {
-        this.blobStoreTask = blobStoreTask;
+    public GetDataPlannerBlobStoreTasksSpectraS3Request() {
         
     }
     public GetDataPlannerBlobStoreTasksSpectraS3Request withFullDetails(final boolean fullDetails) {
@@ -50,14 +47,9 @@ public class GetDataPlannerBlobStoreTasksSpectraS3Request extends AbstractReques
 
     @Override
     public String getPath() {
-        return "/_rest_/blob_store_task/" + blobStoreTask;
+        return "/_rest_/blob_store_task/";
     }
     
-    public String getBlobStoreTask() {
-        return this.blobStoreTask;
-    }
-
-
     public boolean getFullDetails() {
         return this.fullDetails;
     }

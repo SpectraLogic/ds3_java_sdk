@@ -41,6 +41,7 @@ public class CreateTapePartitionFailureNotificationRegistrationSpectraS3Response
                 try (final InputStream content = getResponse().getResponseStream()) {
                     this.tapePartitionFailureNotificationRegistrationResult = XmlOutput.fromXml(content, TapePartitionFailureNotificationRegistration.class);
                 }
+                break;
             default:
                 assert false : "checkStatusCode should have made it impossible to reach this line.";
             }

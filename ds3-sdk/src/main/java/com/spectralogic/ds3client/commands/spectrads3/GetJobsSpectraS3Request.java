@@ -24,14 +24,11 @@ public class GetJobsSpectraS3Request extends AbstractRequest {
 
     // Variables
     
-    private final UUID jobId;
-
     private UUID bucketId;
     private boolean fullDetails;
 
     // Constructor
-    public GetJobsSpectraS3Request(final UUID jobId) {
-        this.jobId = jobId;
+    public GetJobsSpectraS3Request() {
         
     }
     public GetJobsSpectraS3Request withBucketId(final UUID bucketId) {
@@ -58,14 +55,9 @@ public class GetJobsSpectraS3Request extends AbstractRequest {
 
     @Override
     public String getPath() {
-        return "/_rest_/job/" + jobId.toString();
+        return "/_rest_/job/";
     }
     
-    public UUID getJobId() {
-        return this.jobId;
-    }
-
-
     public UUID getBucketId() {
         return this.bucketId;
     }

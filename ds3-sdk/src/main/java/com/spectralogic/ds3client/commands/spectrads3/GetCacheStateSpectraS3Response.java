@@ -41,6 +41,7 @@ public class GetCacheStateSpectraS3Response extends AbstractResponse {
                 try (final InputStream content = getResponse().getResponseStream()) {
                     this.cacheInformationResult = XmlOutput.fromXml(content, CacheInformation.class);
                 }
+                break;
             default:
                 assert false : "checkStatusCode should have made it impossible to reach this line.";
             }

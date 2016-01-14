@@ -24,33 +24,25 @@ public class CreateGlobalDataPolicyAclForUserSpectraS3Request extends AbstractRe
 
     // Variables
     
-    private final String dataPolicyAcl;
-
     private final UUID userId;
 
 
     // Constructor
-    public CreateGlobalDataPolicyAclForUserSpectraS3Request(final String dataPolicyAcl, final UUID userId) {
-        this.dataPolicyAcl = dataPolicyAcl;
+    public CreateGlobalDataPolicyAclForUserSpectraS3Request(final UUID userId) {
         this.userId = userId;
         
     }
 
     @Override
     public HttpVerb getVerb() {
-        return HttpVerb.PUT;
+        return HttpVerb.POST;
     }
 
     @Override
     public String getPath() {
-        return "/_rest_/data_policy_acl/" + dataPolicyAcl;
+        return "/_rest_/data_policy_acl/";
     }
     
-    public String getDataPolicyAcl() {
-        return this.dataPolicyAcl;
-    }
-
-
     public UUID getUserId() {
         return this.userId;
     }

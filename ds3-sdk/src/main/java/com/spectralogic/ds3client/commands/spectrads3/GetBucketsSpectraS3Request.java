@@ -25,8 +25,6 @@ public class GetBucketsSpectraS3Request extends AbstractRequest {
 
     // Variables
     
-    private final String bucketName;
-
     private UUID dataPolicyId;
     private boolean lastPage;
     private String name;
@@ -36,8 +34,7 @@ public class GetBucketsSpectraS3Request extends AbstractRequest {
     private UUID userId;
 
     // Constructor
-    public GetBucketsSpectraS3Request(final String bucketName) {
-        this.bucketName = bucketName;
+    public GetBucketsSpectraS3Request() {
         
     }
     public GetBucketsSpectraS3Request withDataPolicyId(final UUID dataPolicyId) {
@@ -94,14 +91,9 @@ public class GetBucketsSpectraS3Request extends AbstractRequest {
 
     @Override
     public String getPath() {
-        return "/_rest_/bucket/" + this.bucketName;
+        return "/_rest_/bucket/";
     }
     
-    public String getBucketName() {
-        return this.bucketName;
-    }
-
-
     public UUID getDataPolicyId() {
         return this.dataPolicyId;
     }

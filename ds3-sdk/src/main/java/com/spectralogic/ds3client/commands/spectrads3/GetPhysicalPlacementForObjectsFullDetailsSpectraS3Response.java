@@ -41,6 +41,7 @@ public class GetPhysicalPlacementForObjectsFullDetailsSpectraS3Response extends 
                 try (final InputStream content = getResponse().getResponseStream()) {
                     this.blobApiBeansContainerResult = XmlOutput.fromXml(content, BlobApiBeansContainer.class);
                 }
+                break;
             default:
                 assert false : "checkStatusCode should have made it impossible to reach this line.";
             }

@@ -26,8 +26,6 @@ public class GetStorageDomainsSpectraS3Request extends AbstractRequest {
 
     // Variables
     
-    private final String storageDomain;
-
     private String autoEjectUponCron;
     private boolean autoEjectUponJobCancellation;
     private boolean autoEjectUponJobCompletion;
@@ -41,8 +39,7 @@ public class GetStorageDomainsSpectraS3Request extends AbstractRequest {
     private WriteOptimization writeOptimization;
 
     // Constructor
-    public GetStorageDomainsSpectraS3Request(final String storageDomain) {
-        this.storageDomain = storageDomain;
+    public GetStorageDomainsSpectraS3Request() {
         
     }
     public GetStorageDomainsSpectraS3Request withAutoEjectUponCron(final String autoEjectUponCron) {
@@ -123,14 +120,9 @@ public class GetStorageDomainsSpectraS3Request extends AbstractRequest {
 
     @Override
     public String getPath() {
-        return "/_rest_/storage_domain/" + storageDomain;
+        return "/_rest_/storage_domain/";
     }
     
-    public String getStorageDomain() {
-        return this.storageDomain;
-    }
-
-
     public String getAutoEjectUponCron() {
         return this.autoEjectUponCron;
     }

@@ -26,8 +26,6 @@ public class GetTapeFailuresSpectraS3Request extends AbstractRequest {
 
     // Variables
     
-    private final String tapeFailure;
-
     private String errorMessage;
     private boolean lastPage;
     private int pageLength;
@@ -38,8 +36,7 @@ public class GetTapeFailuresSpectraS3Request extends AbstractRequest {
     private TapeFailureType type;
 
     // Constructor
-    public GetTapeFailuresSpectraS3Request(final String tapeFailure) {
-        this.tapeFailure = tapeFailure;
+    public GetTapeFailuresSpectraS3Request() {
         
     }
     public GetTapeFailuresSpectraS3Request withErrorMessage(final String errorMessage) {
@@ -102,14 +99,9 @@ public class GetTapeFailuresSpectraS3Request extends AbstractRequest {
 
     @Override
     public String getPath() {
-        return "/_rest_/tape_failure/" + tapeFailure;
+        return "/_rest_/tape_failure/";
     }
     
-    public String getTapeFailure() {
-        return this.tapeFailure;
-    }
-
-
     public String getErrorMessage() {
         return this.errorMessage;
     }

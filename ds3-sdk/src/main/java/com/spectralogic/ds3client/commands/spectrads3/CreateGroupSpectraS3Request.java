@@ -24,33 +24,25 @@ public class CreateGroupSpectraS3Request extends AbstractRequest {
 
     // Variables
     
-    private final String group;
-
     private final String name;
 
 
     // Constructor
-    public CreateGroupSpectraS3Request(final String group, final String name) {
-        this.group = group;
+    public CreateGroupSpectraS3Request(final String name) {
         this.name = name;
         
     }
 
     @Override
     public HttpVerb getVerb() {
-        return HttpVerb.PUT;
+        return HttpVerb.POST;
     }
 
     @Override
     public String getPath() {
-        return "/_rest_/group/" + group;
+        return "/_rest_/group/";
     }
     
-    public String getGroup() {
-        return this.group;
-    }
-
-
     public String getName() {
         return this.name;
     }

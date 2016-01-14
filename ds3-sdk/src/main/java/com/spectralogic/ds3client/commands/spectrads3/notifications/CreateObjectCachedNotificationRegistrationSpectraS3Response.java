@@ -41,6 +41,7 @@ public class CreateObjectCachedNotificationRegistrationSpectraS3Response extends
                 try (final InputStream content = getResponse().getResponseStream()) {
                     this.s3ObjectCachedNotificationRegistrationResult = XmlOutput.fromXml(content, S3ObjectCachedNotificationRegistration.class);
                 }
+                break;
             default:
                 assert false : "checkStatusCode should have made it impossible to reach this line.";
             }

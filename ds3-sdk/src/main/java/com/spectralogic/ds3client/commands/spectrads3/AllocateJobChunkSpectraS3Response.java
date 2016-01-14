@@ -22,10 +22,26 @@ import java.io.IOException;
 import java.io.InputStream;
 import com.spectralogic.ds3client.models.JobChunkContainerApiBean;
 import com.spectralogic.ds3client.serializer.XmlOutput;
+import com.spectralogic.ds3client.commands.RetryAfterExpectedException;
 
 public class AllocateJobChunkSpectraS3Response extends AbstractResponse {
 
     private JobChunkContainerApiBean jobChunkContainerApiBeanResult;
+
+    public enum Status {
+        ALLOCATED, RETRYLATER
+    }
+
+    private Status status;
+    private int retryAfterSeconds;
+
+    public Status getStatus() {
+        return this.status;
+    }
+
+    public int getRetryAfterSeconds() {
+        return this.retryAfterSeconds;
+    }
 
     public AllocateJobChunkSpectraS3Response(final WebResponse response) throws IOException {
         super(response);
@@ -33,14 +49,20 @@ public class AllocateJobChunkSpectraS3Response extends AbstractResponse {
 
     @Override
     protected void processResponse() throws IOException {
-        try {
-            this.checkStatusCode(200);
+        try (final WebResponse response = this.getResponse()) {
+            this.checkStatusCode(200, 403);
 
             switch (this.getStatusCode()) {
             case 200:
-                try (final InputStream content = getResponse().getResponseStream()) {
+                try (final InputStream content = response.getResponseStream()) {
                     this.jobChunkContainerApiBeanResult = XmlOutput.fromXml(content, JobChunkContainerApiBean.class);
+                    this.status = Status.ALLOCATED;
                 }
+                break;
+            case 403:
+                this.status = Status.RETRYLATER;
+                this.retryAfterSeconds = parseRetryAfter(response);
+                break;
             default:
                 assert false : "checkStatusCode should have made it impossible to reach this line.";
             }
@@ -49,8 +71,17 @@ public class AllocateJobChunkSpectraS3Response extends AbstractResponse {
         }
     }
 
+    private static int parseRetryAfter(final WebResponse webResponse) {
+        final String retryAfter = webResponse.getHeaders().get("Retry-After").get(0);
+        if (retryAfter == null) {
+            throw new RetryAfterExpectedException();
+        }
+        return Integer.parseInt(retryAfter);
+    }
+
     public JobChunkContainerApiBean getJobChunkContainerApiBeanResult() {
         return this.jobChunkContainerApiBeanResult;
     }
+
 
 }

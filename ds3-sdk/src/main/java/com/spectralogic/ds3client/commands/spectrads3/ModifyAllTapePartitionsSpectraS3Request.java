@@ -24,14 +24,11 @@ public class ModifyAllTapePartitionsSpectraS3Request extends AbstractRequest {
 
     // Variables
     
-    private final String tapePartition;
-
     private final Quiesced quiesced;
 
 
     // Constructor
-    public ModifyAllTapePartitionsSpectraS3Request(final Quiesced quiesced, final String tapePartition) {
-        this.tapePartition = tapePartition;
+    public ModifyAllTapePartitionsSpectraS3Request(final Quiesced quiesced) {
         this.quiesced = quiesced;
         
     }
@@ -43,14 +40,9 @@ public class ModifyAllTapePartitionsSpectraS3Request extends AbstractRequest {
 
     @Override
     public String getPath() {
-        return "/_rest_/tape_partition/" + tapePartition;
+        return "/_rest_/tape_partition/";
     }
     
-    public String getTapePartition() {
-        return this.tapePartition;
-    }
-
-
     public Quiesced getQuiesced() {
         return this.quiesced;
     }

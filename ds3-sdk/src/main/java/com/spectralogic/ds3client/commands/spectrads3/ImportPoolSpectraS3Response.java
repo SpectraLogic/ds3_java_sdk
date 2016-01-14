@@ -41,6 +41,7 @@ public class ImportPoolSpectraS3Response extends AbstractResponse {
                 try (final InputStream content = getResponse().getResponseStream()) {
                     this.poolResult = XmlOutput.fromXml(content, Pool.class);
                 }
+                break;
             default:
                 assert false : "checkStatusCode should have made it impossible to reach this line.";
             }

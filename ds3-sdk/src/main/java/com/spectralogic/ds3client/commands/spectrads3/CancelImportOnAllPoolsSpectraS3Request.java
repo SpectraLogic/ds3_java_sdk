@@ -23,12 +23,9 @@ public class CancelImportOnAllPoolsSpectraS3Request extends AbstractRequest {
 
     // Variables
     
-    private final String pool;
-
 
     // Constructor
-    public CancelImportOnAllPoolsSpectraS3Request(final String pool) {
-        this.pool = pool;
+    public CancelImportOnAllPoolsSpectraS3Request() {
         this.getQueryParams().put("operation", "cancel_import");
         
     }
@@ -40,12 +37,7 @@ public class CancelImportOnAllPoolsSpectraS3Request extends AbstractRequest {
 
     @Override
     public String getPath() {
-        return "/_rest_/pool/" + pool;
+        return "/_rest_/pool/";
     }
     
-    public String getPool() {
-        return this.pool;
-    }
-
-
 }

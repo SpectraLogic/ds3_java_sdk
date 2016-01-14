@@ -26,8 +26,6 @@ public class GetStorageDomainFailuresSpectraS3Request extends AbstractRequest {
 
     // Variables
     
-    private final String storageDomainFailure;
-
     private String errorMessage;
     private boolean lastPage;
     private int pageLength;
@@ -37,8 +35,7 @@ public class GetStorageDomainFailuresSpectraS3Request extends AbstractRequest {
     private StorageDomainFailureType type;
 
     // Constructor
-    public GetStorageDomainFailuresSpectraS3Request(final String storageDomainFailure) {
-        this.storageDomainFailure = storageDomainFailure;
+    public GetStorageDomainFailuresSpectraS3Request() {
         
     }
     public GetStorageDomainFailuresSpectraS3Request withErrorMessage(final String errorMessage) {
@@ -95,14 +92,9 @@ public class GetStorageDomainFailuresSpectraS3Request extends AbstractRequest {
 
     @Override
     public String getPath() {
-        return "/_rest_/storage_domain_failure/" + storageDomainFailure;
+        return "/_rest_/storage_domain_failure/";
     }
     
-    public String getStorageDomainFailure() {
-        return this.storageDomainFailure;
-    }
-
-
     public String getErrorMessage() {
         return this.errorMessage;
     }

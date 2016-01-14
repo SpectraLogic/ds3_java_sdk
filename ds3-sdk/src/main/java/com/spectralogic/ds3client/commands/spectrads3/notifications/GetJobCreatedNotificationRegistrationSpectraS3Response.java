@@ -41,6 +41,7 @@ public class GetJobCreatedNotificationRegistrationSpectraS3Response extends Abst
                 try (final InputStream content = getResponse().getResponseStream()) {
                     this.jobCreatedNotificationRegistrationResult = XmlOutput.fromXml(content, JobCreatedNotificationRegistration.class);
                 }
+                break;
             default:
                 assert false : "checkStatusCode should have made it impossible to reach this line.";
             }

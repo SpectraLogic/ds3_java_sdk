@@ -41,6 +41,7 @@ public class GetTapeFailureNotificationRegistrationsSpectraS3Response extends Ab
                 try (final InputStream content = getResponse().getResponseStream()) {
                     this.tapeFailureNotificationRegistrationListResult = XmlOutput.fromXml(content, TapeFailureNotificationRegistrationList.class);
                 }
+                break;
             default:
                 assert false : "checkStatusCode should have made it impossible to reach this line.";
             }

@@ -23,12 +23,9 @@ public class ClearAllCompletedJobsSpectraS3Request extends AbstractRequest {
 
     // Variables
     
-    private final String completedJob;
-
 
     // Constructor
-    public ClearAllCompletedJobsSpectraS3Request(final String completedJob) {
-        this.completedJob = completedJob;
+    public ClearAllCompletedJobsSpectraS3Request() {
         
     }
 
@@ -39,12 +36,7 @@ public class ClearAllCompletedJobsSpectraS3Request extends AbstractRequest {
 
     @Override
     public String getPath() {
-        return "/_rest_/completed_job/" + completedJob;
+        return "/_rest_/completed_job/";
     }
     
-    public String getCompletedJob() {
-        return this.completedJob;
-    }
-
-
 }

@@ -41,6 +41,7 @@ public class GetSystemFailureNotificationRegistrationSpectraS3Response extends A
                 try (final InputStream content = getResponse().getResponseStream()) {
                     this.systemFailureNotificationRegistrationResult = XmlOutput.fromXml(content, SystemFailureNotificationRegistration.class);
                 }
+                break;
             default:
                 assert false : "checkStatusCode should have made it impossible to reach this line.";
             }

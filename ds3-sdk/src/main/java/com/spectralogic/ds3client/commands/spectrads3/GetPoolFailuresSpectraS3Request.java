@@ -26,8 +26,6 @@ public class GetPoolFailuresSpectraS3Request extends AbstractRequest {
 
     // Variables
     
-    private final String poolFailure;
-
     private String errorMessage;
     private boolean lastPage;
     private int pageLength;
@@ -37,8 +35,7 @@ public class GetPoolFailuresSpectraS3Request extends AbstractRequest {
     private PoolFailureType type;
 
     // Constructor
-    public GetPoolFailuresSpectraS3Request(final String poolFailure) {
-        this.poolFailure = poolFailure;
+    public GetPoolFailuresSpectraS3Request() {
         
     }
     public GetPoolFailuresSpectraS3Request withErrorMessage(final String errorMessage) {
@@ -95,14 +92,9 @@ public class GetPoolFailuresSpectraS3Request extends AbstractRequest {
 
     @Override
     public String getPath() {
-        return "/_rest_/pool_failure/" + poolFailure;
+        return "/_rest_/pool_failure/";
     }
     
-    public String getPoolFailure() {
-        return this.poolFailure;
-    }
-
-
     public String getErrorMessage() {
         return this.errorMessage;
     }

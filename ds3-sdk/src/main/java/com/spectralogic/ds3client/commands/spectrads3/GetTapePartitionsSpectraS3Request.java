@@ -28,8 +28,6 @@ public class GetTapePartitionsSpectraS3Request extends AbstractRequest {
 
     // Variables
     
-    private final String tapePartition;
-
     private boolean fullDetails;
     private ImportExportConfiguration importExportConfiguration;
     private boolean lastPage;
@@ -43,8 +41,7 @@ public class GetTapePartitionsSpectraS3Request extends AbstractRequest {
     private TapePartitionState state;
 
     // Constructor
-    public GetTapePartitionsSpectraS3Request(final String tapePartition) {
-        this.tapePartition = tapePartition;
+    public GetTapePartitionsSpectraS3Request() {
         
     }
     public GetTapePartitionsSpectraS3Request withFullDetails(final boolean fullDetails) {
@@ -129,14 +126,9 @@ public class GetTapePartitionsSpectraS3Request extends AbstractRequest {
 
     @Override
     public String getPath() {
-        return "/_rest_/tape_partition/" + tapePartition;
+        return "/_rest_/tape_partition/";
     }
     
-    public String getTapePartition() {
-        return this.tapePartition;
-    }
-
-
     public boolean getFullDetails() {
         return this.fullDetails;
     }

@@ -19,8 +19,34 @@ package com.spectralogic.ds3client.commands;
 import com.spectralogic.ds3client.networking.WebResponse;
 import java.io.IOException;
 import java.io.InputStream;
+import com.spectralogic.ds3client.networking.Metadata;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class HeadObjectResponse extends AbstractResponse {
+
+    private static final Logger LOG = LoggerFactory.getLogger(HeadObjectResponse.class);
+    private Status status;
+
+    private Metadata metadata;
+    private long objectSize;
+
+    public enum Status {
+        EXISTS, DOESNTEXIST, UNKNOWN
+    }
+
+    public Status getStatus() {
+        return this.status;
+    }
+
+    public Metadata getMetadata() {
+        return this.metadata;
+    }
+
+    public long getObjectSize() {
+        return this.objectSize;
+    }
+
 
 
 
@@ -31,17 +57,24 @@ public class HeadObjectResponse extends AbstractResponse {
     @Override
     protected void processResponse() throws IOException {
         try {
-            this.checkStatusCode(200);
-
-            switch (this.getStatusCode()) {
-            case 200:
-                //Do nothing, payload is null
-                break;
-            default:
-                assert false : "checkStatusCode should have made it impossible to reach this line.";
-            }
+            this.checkStatusCode(200, 404);
+            this.metadata = new MetadataImpl(this.getResponse().getHeaders());
+            this.objectSize = getSizeFromHeaders(this.getResponse().getHeaders());
+            this.setStatus(this.getStatusCode());
         } finally {
             this.getResponse().close();
+        }
+    }
+
+    private void setStatus(final int statusCode) {
+        switch(statusCode) {
+            case 200: this.status = Status.EXISTS; break;
+            case 404: this.status = Status.DOESNTEXIST; break;
+            default: {
+                LOG.error("Unexpected status code: " + Integer.toString(statusCode));
+                this.status = Status.UNKNOWN;
+                break;
+            }
         }
     }
 

@@ -24,13 +24,10 @@ public class VerifyAllPoolsSpectraS3Request extends AbstractRequest {
 
     // Variables
     
-    private final String pool;
-
     private BlobStoreTaskPriority priority;
 
     // Constructor
-    public VerifyAllPoolsSpectraS3Request(final String pool) {
-        this.pool = pool;
+    public VerifyAllPoolsSpectraS3Request() {
         this.getQueryParams().put("operation", "verify");
         
     }
@@ -48,14 +45,9 @@ public class VerifyAllPoolsSpectraS3Request extends AbstractRequest {
 
     @Override
     public String getPath() {
-        return "/_rest_/pool/" + pool;
+        return "/_rest_/pool/";
     }
     
-    public String getPool() {
-        return this.pool;
-    }
-
-
     public BlobStoreTaskPriority getPriority() {
         return this.priority;
     }

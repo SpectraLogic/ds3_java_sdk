@@ -41,6 +41,7 @@ public class CreateDataPolicySpectraS3Response extends AbstractResponse {
                 try (final InputStream content = getResponse().getResponseStream()) {
                     this.dataPolicyResult = XmlOutput.fromXml(content, DataPolicy.class);
                 }
+                break;
             default:
                 assert false : "checkStatusCode should have made it impossible to reach this line.";
             }

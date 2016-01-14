@@ -26,8 +26,6 @@ public class GetSystemFailuresSpectraS3Request extends AbstractRequest {
 
     // Variables
     
-    private final String systemFailure;
-
     private String errorMessage;
     private boolean lastPage;
     private int pageLength;
@@ -36,8 +34,7 @@ public class GetSystemFailuresSpectraS3Request extends AbstractRequest {
     private SystemFailureType type;
 
     // Constructor
-    public GetSystemFailuresSpectraS3Request(final String systemFailure) {
-        this.systemFailure = systemFailure;
+    public GetSystemFailuresSpectraS3Request() {
         
     }
     public GetSystemFailuresSpectraS3Request withErrorMessage(final String errorMessage) {
@@ -88,14 +85,9 @@ public class GetSystemFailuresSpectraS3Request extends AbstractRequest {
 
     @Override
     public String getPath() {
-        return "/_rest_/system_failure/" + systemFailure;
+        return "/_rest_/system_failure/";
     }
     
-    public String getSystemFailure() {
-        return this.systemFailure;
-    }
-
-
     public String getErrorMessage() {
         return this.errorMessage;
     }

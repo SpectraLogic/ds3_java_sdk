@@ -24,8 +24,6 @@ public class GetCacheFilesystemsSpectraS3Request extends AbstractRequest {
 
     // Variables
     
-    private final String cacheFilesystem;
-
     private boolean lastPage;
     private UUID nodeId;
     private int pageLength;
@@ -33,8 +31,7 @@ public class GetCacheFilesystemsSpectraS3Request extends AbstractRequest {
     private UUID pageStartMarker;
 
     // Constructor
-    public GetCacheFilesystemsSpectraS3Request(final String cacheFilesystem) {
-        this.cacheFilesystem = cacheFilesystem;
+    public GetCacheFilesystemsSpectraS3Request() {
         
     }
     public GetCacheFilesystemsSpectraS3Request withLastPage(final boolean lastPage) {
@@ -79,14 +76,9 @@ public class GetCacheFilesystemsSpectraS3Request extends AbstractRequest {
 
     @Override
     public String getPath() {
-        return "/_rest_/cache_filesystem/" + cacheFilesystem;
+        return "/_rest_/cache_filesystem/";
     }
     
-    public String getCacheFilesystem() {
-        return this.cacheFilesystem;
-    }
-
-
     public boolean getLastPage() {
         return this.lastPage;
     }

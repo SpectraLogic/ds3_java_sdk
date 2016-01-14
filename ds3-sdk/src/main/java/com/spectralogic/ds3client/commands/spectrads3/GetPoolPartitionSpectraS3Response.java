@@ -41,6 +41,7 @@ public class GetPoolPartitionSpectraS3Response extends AbstractResponse {
                 try (final InputStream content = getResponse().getResponseStream()) {
                     this.poolPartitionResult = XmlOutput.fromXml(content, PoolPartition.class);
                 }
+                break;
             default:
                 assert false : "checkStatusCode should have made it impossible to reach this line.";
             }

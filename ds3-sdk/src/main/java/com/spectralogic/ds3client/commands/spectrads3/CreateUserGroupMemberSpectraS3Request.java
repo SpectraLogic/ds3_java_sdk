@@ -24,16 +24,13 @@ public class CreateUserGroupMemberSpectraS3Request extends AbstractRequest {
 
     // Variables
     
-    private final String groupMember;
-
     private final UUID groupId;
 
     private final UUID memberUserId;
 
 
     // Constructor
-    public CreateUserGroupMemberSpectraS3Request(final UUID groupId, final String groupMember, final UUID memberUserId) {
-        this.groupMember = groupMember;
+    public CreateUserGroupMemberSpectraS3Request(final UUID groupId, final UUID memberUserId) {
         this.groupId = groupId;
         this.memberUserId = memberUserId;
         
@@ -41,19 +38,14 @@ public class CreateUserGroupMemberSpectraS3Request extends AbstractRequest {
 
     @Override
     public HttpVerb getVerb() {
-        return HttpVerb.PUT;
+        return HttpVerb.POST;
     }
 
     @Override
     public String getPath() {
-        return "/_rest_/group_member/" + groupMember;
+        return "/_rest_/group_member/";
     }
     
-    public String getGroupMember() {
-        return this.groupMember;
-    }
-
-
     public UUID getGroupId() {
         return this.groupId;
     }

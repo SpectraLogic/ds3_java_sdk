@@ -22,10 +22,26 @@ import java.io.IOException;
 import java.io.InputStream;
 import com.spectralogic.ds3client.models.JobWithChunksContainerApiBean;
 import com.spectralogic.ds3client.serializer.XmlOutput;
+import com.spectralogic.ds3client.commands.RetryAfterExpectedException;
 
 public class GetJobChunksReadyForClientProcessingSpectraS3Response extends AbstractResponse {
 
     private JobWithChunksContainerApiBean jobWithChunksContainerApiBeanResult;
+
+    public enum Status {
+        AVAILABLE, RETRYLATER
+    }
+
+    private Status status;
+    private int retryAfterSeconds;
+
+    public Status getStatus() {
+        return this.status;
+    }
+
+    public int getRetryAfterSeconds() {
+        return this.retryAfterSeconds;
+    }
 
     public GetJobChunksReadyForClientProcessingSpectraS3Response(final WebResponse response) throws IOException {
         super(response);
@@ -33,14 +49,21 @@ public class GetJobChunksReadyForClientProcessingSpectraS3Response extends Abstr
 
     @Override
     protected void processResponse() throws IOException {
-        try {
+        try (final WebResponse webResponse = this.getResponse()) {
             this.checkStatusCode(200);
 
             switch (this.getStatusCode()) {
             case 200:
                 try (final InputStream content = getResponse().getResponseStream()) {
                     this.jobWithChunksContainerApiBeanResult = XmlOutput.fromXml(content, JobWithChunksContainerApiBean.class);
+                    if (this.jobWithChunksContainerApiBeanResult == null) {
+                        this.status = Status.RETRYLATER;
+                        this.retryAfterSeconds = parseRetryAfter(webResponse);
+                    } else {
+                        this.status = Status.AVAILABLE;
+                    }
                 }
+                break;
             default:
                 assert false : "checkStatusCode should have made it impossible to reach this line.";
             }
@@ -49,8 +72,17 @@ public class GetJobChunksReadyForClientProcessingSpectraS3Response extends Abstr
         }
     }
 
+    private static int parseRetryAfter(final WebResponse webResponse) {
+        final String retryAfter = webResponse.getHeaders().get("Retry-After").get(0);
+        if (retryAfter == null) {
+            throw new RetryAfterExpectedException();
+        }
+        return Integer.parseInt(retryAfter);
+    }
+
     public JobWithChunksContainerApiBean getJobWithChunksContainerApiBeanResult() {
         return this.jobWithChunksContainerApiBeanResult;
     }
+
 
 }

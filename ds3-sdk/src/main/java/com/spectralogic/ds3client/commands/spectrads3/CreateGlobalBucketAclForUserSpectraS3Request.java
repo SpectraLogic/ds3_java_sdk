@@ -25,16 +25,13 @@ public class CreateGlobalBucketAclForUserSpectraS3Request extends AbstractReques
 
     // Variables
     
-    private final String bucketAcl;
-
     private final BucketAclPermission permission;
 
     private final UUID userId;
 
 
     // Constructor
-    public CreateGlobalBucketAclForUserSpectraS3Request(final String bucketAcl, final BucketAclPermission permission, final UUID userId) {
-        this.bucketAcl = bucketAcl;
+    public CreateGlobalBucketAclForUserSpectraS3Request(final BucketAclPermission permission, final UUID userId) {
         this.permission = permission;
         this.userId = userId;
         
@@ -42,19 +39,14 @@ public class CreateGlobalBucketAclForUserSpectraS3Request extends AbstractReques
 
     @Override
     public HttpVerb getVerb() {
-        return HttpVerb.PUT;
+        return HttpVerb.POST;
     }
 
     @Override
     public String getPath() {
-        return "/_rest_/bucket_acl/" + bucketAcl;
+        return "/_rest_/bucket_acl/";
     }
     
-    public String getBucketAcl() {
-        return this.bucketAcl;
-    }
-
-
     public BucketAclPermission getPermission() {
         return this.permission;
     }

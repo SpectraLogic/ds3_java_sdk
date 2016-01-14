@@ -40,6 +40,7 @@ public class GetBucketResponse extends AbstractResponse {
                 try (final InputStream content = getResponse().getResponseStream()) {
                     this.bucketObjectsApiBeanResult = XmlOutput.fromXml(content, BucketObjectsApiBean.class);
                 }
+                break;
             default:
                 assert false : "checkStatusCode should have made it impossible to reach this line.";
             }

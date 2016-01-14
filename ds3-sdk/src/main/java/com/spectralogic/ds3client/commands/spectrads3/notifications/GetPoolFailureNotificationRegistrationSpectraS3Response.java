@@ -41,6 +41,7 @@ public class GetPoolFailureNotificationRegistrationSpectraS3Response extends Abs
                 try (final InputStream content = getResponse().getResponseStream()) {
                     this.poolFailureNotificationRegistrationResult = XmlOutput.fromXml(content, PoolFailureNotificationRegistration.class);
                 }
+                break;
             default:
                 assert false : "checkStatusCode should have made it impossible to reach this line.";
             }

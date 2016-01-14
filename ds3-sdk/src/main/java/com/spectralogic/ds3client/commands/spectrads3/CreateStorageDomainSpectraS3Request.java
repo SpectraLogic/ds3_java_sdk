@@ -27,8 +27,6 @@ public class CreateStorageDomainSpectraS3Request extends AbstractRequest {
 
     // Variables
     
-    private final String storageDomain;
-
     private final String name;
 
     private String autoEjectUponCron;
@@ -43,8 +41,7 @@ public class CreateStorageDomainSpectraS3Request extends AbstractRequest {
     private WriteOptimization writeOptimization;
 
     // Constructor
-    public CreateStorageDomainSpectraS3Request(final String name, final String storageDomain) {
-        this.storageDomain = storageDomain;
+    public CreateStorageDomainSpectraS3Request(final String name) {
         this.name = name;
         
     }
@@ -111,19 +108,14 @@ public class CreateStorageDomainSpectraS3Request extends AbstractRequest {
 
     @Override
     public HttpVerb getVerb() {
-        return HttpVerb.PUT;
+        return HttpVerb.POST;
     }
 
     @Override
     public String getPath() {
-        return "/_rest_/storage_domain/" + storageDomain;
+        return "/_rest_/storage_domain/";
     }
     
-    public String getStorageDomain() {
-        return this.storageDomain;
-    }
-
-
     public String getName() {
         return this.name;
     }

@@ -40,6 +40,7 @@ public class InitiateMultiPartUploadResponse extends AbstractResponse {
                 try (final InputStream content = getResponse().getResponseStream()) {
                     this.initiateMultipartUploadResultApiBeanResult = XmlOutput.fromXml(content, InitiateMultipartUploadResultApiBean.class);
                 }
+                break;
             default:
                 assert false : "checkStatusCode should have made it impossible to reach this line.";
             }

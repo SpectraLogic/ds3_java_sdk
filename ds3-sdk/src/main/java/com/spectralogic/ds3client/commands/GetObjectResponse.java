@@ -46,6 +46,7 @@ public class GetObjectResponse extends AbstractResponse {
                 try (final InputStream content = getResponse().getResponseStream()) {
                     this.httpErrorResultApiBeanResult = XmlOutput.fromXml(content, HttpErrorResultApiBean.class);
                 }
+                break;
             default:
                 assert false : "checkStatusCode should have made it impossible to reach this line.";
             }

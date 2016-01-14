@@ -23,12 +23,9 @@ public class GetCacheStateSpectraS3Request extends AbstractRequest {
 
     // Variables
     
-    private final String cacheState;
-
 
     // Constructor
-    public GetCacheStateSpectraS3Request(final String cacheState) {
-        this.cacheState = cacheState;
+    public GetCacheStateSpectraS3Request() {
         
     }
 
@@ -39,12 +36,7 @@ public class GetCacheStateSpectraS3Request extends AbstractRequest {
 
     @Override
     public String getPath() {
-        return "/_rest_/cache_state/" + cacheState;
+        return "/_rest_/cache_state/";
     }
     
-    public String getCacheState() {
-        return this.cacheState;
-    }
-
-
 }

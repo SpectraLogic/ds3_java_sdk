@@ -27,8 +27,6 @@ public class GetDataPersistenceRulesSpectraS3Request extends AbstractRequest {
 
     // Variables
     
-    private final String dataPersistenceRule;
-
     private UUID dataPolicyId;
     private DataIsolationLevel isolationLevel;
     private boolean lastPage;
@@ -40,8 +38,7 @@ public class GetDataPersistenceRulesSpectraS3Request extends AbstractRequest {
     private DataPersistenceRuleType type;
 
     // Constructor
-    public GetDataPersistenceRulesSpectraS3Request(final String dataPersistenceRule) {
-        this.dataPersistenceRule = dataPersistenceRule;
+    public GetDataPersistenceRulesSpectraS3Request() {
         
     }
     public GetDataPersistenceRulesSpectraS3Request withDataPolicyId(final UUID dataPolicyId) {
@@ -110,14 +107,9 @@ public class GetDataPersistenceRulesSpectraS3Request extends AbstractRequest {
 
     @Override
     public String getPath() {
-        return "/_rest_/data_persistence_rule/" + dataPersistenceRule;
+        return "/_rest_/data_persistence_rule/";
     }
     
-    public String getDataPersistenceRule() {
-        return this.dataPersistenceRule;
-    }
-
-
     public UUID getDataPolicyId() {
         return this.dataPolicyId;
     }

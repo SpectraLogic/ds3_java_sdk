@@ -41,6 +41,7 @@ public class GetTapeFullDetailsSpectraS3Response extends AbstractResponse {
                 try (final InputStream content = getResponse().getResponseStream()) {
                     this.tapeApiBeanResult = XmlOutput.fromXml(content, TapeApiBean.class);
                 }
+                break;
             default:
                 assert false : "checkStatusCode should have made it impossible to reach this line.";
             }

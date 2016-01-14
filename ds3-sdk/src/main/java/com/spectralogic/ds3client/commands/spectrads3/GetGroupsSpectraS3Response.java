@@ -41,6 +41,7 @@ public class GetGroupsSpectraS3Response extends AbstractResponse {
                 try (final InputStream content = getResponse().getResponseStream()) {
                     this.groupListResult = XmlOutput.fromXml(content, GroupList.class);
                 }
+                break;
             default:
                 assert false : "checkStatusCode should have made it impossible to reach this line.";
             }

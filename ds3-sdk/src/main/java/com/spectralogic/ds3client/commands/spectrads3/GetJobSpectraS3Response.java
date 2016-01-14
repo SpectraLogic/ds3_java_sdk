@@ -41,6 +41,7 @@ public class GetJobSpectraS3Response extends AbstractResponse {
                 try (final InputStream content = getResponse().getResponseStream()) {
                     this.jobWithChunksContainerApiBeanResult = XmlOutput.fromXml(content, JobWithChunksContainerApiBean.class);
                 }
+                break;
             default:
                 assert false : "checkStatusCode should have made it impossible to reach this line.";
             }

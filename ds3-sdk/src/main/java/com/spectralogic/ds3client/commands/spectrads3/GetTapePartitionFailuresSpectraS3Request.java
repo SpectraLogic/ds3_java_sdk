@@ -26,8 +26,6 @@ public class GetTapePartitionFailuresSpectraS3Request extends AbstractRequest {
 
     // Variables
     
-    private final String tapePartitionFailure;
-
     private String errorMessage;
     private boolean lastPage;
     private int pageLength;
@@ -37,8 +35,7 @@ public class GetTapePartitionFailuresSpectraS3Request extends AbstractRequest {
     private TapePartitionFailureType type;
 
     // Constructor
-    public GetTapePartitionFailuresSpectraS3Request(final String tapePartitionFailure) {
-        this.tapePartitionFailure = tapePartitionFailure;
+    public GetTapePartitionFailuresSpectraS3Request() {
         
     }
     public GetTapePartitionFailuresSpectraS3Request withErrorMessage(final String errorMessage) {
@@ -95,14 +92,9 @@ public class GetTapePartitionFailuresSpectraS3Request extends AbstractRequest {
 
     @Override
     public String getPath() {
-        return "/_rest_/tape_partition_failure/" + tapePartitionFailure;
+        return "/_rest_/tape_partition_failure/";
     }
     
-    public String getTapePartitionFailure() {
-        return this.tapePartitionFailure;
-    }
-
-
     public String getErrorMessage() {
         return this.errorMessage;
     }

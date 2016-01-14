@@ -41,6 +41,7 @@ public class GetTapeDrivesSpectraS3Response extends AbstractResponse {
                 try (final InputStream content = getResponse().getResponseStream()) {
                     this.tapeDriveListResult = XmlOutput.fromXml(content, TapeDriveList.class);
                 }
+                break;
             default:
                 assert false : "checkStatusCode should have made it impossible to reach this line.";
             }

@@ -41,6 +41,7 @@ public class GetStorageDomainFailuresSpectraS3Response extends AbstractResponse 
                 try (final InputStream content = getResponse().getResponseStream()) {
                     this.storageDomainFailureListResult = XmlOutput.fromXml(content, StorageDomainFailureList.class);
                 }
+                break;
             default:
                 assert false : "checkStatusCode should have made it impossible to reach this line.";
             }

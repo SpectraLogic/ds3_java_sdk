@@ -41,6 +41,7 @@ public class GetObjectLostNotificationRegistrationsSpectraS3Response extends Abs
                 try (final InputStream content = getResponse().getResponseStream()) {
                     this.s3ObjectLostNotificationRegistrationListResult = XmlOutput.fromXml(content, S3ObjectLostNotificationRegistrationList.class);
                 }
+                break;
             default:
                 assert false : "checkStatusCode should have made it impossible to reach this line.";
             }

@@ -41,6 +41,7 @@ public class ModifyStorageDomainSpectraS3Response extends AbstractResponse {
                 try (final InputStream content = getResponse().getResponseStream()) {
                     this.storageDomainResult = XmlOutput.fromXml(content, StorageDomain.class);
                 }
+                break;
             default:
                 assert false : "checkStatusCode should have made it impossible to reach this line.";
             }

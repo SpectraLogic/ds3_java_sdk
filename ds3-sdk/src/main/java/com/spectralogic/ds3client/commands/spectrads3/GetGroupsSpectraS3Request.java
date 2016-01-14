@@ -25,8 +25,6 @@ public class GetGroupsSpectraS3Request extends AbstractRequest {
 
     // Variables
     
-    private final String group;
-
     private boolean builtIn;
     private boolean lastPage;
     private String name;
@@ -35,8 +33,7 @@ public class GetGroupsSpectraS3Request extends AbstractRequest {
     private UUID pageStartMarker;
 
     // Constructor
-    public GetGroupsSpectraS3Request(final String group) {
-        this.group = group;
+    public GetGroupsSpectraS3Request() {
         
     }
     public GetGroupsSpectraS3Request withBuiltIn(final boolean builtIn) {
@@ -87,14 +84,9 @@ public class GetGroupsSpectraS3Request extends AbstractRequest {
 
     @Override
     public String getPath() {
-        return "/_rest_/group/" + group;
+        return "/_rest_/group/";
     }
     
-    public String getGroup() {
-        return this.group;
-    }
-
-
     public boolean getBuiltIn() {
         return this.builtIn;
     }

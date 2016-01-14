@@ -27,8 +27,6 @@ public class GetTapeDrivesSpectraS3Request extends AbstractRequest {
 
     // Variables
     
-    private final UUID tapeDriveId;
-
     private boolean lastPage;
     private int pageLength;
     private int pageOffset;
@@ -39,8 +37,7 @@ public class GetTapeDrivesSpectraS3Request extends AbstractRequest {
     private TapeDriveType type;
 
     // Constructor
-    public GetTapeDrivesSpectraS3Request(final UUID tapeDriveId) {
-        this.tapeDriveId = tapeDriveId;
+    public GetTapeDrivesSpectraS3Request() {
         
     }
     public GetTapeDrivesSpectraS3Request withLastPage(final boolean lastPage) {
@@ -103,14 +100,9 @@ public class GetTapeDrivesSpectraS3Request extends AbstractRequest {
 
     @Override
     public String getPath() {
-        return "/_rest_/tape_drive/" + tapeDriveId.toString();
+        return "/_rest_/tape_drive/";
     }
     
-    public UUID getTapeDriveId() {
-        return this.tapeDriveId;
-    }
-
-
     public boolean getLastPage() {
         return this.lastPage;
     }

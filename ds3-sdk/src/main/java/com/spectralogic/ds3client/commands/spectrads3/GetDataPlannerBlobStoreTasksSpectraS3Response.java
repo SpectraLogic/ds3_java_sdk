@@ -41,6 +41,7 @@ public class GetDataPlannerBlobStoreTasksSpectraS3Response extends AbstractRespo
                 try (final InputStream content = getResponse().getResponseStream()) {
                     this.blobStoreTasksInformationResult = XmlOutput.fromXml(content, BlobStoreTasksInformation.class);
                 }
+                break;
             default:
                 assert false : "checkStatusCode should have made it impossible to reach this line.";
             }

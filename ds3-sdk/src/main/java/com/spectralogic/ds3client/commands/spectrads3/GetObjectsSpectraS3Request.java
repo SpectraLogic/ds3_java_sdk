@@ -26,8 +26,6 @@ public class GetObjectsSpectraS3Request extends AbstractRequest {
 
     // Variables
     
-    private final String objectName;
-
     private UUID bucketId;
     private String folder;
     private boolean fullDetails;
@@ -42,8 +40,7 @@ public class GetObjectsSpectraS3Request extends AbstractRequest {
     private long version;
 
     // Constructor
-    public GetObjectsSpectraS3Request(final String objectName) {
-        this.objectName = objectName;
+    public GetObjectsSpectraS3Request() {
         
     }
     public GetObjectsSpectraS3Request withBucketId(final UUID bucketId) {
@@ -138,14 +135,9 @@ public class GetObjectsSpectraS3Request extends AbstractRequest {
 
     @Override
     public String getPath() {
-        return "/_rest_/object/" + objectName;
+        return "/_rest_/object/";
     }
     
-    public String getObjectName() {
-        return this.objectName;
-    }
-
-
     public UUID getBucketId() {
         return this.bucketId;
     }

@@ -41,6 +41,7 @@ public class GetPoolFailuresSpectraS3Response extends AbstractResponse {
                 try (final InputStream content = getResponse().getResponseStream()) {
                     this.poolFailureListResult = XmlOutput.fromXml(content, PoolFailureList.class);
                 }
+                break;
             default:
                 assert false : "checkStatusCode should have made it impossible to reach this line.";
             }

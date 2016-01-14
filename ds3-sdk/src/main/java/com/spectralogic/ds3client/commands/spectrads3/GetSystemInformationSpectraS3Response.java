@@ -41,6 +41,7 @@ public class GetSystemInformationSpectraS3Response extends AbstractResponse {
                 try (final InputStream content = getResponse().getResponseStream()) {
                     this.systemInformationApiBeanResult = XmlOutput.fromXml(content, SystemInformationApiBean.class);
                 }
+                break;
             default:
                 assert false : "checkStatusCode should have made it impossible to reach this line.";
             }

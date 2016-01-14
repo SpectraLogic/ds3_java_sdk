@@ -22,6 +22,7 @@ import com.spectralogic.ds3client.BulkCommand;
 import com.spectralogic.ds3client.models.bulk.Ds3Object;
 import com.spectralogic.ds3client.serializer.XmlProcessingException;
 import com.spectralogic.ds3client.models.JobChunkClientProcessingOrderGuarantee;
+import java.lang.String;
 import com.spectralogic.ds3client.models.BlobStoreTaskPriority;
 
 public class CreateGetJobSpectraS3Request extends BulkRequest {
@@ -29,6 +30,7 @@ public class CreateGetJobSpectraS3Request extends BulkRequest {
 
     
     private JobChunkClientProcessingOrderGuarantee chunkClientProcessingOrderGuarantee;
+    private String name;
     
 
     // Constructor
@@ -44,6 +46,12 @@ public class CreateGetJobSpectraS3Request extends BulkRequest {
         return this;
     }
 
+    public CreateGetJobSpectraS3Request withName(final String name) {
+        this.name = name;
+        this.updateQueryParam("name", name);
+        return this;
+    }
+
     @Override
     public CreateGetJobSpectraS3Request withPriority(final BlobStoreTaskPriority priority) {
         super.withPriority(priority);
@@ -54,6 +62,10 @@ public class CreateGetJobSpectraS3Request extends BulkRequest {
 
     public JobChunkClientProcessingOrderGuarantee getChunkClientProcessingOrderGuarantee() {
         return this.chunkClientProcessingOrderGuarantee;
+    }
+
+    public String getName() {
+        return this.name;
     }
 
     @Override

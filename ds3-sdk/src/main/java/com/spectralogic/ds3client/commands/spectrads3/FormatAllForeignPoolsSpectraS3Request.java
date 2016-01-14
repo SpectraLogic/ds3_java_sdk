@@ -23,12 +23,9 @@ public class FormatAllForeignPoolsSpectraS3Request extends AbstractRequest {
 
     // Variables
     
-    private final String pool;
-
 
     // Constructor
-    public FormatAllForeignPoolsSpectraS3Request(final String pool) {
-        this.pool = pool;
+    public FormatAllForeignPoolsSpectraS3Request() {
         this.getQueryParams().put("operation", "format");
         
     }
@@ -40,12 +37,7 @@ public class FormatAllForeignPoolsSpectraS3Request extends AbstractRequest {
 
     @Override
     public String getPath() {
-        return "/_rest_/pool/" + pool;
+        return "/_rest_/pool/";
     }
     
-    public String getPool() {
-        return this.pool;
-    }
-
-
 }

@@ -19,20 +19,16 @@ package com.spectralogic.ds3client.commands.spectrads3;
 import com.spectralogic.ds3client.commands.AbstractRequest;
 import com.spectralogic.ds3client.HttpVerb;
 import java.lang.String;
-import java.util.UUID;
 
 public class EjectAllTapesSpectraS3Request extends AbstractRequest {
 
     // Variables
     
-    private final UUID tapeId;
-
     private String ejectLabel;
     private String ejectLocation;
 
     // Constructor
-    public EjectAllTapesSpectraS3Request(final UUID tapeId) {
-        this.tapeId = tapeId;
+    public EjectAllTapesSpectraS3Request() {
         this.getQueryParams().put("operation", "eject");
         
     }
@@ -56,14 +52,9 @@ public class EjectAllTapesSpectraS3Request extends AbstractRequest {
 
     @Override
     public String getPath() {
-        return "/_rest_/tape/" + tapeId.toString();
+        return "/_rest_/tape/";
     }
     
-    public UUID getTapeId() {
-        return this.tapeId;
-    }
-
-
     public String getEjectLabel() {
         return this.ejectLabel;
     }

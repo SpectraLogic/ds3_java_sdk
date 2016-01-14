@@ -23,12 +23,9 @@ public class ForceFullCacheReclaimSpectraS3Request extends AbstractRequest {
 
     // Variables
     
-    private final String cacheFilesystem;
-
 
     // Constructor
-    public ForceFullCacheReclaimSpectraS3Request(final String cacheFilesystem) {
-        this.cacheFilesystem = cacheFilesystem;
+    public ForceFullCacheReclaimSpectraS3Request() {
         
         this.getQueryParams().put("reclaim", null);
 
@@ -41,12 +38,7 @@ public class ForceFullCacheReclaimSpectraS3Request extends AbstractRequest {
 
     @Override
     public String getPath() {
-        return "/_rest_/cache_filesystem/" + cacheFilesystem;
+        return "/_rest_/cache_filesystem/";
     }
     
-    public String getCacheFilesystem() {
-        return this.cacheFilesystem;
-    }
-
-
 }

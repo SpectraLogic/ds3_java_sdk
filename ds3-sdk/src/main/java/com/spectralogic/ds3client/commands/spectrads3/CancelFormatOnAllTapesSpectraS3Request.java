@@ -18,18 +18,14 @@ package com.spectralogic.ds3client.commands.spectrads3;
 
 import com.spectralogic.ds3client.commands.AbstractRequest;
 import com.spectralogic.ds3client.HttpVerb;
-import java.util.UUID;
 
 public class CancelFormatOnAllTapesSpectraS3Request extends AbstractRequest {
 
     // Variables
     
-    private final UUID tapeId;
-
 
     // Constructor
-    public CancelFormatOnAllTapesSpectraS3Request(final UUID tapeId) {
-        this.tapeId = tapeId;
+    public CancelFormatOnAllTapesSpectraS3Request() {
         this.getQueryParams().put("operation", "cancel_format");
         
     }
@@ -41,12 +37,7 @@ public class CancelFormatOnAllTapesSpectraS3Request extends AbstractRequest {
 
     @Override
     public String getPath() {
-        return "/_rest_/tape/" + tapeId.toString();
+        return "/_rest_/tape/";
     }
     
-    public UUID getTapeId() {
-        return this.tapeId;
-    }
-
-
 }

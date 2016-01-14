@@ -27,8 +27,6 @@ public class GetDegradedDataPersistenceRulesSpectraS3Request extends AbstractReq
 
     // Variables
     
-    private final String degradedDataPersistenceRule;
-
     private UUID dataPolicyId;
     private DataIsolationLevel isolationLevel;
     private boolean lastPage;
@@ -40,8 +38,7 @@ public class GetDegradedDataPersistenceRulesSpectraS3Request extends AbstractReq
     private DataPersistenceRuleType type;
 
     // Constructor
-    public GetDegradedDataPersistenceRulesSpectraS3Request(final String degradedDataPersistenceRule) {
-        this.degradedDataPersistenceRule = degradedDataPersistenceRule;
+    public GetDegradedDataPersistenceRulesSpectraS3Request() {
         
     }
     public GetDegradedDataPersistenceRulesSpectraS3Request withDataPolicyId(final UUID dataPolicyId) {
@@ -110,14 +107,9 @@ public class GetDegradedDataPersistenceRulesSpectraS3Request extends AbstractReq
 
     @Override
     public String getPath() {
-        return "/_rest_/degraded_data_persistence_rule/" + degradedDataPersistenceRule;
+        return "/_rest_/degraded_data_persistence_rule/";
     }
     
-    public String getDegradedDataPersistenceRule() {
-        return this.degradedDataPersistenceRule;
-    }
-
-
     public UUID getDataPolicyId() {
         return this.dataPolicyId;
     }

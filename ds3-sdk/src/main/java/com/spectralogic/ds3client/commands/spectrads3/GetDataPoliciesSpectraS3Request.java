@@ -26,8 +26,6 @@ public class GetDataPoliciesSpectraS3Request extends AbstractRequest {
 
     // Variables
     
-    private final String dataPolicy;
-
     private ChecksumType.Type checksumType;
     private boolean endToEndCrcRequired;
     private boolean lastPage;
@@ -37,8 +35,7 @@ public class GetDataPoliciesSpectraS3Request extends AbstractRequest {
     private UUID pageStartMarker;
 
     // Constructor
-    public GetDataPoliciesSpectraS3Request(final String dataPolicy) {
-        this.dataPolicy = dataPolicy;
+    public GetDataPoliciesSpectraS3Request() {
         
     }
     public GetDataPoliciesSpectraS3Request withChecksumType(final ChecksumType.Type checksumType) {
@@ -95,14 +92,9 @@ public class GetDataPoliciesSpectraS3Request extends AbstractRequest {
 
     @Override
     public String getPath() {
-        return "/_rest_/data_policy/" + dataPolicy;
+        return "/_rest_/data_policy/";
     }
     
-    public String getDataPolicy() {
-        return this.dataPolicy;
-    }
-
-
     public ChecksumType.Type getChecksumType() {
         return this.checksumType;
     }

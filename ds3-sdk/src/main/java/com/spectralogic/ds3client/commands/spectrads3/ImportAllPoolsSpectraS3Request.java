@@ -25,16 +25,13 @@ public class ImportAllPoolsSpectraS3Request extends AbstractRequest {
 
     // Variables
     
-    private final String pool;
-
     private ImportConflictResolutionMode conflictResolutionMode;
     private UUID dataPolicyId;
     private UUID storageDomainId;
     private UUID userId;
 
     // Constructor
-    public ImportAllPoolsSpectraS3Request(final String pool) {
-        this.pool = pool;
+    public ImportAllPoolsSpectraS3Request() {
         this.getQueryParams().put("operation", "import");
         
     }
@@ -70,14 +67,9 @@ public class ImportAllPoolsSpectraS3Request extends AbstractRequest {
 
     @Override
     public String getPath() {
-        return "/_rest_/pool/" + pool;
+        return "/_rest_/pool/";
     }
     
-    public String getPool() {
-        return this.pool;
-    }
-
-
     public ImportConflictResolutionMode getConflictResolutionMode() {
         return this.conflictResolutionMode;
     }

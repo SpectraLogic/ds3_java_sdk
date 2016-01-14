@@ -19,19 +19,15 @@ package com.spectralogic.ds3client.commands.spectrads3;
 import com.spectralogic.ds3client.commands.AbstractRequest;
 import com.spectralogic.ds3client.HttpVerb;
 import com.spectralogic.ds3client.models.BlobStoreTaskPriority;
-import java.util.UUID;
 
 public class VerifyAllTapesSpectraS3Request extends AbstractRequest {
 
     // Variables
     
-    private final UUID tapeId;
-
     private BlobStoreTaskPriority taskPriority;
 
     // Constructor
-    public VerifyAllTapesSpectraS3Request(final UUID tapeId) {
-        this.tapeId = tapeId;
+    public VerifyAllTapesSpectraS3Request() {
         this.getQueryParams().put("operation", "verify");
         
     }
@@ -49,14 +45,9 @@ public class VerifyAllTapesSpectraS3Request extends AbstractRequest {
 
     @Override
     public String getPath() {
-        return "/_rest_/tape/" + tapeId.toString();
+        return "/_rest_/tape/";
     }
     
-    public UUID getTapeId() {
-        return this.tapeId;
-    }
-
-
     public BlobStoreTaskPriority getTaskPriority() {
         return this.taskPriority;
     }

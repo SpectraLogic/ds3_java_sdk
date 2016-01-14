@@ -24,6 +24,7 @@ import com.spectralogic.ds3client.serializer.XmlOutput;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.List;
+import java.lang.String;
 import com.spectralogic.ds3client.models.BlobStoreTaskPriority;
 
 public class CreateVerifyJobSpectraS3Request extends AbstractRequest {
@@ -33,6 +34,7 @@ public class CreateVerifyJobSpectraS3Request extends AbstractRequest {
     
     private final String bucketName;
 
+    private String name;
     private BlobStoreTaskPriority priority;
 
     // Constructor
@@ -41,6 +43,12 @@ public class CreateVerifyJobSpectraS3Request extends AbstractRequest {
         this.bucketName = bucketName;
         this.getQueryParams().put("operation", "start_bulk_verify");
             }
+
+    public CreateVerifyJobSpectraS3Request withName(final String name) {
+        this.name = name;
+        this.updateQueryParam("name", name);
+        return this;
+    }
 
     public CreateVerifyJobSpectraS3Request withPriority(final BlobStoreTaskPriority priority) {
         this.priority = priority;
@@ -73,6 +81,10 @@ public class CreateVerifyJobSpectraS3Request extends AbstractRequest {
         return this.bucketName;
     }
 
+
+    public String getName() {
+        return this.name;
+    }
 
     public BlobStoreTaskPriority getPriority() {
         return this.priority;

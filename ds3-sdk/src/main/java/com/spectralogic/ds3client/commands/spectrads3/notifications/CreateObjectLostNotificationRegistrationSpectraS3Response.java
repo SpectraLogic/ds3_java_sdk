@@ -41,6 +41,7 @@ public class CreateObjectLostNotificationRegistrationSpectraS3Response extends A
                 try (final InputStream content = getResponse().getResponseStream()) {
                     this.s3ObjectLostNotificationRegistrationResult = XmlOutput.fromXml(content, S3ObjectLostNotificationRegistration.class);
                 }
+                break;
             default:
                 assert false : "checkStatusCode should have made it impossible to reach this line.";
             }

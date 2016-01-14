@@ -26,8 +26,6 @@ public class GetPoolPartitionsSpectraS3Request extends AbstractRequest {
 
     // Variables
     
-    private final String poolPartition;
-
     private boolean lastPage;
     private String name;
     private int pageLength;
@@ -36,8 +34,7 @@ public class GetPoolPartitionsSpectraS3Request extends AbstractRequest {
     private PoolType type;
 
     // Constructor
-    public GetPoolPartitionsSpectraS3Request(final String poolPartition) {
-        this.poolPartition = poolPartition;
+    public GetPoolPartitionsSpectraS3Request() {
         
     }
     public GetPoolPartitionsSpectraS3Request withLastPage(final boolean lastPage) {
@@ -88,14 +85,9 @@ public class GetPoolPartitionsSpectraS3Request extends AbstractRequest {
 
     @Override
     public String getPath() {
-        return "/_rest_/pool_partition/" + poolPartition;
+        return "/_rest_/pool_partition/";
     }
     
-    public String getPoolPartition() {
-        return this.poolPartition;
-    }
-
-
     public boolean getLastPage() {
         return this.lastPage;
     }

@@ -20,6 +20,7 @@ import com.spectralogic.ds3client.commands.AbstractRequest;
 import com.spectralogic.ds3client.HttpVerb;
 import java.util.UUID;
 import com.spectralogic.ds3client.models.JobChunkClientProcessingOrderGuarantee;
+import java.lang.String;
 import com.spectralogic.ds3client.models.BlobStoreTaskPriority;
 import java.util.Date;
 import com.spectralogic.ds3client.models.JobRequestType;
@@ -28,11 +29,10 @@ public class GetActiveJobsSpectraS3Request extends AbstractRequest {
 
     // Variables
     
-    private final UUID activeJobId;
-
     private UUID bucketId;
     private JobChunkClientProcessingOrderGuarantee chunkClientProcessingOrderGuarantee;
     private boolean lastPage;
+    private String name;
     private int pageLength;
     private int pageOffset;
     private UUID pageStartMarker;
@@ -44,8 +44,7 @@ public class GetActiveJobsSpectraS3Request extends AbstractRequest {
     private UUID userId;
 
     // Constructor
-    public GetActiveJobsSpectraS3Request(final UUID activeJobId) {
-        this.activeJobId = activeJobId;
+    public GetActiveJobsSpectraS3Request() {
         
     }
     public GetActiveJobsSpectraS3Request withBucketId(final UUID bucketId) {
@@ -67,6 +66,12 @@ public class GetActiveJobsSpectraS3Request extends AbstractRequest {
         } else {
             this.getQueryParams().remove("last_page");
         }
+        return this;
+    }
+
+    public GetActiveJobsSpectraS3Request withName(final String name) {
+        this.name = name;
+        this.updateQueryParam("name", name);
         return this;
     }
 
@@ -132,14 +137,9 @@ public class GetActiveJobsSpectraS3Request extends AbstractRequest {
 
     @Override
     public String getPath() {
-        return "/_rest_/active_job/" + activeJobId.toString();
+        return "/_rest_/active_job/";
     }
     
-    public UUID getActiveJobId() {
-        return this.activeJobId;
-    }
-
-
     public UUID getBucketId() {
         return this.bucketId;
     }
@@ -150,6 +150,10 @@ public class GetActiveJobsSpectraS3Request extends AbstractRequest {
 
     public boolean getLastPage() {
         return this.lastPage;
+    }
+
+    public String getName() {
+        return this.name;
     }
 
     public int getPageLength() {

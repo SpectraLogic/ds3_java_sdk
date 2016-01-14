@@ -26,8 +26,6 @@ public class GetTapeDensityDirectivesSpectraS3Request extends AbstractRequest {
 
     // Variables
     
-    private final String tapeDensityDirective;
-
     private TapeDriveType density;
     private boolean lastPage;
     private int pageLength;
@@ -37,8 +35,7 @@ public class GetTapeDensityDirectivesSpectraS3Request extends AbstractRequest {
     private TapeType tapeType;
 
     // Constructor
-    public GetTapeDensityDirectivesSpectraS3Request(final String tapeDensityDirective) {
-        this.tapeDensityDirective = tapeDensityDirective;
+    public GetTapeDensityDirectivesSpectraS3Request() {
         
     }
     public GetTapeDensityDirectivesSpectraS3Request withDensity(final TapeDriveType density) {
@@ -95,14 +92,9 @@ public class GetTapeDensityDirectivesSpectraS3Request extends AbstractRequest {
 
     @Override
     public String getPath() {
-        return "/_rest_/tape_density_directive/" + tapeDensityDirective;
+        return "/_rest_/tape_density_directive/";
     }
     
-    public String getTapeDensityDirective() {
-        return this.tapeDensityDirective;
-    }
-
-
     public TapeDriveType getDensity() {
         return this.density;
     }

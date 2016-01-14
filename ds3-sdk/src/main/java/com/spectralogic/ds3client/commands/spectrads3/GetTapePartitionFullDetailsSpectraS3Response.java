@@ -41,6 +41,7 @@ public class GetTapePartitionFullDetailsSpectraS3Response extends AbstractRespon
                 try (final InputStream content = getResponse().getResponseStream()) {
                     this.detailedTapePartitionResult = XmlOutput.fromXml(content, DetailedTapePartition.class);
                 }
+                break;
             default:
                 assert false : "checkStatusCode should have made it impossible to reach this line.";
             }

@@ -25,8 +25,6 @@ public class CreatePoolStorageDomainMemberSpectraS3Request extends AbstractReque
 
     // Variables
     
-    private final String storageDomainMember;
-
     private final UUID poolPartitionId;
 
     private final UUID storageDomainId;
@@ -34,8 +32,7 @@ public class CreatePoolStorageDomainMemberSpectraS3Request extends AbstractReque
     private WritePreferenceLevel writePreference;
 
     // Constructor
-    public CreatePoolStorageDomainMemberSpectraS3Request(final UUID poolPartitionId, final UUID storageDomainId, final String storageDomainMember) {
-        this.storageDomainMember = storageDomainMember;
+    public CreatePoolStorageDomainMemberSpectraS3Request(final UUID poolPartitionId, final UUID storageDomainId) {
         this.poolPartitionId = poolPartitionId;
         this.storageDomainId = storageDomainId;
         
@@ -49,19 +46,14 @@ public class CreatePoolStorageDomainMemberSpectraS3Request extends AbstractReque
 
     @Override
     public HttpVerb getVerb() {
-        return HttpVerb.PUT;
+        return HttpVerb.POST;
     }
 
     @Override
     public String getPath() {
-        return "/_rest_/storage_domain_member/" + storageDomainMember;
+        return "/_rest_/storage_domain_member/";
     }
     
-    public String getStorageDomainMember() {
-        return this.storageDomainMember;
-    }
-
-
     public UUID getPoolPartitionId() {
         return this.poolPartitionId;
     }

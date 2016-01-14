@@ -41,6 +41,7 @@ public class VerifyUserIsMemberOfGroupSpectraS3Response extends AbstractResponse
                 try (final InputStream content = getResponse().getResponseStream()) {
                     this.groupResult = XmlOutput.fromXml(content, Group.class);
                 }
+                break;
             case 204:
                 //Do nothing, payload is null
                 break;

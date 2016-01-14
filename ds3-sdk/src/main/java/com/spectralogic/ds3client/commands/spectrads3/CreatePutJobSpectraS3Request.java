@@ -19,9 +19,9 @@ package com.spectralogic.ds3client.commands.spectrads3;
 import com.spectralogic.ds3client.commands.BulkRequest;
 import java.util.List;
 import com.spectralogic.ds3client.BulkCommand;
-import com.spectralogic.ds3client.models.WriteOptimization;
 import com.spectralogic.ds3client.models.bulk.Ds3Object;
 import com.spectralogic.ds3client.serializer.XmlProcessingException;
+import java.lang.String;
 import com.spectralogic.ds3client.models.BlobStoreTaskPriority;
 
 public class CreatePutJobSpectraS3Request extends BulkRequest {
@@ -32,6 +32,7 @@ public class CreatePutJobSpectraS3Request extends BulkRequest {
     
     private boolean ignoreNamingConflicts;
     private long maxUploadSize;
+    private String name;
     
 
     // Constructor
@@ -60,23 +61,26 @@ public class CreatePutJobSpectraS3Request extends BulkRequest {
         return this;
     }
 
+    public CreatePutJobSpectraS3Request withName(final String name) {
+        this.name = name;
+        this.updateQueryParam("name", name);
+        return this;
+    }
+
     @Override
     public CreatePutJobSpectraS3Request withPriority(final BlobStoreTaskPriority priority) {
         super.withPriority(priority);
         return this;
     }
 
-    /*
-    @Override
-    public CreatePutJobSpectraS3Request withWriteOptimization(final WriteOptimization writeOptimization) {
-        super.withWriteOptimization(writeOptimization);
-        return this;
-    }
-    */
 
 
     public boolean getIgnoreNamingConflicts() {
         return this.ignoreNamingConflicts;
+    }
+
+    public String getName() {
+        return this.name;
     }
 
     @Override

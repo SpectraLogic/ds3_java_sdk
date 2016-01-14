@@ -28,8 +28,6 @@ public class GetPoolsSpectraS3Request extends AbstractRequest {
 
     // Variables
     
-    private final String pool;
-
     private boolean assignedToStorageDomain;
     private UUID bucketId;
     private PoolHealth health;
@@ -45,8 +43,7 @@ public class GetPoolsSpectraS3Request extends AbstractRequest {
     private PoolType type;
 
     // Constructor
-    public GetPoolsSpectraS3Request(final String pool) {
-        this.pool = pool;
+    public GetPoolsSpectraS3Request() {
         
     }
     public GetPoolsSpectraS3Request withAssignedToStorageDomain(final boolean assignedToStorageDomain) {
@@ -139,14 +136,9 @@ public class GetPoolsSpectraS3Request extends AbstractRequest {
 
     @Override
     public String getPath() {
-        return "/_rest_/pool/" + pool;
+        return "/_rest_/pool/";
     }
     
-    public String getPool() {
-        return this.pool;
-    }
-
-
     public boolean getAssignedToStorageDomain() {
         return this.assignedToStorageDomain;
     }
