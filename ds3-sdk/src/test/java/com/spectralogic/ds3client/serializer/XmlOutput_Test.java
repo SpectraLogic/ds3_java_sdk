@@ -16,9 +16,10 @@
 package com.spectralogic.ds3client.serializer;
 
 import com.google.common.collect.ImmutableList;
-import com.spectralogic.ds3client.BulkCommand;
-import com.spectralogic.ds3client.models.ListBucketResult;
-import com.spectralogic.ds3client.models.bulk.*;
+import com.spectralogic.ds3client.models.*;
+import com.spectralogic.ds3client.models.bulk.BulkObject;
+import com.spectralogic.ds3client.models.bulk.Ds3Object;
+import com.spectralogic.ds3client.models.bulk.Ds3ObjectList;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -36,13 +37,13 @@ public class XmlOutput_Test {
     public void singleList() throws IOException {
         final String xmlResponse = "<MasterObjectList BucketName=\"lib\" JobId=\"9652a41a-218a-4158-af1b-064ab9e4ef71\" Priority=\"NORMAL\" RequestType=\"PUT\" StartDate=\"2014-07-29T16:08:39.000Z\"><Nodes><Node EndPoint=\"FAILED_TO_DETERMINE_DATAPATH_IP_ADDRESS\" HttpPort=\"80\" HttpsPort=\"443\" Id=\"b18ee082-1352-11e4-945e-080027ebeb6d\"/></Nodes><Objects ChunkId=\"cfa3153f-57de-41c7-b1fb-f30fa4154232\" ChunkNumber=\"0\"><Object Name=\"file2\" InCache=\"false\" Length=\"1202\" Offset=\"0\"/><Object Name=\"file1\" InCache=\"false\" Length=\"256\" Offset=\"0\"/><Object Name=\"file3\" InCache=\"false\" Length=\"2523\" Offset=\"0\"/></Objects></MasterObjectList>";
 
-        final MasterObjectList masterObjectList = XmlOutput.fromXml(xmlResponse, MasterObjectList.class);
+        final JobWithChunksApiBean masterObjectList = XmlOutput.fromXml(xmlResponse, JobWithChunksApiBean.class);
         assertThat(masterObjectList, is(notNullValue()));
         assertThat(masterObjectList.getObjects(), is(notNullValue()));
-        final List<Objects> objectsList = masterObjectList.getObjects();
+        final List<JobChunkApiBean> objectsList = masterObjectList.getObjects();
         assertThat(objectsList.size(), is(1));
-        final Objects objects = objectsList.get(0);
-        final List<BulkObject> objectList = objects.getObjects();
+        final JobChunkApiBean objects = objectsList.get(0);
+        final List<BlobApiBean> objectList = objects.getObjects();
         assertThat(objectList.size(), is(3));
     }
 
@@ -92,7 +93,7 @@ public class XmlOutput_Test {
         final String expectedString = "<Objects Priority=\"HIGH\"><Object Name=\"file1\" Size=\"12\"/><Object Name=\"file2\" Size=\"5022\"/></Objects>";
         final List<Ds3Object> objectList = ImmutableList.of(new Ds3Object("file1", 12), new Ds3Object("file2", 5022)).asList();
         final Ds3ObjectList ds3ObjectList = new Ds3ObjectList(objectList);
-        ds3ObjectList.setPriority(Priority.HIGH);
+        ds3ObjectList.setPriority(BlobStoreTaskPriority.HIGH);
         final String result = XmlOutput.toXml(ds3ObjectList, true);
 
         assertThat(result, is(expectedString));

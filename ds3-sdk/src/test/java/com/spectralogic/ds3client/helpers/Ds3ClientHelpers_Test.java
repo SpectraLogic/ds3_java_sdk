@@ -18,18 +18,16 @@ package com.spectralogic.ds3client.helpers;
 import com.google.common.base.Stopwatch;
 import com.google.common.collect.Lists;
 import com.spectralogic.ds3client.Ds3Client;
-import com.spectralogic.ds3client.commands.*;
+import com.spectralogic.ds3client.commands.CreateObjectResponse;
+import com.spectralogic.ds3client.commands.GetBucketResponse;
+import com.spectralogic.ds3client.commands.spectrads3.*;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.Job;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.ObjectChannelBuilder;
-import com.spectralogic.ds3client.models.Contents;
-import com.spectralogic.ds3client.models.ListBucketResult;
-import com.spectralogic.ds3client.models.Owner;
-import com.spectralogic.ds3client.models.bulk.*;
-import com.spectralogic.ds3client.models.bulk.Objects;
+import com.spectralogic.ds3client.models.*;
+import com.spectralogic.ds3client.models.bulk.Ds3Object;
 import com.spectralogic.ds3client.networking.ConnectionDetails;
 import com.spectralogic.ds3client.serializer.XmlProcessingException;
 import com.spectralogic.ds3client.utils.ByteArraySeekableByteChannel;
-
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -37,6 +35,7 @@ import org.mockito.Mockito;
 import java.io.IOException;
 import java.nio.channels.SeekableByteChannel;
 import java.security.SignatureException;
+import java.time.Instant;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
@@ -54,8 +53,8 @@ public class Ds3ClientHelpers_Test {
         final Ds3Client ds3Client = buildDs3ClientForBulk();
 
 
-        final BulkGetResponse buildBulkGetResponse = buildBulkGetResponse();
-        Mockito.when(ds3Client.bulkGet(hasChunkOrdering(ChunkClientProcessingOrderGuarantee.NONE))).thenReturn(buildBulkGetResponse);
+        final CreateGetJobSpectraS3Response buildBulkGetResponse = buildBulkGetResponse();
+        Mockito.when(ds3Client.createGetJobSpectraS3(hasChunkOrdering(JobChunkClientProcessingOrderGuarantee.NONE))).thenReturn(buildBulkGetResponse);
 
         Mockito.when(ds3Client.getObject(getRequestHas(MYBUCKET, "foo", jobId, 0))).then(getObjectAnswer("foo co"));
         Mockito.when(ds3Client.getObject(getRequestHas(MYBUCKET, "bar", jobId, 0))).then(getObjectAnswer("bar contents"));
@@ -95,13 +94,13 @@ public class Ds3ClientHelpers_Test {
     public void testReadObjectsWithFailedGet() throws SignatureException, IOException, XmlProcessingException {
         final Ds3Client ds3Client = mock(Ds3Client.class);
 
-        Mockito.when(ds3Client.newForNode(Mockito.<Node>any())).thenReturn(ds3Client);
+        Mockito.when(ds3Client.newForNode(Mockito.<NodeApiBean>any())).thenReturn(ds3Client);
 
-        final BulkGetResponse buildBulkGetResponse = buildBulkGetResponse();
-        Mockito.when(ds3Client.bulkGet(hasChunkOrdering(ChunkClientProcessingOrderGuarantee.NONE))).thenReturn(buildBulkGetResponse);
+        final CreateGetJobSpectraS3Response buildBulkGetResponse = buildBulkGetResponse();
+        Mockito.when(ds3Client.createGetJobSpectraS3(hasChunkOrdering(JobChunkClientProcessingOrderGuarantee.NONE))).thenReturn(buildBulkGetResponse);
 
-        final GetAvailableJobChunksResponse jobChunksResponse = buildJobChunksResponse2();
-        Mockito.when(ds3Client.getAvailableJobChunks(hasJobId(jobId))).thenReturn(jobChunksResponse);
+        final GetJobChunksReadyForClientProcessingSpectraS3Response jobChunksResponse = buildJobChunksResponse2();
+        Mockito.when(ds3Client.getJobChunksReadyForClientProcessingSpectraS3(hasJobId(jobId))).thenReturn(jobChunksResponse);
 
         Mockito.when(ds3Client.getObject(getRequestHas(MYBUCKET, "foo", jobId, 6))).thenThrow(new StubException());
         Mockito.when(ds3Client.getObject(getRequestHas(MYBUCKET, "baz", jobId, 6))).then(getObjectAnswer("ntents"));
@@ -125,24 +124,24 @@ public class Ds3ClientHelpers_Test {
     public void testWriteObjects() throws SignatureException, IOException, XmlProcessingException {
         final Ds3Client ds3Client = buildDs3ClientForBulk();
         
-        final BulkPutResponse bulkPutResponse = buildBulkPutResponse();
-        Mockito.when(ds3Client.bulkPut(Mockito.any(BulkPutRequest.class))).thenReturn(bulkPutResponse);
+        final CreatePutJobSpectraS3Response bulkPutResponse = buildBulkPutResponse();
+        Mockito.when(ds3Client.createPutJobSpectraS3(Mockito.any(CreatePutJobSpectraS3Request.class))).thenReturn(bulkPutResponse);
         
-        final AllocateJobChunkResponse allocateResponse1 = buildAllocateResponse1();
-        final AllocateJobChunkResponse allocateResponse2 = buildAllocateResponse2();
-        final AllocateJobChunkResponse allocateResponse3 = buildAllocateResponse3();
-        Mockito.when(ds3Client.allocateJobChunk(hasChunkId(CHUNK_ID_1)))
+        final AllocateJobChunkSpectraS3Response allocateResponse1 = buildAllocateResponse1();
+        final AllocateJobChunkSpectraS3Response allocateResponse2 = buildAllocateResponse2();
+        final AllocateJobChunkSpectraS3Response allocateResponse3 = buildAllocateResponse3();
+        Mockito.when(ds3Client.allocateJobChunkSpectraS3(hasChunkId(CHUNK_ID_1)))
             .thenReturn(allocateResponse1)
             .thenReturn(allocateResponse2);
-        Mockito.when(ds3Client.allocateJobChunk(hasChunkId(CHUNK_ID_2)))
+        Mockito.when(ds3Client.allocateJobChunkSpectraS3(hasChunkId(CHUNK_ID_2)))
             .thenReturn(allocateResponse3);
 
-        final PutObjectResponse response = mock(PutObjectResponse.class);
-        Mockito.when(ds3Client.putObject(putRequestHas(MYBUCKET, "foo", jobId, 0, "foo co"))).thenReturn(response);
-        Mockito.when(ds3Client.putObject(putRequestHas(MYBUCKET, "bar", jobId, 0, "bar contents"))).thenReturn(response);
-        Mockito.when(ds3Client.putObject(putRequestHas(MYBUCKET, "baz", jobId, 0, "baz co"))).thenReturn(response);
-        Mockito.when(ds3Client.putObject(putRequestHas(MYBUCKET, "foo", jobId, 6, "ntents"))).thenReturn(response);
-        Mockito.when(ds3Client.putObject(putRequestHas(MYBUCKET, "baz", jobId, 6, "ntents"))).thenReturn(response);
+        final CreateObjectResponse response = mock(CreateObjectResponse.class);
+        Mockito.when(ds3Client.createObject(putRequestHas(MYBUCKET, "foo", jobId, 0, "foo co"))).thenReturn(response);
+        Mockito.when(ds3Client.createObject(putRequestHas(MYBUCKET, "bar", jobId, 0, "bar contents"))).thenReturn(response);
+        Mockito.when(ds3Client.createObject(putRequestHas(MYBUCKET, "baz", jobId, 0, "baz co"))).thenReturn(response);
+        Mockito.when(ds3Client.createObject(putRequestHas(MYBUCKET, "foo", jobId, 6, "ntents"))).thenReturn(response);
+        Mockito.when(ds3Client.createObject(putRequestHas(MYBUCKET, "baz", jobId, 6, "ntents"))).thenReturn(response);
         
         final Job job = Ds3ClientHelpers.wrap(ds3Client).startWriteJob(MYBUCKET, Lists.newArrayList(
                 new Ds3Object("foo", 12),
@@ -174,18 +173,18 @@ public class Ds3ClientHelpers_Test {
         final ConnectionDetails details = mock(ConnectionDetails.class);
         Mockito.when(details.getEndpoint()).thenReturn("localhost");
 
-        Mockito.when(ds3Client.newForNode(Mockito.<Node>any())).thenReturn(ds3Client);
+        Mockito.when(ds3Client.newForNode(Mockito.<NodeApiBean>any())).thenReturn(ds3Client);
         Mockito.when(ds3Client.getConnectionDetails()).thenReturn(details);
 
-        final BulkPutResponse buildBulkPutResponse = buildBulkPutResponse();
-        Mockito.when(ds3Client.bulkPut(Mockito.any(BulkPutRequest.class))).thenReturn(buildBulkPutResponse);
+        final CreatePutJobSpectraS3Response buildBulkPutResponse = buildBulkPutResponse();
+        Mockito.when(ds3Client.createPutJobSpectraS3(Mockito.any(CreatePutJobSpectraS3Request.class))).thenReturn(buildBulkPutResponse);
 
-        final AllocateJobChunkResponse allocateResponse = buildAllocateResponse2();
-        Mockito.when(ds3Client.allocateJobChunk(hasChunkId(CHUNK_ID_1))).thenReturn(allocateResponse);
+        final AllocateJobChunkSpectraS3Response allocateResponse = buildAllocateResponse2();
+        Mockito.when(ds3Client.allocateJobChunkSpectraS3(hasChunkId(CHUNK_ID_1))).thenReturn(allocateResponse);
 
-        final PutObjectResponse putResponse = mock(PutObjectResponse.class);
-        Mockito.when(ds3Client.putObject(putRequestHas(MYBUCKET, "foo", jobId, 0, "foo co"))).thenThrow(new StubException());
-        Mockito.when(ds3Client.putObject(putRequestHas(MYBUCKET, "baz", jobId, 0, "baz co"))).thenReturn(putResponse);
+        final CreateObjectResponse putResponse = mock(CreateObjectResponse.class);
+        Mockito.when(ds3Client.createObject(putRequestHas(MYBUCKET, "foo", jobId, 0, "foo co"))).thenThrow(new StubException());
+        Mockito.when(ds3Client.createObject(putRequestHas(MYBUCKET, "baz", jobId, 0, "baz co"))).thenReturn(putResponse);
 
         final Job job = Ds3ClientHelpers.wrap(ds3Client).startWriteJob(MYBUCKET, Lists.newArrayList(
             new Ds3Object("foo"),
@@ -221,7 +220,7 @@ public class Ds3ClientHelpers_Test {
         Mockito.when(ds3Client.getBucket(getBucketHas(MYBUCKET, "baz"))).thenReturn(new StubGetBucketResponse(1));
         
         // Call the list objects method.
-        final List<Contents> contentList = Lists.newArrayList(Ds3ClientHelpers.wrap(ds3Client).listObjects(MYBUCKET));
+        final List<S3ObjectApiBean> contentList = Lists.newArrayList(Ds3ClientHelpers.wrap(ds3Client).listObjects(MYBUCKET));
         
         // Check the results.
         assertThat(contentList.size(), is(3));
@@ -231,14 +230,14 @@ public class Ds3ClientHelpers_Test {
     }
     
     private static void checkContents(
-            final Contents contents,
+            final S3ObjectApiBean contents,
             final String key,
             final String eTag,
             final String lastModified,
             final long size) {
         assertThat(contents.getKey(), is(key));
-        assertThat(contents.geteTag(), is(eTag));
-        assertThat(contents.getLastModified(), is(lastModified));
+        assertThat(contents.getETag(), is(eTag));
+        assertThat(contents.getLastModified(), is(Date.from(Instant.parse(lastModified))));
         assertThat(contents.getSize(), is(size));
     }
 
@@ -247,8 +246,8 @@ public class Ds3ClientHelpers_Test {
     public void testRecoverWriteJob() throws SignatureException, IOException, XmlProcessingException, JobRecoveryException {
         final Ds3Client ds3Client = buildDs3ClientForBulk();
 
-        final ModifyJobResponse modifyWriteJobResponse = buildModifyWriteJobResponse();
-        Mockito.when(ds3Client.modifyJob(Mockito.any(ModifyJobRequest.class))).thenReturn(modifyWriteJobResponse);
+        final ModifyJobSpectraS3Response modifyWriteJobResponse = buildModifyWriteJobResponse();
+        Mockito.when(ds3Client.modifyJobSpectraS3(Mockito.any(ModifyJobSpectraS3Request.class))).thenReturn(modifyWriteJobResponse);
 
         final Job job = Ds3ClientHelpers.wrap(ds3Client).recoverWriteJob(jobId);
         assertThat(job.getJobId(), is(jobId));
@@ -259,8 +258,8 @@ public class Ds3ClientHelpers_Test {
     public void testRecoverWriteJobThrowsJobRecoveryExceptionForWrongRequestType() throws SignatureException, IOException, XmlProcessingException, JobRecoveryException {
         final Ds3Client ds3Client = buildDs3ClientForBulk();
 
-        final ModifyJobResponse modifyReadJobResponse = buildModifyReadJobResponse();
-        Mockito.when(ds3Client.modifyJob(Mockito.any(ModifyJobRequest.class))).thenReturn(modifyReadJobResponse);
+        final ModifyJobSpectraS3Response modifyReadJobResponse = buildModifyReadJobResponse();
+        Mockito.when(ds3Client.modifyJobSpectraS3(Mockito.any(ModifyJobSpectraS3Request.class))).thenReturn(modifyReadJobResponse);
 
         Ds3ClientHelpers.wrap(ds3Client).recoverWriteJob(jobId);
     }
@@ -269,8 +268,8 @@ public class Ds3ClientHelpers_Test {
     public void testRecoverReadJob() throws SignatureException, IOException, XmlProcessingException, JobRecoveryException {
         final Ds3Client ds3Client = buildDs3ClientForBulk();
 
-        final ModifyJobResponse modifyReadJobResponse = buildModifyReadJobResponse();
-        Mockito.when(ds3Client.modifyJob(Mockito.any(ModifyJobRequest.class))).thenReturn(modifyReadJobResponse);
+        final ModifyJobSpectraS3Response modifyReadJobResponse = buildModifyReadJobResponse();
+        Mockito.when(ds3Client.modifyJobSpectraS3(Mockito.any(ModifyJobSpectraS3Request.class))).thenReturn(modifyReadJobResponse);
 
         final Job job = Ds3ClientHelpers.wrap(ds3Client).recoverReadJob(jobId);
         assertThat(job.getJobId(), is(jobId));
@@ -281,8 +280,8 @@ public class Ds3ClientHelpers_Test {
     public void testRecoverReadJobThrowsJobRecoveryExceptionForWrongRequestType() throws SignatureException, IOException, XmlProcessingException, JobRecoveryException {
         final Ds3Client ds3Client = buildDs3ClientForBulk();
 
-        final ModifyJobResponse modifyWriteJobResponse = buildModifyWriteJobResponse();
-        Mockito.when(ds3Client.modifyJob(Mockito.any(ModifyJobRequest.class))).thenReturn(modifyWriteJobResponse);
+        final ModifyJobSpectraS3Response modifyWriteJobResponse = buildModifyWriteJobResponse();
+        Mockito.when(ds3Client.modifyJobSpectraS3(Mockito.any(ModifyJobSpectraS3Request.class))).thenReturn(modifyWriteJobResponse);
 
         Ds3ClientHelpers.wrap(ds3Client).recoverReadJob(jobId);
     }
@@ -300,7 +299,7 @@ public class Ds3ClientHelpers_Test {
         }
 
         @Override
-        public ListBucketResult getResult() {
+        public BucketObjectsApiBean getBucketObjectsApiBeanResult() {
             switch (this.invocationIndex) {
             case 0: return buildListBucketResult(buildContentList0(), "", "baz", true);
             case 1: return buildListBucketResult(buildContentList1(), "baz", "", false);
@@ -310,53 +309,54 @@ public class Ds3ClientHelpers_Test {
             }
         }
 
-        private static ListBucketResult buildListBucketResult(
-                final List<Contents> contentList,
+        private static BucketObjectsApiBean buildListBucketResult(
+                final List<S3ObjectApiBean> contentList,
                 final String marker,
                 final String nextMarker,
                 final boolean isTruncated) {
-            final ListBucketResult listBucketResult = new ListBucketResult();
-            listBucketResult.setContentsList(contentList);
-            listBucketResult.setCreationDate("");
-            listBucketResult.setDelimiter("");
-            listBucketResult.setMarker(marker);
-            listBucketResult.setMaxKeys(2);
-            listBucketResult.setName(MYBUCKET);
-            listBucketResult.setNextMarker(nextMarker);
-            listBucketResult.setPrefix("");
-            listBucketResult.setTruncated(isTruncated);
-            return listBucketResult;
+            return new BucketObjectsApiBean(
+                    null,
+                    null,
+                    "",
+                    marker,
+                    2,
+                    MYBUCKET,
+                    nextMarker,
+                    contentList,
+                    "",
+                    isTruncated
+
+            );
         }
         
-        private static List<Contents> buildContentList0() {
+        private static List<S3ObjectApiBean> buildContentList0() {
             return Lists.newArrayList(
                 buildContents("foo", "2cde576e5f5a613e6cee466a681f4929", "2009-10-12T17:50:30.000Z", 12),
                 buildContents("bar", "f3f98ff00be128139332bcf4b772be43", "2009-10-14T17:50:31.000Z", 12)
             );
         }
         
-        private static List<Contents> buildContentList1() {
+        private static List<S3ObjectApiBean> buildContentList1() {
             return Lists.newArrayList(
                 buildContents("baz", "802d45fcb9a3f7d00f1481362edc0ec9", "2009-10-18T17:50:35.000Z", 12)
             );
         }
         
-        private static Contents buildContents(
+        private static S3ObjectApiBean buildContents(
                 final String key,
                 final String eTag,
                 final String lastModified,
                 final long size) {
-            final Contents contents = new Contents();
-            contents.seteTag(eTag);
-            contents.setKey(key);
-            contents.setLastModified(lastModified);
-            final Owner owner = new Owner();
-            owner.setDisplayName("person@spectralogic.com");
-            owner.setId("75aa57f09aa0c8caeab4f8c24e99d10f8e7faeebf76c078efc7c6caea54ba06a");
-            contents.setOwner(owner);
-            contents.setSize(size);
-            contents.setStorageClass("STANDARD");
-            return contents;
+            final UserApiBean owner = new UserApiBean(null, null);
+            final Object storageClass = new String("STANDARD");
+            return new S3ObjectApiBean(
+                    eTag,
+                    key,
+                    Date.from(Instant.parse(lastModified)),
+                    owner,
+                    size,
+                    storageClass
+            );
         }
     }
     
@@ -368,23 +368,23 @@ public class Ds3ClientHelpers_Test {
         final Ds3Client ds3Client = mock(Ds3Client.class);
         final ConnectionDetails details = mock(ConnectionDetails.class);
         Mockito.when(details.getEndpoint()).thenReturn("localhost");
-        final GetAvailableJobChunksResponse jobChunksResponse1 = buildJobChunksResponse1();
-        final GetAvailableJobChunksResponse jobChunksResponse2 = buildJobChunksResponse2();
-        final GetAvailableJobChunksResponse jobChunksResponse3 = buildJobChunksResponse3();
-        Mockito.when(ds3Client.getAvailableJobChunks(hasJobId(jobId)))
+        final GetJobChunksReadyForClientProcessingSpectraS3Response jobChunksResponse1 = buildJobChunksResponse1();
+        final GetJobChunksReadyForClientProcessingSpectraS3Response jobChunksResponse2 = buildJobChunksResponse2();
+        final GetJobChunksReadyForClientProcessingSpectraS3Response jobChunksResponse3 = buildJobChunksResponse3();
+        Mockito.when(ds3Client.getJobChunksReadyForClientProcessingSpectraS3(hasJobId(jobId)))
             .thenReturn(jobChunksResponse1)
             .thenReturn(jobChunksResponse2)
             .thenReturn(jobChunksResponse3);
 
-        Mockito.when(ds3Client.newForNode(Mockito.<Node>any())).thenReturn(ds3Client);
+        Mockito.when(ds3Client.newForNode(Mockito.<NodeApiBean>any())).thenReturn(ds3Client);
         Mockito.when(ds3Client.getConnectionDetails()).thenReturn(details);
         return ds3Client;
     }
 
-    private static BulkGetResponse buildBulkGetResponse() {
+    private static CreateGetJobSpectraS3Response buildBulkGetResponse() {
         return bulkGetResponse(buildJobResponse(
-                RequestType.GET,
-                ChunkClientProcessingOrderGuarantee.NONE,
+                JobRequestType.GET,
+                JobChunkClientProcessingOrderGuarantee.NONE,
                 0L,
                 0L,
                 chunk1(false),
@@ -392,34 +392,34 @@ public class Ds3ClientHelpers_Test {
         ));
     }
     
-    private static GetAvailableJobChunksResponse buildJobChunksResponse1() {
+    private static GetJobChunksReadyForClientProcessingSpectraS3Response buildJobChunksResponse1() {
         return retryGetAvailableAfter(1);
     }
     
-    private static GetAvailableJobChunksResponse buildJobChunksResponse2() {
+    private static GetJobChunksReadyForClientProcessingSpectraS3Response buildJobChunksResponse2() {
         return availableJobChunks(buildJobResponse(
-                RequestType.GET,
-                ChunkClientProcessingOrderGuarantee.NONE,
+                JobRequestType.GET,
+                JobChunkClientProcessingOrderGuarantee.NONE,
                 12L,
                 0L,
                 chunk2(true)
         ));
     }
     
-    private static GetAvailableJobChunksResponse buildJobChunksResponse3() {
+    private static GetJobChunksReadyForClientProcessingSpectraS3Response buildJobChunksResponse3() {
         return availableJobChunks(buildJobResponse(
-                RequestType.GET,
-                ChunkClientProcessingOrderGuarantee.NONE,
+                JobRequestType.GET,
+                JobChunkClientProcessingOrderGuarantee.NONE,
                 24L,
                 12L,
                 chunk1(true)
         ));
     }
 
-    private static BulkPutResponse buildBulkPutResponse() {
+    private static CreatePutJobSpectraS3Response buildBulkPutResponse() {
         return bulkPutResponse(buildJobResponse(
-                RequestType.PUT,
-                ChunkClientProcessingOrderGuarantee.IN_ORDER,
+                JobRequestType.PUT,
+                JobChunkClientProcessingOrderGuarantee.IN_ORDER,
                 0L,
                 0L,
                 chunk1(false),
@@ -427,10 +427,10 @@ public class Ds3ClientHelpers_Test {
         ));
     }
 
-    private static ModifyJobResponse buildModifyWriteJobResponse() {
+    private static ModifyJobSpectraS3Response buildModifyWriteJobResponse() {
         return modifyJobResponse(buildJobResponse(
-                RequestType.PUT,
-                ChunkClientProcessingOrderGuarantee.IN_ORDER,
+                JobRequestType.PUT,
+                JobChunkClientProcessingOrderGuarantee.IN_ORDER,
                 0L,
                 0L,
                 chunk1(false),
@@ -438,10 +438,10 @@ public class Ds3ClientHelpers_Test {
         ));
     }
 
-    private static ModifyJobResponse buildModifyReadJobResponse() {
+    private static ModifyJobSpectraS3Response buildModifyReadJobResponse() {
         return modifyJobResponse(buildJobResponse(
-                RequestType.GET,
-                ChunkClientProcessingOrderGuarantee.IN_ORDER,
+                JobRequestType.GET,
+                JobChunkClientProcessingOrderGuarantee.IN_ORDER,
                 0L,
                 0L,
                 chunk1(false),
@@ -449,24 +449,24 @@ public class Ds3ClientHelpers_Test {
         ));
     }
 
-    private static AllocateJobChunkResponse buildAllocateResponse1() {
+    private static AllocateJobChunkSpectraS3Response buildAllocateResponse1() {
         return retryAllocateLater(1);
     }
     
-    private static AllocateJobChunkResponse buildAllocateResponse2() {
+    private static AllocateJobChunkSpectraS3Response buildAllocateResponse2() {
         return allocated(chunk1(false));
     }
     
-    private static AllocateJobChunkResponse buildAllocateResponse3() {
+    private static AllocateJobChunkSpectraS3Response buildAllocateResponse3() {
         return allocated(chunk2(false));
     }
 
-    private static MasterObjectList buildJobResponse(
-            final RequestType requestType,
-            final ChunkClientProcessingOrderGuarantee chunkOrdering,
+    private static JobWithChunksApiBean buildJobResponse(
+            final JobRequestType requestType,
+            final JobChunkClientProcessingOrderGuarantee chunkOrdering,
             final long cachedSizeInBytes,
             final long completedSizeInBytes,
-            final Objects ... chunks) {
+            final JobChunkApiBean ... chunks) {
         return ResponseBuilders.jobResponse(
             jobId,
             MYBUCKET,
@@ -475,7 +475,7 @@ public class Ds3ClientHelpers_Test {
             cachedSizeInBytes,
             completedSizeInBytes,
             chunkOrdering,
-            Priority.CRITICAL,
+                BlobStoreTaskPriority.CRITICAL,
             "9/17/2014 1:03:54 PM",
             UUID.fromString("57919d2d-448c-4e2a-8886-0413af22243e"),
             "spectra",
@@ -486,7 +486,7 @@ public class Ds3ClientHelpers_Test {
     }
 
     private static final UUID CHUNK_ID_1 = UUID.fromString("f44f1aab-f365-4814-883f-037d6afa6bcf");
-    private static Objects chunk1(final boolean inCache) {
+    private static JobChunkApiBean chunk1(final boolean inCache) {
         return chunk(
                 1,
                 CHUNK_ID_1,
@@ -498,7 +498,7 @@ public class Ds3ClientHelpers_Test {
     }
 
     private static final UUID CHUNK_ID_2 = UUID.fromString("7cda9f1a-3a7d-44a5-813e-29535228c40c");
-    private static Objects chunk2(final boolean inCache) {
+    private static JobChunkApiBean chunk2(final boolean inCache) {
         return chunk(
                 2,
                 CHUNK_ID_2,

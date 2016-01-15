@@ -15,7 +15,12 @@ public class GetObjectRequest_Test {
 
     @Test
     public void singleRangeFormat() {
-       final GetObjectRequest request = new GetObjectRequest("bucketName", "objectName", 0, UUID.randomUUID(), null);
+       final GetObjectRequest request = new GetObjectRequest(
+               "bucketName",
+               "objectName",
+               null,
+               UUID.randomUUID(),
+               0);
 
         request.withByteRanges(Range.byPosition(0, 100));
 
@@ -29,7 +34,12 @@ public class GetObjectRequest_Test {
 
     @Test
     public void multipleRangeFormat() {
-        final GetObjectRequest request = new GetObjectRequest("bucketName", "objectName", 0, UUID.randomUUID(), null);
+        final GetObjectRequest request = new GetObjectRequest(
+                "bucketName",
+                "objectName",
+                null,
+                UUID.randomUUID(),
+                0);
 
         request.withByteRanges(Range.byPosition(0, 100), Range.byPosition(150, 200));
 

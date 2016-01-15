@@ -15,6 +15,7 @@
 
 package com.spectralogic.ds3client.helpers;
 
+import com.spectralogic.ds3client.models.BlobApiBean;
 import com.spectralogic.ds3client.models.bulk.BulkObject;
 
 import org.junit.Test;
@@ -30,10 +31,10 @@ public class JobPartTrackerFactory_Test {
     @Test
     public void createdTrackerTracksParts() {
         final JobPartTracker tracker = JobPartTrackerFactory.buildPartTracker(Arrays.asList(
-            new BulkObject("foo", 10L, false, 0L),
-            new BulkObject("bar", 13L, false, 0L),
-            new BulkObject("foo", 11L, true, 10L),
-            new BulkObject("baz", 12L, true, 0L)
+                new BlobApiBean(null, false, true, 10L, "foo", 0L, null, 1),
+                new BlobApiBean(null, false, true, 13L, "bar", 0L, null, 1),
+                new BlobApiBean(null, true, true, 11L, "foo", 10L, null, 1),
+                new BlobApiBean(null, true, true, 12L, "baz", 0L, null, 1)
         ));
 
         final List<Long> transfers = new ArrayList<>();

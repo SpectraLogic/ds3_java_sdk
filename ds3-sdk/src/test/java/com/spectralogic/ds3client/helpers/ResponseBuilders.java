@@ -15,10 +15,11 @@
 
 package com.spectralogic.ds3client.helpers;
 
-import com.spectralogic.ds3client.commands.*;
-import com.spectralogic.ds3client.models.bulk.*;
+import com.spectralogic.ds3client.commands.GetObjectRequest;
+import com.spectralogic.ds3client.commands.GetObjectResponse;
+import com.spectralogic.ds3client.commands.spectrads3.*;
+import com.spectralogic.ds3client.models.*;
 import com.spectralogic.ds3client.utils.ByteArraySeekableByteChannel;
-
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
@@ -27,140 +28,141 @@ import java.io.Writer;
 import java.nio.channels.Channels;
 import java.nio.channels.SeekableByteChannel;
 import java.nio.channels.WritableByteChannel;
+import java.sql.Date;
+import java.time.Instant;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class ResponseBuilders {
-    public static BulkGetResponse bulkGetResponse(final MasterObjectList masterObjectList) {
-        final BulkGetResponse response = mock(BulkGetResponse.class);
+    public static CreateGetJobSpectraS3Response bulkGetResponse(final JobWithChunksApiBean jobWithChunksApiBean) {
+        final CreateGetJobSpectraS3Response response = mock(CreateGetJobSpectraS3Response.class);
+        when(response.getResult()).thenReturn(jobWithChunksApiBean);
+        return response;
+    }
+
+    public static CreatePutJobSpectraS3Response bulkPutResponse(final JobWithChunksApiBean masterObjectList) {
+        final CreatePutJobSpectraS3Response response = mock(CreatePutJobSpectraS3Response.class);
         when(response.getResult()).thenReturn(masterObjectList);
         return response;
     }
 
-    public static BulkPutResponse bulkPutResponse(final MasterObjectList masterObjectList) {
-        final BulkPutResponse response = mock(BulkPutResponse.class);
-        when(response.getResult()).thenReturn(masterObjectList);
+    public static ModifyJobSpectraS3Response modifyJobResponse(final JobWithChunksApiBean masterObjectList) {
+        final ModifyJobSpectraS3Response response = mock(ModifyJobSpectraS3Response.class);
+        when(response.getJobWithChunksContainerApiBeanResult().getJob()).thenReturn(masterObjectList);
         return response;
     }
 
-    public static ModifyJobResponse modifyJobResponse(final MasterObjectList masterObjectList) {
-        final ModifyJobResponse response = mock(ModifyJobResponse.class);
-        when(response.getMasterObjectList()).thenReturn(masterObjectList);
-        return response;
-    }
-
-    public static GetAvailableJobChunksResponse availableJobChunks(final MasterObjectList masterObjectList) {
-        final GetAvailableJobChunksResponse response = mock(GetAvailableJobChunksResponse.class);
-        when(response.getStatus()).thenReturn(GetAvailableJobChunksResponse.Status.AVAILABLE);
-        when(response.getMasterObjectList()).thenReturn(masterObjectList);
+    public static GetJobChunksReadyForClientProcessingSpectraS3Response availableJobChunks(final JobWithChunksApiBean jobWithChunksApiBean) {
+        final GetJobChunksReadyForClientProcessingSpectraS3Response response = mock(GetJobChunksReadyForClientProcessingSpectraS3Response.class);
+        when(response.getStatus()).thenReturn(GetJobChunksReadyForClientProcessingSpectraS3Response.Status.AVAILABLE);
+        when(response.getJobWithChunksContainerApiBeanResult().getJob()).thenReturn(jobWithChunksApiBean);
         return response;
     }
     
-    public static GetAvailableJobChunksResponse retryGetAvailableAfter(final int retryAfterInSeconds) {
-        final GetAvailableJobChunksResponse response = mock(GetAvailableJobChunksResponse.class);
-        when(response.getStatus()).thenReturn(GetAvailableJobChunksResponse.Status.RETRYLATER);
+    public static GetJobChunksReadyForClientProcessingSpectraS3Response retryGetAvailableAfter(final int retryAfterInSeconds) {
+        final GetJobChunksReadyForClientProcessingSpectraS3Response response = mock(GetJobChunksReadyForClientProcessingSpectraS3Response.class);
+        when(response.getStatus()).thenReturn(GetJobChunksReadyForClientProcessingSpectraS3Response.Status.RETRYLATER);
         when(response.getRetryAfterSeconds()).thenReturn(retryAfterInSeconds);
         return response;
     }
     
-    public static AllocateJobChunkResponse allocated(final Objects chunk) {
-        final AllocateJobChunkResponse response = mock(AllocateJobChunkResponse.class);
-        when(response.getStatus()).thenReturn(AllocateJobChunkResponse.Status.ALLOCATED);
-        when(response.getObjects()).thenReturn(chunk);
+    public static AllocateJobChunkSpectraS3Response allocated(final JobChunkApiBean chunk) {
+        final AllocateJobChunkSpectraS3Response response = mock(AllocateJobChunkSpectraS3Response.class);
+        when(response.getStatus()).thenReturn(AllocateJobChunkSpectraS3Response.Status.ALLOCATED);
+        when(response.getJobChunkContainerApiBeanResult().getJobChunk()).thenReturn(chunk);
         return response;
     }
     
-    public static AllocateJobChunkResponse retryAllocateLater(final int retryAfterInSeconds) {
-        final AllocateJobChunkResponse response = mock(AllocateJobChunkResponse.class);
-        when(response.getStatus()).thenReturn(AllocateJobChunkResponse.Status.RETRYLATER);
+    public static AllocateJobChunkSpectraS3Response retryAllocateLater(final int retryAfterInSeconds) {
+        final AllocateJobChunkSpectraS3Response response = mock(AllocateJobChunkSpectraS3Response.class);
+        when(response.getStatus()).thenReturn(AllocateJobChunkSpectraS3Response.Status.RETRYLATER);
         when(response.getRetryAfterSeconds()).thenReturn(retryAfterInSeconds);
         return response;
     }
     
-    public static MasterObjectList jobResponse(
+    public static JobWithChunksApiBean jobResponse(
             final UUID jobId,
             final String bucketName,
-            final RequestType requestType,
+            final JobRequestType requestType,
             final long originalSizeInBytes,
             final long cachedSizeInBytes,
             final long completedSizeInBytes,
-            final ChunkClientProcessingOrderGuarantee chunkClientProcessingOrderGuarantee,
-            final Priority priority,
+            final JobChunkClientProcessingOrderGuarantee chunkClientProcessingOrderGuarantee,
+            final BlobStoreTaskPriority priority,
             final String startDate,
             final UUID userId,
             final String userName,
             final WriteOptimization writeOptimization,
-            final List<Node> nodes,
-            final List<Objects> objects) {
-        final MasterObjectList masterObjectList = new MasterObjectList();
-        masterObjectList.setJobId(jobId);
-        masterObjectList.setBucketName(bucketName);
-        masterObjectList.setRequestType(requestType);
-        masterObjectList.setOriginalSizeInBytes(originalSizeInBytes);
-        masterObjectList.setCachedSizeInBytes(cachedSizeInBytes);
-        masterObjectList.setCompletedSizeInBytes(completedSizeInBytes);
-        masterObjectList.setChunkClientProcessingOrderGuarantee(chunkClientProcessingOrderGuarantee);
-        masterObjectList.setPriority(priority);
-        masterObjectList.setStartDate(startDate);
-        masterObjectList.setUserId(userId);
-        masterObjectList.setUserName(userName);
-        masterObjectList.setWriteOptimization(writeOptimization);
-        masterObjectList.setNodes(nodes);
-        masterObjectList.setObjects(objects);
-        return masterObjectList;
+            final List<NodeApiBean> nodes,
+            final List<JobChunkApiBean> objects) {
+        return new JobWithChunksApiBean(
+                bucketName,
+                cachedSizeInBytes,
+                chunkClientProcessingOrderGuarantee,
+                completedSizeInBytes,
+                jobId,
+                null, //TODO verify assumption of default value
+                nodes,
+                objects,
+                originalSizeInBytes,
+                priority,
+                requestType,
+                Date.from(Instant.parse(startDate)),
+                null, //TODO verify assumption of default value
+                userId,
+                userName,
+                writeOptimization
+        );
     }
     
-    public static Node basicNode(final UUID nodeId, final String endpoint) {
+    public static NodeApiBean basicNode(final UUID nodeId, final String endpoint) {
         return node(nodeId, endpoint, 80, 443);
     }
 
-    public static Node node(
+    public static NodeApiBean node(
             final UUID nodeId,
             final String endpoint,
             final int httpPort,
             final int httpsPort) {
-        final Node node = new Node();
-        node.setId(nodeId);
-        node.setEndpoint(endpoint);
-        node.setHttpPort(httpPort);
-        node.setHttpsPort(httpsPort);
-        return node;
+        return new NodeApiBean(
+                endpoint, httpPort, httpsPort, nodeId);
     }
 
-    public static Objects chunk(
-            final long chunkNumber,
+    public static JobChunkApiBean chunk(
+            final int chunkNumber,
             final UUID chunkId,
             final UUID nodeId,
-            final BulkObject ... chunkList) {
-        final Objects objects = new Objects();
-        objects.setChunkNumber(chunkNumber);
-        objects.setChunkId(chunkId);
-        objects.setNodeId(nodeId);
-        objects.setObjects(Arrays.asList(chunkList));
-        return objects;
+            final BlobApiBean ... chunkList) {
+        return new JobChunkApiBean(
+                chunkId, chunkNumber, nodeId, Arrays.asList(chunkList));
     }
     
-    public static BulkObject object(
+    public static BlobApiBean object(
             final String name,
             final long offset,
             final long length,
             final boolean inCache) {
-        final BulkObject bulkObject = new BulkObject();
-        bulkObject.setName(name);
-        bulkObject.setOffset(offset);
-        bulkObject.setLength(length);
-        bulkObject.setInCache(inCache);
-        return bulkObject;
+        return new BlobApiBean(
+                UUID.randomUUID(), //TODO verify that this is valid default value for testing
+                inCache,
+                true,
+                length,
+                name,
+                offset,
+                null, //TODO verify that this is valid default value for testing
+                1
+        );
     }
     
     public static Answer<GetObjectResponse> getObjectAnswer(final String result) {
         return new Answer<GetObjectResponse>() {
             @Override
             public GetObjectResponse answer(final InvocationOnMock invocation) throws Throwable {
-                writeToChannel(result, ((GetObjectRequest)invocation.getArguments()[0]).getDestinationChannel());
+                writeToChannel(result, ((GetObjectRequest)invocation.getArguments()[0]).getChannel());
                 return mock(GetObjectResponse.class);
             }
         };

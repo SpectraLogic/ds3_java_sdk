@@ -1,8 +1,8 @@
 package com.spectralogic.ds3client.helpers.channels;
 
 import com.google.common.collect.ImmutableMultimap;
+import com.spectralogic.ds3client.models.BlobApiBean;
 import com.spectralogic.ds3client.models.Range;
-import com.spectralogic.ds3client.models.bulk.BulkObject;
 import com.spectralogic.ds3client.utils.ByteArraySeekableByteChannel;
 import org.junit.Test;
 
@@ -24,15 +24,15 @@ public class RangedSeekableByteChannel_Test {
         final ByteBuffer firstBlobData = ByteBuffer.wrap(firstPartialBlob.getBytes(Charset.forName("UTF-8")));
         final ByteBuffer secondBlobData = ByteBuffer.wrap(secondPartialBlob.getBytes(Charset.forName("UTF-8")));
 
-        final ImmutableMultimap.Builder<BulkObject, Range> builder = ImmutableMultimap.builder();
+        final ImmutableMultimap.Builder<BlobApiBean, Range> builder = ImmutableMultimap.builder();
 
-        final BulkObject blob1 = new BulkObject("obj1.txt", 50, true, 0);
-        final BulkObject blob2 = new BulkObject("obj1.txt", 50, true, 50);
+        final BlobApiBean blob1 = new BlobApiBean(null, true, true, 50, "obj1.txt", 0, null, 1);
+        final BlobApiBean blob2 =new BlobApiBean(null, true, true, 50, "obj1.txt", 50, null, 1);
 
         builder.put(blob1, Range.byLength(0, firstBlobData.limit()));
         builder.put(blob2, Range.byLength(50, secondBlobData.limit()));
 
-        final ImmutableMultimap<BulkObject, Range> ranges = builder.build();
+        final ImmutableMultimap<BlobApiBean, Range> ranges = builder.build();
 
         final ByteArraySeekableByteChannel channel = new ByteArraySeekableByteChannel();
         try (final RangedSeekableByteChannel rangedChannel = new RangedSeekableByteChannel(channel, ranges)) {
@@ -56,15 +56,15 @@ public class RangedSeekableByteChannel_Test {
         final ByteBuffer firstBlobData = ByteBuffer.wrap(firstPartialBlob.getBytes(Charset.forName("UTF-8")));
         final ByteBuffer secondBlobData = ByteBuffer.wrap(secondPartialBlob.getBytes(Charset.forName("UTF-8")));
 
-        final ImmutableMultimap.Builder<BulkObject, Range> builder = ImmutableMultimap.builder();
+        final ImmutableMultimap.Builder<BlobApiBean, Range> builder = ImmutableMultimap.builder();
 
-        final BulkObject blob1 = new BulkObject("obj1.txt", 50, true, 0);
-        final BulkObject blob2 = new BulkObject("obj1.txt", 50, true, 50);
+        final BlobApiBean blob1 = new BlobApiBean(null, true, true, 50, "obj1.txt", 0, null, 1);
+        final BlobApiBean blob2 =new BlobApiBean(null, true, true, 50, "obj1.txt", 50, null, 1);
 
         builder.put(blob1, Range.byLength(5, firstBlobData.limit()));
         builder.put(blob2, Range.byLength(60, secondBlobData.limit()));
 
-        final ImmutableMultimap<BulkObject, Range> ranges = builder.build();
+        final ImmutableMultimap<BlobApiBean, Range> ranges = builder.build();
 
         final ByteArraySeekableByteChannel channel = new ByteArraySeekableByteChannel();
         try (final RangedSeekableByteChannel rangedChannel = new RangedSeekableByteChannel(channel, ranges)) {
@@ -82,15 +82,15 @@ public class RangedSeekableByteChannel_Test {
 
     @Test(expected = IllegalStateException.class)
     public void seekToInvalidPosition() throws IOException {
-        final ImmutableMultimap.Builder<BulkObject, Range> builder = ImmutableMultimap.builder();
+        final ImmutableMultimap.Builder<BlobApiBean, Range> builder = ImmutableMultimap.builder();
 
-        final BulkObject blob1 = new BulkObject("obj1.txt", 20, true, 0);
-        final BulkObject blob2 = new BulkObject("obj1.txt", 20, true, 20);
+        final BlobApiBean blob1 = new BlobApiBean(null, true, true, 20, "obj1.txt", 0, null, 1);
+        final BlobApiBean blob2 =new BlobApiBean(null, true, true, 20, "obj1.txt", 20, null, 1);
 
         builder.put(blob1, Range.byPosition(5, 15));
         builder.put(blob2, Range.byPosition(20, 10));
 
-        final ImmutableMultimap<BulkObject, Range> ranges = builder.build();
+        final ImmutableMultimap<BlobApiBean, Range> ranges = builder.build();
 
         final ByteArraySeekableByteChannel channel = new ByteArraySeekableByteChannel();
         try (final RangedSeekableByteChannel rangedChannel = new RangedSeekableByteChannel(channel, ranges)) {
