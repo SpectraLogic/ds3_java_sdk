@@ -36,7 +36,7 @@ public class VerifySystemHealthSpectraS3Request extends AbstractRequest {
 
     @Override
     public String getPath() {
-        return "/_rest_/system_health/";
+        return "/_rest_/system_health";
     }
     
 }

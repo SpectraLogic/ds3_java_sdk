@@ -84,7 +84,7 @@ public class GetGroupsSpectraS3Request extends AbstractRequest {
 
     @Override
     public String getPath() {
-        return "/_rest_/group/";
+        return "/_rest_/group";
     }
     
     public boolean getBuiltIn() {

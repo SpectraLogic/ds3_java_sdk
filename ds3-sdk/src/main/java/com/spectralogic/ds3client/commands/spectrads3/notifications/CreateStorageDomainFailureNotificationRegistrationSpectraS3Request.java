@@ -33,7 +33,9 @@ public class CreateStorageDomainFailureNotificationRegistrationSpectraS3Request 
     public CreateStorageDomainFailureNotificationRegistrationSpectraS3Request(final String notificationEndPoint) {
         super(notificationEndPoint);
 
-            }
+        
+        this.getQueryParams().put("notification_end_point", notificationEndPoint);
+    }
 
     public CreateStorageDomainFailureNotificationRegistrationSpectraS3Request withFormat(final HttpResponseFormatType format) {
         this.format = format;
@@ -56,7 +58,7 @@ public class CreateStorageDomainFailureNotificationRegistrationSpectraS3Request 
 
     @Override
     public String getPath() {
-        return "/_rest_/storage_domain_failure_notification_registration/";
+        return "/_rest_/storage_domain_failure_notification_registration";
     }
 
     public HttpResponseFormatType getFormat() {

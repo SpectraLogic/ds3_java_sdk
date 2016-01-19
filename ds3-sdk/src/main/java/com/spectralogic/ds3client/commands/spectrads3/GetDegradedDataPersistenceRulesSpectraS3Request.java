@@ -107,7 +107,7 @@ public class GetDegradedDataPersistenceRulesSpectraS3Request extends AbstractReq
 
     @Override
     public String getPath() {
-        return "/_rest_/degraded_data_persistence_rule/";
+        return "/_rest_/degraded_data_persistence_rule";
     }
     
     public UUID getDataPolicyId() {

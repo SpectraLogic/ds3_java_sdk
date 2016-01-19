@@ -34,6 +34,8 @@ public class CreateBucketSpectraS3Request extends AbstractRequest {
     public CreateBucketSpectraS3Request(final String name) {
         this.name = name;
         
+        this.getQueryParams().put("name", name);
+
     }
     public CreateBucketSpectraS3Request withDataPolicyId(final UUID dataPolicyId) {
         this.dataPolicyId = dataPolicyId;
@@ -55,7 +57,7 @@ public class CreateBucketSpectraS3Request extends AbstractRequest {
 
     @Override
     public String getPath() {
-        return "/_rest_/bucket/";
+        return "/_rest_/bucket";
     }
     
     public String getName() {

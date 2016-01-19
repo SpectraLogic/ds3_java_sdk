@@ -120,7 +120,7 @@ public class GetStorageDomainsSpectraS3Request extends AbstractRequest {
 
     @Override
     public String getPath() {
-        return "/_rest_/storage_domain/";
+        return "/_rest_/storage_domain";
     }
     
     public String getAutoEjectUponCron() {

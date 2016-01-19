@@ -36,7 +36,7 @@ public class ForceTapeEnvironmentRefreshSpectraS3Request extends AbstractRequest
 
     @Override
     public String getPath() {
-        return "/_rest_/tape_environment/";
+        return "/_rest_/tape_environment";
     }
     
 }

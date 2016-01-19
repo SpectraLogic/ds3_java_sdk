@@ -31,6 +31,8 @@ public class CreateGlobalDataPolicyAclForUserSpectraS3Request extends AbstractRe
     public CreateGlobalDataPolicyAclForUserSpectraS3Request(final UUID userId) {
         this.userId = userId;
         
+        this.getQueryParams().put("user_id", userId.toString());
+
     }
 
     @Override
@@ -40,7 +42,7 @@ public class CreateGlobalDataPolicyAclForUserSpectraS3Request extends AbstractRe
 
     @Override
     public String getPath() {
-        return "/_rest_/data_policy_acl/";
+        return "/_rest_/data_policy_acl";
     }
     
     public UUID getUserId() {

@@ -38,6 +38,12 @@ public class CreateBucketAclForUserSpectraS3Request extends AbstractRequest {
         this.permission = permission;
         this.userId = userId;
         
+        this.getQueryParams().put("bucket_id", bucketId.toString());
+
+        this.getQueryParams().put("permission", permission.toString());
+
+        this.getQueryParams().put("user_id", userId.toString());
+
     }
 
     @Override
@@ -47,7 +53,7 @@ public class CreateBucketAclForUserSpectraS3Request extends AbstractRequest {
 
     @Override
     public String getPath() {
-        return "/_rest_/bucket_acl/";
+        return "/_rest_/bucket_acl";
     }
     
     public UUID getBucketId() {

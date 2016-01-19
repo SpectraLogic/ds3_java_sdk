@@ -235,7 +235,7 @@ public class Ds3Client_Test {
     public void deleteFolderRecursivelySpectraS3() throws IOException, SignatureException {
         final UUID bucketId = UUID.randomUUID();
         final Map<String, String> queryParams = new HashMap<>();
-        queryParams.put("bucketId", bucketId.toString());
+        queryParams.put("bucket_id", bucketId.toString());
         queryParams.put("recursive", null);
 
         MockNetwork
@@ -542,7 +542,7 @@ public class Ds3Client_Test {
         headers.put("retry-after", "300");
         final AllocateJobChunkSpectraS3Response response = MockNetwork
             .expecting(HttpVerb.PUT, "/_rest_/job_chunk/203f6886-b058-4f7c-a012-8779176453b1", queryParams, null)
-            .returning(503, "", headers)
+            .returning(403, "", headers)
             .asClient()
             .allocateJobChunkSpectraS3(new AllocateJobChunkSpectraS3Request(UUID.fromString("203f6886-b058-4f7c-a012-8779176453b1")));
         

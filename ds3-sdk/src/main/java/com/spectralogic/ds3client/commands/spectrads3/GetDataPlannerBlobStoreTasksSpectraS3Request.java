@@ -47,7 +47,7 @@ public class GetDataPlannerBlobStoreTasksSpectraS3Request extends AbstractReques
 
     @Override
     public String getPath() {
-        return "/_rest_/blob_store_task/";
+        return "/_rest_/blob_store_task";
     }
     
     public boolean getFullDetails() {

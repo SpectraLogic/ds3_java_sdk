@@ -92,7 +92,7 @@ public class GetDataPoliciesSpectraS3Request extends AbstractRequest {
 
     @Override
     public String getPath() {
-        return "/_rest_/data_policy/";
+        return "/_rest_/data_policy";
     }
     
     public ChecksumType.Type getChecksumType() {

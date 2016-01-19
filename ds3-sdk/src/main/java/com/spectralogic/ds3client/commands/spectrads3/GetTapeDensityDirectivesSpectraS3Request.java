@@ -92,7 +92,7 @@ public class GetTapeDensityDirectivesSpectraS3Request extends AbstractRequest {
 
     @Override
     public String getPath() {
-        return "/_rest_/tape_density_directive/";
+        return "/_rest_/tape_density_directive";
     }
     
     public TapeDriveType getDensity() {

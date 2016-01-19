@@ -44,6 +44,8 @@ public class CreateDataPolicySpectraS3Request extends AbstractRequest {
     public CreateDataPolicySpectraS3Request(final String name) {
         this.name = name;
         
+        this.getQueryParams().put("name", name);
+
     }
     public CreateDataPolicySpectraS3Request withBlobbingEnabled(final boolean blobbingEnabled) {
         this.blobbingEnabled = blobbingEnabled;
@@ -107,7 +109,7 @@ public class CreateDataPolicySpectraS3Request extends AbstractRequest {
 
     @Override
     public String getPath() {
-        return "/_rest_/data_policy/";
+        return "/_rest_/data_policy";
     }
     
     public String getName() {

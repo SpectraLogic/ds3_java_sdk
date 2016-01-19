@@ -39,6 +39,12 @@ public class CreateTapeDensityDirectiveSpectraS3Request extends AbstractRequest 
         this.partitionId = partitionId;
         this.tapeType = tapeType;
         
+        this.getQueryParams().put("density", density.toString());
+
+        this.getQueryParams().put("partition_id", partitionId.toString());
+
+        this.getQueryParams().put("tape_type", tapeType.toString());
+
     }
 
     @Override
@@ -48,7 +54,7 @@ public class CreateTapeDensityDirectiveSpectraS3Request extends AbstractRequest 
 
     @Override
     public String getPath() {
-        return "/_rest_/tape_density_directive/";
+        return "/_rest_/tape_density_directive";
     }
     
     public TapeDriveType getDensity() {

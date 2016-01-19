@@ -114,7 +114,7 @@ public class GetStorageDomainMembersSpectraS3Request extends AbstractRequest {
 
     @Override
     public String getPath() {
-        return "/_rest_/storage_domain_member/";
+        return "/_rest_/storage_domain_member";
     }
     
     public boolean getLastPage() {

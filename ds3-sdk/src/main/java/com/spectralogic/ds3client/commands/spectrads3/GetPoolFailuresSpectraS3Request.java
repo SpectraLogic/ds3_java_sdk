@@ -92,7 +92,7 @@ public class GetPoolFailuresSpectraS3Request extends AbstractRequest {
 
     @Override
     public String getPath() {
-        return "/_rest_/pool_failure/";
+        return "/_rest_/pool_failure";
     }
     
     public String getErrorMessage() {

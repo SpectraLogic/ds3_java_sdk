@@ -91,7 +91,7 @@ public class GetDegradedBucketsSpectraS3Request extends AbstractRequest {
 
     @Override
     public String getPath() {
-        return "/_rest_/degraded_bucket/";
+        return "/_rest_/degraded_bucket";
     }
     
     public UUID getDataPolicyId() {

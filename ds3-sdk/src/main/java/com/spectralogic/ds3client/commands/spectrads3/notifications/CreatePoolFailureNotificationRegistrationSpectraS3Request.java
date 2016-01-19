@@ -33,7 +33,9 @@ public class CreatePoolFailureNotificationRegistrationSpectraS3Request extends A
     public CreatePoolFailureNotificationRegistrationSpectraS3Request(final String notificationEndPoint) {
         super(notificationEndPoint);
 
-            }
+        
+        this.getQueryParams().put("notification_end_point", notificationEndPoint);
+    }
 
     public CreatePoolFailureNotificationRegistrationSpectraS3Request withFormat(final HttpResponseFormatType format) {
         this.format = format;
@@ -56,7 +58,7 @@ public class CreatePoolFailureNotificationRegistrationSpectraS3Request extends A
 
     @Override
     public String getPath() {
-        return "/_rest_/pool_failure_notification_registration/";
+        return "/_rest_/pool_failure_notification_registration";
     }
 
     public HttpResponseFormatType getFormat() {

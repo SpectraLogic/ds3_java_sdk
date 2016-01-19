@@ -33,7 +33,9 @@ public class CreateSystemFailureNotificationRegistrationSpectraS3Request extends
     public CreateSystemFailureNotificationRegistrationSpectraS3Request(final String notificationEndPoint) {
         super(notificationEndPoint);
 
-            }
+        
+        this.getQueryParams().put("notification_end_point", notificationEndPoint);
+    }
 
     public CreateSystemFailureNotificationRegistrationSpectraS3Request withFormat(final HttpResponseFormatType format) {
         this.format = format;
@@ -56,7 +58,7 @@ public class CreateSystemFailureNotificationRegistrationSpectraS3Request extends
 
     @Override
     public String getPath() {
-        return "/_rest_/system_failure_notification_registration/";
+        return "/_rest_/system_failure_notification_registration";
     }
 
     public HttpResponseFormatType getFormat() {

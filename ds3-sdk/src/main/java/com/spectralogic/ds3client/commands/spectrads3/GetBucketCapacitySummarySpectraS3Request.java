@@ -44,6 +44,10 @@ public class GetBucketCapacitySummarySpectraS3Request extends AbstractRequest {
         this.bucketId = bucketId;
         this.storageDomainId = storageDomainId;
         
+        this.getQueryParams().put("bucket_id", bucketId.toString());
+
+        this.getQueryParams().put("storage_domain_id", storageDomainId.toString());
+
     }
     public GetBucketCapacitySummarySpectraS3Request withPoolHealth(final PoolHealth poolHealth) {
         this.poolHealth = poolHealth;
@@ -83,7 +87,7 @@ public class GetBucketCapacitySummarySpectraS3Request extends AbstractRequest {
 
     @Override
     public String getPath() {
-        return "/_rest_/capacity_summary/";
+        return "/_rest_/capacity_summary";
     }
     
     public UUID getBucketId() {

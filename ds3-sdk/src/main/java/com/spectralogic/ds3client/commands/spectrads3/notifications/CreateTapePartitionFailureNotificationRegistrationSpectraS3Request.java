@@ -33,7 +33,9 @@ public class CreateTapePartitionFailureNotificationRegistrationSpectraS3Request 
     public CreateTapePartitionFailureNotificationRegistrationSpectraS3Request(final String notificationEndPoint) {
         super(notificationEndPoint);
 
-            }
+        
+        this.getQueryParams().put("notification_end_point", notificationEndPoint);
+    }
 
     public CreateTapePartitionFailureNotificationRegistrationSpectraS3Request withFormat(final HttpResponseFormatType format) {
         this.format = format;
@@ -56,7 +58,7 @@ public class CreateTapePartitionFailureNotificationRegistrationSpectraS3Request 
 
     @Override
     public String getPath() {
-        return "/_rest_/tape_partition_failure_notification_registration/";
+        return "/_rest_/tape_partition_failure_notification_registration";
     }
 
     public HttpResponseFormatType getFormat() {

@@ -67,7 +67,7 @@ public class ImportAllTapesSpectraS3Request extends AbstractRequest {
 
     @Override
     public String getPath() {
-        return "/_rest_/tape/";
+        return "/_rest_/tape";
     }
     
     public ImportConflictResolutionMode getConflictResolutionMode() {

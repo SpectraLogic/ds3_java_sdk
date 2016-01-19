@@ -44,6 +44,14 @@ public class CreateDataPersistenceRuleSpectraS3Request extends AbstractRequest {
         this.storageDomainId = storageDomainId;
         this.type = type;
         
+        this.getQueryParams().put("data_policy_id", dataPolicyId.toString());
+
+        this.getQueryParams().put("isolation_level", isolationLevel.toString());
+
+        this.getQueryParams().put("storage_domain_id", storageDomainId.toString());
+
+        this.getQueryParams().put("type", type.toString());
+
     }
     public CreateDataPersistenceRuleSpectraS3Request withMinimumDaysToRetain(final int minimumDaysToRetain) {
         this.minimumDaysToRetain = minimumDaysToRetain;
@@ -59,7 +67,7 @@ public class CreateDataPersistenceRuleSpectraS3Request extends AbstractRequest {
 
     @Override
     public String getPath() {
-        return "/_rest_/data_persistence_rule/";
+        return "/_rest_/data_persistence_rule";
     }
     
     public UUID getDataPolicyId() {

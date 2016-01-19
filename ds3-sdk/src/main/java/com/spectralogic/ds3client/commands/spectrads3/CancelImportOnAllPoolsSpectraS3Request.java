@@ -37,7 +37,7 @@ public class CancelImportOnAllPoolsSpectraS3Request extends AbstractRequest {
 
     @Override
     public String getPath() {
-        return "/_rest_/pool/";
+        return "/_rest_/pool";
     }
     
 }

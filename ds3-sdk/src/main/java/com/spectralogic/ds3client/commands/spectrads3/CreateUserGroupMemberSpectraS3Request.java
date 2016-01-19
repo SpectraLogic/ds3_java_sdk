@@ -34,6 +34,10 @@ public class CreateUserGroupMemberSpectraS3Request extends AbstractRequest {
         this.groupId = groupId;
         this.memberUserId = memberUserId;
         
+        this.getQueryParams().put("group_id", groupId.toString());
+
+        this.getQueryParams().put("member_user_id", memberUserId.toString());
+
     }
 
     @Override
@@ -43,7 +47,7 @@ public class CreateUserGroupMemberSpectraS3Request extends AbstractRequest {
 
     @Override
     public String getPath() {
-        return "/_rest_/group_member/";
+        return "/_rest_/group_member";
     }
     
     public UUID getGroupId() {

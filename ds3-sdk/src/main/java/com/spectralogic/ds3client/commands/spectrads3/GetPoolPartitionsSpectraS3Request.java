@@ -85,7 +85,7 @@ public class GetPoolPartitionsSpectraS3Request extends AbstractRequest {
 
     @Override
     public String getPath() {
-        return "/_rest_/pool_partition/";
+        return "/_rest_/pool_partition";
     }
     
     public boolean getLastPage() {

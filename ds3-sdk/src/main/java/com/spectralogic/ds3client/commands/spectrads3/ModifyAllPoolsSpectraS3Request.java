@@ -31,6 +31,8 @@ public class ModifyAllPoolsSpectraS3Request extends AbstractRequest {
     public ModifyAllPoolsSpectraS3Request(final Quiesced quiesced) {
         this.quiesced = quiesced;
         
+        this.getQueryParams().put("quiesced", quiesced.toString());
+
     }
 
     @Override
@@ -40,7 +42,7 @@ public class ModifyAllPoolsSpectraS3Request extends AbstractRequest {
 
     @Override
     public String getPath() {
-        return "/_rest_/pool/";
+        return "/_rest_/pool";
     }
     
     public Quiesced getQuiesced() {

@@ -31,6 +31,8 @@ public class CreateGroupSpectraS3Request extends AbstractRequest {
     public CreateGroupSpectraS3Request(final String name) {
         this.name = name;
         
+        this.getQueryParams().put("name", name);
+
     }
 
     @Override
@@ -40,7 +42,7 @@ public class CreateGroupSpectraS3Request extends AbstractRequest {
 
     @Override
     public String getPath() {
-        return "/_rest_/group/";
+        return "/_rest_/group";
     }
     
     public String getName() {

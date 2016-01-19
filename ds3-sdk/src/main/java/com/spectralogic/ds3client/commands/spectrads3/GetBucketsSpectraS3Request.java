@@ -91,7 +91,7 @@ public class GetBucketsSpectraS3Request extends AbstractRequest {
 
     @Override
     public String getPath() {
-        return "/_rest_/bucket/";
+        return "/_rest_/bucket";
     }
     
     public UUID getDataPolicyId() {

@@ -89,7 +89,7 @@ public class ModifyDataPathBackendSpectraS3Request extends AbstractRequest {
 
     @Override
     public String getPath() {
-        return "/_rest_/data_path_backend/";
+        return "/_rest_/data_path_backend";
     }
     
     public boolean getActivated() {

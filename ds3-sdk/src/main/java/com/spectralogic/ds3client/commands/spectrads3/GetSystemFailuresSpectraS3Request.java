@@ -85,7 +85,7 @@ public class GetSystemFailuresSpectraS3Request extends AbstractRequest {
 
     @Override
     public String getPath() {
-        return "/_rest_/system_failure/";
+        return "/_rest_/system_failure";
     }
     
     public String getErrorMessage() {

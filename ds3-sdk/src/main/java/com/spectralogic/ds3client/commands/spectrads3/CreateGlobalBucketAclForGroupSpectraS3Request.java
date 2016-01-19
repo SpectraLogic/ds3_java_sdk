@@ -35,6 +35,10 @@ public class CreateGlobalBucketAclForGroupSpectraS3Request extends AbstractReque
         this.groupId = groupId;
         this.permission = permission;
         
+        this.getQueryParams().put("group_id", groupId.toString());
+
+        this.getQueryParams().put("permission", permission.toString());
+
     }
 
     @Override
@@ -44,7 +48,7 @@ public class CreateGlobalBucketAclForGroupSpectraS3Request extends AbstractReque
 
     @Override
     public String getPath() {
-        return "/_rest_/bucket_acl/";
+        return "/_rest_/bucket_acl";
     }
     
     public UUID getGroupId() {

@@ -55,7 +55,7 @@ public class GetJobsSpectraS3Request extends AbstractRequest {
 
     @Override
     public String getPath() {
-        return "/_rest_/job/";
+        return "/_rest_/job";
     }
     
     public UUID getBucketId() {

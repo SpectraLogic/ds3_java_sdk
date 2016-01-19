@@ -39,6 +39,8 @@ public class ListMultiPartUploadPartsRequest extends AbstractRequest {
         this.objectName = objectName;
         this.uploadId = uploadId;
         
+        this.getQueryParams().put("upload_id", uploadId.toString());
+
     }
     public ListMultiPartUploadPartsRequest withMaxParts(final int maxParts) {
         this.maxParts = maxParts;

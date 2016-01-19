@@ -107,7 +107,7 @@ public class GetDataPersistenceRulesSpectraS3Request extends AbstractRequest {
 
     @Override
     public String getPath() {
-        return "/_rest_/data_persistence_rule/";
+        return "/_rest_/data_persistence_rule";
     }
     
     public UUID getDataPolicyId() {

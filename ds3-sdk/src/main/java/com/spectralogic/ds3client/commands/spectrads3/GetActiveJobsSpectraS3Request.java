@@ -137,7 +137,7 @@ public class GetActiveJobsSpectraS3Request extends AbstractRequest {
 
     @Override
     public String getPath() {
-        return "/_rest_/active_job/";
+        return "/_rest_/active_job";
     }
     
     public UUID getBucketId() {

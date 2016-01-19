@@ -98,7 +98,7 @@ public class GetBucketAclsSpectraS3Request extends AbstractRequest {
 
     @Override
     public String getPath() {
-        return "/_rest_/bucket_acl/";
+        return "/_rest_/bucket_acl";
     }
     
     public UUID getBucketId() {

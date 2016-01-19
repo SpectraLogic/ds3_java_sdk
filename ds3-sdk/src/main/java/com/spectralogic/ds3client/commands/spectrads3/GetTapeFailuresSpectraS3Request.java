@@ -99,7 +99,7 @@ public class GetTapeFailuresSpectraS3Request extends AbstractRequest {
 
     @Override
     public String getPath() {
-        return "/_rest_/tape_failure/";
+        return "/_rest_/tape_failure";
     }
     
     public String getErrorMessage() {

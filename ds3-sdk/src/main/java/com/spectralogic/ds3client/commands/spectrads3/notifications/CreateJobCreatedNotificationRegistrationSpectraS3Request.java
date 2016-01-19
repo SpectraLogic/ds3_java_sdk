@@ -33,7 +33,9 @@ public class CreateJobCreatedNotificationRegistrationSpectraS3Request extends Ab
     public CreateJobCreatedNotificationRegistrationSpectraS3Request(final String notificationEndPoint) {
         super(notificationEndPoint);
 
-            }
+        
+        this.getQueryParams().put("notification_end_point", notificationEndPoint);
+    }
 
     public CreateJobCreatedNotificationRegistrationSpectraS3Request withFormat(final HttpResponseFormatType format) {
         this.format = format;
@@ -56,7 +58,7 @@ public class CreateJobCreatedNotificationRegistrationSpectraS3Request extends Ab
 
     @Override
     public String getPath() {
-        return "/_rest_/job_created_notification_registration/";
+        return "/_rest_/job_created_notification_registration";
     }
 
     public HttpResponseFormatType getFormat() {

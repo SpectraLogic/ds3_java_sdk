@@ -100,7 +100,7 @@ public class GetTapeDrivesSpectraS3Request extends AbstractRequest {
 
     @Override
     public String getPath() {
-        return "/_rest_/tape_drive/";
+        return "/_rest_/tape_drive";
     }
     
     public boolean getLastPage() {

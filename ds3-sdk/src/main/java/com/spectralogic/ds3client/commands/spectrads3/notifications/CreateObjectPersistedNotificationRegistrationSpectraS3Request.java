@@ -35,7 +35,9 @@ public class CreateObjectPersistedNotificationRegistrationSpectraS3Request exten
     public CreateObjectPersistedNotificationRegistrationSpectraS3Request(final String notificationEndPoint) {
         super(notificationEndPoint);
 
-            }
+        
+        this.getQueryParams().put("notification_end_point", notificationEndPoint);
+    }
 
     public CreateObjectPersistedNotificationRegistrationSpectraS3Request withFormat(final HttpResponseFormatType format) {
         this.format = format;
@@ -64,7 +66,7 @@ public class CreateObjectPersistedNotificationRegistrationSpectraS3Request exten
 
     @Override
     public String getPath() {
-        return "/_rest_/object_persisted_notification_registration/";
+        return "/_rest_/object_persisted_notification_registration";
     }
 
     public HttpResponseFormatType getFormat() {

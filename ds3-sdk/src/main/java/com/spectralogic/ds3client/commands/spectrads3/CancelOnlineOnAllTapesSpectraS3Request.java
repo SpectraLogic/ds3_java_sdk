@@ -37,7 +37,7 @@ public class CancelOnlineOnAllTapesSpectraS3Request extends AbstractRequest {
 
     @Override
     public String getPath() {
-        return "/_rest_/tape/";
+        return "/_rest_/tape";
     }
     
 }

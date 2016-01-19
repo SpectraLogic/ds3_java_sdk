@@ -36,7 +36,7 @@ public class GetCacheStateSpectraS3Request extends AbstractRequest {
 
     @Override
     public String getPath() {
-        return "/_rest_/cache_state/";
+        return "/_rest_/cache_state";
     }
     
 }

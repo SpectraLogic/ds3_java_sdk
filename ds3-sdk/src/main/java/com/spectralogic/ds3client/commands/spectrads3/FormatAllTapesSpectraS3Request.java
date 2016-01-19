@@ -48,7 +48,7 @@ public class FormatAllTapesSpectraS3Request extends AbstractRequest {
 
     @Override
     public String getPath() {
-        return "/_rest_/tape/";
+        return "/_rest_/tape";
     }
     
     public boolean getForce() {

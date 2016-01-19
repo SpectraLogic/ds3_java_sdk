@@ -34,6 +34,8 @@ public class ReplacePermanentlyOfflineTapePartitionSpectraS3Request extends Abst
         this.tapePartition = tapePartition;
         this.partitionId = partitionId;
         
+        this.getQueryParams().put("partition_id", partitionId.toString());
+
     }
 
     @Override

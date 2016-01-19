@@ -69,7 +69,7 @@ public class GetNodesSpectraS3Request extends AbstractRequest {
 
     @Override
     public String getPath() {
-        return "/_rest_/node/";
+        return "/_rest_/node";
     }
     
     public boolean getLastPage() {

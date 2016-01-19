@@ -45,7 +45,7 @@ public class CompactAllPoolsSpectraS3Request extends AbstractRequest {
 
     @Override
     public String getPath() {
-        return "/_rest_/pool/";
+        return "/_rest_/pool";
     }
     
     public BlobStoreTaskPriority getPriority() {

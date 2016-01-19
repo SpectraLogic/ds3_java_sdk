@@ -36,7 +36,7 @@ public class ForcePoolEnvironmentRefreshSpectraS3Request extends AbstractRequest
 
     @Override
     public String getPath() {
-        return "/_rest_/pool_environment/";
+        return "/_rest_/pool_environment";
     }
     
 }

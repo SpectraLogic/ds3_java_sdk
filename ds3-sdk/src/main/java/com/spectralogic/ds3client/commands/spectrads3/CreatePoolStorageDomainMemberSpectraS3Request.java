@@ -36,6 +36,10 @@ public class CreatePoolStorageDomainMemberSpectraS3Request extends AbstractReque
         this.poolPartitionId = poolPartitionId;
         this.storageDomainId = storageDomainId;
         
+        this.getQueryParams().put("pool_partition_id", poolPartitionId.toString());
+
+        this.getQueryParams().put("storage_domain_id", storageDomainId.toString());
+
     }
     public CreatePoolStorageDomainMemberSpectraS3Request withWritePreference(final WritePreferenceLevel writePreference) {
         this.writePreference = writePreference;
@@ -51,7 +55,7 @@ public class CreatePoolStorageDomainMemberSpectraS3Request extends AbstractReque
 
     @Override
     public String getPath() {
-        return "/_rest_/storage_domain_member/";
+        return "/_rest_/storage_domain_member";
     }
     
     public UUID getPoolPartitionId() {

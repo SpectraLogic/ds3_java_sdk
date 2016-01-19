@@ -36,6 +36,8 @@ public class EjectStorageDomainSpectraS3Request extends AbstractRequest {
         this.storageDomainId = storageDomainId;
         this.getQueryParams().put("operation", "eject");
         
+        this.getQueryParams().put("storage_domain_id", storageDomainId.toString());
+
     }
     public EjectStorageDomainSpectraS3Request withBucketId(final UUID bucketId) {
         this.bucketId = bucketId;
@@ -63,7 +65,7 @@ public class EjectStorageDomainSpectraS3Request extends AbstractRequest {
 
     @Override
     public String getPath() {
-        return "/_rest_/tape/";
+        return "/_rest_/tape";
     }
     
     public UUID getStorageDomainId() {

@@ -36,6 +36,8 @@ public class CompleteMultiPartUploadRequest extends AbstractRequest {
         this.objectName = objectName;
         this.uploadId = uploadId;
         
+        this.getQueryParams().put("upload_id", uploadId.toString());
+
     }
 
     @Override

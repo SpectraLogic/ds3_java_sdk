@@ -83,6 +83,8 @@ public class JobWithChunksApiBean {
     @JsonProperty("WriteOptimization")
     private WriteOptimization writeOptimization;
 
+    public JobWithChunksApiBean() { }
+
     // Constructor
     public JobWithChunksApiBean(final String bucketName, final long cachedSizeInBytes, final JobChunkClientProcessingOrderGuarantee chunkClientProcessingOrderGuarantee, final long completedSizeInBytes, final UUID jobId, final String name, final List<NodeApiBean> nodes, final List<JobChunkApiBean> objects, final long originalSizeInBytes, final BlobStoreTaskPriority priority, final JobRequestType requestType, final Date startDate, final JobStatus status, final UUID userId, final String userName, final WriteOptimization writeOptimization) {
         this.bucketName = bucketName;

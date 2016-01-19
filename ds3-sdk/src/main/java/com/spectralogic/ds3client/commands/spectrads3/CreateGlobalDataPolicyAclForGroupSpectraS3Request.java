@@ -31,6 +31,8 @@ public class CreateGlobalDataPolicyAclForGroupSpectraS3Request extends AbstractR
     public CreateGlobalDataPolicyAclForGroupSpectraS3Request(final UUID groupId) {
         this.groupId = groupId;
         
+        this.getQueryParams().put("group_id", groupId.toString());
+
     }
 
     @Override
@@ -40,7 +42,7 @@ public class CreateGlobalDataPolicyAclForGroupSpectraS3Request extends AbstractR
 
     @Override
     public String getPath() {
-        return "/_rest_/data_policy_acl/";
+        return "/_rest_/data_policy_acl";
     }
     
     public UUID getGroupId() {

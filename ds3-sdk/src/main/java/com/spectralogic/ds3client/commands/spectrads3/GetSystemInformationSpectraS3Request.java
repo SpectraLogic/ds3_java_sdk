@@ -36,7 +36,7 @@ public class GetSystemInformationSpectraS3Request extends AbstractRequest {
 
     @Override
     public String getPath() {
-        return "/_rest_/system_information/";
+        return "/_rest_/system_information";
     }
     
 }

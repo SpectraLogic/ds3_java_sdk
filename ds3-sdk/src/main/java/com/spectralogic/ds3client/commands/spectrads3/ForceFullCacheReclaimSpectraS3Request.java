@@ -38,7 +38,7 @@ public class ForceFullCacheReclaimSpectraS3Request extends AbstractRequest {
 
     @Override
     public String getPath() {
-        return "/_rest_/cache_filesystem/";
+        return "/_rest_/cache_filesystem";
     }
     
 }

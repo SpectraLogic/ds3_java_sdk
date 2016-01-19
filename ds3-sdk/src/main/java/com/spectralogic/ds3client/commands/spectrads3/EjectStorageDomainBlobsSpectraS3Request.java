@@ -40,6 +40,10 @@ public class EjectStorageDomainBlobsSpectraS3Request extends AbstractRequest {
         
         this.getQueryParams().put("blobs", null);
 
+        this.getQueryParams().put("bucket_id", bucketId.toString());
+
+        this.getQueryParams().put("storage_domain_id", storageDomainId.toString());
+
     }
     public EjectStorageDomainBlobsSpectraS3Request withEjectLabel(final String ejectLabel) {
         this.ejectLabel = ejectLabel;
@@ -61,7 +65,7 @@ public class EjectStorageDomainBlobsSpectraS3Request extends AbstractRequest {
 
     @Override
     public String getPath() {
-        return "/_rest_/tape/";
+        return "/_rest_/tape";
     }
     
     public UUID getBucketId() {

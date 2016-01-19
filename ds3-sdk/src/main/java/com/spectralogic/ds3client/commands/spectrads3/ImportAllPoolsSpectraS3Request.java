@@ -67,7 +67,7 @@ public class ImportAllPoolsSpectraS3Request extends AbstractRequest {
 
     @Override
     public String getPath() {
-        return "/_rest_/pool/";
+        return "/_rest_/pool";
     }
     
     public ImportConflictResolutionMode getConflictResolutionMode() {

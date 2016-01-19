@@ -91,7 +91,7 @@ public class GetUsersSpectraS3Request extends AbstractRequest {
 
     @Override
     public String getPath() {
-        return "/_rest_/user/";
+        return "/_rest_/user";
     }
     
     public String getAuthId() {

@@ -91,7 +91,7 @@ public class GetTapeLibrariesSpectraS3Request extends AbstractRequest {
 
     @Override
     public String getPath() {
-        return "/_rest_/tape_library/";
+        return "/_rest_/tape_library";
     }
     
     public boolean getLastPage() {

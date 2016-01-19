@@ -76,7 +76,7 @@ public class GetSystemCapacitySummarySpectraS3Request extends AbstractRequest {
 
     @Override
     public String getPath() {
-        return "/_rest_/capacity_summary/";
+        return "/_rest_/capacity_summary";
     }
     
     public PoolHealth getPoolHealth() {

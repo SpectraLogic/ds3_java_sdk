@@ -92,7 +92,7 @@ public class GetTapePartitionFailuresSpectraS3Request extends AbstractRequest {
 
     @Override
     public String getPath() {
-        return "/_rest_/tape_partition_failure/";
+        return "/_rest_/tape_partition_failure";
     }
     
     public String getErrorMessage() {

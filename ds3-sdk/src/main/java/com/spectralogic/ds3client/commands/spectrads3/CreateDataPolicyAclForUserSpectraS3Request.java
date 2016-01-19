@@ -34,6 +34,10 @@ public class CreateDataPolicyAclForUserSpectraS3Request extends AbstractRequest 
         this.dataPolicyId = dataPolicyId;
         this.userId = userId;
         
+        this.getQueryParams().put("data_policy_id", dataPolicyId.toString());
+
+        this.getQueryParams().put("user_id", userId.toString());
+
     }
 
     @Override
@@ -43,7 +47,7 @@ public class CreateDataPolicyAclForUserSpectraS3Request extends AbstractRequest 
 
     @Override
     public String getPath() {
-        return "/_rest_/data_policy_acl/";
+        return "/_rest_/data_policy_acl";
     }
     
     public UUID getDataPolicyId() {

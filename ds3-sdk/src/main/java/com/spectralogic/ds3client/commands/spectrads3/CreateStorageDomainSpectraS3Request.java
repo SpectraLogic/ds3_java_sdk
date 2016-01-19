@@ -44,6 +44,8 @@ public class CreateStorageDomainSpectraS3Request extends AbstractRequest {
     public CreateStorageDomainSpectraS3Request(final String name) {
         this.name = name;
         
+        this.getQueryParams().put("name", name);
+
     }
     public CreateStorageDomainSpectraS3Request withAutoEjectUponCron(final String autoEjectUponCron) {
         this.autoEjectUponCron = autoEjectUponCron;
@@ -113,7 +115,7 @@ public class CreateStorageDomainSpectraS3Request extends AbstractRequest {
 
     @Override
     public String getPath() {
-        return "/_rest_/storage_domain/";
+        return "/_rest_/storage_domain";
     }
     
     public String getName() {

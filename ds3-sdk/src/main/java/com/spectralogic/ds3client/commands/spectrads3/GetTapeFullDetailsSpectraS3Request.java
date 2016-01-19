@@ -31,7 +31,7 @@ public class GetTapeFullDetailsSpectraS3Request extends AbstractRequest {
     public GetTapeFullDetailsSpectraS3Request(final UUID tapeId) {
         this.tapeId = tapeId;
         
-        this.getQueryParams().put("fullDetails", null);
+        this.getQueryParams().put("full_details", null);
 
     }
 

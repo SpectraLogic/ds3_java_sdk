@@ -31,6 +31,8 @@ public class ModifyAllTapePartitionsSpectraS3Request extends AbstractRequest {
     public ModifyAllTapePartitionsSpectraS3Request(final Quiesced quiesced) {
         this.quiesced = quiesced;
         
+        this.getQueryParams().put("quiesced", quiesced.toString());
+
     }
 
     @Override
@@ -40,7 +42,7 @@ public class ModifyAllTapePartitionsSpectraS3Request extends AbstractRequest {
 
     @Override
     public String getPath() {
-        return "/_rest_/tape_partition/";
+        return "/_rest_/tape_partition";
     }
     
     public Quiesced getQuiesced() {

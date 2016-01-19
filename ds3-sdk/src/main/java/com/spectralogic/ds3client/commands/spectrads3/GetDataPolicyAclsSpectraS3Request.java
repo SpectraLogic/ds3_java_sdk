@@ -90,7 +90,7 @@ public class GetDataPolicyAclsSpectraS3Request extends AbstractRequest {
 
     @Override
     public String getPath() {
-        return "/_rest_/data_policy_acl/";
+        return "/_rest_/data_policy_acl";
     }
     
     public UUID getDataPolicyId() {

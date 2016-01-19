@@ -135,7 +135,7 @@ public class GetObjectsSpectraS3Request extends AbstractRequest {
 
     @Override
     public String getPath() {
-        return "/_rest_/object/";
+        return "/_rest_/object";
     }
     
     public UUID getBucketId() {

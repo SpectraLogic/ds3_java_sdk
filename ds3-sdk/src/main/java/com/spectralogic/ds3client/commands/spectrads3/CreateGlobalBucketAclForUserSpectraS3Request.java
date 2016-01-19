@@ -35,6 +35,10 @@ public class CreateGlobalBucketAclForUserSpectraS3Request extends AbstractReques
         this.permission = permission;
         this.userId = userId;
         
+        this.getQueryParams().put("permission", permission.toString());
+
+        this.getQueryParams().put("user_id", userId.toString());
+
     }
 
     @Override
@@ -44,7 +48,7 @@ public class CreateGlobalBucketAclForUserSpectraS3Request extends AbstractReques
 
     @Override
     public String getPath() {
-        return "/_rest_/bucket_acl/";
+        return "/_rest_/bucket_acl";
     }
     
     public BucketAclPermission getPermission() {

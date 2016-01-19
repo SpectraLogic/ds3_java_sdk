@@ -126,7 +126,7 @@ public class GetTapePartitionsSpectraS3Request extends AbstractRequest {
 
     @Override
     public String getPath() {
-        return "/_rest_/tape_partition/";
+        return "/_rest_/tape_partition";
     }
     
     public boolean getFullDetails() {

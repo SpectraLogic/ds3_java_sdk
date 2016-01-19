@@ -36,7 +36,7 @@ public class ClearAllCompletedJobsSpectraS3Request extends AbstractRequest {
 
     @Override
     public String getPath() {
-        return "/_rest_/completed_job/";
+        return "/_rest_/completed_job";
     }
     
 }

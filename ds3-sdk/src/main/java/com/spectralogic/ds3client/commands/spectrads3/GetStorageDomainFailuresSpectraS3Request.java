@@ -92,7 +92,7 @@ public class GetStorageDomainFailuresSpectraS3Request extends AbstractRequest {
 
     @Override
     public String getPath() {
-        return "/_rest_/storage_domain_failure/";
+        return "/_rest_/storage_domain_failure";
     }
     
     public String getErrorMessage() {

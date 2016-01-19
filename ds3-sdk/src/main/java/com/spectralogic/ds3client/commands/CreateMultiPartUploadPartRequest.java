@@ -39,6 +39,10 @@ public class CreateMultiPartUploadPartRequest extends AbstractRequest {
         this.partNumber = partNumber;
         this.uploadId = uploadId;
         
+        this.getQueryParams().put("part_number", Integer.toString(partNumber));
+
+        this.getQueryParams().put("upload_id", uploadId.toString());
+
     }
 
     @Override

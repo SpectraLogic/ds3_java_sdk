@@ -90,7 +90,7 @@ public class GetGroupMembersSpectraS3Request extends AbstractRequest {
 
     @Override
     public String getPath() {
-        return "/_rest_/group_member/";
+        return "/_rest_/group_member";
     }
     
     public UUID getGroupId() {

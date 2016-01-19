@@ -33,7 +33,9 @@ public class CreateObjectLostNotificationRegistrationSpectraS3Request extends Ab
     public CreateObjectLostNotificationRegistrationSpectraS3Request(final String notificationEndPoint) {
         super(notificationEndPoint);
 
-            }
+        
+        this.getQueryParams().put("notification_end_point", notificationEndPoint);
+    }
 
     public CreateObjectLostNotificationRegistrationSpectraS3Request withFormat(final HttpResponseFormatType format) {
         this.format = format;
@@ -56,7 +58,7 @@ public class CreateObjectLostNotificationRegistrationSpectraS3Request extends Ab
 
     @Override
     public String getPath() {
-        return "/_rest_/object_lost_notification_registration/";
+        return "/_rest_/object_lost_notification_registration";
     }
 
     public HttpResponseFormatType getFormat() {
