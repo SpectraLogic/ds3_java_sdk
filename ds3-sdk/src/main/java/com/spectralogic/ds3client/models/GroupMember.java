@@ -35,11 +35,8 @@ public class GroupMember {
     private UUID memberUserId;
 
     // Constructor
-    public GroupMember(final UUID groupId, final UUID id, final UUID memberGroupId, final UUID memberUserId) {
-        this.groupId = groupId;
-        this.id = id;
-        this.memberGroupId = memberGroupId;
-        this.memberUserId = memberUserId;
+    public GroupMember() {
+        //pass
     }
 
     // Getters and Setters

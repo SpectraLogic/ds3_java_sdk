@@ -66,18 +66,8 @@ public class DetailedTapePartition {
     private List<TapeType> tapeTypes;
 
     // Constructor
-    public DetailedTapePartition(final TapeDriveType driveType, final List<TapeDriveType> driveTypes, final String errorMessage, final UUID id, final ImportExportConfiguration importExportConfiguration, final UUID libraryId, final String name, final Quiesced quiesced, final String serialNumber, final TapePartitionState state, final List<TapeType> tapeTypes) {
-        this.driveType = driveType;
-        this.driveTypes = driveTypes;
-        this.errorMessage = errorMessage;
-        this.id = id;
-        this.importExportConfiguration = importExportConfiguration;
-        this.libraryId = libraryId;
-        this.name = name;
-        this.quiesced = quiesced;
-        this.serialNumber = serialNumber;
-        this.state = state;
-        this.tapeTypes = tapeTypes;
+    public DetailedTapePartition() {
+        //pass
     }
 
     // Getters and Setters

@@ -39,12 +39,8 @@ public class BucketAcl {
     private UUID userId;
 
     // Constructor
-    public BucketAcl(final UUID bucketId, final UUID groupId, final UUID id, final BucketAclPermission permission, final UUID userId) {
-        this.bucketId = bucketId;
-        this.groupId = groupId;
-        this.id = id;
-        this.permission = permission;
-        this.userId = userId;
+    public BucketAcl() {
+        //pass
     }
 
     // Getters and Setters

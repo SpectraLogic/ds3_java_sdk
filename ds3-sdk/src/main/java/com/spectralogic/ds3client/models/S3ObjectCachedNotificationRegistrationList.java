@@ -29,8 +29,8 @@ public class S3ObjectCachedNotificationRegistrationList {
     private List<S3ObjectCachedNotificationRegistration> s3ObjectCachedNotificationRegistration;
 
     // Constructor
-    public S3ObjectCachedNotificationRegistrationList(final List<S3ObjectCachedNotificationRegistration> s3ObjectCachedNotificationRegistration) {
-        this.s3ObjectCachedNotificationRegistration = s3ObjectCachedNotificationRegistration;
+    public S3ObjectCachedNotificationRegistrationList() {
+        //pass
     }
 
     // Getters and Setters

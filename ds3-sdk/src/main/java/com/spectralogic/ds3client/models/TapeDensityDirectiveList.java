@@ -29,8 +29,8 @@ public class TapeDensityDirectiveList {
     private List<TapeDensityDirective> tapeDensityDirective;
 
     // Constructor
-    public TapeDensityDirectiveList(final List<TapeDensityDirective> tapeDensityDirective) {
-        this.tapeDensityDirective = tapeDensityDirective;
+    public TapeDensityDirectiveList() {
+        //pass
     }
 
     // Getters and Setters

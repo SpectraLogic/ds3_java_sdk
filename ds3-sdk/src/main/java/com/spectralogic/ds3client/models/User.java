@@ -39,12 +39,8 @@ public class User {
     private String secretKey;
 
     // Constructor
-    public User(final String authId, final UUID defaultDataPolicyId, final UUID id, final String name, final String secretKey) {
-        this.authId = authId;
-        this.defaultDataPolicyId = defaultDataPolicyId;
-        this.id = id;
-        this.name = name;
-        this.secretKey = secretKey;
+    public User() {
+        //pass
     }
 
     // Getters and Setters

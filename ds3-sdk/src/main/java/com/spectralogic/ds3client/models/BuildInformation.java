@@ -32,10 +32,8 @@ public class BuildInformation {
     private String version;
 
     // Constructor
-    public BuildInformation(final String branch, final String revision, final String version) {
-        this.branch = branch;
-        this.revision = revision;
-        this.version = version;
+    public BuildInformation() {
+        //pass
     }
 
     // Getters and Setters

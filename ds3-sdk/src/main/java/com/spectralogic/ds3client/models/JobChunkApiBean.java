@@ -39,11 +39,8 @@ public class JobChunkApiBean {
     private List<BlobApiBean> objects;
 
     // Constructor
-    public JobChunkApiBean(final UUID chunkId, final int chunkNumber, final UUID nodeId, final List<BlobApiBean> objects) {
-        this.chunkId = chunkId;
-        this.chunkNumber = chunkNumber;
-        this.nodeId = nodeId;
-        this.objects = objects;
+    public JobChunkApiBean() {
+        //pass
     }
 
     // Getters and Setters

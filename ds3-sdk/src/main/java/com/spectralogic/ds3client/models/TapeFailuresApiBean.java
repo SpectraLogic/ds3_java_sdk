@@ -29,8 +29,8 @@ public class TapeFailuresApiBean {
     private List<TapeFailureApiBean> failures;
 
     // Constructor
-    public TapeFailuresApiBean(final List<TapeFailureApiBean> failures) {
-        this.failures = failures;
+    public TapeFailuresApiBean() {
+        //pass
     }
 
     // Getters and Setters

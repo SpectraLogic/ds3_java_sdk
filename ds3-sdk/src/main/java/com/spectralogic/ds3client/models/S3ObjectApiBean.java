@@ -44,13 +44,8 @@ public class S3ObjectApiBean {
     private Object storageClass;
 
     // Constructor
-    public S3ObjectApiBean(final String eTag, final String key, final Date lastModified, final UserApiBean owner, final long size, final Object storageClass) {
-        this.eTag = eTag;
-        this.key = key;
-        this.lastModified = lastModified;
-        this.owner = owner;
-        this.size = size;
-        this.storageClass = storageClass;
+    public S3ObjectApiBean() {
+        //pass
     }
 
     // Getters and Setters

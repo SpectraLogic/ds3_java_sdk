@@ -36,11 +36,8 @@ public class SystemInformationApiBean {
     private String serialNumber;
 
     // Constructor
-    public SystemInformationApiBean(final String apiVersion, final boolean backendActivated, final BuildInformation buildInformation, final String serialNumber) {
-        this.apiVersion = apiVersion;
-        this.backendActivated = backendActivated;
-        this.buildInformation = buildInformation;
-        this.serialNumber = serialNumber;
+    public SystemInformationApiBean() {
+        //pass
     }
 
     // Getters and Setters

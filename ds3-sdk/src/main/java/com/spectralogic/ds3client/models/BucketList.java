@@ -29,8 +29,8 @@ public class BucketList {
     private List<Bucket> bucket;
 
     // Constructor
-    public BucketList(final List<Bucket> bucket) {
-        this.bucket = bucket;
+    public BucketList() {
+        //pass
     }
 
     // Getters and Setters

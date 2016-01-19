@@ -29,8 +29,8 @@ public class S3ObjectList {
     private List<S3Object> s3Object;
 
     // Constructor
-    public S3ObjectList(final List<S3Object> s3Object) {
-        this.s3Object = s3Object;
+    public S3ObjectList() {
+        //pass
     }
 
     // Getters and Setters

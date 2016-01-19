@@ -41,12 +41,8 @@ public class PoolFailure {
     private PoolFailureType type;
 
     // Constructor
-    public PoolFailure(final Date date, final String errorMessage, final UUID id, final UUID poolId, final PoolFailureType type) {
-        this.date = date;
-        this.errorMessage = errorMessage;
-        this.id = id;
-        this.poolId = poolId;
-        this.type = type;
+    public PoolFailure() {
+        //pass
     }
 
     // Getters and Setters

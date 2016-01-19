@@ -33,10 +33,8 @@ public class MultiPartUploadPartApiBean {
     private int partNumber;
 
     // Constructor
-    public MultiPartUploadPartApiBean(final String eTag, final Date lastModified, final int partNumber) {
-        this.eTag = eTag;
-        this.lastModified = lastModified;
-        this.partNumber = partNumber;
+    public MultiPartUploadPartApiBean() {
+        //pass
     }
 
     // Getters and Setters

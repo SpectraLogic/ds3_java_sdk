@@ -29,8 +29,8 @@ public class TapePartitionList {
     private List<TapePartition> tapePartition;
 
     // Constructor
-    public TapePartitionList(final List<TapePartition> tapePartition) {
-        this.tapePartition = tapePartition;
+    public TapePartitionList() {
+        //pass
     }
 
     // Getters and Setters

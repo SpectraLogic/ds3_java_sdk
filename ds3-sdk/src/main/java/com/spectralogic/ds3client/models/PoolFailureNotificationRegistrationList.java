@@ -29,8 +29,8 @@ public class PoolFailureNotificationRegistrationList {
     private List<PoolFailureNotificationRegistration> poolFailureNotificationRegistration;
 
     // Constructor
-    public PoolFailureNotificationRegistrationList(final List<PoolFailureNotificationRegistration> poolFailureNotificationRegistration) {
-        this.poolFailureNotificationRegistration = poolFailureNotificationRegistration;
+    public PoolFailureNotificationRegistrationList() {
+        //pass
     }
 
     // Getters and Setters

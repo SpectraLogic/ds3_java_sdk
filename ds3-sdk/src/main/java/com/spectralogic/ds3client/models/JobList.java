@@ -29,8 +29,8 @@ public class JobList {
     private List<Job> job;
 
     // Constructor
-    public JobList(final List<Job> job) {
-        this.job = job;
+    public JobList() {
+        //pass
     }
 
     // Getters and Setters

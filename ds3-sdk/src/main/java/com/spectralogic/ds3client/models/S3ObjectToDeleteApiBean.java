@@ -26,8 +26,8 @@ public class S3ObjectToDeleteApiBean {
     private String key;
 
     // Constructor
-    public S3ObjectToDeleteApiBean(final String key) {
-        this.key = key;
+    public S3ObjectToDeleteApiBean() {
+        //pass
     }
 
     // Getters and Setters

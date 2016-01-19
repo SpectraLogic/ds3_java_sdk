@@ -37,11 +37,8 @@ public class TapeDensityDirective {
     private TapeType tapeType;
 
     // Constructor
-    public TapeDensityDirective(final TapeDriveType density, final UUID id, final UUID partitionId, final TapeType tapeType) {
-        this.density = density;
-        this.id = id;
-        this.partitionId = partitionId;
-        this.tapeType = tapeType;
+    public TapeDensityDirective() {
+        //pass
     }
 
     // Getters and Setters

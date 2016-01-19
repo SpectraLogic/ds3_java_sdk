@@ -50,15 +50,8 @@ public class BlobApiBean {
     private long version;
 
     // Constructor
-    public BlobApiBean(final UUID id, final Boolean inCache, final boolean latest, final long length, final String name, final long offset, final PhysicalPlacementApiBean physicalPlacement, final long version) {
-        this.id = id;
-        this.inCache = inCache;
-        this.latest = latest;
-        this.length = length;
-        this.name = name;
-        this.offset = offset;
-        this.physicalPlacement = physicalPlacement;
-        this.version = version;
+    public BlobApiBean() {
+        //pass
     }
 
     // Getters and Setters

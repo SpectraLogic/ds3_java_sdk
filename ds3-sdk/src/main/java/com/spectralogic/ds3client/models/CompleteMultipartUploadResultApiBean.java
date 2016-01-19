@@ -35,11 +35,8 @@ public class CompleteMultipartUploadResultApiBean {
     private String location;
 
     // Constructor
-    public CompleteMultipartUploadResultApiBean(final String bucket, final String eTag, final String key, final String location) {
-        this.bucket = bucket;
-        this.eTag = eTag;
-        this.key = key;
-        this.location = location;
+    public CompleteMultipartUploadResultApiBean() {
+        //pass
     }
 
     // Getters and Setters

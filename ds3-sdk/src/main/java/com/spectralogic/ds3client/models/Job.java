@@ -76,23 +76,8 @@ public class Job {
     private UUID userId;
 
     // Constructor
-    public Job(final UUID bucketId, final long cachedSizeInBytes, final JobChunkClientProcessingOrderGuarantee chunkClientProcessingOrderGuarantee, final long completedSizeInBytes, final Date createdAt, final String errorMessage, final UUID id, final boolean naked, final String name, final long originalSizeInBytes, final BlobStoreTaskPriority priority, final Date rechunked, final JobRequestType requestType, final boolean reshapable, final boolean truncated, final UUID userId) {
-        this.bucketId = bucketId;
-        this.cachedSizeInBytes = cachedSizeInBytes;
-        this.chunkClientProcessingOrderGuarantee = chunkClientProcessingOrderGuarantee;
-        this.completedSizeInBytes = completedSizeInBytes;
-        this.createdAt = createdAt;
-        this.errorMessage = errorMessage;
-        this.id = id;
-        this.naked = naked;
-        this.name = name;
-        this.originalSizeInBytes = originalSizeInBytes;
-        this.priority = priority;
-        this.rechunked = rechunked;
-        this.requestType = requestType;
-        this.reshapable = reshapable;
-        this.truncated = truncated;
-        this.userId = userId;
+    public Job() {
+        //pass
     }
 
     // Getters and Setters

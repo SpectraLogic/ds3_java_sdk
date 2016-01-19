@@ -38,11 +38,8 @@ public class SystemFailure {
     private SystemFailureType type;
 
     // Constructor
-    public SystemFailure(final Date date, final String errorMessage, final UUID id, final SystemFailureType type) {
-        this.date = date;
-        this.errorMessage = errorMessage;
-        this.id = id;
-        this.type = type;
+    public SystemFailure() {
+        //pass
     }
 
     // Getters and Setters

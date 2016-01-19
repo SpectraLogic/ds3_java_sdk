@@ -43,13 +43,8 @@ public class Blob {
     private UUID objectId;
 
     // Constructor
-    public Blob(final long byteOffset, final String checksum, final ChecksumType checksumType, final UUID id, final long length, final UUID objectId) {
-        this.byteOffset = byteOffset;
-        this.checksum = checksum;
-        this.checksumType = checksumType;
-        this.id = id;
-        this.length = length;
-        this.objectId = objectId;
+    public Blob() {
+        //pass
     }
 
     // Getters and Setters

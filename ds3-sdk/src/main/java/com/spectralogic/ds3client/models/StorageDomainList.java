@@ -29,8 +29,8 @@ public class StorageDomainList {
     private List<StorageDomain> storageDomain;
 
     // Constructor
-    public StorageDomainList(final List<StorageDomain> storageDomain) {
-        this.storageDomain = storageDomain;
+    public StorageDomainList() {
+        //pass
     }
 
     // Getters and Setters

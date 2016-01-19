@@ -29,8 +29,8 @@ public class CacheFilesystemList {
     private List<CacheFilesystem> cacheFilesystem;
 
     // Constructor
-    public CacheFilesystemList(final List<CacheFilesystem> cacheFilesystem) {
-        this.cacheFilesystem = cacheFilesystem;
+    public CacheFilesystemList() {
+        //pass
     }
 
     // Getters and Setters

@@ -29,9 +29,8 @@ public class CapacitySummaryContainer {
     private StorageDomainCapacitySummary tape;
 
     // Constructor
-    public CapacitySummaryContainer(final StorageDomainCapacitySummary pool, final StorageDomainCapacitySummary tape) {
-        this.pool = pool;
-        this.tape = tape;
+    public CapacitySummaryContainer() {
+        //pass
     }
 
     // Getters and Setters

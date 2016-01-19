@@ -83,26 +83,9 @@ public class JobWithChunksApiBean {
     @JsonProperty("WriteOptimization")
     private WriteOptimization writeOptimization;
 
-    public JobWithChunksApiBean() { }
-
     // Constructor
-    public JobWithChunksApiBean(final String bucketName, final long cachedSizeInBytes, final JobChunkClientProcessingOrderGuarantee chunkClientProcessingOrderGuarantee, final long completedSizeInBytes, final UUID jobId, final String name, final List<NodeApiBean> nodes, final List<JobChunkApiBean> objects, final long originalSizeInBytes, final BlobStoreTaskPriority priority, final JobRequestType requestType, final Date startDate, final JobStatus status, final UUID userId, final String userName, final WriteOptimization writeOptimization) {
-        this.bucketName = bucketName;
-        this.cachedSizeInBytes = cachedSizeInBytes;
-        this.chunkClientProcessingOrderGuarantee = chunkClientProcessingOrderGuarantee;
-        this.completedSizeInBytes = completedSizeInBytes;
-        this.jobId = jobId;
-        this.name = name;
-        this.nodes = nodes;
-        this.objects = objects;
-        this.originalSizeInBytes = originalSizeInBytes;
-        this.priority = priority;
-        this.requestType = requestType;
-        this.startDate = startDate;
-        this.status = status;
-        this.userId = userId;
-        this.userName = userName;
-        this.writeOptimization = writeOptimization;
+    public JobWithChunksApiBean() {
+        //pass
     }
 
     // Getters and Setters

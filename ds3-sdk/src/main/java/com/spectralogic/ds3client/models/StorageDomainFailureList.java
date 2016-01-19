@@ -29,8 +29,8 @@ public class StorageDomainFailureList {
     private List<StorageDomainFailure> storageDomainFailure;
 
     // Constructor
-    public StorageDomainFailureList(final List<StorageDomainFailure> storageDomainFailure) {
-        this.storageDomainFailure = storageDomainFailure;
+    public StorageDomainFailureList() {
+        //pass
     }
 
     // Getters and Setters

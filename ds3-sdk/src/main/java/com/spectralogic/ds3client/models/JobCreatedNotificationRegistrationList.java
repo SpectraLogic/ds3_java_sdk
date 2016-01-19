@@ -29,8 +29,8 @@ public class JobCreatedNotificationRegistrationList {
     private List<JobCreatedNotificationRegistration> jobCreatedNotificationRegistration;
 
     // Constructor
-    public JobCreatedNotificationRegistrationList(final List<JobCreatedNotificationRegistration> jobCreatedNotificationRegistration) {
-        this.jobCreatedNotificationRegistration = jobCreatedNotificationRegistration;
+    public JobCreatedNotificationRegistrationList() {
+        //pass
     }
 
     // Getters and Setters

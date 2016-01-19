@@ -29,8 +29,8 @@ public class TapeList {
     private List<Tape> tape;
 
     // Constructor
-    public TapeList(final List<Tape> tape) {
-        this.tape = tape;
+    public TapeList() {
+        //pass
     }
 
     // Getters and Setters

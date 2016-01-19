@@ -41,12 +41,8 @@ public class TapePartitionFailure {
     private TapePartitionFailureType type;
 
     // Constructor
-    public TapePartitionFailure(final Date date, final String errorMessage, final UUID id, final UUID partitionId, final TapePartitionFailureType type) {
-        this.date = date;
-        this.errorMessage = errorMessage;
-        this.id = id;
-        this.partitionId = partitionId;
-        this.type = type;
+    public TapePartitionFailure() {
+        //pass
     }
 
     // Getters and Setters

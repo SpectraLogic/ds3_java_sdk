@@ -29,8 +29,8 @@ public class PoolList {
     private List<Pool> pool;
 
     // Constructor
-    public PoolList(final List<Pool> pool) {
-        this.pool = pool;
+    public PoolList() {
+        //pass
     }
 
     // Getters and Setters

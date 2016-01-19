@@ -29,9 +29,8 @@ public class HealthVerificationResult {
     private long msRequiredToVerifyDataPlannerHealth;
 
     // Constructor
-    public HealthVerificationResult(final DatabasePhysicalSpaceState databaseFilesystemFreeSpace, final long msRequiredToVerifyDataPlannerHealth) {
-        this.databaseFilesystemFreeSpace = databaseFilesystemFreeSpace;
-        this.msRequiredToVerifyDataPlannerHealth = msRequiredToVerifyDataPlannerHealth;
+    public HealthVerificationResult() {
+        //pass
     }
 
     // Getters and Setters

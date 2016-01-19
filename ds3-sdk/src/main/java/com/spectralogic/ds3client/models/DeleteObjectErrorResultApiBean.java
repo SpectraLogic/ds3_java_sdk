@@ -32,10 +32,8 @@ public class DeleteObjectErrorResultApiBean {
     private String message;
 
     // Constructor
-    public DeleteObjectErrorResultApiBean(final String code, final String key, final String message) {
-        this.code = code;
-        this.key = key;
-        this.message = message;
+    public DeleteObjectErrorResultApiBean() {
+        //pass
     }
 
     // Getters and Setters

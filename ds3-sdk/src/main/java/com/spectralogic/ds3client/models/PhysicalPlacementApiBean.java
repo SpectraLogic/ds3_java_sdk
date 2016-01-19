@@ -34,9 +34,8 @@ public class PhysicalPlacementApiBean {
     private List<Tape> tapes;
 
     // Constructor
-    public PhysicalPlacementApiBean(final List<Pool> pools, final List<Tape> tapes) {
-        this.pools = pools;
-        this.tapes = tapes;
+    public PhysicalPlacementApiBean() {
+        //pass
     }
 
     // Getters and Setters

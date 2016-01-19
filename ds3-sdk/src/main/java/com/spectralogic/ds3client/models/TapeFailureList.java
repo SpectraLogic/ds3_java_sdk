@@ -29,8 +29,8 @@ public class TapeFailureList {
     private List<TapeFailure> tapeFailure;
 
     // Constructor
-    public TapeFailureList(final List<TapeFailure> tapeFailure) {
-        this.tapeFailure = tapeFailure;
+    public TapeFailureList() {
+        //pass
     }
 
     // Getters and Setters

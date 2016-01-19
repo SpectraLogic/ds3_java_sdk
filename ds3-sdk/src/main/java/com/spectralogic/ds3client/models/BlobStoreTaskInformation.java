@@ -64,19 +64,8 @@ public class BlobStoreTaskInformation {
     private UUID tapeId;
 
     // Constructor
-    public BlobStoreTaskInformation(final Date dateScheduled, final Date dateStarted, final String description, final UUID driveId, final Duration durationInProgress, final Duration durationScheduled, final long id, final String name, final UUID poolId, final BlobStoreTaskPriority priority, final BlobStoreTaskState state, final UUID tapeId) {
-        this.dateScheduled = dateScheduled;
-        this.dateStarted = dateStarted;
-        this.description = description;
-        this.driveId = driveId;
-        this.durationInProgress = durationInProgress;
-        this.durationScheduled = durationScheduled;
-        this.id = id;
-        this.name = name;
-        this.poolId = poolId;
-        this.priority = priority;
-        this.state = state;
-        this.tapeId = tapeId;
+    public BlobStoreTaskInformation() {
+        //pass
     }
 
     // Getters and Setters

@@ -89,27 +89,8 @@ public class Pool {
     private long usedCapacity;
 
     // Constructor
-    public Pool(final boolean assignedToStorageDomain, final long availableCapacity, final UUID bucketId, final String guid, final PoolHealth health, final UUID id, final Date lastAccessed, final Date lastModified, final Date lastVerified, final String mountpoint, final String name, final UUID partitionId, final boolean poweredOn, final Quiesced quiesced, final long reservedCapacity, final PoolState state, final UUID storageDomainId, final long totalCapacity, final PoolType type, final long usedCapacity) {
-        this.assignedToStorageDomain = assignedToStorageDomain;
-        this.availableCapacity = availableCapacity;
-        this.bucketId = bucketId;
-        this.guid = guid;
-        this.health = health;
-        this.id = id;
-        this.lastAccessed = lastAccessed;
-        this.lastModified = lastModified;
-        this.lastVerified = lastVerified;
-        this.mountpoint = mountpoint;
-        this.name = name;
-        this.partitionId = partitionId;
-        this.poweredOn = poweredOn;
-        this.quiesced = quiesced;
-        this.reservedCapacity = reservedCapacity;
-        this.state = state;
-        this.storageDomainId = storageDomainId;
-        this.totalCapacity = totalCapacity;
-        this.type = type;
-        this.usedCapacity = usedCapacity;
+    public Pool() {
+        //pass
     }
 
     // Getters and Setters

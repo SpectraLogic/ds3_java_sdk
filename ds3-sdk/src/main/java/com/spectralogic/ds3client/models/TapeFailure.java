@@ -44,13 +44,8 @@ public class TapeFailure {
     private TapeFailureType type;
 
     // Constructor
-    public TapeFailure(final Date date, final String errorMessage, final UUID id, final UUID tapeDriveId, final UUID tapeId, final TapeFailureType type) {
-        this.date = date;
-        this.errorMessage = errorMessage;
-        this.id = id;
-        this.tapeDriveId = tapeDriveId;
-        this.tapeId = tapeId;
-        this.type = type;
+    public TapeFailure() {
+        //pass
     }
 
     // Getters and Setters

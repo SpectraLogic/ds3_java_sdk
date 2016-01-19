@@ -29,8 +29,8 @@ public class PoolFailureList {
     private List<PoolFailure> poolFailure;
 
     // Constructor
-    public PoolFailureList(final List<PoolFailure> poolFailure) {
-        this.poolFailure = poolFailure;
+    public PoolFailureList() {
+        //pass
     }
 
     // Getters and Setters

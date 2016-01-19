@@ -29,8 +29,8 @@ public class CanceledJobList {
     private List<CanceledJob> canceledJob;
 
     // Constructor
-    public CanceledJobList(final List<CanceledJob> canceledJob) {
-        this.canceledJob = canceledJob;
+    public CanceledJobList() {
+        //pass
     }
 
     // Getters and Setters

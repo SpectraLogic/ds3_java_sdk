@@ -29,8 +29,8 @@ public class BlobApiBeansContainer {
     private List<BlobApiBean> objects;
 
     // Constructor
-    public BlobApiBeansContainer(final List<BlobApiBean> objects) {
-        this.objects = objects;
+    public BlobApiBeansContainer() {
+        //pass
     }
 
     // Getters and Setters

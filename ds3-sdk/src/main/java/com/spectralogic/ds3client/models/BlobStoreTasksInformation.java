@@ -29,8 +29,8 @@ public class BlobStoreTasksInformation {
     private List<BlobStoreTaskInformation> tasks;
 
     // Constructor
-    public BlobStoreTasksInformation(final List<BlobStoreTaskInformation> tasks) {
-        this.tasks = tasks;
+    public BlobStoreTasksInformation() {
+        //pass
     }
 
     // Getters and Setters

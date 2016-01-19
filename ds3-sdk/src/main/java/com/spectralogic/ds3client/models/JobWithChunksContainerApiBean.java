@@ -26,8 +26,8 @@ public class JobWithChunksContainerApiBean {
     private JobWithChunksApiBean job;
 
     // Constructor
-    public JobWithChunksContainerApiBean(final JobWithChunksApiBean job) {
-        this.job = job;
+    public JobWithChunksContainerApiBean() {
+        //pass
     }
 
     // Getters and Setters

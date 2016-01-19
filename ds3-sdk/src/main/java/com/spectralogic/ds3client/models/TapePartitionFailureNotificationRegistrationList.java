@@ -29,8 +29,8 @@ public class TapePartitionFailureNotificationRegistrationList {
     private List<TapePartitionFailureNotificationRegistration> tapePartitionFailureNotificationRegistration;
 
     // Constructor
-    public TapePartitionFailureNotificationRegistrationList(final List<TapePartitionFailureNotificationRegistration> tapePartitionFailureNotificationRegistration) {
-        this.tapePartitionFailureNotificationRegistration = tapePartitionFailureNotificationRegistration;
+    public TapePartitionFailureNotificationRegistrationList() {
+        //pass
     }
 
     // Getters and Setters

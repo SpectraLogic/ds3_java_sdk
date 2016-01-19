@@ -47,14 +47,8 @@ public class StorageDomainMember {
     private WritePreferenceLevel writePreference;
 
     // Constructor
-    public StorageDomainMember(final UUID id, final UUID poolPartitionId, final StorageDomainMemberState state, final UUID storageDomainId, final UUID tapePartitionId, final TapeType tapeType, final WritePreferenceLevel writePreference) {
-        this.id = id;
-        this.poolPartitionId = poolPartitionId;
-        this.state = state;
-        this.storageDomainId = storageDomainId;
-        this.tapePartitionId = tapePartitionId;
-        this.tapeType = tapeType;
-        this.writePreference = writePreference;
+    public StorageDomainMember() {
+        //pass
     }
 
     // Getters and Setters

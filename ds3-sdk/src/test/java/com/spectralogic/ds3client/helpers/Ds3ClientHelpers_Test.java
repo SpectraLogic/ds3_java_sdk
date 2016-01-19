@@ -314,19 +314,16 @@ public class Ds3ClientHelpers_Test {
                 final String marker,
                 final String nextMarker,
                 final boolean isTruncated) {
-            return new BucketObjectsApiBean(
-                    null,
-                    null,
-                    "",
-                    marker,
-                    2,
-                    MYBUCKET,
-                    nextMarker,
-                    contentList,
-                    "",
-                    isTruncated
-
-            );
+            final BucketObjectsApiBean listBucketResult = new BucketObjectsApiBean();
+            listBucketResult.setObjects(contentList);
+            listBucketResult.setDelimiter("");
+            listBucketResult.setMarker(marker);
+            listBucketResult.setMaxKeys(2);
+            listBucketResult.setName(MYBUCKET);
+            listBucketResult.setNextMarker(nextMarker);
+            listBucketResult.setPrefix("");
+            listBucketResult.setTruncated(isTruncated);
+            return listBucketResult;
         }
         
         private static List<S3ObjectApiBean> buildContentList0() {
@@ -347,16 +344,17 @@ public class Ds3ClientHelpers_Test {
                 final String eTag,
                 final String lastModified,
                 final long size) {
-            final UserApiBean owner = new UserApiBean(null, null);
-            final Object storageClass = new String("STANDARD");
-            return new S3ObjectApiBean(
-                    eTag,
-                    key,
-                    Date.from(Instant.parse(lastModified)),
-                    owner,
-                    size,
-                    storageClass
-            );
+            final S3ObjectApiBean contents = new S3ObjectApiBean();
+            contents.setETag(eTag);
+            contents.setKey(key);
+            contents.setLastModified(Date.from(Instant.parse(lastModified)));
+            final UserApiBean owner = new UserApiBean();
+            owner.setDisplayName("person@spectralogic.com");
+            owner.setId(UUID.randomUUID());
+            contents.setOwner(owner);
+            contents.setSize(size);
+            contents.setStorageClass("STANDARD");
+            return contents;
         }
     }
     
@@ -468,20 +466,20 @@ public class Ds3ClientHelpers_Test {
             final long completedSizeInBytes,
             final JobChunkApiBean ... chunks) {
         return ResponseBuilders.jobResponse(
-            jobId,
-            MYBUCKET,
-            requestType,
-            36L,
-            cachedSizeInBytes,
-            completedSizeInBytes,
-            chunkOrdering,
+                jobId,
+                MYBUCKET,
+                requestType,
+                36L,
+                cachedSizeInBytes,
+                completedSizeInBytes,
+                chunkOrdering,
                 BlobStoreTaskPriority.CRITICAL,
-            "9/17/2014 1:03:54 PM",
-            UUID.fromString("57919d2d-448c-4e2a-8886-0413af22243e"),
-            "spectra",
-            WriteOptimization.CAPACITY,
-            Arrays.asList(basicNode(nodeId, "black-pearl")),
-            Arrays.asList(chunks)
+                "2014-09-17T13:03:54Z",
+                UUID.fromString("57919d2d-448c-4e2a-8886-0413af22243e"),
+                "spectra",
+                WriteOptimization.CAPACITY,
+                Arrays.asList(basicNode(nodeId, "black-pearl")),
+                Arrays.asList(chunks)
         );
     }
 

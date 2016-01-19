@@ -79,22 +79,8 @@ public class JobApiBean {
     private WriteOptimization writeOptimization;
 
     // Constructor
-    public JobApiBean(final String bucketName, final long cachedSizeInBytes, final JobChunkClientProcessingOrderGuarantee chunkClientProcessingOrderGuarantee, final long completedSizeInBytes, final UUID jobId, final String name, final List<NodeApiBean> nodes, final long originalSizeInBytes, final BlobStoreTaskPriority priority, final JobRequestType requestType, final Date startDate, final JobStatus status, final UUID userId, final String userName, final WriteOptimization writeOptimization) {
-        this.bucketName = bucketName;
-        this.cachedSizeInBytes = cachedSizeInBytes;
-        this.chunkClientProcessingOrderGuarantee = chunkClientProcessingOrderGuarantee;
-        this.completedSizeInBytes = completedSizeInBytes;
-        this.jobId = jobId;
-        this.name = name;
-        this.nodes = nodes;
-        this.originalSizeInBytes = originalSizeInBytes;
-        this.priority = priority;
-        this.requestType = requestType;
-        this.startDate = startDate;
-        this.status = status;
-        this.userId = userId;
-        this.userName = userName;
-        this.writeOptimization = writeOptimization;
+    public JobApiBean() {
+        //pass
     }
 
     // Getters and Setters

@@ -41,12 +41,8 @@ public class StorageDomainFailure {
     private StorageDomainFailureType type;
 
     // Constructor
-    public StorageDomainFailure(final Date date, final String errorMessage, final UUID id, final UUID storageDomainId, final StorageDomainFailureType type) {
-        this.date = date;
-        this.errorMessage = errorMessage;
-        this.id = id;
-        this.storageDomainId = storageDomainId;
-        this.type = type;
+    public StorageDomainFailure() {
+        //pass
     }
 
     // Getters and Setters

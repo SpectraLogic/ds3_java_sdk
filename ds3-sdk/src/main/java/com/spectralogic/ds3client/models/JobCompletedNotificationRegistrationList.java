@@ -29,8 +29,8 @@ public class JobCompletedNotificationRegistrationList {
     private List<JobCompletedNotificationRegistration> jobCompletedNotificationRegistration;
 
     // Constructor
-    public JobCompletedNotificationRegistrationList(final List<JobCompletedNotificationRegistration> jobCompletedNotificationRegistration) {
-        this.jobCompletedNotificationRegistration = jobCompletedNotificationRegistration;
+    public JobCompletedNotificationRegistrationList() {
+        //pass
     }
 
     // Getters and Setters

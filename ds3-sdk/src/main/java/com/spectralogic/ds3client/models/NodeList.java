@@ -29,8 +29,8 @@ public class NodeList {
     private List<Node> node;
 
     // Constructor
-    public NodeList(final List<Node> node) {
-        this.node = node;
+    public NodeList() {
+        //pass
     }
 
     // Getters and Setters

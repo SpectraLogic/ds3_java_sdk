@@ -31,10 +31,8 @@ public class StorageDomainCapacitySummary {
     private long physicalUsed;
 
     // Constructor
-    public StorageDomainCapacitySummary(final long physicalAllocated, final long physicalFree, final long physicalUsed) {
-        this.physicalAllocated = physicalAllocated;
-        this.physicalFree = physicalFree;
-        this.physicalUsed = physicalUsed;
+    public StorageDomainCapacitySummary() {
+        //pass
     }
 
     // Getters and Setters

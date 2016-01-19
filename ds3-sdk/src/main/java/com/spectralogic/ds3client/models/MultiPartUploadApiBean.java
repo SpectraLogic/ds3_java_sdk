@@ -38,11 +38,8 @@ public class MultiPartUploadApiBean {
     private UUID uploadId;
 
     // Constructor
-    public MultiPartUploadApiBean(final Date initiated, final String key, final UserApiBean owner, final UUID uploadId) {
-        this.initiated = initiated;
-        this.key = key;
-        this.owner = owner;
-        this.uploadId = uploadId;
+    public MultiPartUploadApiBean() {
+        //pass
     }
 
     // Getters and Setters

@@ -49,14 +49,8 @@ public class CacheFilesystemInformation {
     private long usedCapacityInBytes;
 
     // Constructor
-    public CacheFilesystemInformation(final long availableCapacityInBytes, final CacheFilesystem cacheFilesystem, final List<CacheEntryInformation> entries, final String summary, final long totalCapacityInBytes, final long unavailableCapacityInBytes, final long usedCapacityInBytes) {
-        this.availableCapacityInBytes = availableCapacityInBytes;
-        this.cacheFilesystem = cacheFilesystem;
-        this.entries = entries;
-        this.summary = summary;
-        this.totalCapacityInBytes = totalCapacityInBytes;
-        this.unavailableCapacityInBytes = unavailableCapacityInBytes;
-        this.usedCapacityInBytes = usedCapacityInBytes;
+    public CacheFilesystemInformation() {
+        //pass
     }
 
     // Getters and Setters

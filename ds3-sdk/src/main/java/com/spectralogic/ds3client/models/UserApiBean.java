@@ -30,9 +30,8 @@ public class UserApiBean {
     private UUID id;
 
     // Constructor
-    public UserApiBean(final String displayName, final UUID id) {
-        this.displayName = displayName;
-        this.id = id;
+    public UserApiBean() {
+        //pass
     }
 
     // Getters and Setters

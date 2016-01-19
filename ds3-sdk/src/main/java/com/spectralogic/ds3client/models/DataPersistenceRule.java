@@ -48,14 +48,8 @@ public class DataPersistenceRule {
     private DataPersistenceRuleType type;
 
     // Constructor
-    public DataPersistenceRule(final UUID dataPolicyId, final UUID id, final DataIsolationLevel isolationLevel, final Integer minimumDaysToRetain, final DataPersistenceRuleState state, final UUID storageDomainId, final DataPersistenceRuleType type) {
-        this.dataPolicyId = dataPolicyId;
-        this.id = id;
-        this.isolationLevel = isolationLevel;
-        this.minimumDaysToRetain = minimumDaysToRetain;
-        this.state = state;
-        this.storageDomainId = storageDomainId;
-        this.type = type;
+    public DataPersistenceRule() {
+        //pass
     }
 
     // Getters and Setters

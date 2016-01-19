@@ -54,16 +54,8 @@ public class TapeDrive {
     private TapeDriveType type;
 
     // Constructor
-    public TapeDrive(final String errorMessage, final boolean forceTapeRemoval, final UUID id, final Date lastCleaned, final UUID partitionId, final String serialNumber, final TapeDriveState state, final UUID tapeId, final TapeDriveType type) {
-        this.errorMessage = errorMessage;
-        this.forceTapeRemoval = forceTapeRemoval;
-        this.id = id;
-        this.lastCleaned = lastCleaned;
-        this.partitionId = partitionId;
-        this.serialNumber = serialNumber;
-        this.state = state;
-        this.tapeId = tapeId;
-        this.type = type;
+    public TapeDrive() {
+        //pass
     }
 
     // Getters and Setters

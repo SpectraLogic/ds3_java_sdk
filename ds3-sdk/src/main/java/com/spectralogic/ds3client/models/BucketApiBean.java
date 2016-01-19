@@ -30,9 +30,8 @@ public class BucketApiBean {
     private String name;
 
     // Constructor
-    public BucketApiBean(final Date creationDate, final String name) {
-        this.creationDate = creationDate;
-        this.name = name;
+    public BucketApiBean() {
+        //pass
     }
 
     // Getters and Setters

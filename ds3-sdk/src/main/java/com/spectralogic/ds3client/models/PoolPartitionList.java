@@ -29,8 +29,8 @@ public class PoolPartitionList {
     private List<PoolPartition> poolPartition;
 
     // Constructor
-    public PoolPartitionList(final List<PoolPartition> poolPartition) {
-        this.poolPartition = poolPartition;
+    public PoolPartitionList() {
+        //pass
     }
 
     // Getters and Setters

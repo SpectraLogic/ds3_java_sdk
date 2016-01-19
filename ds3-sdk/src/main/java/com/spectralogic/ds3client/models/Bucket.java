@@ -47,14 +47,8 @@ public class Bucket {
     private UUID userId;
 
     // Constructor
-    public Bucket(final Date creationDate, final UUID dataPolicyId, final UUID id, final Long lastPreferredChunkSizeInBytes, final Long logicalUsedCapacity, final String name, final UUID userId) {
-        this.creationDate = creationDate;
-        this.dataPolicyId = dataPolicyId;
-        this.id = id;
-        this.lastPreferredChunkSizeInBytes = lastPreferredChunkSizeInBytes;
-        this.logicalUsedCapacity = logicalUsedCapacity;
-        this.name = name;
-        this.userId = userId;
+    public Bucket() {
+        //pass
     }
 
     // Getters and Setters

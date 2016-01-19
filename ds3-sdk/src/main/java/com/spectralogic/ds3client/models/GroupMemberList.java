@@ -29,8 +29,8 @@ public class GroupMemberList {
     private List<GroupMember> groupMember;
 
     // Constructor
-    public GroupMemberList(final List<GroupMember> groupMember) {
-        this.groupMember = groupMember;
+    public GroupMemberList() {
+        //pass
     }
 
     // Getters and Setters

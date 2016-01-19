@@ -29,8 +29,8 @@ public class StorageDomainFailureNotificationRegistrationList {
     private List<StorageDomainFailureNotificationRegistration> storageDomainFailureNotificationRegistration;
 
     // Constructor
-    public StorageDomainFailureNotificationRegistrationList(final List<StorageDomainFailureNotificationRegistration> storageDomainFailureNotificationRegistration) {
-        this.storageDomainFailureNotificationRegistration = storageDomainFailureNotificationRegistration;
+    public StorageDomainFailureNotificationRegistrationList() {
+        //pass
     }
 
     // Getters and Setters

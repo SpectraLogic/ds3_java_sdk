@@ -35,11 +35,8 @@ public class DataPolicyAcl {
     private UUID userId;
 
     // Constructor
-    public DataPolicyAcl(final UUID dataPolicyId, final UUID groupId, final UUID id, final UUID userId) {
-        this.dataPolicyId = dataPolicyId;
-        this.groupId = groupId;
-        this.id = id;
-        this.userId = userId;
+    public DataPolicyAcl() {
+        //pass
     }
 
     // Getters and Setters

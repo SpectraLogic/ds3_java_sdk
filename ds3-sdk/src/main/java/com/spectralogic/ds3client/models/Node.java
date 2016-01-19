@@ -50,15 +50,8 @@ public class Node {
     private String serialNumber;
 
     // Constructor
-    public Node(final Integer dataPathHttpPort, final Integer dataPathHttpsPort, final String dataPathIpAddress, final String dnsName, final UUID id, final Date lastHeartbeat, final String name, final String serialNumber) {
-        this.dataPathHttpPort = dataPathHttpPort;
-        this.dataPathHttpsPort = dataPathHttpsPort;
-        this.dataPathIpAddress = dataPathIpAddress;
-        this.dnsName = dnsName;
-        this.id = id;
-        this.lastHeartbeat = lastHeartbeat;
-        this.name = name;
-        this.serialNumber = serialNumber;
+    public Node() {
+        //pass
     }
 
     // Getters and Setters

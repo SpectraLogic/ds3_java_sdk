@@ -61,18 +61,8 @@ public class ListMultiPartUploadsApiBean {
     private List<MultiPartUploadApiBean> uploads;
 
     // Constructor
-    public ListMultiPartUploadsApiBean(final String bucket, final List<String> commonPrefixes, final String delimiter, final String keyMarker, final int maxUploads, final String nextKeyMarker, final String nextUploadIdMarker, final String prefix, final boolean truncated, final String uploadIdMarker, final List<MultiPartUploadApiBean> uploads) {
-        this.bucket = bucket;
-        this.commonPrefixes = commonPrefixes;
-        this.delimiter = delimiter;
-        this.keyMarker = keyMarker;
-        this.maxUploads = maxUploads;
-        this.nextKeyMarker = nextKeyMarker;
-        this.nextUploadIdMarker = nextUploadIdMarker;
-        this.prefix = prefix;
-        this.truncated = truncated;
-        this.uploadIdMarker = uploadIdMarker;
-        this.uploads = uploads;
+    public ListMultiPartUploadsApiBean() {
+        //pass
     }
 
     // Getters and Setters

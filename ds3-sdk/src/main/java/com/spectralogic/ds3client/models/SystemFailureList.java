@@ -29,8 +29,8 @@ public class SystemFailureList {
     private List<SystemFailure> systemFailure;
 
     // Constructor
-    public SystemFailureList(final List<SystemFailure> systemFailure) {
-        this.systemFailure = systemFailure;
+    public SystemFailureList() {
+        //pass
     }
 
     // Getters and Setters

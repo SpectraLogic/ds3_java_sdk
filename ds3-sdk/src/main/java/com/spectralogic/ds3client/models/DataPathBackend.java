@@ -55,16 +55,8 @@ public class DataPathBackend {
     private int unavailableTapePartitionMaxJobRetryInMins;
 
     // Constructor
-    public DataPathBackend(final boolean activated, final Integer autoActivateTimeoutInMins, final AutoInspectMode autoInspect, final ImportConflictResolutionMode defaultImportConflictResolutionMode, final UUID id, final Date lastHeartbeat, final UnavailableMediaUsagePolicy unavailableMediaPolicy, final int unavailablePoolMaxJobRetryInMins, final int unavailableTapePartitionMaxJobRetryInMins) {
-        this.activated = activated;
-        this.autoActivateTimeoutInMins = autoActivateTimeoutInMins;
-        this.autoInspect = autoInspect;
-        this.defaultImportConflictResolutionMode = defaultImportConflictResolutionMode;
-        this.id = id;
-        this.lastHeartbeat = lastHeartbeat;
-        this.unavailableMediaPolicy = unavailableMediaPolicy;
-        this.unavailablePoolMaxJobRetryInMins = unavailablePoolMaxJobRetryInMins;
-        this.unavailableTapePartitionMaxJobRetryInMins = unavailableTapePartitionMaxJobRetryInMins;
+    public DataPathBackend() {
+        //pass
     }
 
     // Getters and Setters

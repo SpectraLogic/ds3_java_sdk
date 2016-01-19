@@ -47,14 +47,8 @@ public class S3Object {
     private long version;
 
     // Constructor
-    public S3Object(final UUID bucketId, final Date creationDate, final UUID id, final boolean latest, final String name, final S3ObjectType type, final long version) {
-        this.bucketId = bucketId;
-        this.creationDate = creationDate;
-        this.id = id;
-        this.latest = latest;
-        this.name = name;
-        this.type = type;
-        this.version = version;
+    public S3Object() {
+        //pass
     }
 
     // Getters and Setters

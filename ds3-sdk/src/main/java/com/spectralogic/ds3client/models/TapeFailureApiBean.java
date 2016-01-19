@@ -30,9 +30,8 @@ public class TapeFailureApiBean {
     private Tape tape;
 
     // Constructor
-    public TapeFailureApiBean(final String cause, final Tape tape) {
-        this.cause = cause;
-        this.tape = tape;
+    public TapeFailureApiBean() {
+        //pass
     }
 
     // Getters and Setters

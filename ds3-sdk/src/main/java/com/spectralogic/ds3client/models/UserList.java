@@ -29,8 +29,8 @@ public class UserList {
     private List<User> user;
 
     // Constructor
-    public UserList(final List<User> user) {
-        this.user = user;
+    public UserList() {
+        //pass
     }
 
     // Getters and Setters

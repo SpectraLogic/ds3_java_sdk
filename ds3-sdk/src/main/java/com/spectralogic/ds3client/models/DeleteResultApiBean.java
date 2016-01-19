@@ -34,9 +34,8 @@ public class DeleteResultApiBean {
     private List<DeleteObjectErrorResultApiBean> errors;
 
     // Constructor
-    public DeleteResultApiBean(final List<S3ObjectToDeleteApiBean> deletedObjects, final List<DeleteObjectErrorResultApiBean> errors) {
-        this.deletedObjects = deletedObjects;
-        this.errors = errors;
+    public DeleteResultApiBean() {
+        //pass
     }
 
     // Getters and Setters

@@ -161,12 +161,12 @@ class WriteJobImpl extends JobImpl {
     }
 
     private static JobChunkApiBean filterChunk(final JobChunkApiBean jobChunkApiBean) {
-        return new  JobChunkApiBean(
-                jobChunkApiBean.getChunkId(),
-                jobChunkApiBean.getChunkNumber(),
-                jobChunkApiBean.getNodeId(),
-                filterObjects(jobChunkApiBean.getObjects())
-        );
+        final JobChunkApiBean newJobChunkApiBean = new JobChunkApiBean();
+        newJobChunkApiBean.setChunkId(jobChunkApiBean.getChunkId());
+        newJobChunkApiBean.setChunkNumber(jobChunkApiBean.getChunkNumber());
+        newJobChunkApiBean.setNodeId(jobChunkApiBean.getNodeId());
+        newJobChunkApiBean.setObjects(filterObjects(jobChunkApiBean.getObjects()));
+        return newJobChunkApiBean;
     }
 
     private static List<BlobApiBean> filterObjects(final List<BlobApiBean> list) {

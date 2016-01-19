@@ -33,9 +33,8 @@ public class BucketsApiBean {
     private UserApiBean owner;
 
     // Constructor
-    public BucketsApiBean(final List<BucketApiBean> buckets, final UserApiBean owner) {
-        this.buckets = buckets;
-        this.owner = owner;
+    public BucketsApiBean() {
+        //pass
     }
 
     // Getters and Setters

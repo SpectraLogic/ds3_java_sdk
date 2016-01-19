@@ -29,8 +29,8 @@ public class DataPolicyList {
     private List<DataPolicy> dataPolicy;
 
     // Constructor
-    public DataPolicyList(final List<DataPolicy> dataPolicy) {
-        this.dataPolicy = dataPolicy;
+    public DataPolicyList() {
+        //pass
     }
 
     // Getters and Setters

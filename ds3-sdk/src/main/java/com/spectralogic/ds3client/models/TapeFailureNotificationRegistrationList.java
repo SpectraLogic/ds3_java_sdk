@@ -29,8 +29,8 @@ public class TapeFailureNotificationRegistrationList {
     private List<TapeFailureNotificationRegistration> tapeFailureNotificationRegistration;
 
     // Constructor
-    public TapeFailureNotificationRegistrationList(final List<TapeFailureNotificationRegistration> tapeFailureNotificationRegistration) {
-        this.tapeFailureNotificationRegistration = tapeFailureNotificationRegistration;
+    public TapeFailureNotificationRegistrationList() {
+        //pass
     }
 
     // Getters and Setters

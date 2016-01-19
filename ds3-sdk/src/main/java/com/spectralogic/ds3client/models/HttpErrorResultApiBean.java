@@ -38,12 +38,8 @@ public class HttpErrorResultApiBean {
     private long resourceId;
 
     // Constructor
-    public HttpErrorResultApiBean(final String code, final int httpErrorCode, final String message, final String resource, final long resourceId) {
-        this.code = code;
-        this.httpErrorCode = httpErrorCode;
-        this.message = message;
-        this.resource = resource;
-        this.resourceId = resourceId;
+    public HttpErrorResultApiBean() {
+        //pass
     }
 
     // Getters and Setters

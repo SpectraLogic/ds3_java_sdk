@@ -32,10 +32,8 @@ public class InitiateMultipartUploadResultApiBean {
     private String uploadId;
 
     // Constructor
-    public InitiateMultipartUploadResultApiBean(final String bucket, final String key, final String uploadId) {
-        this.bucket = bucket;
-        this.key = key;
-        this.uploadId = uploadId;
+    public InitiateMultipartUploadResultApiBean() {
+        //pass
     }
 
     // Getters and Setters

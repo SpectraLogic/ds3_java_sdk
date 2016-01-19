@@ -59,17 +59,8 @@ public class BucketObjectsApiBean {
     private boolean truncated;
 
     // Constructor
-    public BucketObjectsApiBean(final List<String> commonPrefixes, final Date creationDate, final String delimiter, final String marker, final int maxKeys, final String name, final String nextMarker, final List<S3ObjectApiBean> objects, final String prefix, final boolean truncated) {
-        this.commonPrefixes = commonPrefixes;
-        this.creationDate = creationDate;
-        this.delimiter = delimiter;
-        this.marker = marker;
-        this.maxKeys = maxKeys;
-        this.name = name;
-        this.nextMarker = nextMarker;
-        this.objects = objects;
-        this.prefix = prefix;
-        this.truncated = truncated;
+    public BucketObjectsApiBean() {
+        //pass
     }
 
     // Getters and Setters

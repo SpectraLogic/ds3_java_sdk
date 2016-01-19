@@ -26,8 +26,8 @@ public class JobChunkContainerApiBean {
     private JobChunkApiBean jobChunk;
 
     // Constructor
-    public JobChunkContainerApiBean(final JobChunkApiBean jobChunk) {
-        this.jobChunk = jobChunk;
+    public JobChunkContainerApiBean() {
+        //pass
     }
 
     // Getters and Setters

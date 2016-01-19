@@ -52,14 +52,18 @@ public class ResponseBuilders {
 
     public static ModifyJobSpectraS3Response modifyJobResponse(final JobWithChunksApiBean masterObjectList) {
         final ModifyJobSpectraS3Response response = mock(ModifyJobSpectraS3Response.class);
-        when(response.getJobWithChunksContainerApiBeanResult().getJob()).thenReturn(masterObjectList);
+        final JobWithChunksContainerApiBean container = new JobWithChunksContainerApiBean();
+        container.setJob(masterObjectList);
+        when(response.getJobWithChunksContainerApiBeanResult()).thenReturn(container);
         return response;
     }
 
     public static GetJobChunksReadyForClientProcessingSpectraS3Response availableJobChunks(final JobWithChunksApiBean jobWithChunksApiBean) {
         final GetJobChunksReadyForClientProcessingSpectraS3Response response = mock(GetJobChunksReadyForClientProcessingSpectraS3Response.class);
         when(response.getStatus()).thenReturn(GetJobChunksReadyForClientProcessingSpectraS3Response.Status.AVAILABLE);
-        when(response.getJobWithChunksContainerApiBeanResult().getJob()).thenReturn(jobWithChunksApiBean);
+        final JobWithChunksContainerApiBean container = new JobWithChunksContainerApiBean();
+        container.setJob(jobWithChunksApiBean);
+        when(response.getJobWithChunksContainerApiBeanResult()).thenReturn(container);
         return response;
     }
     
@@ -73,7 +77,9 @@ public class ResponseBuilders {
     public static AllocateJobChunkSpectraS3Response allocated(final JobChunkApiBean chunk) {
         final AllocateJobChunkSpectraS3Response response = mock(AllocateJobChunkSpectraS3Response.class);
         when(response.getStatus()).thenReturn(AllocateJobChunkSpectraS3Response.Status.ALLOCATED);
-        when(response.getJobChunkContainerApiBeanResult().getJobChunk()).thenReturn(chunk);
+        final JobChunkContainerApiBean container = new JobChunkContainerApiBean();
+        container.setJobChunk(chunk);
+        when(response.getJobChunkContainerApiBeanResult()).thenReturn(container);
         return response;
     }
     
@@ -99,24 +105,22 @@ public class ResponseBuilders {
             final WriteOptimization writeOptimization,
             final List<NodeApiBean> nodes,
             final List<JobChunkApiBean> objects) {
-        return new JobWithChunksApiBean(
-                bucketName,
-                cachedSizeInBytes,
-                chunkClientProcessingOrderGuarantee,
-                completedSizeInBytes,
-                jobId,
-                null, //TODO verify assumption of default value
-                nodes,
-                objects,
-                originalSizeInBytes,
-                priority,
-                requestType,
-                Date.from(Instant.parse(startDate)),
-                null, //TODO verify assumption of default value
-                userId,
-                userName,
-                writeOptimization
-        );
+        final JobWithChunksApiBean masterObjectList = new JobWithChunksApiBean();
+        masterObjectList.setJobId(jobId);
+        masterObjectList.setBucketName(bucketName);
+        masterObjectList.setRequestType(requestType);
+        masterObjectList.setOriginalSizeInBytes(originalSizeInBytes);
+        masterObjectList.setCachedSizeInBytes(cachedSizeInBytes);
+        masterObjectList.setCompletedSizeInBytes(completedSizeInBytes);
+        masterObjectList.setChunkClientProcessingOrderGuarantee(chunkClientProcessingOrderGuarantee);
+        masterObjectList.setPriority(priority);
+        masterObjectList.setStartDate(Date.from(Instant.parse(startDate)));
+        masterObjectList.setUserId(userId);
+        masterObjectList.setUserName(userName);
+        masterObjectList.setWriteOptimization(writeOptimization);
+        masterObjectList.setNodes(nodes);
+        masterObjectList.setObjects(objects);
+        return masterObjectList;
     }
     
     public static NodeApiBean basicNode(final UUID nodeId, final String endpoint) {
@@ -128,8 +132,12 @@ public class ResponseBuilders {
             final String endpoint,
             final int httpPort,
             final int httpsPort) {
-        return new NodeApiBean(
-                endpoint, httpPort, httpsPort, nodeId);
+        final NodeApiBean node = new NodeApiBean();
+        node.setId(nodeId);
+        node.setEndPoint(endpoint);
+        node.setHttpPort(httpPort);
+        node.setHttpsPort(httpsPort);
+        return node;
     }
 
     public static JobChunkApiBean chunk(
@@ -137,8 +145,12 @@ public class ResponseBuilders {
             final UUID chunkId,
             final UUID nodeId,
             final BlobApiBean ... chunkList) {
-        return new JobChunkApiBean(
-                chunkId, chunkNumber, nodeId, Arrays.asList(chunkList));
+        final JobChunkApiBean objects = new JobChunkApiBean();
+        objects.setChunkNumber(chunkNumber);
+        objects.setChunkId(chunkId);
+        objects.setNodeId(nodeId);
+        objects.setObjects(Arrays.asList(chunkList));
+        return objects;
     }
     
     public static BlobApiBean object(
@@ -146,16 +158,12 @@ public class ResponseBuilders {
             final long offset,
             final long length,
             final boolean inCache) {
-        return new BlobApiBean(
-                UUID.randomUUID(), //TODO verify that this is valid default value for testing
-                inCache,
-                true,
-                length,
-                name,
-                offset,
-                null, //TODO verify that this is valid default value for testing
-                1
-        );
+        final BlobApiBean bulkObject = new BlobApiBean();
+        bulkObject.setName(name);
+        bulkObject.setOffset(offset);
+        bulkObject.setLength(length);
+        bulkObject.setInCache(inCache);
+        return bulkObject;
     }
     
     public static Answer<GetObjectResponse> getObjectAnswer(final String result) {

@@ -37,11 +37,8 @@ public class NodeApiBean {
     private UUID id;
 
     // Constructor
-    public NodeApiBean(final String endPoint, final Integer httpPort, final Integer httpsPort, final UUID id) {
-        this.endPoint = endPoint;
-        this.httpPort = httpPort;
-        this.httpsPort = httpsPort;
-        this.id = id;
+    public NodeApiBean() {
+        //pass
     }
 
     // Getters and Setters

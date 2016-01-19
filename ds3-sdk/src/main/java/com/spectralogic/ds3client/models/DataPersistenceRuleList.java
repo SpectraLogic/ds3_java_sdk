@@ -29,8 +29,8 @@ public class DataPersistenceRuleList {
     private List<DataPersistenceRule> dataPersistenceRule;
 
     // Constructor
-    public DataPersistenceRuleList(final List<DataPersistenceRule> dataPersistenceRule) {
-        this.dataPersistenceRule = dataPersistenceRule;
+    public DataPersistenceRuleList() {
+        //pass
     }
 
     // Getters and Setters

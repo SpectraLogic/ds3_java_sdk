@@ -29,8 +29,8 @@ public class S3ObjectLostNotificationRegistrationList {
     private List<S3ObjectLostNotificationRegistration> s3ObjectLostNotificationRegistration;
 
     // Constructor
-    public S3ObjectLostNotificationRegistrationList(final List<S3ObjectLostNotificationRegistration> s3ObjectLostNotificationRegistration) {
-        this.s3ObjectLostNotificationRegistration = s3ObjectLostNotificationRegistration;
+    public S3ObjectLostNotificationRegistrationList() {
+        //pass
     }
 
     // Getters and Setters

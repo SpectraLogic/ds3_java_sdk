@@ -29,8 +29,8 @@ public class JobsApiBean {
     private List<JobApiBean> jobs;
 
     // Constructor
-    public JobsApiBean(final List<JobApiBean> jobs) {
-        this.jobs = jobs;
+    public JobsApiBean() {
+        //pass
     }
 
     // Getters and Setters

@@ -76,23 +76,8 @@ public class CanceledJob {
     private UUID userId;
 
     // Constructor
-    public CanceledJob(final UUID bucketId, final long cachedSizeInBytes, final JobChunkClientProcessingOrderGuarantee chunkClientProcessingOrderGuarantee, final long completedSizeInBytes, final Date createdAt, final Date dateCanceled, final String errorMessage, final UUID id, final boolean naked, final String name, final long originalSizeInBytes, final BlobStoreTaskPriority priority, final Date rechunked, final JobRequestType requestType, final boolean truncated, final UUID userId) {
-        this.bucketId = bucketId;
-        this.cachedSizeInBytes = cachedSizeInBytes;
-        this.chunkClientProcessingOrderGuarantee = chunkClientProcessingOrderGuarantee;
-        this.completedSizeInBytes = completedSizeInBytes;
-        this.createdAt = createdAt;
-        this.dateCanceled = dateCanceled;
-        this.errorMessage = errorMessage;
-        this.id = id;
-        this.naked = naked;
-        this.name = name;
-        this.originalSizeInBytes = originalSizeInBytes;
-        this.priority = priority;
-        this.rechunked = rechunked;
-        this.requestType = requestType;
-        this.truncated = truncated;
-        this.userId = userId;
+    public CanceledJob() {
+        //pass
     }
 
     // Getters and Setters

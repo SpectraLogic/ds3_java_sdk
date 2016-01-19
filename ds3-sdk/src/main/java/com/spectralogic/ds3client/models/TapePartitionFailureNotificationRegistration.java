@@ -62,18 +62,8 @@ public class TapePartitionFailureNotificationRegistration {
     private UUID userId;
 
     // Constructor
-    public TapePartitionFailureNotificationRegistration(final Date creationDate, final HttpResponseFormatType format, final UUID id, final String lastFailure, final Integer lastHttpResponseCode, final Date lastNotification, final NamingConventionType namingConvention, final String notificationEndPoint, final RequestType notificationHttpMethod, final int numberOfFailuresSinceLastSuccess, final UUID userId) {
-        this.creationDate = creationDate;
-        this.format = format;
-        this.id = id;
-        this.lastFailure = lastFailure;
-        this.lastHttpResponseCode = lastHttpResponseCode;
-        this.lastNotification = lastNotification;
-        this.namingConvention = namingConvention;
-        this.notificationEndPoint = notificationEndPoint;
-        this.notificationHttpMethod = notificationHttpMethod;
-        this.numberOfFailuresSinceLastSuccess = numberOfFailuresSinceLastSuccess;
-        this.userId = userId;
+    public TapePartitionFailureNotificationRegistration() {
+        //pass
     }
 
     // Getters and Setters

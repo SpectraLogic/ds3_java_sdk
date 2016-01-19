@@ -29,8 +29,8 @@ public class SystemFailureNotificationRegistrationList {
     private List<SystemFailureNotificationRegistration> systemFailureNotificationRegistration;
 
     // Constructor
-    public SystemFailureNotificationRegistrationList(final List<SystemFailureNotificationRegistration> systemFailureNotificationRegistration) {
-        this.systemFailureNotificationRegistration = systemFailureNotificationRegistration;
+    public SystemFailureNotificationRegistrationList() {
+        //pass
     }
 
     // Getters and Setters

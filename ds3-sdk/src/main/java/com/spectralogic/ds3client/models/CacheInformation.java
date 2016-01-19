@@ -29,8 +29,8 @@ public class CacheInformation {
     private List<CacheFilesystemInformation> filesystems;
 
     // Constructor
-    public CacheInformation(final List<CacheFilesystemInformation> filesystems) {
-        this.filesystems = filesystems;
+    public CacheInformation() {
+        //pass
     }
 
     // Getters and Setters

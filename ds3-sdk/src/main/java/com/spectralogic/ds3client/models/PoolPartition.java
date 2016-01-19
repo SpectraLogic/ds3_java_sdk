@@ -34,10 +34,8 @@ public class PoolPartition {
     private PoolType type;
 
     // Constructor
-    public PoolPartition(final UUID id, final String name, final PoolType type) {
-        this.id = id;
-        this.name = name;
-        this.type = type;
+    public PoolPartition() {
+        //pass
     }
 
     // Getters and Setters

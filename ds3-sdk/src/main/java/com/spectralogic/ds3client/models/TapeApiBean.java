@@ -108,33 +108,8 @@ public class TapeApiBean {
     private boolean writeProtected;
 
     // Constructor
-    public TapeApiBean(final boolean assignedToStorageDomain, final Long availableRawCapacity, final String barCode, final UUID bucketId, final String descriptionForIdentification, final Date ejectDate, final String ejectLabel, final String ejectLocation, final Date ejectPending, final boolean fullOfData, final UUID id, final Date lastAccessed, final String lastCheckpoint, final Date lastModified, final Date lastVerified, final TapeFailure mostRecentFailure, final UUID partitionId, final TapeState previousState, final String serialNumber, final TapeState state, final UUID storageDomainId, final boolean takeOwnershipPending, final Long totalRawCapacity, final TapeType type, final BlobStoreTaskPriority verifyPending, final boolean writeProtected) {
-        this.assignedToStorageDomain = assignedToStorageDomain;
-        this.availableRawCapacity = availableRawCapacity;
-        this.barCode = barCode;
-        this.bucketId = bucketId;
-        this.descriptionForIdentification = descriptionForIdentification;
-        this.ejectDate = ejectDate;
-        this.ejectLabel = ejectLabel;
-        this.ejectLocation = ejectLocation;
-        this.ejectPending = ejectPending;
-        this.fullOfData = fullOfData;
-        this.id = id;
-        this.lastAccessed = lastAccessed;
-        this.lastCheckpoint = lastCheckpoint;
-        this.lastModified = lastModified;
-        this.lastVerified = lastVerified;
-        this.mostRecentFailure = mostRecentFailure;
-        this.partitionId = partitionId;
-        this.previousState = previousState;
-        this.serialNumber = serialNumber;
-        this.state = state;
-        this.storageDomainId = storageDomainId;
-        this.takeOwnershipPending = takeOwnershipPending;
-        this.totalRawCapacity = totalRawCapacity;
-        this.type = type;
-        this.verifyPending = verifyPending;
-        this.writeProtected = writeProtected;
+    public TapeApiBean() {
+        //pass
     }
 
     // Getters and Setters

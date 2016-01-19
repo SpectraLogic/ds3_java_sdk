@@ -68,20 +68,8 @@ public class DataPolicy {
     private VersioningLevel versioning;
 
     // Constructor
-    public DataPolicy(final boolean blobbingEnabled, final ChecksumType checksumType, final Date creationDate, final Long defaultBlobSize, final BlobStoreTaskPriority defaultGetJobPriority, final BlobStoreTaskPriority defaultPutJobPriority, final BlobStoreTaskPriority defaultVerifyJobPriority, final boolean endToEndCrcRequired, final UUID id, final boolean ltfsObjectNamingAllowed, final String name, final BlobStoreTaskPriority rebuildPriority, final VersioningLevel versioning) {
-        this.blobbingEnabled = blobbingEnabled;
-        this.checksumType = checksumType;
-        this.creationDate = creationDate;
-        this.defaultBlobSize = defaultBlobSize;
-        this.defaultGetJobPriority = defaultGetJobPriority;
-        this.defaultPutJobPriority = defaultPutJobPriority;
-        this.defaultVerifyJobPriority = defaultVerifyJobPriority;
-        this.endToEndCrcRequired = endToEndCrcRequired;
-        this.id = id;
-        this.ltfsObjectNamingAllowed = ltfsObjectNamingAllowed;
-        this.name = name;
-        this.rebuildPriority = rebuildPriority;
-        this.versioning = versioning;
+    public DataPolicy() {
+        //pass
     }
 
     // Getters and Setters

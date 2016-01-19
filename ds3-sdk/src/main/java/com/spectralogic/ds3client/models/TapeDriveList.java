@@ -29,8 +29,8 @@ public class TapeDriveList {
     private List<TapeDrive> tapeDrive;
 
     // Constructor
-    public TapeDriveList(final List<TapeDrive> tapeDrive) {
-        this.tapeDrive = tapeDrive;
+    public TapeDriveList() {
+        //pass
     }
 
     // Getters and Setters

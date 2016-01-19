@@ -30,9 +30,8 @@ public class CacheEntryInformation {
     private CacheEntryState state;
 
     // Constructor
-    public CacheEntryInformation(final Blob blob, final CacheEntryState state) {
-        this.blob = blob;
-        this.state = state;
+    public CacheEntryInformation() {
+        //pass
     }
 
     // Getters and Setters

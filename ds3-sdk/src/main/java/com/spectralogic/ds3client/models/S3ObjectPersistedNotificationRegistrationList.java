@@ -29,8 +29,8 @@ public class S3ObjectPersistedNotificationRegistrationList {
     private List<S3ObjectPersistedNotificationRegistration> s3ObjectPersistedNotificationRegistration;
 
     // Constructor
-    public S3ObjectPersistedNotificationRegistrationList(final List<S3ObjectPersistedNotificationRegistration> s3ObjectPersistedNotificationRegistration) {
-        this.s3ObjectPersistedNotificationRegistration = s3ObjectPersistedNotificationRegistration;
+    public S3ObjectPersistedNotificationRegistrationList() {
+        //pass
     }
 
     // Getters and Setters

@@ -29,8 +29,8 @@ public class TapePartitionFailureList {
     private List<TapePartitionFailure> tapePartitionFailure;
 
     // Constructor
-    public TapePartitionFailureList(final List<TapePartitionFailure> tapePartitionFailure) {
-        this.tapePartitionFailure = tapePartitionFailure;
+    public TapePartitionFailureList() {
+        //pass
     }
 
     // Getters and Setters

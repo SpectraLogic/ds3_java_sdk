@@ -62,8 +62,9 @@ public class Ds3Client_Test {
 
     @Test
     public void getBuckets() throws IOException, SignatureException {
+        final UUID id = UUID.randomUUID();
         final String stringResponse = "<ListAllMyBucketsResult xmlns=\"http://doc.s3.amazonaws.com/2006-03-01\">\n" +
-                "<Owner><ID>ryanid</ID><DisplayName>ryan</DisplayName></Owner><Buckets><Bucket><Name>testBucket2</Name><CreationDate>2013-12-11T23:20:09</CreationDate></Bucket><Bucket><Name>bulkTest</Name><CreationDate>2013-12-11T23:20:09</CreationDate></Bucket><Bucket><Name>bulkTest1</Name><CreationDate>2013-12-11T23:20:09</CreationDate></Bucket><Bucket><Name>bulkTest2</Name><CreationDate>2013-12-11T23:20:09</CreationDate></Bucket><Bucket><Name>bulkTest3</Name><CreationDate>2013-12-11T23:20:09</CreationDate></Bucket><Bucket><Name>bulkTest4</Name><CreationDate>2013-12-11T23:20:09</CreationDate></Bucket><Bucket><Name>bulkTest5</Name><CreationDate>2013-12-11T23:20:09</CreationDate></Bucket><Bucket><Name>bulkTest6</Name><CreationDate>2013-12-11T23:20:09</CreationDate></Bucket><Bucket><Name>testBucket3</Name><CreationDate>2013-12-11T23:20:09</CreationDate></Bucket><Bucket><Name>testBucket1</Name><CreationDate>2013-12-11T23:20:09</CreationDate></Bucket><Bucket><Name>testbucket</Name><CreationDate>2013-12-11T23:20:09</CreationDate></Bucket></Buckets></ListAllMyBucketsResult>";
+                "<Owner><Id>" + id.toString() + "</Id><DisplayName>ryan</DisplayName></Owner><Buckets><Bucket><Name>testBucket2</Name><CreationDate>2013-12-11T23:20:09</CreationDate></Bucket><Bucket><Name>bulkTest</Name><CreationDate>2013-12-11T23:20:09</CreationDate></Bucket><Bucket><Name>bulkTest1</Name><CreationDate>2013-12-11T23:20:09</CreationDate></Bucket><Bucket><Name>bulkTest2</Name><CreationDate>2013-12-11T23:20:09</CreationDate></Bucket><Bucket><Name>bulkTest3</Name><CreationDate>2013-12-11T23:20:09</CreationDate></Bucket><Bucket><Name>bulkTest4</Name><CreationDate>2013-12-11T23:20:09</CreationDate></Bucket><Bucket><Name>bulkTest5</Name><CreationDate>2013-12-11T23:20:09</CreationDate></Bucket><Bucket><Name>bulkTest6</Name><CreationDate>2013-12-11T23:20:09</CreationDate></Bucket><Bucket><Name>testBucket3</Name><CreationDate>2013-12-11T23:20:09</CreationDate></Bucket><Bucket><Name>testBucket1</Name><CreationDate>2013-12-11T23:20:09</CreationDate></Bucket><Bucket><Name>testbucket</Name><CreationDate>2013-12-11T23:20:09</CreationDate></Bucket></Buckets></ListAllMyBucketsResult>";
         
         final List<String> expectedBucketNames = Arrays.asList(
             "testBucket2",
@@ -86,13 +87,13 @@ public class Ds3Client_Test {
             .getBuckets(new GetBucketsRequest());
         final BucketsApiBean result = response.getBucketsApiBeanResult();
         assertThat(result.getOwner().getDisplayName(), is("ryan"));
-        assertThat(result.getOwner().getId(), is(UUID.fromString("ryanid")));
+        assertThat(result.getOwner().getId(), is(id));
         
         final List<BucketApiBean> buckets = result.getBuckets();
         final List<String> bucketNames = new ArrayList<>();
         for (final BucketApiBean bucket : buckets) {
             bucketNames.add(bucket.getName());
-            assertThat(bucket.getCreationDate(), is(Date.from(Instant.parse("2013-12-11T23:20:09"))));
+            assertThat(bucket.getCreationDate(), is(Date.from(Instant.parse("2013-12-11T23:20:09Z"))));
         }
         assertThat(bucketNames, is(expectedBucketNames));
     }
@@ -181,23 +182,21 @@ public class Ds3Client_Test {
                 .getS3ObjectListResult()
                 .getS3Object();
 
-        final S3Object beowulf = new S3Object(
-                UUID.fromString("a24d14f3-e2f0-4bfb-ab71-f99d5ef43745"),
-                Date.from(Instant.parse("2015-09-21 20:06:47.694")),
-                UUID.fromString("e37c3ce0-12aa-4f54-87e3-42532aca0e5e"),
-                true,
-                "beowulf.txt",
-                S3ObjectType.DATA,
-                1);
+        final S3Object beowulf = new S3Object();
+        beowulf.setBucketId(UUID.fromString("a24d14f3-e2f0-4bfb-ab71-f99d5ef43745"));
+        beowulf.setCreationDate(Date.from(Instant.parse("2015-09-21 20:06:47.694")));
+        beowulf.setId(UUID.fromString("e37c3ce0-12aa-4f54-87e3-42532aca0e5e"));
+        beowulf.setName("beowulf.txt");
+        beowulf.setType(S3ObjectType.DATA);
+        beowulf.setVersion(1);
 
-        final S3Object notBeowulf = new S3Object(
-                UUID.fromString("a24d14f3-e2f0-4bfb-ab71-f99d5ef43745"),
-                Date.from(Instant.parse("2015-09-21 20:06:47.694")),
-                UUID.fromString("e37c3ce0-12aa-4f54-87e3-42532aca0e5e"),
-                true,
-                "notBeowulf.txt",
-                S3ObjectType.DATA,
-                1);
+        final S3Object notBeowulf = new S3Object();
+        notBeowulf.setBucketId(UUID.fromString("a24d14f3-e2f0-4bfb-ab71-f99d5ef43745"));
+        notBeowulf.setCreationDate(Date.from(Instant.parse("2015-09-21 20:06:47.694")));
+        notBeowulf.setId(UUID.fromString("e37c3ce0-12aa-4f54-87e3-42532aca0e5e"));
+        notBeowulf.setName("notBeowulf.txt");
+        notBeowulf.setType(S3ObjectType.DATA);
+        notBeowulf.setVersion(1);
 
         assertThat(objects.size(), is(4));
         assertThat(s3ObjectExists(objects, beowulf), is(true));
@@ -789,11 +788,10 @@ public class Ds3Client_Test {
     public void newForNode() {
         final Ds3Client client = Ds3ClientBuilder.create("endpoint", new Credentials("access", "key")).build();
 
-        final NodeApiBean node = new NodeApiBean(
-                "newEndpoint",
-                80,
-                443,
-                UUID.randomUUID());
+        final NodeApiBean node = new NodeApiBean();
+        node.setEndPoint("newEndpoint");
+        node.setHttpPort(80);
+        node.setHttpsPort(443);
 
         final Ds3Client newClient = client.newForNode(node);
         assertThat(newClient.getConnectionDetails().getEndpoint(), is("newEndpoint:443"));

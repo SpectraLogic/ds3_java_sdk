@@ -26,8 +26,17 @@ public class RangedSeekableByteChannel_Test {
 
         final ImmutableMultimap.Builder<BlobApiBean, Range> builder = ImmutableMultimap.builder();
 
-        final BlobApiBean blob1 = new BlobApiBean(null, true, true, 50, "obj1.txt", 0, null, 1);
-        final BlobApiBean blob2 =new BlobApiBean(null, true, true, 50, "obj1.txt", 50, null, 1);
+        final BlobApiBean blob1 = new BlobApiBean();
+        blob1.setName("obj1.txt");
+        blob1.setLength(50);
+        blob1.setInCache(true);
+        blob1.setOffset(0);
+
+        final BlobApiBean blob2 = new BlobApiBean();
+        blob2.setName("obj1.txt");
+        blob2.setLength(50);
+        blob2.setInCache(true);
+        blob2.setOffset(50);
 
         builder.put(blob1, Range.byLength(0, firstBlobData.limit()));
         builder.put(blob2, Range.byLength(50, secondBlobData.limit()));
@@ -58,8 +67,17 @@ public class RangedSeekableByteChannel_Test {
 
         final ImmutableMultimap.Builder<BlobApiBean, Range> builder = ImmutableMultimap.builder();
 
-        final BlobApiBean blob1 = new BlobApiBean(null, true, true, 50, "obj1.txt", 0, null, 1);
-        final BlobApiBean blob2 =new BlobApiBean(null, true, true, 50, "obj1.txt", 50, null, 1);
+        final BlobApiBean blob1 = new BlobApiBean();
+        blob1.setName("obj1.txt");
+        blob1.setLength(50);
+        blob1.setInCache(true);
+        blob1.setOffset(0);
+
+        final BlobApiBean blob2 = new BlobApiBean();
+        blob2.setName("obj1.txt");
+        blob2.setLength(50);
+        blob2.setInCache(true);
+        blob2.setOffset(50);
 
         builder.put(blob1, Range.byLength(5, firstBlobData.limit()));
         builder.put(blob2, Range.byLength(60, secondBlobData.limit()));
@@ -84,8 +102,17 @@ public class RangedSeekableByteChannel_Test {
     public void seekToInvalidPosition() throws IOException {
         final ImmutableMultimap.Builder<BlobApiBean, Range> builder = ImmutableMultimap.builder();
 
-        final BlobApiBean blob1 = new BlobApiBean(null, true, true, 20, "obj1.txt", 0, null, 1);
-        final BlobApiBean blob2 =new BlobApiBean(null, true, true, 20, "obj1.txt", 20, null, 1);
+        final BlobApiBean blob1 = new BlobApiBean();
+        blob1.setName("obj1.txt");
+        blob1.setLength(20);
+        blob1.setInCache(true);
+        blob1.setOffset(0);
+
+        final BlobApiBean blob2 = new BlobApiBean();
+        blob2.setName("obj1.txt");
+        blob2.setLength(20);
+        blob2.setInCache(true);
+        blob2.setOffset(20);
 
         builder.put(blob1, Range.byPosition(5, 15));
         builder.put(blob2, Range.byPosition(20, 10));

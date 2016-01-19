@@ -34,11 +34,8 @@ public class Duration {
     private int elapsedSeconds;
 
     // Constructor
-    public Duration(final long elapsedMillis, final int elapsedMinutes, final long elapsedNanos, final int elapsedSeconds) {
-        this.elapsedMillis = elapsedMillis;
-        this.elapsedMinutes = elapsedMinutes;
-        this.elapsedNanos = elapsedNanos;
-        this.elapsedSeconds = elapsedSeconds;
+    public Duration() {
+        //pass
     }
 
     // Getters and Setters

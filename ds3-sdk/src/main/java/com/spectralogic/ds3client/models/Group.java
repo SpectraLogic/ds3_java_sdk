@@ -33,10 +33,8 @@ public class Group {
     private String name;
 
     // Constructor
-    public Group(final boolean builtIn, final UUID id, final String name) {
-        this.builtIn = builtIn;
-        this.id = id;
-        this.name = name;
+    public Group() {
+        //pass
     }
 
     // Getters and Setters

@@ -29,8 +29,8 @@ public class BucketAclList {
     private List<BucketAcl> bucketAcl;
 
     // Constructor
-    public BucketAclList(final List<BucketAcl> bucketAcl) {
-        this.bucketAcl = bucketAcl;
+    public BucketAclList() {
+        //pass
     }
 
     // Getters and Setters

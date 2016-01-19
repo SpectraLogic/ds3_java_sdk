@@ -57,16 +57,8 @@ public class ListMultiPartUploadPartsApiBean {
     private UUID uploadId;
 
     // Constructor
-    public ListMultiPartUploadPartsApiBean(final String bucket, final String key, final int maxParts, final int nextPartNumberMarker, final UserApiBean owner, final Integer partNumberMarker, final List<MultiPartUploadPartApiBean> parts, final boolean truncated, final UUID uploadId) {
-        this.bucket = bucket;
-        this.key = key;
-        this.maxParts = maxParts;
-        this.nextPartNumberMarker = nextPartNumberMarker;
-        this.owner = owner;
-        this.partNumberMarker = partNumberMarker;
-        this.parts = parts;
-        this.truncated = truncated;
-        this.uploadId = uploadId;
+    public ListMultiPartUploadPartsApiBean() {
+        //pass
     }
 
     // Getters and Setters

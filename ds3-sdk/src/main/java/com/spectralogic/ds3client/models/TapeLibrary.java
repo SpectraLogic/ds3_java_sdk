@@ -36,11 +36,8 @@ public class TapeLibrary {
     private String serialNumber;
 
     // Constructor
-    public TapeLibrary(final UUID id, final String managementUrl, final String name, final String serialNumber) {
-        this.id = id;
-        this.managementUrl = managementUrl;
-        this.name = name;
-        this.serialNumber = serialNumber;
+    public TapeLibrary() {
+        //pass
     }
 
     // Getters and Setters

@@ -100,16 +100,35 @@ public class PartialObjectHelpers_Test {
         final ImmutableMultimap<String, Range> ranges = PartialObjectHelpers.getPartialObjectsRanges(objects);
 
         List<BlobApiBean> blobs = Lists.newArrayList();
-        blobs.add(new BlobApiBean(null, true, true, 100, "obj1.txt", 0, null, 1));
-        blobs.add(new BlobApiBean(null, true, true, 100, "obj2.txt", 0, null, 1));
 
-        final JobChunkApiBean chunk1 =  new JobChunkApiBean(null, 1, null, blobs);
+        final BlobApiBean blob1 = new BlobApiBean();
+        blob1.setName("obj1.txt");
+        blob1.setLength(100);
+        blob1.setInCache(true);
+        blob1.setOffset(0);
+
+        final BlobApiBean blob2 = new BlobApiBean();
+        blob2.setName("obj2.txt");
+        blob2.setLength(100);
+        blob2.setInCache(true);
+        blob2.setOffset(0);
+
+        blobs.add(blob1);
+        blobs.add(blob2);
+
+        final JobChunkApiBean chunk1 =  new JobChunkApiBean();
         chunk1.setObjects(blobs);
 
-        blobs = Lists.newArrayList();
-        blobs.add(new BlobApiBean(null, true, true, 200, "obj2.txt", 100, null, 1));
+        final BlobApiBean blob3 = new BlobApiBean();
+        blob3.setName("obj2.txt");
+        blob3.setLength(200);
+        blob3.setInCache(true);
+        blob3.setOffset(100);
 
-        final JobChunkApiBean chunk2 = new JobChunkApiBean(null, 0, null, blobs);
+        blobs = Lists.newArrayList();
+        blobs.add(blob3);
+
+        final JobChunkApiBean chunk2 = new JobChunkApiBean();
         chunk2.setObjects(blobs);
 
         final List<JobChunkApiBean> chunks = Lists.newArrayList();
@@ -121,7 +140,7 @@ public class PartialObjectHelpers_Test {
         assertFalse(blobToRangeMapping.isEmpty());
         assertThat(blobToRangeMapping.size(), is(2));
 
-        final ImmutableCollection<Range> obj1Blob = blobToRangeMapping.get("obj1.txt").get(new BlobApiBean(null, true, true, 100, "obj1.txt", 0, null, 1));
+        final ImmutableCollection<Range> obj1Blob = blobToRangeMapping.get("obj1.txt").get(blob1);
         assertThat(obj1Blob, is(notNullValue()));
         assertThat(obj1Blob.size(), is(1));
 
@@ -129,7 +148,7 @@ public class PartialObjectHelpers_Test {
         assertThat(range.getStart(), is(0L));
         assertThat(range.getEnd(), is(99L));
 
-        final ImmutableCollection<Range> obj2Blob1 = blobToRangeMapping.get("obj2.txt").get(new BlobApiBean(null, true, true, 100, "obj2.txt", 0, null, 1));
+        final ImmutableCollection<Range> obj2Blob1 = blobToRangeMapping.get("obj2.txt").get(blob2);
         assertThat(obj2Blob1, is(notNullValue()));
         assertThat(obj2Blob1.size(), is(2));
 
@@ -141,7 +160,7 @@ public class PartialObjectHelpers_Test {
         assertThat(range.getStart(), is(10L));
         assertThat(range.getEnd(), is(99L));
 
-        final ImmutableCollection<Range> obj2Blob2 = blobToRangeMapping.get("obj2.txt").get(new BlobApiBean(null, true, true, 200, "obj2.txt",100, null, 1));
+        final ImmutableCollection<Range> obj2Blob2 = blobToRangeMapping.get("obj2.txt").get(blob3);
         assertThat(obj2Blob2, is(notNullValue()));
         assertThat(obj2Blob2.size(), is(1));
 
@@ -207,13 +226,33 @@ public class PartialObjectHelpers_Test {
     @Test
     public void multiBlobSingleRangeMapping() {
 
+        final BlobApiBean blob1 = new BlobApiBean();
+        blob1.setName("obj1.txt");
+        blob1.setLength(10);
+        blob1.setInCache(true);
+        blob1.setOffset(0);
+
+        final BlobApiBean blob2 = new BlobApiBean();
+        blob2.setName("obj1.txt");
+        blob2.setLength(10);
+        blob2.setInCache(true);
+        blob2.setOffset(10);
+
+        final BlobApiBean blob3 = new BlobApiBean();
+        blob3.setName("obj1.txt");
+        blob3.setLength(10);
+        blob3.setInCache(true);
+        blob3.setOffset(20);
+
         final List<JobChunkApiBean> objects = Lists.newArrayList();
-        final JobChunkApiBean objs1 = new JobChunkApiBean(null, 0, null, Lists.newArrayList(
-                new BlobApiBean(null, true, true, 10, "obj1.txt", 0, null, 1)));
-        final JobChunkApiBean objs2 = new JobChunkApiBean(null, 0, null, Lists.newArrayList(
-                new BlobApiBean(null, true, true, 10, "obj1.txt", 10, null, 1)));
-        final JobChunkApiBean objs3 = new JobChunkApiBean(null, 0, null, Lists.newArrayList(
-                new BlobApiBean(null, true, true, 10, "obj1.txt", 20, null, 1)));
+        final JobChunkApiBean objs1 = new JobChunkApiBean();
+        objs1.setObjects(Lists.newArrayList(blob1));
+
+        final JobChunkApiBean objs2 = new JobChunkApiBean();
+        objs2.setObjects(Lists.newArrayList(blob2));
+
+        final JobChunkApiBean objs3 = new JobChunkApiBean();
+        objs3.setObjects(Lists.newArrayList(blob3));
 
         objects.add(objs1);
         objects.add(objs2);

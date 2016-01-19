@@ -35,28 +35,51 @@ public class JobUtils_Test {
         final UUID realJobId = UUID.randomUUID();
         final List<JobApiBean> jobs = new ArrayList<>();
 
-        final JobApiBean job1 = new JobApiBean("bucket", 0, null, 0, realJobId, null, null, 0, null,
-                JobRequestType.PUT, null, JobStatus.IN_PROGRESS, null, null, null);
+        final JobApiBean job1 = new JobApiBean();
+        job1.setJobId(realJobId);
+        job1.setStatus(JobStatus.IN_PROGRESS);
+        job1.setBucketName("bucket");
+        job1.setRequestType(JobRequestType.PUT);
+        jobs.add(job1);
 
         jobs.add(job1);
 
-        when(jobsResponse.getJobsApiBeanResult().getJobs()).thenReturn(jobs);
+        final JobsApiBean container = new JobsApiBean();
+        container.setJobs(jobs);
+        when(jobsResponse.getJobsApiBeanResult()).thenReturn(container);
 
-        final JobWithChunksApiBean mob = new JobWithChunksApiBean("bucket", 0, null, 0, realJobId, null, null,
-                null, 0, null, JobRequestType.PUT, null, JobStatus.IN_PROGRESS, null, null, null);
+        final JobWithChunksApiBean mob = new JobWithChunksApiBean();
+        mob.setStatus(JobStatus.IN_PROGRESS);
+        mob.setBucketName("bucket");
+        mob.setRequestType(JobRequestType.PUT);
+        mob.setJobId(realJobId);
 
-        final List<BlobApiBean> bulkObjects = Lists.newArrayList(
-                new BlobApiBean(null, false, true, 12, "file1", 0, null, 1),
-                new BlobApiBean(null, false, true, 12, "file2", 0, null, 1));
+        final BlobApiBean blob1 = new BlobApiBean();
+        blob1.setName("file1");
+        blob1.setLength(12);
+        blob1.setInCache(false);
+        blob1.setOffset(0);
 
-        final JobChunkApiBean chunk = new JobChunkApiBean(null, 0, null, bulkObjects);
+        final BlobApiBean blob2 = new BlobApiBean();
+        blob2.setName("file2");
+        blob2.setLength(12);
+        blob2.setInCache(false);
+        blob2.setOffset(0);
+
+        final List<BlobApiBean> bulkObjects = Lists.newArrayList(blob1, blob2);
+
+        final JobChunkApiBean chunk = new JobChunkApiBean();
+        chunk.setObjects(bulkObjects);
 
         final List<JobChunkApiBean> chunks = new ArrayList<>();
         chunks.add(chunk);
 
         mob.setObjects(chunks);
 
-        when(jobResponse.getJobWithChunksContainerApiBeanResult().getJob()).thenReturn(mob);
+        final JobWithChunksContainerApiBean containerApiBean = new JobWithChunksContainerApiBean();
+        containerApiBean.setJob(mob);
+        when(jobResponse.getJobWithChunksContainerApiBeanResult()).thenReturn(containerApiBean);
+        //when(jobResponse.getJobWithChunksContainerApiBeanResult().getJob()).thenReturn(mob);
 
         when(client.getJobsSpectraS3(any(GetJobsSpectraS3Request.class))).thenReturn(jobsResponse);
         when(client.getJobSpectraS3(new GetJobSpectraS3Request(realJobId))).thenReturn(jobResponse);
@@ -79,24 +102,44 @@ public class JobUtils_Test {
         final UUID realJobId = UUID.randomUUID();
         final List<JobApiBean> jobs = new ArrayList<>();
 
-        final JobApiBean job1 = new JobApiBean(null, 0, null, 0, UUID.randomUUID(), "bucket2", null, 0, null,
-                JobRequestType.PUT, null, JobStatus.IN_PROGRESS, null, null, null);
+        final JobApiBean job1 = new JobApiBean();
+        job1.setJobId(UUID.randomUUID());
+        job1.setStatus(JobStatus.IN_PROGRESS);
+        job1.setBucketName("bucket2");
+        job1.setRequestType(JobRequestType.PUT);
         jobs.add(job1);
 
-        final JobApiBean job2 = new JobApiBean(null, 0, null, 0, realJobId, "bucket", null, 0, null,
-                JobRequestType.PUT, null, JobStatus.IN_PROGRESS, null, null, null);
+        final JobApiBean job2 = new JobApiBean();
+        job2.setJobId(realJobId);
+        job2.setStatus(JobStatus.IN_PROGRESS);
+        job2.setBucketName("bucket");
+        job2.setRequestType(JobRequestType.PUT);
         jobs.add(job2);
 
         when(jobsResponse.getJobsApiBeanResult().getJobs()).thenReturn(jobs);
 
-        final JobWithChunksApiBean mob = new JobWithChunksApiBean("bucket", 0, null, 0, realJobId, null, null,
-                null, 0, null, JobRequestType.PUT, null, JobStatus.IN_PROGRESS, null, null, null);
+        final JobWithChunksApiBean mob = new JobWithChunksApiBean();
+        mob.setStatus(JobStatus.IN_PROGRESS);
+        mob.setBucketName("bucket");
+        mob.setJobId(realJobId);
+        mob.setRequestType(JobRequestType.PUT);
 
-        final List<BlobApiBean> bulkObjects = Lists.newArrayList(
-                new BlobApiBean(null, false, true, 12, "file1", 0, null, 1),
-                new BlobApiBean(null, false, true, 12, "file2", 0, null, 1));
+        final BlobApiBean blob1 = new BlobApiBean();
+        blob1.setName("file1");
+        blob1.setLength(12);
+        blob1.setInCache(false);
+        blob1.setOffset(0);
 
-        final JobChunkApiBean chunk = new JobChunkApiBean(null, 0, null, bulkObjects);
+        final BlobApiBean blob2 = new BlobApiBean();
+        blob2.setName("file2");
+        blob2.setLength(12);
+        blob2.setInCache(false);
+        blob2.setOffset(0);
+
+        final List<BlobApiBean> bulkObjects = Lists.newArrayList(blob1, blob2);
+
+        final JobChunkApiBean chunk = new JobChunkApiBean();
+        chunk.setObjects(bulkObjects);
 
         final List<JobChunkApiBean> chunks = new ArrayList<>();
         chunks.add(chunk);
@@ -126,24 +169,44 @@ public class JobUtils_Test {
         final UUID realJobId = UUID.randomUUID();
         final List<JobApiBean> jobs = new ArrayList<>();
 
-        final JobApiBean job1 = new JobApiBean(null, 0, null, 0, UUID.randomUUID(), "bucket", null, 0, null,
-                JobRequestType.PUT, null, JobStatus.COMPLETED, null, null, null);
+        final JobApiBean job1 = new JobApiBean();
+        job1.setJobId(UUID.randomUUID());
+        job1.setStatus(JobStatus.COMPLETED);
+        job1.setBucketName("bucket");
+        job1.setRequestType(JobRequestType.PUT);
         jobs.add(job1);
 
-        final JobApiBean job2 = new JobApiBean(null, 0, null, 0, realJobId, "bucket", null, 0, null,
-                JobRequestType.PUT, null, JobStatus.IN_PROGRESS, null, null, null);
+        final JobApiBean job2 = new JobApiBean();
+        job2.setJobId(realJobId);
+        job2.setStatus(JobStatus.IN_PROGRESS);
+        job2.setBucketName("bucket");
+        job2.setRequestType(JobRequestType.PUT);
         jobs.add(job2);
 
         when(jobsResponse.getJobsApiBeanResult().getJobs()).thenReturn(jobs);
 
-        final JobWithChunksApiBean mob = new JobWithChunksApiBean("bucket", 0, null, 0, realJobId, null, null,
-                null, 0, null, JobRequestType.PUT, null, JobStatus.IN_PROGRESS, null, null, null);
+        final JobWithChunksApiBean mob = new JobWithChunksApiBean();
+        mob.setStatus(JobStatus.IN_PROGRESS);
+        mob.setBucketName("bucket");
+        mob.setJobId(realJobId);
+        mob.setRequestType(JobRequestType.PUT);
 
-        final List<BlobApiBean> bulkObjects = Lists.newArrayList(
-                new BlobApiBean(null, false, true, 12, "file1", 0, null, 1),
-                new BlobApiBean(null, false, true, 12, "file2", 0, null, 1));
+        final BlobApiBean blob1 = new BlobApiBean();
+        blob1.setName("file1");
+        blob1.setLength(12);
+        blob1.setInCache(false);
+        blob1.setOffset(0);
 
-        final JobChunkApiBean chunk = new JobChunkApiBean(null, 0, null, bulkObjects);
+        final BlobApiBean blob2 = new BlobApiBean();
+        blob2.setName("file2");
+        blob2.setLength(12);
+        blob2.setInCache(false);
+        blob2.setOffset(0);
+
+        final List<BlobApiBean> bulkObjects = Lists.newArrayList(blob1, blob2);
+
+        final JobChunkApiBean chunk = new JobChunkApiBean();
+        chunk.setObjects(bulkObjects);
 
         final List<JobChunkApiBean> chunks = new ArrayList<>();
         chunks.add(chunk);
@@ -173,25 +236,43 @@ public class JobUtils_Test {
         final UUID realJobId = UUID.randomUUID();
         final List<JobApiBean> jobs = new ArrayList<>();
 
-        final JobApiBean job1 = new JobApiBean(null, 0, null, 0, UUID.randomUUID(), "bucket", null, 0, null,
-                JobRequestType.PUT, null, JobStatus.COMPLETED, null, null, null);
+        final JobApiBean job1 = new JobApiBean();
+        job1.setJobId(UUID.randomUUID());
+        job1.setStatus(JobStatus.COMPLETED);
+        job1.setBucketName("bucket");
+        job1.setRequestType(JobRequestType.PUT);
         jobs.add(job1);
 
-        final JobApiBean job2 = new JobApiBean(null, 0, null, 0, realJobId, "bucket", null, 0, null,
-                JobRequestType.PUT, null, JobStatus.IN_PROGRESS, null, null, null);
+        final JobApiBean job2 = new JobApiBean();
+        job2.setJobId(realJobId);
+        job2.setStatus(JobStatus.IN_PROGRESS);
+        job2.setBucketName("bucket");
+        job2.setRequestType(JobRequestType.PUT);
         jobs.add(job2);
 
         when(jobsResponse.getJobsApiBeanResult().getJobs()).thenReturn(jobs);
 
-        final JobWithChunksApiBean mob = new JobWithChunksApiBean("bucket", 0, null, 0, realJobId, null, null,
-                null, 0, null, JobRequestType.PUT, null, JobStatus.IN_PROGRESS, null, null, null);
+        final JobWithChunksApiBean mob = new JobWithChunksApiBean();
+        mob.setStatus(JobStatus.IN_PROGRESS);
+        mob.setBucketName("bucket");
+        mob.setJobId(realJobId);
+        mob.setRequestType(JobRequestType.PUT);
 
-        final List<BlobApiBean> bulkObjects = Lists.newArrayList(
-                new BlobApiBean(null, false, true, 12, "file1", 0, null, 1),
-                new BlobApiBean(null, false, true, 12, "file2", 0, null, 1)
-        );
+        final BlobApiBean blob1 = new BlobApiBean();
+        blob1.setName("file1");
+        blob1.setLength(12);
+        blob1.setInCache(false);
+        blob1.setOffset(0);
 
-        final JobChunkApiBean chunk = new JobChunkApiBean(null, 0, null, bulkObjects);
+        final BlobApiBean blob2 = new BlobApiBean();
+        blob2.setName("file2");
+        blob2.setLength(12);
+        blob2.setInCache(false);
+        blob2.setOffset(0);
+
+        final List<BlobApiBean> bulkObjects = Lists.newArrayList(blob1, blob2);
+
+        final JobChunkApiBean chunk = new JobChunkApiBean();
         chunk.setObjects(bulkObjects);
 
         final List<JobChunkApiBean> chunks = new ArrayList<>();
@@ -222,41 +303,77 @@ public class JobUtils_Test {
         final UUID realJobId = UUID.randomUUID();
         final List<JobApiBean> jobs = new ArrayList<>();
 
-        final JobApiBean job1 = new JobApiBean(null, 0, null, 0, UUID.randomUUID(), "bucket", null, 0, null,
-                JobRequestType.PUT, null, JobStatus.IN_PROGRESS, null, null, null);
+        final JobApiBean job1 = new JobApiBean();
+        job1.setJobId(UUID.randomUUID());
+        job1.setStatus(JobStatus.IN_PROGRESS);
+        job1.setBucketName("bucket");
+        job1.setRequestType(JobRequestType.PUT);
         jobs.add(job1);
 
-        final JobWithChunksApiBean mob1 = new JobWithChunksApiBean("bucket", 0, null, 0, job1.getJobId(), null, null,
-                null, 0, null, JobRequestType.PUT, null, JobStatus.IN_PROGRESS, null, null, null);
+        final JobWithChunksApiBean mob1 = new JobWithChunksApiBean();
+        mob1.setStatus(JobStatus.IN_PROGRESS);
+        mob1.setBucketName("bucket");
+        mob1.setJobId(job1.getJobId());
+        mob1.setRequestType(JobRequestType.PUT);
 
-        final List<BlobApiBean> bulkObjects1 = Lists.newArrayList(
-                new BlobApiBean(null, false, true, 125, "file.something", 0, null, 1));
+        final BlobApiBean blob0 = new BlobApiBean();
+        blob0.setName("file.something");
+        blob0.setLength(125);
+        blob0.setInCache(false);
+        blob0.setOffset(0);
 
-        final JobChunkApiBean chunk1 = new JobChunkApiBean(null, 0, null, bulkObjects1);
+        final List<BlobApiBean> bulkObjects1 = Lists.newArrayList(blob0);
+
+        final JobChunkApiBean chunk1 = new JobChunkApiBean();
+        chunk1.setObjects(bulkObjects1);
 
         final List<JobChunkApiBean> chunks1 = new ArrayList<>();
         chunks1.add(chunk1);
 
         mob1.setObjects(chunks1);
 
-        final JobApiBean job2 = new JobApiBean(null, 0, null, 0, realJobId, "bucket", null, 0, null,
-                JobRequestType.PUT, null, JobStatus.IN_PROGRESS, null, null, null);
+        final JobApiBean job2 = new JobApiBean();
+        job2.setJobId(realJobId);
+        job2.setStatus(JobStatus.IN_PROGRESS);
+        job2.setBucketName("bucket");
+        job2.setRequestType(JobRequestType.PUT);
         jobs.add(job2);
 
         when(jobsResponse.getJobsApiBeanResult().getJobs()).thenReturn(jobs);
 
-        final JobWithChunksApiBean mob2 = new JobWithChunksApiBean("bucket", 0, null, 0, realJobId, null, null,
-                null, 0, null, JobRequestType.PUT, null, JobStatus.IN_PROGRESS, null, null, null);
+        final JobWithChunksApiBean mob2 = new JobWithChunksApiBean();
+        mob2.setStatus(JobStatus.IN_PROGRESS);
+        mob2.setBucketName("bucket");
+        mob2.setJobId(realJobId);
+        mob2.setRequestType(JobRequestType.PUT);
 
-        final List<BlobApiBean> bulkObjects2 = Lists.newArrayList(
-                new BlobApiBean(null, false, true, 12, "file1", 0, null, 1),
-                new BlobApiBean(null, false, true, 12, "file2", 0, null, 1));
-        final List<BlobApiBean> bulkObjects3 = Lists.newArrayList(
-                new BlobApiBean(null, false, true, 12, "file3", 0, null, 1));
+        final BlobApiBean blob1 = new BlobApiBean();
+        blob1.setName("file1");
+        blob1.setLength(12);
+        blob1.setInCache(false);
+        blob1.setOffset(0);
 
-        final JobChunkApiBean chunk2 = new JobChunkApiBean(null, 0, null, bulkObjects2);
+        final BlobApiBean blob2 = new BlobApiBean();
+        blob2.setName("file2");
+        blob2.setLength(12);
+        blob2.setInCache(false);
+        blob2.setOffset(0);
 
-        final JobChunkApiBean chunk3 = new JobChunkApiBean(null, 0, null, bulkObjects3);
+        final List<BlobApiBean> bulkObjects2 = Lists.newArrayList(blob1, blob2);
+
+        final BlobApiBean blob3 = new BlobApiBean();
+        blob3.setName("file3");
+        blob3.setLength(12);
+        blob3.setInCache(false);
+        blob3.setOffset(0);
+
+        final List<BlobApiBean> bulkObjects3 = Lists.newArrayList(blob3);
+
+        final JobChunkApiBean chunk2 = new JobChunkApiBean();
+        chunk2.setObjects(bulkObjects2);
+
+        final JobChunkApiBean chunk3 = new JobChunkApiBean();
+        chunk3.setObjects(bulkObjects3);
 
         final List<JobChunkApiBean> chunks2 = new ArrayList<>();
         chunks2.add(chunk2);
@@ -290,41 +407,70 @@ public class JobUtils_Test {
         final UUID realJobId = UUID.randomUUID();
         final List<JobApiBean> jobs = new ArrayList<>();
 
-        final JobApiBean job1 = new JobApiBean(null, 0, null, 0, UUID.randomUUID(), "bucket", null, 0, null,
-                JobRequestType.GET, null, JobStatus.IN_PROGRESS, null, null, null);
+        final JobApiBean job1 = new JobApiBean();
+        job1.setJobId(UUID.randomUUID());
+        job1.setStatus(JobStatus.IN_PROGRESS);
+        job1.setBucketName("bucket");
+        job1.setRequestType(JobRequestType.GET);
         jobs.add(job1);
 
-        final JobWithChunksApiBean mob1 = new JobWithChunksApiBean("bucket", 0, null, 0, job1.getJobId(), null, null,
-                null, 0, null, JobRequestType.GET, null, JobStatus.IN_PROGRESS, null, null, null);
+        final JobWithChunksApiBean mob1 = new JobWithChunksApiBean();
+        mob1.setStatus(JobStatus.IN_PROGRESS);
+        mob1.setBucketName("bucket");
+        mob1.setJobId(job1.getJobId());
+        mob1.setRequestType(JobRequestType.GET);
 
-        final List<BlobApiBean> bulkObjects1 = Lists.newArrayList(
-                new BlobApiBean(null, false, true, 12, "file3", 0, null, 1));
+        final BlobApiBean blob3 = new BlobApiBean();
+        blob3.setName("file3");
+        blob3.setLength(12);
+        blob3.setInCache(false);
+        blob3.setOffset(0);
 
-        final JobChunkApiBean chunk1 = new JobChunkApiBean(null, 0, null, bulkObjects1);
+        final List<BlobApiBean> bulkObjects1 = Lists.newArrayList(blob3);
+
+        final JobChunkApiBean chunk1 = new JobChunkApiBean();
+        chunk1.setObjects(bulkObjects1);
 
         final List<JobChunkApiBean> chunks1 = new ArrayList<>();
         chunks1.add(chunk1);
 
         mob1.setObjects(chunks1);
 
-        final JobApiBean job2 = new JobApiBean(null, 0, null, 0, realJobId, "bucket", null, 0, null,
-                JobRequestType.GET, null, JobStatus.IN_PROGRESS, null, null, null);
+        final JobApiBean job2 = new JobApiBean();
+        job2.setJobId(realJobId);
+        job2.setStatus(JobStatus.IN_PROGRESS);
+        job2.setBucketName("bucket");
+        job2.setRequestType(JobRequestType.GET);
         jobs.add(job2);
 
         when(jobsResponse.getJobsApiBeanResult().getJobs()).thenReturn(jobs);
 
-        final JobWithChunksApiBean mob2 = new JobWithChunksApiBean("bucket", 0, null, 0, realJobId, null, null,
-                null, 0, null, JobRequestType.GET, null, JobStatus.IN_PROGRESS, null, null, null);
+        final JobWithChunksApiBean mob2 = new JobWithChunksApiBean();
+        mob2.setStatus(JobStatus.IN_PROGRESS);
+        mob2.setBucketName("bucket");
+        mob2.setJobId(realJobId);
+        mob2.setRequestType(JobRequestType.GET);
 
-        final List<BlobApiBean> bulkObjects2 = Lists.newArrayList(
-                new BlobApiBean(null, false, true, 12, "file1", 0, null, 1),
-                new BlobApiBean(null, false, true, 12, "file2", 0, null, 1));
-        final List<BlobApiBean> bulkObjects3 = Lists.newArrayList(
-                new BlobApiBean(null, false, true, 12, "file3", 0, null, 1));
+        final BlobApiBean blob1 = new BlobApiBean();
+        blob1.setName("file1");
+        blob1.setLength(12);
+        blob1.setInCache(false);
+        blob1.setOffset(0);
 
-        final JobChunkApiBean chunk2 = new JobChunkApiBean(null, 0, null, bulkObjects2);
+        final BlobApiBean blob2 = new BlobApiBean();
+        blob2.setName("file2");
+        blob2.setLength(12);
+        blob2.setInCache(false);
+        blob2.setOffset(0);
 
-        final JobChunkApiBean chunk3 = new JobChunkApiBean(null, 0, null, bulkObjects3);
+        final List<BlobApiBean> bulkObjects2 = Lists.newArrayList(blob1, blob2);
+        final List<BlobApiBean> bulkObjects3 = Lists.newArrayList(blob3);
+
+        final JobChunkApiBean chunk2 = new JobChunkApiBean();
+        chunk2.setObjects(bulkObjects2);
+
+        final JobChunkApiBean chunk3 = new JobChunkApiBean();
+        chunk3.setObjects(bulkObjects3);
 
         final List<JobChunkApiBean> chunks2 = new ArrayList<>();
         chunks2.add(chunk2);
@@ -346,7 +492,8 @@ public class JobUtils_Test {
         assertThat(jobId, is(notNullValue()));
         assertThat(jobId.size(), is(2));
     }
- @Test
+
+    @Test
     public void findFileWithDifferentRequestTypes() throws IOException, SignatureException {
         final Ds3Client client = mock(Ds3Client.class);
         final GetJobsSpectraS3Response jobsResponse = mock(GetJobsSpectraS3Response.class);
@@ -355,24 +502,44 @@ public class JobUtils_Test {
         final UUID realJobId = UUID.randomUUID();
         final List<JobApiBean> jobs = new ArrayList<>();
 
-        final JobApiBean job1 = new JobApiBean(null, 0, null, 0, UUID.randomUUID(), "bucket", null, 0, null,
-                JobRequestType.GET, null, JobStatus.IN_PROGRESS, null, null, null);
+        final JobApiBean job1 = new JobApiBean();
+        job1.setJobId(UUID.randomUUID());
+        job1.setStatus(JobStatus.IN_PROGRESS);
+        job1.setBucketName("bucket");
+        job1.setRequestType(JobRequestType.GET);
         jobs.add(job1);
 
-        final JobApiBean job2 = new JobApiBean(null, 0, null, 0, realJobId, "bucket", null, 0, null,
-                JobRequestType.PUT, null, JobStatus.IN_PROGRESS, null, null, null);
+        final JobApiBean job2 = new JobApiBean();
+        job2.setJobId(realJobId);
+        job2.setStatus(JobStatus.IN_PROGRESS);
+        job2.setBucketName("bucket");
+        job2.setRequestType(JobRequestType.PUT);
         jobs.add(job2);
 
         when(jobsResponse.getJobsApiBeanResult().getJobs()).thenReturn(jobs);
 
-        final JobWithChunksApiBean mob = new JobWithChunksApiBean("bucket", 0, null, 0, realJobId, null, null,
-                null, 0, null, JobRequestType.PUT, null, JobStatus.IN_PROGRESS, null, null, null);
+        final JobWithChunksApiBean mob = new JobWithChunksApiBean();
+        mob.setStatus(JobStatus.IN_PROGRESS);
+        mob.setBucketName("bucket");
+        mob.setJobId(realJobId);
+        mob.setRequestType(JobRequestType.PUT);
 
-        final List<BlobApiBean> bulkObjects = Lists.newArrayList(
-                new BlobApiBean(null, false, true, 12, "file1", 0, null, 1),
-                new BlobApiBean(null, false, true, 12, "file2", 0, null, 1));
+        final BlobApiBean blob1 = new BlobApiBean();
+        blob1.setName("file1");
+        blob1.setLength(12);
+        blob1.setInCache(false);
+        blob1.setOffset(0);
 
-        final JobChunkApiBean chunk = new JobChunkApiBean(null, 0, null, bulkObjects);
+        final BlobApiBean blob2 = new BlobApiBean();
+        blob2.setName("file2");
+        blob2.setLength(12);
+        blob2.setInCache(false);
+        blob2.setOffset(0);
+
+        final List<BlobApiBean> bulkObjects = Lists.newArrayList(blob1, blob2);
+
+        final JobChunkApiBean chunk = new JobChunkApiBean();
+        chunk.setObjects(bulkObjects);
 
         final List<JobChunkApiBean> chunks = new ArrayList<>();
         chunks.add(chunk);

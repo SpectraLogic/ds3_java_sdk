@@ -50,15 +50,8 @@ public class CacheFilesystem {
     private String path;
 
     // Constructor
-    public CacheFilesystem(final double autoReclaimInitiateThreshold, final double autoReclaimTerminateThreshold, final double burstThreshold, final UUID id, final Long maxCapacityInBytes, final Double maxPercentUtilizationOfFilesystem, final UUID nodeId, final String path) {
-        this.autoReclaimInitiateThreshold = autoReclaimInitiateThreshold;
-        this.autoReclaimTerminateThreshold = autoReclaimTerminateThreshold;
-        this.burstThreshold = burstThreshold;
-        this.id = id;
-        this.maxCapacityInBytes = maxCapacityInBytes;
-        this.maxPercentUtilizationOfFilesystem = maxPercentUtilizationOfFilesystem;
-        this.nodeId = nodeId;
-        this.path = path;
+    public CacheFilesystem() {
+        //pass
     }
 
     // Getters and Setters

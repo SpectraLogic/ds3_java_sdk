@@ -63,19 +63,8 @@ public class StorageDomain {
     private WriteOptimization writeOptimization;
 
     // Constructor
-    public StorageDomain(final String autoEjectUponCron, final boolean autoEjectUponJobCancellation, final boolean autoEjectUponJobCompletion, final boolean autoEjectUponMediaFull, final UUID id, final LtfsFileNamingMode ltfsFileNaming, final int maximumAutoVerificationFrequencyInDays, final int maxTapeFragmentationPercent, final boolean mediaEjectionAllowed, final String name, final BlobStoreTaskPriority verifyPriorToAutoEject, final WriteOptimization writeOptimization) {
-        this.autoEjectUponCron = autoEjectUponCron;
-        this.autoEjectUponJobCancellation = autoEjectUponJobCancellation;
-        this.autoEjectUponJobCompletion = autoEjectUponJobCompletion;
-        this.autoEjectUponMediaFull = autoEjectUponMediaFull;
-        this.id = id;
-        this.ltfsFileNaming = ltfsFileNaming;
-        this.maxTapeFragmentationPercent = maxTapeFragmentationPercent;
-        this.maximumAutoVerificationFrequencyInDays = maximumAutoVerificationFrequencyInDays;
-        this.mediaEjectionAllowed = mediaEjectionAllowed;
-        this.name = name;
-        this.verifyPriorToAutoEject = verifyPriorToAutoEject;
-        this.writeOptimization = writeOptimization;
+    public StorageDomain() {
+        //pass
     }
 
     // Getters and Setters

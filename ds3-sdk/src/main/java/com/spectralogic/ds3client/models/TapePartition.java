@@ -55,16 +55,8 @@ public class TapePartition {
     private TapePartitionState state;
 
     // Constructor
-    public TapePartition(final TapeDriveType driveType, final String errorMessage, final UUID id, final ImportExportConfiguration importExportConfiguration, final UUID libraryId, final String name, final Quiesced quiesced, final String serialNumber, final TapePartitionState state) {
-        this.driveType = driveType;
-        this.errorMessage = errorMessage;
-        this.id = id;
-        this.importExportConfiguration = importExportConfiguration;
-        this.libraryId = libraryId;
-        this.name = name;
-        this.quiesced = quiesced;
-        this.serialNumber = serialNumber;
-        this.state = state;
+    public TapePartition() {
+        //pass
     }
 
     // Getters and Setters

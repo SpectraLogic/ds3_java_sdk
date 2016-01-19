@@ -29,8 +29,8 @@ public class CompletedJobList {
     private List<CompletedJob> completedJob;
 
     // Constructor
-    public CompletedJobList(final List<CompletedJob> completedJob) {
-        this.completedJob = completedJob;
+    public CompletedJobList() {
+        //pass
     }
 
     // Getters and Setters
