@@ -26,7 +26,10 @@ import com.spectralogic.ds3client.models.Contents;
 import com.spectralogic.ds3client.models.ListBucketResult;
 import com.spectralogic.ds3client.models.Range;
 import com.spectralogic.ds3client.models.bulk.*;
+import com.spectralogic.ds3client.networking.FailedRequestException;
 import com.spectralogic.ds3client.serializer.XmlProcessingException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.nio.file.*;
@@ -37,6 +40,8 @@ import java.util.List;
 import java.util.UUID;
 
 class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
+
+    private final static Logger LOG = LoggerFactory.getLogger(Ds3ClientHelpersImpl.class);
 
     private static final int DEFAULT_MAX_KEYS = 1000;
     private final Ds3Client client;
@@ -158,7 +163,14 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
     public void ensureBucketExists(final String bucket) throws IOException, SignatureException {
         final HeadBucketResponse response = this.client.headBucket(new HeadBucketRequest(bucket));
         if (response.getStatus() == HeadBucketResponse.Status.DOESNTEXIST) {
-            this.client.putBucket(new PutBucketRequest(bucket));
+            try {
+                this.client.putBucket(new PutBucketRequest(bucket));
+            } catch (final FailedRequestException e) {
+                if (e.getStatusCode() != 409) {
+                    throw e;
+                }
+                LOG.warn("Creating " + bucket + " failed because it was created by another thread or process");
+            }
         }
     }
 

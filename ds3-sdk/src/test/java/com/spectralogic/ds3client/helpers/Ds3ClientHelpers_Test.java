@@ -16,6 +16,7 @@
 package com.spectralogic.ds3client.helpers;
 
 import com.google.common.base.Stopwatch;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.spectralogic.ds3client.Ds3Client;
 import com.spectralogic.ds3client.commands.*;
@@ -23,11 +24,13 @@ import com.spectralogic.ds3client.exceptions.Ds3NoMoreRetriesException;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.Job;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.ObjectChannelBuilder;
 import com.spectralogic.ds3client.models.Contents;
+import com.spectralogic.ds3client.models.Error;
 import com.spectralogic.ds3client.models.ListBucketResult;
 import com.spectralogic.ds3client.models.Owner;
 import com.spectralogic.ds3client.models.bulk.*;
 import com.spectralogic.ds3client.models.bulk.Objects;
 import com.spectralogic.ds3client.networking.ConnectionDetails;
+import com.spectralogic.ds3client.networking.FailedRequestException;
 import com.spectralogic.ds3client.serializer.XmlProcessingException;
 import com.spectralogic.ds3client.utils.ByteArraySeekableByteChannel;
 import org.junit.Assert;
@@ -44,8 +47,7 @@ import static com.spectralogic.ds3client.helpers.RequestMatchers.*;
 import static com.spectralogic.ds3client.helpers.ResponseBuilders.*;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class Ds3ClientHelpers_Test {
     private static final String MYBUCKET = "mybucket";
@@ -392,6 +394,10 @@ public class Ds3ClientHelpers_Test {
                 chunk2(false)
         ));
     }
+
+    private static HeadBucketResponse buildHeadBucketResponse(final HeadBucketResponse.Status status) {
+        return ResponseBuilders.headBucket(status);
+    }
     
     private static GetAvailableJobChunksResponse buildJobChunksResponse1() {
         return retryGetAvailableAfter(1);
@@ -608,5 +614,30 @@ public class Ds3ClientHelpers_Test {
             }
         });
 
+    }
+
+    @Test
+    public void testEnsureBucketExistsRace() throws IOException, SignatureException {
+        final Ds3Client ds3Client = mock(Ds3Client.class);
+        final HeadBucketResponse response = buildHeadBucketResponse(HeadBucketResponse.Status.DOESNTEXIST);
+        Mockito.when(ds3Client.headBucket(Mockito.any(HeadBucketRequest.class))).thenReturn(response);
+        Mockito.when(ds3Client.putBucket(Mockito.any(PutBucketRequest.class))).thenThrow(new FailedRequestException(ImmutableList.of(202, 409),409, new Error(), "Conflict"));
+
+        final Ds3ClientHelpers helpers = Ds3ClientHelpers.wrap(ds3Client);
+
+        helpers.ensureBucketExists("fake_bucket"); // if this throws an exception, then this test should fail
+        verify(ds3Client, atLeastOnce()).putBucket(Mockito.any(PutBucketRequest.class));
+    }
+
+    @Test(expected = FailedRequestException.class)
+    public void testEnsureBucketExistsReturnsError() throws IOException, SignatureException {
+final Ds3Client ds3Client = mock(Ds3Client.class);
+        final HeadBucketResponse response = buildHeadBucketResponse(HeadBucketResponse.Status.DOESNTEXIST);
+        Mockito.when(ds3Client.headBucket(Mockito.any(HeadBucketRequest.class))).thenReturn(response);
+        Mockito.when(ds3Client.putBucket(Mockito.any(PutBucketRequest.class))).thenThrow(new FailedRequestException(ImmutableList.of(202, 409, 500), 500, new Error(), "Error"));
+
+        final Ds3ClientHelpers helpers = Ds3ClientHelpers.wrap(ds3Client);
+
+        helpers.ensureBucketExists("fake_bucket");
     }
 }
