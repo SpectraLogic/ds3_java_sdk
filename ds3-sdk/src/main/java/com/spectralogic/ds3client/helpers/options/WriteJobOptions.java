@@ -15,6 +15,7 @@
 
 package com.spectralogic.ds3client.helpers.options;
 
+import com.spectralogic.ds3client.models.Checksum;
 import com.spectralogic.ds3client.models.bulk.Priority;
 import com.spectralogic.ds3client.models.bulk.WriteOptimization;
 
@@ -22,11 +23,13 @@ public class WriteJobOptions {
     private Priority priority;
     private WriteOptimization writeOptimization;
     private int maxUploadSize;
+    private Checksum.Type checksumType;
 
     private WriteJobOptions() {
         this.priority = null;
         this.writeOptimization = null;
         this.maxUploadSize = 0;
+        this.checksumType = Checksum.Type.NONE;
     }
 
     public static WriteJobOptions create() {
@@ -68,4 +71,16 @@ public class WriteJobOptions {
         this.priority = priority;
     }
 
+    public WriteJobOptions withChecksumType(final Checksum.Type checksumType) {
+        this.checksumType = checksumType;
+        return this;
+    }
+
+    public Checksum.Type getChecksumType() {
+        return checksumType;
+    }
+
+    public void setChecksumType(final Checksum.Type checksumType) {
+        this.checksumType = checksumType;
+    }
 }

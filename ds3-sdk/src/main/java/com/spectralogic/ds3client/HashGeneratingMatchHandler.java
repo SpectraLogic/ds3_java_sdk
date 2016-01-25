@@ -15,12 +15,14 @@
 
 package com.spectralogic.ds3client;
 
+import com.google.common.primitives.Chars;
 import com.spectralogic.ds3client.models.Checksum;
 import com.spectralogic.ds3client.utils.hashing.*;
 import org.apache.commons.codec.binary.Base64;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.Charset;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -45,10 +47,9 @@ class HashGeneratingMatchHandler implements Checksum.MatchHandler<String, IOExce
         return hashInputStream(getHasher(this.checksumType), this.content);
     }
 
-
     @Override
     public String value(final byte[] hash) throws IOException {
-        return Base64.encodeBase64String(hash);
+        return new String(hash, Charset.forName("UTF-8"));
     }
     
     private String hashInputStream(final Hasher digest, final InputStream stream) throws IOException {

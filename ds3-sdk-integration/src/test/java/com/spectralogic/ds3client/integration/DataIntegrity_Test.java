@@ -21,6 +21,7 @@ import com.spectralogic.ds3client.commands.BulkPutRequest;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers;
 import com.spectralogic.ds3client.helpers.FileObjectGetter;
 import com.spectralogic.ds3client.helpers.options.WriteJobOptions;
+import com.spectralogic.ds3client.models.Checksum;
 import com.spectralogic.ds3client.models.bulk.Ds3Object;
 import com.spectralogic.ds3client.serializer.XmlProcessingException;
 import com.spectralogic.ds3client.utils.ByteArraySeekableByteChannel;
@@ -34,12 +35,15 @@ import org.junit.Test;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.ByteBuffer;
+import java.nio.channels.ByteChannel;
 import java.nio.channels.SeekableByteChannel;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.security.SignatureException;
+import java.util.List;
 
 import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -143,6 +147,30 @@ public class DataIntegrity_Test {
         final int length = 2 * BulkPutRequest.MIN_UPLOAD_SIZE_IN_BYTES + 1;
 
         sendAndVerifySingleFile(bucketName, randomFileName, seed, length);
+    }
+
+    @Test
+    public void autoChecksumming() throws IOException, SignatureException, XmlProcessingException {
+        final String bucketName = "auto_checksumming";
+        final Ds3ClientHelpers helpers = Ds3ClientHelpers.wrap(client);
+
+        helpers.ensureBucketExists(bucketName);
+
+        try {
+
+            final List<Ds3Object> objs = Lists.newArrayList(new Ds3Object("beowulf.txt", 294059));
+
+            final Ds3ClientHelpers.Job job = helpers.startWriteJob(bucketName, objs, WriteJobOptions.create().withChecksumType(Checksum.Type.MD5));
+
+            job.computeChecksum(new ChecksumFunction() {
+                public String compute(final Ds3Object obj, final ByteChannel byteChannel) {
+                    return null;
+                }
+            }).transfer(new ResourceObjectPutter("books/"));
+
+        } finally {
+            Util.deleteAllContents(client, bucketName);
+        }
     }
 
     public void sendAndVerifySingleFile(final String bucketName, final String fileName, final long seed, final int length) throws IOException, SignatureException, XmlProcessingException {
