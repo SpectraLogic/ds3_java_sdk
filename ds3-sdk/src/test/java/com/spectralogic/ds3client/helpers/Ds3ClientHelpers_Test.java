@@ -631,7 +631,7 @@ public class Ds3ClientHelpers_Test {
 
     @Test(expected = FailedRequestException.class)
     public void testEnsureBucketExistsReturnsError() throws IOException, SignatureException {
-final Ds3Client ds3Client = mock(Ds3Client.class);
+        final Ds3Client ds3Client = mock(Ds3Client.class);
         final HeadBucketResponse response = buildHeadBucketResponse(HeadBucketResponse.Status.DOESNTEXIST);
         Mockito.when(ds3Client.headBucket(Mockito.any(HeadBucketRequest.class))).thenReturn(response);
         Mockito.when(ds3Client.putBucket(Mockito.any(PutBucketRequest.class))).thenThrow(new FailedRequestException(ImmutableList.of(202, 409, 500), 500, new Error(), "Error"));
