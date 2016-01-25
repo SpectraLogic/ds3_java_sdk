@@ -180,4 +180,10 @@ public class ResponseBuilders {
         }
         return channel;
     }
+
+    public static HeadBucketResponse headBucket(final HeadBucketResponse.Status status) {
+        final HeadBucketResponse response = mock(HeadBucketResponse.class);
+        when(response.getStatus()).thenReturn(status);
+        return response;
+    }
 }
