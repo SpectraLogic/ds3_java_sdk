@@ -53,6 +53,8 @@ public class FileObjectPutter implements ObjectChannelBuilder {
         if (Files.isSymbolicLink(path)) {
             final Path simLink = Files.readSymbolicLink(path);
             if (!simLink.isAbsolute()) {
+                // Resolve the path such that the path is relative to the symbolically
+                // linked file's directory
                 final Path symLinkParent = path.toAbsolutePath().getParent();
                 return symLinkParent.resolve(simLink);
             }
