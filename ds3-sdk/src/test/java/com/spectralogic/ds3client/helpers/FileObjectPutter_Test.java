@@ -1,5 +1,6 @@
 package com.spectralogic.ds3client.helpers;
 
+import com.spectralogic.ds3client.utils.Platform;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,7 +15,7 @@ import java.nio.file.*;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
-import static org.junit.Assume.assumeThat;
+import static org.junit.Assume.assumeTrue;
 
 public class FileObjectPutter_Test {
 
@@ -28,7 +29,7 @@ public class FileObjectPutter_Test {
      */
     @Test
     public void testSymlink() throws IOException {
-        assumeThat(System.getProperty("os.name"), not(containsString("Windows")));
+        assumeTrue(Platform.isWindows());
         final Path tempDir = Files.createTempDirectory("ds3_file_object_putter_");
         final Path tempPath = Files.createTempFile(tempDir, "temp_", ".txt");
 
@@ -66,7 +67,7 @@ public class FileObjectPutter_Test {
 
     @Test
     public void testRelativeSymlink() throws IOException, URISyntaxException {
-        assumeThat(System.getProperty("os.name"), not(containsString("Windows")));
+        assumeTrue(Platform.isWindows());
         final Path tempDir = Files.createTempDirectory("ds3_file_object_rel_test_");
         final Path tempPath = Files.createTempFile(tempDir, "temp_", ".txt");
 
