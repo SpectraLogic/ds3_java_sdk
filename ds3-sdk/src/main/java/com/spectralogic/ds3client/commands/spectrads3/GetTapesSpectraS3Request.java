@@ -32,7 +32,6 @@ public class GetTapesSpectraS3Request extends AbstractRequest {
     private UUID bucketId;
     private String ejectLabel;
     private String ejectLocation;
-    private boolean fullDetails;
     private boolean fullOfData;
     private boolean lastPage;
     private int pageLength;
@@ -77,16 +76,6 @@ public class GetTapesSpectraS3Request extends AbstractRequest {
     public GetTapesSpectraS3Request withEjectLocation(final String ejectLocation) {
         this.ejectLocation = ejectLocation;
         this.updateQueryParam("eject_location", ejectLocation);
-        return this;
-    }
-
-    public GetTapesSpectraS3Request withFullDetails(final boolean fullDetails) {
-        this.fullDetails = fullDetails;
-        if (this.fullDetails) {
-            this.getQueryParams().put("full_details", null);
-        } else {
-            this.getQueryParams().remove("full_details");
-        }
         return this;
     }
 
@@ -195,10 +184,6 @@ public class GetTapesSpectraS3Request extends AbstractRequest {
 
     public String getEjectLocation() {
         return this.ejectLocation;
-    }
-
-    public boolean getFullDetails() {
-        return this.fullDetails;
     }
 
     public boolean getFullOfData() {

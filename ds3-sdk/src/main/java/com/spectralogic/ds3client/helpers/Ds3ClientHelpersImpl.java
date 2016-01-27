@@ -129,30 +129,29 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
     @Override
     public Ds3ClientHelpers.Job recoverWriteJob(final UUID jobId) throws SignatureException, IOException, XmlProcessingException, JobRecoveryException {
         final ModifyJobSpectraS3Response jobResponse = this.client.modifyJobSpectraS3(new ModifyJobSpectraS3Request(jobId));
-        if (JobRequestType.PUT != jobResponse.getJobWithChunksContainerApiBeanResult().getJob().getRequestType()) {
+        if (JobRequestType.PUT != jobResponse.getJobWithChunksApiBeanResult().getRequestType()) {
             throw new JobRecoveryException(
                     RequestType.PUT.toString(),
-                    jobResponse.getJobWithChunksContainerApiBeanResult().getJob().getRequestType().toString());
+                    jobResponse.getJobWithChunksApiBeanResult().getRequestType().toString());
         }
 
         return new WriteJobImpl(
                 this.client,
-                jobResponse.getJobWithChunksContainerApiBeanResult()
-                        .getJob());
+                jobResponse.getJobWithChunksApiBeanResult());
     }
 
     @Override
     //TODO add a partial object read recovery method.  That method will require the list of partial objects.
     public Ds3ClientHelpers.Job recoverReadJob(final UUID jobId) throws SignatureException, IOException, XmlProcessingException, JobRecoveryException {
         final ModifyJobSpectraS3Response jobResponse = this.client.modifyJobSpectraS3(new ModifyJobSpectraS3Request(jobId));
-        if (JobRequestType.GET != jobResponse.getJobWithChunksContainerApiBeanResult().getJob().getRequestType()){
+        if (JobRequestType.GET != jobResponse.getJobWithChunksApiBeanResult().getRequestType()){
             throw new JobRecoveryException(
                     RequestType.GET.toString(),
-                    jobResponse.getJobWithChunksContainerApiBeanResult().getJob().getRequestType().toString() );
+                    jobResponse.getJobWithChunksApiBeanResult().getRequestType().toString() );
         }
 
         return new ReadJobImpl(this.client,
-                jobResponse.getJobWithChunksContainerApiBeanResult().getJob(),
+                jobResponse.getJobWithChunksApiBeanResult(),
                 ImmutableMultimap.<String, Range>of());
     }
 

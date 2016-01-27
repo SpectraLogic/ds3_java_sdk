@@ -17,17 +17,20 @@
 package com.spectralogic.ds3client.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import java.lang.String;
 import java.util.List;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import java.util.Date;
 import com.spectralogic.ds3client.models.S3ObjectApiBean;
 
+@JacksonXmlRootElement(namespace = "ListBucketResult")
 public class BucketObjectsApiBean {
 
     // Variables
     @JsonProperty("CommonPrefixes")
-    @JacksonXmlElementWrapper
+    @JacksonXmlElementWrapper(useWrapping = true)
     private List<String> commonPrefixes;
 
     @JsonProperty("CreationDate")
@@ -48,14 +51,14 @@ public class BucketObjectsApiBean {
     @JsonProperty("NextMarker")
     private String nextMarker;
 
-    @JsonProperty("Objects")
-    @JacksonXmlElementWrapper
+    @JsonProperty("Contents")
+    @JacksonXmlElementWrapper(useWrapping = false)
     private List<S3ObjectApiBean> objects;
 
     @JsonProperty("Prefix")
     private String prefix;
 
-    @JsonProperty("Truncated")
+    @JsonProperty("IsTruncated")
     private boolean truncated;
 
     // Constructor

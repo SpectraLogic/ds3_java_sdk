@@ -17,15 +17,18 @@
 package com.spectralogic.ds3client.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.spectralogic.ds3client.models.JobApiBean;
 import java.util.List;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 
+@JacksonXmlRootElement(namespace = "Jobs")
 public class JobsApiBean {
 
     // Variables
-    @JsonProperty("Jobs")
-    @JacksonXmlElementWrapper
+    @JsonProperty("Job")
+    @JacksonXmlElementWrapper(useWrapping = false)
     private List<JobApiBean> jobs;
 
     // Constructor

@@ -17,11 +17,14 @@
 package com.spectralogic.ds3client.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import java.lang.Integer;
 import java.lang.String;
 import java.util.UUID;
 import java.util.Date;
 
+@JacksonXmlRootElement(namespace = "Data")
 public class Node {
 
     // Variables

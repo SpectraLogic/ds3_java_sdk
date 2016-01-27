@@ -17,15 +17,18 @@
 package com.spectralogic.ds3client.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.spectralogic.ds3client.models.S3Object;
 import java.util.List;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 
+@JacksonXmlRootElement(namespace = "Data")
 public class S3ObjectList {
 
     // Variables
     @JsonProperty("S3Object")
-    @JacksonXmlElementWrapper
+    @JacksonXmlElementWrapper(useWrapping = false)
     private List<S3Object> s3Object;
 
     // Constructor

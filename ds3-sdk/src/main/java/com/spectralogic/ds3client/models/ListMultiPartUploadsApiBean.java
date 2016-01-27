@@ -17,11 +17,14 @@
 package com.spectralogic.ds3client.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import java.lang.String;
 import java.util.List;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.spectralogic.ds3client.models.MultiPartUploadApiBean;
 
+@JacksonXmlRootElement(namespace = "ListMultipartUploadsResult")
 public class ListMultiPartUploadsApiBean {
 
     // Variables
@@ -29,7 +32,7 @@ public class ListMultiPartUploadsApiBean {
     private String bucket;
 
     @JsonProperty("CommonPrefixes")
-    @JacksonXmlElementWrapper
+    @JacksonXmlElementWrapper(useWrapping = true)
     private List<String> commonPrefixes;
 
     @JsonProperty("Delimiter")
@@ -50,14 +53,14 @@ public class ListMultiPartUploadsApiBean {
     @JsonProperty("Prefix")
     private String prefix;
 
-    @JsonProperty("Truncated")
+    @JsonProperty("IsTruncated")
     private boolean truncated;
 
     @JsonProperty("UploadIdMarker")
     private String uploadIdMarker;
 
-    @JsonProperty("Uploads")
-    @JacksonXmlElementWrapper
+    @JsonProperty("Upload")
+    @JacksonXmlElementWrapper(useWrapping = false)
     private List<MultiPartUploadApiBean> uploads;
 
     // Constructor

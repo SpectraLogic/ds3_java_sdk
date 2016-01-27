@@ -17,15 +17,18 @@
 package com.spectralogic.ds3client.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.spectralogic.ds3client.models.SystemFailure;
 import java.util.List;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 
+@JacksonXmlRootElement(namespace = "Data")
 public class SystemFailureList {
 
     // Variables
     @JsonProperty("SystemFailure")
-    @JacksonXmlElementWrapper
+    @JacksonXmlElementWrapper(useWrapping = false)
     private List<SystemFailure> systemFailure;
 
     // Constructor

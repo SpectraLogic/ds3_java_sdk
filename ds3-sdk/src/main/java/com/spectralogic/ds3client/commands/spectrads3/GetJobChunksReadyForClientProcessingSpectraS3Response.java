@@ -20,13 +20,13 @@ import com.spectralogic.ds3client.commands.AbstractResponse;
 import com.spectralogic.ds3client.networking.WebResponse;
 import java.io.IOException;
 import java.io.InputStream;
-import com.spectralogic.ds3client.models.JobWithChunksContainerApiBean;
+import com.spectralogic.ds3client.models.JobWithChunksApiBean;
 import com.spectralogic.ds3client.serializer.XmlOutput;
 import com.spectralogic.ds3client.commands.RetryAfterExpectedException;
 
 public class GetJobChunksReadyForClientProcessingSpectraS3Response extends AbstractResponse {
 
-    private JobWithChunksContainerApiBean jobWithChunksContainerApiBeanResult;
+    private JobWithChunksApiBean jobWithChunksApiBeanResult;
 
     public enum Status {
         AVAILABLE, RETRYLATER
@@ -55,8 +55,8 @@ public class GetJobChunksReadyForClientProcessingSpectraS3Response extends Abstr
             switch (this.getStatusCode()) {
             case 200:
                 try (final InputStream content = getResponse().getResponseStream()) {
-                    this.jobWithChunksContainerApiBeanResult = XmlOutput.fromXml(content, JobWithChunksContainerApiBean.class);
-                    if (this.jobWithChunksContainerApiBeanResult == null) {
+                    this.jobWithChunksApiBeanResult = XmlOutput.fromXml(content, JobWithChunksApiBean.class);
+                    if (this.jobWithChunksApiBeanResult == null) {
                         this.status = Status.RETRYLATER;
                         this.retryAfterSeconds = parseRetryAfter(webResponse);
                     } else {
@@ -80,8 +80,8 @@ public class GetJobChunksReadyForClientProcessingSpectraS3Response extends Abstr
         return Integer.parseInt(retryAfter);
     }
 
-    public JobWithChunksContainerApiBean getJobWithChunksContainerApiBeanResult() {
-        return this.jobWithChunksContainerApiBeanResult;
+    public JobWithChunksApiBean getJobWithChunksApiBeanResult() {
+        return this.jobWithChunksApiBeanResult;
     }
 
 

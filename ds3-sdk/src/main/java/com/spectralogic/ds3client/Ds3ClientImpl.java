@@ -574,20 +574,24 @@ public class Ds3ClientImpl implements Ds3Client {
         return new GetObjectsSpectraS3Response(this.netClient.getResponse(request));
     }
     @Override
+    public GetObjectsWithFullDetailsSpectraS3Response getObjectsWithFullDetailsSpectraS3(GetObjectsWithFullDetailsSpectraS3Request request) throws IOException, SignatureException {
+        return new GetObjectsWithFullDetailsSpectraS3Response(this.netClient.getResponse(request));
+    }
+    @Override
     public GetPhysicalPlacementForObjectsSpectraS3Response getPhysicalPlacementForObjectsSpectraS3(GetPhysicalPlacementForObjectsSpectraS3Request request) throws IOException, SignatureException {
         return new GetPhysicalPlacementForObjectsSpectraS3Response(this.netClient.getResponse(request));
     }
     @Override
-    public GetPhysicalPlacementForObjectsFullDetailsSpectraS3Response getPhysicalPlacementForObjectsFullDetailsSpectraS3(GetPhysicalPlacementForObjectsFullDetailsSpectraS3Request request) throws IOException, SignatureException {
-        return new GetPhysicalPlacementForObjectsFullDetailsSpectraS3Response(this.netClient.getResponse(request));
+    public GetPhysicalPlacementForObjectsWithFullDetailsSpectraS3Response getPhysicalPlacementForObjectsWithFullDetailsSpectraS3(GetPhysicalPlacementForObjectsWithFullDetailsSpectraS3Request request) throws IOException, SignatureException {
+        return new GetPhysicalPlacementForObjectsWithFullDetailsSpectraS3Response(this.netClient.getResponse(request));
     }
     @Override
     public VerifyPhysicalPlacementForObjectsSpectraS3Response verifyPhysicalPlacementForObjectsSpectraS3(VerifyPhysicalPlacementForObjectsSpectraS3Request request) throws IOException, SignatureException {
         return new VerifyPhysicalPlacementForObjectsSpectraS3Response(this.netClient.getResponse(request));
     }
     @Override
-    public VerifyPhysicalPlacementForObjectsFullDetailsSpectraS3Response verifyPhysicalPlacementForObjectsFullDetailsSpectraS3(VerifyPhysicalPlacementForObjectsFullDetailsSpectraS3Request request) throws IOException, SignatureException {
-        return new VerifyPhysicalPlacementForObjectsFullDetailsSpectraS3Response(this.netClient.getResponse(request));
+    public VerifyPhysicalPlacementForObjectsWithFullDetailsSpectraS3Response verifyPhysicalPlacementForObjectsWithFullDetailsSpectraS3(VerifyPhysicalPlacementForObjectsWithFullDetailsSpectraS3Request request) throws IOException, SignatureException {
+        return new VerifyPhysicalPlacementForObjectsWithFullDetailsSpectraS3Response(this.netClient.getResponse(request));
     }
     @Override
     public CancelImportOnAllPoolsSpectraS3Response cancelImportOnAllPoolsSpectraS3(CancelImportOnAllPoolsSpectraS3Request request) throws IOException, SignatureException {
@@ -886,24 +890,32 @@ public class Ds3ClientImpl implements Ds3Client {
         return new GetTapePartitionSpectraS3Response(this.netClient.getResponse(request));
     }
     @Override
-    public GetTapePartitionFullDetailsSpectraS3Response getTapePartitionFullDetailsSpectraS3(GetTapePartitionFullDetailsSpectraS3Request request) throws IOException, SignatureException {
-        return new GetTapePartitionFullDetailsSpectraS3Response(this.netClient.getResponse(request));
+    public GetTapePartitionWithFullDetailsSpectraS3Response getTapePartitionWithFullDetailsSpectraS3(GetTapePartitionWithFullDetailsSpectraS3Request request) throws IOException, SignatureException {
+        return new GetTapePartitionWithFullDetailsSpectraS3Response(this.netClient.getResponse(request));
     }
     @Override
     public GetTapePartitionsSpectraS3Response getTapePartitionsSpectraS3(GetTapePartitionsSpectraS3Request request) throws IOException, SignatureException {
         return new GetTapePartitionsSpectraS3Response(this.netClient.getResponse(request));
     }
     @Override
+    public GetTapePartitionsWithFullDetailsSpectraS3Response getTapePartitionsWithFullDetailsSpectraS3(GetTapePartitionsWithFullDetailsSpectraS3Request request) throws IOException, SignatureException {
+        return new GetTapePartitionsWithFullDetailsSpectraS3Response(this.netClient.getResponse(request));
+    }
+    @Override
     public GetTapeSpectraS3Response getTapeSpectraS3(GetTapeSpectraS3Request request) throws IOException, SignatureException {
         return new GetTapeSpectraS3Response(this.netClient.getResponse(request));
     }
     @Override
-    public GetTapeFullDetailsSpectraS3Response getTapeFullDetailsSpectraS3(GetTapeFullDetailsSpectraS3Request request) throws IOException, SignatureException {
-        return new GetTapeFullDetailsSpectraS3Response(this.netClient.getResponse(request));
+    public GetTapeWithFullDetailsSpectraS3Response getTapeWithFullDetailsSpectraS3(GetTapeWithFullDetailsSpectraS3Request request) throws IOException, SignatureException {
+        return new GetTapeWithFullDetailsSpectraS3Response(this.netClient.getResponse(request));
     }
     @Override
     public GetTapesSpectraS3Response getTapesSpectraS3(GetTapesSpectraS3Request request) throws IOException, SignatureException {
         return new GetTapesSpectraS3Response(this.netClient.getResponse(request));
+    }
+    @Override
+    public GetTapesWithFullDetailsSpectraS3Response getTapesWithFullDetailsSpectraS3(GetTapesWithFullDetailsSpectraS3Request request) throws IOException, SignatureException {
+        return new GetTapesWithFullDetailsSpectraS3Response(this.netClient.getResponse(request));
     }
     @Override
     public ImportAllTapesSpectraS3Response importAllTapesSpectraS3(ImportAllTapesSpectraS3Request request) throws IOException, SignatureException {
@@ -940,10 +952,6 @@ public class Ds3ClientImpl implements Ds3Client {
     @Override
     public OnlineTapeSpectraS3Response onlineTapeSpectraS3(OnlineTapeSpectraS3Request request) throws IOException, SignatureException {
         return new OnlineTapeSpectraS3Response(this.netClient.getResponse(request));
-    }
-    @Override
-    public ReplacePermanentlyOfflineTapePartitionSpectraS3Response replacePermanentlyOfflineTapePartitionSpectraS3(ReplacePermanentlyOfflineTapePartitionSpectraS3Request request) throws IOException, SignatureException {
-        return new ReplacePermanentlyOfflineTapePartitionSpectraS3Response(this.netClient.getResponse(request));
     }
     @Override
     public VerifyAllTapesSpectraS3Response verifyAllTapesSpectraS3(VerifyAllTapesSpectraS3Request request) throws IOException, SignatureException {

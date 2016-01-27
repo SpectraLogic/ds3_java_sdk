@@ -296,13 +296,15 @@ public interface Ds3Client extends Closeable {
             throws IOException, SignatureException;
     GetObjectsSpectraS3Response getObjectsSpectraS3(GetObjectsSpectraS3Request request)
             throws IOException, SignatureException;
+    GetObjectsWithFullDetailsSpectraS3Response getObjectsWithFullDetailsSpectraS3(GetObjectsWithFullDetailsSpectraS3Request request)
+            throws IOException, SignatureException;
     GetPhysicalPlacementForObjectsSpectraS3Response getPhysicalPlacementForObjectsSpectraS3(GetPhysicalPlacementForObjectsSpectraS3Request request)
             throws IOException, SignatureException;
-    GetPhysicalPlacementForObjectsFullDetailsSpectraS3Response getPhysicalPlacementForObjectsFullDetailsSpectraS3(GetPhysicalPlacementForObjectsFullDetailsSpectraS3Request request)
+    GetPhysicalPlacementForObjectsWithFullDetailsSpectraS3Response getPhysicalPlacementForObjectsWithFullDetailsSpectraS3(GetPhysicalPlacementForObjectsWithFullDetailsSpectraS3Request request)
             throws IOException, SignatureException;
     VerifyPhysicalPlacementForObjectsSpectraS3Response verifyPhysicalPlacementForObjectsSpectraS3(VerifyPhysicalPlacementForObjectsSpectraS3Request request)
             throws IOException, SignatureException;
-    VerifyPhysicalPlacementForObjectsFullDetailsSpectraS3Response verifyPhysicalPlacementForObjectsFullDetailsSpectraS3(VerifyPhysicalPlacementForObjectsFullDetailsSpectraS3Request request)
+    VerifyPhysicalPlacementForObjectsWithFullDetailsSpectraS3Response verifyPhysicalPlacementForObjectsWithFullDetailsSpectraS3(VerifyPhysicalPlacementForObjectsWithFullDetailsSpectraS3Request request)
             throws IOException, SignatureException;
     CancelImportOnAllPoolsSpectraS3Response cancelImportOnAllPoolsSpectraS3(CancelImportOnAllPoolsSpectraS3Request request)
             throws IOException, SignatureException;
@@ -452,15 +454,19 @@ public interface Ds3Client extends Closeable {
             throws IOException, SignatureException;
     GetTapePartitionSpectraS3Response getTapePartitionSpectraS3(GetTapePartitionSpectraS3Request request)
             throws IOException, SignatureException;
-    GetTapePartitionFullDetailsSpectraS3Response getTapePartitionFullDetailsSpectraS3(GetTapePartitionFullDetailsSpectraS3Request request)
+    GetTapePartitionWithFullDetailsSpectraS3Response getTapePartitionWithFullDetailsSpectraS3(GetTapePartitionWithFullDetailsSpectraS3Request request)
             throws IOException, SignatureException;
     GetTapePartitionsSpectraS3Response getTapePartitionsSpectraS3(GetTapePartitionsSpectraS3Request request)
             throws IOException, SignatureException;
+    GetTapePartitionsWithFullDetailsSpectraS3Response getTapePartitionsWithFullDetailsSpectraS3(GetTapePartitionsWithFullDetailsSpectraS3Request request)
+            throws IOException, SignatureException;
     GetTapeSpectraS3Response getTapeSpectraS3(GetTapeSpectraS3Request request)
             throws IOException, SignatureException;
-    GetTapeFullDetailsSpectraS3Response getTapeFullDetailsSpectraS3(GetTapeFullDetailsSpectraS3Request request)
+    GetTapeWithFullDetailsSpectraS3Response getTapeWithFullDetailsSpectraS3(GetTapeWithFullDetailsSpectraS3Request request)
             throws IOException, SignatureException;
     GetTapesSpectraS3Response getTapesSpectraS3(GetTapesSpectraS3Request request)
+            throws IOException, SignatureException;
+    GetTapesWithFullDetailsSpectraS3Response getTapesWithFullDetailsSpectraS3(GetTapesWithFullDetailsSpectraS3Request request)
             throws IOException, SignatureException;
     ImportAllTapesSpectraS3Response importAllTapesSpectraS3(ImportAllTapesSpectraS3Request request)
             throws IOException, SignatureException;
@@ -479,8 +485,6 @@ public interface Ds3Client extends Closeable {
     OnlineAllTapesSpectraS3Response onlineAllTapesSpectraS3(OnlineAllTapesSpectraS3Request request)
             throws IOException, SignatureException;
     OnlineTapeSpectraS3Response onlineTapeSpectraS3(OnlineTapeSpectraS3Request request)
-            throws IOException, SignatureException;
-    ReplacePermanentlyOfflineTapePartitionSpectraS3Response replacePermanentlyOfflineTapePartitionSpectraS3(ReplacePermanentlyOfflineTapePartitionSpectraS3Request request)
             throws IOException, SignatureException;
     VerifyAllTapesSpectraS3Response verifyAllTapesSpectraS3(VerifyAllTapesSpectraS3Request request)
             throws IOException, SignatureException;

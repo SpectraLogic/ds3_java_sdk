@@ -17,36 +17,39 @@
 package com.spectralogic.ds3client.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import java.util.UUID;
 import java.lang.Boolean;
 import java.lang.String;
 import com.spectralogic.ds3client.models.PhysicalPlacementApiBean;
 
+@JacksonXmlRootElement(namespace = "Data")
 public class BlobApiBean {
 
     // Variables
     @JsonProperty("Id")
     private UUID id;
 
-    @JsonProperty("InCache")
+    @JacksonXmlProperty(isAttribute = true, localName = "InCache")
     private Boolean inCache;
 
-    @JsonProperty("Latest")
+    @JacksonXmlProperty(isAttribute = true, localName = "Latest")
     private boolean latest;
 
-    @JsonProperty("Length")
+    @JacksonXmlProperty(isAttribute = true, localName = "Length")
     private long length;
 
-    @JsonProperty("Name")
+    @JacksonXmlProperty(isAttribute = true, localName = "Name")
     private String name;
 
-    @JsonProperty("Offset")
+    @JacksonXmlProperty(isAttribute = true, localName = "Offset")
     private long offset;
 
     @JsonProperty("PhysicalPlacement")
     private PhysicalPlacementApiBean physicalPlacement;
 
-    @JsonProperty("Version")
+    @JacksonXmlProperty(isAttribute = true, localName = "Version")
     private long version;
 
     // Constructor

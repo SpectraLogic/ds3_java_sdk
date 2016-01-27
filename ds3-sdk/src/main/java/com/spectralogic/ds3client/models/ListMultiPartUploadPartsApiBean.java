@@ -17,6 +17,8 @@
 package com.spectralogic.ds3client.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import java.lang.String;
 import com.spectralogic.ds3client.models.UserApiBean;
 import java.lang.Integer;
@@ -25,6 +27,7 @@ import java.util.List;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import java.util.UUID;
 
+@JacksonXmlRootElement(namespace = "ListPartsResult")
 public class ListMultiPartUploadPartsApiBean {
 
     // Variables
@@ -46,11 +49,11 @@ public class ListMultiPartUploadPartsApiBean {
     @JsonProperty("PartNumberMarker")
     private Integer partNumberMarker;
 
-    @JsonProperty("Parts")
-    @JacksonXmlElementWrapper
+    @JsonProperty("Part")
+    @JacksonXmlElementWrapper(useWrapping = false)
     private List<MultiPartUploadPartApiBean> parts;
 
-    @JsonProperty("Truncated")
+    @JsonProperty("IsTruncated")
     private boolean truncated;
 
     @JsonProperty("UploadId")

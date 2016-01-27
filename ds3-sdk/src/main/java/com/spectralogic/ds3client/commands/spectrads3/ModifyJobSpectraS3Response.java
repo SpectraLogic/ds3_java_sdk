@@ -20,12 +20,12 @@ import com.spectralogic.ds3client.commands.AbstractResponse;
 import com.spectralogic.ds3client.networking.WebResponse;
 import java.io.IOException;
 import java.io.InputStream;
-import com.spectralogic.ds3client.models.JobWithChunksContainerApiBean;
+import com.spectralogic.ds3client.models.JobWithChunksApiBean;
 import com.spectralogic.ds3client.serializer.XmlOutput;
 
 public class ModifyJobSpectraS3Response extends AbstractResponse {
 
-    private JobWithChunksContainerApiBean jobWithChunksContainerApiBeanResult;
+    private JobWithChunksApiBean jobWithChunksApiBeanResult;
 
     public ModifyJobSpectraS3Response(final WebResponse response) throws IOException {
         super(response);
@@ -39,7 +39,7 @@ public class ModifyJobSpectraS3Response extends AbstractResponse {
             switch (this.getStatusCode()) {
             case 200:
                 try (final InputStream content = getResponse().getResponseStream()) {
-                    this.jobWithChunksContainerApiBeanResult = XmlOutput.fromXml(content, JobWithChunksContainerApiBean.class);
+                    this.jobWithChunksApiBeanResult = XmlOutput.fromXml(content, JobWithChunksApiBean.class);
                 }
                 break;
             default:
@@ -50,8 +50,8 @@ public class ModifyJobSpectraS3Response extends AbstractResponse {
         }
     }
 
-    public JobWithChunksContainerApiBean getJobWithChunksContainerApiBeanResult() {
-        return this.jobWithChunksContainerApiBeanResult;
+    public JobWithChunksApiBean getJobWithChunksApiBeanResult() {
+        return this.jobWithChunksApiBeanResult;
     }
 
 }

@@ -17,16 +17,19 @@
 package com.spectralogic.ds3client.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.spectralogic.ds3client.models.BucketApiBean;
 import java.util.List;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.spectralogic.ds3client.models.UserApiBean;
 
+@JacksonXmlRootElement(namespace = "ListAllMyBucketsResult")
 public class BucketsApiBean {
 
     // Variables
     @JsonProperty("Buckets")
-    @JacksonXmlElementWrapper
+    @JacksonXmlElementWrapper(useWrapping = true)
     private List<BucketApiBean> buckets;
 
     @JsonProperty("Owner")

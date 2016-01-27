@@ -17,20 +17,23 @@
 package com.spectralogic.ds3client.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.spectralogic.ds3client.models.Pool;
 import java.util.List;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.spectralogic.ds3client.models.Tape;
 
+@JacksonXmlRootElement(namespace = "Data")
 public class PhysicalPlacementApiBean {
 
     // Variables
     @JsonProperty("Pools")
-    @JacksonXmlElementWrapper
+    @JacksonXmlElementWrapper(useWrapping = true)
     private List<Pool> pools;
 
     @JsonProperty("Tapes")
-    @JacksonXmlElementWrapper
+    @JacksonXmlElementWrapper(useWrapping = true)
     private List<Tape> tapes;
 
     // Constructor

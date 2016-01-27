@@ -17,15 +17,18 @@
 package com.spectralogic.ds3client.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.spectralogic.ds3client.models.CacheFilesystem;
 import java.util.List;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 
+@JacksonXmlRootElement(namespace = "Data")
 public class CacheFilesystemList {
 
     // Variables
     @JsonProperty("CacheFilesystem")
-    @JacksonXmlElementWrapper
+    @JacksonXmlElementWrapper(useWrapping = false)
     private List<CacheFilesystem> cacheFilesystem;
 
     // Constructor

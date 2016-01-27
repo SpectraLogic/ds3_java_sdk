@@ -28,7 +28,6 @@ public class GetTapePartitionsSpectraS3Request extends AbstractRequest {
 
     // Variables
     
-    private boolean fullDetails;
     private ImportExportConfiguration importExportConfiguration;
     private boolean lastPage;
     private UUID libraryId;
@@ -44,16 +43,6 @@ public class GetTapePartitionsSpectraS3Request extends AbstractRequest {
     public GetTapePartitionsSpectraS3Request() {
         
     }
-    public GetTapePartitionsSpectraS3Request withFullDetails(final boolean fullDetails) {
-        this.fullDetails = fullDetails;
-        if (this.fullDetails) {
-            this.getQueryParams().put("full_details", null);
-        } else {
-            this.getQueryParams().remove("full_details");
-        }
-        return this;
-    }
-
     public GetTapePartitionsSpectraS3Request withImportExportConfiguration(final ImportExportConfiguration importExportConfiguration) {
         this.importExportConfiguration = importExportConfiguration;
         this.updateQueryParam("import_export_configuration", importExportConfiguration.toString());
@@ -129,10 +118,6 @@ public class GetTapePartitionsSpectraS3Request extends AbstractRequest {
         return "/_rest_/tape_partition";
     }
     
-    public boolean getFullDetails() {
-        return this.fullDetails;
-    }
-
     public ImportExportConfiguration getImportExportConfiguration() {
         return this.importExportConfiguration;
     }

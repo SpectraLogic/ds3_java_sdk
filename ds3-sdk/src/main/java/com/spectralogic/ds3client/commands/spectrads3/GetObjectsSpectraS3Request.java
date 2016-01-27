@@ -28,7 +28,6 @@ public class GetObjectsSpectraS3Request extends AbstractRequest {
     
     private UUID bucketId;
     private String folder;
-    private boolean fullDetails;
     private boolean includePhysicalPlacement;
     private boolean lastPage;
     private boolean latest;
@@ -52,16 +51,6 @@ public class GetObjectsSpectraS3Request extends AbstractRequest {
     public GetObjectsSpectraS3Request withFolder(final String folder) {
         this.folder = folder;
         this.updateQueryParam("folder", folder);
-        return this;
-    }
-
-    public GetObjectsSpectraS3Request withFullDetails(final boolean fullDetails) {
-        this.fullDetails = fullDetails;
-        if (this.fullDetails) {
-            this.getQueryParams().put("full_details", null);
-        } else {
-            this.getQueryParams().remove("full_details");
-        }
         return this;
     }
 
@@ -144,10 +133,6 @@ public class GetObjectsSpectraS3Request extends AbstractRequest {
 
     public String getFolder() {
         return this.folder;
-    }
-
-    public boolean getFullDetails() {
-        return this.fullDetails;
     }
 
     public boolean getIncludePhysicalPlacement() {

@@ -17,6 +17,8 @@
 package com.spectralogic.ds3client.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import java.lang.String;
 import com.spectralogic.ds3client.models.JobChunkClientProcessingOrderGuarantee;
 import java.util.UUID;
@@ -29,53 +31,57 @@ import java.util.Date;
 import com.spectralogic.ds3client.models.JobStatus;
 import com.spectralogic.ds3client.models.WriteOptimization;
 
+@JacksonXmlRootElement(namespace = "Data")
 public class JobApiBean {
 
     // Variables
-    @JsonProperty("BucketName")
+    @JacksonXmlProperty(isAttribute = true, localName = "Aggregating")
+    private boolean aggregating;
+
+    @JacksonXmlProperty(isAttribute = true, localName = "BucketName")
     private String bucketName;
 
-    @JsonProperty("CachedSizeInBytes")
+    @JacksonXmlProperty(isAttribute = true, localName = "CachedSizeInBytes")
     private long cachedSizeInBytes;
 
-    @JsonProperty("ChunkClientProcessingOrderGuarantee")
+    @JacksonXmlProperty(isAttribute = true, localName = "ChunkClientProcessingOrderGuarantee")
     private JobChunkClientProcessingOrderGuarantee chunkClientProcessingOrderGuarantee;
 
-    @JsonProperty("CompletedSizeInBytes")
+    @JacksonXmlProperty(isAttribute = true, localName = "CompletedSizeInBytes")
     private long completedSizeInBytes;
 
-    @JsonProperty("JobId")
+    @JacksonXmlProperty(isAttribute = true, localName = "JobId")
     private UUID jobId;
 
-    @JsonProperty("Name")
+    @JacksonXmlProperty(isAttribute = true, localName = "Name")
     private String name;
 
     @JsonProperty("Nodes")
-    @JacksonXmlElementWrapper
+    @JacksonXmlElementWrapper(useWrapping = true)
     private List<NodeApiBean> nodes;
 
-    @JsonProperty("OriginalSizeInBytes")
+    @JacksonXmlProperty(isAttribute = true, localName = "OriginalSizeInBytes")
     private long originalSizeInBytes;
 
-    @JsonProperty("Priority")
+    @JacksonXmlProperty(isAttribute = true, localName = "Priority")
     private BlobStoreTaskPriority priority;
 
-    @JsonProperty("RequestType")
+    @JacksonXmlProperty(isAttribute = true, localName = "RequestType")
     private JobRequestType requestType;
 
-    @JsonProperty("StartDate")
+    @JacksonXmlProperty(isAttribute = true, localName = "StartDate")
     private Date startDate;
 
-    @JsonProperty("Status")
+    @JacksonXmlProperty(isAttribute = true, localName = "Status")
     private JobStatus status;
 
-    @JsonProperty("UserId")
+    @JacksonXmlProperty(isAttribute = true, localName = "UserId")
     private UUID userId;
 
-    @JsonProperty("UserName")
+    @JacksonXmlProperty(isAttribute = true, localName = "UserName")
     private String userName;
 
-    @JsonProperty("WriteOptimization")
+    @JacksonXmlProperty(isAttribute = true, localName = "WriteOptimization")
     private WriteOptimization writeOptimization;
 
     // Constructor
@@ -85,6 +91,15 @@ public class JobApiBean {
 
     // Getters and Setters
     
+    public boolean getAggregating() {
+        return this.aggregating;
+    }
+
+    public void setAggregating(final boolean aggregating) {
+        this.aggregating = aggregating;
+    }
+
+
     public String getBucketName() {
         return this.bucketName;
     }

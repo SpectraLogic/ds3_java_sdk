@@ -17,20 +17,23 @@
 package com.spectralogic.ds3client.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.spectralogic.ds3client.models.S3ObjectToDeleteApiBean;
 import java.util.List;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.spectralogic.ds3client.models.DeleteObjectErrorResultApiBean;
 
+@JacksonXmlRootElement(namespace = "DeleteResult")
 public class DeleteResultApiBean {
 
     // Variables
-    @JsonProperty("DeletedObjects")
-    @JacksonXmlElementWrapper
+    @JsonProperty("Deleted")
+    @JacksonXmlElementWrapper(useWrapping = false)
     private List<S3ObjectToDeleteApiBean> deletedObjects;
 
-    @JsonProperty("Errors")
-    @JacksonXmlElementWrapper
+    @JsonProperty("Error")
+    @JacksonXmlElementWrapper(useWrapping = false)
     private List<DeleteObjectErrorResultApiBean> errors;
 
     // Constructor

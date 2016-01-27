@@ -17,25 +17,28 @@
 package com.spectralogic.ds3client.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import java.util.UUID;
 import com.spectralogic.ds3client.models.BlobApiBean;
 import java.util.List;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 
+@JacksonXmlRootElement(namespace = "Objects")
 public class JobChunkApiBean {
 
     // Variables
-    @JsonProperty("ChunkId")
+    @JacksonXmlProperty(isAttribute = true, localName = "ChunkId")
     private UUID chunkId;
 
-    @JsonProperty("ChunkNumber")
+    @JacksonXmlProperty(isAttribute = true, localName = "ChunkNumber")
     private int chunkNumber;
 
-    @JsonProperty("NodeId")
+    @JacksonXmlProperty(isAttribute = true, localName = "NodeId")
     private UUID nodeId;
 
-    @JsonProperty("Objects")
-    @JacksonXmlElementWrapper
+    @JsonProperty("Object")
+    @JacksonXmlElementWrapper(useWrapping = false)
     private List<BlobApiBean> objects;
 
     // Constructor

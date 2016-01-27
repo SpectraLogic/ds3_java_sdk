@@ -17,12 +17,15 @@
 package com.spectralogic.ds3client.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import java.lang.String;
 import java.util.UUID;
 import com.spectralogic.ds3client.models.LtfsFileNamingMode;
 import com.spectralogic.ds3client.models.BlobStoreTaskPriority;
 import com.spectralogic.ds3client.models.WriteOptimization;
 
+@JacksonXmlRootElement(namespace = "Data")
 public class StorageDomain {
 
     // Variables

@@ -17,15 +17,18 @@
 package com.spectralogic.ds3client.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.spectralogic.ds3client.models.PoolFailureNotificationRegistration;
 import java.util.List;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 
+@JacksonXmlRootElement(namespace = "Data")
 public class PoolFailureNotificationRegistrationList {
 
     // Variables
     @JsonProperty("PoolFailureNotificationRegistration")
-    @JacksonXmlElementWrapper
+    @JacksonXmlElementWrapper(useWrapping = false)
     private List<PoolFailureNotificationRegistration> poolFailureNotificationRegistration;
 
     // Constructor

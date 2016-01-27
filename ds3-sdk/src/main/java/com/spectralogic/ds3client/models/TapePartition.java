@@ -17,6 +17,8 @@
 package com.spectralogic.ds3client.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.spectralogic.ds3client.models.TapeDriveType;
 import java.lang.String;
 import java.util.UUID;
@@ -24,6 +26,7 @@ import com.spectralogic.ds3client.models.ImportExportConfiguration;
 import com.spectralogic.ds3client.models.Quiesced;
 import com.spectralogic.ds3client.models.TapePartitionState;
 
+@JacksonXmlRootElement(namespace = "Data")
 public class TapePartition {
 
     // Variables

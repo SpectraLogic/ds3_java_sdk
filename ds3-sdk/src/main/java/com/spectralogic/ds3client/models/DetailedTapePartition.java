@@ -17,6 +17,8 @@
 package com.spectralogic.ds3client.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.spectralogic.ds3client.models.TapeDriveType;
 import java.util.List;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
@@ -27,6 +29,7 @@ import com.spectralogic.ds3client.models.Quiesced;
 import com.spectralogic.ds3client.models.TapePartitionState;
 import com.spectralogic.ds3client.models.TapeType;
 
+@JacksonXmlRootElement(namespace = "Data")
 public class DetailedTapePartition {
 
     // Variables
@@ -34,7 +37,7 @@ public class DetailedTapePartition {
     private TapeDriveType driveType;
 
     @JsonProperty("DriveTypes")
-    @JacksonXmlElementWrapper
+    @JacksonXmlElementWrapper(useWrapping = false)
     private List<TapeDriveType> driveTypes;
 
     @JsonProperty("ErrorMessage")
@@ -62,7 +65,7 @@ public class DetailedTapePartition {
     private TapePartitionState state;
 
     @JsonProperty("TapeTypes")
-    @JacksonXmlElementWrapper
+    @JacksonXmlElementWrapper(useWrapping = false)
     private List<TapeType> tapeTypes;
 
     // Constructor

@@ -34,6 +34,7 @@ public class CreateVerifyJobSpectraS3Request extends AbstractRequest {
     
     private final String bucketName;
 
+    private boolean aggregating;
     private String name;
     private BlobStoreTaskPriority priority;
 
@@ -43,6 +44,12 @@ public class CreateVerifyJobSpectraS3Request extends AbstractRequest {
         this.bucketName = bucketName;
         this.getQueryParams().put("operation", "start_bulk_verify");
             }
+
+    public CreateVerifyJobSpectraS3Request withAggregating(final boolean aggregating) {
+        this.aggregating = aggregating;
+        this.updateQueryParam("aggregating", null);
+        return this;
+    }
 
     public CreateVerifyJobSpectraS3Request withName(final String name) {
         this.name = name;
@@ -81,6 +88,10 @@ public class CreateVerifyJobSpectraS3Request extends AbstractRequest {
         return this.bucketName;
     }
 
+
+    public boolean getAggregating() {
+        return this.aggregating;
+    }
 
     public String getName() {
         return this.name;

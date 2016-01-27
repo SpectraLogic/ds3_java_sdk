@@ -128,7 +128,7 @@ class WriteJobImpl extends JobImpl {
         LOG.info("AllocatedJobChunkResponse status: " + response.getStatus().toString());
         switch (response.getStatus()) {
         case ALLOCATED:
-            return response.getJobChunkContainerApiBeanResult().getJobChunk();
+            return response.getJobChunkApiBeanResult();
         case RETRYLATER:
             try {
                 final int retryAfter = response.getRetryAfterSeconds() * 1000;

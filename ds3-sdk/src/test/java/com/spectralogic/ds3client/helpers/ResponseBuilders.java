@@ -52,18 +52,14 @@ public class ResponseBuilders {
 
     public static ModifyJobSpectraS3Response modifyJobResponse(final JobWithChunksApiBean masterObjectList) {
         final ModifyJobSpectraS3Response response = mock(ModifyJobSpectraS3Response.class);
-        final JobWithChunksContainerApiBean container = new JobWithChunksContainerApiBean();
-        container.setJob(masterObjectList);
-        when(response.getJobWithChunksContainerApiBeanResult()).thenReturn(container);
+        when(response.getJobWithChunksApiBeanResult()).thenReturn(masterObjectList);
         return response;
     }
 
     public static GetJobChunksReadyForClientProcessingSpectraS3Response availableJobChunks(final JobWithChunksApiBean jobWithChunksApiBean) {
         final GetJobChunksReadyForClientProcessingSpectraS3Response response = mock(GetJobChunksReadyForClientProcessingSpectraS3Response.class);
         when(response.getStatus()).thenReturn(GetJobChunksReadyForClientProcessingSpectraS3Response.Status.AVAILABLE);
-        final JobWithChunksContainerApiBean container = new JobWithChunksContainerApiBean();
-        container.setJob(jobWithChunksApiBean);
-        when(response.getJobWithChunksContainerApiBeanResult()).thenReturn(container);
+        when(response.getJobWithChunksApiBeanResult()).thenReturn(jobWithChunksApiBean);
         return response;
     }
     
@@ -77,9 +73,7 @@ public class ResponseBuilders {
     public static AllocateJobChunkSpectraS3Response allocated(final JobChunkApiBean chunk) {
         final AllocateJobChunkSpectraS3Response response = mock(AllocateJobChunkSpectraS3Response.class);
         when(response.getStatus()).thenReturn(AllocateJobChunkSpectraS3Response.Status.ALLOCATED);
-        final JobChunkContainerApiBean container = new JobChunkContainerApiBean();
-        container.setJobChunk(chunk);
-        when(response.getJobChunkContainerApiBeanResult()).thenReturn(container);
+        when(response.getJobChunkApiBeanResult()).thenReturn(chunk);
         return response;
     }
     

@@ -29,6 +29,7 @@ public class GetActiveJobsSpectraS3Request extends AbstractRequest {
 
     // Variables
     
+    private boolean aggregating;
     private UUID bucketId;
     private JobChunkClientProcessingOrderGuarantee chunkClientProcessingOrderGuarantee;
     private boolean lastPage;
@@ -39,7 +40,6 @@ public class GetActiveJobsSpectraS3Request extends AbstractRequest {
     private BlobStoreTaskPriority priority;
     private Date rechunked;
     private JobRequestType requestType;
-    private boolean reshapable;
     private boolean truncated;
     private UUID userId;
 
@@ -47,6 +47,12 @@ public class GetActiveJobsSpectraS3Request extends AbstractRequest {
     public GetActiveJobsSpectraS3Request() {
         
     }
+    public GetActiveJobsSpectraS3Request withAggregating(final boolean aggregating) {
+        this.aggregating = aggregating;
+        this.updateQueryParam("aggregating", null);
+        return this;
+    }
+
     public GetActiveJobsSpectraS3Request withBucketId(final UUID bucketId) {
         this.bucketId = bucketId;
         this.updateQueryParam("bucket_id", bucketId.toString());
@@ -111,12 +117,6 @@ public class GetActiveJobsSpectraS3Request extends AbstractRequest {
         return this;
     }
 
-    public GetActiveJobsSpectraS3Request withReshapable(final boolean reshapable) {
-        this.reshapable = reshapable;
-        this.updateQueryParam("reshapable", null);
-        return this;
-    }
-
     public GetActiveJobsSpectraS3Request withTruncated(final boolean truncated) {
         this.truncated = truncated;
         this.updateQueryParam("truncated", null);
@@ -140,6 +140,10 @@ public class GetActiveJobsSpectraS3Request extends AbstractRequest {
         return "/_rest_/active_job";
     }
     
+    public boolean getAggregating() {
+        return this.aggregating;
+    }
+
     public UUID getBucketId() {
         return this.bucketId;
     }
@@ -178,10 +182,6 @@ public class GetActiveJobsSpectraS3Request extends AbstractRequest {
 
     public JobRequestType getRequestType() {
         return this.requestType;
-    }
-
-    public boolean getReshapable() {
-        return this.reshapable;
     }
 
     public boolean getTruncated() {

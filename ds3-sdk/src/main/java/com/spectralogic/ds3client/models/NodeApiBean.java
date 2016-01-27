@@ -17,23 +17,26 @@
 package com.spectralogic.ds3client.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import java.lang.String;
 import java.lang.Integer;
 import java.util.UUID;
 
+@JacksonXmlRootElement(namespace = "Data")
 public class NodeApiBean {
 
     // Variables
-    @JsonProperty("EndPoint")
+    @JacksonXmlProperty(isAttribute = true, localName = "EndPoint")
     private String endPoint;
 
-    @JsonProperty("HttpPort")
+    @JacksonXmlProperty(isAttribute = true, localName = "HttpPort")
     private Integer httpPort;
 
-    @JsonProperty("HttpsPort")
+    @JacksonXmlProperty(isAttribute = true, localName = "HttpsPort")
     private Integer httpsPort;
 
-    @JsonProperty("Id")
+    @JacksonXmlProperty(isAttribute = true, localName = "Id")
     private UUID id;
 
     // Constructor

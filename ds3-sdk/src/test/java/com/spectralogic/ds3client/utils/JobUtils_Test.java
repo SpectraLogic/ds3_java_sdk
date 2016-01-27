@@ -42,8 +42,6 @@ public class JobUtils_Test {
         job1.setRequestType(JobRequestType.PUT);
         jobs.add(job1);
 
-        jobs.add(job1);
-
         final JobsApiBean container = new JobsApiBean();
         container.setJobs(jobs);
         when(jobsResponse.getJobsApiBeanResult()).thenReturn(container);
@@ -76,13 +74,11 @@ public class JobUtils_Test {
 
         mob.setObjects(chunks);
 
-        final JobWithChunksContainerApiBean containerApiBean = new JobWithChunksContainerApiBean();
-        containerApiBean.setJob(mob);
-        when(jobResponse.getJobWithChunksContainerApiBeanResult()).thenReturn(containerApiBean);
-        //when(jobResponse.getJobWithChunksContainerApiBeanResult().getJob()).thenReturn(mob);
+        when(jobResponse.getJobWithChunksApiBeanResult()).thenReturn(mob);
 
         when(client.getJobsSpectraS3(any(GetJobsSpectraS3Request.class))).thenReturn(jobsResponse);
         when(client.getJobSpectraS3(new GetJobSpectraS3Request(realJobId))).thenReturn(jobResponse);
+        //when(client.getJobSpectraS3(any(GetJobSpectraS3Request.class))).thenReturn(jobResponse);
 
         final Set<String> fileNames = Sets.newSet("file1");
 
@@ -116,7 +112,10 @@ public class JobUtils_Test {
         job2.setRequestType(JobRequestType.PUT);
         jobs.add(job2);
 
-        when(jobsResponse.getJobsApiBeanResult().getJobs()).thenReturn(jobs);
+        final JobsApiBean container = new JobsApiBean();
+        container.setJobs(jobs);
+
+        when(jobsResponse.getJobsApiBeanResult()).thenReturn(container);
 
         final JobWithChunksApiBean mob = new JobWithChunksApiBean();
         mob.setStatus(JobStatus.IN_PROGRESS);
@@ -146,7 +145,7 @@ public class JobUtils_Test {
 
         mob.setObjects(chunks);
 
-        when(jobResponse.getJobWithChunksContainerApiBeanResult().getJob()).thenReturn(mob);
+        when(jobResponse.getJobWithChunksApiBeanResult()).thenReturn(mob);
 
         when(client.getJobsSpectraS3(any(GetJobsSpectraS3Request.class))).thenReturn(jobsResponse);
         when(client.getJobSpectraS3(new GetJobSpectraS3Request(realJobId))).thenReturn(jobResponse);
@@ -183,7 +182,10 @@ public class JobUtils_Test {
         job2.setRequestType(JobRequestType.PUT);
         jobs.add(job2);
 
-        when(jobsResponse.getJobsApiBeanResult().getJobs()).thenReturn(jobs);
+        final JobsApiBean container = new JobsApiBean();
+        container.setJobs(jobs);
+
+        when(jobsResponse.getJobsApiBeanResult()).thenReturn(container);
 
         final JobWithChunksApiBean mob = new JobWithChunksApiBean();
         mob.setStatus(JobStatus.IN_PROGRESS);
@@ -213,7 +215,7 @@ public class JobUtils_Test {
 
         mob.setObjects(chunks);
 
-        when(jobResponse.getJobWithChunksContainerApiBeanResult().getJob()).thenReturn(mob);
+        when(jobResponse.getJobWithChunksApiBeanResult()).thenReturn(mob);
 
         when(client.getJobsSpectraS3(any(GetJobsSpectraS3Request.class))).thenReturn(jobsResponse);
         when(client.getJobSpectraS3(new GetJobSpectraS3Request(realJobId))).thenReturn(jobResponse);
@@ -250,7 +252,10 @@ public class JobUtils_Test {
         job2.setRequestType(JobRequestType.PUT);
         jobs.add(job2);
 
-        when(jobsResponse.getJobsApiBeanResult().getJobs()).thenReturn(jobs);
+        final JobsApiBean container = new JobsApiBean();
+        container.setJobs(jobs);
+
+        when(jobsResponse.getJobsApiBeanResult()).thenReturn(container);
 
         final JobWithChunksApiBean mob = new JobWithChunksApiBean();
         mob.setStatus(JobStatus.IN_PROGRESS);
@@ -280,7 +285,7 @@ public class JobUtils_Test {
 
         mob.setObjects(chunks);
 
-        when(jobResponse.getJobWithChunksContainerApiBeanResult().getJob()).thenReturn(mob);
+        when(jobResponse.getJobWithChunksApiBeanResult()).thenReturn(mob);
 
         when(client.getJobsSpectraS3(any(GetJobsSpectraS3Request.class))).thenReturn(jobsResponse);
         when(client.getJobSpectraS3(new GetJobSpectraS3Request(realJobId))).thenReturn(jobResponse);
@@ -339,7 +344,10 @@ public class JobUtils_Test {
         job2.setRequestType(JobRequestType.PUT);
         jobs.add(job2);
 
-        when(jobsResponse.getJobsApiBeanResult().getJobs()).thenReturn(jobs);
+        final JobsApiBean container = new JobsApiBean();
+        container.setJobs(jobs);
+
+        when(jobsResponse.getJobsApiBeanResult()).thenReturn(container);
 
         final JobWithChunksApiBean mob2 = new JobWithChunksApiBean();
         mob2.setStatus(JobStatus.IN_PROGRESS);
@@ -381,8 +389,8 @@ public class JobUtils_Test {
 
         mob2.setObjects(chunks2);
 
-        when(jobResponse1.getJobWithChunksContainerApiBeanResult().getJob()).thenReturn(mob1);
-        when(jobResponse2.getJobWithChunksContainerApiBeanResult().getJob()).thenReturn(mob2);
+        when(jobResponse1.getJobWithChunksApiBeanResult()).thenReturn(mob1);
+        when(jobResponse2.getJobWithChunksApiBeanResult()).thenReturn(mob2);
 
         when(client.getJobsSpectraS3(any(GetJobsSpectraS3Request.class))).thenReturn(jobsResponse);
         when(client.getJobSpectraS3(new GetJobSpectraS3Request(job1.getJobId()))).thenReturn(jobResponse1);
@@ -443,7 +451,10 @@ public class JobUtils_Test {
         job2.setRequestType(JobRequestType.GET);
         jobs.add(job2);
 
-        when(jobsResponse.getJobsApiBeanResult().getJobs()).thenReturn(jobs);
+        final JobsApiBean container = new JobsApiBean();
+        container.setJobs(jobs);
+
+        when(jobsResponse.getJobsApiBeanResult()).thenReturn(container);
 
         final JobWithChunksApiBean mob2 = new JobWithChunksApiBean();
         mob2.setStatus(JobStatus.IN_PROGRESS);
@@ -478,8 +489,8 @@ public class JobUtils_Test {
 
         mob2.setObjects(chunks2);
 
-        when(jobResponse1.getJobWithChunksContainerApiBeanResult().getJob()).thenReturn(mob1);
-        when(jobResponse2.getJobWithChunksContainerApiBeanResult().getJob()).thenReturn(mob2);
+        when(jobResponse1.getJobWithChunksApiBeanResult()).thenReturn(mob1);
+        when(jobResponse2.getJobWithChunksApiBeanResult()).thenReturn(mob2);
 
         when(client.getJobsSpectraS3(any(GetJobsSpectraS3Request.class))).thenReturn(jobsResponse);
         when(client.getJobSpectraS3(new GetJobSpectraS3Request(job1.getJobId()))).thenReturn(jobResponse1);
@@ -516,7 +527,10 @@ public class JobUtils_Test {
         job2.setRequestType(JobRequestType.PUT);
         jobs.add(job2);
 
-        when(jobsResponse.getJobsApiBeanResult().getJobs()).thenReturn(jobs);
+        final JobsApiBean container = new JobsApiBean();
+        container.setJobs(jobs);
+
+        when(jobsResponse.getJobsApiBeanResult()).thenReturn(container);
 
         final JobWithChunksApiBean mob = new JobWithChunksApiBean();
         mob.setStatus(JobStatus.IN_PROGRESS);
@@ -546,7 +560,7 @@ public class JobUtils_Test {
 
         mob.setObjects(chunks);
 
-        when(jobResponse.getJobWithChunksContainerApiBeanResult().getJob()).thenReturn(mob);
+        when(jobResponse.getJobWithChunksApiBeanResult()).thenReturn(mob);
 
         when(client.getJobsSpectraS3(any(GetJobsSpectraS3Request.class))).thenReturn(jobsResponse);
         when(client.getJobSpectraS3(new GetJobSpectraS3Request(realJobId))).thenReturn(jobResponse);

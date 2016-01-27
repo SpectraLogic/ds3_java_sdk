@@ -32,9 +32,7 @@ public class JobUtils {
         for (final JobApiBean jobApiBean : response.getJobsApiBeanResult().getJobs()) {
             if (!jobApiBean.getBucketName().equals(bucketName) || jobApiBean.getStatus() != JobStatus.IN_PROGRESS || jobApiBean.getRequestType() != type) continue;
             final GetJobSpectraS3Response jobResponse = client.getJobSpectraS3(new GetJobSpectraS3Request(jobApiBean.getJobId()));
-            final JobWithChunksApiBean  jobWithChunksApiBean = jobResponse
-                    .getJobWithChunksContainerApiBeanResult()
-                    .getJob();
+            final JobWithChunksApiBean  jobWithChunksApiBean = jobResponse.getJobWithChunksApiBeanResult();
 
             for (final JobChunkApiBean jobChunkApiBean : jobWithChunksApiBean.getObjects()) {
                 if (chunkAndSetIntersects(jobChunkApiBean, files)){

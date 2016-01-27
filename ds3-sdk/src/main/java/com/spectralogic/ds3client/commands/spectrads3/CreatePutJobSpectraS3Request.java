@@ -30,6 +30,7 @@ public class CreatePutJobSpectraS3Request extends BulkRequest {
     public static final int MIN_UPLOAD_SIZE_IN_BYTES = 10485760;
 
     
+    private boolean aggregating;
     private boolean ignoreNamingConflicts;
     private long maxUploadSize;
     private String name;
@@ -40,6 +41,12 @@ public class CreatePutJobSpectraS3Request extends BulkRequest {
         super(bucketName, objects);
         this.getQueryParams().put("operation", "start_bulk_put");
         
+    }
+
+    public CreatePutJobSpectraS3Request withAggregating(final boolean aggregating) {
+        this.aggregating = aggregating;
+        this.updateQueryParam("aggregating", null);
+        return this;
     }
 
     public CreatePutJobSpectraS3Request withIgnoreNamingConflicts(final boolean ignoreNamingConflicts) {
@@ -74,6 +81,10 @@ public class CreatePutJobSpectraS3Request extends BulkRequest {
     }
 
 
+
+    public boolean getAggregating() {
+        return this.aggregating;
+    }
 
     public boolean getIgnoreNamingConflicts() {
         return this.ignoreNamingConflicts;

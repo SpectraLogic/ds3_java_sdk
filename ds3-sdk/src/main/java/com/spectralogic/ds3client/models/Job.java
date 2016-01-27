@@ -17,6 +17,8 @@
 package com.spectralogic.ds3client.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import java.util.UUID;
 import com.spectralogic.ds3client.models.JobChunkClientProcessingOrderGuarantee;
 import java.util.Date;
@@ -24,9 +26,13 @@ import java.lang.String;
 import com.spectralogic.ds3client.models.BlobStoreTaskPriority;
 import com.spectralogic.ds3client.models.JobRequestType;
 
+@JacksonXmlRootElement(namespace = "Data")
 public class Job {
 
     // Variables
+    @JsonProperty("Aggregating")
+    private boolean aggregating;
+
     @JsonProperty("BucketId")
     private UUID bucketId;
 
@@ -66,9 +72,6 @@ public class Job {
     @JsonProperty("RequestType")
     private JobRequestType requestType;
 
-    @JsonProperty("Reshapable")
-    private boolean reshapable;
-
     @JsonProperty("Truncated")
     private boolean truncated;
 
@@ -82,6 +85,15 @@ public class Job {
 
     // Getters and Setters
     
+    public boolean getAggregating() {
+        return this.aggregating;
+    }
+
+    public void setAggregating(final boolean aggregating) {
+        this.aggregating = aggregating;
+    }
+
+
     public UUID getBucketId() {
         return this.bucketId;
     }
@@ -196,15 +208,6 @@ public class Job {
 
     public void setRequestType(final JobRequestType requestType) {
         this.requestType = requestType;
-    }
-
-
-    public boolean getReshapable() {
-        return this.reshapable;
-    }
-
-    public void setReshapable(final boolean reshapable) {
-        this.reshapable = reshapable;
     }
 
 

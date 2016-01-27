@@ -29,6 +29,7 @@ public class CreateGetJobSpectraS3Request extends BulkRequest {
 
 
     
+    private boolean aggregating;
     private JobChunkClientProcessingOrderGuarantee chunkClientProcessingOrderGuarantee;
     private String name;
     
@@ -38,6 +39,12 @@ public class CreateGetJobSpectraS3Request extends BulkRequest {
         super(bucketName, objects);
         this.getQueryParams().put("operation", "start_bulk_get");
         
+    }
+
+    public CreateGetJobSpectraS3Request withAggregating(final boolean aggregating) {
+        this.aggregating = aggregating;
+        this.updateQueryParam("aggregating", null);
+        return this;
     }
 
     public CreateGetJobSpectraS3Request withChunkClientProcessingOrderGuarantee(final JobChunkClientProcessingOrderGuarantee chunkClientProcessingOrderGuarantee) {
@@ -59,6 +66,10 @@ public class CreateGetJobSpectraS3Request extends BulkRequest {
     }
 
 
+
+    public boolean getAggregating() {
+        return this.aggregating;
+    }
 
     public JobChunkClientProcessingOrderGuarantee getChunkClientProcessingOrderGuarantee() {
         return this.chunkClientProcessingOrderGuarantee;

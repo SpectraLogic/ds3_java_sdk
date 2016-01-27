@@ -106,7 +106,7 @@ class ReadJobImpl extends JobImpl {
             this.client.getJobChunksReadyForClientProcessingSpectraS3(new GetJobChunksReadyForClientProcessingSpectraS3Request(this.jobWithChunksApiBean.getJobId()));
         switch(availableJobChunks.getStatus()) {
         case AVAILABLE: {
-            final JobWithChunksApiBean availableMol = availableJobChunks.getJobWithChunksContainerApiBeanResult().getJob();
+            final JobWithChunksApiBean availableMol = availableJobChunks.getJobWithChunksApiBeanResult();
             chunkTransferrer.transferChunks(availableMol.getNodes(), availableMol.getObjects());
             break;
         }
