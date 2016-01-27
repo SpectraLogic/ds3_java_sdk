@@ -15,7 +15,7 @@ import java.nio.file.*;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
-import static org.junit.Assume.assumeTrue;
+import static org.junit.Assume.assumeFalse;
 
 public class FileObjectPutter_Test {
 
@@ -29,7 +29,7 @@ public class FileObjectPutter_Test {
      */
     @Test
     public void testSymlink() throws IOException {
-        assumeTrue(Platform.isWindows());
+        assumeFalse(Platform.isWindows());
         final Path tempDir = Files.createTempDirectory("ds3_file_object_putter_");
         final Path tempPath = Files.createTempFile(tempDir, "temp_", ".txt");
 
@@ -67,7 +67,7 @@ public class FileObjectPutter_Test {
 
     @Test
     public void testRelativeSymlink() throws IOException, URISyntaxException {
-        assumeTrue(Platform.isWindows());
+        assumeFalse(Platform.isWindows());
         final Path tempDir = Files.createTempDirectory("ds3_file_object_rel_test_");
         final Path tempPath = Files.createTempFile(tempDir, "temp_", ".txt");
 
