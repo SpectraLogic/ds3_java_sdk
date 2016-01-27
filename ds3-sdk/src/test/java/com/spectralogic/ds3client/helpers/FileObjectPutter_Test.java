@@ -3,15 +3,18 @@ package com.spectralogic.ds3client.helpers;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.nio.ByteBuffer;
+import java.nio.channels.ByteChannel;
 import java.nio.channels.SeekableByteChannel;
 import java.nio.charset.Charset;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.StandardOpenOption;
+import java.nio.file.*;
+import java.util.Arrays;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assume.assumeThat;
 
 public class FileObjectPutter_Test {
@@ -79,4 +82,60 @@ public class FileObjectPutter_Test {
             Files.deleteIfExists(tempDir);
         }
     }
+
+    @Test
+    public void testRelativeSymlink() throws IOException, URISyntaxException {
+        assumeThat(System.getProperty("os.name"), not(containsString("Windows")));
+        final Path tempDir = Files.createTempDirectory("ds3_file_object_rel_test_");
+
+        final Path testFile = Paths.get("src/test/resources/LoremIpsum.txt");
+
+        try {
+
+            final Path symLinkPath = tempDir.resolve("sym_" + testFile.getFileName().toString());
+
+            Files.createSymbolicLink(symLinkPath, testFile);
+
+            try {
+                final FileObjectPutter putter = new FileObjectPutter(tempDir);
+
+                final SeekableByteChannel newChannel = putter.buildChannel(symLinkPath.getFileName().toString());
+                assertThat(newChannel, is(notNullValue()));
+
+                final ByteBuffer fileBuff = readTestFile("/LoremIpsum.txt");
+
+                final ByteBuffer buff = ByteBuffer.allocate(fileBuff.limit());
+
+                assertThat(newChannel.read(buff), is(fileBuff.limit()));
+
+                assertTrue(Arrays.equals(fileBuff.array(), buff.array()));
+
+            } finally {
+                Files.deleteIfExists(symLinkPath);
+            }
+        } finally {
+            Files.deleteIfExists(tempDir);
+        }
+    }
+
+    /**
+     * This methods reads data into a newly allocated buffer up to 10240 bytes
+     */
+    private static ByteBuffer readTestFile(final String fileName) throws URISyntaxException, IOException {
+
+        final URI pathUri = FileObjectPutter_Test.class.getResource(fileName).toURI();
+
+        final Path path = Paths.get(pathUri);
+
+        final int fileSize = (int) Math.min(Files.size(path), 10240);
+
+        final ByteBuffer fileBuff =  ByteBuffer.allocate(fileSize);
+
+        try (final ByteChannel channel = Files.newByteChannel(path, StandardOpenOption.READ)) {
+            channel.read(fileBuff);
+        }
+        fileBuff.flip();
+        return fileBuff;
+    }
+
 }

@@ -16,6 +16,8 @@
 package com.spectralogic.ds3client.helpers;
 
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.ObjectChannelBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.nio.channels.FileChannel;
@@ -28,6 +30,7 @@ import java.nio.file.StandardOpenOption;
  * Writes files to a remote DS3 appliance from a directory in the local filesystem.
  */
 public class FileObjectPutter implements ObjectChannelBuilder {
+
     private final Path root;
 
     /**
@@ -48,7 +51,9 @@ public class FileObjectPutter implements ObjectChannelBuilder {
 
     private static Path resolveForSymbolic(final Path path) throws IOException {
         if (Files.isSymbolicLink(path)) {
-            return Files.readSymbolicLink(path);
+            final Path relativePath = Files.readSymbolicLink(path);
+
+            return relativePath.toAbsolutePath();
         }
         return path;
     }
