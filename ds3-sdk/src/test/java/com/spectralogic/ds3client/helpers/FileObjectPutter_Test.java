@@ -40,18 +40,7 @@ public class FileObjectPutter_Test {
             final Path symLinkPath = tempDir.resolve("sym_" + tempPath.getFileName().toString());
             Files.createSymbolicLink(symLinkPath, tempPath);
 
-            try {
-                final FileObjectPutter putter = new FileObjectPutter(tempDir);
-
-                try (final SeekableByteChannel newChannel = putter.buildChannel(symLinkPath.getFileName().toString())) {
-                    assertThat(newChannel, is(notNullValue()));
-                    final ByteBuffer buff = ByteBuffer.allocate(testData.length);
-                    assertThat(newChannel.read(buff), is(testData.length));
-                    assertThat(new String(buff.array(), Charset.forName("UTF-8")), is(testString));
-                }
-            } finally {
-                Files.deleteIfExists(symLinkPath);
-            }
+            getFileWithPutter(tempDir, symLinkPath);
         } finally {
             Files.deleteIfExists(tempPath);
             Files.deleteIfExists(tempDir);
@@ -67,16 +56,8 @@ public class FileObjectPutter_Test {
             try (final SeekableByteChannel channel = Files.newByteChannel(tempPath, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.WRITE)) {
                 channel.write(ByteBuffer.wrap(testData));
             }
-            final FileObjectPutter putter = new FileObjectPutter(tempDir);
 
-             try (final SeekableByteChannel newChannel = putter.buildChannel(tempPath.getFileName().toString())) {
-                 assertThat(newChannel, is(notNullValue()));
-
-                 final ByteBuffer buff = ByteBuffer.allocate(testData.length);
-                 assertThat(newChannel.read(buff), is(testData.length));
-
-                 assertThat(new String(buff.array(), Charset.forName("UTF-8")), is(testString));
-             }
+            getFileWithPutter(tempDir, tempPath);
         } finally {
             Files.deleteIfExists(tempPath);
             Files.deleteIfExists(tempDir);
@@ -100,28 +81,31 @@ public class FileObjectPutter_Test {
             LOG.info("Creating symlink from " + symLinkPath.toString() + " to " + relPath.toString());
 
             Files.createSymbolicLink(symLinkPath, relPath);
+            getFileWithPutter(tempDir, symLinkPath);
 
-            try {
-                final FileObjectPutter putter = new FileObjectPutter(tempDir);
-                final SeekableByteChannel newChannel = putter.buildChannel(symLinkPath.getFileName().toString());
-                assertThat(newChannel, is(notNullValue()));
-                final ByteBuffer buff = ByteBuffer.allocate(testData.length);
-                assertThat(newChannel.read(buff), is(testData.length));
-                assertThat(new String(buff.array(), Charset.forName("UTF-8")), is(testString));
-
-            } finally {
-                Files.deleteIfExists(symLinkPath);
-            }
         } finally {
             Files.deleteIfExists(tempPath);
             Files.deleteIfExists(tempDir);
         }
     }
 
-    private String getParentDir(final Path path) {
+    private void getFileWithPutter(final Path dir, final Path file) throws IOException {
+             try {
+                final FileObjectPutter putter = new FileObjectPutter(dir);
+                try (final SeekableByteChannel newChannel = putter.buildChannel(file.getFileName().toString())) {
+                    assertThat(newChannel, is(notNullValue()));
+                    final ByteBuffer buff = ByteBuffer.allocate(testData.length);
+                    assertThat(newChannel.read(buff), is(testData.length));
+                    assertThat(new String(buff.array(), Charset.forName("UTF-8")), is(testString));
+                }
+            } finally {
+                Files.deleteIfExists(file);
+            }
+    }
+
+    private static String getParentDir(final Path path) {
         final String parentPath = path.getParent().toString();
         final int lastIndex = parentPath.lastIndexOf(File.separator);
         return parentPath.substring(lastIndex + 1);
     }
-
 }
