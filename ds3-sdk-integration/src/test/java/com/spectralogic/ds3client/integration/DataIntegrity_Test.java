@@ -18,6 +18,8 @@ package com.spectralogic.ds3client.integration;
 import com.google.common.collect.Lists;
 import com.spectralogic.ds3client.Ds3Client;
 import com.spectralogic.ds3client.commands.BulkPutRequest;
+import com.spectralogic.ds3client.helpers.ChecksumFunction;
+import com.spectralogic.ds3client.helpers.ChecksumValue;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers;
 import com.spectralogic.ds3client.helpers.FileObjectGetter;
 import com.spectralogic.ds3client.helpers.options.WriteJobOptions;
@@ -162,9 +164,9 @@ public class DataIntegrity_Test {
 
             final Ds3ClientHelpers.Job job = helpers.startWriteJob(bucketName, objs, WriteJobOptions.create().withChecksumType(Checksum.Type.MD5));
 
-            job.computeChecksum(new ChecksumFunction() {
-                public String compute(final Ds3Object obj, final ByteChannel byteChannel) {
-                    return null;
+            job.checksumValue(new ChecksumValue() {
+                public void value(final Ds3Object obj, final String checksum) {
+
                 }
             }).transfer(new ResourceObjectPutter("books/"));
 

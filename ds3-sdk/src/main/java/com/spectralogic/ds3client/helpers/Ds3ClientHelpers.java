@@ -63,7 +63,7 @@ public abstract class Ds3ClientHelpers {
         /**
          * Sets the maximum number of requests to execute at a time when fulfilling the job.
          */
-        Job withMaxParallelRequests(int maxParallelRequests);
+        Job withMaxParallelRequests(final int maxParallelRequests);
         
         /**
          * Transfers the files in this job using the given seekable channel creator.  The is a blocking call.
@@ -73,6 +73,10 @@ public abstract class Ds3ClientHelpers {
          */
         void transfer(final ObjectChannelBuilder channelBuilder)
             throws SignatureException, IOException, XmlProcessingException;
+
+        Job computeChecksum(final ChecksumFunction checksumFunction);
+
+        Job checksumValue(final ChecksumValue checksumValue);
     }
 
     /**
