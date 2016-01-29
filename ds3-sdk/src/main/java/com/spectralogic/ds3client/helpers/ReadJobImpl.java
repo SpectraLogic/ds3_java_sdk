@@ -23,6 +23,7 @@ import com.spectralogic.ds3client.Ds3Client;
 import com.spectralogic.ds3client.commands.GetAvailableJobChunksRequest;
 import com.spectralogic.ds3client.commands.GetAvailableJobChunksResponse;
 import com.spectralogic.ds3client.commands.GetObjectRequest;
+import com.spectralogic.ds3client.commands.GetObjectResponse;
 import com.spectralogic.ds3client.exceptions.Ds3NoMoreRetriesException;
 import com.spectralogic.ds3client.helpers.ChunkTransferrer.ItemTransferrer;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.ObjectChannelBuilder;
@@ -31,20 +32,28 @@ import com.spectralogic.ds3client.models.Range;
 import com.spectralogic.ds3client.models.bulk.BulkObject;
 import com.spectralogic.ds3client.models.bulk.MasterObjectList;
 import com.spectralogic.ds3client.models.bulk.Objects;
+import com.spectralogic.ds3client.networking.Metadata;
 import com.spectralogic.ds3client.serializer.XmlProcessingException;
 import com.spectralogic.ds3client.utils.Guard;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.security.SignatureException;
+import java.util.IdentityHashMap;
 import java.util.List;
+import java.util.Map;
 
 class ReadJobImpl extends JobImpl {
+
+    private static final Logger LOG = LoggerFactory.getLogger(ReadJobImpl.class);
 
     private final JobPartTracker partTracker;
     private final List<Objects> chunks;
     private final ImmutableMap<String, ImmutableMultimap<BulkObject, Range>> blobToRanges;
     private final int retryAfter; // Negative retryAfter value represent infinity retries
     private int retryAfterLeft; // The number of retries left
+    private Map<MetadataReceivedListener, MetadataReceivedListener> metadataListeners;
 
     public ReadJobImpl(final Ds3Client client, final MasterObjectList masterObjectList, final ImmutableMultimap<String, Range> objectRanges, final int retryAfter) {
         super(client, masterObjectList);
@@ -54,31 +63,55 @@ class ReadJobImpl extends JobImpl {
                 .buildPartTracker(Iterables.concat(chunks));
         this.blobToRanges = PartialObjectHelpers.mapRangesToBlob(masterObjectList.getObjects(), objectRanges);
         this.retryAfter = this.retryAfterLeft = retryAfter;
+        this.metadataListeners = new IdentityHashMap<>();
     }
 
     @Override
     public void attachDataTransferredListener(final DataTransferredListener listener) {
+        checkRunning();
         this.partTracker.attachDataTransferredListener(listener);
     }
 
     @Override
     public void attachObjectCompletedListener(final ObjectCompletedListener listener) {
+        checkRunning();
         this.partTracker.attachObjectCompletedListener(listener);
     }
 
     @Override
     public void removeDataTransferredListener(final DataTransferredListener listener) {
+        checkRunning();
         this.partTracker.removeDataTransferredListener(listener);
     }
 
     @Override
     public void removeObjectCompletedListener(final ObjectCompletedListener listener) {
+        checkRunning();
         this.partTracker.removeObjectCompletedListener(listener);
+    }
+
+    @Override
+    public void attachMetadataReceivedListener(final MetadataReceivedListener listener) {
+        checkRunning();
+        this.metadataListeners.put(listener, listener);
+    }
+
+    @Override
+    public void removeMetadataReceivedListener(final MetadataReceivedListener listener) {
+        checkRunning();
+        this.metadataListeners.remove(listener);
+    }
+
+    @Override
+    public Ds3ClientHelpers.Job withMetadata(final Ds3ClientHelpers.MetadataAccess access) {
+        LOG.warn("The withMetadata method is not used with Read Jobs");
+        return this;
     }
 
     @Override
     public void transfer(final ObjectChannelBuilder channelBuilder)
             throws SignatureException, IOException, XmlProcessingException {
+        running = true;
         try (final JobState jobState = new JobState(channelBuilder, this.masterObjectList.getObjects(), partTracker, blobToRanges)) {
             final ChunkTransferrer chunkTransferrer = new ChunkTransferrer(
                 new GetObjectTransferrer(jobState),
@@ -146,7 +179,16 @@ class ReadJobImpl extends JobImpl {
                 request.withByteRanges(ranges);
             }
 
-            client.getObject(request);
+            final GetObjectResponse response = client.getObject(request);
+            final Metadata metadata = response.getMetadata();
+
+            sendMetadataEvents(ds3Object.getName(), metadata);
+        }
+    }
+
+    private void sendMetadataEvents(final String objName , final Metadata metadata) {
+        for (final MetadataReceivedListener listener : this.metadataListeners.values()) {
+            listener.metadataReceived(objName, metadata);
         }
     }
 
