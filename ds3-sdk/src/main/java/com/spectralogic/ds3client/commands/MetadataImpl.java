@@ -57,7 +57,7 @@ class MetadataImpl implements Metadata {
 
     @Override
     public List<String> get(final String name) {
-        return metadata.get(name).asList();
+        return metadata.get(name.toLowerCase()).asList();
     }
 
     @Override

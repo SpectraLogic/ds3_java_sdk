@@ -26,7 +26,7 @@ import java.io.IOException;
 import java.nio.channels.SeekableByteChannel;
 import java.nio.file.Path;
 import java.security.SignatureException;
-import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -59,12 +59,16 @@ public abstract class Ds3ClientHelpers {
         void attachObjectCompletedListener(final ObjectCompletedListener listener);
         void removeDataTransferredListener(final DataTransferredListener listener);
         void removeObjectCompletedListener(final ObjectCompletedListener listener);
+        void attachMetadataReceivedListener(final MetadataReceivedListener listener);
+        void removeMetadataReceivedListener(final MetadataReceivedListener listener);
 
         /**
          * Sets the maximum number of requests to execute at a time when fulfilling the job.
          */
         Job withMaxParallelRequests(int maxParallelRequests);
-        
+
+        Job withMetadata(final MetadataAccess access);
+
         /**
          * Transfers the files in this job using the given seekable channel creator.  The is a blocking call.
          * @throws SignatureException
@@ -73,6 +77,10 @@ public abstract class Ds3ClientHelpers {
          */
         void transfer(final ObjectChannelBuilder channelBuilder)
             throws SignatureException, IOException, XmlProcessingException;
+    }
+
+    public interface MetadataAccess {
+        Map<String, String> getMetadataValue(final String filename);
     }
 
     /**

@@ -22,9 +22,11 @@ import com.spectralogic.ds3client.models.bulk.MasterObjectList;
 import java.util.UUID;
 
 abstract class JobImpl implements Job {
-    protected int maxParallelRequests = 10;
     protected final Ds3Client client;
     protected final MasterObjectList masterObjectList;
+
+    protected boolean running = false;
+    protected int maxParallelRequests = 10;
 
     public JobImpl(final Ds3Client client, final MasterObjectList masterObjectList) {
         this.client = client;
@@ -52,4 +54,9 @@ abstract class JobImpl implements Job {
         this.maxParallelRequests = maxParallelRequests;
         return this;
     }
+
+    protected void checkRunning() {
+        if (running) throw new IllegalStateException("You cannot modify a job after calling transfer");
+    }
+
 }

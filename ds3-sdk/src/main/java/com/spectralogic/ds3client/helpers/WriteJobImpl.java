@@ -30,6 +30,7 @@ import com.spectralogic.ds3client.models.bulk.BulkObject;
 import com.spectralogic.ds3client.models.bulk.MasterObjectList;
 import com.spectralogic.ds3client.models.bulk.Objects;
 import com.spectralogic.ds3client.serializer.XmlProcessingException;
+import com.spectralogic.ds3client.utils.Guard;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,6 +39,7 @@ import java.security.SignatureException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 class WriteJobImpl extends JobImpl {
     static private final Logger LOG = LoggerFactory.getLogger(WriteJobImpl.class);
@@ -45,6 +47,7 @@ class WriteJobImpl extends JobImpl {
     private final List<Objects> filteredChunks;
     private final int retryAfter; // Negative retryAfter value represent infinity retries
     private int retryAfterLeft; // The number of retries left
+    private Ds3ClientHelpers.MetadataAccess metadataAccess = null;
 
     public WriteJobImpl(final Ds3Client client, final MasterObjectList masterObjectList, final int retryAfter) {
         super(client, masterObjectList);
@@ -63,29 +66,49 @@ class WriteJobImpl extends JobImpl {
 
     @Override
     public void attachDataTransferredListener(final DataTransferredListener listener) {
+        checkRunning();
         this.partTracker.attachDataTransferredListener(listener);
     }
 
     @Override
     public void attachObjectCompletedListener(final ObjectCompletedListener listener) {
+        checkRunning();
         this.partTracker.attachObjectCompletedListener(listener);
-
     }
 
     @Override
     public void removeDataTransferredListener(final DataTransferredListener listener) {
+        checkRunning();
         this.partTracker.removeDataTransferredListener(listener);
     }
 
     @Override
     public void removeObjectCompletedListener(final ObjectCompletedListener listener) {
+        checkRunning();
         this.partTracker.removeObjectCompletedListener(listener);
+    }
 
+    @Override
+    public void attachMetadataReceivedListener(final MetadataReceivedListener listener) {
+        LOG.warn("Metadata listeners are not used with Write jobs");
+    }
+
+    @Override
+    public void removeMetadataReceivedListener(final MetadataReceivedListener listener) {
+        LOG.warn("Metadata listeners are not used with Write jobs");
+    }
+
+    @Override
+    public Ds3ClientHelpers.Job withMetadata(final Ds3ClientHelpers.MetadataAccess access) {
+        checkRunning();
+        this.metadataAccess = access;
+        return this;
     }
 
     @Override
     public void transfer(final ObjectChannelBuilder channelBuilder)
             throws SignatureException, IOException, XmlProcessingException {
+        running = true;
         LOG.debug("Starting job transfer");
         if (this.masterObjectList == null || this.masterObjectList.getObjects() == null) {
             LOG.info("There is nothing to transfer for job" + ((this.getJobId() == null) ? "" : " " + this.getJobId().toString()));
@@ -191,14 +214,30 @@ class WriteJobImpl extends JobImpl {
         @Override
         public void transferItem(final Ds3Client client, final BulkObject ds3Object)
                 throws SignatureException, IOException {
-            client.putObject(new PutObjectRequest(
+
+            client.putObject(createRequest(ds3Object));
+        }
+
+        private PutObjectRequest createRequest(final BulkObject ds3Object) {
+            final PutObjectRequest request = new PutObjectRequest(
                 WriteJobImpl.this.masterObjectList.getBucketName(),
                 ds3Object.getName(),
                 WriteJobImpl.this.getJobId(),
                 ds3Object.getLength(),
                 ds3Object.getOffset(),
                 jobState.getChannel(ds3Object.getName(), ds3Object.getOffset(), ds3Object.getLength())
-            ));
+            );
+
+            if (ds3Object.getOffset() == 0 && metadataAccess != null) {
+                final Map<String, String> metadata = metadataAccess.getMetadataValue(ds3Object.getName());
+                if (Guard.isMapNullOrEmpty(metadata)) return request;
+                final ImmutableMap<String, String> immutableMetadata = ImmutableMap.copyOf(metadata);
+                for (final Map.Entry<String, String> value : immutableMetadata.entrySet()) {
+                    request.withMetaData(value.getKey(), value.getValue());
+                }
+            }
+
+            return request;
         }
     }
 }
