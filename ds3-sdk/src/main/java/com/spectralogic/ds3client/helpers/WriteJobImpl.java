@@ -25,6 +25,7 @@ import com.spectralogic.ds3client.commands.PutObjectRequest;
 import com.spectralogic.ds3client.exceptions.Ds3NoMoreRetriesException;
 import com.spectralogic.ds3client.helpers.ChunkTransferrer.ItemTransferrer;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.ObjectChannelBuilder;
+import com.spectralogic.ds3client.models.Checksum;
 import com.spectralogic.ds3client.models.Range;
 import com.spectralogic.ds3client.models.bulk.BulkObject;
 import com.spectralogic.ds3client.models.bulk.MasterObjectList;
@@ -35,21 +36,23 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.nio.channels.ByteChannel;
+import java.nio.channels.SeekableByteChannel;
 import java.security.SignatureException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 class WriteJobImpl extends JobImpl {
     static private final Logger LOG = LoggerFactory.getLogger(WriteJobImpl.class);
     private final JobPartTracker partTracker;
     private final List<Objects> filteredChunks;
     private final int retryAfter; // Negative retryAfter value represent infinity retries
+    private final Checksum.Type checksumType;
+    private final Map<ChecksumListener, ChecksumListener> checksumListeners;
     private int retryAfterLeft; // The number of retries left
     private Ds3ClientHelpers.MetadataAccess metadataAccess = null;
+    private ChecksumFunction checksumFunction = null;
 
-    public WriteJobImpl(final Ds3Client client, final MasterObjectList masterObjectList, final int retryAfter) {
+    public WriteJobImpl(final Ds3Client client, final MasterObjectList masterObjectList, final int retryAfter, final Checksum.Type type) {
         super(client, masterObjectList);
         if (this.masterObjectList == null || this.masterObjectList.getObjects() == null) {
             LOG.info("Job has no data to transfer");
@@ -62,6 +65,8 @@ class WriteJobImpl extends JobImpl {
                     .buildPartTracker(Iterables.concat(filteredChunks));
         }
         this.retryAfter = this.retryAfterLeft = retryAfter;
+        this.checksumListeners = new IdentityHashMap<>();
+        this.checksumType = type;
     }
 
     @Override
@@ -90,18 +95,36 @@ class WriteJobImpl extends JobImpl {
 
     @Override
     public void attachMetadataReceivedListener(final MetadataReceivedListener listener) {
-        LOG.warn("Metadata listeners are not used with Write jobs");
+        throw new IllegalStateException("Metadata listeners are not used with Write jobs");
     }
 
     @Override
     public void removeMetadataReceivedListener(final MetadataReceivedListener listener) {
-        LOG.warn("Metadata listeners are not used with Write jobs");
+        throw new IllegalStateException("Metadata listeners are not used with Write jobs");
+    }
+
+    @Override
+    public void attachChecksumListener(final ChecksumListener listener) {
+        checkRunning();
+        this.checksumListeners.put(listener, listener);
+    }
+
+    @Override
+    public void removeChecksumListener(final ChecksumListener listener) {
+        checkRunning();
+        this.checksumListeners.remove(listener);
     }
 
     @Override
     public Ds3ClientHelpers.Job withMetadata(final Ds3ClientHelpers.MetadataAccess access) {
         checkRunning();
         this.metadataAccess = access;
+        return this;
+    }
+
+    @Override
+    public Ds3ClientHelpers.Job withChecksum(final ChecksumFunction checksumFunction) {
+        this.checksumFunction = checksumFunction;
         return this;
     }
 
@@ -219,13 +242,17 @@ class WriteJobImpl extends JobImpl {
         }
 
         private PutObjectRequest createRequest(final BulkObject ds3Object) {
+
+
+            final SeekableByteChannel channel = jobState.getChannel(ds3Object.getName(), ds3Object.getOffset(), ds3Object.getLength());
+
             final PutObjectRequest request = new PutObjectRequest(
-                WriteJobImpl.this.masterObjectList.getBucketName(),
-                ds3Object.getName(),
-                WriteJobImpl.this.getJobId(),
-                ds3Object.getLength(),
-                ds3Object.getOffset(),
-                jobState.getChannel(ds3Object.getName(), ds3Object.getOffset(), ds3Object.getLength())
+                    WriteJobImpl.this.masterObjectList.getBucketName(),
+                    ds3Object.getName(),
+                    WriteJobImpl.this.getJobId(),
+                    ds3Object.getLength(),
+                    ds3Object.getOffset(),
+                    channel
             );
 
             if (ds3Object.getOffset() == 0 && metadataAccess != null) {
@@ -237,7 +264,26 @@ class WriteJobImpl extends JobImpl {
                 }
             }
 
+            final String checksum = calculateChecksum(ds3Object, channel);
+            if (checksum != null) {
+                request.withChecksum(Checksum.value(checksum), WriteJobImpl.this.checksumType);
+            }
+
             return request;
+        }
+
+        private String calculateChecksum(final BulkObject ds3Object, final SeekableByteChannel channel) {
+            if (WriteJobImpl.this.checksumType != Checksum.Type.NONE) {
+                if (WriteJobImpl.this.checksumFunction == null) {
+                    // perform calculation
+
+
+                    return null;
+                } else {
+                    return WriteJobImpl.this.checksumFunction.compute(ds3Object, channel);
+                }
+            }
+            return null;
         }
     }
 }

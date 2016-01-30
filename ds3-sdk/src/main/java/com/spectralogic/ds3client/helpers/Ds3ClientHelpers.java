@@ -68,7 +68,6 @@ public abstract class Ds3ClientHelpers {
          */
         Job withMaxParallelRequests(final int maxParallelRequests);
         
-
         Job withMetadata(final MetadataAccess access);
 
         Job withChecksum(final ChecksumFunction checksumFunction);

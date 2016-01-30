@@ -881,7 +881,6 @@ public class Smoke_Test {
 
             assertThat(Files.size(filePath), is(200L));
 
-
         } finally {
             Files.delete(filePath);
             deleteAllContents(client, bucketName);

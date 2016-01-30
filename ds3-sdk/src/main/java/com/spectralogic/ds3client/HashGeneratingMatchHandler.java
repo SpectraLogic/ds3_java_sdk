@@ -15,28 +15,30 @@
 
 package com.spectralogic.ds3client;
 
-import com.google.common.primitives.Chars;
 import com.spectralogic.ds3client.models.Checksum;
 import com.spectralogic.ds3client.utils.hashing.*;
-import org.apache.commons.codec.binary.Base64;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 
 class HashGeneratingMatchHandler implements Checksum.MatchHandler<String, IOException> {
     private static final int READ_BUFFER_SIZE = 1024;
     
     private final InputStream content;
     private final Checksum.Type checksumType;
+    private final int bufferSize;
     
     public HashGeneratingMatchHandler(final InputStream content, final Checksum.Type checksumType) {
+        this(content, checksumType, READ_BUFFER_SIZE);
+    }
+
+    public HashGeneratingMatchHandler(final InputStream content, final Checksum.Type checksumType, final int bufferSize) {
         this.content = content;
         this.checksumType = checksumType;
+        this.bufferSize = bufferSize;
     }
-    
+
     @Override
     public String none() throws IOException {
         return "";
@@ -53,7 +55,7 @@ class HashGeneratingMatchHandler implements Checksum.MatchHandler<String, IOExce
     }
     
     private String hashInputStream(final Hasher digest, final InputStream stream) throws IOException {
-        final byte[] buffer = new byte[READ_BUFFER_SIZE];
+        final byte[] buffer = new byte[bufferSize];
         int bytesRead;
         
         while (true) {

@@ -18,12 +18,12 @@ package com.spectralogic.ds3client.integration;
 import com.google.common.collect.Lists;
 import com.spectralogic.ds3client.Ds3Client;
 import com.spectralogic.ds3client.commands.BulkPutRequest;
-import com.spectralogic.ds3client.helpers.ChecksumFunction;
-import com.spectralogic.ds3client.helpers.ChecksumValue;
+import com.spectralogic.ds3client.helpers.ChecksumListener;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers;
 import com.spectralogic.ds3client.helpers.FileObjectGetter;
 import com.spectralogic.ds3client.helpers.options.WriteJobOptions;
 import com.spectralogic.ds3client.models.Checksum;
+import com.spectralogic.ds3client.models.bulk.BulkObject;
 import com.spectralogic.ds3client.models.bulk.Ds3Object;
 import com.spectralogic.ds3client.serializer.XmlProcessingException;
 import com.spectralogic.ds3client.utils.ByteArraySeekableByteChannel;
@@ -37,16 +37,13 @@ import org.junit.Test;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.ByteBuffer;
-import java.nio.channels.ByteChannel;
 import java.nio.channels.SeekableByteChannel;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.security.SignatureException;
 import java.util.List;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.instanceOf;
-import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
 
 public class DataIntegrity_Test {
@@ -164,16 +161,35 @@ public class DataIntegrity_Test {
 
             final Ds3ClientHelpers.Job job = helpers.startWriteJob(bucketName, objs, WriteJobOptions.create().withChecksumType(Checksum.Type.MD5));
 
-            job.checksumValue(new ChecksumValue() {
-                public void value(final Ds3Object obj, final String checksum) {
+            final SingleChecksumListener listener = new SingleChecksumListener();
 
-                }
-            }).transfer(new ResourceObjectPutter("books/"));
+            job.attachChecksumListener(listener);
+
+            job.transfer(new ResourceObjectPutter("books/"));
+
+            final String checksum = listener.getChecksum();
+
+            assertThat(checksum, is(notNullValue()));
 
         } finally {
             Util.deleteAllContents(client, bucketName);
         }
     }
+
+    private class SingleChecksumListener implements ChecksumListener {
+
+        public String getChecksum() {
+            return checksum;
+        }
+
+        private String checksum = null;
+
+        @Override
+        public void value(final BulkObject obj, final Checksum.Type type, final String checksum) {
+            this.checksum = checksum;
+        }
+    }
+
 
     public void sendAndVerifySingleFile(final String bucketName, final String fileName, final long seed, final int length) throws IOException, SignatureException, XmlProcessingException {
         try {
