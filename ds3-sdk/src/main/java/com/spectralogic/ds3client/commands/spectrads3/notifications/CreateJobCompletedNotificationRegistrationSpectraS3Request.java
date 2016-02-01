@@ -17,7 +17,6 @@
 package com.spectralogic.ds3client.commands.spectrads3.notifications;
 
 import com.spectralogic.ds3client.commands.notifications.AbstractCreateNotificationRequest;
-import java.lang.String;
 import com.spectralogic.ds3client.models.HttpResponseFormatType;
 import java.util.UUID;
 import com.spectralogic.ds3client.models.NamingConventionType;
@@ -28,15 +27,18 @@ public class CreateJobCompletedNotificationRegistrationSpectraS3Request extends 
     // Variables
     
     private HttpResponseFormatType format;
+
     private UUID jobId;
+
     private NamingConventionType namingConvention;
+
     private RequestType notificationHttpMethod;
 
     public CreateJobCompletedNotificationRegistrationSpectraS3Request(final String notificationEndPoint) {
         super(notificationEndPoint);
 
-        
-        this.getQueryParams().put("notification_end_point", notificationEndPoint);
+                this.getQueryParams().put("notification_end_point", notificationEndPoint);
+
     }
 
     public CreateJobCompletedNotificationRegistrationSpectraS3Request withFormat(final HttpResponseFormatType format) {
@@ -69,21 +71,24 @@ public class CreateJobCompletedNotificationRegistrationSpectraS3Request extends 
         return "/_rest_/job_completed_notification_registration";
     }
 
+    
     public HttpResponseFormatType getFormat() {
         return this.format;
     }
+
 
     public UUID getJobId() {
         return this.jobId;
     }
 
+
     public NamingConventionType getNamingConvention() {
         return this.namingConvention;
     }
 
+
     public RequestType getNotificationHttpMethod() {
         return this.notificationHttpMethod;
     }
-
 
 }

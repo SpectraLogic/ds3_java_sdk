@@ -23,12 +23,13 @@ public class GetStorageDomainFailureNotificationRegistrationSpectraS3Request ext
 
     // Variables
     
-
     // Constructor
+    
     public GetStorageDomainFailureNotificationRegistrationSpectraS3Request(final UUID notificationId) {
         super(notificationId);
 
-            }
+        
+    }
 
 
     @Override
@@ -36,5 +37,4 @@ public class GetStorageDomainFailureNotificationRegistrationSpectraS3Request ext
         return "/_rest_/storage_domain_failure_notification_registration/" + this.getNotificationId().toString();
     }
 
-    
-}
+    }

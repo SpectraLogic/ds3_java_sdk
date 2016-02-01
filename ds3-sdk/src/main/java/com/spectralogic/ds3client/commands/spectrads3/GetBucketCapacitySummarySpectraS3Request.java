@@ -16,8 +16,8 @@
 // This code is auto-generated, do not modify
 package com.spectralogic.ds3client.commands.spectrads3;
 
-import com.spectralogic.ds3client.commands.AbstractRequest;
 import com.spectralogic.ds3client.HttpVerb;
+import com.spectralogic.ds3client.commands.AbstractRequest;
 import java.util.UUID;
 import com.spectralogic.ds3client.models.PoolHealth;
 import com.spectralogic.ds3client.models.PoolState;
@@ -34,21 +34,24 @@ public class GetBucketCapacitySummarySpectraS3Request extends AbstractRequest {
     private final UUID storageDomainId;
 
     private PoolHealth poolHealth;
+
     private PoolState poolState;
+
     private PoolType poolType;
+
     private TapeState tapeState;
+
     private TapeType tapeType;
 
     // Constructor
+    
     public GetBucketCapacitySummarySpectraS3Request(final UUID bucketId, final UUID storageDomainId) {
         this.bucketId = bucketId;
         this.storageDomainId = storageDomainId;
-        
-        this.getQueryParams().put("bucket_id", bucketId.toString());
-
+                this.getQueryParams().put("bucket_id", bucketId.toString());
         this.getQueryParams().put("storage_domain_id", storageDomainId.toString());
-
     }
+
     public GetBucketCapacitySummarySpectraS3Request withPoolHealth(final PoolHealth poolHealth) {
         this.poolHealth = poolHealth;
         this.updateQueryParam("pool_health", poolHealth.toString());
@@ -104,17 +107,21 @@ public class GetBucketCapacitySummarySpectraS3Request extends AbstractRequest {
         return this.poolHealth;
     }
 
+
     public PoolState getPoolState() {
         return this.poolState;
     }
+
 
     public PoolType getPoolType() {
         return this.poolType;
     }
 
+
     public TapeState getTapeState() {
         return this.tapeState;
     }
+
 
     public TapeType getTapeType() {
         return this.tapeType;

@@ -16,10 +16,9 @@
 // This code is auto-generated, do not modify
 package com.spectralogic.ds3client.commands.spectrads3;
 
-import com.spectralogic.ds3client.commands.AbstractRequest;
 import com.spectralogic.ds3client.HttpVerb;
+import com.spectralogic.ds3client.commands.AbstractRequest;
 import java.util.UUID;
-import java.lang.String;
 import com.spectralogic.ds3client.models.S3ObjectType;
 
 public class GetObjectsSpectraS3Request extends AbstractRequest {
@@ -27,21 +26,32 @@ public class GetObjectsSpectraS3Request extends AbstractRequest {
     // Variables
     
     private UUID bucketId;
+
     private String folder;
+
     private boolean includePhysicalPlacement;
+
     private boolean lastPage;
+
     private boolean latest;
+
     private String name;
+
     private int pageLength;
+
     private int pageOffset;
+
     private UUID pageStartMarker;
+
     private S3ObjectType type;
+
     private long version;
 
     // Constructor
+    
     public GetObjectsSpectraS3Request() {
-        
-    }
+            }
+
     public GetObjectsSpectraS3Request withBucketId(final UUID bucketId) {
         this.bucketId = bucketId;
         this.updateQueryParam("bucket_id", bucketId.toString());
@@ -131,41 +141,51 @@ public class GetObjectsSpectraS3Request extends AbstractRequest {
         return this.bucketId;
     }
 
+
     public String getFolder() {
         return this.folder;
     }
+
 
     public boolean getIncludePhysicalPlacement() {
         return this.includePhysicalPlacement;
     }
 
+
     public boolean getLastPage() {
         return this.lastPage;
     }
+
 
     public boolean getLatest() {
         return this.latest;
     }
 
+
     public String getName() {
         return this.name;
     }
+
 
     public int getPageLength() {
         return this.pageLength;
     }
 
+
     public int getPageOffset() {
         return this.pageOffset;
     }
+
 
     public UUID getPageStartMarker() {
         return this.pageStartMarker;
     }
 
+
     public S3ObjectType getType() {
         return this.type;
     }
+
 
     public long getVersion() {
         return this.version;

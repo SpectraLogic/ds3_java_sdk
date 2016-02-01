@@ -29,16 +29,15 @@ public class AbortMultiPartUploadRequest extends AbstractRequest {
 
     private final UUID uploadId;
 
-
     // Constructor
+    
     public AbortMultiPartUploadRequest(final String bucketName, final String objectName, final UUID uploadId) {
         this.bucketName = bucketName;
         this.objectName = objectName;
         this.uploadId = uploadId;
-        
-        this.getQueryParams().put("upload_id", uploadId.toString());
-
+                this.getQueryParams().put("upload_id", uploadId.toString());
     }
+
 
     @Override
     public HttpVerb getVerb() {
@@ -63,6 +62,5 @@ public class AbortMultiPartUploadRequest extends AbstractRequest {
     public UUID getUploadId() {
         return this.uploadId;
     }
-
 
 }

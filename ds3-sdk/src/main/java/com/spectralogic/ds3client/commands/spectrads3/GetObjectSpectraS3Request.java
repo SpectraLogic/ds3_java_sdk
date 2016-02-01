@@ -16,7 +16,6 @@
 // This code is auto-generated, do not modify
 package com.spectralogic.ds3client.commands.spectrads3;
 
-import com.spectralogic.ds3client.commands.AbstractRequest;
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableCollection;
 import com.google.common.collect.ImmutableList;
@@ -25,6 +24,7 @@ import com.spectralogic.ds3client.models.Range;
 import org.apache.http.entity.ContentType;
 import java.nio.channels.WritableByteChannel;
 import java.util.Collection;
+import com.spectralogic.ds3client.commands.AbstractRequest;
 import java.util.UUID;
 import com.spectralogic.ds3client.models.ChecksumType;
 public class GetObjectSpectraS3Request extends AbstractRequest {
@@ -33,22 +33,22 @@ public class GetObjectSpectraS3Request extends AbstractRequest {
     
     private final String objectName;
 
-    private final UUID bucketId;
-
     private final WritableByteChannel channel;
+
+    private final UUID bucketId;
     private ImmutableCollection<Range> byteRanges = null;
     private ChecksumType checksum = ChecksumType.none();
     private ChecksumType.Type checksumType = ChecksumType.Type.NONE;
 
     // Constructor
-
-
     public GetObjectSpectraS3Request(final String objectName, final UUID bucketId, final WritableByteChannel channel) {
         this.objectName = objectName;
-        this.bucketId = bucketId;
         this.channel = channel;
+        this.bucketId = bucketId;
+                this.getQueryParams().put("bucket_id", bucketId.toString());
 
     }
+
 
 
     /**
@@ -131,19 +131,19 @@ public class GetObjectSpectraS3Request extends AbstractRequest {
     }
 
 
+    public WritableByteChannel getChannel() {
+        return this.channel;
+    }
+
+
     public UUID getBucketId() {
         return this.bucketId;
     }
-
 
 
     public Collection<Range> getByteRanges() {
         return this.byteRanges;
     }
 
-
-    public WritableByteChannel getChannel() {
-        return this.channel;
-    }
 
 }

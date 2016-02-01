@@ -16,8 +16,8 @@
 // This code is auto-generated, do not modify
 package com.spectralogic.ds3client.commands.spectrads3;
 
-import com.spectralogic.ds3client.commands.AbstractRequest;
 import com.spectralogic.ds3client.HttpVerb;
+import com.spectralogic.ds3client.commands.AbstractRequest;
 import java.util.UUID;
 
 public class DeleteFolderRecursivelySpectraS3Request extends AbstractRequest {
@@ -31,15 +31,14 @@ public class DeleteFolderRecursivelySpectraS3Request extends AbstractRequest {
     private boolean rollBack;
 
     // Constructor
+    
     public DeleteFolderRecursivelySpectraS3Request(final UUID bucketId, final String folder) {
         this.folder = folder;
         this.bucketId = bucketId;
-        
-        this.getQueryParams().put("bucket_id", bucketId.toString());
-
+                this.getQueryParams().put("bucket_id", bucketId.toString());
         this.getQueryParams().put("recursive", null);
-
     }
+
     public DeleteFolderRecursivelySpectraS3Request withRollBack(final boolean rollBack) {
         this.rollBack = rollBack;
         if (this.rollBack) {

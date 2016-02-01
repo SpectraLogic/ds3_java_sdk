@@ -23,12 +23,13 @@ public class GetJobCompletedNotificationRegistrationSpectraS3Request extends Abs
 
     // Variables
     
-
     // Constructor
+    
     public GetJobCompletedNotificationRegistrationSpectraS3Request(final UUID notificationId) {
         super(notificationId);
 
-            }
+        
+    }
 
 
     @Override
@@ -36,5 +37,4 @@ public class GetJobCompletedNotificationRegistrationSpectraS3Request extends Abs
         return "/_rest_/job_completed_notification_registration/" + this.getNotificationId().toString();
     }
 
-    
-}
+    }

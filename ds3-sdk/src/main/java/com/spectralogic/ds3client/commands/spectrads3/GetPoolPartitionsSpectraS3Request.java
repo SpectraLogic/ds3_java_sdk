@@ -16,9 +16,8 @@
 // This code is auto-generated, do not modify
 package com.spectralogic.ds3client.commands.spectrads3;
 
-import com.spectralogic.ds3client.commands.AbstractRequest;
 import com.spectralogic.ds3client.HttpVerb;
-import java.lang.String;
+import com.spectralogic.ds3client.commands.AbstractRequest;
 import java.util.UUID;
 import com.spectralogic.ds3client.models.PoolType;
 
@@ -27,16 +26,22 @@ public class GetPoolPartitionsSpectraS3Request extends AbstractRequest {
     // Variables
     
     private boolean lastPage;
+
     private String name;
+
     private int pageLength;
+
     private int pageOffset;
+
     private UUID pageStartMarker;
+
     private PoolType type;
 
     // Constructor
+    
     public GetPoolPartitionsSpectraS3Request() {
-        
-    }
+            }
+
     public GetPoolPartitionsSpectraS3Request withLastPage(final boolean lastPage) {
         this.lastPage = lastPage;
         if (this.lastPage) {
@@ -92,21 +97,26 @@ public class GetPoolPartitionsSpectraS3Request extends AbstractRequest {
         return this.lastPage;
     }
 
+
     public String getName() {
         return this.name;
     }
+
 
     public int getPageLength() {
         return this.pageLength;
     }
 
+
     public int getPageOffset() {
         return this.pageOffset;
     }
 
+
     public UUID getPageStartMarker() {
         return this.pageStartMarker;
     }
+
 
     public PoolType getType() {
         return this.type;

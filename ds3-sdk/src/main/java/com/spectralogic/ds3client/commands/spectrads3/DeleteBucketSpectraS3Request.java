@@ -16,8 +16,8 @@
 // This code is auto-generated, do not modify
 package com.spectralogic.ds3client.commands.spectrads3;
 
-import com.spectralogic.ds3client.commands.AbstractRequest;
 import com.spectralogic.ds3client.HttpVerb;
+import com.spectralogic.ds3client.commands.AbstractRequest;
 
 public class DeleteBucketSpectraS3Request extends AbstractRequest {
 
@@ -28,10 +28,11 @@ public class DeleteBucketSpectraS3Request extends AbstractRequest {
     private boolean force;
 
     // Constructor
+    
     public DeleteBucketSpectraS3Request(final String bucketName) {
         this.bucketName = bucketName;
-        
-    }
+            }
+
     public DeleteBucketSpectraS3Request withForce(final boolean force) {
         this.force = force;
         if (this.force) {

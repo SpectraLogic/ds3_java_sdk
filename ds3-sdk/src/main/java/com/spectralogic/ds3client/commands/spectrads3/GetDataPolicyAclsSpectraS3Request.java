@@ -16,8 +16,8 @@
 // This code is auto-generated, do not modify
 package com.spectralogic.ds3client.commands.spectrads3;
 
-import com.spectralogic.ds3client.commands.AbstractRequest;
 import com.spectralogic.ds3client.HttpVerb;
+import com.spectralogic.ds3client.commands.AbstractRequest;
 import java.util.UUID;
 
 public class GetDataPolicyAclsSpectraS3Request extends AbstractRequest {
@@ -25,17 +25,24 @@ public class GetDataPolicyAclsSpectraS3Request extends AbstractRequest {
     // Variables
     
     private UUID dataPolicyId;
+
     private UUID groupId;
+
     private boolean lastPage;
+
     private int pageLength;
+
     private int pageOffset;
+
     private UUID pageStartMarker;
+
     private UUID userId;
 
     // Constructor
+    
     public GetDataPolicyAclsSpectraS3Request() {
-        
-    }
+            }
+
     public GetDataPolicyAclsSpectraS3Request withDataPolicyId(final UUID dataPolicyId) {
         this.dataPolicyId = dataPolicyId;
         this.updateQueryParam("data_policy_id", dataPolicyId.toString());
@@ -97,25 +104,31 @@ public class GetDataPolicyAclsSpectraS3Request extends AbstractRequest {
         return this.dataPolicyId;
     }
 
+
     public UUID getGroupId() {
         return this.groupId;
     }
+
 
     public boolean getLastPage() {
         return this.lastPage;
     }
 
+
     public int getPageLength() {
         return this.pageLength;
     }
+
 
     public int getPageOffset() {
         return this.pageOffset;
     }
 
+
     public UUID getPageStartMarker() {
         return this.pageStartMarker;
     }
+
 
     public UUID getUserId() {
         return this.userId;

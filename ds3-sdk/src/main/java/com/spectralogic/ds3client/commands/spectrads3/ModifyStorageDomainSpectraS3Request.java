@@ -16,9 +16,8 @@
 // This code is auto-generated, do not modify
 package com.spectralogic.ds3client.commands.spectrads3;
 
-import com.spectralogic.ds3client.commands.AbstractRequest;
 import com.spectralogic.ds3client.HttpVerb;
-import java.lang.String;
+import com.spectralogic.ds3client.commands.AbstractRequest;
 import com.spectralogic.ds3client.models.LtfsFileNamingMode;
 import com.spectralogic.ds3client.models.BlobStoreTaskPriority;
 import com.spectralogic.ds3client.models.WriteOptimization;
@@ -30,22 +29,33 @@ public class ModifyStorageDomainSpectraS3Request extends AbstractRequest {
     private final String storageDomain;
 
     private String autoEjectUponCron;
+
     private boolean autoEjectUponJobCancellation;
+
     private boolean autoEjectUponJobCompletion;
+
     private boolean autoEjectUponMediaFull;
+
     private LtfsFileNamingMode ltfsFileNaming;
+
     private int maxTapeFragmentationPercent;
+
     private int maximumAutoVerificationFrequencyInDays;
+
     private boolean mediaEjectionAllowed;
+
     private String name;
+
     private BlobStoreTaskPriority verifyPriorToAutoEject;
+
     private WriteOptimization writeOptimization;
 
     // Constructor
+    
     public ModifyStorageDomainSpectraS3Request(final String storageDomain) {
         this.storageDomain = storageDomain;
-        
-    }
+            }
+
     public ModifyStorageDomainSpectraS3Request withAutoEjectUponCron(final String autoEjectUponCron) {
         this.autoEjectUponCron = autoEjectUponCron;
         this.updateQueryParam("auto_eject_upon_cron", autoEjectUponCron);
@@ -132,41 +142,51 @@ public class ModifyStorageDomainSpectraS3Request extends AbstractRequest {
         return this.autoEjectUponCron;
     }
 
+
     public boolean getAutoEjectUponJobCancellation() {
         return this.autoEjectUponJobCancellation;
     }
+
 
     public boolean getAutoEjectUponJobCompletion() {
         return this.autoEjectUponJobCompletion;
     }
 
+
     public boolean getAutoEjectUponMediaFull() {
         return this.autoEjectUponMediaFull;
     }
+
 
     public LtfsFileNamingMode getLtfsFileNaming() {
         return this.ltfsFileNaming;
     }
 
+
     public int getMaxTapeFragmentationPercent() {
         return this.maxTapeFragmentationPercent;
     }
+
 
     public int getMaximumAutoVerificationFrequencyInDays() {
         return this.maximumAutoVerificationFrequencyInDays;
     }
 
+
     public boolean getMediaEjectionAllowed() {
         return this.mediaEjectionAllowed;
     }
+
 
     public String getName() {
         return this.name;
     }
 
+
     public BlobStoreTaskPriority getVerifyPriorToAutoEject() {
         return this.verifyPriorToAutoEject;
     }
+
 
     public WriteOptimization getWriteOptimization() {
         return this.writeOptimization;

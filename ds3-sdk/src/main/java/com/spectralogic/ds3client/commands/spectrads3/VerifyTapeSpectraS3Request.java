@@ -16,8 +16,8 @@
 // This code is auto-generated, do not modify
 package com.spectralogic.ds3client.commands.spectrads3;
 
-import com.spectralogic.ds3client.commands.AbstractRequest;
 import com.spectralogic.ds3client.HttpVerb;
+import com.spectralogic.ds3client.commands.AbstractRequest;
 import com.spectralogic.ds3client.models.BlobStoreTaskPriority;
 import java.util.UUID;
 
@@ -30,11 +30,13 @@ public class VerifyTapeSpectraS3Request extends AbstractRequest {
     private BlobStoreTaskPriority taskPriority;
 
     // Constructor
+    
     public VerifyTapeSpectraS3Request(final UUID tapeId) {
         this.tapeId = tapeId;
-        this.getQueryParams().put("operation", "verify");
         
+        this.getQueryParams().put("operation", "verify");
     }
+
     public VerifyTapeSpectraS3Request withTaskPriority(final BlobStoreTaskPriority taskPriority) {
         this.taskPriority = taskPriority;
         this.updateQueryParam("task_priority", taskPriority.toString());

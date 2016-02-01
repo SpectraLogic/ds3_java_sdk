@@ -16,18 +16,18 @@
 // This code is auto-generated, do not modify
 package com.spectralogic.ds3client.commands.spectrads3;
 
-import com.spectralogic.ds3client.commands.AbstractRequest;
 import com.spectralogic.ds3client.HttpVerb;
+import com.spectralogic.ds3client.commands.AbstractRequest;
 
 public class ForceTapeEnvironmentRefreshSpectraS3Request extends AbstractRequest {
 
     // Variables
     
-
     // Constructor
+    
     public ForceTapeEnvironmentRefreshSpectraS3Request() {
-        
-    }
+            }
+
 
     @Override
     public HttpVerb getVerb() {
@@ -38,5 +38,4 @@ public class ForceTapeEnvironmentRefreshSpectraS3Request extends AbstractRequest
     public String getPath() {
         return "/_rest_/tape_environment";
     }
-    
-}
+    }

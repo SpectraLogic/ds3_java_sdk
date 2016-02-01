@@ -16,9 +16,8 @@
 // This code is auto-generated, do not modify
 package com.spectralogic.ds3client.commands.spectrads3;
 
-import com.spectralogic.ds3client.commands.AbstractRequest;
 import com.spectralogic.ds3client.HttpVerb;
-import java.lang.String;
+import com.spectralogic.ds3client.commands.AbstractRequest;
 
 public class ModifyGroupSpectraS3Request extends AbstractRequest {
 
@@ -29,10 +28,11 @@ public class ModifyGroupSpectraS3Request extends AbstractRequest {
     private String name;
 
     // Constructor
+    
     public ModifyGroupSpectraS3Request(final String group) {
         this.group = group;
-        
-    }
+            }
+
     public ModifyGroupSpectraS3Request withName(final String name) {
         this.name = name;
         this.updateQueryParam("name", name);

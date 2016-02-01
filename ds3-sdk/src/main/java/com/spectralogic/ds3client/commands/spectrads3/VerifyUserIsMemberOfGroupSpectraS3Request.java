@@ -16,8 +16,8 @@
 // This code is auto-generated, do not modify
 package com.spectralogic.ds3client.commands.spectrads3;
 
-import com.spectralogic.ds3client.commands.AbstractRequest;
 import com.spectralogic.ds3client.HttpVerb;
+import com.spectralogic.ds3client.commands.AbstractRequest;
 import java.util.UUID;
 
 public class VerifyUserIsMemberOfGroupSpectraS3Request extends AbstractRequest {
@@ -29,11 +29,13 @@ public class VerifyUserIsMemberOfGroupSpectraS3Request extends AbstractRequest {
     private UUID userId;
 
     // Constructor
+    
     public VerifyUserIsMemberOfGroupSpectraS3Request(final String group) {
         this.group = group;
-        this.getQueryParams().put("operation", "verify");
         
+        this.getQueryParams().put("operation", "verify");
     }
+
     public VerifyUserIsMemberOfGroupSpectraS3Request withUserId(final UUID userId) {
         this.userId = userId;
         this.updateQueryParam("user_id", userId.toString());

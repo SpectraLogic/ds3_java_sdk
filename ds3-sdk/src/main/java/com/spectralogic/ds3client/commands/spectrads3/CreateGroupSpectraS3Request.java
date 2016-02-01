@@ -16,9 +16,8 @@
 // This code is auto-generated, do not modify
 package com.spectralogic.ds3client.commands.spectrads3;
 
-import com.spectralogic.ds3client.commands.AbstractRequest;
 import com.spectralogic.ds3client.HttpVerb;
-import java.lang.String;
+import com.spectralogic.ds3client.commands.AbstractRequest;
 
 public class CreateGroupSpectraS3Request extends AbstractRequest {
 
@@ -26,14 +25,13 @@ public class CreateGroupSpectraS3Request extends AbstractRequest {
     
     private final String name;
 
-
     // Constructor
+    
     public CreateGroupSpectraS3Request(final String name) {
         this.name = name;
-        
-        this.getQueryParams().put("name", name);
-
+                this.getQueryParams().put("name", name);
     }
+
 
     @Override
     public HttpVerb getVerb() {
@@ -48,6 +46,5 @@ public class CreateGroupSpectraS3Request extends AbstractRequest {
     public String getName() {
         return this.name;
     }
-
 
 }

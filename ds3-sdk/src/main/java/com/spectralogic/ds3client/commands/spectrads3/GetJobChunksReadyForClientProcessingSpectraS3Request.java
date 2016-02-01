@@ -16,8 +16,8 @@
 // This code is auto-generated, do not modify
 package com.spectralogic.ds3client.commands.spectrads3;
 
-import com.spectralogic.ds3client.commands.AbstractRequest;
 import com.spectralogic.ds3client.HttpVerb;
+import com.spectralogic.ds3client.commands.AbstractRequest;
 import java.util.UUID;
 
 public class GetJobChunksReadyForClientProcessingSpectraS3Request extends AbstractRequest {
@@ -29,12 +29,12 @@ public class GetJobChunksReadyForClientProcessingSpectraS3Request extends Abstra
     private int preferredNumberOfChunks;
 
     // Constructor
+    
     public GetJobChunksReadyForClientProcessingSpectraS3Request(final UUID job) {
         this.job = job;
-        
-        this.getQueryParams().put("job", job.toString());
-
+                this.getQueryParams().put("job", job.toString());
     }
+
     public GetJobChunksReadyForClientProcessingSpectraS3Request withPreferredNumberOfChunks(final int preferredNumberOfChunks) {
         this.preferredNumberOfChunks = preferredNumberOfChunks;
         this.updateQueryParam("preferred_number_of_chunks", Integer.toString(preferredNumberOfChunks));

@@ -16,13 +16,12 @@
 // This code is auto-generated, do not modify
 package com.spectralogic.ds3client.commands.spectrads3;
 
-import com.spectralogic.ds3client.commands.BulkRequest;
 import java.util.List;
 import com.spectralogic.ds3client.BulkCommand;
 import com.spectralogic.ds3client.models.bulk.Ds3Object;
 import com.spectralogic.ds3client.serializer.XmlProcessingException;
+import com.spectralogic.ds3client.commands.BulkRequest;
 import com.spectralogic.ds3client.models.JobChunkClientProcessingOrderGuarantee;
-import java.lang.String;
 import com.spectralogic.ds3client.models.BlobStoreTaskPriority;
 
 public class CreateGetJobSpectraS3Request extends BulkRequest {
@@ -30,15 +29,16 @@ public class CreateGetJobSpectraS3Request extends BulkRequest {
 
     
     private boolean aggregating;
+
     private JobChunkClientProcessingOrderGuarantee chunkClientProcessingOrderGuarantee;
+
     private String name;
-    
 
     // Constructor
     public CreateGetJobSpectraS3Request(final String bucketName, final List<Ds3Object> objects) throws XmlProcessingException {
         super(bucketName, objects);
-        this.getQueryParams().put("operation", "start_bulk_get");
         
+        this.getQueryParams().put("operation", "start_bulk_get");
     }
 
     public CreateGetJobSpectraS3Request withAggregating(final boolean aggregating) {
@@ -66,18 +66,21 @@ public class CreateGetJobSpectraS3Request extends BulkRequest {
     }
 
 
-
+    
     public boolean getAggregating() {
         return this.aggregating;
     }
+
 
     public JobChunkClientProcessingOrderGuarantee getChunkClientProcessingOrderGuarantee() {
         return this.chunkClientProcessingOrderGuarantee;
     }
 
+
     public String getName() {
         return this.name;
     }
+
 
     @Override
     public BulkCommand getCommand() {

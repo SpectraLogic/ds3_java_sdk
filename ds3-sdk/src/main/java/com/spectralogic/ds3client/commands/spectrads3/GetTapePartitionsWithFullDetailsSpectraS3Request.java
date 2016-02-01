@@ -16,11 +16,10 @@
 // This code is auto-generated, do not modify
 package com.spectralogic.ds3client.commands.spectrads3;
 
-import com.spectralogic.ds3client.commands.AbstractRequest;
 import com.spectralogic.ds3client.HttpVerb;
+import com.spectralogic.ds3client.commands.AbstractRequest;
 import com.spectralogic.ds3client.models.ImportExportConfiguration;
 import java.util.UUID;
-import java.lang.String;
 import com.spectralogic.ds3client.models.Quiesced;
 import com.spectralogic.ds3client.models.TapePartitionState;
 
@@ -29,22 +28,31 @@ public class GetTapePartitionsWithFullDetailsSpectraS3Request extends AbstractRe
     // Variables
     
     private ImportExportConfiguration importExportConfiguration;
+
     private boolean lastPage;
+
     private UUID libraryId;
+
     private String name;
+
     private int pageLength;
+
     private int pageOffset;
+
     private UUID pageStartMarker;
+
     private Quiesced quiesced;
+
     private String serialNumber;
+
     private TapePartitionState state;
 
     // Constructor
+    
     public GetTapePartitionsWithFullDetailsSpectraS3Request() {
-        
-        this.getQueryParams().put("full_details", null);
-
+                this.getQueryParams().put("full_details", null);
     }
+
     public GetTapePartitionsWithFullDetailsSpectraS3Request withImportExportConfiguration(final ImportExportConfiguration importExportConfiguration) {
         this.importExportConfiguration = importExportConfiguration;
         this.updateQueryParam("import_export_configuration", importExportConfiguration.toString());
@@ -124,37 +132,46 @@ public class GetTapePartitionsWithFullDetailsSpectraS3Request extends AbstractRe
         return this.importExportConfiguration;
     }
 
+
     public boolean getLastPage() {
         return this.lastPage;
     }
+
 
     public UUID getLibraryId() {
         return this.libraryId;
     }
 
+
     public String getName() {
         return this.name;
     }
+
 
     public int getPageLength() {
         return this.pageLength;
     }
 
+
     public int getPageOffset() {
         return this.pageOffset;
     }
+
 
     public UUID getPageStartMarker() {
         return this.pageStartMarker;
     }
 
+
     public Quiesced getQuiesced() {
         return this.quiesced;
     }
 
+
     public String getSerialNumber() {
         return this.serialNumber;
     }
+
 
     public TapePartitionState getState() {
         return this.state;

@@ -16,8 +16,8 @@
 // This code is auto-generated, do not modify
 package com.spectralogic.ds3client.commands.spectrads3;
 
-import com.spectralogic.ds3client.commands.AbstractRequest;
 import com.spectralogic.ds3client.HttpVerb;
+import com.spectralogic.ds3client.commands.AbstractRequest;
 import java.util.UUID;
 
 public class GetNodesSpectraS3Request extends AbstractRequest {
@@ -25,14 +25,18 @@ public class GetNodesSpectraS3Request extends AbstractRequest {
     // Variables
     
     private boolean lastPage;
+
     private int pageLength;
+
     private int pageOffset;
+
     private UUID pageStartMarker;
 
     // Constructor
+    
     public GetNodesSpectraS3Request() {
-        
-    }
+            }
+
     public GetNodesSpectraS3Request withLastPage(final boolean lastPage) {
         this.lastPage = lastPage;
         if (this.lastPage) {
@@ -76,13 +80,16 @@ public class GetNodesSpectraS3Request extends AbstractRequest {
         return this.lastPage;
     }
 
+
     public int getPageLength() {
         return this.pageLength;
     }
 
+
     public int getPageOffset() {
         return this.pageOffset;
     }
+
 
     public UUID getPageStartMarker() {
         return this.pageStartMarker;

@@ -16,8 +16,8 @@
 // This code is auto-generated, do not modify
 package com.spectralogic.ds3client.commands.spectrads3;
 
-import com.spectralogic.ds3client.commands.AbstractRequest;
 import com.spectralogic.ds3client.HttpVerb;
+import com.spectralogic.ds3client.commands.AbstractRequest;
 import java.util.UUID;
 
 public class GetTapeDriveSpectraS3Request extends AbstractRequest {
@@ -26,12 +26,12 @@ public class GetTapeDriveSpectraS3Request extends AbstractRequest {
     
     private final UUID tapeDriveId;
 
-
     // Constructor
+    
     public GetTapeDriveSpectraS3Request(final UUID tapeDriveId) {
         this.tapeDriveId = tapeDriveId;
-        
-    }
+            }
+
 
     @Override
     public HttpVerb getVerb() {
@@ -46,6 +46,5 @@ public class GetTapeDriveSpectraS3Request extends AbstractRequest {
     public UUID getTapeDriveId() {
         return this.tapeDriveId;
     }
-
 
 }

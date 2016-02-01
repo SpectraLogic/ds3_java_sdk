@@ -16,8 +16,8 @@
 // This code is auto-generated, do not modify
 package com.spectralogic.ds3client.commands.spectrads3;
 
-import com.spectralogic.ds3client.commands.AbstractRequest;
 import com.spectralogic.ds3client.HttpVerb;
+import com.spectralogic.ds3client.commands.AbstractRequest;
 import java.util.UUID;
 
 public class CreateGlobalDataPolicyAclForUserSpectraS3Request extends AbstractRequest {
@@ -26,14 +26,13 @@ public class CreateGlobalDataPolicyAclForUserSpectraS3Request extends AbstractRe
     
     private final UUID userId;
 
-
     // Constructor
+    
     public CreateGlobalDataPolicyAclForUserSpectraS3Request(final UUID userId) {
         this.userId = userId;
-        
-        this.getQueryParams().put("user_id", userId.toString());
-
+                this.getQueryParams().put("user_id", userId.toString());
     }
+
 
     @Override
     public HttpVerb getVerb() {
@@ -48,6 +47,5 @@ public class CreateGlobalDataPolicyAclForUserSpectraS3Request extends AbstractRe
     public UUID getUserId() {
         return this.userId;
     }
-
 
 }

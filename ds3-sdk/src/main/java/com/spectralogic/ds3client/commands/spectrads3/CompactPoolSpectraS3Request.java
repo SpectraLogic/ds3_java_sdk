@@ -16,8 +16,8 @@
 // This code is auto-generated, do not modify
 package com.spectralogic.ds3client.commands.spectrads3;
 
-import com.spectralogic.ds3client.commands.AbstractRequest;
 import com.spectralogic.ds3client.HttpVerb;
+import com.spectralogic.ds3client.commands.AbstractRequest;
 import com.spectralogic.ds3client.models.BlobStoreTaskPriority;
 
 public class CompactPoolSpectraS3Request extends AbstractRequest {
@@ -29,11 +29,13 @@ public class CompactPoolSpectraS3Request extends AbstractRequest {
     private BlobStoreTaskPriority priority;
 
     // Constructor
+    
     public CompactPoolSpectraS3Request(final String pool) {
         this.pool = pool;
-        this.getQueryParams().put("operation", "compact");
         
+        this.getQueryParams().put("operation", "compact");
     }
+
     public CompactPoolSpectraS3Request withPriority(final BlobStoreTaskPriority priority) {
         this.priority = priority;
         this.updateQueryParam("priority", priority.toString());

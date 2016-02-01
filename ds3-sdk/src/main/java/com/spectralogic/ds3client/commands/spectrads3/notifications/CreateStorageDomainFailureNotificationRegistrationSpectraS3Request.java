@@ -17,7 +17,6 @@
 package com.spectralogic.ds3client.commands.spectrads3.notifications;
 
 import com.spectralogic.ds3client.commands.notifications.AbstractCreateNotificationRequest;
-import java.lang.String;
 import com.spectralogic.ds3client.models.HttpResponseFormatType;
 import com.spectralogic.ds3client.models.NamingConventionType;
 import com.spectralogic.ds3client.models.RequestType;
@@ -27,14 +26,16 @@ public class CreateStorageDomainFailureNotificationRegistrationSpectraS3Request 
     // Variables
     
     private HttpResponseFormatType format;
+
     private NamingConventionType namingConvention;
+
     private RequestType notificationHttpMethod;
 
     public CreateStorageDomainFailureNotificationRegistrationSpectraS3Request(final String notificationEndPoint) {
         super(notificationEndPoint);
 
-        
-        this.getQueryParams().put("notification_end_point", notificationEndPoint);
+                this.getQueryParams().put("notification_end_point", notificationEndPoint);
+
     }
 
     public CreateStorageDomainFailureNotificationRegistrationSpectraS3Request withFormat(final HttpResponseFormatType format) {
@@ -61,17 +62,19 @@ public class CreateStorageDomainFailureNotificationRegistrationSpectraS3Request 
         return "/_rest_/storage_domain_failure_notification_registration";
     }
 
+    
     public HttpResponseFormatType getFormat() {
         return this.format;
     }
+
 
     public NamingConventionType getNamingConvention() {
         return this.namingConvention;
     }
 
+
     public RequestType getNotificationHttpMethod() {
         return this.notificationHttpMethod;
     }
-
 
 }

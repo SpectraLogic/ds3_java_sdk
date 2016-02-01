@@ -16,8 +16,8 @@
 // This code is auto-generated, do not modify
 package com.spectralogic.ds3client.commands.spectrads3;
 
-import com.spectralogic.ds3client.commands.AbstractRequest;
 import com.spectralogic.ds3client.HttpVerb;
+import com.spectralogic.ds3client.commands.AbstractRequest;
 
 public class GetTapeDensityDirectiveSpectraS3Request extends AbstractRequest {
 
@@ -25,12 +25,12 @@ public class GetTapeDensityDirectiveSpectraS3Request extends AbstractRequest {
     
     private final String tapeDensityDirective;
 
-
     // Constructor
+    
     public GetTapeDensityDirectiveSpectraS3Request(final String tapeDensityDirective) {
         this.tapeDensityDirective = tapeDensityDirective;
-        
-    }
+            }
+
 
     @Override
     public HttpVerb getVerb() {
@@ -45,6 +45,5 @@ public class GetTapeDensityDirectiveSpectraS3Request extends AbstractRequest {
     public String getTapeDensityDirective() {
         return this.tapeDensityDirective;
     }
-
 
 }

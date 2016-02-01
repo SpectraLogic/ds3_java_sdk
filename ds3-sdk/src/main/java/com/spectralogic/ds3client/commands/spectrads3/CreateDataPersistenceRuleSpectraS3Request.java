@@ -16,8 +16,8 @@
 // This code is auto-generated, do not modify
 package com.spectralogic.ds3client.commands.spectrads3;
 
-import com.spectralogic.ds3client.commands.AbstractRequest;
 import com.spectralogic.ds3client.HttpVerb;
+import com.spectralogic.ds3client.commands.AbstractRequest;
 import java.util.UUID;
 import com.spectralogic.ds3client.models.DataIsolationLevel;
 import com.spectralogic.ds3client.models.DataPersistenceRuleType;
@@ -38,21 +38,18 @@ public class CreateDataPersistenceRuleSpectraS3Request extends AbstractRequest {
     private int minimumDaysToRetain;
 
     // Constructor
+    
     public CreateDataPersistenceRuleSpectraS3Request(final UUID dataPolicyId, final DataIsolationLevel isolationLevel, final UUID storageDomainId, final DataPersistenceRuleType type) {
         this.dataPolicyId = dataPolicyId;
         this.isolationLevel = isolationLevel;
         this.storageDomainId = storageDomainId;
         this.type = type;
-        
-        this.getQueryParams().put("data_policy_id", dataPolicyId.toString());
-
+                this.getQueryParams().put("data_policy_id", dataPolicyId.toString());
         this.getQueryParams().put("isolation_level", isolationLevel.toString());
-
         this.getQueryParams().put("storage_domain_id", storageDomainId.toString());
-
         this.getQueryParams().put("type", type.toString());
-
     }
+
     public CreateDataPersistenceRuleSpectraS3Request withMinimumDaysToRetain(final int minimumDaysToRetain) {
         this.minimumDaysToRetain = minimumDaysToRetain;
         this.updateQueryParam("minimum_days_to_retain", Integer.toString(minimumDaysToRetain));

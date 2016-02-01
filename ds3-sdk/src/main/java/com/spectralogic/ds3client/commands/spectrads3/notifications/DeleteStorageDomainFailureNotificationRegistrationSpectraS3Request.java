@@ -23,12 +23,13 @@ public class DeleteStorageDomainFailureNotificationRegistrationSpectraS3Request 
 
     //Variables
     
-
     //Constructor
+    
     public DeleteStorageDomainFailureNotificationRegistrationSpectraS3Request(final UUID notificationId) {
         super(notificationId);
 
-            }
+        
+    }
 
     @Override
     public String getPath() {

@@ -16,8 +16,8 @@
 // This code is auto-generated, do not modify
 package com.spectralogic.ds3client.commands.spectrads3;
 
-import com.spectralogic.ds3client.commands.AbstractRequest;
 import com.spectralogic.ds3client.HttpVerb;
+import com.spectralogic.ds3client.commands.AbstractRequest;
 
 public class GetBucketSpectraS3Request extends AbstractRequest {
 
@@ -25,12 +25,12 @@ public class GetBucketSpectraS3Request extends AbstractRequest {
     
     private final String bucketName;
 
-
     // Constructor
+    
     public GetBucketSpectraS3Request(final String bucketName) {
         this.bucketName = bucketName;
-        
-    }
+            }
+
 
     @Override
     public HttpVerb getVerb() {
@@ -45,6 +45,5 @@ public class GetBucketSpectraS3Request extends AbstractRequest {
     public String getBucketName() {
         return this.bucketName;
     }
-
 
 }

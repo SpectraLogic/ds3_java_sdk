@@ -16,8 +16,8 @@
 // This code is auto-generated, do not modify
 package com.spectralogic.ds3client.commands.spectrads3;
 
-import com.spectralogic.ds3client.commands.AbstractRequest;
 import com.spectralogic.ds3client.HttpVerb;
+import com.spectralogic.ds3client.commands.AbstractRequest;
 import java.util.UUID;
 
 public class GetJobChunkSpectraS3Request extends AbstractRequest {
@@ -26,12 +26,12 @@ public class GetJobChunkSpectraS3Request extends AbstractRequest {
     
     private final UUID jobChunkId;
 
-
     // Constructor
+    
     public GetJobChunkSpectraS3Request(final UUID jobChunkId) {
         this.jobChunkId = jobChunkId;
-        
-    }
+            }
+
 
     @Override
     public HttpVerb getVerb() {
@@ -46,6 +46,5 @@ public class GetJobChunkSpectraS3Request extends AbstractRequest {
     public UUID getJobChunkId() {
         return this.jobChunkId;
     }
-
 
 }

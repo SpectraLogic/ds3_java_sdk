@@ -16,10 +16,9 @@
 // This code is auto-generated, do not modify
 package com.spectralogic.ds3client.commands.spectrads3;
 
-import com.spectralogic.ds3client.commands.AbstractRequest;
 import com.spectralogic.ds3client.HttpVerb;
+import com.spectralogic.ds3client.commands.AbstractRequest;
 import java.util.UUID;
-import java.lang.String;
 
 public class EjectStorageDomainSpectraS3Request extends AbstractRequest {
 
@@ -28,17 +27,20 @@ public class EjectStorageDomainSpectraS3Request extends AbstractRequest {
     private final UUID storageDomainId;
 
     private UUID bucketId;
+
     private String ejectLabel;
+
     private String ejectLocation;
 
     // Constructor
+    
     public EjectStorageDomainSpectraS3Request(final UUID storageDomainId) {
         this.storageDomainId = storageDomainId;
-        this.getQueryParams().put("operation", "eject");
         
+        this.getQueryParams().put("operation", "eject");
         this.getQueryParams().put("storage_domain_id", storageDomainId.toString());
-
     }
+
     public EjectStorageDomainSpectraS3Request withBucketId(final UUID bucketId) {
         this.bucketId = bucketId;
         this.updateQueryParam("bucket_id", bucketId.toString());
@@ -77,9 +79,11 @@ public class EjectStorageDomainSpectraS3Request extends AbstractRequest {
         return this.bucketId;
     }
 
+
     public String getEjectLabel() {
         return this.ejectLabel;
     }
+
 
     public String getEjectLocation() {
         return this.ejectLocation;

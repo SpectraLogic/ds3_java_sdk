@@ -26,13 +26,13 @@ public class HeadObjectRequest extends AbstractRequest {
 
     private final String objectName;
 
-
     // Constructor
+    
     public HeadObjectRequest(final String bucketName, final String objectName) {
         this.bucketName = bucketName;
         this.objectName = objectName;
-        
-    }
+            }
+
 
     @Override
     public HttpVerb getVerb() {
@@ -52,6 +52,5 @@ public class HeadObjectRequest extends AbstractRequest {
     public String getObjectName() {
         return this.objectName;
     }
-
 
 }

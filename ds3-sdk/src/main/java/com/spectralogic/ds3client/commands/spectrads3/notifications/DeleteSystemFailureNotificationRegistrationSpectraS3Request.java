@@ -23,12 +23,13 @@ public class DeleteSystemFailureNotificationRegistrationSpectraS3Request extends
 
     //Variables
     
-
     //Constructor
+    
     public DeleteSystemFailureNotificationRegistrationSpectraS3Request(final UUID notificationId) {
         super(notificationId);
 
-            }
+        
+    }
 
     @Override
     public String getPath() {

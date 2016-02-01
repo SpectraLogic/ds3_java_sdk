@@ -16,7 +16,6 @@
 // This code is auto-generated, do not modify
 package com.spectralogic.ds3client.commands.spectrads3;
 
-import com.spectralogic.ds3client.commands.AbstractRequest;
 import com.spectralogic.ds3client.HttpVerb;
 import com.spectralogic.ds3client.models.bulk.Ds3Object;
 import com.spectralogic.ds3client.models.bulk.Ds3ObjectList;
@@ -24,26 +23,31 @@ import com.spectralogic.ds3client.serializer.XmlOutput;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.List;
-import java.lang.String;
+import com.spectralogic.ds3client.commands.AbstractRequest;
 import com.spectralogic.ds3client.models.BlobStoreTaskPriority;
 
 public class CreateVerifyJobSpectraS3Request extends AbstractRequest {
 
     // Variables
-    private final List<Ds3Object> objects;
     
     private final String bucketName;
 
+    private final List<Ds3Object> objects;
+
     private boolean aggregating;
+
     private String name;
+
     private BlobStoreTaskPriority priority;
 
     // Constructor
+    
     public CreateVerifyJobSpectraS3Request(final String bucketName, final List<Ds3Object> objects) {
-        this.objects = objects;
         this.bucketName = bucketName;
+        this.objects = objects;
+        
         this.getQueryParams().put("operation", "start_bulk_verify");
-            }
+    }
 
     public CreateVerifyJobSpectraS3Request withAggregating(final boolean aggregating) {
         this.aggregating = aggregating;
@@ -89,21 +93,24 @@ public class CreateVerifyJobSpectraS3Request extends AbstractRequest {
     }
 
 
+    public List<Ds3Object> getObjects() {
+        return this.objects;
+    }
+
+
     public boolean getAggregating() {
         return this.aggregating;
     }
+
 
     public String getName() {
         return this.name;
     }
 
+
     public BlobStoreTaskPriority getPriority() {
         return this.priority;
     }
 
-
-    public List<Ds3Object> getObjects() {
-        return this.objects;
-    }
 
 }

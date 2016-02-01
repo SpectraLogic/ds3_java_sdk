@@ -16,8 +16,8 @@
 // This code is auto-generated, do not modify
 package com.spectralogic.ds3client.commands.spectrads3;
 
-import com.spectralogic.ds3client.commands.AbstractRequest;
 import com.spectralogic.ds3client.HttpVerb;
+import com.spectralogic.ds3client.commands.AbstractRequest;
 
 public class GetDataPlannerBlobStoreTasksSpectraS3Request extends AbstractRequest {
 
@@ -26,9 +26,10 @@ public class GetDataPlannerBlobStoreTasksSpectraS3Request extends AbstractReques
     private boolean fullDetails;
 
     // Constructor
+    
     public GetDataPlannerBlobStoreTasksSpectraS3Request() {
-        
-    }
+            }
+
     public GetDataPlannerBlobStoreTasksSpectraS3Request withFullDetails(final boolean fullDetails) {
         this.fullDetails = fullDetails;
         if (this.fullDetails) {

@@ -16,10 +16,9 @@
 // This code is auto-generated, do not modify
 package com.spectralogic.ds3client.commands.spectrads3;
 
-import com.spectralogic.ds3client.commands.AbstractRequest;
 import com.spectralogic.ds3client.HttpVerb;
+import com.spectralogic.ds3client.commands.AbstractRequest;
 import com.spectralogic.ds3client.models.ChecksumType;
-import java.lang.String;
 import java.util.UUID;
 
 public class GetDataPoliciesSpectraS3Request extends AbstractRequest {
@@ -27,17 +26,24 @@ public class GetDataPoliciesSpectraS3Request extends AbstractRequest {
     // Variables
     
     private ChecksumType.Type checksumType;
+
     private boolean endToEndCrcRequired;
+
     private boolean lastPage;
+
     private String name;
+
     private int pageLength;
+
     private int pageOffset;
+
     private UUID pageStartMarker;
 
     // Constructor
+    
     public GetDataPoliciesSpectraS3Request() {
-        
-    }
+            }
+
     public GetDataPoliciesSpectraS3Request withChecksumType(final ChecksumType.Type checksumType) {
         this.checksumType = checksumType;
         this.updateQueryParam("checksum_type", checksumType.toString());
@@ -99,25 +105,31 @@ public class GetDataPoliciesSpectraS3Request extends AbstractRequest {
         return this.checksumType;
     }
 
+
     public boolean getEndToEndCrcRequired() {
         return this.endToEndCrcRequired;
     }
+
 
     public boolean getLastPage() {
         return this.lastPage;
     }
 
+
     public String getName() {
         return this.name;
     }
+
 
     public int getPageLength() {
         return this.pageLength;
     }
 
+
     public int getPageOffset() {
         return this.pageOffset;
     }
+
 
     public UUID getPageStartMarker() {
         return this.pageStartMarker;

@@ -16,8 +16,8 @@
 // This code is auto-generated, do not modify
 package com.spectralogic.ds3client.commands.spectrads3;
 
-import com.spectralogic.ds3client.commands.AbstractRequest;
 import com.spectralogic.ds3client.HttpVerb;
+import com.spectralogic.ds3client.commands.AbstractRequest;
 import java.util.UUID;
 import com.spectralogic.ds3client.models.StorageDomainMemberState;
 import com.spectralogic.ds3client.models.TapeType;
@@ -28,20 +28,30 @@ public class GetStorageDomainMembersSpectraS3Request extends AbstractRequest {
     // Variables
     
     private boolean lastPage;
+
     private int pageLength;
+
     private int pageOffset;
+
     private UUID pageStartMarker;
+
     private UUID poolPartitionId;
+
     private StorageDomainMemberState state;
+
     private UUID storageDomainId;
+
     private UUID tapePartitionId;
+
     private TapeType tapeType;
+
     private WritePreferenceLevel writePreference;
 
     // Constructor
+    
     public GetStorageDomainMembersSpectraS3Request() {
-        
-    }
+            }
+
     public GetStorageDomainMembersSpectraS3Request withLastPage(final boolean lastPage) {
         this.lastPage = lastPage;
         if (this.lastPage) {
@@ -121,37 +131,46 @@ public class GetStorageDomainMembersSpectraS3Request extends AbstractRequest {
         return this.lastPage;
     }
 
+
     public int getPageLength() {
         return this.pageLength;
     }
+
 
     public int getPageOffset() {
         return this.pageOffset;
     }
 
+
     public UUID getPageStartMarker() {
         return this.pageStartMarker;
     }
+
 
     public UUID getPoolPartitionId() {
         return this.poolPartitionId;
     }
 
+
     public StorageDomainMemberState getState() {
         return this.state;
     }
+
 
     public UUID getStorageDomainId() {
         return this.storageDomainId;
     }
 
+
     public UUID getTapePartitionId() {
         return this.tapePartitionId;
     }
 
+
     public TapeType getTapeType() {
         return this.tapeType;
     }
+
 
     public WritePreferenceLevel getWritePreference() {
         return this.writePreference;

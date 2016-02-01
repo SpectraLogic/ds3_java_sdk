@@ -16,8 +16,8 @@
 // This code is auto-generated, do not modify
 package com.spectralogic.ds3client.commands.spectrads3;
 
-import com.spectralogic.ds3client.commands.AbstractRequest;
 import com.spectralogic.ds3client.HttpVerb;
+import com.spectralogic.ds3client.commands.AbstractRequest;
 import java.util.UUID;
 import com.spectralogic.ds3client.models.WritePreferenceLevel;
 
@@ -32,15 +32,14 @@ public class CreatePoolStorageDomainMemberSpectraS3Request extends AbstractReque
     private WritePreferenceLevel writePreference;
 
     // Constructor
+    
     public CreatePoolStorageDomainMemberSpectraS3Request(final UUID poolPartitionId, final UUID storageDomainId) {
         this.poolPartitionId = poolPartitionId;
         this.storageDomainId = storageDomainId;
-        
-        this.getQueryParams().put("pool_partition_id", poolPartitionId.toString());
-
+                this.getQueryParams().put("pool_partition_id", poolPartitionId.toString());
         this.getQueryParams().put("storage_domain_id", storageDomainId.toString());
-
     }
+
     public CreatePoolStorageDomainMemberSpectraS3Request withWritePreference(final WritePreferenceLevel writePreference) {
         this.writePreference = writePreference;
         this.updateQueryParam("write_preference", writePreference.toString());

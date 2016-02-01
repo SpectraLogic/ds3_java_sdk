@@ -16,8 +16,8 @@
 // This code is auto-generated, do not modify
 package com.spectralogic.ds3client.commands.spectrads3;
 
-import com.spectralogic.ds3client.commands.AbstractRequest;
 import com.spectralogic.ds3client.HttpVerb;
+import com.spectralogic.ds3client.commands.AbstractRequest;
 import java.util.UUID;
 
 public class CancelFormatTapeSpectraS3Request extends AbstractRequest {
@@ -26,13 +26,14 @@ public class CancelFormatTapeSpectraS3Request extends AbstractRequest {
     
     private final UUID tapeId;
 
-
     // Constructor
+    
     public CancelFormatTapeSpectraS3Request(final UUID tapeId) {
         this.tapeId = tapeId;
-        this.getQueryParams().put("operation", "cancel_format");
         
+        this.getQueryParams().put("operation", "cancel_format");
     }
+
 
     @Override
     public HttpVerb getVerb() {
@@ -47,6 +48,5 @@ public class CancelFormatTapeSpectraS3Request extends AbstractRequest {
     public UUID getTapeId() {
         return this.tapeId;
     }
-
 
 }

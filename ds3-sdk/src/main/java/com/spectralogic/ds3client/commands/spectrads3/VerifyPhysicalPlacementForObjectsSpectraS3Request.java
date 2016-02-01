@@ -16,7 +16,6 @@
 // This code is auto-generated, do not modify
 package com.spectralogic.ds3client.commands.spectrads3;
 
-import com.spectralogic.ds3client.commands.AbstractRequest;
 import com.spectralogic.ds3client.HttpVerb;
 import com.spectralogic.ds3client.models.bulk.Ds3Object;
 import com.spectralogic.ds3client.models.bulk.Ds3ObjectList;
@@ -24,23 +23,27 @@ import com.spectralogic.ds3client.serializer.XmlOutput;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.List;
+import com.spectralogic.ds3client.commands.AbstractRequest;
 import java.util.UUID;
 
 public class VerifyPhysicalPlacementForObjectsSpectraS3Request extends AbstractRequest {
 
     // Variables
-    private final List<Ds3Object> objects;
     
     private final String bucketName;
+
+    private final List<Ds3Object> objects;
 
     private UUID storageDomainId;
 
     // Constructor
+    
     public VerifyPhysicalPlacementForObjectsSpectraS3Request(final String bucketName, final List<Ds3Object> objects) {
-        this.objects = objects;
         this.bucketName = bucketName;
+        this.objects = objects;
+        
         this.getQueryParams().put("operation", "verify_physical_placement");
-            }
+    }
 
     public VerifyPhysicalPlacementForObjectsSpectraS3Request withStorageDomainId(final UUID storageDomainId) {
         this.storageDomainId = storageDomainId;
@@ -74,13 +77,14 @@ public class VerifyPhysicalPlacementForObjectsSpectraS3Request extends AbstractR
     }
 
 
+    public List<Ds3Object> getObjects() {
+        return this.objects;
+    }
+
+
     public UUID getStorageDomainId() {
         return this.storageDomainId;
     }
 
-
-    public List<Ds3Object> getObjects() {
-        return this.objects;
-    }
 
 }

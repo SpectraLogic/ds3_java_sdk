@@ -31,19 +31,17 @@ public class CreateMultiPartUploadPartRequest extends AbstractRequest {
 
     private final UUID uploadId;
 
-
     // Constructor
+    
     public CreateMultiPartUploadPartRequest(final String bucketName, final String objectName, final int partNumber, final UUID uploadId) {
         this.bucketName = bucketName;
         this.objectName = objectName;
         this.partNumber = partNumber;
         this.uploadId = uploadId;
-        
-        this.getQueryParams().put("part_number", Integer.toString(partNumber));
-
+                this.getQueryParams().put("part_number", Integer.toString(partNumber));
         this.getQueryParams().put("upload_id", uploadId.toString());
-
     }
+
 
     @Override
     public HttpVerb getVerb() {
@@ -73,6 +71,5 @@ public class CreateMultiPartUploadPartRequest extends AbstractRequest {
     public UUID getUploadId() {
         return this.uploadId;
     }
-
 
 }

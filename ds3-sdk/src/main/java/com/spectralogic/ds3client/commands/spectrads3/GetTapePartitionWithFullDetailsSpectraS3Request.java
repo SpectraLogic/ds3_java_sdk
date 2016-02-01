@@ -16,8 +16,8 @@
 // This code is auto-generated, do not modify
 package com.spectralogic.ds3client.commands.spectrads3;
 
-import com.spectralogic.ds3client.commands.AbstractRequest;
 import com.spectralogic.ds3client.HttpVerb;
+import com.spectralogic.ds3client.commands.AbstractRequest;
 
 public class GetTapePartitionWithFullDetailsSpectraS3Request extends AbstractRequest {
 
@@ -25,14 +25,13 @@ public class GetTapePartitionWithFullDetailsSpectraS3Request extends AbstractReq
     
     private final String tapePartition;
 
-
     // Constructor
+    
     public GetTapePartitionWithFullDetailsSpectraS3Request(final String tapePartition) {
         this.tapePartition = tapePartition;
-        
-        this.getQueryParams().put("full_details", null);
-
+                this.getQueryParams().put("full_details", null);
     }
+
 
     @Override
     public HttpVerb getVerb() {
@@ -47,6 +46,5 @@ public class GetTapePartitionWithFullDetailsSpectraS3Request extends AbstractReq
     public String getTapePartition() {
         return this.tapePartition;
     }
-
 
 }

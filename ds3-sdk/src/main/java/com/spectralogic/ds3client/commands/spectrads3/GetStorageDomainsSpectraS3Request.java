@@ -16,9 +16,8 @@
 // This code is auto-generated, do not modify
 package com.spectralogic.ds3client.commands.spectrads3;
 
-import com.spectralogic.ds3client.commands.AbstractRequest;
 import com.spectralogic.ds3client.HttpVerb;
-import java.lang.String;
+import com.spectralogic.ds3client.commands.AbstractRequest;
 import java.util.UUID;
 import com.spectralogic.ds3client.models.WriteOptimization;
 
@@ -27,21 +26,32 @@ public class GetStorageDomainsSpectraS3Request extends AbstractRequest {
     // Variables
     
     private String autoEjectUponCron;
+
     private boolean autoEjectUponJobCancellation;
+
     private boolean autoEjectUponJobCompletion;
+
     private boolean autoEjectUponMediaFull;
+
     private boolean lastPage;
+
     private boolean mediaEjectionAllowed;
+
     private String name;
+
     private int pageLength;
+
     private int pageOffset;
+
     private UUID pageStartMarker;
+
     private WriteOptimization writeOptimization;
 
     // Constructor
+    
     public GetStorageDomainsSpectraS3Request() {
-        
-    }
+            }
+
     public GetStorageDomainsSpectraS3Request withAutoEjectUponCron(final String autoEjectUponCron) {
         this.autoEjectUponCron = autoEjectUponCron;
         this.updateQueryParam("auto_eject_upon_cron", autoEjectUponCron);
@@ -127,41 +137,51 @@ public class GetStorageDomainsSpectraS3Request extends AbstractRequest {
         return this.autoEjectUponCron;
     }
 
+
     public boolean getAutoEjectUponJobCancellation() {
         return this.autoEjectUponJobCancellation;
     }
+
 
     public boolean getAutoEjectUponJobCompletion() {
         return this.autoEjectUponJobCompletion;
     }
 
+
     public boolean getAutoEjectUponMediaFull() {
         return this.autoEjectUponMediaFull;
     }
+
 
     public boolean getLastPage() {
         return this.lastPage;
     }
 
+
     public boolean getMediaEjectionAllowed() {
         return this.mediaEjectionAllowed;
     }
+
 
     public String getName() {
         return this.name;
     }
 
+
     public int getPageLength() {
         return this.pageLength;
     }
+
 
     public int getPageOffset() {
         return this.pageOffset;
     }
 
+
     public UUID getPageStartMarker() {
         return this.pageStartMarker;
     }
+
 
     public WriteOptimization getWriteOptimization() {
         return this.writeOptimization;

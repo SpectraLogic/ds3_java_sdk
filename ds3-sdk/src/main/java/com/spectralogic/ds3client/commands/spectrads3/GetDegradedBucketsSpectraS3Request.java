@@ -16,27 +16,33 @@
 // This code is auto-generated, do not modify
 package com.spectralogic.ds3client.commands.spectrads3;
 
-import com.spectralogic.ds3client.commands.AbstractRequest;
 import com.spectralogic.ds3client.HttpVerb;
+import com.spectralogic.ds3client.commands.AbstractRequest;
 import java.util.UUID;
-import java.lang.String;
 
 public class GetDegradedBucketsSpectraS3Request extends AbstractRequest {
 
     // Variables
     
     private UUID dataPolicyId;
+
     private boolean lastPage;
+
     private String name;
+
     private int pageLength;
+
     private int pageOffset;
+
     private UUID pageStartMarker;
+
     private UUID userId;
 
     // Constructor
+    
     public GetDegradedBucketsSpectraS3Request() {
-        
-    }
+            }
+
     public GetDegradedBucketsSpectraS3Request withDataPolicyId(final UUID dataPolicyId) {
         this.dataPolicyId = dataPolicyId;
         this.updateQueryParam("data_policy_id", dataPolicyId.toString());
@@ -98,25 +104,31 @@ public class GetDegradedBucketsSpectraS3Request extends AbstractRequest {
         return this.dataPolicyId;
     }
 
+
     public boolean getLastPage() {
         return this.lastPage;
     }
+
 
     public String getName() {
         return this.name;
     }
 
+
     public int getPageLength() {
         return this.pageLength;
     }
+
 
     public int getPageOffset() {
         return this.pageOffset;
     }
 
+
     public UUID getPageStartMarker() {
         return this.pageStartMarker;
     }
+
 
     public UUID getUserId() {
         return this.userId;

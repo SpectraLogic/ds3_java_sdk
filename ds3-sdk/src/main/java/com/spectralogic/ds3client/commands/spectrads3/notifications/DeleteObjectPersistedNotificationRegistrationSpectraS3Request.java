@@ -23,12 +23,13 @@ public class DeleteObjectPersistedNotificationRegistrationSpectraS3Request exten
 
     //Variables
     
-
     //Constructor
+    
     public DeleteObjectPersistedNotificationRegistrationSpectraS3Request(final UUID notificationId) {
         super(notificationId);
 
-            }
+        
+    }
 
     @Override
     public String getPath() {

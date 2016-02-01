@@ -16,8 +16,8 @@
 // This code is auto-generated, do not modify
 package com.spectralogic.ds3client.commands.spectrads3;
 
-import com.spectralogic.ds3client.commands.AbstractRequest;
 import com.spectralogic.ds3client.HttpVerb;
+import com.spectralogic.ds3client.commands.AbstractRequest;
 import java.util.UUID;
 import com.spectralogic.ds3client.models.DataIsolationLevel;
 import com.spectralogic.ds3client.models.DataPersistenceRuleState;
@@ -28,19 +28,28 @@ public class GetDegradedDataPersistenceRulesSpectraS3Request extends AbstractReq
     // Variables
     
     private UUID dataPolicyId;
+
     private DataIsolationLevel isolationLevel;
+
     private boolean lastPage;
+
     private int pageLength;
+
     private int pageOffset;
+
     private UUID pageStartMarker;
+
     private DataPersistenceRuleState state;
+
     private UUID storageDomainId;
+
     private DataPersistenceRuleType type;
 
     // Constructor
+    
     public GetDegradedDataPersistenceRulesSpectraS3Request() {
-        
-    }
+            }
+
     public GetDegradedDataPersistenceRulesSpectraS3Request withDataPolicyId(final UUID dataPolicyId) {
         this.dataPolicyId = dataPolicyId;
         this.updateQueryParam("data_policy_id", dataPolicyId.toString());
@@ -114,33 +123,41 @@ public class GetDegradedDataPersistenceRulesSpectraS3Request extends AbstractReq
         return this.dataPolicyId;
     }
 
+
     public DataIsolationLevel getIsolationLevel() {
         return this.isolationLevel;
     }
+
 
     public boolean getLastPage() {
         return this.lastPage;
     }
 
+
     public int getPageLength() {
         return this.pageLength;
     }
+
 
     public int getPageOffset() {
         return this.pageOffset;
     }
 
+
     public UUID getPageStartMarker() {
         return this.pageStartMarker;
     }
+
 
     public DataPersistenceRuleState getState() {
         return this.state;
     }
 
+
     public UUID getStorageDomainId() {
         return this.storageDomainId;
     }
+
 
     public DataPersistenceRuleType getType() {
         return this.type;

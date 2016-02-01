@@ -16,12 +16,11 @@
 // This code is auto-generated, do not modify
 package com.spectralogic.ds3client.commands.spectrads3;
 
-import com.spectralogic.ds3client.commands.BulkRequest;
 import java.util.List;
 import com.spectralogic.ds3client.BulkCommand;
 import com.spectralogic.ds3client.models.bulk.Ds3Object;
 import com.spectralogic.ds3client.serializer.XmlProcessingException;
-import java.lang.String;
+import com.spectralogic.ds3client.commands.BulkRequest;
 import com.spectralogic.ds3client.models.BlobStoreTaskPriority;
 
 public class CreatePutJobSpectraS3Request extends BulkRequest {
@@ -31,16 +30,16 @@ public class CreatePutJobSpectraS3Request extends BulkRequest {
 
     
     private boolean aggregating;
+
     private boolean ignoreNamingConflicts;
-    private long maxUploadSize;
+
     private String name;
-    
 
     // Constructor
     public CreatePutJobSpectraS3Request(final String bucketName, final List<Ds3Object> objects) throws XmlProcessingException {
         super(bucketName, objects);
-        this.getQueryParams().put("operation", "start_bulk_put");
         
+        this.getQueryParams().put("operation", "start_bulk_put");
     }
 
     public CreatePutJobSpectraS3Request withAggregating(final boolean aggregating) {
@@ -81,18 +80,21 @@ public class CreatePutJobSpectraS3Request extends BulkRequest {
     }
 
 
-
+    
     public boolean getAggregating() {
         return this.aggregating;
     }
+
 
     public boolean getIgnoreNamingConflicts() {
         return this.ignoreNamingConflicts;
     }
 
+
     public String getName() {
         return this.name;
     }
+
 
     @Override
     public BulkCommand getCommand() {

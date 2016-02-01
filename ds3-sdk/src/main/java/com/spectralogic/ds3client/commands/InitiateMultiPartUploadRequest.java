@@ -26,15 +26,14 @@ public class InitiateMultiPartUploadRequest extends AbstractRequest {
 
     private final String objectName;
 
-
     // Constructor
+    
     public InitiateMultiPartUploadRequest(final String bucketName, final String objectName) {
         this.bucketName = bucketName;
         this.objectName = objectName;
-        
-        this.getQueryParams().put("uploads", null);
-
+                this.getQueryParams().put("uploads", null);
     }
+
 
     @Override
     public HttpVerb getVerb() {
@@ -54,6 +53,5 @@ public class InitiateMultiPartUploadRequest extends AbstractRequest {
     public String getObjectName() {
         return this.objectName;
     }
-
 
 }

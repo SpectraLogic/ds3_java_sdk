@@ -16,8 +16,8 @@
 // This code is auto-generated, do not modify
 package com.spectralogic.ds3client.commands.spectrads3;
 
-import com.spectralogic.ds3client.commands.AbstractRequest;
 import com.spectralogic.ds3client.HttpVerb;
+import com.spectralogic.ds3client.commands.AbstractRequest;
 import java.util.UUID;
 
 public class GetGroupMembersSpectraS3Request extends AbstractRequest {
@@ -25,17 +25,24 @@ public class GetGroupMembersSpectraS3Request extends AbstractRequest {
     // Variables
     
     private UUID groupId;
+
     private boolean lastPage;
+
     private UUID memberGroupId;
+
     private UUID memberUserId;
+
     private int pageLength;
+
     private int pageOffset;
+
     private UUID pageStartMarker;
 
     // Constructor
+    
     public GetGroupMembersSpectraS3Request() {
-        
-    }
+            }
+
     public GetGroupMembersSpectraS3Request withGroupId(final UUID groupId) {
         this.groupId = groupId;
         this.updateQueryParam("group_id", groupId.toString());
@@ -97,25 +104,31 @@ public class GetGroupMembersSpectraS3Request extends AbstractRequest {
         return this.groupId;
     }
 
+
     public boolean getLastPage() {
         return this.lastPage;
     }
+
 
     public UUID getMemberGroupId() {
         return this.memberGroupId;
     }
 
+
     public UUID getMemberUserId() {
         return this.memberUserId;
     }
+
 
     public int getPageLength() {
         return this.pageLength;
     }
 
+
     public int getPageOffset() {
         return this.pageOffset;
     }
+
 
     public UUID getPageStartMarker() {
         return this.pageStartMarker;

@@ -16,8 +16,8 @@
 // This code is auto-generated, do not modify
 package com.spectralogic.ds3client.commands.spectrads3;
 
-import com.spectralogic.ds3client.commands.AbstractRequest;
 import com.spectralogic.ds3client.HttpVerb;
+import com.spectralogic.ds3client.commands.AbstractRequest;
 
 public class CancelImportPoolSpectraS3Request extends AbstractRequest {
 
@@ -25,13 +25,14 @@ public class CancelImportPoolSpectraS3Request extends AbstractRequest {
     
     private final String pool;
 
-
     // Constructor
+    
     public CancelImportPoolSpectraS3Request(final String pool) {
         this.pool = pool;
-        this.getQueryParams().put("operation", "cancel_import");
         
+        this.getQueryParams().put("operation", "cancel_import");
     }
+
 
     @Override
     public HttpVerb getVerb() {
@@ -46,6 +47,5 @@ public class CancelImportPoolSpectraS3Request extends AbstractRequest {
     public String getPool() {
         return this.pool;
     }
-
 
 }

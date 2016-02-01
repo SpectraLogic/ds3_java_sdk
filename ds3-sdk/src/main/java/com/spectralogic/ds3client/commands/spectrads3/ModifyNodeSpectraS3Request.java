@@ -16,9 +16,8 @@
 // This code is auto-generated, do not modify
 package com.spectralogic.ds3client.commands.spectrads3;
 
-import com.spectralogic.ds3client.commands.AbstractRequest;
 import com.spectralogic.ds3client.HttpVerb;
-import java.lang.String;
+import com.spectralogic.ds3client.commands.AbstractRequest;
 
 public class ModifyNodeSpectraS3Request extends AbstractRequest {
 
@@ -27,13 +26,15 @@ public class ModifyNodeSpectraS3Request extends AbstractRequest {
     private final String node;
 
     private String dnsName;
+
     private String name;
 
     // Constructor
+    
     public ModifyNodeSpectraS3Request(final String node) {
         this.node = node;
-        
-    }
+            }
+
     public ModifyNodeSpectraS3Request withDnsName(final String dnsName) {
         this.dnsName = dnsName;
         this.updateQueryParam("dns_name", dnsName);
@@ -65,6 +66,7 @@ public class ModifyNodeSpectraS3Request extends AbstractRequest {
     public String getDnsName() {
         return this.dnsName;
     }
+
 
     public String getName() {
         return this.name;

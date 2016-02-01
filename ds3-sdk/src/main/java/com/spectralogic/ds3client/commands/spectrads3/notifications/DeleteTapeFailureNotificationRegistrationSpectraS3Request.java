@@ -23,12 +23,13 @@ public class DeleteTapeFailureNotificationRegistrationSpectraS3Request extends A
 
     //Variables
     
-
     //Constructor
+    
     public DeleteTapeFailureNotificationRegistrationSpectraS3Request(final UUID notificationId) {
         super(notificationId);
 
-            }
+        
+    }
 
     @Override
     public String getPath() {

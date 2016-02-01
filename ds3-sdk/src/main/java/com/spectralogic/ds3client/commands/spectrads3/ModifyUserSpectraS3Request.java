@@ -16,10 +16,9 @@
 // This code is auto-generated, do not modify
 package com.spectralogic.ds3client.commands.spectrads3;
 
-import com.spectralogic.ds3client.commands.AbstractRequest;
 import com.spectralogic.ds3client.HttpVerb;
+import com.spectralogic.ds3client.commands.AbstractRequest;
 import java.util.UUID;
-import java.lang.String;
 
 public class ModifyUserSpectraS3Request extends AbstractRequest {
 
@@ -28,13 +27,15 @@ public class ModifyUserSpectraS3Request extends AbstractRequest {
     private final UUID userId;
 
     private UUID defaultDataPolicyId;
+
     private String name;
 
     // Constructor
+    
     public ModifyUserSpectraS3Request(final UUID userId) {
         this.userId = userId;
-        
-    }
+            }
+
     public ModifyUserSpectraS3Request withDefaultDataPolicyId(final UUID defaultDataPolicyId) {
         this.defaultDataPolicyId = defaultDataPolicyId;
         this.updateQueryParam("default_data_policy_id", defaultDataPolicyId.toString());
@@ -66,6 +67,7 @@ public class ModifyUserSpectraS3Request extends AbstractRequest {
     public UUID getDefaultDataPolicyId() {
         return this.defaultDataPolicyId;
     }
+
 
     public String getName() {
         return this.name;

@@ -24,16 +24,22 @@ public class GetTapeFailureNotificationRegistrationsSpectraS3Request extends Abs
     // Variables
     
     private boolean lastPage;
+
     private int pageLength;
+
     private int pageOffset;
+
     private UUID pageStartMarker;
+
     private UUID userId;
 
     // Constructor
+    
     public GetTapeFailureNotificationRegistrationsSpectraS3Request(final UUID notificationId) {
         super(notificationId);
 
-            }
+        
+    }
 
     public GetTapeFailureNotificationRegistrationsSpectraS3Request withLastPage(final boolean lastPage) {
         this.lastPage = lastPage;
@@ -80,17 +86,21 @@ public class GetTapeFailureNotificationRegistrationsSpectraS3Request extends Abs
         return this.lastPage;
     }
 
+
     public int getPageLength() {
         return this.pageLength;
     }
+
 
     public int getPageOffset() {
         return this.pageOffset;
     }
 
+
     public UUID getPageStartMarker() {
         return this.pageStartMarker;
     }
+
 
     public UUID getUserId() {
         return this.userId;

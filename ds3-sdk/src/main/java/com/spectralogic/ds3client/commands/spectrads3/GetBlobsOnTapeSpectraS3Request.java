@@ -16,7 +16,6 @@
 // This code is auto-generated, do not modify
 package com.spectralogic.ds3client.commands.spectrads3;
 
-import com.spectralogic.ds3client.commands.AbstractRequest;
 import com.spectralogic.ds3client.HttpVerb;
 import com.spectralogic.ds3client.models.bulk.Ds3Object;
 import com.spectralogic.ds3client.models.bulk.Ds3ObjectList;
@@ -24,22 +23,25 @@ import com.spectralogic.ds3client.serializer.XmlOutput;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.List;
+import com.spectralogic.ds3client.commands.AbstractRequest;
 import java.util.UUID;
 
 public class GetBlobsOnTapeSpectraS3Request extends AbstractRequest {
 
     // Variables
-    private final List<Ds3Object> objects;
     
     private final UUID tapeId;
 
+    private final List<Ds3Object> objects;
 
     // Constructor
+    
     public GetBlobsOnTapeSpectraS3Request(final List<Ds3Object> objects, final UUID tapeId) {
-        this.objects = objects;
         this.tapeId = tapeId;
+        this.objects = objects;
+        
         this.getQueryParams().put("operation", "get_physical_placement");
-            }
+    }
 
 
     public InputStream getContentStream() {
@@ -67,9 +69,9 @@ public class GetBlobsOnTapeSpectraS3Request extends AbstractRequest {
     }
 
 
-
     public List<Ds3Object> getObjects() {
         return this.objects;
     }
+
 
 }

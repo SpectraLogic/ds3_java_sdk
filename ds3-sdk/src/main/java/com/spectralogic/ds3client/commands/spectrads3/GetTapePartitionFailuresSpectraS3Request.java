@@ -16,9 +16,8 @@
 // This code is auto-generated, do not modify
 package com.spectralogic.ds3client.commands.spectrads3;
 
-import com.spectralogic.ds3client.commands.AbstractRequest;
 import com.spectralogic.ds3client.HttpVerb;
-import java.lang.String;
+import com.spectralogic.ds3client.commands.AbstractRequest;
 import java.util.UUID;
 import com.spectralogic.ds3client.models.TapePartitionFailureType;
 
@@ -27,17 +26,24 @@ public class GetTapePartitionFailuresSpectraS3Request extends AbstractRequest {
     // Variables
     
     private String errorMessage;
+
     private boolean lastPage;
+
     private int pageLength;
+
     private int pageOffset;
+
     private UUID pageStartMarker;
+
     private UUID partitionId;
+
     private TapePartitionFailureType type;
 
     // Constructor
+    
     public GetTapePartitionFailuresSpectraS3Request() {
-        
-    }
+            }
+
     public GetTapePartitionFailuresSpectraS3Request withErrorMessage(final String errorMessage) {
         this.errorMessage = errorMessage;
         this.updateQueryParam("error_message", errorMessage);
@@ -99,25 +105,31 @@ public class GetTapePartitionFailuresSpectraS3Request extends AbstractRequest {
         return this.errorMessage;
     }
 
+
     public boolean getLastPage() {
         return this.lastPage;
     }
+
 
     public int getPageLength() {
         return this.pageLength;
     }
 
+
     public int getPageOffset() {
         return this.pageOffset;
     }
+
 
     public UUID getPageStartMarker() {
         return this.pageStartMarker;
     }
 
+
     public UUID getPartitionId() {
         return this.partitionId;
     }
+
 
     public TapePartitionFailureType getType() {
         return this.type;

@@ -17,7 +17,6 @@
 package com.spectralogic.ds3client.commands.spectrads3.notifications;
 
 import com.spectralogic.ds3client.commands.notifications.AbstractCreateNotificationRequest;
-import java.lang.String;
 import com.spectralogic.ds3client.models.HttpResponseFormatType;
 import com.spectralogic.ds3client.models.NamingConventionType;
 import com.spectralogic.ds3client.models.RequestType;
@@ -27,14 +26,16 @@ public class CreatePoolFailureNotificationRegistrationSpectraS3Request extends A
     // Variables
     
     private HttpResponseFormatType format;
+
     private NamingConventionType namingConvention;
+
     private RequestType notificationHttpMethod;
 
     public CreatePoolFailureNotificationRegistrationSpectraS3Request(final String notificationEndPoint) {
         super(notificationEndPoint);
 
-        
-        this.getQueryParams().put("notification_end_point", notificationEndPoint);
+                this.getQueryParams().put("notification_end_point", notificationEndPoint);
+
     }
 
     public CreatePoolFailureNotificationRegistrationSpectraS3Request withFormat(final HttpResponseFormatType format) {
@@ -61,17 +62,19 @@ public class CreatePoolFailureNotificationRegistrationSpectraS3Request extends A
         return "/_rest_/pool_failure_notification_registration";
     }
 
+    
     public HttpResponseFormatType getFormat() {
         return this.format;
     }
+
 
     public NamingConventionType getNamingConvention() {
         return this.namingConvention;
     }
 
+
     public RequestType getNotificationHttpMethod() {
         return this.notificationHttpMethod;
     }
-
 
 }

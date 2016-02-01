@@ -16,8 +16,8 @@
 // This code is auto-generated, do not modify
 package com.spectralogic.ds3client.commands.spectrads3;
 
-import com.spectralogic.ds3client.commands.AbstractRequest;
 import com.spectralogic.ds3client.HttpVerb;
+import com.spectralogic.ds3client.commands.AbstractRequest;
 import com.spectralogic.ds3client.models.BucketAclPermission;
 import java.util.UUID;
 
@@ -29,17 +29,15 @@ public class CreateGlobalBucketAclForUserSpectraS3Request extends AbstractReques
 
     private final UUID userId;
 
-
     // Constructor
+    
     public CreateGlobalBucketAclForUserSpectraS3Request(final BucketAclPermission permission, final UUID userId) {
         this.permission = permission;
         this.userId = userId;
-        
-        this.getQueryParams().put("permission", permission.toString());
-
+                this.getQueryParams().put("permission", permission.toString());
         this.getQueryParams().put("user_id", userId.toString());
-
     }
+
 
     @Override
     public HttpVerb getVerb() {
@@ -59,6 +57,5 @@ public class CreateGlobalBucketAclForUserSpectraS3Request extends AbstractReques
     public UUID getUserId() {
         return this.userId;
     }
-
 
 }

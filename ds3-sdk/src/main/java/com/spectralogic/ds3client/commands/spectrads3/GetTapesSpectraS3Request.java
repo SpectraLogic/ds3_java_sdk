@@ -16,9 +16,8 @@
 // This code is auto-generated, do not modify
 package com.spectralogic.ds3client.commands.spectrads3;
 
-import com.spectralogic.ds3client.commands.AbstractRequest;
 import com.spectralogic.ds3client.HttpVerb;
-import java.lang.String;
+import com.spectralogic.ds3client.commands.AbstractRequest;
 import java.util.UUID;
 import com.spectralogic.ds3client.models.TapeState;
 import com.spectralogic.ds3client.models.TapeType;
@@ -28,27 +27,44 @@ public class GetTapesSpectraS3Request extends AbstractRequest {
     // Variables
     
     private boolean assignedToStorageDomain;
+
     private String barCode;
+
     private UUID bucketId;
+
     private String ejectLabel;
+
     private String ejectLocation;
+
     private boolean fullOfData;
+
     private boolean lastPage;
+
     private int pageLength;
+
     private int pageOffset;
+
     private UUID pageStartMarker;
+
     private UUID partitionId;
+
     private TapeState previousState;
+
     private String serialNumber;
+
     private TapeState state;
+
     private UUID storageDomainId;
+
     private TapeType type;
+
     private boolean writeProtected;
 
     // Constructor
+    
     public GetTapesSpectraS3Request() {
-        
-    }
+            }
+
     public GetTapesSpectraS3Request withAssignedToStorageDomain(final boolean assignedToStorageDomain) {
         this.assignedToStorageDomain = assignedToStorageDomain;
         this.updateQueryParam("assigned_to_storage_domain", null);
@@ -170,65 +186,81 @@ public class GetTapesSpectraS3Request extends AbstractRequest {
         return this.assignedToStorageDomain;
     }
 
+
     public String getBarCode() {
         return this.barCode;
     }
+
 
     public UUID getBucketId() {
         return this.bucketId;
     }
 
+
     public String getEjectLabel() {
         return this.ejectLabel;
     }
+
 
     public String getEjectLocation() {
         return this.ejectLocation;
     }
 
+
     public boolean getFullOfData() {
         return this.fullOfData;
     }
+
 
     public boolean getLastPage() {
         return this.lastPage;
     }
 
+
     public int getPageLength() {
         return this.pageLength;
     }
+
 
     public int getPageOffset() {
         return this.pageOffset;
     }
 
+
     public UUID getPageStartMarker() {
         return this.pageStartMarker;
     }
+
 
     public UUID getPartitionId() {
         return this.partitionId;
     }
 
+
     public TapeState getPreviousState() {
         return this.previousState;
     }
+
 
     public String getSerialNumber() {
         return this.serialNumber;
     }
 
+
     public TapeState getState() {
         return this.state;
     }
+
 
     public UUID getStorageDomainId() {
         return this.storageDomainId;
     }
 
+
     public TapeType getType() {
         return this.type;
     }
+
 
     public boolean getWriteProtected() {
         return this.writeProtected;

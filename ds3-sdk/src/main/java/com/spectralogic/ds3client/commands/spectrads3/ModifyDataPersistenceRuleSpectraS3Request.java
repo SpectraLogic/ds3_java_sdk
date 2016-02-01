@@ -16,8 +16,8 @@
 // This code is auto-generated, do not modify
 package com.spectralogic.ds3client.commands.spectrads3;
 
-import com.spectralogic.ds3client.commands.AbstractRequest;
 import com.spectralogic.ds3client.HttpVerb;
+import com.spectralogic.ds3client.commands.AbstractRequest;
 import com.spectralogic.ds3client.models.DataIsolationLevel;
 import java.lang.Integer;
 import com.spectralogic.ds3client.models.DataPersistenceRuleType;
@@ -29,14 +29,17 @@ public class ModifyDataPersistenceRuleSpectraS3Request extends AbstractRequest {
     private final String dataPersistenceRule;
 
     private DataIsolationLevel isolationLevel;
+
     private int minimumDaysToRetain;
+
     private DataPersistenceRuleType type;
 
     // Constructor
+    
     public ModifyDataPersistenceRuleSpectraS3Request(final String dataPersistenceRule) {
         this.dataPersistenceRule = dataPersistenceRule;
-        
-    }
+            }
+
     public ModifyDataPersistenceRuleSpectraS3Request withIsolationLevel(final DataIsolationLevel isolationLevel) {
         this.isolationLevel = isolationLevel;
         this.updateQueryParam("isolation_level", isolationLevel.toString());
@@ -75,9 +78,11 @@ public class ModifyDataPersistenceRuleSpectraS3Request extends AbstractRequest {
         return this.isolationLevel;
     }
 
+
     public int getMinimumDaysToRetain() {
         return this.minimumDaysToRetain;
     }
+
 
     public DataPersistenceRuleType getType() {
         return this.type;

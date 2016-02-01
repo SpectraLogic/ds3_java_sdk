@@ -16,8 +16,8 @@
 // This code is auto-generated, do not modify
 package com.spectralogic.ds3client.commands.spectrads3;
 
-import com.spectralogic.ds3client.commands.AbstractRequest;
 import com.spectralogic.ds3client.HttpVerb;
+import com.spectralogic.ds3client.commands.AbstractRequest;
 import java.util.UUID;
 
 public class GetJobsSpectraS3Request extends AbstractRequest {
@@ -25,12 +25,14 @@ public class GetJobsSpectraS3Request extends AbstractRequest {
     // Variables
     
     private UUID bucketId;
+
     private boolean fullDetails;
 
     // Constructor
+    
     public GetJobsSpectraS3Request() {
-        
-    }
+            }
+
     public GetJobsSpectraS3Request withBucketId(final UUID bucketId) {
         this.bucketId = bucketId;
         this.updateQueryParam("bucket_id", bucketId.toString());
@@ -61,6 +63,7 @@ public class GetJobsSpectraS3Request extends AbstractRequest {
     public UUID getBucketId() {
         return this.bucketId;
     }
+
 
     public boolean getFullDetails() {
         return this.fullDetails;

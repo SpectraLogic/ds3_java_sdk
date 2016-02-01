@@ -16,11 +16,10 @@
 // This code is auto-generated, do not modify
 package com.spectralogic.ds3client.commands.spectrads3;
 
-import com.spectralogic.ds3client.commands.AbstractRequest;
 import com.spectralogic.ds3client.HttpVerb;
+import com.spectralogic.ds3client.commands.AbstractRequest;
 import java.util.UUID;
 import com.spectralogic.ds3client.models.PoolHealth;
-import java.lang.String;
 import com.spectralogic.ds3client.models.PoolState;
 import com.spectralogic.ds3client.models.PoolType;
 
@@ -29,23 +28,36 @@ public class GetPoolsSpectraS3Request extends AbstractRequest {
     // Variables
     
     private boolean assignedToStorageDomain;
+
     private UUID bucketId;
+
     private PoolHealth health;
+
     private boolean lastPage;
+
     private String name;
+
     private int pageLength;
+
     private int pageOffset;
+
     private UUID pageStartMarker;
+
     private UUID partitionId;
+
     private boolean poweredOn;
+
     private PoolState state;
+
     private UUID storageDomainId;
+
     private PoolType type;
 
     // Constructor
+    
     public GetPoolsSpectraS3Request() {
-        
-    }
+            }
+
     public GetPoolsSpectraS3Request withAssignedToStorageDomain(final boolean assignedToStorageDomain) {
         this.assignedToStorageDomain = assignedToStorageDomain;
         this.updateQueryParam("assigned_to_storage_domain", null);
@@ -143,49 +155,61 @@ public class GetPoolsSpectraS3Request extends AbstractRequest {
         return this.assignedToStorageDomain;
     }
 
+
     public UUID getBucketId() {
         return this.bucketId;
     }
+
 
     public PoolHealth getHealth() {
         return this.health;
     }
 
+
     public boolean getLastPage() {
         return this.lastPage;
     }
+
 
     public String getName() {
         return this.name;
     }
 
+
     public int getPageLength() {
         return this.pageLength;
     }
+
 
     public int getPageOffset() {
         return this.pageOffset;
     }
 
+
     public UUID getPageStartMarker() {
         return this.pageStartMarker;
     }
+
 
     public UUID getPartitionId() {
         return this.partitionId;
     }
 
+
     public boolean getPoweredOn() {
         return this.poweredOn;
     }
+
 
     public PoolState getState() {
         return this.state;
     }
 
+
     public UUID getStorageDomainId() {
         return this.storageDomainId;
     }
+
 
     public PoolType getType() {
         return this.type;

@@ -16,8 +16,8 @@
 // This code is auto-generated, do not modify
 package com.spectralogic.ds3client.commands.spectrads3;
 
-import com.spectralogic.ds3client.commands.AbstractRequest;
 import com.spectralogic.ds3client.HttpVerb;
+import com.spectralogic.ds3client.commands.AbstractRequest;
 
 public class DeletePoolPartitionSpectraS3Request extends AbstractRequest {
 
@@ -25,12 +25,12 @@ public class DeletePoolPartitionSpectraS3Request extends AbstractRequest {
     
     private final String poolPartition;
 
-
     // Constructor
+    
     public DeletePoolPartitionSpectraS3Request(final String poolPartition) {
         this.poolPartition = poolPartition;
-        
-    }
+            }
+
 
     @Override
     public HttpVerb getVerb() {
@@ -45,6 +45,5 @@ public class DeletePoolPartitionSpectraS3Request extends AbstractRequest {
     public String getPoolPartition() {
         return this.poolPartition;
     }
-
 
 }

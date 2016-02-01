@@ -16,9 +16,8 @@
 // This code is auto-generated, do not modify
 package com.spectralogic.ds3client.commands.spectrads3;
 
-import com.spectralogic.ds3client.commands.AbstractRequest;
 import com.spectralogic.ds3client.HttpVerb;
-import java.lang.String;
+import com.spectralogic.ds3client.commands.AbstractRequest;
 import java.util.UUID;
 import com.spectralogic.ds3client.models.StorageDomainFailureType;
 
@@ -27,17 +26,24 @@ public class GetStorageDomainFailuresSpectraS3Request extends AbstractRequest {
     // Variables
     
     private String errorMessage;
+
     private boolean lastPage;
+
     private int pageLength;
+
     private int pageOffset;
+
     private UUID pageStartMarker;
+
     private UUID storageDomainId;
+
     private StorageDomainFailureType type;
 
     // Constructor
+    
     public GetStorageDomainFailuresSpectraS3Request() {
-        
-    }
+            }
+
     public GetStorageDomainFailuresSpectraS3Request withErrorMessage(final String errorMessage) {
         this.errorMessage = errorMessage;
         this.updateQueryParam("error_message", errorMessage);
@@ -99,25 +105,31 @@ public class GetStorageDomainFailuresSpectraS3Request extends AbstractRequest {
         return this.errorMessage;
     }
 
+
     public boolean getLastPage() {
         return this.lastPage;
     }
+
 
     public int getPageLength() {
         return this.pageLength;
     }
 
+
     public int getPageOffset() {
         return this.pageOffset;
     }
+
 
     public UUID getPageStartMarker() {
         return this.pageStartMarker;
     }
 
+
     public UUID getStorageDomainId() {
         return this.storageDomainId;
     }
+
 
     public StorageDomainFailureType getType() {
         return this.type;

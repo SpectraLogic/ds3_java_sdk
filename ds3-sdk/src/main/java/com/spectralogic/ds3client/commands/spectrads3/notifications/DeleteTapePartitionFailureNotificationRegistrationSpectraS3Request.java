@@ -23,12 +23,13 @@ public class DeleteTapePartitionFailureNotificationRegistrationSpectraS3Request 
 
     //Variables
     
-
     //Constructor
+    
     public DeleteTapePartitionFailureNotificationRegistrationSpectraS3Request(final UUID notificationId) {
         super(notificationId);
 
-            }
+        
+    }
 
     @Override
     public String getPath() {

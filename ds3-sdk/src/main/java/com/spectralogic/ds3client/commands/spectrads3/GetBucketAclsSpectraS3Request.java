@@ -16,8 +16,8 @@
 // This code is auto-generated, do not modify
 package com.spectralogic.ds3client.commands.spectrads3;
 
-import com.spectralogic.ds3client.commands.AbstractRequest;
 import com.spectralogic.ds3client.HttpVerb;
+import com.spectralogic.ds3client.commands.AbstractRequest;
 import java.util.UUID;
 import com.spectralogic.ds3client.models.BucketAclPermission;
 
@@ -26,18 +26,26 @@ public class GetBucketAclsSpectraS3Request extends AbstractRequest {
     // Variables
     
     private UUID bucketId;
+
     private UUID groupId;
+
     private boolean lastPage;
+
     private int pageLength;
+
     private int pageOffset;
+
     private UUID pageStartMarker;
+
     private BucketAclPermission permission;
+
     private UUID userId;
 
     // Constructor
+    
     public GetBucketAclsSpectraS3Request() {
-        
-    }
+            }
+
     public GetBucketAclsSpectraS3Request withBucketId(final UUID bucketId) {
         this.bucketId = bucketId;
         this.updateQueryParam("bucket_id", bucketId.toString());
@@ -105,29 +113,36 @@ public class GetBucketAclsSpectraS3Request extends AbstractRequest {
         return this.bucketId;
     }
 
+
     public UUID getGroupId() {
         return this.groupId;
     }
+
 
     public boolean getLastPage() {
         return this.lastPage;
     }
 
+
     public int getPageLength() {
         return this.pageLength;
     }
+
 
     public int getPageOffset() {
         return this.pageOffset;
     }
 
+
     public UUID getPageStartMarker() {
         return this.pageStartMarker;
     }
 
+
     public BucketAclPermission getPermission() {
         return this.permission;
     }
+
 
     public UUID getUserId() {
         return this.userId;

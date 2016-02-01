@@ -16,9 +16,8 @@
 // This code is auto-generated, do not modify
 package com.spectralogic.ds3client.commands.spectrads3;
 
-import com.spectralogic.ds3client.commands.AbstractRequest;
 import com.spectralogic.ds3client.HttpVerb;
-import java.lang.String;
+import com.spectralogic.ds3client.commands.AbstractRequest;
 
 public class ModifyPoolPartitionSpectraS3Request extends AbstractRequest {
 
@@ -29,10 +28,11 @@ public class ModifyPoolPartitionSpectraS3Request extends AbstractRequest {
     private String name;
 
     // Constructor
+    
     public ModifyPoolPartitionSpectraS3Request(final String poolPartition) {
         this.poolPartition = poolPartition;
-        
-    }
+            }
+
     public ModifyPoolPartitionSpectraS3Request withName(final String name) {
         this.name = name;
         this.updateQueryParam("name", name);

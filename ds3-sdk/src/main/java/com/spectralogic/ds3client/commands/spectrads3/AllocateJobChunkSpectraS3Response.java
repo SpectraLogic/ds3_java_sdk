@@ -16,12 +16,12 @@
 // This code is auto-generated, do not modify
 package com.spectralogic.ds3client.commands.spectrads3;
 
-import com.spectralogic.ds3client.commands.AbstractResponse;
 import com.spectralogic.ds3client.networking.WebResponse;
 import java.io.IOException;
 import java.io.InputStream;
 import com.spectralogic.ds3client.models.JobChunkApiBean;
 import com.spectralogic.ds3client.serializer.XmlOutput;
+import com.spectralogic.ds3client.commands.AbstractResponse;
 import com.spectralogic.ds3client.commands.RetryAfterExpectedException;
 
 public class AllocateJobChunkSpectraS3Response extends AbstractResponse {
@@ -50,7 +50,7 @@ public class AllocateJobChunkSpectraS3Response extends AbstractResponse {
     @Override
     protected void processResponse() throws IOException {
         try (final WebResponse response = this.getResponse()) {
-            this.checkStatusCode(200, 403);
+            this.checkStatusCode(200, 404);
 
             switch (this.getStatusCode()) {
             case 200:
@@ -59,7 +59,7 @@ public class AllocateJobChunkSpectraS3Response extends AbstractResponse {
                     this.status = Status.ALLOCATED;
                 }
                 break;
-            case 403:
+            case 404:
                 this.status = Status.RETRYLATER;
                 this.retryAfterSeconds = parseRetryAfter(response);
                 break;

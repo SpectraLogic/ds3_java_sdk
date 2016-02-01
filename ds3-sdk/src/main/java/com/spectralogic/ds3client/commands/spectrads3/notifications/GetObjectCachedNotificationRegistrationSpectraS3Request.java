@@ -23,12 +23,13 @@ public class GetObjectCachedNotificationRegistrationSpectraS3Request extends Abs
 
     // Variables
     
-
     // Constructor
+    
     public GetObjectCachedNotificationRegistrationSpectraS3Request(final UUID notificationId) {
         super(notificationId);
 
-            }
+        
+    }
 
 
     @Override
@@ -36,5 +37,4 @@ public class GetObjectCachedNotificationRegistrationSpectraS3Request extends Abs
         return "/_rest_/object_cached_notification_registration/" + this.getNotificationId().toString();
     }
 
-    
-}
+    }

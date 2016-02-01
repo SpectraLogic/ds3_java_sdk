@@ -22,11 +22,11 @@ public class GetBucketsRequest extends AbstractRequest {
 
     // Variables
     
-
     // Constructor
+    
     public GetBucketsRequest() {
-        
-    }
+            }
+
 
     @Override
     public HttpVerb getVerb() {
@@ -37,5 +37,4 @@ public class GetBucketsRequest extends AbstractRequest {
     public String getPath() {
         return "/";
     }
-    
-}
+    }

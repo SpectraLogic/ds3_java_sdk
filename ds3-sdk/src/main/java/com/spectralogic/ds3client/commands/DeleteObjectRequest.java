@@ -29,11 +29,12 @@ public class DeleteObjectRequest extends AbstractRequest {
     private boolean rollBack;
 
     // Constructor
+    
     public DeleteObjectRequest(final String bucketName, final String objectName) {
         this.bucketName = bucketName;
         this.objectName = objectName;
-        
-    }
+            }
+
     public DeleteObjectRequest withRollBack(final boolean rollBack) {
         this.rollBack = rollBack;
         if (this.rollBack) {

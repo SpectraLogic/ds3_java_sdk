@@ -16,10 +16,9 @@
 // This code is auto-generated, do not modify
 package com.spectralogic.ds3client.commands.spectrads3;
 
-import com.spectralogic.ds3client.commands.AbstractRequest;
 import com.spectralogic.ds3client.HttpVerb;
+import com.spectralogic.ds3client.commands.AbstractRequest;
 import java.util.Date;
-import java.lang.String;
 import com.spectralogic.ds3client.models.BlobStoreTaskPriority;
 import java.util.UUID;
 
@@ -30,14 +29,17 @@ public class ModifyJobSpectraS3Request extends AbstractRequest {
     private final UUID jobId;
 
     private Date createdAt;
+
     private String name;
+
     private BlobStoreTaskPriority priority;
 
     // Constructor
+    
     public ModifyJobSpectraS3Request(final UUID jobId) {
         this.jobId = jobId;
-        
-    }
+            }
+
     public ModifyJobSpectraS3Request withCreatedAt(final Date createdAt) {
         this.createdAt = createdAt;
         this.updateQueryParam("created_at", createdAt.toString());
@@ -76,9 +78,11 @@ public class ModifyJobSpectraS3Request extends AbstractRequest {
         return this.createdAt;
     }
 
+
     public String getName() {
         return this.name;
     }
+
 
     public BlobStoreTaskPriority getPriority() {
         return this.priority;

@@ -23,12 +23,13 @@ public class DeleteJobCompletedNotificationRegistrationSpectraS3Request extends 
 
     //Variables
     
-
     //Constructor
+    
     public DeleteJobCompletedNotificationRegistrationSpectraS3Request(final UUID notificationId) {
         super(notificationId);
 
-            }
+        
+    }
 
     @Override
     public String getPath() {

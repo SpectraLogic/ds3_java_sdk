@@ -16,9 +16,9 @@
 // This code is auto-generated, do not modify
 package com.spectralogic.ds3client.commands.spectrads3;
 
-import com.spectralogic.ds3client.commands.BulkResponse;
 import com.spectralogic.ds3client.networking.WebResponse;
 import java.io.IOException;
+import com.spectralogic.ds3client.commands.BulkResponse;
 
 public class CreatePutJobSpectraS3Response extends BulkResponse {
     public CreatePutJobSpectraS3Response(final WebResponse response) throws IOException {

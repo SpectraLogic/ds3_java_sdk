@@ -16,8 +16,8 @@
 // This code is auto-generated, do not modify
 package com.spectralogic.ds3client.commands.spectrads3;
 
-import com.spectralogic.ds3client.commands.AbstractRequest;
 import com.spectralogic.ds3client.HttpVerb;
+import com.spectralogic.ds3client.commands.AbstractRequest;
 import java.util.UUID;
 
 public class RegenerateUserSecretKeySpectraS3Request extends AbstractRequest {
@@ -26,13 +26,14 @@ public class RegenerateUserSecretKeySpectraS3Request extends AbstractRequest {
     
     private final UUID userId;
 
-
     // Constructor
+    
     public RegenerateUserSecretKeySpectraS3Request(final UUID userId) {
         this.userId = userId;
-        this.getQueryParams().put("operation", "regenerate_secret_key");
         
+        this.getQueryParams().put("operation", "regenerate_secret_key");
     }
+
 
     @Override
     public HttpVerb getVerb() {
@@ -47,6 +48,5 @@ public class RegenerateUserSecretKeySpectraS3Request extends AbstractRequest {
     public UUID getUserId() {
         return this.userId;
     }
-
 
 }

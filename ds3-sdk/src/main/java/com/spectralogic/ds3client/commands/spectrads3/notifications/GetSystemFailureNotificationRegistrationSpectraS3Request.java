@@ -23,12 +23,13 @@ public class GetSystemFailureNotificationRegistrationSpectraS3Request extends Ab
 
     // Variables
     
-
     // Constructor
+    
     public GetSystemFailureNotificationRegistrationSpectraS3Request(final UUID notificationId) {
         super(notificationId);
 
-            }
+        
+    }
 
 
     @Override
@@ -36,5 +37,4 @@ public class GetSystemFailureNotificationRegistrationSpectraS3Request extends Ab
         return "/_rest_/system_failure_notification_registration/" + this.getNotificationId().toString();
     }
 
-    
-}
+    }

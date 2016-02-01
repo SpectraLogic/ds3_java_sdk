@@ -27,23 +27,22 @@ public class CreateObjectRequest extends AbstractRequest {
     public final static String AMZ_META_HEADER = "x-amz-meta-";
 
     private final InputStream stream;
-    private final long size;
     
     private final String bucketName;
 
     private final String objectName;
 
+    private final long size;
+
     private UUID job;
+
     private long offset;
     private SeekableByteChannel channel;
     private ChecksumType checksum = ChecksumType.none();
     private ChecksumType.Type checksumType = ChecksumType.Type.NONE;
 
     // Constructor
-
-    /**
-     * @deprecated use {@link #CreateObjectRequest(String, String, SeekableByteChannel, UUID, long, long) instead
-     */
+    /** @deprecated use {@link #CreateObjectRequest(String, String, SeekableByteChannel, UUID, long, long)} instead */
     @Deprecated
     public CreateObjectRequest(final String bucketName, final String objectName, final SeekableByteChannel channel, final long size) {
         this.bucketName = bucketName;
@@ -51,25 +50,34 @@ public class CreateObjectRequest extends AbstractRequest {
         this.size = size;
         this.channel = channel;
         this.stream = new SeekableByteChannelInputStream(channel);
+        
     }
 
     public CreateObjectRequest(final String bucketName, final String objectName, final SeekableByteChannel channel, final UUID job, final long offset, final long size) {
-        this(bucketName, objectName, job, offset, size, new SeekableByteChannelInputStream(channel));
-
+        this.bucketName = bucketName;
+        this.objectName = objectName;
+        this.size = size;
+        this.job = job;
+        this.offset = offset;
         this.channel = channel;
+        this.stream = new SeekableByteChannelInputStream(channel);
+                this.getQueryParams().put("job", job.toString());
+        this.getQueryParams().put("offset", Long.toString(offset));
+
     }
 
     public CreateObjectRequest(final String bucketName, final String objectName, final UUID job, final long offset, final long size, final InputStream stream) {
-            this.bucketName = bucketName;
-            this.objectName = objectName;
-            this.job = job;
-            this.offset = offset;
-            this.size = size;
-            this.stream = stream;
+        this.bucketName = bucketName;
+        this.objectName = objectName;
+        this.size = size;
+        this.job = job;
+        this.offset = offset;
+        this.stream = stream;
+                this.getQueryParams().put("job", job.toString());
+        this.getQueryParams().put("offset", Long.toString(offset));
 
-            this.getQueryParams().put("job", job.toString());
-            this.getQueryParams().put("offset", Long.toString(offset));
-        }
+    }
+
 
     public CreateObjectRequest withJob(final UUID job) {
         this.job = job;
@@ -141,16 +149,18 @@ public class CreateObjectRequest extends AbstractRequest {
     }
 
 
-    
+    public SeekableByteChannel getChannel() {
+        return this.channel;
+    }
+
+
     public String getBucketName() {
         return this.bucketName;
     }
 
-
     public String getObjectName() {
         return this.objectName;
     }
-
 
     public UUID getJob() {
         return this.job;
@@ -160,9 +170,5 @@ public class CreateObjectRequest extends AbstractRequest {
         return this.offset;
     }
 
-
-    public SeekableByteChannel getChannel() {
-        return this.channel;
-    }
 
 }

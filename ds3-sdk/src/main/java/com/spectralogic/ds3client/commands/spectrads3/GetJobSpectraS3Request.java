@@ -16,8 +16,8 @@
 // This code is auto-generated, do not modify
 package com.spectralogic.ds3client.commands.spectrads3;
 
-import com.spectralogic.ds3client.commands.AbstractRequest;
 import com.spectralogic.ds3client.HttpVerb;
+import com.spectralogic.ds3client.commands.AbstractRequest;
 import java.util.UUID;
 
 public class GetJobSpectraS3Request extends AbstractRequest {
@@ -26,12 +26,12 @@ public class GetJobSpectraS3Request extends AbstractRequest {
     
     private final UUID jobId;
 
-
     // Constructor
+    
     public GetJobSpectraS3Request(final UUID jobId) {
         this.jobId = jobId;
-        
-    }
+            }
+
 
     @Override
     public HttpVerb getVerb() {
@@ -46,6 +46,5 @@ public class GetJobSpectraS3Request extends AbstractRequest {
     public UUID getJobId() {
         return this.jobId;
     }
-
 
 }

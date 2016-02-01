@@ -23,12 +23,13 @@ public class GetPoolFailureNotificationRegistrationSpectraS3Request extends Abst
 
     // Variables
     
-
     // Constructor
+    
     public GetPoolFailureNotificationRegistrationSpectraS3Request(final UUID notificationId) {
         super(notificationId);
 
-            }
+        
+    }
 
 
     @Override
@@ -36,5 +37,4 @@ public class GetPoolFailureNotificationRegistrationSpectraS3Request extends Abst
         return "/_rest_/pool_failure_notification_registration/" + this.getNotificationId().toString();
     }
 
-    
-}
+    }

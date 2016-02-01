@@ -16,9 +16,8 @@
 // This code is auto-generated, do not modify
 package com.spectralogic.ds3client.commands.spectrads3;
 
-import com.spectralogic.ds3client.commands.AbstractRequest;
 import com.spectralogic.ds3client.HttpVerb;
-import java.lang.String;
+import com.spectralogic.ds3client.commands.AbstractRequest;
 import java.util.UUID;
 
 public class GetTapeLibrariesSpectraS3Request extends AbstractRequest {
@@ -26,17 +25,24 @@ public class GetTapeLibrariesSpectraS3Request extends AbstractRequest {
     // Variables
     
     private boolean lastPage;
+
     private String managementUrl;
+
     private String name;
+
     private int pageLength;
+
     private int pageOffset;
+
     private UUID pageStartMarker;
+
     private String serialNumber;
 
     // Constructor
+    
     public GetTapeLibrariesSpectraS3Request() {
-        
-    }
+            }
+
     public GetTapeLibrariesSpectraS3Request withLastPage(final boolean lastPage) {
         this.lastPage = lastPage;
         if (this.lastPage) {
@@ -98,25 +104,31 @@ public class GetTapeLibrariesSpectraS3Request extends AbstractRequest {
         return this.lastPage;
     }
 
+
     public String getManagementUrl() {
         return this.managementUrl;
     }
+
 
     public String getName() {
         return this.name;
     }
 
+
     public int getPageLength() {
         return this.pageLength;
     }
+
 
     public int getPageOffset() {
         return this.pageOffset;
     }
 
+
     public UUID getPageStartMarker() {
         return this.pageStartMarker;
     }
+
 
     public String getSerialNumber() {
         return this.serialNumber;

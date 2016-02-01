@@ -23,12 +23,13 @@ public class GetTapePartitionFailureNotificationRegistrationSpectraS3Request ext
 
     // Variables
     
-
     // Constructor
+    
     public GetTapePartitionFailureNotificationRegistrationSpectraS3Request(final UUID notificationId) {
         super(notificationId);
 
-            }
+        
+    }
 
 
     @Override
@@ -36,5 +37,4 @@ public class GetTapePartitionFailureNotificationRegistrationSpectraS3Request ext
         return "/_rest_/tape_partition_failure_notification_registration/" + this.getNotificationId().toString();
     }
 
-    
-}
+    }

@@ -16,9 +16,8 @@
 // This code is auto-generated, do not modify
 package com.spectralogic.ds3client.commands.spectrads3;
 
-import com.spectralogic.ds3client.commands.AbstractRequest;
 import com.spectralogic.ds3client.HttpVerb;
-import java.lang.String;
+import com.spectralogic.ds3client.commands.AbstractRequest;
 import com.spectralogic.ds3client.models.TapeState;
 import java.util.UUID;
 
@@ -29,14 +28,17 @@ public class ModifyTapeSpectraS3Request extends AbstractRequest {
     private final UUID tapeId;
 
     private String ejectLabel;
+
     private String ejectLocation;
+
     private TapeState state;
 
     // Constructor
+    
     public ModifyTapeSpectraS3Request(final UUID tapeId) {
         this.tapeId = tapeId;
-        
-    }
+            }
+
     public ModifyTapeSpectraS3Request withEjectLabel(final String ejectLabel) {
         this.ejectLabel = ejectLabel;
         this.updateQueryParam("eject_label", ejectLabel);
@@ -75,9 +77,11 @@ public class ModifyTapeSpectraS3Request extends AbstractRequest {
         return this.ejectLabel;
     }
 
+
     public String getEjectLocation() {
         return this.ejectLocation;
     }
+
 
     public TapeState getState() {
         return this.state;

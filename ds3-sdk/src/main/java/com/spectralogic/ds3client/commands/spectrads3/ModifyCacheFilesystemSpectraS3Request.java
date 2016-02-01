@@ -16,8 +16,8 @@
 // This code is auto-generated, do not modify
 package com.spectralogic.ds3client.commands.spectrads3;
 
-import com.spectralogic.ds3client.commands.AbstractRequest;
 import com.spectralogic.ds3client.HttpVerb;
+import com.spectralogic.ds3client.commands.AbstractRequest;
 import java.lang.Long;
 
 public class ModifyCacheFilesystemSpectraS3Request extends AbstractRequest {
@@ -27,15 +27,19 @@ public class ModifyCacheFilesystemSpectraS3Request extends AbstractRequest {
     private final String cacheFilesystem;
 
     private double autoReclaimInitiateThreshold;
+
     private double autoReclaimTerminateThreshold;
+
     private double burstThreshold;
+
     private Long maxCapacityInBytes;
 
     // Constructor
+    
     public ModifyCacheFilesystemSpectraS3Request(final String cacheFilesystem) {
         this.cacheFilesystem = cacheFilesystem;
-        
-    }
+            }
+
     public ModifyCacheFilesystemSpectraS3Request withAutoReclaimInitiateThreshold(final double autoReclaimInitiateThreshold) {
         this.autoReclaimInitiateThreshold = autoReclaimInitiateThreshold;
         this.updateQueryParam("auto_reclaim_initiate_threshold", Double.toString(autoReclaimInitiateThreshold));
@@ -80,13 +84,16 @@ public class ModifyCacheFilesystemSpectraS3Request extends AbstractRequest {
         return this.autoReclaimInitiateThreshold;
     }
 
+
     public double getAutoReclaimTerminateThreshold() {
         return this.autoReclaimTerminateThreshold;
     }
 
+
     public double getBurstThreshold() {
         return this.burstThreshold;
     }
+
 
     public Long getMaxCapacityInBytes() {
         return this.maxCapacityInBytes;

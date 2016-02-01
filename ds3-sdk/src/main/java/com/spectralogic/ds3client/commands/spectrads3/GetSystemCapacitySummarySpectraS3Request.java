@@ -16,8 +16,8 @@
 // This code is auto-generated, do not modify
 package com.spectralogic.ds3client.commands.spectrads3;
 
-import com.spectralogic.ds3client.commands.AbstractRequest;
 import com.spectralogic.ds3client.HttpVerb;
+import com.spectralogic.ds3client.commands.AbstractRequest;
 import com.spectralogic.ds3client.models.PoolHealth;
 import com.spectralogic.ds3client.models.PoolState;
 import com.spectralogic.ds3client.models.PoolType;
@@ -29,15 +29,20 @@ public class GetSystemCapacitySummarySpectraS3Request extends AbstractRequest {
     // Variables
     
     private PoolHealth poolHealth;
+
     private PoolState poolState;
+
     private PoolType poolType;
+
     private TapeState tapeState;
+
     private TapeType tapeType;
 
     // Constructor
+    
     public GetSystemCapacitySummarySpectraS3Request() {
-        
-    }
+            }
+
     public GetSystemCapacitySummarySpectraS3Request withPoolHealth(final PoolHealth poolHealth) {
         this.poolHealth = poolHealth;
         this.updateQueryParam("pool_health", poolHealth.toString());
@@ -83,17 +88,21 @@ public class GetSystemCapacitySummarySpectraS3Request extends AbstractRequest {
         return this.poolHealth;
     }
 
+
     public PoolState getPoolState() {
         return this.poolState;
     }
+
 
     public PoolType getPoolType() {
         return this.poolType;
     }
 
+
     public TapeState getTapeState() {
         return this.tapeState;
     }
+
 
     public TapeType getTapeType() {
         return this.tapeType;

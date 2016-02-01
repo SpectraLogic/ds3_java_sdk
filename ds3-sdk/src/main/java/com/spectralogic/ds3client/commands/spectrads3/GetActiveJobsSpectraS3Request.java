@@ -16,11 +16,10 @@
 // This code is auto-generated, do not modify
 package com.spectralogic.ds3client.commands.spectrads3;
 
-import com.spectralogic.ds3client.commands.AbstractRequest;
 import com.spectralogic.ds3client.HttpVerb;
+import com.spectralogic.ds3client.commands.AbstractRequest;
 import java.util.UUID;
 import com.spectralogic.ds3client.models.JobChunkClientProcessingOrderGuarantee;
-import java.lang.String;
 import com.spectralogic.ds3client.models.BlobStoreTaskPriority;
 import java.util.Date;
 import com.spectralogic.ds3client.models.JobRequestType;
@@ -30,23 +29,36 @@ public class GetActiveJobsSpectraS3Request extends AbstractRequest {
     // Variables
     
     private boolean aggregating;
+
     private UUID bucketId;
+
     private JobChunkClientProcessingOrderGuarantee chunkClientProcessingOrderGuarantee;
+
     private boolean lastPage;
+
     private String name;
+
     private int pageLength;
+
     private int pageOffset;
+
     private UUID pageStartMarker;
+
     private BlobStoreTaskPriority priority;
+
     private Date rechunked;
+
     private JobRequestType requestType;
+
     private boolean truncated;
+
     private UUID userId;
 
     // Constructor
+    
     public GetActiveJobsSpectraS3Request() {
-        
-    }
+            }
+
     public GetActiveJobsSpectraS3Request withAggregating(final boolean aggregating) {
         this.aggregating = aggregating;
         this.updateQueryParam("aggregating", null);
@@ -144,49 +156,61 @@ public class GetActiveJobsSpectraS3Request extends AbstractRequest {
         return this.aggregating;
     }
 
+
     public UUID getBucketId() {
         return this.bucketId;
     }
+
 
     public JobChunkClientProcessingOrderGuarantee getChunkClientProcessingOrderGuarantee() {
         return this.chunkClientProcessingOrderGuarantee;
     }
 
+
     public boolean getLastPage() {
         return this.lastPage;
     }
+
 
     public String getName() {
         return this.name;
     }
 
+
     public int getPageLength() {
         return this.pageLength;
     }
+
 
     public int getPageOffset() {
         return this.pageOffset;
     }
 
+
     public UUID getPageStartMarker() {
         return this.pageStartMarker;
     }
+
 
     public BlobStoreTaskPriority getPriority() {
         return this.priority;
     }
 
+
     public Date getRechunked() {
         return this.rechunked;
     }
+
 
     public JobRequestType getRequestType() {
         return this.requestType;
     }
 
+
     public boolean getTruncated() {
         return this.truncated;
     }
+
 
     public UUID getUserId() {
         return this.userId;

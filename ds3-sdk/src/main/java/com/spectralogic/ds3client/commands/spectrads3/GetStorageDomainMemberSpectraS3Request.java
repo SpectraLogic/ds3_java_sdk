@@ -16,8 +16,8 @@
 // This code is auto-generated, do not modify
 package com.spectralogic.ds3client.commands.spectrads3;
 
-import com.spectralogic.ds3client.commands.AbstractRequest;
 import com.spectralogic.ds3client.HttpVerb;
+import com.spectralogic.ds3client.commands.AbstractRequest;
 
 public class GetStorageDomainMemberSpectraS3Request extends AbstractRequest {
 
@@ -25,12 +25,12 @@ public class GetStorageDomainMemberSpectraS3Request extends AbstractRequest {
     
     private final String storageDomainMember;
 
-
     // Constructor
+    
     public GetStorageDomainMemberSpectraS3Request(final String storageDomainMember) {
         this.storageDomainMember = storageDomainMember;
-        
-    }
+            }
+
 
     @Override
     public HttpVerb getVerb() {
@@ -45,6 +45,5 @@ public class GetStorageDomainMemberSpectraS3Request extends AbstractRequest {
     public String getStorageDomainMember() {
         return this.storageDomainMember;
     }
-
 
 }

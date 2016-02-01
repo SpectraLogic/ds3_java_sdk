@@ -17,7 +17,6 @@
 package com.spectralogic.ds3client.commands;
 
 import com.spectralogic.ds3client.HttpVerb;
-import java.lang.String;
 
 public class GetBucketRequest extends AbstractRequest {
 
@@ -26,15 +25,19 @@ public class GetBucketRequest extends AbstractRequest {
     private final String bucketName;
 
     private String delimiter;
+
     private String marker;
+
     private int maxKeys;
+
     private String prefix;
 
     // Constructor
+    
     public GetBucketRequest(final String bucketName) {
         this.bucketName = bucketName;
-        
-    }
+            }
+
     public GetBucketRequest withDelimiter(final String delimiter) {
         this.delimiter = delimiter;
         this.updateQueryParam("delimiter", delimiter);
@@ -79,13 +82,16 @@ public class GetBucketRequest extends AbstractRequest {
         return this.delimiter;
     }
 
+
     public String getMarker() {
         return this.marker;
     }
 
+
     public int getMaxKeys() {
         return this.maxKeys;
     }
+
 
     public String getPrefix() {
         return this.prefix;

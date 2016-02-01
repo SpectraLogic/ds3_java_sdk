@@ -16,8 +16,8 @@
 // This code is auto-generated, do not modify
 package com.spectralogic.ds3client.commands.spectrads3;
 
-import com.spectralogic.ds3client.commands.AbstractRequest;
 import com.spectralogic.ds3client.HttpVerb;
+import com.spectralogic.ds3client.commands.AbstractRequest;
 import java.util.UUID;
 
 public class FormatTapeSpectraS3Request extends AbstractRequest {
@@ -29,11 +29,13 @@ public class FormatTapeSpectraS3Request extends AbstractRequest {
     private boolean force;
 
     // Constructor
+    
     public FormatTapeSpectraS3Request(final UUID tapeId) {
         this.tapeId = tapeId;
-        this.getQueryParams().put("operation", "format");
         
+        this.getQueryParams().put("operation", "format");
     }
+
     public FormatTapeSpectraS3Request withForce(final boolean force) {
         this.force = force;
         if (this.force) {

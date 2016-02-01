@@ -16,8 +16,8 @@
 // This code is auto-generated, do not modify
 package com.spectralogic.ds3client.commands.spectrads3;
 
-import com.spectralogic.ds3client.commands.AbstractRequest;
 import com.spectralogic.ds3client.HttpVerb;
+import com.spectralogic.ds3client.commands.AbstractRequest;
 import com.spectralogic.ds3client.models.Quiesced;
 
 public class ModifyTapePartitionSpectraS3Request extends AbstractRequest {
@@ -29,10 +29,11 @@ public class ModifyTapePartitionSpectraS3Request extends AbstractRequest {
     private Quiesced quiesced;
 
     // Constructor
+    
     public ModifyTapePartitionSpectraS3Request(final String tapePartition) {
         this.tapePartition = tapePartition;
-        
-    }
+            }
+
     public ModifyTapePartitionSpectraS3Request withQuiesced(final Quiesced quiesced) {
         this.quiesced = quiesced;
         this.updateQueryParam("quiesced", quiesced.toString());

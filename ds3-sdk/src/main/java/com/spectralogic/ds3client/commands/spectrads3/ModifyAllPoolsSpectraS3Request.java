@@ -16,8 +16,8 @@
 // This code is auto-generated, do not modify
 package com.spectralogic.ds3client.commands.spectrads3;
 
-import com.spectralogic.ds3client.commands.AbstractRequest;
 import com.spectralogic.ds3client.HttpVerb;
+import com.spectralogic.ds3client.commands.AbstractRequest;
 import com.spectralogic.ds3client.models.Quiesced;
 
 public class ModifyAllPoolsSpectraS3Request extends AbstractRequest {
@@ -26,14 +26,13 @@ public class ModifyAllPoolsSpectraS3Request extends AbstractRequest {
     
     private final Quiesced quiesced;
 
-
     // Constructor
+    
     public ModifyAllPoolsSpectraS3Request(final Quiesced quiesced) {
         this.quiesced = quiesced;
-        
-        this.getQueryParams().put("quiesced", quiesced.toString());
-
+                this.getQueryParams().put("quiesced", quiesced.toString());
     }
+
 
     @Override
     public HttpVerb getVerb() {
@@ -48,6 +47,5 @@ public class ModifyAllPoolsSpectraS3Request extends AbstractRequest {
     public Quiesced getQuiesced() {
         return this.quiesced;
     }
-
 
 }

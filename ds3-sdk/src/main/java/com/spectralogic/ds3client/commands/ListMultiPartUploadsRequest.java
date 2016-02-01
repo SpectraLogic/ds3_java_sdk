@@ -17,7 +17,6 @@
 package com.spectralogic.ds3client.commands;
 
 import com.spectralogic.ds3client.HttpVerb;
-import java.lang.String;
 
 public class ListMultiPartUploadsRequest extends AbstractRequest {
 
@@ -26,18 +25,22 @@ public class ListMultiPartUploadsRequest extends AbstractRequest {
     private final String bucketName;
 
     private String delimiter;
+
     private String keyMarker;
+
     private int maxUploads;
+
     private String prefix;
+
     private String uploadIdMarker;
 
     // Constructor
+    
     public ListMultiPartUploadsRequest(final String bucketName) {
         this.bucketName = bucketName;
-        
-        this.getQueryParams().put("uploads", null);
-
+                this.getQueryParams().put("uploads", null);
     }
+
     public ListMultiPartUploadsRequest withDelimiter(final String delimiter) {
         this.delimiter = delimiter;
         this.updateQueryParam("delimiter", delimiter);
@@ -88,17 +91,21 @@ public class ListMultiPartUploadsRequest extends AbstractRequest {
         return this.delimiter;
     }
 
+
     public String getKeyMarker() {
         return this.keyMarker;
     }
+
 
     public int getMaxUploads() {
         return this.maxUploads;
     }
 
+
     public String getPrefix() {
         return this.prefix;
     }
+
 
     public String getUploadIdMarker() {
         return this.uploadIdMarker;

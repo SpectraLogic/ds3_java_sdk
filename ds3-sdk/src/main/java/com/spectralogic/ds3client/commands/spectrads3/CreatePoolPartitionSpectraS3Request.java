@@ -16,9 +16,8 @@
 // This code is auto-generated, do not modify
 package com.spectralogic.ds3client.commands.spectrads3;
 
-import com.spectralogic.ds3client.commands.AbstractRequest;
 import com.spectralogic.ds3client.HttpVerb;
-import java.lang.String;
+import com.spectralogic.ds3client.commands.AbstractRequest;
 import com.spectralogic.ds3client.models.PoolType;
 
 public class CreatePoolPartitionSpectraS3Request extends AbstractRequest {
@@ -29,17 +28,15 @@ public class CreatePoolPartitionSpectraS3Request extends AbstractRequest {
 
     private final PoolType type;
 
-
     // Constructor
+    
     public CreatePoolPartitionSpectraS3Request(final String name, final PoolType type) {
         this.name = name;
         this.type = type;
-        
-        this.getQueryParams().put("name", name);
-
+                this.getQueryParams().put("name", name);
         this.getQueryParams().put("type", type.toString());
-
     }
+
 
     @Override
     public HttpVerb getVerb() {
@@ -59,6 +56,5 @@ public class CreatePoolPartitionSpectraS3Request extends AbstractRequest {
     public PoolType getType() {
         return this.type;
     }
-
 
 }

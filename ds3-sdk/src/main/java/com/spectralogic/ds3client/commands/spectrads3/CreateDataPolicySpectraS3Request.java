@@ -16,9 +16,8 @@
 // This code is auto-generated, do not modify
 package com.spectralogic.ds3client.commands.spectrads3;
 
-import com.spectralogic.ds3client.commands.AbstractRequest;
 import com.spectralogic.ds3client.HttpVerb;
-import java.lang.String;
+import com.spectralogic.ds3client.commands.AbstractRequest;
 import com.spectralogic.ds3client.models.ChecksumType;
 import java.lang.Long;
 import com.spectralogic.ds3client.models.BlobStoreTaskPriority;
@@ -31,22 +30,30 @@ public class CreateDataPolicySpectraS3Request extends AbstractRequest {
     private final String name;
 
     private boolean blobbingEnabled;
+
     private ChecksumType.Type checksumType;
+
     private Long defaultBlobSize;
+
     private BlobStoreTaskPriority defaultGetJobPriority;
+
     private BlobStoreTaskPriority defaultPutJobPriority;
+
     private BlobStoreTaskPriority defaultVerifyJobPriority;
+
     private boolean endToEndCrcRequired;
+
     private BlobStoreTaskPriority rebuildPriority;
+
     private VersioningLevel versioning;
 
     // Constructor
+    
     public CreateDataPolicySpectraS3Request(final String name) {
         this.name = name;
-        
-        this.getQueryParams().put("name", name);
-
+                this.getQueryParams().put("name", name);
     }
+
     public CreateDataPolicySpectraS3Request withBlobbingEnabled(final boolean blobbingEnabled) {
         this.blobbingEnabled = blobbingEnabled;
         this.updateQueryParam("blobbing_enabled", null);
@@ -121,33 +128,41 @@ public class CreateDataPolicySpectraS3Request extends AbstractRequest {
         return this.blobbingEnabled;
     }
 
+
     public ChecksumType.Type getChecksumType() {
         return this.checksumType;
     }
+
 
     public Long getDefaultBlobSize() {
         return this.defaultBlobSize;
     }
 
+
     public BlobStoreTaskPriority getDefaultGetJobPriority() {
         return this.defaultGetJobPriority;
     }
+
 
     public BlobStoreTaskPriority getDefaultPutJobPriority() {
         return this.defaultPutJobPriority;
     }
 
+
     public BlobStoreTaskPriority getDefaultVerifyJobPriority() {
         return this.defaultVerifyJobPriority;
     }
+
 
     public boolean getEndToEndCrcRequired() {
         return this.endToEndCrcRequired;
     }
 
+
     public BlobStoreTaskPriority getRebuildPriority() {
         return this.rebuildPriority;
     }
+
 
     public VersioningLevel getVersioning() {
         return this.versioning;

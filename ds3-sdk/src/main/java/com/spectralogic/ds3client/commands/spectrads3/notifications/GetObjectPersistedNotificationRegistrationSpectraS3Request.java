@@ -23,12 +23,13 @@ public class GetObjectPersistedNotificationRegistrationSpectraS3Request extends 
 
     // Variables
     
-
     // Constructor
+    
     public GetObjectPersistedNotificationRegistrationSpectraS3Request(final UUID notificationId) {
         super(notificationId);
 
-            }
+        
+    }
 
 
     @Override
@@ -36,5 +37,4 @@ public class GetObjectPersistedNotificationRegistrationSpectraS3Request extends 
         return "/_rest_/object_persisted_notification_registration/" + this.getNotificationId().toString();
     }
 
-    
-}
+    }

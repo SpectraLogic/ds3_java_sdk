@@ -23,12 +23,13 @@ public class GetJobCreatedNotificationRegistrationSpectraS3Request extends Abstr
 
     // Variables
     
-
     // Constructor
+    
     public GetJobCreatedNotificationRegistrationSpectraS3Request(final UUID notificationId) {
         super(notificationId);
 
-            }
+        
+    }
 
 
     @Override
@@ -36,5 +37,4 @@ public class GetJobCreatedNotificationRegistrationSpectraS3Request extends Abstr
         return "/_rest_/job_created_notification_registration/" + this.getNotificationId().toString();
     }
 
-    
-}
+    }

@@ -16,8 +16,8 @@
 // This code is auto-generated, do not modify
 package com.spectralogic.ds3client.commands.spectrads3;
 
-import com.spectralogic.ds3client.commands.AbstractRequest;
 import com.spectralogic.ds3client.HttpVerb;
+import com.spectralogic.ds3client.commands.AbstractRequest;
 import java.lang.Integer;
 import com.spectralogic.ds3client.models.AutoInspectMode;
 import com.spectralogic.ds3client.models.ImportConflictResolutionMode;
@@ -28,17 +28,24 @@ public class ModifyDataPathBackendSpectraS3Request extends AbstractRequest {
     // Variables
     
     private boolean activated;
+
     private int autoActivateTimeoutInMins;
+
     private AutoInspectMode autoInspect;
+
     private ImportConflictResolutionMode defaultImportConflictResolutionMode;
+
     private UnavailableMediaUsagePolicy unavailableMediaPolicy;
+
     private int unavailablePoolMaxJobRetryInMins;
+
     private int unavailableTapePartitionMaxJobRetryInMins;
 
     // Constructor
+    
     public ModifyDataPathBackendSpectraS3Request() {
-        
-    }
+            }
+
     public ModifyDataPathBackendSpectraS3Request withActivated(final boolean activated) {
         this.activated = activated;
         this.updateQueryParam("activated", null);
@@ -96,25 +103,31 @@ public class ModifyDataPathBackendSpectraS3Request extends AbstractRequest {
         return this.activated;
     }
 
+
     public int getAutoActivateTimeoutInMins() {
         return this.autoActivateTimeoutInMins;
     }
+
 
     public AutoInspectMode getAutoInspect() {
         return this.autoInspect;
     }
 
+
     public ImportConflictResolutionMode getDefaultImportConflictResolutionMode() {
         return this.defaultImportConflictResolutionMode;
     }
+
 
     public UnavailableMediaUsagePolicy getUnavailableMediaPolicy() {
         return this.unavailableMediaPolicy;
     }
 
+
     public int getUnavailablePoolMaxJobRetryInMins() {
         return this.unavailablePoolMaxJobRetryInMins;
     }
+
 
     public int getUnavailableTapePartitionMaxJobRetryInMins() {
         return this.unavailableTapePartitionMaxJobRetryInMins;

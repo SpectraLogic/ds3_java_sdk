@@ -23,12 +23,13 @@ public class GetObjectLostNotificationRegistrationSpectraS3Request extends Abstr
 
     // Variables
     
-
     // Constructor
+    
     public GetObjectLostNotificationRegistrationSpectraS3Request(final UUID notificationId) {
         super(notificationId);
 
-            }
+        
+    }
 
 
     @Override
@@ -36,5 +37,4 @@ public class GetObjectLostNotificationRegistrationSpectraS3Request extends Abstr
         return "/_rest_/object_lost_notification_registration/" + this.getNotificationId().toString();
     }
 
-    
-}
+    }

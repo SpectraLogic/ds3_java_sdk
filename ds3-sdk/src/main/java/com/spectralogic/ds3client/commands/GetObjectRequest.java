@@ -34,35 +34,36 @@ public class GetObjectRequest extends AbstractRequest {
 
     private final String objectName;
 
-    private UUID job;
-    private long offset;
     private final WritableByteChannel channel;
+
+    private UUID job;
+
+    private long offset;
     private ImmutableCollection<Range> byteRanges = null;
     private ChecksumType checksum = ChecksumType.none();
     private ChecksumType.Type checksumType = ChecksumType.Type.NONE;
 
     // Constructor
-
-    /**
-     * @deprecated use {@link #GetObjectRequest(String, String, WritableByteChannel, UUID, long)} instead
-     */
+    /** @deprecated use {@link #GetObjectRequest(String, String, WritableByteChannel, UUID, long)} instead */
     @Deprecated
     public GetObjectRequest(final String bucketName, final String objectName, final WritableByteChannel channel) {
         this.bucketName = bucketName;
         this.objectName = objectName;
         this.channel = channel;
+        
     }
 
     public GetObjectRequest(final String bucketName, final String objectName, final WritableByteChannel channel, final UUID job, final long offset) {
         this.bucketName = bucketName;
         this.objectName = objectName;
+        this.channel = channel;
         this.job = job;
         this.offset = offset;
-        this.channel = channel;
-
-        this.getQueryParams().put("job", job.toString());
+                this.getQueryParams().put("job", job.toString());
         this.getQueryParams().put("offset", Long.toString(offset));
+
     }
+
 
     public GetObjectRequest withJob(final UUID job) {
         this.job = job;
@@ -162,9 +163,15 @@ public class GetObjectRequest extends AbstractRequest {
     }
 
 
+    public WritableByteChannel getChannel() {
+        return this.channel;
+    }
+
+
     public UUID getJob() {
         return this.job;
     }
+
 
     public long getOffset() {
         return this.offset;
@@ -175,9 +182,5 @@ public class GetObjectRequest extends AbstractRequest {
         return this.byteRanges;
     }
 
-
-    public WritableByteChannel getChannel() {
-        return this.channel;
-    }
 
 }

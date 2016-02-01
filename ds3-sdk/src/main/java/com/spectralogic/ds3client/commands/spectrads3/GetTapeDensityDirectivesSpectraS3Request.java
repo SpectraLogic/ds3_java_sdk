@@ -16,8 +16,8 @@
 // This code is auto-generated, do not modify
 package com.spectralogic.ds3client.commands.spectrads3;
 
-import com.spectralogic.ds3client.commands.AbstractRequest;
 import com.spectralogic.ds3client.HttpVerb;
+import com.spectralogic.ds3client.commands.AbstractRequest;
 import com.spectralogic.ds3client.models.TapeDriveType;
 import java.util.UUID;
 import com.spectralogic.ds3client.models.TapeType;
@@ -27,17 +27,24 @@ public class GetTapeDensityDirectivesSpectraS3Request extends AbstractRequest {
     // Variables
     
     private TapeDriveType density;
+
     private boolean lastPage;
+
     private int pageLength;
+
     private int pageOffset;
+
     private UUID pageStartMarker;
+
     private UUID partitionId;
+
     private TapeType tapeType;
 
     // Constructor
+    
     public GetTapeDensityDirectivesSpectraS3Request() {
-        
-    }
+            }
+
     public GetTapeDensityDirectivesSpectraS3Request withDensity(final TapeDriveType density) {
         this.density = density;
         this.updateQueryParam("density", density.toString());
@@ -99,25 +106,31 @@ public class GetTapeDensityDirectivesSpectraS3Request extends AbstractRequest {
         return this.density;
     }
 
+
     public boolean getLastPage() {
         return this.lastPage;
     }
+
 
     public int getPageLength() {
         return this.pageLength;
     }
 
+
     public int getPageOffset() {
         return this.pageOffset;
     }
+
 
     public UUID getPageStartMarker() {
         return this.pageStartMarker;
     }
 
+
     public UUID getPartitionId() {
         return this.partitionId;
     }
+
 
     public TapeType getTapeType() {
         return this.tapeType;

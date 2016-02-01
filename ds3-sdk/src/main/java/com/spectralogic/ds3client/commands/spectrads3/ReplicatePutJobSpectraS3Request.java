@@ -16,11 +16,11 @@
 // This code is auto-generated, do not modify
 package com.spectralogic.ds3client.commands.spectrads3;
 
-import com.spectralogic.ds3client.commands.BulkRequest;
 import java.util.List;
 import com.spectralogic.ds3client.BulkCommand;
 import com.spectralogic.ds3client.models.bulk.Ds3Object;
 import com.spectralogic.ds3client.serializer.XmlProcessingException;
+import com.spectralogic.ds3client.commands.BulkRequest;
 import com.spectralogic.ds3client.models.ReplicationConflictResolutionMode;
 import com.spectralogic.ds3client.models.BlobStoreTaskPriority;
 
@@ -29,15 +29,13 @@ public class ReplicatePutJobSpectraS3Request extends BulkRequest {
 
     
     private ReplicationConflictResolutionMode conflictResolutionMode;
-    
 
     // Constructor
     public ReplicatePutJobSpectraS3Request(final String bucketName, final List<Ds3Object> objects) throws XmlProcessingException {
         super(bucketName, objects);
-        this.getQueryParams().put("operation", "start_bulk_put");
         
+        this.getQueryParams().put("operation", "start_bulk_put");
         this.getQueryParams().put("replicate", null);
-
     }
 
     public ReplicatePutJobSpectraS3Request withConflictResolutionMode(final ReplicationConflictResolutionMode conflictResolutionMode) {
@@ -53,10 +51,11 @@ public class ReplicatePutJobSpectraS3Request extends BulkRequest {
     }
 
 
-
+    
     public ReplicationConflictResolutionMode getConflictResolutionMode() {
         return this.conflictResolutionMode;
     }
+
 
     @Override
     public BulkCommand getCommand() {

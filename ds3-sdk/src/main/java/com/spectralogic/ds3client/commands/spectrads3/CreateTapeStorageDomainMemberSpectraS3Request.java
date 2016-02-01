@@ -16,8 +16,8 @@
 // This code is auto-generated, do not modify
 package com.spectralogic.ds3client.commands.spectrads3;
 
-import com.spectralogic.ds3client.commands.AbstractRequest;
 import com.spectralogic.ds3client.HttpVerb;
+import com.spectralogic.ds3client.commands.AbstractRequest;
 import java.util.UUID;
 import com.spectralogic.ds3client.models.TapeType;
 import com.spectralogic.ds3client.models.WritePreferenceLevel;
@@ -35,18 +35,16 @@ public class CreateTapeStorageDomainMemberSpectraS3Request extends AbstractReque
     private WritePreferenceLevel writePreference;
 
     // Constructor
+    
     public CreateTapeStorageDomainMemberSpectraS3Request(final UUID storageDomainId, final UUID tapePartitionId, final TapeType tapeType) {
         this.storageDomainId = storageDomainId;
         this.tapePartitionId = tapePartitionId;
         this.tapeType = tapeType;
-        
-        this.getQueryParams().put("storage_domain_id", storageDomainId.toString());
-
+                this.getQueryParams().put("storage_domain_id", storageDomainId.toString());
         this.getQueryParams().put("tape_partition_id", tapePartitionId.toString());
-
         this.getQueryParams().put("tape_type", tapeType.toString());
-
     }
+
     public CreateTapeStorageDomainMemberSpectraS3Request withWritePreference(final WritePreferenceLevel writePreference) {
         this.writePreference = writePreference;
         this.updateQueryParam("write_preference", writePreference.toString());

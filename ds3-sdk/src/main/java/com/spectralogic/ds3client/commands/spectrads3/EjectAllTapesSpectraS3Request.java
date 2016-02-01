@@ -16,22 +16,24 @@
 // This code is auto-generated, do not modify
 package com.spectralogic.ds3client.commands.spectrads3;
 
-import com.spectralogic.ds3client.commands.AbstractRequest;
 import com.spectralogic.ds3client.HttpVerb;
-import java.lang.String;
+import com.spectralogic.ds3client.commands.AbstractRequest;
 
 public class EjectAllTapesSpectraS3Request extends AbstractRequest {
 
     // Variables
     
     private String ejectLabel;
+
     private String ejectLocation;
 
     // Constructor
+    
     public EjectAllTapesSpectraS3Request() {
-        this.getQueryParams().put("operation", "eject");
         
+        this.getQueryParams().put("operation", "eject");
     }
+
     public EjectAllTapesSpectraS3Request withEjectLabel(final String ejectLabel) {
         this.ejectLabel = ejectLabel;
         this.updateQueryParam("eject_label", ejectLabel);
@@ -58,6 +60,7 @@ public class EjectAllTapesSpectraS3Request extends AbstractRequest {
     public String getEjectLabel() {
         return this.ejectLabel;
     }
+
 
     public String getEjectLocation() {
         return this.ejectLocation;

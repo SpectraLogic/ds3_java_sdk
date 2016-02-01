@@ -23,12 +23,13 @@ public class DeleteObjectLostNotificationRegistrationSpectraS3Request extends Ab
 
     //Variables
     
-
     //Constructor
+    
     public DeleteObjectLostNotificationRegistrationSpectraS3Request(final UUID notificationId) {
         super(notificationId);
 
-            }
+        
+    }
 
     @Override
     public String getPath() {

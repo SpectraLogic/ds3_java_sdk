@@ -16,8 +16,8 @@
 // This code is auto-generated, do not modify
 package com.spectralogic.ds3client.commands.spectrads3;
 
-import com.spectralogic.ds3client.commands.AbstractRequest;
 import com.spectralogic.ds3client.HttpVerb;
+import com.spectralogic.ds3client.commands.AbstractRequest;
 import java.util.UUID;
 
 public class CancelJobSpectraS3Request extends AbstractRequest {
@@ -29,10 +29,11 @@ public class CancelJobSpectraS3Request extends AbstractRequest {
     private boolean force;
 
     // Constructor
+    
     public CancelJobSpectraS3Request(final UUID jobId) {
         this.jobId = jobId;
-        
-    }
+            }
+
     public CancelJobSpectraS3Request withForce(final boolean force) {
         this.force = force;
         if (this.force) {

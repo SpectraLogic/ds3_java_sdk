@@ -23,12 +23,13 @@ public class DeleteObjectCachedNotificationRegistrationSpectraS3Request extends 
 
     //Variables
     
-
     //Constructor
+    
     public DeleteObjectCachedNotificationRegistrationSpectraS3Request(final UUID notificationId) {
         super(notificationId);
 
-            }
+        
+    }
 
     @Override
     public String getPath() {

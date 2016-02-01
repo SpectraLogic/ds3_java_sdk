@@ -24,12 +24,12 @@ public class CreateBucketRequest extends AbstractRequest {
     
     private final String bucketName;
 
-
     // Constructor
+    
     public CreateBucketRequest(final String bucketName) {
         this.bucketName = bucketName;
-        
-    }
+            }
+
 
     @Override
     public HttpVerb getVerb() {
@@ -44,6 +44,5 @@ public class CreateBucketRequest extends AbstractRequest {
     public String getBucketName() {
         return this.bucketName;
     }
-
 
 }

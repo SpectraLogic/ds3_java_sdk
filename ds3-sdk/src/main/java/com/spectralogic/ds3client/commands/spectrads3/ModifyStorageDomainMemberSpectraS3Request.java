@@ -16,8 +16,8 @@
 // This code is auto-generated, do not modify
 package com.spectralogic.ds3client.commands.spectrads3;
 
-import com.spectralogic.ds3client.commands.AbstractRequest;
 import com.spectralogic.ds3client.HttpVerb;
+import com.spectralogic.ds3client.commands.AbstractRequest;
 import com.spectralogic.ds3client.models.WritePreferenceLevel;
 
 public class ModifyStorageDomainMemberSpectraS3Request extends AbstractRequest {
@@ -29,10 +29,11 @@ public class ModifyStorageDomainMemberSpectraS3Request extends AbstractRequest {
     private WritePreferenceLevel writePreference;
 
     // Constructor
+    
     public ModifyStorageDomainMemberSpectraS3Request(final String storageDomainMember) {
         this.storageDomainMember = storageDomainMember;
-        
-    }
+            }
+
     public ModifyStorageDomainMemberSpectraS3Request withWritePreference(final WritePreferenceLevel writePreference) {
         this.writePreference = writePreference;
         this.updateQueryParam("write_preference", writePreference.toString());
