@@ -170,6 +170,7 @@ public class DataIntegrity_Test {
             final String checksum = listener.getChecksum();
 
             assertThat(checksum, is(notNullValue()));
+            assertThat(checksum, is("rCu751L6xhB5zyL+soa3fg=="));
 
         } finally {
             Util.deleteAllContents(client, bucketName);
