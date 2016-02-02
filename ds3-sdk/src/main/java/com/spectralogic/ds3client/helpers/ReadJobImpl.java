@@ -28,6 +28,7 @@ import com.spectralogic.ds3client.exceptions.Ds3NoMoreRetriesException;
 import com.spectralogic.ds3client.helpers.ChunkTransferrer.ItemTransferrer;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.ObjectChannelBuilder;
 import com.spectralogic.ds3client.helpers.util.PartialObjectHelpers;
+import com.spectralogic.ds3client.models.Checksum;
 import com.spectralogic.ds3client.models.Range;
 import com.spectralogic.ds3client.models.bulk.BulkObject;
 import com.spectralogic.ds3client.models.bulk.MasterObjectList;
@@ -54,6 +55,7 @@ class ReadJobImpl extends JobImpl {
     private final int retryAfter; // Negative retryAfter value represent infinity retries
     private int retryAfterLeft; // The number of retries left
     private Map<MetadataReceivedListener, MetadataReceivedListener> metadataListeners;
+    private Map<ChecksumListener, ChecksumListener> checksumListeners;
 
     public ReadJobImpl(final Ds3Client client, final MasterObjectList masterObjectList, final ImmutableMultimap<String, Range> objectRanges, final int retryAfter) {
         super(client, masterObjectList);
@@ -64,6 +66,7 @@ class ReadJobImpl extends JobImpl {
         this.blobToRanges = PartialObjectHelpers.mapRangesToBlob(masterObjectList.getObjects(), objectRanges);
         this.retryAfter = this.retryAfterLeft = retryAfter;
         this.metadataListeners = new IdentityHashMap<>();
+        this.checksumListeners = new IdentityHashMap<>();
     }
 
     @Override
@@ -103,9 +106,25 @@ class ReadJobImpl extends JobImpl {
     }
 
     @Override
+    public void attachChecksumListener(final ChecksumListener listener) {
+        checkRunning();
+        this.checksumListeners.put(listener, listener);
+    }
+
+    @Override
+    public void removeChecksumListener(final ChecksumListener listener) {
+        checkRunning();
+        this.checksumListeners.remove(listener);
+    }
+
+    @Override
     public Ds3ClientHelpers.Job withMetadata(final Ds3ClientHelpers.MetadataAccess access) {
-        LOG.warn("The withMetadata method is not used with Read Jobs");
-        return this;
+        throw new IllegalStateException("withMetadata method is not used with Read Jobs");
+    }
+
+    @Override
+    public Ds3ClientHelpers.Job withChecksum(final ChecksumFunction checksumFunction) {
+        throw new IllegalStateException("withChecksum is not supported on Read Jobs");
     }
 
     @Override
@@ -182,8 +201,15 @@ class ReadJobImpl extends JobImpl {
             final GetObjectResponse response = client.getObject(request);
             final Metadata metadata = response.getMetadata();
 
+            sendChecksumEvents(ds3Object, response.getChecksumType(), response.getChecksum());
             sendMetadataEvents(ds3Object.getName(), metadata);
         }
+    }
+
+    private void sendChecksumEvents(final BulkObject ds3Object, final Checksum.Type type, final String checksum) {
+            for (final ChecksumListener listener : this.checksumListeners.values()) {
+                listener.value(ds3Object, type, checksum);
+            }
     }
 
     private void sendMetadataEvents(final String objName , final Metadata metadata) {

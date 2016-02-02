@@ -515,11 +515,9 @@ public class Smoke_Test {
 
             helpers.ensureBucketExists(bucketName);
 
-            final List<Ds3Object> objs = new ArrayList<>();
-            objs.add(new Ds3Object("beowulf.txt", 294059));
+            final List<Ds3Object> objs = Lists.newArrayList(new Ds3Object("beowulf.txt", 294059));
 
             final MasterObjectList mol = client.bulkPut(new BulkPutRequest(bucketName, objs)).getResult();
-
 
             final FileChannel channel = FileChannel.open(ResourceUtils.loadFileResource("books/beowulf.txt"), StandardOpenOption.READ);
 
@@ -882,7 +880,6 @@ public class Smoke_Test {
             });
 
             assertThat(Files.size(filePath), is(200L));
-
 
         } finally {
             Files.delete(filePath);

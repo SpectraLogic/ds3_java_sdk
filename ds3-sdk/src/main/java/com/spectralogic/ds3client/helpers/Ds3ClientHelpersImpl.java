@@ -22,6 +22,7 @@ import com.spectralogic.ds3client.commands.*;
 import com.spectralogic.ds3client.helpers.options.ReadJobOptions;
 import com.spectralogic.ds3client.helpers.options.WriteJobOptions;
 import com.spectralogic.ds3client.helpers.util.PartialObjectHelpers;
+import com.spectralogic.ds3client.models.Checksum;
 import com.spectralogic.ds3client.models.Contents;
 import com.spectralogic.ds3client.models.ListBucketResult;
 import com.spectralogic.ds3client.models.Range;
@@ -81,7 +82,7 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
                 .withPriority(options.getPriority())
                 .withWriteOptimization(options.getWriteOptimization())
                 .withMaxUploadSize(options.getMaxUploadSize()));
-        return new WriteJobImpl(this.client, prime.getResult(), this.retryAfter);
+        return new WriteJobImpl(this.client, prime.getResult(), this.retryAfter, options.getChecksumType());
     }
 
     @Override
@@ -144,8 +145,8 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
         if (RequestType.PUT != jobResponse.getMasterObjectList().getRequestType()){
             throw new JobRecoveryException(RequestType.PUT.toString(), jobResponse.getMasterObjectList().getRequestType().toString() );
         }
-
-        return new WriteJobImpl(this.client, jobResponse.getMasterObjectList(), this.retryAfter);
+        // TODO Need to allow the user to pass in the checksumming information again
+        return new WriteJobImpl(this.client, jobResponse.getMasterObjectList(), this.retryAfter, Checksum.Type.NONE);
     }
 
     @Override

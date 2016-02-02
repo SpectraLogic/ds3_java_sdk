@@ -61,13 +61,16 @@ public abstract class Ds3ClientHelpers {
         void removeObjectCompletedListener(final ObjectCompletedListener listener);
         void attachMetadataReceivedListener(final MetadataReceivedListener listener);
         void removeMetadataReceivedListener(final MetadataReceivedListener listener);
-
+        void attachChecksumListener(final ChecksumListener listener);
+        void removeChecksumListener(final ChecksumListener listener);
         /**
          * Sets the maximum number of requests to execute at a time when fulfilling the job.
          */
-        Job withMaxParallelRequests(int maxParallelRequests);
-
+        Job withMaxParallelRequests(final int maxParallelRequests);
+        
         Job withMetadata(final MetadataAccess access);
+
+        Job withChecksum(final ChecksumFunction checksumFunction);
 
         /**
          * Transfers the files in this job using the given seekable channel creator.  The is a blocking call.

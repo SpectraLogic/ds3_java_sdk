@@ -15,8 +15,11 @@
 
 package com.spectralogic.ds3client.helpers;
 
-import com.spectralogic.ds3client.networking.Metadata;
+import com.spectralogic.ds3client.models.bulk.BulkObject;
+import com.spectralogic.ds3client.models.bulk.Ds3Object;
 
-public interface MetadataReceivedListener {
-    void metadataReceived(final String filename, final Metadata metdata);
+import java.nio.channels.ByteChannel;
+
+public interface ChecksumFunction {
+    String compute(final BulkObject obj, final ByteChannel channel);
 }

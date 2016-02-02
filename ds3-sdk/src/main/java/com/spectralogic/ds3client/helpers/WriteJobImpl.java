@@ -25,31 +25,36 @@ import com.spectralogic.ds3client.commands.PutObjectRequest;
 import com.spectralogic.ds3client.exceptions.Ds3NoMoreRetriesException;
 import com.spectralogic.ds3client.helpers.ChunkTransferrer.ItemTransferrer;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.ObjectChannelBuilder;
+import com.spectralogic.ds3client.models.Checksum;
 import com.spectralogic.ds3client.models.Range;
 import com.spectralogic.ds3client.models.bulk.BulkObject;
 import com.spectralogic.ds3client.models.bulk.MasterObjectList;
 import com.spectralogic.ds3client.models.bulk.Objects;
 import com.spectralogic.ds3client.serializer.XmlProcessingException;
 import com.spectralogic.ds3client.utils.Guard;
+import com.spectralogic.ds3client.utils.SeekableByteChannelInputStream;
+import com.spectralogic.ds3client.utils.hashing.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.channels.SeekableByteChannel;
 import java.security.SignatureException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 class WriteJobImpl extends JobImpl {
     static private final Logger LOG = LoggerFactory.getLogger(WriteJobImpl.class);
     private final JobPartTracker partTracker;
     private final List<Objects> filteredChunks;
     private final int retryAfter; // Negative retryAfter value represent infinity retries
+    private final Checksum.Type checksumType;
+    private final Map<ChecksumListener, ChecksumListener> checksumListeners;
     private int retryAfterLeft; // The number of retries left
     private Ds3ClientHelpers.MetadataAccess metadataAccess = null;
+    private ChecksumFunction checksumFunction = null;
 
-    public WriteJobImpl(final Ds3Client client, final MasterObjectList masterObjectList, final int retryAfter) {
+    public WriteJobImpl(final Ds3Client client, final MasterObjectList masterObjectList, final int retryAfter, final Checksum.Type type) {
         super(client, masterObjectList);
         if (this.masterObjectList == null || this.masterObjectList.getObjects() == null) {
             LOG.info("Job has no data to transfer");
@@ -62,6 +67,8 @@ class WriteJobImpl extends JobImpl {
                     .buildPartTracker(Iterables.concat(filteredChunks));
         }
         this.retryAfter = this.retryAfterLeft = retryAfter;
+        this.checksumListeners = new IdentityHashMap<>();
+        this.checksumType = type;
     }
 
     @Override
@@ -90,18 +97,36 @@ class WriteJobImpl extends JobImpl {
 
     @Override
     public void attachMetadataReceivedListener(final MetadataReceivedListener listener) {
-        LOG.warn("Metadata listeners are not used with Write jobs");
+        throw new IllegalStateException("Metadata listeners are not used with Write jobs");
     }
 
     @Override
     public void removeMetadataReceivedListener(final MetadataReceivedListener listener) {
-        LOG.warn("Metadata listeners are not used with Write jobs");
+        throw new IllegalStateException("Metadata listeners are not used with Write jobs");
+    }
+
+    @Override
+    public void attachChecksumListener(final ChecksumListener listener) {
+        checkRunning();
+        this.checksumListeners.put(listener, listener);
+    }
+
+    @Override
+    public void removeChecksumListener(final ChecksumListener listener) {
+        checkRunning();
+        this.checksumListeners.remove(listener);
     }
 
     @Override
     public Ds3ClientHelpers.Job withMetadata(final Ds3ClientHelpers.MetadataAccess access) {
         checkRunning();
         this.metadataAccess = access;
+        return this;
+    }
+
+    @Override
+    public Ds3ClientHelpers.Job withChecksum(final ChecksumFunction checksumFunction) {
+        this.checksumFunction = checksumFunction;
         return this;
     }
 
@@ -214,18 +239,19 @@ class WriteJobImpl extends JobImpl {
         @Override
         public void transferItem(final Ds3Client client, final BulkObject ds3Object)
                 throws SignatureException, IOException {
-
             client.putObject(createRequest(ds3Object));
         }
 
-        private PutObjectRequest createRequest(final BulkObject ds3Object) {
+        private PutObjectRequest createRequest(final BulkObject ds3Object) throws IOException {
+            final SeekableByteChannel channel = jobState.getChannel(ds3Object.getName(), ds3Object.getOffset(), ds3Object.getLength());
+
             final PutObjectRequest request = new PutObjectRequest(
-                WriteJobImpl.this.masterObjectList.getBucketName(),
-                ds3Object.getName(),
-                WriteJobImpl.this.getJobId(),
-                ds3Object.getLength(),
-                ds3Object.getOffset(),
-                jobState.getChannel(ds3Object.getName(), ds3Object.getOffset(), ds3Object.getLength())
+                    WriteJobImpl.this.masterObjectList.getBucketName(),
+                    ds3Object.getName(),
+                    WriteJobImpl.this.getJobId(),
+                    ds3Object.getLength(),
+                    ds3Object.getOffset(),
+                    channel
             );
 
             if (ds3Object.getOffset() == 0 && metadataAccess != null) {
@@ -237,7 +263,67 @@ class WriteJobImpl extends JobImpl {
                 }
             }
 
+            final String checksum = calculateChecksum(ds3Object, channel);
+            if (checksum != null) {
+                request.withChecksum(Checksum.value(checksum), WriteJobImpl.this.checksumType);
+                emitChecksumEvents(ds3Object, WriteJobImpl.this.checksumType, checksum);
+            }
+
             return request;
+        }
+
+        private String calculateChecksum(final BulkObject ds3Object, final SeekableByteChannel channel) throws IOException {
+            if (WriteJobImpl.this.checksumType != Checksum.Type.NONE) {
+                if (WriteJobImpl.this.checksumFunction == null) {
+                    LOG.info("Calculating " + WriteJobImpl.this.checksumType.toString() + " checksum for blob: " + ds3Object.toString());
+                    final SeekableByteChannelInputStream dataStream = new SeekableByteChannelInputStream(channel);
+                    final Hasher hasher = getHasher(WriteJobImpl.this.checksumType);
+                    final String checksum = hashInputStream(hasher, dataStream);
+                    LOG.info("Computed checksum for blob: " + checksum);
+                    return checksum;
+                } else {
+                    LOG.info("Getting checksum from user supplied callback for blob: " + ds3Object.toString());
+                    final String checksum = WriteJobImpl.this.checksumFunction.compute(ds3Object, channel);
+                    LOG.info("User supplied checksum is: " + checksum);
+                    return checksum;
+                }
+            }
+            return null;
+        }
+
+        private static final int READ_BUFFER_SIZE = 10 * 1024 * 1024;
+        private String hashInputStream(final Hasher digest, final InputStream stream) throws IOException {
+            final byte[] buffer = new byte[READ_BUFFER_SIZE];
+            int bytesRead;
+
+            while (true) {
+                bytesRead = stream.read(buffer);
+
+                if (bytesRead < 0) {
+                    break;
+                }
+
+                digest.update(buffer, 0, bytesRead);
+            }
+
+            return digest.digest();
+        }
+
+        private Hasher getHasher(final Checksum.Type checksumType) {
+            switch (checksumType) {
+                case MD5: return new MD5Hasher();
+                case SHA256: return new SHA256Hasher();
+                case SHA512: return new SHA512Hasher();
+                case CRC32: return new CRC32Hasher();
+                case CRC32C: return new CRC32CHasher();
+                default: throw new RuntimeException("Unknown checksum type " + checksumType.toString());
+            }
+        }
+    }
+
+    private void emitChecksumEvents(final BulkObject bulkObject, final Checksum.Type type, final String checksum) {
+        for (final ChecksumListener listener : checksumListeners.values()) {
+            listener.value(bulkObject, type, checksum);
         }
     }
 }

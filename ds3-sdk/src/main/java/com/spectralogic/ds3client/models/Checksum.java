@@ -15,6 +15,10 @@
 
 package com.spectralogic.ds3client.models;
 
+import org.apache.commons.codec.binary.Base64;
+
+import java.nio.charset.Charset;
+
 public abstract class Checksum {
 
     public enum Type {
@@ -31,9 +35,14 @@ public abstract class Checksum {
     public static Checksum compute() {
         return compute;
     }
-    
-    public static Checksum value(final byte[] hash) {
+
+    public static Checksum value(final String hash) {
         return new Value(hash);
+    }
+
+    public static Checksum value(final byte[] hash) {
+        final String hashStr = Base64.encodeBase64String(hash);
+        return new Value(hashStr);
     }
     
     public abstract <T, E extends Throwable> T match(final MatchHandler<T, E> handler) throws E;
@@ -63,15 +72,15 @@ public abstract class Checksum {
     }
     
     private static class Value extends Checksum {
-        private final byte[] hash;
+        private final String hash;
 
-        public Value(final byte[] hash) {
+        public Value(final String hash) {
             this.hash = hash;
         }
         
         @Override
         public <T, E extends Throwable> T match(final MatchHandler<T, E> handler) throws E {
-            return handler.value(this.hash);
+            return handler.value(this.hash.getBytes(Charset.forName("UTF-8")));
         }
     }
 }
