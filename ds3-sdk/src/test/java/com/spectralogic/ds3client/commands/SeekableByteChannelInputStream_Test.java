@@ -17,6 +17,7 @@ package com.spectralogic.ds3client.commands;
 
 import com.spectralogic.ds3client.utils.ResourceUtils;
 
+import com.spectralogic.ds3client.utils.SeekableByteChannelInputStream;
 import org.junit.Test;
 import org.mockito.Mockito;
 

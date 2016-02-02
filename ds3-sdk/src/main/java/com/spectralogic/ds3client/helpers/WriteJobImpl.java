@@ -32,11 +32,13 @@ import com.spectralogic.ds3client.models.bulk.MasterObjectList;
 import com.spectralogic.ds3client.models.bulk.Objects;
 import com.spectralogic.ds3client.serializer.XmlProcessingException;
 import com.spectralogic.ds3client.utils.Guard;
+import com.spectralogic.ds3client.utils.SeekableByteChannelInputStream;
+import com.spectralogic.ds3client.utils.hashing.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.nio.channels.ByteChannel;
+import java.io.InputStream;
 import java.nio.channels.SeekableByteChannel;
 import java.security.SignatureException;
 import java.util.*;
@@ -241,7 +243,7 @@ class WriteJobImpl extends JobImpl {
             client.putObject(createRequest(ds3Object));
         }
 
-        private PutObjectRequest createRequest(final BulkObject ds3Object) {
+        private PutObjectRequest createRequest(final BulkObject ds3Object) throws IOException {
 
 
             final SeekableByteChannel channel = jobState.getChannel(ds3Object.getName(), ds3Object.getOffset(), ds3Object.getLength());
@@ -267,23 +269,61 @@ class WriteJobImpl extends JobImpl {
             final String checksum = calculateChecksum(ds3Object, channel);
             if (checksum != null) {
                 request.withChecksum(Checksum.value(checksum), WriteJobImpl.this.checksumType);
+                emitChecksumEvents(ds3Object, WriteJobImpl.this.checksumType, checksum);
             }
 
             return request;
         }
 
-        private String calculateChecksum(final BulkObject ds3Object, final SeekableByteChannel channel) {
+        private String calculateChecksum(final BulkObject ds3Object, final SeekableByteChannel channel) throws IOException {
             if (WriteJobImpl.this.checksumType != Checksum.Type.NONE) {
                 if (WriteJobImpl.this.checksumFunction == null) {
-                    // perform calculation
-
-
-                    return null;
+                    LOG.info("Calculating " + WriteJobImpl.this.checksumType.toString() + " checksum for blob: name = " + ds3Object.getName() + ", offset = " + ds3Object.getOffset() + ", length = " + ds3Object.getLength());
+                    final SeekableByteChannelInputStream dataStream = new SeekableByteChannelInputStream(channel);
+                    final Hasher hasher = getHasher(WriteJobImpl.this.checksumType);
+                    final String checksum = hashInputStream(hasher, dataStream);
+                    LOG.info("Computed checksum for blob: " + checksum);
+                    return checksum;
                 } else {
                     return WriteJobImpl.this.checksumFunction.compute(ds3Object, channel);
                 }
             }
             return null;
+        }
+
+        private static final int READ_BUFFER_SIZE = 10 * 1024 * 1024;
+        private String hashInputStream(final Hasher digest, final InputStream stream) throws IOException {
+            final byte[] buffer = new byte[READ_BUFFER_SIZE];
+            int bytesRead;
+
+            while (true) {
+                bytesRead = stream.read(buffer);
+
+                if (bytesRead < 0) {
+                    break;
+                }
+
+                digest.update(buffer, 0, bytesRead);
+            }
+
+            return digest.digest();
+        }
+
+        private Hasher getHasher(final Checksum.Type checksumType) {
+            switch (checksumType) {
+                case MD5: return new MD5Hasher();
+                case SHA256: return new SHA256Hasher();
+                case SHA512: return new SHA512Hasher();
+                case CRC32: return new CRC32Hasher();
+                case CRC32C: return new CRC32CHasher();
+                default: throw new RuntimeException("Unknown checksum type " + checksumType.toString());
+            }
+        }
+    }
+
+    private void emitChecksumEvents(final BulkObject bulkObject, final Checksum.Type type, final String checksum) {
+        for (final ChecksumListener listener : checksumListeners.values()) {
+            listener.value(bulkObject, type, checksum);
         }
     }
 }

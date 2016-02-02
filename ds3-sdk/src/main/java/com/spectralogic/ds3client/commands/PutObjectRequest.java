@@ -17,6 +17,7 @@ package com.spectralogic.ds3client.commands;
 
 import com.spectralogic.ds3client.HttpVerb;
 import com.spectralogic.ds3client.models.Checksum;
+import com.spectralogic.ds3client.utils.SeekableByteChannelInputStream;
 
 import java.io.InputStream;
 import java.nio.channels.SeekableByteChannel;

@@ -66,6 +66,7 @@ class ReadJobImpl extends JobImpl {
         this.blobToRanges = PartialObjectHelpers.mapRangesToBlob(masterObjectList.getObjects(), objectRanges);
         this.retryAfter = this.retryAfterLeft = retryAfter;
         this.metadataListeners = new IdentityHashMap<>();
+        this.checksumListeners = new IdentityHashMap<>();
     }
 
     @Override
