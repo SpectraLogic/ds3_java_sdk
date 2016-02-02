@@ -44,7 +44,7 @@ public class BulkPutWithChecksums {
             // Make sure that the bucket exists, if it does not this will create it
             helper.ensureBucketExists(bucketName);
 
-            // Our input path which contains all the files that we want to transfer
+            // Our local path which contains all the files that we want to transfer
             final Path inputPath = Paths.get("input");
 
             // Get the list of files that are contained in the inputPath
