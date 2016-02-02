@@ -62,8 +62,8 @@ public class BulkPutWithChecksums {
             final Ds3ClientHelpers.Job job = helper.startWriteJob(bucketName, objects, options);
 
             // To capture the checksums as they are calculated for your own records, use the
-            // ChecksumListener
-
+            // ChecksumListener.  This same listener can be used on read jobs to capture the
+            // blob checksums
             job.attachChecksumListener(new ChecksumListener() {
                 @Override
                 public void value(final BulkObject obj, final Checksum.Type type, final String checksum) {
