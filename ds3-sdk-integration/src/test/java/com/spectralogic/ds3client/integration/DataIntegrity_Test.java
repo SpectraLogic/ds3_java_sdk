@@ -18,6 +18,7 @@ package com.spectralogic.ds3client.integration;
 import com.google.common.collect.Lists;
 import com.spectralogic.ds3client.Ds3Client;
 import com.spectralogic.ds3client.commands.BulkPutRequest;
+import com.spectralogic.ds3client.helpers.ChecksumFunction;
 import com.spectralogic.ds3client.helpers.ChecksumListener;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers;
 import com.spectralogic.ds3client.helpers.FileObjectGetter;
@@ -37,14 +38,17 @@ import org.junit.Test;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.ByteBuffer;
+import java.nio.channels.ByteChannel;
 import java.nio.channels.SeekableByteChannel;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.security.SignatureException;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 public class DataIntegrity_Test {
     private static Ds3Client client;
@@ -171,6 +175,121 @@ public class DataIntegrity_Test {
 
             assertThat(checksum, is(notNullValue()));
             assertThat(checksum, is("rCu751L6xhB5zyL+soa3fg=="));
+
+        } finally {
+            Util.deleteAllContents(client, bucketName);
+        }
+    }
+
+    @Test
+    public void callerSuppliedChecksum() throws IOException, SignatureException, XmlProcessingException {
+        final String bucketName = "auto_checksumming";
+        final Ds3ClientHelpers helpers = Ds3ClientHelpers.wrap(client);
+
+        helpers.ensureBucketExists(bucketName);
+
+        try {
+
+            final List<Ds3Object> objs = Lists.newArrayList(new Ds3Object("beowulf.txt", 294059));
+            final Ds3ClientHelpers.Job job = helpers.startWriteJob(bucketName, objs, WriteJobOptions.create().withChecksumType(Checksum.Type.MD5));
+
+            final AtomicBoolean callbackCalled = new AtomicBoolean(false);
+
+            job.withChecksum(new ChecksumFunction() {
+                @Override
+                public String compute(final BulkObject obj, final ByteChannel channel) {
+                    if (obj.getName().equals("beowulf.txt")) {
+                        callbackCalled.set(true);
+                        return "rCu751L6xhB5zyL+soa3fg==";
+                    }
+                    return null;
+                }
+            });
+
+            final SingleChecksumListener listener = new SingleChecksumListener();
+
+            job.attachChecksumListener(listener);
+
+            job.transfer(new ResourceObjectPutter("books/"));
+
+            final String checksum = listener.getChecksum();
+
+            assertThat(checksum, is(notNullValue()));
+            assertThat(checksum, is("rCu751L6xhB5zyL+soa3fg=="));
+            assertTrue(callbackCalled.get());
+
+        } finally {
+            Util.deleteAllContents(client, bucketName);
+        }
+    }
+
+    @Test
+    public void getChecksum() throws IOException, SignatureException, XmlProcessingException {
+        final String bucketName = "auto_checksumming";
+        final Ds3ClientHelpers helpers = Ds3ClientHelpers.wrap(client);
+
+        helpers.ensureBucketExists(bucketName);
+
+        try {
+
+            final List<Ds3Object> objs = Lists.newArrayList(new Ds3Object("beowulf.txt", 294059));
+            final Ds3ClientHelpers.Job job = helpers.startWriteJob(bucketName, objs, WriteJobOptions.create().withChecksumType(Checksum.Type.MD5));
+
+            final SingleChecksumListener listener = new SingleChecksumListener();
+
+            job.attachChecksumListener(listener);
+
+            job.transfer(new ResourceObjectPutter("books/"));
+
+            final String checksum = listener.getChecksum();
+
+            assertThat(checksum, is(notNullValue()));
+            assertThat(checksum, is("rCu751L6xhB5zyL+soa3fg=="));
+
+            final Ds3ClientHelpers.Job getJob = helpers.startReadJob(bucketName, objs);
+            final SingleChecksumListener getListener = new SingleChecksumListener();
+            getJob.attachChecksumListener(getListener);
+
+            getJob.transfer(new Ds3ClientHelpers.ObjectChannelBuilder() {
+                @Override
+                public SeekableByteChannel buildChannel(final String key) throws IOException {
+                    return new NullChannel();
+                }
+            });
+
+            final String getChecksum = getListener.getChecksum();
+            assertThat(getChecksum, is(notNullValue()));
+            assertThat(getChecksum, is(listener.getChecksum()));
+        } finally {
+            Util.deleteAllContents(client, bucketName);
+        }
+    }
+
+    @Test
+    public void getChecksumComputedByBp() throws IOException, SignatureException, URISyntaxException, XmlProcessingException {
+        final String bucketName = "bpComputedChecksum";
+
+        final Ds3ClientHelpers helpers = Ds3ClientHelpers.wrap(client);
+
+        helpers.ensureBucketExists(bucketName);
+        try {
+            Util.loadBookTestData(client, bucketName);
+            final List<Ds3Object> objs = Lists.newArrayList(new Ds3Object("beowulf.txt"));
+
+            final Ds3ClientHelpers.Job getJob = helpers.startReadJob(bucketName, objs);
+            final SingleChecksumListener getListener = new SingleChecksumListener();
+            getJob.attachChecksumListener(getListener);
+
+            getJob.transfer(new Ds3ClientHelpers.ObjectChannelBuilder() {
+                @Override
+                public SeekableByteChannel buildChannel(final String key) throws IOException {
+                    return new NullChannel();
+                }
+            });
+
+            final String getChecksum = getListener.getChecksum();
+            assertThat(getChecksum, is(notNullValue()));
+            assertThat(getChecksum, is("rCu751L6xhB5zyL+soa3fg=="));
 
         } finally {
             Util.deleteAllContents(client, bucketName);

@@ -87,4 +87,9 @@ public class BulkObject {
         }
         return false;
     }
+
+    @Override
+    public String toString() {
+        return String.format("name = %s, offset = %d, length %d", name, offset, length);
+    }
 }

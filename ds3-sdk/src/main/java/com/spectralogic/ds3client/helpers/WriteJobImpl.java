@@ -239,13 +239,10 @@ class WriteJobImpl extends JobImpl {
         @Override
         public void transferItem(final Ds3Client client, final BulkObject ds3Object)
                 throws SignatureException, IOException {
-
             client.putObject(createRequest(ds3Object));
         }
 
         private PutObjectRequest createRequest(final BulkObject ds3Object) throws IOException {
-
-
             final SeekableByteChannel channel = jobState.getChannel(ds3Object.getName(), ds3Object.getOffset(), ds3Object.getLength());
 
             final PutObjectRequest request = new PutObjectRequest(
@@ -278,14 +275,17 @@ class WriteJobImpl extends JobImpl {
         private String calculateChecksum(final BulkObject ds3Object, final SeekableByteChannel channel) throws IOException {
             if (WriteJobImpl.this.checksumType != Checksum.Type.NONE) {
                 if (WriteJobImpl.this.checksumFunction == null) {
-                    LOG.info("Calculating " + WriteJobImpl.this.checksumType.toString() + " checksum for blob: name = " + ds3Object.getName() + ", offset = " + ds3Object.getOffset() + ", length = " + ds3Object.getLength());
+                    LOG.info("Calculating " + WriteJobImpl.this.checksumType.toString() + " checksum for blob: " + ds3Object.toString());
                     final SeekableByteChannelInputStream dataStream = new SeekableByteChannelInputStream(channel);
                     final Hasher hasher = getHasher(WriteJobImpl.this.checksumType);
                     final String checksum = hashInputStream(hasher, dataStream);
                     LOG.info("Computed checksum for blob: " + checksum);
                     return checksum;
                 } else {
-                    return WriteJobImpl.this.checksumFunction.compute(ds3Object, channel);
+                    LOG.info("Getting checksum from user supplied callback for blob: " + ds3Object.toString());
+                    final String checksum = WriteJobImpl.this.checksumFunction.compute(ds3Object, channel);
+                    LOG.info("User supplied checksum is: " + checksum);
+                    return checksum;
                 }
             }
             return null;
