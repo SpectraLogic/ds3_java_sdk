@@ -19,7 +19,7 @@ package com.spectralogic.ds3client.models;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import com.spectralogic.ds3client.models.BlobApiBean;
+import com.spectralogic.ds3client.models.BulkObject;
 import java.util.List;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 
@@ -29,7 +29,7 @@ public class BlobApiBeansContainer {
     // Variables
     @JsonProperty("Object")
     @JacksonXmlElementWrapper(useWrapping = false)
-    private List<BlobApiBean> objects;
+    private List<BulkObject> objects;
 
     // Constructor
     public BlobApiBeansContainer() {
@@ -38,11 +38,11 @@ public class BlobApiBeansContainer {
 
     // Getters and Setters
     
-    public List<BlobApiBean> getObjects() {
+    public List<BulkObject> getObjects() {
         return this.objects;
     }
 
-    public void setObjects(final List<BlobApiBean> objects) {
+    public void setObjects(final List<BulkObject> objects) {
         this.objects = objects;
     }
 

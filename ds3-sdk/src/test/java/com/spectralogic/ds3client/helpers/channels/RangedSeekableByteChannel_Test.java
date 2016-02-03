@@ -1,7 +1,7 @@
 package com.spectralogic.ds3client.helpers.channels;
 
 import com.google.common.collect.ImmutableMultimap;
-import com.spectralogic.ds3client.models.BlobApiBean;
+import com.spectralogic.ds3client.models.BulkObject;
 import com.spectralogic.ds3client.models.Range;
 import com.spectralogic.ds3client.utils.ByteArraySeekableByteChannel;
 import org.junit.Test;
@@ -24,15 +24,15 @@ public class RangedSeekableByteChannel_Test {
         final ByteBuffer firstBlobData = ByteBuffer.wrap(firstPartialBlob.getBytes(Charset.forName("UTF-8")));
         final ByteBuffer secondBlobData = ByteBuffer.wrap(secondPartialBlob.getBytes(Charset.forName("UTF-8")));
 
-        final ImmutableMultimap.Builder<BlobApiBean, Range> builder = ImmutableMultimap.builder();
+        final ImmutableMultimap.Builder<BulkObject, Range> builder = ImmutableMultimap.builder();
 
-        final BlobApiBean blob1 = new BlobApiBean();
+        final BulkObject blob1 = new BulkObject();
         blob1.setName("obj1.txt");
         blob1.setLength(50);
         blob1.setInCache(true);
         blob1.setOffset(0);
 
-        final BlobApiBean blob2 = new BlobApiBean();
+        final BulkObject blob2 = new BulkObject();
         blob2.setName("obj1.txt");
         blob2.setLength(50);
         blob2.setInCache(true);
@@ -41,7 +41,7 @@ public class RangedSeekableByteChannel_Test {
         builder.put(blob1, Range.byLength(0, firstBlobData.limit()));
         builder.put(blob2, Range.byLength(50, secondBlobData.limit()));
 
-        final ImmutableMultimap<BlobApiBean, Range> ranges = builder.build();
+        final ImmutableMultimap<BulkObject, Range> ranges = builder.build();
 
         final ByteArraySeekableByteChannel channel = new ByteArraySeekableByteChannel();
         try (final RangedSeekableByteChannel rangedChannel = new RangedSeekableByteChannel(channel, ranges)) {
@@ -65,15 +65,15 @@ public class RangedSeekableByteChannel_Test {
         final ByteBuffer firstBlobData = ByteBuffer.wrap(firstPartialBlob.getBytes(Charset.forName("UTF-8")));
         final ByteBuffer secondBlobData = ByteBuffer.wrap(secondPartialBlob.getBytes(Charset.forName("UTF-8")));
 
-        final ImmutableMultimap.Builder<BlobApiBean, Range> builder = ImmutableMultimap.builder();
+        final ImmutableMultimap.Builder<BulkObject, Range> builder = ImmutableMultimap.builder();
 
-        final BlobApiBean blob1 = new BlobApiBean();
+        final BulkObject blob1 = new BulkObject();
         blob1.setName("obj1.txt");
         blob1.setLength(50);
         blob1.setInCache(true);
         blob1.setOffset(0);
 
-        final BlobApiBean blob2 = new BlobApiBean();
+        final BulkObject blob2 = new BulkObject();
         blob2.setName("obj1.txt");
         blob2.setLength(50);
         blob2.setInCache(true);
@@ -82,7 +82,7 @@ public class RangedSeekableByteChannel_Test {
         builder.put(blob1, Range.byLength(5, firstBlobData.limit()));
         builder.put(blob2, Range.byLength(60, secondBlobData.limit()));
 
-        final ImmutableMultimap<BlobApiBean, Range> ranges = builder.build();
+        final ImmutableMultimap<BulkObject, Range> ranges = builder.build();
 
         final ByteArraySeekableByteChannel channel = new ByteArraySeekableByteChannel();
         try (final RangedSeekableByteChannel rangedChannel = new RangedSeekableByteChannel(channel, ranges)) {
@@ -100,15 +100,15 @@ public class RangedSeekableByteChannel_Test {
 
     @Test(expected = IllegalStateException.class)
     public void seekToInvalidPosition() throws IOException {
-        final ImmutableMultimap.Builder<BlobApiBean, Range> builder = ImmutableMultimap.builder();
+        final ImmutableMultimap.Builder<BulkObject, Range> builder = ImmutableMultimap.builder();
 
-        final BlobApiBean blob1 = new BlobApiBean();
+        final BulkObject blob1 = new BulkObject();
         blob1.setName("obj1.txt");
         blob1.setLength(20);
         blob1.setInCache(true);
         blob1.setOffset(0);
 
-        final BlobApiBean blob2 = new BlobApiBean();
+        final BulkObject blob2 = new BulkObject();
         blob2.setName("obj1.txt");
         blob2.setLength(20);
         blob2.setInCache(true);
@@ -117,7 +117,7 @@ public class RangedSeekableByteChannel_Test {
         builder.put(blob1, Range.byPosition(5, 15));
         builder.put(blob2, Range.byPosition(20, 10));
 
-        final ImmutableMultimap<BlobApiBean, Range> ranges = builder.build();
+        final ImmutableMultimap<BulkObject, Range> ranges = builder.build();
 
         final ByteArraySeekableByteChannel channel = new ByteArraySeekableByteChannel();
         try (final RangedSeekableByteChannel rangedChannel = new RangedSeekableByteChannel(channel, ranges)) {

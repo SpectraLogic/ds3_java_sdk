@@ -47,7 +47,7 @@ public class JobUtils {
     private static boolean chunkAndSetIntersects(
             final JobChunkApiBean jobChunkApiBean,
             final ImmutableSet<String> fileNames) {
-        for (final BlobApiBean blobApiBean : jobChunkApiBean.getObjects()) {
+        for (final BulkObject blobApiBean : jobChunkApiBean.getObjects()) {
             if (fileNames.contains(blobApiBean.getName())) return true;
         }
 

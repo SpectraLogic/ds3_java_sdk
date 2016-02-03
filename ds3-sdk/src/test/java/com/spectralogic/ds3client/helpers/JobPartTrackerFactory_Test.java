@@ -15,7 +15,7 @@
 
 package com.spectralogic.ds3client.helpers;
 
-import com.spectralogic.ds3client.models.BlobApiBean;
+import com.spectralogic.ds3client.models.BulkObject;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -28,25 +28,25 @@ import static org.junit.Assert.assertThat;
 public class JobPartTrackerFactory_Test {
     @Test
     public void createdTrackerTracksParts() {
-        final BlobApiBean part1 = new BlobApiBean();
+        final BulkObject part1 = new BulkObject();
         part1.setName("foo");
         part1.setLength(10L);
         part1.setInCache(false);
         part1.setOffset(0L);
 
-        final BlobApiBean part2 = new BlobApiBean();
+        final BulkObject part2 = new BulkObject();
         part2.setName("bar");
         part2.setLength(13L);
         part2.setInCache(false);
         part2.setOffset(0L);
 
-        final BlobApiBean part3 = new BlobApiBean();
+        final BulkObject part3 = new BulkObject();
         part3.setName("foo");
         part3.setLength(11L);
         part3.setInCache(true);
         part3.setOffset(10L);
 
-        final BlobApiBean part4 = new BlobApiBean();
+        final BulkObject part4 = new BulkObject();
         part4.setName("baz");
         part4.setLength(12L);
         part4.setInCache(true);

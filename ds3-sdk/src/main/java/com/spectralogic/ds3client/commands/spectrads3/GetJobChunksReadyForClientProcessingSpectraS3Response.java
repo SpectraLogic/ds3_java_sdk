@@ -54,9 +54,9 @@ public class GetJobChunksReadyForClientProcessingSpectraS3Response extends Abstr
 
             switch (this.getStatusCode()) {
             case 200:
-                try (final InputStream content = getResponse().getResponseStream()) {
+                try (final InputStream content = webResponse.getResponseStream()) {
                     this.jobWithChunksApiBeanResult = XmlOutput.fromXml(content, JobWithChunksApiBean.class);
-                    if (this.jobWithChunksApiBeanResult == null) {
+                    if (this.jobWithChunksApiBeanResult.getObjects() == null) {
                         this.status = Status.RETRYLATER;
                         this.retryAfterSeconds = parseRetryAfter(webResponse);
                     } else {

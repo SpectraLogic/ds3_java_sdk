@@ -23,7 +23,7 @@ import com.spectralogic.ds3client.commands.spectrads3.GetJobChunksReadyForClient
 import com.spectralogic.ds3client.helpers.ChunkTransferrer.ItemTransferrer;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.ObjectChannelBuilder;
 import com.spectralogic.ds3client.helpers.util.PartialObjectHelpers;
-import com.spectralogic.ds3client.models.BlobApiBean;
+import com.spectralogic.ds3client.models.BulkObject;
 import com.spectralogic.ds3client.models.JobChunkApiBean;
 import com.spectralogic.ds3client.models.JobWithChunksApiBean;
 import com.spectralogic.ds3client.models.Range;
@@ -38,7 +38,7 @@ class ReadJobImpl extends JobImpl {
 
     private final JobPartTracker partTracker;
     private final List<JobChunkApiBean> chunks;
-    private final ImmutableMap<String, ImmutableMultimap<BlobApiBean, Range>> blobToRanges;
+    private final ImmutableMap<String, ImmutableMultimap<BulkObject, Range>> blobToRanges;
 
     public ReadJobImpl(
             final Ds3Client client,
@@ -52,8 +52,8 @@ class ReadJobImpl extends JobImpl {
         this.blobToRanges = PartialObjectHelpers.mapRangesToBlob(jobWithChunksApiBean.getObjects(), objectRanges);
     }
 
-    protected static ImmutableList<BlobApiBean> getAllBlobApiBeans(final List<JobChunkApiBean> jobWithChunksApiBeans) {
-        ImmutableList.Builder<BlobApiBean> builder = ImmutableList.builder();
+    protected static ImmutableList<BulkObject> getAllBlobApiBeans(final List<JobChunkApiBean> jobWithChunksApiBeans) {
+        ImmutableList.Builder<BulkObject> builder = ImmutableList.builder();
         for (final JobChunkApiBean jobChunkApiBean : jobWithChunksApiBeans) {
             builder.addAll(jobChunkApiBean.getObjects());
         }
@@ -127,7 +127,7 @@ class ReadJobImpl extends JobImpl {
         }
 
         @Override
-        public void transferItem(final Ds3Client client, final BlobApiBean ds3Object)
+        public void transferItem(final Ds3Client client, final BulkObject ds3Object)
                 throws SignatureException, IOException {
 
             final ImmutableCollection<Range> ranges = getRangesForBlob(blobToRanges, ds3Object);
@@ -149,9 +149,9 @@ class ReadJobImpl extends JobImpl {
     }
 
     private static ImmutableCollection<Range> getRangesForBlob(
-            final ImmutableMap<String, ImmutableMultimap<BlobApiBean, Range>> blobToRanges,
-            final BlobApiBean ds3Object) {
-        final ImmutableMultimap<BlobApiBean, Range> ranges =  blobToRanges.get(ds3Object.getName());
+            final ImmutableMap<String, ImmutableMultimap<BulkObject, Range>> blobToRanges,
+            final BulkObject ds3Object) {
+        final ImmutableMultimap<BulkObject, Range> ranges =  blobToRanges.get(ds3Object.getName());
         if (ranges == null) return null;
         return ranges.get(ds3Object);
     }

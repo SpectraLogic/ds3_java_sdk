@@ -1,7 +1,7 @@
 package com.spectralogic.ds3client.helpers.util;
 
 import com.google.common.collect.*;
-import com.spectralogic.ds3client.models.BlobApiBean;
+import com.spectralogic.ds3client.models.BulkObject;
 import com.spectralogic.ds3client.models.JobChunkApiBean;
 import com.spectralogic.ds3client.models.Range;
 import com.spectralogic.ds3client.models.bulk.Ds3Object;
@@ -99,15 +99,15 @@ public class PartialObjectHelpers_Test {
         objects.add(new PartialDs3Object("obj1.txt", Range.byLength(0, 100)));
         final ImmutableMultimap<String, Range> ranges = PartialObjectHelpers.getPartialObjectsRanges(objects);
 
-        List<BlobApiBean> blobs = Lists.newArrayList();
+        List<BulkObject> blobs = Lists.newArrayList();
 
-        final BlobApiBean blob1 = new BlobApiBean();
+        final BulkObject blob1 = new BulkObject();
         blob1.setName("obj1.txt");
         blob1.setLength(100);
         blob1.setInCache(true);
         blob1.setOffset(0);
 
-        final BlobApiBean blob2 = new BlobApiBean();
+        final BulkObject blob2 = new BulkObject();
         blob2.setName("obj2.txt");
         blob2.setLength(100);
         blob2.setInCache(true);
@@ -119,7 +119,7 @@ public class PartialObjectHelpers_Test {
         final JobChunkApiBean chunk1 =  new JobChunkApiBean();
         chunk1.setObjects(blobs);
 
-        final BlobApiBean blob3 = new BlobApiBean();
+        final BulkObject blob3 = new BulkObject();
         blob3.setName("obj2.txt");
         blob3.setLength(200);
         blob3.setInCache(true);
@@ -135,7 +135,7 @@ public class PartialObjectHelpers_Test {
         chunks.add(chunk1);
         chunks.add(chunk2);
 
-        final ImmutableMap<String, ImmutableMultimap<BlobApiBean, Range>> blobToRangeMapping = PartialObjectHelpers.mapRangesToBlob(chunks, ranges);
+        final ImmutableMap<String, ImmutableMultimap<BulkObject, Range>> blobToRangeMapping = PartialObjectHelpers.mapRangesToBlob(chunks, ranges);
 
         assertFalse(blobToRangeMapping.isEmpty());
         assertThat(blobToRangeMapping.size(), is(2));
@@ -226,19 +226,19 @@ public class PartialObjectHelpers_Test {
     @Test
     public void multiBlobSingleRangeMapping() {
 
-        final BlobApiBean blob1 = new BlobApiBean();
+        final BulkObject blob1 = new BulkObject();
         blob1.setName("obj1.txt");
         blob1.setLength(10);
         blob1.setInCache(true);
         blob1.setOffset(0);
 
-        final BlobApiBean blob2 = new BlobApiBean();
+        final BulkObject blob2 = new BulkObject();
         blob2.setName("obj1.txt");
         blob2.setLength(10);
         blob2.setInCache(true);
         blob2.setOffset(10);
 
-        final BlobApiBean blob3 = new BlobApiBean();
+        final BulkObject blob3 = new BulkObject();
         blob3.setName("obj1.txt");
         blob3.setLength(10);
         blob3.setInCache(true);
@@ -258,10 +258,10 @@ public class PartialObjectHelpers_Test {
         objects.add(objs2);
         objects.add(objs3);
 
-        final ImmutableMap<String, ImmutableMultimap<BlobApiBean, Range>> ranges = PartialObjectHelpers.mapRangesToBlob(objects, ImmutableMultimap.of("obj1.txt", Range.byLength(0, 30)));
+        final ImmutableMap<String, ImmutableMultimap<BulkObject, Range>> ranges = PartialObjectHelpers.mapRangesToBlob(objects, ImmutableMultimap.of("obj1.txt", Range.byLength(0, 30)));
         assertThat(ranges.size(), is(1));
-        final ImmutableMultimap<BlobApiBean, Range> object = ranges.get("obj1.txt");
-        for (final BlobApiBean obj : object.keySet()) {
+        final ImmutableMultimap<BulkObject, Range> object = ranges.get("obj1.txt");
+        for (final BulkObject obj : object.keySet()) {
             assertThat(object.get(obj).size(), is(1));
             if (obj.getOffset() == 10) {
                 final Range range = object.get(obj).asList().get(0);

@@ -50,8 +50,6 @@ public interface Ds3Client extends Closeable {
             throws IOException, SignatureException;
     GetBucketsResponse getBuckets(GetBucketsRequest request)
             throws IOException, SignatureException;
-    GetObjectResponse getObject(GetObjectRequest request)
-            throws IOException, SignatureException;
     HeadBucketResponse headBucket(HeadBucketRequest request)
             throws IOException, SignatureException;
     HeadObjectResponse headObject(HeadObjectRequest request)
@@ -497,6 +495,8 @@ public interface Ds3Client extends Closeable {
     ModifyUserSpectraS3Response modifyUserSpectraS3(ModifyUserSpectraS3Request request)
             throws IOException, SignatureException;
     RegenerateUserSecretKeySpectraS3Response regenerateUserSecretKeySpectraS3(RegenerateUserSecretKeySpectraS3Request request)
+            throws IOException, SignatureException;
+    GetObjectResponse getObject(GetObjectRequest request)
             throws IOException, SignatureException;
 
     Ds3Client newForNode(final NodeApiBean node);

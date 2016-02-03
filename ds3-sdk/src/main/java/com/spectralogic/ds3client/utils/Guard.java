@@ -2,8 +2,7 @@ package com.spectralogic.ds3client.utils;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Multimap;
-import com.spectralogic.ds3client.models.BlobApiBean;
-import com.spectralogic.ds3client.models.bulk.BulkObject;
+import com.spectralogic.ds3client.models.BulkObject;
 
 import java.util.Collection;
 
@@ -29,7 +28,7 @@ public final class Guard {
         return multimap == null || multimap.isEmpty();
     }
 
-    public static boolean isMapNullOrEmpty(final ImmutableMap<BlobApiBean, Long> map) {
+    public static boolean isMapNullOrEmpty(final ImmutableMap<BulkObject, Long> map) {
         return map == null || map.isEmpty();
     }
 }

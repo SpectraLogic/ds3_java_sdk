@@ -16,6 +16,7 @@
 // This code is auto-generated, do not modify
 package com.spectralogic.ds3client.models;
 
+import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
@@ -118,4 +119,26 @@ public class S3Object {
         this.version = version;
     }
 
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(bucketId, name, id, latest, creationDate, type, version);
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        if (!(obj instanceof S3Object)) {
+            return false;
+        }
+
+        final S3Object s3obj = (S3Object)obj;
+
+        return this.bucketId.equals(s3obj.getBucketId())
+                && this.creationDate.equals(s3obj.getCreationDate())
+                && this.id.equals(s3obj.getId())
+                && this.latest == s3obj.getLatest()
+                && this.name.equals(s3obj.getName())
+                && this.type == s3obj.getType()
+                && this.version == s3obj.getVersion();
+    }
 }

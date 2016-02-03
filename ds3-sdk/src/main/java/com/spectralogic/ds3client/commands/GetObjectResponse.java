@@ -21,42 +21,51 @@ import java.io.IOException;
 import java.io.InputStream;
 import com.spectralogic.ds3client.models.HttpErrorResultApiBean;
 import com.spectralogic.ds3client.serializer.XmlOutput;
+import com.spectralogic.ds3client.networking.Metadata;
+import java.nio.channels.WritableByteChannel;
+import com.spectralogic.ds3client.utils.IOUtils;
+import com.spectralogic.ds3client.utils.PerformanceUtils;
+import com.spectralogic.ds3client.exceptions.ContentLengthNotMatchException;
 
 public class GetObjectResponse extends AbstractResponse {
 
-    private HttpErrorResultApiBean httpErrorResultApiBeanResult;
+    private Metadata metadata;
+    private long objectSize;
 
-    public GetObjectResponse(final WebResponse response) throws IOException {
+    public GetObjectResponse(final WebResponse response, final WritableByteChannel destinationChannel, final int bufferSize, final String objName) throws IOException {
         super(response);
+        download(destinationChannel, bufferSize, objName);
     }
 
     @Override
     protected void processResponse() throws IOException {
-        try {
-            this.checkStatusCode(200, 206, 307);
+        this.checkStatusCode(200, 206, 307);
+        this.metadata = new MetadataImpl(this.getResponse().getHeaders());
+        this.objectSize = getSizeFromHeaders(this.getResponse().getHeaders());
+    }
 
-            switch (this.getStatusCode()) {
-            case 200:
-                //Do nothing, payload is null
-                break;
-            case 206:
-                //Do nothing, payload is null
-                break;
-            case 307:
-                try (final InputStream content = getResponse().getResponseStream()) {
-                    this.httpErrorResultApiBeanResult = XmlOutput.fromXml(content, HttpErrorResultApiBean.class);
-                }
-                break;
-            default:
-                assert false : "checkStatusCode should have made it impossible to reach this line.";
+    protected void download(final WritableByteChannel destinationChannel, final int bufferSize, final String objName) throws IOException {
+        try (
+                final WebResponse response = this.getResponse();
+                final InputStream responseStream = response.getResponseStream()) {
+            final long startTime = PerformanceUtils.getCurrentTime();
+            final long totalBytes = IOUtils.copy(responseStream, destinationChannel, bufferSize);
+            destinationChannel.close();
+            final long endTime = PerformanceUtils.getCurrentTime();
+
+            if (this.objectSize != -1 && totalBytes != this.objectSize) {
+                throw new ContentLengthNotMatchException(objName, objectSize, totalBytes);
             }
-        } finally {
-            this.getResponse().close();
+
+            PerformanceUtils.logMbps(startTime, endTime, totalBytes, objName, false);
         }
     }
 
-    public HttpErrorResultApiBean getHttpErrorResultApiBeanResult() {
-        return this.httpErrorResultApiBeanResult;
+    public Metadata getMetadata() {
+        return metadata;
     }
 
+    public long getObjectSize() {
+        return objectSize;
+    }
 }

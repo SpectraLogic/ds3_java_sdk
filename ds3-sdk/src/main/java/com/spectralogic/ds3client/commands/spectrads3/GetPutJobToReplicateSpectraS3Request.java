@@ -48,4 +48,16 @@ public class GetPutJobToReplicateSpectraS3Request extends AbstractRequest {
         return this.jobId;
     }
 
+
+    @Override
+    public int hashCode() {
+        return jobId.hashCode();
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        if (! (obj instanceof GetPutJobToReplicateSpectraS3Request)) return false;
+        final GetPutJobToReplicateSpectraS3Request other = (GetPutJobToReplicateSpectraS3Request) obj;
+        return other.getJobId().equals(this.getJobId());
+    }
 }

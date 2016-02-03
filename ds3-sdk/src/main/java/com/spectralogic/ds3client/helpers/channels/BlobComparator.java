@@ -1,6 +1,6 @@
 package com.spectralogic.ds3client.helpers.channels;
 
-import com.spectralogic.ds3client.models.BlobApiBean;
+import com.spectralogic.ds3client.models.BulkObject;
 
 import java.util.Comparator;
 
@@ -8,13 +8,13 @@ import java.util.Comparator;
  * Used to sort BlobApiBean (Blobs).  We only care about the starting
  * offset, so that is what is used to compare.
  */
-public class BlobComparator implements Comparator<BlobApiBean> {
+public class BlobComparator implements Comparator<BulkObject> {
     @Override
-    public int compare(final BlobApiBean o1, final BlobApiBean o2) {
+    public int compare(final BulkObject o1, final BulkObject o2) {
         return Long.compare(o1.getOffset(), o2.getOffset());
     }
 
-    public static Comparator<BlobApiBean> create() {
+    public static Comparator<BulkObject> create() {
         return new BlobComparator();
     }
 }

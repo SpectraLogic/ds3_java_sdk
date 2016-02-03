@@ -17,7 +17,6 @@ package com.spectralogic.ds3client.serializer;
 
 import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3client.models.*;
-import com.spectralogic.ds3client.models.bulk.BulkObject;
 import com.spectralogic.ds3client.models.bulk.Ds3Object;
 import com.spectralogic.ds3client.models.bulk.Ds3ObjectList;
 import org.junit.Test;
@@ -43,7 +42,7 @@ public class XmlOutput_Test {
         final List<JobChunkApiBean> objectsList = masterObjectList.getObjects();
         assertThat(objectsList.size(), is(1));
         final JobChunkApiBean objects = objectsList.get(0);
-        final List<BlobApiBean> objectList = objects.getObjects();
+        final List<BulkObject> objectList = objects.getObjects();
         assertThat(objectList.size(), is(3));
     }
 
@@ -104,7 +103,7 @@ public class XmlOutput_Test {
         assumeFalse(XmlOutput.isProductionBuild());
 
         final String xmlResponse = "<Object Name=\"file1\" InCache=\"false\" Length=\"256\" Offset=\"0\" TheAnswerToEverything=\"42\" />";
-        XmlOutput.fromXml(xmlResponse, BulkObject.class);
+        XmlOutput.fromXml(xmlResponse, com.spectralogic.ds3client.models.bulk.BulkObject.class);
     }
 
     @Test
@@ -112,6 +111,6 @@ public class XmlOutput_Test {
         assumeTrue(XmlOutput.isProductionBuild());
 
         final String xmlResponse = "<Object Name=\"file1\" InCache=\"false\" Length=\"256\" Offset=\"0\" TheAnswerToEverything=\"42\" />";
-        XmlOutput.fromXml(xmlResponse, BulkObject.class);
+        XmlOutput.fromXml(xmlResponse, com.spectralogic.ds3client.models.bulk.BulkObject.class);
     }
 }

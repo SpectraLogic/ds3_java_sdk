@@ -138,7 +138,7 @@ public class ResponseBuilders {
             final int chunkNumber,
             final UUID chunkId,
             final UUID nodeId,
-            final BlobApiBean ... chunkList) {
+            final BulkObject... chunkList) {
         final JobChunkApiBean objects = new JobChunkApiBean();
         objects.setChunkNumber(chunkNumber);
         objects.setChunkId(chunkId);
@@ -147,12 +147,12 @@ public class ResponseBuilders {
         return objects;
     }
     
-    public static BlobApiBean object(
+    public static BulkObject object(
             final String name,
             final long offset,
             final long length,
             final boolean inCache) {
-        final BlobApiBean bulkObject = new BlobApiBean();
+        final BulkObject bulkObject = new BulkObject();
         bulkObject.setName(name);
         bulkObject.setOffset(offset);
         bulkObject.setLength(length);

@@ -21,6 +21,7 @@ import com.google.common.collect.TreeMultimap;
 import com.spectralogic.ds3client.commands.*;
 import com.spectralogic.ds3client.commands.spectrads3.*;
 import com.spectralogic.ds3client.models.*;
+import com.spectralogic.ds3client.models.BulkObject;
 import com.spectralogic.ds3client.models.bulk.*;
 import com.spectralogic.ds3client.networking.FailedRequestException;
 import com.spectralogic.ds3client.serializer.XmlProcessingException;
@@ -176,10 +177,11 @@ public class Ds3Client_Test {
         final String bucketId = "a24d14f3-e2f0-4bfb-ab71-f99d5ef43745";
         queryParams.put("bucket_id", bucketId);
 
-        final String stringResponse = "<Data><S3Object><BucketId>a24d14f3-e2f0-4bfb-ab71-f99d5ef43745</BucketId><CreationDate>2015-09-21T20:06:47.694</CreationDate><Id>e37c3ce0-12aa-4f54-87e3-42532aca0e5e</Id><Name>beowulf.txt</Name><Type>DATA</Type><Version>1</Version></S3Object><S3Object><BucketId>a24d14f3-e2f0-4bfb-ab71-f99d5ef43745</BucketId><CreationDate>2015-09-21T20:06:47.779</CreationDate><Id>dc628815-c723-4c4e-b68b-5f5d10f38af5</Id><Name>sherlock_holmes.txt</Name><Type>DATA</Type><Version>1</Version></S3Object><S3Object><BucketId>a24d14f3-e2f0-4bfb-ab71-f99d5ef43745</BucketId><CreationDate>2015-09-21T20:06:47.772</CreationDate><Id>4f6985fd-fbae-4421-ba27-66fdb96187c5</Id><Name>tale_of_two_cities.txt</Name><Type>DATA</Type><Version>1</Version></S3Object><S3Object><BucketId>a24d14f3-e2f0-4bfb-ab71-f99d5ef43745</BucketId><CreationDate>2015-09-21T20:06:47.696</CreationDate><Id>82c18910-fadb-4461-a152-bf714ae91b55</Id><Name>ulysses.txt</Name><Type>DATA</Type><Version>1</Version></S3Object></Data>";
+        final String stringResponse = "<Data>" +
+                "<S3Object><BucketId>a24d14f3-e2f0-4bfb-ab71-f99d5ef43745</BucketId><CreationDate>2015-09-21T20:06:47.694Z</CreationDate><Id>e37c3ce0-12aa-4f54-87e3-42532aca0e5e</Id><Name>beowulf.txt</Name><Type>DATA</Type><Version>1</Version></S3Object><S3Object><BucketId>a24d14f3-e2f0-4bfb-ab71-f99d5ef43745</BucketId><CreationDate>2015-09-21T20:06:47.779Z</CreationDate><Id>dc628815-c723-4c4e-b68b-5f5d10f38af5</Id><Name>sherlock_holmes.txt</Name><Type>DATA</Type><Version>1</Version></S3Object><S3Object><BucketId>a24d14f3-e2f0-4bfb-ab71-f99d5ef43745</BucketId><CreationDate>2015-09-21T20:06:47.772Z</CreationDate><Id>4f6985fd-fbae-4421-ba27-66fdb96187c5</Id><Name>tale_of_two_cities.txt</Name><Type>DATA</Type><Version>1</Version></S3Object><S3Object><BucketId>a24d14f3-e2f0-4bfb-ab71-f99d5ef43745</BucketId><CreationDate>2015-09-21T20:06:47.696Z</CreationDate><Id>82c18910-fadb-4461-a152-bf714ae91b55</Id><Name>ulysses.txt</Name><Type>DATA</Type><Version>1</Version></S3Object></Data>";
 
         final List<S3Object> objects = MockNetwork
-                .expecting(HttpVerb.GET, "/_rest_/object/", queryParams, null)
+                .expecting(HttpVerb.GET, "/_rest_/object", queryParams, null)
                 .returning(200, stringResponse)
                 .asClient()
                 .getObjectsSpectraS3(new GetObjectsSpectraS3Request().withBucketId(UUID.fromString(bucketId)))
@@ -469,7 +471,7 @@ public class Ds3Client_Test {
         final List<JobChunkApiBean> objectListList = driver.performRestCall(client, "bulkTest", objects).getObjects();
         assertThat(objectListList.size(), is(1));
         
-        final List<BlobApiBean> objectList = objectListList.get(0).getObjects();
+        final List<BulkObject> objectList = objectListList.get(0).getObjects();
         assertThat(objectList.size(), is(3));
 
         assertObjectEquals(objectList.get(0), "file2", 1202);
@@ -477,7 +479,7 @@ public class Ds3Client_Test {
         assertObjectEquals(objectList.get(2), "file3", 2523);
     }
     
-    private static void assertObjectEquals(final BlobApiBean object, final String name, final long size) {
+    private static void assertObjectEquals(final BulkObject object, final String name, final long size) {
         assertThat(object.getName(), is(name));
         assertThat(object.getLength(), is(size));
     }
@@ -509,28 +511,28 @@ public class Ds3Client_Test {
         assertThat(chunk.getChunkNumber(), is(3));
         assertThat(chunk.getNodeId(), is(nodeId));
         
-        final List<BlobApiBean> objects = chunk.getObjects();
+        final List<BulkObject> objects = chunk.getObjects();
         assertThat(objects.size(), is(4));
 
-        final BlobApiBean object0 = objects.get(0);
+        final BulkObject object0 = objects.get(0);
         assertThat(object0.getName(), is("client00obj000004-8000000"));
         assertThat(object0.getInCache(), is(true));
         assertThat(object0.getOffset(), is(0L));
         assertThat(object0.getLength(), is(5368709120L));
 
-        final BlobApiBean object1 = objects.get(1);
+        final BulkObject object1 = objects.get(1);
         assertThat(object1.getName(), is("client00obj000004-8000000"));
         assertThat(object1.getInCache(), is(true));
         assertThat(object1.getOffset(), is(5368709120L));
         assertThat(object1.getLength(), is(2823290880L));
 
-        final BlobApiBean object2 = objects.get(2);
+        final BulkObject object2 = objects.get(2);
         assertThat(object2.getName(), is("client00obj000003-8000000"));
         assertThat(object2.getInCache(), is(true));
         assertThat(object2.getOffset(), is(5368709120L));
         assertThat(object2.getLength(), is(2823290880L));
 
-        final BlobApiBean object3 = objects.get(3);
+        final BulkObject object3 = objects.get(3);
         assertThat(object3.getName(), is("client00obj000003-8000000"));
         assertThat(object3.getInCache(), is(true));
         assertThat(object3.getOffset(), is(0L));
@@ -704,7 +706,7 @@ public class Ds3Client_Test {
         assertThat(node0.getHttpsPort(), is(443));
         final NodeApiBean node1 = nodes.get(1);
         assertThat(node1.getEndPoint(), is("10.1.18.13"));
-        assertThat(node1.getHttpPort(), is(0));
+        assertThat(node1.getHttpPort(), is(nullValue())); //TODO verify this is correct change from is(0)
         assertThat(node1.getHttpsPort(), is(443)); 
         
         final List<JobChunkApiBean> chunkList = jobWithChunksApiBean.getObjects();
@@ -714,14 +716,14 @@ public class Ds3Client_Test {
         assertThat(chunk0.getChunkId(), is(UUID.fromString("f58370c2-2538-4e78-a9f8-e4d2676bdf44")));
         assertThat(chunk0.getChunkNumber(), is(0));
         assertThat(chunk0.getNodeId(), is(UUID.fromString("a02053b9-0147-11e4-8d6a-002590c1177c")));
-        final List<BlobApiBean> objects0 = chunk0.getObjects();
+        final List<BulkObject> objects0 = chunk0.getObjects();
         assertThat(objects0.size(), is(2));
-        final BlobApiBean bulkObject0_0 = objects0.get(0);
+        final BulkObject bulkObject0_0 = objects0.get(0);
         assertThat(bulkObject0_0.getName(), is("client00obj000004-8000000"));
         assertThat(bulkObject0_0.getOffset(), is(0L));
         assertThat(bulkObject0_0.getLength(), is(5368709120L));
         assertThat(bulkObject0_0.getInCache(), is(true));
-        final BlobApiBean bulkObject0_1 = objects0.get(1);
+        final BulkObject bulkObject0_1 = objects0.get(1);
         assertThat(bulkObject0_1.getName(), is("client00obj000004-8000000"));
         assertThat(bulkObject0_1.getOffset(), is(5368709120L));
         assertThat(bulkObject0_1.getLength(), is(2823290880L));
@@ -731,14 +733,14 @@ public class Ds3Client_Test {
         assertThat(chunk1.getChunkId(), is(UUID.fromString("4137d768-25bb-4942-9d36-b92dfbe75e01")));
         assertThat(chunk1.getChunkNumber(), is(1));
         assertThat(chunk1.getNodeId(), is(UUID.fromString("95e97010-8e70-4733-926c-aeeb21796848")));
-        final List<BlobApiBean> objects1 = chunk1.getObjects();
+        final List<BulkObject> objects1 = chunk1.getObjects();
         assertThat(objects1.size(), is(2));
-        final BlobApiBean bulkObject1_0 = objects1.get(0);
+        final BulkObject bulkObject1_0 = objects1.get(0);
         assertThat(bulkObject1_0.getName(), is("client00obj000008-8000000"));
         assertThat(bulkObject1_0.getOffset(), is(5368709120L));
         assertThat(bulkObject1_0.getLength(), is(2823290880L));
         assertThat(bulkObject1_0.getInCache(), is(true));
-        final BlobApiBean bulkObject1_1 = objects1.get(1);
+        final BulkObject bulkObject1_1 = objects1.get(1);
         assertThat(bulkObject1_1.getName(), is("client00obj000008-8000000"));
         assertThat(bulkObject1_1.getOffset(), is(0L));
         assertThat(bulkObject1_1.getLength(), is(5368709120L));
@@ -911,10 +913,10 @@ public class Ds3Client_Test {
 
     @Test
     public void getTapesSpectraS3() throws IOException, SignatureException {
-        final String responsePayload = "<Data><Tape><AssignedToBucket>false</AssignedToBucket><AvailableRawCapacity>2408082046976</AvailableRawCapacity><BarCode>101000L6</BarCode><BucketId/><DescriptionForIdentification/><EjectDate/><EjectLabel/><EjectLocation/><EjectPending/><FullOfData>false</FullOfData><Id>c7c431df-f95d-4533-b350-ffd7a8a5caac</Id><LastAccessed>2015-09-04 06:53:08.236</LastAccessed><LastCheckpoint>eb77ea67-3c83-47ec-8714-cd46a97dc392:2</LastCheckpoint><LastModified>2015-08-21 16:14:30.714</LastModified><LastVerified/><PartitionId>4f8a5cbb-9837-41d9-afd1-cebed41f18f7</PartitionId><PreviousState/><SerialNumber>HP-W130501213</SerialNumber><State>NORMAL</State><TotalRawCapacity>2408088338432</TotalRawCapacity><Type>LTO6</Type><WriteProtected>false</WriteProtected></Tape></Data>";
+        final String responsePayload = "<Data><Tape><AssignedToStorageDomain>false</AssignedToStorageDomain><AvailableRawCapacity>2408082046976</AvailableRawCapacity><BarCode>101000L6</BarCode><BucketId/><DescriptionForIdentification/><EjectDate/><EjectLabel/><EjectLocation/><EjectPending/><FullOfData>false</FullOfData><Id>c7c431df-f95d-4533-b350-ffd7a8a5caac</Id><LastAccessed>2015-09-04T06:53:08.236</LastAccessed><LastCheckpoint>eb77ea67-3c83-47ec-8714-cd46a97dc392:2</LastCheckpoint><LastModified>2015-08-21T16:14:30.714</LastModified><LastVerified/><PartitionId>4f8a5cbb-9837-41d9-afd1-cebed41f18f7</PartitionId><PreviousState/><SerialNumber>HP-W130501213</SerialNumber><State>NORMAL</State><TotalRawCapacity>2408088338432</TotalRawCapacity><Type>LTO6</Type><WriteProtected>false</WriteProtected></Tape></Data>";
 
         final GetTapesSpectraS3Response response = MockNetwork
-                .expecting(HttpVerb.GET, "/_rest_/tape/", null, null)
+                .expecting(HttpVerb.GET, "/_rest_/tape", null, null)
                 .returning(200, responsePayload)
                 .asClient()
                 .getTapesSpectraS3(new GetTapesSpectraS3Request());

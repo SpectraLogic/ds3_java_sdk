@@ -82,10 +82,6 @@ public class Ds3ClientImpl implements Ds3Client {
         return new GetBucketsResponse(this.netClient.getResponse(request));
     }
     @Override
-    public GetObjectResponse getObject(GetObjectRequest request) throws IOException, SignatureException {
-        return new GetObjectResponse(this.netClient.getResponse(request));
-    }
-    @Override
     public HeadBucketResponse headBucket(HeadBucketRequest request) throws IOException, SignatureException {
         return new HeadBucketResponse(this.netClient.getResponse(request));
     }
@@ -976,6 +972,16 @@ public class Ds3ClientImpl implements Ds3Client {
     @Override
     public RegenerateUserSecretKeySpectraS3Response regenerateUserSecretKeySpectraS3(RegenerateUserSecretKeySpectraS3Request request) throws IOException, SignatureException {
         return new RegenerateUserSecretKeySpectraS3Response(this.netClient.getResponse(request));
+    }
+
+    @Override
+    public GetObjectResponse getObject(GetObjectRequest request) throws IOException, SignatureException {
+        return new GetObjectResponse(
+            this.netClient.getResponse(request),
+            request.getChannel(),
+            this.netClient.getConnectionDetails().getBufferSize(),
+            request.getObjectName()
+        );
     }
 
     @Override

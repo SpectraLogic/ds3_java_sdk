@@ -24,7 +24,7 @@ import com.spectralogic.ds3client.commands.spectrads3.AllocateJobChunkSpectraS3R
 import com.spectralogic.ds3client.commands.spectrads3.AllocateJobChunkSpectraS3Response;
 import com.spectralogic.ds3client.helpers.ChunkTransferrer.ItemTransferrer;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.ObjectChannelBuilder;
-import com.spectralogic.ds3client.models.BlobApiBean;
+import com.spectralogic.ds3client.models.BulkObject;
 import com.spectralogic.ds3client.models.JobChunkApiBean;
 import com.spectralogic.ds3client.models.JobWithChunksApiBean;
 import com.spectralogic.ds3client.models.Range;
@@ -93,7 +93,7 @@ class WriteJobImpl extends JobImpl {
             return;
         }
         try (final JobState jobState = new JobState(channelBuilder, filteredChunks, partTracker,
-                ImmutableMap.<String, ImmutableMultimap<BlobApiBean,Range>>of())) {
+                ImmutableMap.<String, ImmutableMultimap<BulkObject,Range>>of())) {
             final ChunkTransferrer chunkTransferrer = new ChunkTransferrer(
                 new PutObjectTransferrer(jobState),
                 this.client,
@@ -169,9 +169,9 @@ class WriteJobImpl extends JobImpl {
         return newJobChunkApiBean;
     }
 
-    private static List<BlobApiBean> filterObjects(final List<BlobApiBean> list) {
-        final List<BlobApiBean> filtered = new ArrayList<>();
-        for (final BlobApiBean obj : list) {
+    private static List<BulkObject> filterObjects(final List<BulkObject> list) {
+        final List<BulkObject> filtered = new ArrayList<>();
+        for (final BulkObject obj : list) {
             if (!obj.getInCache()) {
                 filtered.add(obj);
             }
@@ -187,7 +187,7 @@ class WriteJobImpl extends JobImpl {
         }
 
         @Override
-        public void transferItem(final Ds3Client client, final BlobApiBean ds3Object)
+        public void transferItem(final Ds3Client client, final BulkObject ds3Object)
                 throws SignatureException, IOException {
             client.createObject(new CreateObjectRequest(
                     WriteJobImpl.this.jobWithChunksApiBean.getBucketName(),

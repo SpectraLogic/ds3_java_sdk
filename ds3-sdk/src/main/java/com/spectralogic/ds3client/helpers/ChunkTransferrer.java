@@ -20,7 +20,7 @@ import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;
 import com.spectralogic.ds3client.Ds3Client;
-import com.spectralogic.ds3client.models.BlobApiBean;
+import com.spectralogic.ds3client.models.BulkObject;
 import com.spectralogic.ds3client.models.JobChunkApiBean;
 import com.spectralogic.ds3client.models.NodeApiBean;
 import com.spectralogic.ds3client.serializer.XmlProcessingException;
@@ -42,7 +42,7 @@ class ChunkTransferrer {
     private final int maxParallelRequests;
 
     public interface ItemTransferrer {
-        void transferItem(Ds3Client client, BlobApiBean ds3Object) throws SignatureException, IOException;
+        void transferItem(Ds3Client client, BulkObject ds3Object) throws SignatureException, IOException;
     }
     
     public ChunkTransferrer(
@@ -70,7 +70,7 @@ class ChunkTransferrer {
             for (final JobChunkApiBean chunk : chunks) {
                 LOG.debug("Processing parts for chunk: " + chunk.getChunkId().toString());
                 final Ds3Client client = mainClient.newForNode(nodeMap.get(chunk.getNodeId()));
-                for (final BlobApiBean ds3Object : chunk.getObjects()) {
+                for (final BulkObject ds3Object : chunk.getObjects()) {
                     final ObjectPart part = new ObjectPart(ds3Object.getOffset(), ds3Object.getLength());
                     if (this.partTracker.containsPart(ds3Object.getName(), part)) {
                         LOG.debug("Adding " + ds3Object.getName() + " to executor for processing");

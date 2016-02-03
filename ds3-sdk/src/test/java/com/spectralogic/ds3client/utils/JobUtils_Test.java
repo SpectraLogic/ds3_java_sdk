@@ -52,19 +52,19 @@ public class JobUtils_Test {
         mob.setRequestType(JobRequestType.PUT);
         mob.setJobId(realJobId);
 
-        final BlobApiBean blob1 = new BlobApiBean();
+        final BulkObject blob1 = new BulkObject();
         blob1.setName("file1");
         blob1.setLength(12);
         blob1.setInCache(false);
         blob1.setOffset(0);
 
-        final BlobApiBean blob2 = new BlobApiBean();
+        final BulkObject blob2 = new BulkObject();
         blob2.setName("file2");
         blob2.setLength(12);
         blob2.setInCache(false);
         blob2.setOffset(0);
 
-        final List<BlobApiBean> bulkObjects = Lists.newArrayList(blob1, blob2);
+        final List<BulkObject> bulkObjects = Lists.newArrayList(blob1, blob2);
 
         final JobChunkApiBean chunk = new JobChunkApiBean();
         chunk.setObjects(bulkObjects);
@@ -78,7 +78,6 @@ public class JobUtils_Test {
 
         when(client.getJobsSpectraS3(any(GetJobsSpectraS3Request.class))).thenReturn(jobsResponse);
         when(client.getJobSpectraS3(new GetJobSpectraS3Request(realJobId))).thenReturn(jobResponse);
-        //when(client.getJobSpectraS3(any(GetJobSpectraS3Request.class))).thenReturn(jobResponse);
 
         final Set<String> fileNames = Sets.newSet("file1");
 
@@ -123,19 +122,19 @@ public class JobUtils_Test {
         mob.setJobId(realJobId);
         mob.setRequestType(JobRequestType.PUT);
 
-        final BlobApiBean blob1 = new BlobApiBean();
+        final BulkObject blob1 = new BulkObject();
         blob1.setName("file1");
         blob1.setLength(12);
         blob1.setInCache(false);
         blob1.setOffset(0);
 
-        final BlobApiBean blob2 = new BlobApiBean();
+        final BulkObject blob2 = new BulkObject();
         blob2.setName("file2");
         blob2.setLength(12);
         blob2.setInCache(false);
         blob2.setOffset(0);
 
-        final List<BlobApiBean> bulkObjects = Lists.newArrayList(blob1, blob2);
+        final List<BulkObject> bulkObjects = Lists.newArrayList(blob1, blob2);
 
         final JobChunkApiBean chunk = new JobChunkApiBean();
         chunk.setObjects(bulkObjects);
@@ -193,19 +192,19 @@ public class JobUtils_Test {
         mob.setJobId(realJobId);
         mob.setRequestType(JobRequestType.PUT);
 
-        final BlobApiBean blob1 = new BlobApiBean();
+        final BulkObject blob1 = new BulkObject();
         blob1.setName("file1");
         blob1.setLength(12);
         blob1.setInCache(false);
         blob1.setOffset(0);
 
-        final BlobApiBean blob2 = new BlobApiBean();
+        final BulkObject blob2 = new BulkObject();
         blob2.setName("file2");
         blob2.setLength(12);
         blob2.setInCache(false);
         blob2.setOffset(0);
 
-        final List<BlobApiBean> bulkObjects = Lists.newArrayList(blob1, blob2);
+        final List<BulkObject> bulkObjects = Lists.newArrayList(blob1, blob2);
 
         final JobChunkApiBean chunk = new JobChunkApiBean();
         chunk.setObjects(bulkObjects);
@@ -263,19 +262,19 @@ public class JobUtils_Test {
         mob.setJobId(realJobId);
         mob.setRequestType(JobRequestType.PUT);
 
-        final BlobApiBean blob1 = new BlobApiBean();
+        final BulkObject blob1 = new BulkObject();
         blob1.setName("file1");
         blob1.setLength(12);
         blob1.setInCache(false);
         blob1.setOffset(0);
 
-        final BlobApiBean blob2 = new BlobApiBean();
+        final BulkObject blob2 = new BulkObject();
         blob2.setName("file2");
         blob2.setLength(12);
         blob2.setInCache(false);
         blob2.setOffset(0);
 
-        final List<BlobApiBean> bulkObjects = Lists.newArrayList(blob1, blob2);
+        final List<BulkObject> bulkObjects = Lists.newArrayList(blob1, blob2);
 
         final JobChunkApiBean chunk = new JobChunkApiBean();
         chunk.setObjects(bulkObjects);
@@ -321,13 +320,13 @@ public class JobUtils_Test {
         mob1.setJobId(job1.getJobId());
         mob1.setRequestType(JobRequestType.PUT);
 
-        final BlobApiBean blob0 = new BlobApiBean();
+        final BulkObject blob0 = new BulkObject();
         blob0.setName("file.something");
         blob0.setLength(125);
         blob0.setInCache(false);
         blob0.setOffset(0);
 
-        final List<BlobApiBean> bulkObjects1 = Lists.newArrayList(blob0);
+        final List<BulkObject> bulkObjects1 = Lists.newArrayList(blob0);
 
         final JobChunkApiBean chunk1 = new JobChunkApiBean();
         chunk1.setObjects(bulkObjects1);
@@ -355,27 +354,27 @@ public class JobUtils_Test {
         mob2.setJobId(realJobId);
         mob2.setRequestType(JobRequestType.PUT);
 
-        final BlobApiBean blob1 = new BlobApiBean();
+        final BulkObject blob1 = new BulkObject();
         blob1.setName("file1");
         blob1.setLength(12);
         blob1.setInCache(false);
         blob1.setOffset(0);
 
-        final BlobApiBean blob2 = new BlobApiBean();
+        final BulkObject blob2 = new BulkObject();
         blob2.setName("file2");
         blob2.setLength(12);
         blob2.setInCache(false);
         blob2.setOffset(0);
 
-        final List<BlobApiBean> bulkObjects2 = Lists.newArrayList(blob1, blob2);
+        final List<BulkObject> bulkObjects2 = Lists.newArrayList(blob1, blob2);
 
-        final BlobApiBean blob3 = new BlobApiBean();
+        final BulkObject blob3 = new BulkObject();
         blob3.setName("file3");
         blob3.setLength(12);
         blob3.setInCache(false);
         blob3.setOffset(0);
 
-        final List<BlobApiBean> bulkObjects3 = Lists.newArrayList(blob3);
+        final List<BulkObject> bulkObjects3 = Lists.newArrayList(blob3);
 
         final JobChunkApiBean chunk2 = new JobChunkApiBean();
         chunk2.setObjects(bulkObjects2);
@@ -428,13 +427,13 @@ public class JobUtils_Test {
         mob1.setJobId(job1.getJobId());
         mob1.setRequestType(JobRequestType.GET);
 
-        final BlobApiBean blob3 = new BlobApiBean();
+        final BulkObject blob3 = new BulkObject();
         blob3.setName("file3");
         blob3.setLength(12);
         blob3.setInCache(false);
         blob3.setOffset(0);
 
-        final List<BlobApiBean> bulkObjects1 = Lists.newArrayList(blob3);
+        final List<BulkObject> bulkObjects1 = Lists.newArrayList(blob3);
 
         final JobChunkApiBean chunk1 = new JobChunkApiBean();
         chunk1.setObjects(bulkObjects1);
@@ -462,20 +461,20 @@ public class JobUtils_Test {
         mob2.setJobId(realJobId);
         mob2.setRequestType(JobRequestType.GET);
 
-        final BlobApiBean blob1 = new BlobApiBean();
+        final BulkObject blob1 = new BulkObject();
         blob1.setName("file1");
         blob1.setLength(12);
         blob1.setInCache(false);
         blob1.setOffset(0);
 
-        final BlobApiBean blob2 = new BlobApiBean();
+        final BulkObject blob2 = new BulkObject();
         blob2.setName("file2");
         blob2.setLength(12);
         blob2.setInCache(false);
         blob2.setOffset(0);
 
-        final List<BlobApiBean> bulkObjects2 = Lists.newArrayList(blob1, blob2);
-        final List<BlobApiBean> bulkObjects3 = Lists.newArrayList(blob3);
+        final List<BulkObject> bulkObjects2 = Lists.newArrayList(blob1, blob2);
+        final List<BulkObject> bulkObjects3 = Lists.newArrayList(blob3);
 
         final JobChunkApiBean chunk2 = new JobChunkApiBean();
         chunk2.setObjects(bulkObjects2);
@@ -538,19 +537,19 @@ public class JobUtils_Test {
         mob.setJobId(realJobId);
         mob.setRequestType(JobRequestType.PUT);
 
-        final BlobApiBean blob1 = new BlobApiBean();
+        final BulkObject blob1 = new BulkObject();
         blob1.setName("file1");
         blob1.setLength(12);
         blob1.setInCache(false);
         blob1.setOffset(0);
 
-        final BlobApiBean blob2 = new BlobApiBean();
+        final BulkObject blob2 = new BulkObject();
         blob2.setName("file2");
         blob2.setLength(12);
         blob2.setInCache(false);
         blob2.setOffset(0);
 
-        final List<BlobApiBean> bulkObjects = Lists.newArrayList(blob1, blob2);
+        final List<BulkObject> bulkObjects = Lists.newArrayList(blob1, blob2);
 
         final JobChunkApiBean chunk = new JobChunkApiBean();
         chunk.setObjects(bulkObjects);

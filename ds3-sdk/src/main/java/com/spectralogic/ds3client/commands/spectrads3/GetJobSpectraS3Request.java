@@ -47,4 +47,16 @@ public class GetJobSpectraS3Request extends AbstractRequest {
         return this.jobId;
     }
 
+
+    @Override
+    public int hashCode() {
+        return jobId.hashCode();
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        if (! (obj instanceof GetJobSpectraS3Request)) return false;
+        final GetJobSpectraS3Request other = (GetJobSpectraS3Request) obj;
+        return other.getJobId().equals(this.getJobId());
+    }
 }

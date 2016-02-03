@@ -25,7 +25,7 @@ import java.lang.String;
 import com.spectralogic.ds3client.models.PhysicalPlacementApiBean;
 
 @JacksonXmlRootElement(namespace = "Data")
-public class BlobApiBean {
+public class BulkObject {
 
     // Variables
     @JsonProperty("Id")
@@ -53,7 +53,7 @@ public class BlobApiBean {
     private long version;
 
     // Constructor
-    public BlobApiBean() {
+    public BulkObject() {
         //pass
     }
 
@@ -130,4 +130,33 @@ public class BlobApiBean {
         this.version = version;
     }
 
+
+    @Override
+    public int hashCode() {
+        return java.util.Objects.hash(id, inCache, latest, length, name, offset, physicalPlacement, version);
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        if (!(obj instanceof BulkObject)) {
+            return false;
+        }
+
+        final BulkObject bulkObject = (BulkObject) obj;
+
+        return (((this.getId() == null) && (bulkObject.getId() == null))
+                || ((this.getId() != null) && (bulkObject.getId() != null) && this.getId().equals(bulkObject.getId())))
+                && this.getInCache().equals(bulkObject.getInCache())
+                && this.getLatest() == bulkObject.getLatest()
+                && this.getLength() == bulkObject.getLength()
+                && this.getName().equals(bulkObject.getName())
+                && this.getOffset() == bulkObject.getOffset()
+                && this.getPhysicalPlacement() == bulkObject.getPhysicalPlacement()
+                && this.getVersion() == bulkObject.getVersion();
+    }
+
+    @Override
+    public String toString() {
+        return String.format("name = %s, offset = %d, length %d", name, offset, length);
+    }
 }
