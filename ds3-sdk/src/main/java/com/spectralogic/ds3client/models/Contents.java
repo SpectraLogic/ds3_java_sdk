@@ -13,75 +13,97 @@
  * ****************************************************************************
  */
 
+// This code is auto-generated, do not modify
 package com.spectralogic.ds3client.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import java.lang.String;
+import java.util.Date;
+import com.spectralogic.ds3client.models.UserApiBean;
+import java.lang.Object;
 
+@JacksonXmlRootElement(namespace = "Data")
 public class Contents {
+
+    // Variables
+    @JsonProperty("ETag")
+    private String eTag;
 
     @JsonProperty("Key")
     private String key;
+
     @JsonProperty("LastModified")
-    private String lastModified;
-    @JsonProperty("ETag")
-    private String eTag;
+    private Date lastModified;
+
+    @JsonProperty("Owner")
+    private UserApiBean owner;
+
     @JsonProperty("Size")
     private long size;
+
     @JsonProperty("StorageClass")
-    private String storageClass;
-    @JsonProperty("Owner")
-    private Owner owner;
+    private Object storageClass;
+
+    // Constructor
+    public Contents() {
+        //pass
+    }
+
+    // Getters and Setters
+    
+    public String getETag() {
+        return this.eTag;
+    }
+
+    public void setETag(final String eTag) {
+        this.eTag = eTag;
+    }
+
 
     public String getKey() {
-        return key;
+        return this.key;
     }
 
     public void setKey(final String key) {
         this.key = key;
     }
 
-    public String getLastModified() {
-        return lastModified;
+
+    public Date getLastModified() {
+        return this.lastModified;
     }
 
-    public void setLastModified(final String lastModified) {
+    public void setLastModified(final Date lastModified) {
         this.lastModified = lastModified;
     }
 
-    public String geteTag() {
-        return eTag;
+
+    public UserApiBean getOwner() {
+        return this.owner;
     }
 
-    public void seteTag(final String eTag) {
-        this.eTag = eTag;
-    }
-
-    public String getStorageClass() {
-        return storageClass;
-    }
-
-    public void setStorageClass(final String storageClass) {
-        this.storageClass = storageClass;
-    }
-
-    public Owner getOwner() {
-        return owner;
-    }
-
-    public void setOwner(final Owner owner) {
+    public void setOwner(final UserApiBean owner) {
         this.owner = owner;
     }
 
+
     public long getSize() {
-        return size;
+        return this.size;
     }
 
     public void setSize(final long size) {
         this.size = size;
     }
 
-    @Override
-    public String toString() {
-        return "{{key:: " + key + "}, " + "{size:: " + size + "}, " + "{owner:: " + owner + "}}";
+
+    public Object getStorageClass() {
+        return this.storageClass;
     }
+
+    public void setStorageClass(final Object storageClass) {
+        this.storageClass = storageClass;
+    }
+
 }

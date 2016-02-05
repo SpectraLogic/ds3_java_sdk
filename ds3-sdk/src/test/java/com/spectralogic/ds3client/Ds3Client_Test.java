@@ -128,7 +128,7 @@ public class Ds3Client_Test {
         assertThat(result.getMarker(), is(nullValue()));
         assertThat(result.getMaxKeys(), is(1000));
 
-        final List<S3ObjectApiBean> objects = result.getObjects();
+        final List<Contents> objects = result.getObjects();
         assertThat(objects, is(notNullValue()));
         assertThat(objects.size(), is(3));
         this.assertObjectsEquals(
@@ -158,7 +158,7 @@ public class Ds3Client_Test {
     }
 
     private void assertObjectsEquals(
-            final S3ObjectApiBean objects,
+            final Contents objects,
             final String key,
             final Date lastModified,
             final String eTag,
@@ -184,7 +184,7 @@ public class Ds3Client_Test {
                 .expecting(HttpVerb.GET, "/_rest_/object", queryParams, null)
                 .returning(200, stringResponse)
                 .asClient()
-                .getObjectsSpectraS3(new GetObjectsSpectraS3Request().withBucketId(UUID.fromString(bucketId)))
+                .getObjectsSpectraS3(new GetObjectsSpectraS3Request().withBucketId(bucketId))
                 .getS3ObjectListResult()
                 .getS3Object();
 
@@ -248,7 +248,7 @@ public class Ds3Client_Test {
                 .returning(204, "")
                 .asClient()
                 .deleteFolderRecursivelySpectraS3(
-                        new DeleteFolderRecursivelySpectraS3Request(bucketId, "folderName"));
+                        new DeleteFolderRecursivelySpectraS3Request(bucketId.toString(), "folderName"));
     }
 
     @Test

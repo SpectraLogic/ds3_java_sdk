@@ -18,8 +18,8 @@ package com.spectralogic.ds3client.commands.spectrads3;
 
 import com.spectralogic.ds3client.HttpVerb;
 import com.spectralogic.ds3client.commands.AbstractRequest;
-import java.util.UUID;
 import com.spectralogic.ds3client.models.JobChunkClientProcessingOrderGuarantee;
+import java.util.UUID;
 import com.spectralogic.ds3client.models.BlobStoreTaskPriority;
 import java.util.Date;
 import com.spectralogic.ds3client.models.JobRequestType;
@@ -30,7 +30,7 @@ public class GetActiveJobsSpectraS3Request extends AbstractRequest {
     
     private boolean aggregating;
 
-    private UUID bucketId;
+    private String bucketId;
 
     private JobChunkClientProcessingOrderGuarantee chunkClientProcessingOrderGuarantee;
 
@@ -65,9 +65,9 @@ public class GetActiveJobsSpectraS3Request extends AbstractRequest {
         return this;
     }
 
-    public GetActiveJobsSpectraS3Request withBucketId(final UUID bucketId) {
+    public GetActiveJobsSpectraS3Request withBucketId(final String bucketId) {
         this.bucketId = bucketId;
-        this.updateQueryParam("bucket_id", bucketId.toString());
+        this.updateQueryParam("bucket_id", bucketId);
         return this;
     }
 
@@ -157,7 +157,7 @@ public class GetActiveJobsSpectraS3Request extends AbstractRequest {
     }
 
 
-    public UUID getBucketId() {
+    public String getBucketId() {
         return this.bucketId;
     }
 

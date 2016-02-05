@@ -25,7 +25,6 @@ import org.apache.http.entity.ContentType;
 import java.nio.channels.WritableByteChannel;
 import java.util.Collection;
 import com.spectralogic.ds3client.commands.AbstractRequest;
-import java.util.UUID;
 import com.spectralogic.ds3client.models.ChecksumType;
 public class GetObjectSpectraS3Request extends AbstractRequest {
 
@@ -35,17 +34,17 @@ public class GetObjectSpectraS3Request extends AbstractRequest {
 
     private final WritableByteChannel channel;
 
-    private final UUID bucketId;
+    private final String bucketId;
     private ImmutableCollection<Range> byteRanges = null;
     private ChecksumType checksum = ChecksumType.none();
     private ChecksumType.Type checksumType = ChecksumType.Type.NONE;
 
     // Constructor
-    public GetObjectSpectraS3Request(final String objectName, final UUID bucketId, final WritableByteChannel channel) {
+    public GetObjectSpectraS3Request(final String objectName, final String bucketId, final WritableByteChannel channel) {
         this.objectName = objectName;
         this.channel = channel;
         this.bucketId = bucketId;
-                this.getQueryParams().put("bucket_id", bucketId.toString());
+                this.getQueryParams().put("bucket_id", bucketId);
 
     }
 
@@ -136,7 +135,7 @@ public class GetObjectSpectraS3Request extends AbstractRequest {
     }
 
 
-    public UUID getBucketId() {
+    public String getBucketId() {
         return this.bucketId;
     }
 

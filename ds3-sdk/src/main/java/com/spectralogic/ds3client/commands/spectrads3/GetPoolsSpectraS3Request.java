@@ -18,8 +18,8 @@ package com.spectralogic.ds3client.commands.spectrads3;
 
 import com.spectralogic.ds3client.HttpVerb;
 import com.spectralogic.ds3client.commands.AbstractRequest;
-import java.util.UUID;
 import com.spectralogic.ds3client.models.PoolHealth;
+import java.util.UUID;
 import com.spectralogic.ds3client.models.PoolState;
 import com.spectralogic.ds3client.models.PoolType;
 
@@ -29,7 +29,7 @@ public class GetPoolsSpectraS3Request extends AbstractRequest {
     
     private boolean assignedToStorageDomain;
 
-    private UUID bucketId;
+    private String bucketId;
 
     private PoolHealth health;
 
@@ -64,9 +64,9 @@ public class GetPoolsSpectraS3Request extends AbstractRequest {
         return this;
     }
 
-    public GetPoolsSpectraS3Request withBucketId(final UUID bucketId) {
+    public GetPoolsSpectraS3Request withBucketId(final String bucketId) {
         this.bucketId = bucketId;
-        this.updateQueryParam("bucket_id", bucketId.toString());
+        this.updateQueryParam("bucket_id", bucketId);
         return this;
     }
 
@@ -156,7 +156,7 @@ public class GetPoolsSpectraS3Request extends AbstractRequest {
     }
 
 
-    public UUID getBucketId() {
+    public String getBucketId() {
         return this.bucketId;
     }
 

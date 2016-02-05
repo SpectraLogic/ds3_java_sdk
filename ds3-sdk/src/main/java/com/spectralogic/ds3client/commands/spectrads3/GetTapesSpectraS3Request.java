@@ -30,7 +30,7 @@ public class GetTapesSpectraS3Request extends AbstractRequest {
 
     private String barCode;
 
-    private UUID bucketId;
+    private String bucketId;
 
     private String ejectLabel;
 
@@ -77,9 +77,9 @@ public class GetTapesSpectraS3Request extends AbstractRequest {
         return this;
     }
 
-    public GetTapesSpectraS3Request withBucketId(final UUID bucketId) {
+    public GetTapesSpectraS3Request withBucketId(final String bucketId) {
         this.bucketId = bucketId;
-        this.updateQueryParam("bucket_id", bucketId.toString());
+        this.updateQueryParam("bucket_id", bucketId);
         return this;
     }
 
@@ -192,7 +192,7 @@ public class GetTapesSpectraS3Request extends AbstractRequest {
     }
 
 
-    public UUID getBucketId() {
+    public String getBucketId() {
         return this.bucketId;
     }
 

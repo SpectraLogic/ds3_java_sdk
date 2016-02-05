@@ -4,6 +4,8 @@ import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Lists;
 import com.spectralogic.ds3client.Ds3Client;
 import com.spectralogic.ds3client.commands.*;
+import com.spectralogic.ds3client.commands.spectrads3.CreatePutJobSpectraS3Request;
+import com.spectralogic.ds3client.commands.spectrads3.CreatePutJobSpectraS3Response;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers;
 import com.spectralogic.ds3client.models.bulk.Ds3Object;
 import com.spectralogic.ds3client.networking.Metadata;
@@ -113,14 +115,20 @@ public class Metadata_Test {
 
         try {
             final Ds3Object obj = new Ds3Object("obj.txt", 1024);
-            final BulkPutResponse putResponse = client.bulkPut(new BulkPutRequest(bucketName, Lists.newArrayList(obj)));
-            final PutObjectRequest request = new PutObjectRequest(bucketName, obj.getName(), putResponse.getResult().getJobId(), 1024, 0, buildRandomChannel(1024));
+            final CreatePutJobSpectraS3Response putResponse = client.createPutJobSpectraS3(new CreatePutJobSpectraS3Request(bucketName, Lists.newArrayList(obj)));
+            final CreateObjectRequest request = new CreateObjectRequest(
+                    bucketName,
+                    obj.getName(),
+                    buildRandomChannel(1024),
+                    putResponse.getResult().getJobId(),
+                    0,
+                    1024);
 
             for (final Map.Entry<String, String> entry : metadata.entries()) {
                 request.withMetaData(entry.getKey(), entry.getValue());
             }
 
-            final PutObjectResponse putObjResponse = client.putObject(request);
+            final CreateObjectResponse putObjResponse = client.createObject(request);
 
             assertThat(putObjResponse.getStatusCode(), is(200));
 

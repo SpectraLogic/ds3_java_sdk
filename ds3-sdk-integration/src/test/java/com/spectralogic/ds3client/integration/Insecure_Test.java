@@ -16,8 +16,8 @@
 package com.spectralogic.ds3client.integration;
 
 import com.spectralogic.ds3client.Ds3Client;
-import com.spectralogic.ds3client.commands.GetServiceRequest;
-import com.spectralogic.ds3client.commands.GetServiceResponse;
+import com.spectralogic.ds3client.commands.GetBucketsRequest;
+import com.spectralogic.ds3client.commands.GetBucketsResponse;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -25,7 +25,8 @@ import org.junit.Test;
 import java.io.IOException;
 import java.security.SignatureException;
 
-import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 
 /**
@@ -49,7 +50,7 @@ public class Insecure_Test {
 
     @Test
     public void getService() throws SignatureException, IOException{
-        final GetServiceResponse response = client.getService(new GetServiceRequest());
+        final GetBucketsResponse response = client.getBuckets(new GetBucketsRequest());
 
         assertThat(response, is(notNullValue()));
     }

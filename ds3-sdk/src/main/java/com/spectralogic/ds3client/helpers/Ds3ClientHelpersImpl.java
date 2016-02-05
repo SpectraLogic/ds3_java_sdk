@@ -116,10 +116,10 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
 
     private Ds3ClientHelpers.Job innerStartReadAllJob(final String bucket, final ReadJobOptions options)
             throws SignatureException, IOException, XmlProcessingException {
-        final Iterable<S3ObjectApiBean> contentsList = this.listObjects(bucket);
+        final Iterable<Contents> contentsList = this.listObjects(bucket);
 
         final List<Ds3Object> ds3Objects = new ArrayList<>();
-        for (final S3ObjectApiBean objectApiBean : contentsList) {
+        for (final Contents objectApiBean : contentsList) {
             ds3Objects.add(new Ds3Object(objectApiBean.getKey()));
         }
 
@@ -164,23 +164,23 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
     }
 
     @Override
-    public Iterable<S3ObjectApiBean> listObjects(final String bucket) throws SignatureException, IOException {
+    public Iterable<Contents> listObjects(final String bucket) throws SignatureException, IOException {
         return this.listObjects(bucket, null);
     }
 
     @Override
-    public Iterable<S3ObjectApiBean> listObjects(final String bucket, final String keyPrefix) throws SignatureException, IOException {
+    public Iterable<Contents> listObjects(final String bucket, final String keyPrefix) throws SignatureException, IOException {
         return this.listObjects(bucket, keyPrefix, null, Integer.MAX_VALUE);
     }
 
     @Override
-    public Iterable<S3ObjectApiBean> listObjects(final String bucket, final String keyPrefix, final String nextMarker) throws SignatureException, IOException {
+    public Iterable<Contents> listObjects(final String bucket, final String keyPrefix, final String nextMarker) throws SignatureException, IOException {
         return this.listObjects(bucket, keyPrefix, nextMarker, Integer.MAX_VALUE);
     }
 
     @Override
-    public Iterable<S3ObjectApiBean> listObjects(final String bucket, final String keyPrefix, final String nextMarker, final int maxKeys) throws SignatureException, IOException {
-        final List<S3ObjectApiBean> objectApiBeans = new ArrayList<>();
+    public Iterable<Contents> listObjects(final String bucket, final String keyPrefix, final String nextMarker, final int maxKeys) throws SignatureException, IOException {
+        final List<Contents> objectApiBeans = new ArrayList<>();
 
         int remainingKeys = maxKeys;
         boolean isTruncated = false;
@@ -205,7 +205,7 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
             marker = result.getNextMarker();
             remainingKeys -= result.getObjects().size();
 
-            for (final S3ObjectApiBean objectApiBean : result.getObjects()) {
+            for (final Contents objectApiBean : result.getObjects()) {
                 objectApiBeans.add(objectApiBean);
             }
         } while (isTruncated && remainingKeys > 0);

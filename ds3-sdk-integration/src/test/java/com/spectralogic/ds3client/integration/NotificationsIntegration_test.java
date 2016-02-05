@@ -16,8 +16,8 @@
 package com.spectralogic.ds3client.integration;
 
 import com.spectralogic.ds3client.Ds3Client;
-import com.spectralogic.ds3client.commands.PutBucketRequest;
-import com.spectralogic.ds3client.commands.notifications.*;
+import com.spectralogic.ds3client.commands.CreateBucketRequest;
+import com.spectralogic.ds3client.commands.spectrads3.notifications.*;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers;
 import com.spectralogic.ds3client.serializer.XmlProcessingException;
 import org.junit.AfterClass;
@@ -49,67 +49,83 @@ public class NotificationsIntegration_test {
 
     @Test
     public void objectCompletionRegistration() throws IOException, SignatureException {
-        final NotificationResponse response = client.createObjectCachedNotification(new CreateObjectCachedNotificationRequest("192.168.56.101"));
+        final CreateObjectCachedNotificationRegistrationSpectraS3Response response = client.createObjectCachedNotificationRegistrationSpectraS3(
+                new CreateObjectCachedNotificationRegistrationSpectraS3Request("192.168.56.101"));
         assertThat(response, is(notNullValue()));
-        assertThat(response.getRegistration(), is(notNullValue()));
+        assertThat(response.getS3ObjectCachedNotificationRegistrationResult(), is(notNullValue()));
 
-        final UUID registrationId = response.getRegistration().getId();
+        final UUID registrationId = response.getS3ObjectCachedNotificationRegistrationResult().getId();
 
-        final NotificationResponse getResponse = client.getObjectCachedNotification(new GetObjectCachedNotificationRequest(registrationId));
+        final GetObjectCachedNotificationRegistrationSpectraS3Response getResponse = client
+                .getObjectCachedNotificationRegistrationSpectraS3(
+                        new GetObjectCachedNotificationRegistrationSpectraS3Request(registrationId));
         assertThat(getResponse, is(notNullValue()));
-        assertThat(getResponse.getRegistration(), is(notNullValue()));
-        assertThat(getResponse.getRegistration().getId(), is(notNullValue()));
+        assertThat(getResponse.getS3ObjectCachedNotificationRegistrationResult(), is(notNullValue()));
+        assertThat(getResponse.getS3ObjectCachedNotificationRegistrationResult().getId(), is(notNullValue()));
 
-        assertThat(client.deleteObjectCachedNotification(new DeleteObjectCachedNotificationRequest(registrationId)), is(notNullValue()));
-
+        assertThat(client.deleteObjectCachedNotificationRegistrationSpectraS3(
+                new DeleteObjectCachedNotificationRegistrationSpectraS3Request(registrationId)), is(notNullValue()));
     }
 
     @Test
     public void jobCompletionRegistration() throws IOException, SignatureException {
-        final NotificationResponse response = client.createJobCompletedNotification(new CreateJobCompletedNotificationRequest("192.168.56.101/other"));
+        final CreateJobCompletedNotificationRegistrationSpectraS3Response response = client.createJobCompletedNotificationRegistrationSpectraS3(
+                new CreateJobCompletedNotificationRegistrationSpectraS3Request("192.168.56.101/other"));
         assertThat(response, is(notNullValue()));
-        assertThat(response.getRegistration(), is(notNullValue()));
+        assertThat(response.getJobCompletedNotificationRegistrationResult(), is(notNullValue()));
 
-        final UUID registrationId = response.getRegistration().getId();
+        final UUID registrationId = response.getJobCompletedNotificationRegistrationResult().getId();
 
-        final NotificationResponse getResponse = client.getJobCompletedNotification(new GetJobCompletedNotificationRequest(registrationId));
+        final GetJobCompletedNotificationRegistrationSpectraS3Response getResponse = client
+                .getJobCompletedNotificationRegistrationSpectraS3(
+                        new GetJobCompletedNotificationRegistrationSpectraS3Request(registrationId));
         assertThat(getResponse, is(notNullValue()));
-        assertThat(getResponse.getRegistration(), is(notNullValue()));
-        assertThat(getResponse.getRegistration().getId(), is(notNullValue()));
+        assertThat(getResponse.getJobCompletedNotificationRegistrationResult(), is(notNullValue()));
+        assertThat(getResponse.getJobCompletedNotificationRegistrationResult().getId(), is(notNullValue()));
 
-        assertThat(client.deleteJobCompleteNotification(new DeleteJobCompletedNotificationRequest(registrationId)), is(notNullValue()));
+        assertThat(client.deleteJobCompletedNotificationRegistrationSpectraS3(new DeleteJobCompletedNotificationRegistrationSpectraS3Request(registrationId)), is(notNullValue()));
     }
 
     @Test
     public void jobCreateRegistration() throws IOException, SignatureException {
-        final NotificationResponse response = client.createJobCreatedNotification(new CreateJobCreatedNotificationRequest("192.168.56.101/other"));
+        final CreateJobCreatedNotificationRegistrationSpectraS3Response response = client
+                .createJobCreatedNotificationRegistrationSpectraS3(
+                        new CreateJobCreatedNotificationRegistrationSpectraS3Request("192.168.56.101/other"));
         assertThat(response, is(notNullValue()));
-        assertThat(response.getRegistration(), is(notNullValue()));
+        assertThat(response.getJobCreatedNotificationRegistrationResult(), is(notNullValue()));
 
-        final UUID registrationId = response.getRegistration().getId();
+        final UUID registrationId = response.getJobCreatedNotificationRegistrationResult().getId();
 
-        final NotificationResponse getResponse = client.getJobCreatedNotification(new GetJobCreatedNotificationRequest(registrationId));
+        final GetJobCreatedNotificationRegistrationSpectraS3Response getResponse = client
+                .getJobCreatedNotificationRegistrationSpectraS3(
+                        new GetJobCreatedNotificationRegistrationSpectraS3Request(registrationId));
         assertThat(getResponse, is(notNullValue()));
-        assertThat(getResponse.getRegistration(), is(notNullValue()));
-        assertThat(getResponse.getRegistration().getId(), is(notNullValue()));
+        assertThat(getResponse.getJobCreatedNotificationRegistrationResult(), is(notNullValue()));
+        assertThat(getResponse.getJobCreatedNotificationRegistrationResult().getId(), is(notNullValue()));
 
-        assertThat(client.deleteJobCreatedNotification(new DeleteJobCreatedNotificationRequest(registrationId)), is(notNullValue()));
+        assertThat(client.deleteJobCreatedNotificationRegistrationSpectraS3(
+                new DeleteJobCreatedNotificationRegistrationSpectraS3Request(registrationId)), is(notNullValue()));
     }
 
     @Test
     public void objectLostRegistration() throws IOException, SignatureException {
-        final NotificationResponse response = client.createObjectLostNotification(new CreateObjectLostNotificationRequest("192.168.56.101/other"));
+        final CreateObjectLostNotificationRegistrationSpectraS3Response response = client
+                .createObjectLostNotificationRegistrationSpectraS3(
+                        new CreateObjectLostNotificationRegistrationSpectraS3Request("192.168.56.101/other"));
         assertThat(response, is(notNullValue()));
-        assertThat(response.getRegistration(), is(notNullValue()));
+        assertThat(response.getS3ObjectLostNotificationRegistrationResult(), is(notNullValue()));
 
-        final UUID registrationId = response.getRegistration().getId();
+        final UUID registrationId = response.getS3ObjectLostNotificationRegistrationResult().getId();
 
-        final NotificationResponse getResponse = client.getObjectLostNotification(new GetObjectLostNotificationRequest(registrationId));
+        final GetObjectLostNotificationRegistrationSpectraS3Response getResponse = client
+                .getObjectLostNotificationRegistrationSpectraS3(
+                        new GetObjectLostNotificationRegistrationSpectraS3Request(registrationId));
         assertThat(getResponse, is(notNullValue()));
-        assertThat(getResponse.getRegistration(), is(notNullValue()));
-        assertThat(getResponse.getRegistration().getId(), is(notNullValue()));
+        assertThat(getResponse.getS3ObjectLostNotificationRegistrationResult(), is(notNullValue()));
+        assertThat(getResponse.getS3ObjectLostNotificationRegistrationResult().getId(), is(notNullValue()));
 
-        assertThat(client.deleteObjectLostNotification(new DeleteObjectLostNotificationRequest(registrationId)), is(notNullValue()));
+        assertThat(client.deleteObjectLostNotificationRegistrationSpectraS3(
+                new DeleteObjectLostNotificationRegistrationSpectraS3Request(registrationId)), is(notNullValue()));
     }
 
     @Test
@@ -117,23 +133,29 @@ public class NotificationsIntegration_test {
         final String bucketName = "test_bucket";
 
         try {
-            client.putBucket(new PutBucketRequest(bucketName));
+            client.createBucket(new CreateBucketRequest(bucketName));
             final Ds3ClientHelpers.Job job = Util.getLoadJob(client, bucketName, Util.RESOURCE_BASE_NAME);
 
-            final NotificationResponse response = client.createObjectPersistedNotification(new CreateObjectPersistedNotificationRequest("192.168.56.101/other", job.getJobId()));
+            final CreateObjectPersistedNotificationRegistrationSpectraS3Response response = client
+                    .createObjectPersistedNotificationRegistrationSpectraS3(
+                            new CreateObjectPersistedNotificationRegistrationSpectraS3Request("192.168.56.101/other")
+                                    .withJobId(job.getJobId()));
             assertThat(response, is(notNullValue()));
-            assertThat(response.getRegistration(), is(notNullValue()));
+            assertThat(response.getS3ObjectPersistedNotificationRegistrationResult(), is(notNullValue()));
 
             job.transfer(new ResourceObjectPutter(Util.RESOURCE_BASE_NAME));
 
-            final UUID registrationId = response.getRegistration().getId();
+            final UUID registrationId = response.getS3ObjectPersistedNotificationRegistrationResult().getId();
 
-            final NotificationResponse getResponse = client.getObjectPersistedNotification(new GetObjectPersistedNotificationRequest(registrationId));
+            final GetObjectPersistedNotificationRegistrationSpectraS3Response getResponse = client
+                    .getObjectPersistedNotificationRegistrationSpectraS3(
+                            new GetObjectPersistedNotificationRegistrationSpectraS3Request(registrationId));
             assertThat(getResponse, is(notNullValue()));
-            assertThat(getResponse.getRegistration(), is(notNullValue()));
-            assertThat(getResponse.getRegistration().getId(), is(notNullValue()));
+            assertThat(getResponse.getS3ObjectPersistedNotificationRegistrationResult(), is(notNullValue()));
+            assertThat(getResponse.getS3ObjectPersistedNotificationRegistrationResult().getId(), is(notNullValue()));
 
-            assertThat(client.deleteObjectPersistedNotification(new DeleteObjectPersistedNotificationRequest(registrationId)), is(notNullValue()));
+            assertThat(client.deleteObjectPersistedNotificationRegistrationSpectraS3(
+                    new DeleteObjectPersistedNotificationRegistrationSpectraS3Request(registrationId)), is(notNullValue()));
         } finally {
             Util.deleteAllContents(client, bucketName);
         }
@@ -141,33 +163,43 @@ public class NotificationsIntegration_test {
 
     @Test
     public void partitionFailureRegistration() throws IOException, SignatureException {
-        final NotificationResponse response = client.createPartitionFailureNotification(new CreatePartitionFailureNotificationRequest("192.168.56.101/other"));
+        final CreateTapePartitionFailureNotificationRegistrationSpectraS3Response response = client
+                .createTapePartitionFailureNotificationRegistrationSpectraS3(
+                        new CreateTapePartitionFailureNotificationRegistrationSpectraS3Request("192.168.56.101/other"));
         assertThat(response, is(notNullValue()));
-        assertThat(response.getRegistration(), is(notNullValue()));
+        assertThat(response.getTapePartitionFailureNotificationRegistrationResult(), is(notNullValue()));
 
-        final UUID registrationId = response.getRegistration().getId();
+        final UUID registrationId = response.getTapePartitionFailureNotificationRegistrationResult().getId();
 
-        final NotificationResponse getResponse = client.getPartitionFailureNotification(new GetPartitionFailureNotificationRequest(registrationId));
+        final GetTapePartitionFailureNotificationRegistrationSpectraS3Response getResponse = client
+                .getTapePartitionFailureNotificationRegistrationSpectraS3(
+                        new GetTapePartitionFailureNotificationRegistrationSpectraS3Request(registrationId));
         assertThat(getResponse, is(notNullValue()));
-        assertThat(getResponse.getRegistration(), is(notNullValue()));
-        assertThat(getResponse.getRegistration().getId(), is(notNullValue()));
+        assertThat(getResponse.getTapePartitionFailureNotificationRegistrationResult(), is(notNullValue()));
+        assertThat(getResponse.getTapePartitionFailureNotificationRegistrationResult().getId(), is(notNullValue()));
 
-        assertThat(client.deletePartitionFailureNotification(new DeletePartitionFailureNotificationRequest(registrationId)), is(notNullValue()));
+        assertThat(client.deleteTapePartitionFailureNotificationRegistrationSpectraS3(
+                new DeleteTapePartitionFailureNotificationRegistrationSpectraS3Request(registrationId)), is(notNullValue()));
     }
 
     @Test
     public void tapeFailureRegistration() throws IOException, SignatureException {
-        final NotificationResponse response = client.createTapeFailureNotification(new CreateTapeFailureNotificationRequest("192.168.56.101/other"));
+        final CreateTapeFailureNotificationRegistrationSpectraS3Response response = client
+                .createTapeFailureNotificationRegistrationSpectraS3(
+                        new CreateTapeFailureNotificationRegistrationSpectraS3Request("192.168.56.101/other"));
         assertThat(response, is(notNullValue()));
-        assertThat(response.getRegistration(), is(notNullValue()));
+        assertThat(response.getTapeFailureNotificationRegistrationResult(), is(notNullValue()));
 
-        final UUID registrationId = response.getRegistration().getId();
+        final UUID registrationId = response.getTapeFailureNotificationRegistrationResult().getId();
 
-        final NotificationResponse getResponse = client.getTapeFailureNotification(new GetTapeFailureNotificationRequest(registrationId));
+        final GetTapeFailureNotificationRegistrationSpectraS3Response getResponse = client
+                .getTapeFailureNotificationRegistrationSpectraS3(
+                        new GetTapeFailureNotificationRegistrationSpectraS3Request(registrationId));
         assertThat(getResponse, is(notNullValue()));
-        assertThat(getResponse.getRegistration(), is(notNullValue()));
-        assertThat(getResponse.getRegistration().getId(), is(notNullValue()));
+        assertThat(getResponse.getTapeFailureNotificationRegistrationResult(), is(notNullValue()));
+        assertThat(getResponse.getTapeFailureNotificationRegistrationResult().getId(), is(notNullValue()));
 
-        assertThat(client.deleteTapeFailureNotification(new DeleteTapeFailureNotificationRequest(registrationId)), is(notNullValue()));
+        assertThat(client.deleteTapeFailureNotificationRegistrationSpectraS3(
+                new DeleteTapeFailureNotificationRegistrationSpectraS3Request(registrationId)), is(notNullValue()));
     }
 }

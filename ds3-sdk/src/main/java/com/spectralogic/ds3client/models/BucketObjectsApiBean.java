@@ -23,7 +23,7 @@ import java.lang.String;
 import java.util.List;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import java.util.Date;
-import com.spectralogic.ds3client.models.S3ObjectApiBean;
+import com.spectralogic.ds3client.models.Contents;
 
 @JacksonXmlRootElement(namespace = "ListBucketResult")
 public class BucketObjectsApiBean {
@@ -53,7 +53,7 @@ public class BucketObjectsApiBean {
 
     @JsonProperty("Contents")
     @JacksonXmlElementWrapper(useWrapping = false)
-    private List<S3ObjectApiBean> objects;
+    private List<Contents> objects;
 
     @JsonProperty("Prefix")
     private String prefix;
@@ -131,11 +131,11 @@ public class BucketObjectsApiBean {
     }
 
 
-    public List<S3ObjectApiBean> getObjects() {
+    public List<Contents> getObjects() {
         return this.objects;
     }
 
-    public void setObjects(final List<S3ObjectApiBean> objects) {
+    public void setObjects(final List<Contents> objects) {
         this.objects = objects;
     }
 

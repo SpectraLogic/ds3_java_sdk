@@ -25,7 +25,7 @@ public class GetBucketAclsSpectraS3Request extends AbstractRequest {
 
     // Variables
     
-    private UUID bucketId;
+    private String bucketId;
 
     private UUID groupId;
 
@@ -46,9 +46,9 @@ public class GetBucketAclsSpectraS3Request extends AbstractRequest {
     public GetBucketAclsSpectraS3Request() {
             }
 
-    public GetBucketAclsSpectraS3Request withBucketId(final UUID bucketId) {
+    public GetBucketAclsSpectraS3Request withBucketId(final String bucketId) {
         this.bucketId = bucketId;
-        this.updateQueryParam("bucket_id", bucketId.toString());
+        this.updateQueryParam("bucket_id", bucketId);
         return this;
     }
 
@@ -109,7 +109,7 @@ public class GetBucketAclsSpectraS3Request extends AbstractRequest {
         return "/_rest_/bucket_acl";
     }
     
-    public UUID getBucketId() {
+    public String getBucketId() {
         return this.bucketId;
     }
 

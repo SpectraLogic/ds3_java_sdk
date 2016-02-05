@@ -25,7 +25,7 @@ public class GetObjectsWithFullDetailsSpectraS3Request extends AbstractRequest {
 
     // Variables
     
-    private UUID bucketId;
+    private String bucketId;
 
     private String folder;
 
@@ -53,9 +53,9 @@ public class GetObjectsWithFullDetailsSpectraS3Request extends AbstractRequest {
                 this.getQueryParams().put("full_details", null);
     }
 
-    public GetObjectsWithFullDetailsSpectraS3Request withBucketId(final UUID bucketId) {
+    public GetObjectsWithFullDetailsSpectraS3Request withBucketId(final String bucketId) {
         this.bucketId = bucketId;
-        this.updateQueryParam("bucket_id", bucketId.toString());
+        this.updateQueryParam("bucket_id", bucketId);
         return this;
     }
 
@@ -138,7 +138,7 @@ public class GetObjectsWithFullDetailsSpectraS3Request extends AbstractRequest {
         return "/_rest_/object";
     }
     
-    public UUID getBucketId() {
+    public String getBucketId() {
         return this.bucketId;
     }
 

@@ -18,14 +18,14 @@ package com.spectralogic.ds3client.commands.spectrads3;
 
 import com.spectralogic.ds3client.HttpVerb;
 import com.spectralogic.ds3client.commands.AbstractRequest;
-import java.util.UUID;
 import com.spectralogic.ds3client.models.BucketAclPermission;
+import java.util.UUID;
 
 public class CreateBucketAclForUserSpectraS3Request extends AbstractRequest {
 
     // Variables
     
-    private final UUID bucketId;
+    private final String bucketId;
 
     private final BucketAclPermission permission;
 
@@ -33,11 +33,11 @@ public class CreateBucketAclForUserSpectraS3Request extends AbstractRequest {
 
     // Constructor
     
-    public CreateBucketAclForUserSpectraS3Request(final UUID bucketId, final BucketAclPermission permission, final UUID userId) {
+    public CreateBucketAclForUserSpectraS3Request(final String bucketId, final BucketAclPermission permission, final UUID userId) {
         this.bucketId = bucketId;
         this.permission = permission;
         this.userId = userId;
-                this.getQueryParams().put("bucket_id", bucketId.toString());
+                this.getQueryParams().put("bucket_id", bucketId);
         this.getQueryParams().put("permission", permission.toString());
         this.getQueryParams().put("user_id", userId.toString());
     }
@@ -53,7 +53,7 @@ public class CreateBucketAclForUserSpectraS3Request extends AbstractRequest {
         return "/_rest_/bucket_acl";
     }
     
-    public UUID getBucketId() {
+    public String getBucketId() {
         return this.bucketId;
     }
 

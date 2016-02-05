@@ -29,7 +29,7 @@ public class GetBucketCapacitySummarySpectraS3Request extends AbstractRequest {
 
     // Variables
     
-    private final UUID bucketId;
+    private final String bucketId;
 
     private final UUID storageDomainId;
 
@@ -45,10 +45,10 @@ public class GetBucketCapacitySummarySpectraS3Request extends AbstractRequest {
 
     // Constructor
     
-    public GetBucketCapacitySummarySpectraS3Request(final UUID bucketId, final UUID storageDomainId) {
+    public GetBucketCapacitySummarySpectraS3Request(final String bucketId, final UUID storageDomainId) {
         this.bucketId = bucketId;
         this.storageDomainId = storageDomainId;
-                this.getQueryParams().put("bucket_id", bucketId.toString());
+                this.getQueryParams().put("bucket_id", bucketId);
         this.getQueryParams().put("storage_domain_id", storageDomainId.toString());
     }
 
@@ -93,7 +93,7 @@ public class GetBucketCapacitySummarySpectraS3Request extends AbstractRequest {
         return "/_rest_/capacity_summary";
     }
     
-    public UUID getBucketId() {
+    public String getBucketId() {
         return this.bucketId;
     }
 

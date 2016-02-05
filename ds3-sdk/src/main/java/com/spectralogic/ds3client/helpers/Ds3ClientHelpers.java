@@ -18,7 +18,7 @@ package com.spectralogic.ds3client.helpers;
 import com.spectralogic.ds3client.Ds3Client;
 import com.spectralogic.ds3client.helpers.options.ReadJobOptions;
 import com.spectralogic.ds3client.helpers.options.WriteJobOptions;
-import com.spectralogic.ds3client.models.S3ObjectApiBean;
+import com.spectralogic.ds3client.models.Contents;
 import com.spectralogic.ds3client.models.bulk.Ds3Object;
 import com.spectralogic.ds3client.serializer.XmlProcessingException;
 
@@ -182,7 +182,7 @@ public abstract class Ds3ClientHelpers {
      * @throws SignatureException
      * @throws IOException
      */
-    public abstract Iterable<S3ObjectApiBean> listObjects(final String bucket) throws SignatureException, IOException;
+    public abstract Iterable<Contents> listObjects(final String bucket) throws SignatureException, IOException;
 
     /**
      * Returns information about objects in the bucket, filtered by names that start with keyPrefix.
@@ -194,7 +194,7 @@ public abstract class Ds3ClientHelpers {
      * @throws SignatureException
      * @throws IOException
      */
-    public abstract Iterable<S3ObjectApiBean> listObjects(final String bucket, final String keyPrefix)
+    public abstract Iterable<Contents> listObjects(final String bucket, final String keyPrefix)
             throws SignatureException, IOException;
 
     /**
@@ -211,7 +211,7 @@ public abstract class Ds3ClientHelpers {
      * @throws SignatureException
      * @throws IOException
      */
-    public abstract Iterable<S3ObjectApiBean> listObjects(final String bucket, final String keyPrefix, final String nextMarker)
+    public abstract Iterable<Contents> listObjects(final String bucket, final String keyPrefix, final String nextMarker)
             throws SignatureException, IOException;
 
     /**
@@ -233,7 +233,7 @@ public abstract class Ds3ClientHelpers {
      * @throws SignatureException
      * @throws IOException
      */
-    public abstract Iterable<S3ObjectApiBean> listObjects(final String bucket, final String keyPrefix, final String nextMarker, final int maxKeys)
+    public abstract Iterable<Contents> listObjects(final String bucket, final String keyPrefix, final String nextMarker, final int maxKeys)
             throws SignatureException, IOException;
 
 

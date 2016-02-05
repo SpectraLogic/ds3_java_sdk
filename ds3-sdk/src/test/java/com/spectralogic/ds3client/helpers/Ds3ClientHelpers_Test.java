@@ -220,7 +220,7 @@ public class Ds3ClientHelpers_Test {
         Mockito.when(ds3Client.getBucket(getBucketHas(MYBUCKET, "baz"))).thenReturn(new StubGetBucketResponse(1));
         
         // Call the list objects method.
-        final List<S3ObjectApiBean> contentList = Lists.newArrayList(Ds3ClientHelpers.wrap(ds3Client).listObjects(MYBUCKET));
+        final List<Contents> contentList = Lists.newArrayList(Ds3ClientHelpers.wrap(ds3Client).listObjects(MYBUCKET));
         
         // Check the results.
         assertThat(contentList.size(), is(3));
@@ -230,7 +230,7 @@ public class Ds3ClientHelpers_Test {
     }
     
     private static void checkContents(
-            final S3ObjectApiBean contents,
+            final Contents contents,
             final String key,
             final String eTag,
             final String lastModified,
@@ -310,7 +310,7 @@ public class Ds3ClientHelpers_Test {
         }
 
         private static BucketObjectsApiBean buildListBucketResult(
-                final List<S3ObjectApiBean> contentList,
+                final List<Contents> contentList,
                 final String marker,
                 final String nextMarker,
                 final boolean isTruncated) {
@@ -326,25 +326,25 @@ public class Ds3ClientHelpers_Test {
             return listBucketResult;
         }
         
-        private static List<S3ObjectApiBean> buildContentList0() {
+        private static List<Contents> buildContentList0() {
             return Lists.newArrayList(
                 buildContents("foo", "2cde576e5f5a613e6cee466a681f4929", "2009-10-12T17:50:30.000Z", 12),
                 buildContents("bar", "f3f98ff00be128139332bcf4b772be43", "2009-10-14T17:50:31.000Z", 12)
             );
         }
         
-        private static List<S3ObjectApiBean> buildContentList1() {
+        private static List<Contents> buildContentList1() {
             return Lists.newArrayList(
                 buildContents("baz", "802d45fcb9a3f7d00f1481362edc0ec9", "2009-10-18T17:50:35.000Z", 12)
             );
         }
         
-        private static S3ObjectApiBean buildContents(
+        private static Contents buildContents(
                 final String key,
                 final String eTag,
                 final String lastModified,
                 final long size) {
-            final S3ObjectApiBean contents = new S3ObjectApiBean();
+            final Contents contents = new Contents();
             contents.setETag(eTag);
             contents.setKey(key);
             contents.setLastModified(Date.from(Instant.parse(lastModified)));

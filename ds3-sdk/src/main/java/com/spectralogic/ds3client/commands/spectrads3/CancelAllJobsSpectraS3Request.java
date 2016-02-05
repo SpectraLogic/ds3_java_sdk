@@ -18,14 +18,13 @@ package com.spectralogic.ds3client.commands.spectrads3;
 
 import com.spectralogic.ds3client.HttpVerb;
 import com.spectralogic.ds3client.commands.AbstractRequest;
-import java.util.UUID;
 import com.spectralogic.ds3client.models.JobRequestType;
 
 public class CancelAllJobsSpectraS3Request extends AbstractRequest {
 
     // Variables
     
-    private UUID bucketId;
+    private String bucketId;
 
     private boolean force;
 
@@ -36,9 +35,9 @@ public class CancelAllJobsSpectraS3Request extends AbstractRequest {
     public CancelAllJobsSpectraS3Request() {
             }
 
-    public CancelAllJobsSpectraS3Request withBucketId(final UUID bucketId) {
+    public CancelAllJobsSpectraS3Request withBucketId(final String bucketId) {
         this.bucketId = bucketId;
-        this.updateQueryParam("bucket_id", bucketId.toString());
+        this.updateQueryParam("bucket_id", bucketId);
         return this;
     }
 
@@ -69,7 +68,7 @@ public class CancelAllJobsSpectraS3Request extends AbstractRequest {
         return "/_rest_/job";
     }
     
-    public UUID getBucketId() {
+    public String getBucketId() {
         return this.bucketId;
     }
 

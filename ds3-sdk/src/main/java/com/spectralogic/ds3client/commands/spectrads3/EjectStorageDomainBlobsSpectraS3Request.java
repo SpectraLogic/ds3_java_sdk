@@ -24,7 +24,7 @@ public class EjectStorageDomainBlobsSpectraS3Request extends AbstractRequest {
 
     // Variables
     
-    private final UUID bucketId;
+    private final String bucketId;
 
     private final UUID storageDomainId;
 
@@ -34,13 +34,13 @@ public class EjectStorageDomainBlobsSpectraS3Request extends AbstractRequest {
 
     // Constructor
     
-    public EjectStorageDomainBlobsSpectraS3Request(final UUID bucketId, final UUID storageDomainId) {
+    public EjectStorageDomainBlobsSpectraS3Request(final String bucketId, final UUID storageDomainId) {
         this.bucketId = bucketId;
         this.storageDomainId = storageDomainId;
         
         this.getQueryParams().put("operation", "eject");
         this.getQueryParams().put("blobs", null);
-        this.getQueryParams().put("bucket_id", bucketId.toString());
+        this.getQueryParams().put("bucket_id", bucketId);
         this.getQueryParams().put("storage_domain_id", storageDomainId.toString());
     }
 
@@ -67,7 +67,7 @@ public class EjectStorageDomainBlobsSpectraS3Request extends AbstractRequest {
         return "/_rest_/tape";
     }
     
-    public UUID getBucketId() {
+    public String getBucketId() {
         return this.bucketId;
     }
 

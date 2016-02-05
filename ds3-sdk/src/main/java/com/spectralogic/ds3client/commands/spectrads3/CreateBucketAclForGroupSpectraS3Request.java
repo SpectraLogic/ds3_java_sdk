@@ -25,7 +25,7 @@ public class CreateBucketAclForGroupSpectraS3Request extends AbstractRequest {
 
     // Variables
     
-    private final UUID bucketId;
+    private final String bucketId;
 
     private final UUID groupId;
 
@@ -33,11 +33,11 @@ public class CreateBucketAclForGroupSpectraS3Request extends AbstractRequest {
 
     // Constructor
     
-    public CreateBucketAclForGroupSpectraS3Request(final UUID bucketId, final UUID groupId, final BucketAclPermission permission) {
+    public CreateBucketAclForGroupSpectraS3Request(final String bucketId, final UUID groupId, final BucketAclPermission permission) {
         this.bucketId = bucketId;
         this.groupId = groupId;
         this.permission = permission;
-                this.getQueryParams().put("bucket_id", bucketId.toString());
+                this.getQueryParams().put("bucket_id", bucketId);
         this.getQueryParams().put("group_id", groupId.toString());
         this.getQueryParams().put("permission", permission.toString());
     }
@@ -53,7 +53,7 @@ public class CreateBucketAclForGroupSpectraS3Request extends AbstractRequest {
         return "/_rest_/bucket_acl";
     }
     
-    public UUID getBucketId() {
+    public String getBucketId() {
         return this.bucketId;
     }
 
