@@ -26,6 +26,7 @@ import java.io.IOException;
 import java.nio.channels.SeekableByteChannel;
 import java.nio.file.Path;
 import java.security.SignatureException;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -58,12 +59,19 @@ public abstract class Ds3ClientHelpers {
         void attachObjectCompletedListener(final ObjectCompletedListener listener);
         void removeDataTransferredListener(final DataTransferredListener listener);
         void removeObjectCompletedListener(final ObjectCompletedListener listener);
-
+        void attachMetadataReceivedListener(final MetadataReceivedListener listener);
+        void removeMetadataReceivedListener(final MetadataReceivedListener listener);
+        void attachChecksumListener(final ChecksumListener listener);
+        void removeChecksumListener(final ChecksumListener listener);
         /**
          * Sets the maximum number of requests to execute at a time when fulfilling the job.
          */
-        Job withMaxParallelRequests(int maxParallelRequests);
+        Job withMaxParallelRequests(final int maxParallelRequests);
         
+        Job withMetadata(final MetadataAccess access);
+
+        Job withChecksum(final ChecksumFunction checksumFunction);
+
         /**
          * Transfers the files in this job using the given seekable channel creator.  The is a blocking call.
          * @throws SignatureException
@@ -74,11 +82,19 @@ public abstract class Ds3ClientHelpers {
             throws SignatureException, IOException, XmlProcessingException;
     }
 
+    public interface MetadataAccess {
+        Map<String, String> getMetadataValue(final String filename);
+    }
+
     /**
      * Wraps the given {@link com.spectralogic.ds3client.Ds3ClientImpl} with helper methods.
      */
     public static Ds3ClientHelpers wrap(final Ds3Client client) {
         return new Ds3ClientHelpersImpl(client);
+    }
+
+    public static Ds3ClientHelpers wrap(final Ds3Client client, final int retryAfter) {
+        return new Ds3ClientHelpersImpl(client, retryAfter);
     }
 
     /**

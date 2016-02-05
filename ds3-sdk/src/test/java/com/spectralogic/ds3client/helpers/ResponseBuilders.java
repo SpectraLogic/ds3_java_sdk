@@ -17,6 +17,7 @@ package com.spectralogic.ds3client.helpers;
 
 import com.spectralogic.ds3client.commands.GetObjectRequest;
 import com.spectralogic.ds3client.commands.GetObjectResponse;
+import com.spectralogic.ds3client.commands.HeadBucketResponse;
 import com.spectralogic.ds3client.commands.spectrads3.*;
 import com.spectralogic.ds3client.models.*;
 import com.spectralogic.ds3client.utils.ByteArraySeekableByteChannel;
@@ -183,5 +184,11 @@ public class ResponseBuilders {
             throw new RuntimeException();
         }
         return channel;
+    }
+
+    public static HeadBucketResponse headBucket(final HeadBucketResponse.Status status) {
+        final HeadBucketResponse response = mock(HeadBucketResponse.class);
+        when(response.getStatus()).thenReturn(status);
+        return response;
     }
 }

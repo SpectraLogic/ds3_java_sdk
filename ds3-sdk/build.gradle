@@ -33,8 +33,8 @@ shadowJar {
     relocate 'org.slf4j', 'ds3fatjar.org.slf4j'
     dependencies {
         exclude(dependency('org.hamcrest:hamcrest-library:1.3'))
-        exclude(dependency('org.mockito:mockito-all:1.9.5'))
-        exclude(dependency('junit:junit:4.11'))
+        exclude(dependency('org.mockito:mockito-core:1.10.19'))
+        exclude(dependency('junit:junit:4.12'))
     }
 }
 

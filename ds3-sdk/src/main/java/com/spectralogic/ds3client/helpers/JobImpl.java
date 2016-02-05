@@ -22,9 +22,10 @@ import com.spectralogic.ds3client.models.JobWithChunksApiBean;
 import java.util.UUID;
 
 abstract class JobImpl implements Job {
-    protected int maxParallelRequests = 20;
     protected final Ds3Client client;
     protected final JobWithChunksApiBean jobWithChunksApiBean;
+    protected boolean running = false;
+    protected int maxParallelRequests = 10;
 
     public JobImpl(final Ds3Client client, final JobWithChunksApiBean jobWithChunksApiBean) {
         this.client = client;
@@ -52,4 +53,9 @@ abstract class JobImpl implements Job {
         this.maxParallelRequests = maxParallelRequests;
         return this;
     }
+
+    protected void checkRunning() {
+        if (running) throw new IllegalStateException("You cannot modify a job after calling transfer");
+    }
+
 }

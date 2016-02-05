@@ -24,12 +24,18 @@ import com.spectralogic.ds3client.helpers.options.ReadJobOptions;
 import com.spectralogic.ds3client.helpers.options.WriteJobOptions;
 import com.spectralogic.ds3client.helpers.util.PartialObjectHelpers;
 import com.spectralogic.ds3client.models.*;
-import com.spectralogic.ds3client.models.bulk.*;
+import com.spectralogic.ds3client.models.bulk.Ds3Object;
 import com.spectralogic.ds3client.models.bulk.RequestType;
+import com.spectralogic.ds3client.networking.FailedRequestException;
 import com.spectralogic.ds3client.serializer.XmlProcessingException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.nio.file.*;
+import java.nio.file.FileVisitResult;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.security.SignatureException;
 import java.util.ArrayList;
@@ -38,11 +44,19 @@ import java.util.UUID;
 
 class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
 
+    private final static Logger LOG = LoggerFactory.getLogger(Ds3ClientHelpersImpl.class);
+
     private static final int DEFAULT_MAX_KEYS = 1000;
     private final Ds3Client client;
+    private final int retryAfter;
 
-    Ds3ClientHelpersImpl(final Ds3Client client) {
+    public Ds3ClientHelpersImpl(final Ds3Client client) {
+        this(client, -1);
+    }
+
+    public Ds3ClientHelpersImpl(final Ds3Client client, final int retryAfter) {
         this.client = client;
+        this.retryAfter = retryAfter;
     }
 
     @Override
@@ -66,10 +80,11 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
                                                          final Iterable<Ds3Object> objectsToWrite,
                                                          final WriteJobOptions options)
             throws SignatureException, IOException, XmlProcessingException {
-        final CreatePutJobSpectraS3Response prime = this.client.createPutJobSpectraS3(new CreatePutJobSpectraS3Request(bucket, Lists.newArrayList(objectsToWrite))
+        final CreatePutJobSpectraS3Response prime = this.client.createPutJobSpectraS3(
+                new CreatePutJobSpectraS3Request(bucket, Lists.newArrayList(objectsToWrite))
                 .withPriority(options.getPriority())
                 .withMaxUploadSize(options.getMaxUploadSize()));
-        return new WriteJobImpl(this.client, prime.getResult());
+        return new WriteJobImpl(this.client, prime.getResult(), this.retryAfter, options.getChecksumType());
     }
 
     @Override
@@ -96,7 +111,7 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
 
         final ImmutableMultimap<String, Range> partialRanges = PartialObjectHelpers.getPartialObjectsRanges(objects);
 
-        return new ReadJobImpl(this.client, prime.getResult(), partialRanges);
+        return new ReadJobImpl(this.client, prime.getResult(), partialRanges, this.retryAfter);
     }
 
     @Override
@@ -134,10 +149,12 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
                     RequestType.PUT.toString(),
                     jobResponse.getJobWithChunksApiBeanResult().getRequestType().toString());
         }
-
+        // TODO Need to allow the user to pass in the checksumming information again
         return new WriteJobImpl(
                 this.client,
-                jobResponse.getJobWithChunksApiBeanResult());
+                jobResponse.getJobWithChunksApiBeanResult(),
+                this.retryAfter,
+                ChecksumType.Type.NONE);
     }
 
     @Override
@@ -149,17 +166,25 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
                     RequestType.GET.toString(),
                     jobResponse.getJobWithChunksApiBeanResult().getRequestType().toString() );
         }
-
-        return new ReadJobImpl(this.client,
+        return new ReadJobImpl(
+                this.client,
                 jobResponse.getJobWithChunksApiBeanResult(),
-                ImmutableMultimap.<String, Range>of());
+                ImmutableMultimap.<String, Range>of(),
+                this.retryAfter);
     }
 
     @Override
     public void ensureBucketExists(final String bucket) throws IOException, SignatureException {
         final HeadBucketResponse response = this.client.headBucket(new HeadBucketRequest(bucket));
         if (response.getStatus() == HeadBucketResponse.Status.DOESNTEXIST) {
-            this.client.createBucket(new CreateBucketRequest(bucket));
+            try {
+                this.client.createBucket(new CreateBucketRequest(bucket));
+            } catch (final FailedRequestException e) {
+                if (e.getStatusCode() != 409) {
+                    throw e;
+                }
+                LOG.warn("Creating " + bucket + " failed because it was created by another thread or process");
+            }
         }
     }
 

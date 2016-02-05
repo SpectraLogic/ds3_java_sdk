@@ -108,7 +108,7 @@ public class XmlOutput_Test {
         assumeFalse(XmlOutput.isProductionBuild());
 
         final String xmlResponse = "<Object Name=\"file1\" InCache=\"false\" Length=\"256\" Offset=\"0\" TheAnswerToEverything=\"42\" />";
-        XmlOutput.fromXml(xmlResponse, com.spectralogic.ds3client.models.bulk.BulkObject.class);
+        XmlOutput.fromXml(xmlResponse, com.spectralogic.ds3client.models.BulkObject.class);
     }
 
     @Test
@@ -116,6 +116,6 @@ public class XmlOutput_Test {
         assumeTrue(XmlOutput.isProductionBuild());
 
         final String xmlResponse = "<Object Name=\"file1\" InCache=\"false\" Length=\"256\" Offset=\"0\" TheAnswerToEverything=\"42\" />";
-        XmlOutput.fromXml(xmlResponse, com.spectralogic.ds3client.models.bulk.BulkObject.class);
+        XmlOutput.fromXml(xmlResponse, com.spectralogic.ds3client.models.BulkObject.class);
     }
 }

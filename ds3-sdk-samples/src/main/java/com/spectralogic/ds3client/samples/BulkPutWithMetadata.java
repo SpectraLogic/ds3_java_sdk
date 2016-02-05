@@ -26,11 +26,11 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.SignatureException;
+import java.util.HashMap;
+import java.util.Map;
 
-public class BulkPutExample {
-
-    public static void main(final String args[]) throws IOException, SignatureException, XmlProcessingException {
-
+public class BulkPutWithMetadata {
+    public static void main(final String[] args) throws XmlProcessingException, SignatureException, IOException {
         try (final Ds3Client client = Ds3ClientBuilder.fromEnv().withHttps(false).build()) {
 
             // Wrap the Ds3Client with the helper functions
@@ -52,8 +52,19 @@ public class BulkPutExample {
             // of objects that will be written
             final Ds3ClientHelpers.Job job = helper.startWriteJob(bucketName, objects);
 
+            // To put metadata with each file we need to attach the metadata with a callback
+            job.withMetadata(new Ds3ClientHelpers.MetadataAccess() {
+                @Override
+                public Map<String, String> getMetadataValue(final String objectName) {
+                    // Return a map of the metadata that you want assigned to the request object
+                    final Map<String, String> metadata = new HashMap<>();
+                    metadata.put("File-Format", "txt");
+                    return metadata;
+                }
+            });
+
             // Start the write job using an Object Putter that will read the files
-            // from the local file system.
+            // from the local file system and put the metadata with each file.
             job.transfer(new FileObjectPutter(inputPath));
         }
     }

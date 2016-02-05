@@ -18,38 +18,53 @@ package com.spectralogic.ds3client.helpers;
 import com.google.common.collect.*;
 import com.spectralogic.ds3client.Ds3Client;
 import com.spectralogic.ds3client.commands.GetObjectRequest;
+import com.spectralogic.ds3client.commands.GetObjectResponse;
 import com.spectralogic.ds3client.commands.spectrads3.GetJobChunksReadyForClientProcessingSpectraS3Request;
 import com.spectralogic.ds3client.commands.spectrads3.GetJobChunksReadyForClientProcessingSpectraS3Response;
+import com.spectralogic.ds3client.exceptions.Ds3NoMoreRetriesException;
 import com.spectralogic.ds3client.helpers.ChunkTransferrer.ItemTransferrer;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.ObjectChannelBuilder;
 import com.spectralogic.ds3client.helpers.util.PartialObjectHelpers;
-import com.spectralogic.ds3client.models.BulkObject;
-import com.spectralogic.ds3client.models.JobChunkApiBean;
-import com.spectralogic.ds3client.models.JobWithChunksApiBean;
+import com.spectralogic.ds3client.models.*;
 import com.spectralogic.ds3client.models.Range;
+import com.spectralogic.ds3client.networking.Metadata;
 import com.spectralogic.ds3client.serializer.XmlProcessingException;
 import com.spectralogic.ds3client.utils.Guard;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.security.SignatureException;
+import java.util.IdentityHashMap;
 import java.util.List;
+import java.util.Map;
 
 class ReadJobImpl extends JobImpl {
+
+    private static final Logger LOG = LoggerFactory.getLogger(ReadJobImpl.class);
 
     private final JobPartTracker partTracker;
     private final List<JobChunkApiBean> chunks;
     private final ImmutableMap<String, ImmutableMultimap<BulkObject, Range>> blobToRanges;
+    private final int retryAfter; // Negative retryAfter value represent infinity retries
+    private int retryAfterLeft; // The number of retries left
+    private Map<MetadataReceivedListener, MetadataReceivedListener> metadataListeners;
+    private Map<ChecksumListener, ChecksumListener> checksumListeners;
 
     public ReadJobImpl(
             final Ds3Client client,
-            final JobWithChunksApiBean jobWithChunksApiBean,
-            final ImmutableMultimap<String, Range> objectRanges) {
-        super(client, jobWithChunksApiBean);
+            final JobWithChunksApiBean masterObjectList,
+            final ImmutableMultimap<String, Range>
+            objectRanges, final int retryAfter) {
+        super(client, masterObjectList);
 
         this.chunks = this.jobWithChunksApiBean.getObjects();
         this.partTracker = JobPartTrackerFactory
-                .buildPartTracker(getAllBlobApiBeans(chunks));
-        this.blobToRanges = PartialObjectHelpers.mapRangesToBlob(jobWithChunksApiBean.getObjects(), objectRanges);
+                .buildPartTracker(Iterables.concat(getAllBlobApiBeans(chunks)));
+        this.blobToRanges = PartialObjectHelpers.mapRangesToBlob(masterObjectList.getObjects(), objectRanges);
+        this.retryAfter = this.retryAfterLeft = retryAfter;
+        this.metadataListeners = new IdentityHashMap<>();
+        this.checksumListeners = new IdentityHashMap<>();
     }
 
     protected static ImmutableList<BulkObject> getAllBlobApiBeans(final List<JobChunkApiBean> jobWithChunksApiBeans) {
@@ -62,28 +77,70 @@ class ReadJobImpl extends JobImpl {
 
     @Override
     public void attachDataTransferredListener(final DataTransferredListener listener) {
+        checkRunning();
         this.partTracker.attachDataTransferredListener(listener);
     }
 
     @Override
     public void attachObjectCompletedListener(final ObjectCompletedListener listener) {
+        checkRunning();
         this.partTracker.attachObjectCompletedListener(listener);
     }
 
     @Override
     public void removeDataTransferredListener(final DataTransferredListener listener) {
+        checkRunning();
         this.partTracker.removeDataTransferredListener(listener);
     }
 
     @Override
     public void removeObjectCompletedListener(final ObjectCompletedListener listener) {
+        checkRunning();
         this.partTracker.removeObjectCompletedListener(listener);
+    }
+
+    @Override
+    public void attachMetadataReceivedListener(final MetadataReceivedListener listener) {
+        checkRunning();
+        this.metadataListeners.put(listener, listener);
+    }
+
+    @Override
+    public void removeMetadataReceivedListener(final MetadataReceivedListener listener) {
+        checkRunning();
+        this.metadataListeners.remove(listener);
+    }
+
+    @Override
+    public void attachChecksumListener(final ChecksumListener listener) {
+        checkRunning();
+        this.checksumListeners.put(listener, listener);
+    }
+
+    @Override
+    public void removeChecksumListener(final ChecksumListener listener) {
+        checkRunning();
+        this.checksumListeners.remove(listener);
+    }
+
+    @Override
+    public Ds3ClientHelpers.Job withMetadata(final Ds3ClientHelpers.MetadataAccess access) {
+        throw new IllegalStateException("withMetadata method is not used with Read Jobs");
+    }
+
+    @Override
+    public Ds3ClientHelpers.Job withChecksum(final ChecksumFunction checksumFunction) {
+        throw new IllegalStateException("withChecksum is not supported on Read Jobs");
     }
 
     @Override
     public void transfer(final ObjectChannelBuilder channelBuilder)
             throws SignatureException, IOException, XmlProcessingException {
-        try (final JobState jobState = new JobState(channelBuilder, this.jobWithChunksApiBean.getObjects(), partTracker, blobToRanges)) {
+                running = true;
+        try (final JobState jobState = new JobState(
+                channelBuilder,
+                this.jobWithChunksApiBean.getObjects(),
+                partTracker, blobToRanges)) {
             final ChunkTransferrer chunkTransferrer = new ChunkTransferrer(
                 new GetObjectTransferrer(jobState),
                 this.client,
@@ -108,9 +165,15 @@ class ReadJobImpl extends JobImpl {
         case AVAILABLE: {
             final JobWithChunksApiBean availableMol = availableJobChunks.getJobWithChunksApiBeanResult();
             chunkTransferrer.transferChunks(availableMol.getNodes(), availableMol.getObjects());
+            retryAfterLeft = retryAfter; // Reset the number of retries to the initial value
             break;
         }
         case RETRYLATER: {
+            if (retryAfterLeft == 0) {
+                throw new Ds3NoMoreRetriesException(this.retryAfter);
+            }
+            retryAfterLeft--;
+
             Thread.sleep(availableJobChunks.getRetryAfterSeconds() * 1000);
             break;
         }
@@ -144,7 +207,23 @@ class ReadJobImpl extends JobImpl {
                 request.withByteRanges(ranges);
             }
 
-            client.getObject(request);
+            final GetObjectResponse response = client.getObject(request);
+            final Metadata metadata = response.getMetadata();
+
+            sendChecksumEvents(ds3Object, response.getChecksumType(), response.getChecksum());
+            sendMetadataEvents(ds3Object.getName(), metadata);
+        }
+    }
+
+    private void sendChecksumEvents(final BulkObject ds3Object, final ChecksumType.Type type, final String checksum) {
+            for (final ChecksumListener listener : this.checksumListeners.values()) {
+                listener.value(ds3Object, type, checksum);
+            }
+    }
+
+    private void sendMetadataEvents(final String objName , final Metadata metadata) {
+        for (final MetadataReceivedListener listener : this.metadataListeners.values()) {
+            listener.metadataReceived(objName, metadata);
         }
     }
 

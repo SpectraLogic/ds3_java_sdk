@@ -16,16 +16,19 @@
 package com.spectralogic.ds3client.helpers;
 
 import com.google.common.base.Stopwatch;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.spectralogic.ds3client.Ds3Client;
-import com.spectralogic.ds3client.commands.CreateObjectResponse;
-import com.spectralogic.ds3client.commands.GetBucketResponse;
+import com.spectralogic.ds3client.commands.*;
 import com.spectralogic.ds3client.commands.spectrads3.*;
+import com.spectralogic.ds3client.exceptions.Ds3NoMoreRetriesException;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.Job;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.ObjectChannelBuilder;
 import com.spectralogic.ds3client.models.*;
+import com.spectralogic.ds3client.models.Error;
 import com.spectralogic.ds3client.models.bulk.Ds3Object;
 import com.spectralogic.ds3client.networking.ConnectionDetails;
+import com.spectralogic.ds3client.networking.FailedRequestException;
 import com.spectralogic.ds3client.serializer.XmlProcessingException;
 import com.spectralogic.ds3client.utils.ByteArraySeekableByteChannel;
 import org.junit.Assert;
@@ -43,7 +46,7 @@ import static com.spectralogic.ds3client.helpers.RequestMatchers.*;
 import static com.spectralogic.ds3client.helpers.ResponseBuilders.*;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.*;
 
 public class Ds3ClientHelpers_Test {
     private static final String MYBUCKET = "mybucket";
@@ -389,6 +392,10 @@ public class Ds3ClientHelpers_Test {
                 chunk2(false)
         ));
     }
+
+    private static HeadBucketResponse buildHeadBucketResponse(final HeadBucketResponse.Status status) {
+        return ResponseBuilders.headBucket(status);
+    }
     
     private static GetJobChunksReadyForClientProcessingSpectraS3Response buildJobChunksResponse1() {
         return retryGetAvailableAfter(1);
@@ -554,4 +561,90 @@ public class Ds3ClientHelpers_Test {
         assertEquals(Ds3ClientHelpers.stripLeadingPath("bar", "foo/"), "bar");
     }
 
+    @Test(expected = Ds3NoMoreRetriesException.class)
+    public void testWriteObjectsWithRetryAfter() throws SignatureException, IOException, XmlProcessingException {
+        final Ds3Client ds3Client = buildDs3ClientForBulk();
+
+        final CreatePutJobSpectraS3Response bulkPutResponse = buildBulkPutResponse();
+        Mockito.when(ds3Client
+                .createPutJobSpectraS3(Mockito.any(CreatePutJobSpectraS3Request.class)))
+                .thenReturn(bulkPutResponse);
+
+        final AllocateJobChunkSpectraS3Response allocateResponse1 = buildAllocateResponse1();
+        Mockito.when(ds3Client.allocateJobChunkSpectraS3(hasChunkId(CHUNK_ID_1)))
+                .thenReturn(allocateResponse1);
+
+        final CreateObjectResponse response = mock(CreateObjectResponse.class);
+        Mockito.when(ds3Client.createObject(putRequestHas(MYBUCKET, "foo", jobId, 0, "foo co"))).thenReturn(response);
+
+        final Job job = Ds3ClientHelpers.wrap(ds3Client, 1).startWriteJob(MYBUCKET, Lists.newArrayList(
+                new Ds3Object("foo", 12)
+        ));
+
+        job.transfer(new ObjectChannelBuilder() {
+            @Override
+            public SeekableByteChannel buildChannel(final String key) throws IOException {
+                // We don't care about the contents since we just want to know that the exception handling works correctly.
+                return new ByteArraySeekableByteChannel();
+            }
+        });
+    }
+
+    @Test(expected = Ds3NoMoreRetriesException.class)
+    public void testReadObjectsWithRetryAfter() throws SignatureException, IOException, XmlProcessingException {
+        final Ds3Client ds3Client = mock(Ds3Client.class);
+
+        final CreateGetJobSpectraS3Response buildBulkGetResponse = buildBulkGetResponse();
+        Mockito.when(ds3Client.createGetJobSpectraS3(hasChunkOrdering(JobChunkClientProcessingOrderGuarantee.NONE)))
+                .thenReturn(buildBulkGetResponse);
+
+        final GetJobChunksReadyForClientProcessingSpectraS3Response jobChunksResponse =
+                mock(GetJobChunksReadyForClientProcessingSpectraS3Response.class);
+        when(jobChunksResponse.getStatus())
+                .thenReturn(GetJobChunksReadyForClientProcessingSpectraS3Response.Status.RETRYLATER);
+
+        Mockito.when(ds3Client
+                .getJobChunksReadyForClientProcessingSpectraS3(hasJobId(jobId)))
+                .thenReturn(jobChunksResponse);
+
+        final Job job = Ds3ClientHelpers.wrap(ds3Client, 1).startReadJob(MYBUCKET, Lists.newArrayList(
+                new Ds3Object("foo")
+        ));
+
+        job.transfer(new ObjectChannelBuilder() {
+            @Override
+            public SeekableByteChannel buildChannel(final String key) throws IOException {
+                // We don't care about the contents since we just want to know that the exception handling works correctly.
+                return new ByteArraySeekableByteChannel();
+            }
+        });
+
+    }
+
+    @Test
+    public void testEnsureBucketExistsRace() throws IOException, SignatureException {
+        final Ds3Client ds3Client = mock(Ds3Client.class);
+        final HeadBucketResponse response = buildHeadBucketResponse(HeadBucketResponse.Status.DOESNTEXIST);
+        Mockito.when(ds3Client.headBucket(Mockito.any(HeadBucketRequest.class))).thenReturn(response);
+        Mockito.when(ds3Client.createBucket(Mockito.any(CreateBucketRequest.class)))
+                .thenThrow(new FailedRequestException(ImmutableList.of(202, 409), 409, new Error(), "Conflict"));
+
+        final Ds3ClientHelpers helpers = Ds3ClientHelpers.wrap(ds3Client);
+
+        helpers.ensureBucketExists("fake_bucket"); // if this throws an exception, then this test should fail
+        verify(ds3Client, atLeastOnce()).createBucket(Mockito.any(CreateBucketRequest.class));
+    }
+
+    @Test(expected = FailedRequestException.class)
+    public void testEnsureBucketExistsReturnsError() throws IOException, SignatureException {
+        final Ds3Client ds3Client = mock(Ds3Client.class);
+        final HeadBucketResponse response = buildHeadBucketResponse(HeadBucketResponse.Status.DOESNTEXIST);
+        Mockito.when(ds3Client.headBucket(Mockito.any(HeadBucketRequest.class))).thenReturn(response);
+        Mockito.when(ds3Client.createBucket(Mockito.any(CreateBucketRequest.class)))
+                .thenThrow(new FailedRequestException(ImmutableList.of(202, 409, 500), 500, new Error(), "Error"));
+
+        final Ds3ClientHelpers helpers = Ds3ClientHelpers.wrap(ds3Client);
+
+        helpers.ensureBucketExists("fake_bucket");
+    }
 }

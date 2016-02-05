@@ -15,6 +15,7 @@
 
 package com.spectralogic.ds3client.integration;
 
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.spectralogic.ds3client.Ds3Client;
@@ -28,6 +29,7 @@ import com.spectralogic.ds3client.models.*;
 import com.spectralogic.ds3client.models.bulk.Ds3Object;
 import com.spectralogic.ds3client.models.bulk.PartialDs3Object;
 import com.spectralogic.ds3client.networking.FailedRequestException;
+import com.spectralogic.ds3client.networking.Metadata;
 import com.spectralogic.ds3client.serializer.XmlProcessingException;
 import com.spectralogic.ds3client.utils.ByteArraySeekableByteChannel;
 import com.spectralogic.ds3client.utils.ResourceUtils;
@@ -48,7 +50,9 @@ import java.nio.file.*;
 import java.security.SignatureException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.spectralogic.ds3client.integration.Util.*;
@@ -516,8 +520,7 @@ public class Smoke_Test {
 
             helpers.ensureBucketExists(bucketName);
 
-            final List<Ds3Object> objs = new ArrayList<>();
-            objs.add(new Ds3Object("beowulf.txt", 294059));
+            final List<Ds3Object> objs = Lists.newArrayList(new Ds3Object("beowulf.txt", 294059));
 
             final JobWithChunksApiBean mol = client
                     .createPutJobSpectraS3(new CreatePutJobSpectraS3Request(bucketName, objs)).getResult();
@@ -911,7 +914,6 @@ public class Smoke_Test {
 
             assertThat(Files.size(filePath), is(200L));
 
-
         } finally {
             Files.delete(filePath);
             deleteAllContents(client, bucketName);
@@ -1050,4 +1052,50 @@ public class Smoke_Test {
         }
     }
 
+    @Test
+    public void testHelperMetadata() throws IOException, SignatureException, URISyntaxException, XmlProcessingException {
+        final String bucketName = "helper_metadata";
+        try {
+            final Ds3ClientHelpers helpers = Ds3ClientHelpers.wrap(client);
+            helpers.ensureBucketExists(bucketName);
+
+            final List<Ds3Object> objects = new ArrayList<>();
+            for(final String book : BOOKS) {
+                final Path objPath = ResourceUtils.loadFileResource(RESOURCE_BASE_NAME + book);
+                final long bookSize = Files.size(objPath);
+                final Ds3Object obj = new Ds3Object(book, bookSize);
+
+                objects.add(obj);
+            }
+
+            final Ds3ClientHelpers.Job job = helpers.startWriteJob(bucketName, objects);
+
+            final AtomicBoolean calledWithMetadata = new AtomicBoolean(false);
+
+            job.withMetadata(new Ds3ClientHelpers.MetadataAccess() {
+                @Override
+                public Map<String, String> getMetadataValue(final String filename) {
+                    if (filename.equals("beowulf.txt")) {
+                        calledWithMetadata.set(true);
+                        return ImmutableMap.of("fileType", "text");
+                    }
+
+                    return null;
+                }
+            });
+
+            job.transfer(new ResourceObjectPutter(RESOURCE_BASE_NAME));
+
+            assertTrue(calledWithMetadata.get());
+
+            final HeadObjectResponse response = client.headObject(new HeadObjectRequest(bucketName, "beowulf.txt"));
+            final Metadata metadata = response.getMetadata();
+            final List<String> values = metadata.get("fileType");
+            assertThat(values.size(), is(1));
+            assertThat(values.get(0), is("text"));
+
+        } finally {
+            deleteAllContents(client, bucketName);
+        }
+    }
 }

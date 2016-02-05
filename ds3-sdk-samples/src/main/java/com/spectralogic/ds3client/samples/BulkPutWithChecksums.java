@@ -17,8 +17,12 @@ package com.spectralogic.ds3client.samples;
 
 import com.spectralogic.ds3client.Ds3Client;
 import com.spectralogic.ds3client.Ds3ClientBuilder;
+import com.spectralogic.ds3client.helpers.ChecksumListener;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers;
 import com.spectralogic.ds3client.helpers.FileObjectPutter;
+import com.spectralogic.ds3client.helpers.options.WriteJobOptions;
+import com.spectralogic.ds3client.models.BulkObject;
+import com.spectralogic.ds3client.models.ChecksumType;
 import com.spectralogic.ds3client.models.bulk.Ds3Object;
 import com.spectralogic.ds3client.serializer.XmlProcessingException;
 
@@ -27,10 +31,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.SignatureException;
 
-public class BulkPutExample {
-
-    public static void main(final String args[]) throws IOException, SignatureException, XmlProcessingException {
-
+public class BulkPutWithChecksums {
+    public static void main(final String[] args) throws IOException, SignatureException, XmlProcessingException {
         try (final Ds3Client client = Ds3ClientBuilder.fromEnv().withHttps(false).build()) {
 
             // Wrap the Ds3Client with the helper functions
@@ -48,9 +50,27 @@ public class BulkPutExample {
             // Get the list of files that are contained in the inputPath
             final Iterable<Ds3Object> objects = helper.listObjectsForDirectory(inputPath);
 
+            // To enable checksumming we need to tell the helper functions to calculate it with
+            // the WriteJobOptions object.  NOTE: when enabling checksumming calculations in the
+            // helper functions, the helper functions must process the file twice.  Once
+            // to calculate the checksum, and then once to send the object to the
+            // Spectra S3 endpoint.
+            final WriteJobOptions options = WriteJobOptions.create().withChecksumType(ChecksumType.Type.MD5);
+
             // Create the write job with the bucket we want to write to and the list
             // of objects that will be written
-            final Ds3ClientHelpers.Job job = helper.startWriteJob(bucketName, objects);
+            final Ds3ClientHelpers.Job job = helper.startWriteJob(bucketName, objects, options);
+
+            // To capture the checksums as they are calculated for your own records, use the
+            // ChecksumListener.  This same listener can be used on read jobs to capture the
+            // blob checksums
+            job.attachChecksumListener(new ChecksumListener() {
+                @Override
+                public void value(final BulkObject obj, final ChecksumType.Type type, final String checksum) {
+                    // The checksum for each blob(BulkObject) is reported
+                    System.out.println("The checksum for blob " + obj.toString() + " is " + checksum);
+                }
+            });
 
             // Start the write job using an Object Putter that will read the files
             // from the local file system.

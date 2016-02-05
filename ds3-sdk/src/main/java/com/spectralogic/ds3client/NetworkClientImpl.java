@@ -39,6 +39,7 @@ import org.apache.http.conn.ssl.TrustStrategy;
 import org.apache.http.entity.ContentType;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
+import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.message.BasicHttpEntityEnclosingRequest;
 import org.apache.http.message.BasicHttpRequest;
 import org.slf4j.Logger;
@@ -71,25 +72,46 @@ public class NetworkClientImpl implements NetworkClient {
     final static private String CONTENT_SHA512 = "Content-SHA512";
     final static private String CONTENT_CRC32 = "Content-CRC32";
     final static private String CONTENT_CRC32C = "Content-CRC32C";
+    final static private int MAX_CONNECTION_PER_ROUTE = 50;
+    final static private int MAX_CONNECTION_TOTAL = 100;
 
     final private ConnectionDetails connectionDetails;
 
     final private CloseableHttpClient client;
+    final private HttpHost host;
 
     public NetworkClientImpl(final ConnectionDetails connectionDetails) {
         if (connectionDetails == null) throw new AssertionError("ConnectionDetails cannot be null");
-        this.connectionDetails = connectionDetails;
-        this.client = createDefaultClient(connectionDetails);
+        try {
+            this.connectionDetails = connectionDetails;
+            this.host = buildHost(connectionDetails);
+            this.client = createDefaultClient(connectionDetails);
+        } catch (final MalformedURLException e) {
+            // TODO In 3.0 we should remove this try catch and expose the exception so that
+            // we do not create a client that has a bad host url
+            throw new RuntimeException(e);
+        }
     }
+
 
     public NetworkClientImpl(final ConnectionDetails connectionDetails, final CloseableHttpClient client) {
         if (connectionDetails == null) throw new AssertionError("ConnectionDetails cannot be null");
         if (client == null) throw new AssertionError("CloseableHttpClient cannot be null");
-        this.connectionDetails = connectionDetails;
-        this.client = client;
+        try {
+            this.connectionDetails = connectionDetails;
+            this.host = buildHost(connectionDetails);
+            this.client = client;
+        } catch (final MalformedURLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
+
     private static CloseableHttpClient createDefaultClient(final ConnectionDetails connectionDetails) {
+        final PoolingHttpClientConnectionManager connectionManager = new PoolingHttpClientConnectionManager();
+        connectionManager.setDefaultMaxPerRoute(MAX_CONNECTION_PER_ROUTE);
+        connectionManager.setMaxTotal(MAX_CONNECTION_TOTAL);
+
         if (connectionDetails.isHttps() && !connectionDetails.isCertificateVerification()) {
             try {
 
@@ -101,7 +123,9 @@ public class NetworkClientImpl implements NetworkClient {
                 }).useTLS().build();
 
                 final SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(sslContext, new AllowAllHostnameVerifier());
-                return HttpClients.custom().setSSLSocketFactory(
+                return HttpClients.custom()
+                        .setConnectionManager(connectionManager)
+                        .setSSLSocketFactory(
                         sslsf).build();
 
             } catch (final NoSuchAlgorithmException | KeyStoreException | KeyManagementException e) {
@@ -109,7 +133,19 @@ public class NetworkClientImpl implements NetworkClient {
             }
         }
         else {
-            return HttpClients.createDefault();
+            return HttpClients.custom()
+                    .setConnectionManager(connectionManager)
+                    .build();
+        }
+    }
+
+    private static HttpHost buildHost(final ConnectionDetails connectionDetails) throws MalformedURLException {
+        final URI proxyUri = connectionDetails.getProxy();
+        if (proxyUri != null) {
+            return new HttpHost(proxyUri.getHost(), proxyUri.getPort(), proxyUri.getScheme());
+        } else {
+            final URL url = NetUtils.buildUrl(connectionDetails, "/");
+            return new HttpHost(url.getHost(), NetUtils.getPort(url), url.getProtocol());
         }
     }
 
@@ -120,12 +156,13 @@ public class NetworkClientImpl implements NetworkClient {
 
     @Override
     public WebResponse getResponse(final Ds3Request request) throws IOException, SignatureException {
-        try (final RequestExecutor requestExecutor = new RequestExecutor(this.client, request)) {
+        try (final RequestExecutor requestExecutor = new RequestExecutor(this.client, host, request)) {
             int redirectCount = 0;
             do {
                 final CloseableHttpResponse response = requestExecutor.execute();
                 if (response.getStatusLine().getStatusCode() == HttpStatus.SC_TEMPORARY_REDIRECT) {
                     redirectCount++;
+                    response.close();
                     LOG.info("Performing retry - attempt: " + redirectCount);
                 }
                 else {
@@ -151,10 +188,10 @@ public class NetworkClientImpl implements NetworkClient {
         private final ChecksumType.Type checksumType;
         private final CloseableHttpClient client;
 
-        public RequestExecutor(final CloseableHttpClient client, final Ds3Request ds3Request) throws IOException {
+        public RequestExecutor(final CloseableHttpClient client, final HttpHost host, final Ds3Request ds3Request) throws IOException {
             this.client = client;
             this.ds3Request = ds3Request;
-            this.host = this.buildHost();
+            this.host = host;
             this.content = ds3Request.getStream();
             if (this.content != null && !this.content.markSupported()) {
                 throw new RequiresMarkSupportedException();
@@ -173,16 +210,6 @@ public class NetworkClientImpl implements NetworkClient {
             final HttpRequest httpRequest = this.buildHttpRequest();
             this.addHeaders(httpRequest);
             return client.execute(this.host, httpRequest, this.getContext());
-        }
-
-        private HttpHost buildHost() throws MalformedURLException {
-            final URI proxyUri = NetworkClientImpl.this.connectionDetails.getProxy();
-            if (proxyUri != null) {
-                return new HttpHost(proxyUri.getHost(), proxyUri.getPort(), proxyUri.getScheme());
-            } else {
-                final URL url = NetUtils.buildUrl(NetworkClientImpl.this.connectionDetails, "/");
-                return new HttpHost(url.getHost(), NetUtils.getPort(url), url.getProtocol());
-            }
         }
 
         private HttpRequest buildHttpRequest() throws IOException {
