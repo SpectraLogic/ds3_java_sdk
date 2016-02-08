@@ -21,6 +21,7 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.spectralogic.ds3client.models.CacheFilesystemInformation;
 import java.util.List;
+import java.util.ArrayList;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 
 @JacksonXmlRootElement(namespace = "Data")
@@ -29,7 +30,7 @@ public class CacheInformation {
     // Variables
     @JsonProperty("Filesystems")
     @JacksonXmlElementWrapper(useWrapping = false)
-    private List<CacheFilesystemInformation> filesystems;
+    private List<CacheFilesystemInformation> filesystems = new ArrayList<>();
 
     // Constructor
     public CacheInformation() {

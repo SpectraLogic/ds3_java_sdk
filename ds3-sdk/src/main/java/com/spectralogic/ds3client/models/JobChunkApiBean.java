@@ -22,6 +22,7 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import java.util.UUID;
 import com.spectralogic.ds3client.models.BulkObject;
 import java.util.List;
+import java.util.ArrayList;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 
 @JacksonXmlRootElement(namespace = "Objects")
@@ -39,7 +40,7 @@ public class JobChunkApiBean {
 
     @JsonProperty("Object")
     @JacksonXmlElementWrapper(useWrapping = false)
-    private List<BulkObject> objects;
+    private List<BulkObject> objects = new ArrayList<>();
 
     // Constructor
     public JobChunkApiBean() {

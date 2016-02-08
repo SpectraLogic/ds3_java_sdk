@@ -21,6 +21,7 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.spectralogic.ds3client.models.DataPolicyAcl;
 import java.util.List;
+import java.util.ArrayList;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 
 @JacksonXmlRootElement(namespace = "Data")
@@ -29,7 +30,7 @@ public class DataPolicyAclList {
     // Variables
     @JsonProperty("DataPolicyAcl")
     @JacksonXmlElementWrapper(useWrapping = false)
-    private List<DataPolicyAcl> dataPolicyAcl;
+    private List<DataPolicyAcl> dataPolicyAcl = new ArrayList<>();
 
     // Constructor
     public DataPolicyAclList() {

@@ -18,6 +18,7 @@ package com.spectralogic.ds3client.commands.spectrads3;
 
 import com.spectralogic.ds3client.HttpVerb;
 import com.spectralogic.ds3client.commands.AbstractRequest;
+import com.google.common.net.UrlEscapers;
 import com.spectralogic.ds3client.models.LtfsFileNamingMode;
 import com.spectralogic.ds3client.models.BlobStoreTaskPriority;
 import com.spectralogic.ds3client.models.WriteOptimization;
@@ -52,12 +53,12 @@ public class CreateStorageDomainSpectraS3Request extends AbstractRequest {
     
     public CreateStorageDomainSpectraS3Request(final String name) {
         this.name = name;
-                this.getQueryParams().put("name", name);
+                this.getQueryParams().put("name", UrlEscapers.urlFragmentEscaper().escape(name));
     }
 
     public CreateStorageDomainSpectraS3Request withAutoEjectUponCron(final String autoEjectUponCron) {
         this.autoEjectUponCron = autoEjectUponCron;
-        this.updateQueryParam("auto_eject_upon_cron", autoEjectUponCron);
+        this.updateQueryParam("auto_eject_upon_cron", UrlEscapers.urlFragmentEscaper().escape(autoEjectUponCron));
         return this;
     }
 

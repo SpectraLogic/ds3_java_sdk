@@ -17,6 +17,7 @@
 package com.spectralogic.ds3client.commands.spectrads3.notifications;
 
 import com.spectralogic.ds3client.commands.notifications.AbstractCreateNotificationRequest;
+import com.google.common.net.UrlEscapers;
 import com.spectralogic.ds3client.models.HttpResponseFormatType;
 import com.spectralogic.ds3client.models.NamingConventionType;
 import com.spectralogic.ds3client.models.RequestType;
@@ -34,8 +35,7 @@ public class CreateTapeFailureNotificationRegistrationSpectraS3Request extends A
     public CreateTapeFailureNotificationRegistrationSpectraS3Request(final String notificationEndPoint) {
         super(notificationEndPoint);
 
-                this.getQueryParams().put("notification_end_point", notificationEndPoint);
-
+        
     }
 
     public CreateTapeFailureNotificationRegistrationSpectraS3Request withFormat(final HttpResponseFormatType format) {

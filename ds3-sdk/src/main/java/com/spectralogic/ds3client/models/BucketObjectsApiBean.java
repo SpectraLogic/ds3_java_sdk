@@ -21,6 +21,7 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import java.lang.String;
 import java.util.List;
+import java.util.ArrayList;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import java.util.Date;
 import com.spectralogic.ds3client.models.Contents;
@@ -31,7 +32,7 @@ public class BucketObjectsApiBean {
     // Variables
     @JsonProperty("CommonPrefixes")
     @JacksonXmlElementWrapper(useWrapping = true)
-    private List<String> commonPrefixes;
+    private List<String> commonPrefixes = new ArrayList<>();
 
     @JsonProperty("CreationDate")
     private Date creationDate;
@@ -53,7 +54,7 @@ public class BucketObjectsApiBean {
 
     @JsonProperty("Contents")
     @JacksonXmlElementWrapper(useWrapping = false)
-    private List<Contents> objects;
+    private List<Contents> objects = new ArrayList<>();
 
     @JsonProperty("Prefix")
     private String prefix;

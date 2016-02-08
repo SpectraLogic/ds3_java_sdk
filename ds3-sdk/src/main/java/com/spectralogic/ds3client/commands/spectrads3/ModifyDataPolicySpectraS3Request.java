@@ -21,6 +21,7 @@ import com.spectralogic.ds3client.commands.AbstractRequest;
 import com.spectralogic.ds3client.models.ChecksumType;
 import java.lang.Long;
 import com.spectralogic.ds3client.models.BlobStoreTaskPriority;
+import com.google.common.net.UrlEscapers;
 import com.spectralogic.ds3client.models.VersioningLevel;
 
 public class ModifyDataPolicySpectraS3Request extends AbstractRequest {
@@ -99,7 +100,7 @@ public class ModifyDataPolicySpectraS3Request extends AbstractRequest {
 
     public ModifyDataPolicySpectraS3Request withName(final String name) {
         this.name = name;
-        this.updateQueryParam("name", name);
+        this.updateQueryParam("name", UrlEscapers.urlFragmentEscaper().escape(name));
         return this;
     }
 

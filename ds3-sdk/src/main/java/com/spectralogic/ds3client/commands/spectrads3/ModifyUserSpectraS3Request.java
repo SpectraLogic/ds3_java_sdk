@@ -19,6 +19,7 @@ package com.spectralogic.ds3client.commands.spectrads3;
 import com.spectralogic.ds3client.HttpVerb;
 import com.spectralogic.ds3client.commands.AbstractRequest;
 import java.util.UUID;
+import com.google.common.net.UrlEscapers;
 
 public class ModifyUserSpectraS3Request extends AbstractRequest {
 
@@ -44,7 +45,7 @@ public class ModifyUserSpectraS3Request extends AbstractRequest {
 
     public ModifyUserSpectraS3Request withName(final String name) {
         this.name = name;
-        this.updateQueryParam("name", name);
+        this.updateQueryParam("name", UrlEscapers.urlFragmentEscaper().escape(name));
         return this;
     }
 

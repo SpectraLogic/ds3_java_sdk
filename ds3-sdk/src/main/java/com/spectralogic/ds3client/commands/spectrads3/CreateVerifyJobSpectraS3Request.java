@@ -24,6 +24,7 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.List;
 import com.spectralogic.ds3client.commands.AbstractRequest;
+import com.google.common.net.UrlEscapers;
 import com.spectralogic.ds3client.models.BlobStoreTaskPriority;
 
 public class CreateVerifyJobSpectraS3Request extends AbstractRequest {
@@ -57,7 +58,7 @@ public class CreateVerifyJobSpectraS3Request extends AbstractRequest {
 
     public CreateVerifyJobSpectraS3Request withName(final String name) {
         this.name = name;
-        this.updateQueryParam("name", name);
+        this.updateQueryParam("name", UrlEscapers.urlFragmentEscaper().escape(name));
         return this;
     }
 

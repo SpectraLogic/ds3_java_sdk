@@ -23,6 +23,7 @@ import com.spectralogic.ds3client.serializer.XmlProcessingException;
 import com.spectralogic.ds3client.commands.BulkRequest;
 import com.spectralogic.ds3client.models.ReplicationConflictResolutionMode;
 import com.spectralogic.ds3client.models.BlobStoreTaskPriority;
+import com.google.common.net.UrlEscapers;
 
 public class ReplicatePutJobSpectraS3Request extends BulkRequest {
 

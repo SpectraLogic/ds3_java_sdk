@@ -21,6 +21,7 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import java.lang.String;
 import java.util.List;
+import java.util.ArrayList;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.spectralogic.ds3client.models.MultiPartUploadApiBean;
 
@@ -33,7 +34,7 @@ public class ListMultiPartUploadsApiBean {
 
     @JsonProperty("CommonPrefixes")
     @JacksonXmlElementWrapper(useWrapping = true)
-    private List<String> commonPrefixes;
+    private List<String> commonPrefixes = new ArrayList<>();
 
     @JsonProperty("Delimiter")
     private String delimiter;
@@ -61,7 +62,7 @@ public class ListMultiPartUploadsApiBean {
 
     @JsonProperty("Upload")
     @JacksonXmlElementWrapper(useWrapping = false)
-    private List<MultiPartUploadApiBean> uploads;
+    private List<MultiPartUploadApiBean> uploads = new ArrayList<>();
 
     // Constructor
     public ListMultiPartUploadsApiBean() {

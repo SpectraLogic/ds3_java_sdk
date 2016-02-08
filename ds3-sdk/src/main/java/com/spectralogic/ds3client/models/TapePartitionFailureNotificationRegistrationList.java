@@ -21,6 +21,7 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.spectralogic.ds3client.models.TapePartitionFailureNotificationRegistration;
 import java.util.List;
+import java.util.ArrayList;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 
 @JacksonXmlRootElement(namespace = "Data")
@@ -29,7 +30,7 @@ public class TapePartitionFailureNotificationRegistrationList {
     // Variables
     @JsonProperty("TapePartitionFailureNotificationRegistration")
     @JacksonXmlElementWrapper(useWrapping = false)
-    private List<TapePartitionFailureNotificationRegistration> tapePartitionFailureNotificationRegistration;
+    private List<TapePartitionFailureNotificationRegistration> tapePartitionFailureNotificationRegistration = new ArrayList<>();
 
     // Constructor
     public TapePartitionFailureNotificationRegistrationList() {

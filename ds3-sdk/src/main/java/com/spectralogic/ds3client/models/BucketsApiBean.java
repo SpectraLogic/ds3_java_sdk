@@ -21,6 +21,7 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.spectralogic.ds3client.models.BucketApiBean;
 import java.util.List;
+import java.util.ArrayList;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.spectralogic.ds3client.models.UserApiBean;
 
@@ -30,7 +31,7 @@ public class BucketsApiBean {
     // Variables
     @JsonProperty("Buckets")
     @JacksonXmlElementWrapper(useWrapping = true)
-    private List<BucketApiBean> buckets;
+    private List<BucketApiBean> buckets = new ArrayList<>();
 
     @JsonProperty("Owner")
     private UserApiBean owner;

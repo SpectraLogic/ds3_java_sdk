@@ -21,6 +21,7 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.spectralogic.ds3client.models.Pool;
 import java.util.List;
+import java.util.ArrayList;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.spectralogic.ds3client.models.Tape;
 
@@ -30,11 +31,11 @@ public class PhysicalPlacementApiBean {
     // Variables
     @JsonProperty("Pools")
     @JacksonXmlElementWrapper(useWrapping = true)
-    private List<Pool> pools;
+    private List<Pool> pools = new ArrayList<>();
 
     @JsonProperty("Tapes")
     @JacksonXmlElementWrapper(useWrapping = true)
-    private List<Tape> tapes;
+    private List<Tape> tapes = new ArrayList<>();
 
     // Constructor
     public PhysicalPlacementApiBean() {

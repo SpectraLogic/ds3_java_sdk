@@ -21,6 +21,7 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.spectralogic.ds3client.models.PoolPartition;
 import java.util.List;
+import java.util.ArrayList;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 
 @JacksonXmlRootElement(namespace = "Data")
@@ -29,7 +30,7 @@ public class PoolPartitionList {
     // Variables
     @JsonProperty("PoolPartition")
     @JacksonXmlElementWrapper(useWrapping = false)
-    private List<PoolPartition> poolPartition;
+    private List<PoolPartition> poolPartition = new ArrayList<>();
 
     // Constructor
     public PoolPartitionList() {

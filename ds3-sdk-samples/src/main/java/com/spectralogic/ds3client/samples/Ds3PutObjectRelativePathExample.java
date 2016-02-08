@@ -22,6 +22,7 @@ import com.spectralogic.ds3client.commands.GetBucketResponse;
 import com.spectralogic.ds3client.helpers.*;
 import com.spectralogic.ds3client.helpers.channelbuilders.PrefixAdderObjectChannelBuilder;
 import com.spectralogic.ds3client.helpers.channelbuilders.PrefixRemoverObjectChannelBuilder;
+import com.spectralogic.ds3client.models.Contents;
 import com.spectralogic.ds3client.models.bulk.Ds3Object;
 import com.spectralogic.ds3client.serializer.XmlProcessingException;
 
@@ -80,7 +81,7 @@ public class Ds3PutObjectRelativePathExample {
 
             // We now need to generate the list of Ds3Objects that we want to get from DS3.
             final List<Ds3Object> objectList = new ArrayList<>();
-            for (final Contents contents : response.getResult().getContentsList()) {
+            for (final Contents contents : response.getBucketObjectsApiBeanResult().getObjects()) {
                 objectList.add(new Ds3Object(contents.getKey(), contents.getSize()));
             }
 

@@ -21,6 +21,7 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.spectralogic.ds3client.models.CanceledJob;
 import java.util.List;
+import java.util.ArrayList;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 
 @JacksonXmlRootElement(namespace = "Data")
@@ -29,7 +30,7 @@ public class CanceledJobList {
     // Variables
     @JsonProperty("CanceledJob")
     @JacksonXmlElementWrapper(useWrapping = false)
-    private List<CanceledJob> canceledJob;
+    private List<CanceledJob> canceledJob = new ArrayList<>();
 
     // Constructor
     public CanceledJobList() {

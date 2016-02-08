@@ -18,6 +18,7 @@ package com.spectralogic.ds3client.commands.spectrads3;
 
 import com.spectralogic.ds3client.HttpVerb;
 import com.spectralogic.ds3client.commands.AbstractRequest;
+import com.google.common.net.UrlEscapers;
 import java.util.UUID;
 
 public class EjectStorageDomainBlobsSpectraS3Request extends AbstractRequest {
@@ -46,13 +47,13 @@ public class EjectStorageDomainBlobsSpectraS3Request extends AbstractRequest {
 
     public EjectStorageDomainBlobsSpectraS3Request withEjectLabel(final String ejectLabel) {
         this.ejectLabel = ejectLabel;
-        this.updateQueryParam("eject_label", ejectLabel);
+        this.updateQueryParam("eject_label", UrlEscapers.urlFragmentEscaper().escape(ejectLabel));
         return this;
     }
 
     public EjectStorageDomainBlobsSpectraS3Request withEjectLocation(final String ejectLocation) {
         this.ejectLocation = ejectLocation;
-        this.updateQueryParam("eject_location", ejectLocation);
+        this.updateQueryParam("eject_location", UrlEscapers.urlFragmentEscaper().escape(ejectLocation));
         return this;
     }
 

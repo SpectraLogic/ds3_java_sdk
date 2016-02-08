@@ -18,6 +18,7 @@ package com.spectralogic.ds3client.commands.spectrads3;
 
 import com.spectralogic.ds3client.HttpVerb;
 import com.spectralogic.ds3client.commands.AbstractRequest;
+import com.google.common.net.UrlEscapers;
 import java.util.UUID;
 
 public class GetUsersSpectraS3Request extends AbstractRequest {
@@ -45,7 +46,7 @@ public class GetUsersSpectraS3Request extends AbstractRequest {
 
     public GetUsersSpectraS3Request withAuthId(final String authId) {
         this.authId = authId;
-        this.updateQueryParam("auth_id", authId);
+        this.updateQueryParam("auth_id", UrlEscapers.urlFragmentEscaper().escape(authId));
         return this;
     }
 
@@ -67,7 +68,7 @@ public class GetUsersSpectraS3Request extends AbstractRequest {
 
     public GetUsersSpectraS3Request withName(final String name) {
         this.name = name;
-        this.updateQueryParam("name", name);
+        this.updateQueryParam("name", UrlEscapers.urlFragmentEscaper().escape(name));
         return this;
     }
 

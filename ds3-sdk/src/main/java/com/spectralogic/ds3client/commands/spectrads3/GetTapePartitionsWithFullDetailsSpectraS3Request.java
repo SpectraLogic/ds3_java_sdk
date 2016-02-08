@@ -20,6 +20,7 @@ import com.spectralogic.ds3client.HttpVerb;
 import com.spectralogic.ds3client.commands.AbstractRequest;
 import com.spectralogic.ds3client.models.ImportExportConfiguration;
 import java.util.UUID;
+import com.google.common.net.UrlEscapers;
 import com.spectralogic.ds3client.models.Quiesced;
 import com.spectralogic.ds3client.models.TapePartitionState;
 
@@ -77,7 +78,7 @@ public class GetTapePartitionsWithFullDetailsSpectraS3Request extends AbstractRe
 
     public GetTapePartitionsWithFullDetailsSpectraS3Request withName(final String name) {
         this.name = name;
-        this.updateQueryParam("name", name);
+        this.updateQueryParam("name", UrlEscapers.urlFragmentEscaper().escape(name));
         return this;
     }
 
@@ -107,7 +108,7 @@ public class GetTapePartitionsWithFullDetailsSpectraS3Request extends AbstractRe
 
     public GetTapePartitionsWithFullDetailsSpectraS3Request withSerialNumber(final String serialNumber) {
         this.serialNumber = serialNumber;
-        this.updateQueryParam("serial_number", serialNumber);
+        this.updateQueryParam("serial_number", UrlEscapers.urlFragmentEscaper().escape(serialNumber));
         return this;
     }
 

@@ -21,6 +21,7 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.spectralogic.ds3client.models.StorageDomainFailure;
 import java.util.List;
+import java.util.ArrayList;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 
 @JacksonXmlRootElement(namespace = "Data")
@@ -29,7 +30,7 @@ public class StorageDomainFailureList {
     // Variables
     @JsonProperty("StorageDomainFailure")
     @JacksonXmlElementWrapper(useWrapping = false)
-    private List<StorageDomainFailure> storageDomainFailure;
+    private List<StorageDomainFailure> storageDomainFailure = new ArrayList<>();
 
     // Constructor
     public StorageDomainFailureList() {

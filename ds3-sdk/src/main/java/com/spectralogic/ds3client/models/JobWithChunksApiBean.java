@@ -24,6 +24,7 @@ import com.spectralogic.ds3client.models.JobChunkClientProcessingOrderGuarantee;
 import java.util.UUID;
 import com.spectralogic.ds3client.models.NodeApiBean;
 import java.util.List;
+import java.util.ArrayList;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.spectralogic.ds3client.models.JobChunkApiBean;
 import com.spectralogic.ds3client.models.BlobStoreTaskPriority;
@@ -59,11 +60,11 @@ public class JobWithChunksApiBean {
 
     @JsonProperty("Nodes")
     @JacksonXmlElementWrapper(useWrapping = true)
-    private List<NodeApiBean> nodes;
+    private List<NodeApiBean> nodes = new ArrayList<>();
 
     @JsonProperty("Objects")
     @JacksonXmlElementWrapper(useWrapping = false)
-    private List<JobChunkApiBean> objects;
+    private List<JobChunkApiBean> objects = new ArrayList<>();
 
     @JacksonXmlProperty(isAttribute = true, localName = "OriginalSizeInBytes")
     private long originalSizeInBytes;

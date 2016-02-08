@@ -18,6 +18,7 @@ package com.spectralogic.ds3client.commands.spectrads3;
 
 import com.spectralogic.ds3client.HttpVerb;
 import com.spectralogic.ds3client.commands.AbstractRequest;
+import com.google.common.net.UrlEscapers;
 
 public class CreateGroupSpectraS3Request extends AbstractRequest {
 
@@ -29,7 +30,7 @@ public class CreateGroupSpectraS3Request extends AbstractRequest {
     
     public CreateGroupSpectraS3Request(final String name) {
         this.name = name;
-                this.getQueryParams().put("name", name);
+                this.getQueryParams().put("name", UrlEscapers.urlFragmentEscaper().escape(name));
     }
 
 

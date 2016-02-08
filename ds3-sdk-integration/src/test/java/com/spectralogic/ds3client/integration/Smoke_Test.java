@@ -433,7 +433,7 @@ public class Smoke_Test {
                     .deleteObjects(new DeleteObjectsRequest(bucketName, objs).withQuiet(true));
             assertThat(response, is(notNullValue()));
             assertThat(response.getDeleteResultApiBeanResult(), is(notNullValue()));
-            assertThat(response.getDeleteResultApiBeanResult().getDeletedObjects(), is(nullValue()));
+            assertThat(response.getDeleteResultApiBeanResult().getDeletedObjects().size(), is(0));
 
             final Iterable<Contents> filesLeft = wrapper.listObjects(bucketName);
             assertTrue(Iterables.size(filesLeft) == 0);
@@ -455,7 +455,7 @@ public class Smoke_Test {
                     .deleteObjects(new DeleteObjectsRequest(bucketName, objList));
             assertThat(response, is(notNullValue()));
             assertThat(response.getDeleteResultApiBeanResult(), is(notNullValue()));
-            assertThat(response.getDeleteResultApiBeanResult().getDeletedObjects(), is(nullValue()));
+            assertThat(response.getDeleteResultApiBeanResult().getDeletedObjects().size(), is(0));
             assertThat(response.getDeleteResultApiBeanResult().getErrors(), is(notNullValue()));
             assertThat(response.getDeleteResultApiBeanResult().getErrors().size(), is(3));
 

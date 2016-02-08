@@ -21,6 +21,7 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.spectralogic.ds3client.models.JobCreatedNotificationRegistration;
 import java.util.List;
+import java.util.ArrayList;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 
 @JacksonXmlRootElement(namespace = "Data")
@@ -29,7 +30,7 @@ public class JobCreatedNotificationRegistrationList {
     // Variables
     @JsonProperty("JobCreatedNotificationRegistration")
     @JacksonXmlElementWrapper(useWrapping = false)
-    private List<JobCreatedNotificationRegistration> jobCreatedNotificationRegistration;
+    private List<JobCreatedNotificationRegistration> jobCreatedNotificationRegistration = new ArrayList<>();
 
     // Constructor
     public JobCreatedNotificationRegistrationList() {

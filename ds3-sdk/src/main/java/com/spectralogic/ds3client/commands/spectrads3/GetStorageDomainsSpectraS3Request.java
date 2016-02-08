@@ -18,6 +18,7 @@ package com.spectralogic.ds3client.commands.spectrads3;
 
 import com.spectralogic.ds3client.HttpVerb;
 import com.spectralogic.ds3client.commands.AbstractRequest;
+import com.google.common.net.UrlEscapers;
 import java.util.UUID;
 import com.spectralogic.ds3client.models.WriteOptimization;
 
@@ -54,7 +55,7 @@ public class GetStorageDomainsSpectraS3Request extends AbstractRequest {
 
     public GetStorageDomainsSpectraS3Request withAutoEjectUponCron(final String autoEjectUponCron) {
         this.autoEjectUponCron = autoEjectUponCron;
-        this.updateQueryParam("auto_eject_upon_cron", autoEjectUponCron);
+        this.updateQueryParam("auto_eject_upon_cron", UrlEscapers.urlFragmentEscaper().escape(autoEjectUponCron));
         return this;
     }
 
@@ -94,7 +95,7 @@ public class GetStorageDomainsSpectraS3Request extends AbstractRequest {
 
     public GetStorageDomainsSpectraS3Request withName(final String name) {
         this.name = name;
-        this.updateQueryParam("name", name);
+        this.updateQueryParam("name", UrlEscapers.urlFragmentEscaper().escape(name));
         return this;
     }
 

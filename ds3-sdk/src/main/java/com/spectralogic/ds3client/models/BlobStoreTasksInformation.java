@@ -21,6 +21,7 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.spectralogic.ds3client.models.BlobStoreTaskInformation;
 import java.util.List;
+import java.util.ArrayList;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 
 @JacksonXmlRootElement(namespace = "Data")
@@ -29,7 +30,7 @@ public class BlobStoreTasksInformation {
     // Variables
     @JsonProperty("Tasks")
     @JacksonXmlElementWrapper(useWrapping = false)
-    private List<BlobStoreTaskInformation> tasks;
+    private List<BlobStoreTaskInformation> tasks = new ArrayList<>();
 
     // Constructor
     public BlobStoreTasksInformation() {

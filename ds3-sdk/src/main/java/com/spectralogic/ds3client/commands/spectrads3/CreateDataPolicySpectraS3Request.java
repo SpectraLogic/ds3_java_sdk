@@ -18,6 +18,7 @@ package com.spectralogic.ds3client.commands.spectrads3;
 
 import com.spectralogic.ds3client.HttpVerb;
 import com.spectralogic.ds3client.commands.AbstractRequest;
+import com.google.common.net.UrlEscapers;
 import com.spectralogic.ds3client.models.ChecksumType;
 import java.lang.Long;
 import com.spectralogic.ds3client.models.BlobStoreTaskPriority;
@@ -51,7 +52,7 @@ public class CreateDataPolicySpectraS3Request extends AbstractRequest {
     
     public CreateDataPolicySpectraS3Request(final String name) {
         this.name = name;
-                this.getQueryParams().put("name", name);
+                this.getQueryParams().put("name", UrlEscapers.urlFragmentEscaper().escape(name));
     }
 
     public CreateDataPolicySpectraS3Request withBlobbingEnabled(final boolean blobbingEnabled) {

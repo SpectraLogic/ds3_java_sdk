@@ -25,6 +25,7 @@ import java.io.InputStream;
 import java.util.List;
 import com.spectralogic.ds3client.commands.AbstractRequest;
 import java.util.UUID;
+import com.google.common.net.UrlEscapers;
 
 public class GetPhysicalPlacementForObjectsWithFullDetailsSpectraS3Request extends AbstractRequest {
 

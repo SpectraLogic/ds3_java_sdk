@@ -18,6 +18,7 @@ package com.spectralogic.ds3client.commands.spectrads3;
 
 import com.spectralogic.ds3client.HttpVerb;
 import com.spectralogic.ds3client.commands.AbstractRequest;
+import com.google.common.net.UrlEscapers;
 import java.util.UUID;
 import com.spectralogic.ds3client.models.S3ObjectType;
 
@@ -60,7 +61,7 @@ public class GetObjectsSpectraS3Request extends AbstractRequest {
 
     public GetObjectsSpectraS3Request withFolder(final String folder) {
         this.folder = folder;
-        this.updateQueryParam("folder", folder);
+        this.updateQueryParam("folder", UrlEscapers.urlFragmentEscaper().escape(folder));
         return this;
     }
 
@@ -92,7 +93,7 @@ public class GetObjectsSpectraS3Request extends AbstractRequest {
 
     public GetObjectsSpectraS3Request withName(final String name) {
         this.name = name;
-        this.updateQueryParam("name", name);
+        this.updateQueryParam("name", UrlEscapers.urlFragmentEscaper().escape(name));
         return this;
     }
 

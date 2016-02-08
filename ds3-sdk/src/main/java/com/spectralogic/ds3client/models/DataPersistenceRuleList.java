@@ -21,6 +21,7 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.spectralogic.ds3client.models.DataPersistenceRule;
 import java.util.List;
+import java.util.ArrayList;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 
 @JacksonXmlRootElement(namespace = "Data")
@@ -29,7 +30,7 @@ public class DataPersistenceRuleList {
     // Variables
     @JsonProperty("DataPersistenceRule")
     @JacksonXmlElementWrapper(useWrapping = false)
-    private List<DataPersistenceRule> dataPersistenceRule;
+    private List<DataPersistenceRule> dataPersistenceRule = new ArrayList<>();
 
     // Constructor
     public DataPersistenceRuleList() {

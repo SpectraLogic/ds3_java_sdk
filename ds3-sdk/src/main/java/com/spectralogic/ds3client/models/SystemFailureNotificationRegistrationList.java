@@ -21,6 +21,7 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.spectralogic.ds3client.models.SystemFailureNotificationRegistration;
 import java.util.List;
+import java.util.ArrayList;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 
 @JacksonXmlRootElement(namespace = "Data")
@@ -29,7 +30,7 @@ public class SystemFailureNotificationRegistrationList {
     // Variables
     @JsonProperty("SystemFailureNotificationRegistration")
     @JacksonXmlElementWrapper(useWrapping = false)
-    private List<SystemFailureNotificationRegistration> systemFailureNotificationRegistration;
+    private List<SystemFailureNotificationRegistration> systemFailureNotificationRegistration = new ArrayList<>();
 
     // Constructor
     public SystemFailureNotificationRegistrationList() {

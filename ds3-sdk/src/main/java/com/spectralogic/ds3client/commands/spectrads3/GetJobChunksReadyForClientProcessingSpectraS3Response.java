@@ -24,6 +24,8 @@ import com.spectralogic.ds3client.serializer.XmlOutput;
 import com.spectralogic.ds3client.commands.AbstractResponse;
 import com.spectralogic.ds3client.commands.RetryAfterExpectedException;
 
+import static com.spectralogic.ds3client.utils.Guard.isNullOrEmpty;
+
 public class GetJobChunksReadyForClientProcessingSpectraS3Response extends AbstractResponse {
 
     private JobWithChunksApiBean jobWithChunksApiBeanResult;
@@ -56,7 +58,7 @@ public class GetJobChunksReadyForClientProcessingSpectraS3Response extends Abstr
             case 200:
                 try (final InputStream content = webResponse.getResponseStream()) {
                     this.jobWithChunksApiBeanResult = XmlOutput.fromXml(content, JobWithChunksApiBean.class);
-                    if (this.jobWithChunksApiBeanResult.getObjects() == null) {
+                    if (isNullOrEmpty(this.jobWithChunksApiBeanResult.getObjects())) {
                         this.status = Status.RETRYLATER;
                         this.retryAfterSeconds = parseRetryAfter(webResponse);
                     } else {

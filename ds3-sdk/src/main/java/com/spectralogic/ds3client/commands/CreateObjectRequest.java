@@ -17,11 +17,9 @@
 package com.spectralogic.ds3client.commands;
 
 import com.spectralogic.ds3client.HttpVerb;
-import com.spectralogic.ds3client.models.ChecksumType;
-import com.spectralogic.ds3client.utils.SeekableByteChannelInputStream;
-
 import java.io.InputStream;
 import java.nio.channels.SeekableByteChannel;
+import com.spectralogic.ds3client.utils.SeekableByteChannelInputStream;
 import java.util.UUID;
 import com.spectralogic.ds3client.models.ChecksumType;
 public class CreateObjectRequest extends AbstractRequest {
@@ -30,7 +28,7 @@ public class CreateObjectRequest extends AbstractRequest {
     public final static String AMZ_META_HEADER = "x-amz-meta-";
 
     private final InputStream stream;
-
+    
     private final String bucketName;
 
     private final String objectName;
@@ -53,7 +51,7 @@ public class CreateObjectRequest extends AbstractRequest {
         this.size = size;
         this.channel = channel;
         this.stream = new SeekableByteChannelInputStream(channel);
-
+        
     }
 
     public CreateObjectRequest(final String bucketName, final String objectName, final SeekableByteChannel channel, final UUID job, final long offset, final long size) {

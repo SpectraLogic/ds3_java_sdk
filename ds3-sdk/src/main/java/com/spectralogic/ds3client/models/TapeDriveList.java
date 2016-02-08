@@ -21,6 +21,7 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.spectralogic.ds3client.models.TapeDrive;
 import java.util.List;
+import java.util.ArrayList;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 
 @JacksonXmlRootElement(namespace = "Data")
@@ -29,7 +30,7 @@ public class TapeDriveList {
     // Variables
     @JsonProperty("TapeDrive")
     @JacksonXmlElementWrapper(useWrapping = false)
-    private List<TapeDrive> tapeDrive;
+    private List<TapeDrive> tapeDrive = new ArrayList<>();
 
     // Constructor
     public TapeDriveList() {

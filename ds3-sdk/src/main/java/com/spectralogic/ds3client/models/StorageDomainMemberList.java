@@ -21,6 +21,7 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.spectralogic.ds3client.models.StorageDomainMember;
 import java.util.List;
+import java.util.ArrayList;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 
 @JacksonXmlRootElement(namespace = "Data")
@@ -29,7 +30,7 @@ public class StorageDomainMemberList {
     // Variables
     @JsonProperty("StorageDomainMember")
     @JacksonXmlElementWrapper(useWrapping = false)
-    private List<StorageDomainMember> storageDomainMember;
+    private List<StorageDomainMember> storageDomainMember = new ArrayList<>();
 
     // Constructor
     public StorageDomainMemberList() {

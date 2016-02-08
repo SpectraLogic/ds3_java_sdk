@@ -19,6 +19,7 @@ package com.spectralogic.ds3client.commands.spectrads3;
 import com.spectralogic.ds3client.HttpVerb;
 import com.spectralogic.ds3client.commands.AbstractRequest;
 import java.util.UUID;
+import com.google.common.net.UrlEscapers;
 
 public class ModifyBucketSpectraS3Request extends AbstractRequest {
 

@@ -21,6 +21,7 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.spectralogic.ds3client.models.PoolFailure;
 import java.util.List;
+import java.util.ArrayList;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 
 @JacksonXmlRootElement(namespace = "Data")
@@ -29,7 +30,7 @@ public class PoolFailureList {
     // Variables
     @JsonProperty("PoolFailure")
     @JacksonXmlElementWrapper(useWrapping = false)
-    private List<PoolFailure> poolFailure;
+    private List<PoolFailure> poolFailure = new ArrayList<>();
 
     // Constructor
     public PoolFailureList() {

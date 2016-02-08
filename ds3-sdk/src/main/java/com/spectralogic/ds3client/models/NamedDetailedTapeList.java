@@ -21,6 +21,7 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.spectralogic.ds3client.models.NamedDetailedTape;
 import java.util.List;
+import java.util.ArrayList;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 
 @JacksonXmlRootElement(namespace = "Data")
@@ -29,7 +30,7 @@ public class NamedDetailedTapeList {
     // Variables
     @JsonProperty("NamedDetailedTape")
     @JacksonXmlElementWrapper(useWrapping = false)
-    private List<NamedDetailedTape> namedDetailedTape;
+    private List<NamedDetailedTape> namedDetailedTape = new ArrayList<>();
 
     // Constructor
     public NamedDetailedTapeList() {

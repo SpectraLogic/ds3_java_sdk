@@ -18,6 +18,7 @@ package com.spectralogic.ds3client.commands.spectrads3;
 
 import com.spectralogic.ds3client.HttpVerb;
 import com.spectralogic.ds3client.commands.AbstractRequest;
+import com.google.common.net.UrlEscapers;
 import java.util.UUID;
 import com.spectralogic.ds3client.models.PoolFailureType;
 
@@ -46,7 +47,7 @@ public class GetPoolFailuresSpectraS3Request extends AbstractRequest {
 
     public GetPoolFailuresSpectraS3Request withErrorMessage(final String errorMessage) {
         this.errorMessage = errorMessage;
-        this.updateQueryParam("error_message", errorMessage);
+        this.updateQueryParam("error_message", UrlEscapers.urlFragmentEscaper().escape(errorMessage));
         return this;
     }
 

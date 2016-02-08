@@ -21,6 +21,7 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.spectralogic.ds3client.models.DetailedS3Object;
 import java.util.List;
+import java.util.ArrayList;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 
 @JacksonXmlRootElement(namespace = "Data")
@@ -29,7 +30,7 @@ public class DetailedS3ObjectList {
     // Variables
     @JsonProperty("DetailedS3Object")
     @JacksonXmlElementWrapper(useWrapping = false)
-    private List<DetailedS3Object> detailedS3Object;
+    private List<DetailedS3Object> detailedS3Object = new ArrayList<>();
 
     // Constructor
     public DetailedS3ObjectList() {

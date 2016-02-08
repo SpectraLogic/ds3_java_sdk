@@ -21,6 +21,7 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.spectralogic.ds3client.models.S3ObjectToDeleteApiBean;
 import java.util.List;
+import java.util.ArrayList;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.spectralogic.ds3client.models.DeleteObjectErrorResultApiBean;
 
@@ -30,11 +31,11 @@ public class DeleteResultApiBean {
     // Variables
     @JsonProperty("Deleted")
     @JacksonXmlElementWrapper(useWrapping = false)
-    private List<S3ObjectToDeleteApiBean> deletedObjects;
+    private List<S3ObjectToDeleteApiBean> deletedObjects = new ArrayList<>();
 
     @JsonProperty("Error")
     @JacksonXmlElementWrapper(useWrapping = false)
-    private List<DeleteObjectErrorResultApiBean> errors;
+    private List<DeleteObjectErrorResultApiBean> errors = new ArrayList<>();
 
     // Constructor
     public DeleteResultApiBean() {

@@ -21,6 +21,7 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.spectralogic.ds3client.models.TapeDensityDirective;
 import java.util.List;
+import java.util.ArrayList;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 
 @JacksonXmlRootElement(namespace = "Data")
@@ -29,7 +30,7 @@ public class TapeDensityDirectiveList {
     // Variables
     @JsonProperty("TapeDensityDirective")
     @JacksonXmlElementWrapper(useWrapping = false)
-    private List<TapeDensityDirective> tapeDensityDirective;
+    private List<TapeDensityDirective> tapeDensityDirective = new ArrayList<>();
 
     // Constructor
     public TapeDensityDirectiveList() {

@@ -21,6 +21,7 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.spectralogic.ds3client.models.TapeFailure;
 import java.util.List;
+import java.util.ArrayList;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 
 @JacksonXmlRootElement(namespace = "Data")
@@ -29,7 +30,7 @@ public class TapeFailureList {
     // Variables
     @JsonProperty("TapeFailure")
     @JacksonXmlElementWrapper(useWrapping = false)
-    private List<TapeFailure> tapeFailure;
+    private List<TapeFailure> tapeFailure = new ArrayList<>();
 
     // Constructor
     public TapeFailureList() {

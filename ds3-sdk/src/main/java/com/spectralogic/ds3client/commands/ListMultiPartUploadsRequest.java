@@ -17,6 +17,7 @@
 package com.spectralogic.ds3client.commands;
 
 import com.spectralogic.ds3client.HttpVerb;
+import com.google.common.net.UrlEscapers;
 
 public class ListMultiPartUploadsRequest extends AbstractRequest {
 
@@ -49,7 +50,7 @@ public class ListMultiPartUploadsRequest extends AbstractRequest {
 
     public ListMultiPartUploadsRequest withKeyMarker(final String keyMarker) {
         this.keyMarker = keyMarker;
-        this.updateQueryParam("key_marker", keyMarker);
+        this.updateQueryParam("key_marker", UrlEscapers.urlFragmentEscaper().escape(keyMarker));
         return this;
     }
 
@@ -61,13 +62,13 @@ public class ListMultiPartUploadsRequest extends AbstractRequest {
 
     public ListMultiPartUploadsRequest withPrefix(final String prefix) {
         this.prefix = prefix;
-        this.updateQueryParam("prefix", prefix);
+        this.updateQueryParam("prefix", UrlEscapers.urlFragmentEscaper().escape(prefix));
         return this;
     }
 
     public ListMultiPartUploadsRequest withUploadIdMarker(final String uploadIdMarker) {
         this.uploadIdMarker = uploadIdMarker;
-        this.updateQueryParam("upload_id_marker", uploadIdMarker);
+        this.updateQueryParam("upload_id_marker", UrlEscapers.urlFragmentEscaper().escape(uploadIdMarker));
         return this;
     }
 

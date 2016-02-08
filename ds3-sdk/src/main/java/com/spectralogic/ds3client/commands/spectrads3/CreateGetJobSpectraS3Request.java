@@ -22,6 +22,7 @@ import com.spectralogic.ds3client.models.bulk.Ds3Object;
 import com.spectralogic.ds3client.serializer.XmlProcessingException;
 import com.spectralogic.ds3client.commands.BulkRequest;
 import com.spectralogic.ds3client.models.JobChunkClientProcessingOrderGuarantee;
+import com.google.common.net.UrlEscapers;
 import com.spectralogic.ds3client.models.BlobStoreTaskPriority;
 
 public class CreateGetJobSpectraS3Request extends BulkRequest {
@@ -55,7 +56,7 @@ public class CreateGetJobSpectraS3Request extends BulkRequest {
 
     public CreateGetJobSpectraS3Request withName(final String name) {
         this.name = name;
-        this.updateQueryParam("name", name);
+        this.updateQueryParam("name", UrlEscapers.urlFragmentEscaper().escape(name));
         return this;
     }
 
