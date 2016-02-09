@@ -55,6 +55,9 @@ public class JobWithChunksApiBean {
     @JacksonXmlProperty(isAttribute = true, localName = "JobId")
     private UUID jobId;
 
+    @JacksonXmlProperty(isAttribute = true, localName = "Naked")
+    private boolean naked;
+
     @JacksonXmlProperty(isAttribute = true, localName = "Name")
     private String name;
 
@@ -148,6 +151,15 @@ public class JobWithChunksApiBean {
 
     public void setJobId(final UUID jobId) {
         this.jobId = jobId;
+    }
+
+
+    public boolean getNaked() {
+        return this.naked;
+    }
+
+    public void setNaked(final boolean naked) {
+        this.naked = naked;
     }
 
 

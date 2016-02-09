@@ -18,42 +18,34 @@ package com.spectralogic.ds3client.commands.spectrads3;
 
 import com.spectralogic.ds3client.HttpVerb;
 import com.spectralogic.ds3client.commands.AbstractRequest;
-import java.util.UUID;
 import com.google.common.net.UrlEscapers;
+import com.spectralogic.ds3client.models.DataReplicationRuleType;
 
-public class ModifyUserSpectraS3Request extends AbstractRequest {
+public class ModifyDataReplicationRuleSpectraS3Request extends AbstractRequest {
 
     // Variables
     
-    private final UUID userId;
+    private final String dataReplicationRule;
 
-    private UUID defaultDataPolicyId;
+    private String ds3TargetDataPolicy;
 
-    private String name;
-
-    private String secretKey;
+    private DataReplicationRuleType type;
 
     // Constructor
     
-    public ModifyUserSpectraS3Request(final UUID userId) {
-        this.userId = userId;
+    public ModifyDataReplicationRuleSpectraS3Request(final String dataReplicationRule) {
+        this.dataReplicationRule = dataReplicationRule;
             }
 
-    public ModifyUserSpectraS3Request withDefaultDataPolicyId(final UUID defaultDataPolicyId) {
-        this.defaultDataPolicyId = defaultDataPolicyId;
-        this.updateQueryParam("default_data_policy_id", defaultDataPolicyId.toString());
+    public ModifyDataReplicationRuleSpectraS3Request withDs3TargetDataPolicy(final String ds3TargetDataPolicy) {
+        this.ds3TargetDataPolicy = ds3TargetDataPolicy;
+        this.updateQueryParam("ds3_target_data_policy", UrlEscapers.urlFragmentEscaper().escape(ds3TargetDataPolicy));
         return this;
     }
 
-    public ModifyUserSpectraS3Request withName(final String name) {
-        this.name = name;
-        this.updateQueryParam("name", UrlEscapers.urlFragmentEscaper().escape(name));
-        return this;
-    }
-
-    public ModifyUserSpectraS3Request withSecretKey(final String secretKey) {
-        this.secretKey = secretKey;
-        this.updateQueryParam("secret_key", UrlEscapers.urlFragmentEscaper().escape(secretKey));
+    public ModifyDataReplicationRuleSpectraS3Request withType(final DataReplicationRuleType type) {
+        this.type = type;
+        this.updateQueryParam("type", type.toString());
         return this;
     }
 
@@ -65,26 +57,21 @@ public class ModifyUserSpectraS3Request extends AbstractRequest {
 
     @Override
     public String getPath() {
-        return "/_rest_/user/" + userId.toString();
+        return "/_rest_/data_replication_rule/" + dataReplicationRule;
     }
     
-    public UUID getUserId() {
-        return this.userId;
+    public String getDataReplicationRule() {
+        return this.dataReplicationRule;
     }
 
 
-    public UUID getDefaultDataPolicyId() {
-        return this.defaultDataPolicyId;
+    public String getDs3TargetDataPolicy() {
+        return this.ds3TargetDataPolicy;
     }
 
 
-    public String getName() {
-        return this.name;
-    }
-
-
-    public String getSecretKey() {
-        return this.secretKey;
+    public DataReplicationRuleType getType() {
+        return this.type;
     }
 
 }

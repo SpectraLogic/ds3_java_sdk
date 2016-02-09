@@ -32,13 +32,15 @@ import com.spectralogic.ds3client.networking.FailedRequestException;
 import com.spectralogic.ds3client.serializer.XmlProcessingException;
 import com.spectralogic.ds3client.utils.ByteArraySeekableByteChannel;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
 import java.io.IOException;
 import java.nio.channels.SeekableByteChannel;
 import java.security.SignatureException;
-import java.time.Instant;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
@@ -50,9 +52,16 @@ import static org.mockito.Mockito.*;
 
 public class Ds3ClientHelpers_Test {
     private static final String MYBUCKET = "mybucket";
+
+    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+
+    @Before
+    public void setTimeZone() {
+        DATE_FORMAT.setTimeZone(TimeZone.getTimeZone("UTC"));
+    }
     
     @Test
-    public void testReadObjects() throws SignatureException, IOException, XmlProcessingException {
+    public void testReadObjects() throws SignatureException, IOException, XmlProcessingException, ParseException {
         final Ds3Client ds3Client = buildDs3ClientForBulk();
 
 
@@ -94,7 +103,7 @@ public class Ds3ClientHelpers_Test {
     }
 
     @Test(expected = StubException.class)
-    public void testReadObjectsWithFailedGet() throws SignatureException, IOException, XmlProcessingException {
+    public void testReadObjectsWithFailedGet() throws SignatureException, IOException, XmlProcessingException, ParseException {
         final Ds3Client ds3Client = mock(Ds3Client.class);
 
         Mockito.when(ds3Client.newForNode(Mockito.<NodeApiBean>any())).thenReturn(ds3Client);
@@ -124,7 +133,7 @@ public class Ds3ClientHelpers_Test {
     }
     
     @Test
-    public void testWriteObjects() throws SignatureException, IOException, XmlProcessingException {
+    public void testWriteObjects() throws SignatureException, IOException, XmlProcessingException, ParseException {
         final Ds3Client ds3Client = buildDs3ClientForBulk();
         
         final CreatePutJobSpectraS3Response bulkPutResponse = buildBulkPutResponse();
@@ -171,7 +180,7 @@ public class Ds3ClientHelpers_Test {
     }
     
     @Test
-    public void testWriteObjectsWithFailedPut() throws SignatureException, IOException, XmlProcessingException {
+    public void testWriteObjectsWithFailedPut() throws SignatureException, IOException, XmlProcessingException, ParseException {
         final Ds3Client ds3Client = mock(Ds3Client.class);
         final ConnectionDetails details = mock(ConnectionDetails.class);
         Mockito.when(details.getEndpoint()).thenReturn("localhost");
@@ -217,7 +226,7 @@ public class Ds3ClientHelpers_Test {
     }
 
     @Test
-    public void testListObjects() throws SignatureException, IOException, XmlProcessingException {
+    public void testListObjects() throws SignatureException, IOException, XmlProcessingException, ParseException {
         final Ds3Client ds3Client = mock(Ds3Client.class);
         Mockito.when(ds3Client.getBucket(getBucketHas(MYBUCKET, null))).thenReturn(new StubGetBucketResponse(0));
         Mockito.when(ds3Client.getBucket(getBucketHas(MYBUCKET, "baz"))).thenReturn(new StubGetBucketResponse(1));
@@ -237,16 +246,16 @@ public class Ds3ClientHelpers_Test {
             final String key,
             final String eTag,
             final String lastModified,
-            final long size) {
+            final long size) throws ParseException {
         assertThat(contents.getKey(), is(key));
         assertThat(contents.getETag(), is(eTag));
-        assertThat(contents.getLastModified(), is(Date.from(Instant.parse(lastModified))));
+        assertThat(contents.getLastModified(), is(DATE_FORMAT.parse(lastModified)));
         assertThat(contents.getSize(), is(size));
     }
 
 
     @Test
-    public void testRecoverWriteJob() throws SignatureException, IOException, XmlProcessingException, JobRecoveryException {
+    public void testRecoverWriteJob() throws SignatureException, IOException, XmlProcessingException, JobRecoveryException, ParseException {
         final Ds3Client ds3Client = buildDs3ClientForBulk();
 
         final ModifyJobSpectraS3Response modifyWriteJobResponse = buildModifyWriteJobResponse();
@@ -258,7 +267,7 @@ public class Ds3ClientHelpers_Test {
     }
 
     @Test(expected = com.spectralogic.ds3client.helpers.JobRecoveryException.class)
-    public void testRecoverWriteJobThrowsJobRecoveryExceptionForWrongRequestType() throws SignatureException, IOException, XmlProcessingException, JobRecoveryException {
+    public void testRecoverWriteJobThrowsJobRecoveryExceptionForWrongRequestType() throws SignatureException, IOException, XmlProcessingException, JobRecoveryException, ParseException {
         final Ds3Client ds3Client = buildDs3ClientForBulk();
 
         final ModifyJobSpectraS3Response modifyReadJobResponse = buildModifyReadJobResponse();
@@ -268,7 +277,7 @@ public class Ds3ClientHelpers_Test {
     }
 
     @Test
-    public void testRecoverReadJob() throws SignatureException, IOException, XmlProcessingException, JobRecoveryException {
+    public void testRecoverReadJob() throws SignatureException, IOException, XmlProcessingException, JobRecoveryException, ParseException {
         final Ds3Client ds3Client = buildDs3ClientForBulk();
 
         final ModifyJobSpectraS3Response modifyReadJobResponse = buildModifyReadJobResponse();
@@ -280,7 +289,7 @@ public class Ds3ClientHelpers_Test {
     }
 
     @Test(expected = com.spectralogic.ds3client.helpers.JobRecoveryException.class)
-    public void testRecoverReadJobThrowsJobRecoveryExceptionForWrongRequestType() throws SignatureException, IOException, XmlProcessingException, JobRecoveryException {
+    public void testRecoverReadJobThrowsJobRecoveryExceptionForWrongRequestType() throws SignatureException, IOException, XmlProcessingException, JobRecoveryException, ParseException {
         final Ds3Client ds3Client = buildDs3ClientForBulk();
 
         final ModifyJobSpectraS3Response modifyWriteJobResponse = buildModifyWriteJobResponse();
@@ -303,13 +312,18 @@ public class Ds3ClientHelpers_Test {
 
         @Override
         public BucketObjectsApiBean getBucketObjectsApiBeanResult() {
-            switch (this.invocationIndex) {
-            case 0: return buildListBucketResult(buildContentList0(), "", "baz", true);
-            case 1: return buildListBucketResult(buildContentList1(), "baz", "", false);
-            default:
-                Assert.fail("List objects in bucket called too many times");
-                return null;
+            try {
+                switch (this.invocationIndex) {
+                    case 0: return buildListBucketResult(buildContentList0(), "", "baz", true);
+                    case 1: return buildListBucketResult(buildContentList1(), "baz", "", false);
+                    default:
+                        Assert.fail("List objects in bucket called too many times");
+                        return null;
+                }
+            } catch (final ParseException e) {
+                Assert.fail(e.toString());
             }
+            return null;
         }
 
         private static BucketObjectsApiBean buildListBucketResult(
@@ -329,14 +343,14 @@ public class Ds3ClientHelpers_Test {
             return listBucketResult;
         }
         
-        private static List<Contents> buildContentList0() {
+        private static List<Contents> buildContentList0() throws ParseException {
             return Lists.newArrayList(
                 buildContents("foo", "2cde576e5f5a613e6cee466a681f4929", "2009-10-12T17:50:30.000Z", 12),
                 buildContents("bar", "f3f98ff00be128139332bcf4b772be43", "2009-10-14T17:50:31.000Z", 12)
             );
         }
         
-        private static List<Contents> buildContentList1() {
+        private static List<Contents> buildContentList1() throws ParseException {
             return Lists.newArrayList(
                 buildContents("baz", "802d45fcb9a3f7d00f1481362edc0ec9", "2009-10-18T17:50:35.000Z", 12)
             );
@@ -346,11 +360,11 @@ public class Ds3ClientHelpers_Test {
                 final String key,
                 final String eTag,
                 final String lastModified,
-                final long size) {
+                final long size) throws ParseException {
             final Contents contents = new Contents();
             contents.setETag(eTag);
             contents.setKey(key);
-            contents.setLastModified(Date.from(Instant.parse(lastModified)));
+            contents.setLastModified(DATE_FORMAT.parse(lastModified));
             final UserApiBean owner = new UserApiBean();
             owner.setDisplayName("person@spectralogic.com");
             owner.setId(UUID.randomUUID());
@@ -365,7 +379,7 @@ public class Ds3ClientHelpers_Test {
     private static final UUID nodeId = UUID.fromString("29bf5a53-d891-407f-8f3f-749ee7e636f3");
 
     private static Ds3Client buildDs3ClientForBulk() throws IOException,
-            SignatureException {
+            SignatureException, ParseException {
         final Ds3Client ds3Client = mock(Ds3Client.class);
         final ConnectionDetails details = mock(ConnectionDetails.class);
         Mockito.when(details.getEndpoint()).thenReturn("localhost");
@@ -382,7 +396,7 @@ public class Ds3ClientHelpers_Test {
         return ds3Client;
     }
 
-    private static CreateGetJobSpectraS3Response buildBulkGetResponse() {
+    private static CreateGetJobSpectraS3Response buildBulkGetResponse() throws ParseException {
         return bulkGetResponse(buildJobResponse(
                 JobRequestType.GET,
                 JobChunkClientProcessingOrderGuarantee.NONE,
@@ -401,7 +415,7 @@ public class Ds3ClientHelpers_Test {
         return retryGetAvailableAfter(1);
     }
     
-    private static GetJobChunksReadyForClientProcessingSpectraS3Response buildJobChunksResponse2() {
+    private static GetJobChunksReadyForClientProcessingSpectraS3Response buildJobChunksResponse2() throws ParseException {
         return availableJobChunks(buildJobResponse(
                 JobRequestType.GET,
                 JobChunkClientProcessingOrderGuarantee.NONE,
@@ -411,7 +425,7 @@ public class Ds3ClientHelpers_Test {
         ));
     }
     
-    private static GetJobChunksReadyForClientProcessingSpectraS3Response buildJobChunksResponse3() {
+    private static GetJobChunksReadyForClientProcessingSpectraS3Response buildJobChunksResponse3() throws ParseException {
         return availableJobChunks(buildJobResponse(
                 JobRequestType.GET,
                 JobChunkClientProcessingOrderGuarantee.NONE,
@@ -421,7 +435,7 @@ public class Ds3ClientHelpers_Test {
         ));
     }
 
-    private static CreatePutJobSpectraS3Response buildBulkPutResponse() {
+    private static CreatePutJobSpectraS3Response buildBulkPutResponse() throws ParseException {
         return bulkPutResponse(buildJobResponse(
                 JobRequestType.PUT,
                 JobChunkClientProcessingOrderGuarantee.IN_ORDER,
@@ -432,7 +446,7 @@ public class Ds3ClientHelpers_Test {
         ));
     }
 
-    private static ModifyJobSpectraS3Response buildModifyWriteJobResponse() {
+    private static ModifyJobSpectraS3Response buildModifyWriteJobResponse() throws ParseException {
         return modifyJobResponse(buildJobResponse(
                 JobRequestType.PUT,
                 JobChunkClientProcessingOrderGuarantee.IN_ORDER,
@@ -443,7 +457,7 @@ public class Ds3ClientHelpers_Test {
         ));
     }
 
-    private static ModifyJobSpectraS3Response buildModifyReadJobResponse() {
+    private static ModifyJobSpectraS3Response buildModifyReadJobResponse() throws ParseException {
         return modifyJobResponse(buildJobResponse(
                 JobRequestType.GET,
                 JobChunkClientProcessingOrderGuarantee.IN_ORDER,
@@ -471,7 +485,7 @@ public class Ds3ClientHelpers_Test {
             final JobChunkClientProcessingOrderGuarantee chunkOrdering,
             final long cachedSizeInBytes,
             final long completedSizeInBytes,
-            final JobChunkApiBean ... chunks) {
+            final JobChunkApiBean ... chunks) throws ParseException {
         return ResponseBuilders.jobResponse(
                 jobId,
                 MYBUCKET,
@@ -514,7 +528,7 @@ public class Ds3ClientHelpers_Test {
     }
 
     @Test
-    public void testAddPrefixToDs3ObjectsList() throws IOException, SignatureException {
+    public void testAddPrefixToDs3ObjectsList() throws IOException, SignatureException, ParseException {
         final List<Ds3Object> ds3ObjectList = Lists.newArrayList(new Ds3Object("foo"), new Ds3Object("bar"));
         final Ds3ClientHelpers helper = Ds3ClientHelpers.wrap(buildDs3ClientForBulk());
         final Iterable<Ds3Object> modifiedDs3ObjectList = helper.addPrefixToDs3ObjectsList(ds3ObjectList, "baz/");
@@ -535,7 +549,7 @@ public class Ds3ClientHelpers_Test {
     }
 
     @Test
-    public void testRemovePrefixToDs3ObjectsList() throws IOException, SignatureException {
+    public void testRemovePrefixToDs3ObjectsList() throws IOException, SignatureException, ParseException {
         final List<Ds3Object> ds3ObjectList = Lists.newArrayList(new Ds3Object("foo/bar"), new Ds3Object("foo/baz"));
         final Ds3ClientHelpers helper = Ds3ClientHelpers.wrap(buildDs3ClientForBulk());
         final Iterable<Ds3Object> modifiedDs3ObjectList = helper.removePrefixFromDs3ObjectsList(ds3ObjectList, "foo/");
@@ -562,7 +576,7 @@ public class Ds3ClientHelpers_Test {
     }
 
     @Test(expected = Ds3NoMoreRetriesException.class)
-    public void testWriteObjectsWithRetryAfter() throws SignatureException, IOException, XmlProcessingException {
+    public void testWriteObjectsWithRetryAfter() throws SignatureException, IOException, XmlProcessingException, ParseException {
         final Ds3Client ds3Client = buildDs3ClientForBulk();
 
         final CreatePutJobSpectraS3Response bulkPutResponse = buildBulkPutResponse();
@@ -591,7 +605,7 @@ public class Ds3ClientHelpers_Test {
     }
 
     @Test(expected = Ds3NoMoreRetriesException.class)
-    public void testReadObjectsWithRetryAfter() throws SignatureException, IOException, XmlProcessingException {
+    public void testReadObjectsWithRetryAfter() throws SignatureException, IOException, XmlProcessingException, ParseException {
         final Ds3Client ds3Client = mock(Ds3Client.class);
 
         final CreateGetJobSpectraS3Response buildBulkGetResponse = buildBulkGetResponse();

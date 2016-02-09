@@ -22,12 +22,12 @@ import com.spectralogic.ds3client.commands.*;
 import com.spectralogic.ds3client.commands.spectrads3.*;
 import com.spectralogic.ds3client.exceptions.ContentLengthNotMatchException;
 import com.spectralogic.ds3client.models.*;
-import com.spectralogic.ds3client.models.BulkObject;
-import com.spectralogic.ds3client.models.bulk.*;
+import com.spectralogic.ds3client.models.bulk.Ds3Object;
 import com.spectralogic.ds3client.networking.FailedRequestException;
 import com.spectralogic.ds3client.serializer.XmlProcessingException;
 import com.spectralogic.ds3client.utils.ByteArraySeekableByteChannel;
 import com.spectralogic.ds3client.utils.ResourceUtils;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -38,7 +38,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.security.SignatureException;
-import java.time.Instant;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static org.hamcrest.CoreMatchers.*;
@@ -62,8 +63,15 @@ public class Ds3Client_Test {
         + "  </Objects>"
         + "</MasterObjectList>";
 
+    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+
+    @Before
+    public void setTimeZone() {
+        DATE_FORMAT.setTimeZone(TimeZone.getTimeZone("UTC"));
+    }
+
     @Test
-    public void getBuckets() throws IOException, SignatureException {
+    public void getBuckets() throws IOException, SignatureException, ParseException {
         final UUID id = UUID.randomUUID();
         final String stringResponse = "<ListAllMyBucketsResult xmlns=\"http://doc.s3.amazonaws.com/2006-03-01\">\n" +
                 "<Owner><ID>" + id.toString() + "</ID><DisplayName>ryan</DisplayName></Owner><Buckets><Bucket><Name>testBucket2</Name><CreationDate>2013-12-11T23:20:09</CreationDate></Bucket><Bucket><Name>bulkTest</Name><CreationDate>2013-12-11T23:20:09</CreationDate></Bucket><Bucket><Name>bulkTest1</Name><CreationDate>2013-12-11T23:20:09</CreationDate></Bucket><Bucket><Name>bulkTest2</Name><CreationDate>2013-12-11T23:20:09</CreationDate></Bucket><Bucket><Name>bulkTest3</Name><CreationDate>2013-12-11T23:20:09</CreationDate></Bucket><Bucket><Name>bulkTest4</Name><CreationDate>2013-12-11T23:20:09</CreationDate></Bucket><Bucket><Name>bulkTest5</Name><CreationDate>2013-12-11T23:20:09</CreationDate></Bucket><Bucket><Name>bulkTest6</Name><CreationDate>2013-12-11T23:20:09</CreationDate></Bucket><Bucket><Name>testBucket3</Name><CreationDate>2013-12-11T23:20:09</CreationDate></Bucket><Bucket><Name>testBucket1</Name><CreationDate>2013-12-11T23:20:09</CreationDate></Bucket><Bucket><Name>testbucket</Name><CreationDate>2013-12-11T23:20:09</CreationDate></Bucket></Buckets></ListAllMyBucketsResult>";
@@ -95,7 +103,7 @@ public class Ds3Client_Test {
         final List<String> bucketNames = new ArrayList<>();
         for (final BucketApiBean bucket : buckets) {
             bucketNames.add(bucket.getName());
-            assertThat(bucket.getCreationDate(), is(Date.from(Instant.parse("2013-12-11T23:20:09Z"))));
+            assertThat(bucket.getCreationDate(), is(DATE_FORMAT.parse("2013-12-11T23:20:09.000Z")));
         }
         assertThat(bucketNames, is(expectedBucketNames));
     }
@@ -110,7 +118,7 @@ public class Ds3Client_Test {
     }
 
     @Test
-    public void getBucket() throws IOException, SignatureException {
+    public void getBucket() throws IOException, SignatureException, ParseException {
         final UUID id = UUID.randomUUID();
         final String xmlResponse = "<ListBucketResult xmlns=\"http://s3.amazonaws.com/doc/2006-03-01/\"><Name>remoteTest16</Name><Prefix/><Marker/><MaxKeys>1000</MaxKeys><IsTruncated>false</IsTruncated><Contents><Key>user/hduser/gutenberg/20417.txt.utf-8</Key><LastModified>2014-01-03T13:26:47.000Z</LastModified><ETag>8B19F3F41868106382A677C3435BDCE5</ETag><Size>674570</Size><StorageClass>STANDARD</StorageClass>" +
                 "<Owner><ID>" + id.toString() + "</ID><DisplayName>ryan</DisplayName></Owner></Contents><Contents><Key>user/hduser/gutenberg/5000.txt.utf-8</Key><LastModified>2014-01-03T13:26:47.000Z</LastModified><ETag>9DE344878423E44B129730CE22B4B137</ETag><Size>1423803</Size><StorageClass>STANDARD</StorageClass>" +
@@ -135,7 +143,7 @@ public class Ds3Client_Test {
         this.assertObjectsEquals(
                 objects.get(0),
                 "user/hduser/gutenberg/20417.txt.utf-8",
-                Date.from(Instant.parse("2014-01-03T13:26:47.000Z")),
+                DATE_FORMAT.parse("2014-01-03T13:26:47.000Z"),
                 "8B19F3F41868106382A677C3435BDCE5",
                 674570,
                 "STANDARD"
@@ -143,7 +151,7 @@ public class Ds3Client_Test {
         this.assertObjectsEquals(
                 objects.get(1),
                 "user/hduser/gutenberg/5000.txt.utf-8",
-                Date.from(Instant.parse("2014-01-03T13:26:47.000Z")),
+                DATE_FORMAT.parse("2014-01-03T13:26:47.000Z"),
                 "9DE344878423E44B129730CE22B4B137",
                 1423803,
                 "STANDARD"
@@ -151,7 +159,7 @@ public class Ds3Client_Test {
         this.assertObjectsEquals(
                 objects.get(2),
                 "user/hduser/gutenberg/4300.txt.utf-8",
-                Date.from(Instant.parse("2014-01-03T13:26:47.000Z")),
+                DATE_FORMAT.parse("2014-01-03T13:26:47.000Z"),
                 "33EE4519EA7DDAB27CA4E2742326D70B",
                 1573150,
                 "DEEP"
@@ -173,7 +181,7 @@ public class Ds3Client_Test {
     }
 
     @Test
-    public void getObjectsSpectraS3() throws IOException, SignatureException {
+    public void getObjectsSpectraS3() throws IOException, SignatureException, ParseException {
         final Map<String, String> queryParams = new HashMap<>();
         final String bucketId = "a24d14f3-e2f0-4bfb-ab71-f99d5ef43745";
         queryParams.put("bucket_id", bucketId);
@@ -191,7 +199,7 @@ public class Ds3Client_Test {
 
         final S3Object beowulf = new S3Object();
         beowulf.setBucketId(UUID.fromString("a24d14f3-e2f0-4bfb-ab71-f99d5ef43745"));
-        beowulf.setCreationDate(Date.from(Instant.parse("2015-09-21T20:06:47.694Z")));
+        beowulf.setCreationDate(DATE_FORMAT.parse("2015-09-21T20:06:47.694Z"));
         beowulf.setId(UUID.fromString("e37c3ce0-12aa-4f54-87e3-42532aca0e5e"));
         beowulf.setName("beowulf.txt");
         beowulf.setType(S3ObjectType.DATA);
@@ -199,7 +207,7 @@ public class Ds3Client_Test {
 
         final S3Object notBeowulf = new S3Object();
         notBeowulf.setBucketId(UUID.fromString("a24d14f3-e2f0-4bfb-ab71-f99d5ef43745"));
-        notBeowulf.setCreationDate(Date.from(Instant.parse("2015-09-21T20:06:47.694Z")));
+        notBeowulf.setCreationDate(DATE_FORMAT.parse("2015-09-21T20:06:47.694Z"));
         notBeowulf.setId(UUID.fromString("e37c3ce0-12aa-4f54-87e3-42532aca0e5e"));
         notBeowulf.setName("notBeowulf.txt");
         notBeowulf.setType(S3ObjectType.DATA);
@@ -557,7 +565,7 @@ public class Ds3Client_Test {
     }
     
     @Test
-    public void getJobChunksReadyForClientProcessingSpectraS3() throws SignatureException, IOException {
+    public void getJobChunksReadyForClientProcessingSpectraS3() throws SignatureException, IOException, ParseException {
 
         final Map<String, String> queryParams = new HashMap<>();
         queryParams.put("job", MASTER_OBJECT_LIST_JOB_ID.toString());
@@ -598,7 +606,7 @@ public class Ds3Client_Test {
     }
     
     @Test
-    public void getJobsSpectraS3() throws SignatureException, IOException {
+    public void getJobsSpectraS3() throws SignatureException, IOException, ParseException {
         final String responseString =
             "<Jobs>"
             + "  <Job BucketName=\"bucket_1\" CachedSizeInBytes=\"69880\" ChunkClientProcessingOrderGuarantee=\"IN_ORDER\" CompletedSizeInBytes=\"0\" JobId=\"0807ff11-a9f6-4d55-bb92-b452c1bb00c7\" OriginalSizeInBytes=\"69880\" Priority=\"NORMAL\" RequestType=\"PUT\" StartDate=\"2014-09-04T17:23:45.000Z\" UserId=\"a7d3eff9-e6d2-4e37-8a0b-84e76211a18a\" UserName=\"spectra\" WriteOptimization=\"PERFORMANCE\">"
@@ -619,6 +627,7 @@ public class Ds3Client_Test {
             .getJobsSpectraS3(new GetJobsSpectraS3Request());
         
         final List<JobApiBean> jobs = response.getJobsApiBeanResult().getJobs();
+        //final Date date = this.dateFormat.parse("2014-09-04T17:23:45.000Z");
         assertThat(jobs.size(), is(2));
         checkJob(
                 jobs.get(0),
@@ -630,7 +639,8 @@ public class Ds3Client_Test {
                 69880L,
                 BlobStoreTaskPriority.NORMAL,
                 JobRequestType.PUT,
-                Date.from(Instant.parse("2014-09-04T17:23:45.000Z")),
+                //date,
+                DATE_FORMAT.parse("2014-09-04T17:23:45.000Z"),
                 UUID.fromString("a7d3eff9-e6d2-4e37-8a0b-84e76211a18a"),
                 "spectra",
                 WriteOptimization.PERFORMANCE
@@ -645,7 +655,7 @@ public class Ds3Client_Test {
                 69880L,
                 BlobStoreTaskPriority.HIGH,
                 JobRequestType.GET,
-                Date.from(Instant.parse("2014-09-04T17:24:04.000Z")),
+                DATE_FORMAT.parse("2014-09-04T17:24:04.000Z"),
                 UUID.fromString("a7d3eff9-e6d2-4e37-8a0b-84e76211a18a"),
                 "spectra",
                 WriteOptimization.CAPACITY
@@ -681,7 +691,7 @@ public class Ds3Client_Test {
     }
     
     @Test
-    public void getJobSpectraS3() throws SignatureException, IOException{
+    public void getJobSpectraS3() throws SignatureException, IOException, ParseException {
         checkJobWithChunksApiBean(
                 MockNetwork
                         .expecting(HttpVerb.GET, "/_rest_/job/1a85e743-ec8f-4789-afec-97e587a26936", null, null)
@@ -692,12 +702,12 @@ public class Ds3Client_Test {
         );
     }
 
-    private static void checkJobWithChunksApiBean(final JobWithChunksApiBean jobWithChunksApiBean) {
+    private static void checkJobWithChunksApiBean(final JobWithChunksApiBean jobWithChunksApiBean) throws ParseException {
         assertThat(jobWithChunksApiBean.getBucketName(), is("bucket8192000000"));
         assertThat(jobWithChunksApiBean.getJobId(), is(MASTER_OBJECT_LIST_JOB_ID));
         assertThat(jobWithChunksApiBean.getPriority(), is(BlobStoreTaskPriority.NORMAL));
         assertThat(jobWithChunksApiBean.getRequestType(), is(JobRequestType.GET));
-        assertThat(jobWithChunksApiBean.getStartDate(), is(Date.from(Instant.parse("2014-07-01T20:12:52.000Z"))));
+        assertThat(jobWithChunksApiBean.getStartDate(), is(DATE_FORMAT.parse("2014-07-01T20:12:52.000Z")));
 
         final List<NodeApiBean> nodes = jobWithChunksApiBean.getNodes();
         assertThat(nodes.size(), is(2));
@@ -759,7 +769,7 @@ public class Ds3Client_Test {
     }
     
     @Test
-    public void modifyJobSpectraS3() throws SignatureException, IOException {
+    public void modifyJobSpectraS3() throws SignatureException, IOException, ParseException {
         checkJobWithChunksApiBean(
                 MockNetwork
                         .expecting(HttpVerb.PUT, "/_rest_/job/1a85e743-ec8f-4789-afec-97e587a26936", null, null)

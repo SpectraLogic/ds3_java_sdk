@@ -30,9 +30,12 @@ import java.nio.channels.Channels;
 import java.nio.channels.SeekableByteChannel;
 import java.nio.channels.WritableByteChannel;
 import java.sql.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.util.Arrays;
 import java.util.List;
+import java.util.TimeZone;
 import java.util.UUID;
 
 import static org.mockito.Mockito.mock;
@@ -99,7 +102,7 @@ public class ResponseBuilders {
             final String userName,
             final WriteOptimization writeOptimization,
             final List<NodeApiBean> nodes,
-            final List<JobChunkApiBean> objects) {
+            final List<JobChunkApiBean> objects) throws ParseException {
         final JobWithChunksApiBean masterObjectList = new JobWithChunksApiBean();
         masterObjectList.setJobId(jobId);
         masterObjectList.setBucketName(bucketName);
@@ -109,7 +112,11 @@ public class ResponseBuilders {
         masterObjectList.setCompletedSizeInBytes(completedSizeInBytes);
         masterObjectList.setChunkClientProcessingOrderGuarantee(chunkClientProcessingOrderGuarantee);
         masterObjectList.setPriority(priority);
-        masterObjectList.setStartDate(Date.from(Instant.parse(startDate)));
+
+        final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+        dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+        masterObjectList.setStartDate(dateFormat.parse(startDate));
+
         masterObjectList.setUserId(userId);
         masterObjectList.setUserName(userName);
         masterObjectList.setWriteOptimization(writeOptimization);
