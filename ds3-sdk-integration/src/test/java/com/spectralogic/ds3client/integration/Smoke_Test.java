@@ -1098,4 +1098,41 @@ public class Smoke_Test {
             deleteAllContents(client, bucketName);
         }
     }
+
+    @Test
+    public void nameWithSpace() throws IOException, SignatureException, XmlProcessingException {
+        final String bucketName = "test_space_bucket";
+
+        try {
+            final Ds3ClientHelpers helpers = Ds3ClientHelpers.wrap(client);
+
+            helpers.ensureBucketExists(bucketName);
+
+            final List<Ds3Object> objs = Lists.newArrayList(new Ds3Object("space object.txt", 10));
+
+            final Ds3ClientHelpers.Job job = helpers.startWriteJob(bucketName, objs);
+
+            job.transfer(new Ds3ClientHelpers.ObjectChannelBuilder() {
+                @Override
+                public SeekableByteChannel buildChannel(final String key) throws IOException {
+
+                    final byte[] randomData = IOUtils.toByteArray(new RandomDataInputStream(124345, 10));
+                    final ByteBuffer randomBuffer = ByteBuffer.wrap(randomData);
+
+                    final ByteArraySeekableByteChannel channel = new ByteArraySeekableByteChannel(10);
+                    channel.write(randomBuffer);
+
+                    return channel;
+                }
+            });
+
+            final Iterable<Contents> contents = helpers.listObjects(bucketName);
+
+            assertThat(Iterables.size(contents), is(1));
+            assertThat(Iterables.get(contents, 0).getKey(), is("space object.txt"));
+
+        } finally {
+            deleteAllContents(client, bucketName);
+        }
+    }
 }
