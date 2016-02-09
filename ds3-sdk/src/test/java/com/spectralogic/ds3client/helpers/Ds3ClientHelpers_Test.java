@@ -495,7 +495,7 @@ public class Ds3ClientHelpers_Test {
                 completedSizeInBytes,
                 chunkOrdering,
                 BlobStoreTaskPriority.CRITICAL,
-                "2014-09-17T13:03:54Z",
+                "2014-09-17T13:03:54.000Z",
                 UUID.fromString("57919d2d-448c-4e2a-8886-0413af22243e"),
                 "spectra",
                 WriteOptimization.CAPACITY,
