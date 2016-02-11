@@ -35,9 +35,9 @@ public class Ds3ClientBuilder implements Builder<Ds3Client> {
 
     static final private Logger LOG = LoggerFactory.getLogger(Ds3ClientBuilder.class);
 
-    static final private String ENDPOINT = "sm25-5.eng.sldomain.com";
-    static final private String ACCESS_KEY = "c3BlY3RyYQ==";
-    static final private String SECRET_KEY = "iJGSXpbr";
+    static final private String ENDPOINT = "DS3_ENDPOINT";
+    static final private String ACCESS_KEY = "DS3_ACCESS_KEY";
+    static final private String SECRET_KEY = "DS3_SECRET_KEY";
 
     final private String endpoint;
     final private Credentials credentials;
