@@ -18,6 +18,8 @@ package com.spectralogic.ds3client.utils;
 import com.spectralogic.ds3client.models.SignatureDetails;
 
 import org.apache.commons.codec.binary.Base64;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.nio.charset.Charset;
 import java.security.SignatureException;
@@ -26,8 +28,8 @@ import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 
 public class Signature {
-
-    final static private String HMAC_SHA1_ALGORITHM = "HmacSHA1";
+    private final static Logger LOG = LoggerFactory.getLogger(Signature.class);
+    private final static String HMAC_SHA1_ALGORITHM = "HmacSHA1";
 
     /**
      * Computes RFC 2104-compliant HMAC signature.
@@ -43,6 +45,7 @@ public class Signature {
     public static String calculateRFC2104HMAC(final String data, final String key)
             throws java.security.SignatureException
     {
+        LOG.debug("String to sign: " + data.replace("\n", "\\n"));
         final String result;
         try {
             // get an hmac_sha1 key from the raw key bytes

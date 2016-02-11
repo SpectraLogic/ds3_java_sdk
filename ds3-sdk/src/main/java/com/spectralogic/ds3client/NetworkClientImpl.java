@@ -288,6 +288,10 @@ public class NetworkClientImpl implements NetworkClient {
                 canonicalizedResource.append("?delete");
             }
 
+            if (queryParams.containsKey("versioning")) {
+                canonicalizedResource.append("?versioning=").append(queryParams.get("versioning"));
+            }
+
             return canonicalizedResource.toString();
         }
 

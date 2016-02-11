@@ -35,7 +35,7 @@ public class DataPolicy {
     private boolean blobbingEnabled;
 
     @JsonProperty("ChecksumType")
-    private ChecksumType checksumType;
+    private ChecksumType.Type checksumType;
 
     @JsonProperty("CreationDate")
     private Date creationDate;
@@ -86,11 +86,11 @@ public class DataPolicy {
     }
 
 
-    public ChecksumType getChecksumType() {
+    public ChecksumType.Type getChecksumType() {
         return this.checksumType;
     }
 
-    public void setChecksumType(final ChecksumType checksumType) {
+    public void setChecksumType(final ChecksumType.Type checksumType) {
         this.checksumType = checksumType;
     }
 

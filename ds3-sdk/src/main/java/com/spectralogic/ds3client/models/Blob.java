@@ -34,7 +34,7 @@ public class Blob {
     private String checksum;
 
     @JsonProperty("ChecksumType")
-    private ChecksumType checksumType;
+    private ChecksumType.Type checksumType;
 
     @JsonProperty("Id")
     private UUID id;
@@ -70,11 +70,11 @@ public class Blob {
     }
 
 
-    public ChecksumType getChecksumType() {
+    public ChecksumType.Type getChecksumType() {
         return this.checksumType;
     }
 
-    public void setChecksumType(final ChecksumType checksumType) {
+    public void setChecksumType(final ChecksumType.Type checksumType) {
         this.checksumType = checksumType;
     }
 
