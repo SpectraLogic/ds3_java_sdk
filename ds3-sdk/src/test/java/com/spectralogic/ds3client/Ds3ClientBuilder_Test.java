@@ -21,6 +21,7 @@ import org.junit.Test;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 public class Ds3ClientBuilder_Test {
     @Test
@@ -28,6 +29,27 @@ public class Ds3ClientBuilder_Test {
         final Ds3ClientBuilder builder = Ds3ClientBuilder.create("myEndPoint", new Credentials("foo","bar"));
         final Ds3ClientImpl client = (Ds3ClientImpl)builder.build();
         assertThat(client,is(notNullValue()));
+    }
+
+    @Test
+    public void createBasicClientFromENV() throws Exception {
+        try {
+            final Ds3ClientBuilder builder = Ds3ClientBuilder.fromEnv();
+            final Ds3ClientImpl client = (Ds3ClientImpl)builder.build();
+            assertThat(client,is(notNullValue()));
+        }catch (IllegalArgumentException e){
+            Boolean wrongArgument = false;
+            if (System.getenv("ENDPOINT") == null || System.getenv("ENDPOINT").isEmpty()) {
+                wrongArgument = true;
+            }
+            else if (System.getenv("ACCESS_KEY") == null || System.getenv("ACCESS_KEY").isEmpty()) {
+                wrongArgument = true;
+            }
+            else if (System.getenv("SECRET_KEY") == null || System.getenv("SECRET_KEY").isEmpty()) {
+                wrongArgument = true;
+            }
+            assertTrue(wrongArgument);
+        }
     }
 
     @Test
