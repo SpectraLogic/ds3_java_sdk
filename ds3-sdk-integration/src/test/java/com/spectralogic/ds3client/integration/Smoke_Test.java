@@ -328,32 +328,6 @@ public class Smoke_Test {
     }
 
     @Test
-    public void negativePutDuplicateObject() throws SignatureException,
-            IOException, XmlProcessingException, URISyntaxException {
-        final String bucketName = "negative_test_put_duplicate_object";
-
-        try {
-            client.createBucket(new CreateBucketRequest(bucketName));
-            loadBookTestData(client, bucketName);
-
-            final GetBucketResponse response = client
-                    .getBucket(new GetBucketRequest(bucketName));
-            final BucketObjectsApiBean result = response.getBucketObjectsApiBeanResult();
-            assertFalse(result.getObjects().isEmpty());
-            assertThat(result.getObjects().size(), is(4));
-
-            try {
-                loadBookTestData(client, bucketName);
-                fail("Should have thrown a FailedRequestException when trying to put duplicate objects.");
-            } catch (final FailedRequestException e) {
-                assertTrue(409 == e.getStatusCode());
-            }
-        } finally {
-            deleteAllContents(client, bucketName);
-        }
-    }
-
-    @Test
     public void deleteDirectory() throws IOException, SignatureException, XmlProcessingException {
         final String bucketName = "delete_directory";
         final Ds3ClientHelpers helpers = Ds3ClientHelpers.wrap(client);
