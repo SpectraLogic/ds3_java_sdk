@@ -199,7 +199,7 @@ public class AdvancedBucketManagement_Test {
             storageDomainMemberId = memberResponse.getStorageDomainMemberResult().getId();
 
             //create data persistence rule
-            final CreateDataPersistenceRuleSpectraS3Response dataPersistenceResponse = createDataPersistanceRule(
+            final CreateDataPersistenceRuleSpectraS3Response dataPersistenceResponse = createDataPersistenceRule(
                     dataPolicyResponse.getDataPolicyResult().getId(),
                     storageDomainResponse.getStorageDomainResult().getId(),
                     client);
@@ -259,7 +259,7 @@ public class AdvancedBucketManagement_Test {
             storageDomainMemberId = memberResponse.getStorageDomainMemberResult().getId();
 
             //create data persistence rule
-            final CreateDataPersistenceRuleSpectraS3Response dataPersistenceResponse = createDataPersistanceRule(
+            final CreateDataPersistenceRuleSpectraS3Response dataPersistenceResponse = createDataPersistenceRule(
                     dataPolicyResponse.getDataPolicyResult().getId(),
                     storageDomainResponse.getStorageDomainResult().getId(),
                     client);
@@ -331,7 +331,7 @@ public class AdvancedBucketManagement_Test {
             storageDomainMemberId = memberResponse.getStorageDomainMemberResult().getId();
 
             //create data persistence rule
-            final CreateDataPersistenceRuleSpectraS3Response dataPersistenceResponse = createDataPersistanceRule(
+            final CreateDataPersistenceRuleSpectraS3Response dataPersistenceResponse = createDataPersistenceRule(
                     dataPolicyResponse.getDataPolicyResult().getId(),
                     storageDomainResponse.getStorageDomainResult().getId(),
                     client);

@@ -56,6 +56,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.spectralogic.ds3client.integration.Util.*;
+import static com.spectralogic.ds3client.integration.test.helpers.ABMTestHelper.*;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 import static org.junit.Assume.assumeThat;
@@ -485,11 +486,51 @@ public class Smoke_Test {
 
     @Test
     public void verifySendCrc32cChecksum() throws IOException, SignatureException, XmlProcessingException, URISyntaxException {
-        assumeVersion1_2(client);
+        final String bucketName = "crc_32_bucket";
+        final String dataPolicyName = "crc_32_dp";
+        final String storageDomainName = "crc_32_sd";
+        final String poolPartitionName = "crc_32_pp";
 
-        final String bucketName = "crc32Bucket";
-
+        UUID storageDomainMemberId = null;
+        UUID dataPersistenceRuleId = null;
         try {
+            //Create data policy
+            final CreateDataPolicySpectraS3Response dataPolicyResponse = createDataPolicyWithVersioningAndCrcRequired(
+                    dataPolicyName,
+                    VersioningLevel.NONE,
+                    ChecksumType.Type.CRC_32C,
+                    client);
+
+            //Create storage domain
+            final CreateStorageDomainSpectraS3Response storageDomainResponse = createStorageDomain(
+                    storageDomainName,
+                    client);
+
+            //Create pool partition
+            final CreatePoolPartitionSpectraS3Response poolPartitionResponse = createPoolPartition(
+                    poolPartitionName,
+                    PoolType.ONLINE,
+                    client);
+
+            //Create storage domain member linking pool partition to storage domain
+            final CreatePoolStorageDomainMemberSpectraS3Response memberResponse = createPoolStorageDomainMember(
+                    storageDomainResponse.getStorageDomainResult().getId(),
+                    poolPartitionResponse.getPoolPartitionResult().getId(),
+                    client);
+            storageDomainMemberId = memberResponse.getStorageDomainMemberResult().getId();
+
+            //create data persistence rule
+            final CreateDataPersistenceRuleSpectraS3Response dataPersistenceResponse = createDataPersistenceRule(
+                    dataPolicyResponse.getDataPolicyResult().getId(),
+                    storageDomainResponse.getStorageDomainResult().getId(),
+                    client);
+            dataPersistenceRuleId = dataPersistenceResponse.getDataPersistenceRuleResult().getDataPolicyId();
+
+            //Create bucket with data policy
+            client.createBucketSpectraS3(new CreateBucketSpectraS3Request(bucketName)
+                    .withDataPolicyId(dataPolicyResponse.getDataPolicyResult().getId()));
+
+            //Verify send CRC 32c checksum
             final Ds3ClientHelpers helpers = Ds3ClientHelpers.wrap(client);
 
             helpers.ensureBucketExists(bucketName);
@@ -516,6 +557,11 @@ public class Smoke_Test {
 
         } finally {
             deleteAllContents(client, bucketName);
+            deleteDataPersistenceRule(dataPersistenceRuleId, client);
+            deleteDataPolicy(dataPolicyName, client);
+            deleteStorageDomainMember(storageDomainMemberId, client);
+            deleteStorageDomain(storageDomainName, client);
+            deletePoolPartition(poolPartitionName, client);
         }
     }
 

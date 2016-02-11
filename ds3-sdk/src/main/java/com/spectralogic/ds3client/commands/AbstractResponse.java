@@ -49,7 +49,7 @@ public abstract class AbstractResponse implements Ds3Response{
         if (response != null) {
             this.checksumType = determineChecksumType(this.response.getHeaders());
             if (this.checksumType != null) {
-                this.checksum = getFirstHeaderValue(this.response.getHeaders(), "content-" + checksumType.toString().toLowerCase());
+                this.checksum = getFirstHeaderValue(this.response.getHeaders(), "content-" + checksumType.toString().replace("_", "").toLowerCase());
             } else {
                 this.checksum = null;
             }
@@ -63,7 +63,7 @@ public abstract class AbstractResponse implements Ds3Response{
 
     private static ChecksumType.Type determineChecksumType(final Headers headers) throws ResponseProcessingException {
         for (final ChecksumType.Type type : ChecksumType.Type.values()) {
-            if (getFirstHeaderValue(headers, "content-" + type.toString().toLowerCase()) != null) {
+            if (getFirstHeaderValue(headers, "content-" + type.toString().replace("_", "").toLowerCase()) != null) {
                 return type;
             }
         }

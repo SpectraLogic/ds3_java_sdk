@@ -2,10 +2,7 @@ package com.spectralogic.ds3client.integration.test.helpers;
 
 import com.spectralogic.ds3client.Ds3Client;
 import com.spectralogic.ds3client.commands.spectrads3.*;
-import com.spectralogic.ds3client.models.DataIsolationLevel;
-import com.spectralogic.ds3client.models.DataPersistenceRuleType;
-import com.spectralogic.ds3client.models.PoolType;
-import com.spectralogic.ds3client.models.VersioningLevel;
+import com.spectralogic.ds3client.models.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,6 +30,23 @@ public final class ABMTestHelper {
             final String dataPolicyName,
             final VersioningLevel versioningLevel,
             final Ds3Client client) throws IOException, SignatureException {
+        return createDataPolicyWithVersioningAndCrcRequired(
+                dataPolicyName,
+                versioningLevel,
+                null,
+                client);
+    }
+
+    /**
+     * Creates a data policy with the specified name and versioning level and checksum, if a
+     * policy with the same name does not currently exist. If a policy already
+     * exists with the specified name, an error is thrown.
+     */
+    public static CreateDataPolicySpectraS3Response createDataPolicyWithVersioningAndCrcRequired(
+            final String dataPolicyName,
+            final VersioningLevel versioningLevel,
+            final ChecksumType.Type checksumType,
+            final Ds3Client client) throws IOException, SignatureException {
         //Check if data policy already exists
         try {
             client.getDataPolicySpectraS3(new GetDataPolicySpectraS3Request(dataPolicyName));
@@ -41,9 +55,16 @@ public final class ABMTestHelper {
             //Pass: expected data policy to not exist
         }
 
-        //Create the data policy
+        if (checksumType == null) {
+            //Create the data policy with versioning
+            return client.createDataPolicySpectraS3(new CreateDataPolicySpectraS3Request(dataPolicyName)
+                    .withVersioning(versioningLevel));
+        }
+        //Create the data policy with versioning and checksum
         return client.createDataPolicySpectraS3(new CreateDataPolicySpectraS3Request(dataPolicyName)
-                .withVersioning(versioningLevel));
+                .withVersioning(versioningLevel)
+                .withEndToEndCrcRequired(true)
+                .withChecksumType(checksumType));
     }
 
     /**
@@ -64,7 +85,6 @@ public final class ABMTestHelper {
                     .getDataPolicySpectraS3(new GetDataPolicySpectraS3Request(dataPolicyName));
             fail("Data policy was not deleted as expected: " + dataPolicyName);
         } catch (final IOException e) {
-            System.out.println(e.getMessage());
             //Pass: expected data policy to not exist
         }
     }
@@ -211,7 +231,7 @@ public final class ABMTestHelper {
      * Creates a data persistence rule to link the specified data policy and storage domain,
      * if said rule does not already exist.
      */
-    public static CreateDataPersistenceRuleSpectraS3Response createDataPersistanceRule(
+    public static CreateDataPersistenceRuleSpectraS3Response createDataPersistenceRule(
             final UUID dataPolicyId,
             final UUID storageDomainId,
             final Ds3Client client) throws IOException, SignatureException {
