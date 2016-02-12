@@ -556,7 +556,7 @@ public class Ds3Client_Test {
         headers.put("retry-after", "300");
         final AllocateJobChunkSpectraS3Response response = MockNetwork
             .expecting(HttpVerb.PUT, "/_rest_/job_chunk/203f6886-b058-4f7c-a012-8779176453b1", queryParams, null)
-            .returning(404, "", headers)
+            .returning(307, "", headers)
             .asClient()
             .allocateJobChunkSpectraS3(new AllocateJobChunkSpectraS3Request(UUID.fromString("203f6886-b058-4f7c-a012-8779176453b1")));
         

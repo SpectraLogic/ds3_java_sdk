@@ -50,21 +50,21 @@ public class AllocateJobChunkSpectraS3Response extends AbstractResponse {
     @Override
     protected void processResponse() throws IOException {
         try (final WebResponse response = this.getResponse()) {
-            this.checkStatusCode(200, 404);
+            this.checkStatusCode(200, 307);
 
             switch (this.getStatusCode()) {
-            case 200:
-                try (final InputStream content = response.getResponseStream()) {
-                    this.jobChunkApiBeanResult = XmlOutput.fromXml(content, JobChunkApiBean.class);
-                    this.status = Status.ALLOCATED;
-                }
-                break;
-            case 404:
-                this.status = Status.RETRYLATER;
-                this.retryAfterSeconds = parseRetryAfter(response);
-                break;
-            default:
-                assert false : "checkStatusCode should have made it impossible to reach this line.";
+                case 200:
+                    try (final InputStream content = response.getResponseStream()) {
+                        this.jobChunkApiBeanResult = XmlOutput.fromXml(content, JobChunkApiBean.class);
+                        this.status = Status.ALLOCATED;
+                    }
+                    break;
+                case 307:
+                    this.status = Status.RETRYLATER;
+                    this.retryAfterSeconds = parseRetryAfter(response);
+                    break;
+                default:
+                    assert false : "checkStatusCode should have made it impossible to reach this line.";
             }
         } finally {
             this.getResponse().close();
