@@ -11,6 +11,7 @@ import java.security.SignatureException;
 import java.util.UUID;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 
@@ -81,8 +82,7 @@ public final class ABMTestHelper {
 
         //Verify that the data policy was deleted
         try {
-            final GetDataPolicySpectraS3Response response = client
-                    .getDataPolicySpectraS3(new GetDataPolicySpectraS3Request(dataPolicyName));
+            client.getDataPolicySpectraS3(new GetDataPolicySpectraS3Request(dataPolicyName));
             fail("Data policy was not deleted as expected: " + dataPolicyName);
         } catch (final IOException e) {
             //Pass: expected data policy to not exist
@@ -126,8 +126,7 @@ public final class ABMTestHelper {
 
         //Verify that the pool partition was deleted
         try {
-            final GetPoolPartitionSpectraS3Response response = client
-                    .getPoolPartitionSpectraS3(new GetPoolPartitionSpectraS3Request(poolPartitionName));
+            client.getPoolPartitionSpectraS3(new GetPoolPartitionSpectraS3Request(poolPartitionName));
             fail("Pool partition was not deleted as expected: " + poolPartitionName);
         } catch (final IOException e) {
             //Pass: expected pool partition to not exist
@@ -167,8 +166,7 @@ public final class ABMTestHelper {
 
         //Verify that the storage domain was deleted
         try {
-            final GetStorageDomainSpectraS3Response response = client
-                    .getStorageDomainSpectraS3(new GetStorageDomainSpectraS3Request(storageDomainName));
+            client.getStorageDomainSpectraS3(new GetStorageDomainSpectraS3Request(storageDomainName));
             fail("Storage domain was not deleted as expected: " + storageDomainName);
         } catch (final IOException e) {
             //Pass: expected storage domain to not exist
@@ -214,13 +212,14 @@ public final class ABMTestHelper {
         }
         //Delete the storage domain member
         final DeleteStorageDomainMemberSpectraS3Response deleteMember = client
-                .deleteStorageDomainMemberSpectraS3(new DeleteStorageDomainMemberSpectraS3Request(memberId.toString()));
+                .deleteStorageDomainMemberSpectraS3(
+                        new DeleteStorageDomainMemberSpectraS3Request(memberId.toString()));
         assertThat(deleteMember.getStatusCode(), is(204));
 
         //Verify that the storage domain member was deleted
         try {
-            final GetStorageDomainMemberSpectraS3Response response = client
-                    .getStorageDomainMemberSpectraS3(new GetStorageDomainMemberSpectraS3Request(memberId.toString()));
+            client.getStorageDomainMemberSpectraS3(
+                    new GetStorageDomainMemberSpectraS3Request(memberId.toString()));
             fail("Storage domain member was not deleted as expected: " + memberId.toString());
         } catch (final IOException e) {
             //Pass: expected storage domain member to not exist
@@ -269,11 +268,102 @@ public final class ABMTestHelper {
 
         //Verify that the data persistence rule was deleted
         try {
-            final GetDataPersistenceRuleSpectraS3Response response = client.getDataPersistenceRuleSpectraS3(
+            client.getDataPersistenceRuleSpectraS3(
                     new GetDataPersistenceRuleSpectraS3Request(dataPersistenceRuleId.toString()));
             fail("Data persistence rule was not deleted as expected: " + dataPersistenceRuleId.toString());
         } catch (final IOException e) {
             //Pass: expected data persistence rule to not exist
+        }
+    }
+
+    /**
+     * Creates a group with the specified name and, if a group with the same
+     * name does not currently exist. If a group exists with the specified
+     * name, an error is thrown.
+     */
+    public static CreateGroupSpectraS3Response createGroup(
+            final String groupName,
+            final Ds3Client client) throws IOException, SignatureException {
+        //Check if group already exists
+        try {
+            final GetGroupSpectraS3Response response = client.getGroupSpectraS3(
+                    new GetGroupSpectraS3Request(groupName));
+            assertThat(response.getGroupResult(), is(nullValue()));
+        } catch (final IOException e) {
+            //Pass: expected group to not exist
+        }
+
+        //Create the group
+        return client.createGroupSpectraS3(new CreateGroupSpectraS3Request(groupName));
+    }
+
+    /**
+     * Deletes a group with the specified name, and verifies that said
+     * group was deleted. If the group was not properly deleted, then
+     * an error is thrown.
+     */
+    public static void deleteGroup(
+            final String groupName,
+            final Ds3Client client) throws IOException, SignatureException {
+        //Delete the group
+        final DeleteGroupSpectraS3Response deleteResponse = client.deleteGroupSpectraS3(
+                new DeleteGroupSpectraS3Request(groupName));
+        assertThat(deleteResponse.getStatusCode(), is(204));
+
+        //Verify that the group was deleted
+        try {
+            client.getGroupSpectraS3(new GetGroupSpectraS3Request(groupName));
+            fail("Group was not deleted as expected: " + groupName);
+        } catch (final IOException e) {
+            //Pass: expected group to not exist
+        }
+    }
+
+
+
+    /**
+     * Creates a data policy acl for group to link the specified data policy and group,
+     * if said rule does not already exist.
+     */
+    public static CreateDataPolicyAclForGroupSpectraS3Response createDataPolicyAclForGroup(
+            final UUID dataPolicyId,
+            final UUID groupId,
+            final Ds3Client client) throws IOException, SignatureException {
+        //Check if data policy Acl for group already exists
+        final GetDataPolicyAclsSpectraS3Response response = client.getDataPolicyAclsSpectraS3(
+                new GetDataPolicyAclsSpectraS3Request()
+                        .withDataPolicyId(dataPolicyId)
+                        .withGroupId(groupId));
+        assertThat(response.getDataPolicyAclListResult().getDataPolicyAcl().size(), is(0));
+
+        //Create the data policy Acl
+        return client.createDataPolicyAclForGroupSpectraS3(new CreateDataPolicyAclForGroupSpectraS3Request(
+                dataPolicyId,
+                groupId));
+    }
+
+    /**
+     * Deletes a data policy Acl for group with the specified ID, and verifies that said
+     * acl was deleted. If the acl was not properly deleted, then an error is thrown.
+     */
+    public static void deleteDataPolicyAclForGroup(
+            final UUID aclId,
+            final Ds3Client client) throws IOException, SignatureException {
+        if (aclId == null) {
+            LOG.error("Error: data policy Acl Id was null");
+            return;
+        }
+        //Delete the acl
+        final DeleteDataPolicyAclSpectraS3Response deleteAcl = client
+                .deleteDataPolicyAclSpectraS3(new DeleteDataPolicyAclSpectraS3Request(aclId.toString()));
+        assertThat(deleteAcl.getStatusCode(), is(204));
+
+        //Verify that the Acl was deleted
+        try {
+            client.getDataPolicyAclSpectraS3(new GetDataPolicyAclSpectraS3Request(aclId.toString()));
+            fail("Data Policy Acl for Group was not deleted as expected: " + aclId.toString());
+        } catch (final IOException e) {
+            //Pass: expected data policy acl to not exist
         }
     }
 }
