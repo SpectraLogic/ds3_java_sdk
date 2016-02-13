@@ -40,28 +40,28 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public class ResponseBuilders {
-    public static CreateGetJobSpectraS3Response bulkGetResponse(final JobWithChunksApiBean jobWithChunksApiBean) {
+    public static CreateGetJobSpectraS3Response bulkGetResponse(final MasterObjectList masterObjectList) {
         final CreateGetJobSpectraS3Response response = mock(CreateGetJobSpectraS3Response.class);
-        when(response.getResult()).thenReturn(jobWithChunksApiBean);
+        when(response.getResult()).thenReturn(masterObjectList);
         return response;
     }
 
-    public static CreatePutJobSpectraS3Response bulkPutResponse(final JobWithChunksApiBean masterObjectList) {
+    public static CreatePutJobSpectraS3Response bulkPutResponse(final MasterObjectList masterObjectList) {
         final CreatePutJobSpectraS3Response response = mock(CreatePutJobSpectraS3Response.class);
         when(response.getResult()).thenReturn(masterObjectList);
         return response;
     }
 
-    public static ModifyJobSpectraS3Response modifyJobResponse(final JobWithChunksApiBean masterObjectList) {
+    public static ModifyJobSpectraS3Response modifyJobResponse(final MasterObjectList masterObjectList) {
         final ModifyJobSpectraS3Response response = mock(ModifyJobSpectraS3Response.class);
-        when(response.getJobWithChunksApiBeanResult()).thenReturn(masterObjectList);
+        when(response.getMasterObjectListResult()).thenReturn(masterObjectList);
         return response;
     }
 
-    public static GetJobChunksReadyForClientProcessingSpectraS3Response availableJobChunks(final JobWithChunksApiBean jobWithChunksApiBean) {
+    public static GetJobChunksReadyForClientProcessingSpectraS3Response availableJobChunks(final MasterObjectList masterObjectList) {
         final GetJobChunksReadyForClientProcessingSpectraS3Response response = mock(GetJobChunksReadyForClientProcessingSpectraS3Response.class);
         when(response.getStatus()).thenReturn(GetJobChunksReadyForClientProcessingSpectraS3Response.Status.AVAILABLE);
-        when(response.getJobWithChunksApiBeanResult()).thenReturn(jobWithChunksApiBean);
+        when(response.getMasterObjectListResult()).thenReturn(masterObjectList);
         return response;
     }
     
@@ -72,10 +72,10 @@ public class ResponseBuilders {
         return response;
     }
     
-    public static AllocateJobChunkSpectraS3Response allocated(final JobChunkApiBean chunk) {
+    public static AllocateJobChunkSpectraS3Response allocated(final Objects chunk) {
         final AllocateJobChunkSpectraS3Response response = mock(AllocateJobChunkSpectraS3Response.class);
         when(response.getStatus()).thenReturn(AllocateJobChunkSpectraS3Response.Status.ALLOCATED);
-        when(response.getJobChunkApiBeanResult()).thenReturn(chunk);
+        when(response.getObjectsResult()).thenReturn(chunk);
         return response;
     }
     
@@ -86,7 +86,7 @@ public class ResponseBuilders {
         return response;
     }
     
-    public static JobWithChunksApiBean jobResponse(
+    public static MasterObjectList jobResponse(
             final UUID jobId,
             final String bucketName,
             final JobRequestType requestType,
@@ -99,9 +99,9 @@ public class ResponseBuilders {
             final UUID userId,
             final String userName,
             final WriteOptimization writeOptimization,
-            final List<NodeApiBean> nodes,
-            final List<JobChunkApiBean> objects) throws ParseException {
-        final JobWithChunksApiBean masterObjectList = new JobWithChunksApiBean();
+            final List<Ds3Node> nodes,
+            final List<Objects> objects) throws ParseException {
+        final MasterObjectList masterObjectList = new MasterObjectList();
         masterObjectList.setJobId(jobId);
         masterObjectList.setBucketName(bucketName);
         masterObjectList.setRequestType(requestType);
@@ -123,16 +123,16 @@ public class ResponseBuilders {
         return masterObjectList;
     }
     
-    public static NodeApiBean basicNode(final UUID nodeId, final String endpoint) {
+    public static Ds3Node basicNode(final UUID nodeId, final String endpoint) {
         return node(nodeId, endpoint, 80, 443);
     }
 
-    public static NodeApiBean node(
+    public static Ds3Node node(
             final UUID nodeId,
             final String endpoint,
             final int httpPort,
             final int httpsPort) {
-        final NodeApiBean node = new NodeApiBean();
+        final Ds3Node node = new Ds3Node();
         node.setId(nodeId);
         node.setEndPoint(endpoint);
         node.setHttpPort(httpPort);
@@ -140,12 +140,12 @@ public class ResponseBuilders {
         return node;
     }
 
-    public static JobChunkApiBean chunk(
+    public static Objects chunk(
             final int chunkNumber,
             final UUID chunkId,
             final UUID nodeId,
             final BulkObject... chunkList) {
-        final JobChunkApiBean objects = new JobChunkApiBean();
+        final Objects objects = new Objects();
         objects.setChunkNumber(chunkNumber);
         objects.setChunkId(chunkId);
         objects.setNodeId(nodeId);

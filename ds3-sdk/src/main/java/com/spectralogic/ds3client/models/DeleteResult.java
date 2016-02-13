@@ -19,53 +19,46 @@ package com.spectralogic.ds3client.models;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import java.lang.String;
-import java.util.Date;
+import com.spectralogic.ds3client.models.S3ObjectToDelete;
+import java.util.List;
+import java.util.ArrayList;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
+import com.spectralogic.ds3client.models.DeleteObjectError;
 
-@JacksonXmlRootElement(namespace = "Data")
-public class MultiPartUploadPartApiBean {
+@JacksonXmlRootElement(namespace = "DeleteResult")
+public class DeleteResult {
 
     // Variables
-    @JsonProperty("ETag")
-    private String eTag;
+    @JsonProperty("Deleted")
+    @JacksonXmlElementWrapper(useWrapping = false)
+    private List<S3ObjectToDelete> deletedObjects = new ArrayList<>();
 
-    @JsonProperty("LastModified")
-    private Date lastModified;
-
-    @JsonProperty("PartNumber")
-    private int partNumber;
+    @JsonProperty("Error")
+    @JacksonXmlElementWrapper(useWrapping = false)
+    private List<DeleteObjectError> errors = new ArrayList<>();
 
     // Constructor
-    public MultiPartUploadPartApiBean() {
+    public DeleteResult() {
         //pass
     }
 
     // Getters and Setters
     
-    public String getETag() {
-        return this.eTag;
+    public List<S3ObjectToDelete> getDeletedObjects() {
+        return this.deletedObjects;
     }
 
-    public void setETag(final String eTag) {
-        this.eTag = eTag;
-    }
-
-
-    public Date getLastModified() {
-        return this.lastModified;
-    }
-
-    public void setLastModified(final Date lastModified) {
-        this.lastModified = lastModified;
+    public void setDeletedObjects(final List<S3ObjectToDelete> deletedObjects) {
+        this.deletedObjects = deletedObjects;
     }
 
 
-    public int getPartNumber() {
-        return this.partNumber;
+    public List<DeleteObjectError> getErrors() {
+        return this.errors;
     }
 
-    public void setPartNumber(final int partNumber) {
-        this.partNumber = partNumber;
+    public void setErrors(final List<DeleteObjectError> errors) {
+        this.errors = errors;
     }
 
 }

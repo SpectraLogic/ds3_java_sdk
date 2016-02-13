@@ -19,14 +19,14 @@ package com.spectralogic.ds3client.commands.spectrads3;
 import com.spectralogic.ds3client.networking.WebResponse;
 import java.io.IOException;
 import java.io.InputStream;
-import com.spectralogic.ds3client.models.JobChunkApiBean;
+import com.spectralogic.ds3client.models.Objects;
 import com.spectralogic.ds3client.serializer.XmlOutput;
 import com.spectralogic.ds3client.commands.AbstractResponse;
 import com.spectralogic.ds3client.commands.RetryAfterExpectedException;
 
 public class AllocateJobChunkSpectraS3Response extends AbstractResponse {
 
-    private JobChunkApiBean jobChunkApiBeanResult;
+    private Objects objectsResult;
 
     public enum Status {
         ALLOCATED, RETRYLATER
@@ -53,18 +53,18 @@ public class AllocateJobChunkSpectraS3Response extends AbstractResponse {
             this.checkStatusCode(200, 307);
 
             switch (this.getStatusCode()) {
-                case 200:
-                    try (final InputStream content = response.getResponseStream()) {
-                        this.jobChunkApiBeanResult = XmlOutput.fromXml(content, JobChunkApiBean.class);
-                        this.status = Status.ALLOCATED;
-                    }
-                    break;
-                case 307:
-                    this.status = Status.RETRYLATER;
-                    this.retryAfterSeconds = parseRetryAfter(response);
-                    break;
-                default:
-                    assert false : "checkStatusCode should have made it impossible to reach this line.";
+            case 200:
+                try (final InputStream content = response.getResponseStream()) {
+                    this.objectsResult = XmlOutput.fromXml(content, Objects.class);
+                    this.status = Status.ALLOCATED;
+                }
+                break;
+            case 307:
+                this.status = Status.RETRYLATER;
+                this.retryAfterSeconds = parseRetryAfter(response);
+                break;
+            default:
+                assert false : "checkStatusCode should have made it impossible to reach this line.";
             }
         } finally {
             this.getResponse().close();
@@ -79,8 +79,8 @@ public class AllocateJobChunkSpectraS3Response extends AbstractResponse {
         return Integer.parseInt(retryAfter);
     }
 
-    public JobChunkApiBean getJobChunkApiBeanResult() {
-        return this.jobChunkApiBeanResult;
+    public Objects getObjectsResult() {
+        return this.objectsResult;
     }
 
 

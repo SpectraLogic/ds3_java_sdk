@@ -21,44 +21,32 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import java.lang.String;
 
-@JacksonXmlRootElement(namespace = "CompleteMultipartUploadResult")
-public class CompleteMultipartUploadResultApiBean {
+@JacksonXmlRootElement(namespace = "Data")
+public class DeleteObjectError {
 
     // Variables
-    @JsonProperty("Bucket")
-    private String bucket;
-
-    @JsonProperty("ETag")
-    private String eTag;
+    @JsonProperty("Code")
+    private String code;
 
     @JsonProperty("Key")
     private String key;
 
-    @JsonProperty("Location")
-    private String location;
+    @JsonProperty("Message")
+    private String message;
 
     // Constructor
-    public CompleteMultipartUploadResultApiBean() {
+    public DeleteObjectError() {
         //pass
     }
 
     // Getters and Setters
     
-    public String getBucket() {
-        return this.bucket;
+    public String getCode() {
+        return this.code;
     }
 
-    public void setBucket(final String bucket) {
-        this.bucket = bucket;
-    }
-
-
-    public String getETag() {
-        return this.eTag;
-    }
-
-    public void setETag(final String eTag) {
-        this.eTag = eTag;
+    public void setCode(final String code) {
+        this.code = code;
     }
 
 
@@ -71,12 +59,12 @@ public class CompleteMultipartUploadResultApiBean {
     }
 
 
-    public String getLocation() {
-        return this.location;
+    public String getMessage() {
+        return this.message;
     }
 
-    public void setLocation(final String location) {
-        this.location = location;
+    public void setMessage(final String message) {
+        this.message = message;
     }
 
 }

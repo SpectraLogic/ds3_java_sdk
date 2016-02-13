@@ -19,7 +19,7 @@ package com.spectralogic.ds3client.models;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import com.spectralogic.ds3client.models.BlobApiBeansContainer;
+import com.spectralogic.ds3client.models.BulkObjectList;
 import java.lang.Integer;
 import java.util.UUID;
 import java.util.Date;
@@ -31,7 +31,7 @@ public class DetailedS3Object {
 
     // Variables
     @JsonProperty("Blobs")
-    private BlobApiBeansContainer blobs;
+    private BulkObjectList blobs;
 
     @JsonProperty("BlobsBeingPersisted")
     private Integer blobsBeingPersisted;
@@ -82,11 +82,11 @@ public class DetailedS3Object {
 
     // Getters and Setters
     
-    public BlobApiBeansContainer getBlobs() {
+    public BulkObjectList getBlobs() {
         return this.blobs;
     }
 
-    public void setBlobs(final BlobApiBeansContainer blobs) {
+    public void setBlobs(final BulkObjectList blobs) {
         this.blobs = blobs;
     }
 

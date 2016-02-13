@@ -44,7 +44,7 @@ class ReadJobImpl extends JobImpl {
     private static final Logger LOG = LoggerFactory.getLogger(ReadJobImpl.class);
 
     private final JobPartTracker partTracker;
-    private final List<JobChunkApiBean> chunks;
+    private final List<Objects> chunks;
     private final ImmutableMap<String, ImmutableMultimap<BulkObject, Range>> blobToRanges;
     private final int retryAfter; // Negative retryAfter value represent infinity retries
     private int retryAfterLeft; // The number of retries left
@@ -53,12 +53,12 @@ class ReadJobImpl extends JobImpl {
 
     public ReadJobImpl(
             final Ds3Client client,
-            final JobWithChunksApiBean masterObjectList,
+            final MasterObjectList masterObjectList,
             final ImmutableMultimap<String, Range>
             objectRanges, final int retryAfter) {
         super(client, masterObjectList);
 
-        this.chunks = this.jobWithChunksApiBean.getObjects();
+        this.chunks = this.masterObjectList.getObjects();
         this.partTracker = JobPartTrackerFactory
                 .buildPartTracker(Iterables.concat(getAllBlobApiBeans(chunks)));
         this.blobToRanges = PartialObjectHelpers.mapRangesToBlob(masterObjectList.getObjects(), objectRanges);
@@ -67,10 +67,10 @@ class ReadJobImpl extends JobImpl {
         this.checksumListeners = new IdentityHashMap<>();
     }
 
-    protected static ImmutableList<BulkObject> getAllBlobApiBeans(final List<JobChunkApiBean> jobWithChunksApiBeans) {
+    protected static ImmutableList<BulkObject> getAllBlobApiBeans(final List<Objects> jobWithChunksApiBeans) {
         ImmutableList.Builder<BulkObject> builder = ImmutableList.builder();
-        for (final JobChunkApiBean jobChunkApiBean : jobWithChunksApiBeans) {
-            builder.addAll(jobChunkApiBean.getObjects());
+        for (final Objects objects : jobWithChunksApiBeans) {
+            builder.addAll(objects.getObjects());
         }
         return builder.build();
     }
@@ -139,7 +139,7 @@ class ReadJobImpl extends JobImpl {
                 running = true;
         try (final JobState jobState = new JobState(
                 channelBuilder,
-                this.jobWithChunksApiBean.getObjects(),
+                this.masterObjectList.getObjects(),
                 partTracker, blobToRanges)) {
             final ChunkTransferrer chunkTransferrer = new ChunkTransferrer(
                 new GetObjectTransferrer(jobState),
@@ -160,10 +160,10 @@ class ReadJobImpl extends JobImpl {
     private void transferNextChunks(final ChunkTransferrer chunkTransferrer)
             throws IOException, SignatureException, XmlProcessingException, InterruptedException {
         final GetJobChunksReadyForClientProcessingSpectraS3Response availableJobChunks =
-            this.client.getJobChunksReadyForClientProcessingSpectraS3(new GetJobChunksReadyForClientProcessingSpectraS3Request(this.jobWithChunksApiBean.getJobId()));
+            this.client.getJobChunksReadyForClientProcessingSpectraS3(new GetJobChunksReadyForClientProcessingSpectraS3Request(this.masterObjectList.getJobId()));
         switch(availableJobChunks.getStatus()) {
         case AVAILABLE: {
-            final JobWithChunksApiBean availableMol = availableJobChunks.getJobWithChunksApiBeanResult();
+            final MasterObjectList availableMol = availableJobChunks.getMasterObjectListResult();
             chunkTransferrer.transferChunks(availableMol.getNodes(), availableMol.getObjects());
             retryAfterLeft = retryAfter; // Reset the number of retries to the initial value
             break;
@@ -196,7 +196,7 @@ class ReadJobImpl extends JobImpl {
             final ImmutableCollection<Range> ranges = getRangesForBlob(blobToRanges, ds3Object);
 
             final GetObjectRequest request = new GetObjectRequest(
-                    ReadJobImpl.this.jobWithChunksApiBean.getBucketName(),
+                    ReadJobImpl.this.masterObjectList.getBucketName(),
                     ds3Object.getName(),
                     jobState.getChannel(ds3Object.getName(), ds3Object.getOffset(), ds3Object.getLength()),
                     ReadJobImpl.this.getJobId(),

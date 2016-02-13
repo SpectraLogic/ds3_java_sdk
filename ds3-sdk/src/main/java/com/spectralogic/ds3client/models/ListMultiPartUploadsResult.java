@@ -23,10 +23,10 @@ import java.lang.String;
 import java.util.List;
 import java.util.ArrayList;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
-import com.spectralogic.ds3client.models.MultiPartUploadApiBean;
+import com.spectralogic.ds3client.models.MultiPartUpload;
 
 @JacksonXmlRootElement(namespace = "ListMultipartUploadsResult")
-public class ListMultiPartUploadsApiBean {
+public class ListMultipartUploadsResult {
 
     // Variables
     @JsonProperty("Bucket")
@@ -62,10 +62,10 @@ public class ListMultiPartUploadsApiBean {
 
     @JsonProperty("Upload")
     @JacksonXmlElementWrapper(useWrapping = false)
-    private List<MultiPartUploadApiBean> uploads = new ArrayList<>();
+    private List<MultiPartUpload> uploads = new ArrayList<>();
 
     // Constructor
-    public ListMultiPartUploadsApiBean() {
+    public ListMultipartUploadsResult() {
         //pass
     }
 
@@ -161,11 +161,11 @@ public class ListMultiPartUploadsApiBean {
     }
 
 
-    public List<MultiPartUploadApiBean> getUploads() {
+    public List<MultiPartUpload> getUploads() {
         return this.uploads;
     }
 
-    public void setUploads(final List<MultiPartUploadApiBean> uploads) {
+    public void setUploads(final List<MultiPartUpload> uploads) {
         this.uploads = uploads;
     }
 

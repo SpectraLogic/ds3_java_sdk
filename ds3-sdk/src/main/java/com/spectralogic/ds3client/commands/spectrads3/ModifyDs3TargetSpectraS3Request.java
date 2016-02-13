@@ -43,6 +43,8 @@ public class ModifyDs3TargetSpectraS3Request extends AbstractRequest {
 
     private Quiesced quiesced;
 
+    private String replicatedUserDefaultDataPolicy;
+
     // Constructor
     
     public ModifyDs3TargetSpectraS3Request(final String ds3Target) {
@@ -88,6 +90,12 @@ public class ModifyDs3TargetSpectraS3Request extends AbstractRequest {
     public ModifyDs3TargetSpectraS3Request withQuiesced(final Quiesced quiesced) {
         this.quiesced = quiesced;
         this.updateQueryParam("quiesced", quiesced.toString());
+        return this;
+    }
+
+    public ModifyDs3TargetSpectraS3Request withReplicatedUserDefaultDataPolicy(final String replicatedUserDefaultDataPolicy) {
+        this.replicatedUserDefaultDataPolicy = replicatedUserDefaultDataPolicy;
+        this.updateQueryParam("replicated_user_default_data_policy", UrlEscapers.urlFragmentEscaper().escape(replicatedUserDefaultDataPolicy));
         return this;
     }
 
@@ -139,6 +147,11 @@ public class ModifyDs3TargetSpectraS3Request extends AbstractRequest {
 
     public Quiesced getQuiesced() {
         return this.quiesced;
+    }
+
+
+    public String getReplicatedUserDefaultDataPolicy() {
+        return this.replicatedUserDefaultDataPolicy;
     }
 
 }

@@ -19,32 +19,52 @@ package com.spectralogic.ds3client.models;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import com.spectralogic.ds3client.models.BulkObject;
-import java.util.List;
-import java.util.ArrayList;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
+import java.lang.String;
 
-@JacksonXmlRootElement(namespace = "Data")
-public class BlobApiBeansContainer {
+@JacksonXmlRootElement(namespace = "InitiateMultipartUploadResult")
+public class InitiateMultipartUploadResult {
 
     // Variables
-    @JsonProperty("Object")
-    @JacksonXmlElementWrapper(useWrapping = false)
-    private List<BulkObject> objects = new ArrayList<>();
+    @JsonProperty("Bucket")
+    private String bucket;
+
+    @JsonProperty("Key")
+    private String key;
+
+    @JsonProperty("UploadId")
+    private String uploadId;
 
     // Constructor
-    public BlobApiBeansContainer() {
+    public InitiateMultipartUploadResult() {
         //pass
     }
 
     // Getters and Setters
     
-    public List<BulkObject> getObjects() {
-        return this.objects;
+    public String getBucket() {
+        return this.bucket;
     }
 
-    public void setObjects(final List<BulkObject> objects) {
-        this.objects = objects;
+    public void setBucket(final String bucket) {
+        this.bucket = bucket;
+    }
+
+
+    public String getKey() {
+        return this.key;
+    }
+
+    public void setKey(final String key) {
+        this.key = key;
+    }
+
+
+    public String getUploadId() {
+        return this.uploadId;
+    }
+
+    public void setUploadId(final String uploadId) {
+        this.uploadId = uploadId;
     }
 
 }

@@ -20,7 +20,7 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.spectralogic.ds3client.models.BlobStoreTaskPriority;
 import com.spectralogic.ds3client.models.JobChunkClientProcessingOrderGuarantee;
 import com.spectralogic.ds3client.models.JobStatus;
-import com.spectralogic.ds3client.models.NodeApiBean;
+import com.spectralogic.ds3client.models.Ds3Node;
 
 import java.util.List;
 import java.util.UUID;
@@ -28,7 +28,7 @@ import java.util.UUID;
 public class JobInfo {
     @JsonProperty("Nodes")
     @JacksonXmlElementWrapper
-    private List<NodeApiBean> nodes;
+    private List<Ds3Node> nodes;
 
     @JsonProperty("CachedSizeInBytes")
     private long cachedSizeInBytes;
@@ -82,11 +82,11 @@ public class JobInfo {
         this.chunkClientProcessingOrderGuarantee = chunkClientProcessingOrderGuarantee;
     }
 
-    public List<NodeApiBean> getNodes() {
+    public List<Ds3Node> getNodes() {
         return nodes;
     }
 
-    public void setNodes(final List<NodeApiBean> nodes) {
+    public void setNodes(final List<Ds3Node> nodes) {
         this.nodes = nodes;
     }
 

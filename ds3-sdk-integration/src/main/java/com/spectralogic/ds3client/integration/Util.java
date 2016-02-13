@@ -59,7 +59,7 @@ public class Util {
 
     public static void assumeVersion1_2(final Ds3Client client) throws IOException, SignatureException {
         final int majorVersion = Integer.parseInt(client.getSystemInformationSpectraS3(
-                new GetSystemInformationSpectraS3Request()).getSystemInformationApiBeanResult().getBuildInformation().getVersion().split("\\.")[0]);
+                new GetSystemInformationSpectraS3Request()).getSystemInformationResult().getBuildInformation().getVersion().split("\\.")[0]);
         assumeThat(majorVersion, is(1));
     }
 

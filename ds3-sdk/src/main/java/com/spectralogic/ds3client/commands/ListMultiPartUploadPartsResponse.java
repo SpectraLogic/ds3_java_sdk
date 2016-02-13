@@ -19,12 +19,12 @@ package com.spectralogic.ds3client.commands;
 import com.spectralogic.ds3client.networking.WebResponse;
 import java.io.IOException;
 import java.io.InputStream;
-import com.spectralogic.ds3client.models.ListMultiPartUploadPartsApiBean;
+import com.spectralogic.ds3client.models.ListPartsResult;
 import com.spectralogic.ds3client.serializer.XmlOutput;
 
 public class ListMultiPartUploadPartsResponse extends AbstractResponse {
 
-    private ListMultiPartUploadPartsApiBean listMultiPartUploadPartsApiBeanResult;
+    private ListPartsResult listPartsResult;
 
     public ListMultiPartUploadPartsResponse(final WebResponse response) throws IOException {
         super(response);
@@ -38,7 +38,7 @@ public class ListMultiPartUploadPartsResponse extends AbstractResponse {
             switch (this.getStatusCode()) {
             case 200:
                 try (final InputStream content = getResponse().getResponseStream()) {
-                    this.listMultiPartUploadPartsApiBeanResult = XmlOutput.fromXml(content, ListMultiPartUploadPartsApiBean.class);
+                    this.listPartsResult = XmlOutput.fromXml(content, ListPartsResult.class);
                 }
                 break;
             default:
@@ -49,8 +49,8 @@ public class ListMultiPartUploadPartsResponse extends AbstractResponse {
         }
     }
 
-    public ListMultiPartUploadPartsApiBean getListMultiPartUploadPartsApiBeanResult() {
-        return this.listMultiPartUploadPartsApiBeanResult;
+    public ListPartsResult getListPartsResult() {
+        return this.listPartsResult;
     }
 
 }

@@ -51,11 +51,17 @@ public class Ds3Target {
     @JsonProperty("LocalAdminUserId")
     private UUID localAdminUserId;
 
+    @JsonProperty("LocalReplicatedUserDefaultDataPolicyId")
+    private UUID localReplicatedUserDefaultDataPolicyId;
+
     @JsonProperty("Name")
     private String name;
 
     @JsonProperty("Quiesced")
     private Quiesced quiesced;
+
+    @JsonProperty("ReplicatedUserDefaultDataPolicy")
+    private String replicatedUserDefaultDataPolicy;
 
     @JsonProperty("State")
     private TargetState state;
@@ -130,6 +136,15 @@ public class Ds3Target {
     }
 
 
+    public UUID getLocalReplicatedUserDefaultDataPolicyId() {
+        return this.localReplicatedUserDefaultDataPolicyId;
+    }
+
+    public void setLocalReplicatedUserDefaultDataPolicyId(final UUID localReplicatedUserDefaultDataPolicyId) {
+        this.localReplicatedUserDefaultDataPolicyId = localReplicatedUserDefaultDataPolicyId;
+    }
+
+
     public String getName() {
         return this.name;
     }
@@ -145,6 +160,15 @@ public class Ds3Target {
 
     public void setQuiesced(final Quiesced quiesced) {
         this.quiesced = quiesced;
+    }
+
+
+    public String getReplicatedUserDefaultDataPolicy() {
+        return this.replicatedUserDefaultDataPolicy;
+    }
+
+    public void setReplicatedUserDefaultDataPolicy(final String replicatedUserDefaultDataPolicy) {
+        this.replicatedUserDefaultDataPolicy = replicatedUserDefaultDataPolicy;
     }
 
 

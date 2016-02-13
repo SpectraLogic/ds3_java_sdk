@@ -19,34 +19,40 @@ package com.spectralogic.ds3client.models;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import java.util.Date;
 import java.lang.String;
+import com.spectralogic.ds3client.models.UserApiBean;
+import java.util.UUID;
 
 @JacksonXmlRootElement(namespace = "Data")
-public class DeleteObjectErrorResultApiBean {
+public class MultiPartUpload {
 
     // Variables
-    @JsonProperty("Code")
-    private String code;
+    @JsonProperty("Initiated")
+    private Date initiated;
 
     @JsonProperty("Key")
     private String key;
 
-    @JsonProperty("Message")
-    private String message;
+    @JsonProperty("Owner")
+    private UserApiBean owner;
+
+    @JsonProperty("UploadId")
+    private UUID uploadId;
 
     // Constructor
-    public DeleteObjectErrorResultApiBean() {
+    public MultiPartUpload() {
         //pass
     }
 
     // Getters and Setters
     
-    public String getCode() {
-        return this.code;
+    public Date getInitiated() {
+        return this.initiated;
     }
 
-    public void setCode(final String code) {
-        this.code = code;
+    public void setInitiated(final Date initiated) {
+        this.initiated = initiated;
     }
 
 
@@ -59,12 +65,21 @@ public class DeleteObjectErrorResultApiBean {
     }
 
 
-    public String getMessage() {
-        return this.message;
+    public UserApiBean getOwner() {
+        return this.owner;
     }
 
-    public void setMessage(final String message) {
-        this.message = message;
+    public void setOwner(final UserApiBean owner) {
+        this.owner = owner;
+    }
+
+
+    public UUID getUploadId() {
+        return this.uploadId;
+    }
+
+    public void setUploadId(final UUID uploadId) {
+        this.uploadId = uploadId;
     }
 
 }

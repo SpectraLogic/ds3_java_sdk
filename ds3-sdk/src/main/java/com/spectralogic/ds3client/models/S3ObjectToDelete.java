@@ -22,14 +22,14 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import java.lang.String;
 
 @JacksonXmlRootElement(namespace = "Data")
-public class S3ObjectToDeleteApiBean {
+public class S3ObjectToDelete {
 
     // Variables
     @JsonProperty("Key")
     private String key;
 
     // Constructor
-    public S3ObjectToDeleteApiBean() {
+    public S3ObjectToDelete() {
         //pass
     }
 

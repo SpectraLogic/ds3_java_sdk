@@ -19,13 +19,13 @@ package com.spectralogic.ds3client.commands.spectrads3;
 import com.spectralogic.ds3client.networking.WebResponse;
 import java.io.IOException;
 import java.io.InputStream;
-import com.spectralogic.ds3client.models.SystemInformationApiBean;
+import com.spectralogic.ds3client.models.SystemInformation;
 import com.spectralogic.ds3client.serializer.XmlOutput;
 import com.spectralogic.ds3client.commands.AbstractResponse;
 
 public class GetSystemInformationSpectraS3Response extends AbstractResponse {
 
-    private SystemInformationApiBean systemInformationApiBeanResult;
+    private SystemInformation systemInformationResult;
 
     public GetSystemInformationSpectraS3Response(final WebResponse response) throws IOException {
         super(response);
@@ -39,7 +39,7 @@ public class GetSystemInformationSpectraS3Response extends AbstractResponse {
             switch (this.getStatusCode()) {
             case 200:
                 try (final InputStream content = getResponse().getResponseStream()) {
-                    this.systemInformationApiBeanResult = XmlOutput.fromXml(content, SystemInformationApiBean.class);
+                    this.systemInformationResult = XmlOutput.fromXml(content, SystemInformation.class);
                 }
                 break;
             default:
@@ -50,8 +50,8 @@ public class GetSystemInformationSpectraS3Response extends AbstractResponse {
         }
     }
 
-    public SystemInformationApiBean getSystemInformationApiBeanResult() {
-        return this.systemInformationApiBeanResult;
+    public SystemInformation getSystemInformationResult() {
+        return this.systemInformationResult;
     }
 
 }

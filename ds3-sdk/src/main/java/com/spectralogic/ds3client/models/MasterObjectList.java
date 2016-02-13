@@ -22,11 +22,11 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import java.lang.String;
 import com.spectralogic.ds3client.models.JobChunkClientProcessingOrderGuarantee;
 import java.util.UUID;
-import com.spectralogic.ds3client.models.NodeApiBean;
+import com.spectralogic.ds3client.models.Ds3Node;
 import java.util.List;
 import java.util.ArrayList;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
-import com.spectralogic.ds3client.models.JobChunkApiBean;
+import com.spectralogic.ds3client.models.Objects;
 import com.spectralogic.ds3client.models.BlobStoreTaskPriority;
 import com.spectralogic.ds3client.models.JobRequestType;
 import java.util.Date;
@@ -34,7 +34,7 @@ import com.spectralogic.ds3client.models.JobStatus;
 import com.spectralogic.ds3client.models.WriteOptimization;
 
 @JacksonXmlRootElement(namespace = "MasterObjectList")
-public class JobWithChunksApiBean {
+public class MasterObjectList {
 
     // Variables
     @JacksonXmlProperty(isAttribute = true, localName = "Aggregating")
@@ -63,11 +63,11 @@ public class JobWithChunksApiBean {
 
     @JsonProperty("Nodes")
     @JacksonXmlElementWrapper(useWrapping = true)
-    private List<NodeApiBean> nodes = new ArrayList<>();
+    private List<Ds3Node> nodes = new ArrayList<>();
 
     @JsonProperty("Objects")
     @JacksonXmlElementWrapper(useWrapping = false)
-    private List<JobChunkApiBean> objects = new ArrayList<>();
+    private List<Objects> objects = new ArrayList<>();
 
     @JacksonXmlProperty(isAttribute = true, localName = "OriginalSizeInBytes")
     private long originalSizeInBytes;
@@ -94,7 +94,7 @@ public class JobWithChunksApiBean {
     private WriteOptimization writeOptimization;
 
     // Constructor
-    public JobWithChunksApiBean() {
+    public MasterObjectList() {
         //pass
     }
 
@@ -172,20 +172,20 @@ public class JobWithChunksApiBean {
     }
 
 
-    public List<NodeApiBean> getNodes() {
+    public List<Ds3Node> getNodes() {
         return this.nodes;
     }
 
-    public void setNodes(final List<NodeApiBean> nodes) {
+    public void setNodes(final List<Ds3Node> nodes) {
         this.nodes = nodes;
     }
 
 
-    public List<JobChunkApiBean> getObjects() {
+    public List<Objects> getObjects() {
         return this.objects;
     }
 
-    public void setObjects(final List<JobChunkApiBean> objects) {
+    public void setObjects(final List<Objects> objects) {
         this.objects = objects;
     }
 

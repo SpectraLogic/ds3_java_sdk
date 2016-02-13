@@ -21,21 +21,24 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import java.lang.String;
 
-@JacksonXmlRootElement(namespace = "InitiateMultipartUploadResult")
-public class InitiateMultipartUploadResultApiBean {
+@JacksonXmlRootElement(namespace = "CompleteMultipartUploadResult")
+public class CompleteMultipartUploadResult {
 
     // Variables
     @JsonProperty("Bucket")
     private String bucket;
 
+    @JsonProperty("ETag")
+    private String eTag;
+
     @JsonProperty("Key")
     private String key;
 
-    @JsonProperty("UploadId")
-    private String uploadId;
+    @JsonProperty("Location")
+    private String location;
 
     // Constructor
-    public InitiateMultipartUploadResultApiBean() {
+    public CompleteMultipartUploadResult() {
         //pass
     }
 
@@ -50,6 +53,15 @@ public class InitiateMultipartUploadResultApiBean {
     }
 
 
+    public String getETag() {
+        return this.eTag;
+    }
+
+    public void setETag(final String eTag) {
+        this.eTag = eTag;
+    }
+
+
     public String getKey() {
         return this.key;
     }
@@ -59,12 +71,12 @@ public class InitiateMultipartUploadResultApiBean {
     }
 
 
-    public String getUploadId() {
-        return this.uploadId;
+    public String getLocation() {
+        return this.location;
     }
 
-    public void setUploadId(final String uploadId) {
-        this.uploadId = uploadId;
+    public void setLocation(final String location) {
+        this.location = location;
     }
 
 }

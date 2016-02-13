@@ -19,7 +19,7 @@ import com.spectralogic.ds3client.Ds3Client;
 import com.spectralogic.ds3client.Ds3ClientBuilder;
 import com.spectralogic.ds3client.commands.GetBucketsRequest;
 import com.spectralogic.ds3client.commands.GetBucketsResponse;
-import com.spectralogic.ds3client.models.BucketApiBean;
+import com.spectralogic.ds3client.models.Ds3Bucket;
 import com.spectralogic.ds3client.models.Credentials;
 
 import java.io.IOException;
@@ -37,7 +37,7 @@ public class Ds3ServiceListExample {
             final GetBucketsResponse response = client.getBuckets(new GetBucketsRequest());
 
             // Iterate through all the buckets and print them to the console.
-            for (final BucketApiBean bucket : response.getBucketsApiBeanResult().getBuckets()) {
+            for (final Ds3Bucket bucket : response.getListAllMyBucketsResult().getBuckets()) {
                 System.out.println(bucket.getName());
             }
         }

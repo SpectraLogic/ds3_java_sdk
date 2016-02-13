@@ -46,7 +46,7 @@ public class JobUtils_Test {
         container.setJobs(jobs);
         when(jobsResponse.getJobsApiBeanResult()).thenReturn(container);
 
-        final JobWithChunksApiBean mob = new JobWithChunksApiBean();
+        final MasterObjectList mob = new MasterObjectList();
         mob.setStatus(JobStatus.IN_PROGRESS);
         mob.setBucketName("bucket");
         mob.setRequestType(JobRequestType.PUT);
@@ -66,15 +66,15 @@ public class JobUtils_Test {
 
         final List<BulkObject> bulkObjects = Lists.newArrayList(blob1, blob2);
 
-        final JobChunkApiBean chunk = new JobChunkApiBean();
+        final Objects chunk = new Objects();
         chunk.setObjects(bulkObjects);
 
-        final List<JobChunkApiBean> chunks = new ArrayList<>();
+        final List<Objects> chunks = new ArrayList<>();
         chunks.add(chunk);
 
         mob.setObjects(chunks);
 
-        when(jobResponse.getJobWithChunksApiBeanResult()).thenReturn(mob);
+        when(jobResponse.getMasterObjectListResult()).thenReturn(mob);
 
         when(client.getJobsSpectraS3(any(GetJobsSpectraS3Request.class))).thenReturn(jobsResponse);
         when(client.getJobSpectraS3(new GetJobSpectraS3Request(realJobId))).thenReturn(jobResponse);
@@ -116,7 +116,7 @@ public class JobUtils_Test {
 
         when(jobsResponse.getJobsApiBeanResult()).thenReturn(container);
 
-        final JobWithChunksApiBean mob = new JobWithChunksApiBean();
+        final MasterObjectList mob = new MasterObjectList();
         mob.setStatus(JobStatus.IN_PROGRESS);
         mob.setBucketName("bucket");
         mob.setJobId(realJobId);
@@ -136,15 +136,15 @@ public class JobUtils_Test {
 
         final List<BulkObject> bulkObjects = Lists.newArrayList(blob1, blob2);
 
-        final JobChunkApiBean chunk = new JobChunkApiBean();
+        final Objects chunk = new Objects();
         chunk.setObjects(bulkObjects);
 
-        final List<JobChunkApiBean> chunks = new ArrayList<>();
+        final List<Objects> chunks = new ArrayList<>();
         chunks.add(chunk);
 
         mob.setObjects(chunks);
 
-        when(jobResponse.getJobWithChunksApiBeanResult()).thenReturn(mob);
+        when(jobResponse.getMasterObjectListResult()).thenReturn(mob);
 
         when(client.getJobsSpectraS3(any(GetJobsSpectraS3Request.class))).thenReturn(jobsResponse);
         when(client.getJobSpectraS3(new GetJobSpectraS3Request(realJobId))).thenReturn(jobResponse);
@@ -186,7 +186,7 @@ public class JobUtils_Test {
 
         when(jobsResponse.getJobsApiBeanResult()).thenReturn(container);
 
-        final JobWithChunksApiBean mob = new JobWithChunksApiBean();
+        final MasterObjectList mob = new MasterObjectList();
         mob.setStatus(JobStatus.IN_PROGRESS);
         mob.setBucketName("bucket");
         mob.setJobId(realJobId);
@@ -206,15 +206,15 @@ public class JobUtils_Test {
 
         final List<BulkObject> bulkObjects = Lists.newArrayList(blob1, blob2);
 
-        final JobChunkApiBean chunk = new JobChunkApiBean();
+        final Objects chunk = new Objects();
         chunk.setObjects(bulkObjects);
 
-        final List<JobChunkApiBean> chunks = new ArrayList<>();
+        final List<Objects> chunks = new ArrayList<>();
         chunks.add(chunk);
 
         mob.setObjects(chunks);
 
-        when(jobResponse.getJobWithChunksApiBeanResult()).thenReturn(mob);
+        when(jobResponse.getMasterObjectListResult()).thenReturn(mob);
 
         when(client.getJobsSpectraS3(any(GetJobsSpectraS3Request.class))).thenReturn(jobsResponse);
         when(client.getJobSpectraS3(new GetJobSpectraS3Request(realJobId))).thenReturn(jobResponse);
@@ -256,7 +256,7 @@ public class JobUtils_Test {
 
         when(jobsResponse.getJobsApiBeanResult()).thenReturn(container);
 
-        final JobWithChunksApiBean mob = new JobWithChunksApiBean();
+        final MasterObjectList mob = new MasterObjectList();
         mob.setStatus(JobStatus.IN_PROGRESS);
         mob.setBucketName("bucket");
         mob.setJobId(realJobId);
@@ -276,15 +276,15 @@ public class JobUtils_Test {
 
         final List<BulkObject> bulkObjects = Lists.newArrayList(blob1, blob2);
 
-        final JobChunkApiBean chunk = new JobChunkApiBean();
+        final Objects chunk = new Objects();
         chunk.setObjects(bulkObjects);
 
-        final List<JobChunkApiBean> chunks = new ArrayList<>();
+        final List<Objects> chunks = new ArrayList<>();
         chunks.add(chunk);
 
         mob.setObjects(chunks);
 
-        when(jobResponse.getJobWithChunksApiBeanResult()).thenReturn(mob);
+        when(jobResponse.getMasterObjectListResult()).thenReturn(mob);
 
         when(client.getJobsSpectraS3(any(GetJobsSpectraS3Request.class))).thenReturn(jobsResponse);
         when(client.getJobSpectraS3(new GetJobSpectraS3Request(realJobId))).thenReturn(jobResponse);
@@ -314,7 +314,7 @@ public class JobUtils_Test {
         job1.setRequestType(JobRequestType.PUT);
         jobs.add(job1);
 
-        final JobWithChunksApiBean mob1 = new JobWithChunksApiBean();
+        final MasterObjectList mob1 = new MasterObjectList();
         mob1.setStatus(JobStatus.IN_PROGRESS);
         mob1.setBucketName("bucket");
         mob1.setJobId(job1.getJobId());
@@ -328,10 +328,10 @@ public class JobUtils_Test {
 
         final List<BulkObject> bulkObjects1 = Lists.newArrayList(blob0);
 
-        final JobChunkApiBean chunk1 = new JobChunkApiBean();
+        final Objects chunk1 = new Objects();
         chunk1.setObjects(bulkObjects1);
 
-        final List<JobChunkApiBean> chunks1 = new ArrayList<>();
+        final List<Objects> chunks1 = new ArrayList<>();
         chunks1.add(chunk1);
 
         mob1.setObjects(chunks1);
@@ -348,7 +348,7 @@ public class JobUtils_Test {
 
         when(jobsResponse.getJobsApiBeanResult()).thenReturn(container);
 
-        final JobWithChunksApiBean mob2 = new JobWithChunksApiBean();
+        final MasterObjectList mob2 = new MasterObjectList();
         mob2.setStatus(JobStatus.IN_PROGRESS);
         mob2.setBucketName("bucket");
         mob2.setJobId(realJobId);
@@ -376,20 +376,20 @@ public class JobUtils_Test {
 
         final List<BulkObject> bulkObjects3 = Lists.newArrayList(blob3);
 
-        final JobChunkApiBean chunk2 = new JobChunkApiBean();
+        final Objects chunk2 = new Objects();
         chunk2.setObjects(bulkObjects2);
 
-        final JobChunkApiBean chunk3 = new JobChunkApiBean();
+        final Objects chunk3 = new Objects();
         chunk3.setObjects(bulkObjects3);
 
-        final List<JobChunkApiBean> chunks2 = new ArrayList<>();
+        final List<Objects> chunks2 = new ArrayList<>();
         chunks2.add(chunk2);
         chunks2.add(chunk3);
 
         mob2.setObjects(chunks2);
 
-        when(jobResponse1.getJobWithChunksApiBeanResult()).thenReturn(mob1);
-        when(jobResponse2.getJobWithChunksApiBeanResult()).thenReturn(mob2);
+        when(jobResponse1.getMasterObjectListResult()).thenReturn(mob1);
+        when(jobResponse2.getMasterObjectListResult()).thenReturn(mob2);
 
         when(client.getJobsSpectraS3(any(GetJobsSpectraS3Request.class))).thenReturn(jobsResponse);
         when(client.getJobSpectraS3(new GetJobSpectraS3Request(job1.getJobId()))).thenReturn(jobResponse1);
@@ -421,7 +421,7 @@ public class JobUtils_Test {
         job1.setRequestType(JobRequestType.GET);
         jobs.add(job1);
 
-        final JobWithChunksApiBean mob1 = new JobWithChunksApiBean();
+        final MasterObjectList mob1 = new MasterObjectList();
         mob1.setStatus(JobStatus.IN_PROGRESS);
         mob1.setBucketName("bucket");
         mob1.setJobId(job1.getJobId());
@@ -435,10 +435,10 @@ public class JobUtils_Test {
 
         final List<BulkObject> bulkObjects1 = Lists.newArrayList(blob3);
 
-        final JobChunkApiBean chunk1 = new JobChunkApiBean();
+        final Objects chunk1 = new Objects();
         chunk1.setObjects(bulkObjects1);
 
-        final List<JobChunkApiBean> chunks1 = new ArrayList<>();
+        final List<Objects> chunks1 = new ArrayList<>();
         chunks1.add(chunk1);
 
         mob1.setObjects(chunks1);
@@ -455,7 +455,7 @@ public class JobUtils_Test {
 
         when(jobsResponse.getJobsApiBeanResult()).thenReturn(container);
 
-        final JobWithChunksApiBean mob2 = new JobWithChunksApiBean();
+        final MasterObjectList mob2 = new MasterObjectList();
         mob2.setStatus(JobStatus.IN_PROGRESS);
         mob2.setBucketName("bucket");
         mob2.setJobId(realJobId);
@@ -476,20 +476,20 @@ public class JobUtils_Test {
         final List<BulkObject> bulkObjects2 = Lists.newArrayList(blob1, blob2);
         final List<BulkObject> bulkObjects3 = Lists.newArrayList(blob3);
 
-        final JobChunkApiBean chunk2 = new JobChunkApiBean();
+        final Objects chunk2 = new Objects();
         chunk2.setObjects(bulkObjects2);
 
-        final JobChunkApiBean chunk3 = new JobChunkApiBean();
+        final Objects chunk3 = new Objects();
         chunk3.setObjects(bulkObjects3);
 
-        final List<JobChunkApiBean> chunks2 = new ArrayList<>();
+        final List<Objects> chunks2 = new ArrayList<>();
         chunks2.add(chunk2);
         chunks2.add(chunk3);
 
         mob2.setObjects(chunks2);
 
-        when(jobResponse1.getJobWithChunksApiBeanResult()).thenReturn(mob1);
-        when(jobResponse2.getJobWithChunksApiBeanResult()).thenReturn(mob2);
+        when(jobResponse1.getMasterObjectListResult()).thenReturn(mob1);
+        when(jobResponse2.getMasterObjectListResult()).thenReturn(mob2);
 
         when(client.getJobsSpectraS3(any(GetJobsSpectraS3Request.class))).thenReturn(jobsResponse);
         when(client.getJobSpectraS3(new GetJobSpectraS3Request(job1.getJobId()))).thenReturn(jobResponse1);
@@ -531,7 +531,7 @@ public class JobUtils_Test {
 
         when(jobsResponse.getJobsApiBeanResult()).thenReturn(container);
 
-        final JobWithChunksApiBean mob = new JobWithChunksApiBean();
+        final MasterObjectList mob = new MasterObjectList();
         mob.setStatus(JobStatus.IN_PROGRESS);
         mob.setBucketName("bucket");
         mob.setJobId(realJobId);
@@ -551,15 +551,15 @@ public class JobUtils_Test {
 
         final List<BulkObject> bulkObjects = Lists.newArrayList(blob1, blob2);
 
-        final JobChunkApiBean chunk = new JobChunkApiBean();
+        final Objects chunk = new Objects();
         chunk.setObjects(bulkObjects);
 
-        final List<JobChunkApiBean> chunks = new ArrayList<>();
+        final List<Objects> chunks = new ArrayList<>();
         chunks.add(chunk);
 
         mob.setObjects(chunks);
 
-        when(jobResponse.getJobWithChunksApiBeanResult()).thenReturn(mob);
+        when(jobResponse.getMasterObjectListResult()).thenReturn(mob);
 
         when(client.getJobsSpectraS3(any(GetJobsSpectraS3Request.class))).thenReturn(jobsResponse);
         when(client.getJobSpectraS3(new GetJobSpectraS3Request(realJobId))).thenReturn(jobResponse);

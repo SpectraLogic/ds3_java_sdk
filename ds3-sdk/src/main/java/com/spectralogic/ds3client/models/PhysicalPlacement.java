@@ -19,45 +19,46 @@ package com.spectralogic.ds3client.models;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import com.spectralogic.ds3client.models.BucketApiBean;
+import com.spectralogic.ds3client.models.Pool;
 import java.util.List;
 import java.util.ArrayList;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
-import com.spectralogic.ds3client.models.UserApiBean;
+import com.spectralogic.ds3client.models.Tape;
 
-@JacksonXmlRootElement(namespace = "ListAllMyBucketsResult")
-public class BucketsApiBean {
+@JacksonXmlRootElement(namespace = "Data")
+public class PhysicalPlacement {
 
     // Variables
-    @JsonProperty("Buckets")
+    @JsonProperty("Pools")
     @JacksonXmlElementWrapper(useWrapping = true)
-    private List<BucketApiBean> buckets = new ArrayList<>();
+    private List<Pool> pools = new ArrayList<>();
 
-    @JsonProperty("Owner")
-    private UserApiBean owner;
+    @JsonProperty("Tapes")
+    @JacksonXmlElementWrapper(useWrapping = true)
+    private List<Tape> tapes = new ArrayList<>();
 
     // Constructor
-    public BucketsApiBean() {
+    public PhysicalPlacement() {
         //pass
     }
 
     // Getters and Setters
     
-    public List<BucketApiBean> getBuckets() {
-        return this.buckets;
+    public List<Pool> getPools() {
+        return this.pools;
     }
 
-    public void setBuckets(final List<BucketApiBean> buckets) {
-        this.buckets = buckets;
+    public void setPools(final List<Pool> pools) {
+        this.pools = pools;
     }
 
 
-    public UserApiBean getOwner() {
-        return this.owner;
+    public List<Tape> getTapes() {
+        return this.tapes;
     }
 
-    public void setOwner(final UserApiBean owner) {
-        this.owner = owner;
+    public void setTapes(final List<Tape> tapes) {
+        this.tapes = tapes;
     }
 
 }

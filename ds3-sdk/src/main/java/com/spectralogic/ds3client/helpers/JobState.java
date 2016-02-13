@@ -22,7 +22,7 @@ import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.ObjectChannelBuilder;
 import com.spectralogic.ds3client.helpers.channels.RangedSeekableByteChannel;
 import com.spectralogic.ds3client.helpers.channels.WindowedChannelFactory;
 import com.spectralogic.ds3client.models.BulkObject;
-import com.spectralogic.ds3client.models.JobChunkApiBean;
+import com.spectralogic.ds3client.models.Objects;
 import com.spectralogic.ds3client.models.Range;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,7 +43,7 @@ class JobState implements AutoCloseable {
 
     public JobState(
             final ObjectChannelBuilder channelBuilder,
-            final Collection<JobChunkApiBean> filteredChunks,
+            final Collection<Objects> filteredChunks,
             final JobPartTracker partTracker,
             final ImmutableMap<String, ImmutableMultimap<BulkObject, Range>> objectRanges) {
         this.objectsRemaining = new AtomicInteger(getObjectCount(filteredChunks));
@@ -55,9 +55,9 @@ class JobState implements AutoCloseable {
         return this.objectsRemaining.get() > 0;
     }
 
-    private static int getObjectCount(final Collection<JobChunkApiBean> chunks) {
+    private static int getObjectCount(final Collection<Objects> chunks) {
         final HashSet<String> result = new HashSet<>();
-        for (final JobChunkApiBean chunk : chunks) {
+        for (final Objects chunk : chunks) {
             for (final BulkObject bulkObject : chunk.getObjects()) {
                 result.add(bulkObject.getName());
             }

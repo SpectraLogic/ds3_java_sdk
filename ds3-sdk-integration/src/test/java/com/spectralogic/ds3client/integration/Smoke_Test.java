@@ -131,7 +131,7 @@ public class Smoke_Test {
             final GetJobSpectraS3Response response = client
                     .getJobSpectraS3(new GetJobSpectraS3Request(job.getJobId()));
 
-            assertThat(response.getJobWithChunksApiBeanResult().getPriority(), is(BlobStoreTaskPriority.HIGH));
+            assertThat(response.getMasterObjectListResult().getPriority(), is(BlobStoreTaskPriority.HIGH));
 
         } finally {
             deleteAllContents(client, bucketName);
@@ -206,7 +206,7 @@ public class Smoke_Test {
 
             final GetBucketResponse request = client
                     .getBucket(new GetBucketRequest(bucketName));
-            final BucketObjectsApiBean result = request.getBucketObjectsApiBeanResult();
+            final ListBucketResult result = request.getListBucketResult();
             assertThat(result.getObjects(), is(notNullValue()));
             assertTrue(result.getObjects().isEmpty());
         } finally {
@@ -226,7 +226,7 @@ public class Smoke_Test {
             final GetBucketResponse response = client
                     .getBucket(new GetBucketRequest(bucketName));
 
-            final BucketObjectsApiBean result = response.getBucketObjectsApiBeanResult();
+            final ListBucketResult result = response.getListBucketResult();
 
             assertFalse(result.getObjects().isEmpty());
             assertThat(result.getObjects().size(), is(4));
@@ -259,7 +259,7 @@ public class Smoke_Test {
 
             final GetJobSpectraS3Response jobResponse = client
                     .getJobSpectraS3(new GetJobSpectraS3Request(jobId));
-            assertThat(jobResponse.getJobWithChunksApiBeanResult().getStatus(), is(JobStatus.COMPLETED));
+            assertThat(jobResponse.getMasterObjectListResult().getStatus(), is(JobStatus.COMPLETED));
 
         } finally {
             deleteAllContents(client, bucketName);
@@ -278,7 +278,7 @@ public class Smoke_Test {
 
             final GetBucketResponse get_response = client
                     .getBucket(new GetBucketRequest(bucketName));
-            final BucketObjectsApiBean get_result = get_response.getBucketObjectsApiBeanResult();
+            final ListBucketResult get_result = get_response.getListBucketResult();
             assertFalse(get_result.getObjects().isEmpty());
             assertThat(get_result.getObjects().size(), is(4));
 
@@ -384,8 +384,8 @@ public class Smoke_Test {
             final DeleteObjectsResponse response = client
                     .deleteObjects(new DeleteObjectsRequest(bucketName, objs).withQuiet(false));
             assertThat(response, is(notNullValue()));
-            assertThat(response.getDeleteResultApiBeanResult(), is(notNullValue()));
-            assertThat(response.getDeleteResultApiBeanResult().getDeletedObjects().size(), is(4));
+            assertThat(response.getDeleteResult(), is(notNullValue()));
+            assertThat(response.getDeleteResult().getDeletedObjects().size(), is(4));
 
             final Iterable<Contents> filesLeft = wrapper.listObjects(bucketName);
             assertTrue(Iterables.size(filesLeft) == 0);
@@ -407,8 +407,8 @@ public class Smoke_Test {
             final DeleteObjectsResponse response = client
                     .deleteObjects(new DeleteObjectsRequest(bucketName, objs).withQuiet(true));
             assertThat(response, is(notNullValue()));
-            assertThat(response.getDeleteResultApiBeanResult(), is(notNullValue()));
-            assertThat(response.getDeleteResultApiBeanResult().getDeletedObjects().size(), is(0));
+            assertThat(response.getDeleteResult(), is(notNullValue()));
+            assertThat(response.getDeleteResult().getDeletedObjects().size(), is(0));
 
             final Iterable<Contents> filesLeft = wrapper.listObjects(bucketName);
             assertTrue(Iterables.size(filesLeft) == 0);
@@ -429,10 +429,10 @@ public class Smoke_Test {
             final DeleteObjectsResponse response = client
                     .deleteObjects(new DeleteObjectsRequest(bucketName, objList));
             assertThat(response, is(notNullValue()));
-            assertThat(response.getDeleteResultApiBeanResult(), is(notNullValue()));
-            assertThat(response.getDeleteResultApiBeanResult().getDeletedObjects().size(), is(0));
-            assertThat(response.getDeleteResultApiBeanResult().getErrors(), is(notNullValue()));
-            assertThat(response.getDeleteResultApiBeanResult().getErrors().size(), is(3));
+            assertThat(response.getDeleteResult(), is(notNullValue()));
+            assertThat(response.getDeleteResult().getDeletedObjects().size(), is(0));
+            assertThat(response.getDeleteResult().getErrors(), is(notNullValue()));
+            assertThat(response.getDeleteResult().getErrors().size(), is(3));
 
         } finally {
             deleteAllContents(client, bucketName);
@@ -537,7 +537,7 @@ public class Smoke_Test {
 
             final List<Ds3Object> objs = Lists.newArrayList(new Ds3Object("beowulf.txt", 294059));
 
-            final JobWithChunksApiBean mol = client
+            final MasterObjectList mol = client
                     .createPutJobSpectraS3(new CreatePutJobSpectraS3Request(bucketName, objs)).getResult();
 
             final FileChannel channel = FileChannel
@@ -693,8 +693,8 @@ public class Smoke_Test {
 
             final GetBucketResponse response = client.getBucket(new GetBucketRequest(bucketName));
 
-            assertThat(response.getBucketObjectsApiBeanResult().getObjects().size(), is(1));
-            assertThat(response.getBucketObjectsApiBeanResult().getObjects().get(0).getKey(), is("dir/"));
+            assertThat(response.getListBucketResult().getObjects().size(), is(1));
+            assertThat(response.getListBucketResult().getObjects().get(0).getKey(), is("dir/"));
 
         } finally {
             deleteAllContents(client, bucketName);
@@ -731,7 +731,7 @@ public class Smoke_Test {
 
             final GetBucketResponse response = client.getBucket(new GetBucketRequest(bucketName));
 
-            assertThat(response.getBucketObjectsApiBeanResult().getObjects().size(), is(2));
+            assertThat(response.getListBucketResult().getObjects().size(), is(2));
             assertThat(counter.get(), is(1));
 
         } finally {

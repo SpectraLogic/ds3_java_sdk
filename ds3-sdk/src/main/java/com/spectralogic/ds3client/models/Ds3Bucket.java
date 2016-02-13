@@ -19,46 +19,41 @@ package com.spectralogic.ds3client.models;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import com.spectralogic.ds3client.models.Pool;
-import java.util.List;
-import java.util.ArrayList;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
-import com.spectralogic.ds3client.models.Tape;
+import java.util.Date;
+import java.lang.String;
 
 @JacksonXmlRootElement(namespace = "Data")
-public class PhysicalPlacementApiBean {
+public class Ds3Bucket {
 
     // Variables
-    @JsonProperty("Pools")
-    @JacksonXmlElementWrapper(useWrapping = true)
-    private List<Pool> pools = new ArrayList<>();
+    @JsonProperty("CreationDate")
+    private Date creationDate;
 
-    @JsonProperty("Tapes")
-    @JacksonXmlElementWrapper(useWrapping = true)
-    private List<Tape> tapes = new ArrayList<>();
+    @JsonProperty("Name")
+    private String name;
 
     // Constructor
-    public PhysicalPlacementApiBean() {
+    public Ds3Bucket() {
         //pass
     }
 
     // Getters and Setters
     
-    public List<Pool> getPools() {
-        return this.pools;
+    public Date getCreationDate() {
+        return this.creationDate;
     }
 
-    public void setPools(final List<Pool> pools) {
-        this.pools = pools;
+    public void setCreationDate(final Date creationDate) {
+        this.creationDate = creationDate;
     }
 
 
-    public List<Tape> getTapes() {
-        return this.tapes;
+    public String getName() {
+        return this.name;
     }
 
-    public void setTapes(final List<Tape> tapes) {
-        this.tapes = tapes;
+    public void setName(final String name) {
+        this.name = name;
     }
 
 }

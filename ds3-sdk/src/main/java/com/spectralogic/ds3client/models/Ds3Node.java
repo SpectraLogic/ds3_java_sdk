@@ -19,67 +19,66 @@ package com.spectralogic.ds3client.models;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import java.util.Date;
 import java.lang.String;
-import com.spectralogic.ds3client.models.UserApiBean;
+import java.lang.Integer;
 import java.util.UUID;
 
 @JacksonXmlRootElement(namespace = "Data")
-public class MultiPartUploadApiBean {
+public class Ds3Node {
 
     // Variables
-    @JsonProperty("Initiated")
-    private Date initiated;
+    @JacksonXmlProperty(isAttribute = true, localName = "EndPoint")
+    private String endPoint;
 
-    @JsonProperty("Key")
-    private String key;
+    @JacksonXmlProperty(isAttribute = true, localName = "HttpPort")
+    private Integer httpPort;
 
-    @JsonProperty("Owner")
-    private UserApiBean owner;
+    @JacksonXmlProperty(isAttribute = true, localName = "HttpsPort")
+    private Integer httpsPort;
 
-    @JsonProperty("UploadId")
-    private UUID uploadId;
+    @JacksonXmlProperty(isAttribute = true, localName = "Id")
+    private UUID id;
 
     // Constructor
-    public MultiPartUploadApiBean() {
+    public Ds3Node() {
         //pass
     }
 
     // Getters and Setters
     
-    public Date getInitiated() {
-        return this.initiated;
+    public String getEndPoint() {
+        return this.endPoint;
     }
 
-    public void setInitiated(final Date initiated) {
-        this.initiated = initiated;
-    }
-
-
-    public String getKey() {
-        return this.key;
-    }
-
-    public void setKey(final String key) {
-        this.key = key;
+    public void setEndPoint(final String endPoint) {
+        this.endPoint = endPoint;
     }
 
 
-    public UserApiBean getOwner() {
-        return this.owner;
+    public Integer getHttpPort() {
+        return this.httpPort;
     }
 
-    public void setOwner(final UserApiBean owner) {
-        this.owner = owner;
+    public void setHttpPort(final Integer httpPort) {
+        this.httpPort = httpPort;
     }
 
 
-    public UUID getUploadId() {
-        return this.uploadId;
+    public Integer getHttpsPort() {
+        return this.httpsPort;
     }
 
-    public void setUploadId(final UUID uploadId) {
-        this.uploadId = uploadId;
+    public void setHttpsPort(final Integer httpsPort) {
+        this.httpsPort = httpsPort;
+    }
+
+
+    public UUID getId() {
+        return this.id;
+    }
+
+    public void setId(final UUID id) {
+        this.id = id;
     }
 
 }

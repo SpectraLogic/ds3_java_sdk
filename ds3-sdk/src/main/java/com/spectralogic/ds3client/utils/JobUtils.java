@@ -32,10 +32,10 @@ public class JobUtils {
         for (final JobApiBean jobApiBean : response.getJobsApiBeanResult().getJobs()) {
             if (!jobApiBean.getBucketName().equals(bucketName) || jobApiBean.getStatus() != JobStatus.IN_PROGRESS || jobApiBean.getRequestType() != type) continue;
             final GetJobSpectraS3Response jobResponse = client.getJobSpectraS3(new GetJobSpectraS3Request(jobApiBean.getJobId()));
-            final JobWithChunksApiBean  jobWithChunksApiBean = jobResponse.getJobWithChunksApiBeanResult();
+            final MasterObjectList masterObjectList = jobResponse.getMasterObjectListResult();
 
-            for (final JobChunkApiBean jobChunkApiBean : jobWithChunksApiBean.getObjects()) {
-                if (chunkAndSetIntersects(jobChunkApiBean, files)){
+            for (final Objects objects : masterObjectList.getObjects()) {
+                if (chunkAndSetIntersects(objects, files)){
                     jobIds.add(jobApiBean.getJobId());
                     break;  // move onto the next job
                 }
@@ -45,9 +45,9 @@ public class JobUtils {
     }
 
     private static boolean chunkAndSetIntersects(
-            final JobChunkApiBean jobChunkApiBean,
+            final Objects objects,
             final ImmutableSet<String> fileNames) {
-        for (final BulkObject blobApiBean : jobChunkApiBean.getObjects()) {
+        for (final BulkObject blobApiBean : objects.getObjects()) {
             if (fileNames.contains(blobApiBean.getName())) return true;
         }
 

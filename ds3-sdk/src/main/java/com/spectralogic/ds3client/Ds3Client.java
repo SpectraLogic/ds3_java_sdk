@@ -19,7 +19,7 @@ package com.spectralogic.ds3client;
 import com.spectralogic.ds3client.commands.*;
 import com.spectralogic.ds3client.commands.spectrads3.*;
 import com.spectralogic.ds3client.commands.spectrads3.notifications.*;
-import com.spectralogic.ds3client.models.NodeApiBean;
+import com.spectralogic.ds3client.models.Ds3Node;
 import com.spectralogic.ds3client.networking.ConnectionDetails;
 
 import java.io.Closeable;
@@ -543,5 +543,5 @@ public interface Ds3Client extends Closeable {
     GetObjectResponse getObject(GetObjectRequest request)
             throws IOException, SignatureException;
 
-    Ds3Client newForNode(final NodeApiBean node);
+    Ds3Client newForNode(final Ds3Node node);
 }

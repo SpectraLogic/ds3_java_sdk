@@ -37,12 +37,12 @@ public class XmlOutput_Test {
     public void singleList() throws IOException {
         final String xmlResponse = "<MasterObjectList BucketName=\"lib\" JobId=\"9652a41a-218a-4158-af1b-064ab9e4ef71\" Priority=\"NORMAL\" RequestType=\"PUT\" StartDate=\"2014-07-29T16:08:39.000Z\"><Nodes><Node EndPoint=\"FAILED_TO_DETERMINE_DATAPATH_IP_ADDRESS\" HttpPort=\"80\" HttpsPort=\"443\" Id=\"b18ee082-1352-11e4-945e-080027ebeb6d\"/></Nodes><Objects ChunkId=\"cfa3153f-57de-41c7-b1fb-f30fa4154232\" ChunkNumber=\"0\"><Object Name=\"file2\" InCache=\"false\" Length=\"1202\" Offset=\"0\"/><Object Name=\"file1\" InCache=\"false\" Length=\"256\" Offset=\"0\"/><Object Name=\"file3\" InCache=\"false\" Length=\"2523\" Offset=\"0\"/></Objects></MasterObjectList>";
 
-        final JobWithChunksApiBean masterObjectList = XmlOutput.fromXml(xmlResponse, JobWithChunksApiBean.class);
+        final MasterObjectList masterObjectList = XmlOutput.fromXml(xmlResponse, MasterObjectList.class);
         assertThat(masterObjectList, is(notNullValue()));
         assertThat(masterObjectList.getObjects(), is(notNullValue()));
-        final List<JobChunkApiBean> objectsList = masterObjectList.getObjects();
+        final List<Objects> objectsList = masterObjectList.getObjects();
         assertThat(objectsList.size(), is(1));
-        final JobChunkApiBean objects = objectsList.get(0);
+        final Objects objects = objectsList.get(0);
         final List<BulkObject> objectList = objects.getObjects();
         assertThat(objectList.size(), is(3));
     }
@@ -58,9 +58,9 @@ public class XmlOutput_Test {
         final ListBucketResult result = XmlOutput.fromXml(xmlResponse, ListBucketResult.class);
         assertThat(result, is(notNullValue()));
         assertThat(result.getName(), is("remoteTest16"));
-        assertThat(result.getContentsList(), is(notNullValue()));
-        assertThat(result.getContentsList().size(), is(3));
-        assertThat(result.getContentsList().get(0).getSize(), is(674570L));
+        assertThat(result.getObjects(), is(notNullValue()));
+        assertThat(result.getObjects().size(), is(3));
+        assertThat(result.getObjects().get(0).getSize(), is(674570L));
     }
 
     @Test
@@ -69,7 +69,7 @@ public class XmlOutput_Test {
 
         final ListBucketResult result = XmlOutput.fromXml(xmlResponse, ListBucketResult.class);
         assertThat(result, is(notNullValue()));
-        assertThat(result.getContentsList(), is(notNullValue()));
+        assertThat(result.getObjects(), is(notNullValue()));
     }
 
     @Test

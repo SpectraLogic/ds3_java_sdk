@@ -81,7 +81,7 @@ public class Ds3PutObjectRelativePathExample {
 
             // We now need to generate the list of Ds3Objects that we want to get from DS3.
             final List<Ds3Object> objectList = new ArrayList<>();
-            for (final Contents contents : response.getBucketObjectsApiBeanResult().getObjects()) {
+            for (final Contents contents : response.getListBucketResult().getObjects()) {
                 objectList.add(new Ds3Object(contents.getKey(), contents.getSize()));
             }
 

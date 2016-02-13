@@ -22,14 +22,14 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import java.lang.String;
 import com.spectralogic.ds3client.models.UserApiBean;
 import java.lang.Integer;
-import com.spectralogic.ds3client.models.MultiPartUploadPartApiBean;
+import com.spectralogic.ds3client.models.MultipartUploadPart;
 import java.util.List;
 import java.util.ArrayList;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import java.util.UUID;
 
 @JacksonXmlRootElement(namespace = "ListPartsResult")
-public class ListMultiPartUploadPartsApiBean {
+public class ListPartsResult {
 
     // Variables
     @JsonProperty("Bucket")
@@ -52,7 +52,7 @@ public class ListMultiPartUploadPartsApiBean {
 
     @JsonProperty("Part")
     @JacksonXmlElementWrapper(useWrapping = false)
-    private List<MultiPartUploadPartApiBean> parts = new ArrayList<>();
+    private List<MultipartUploadPart> parts = new ArrayList<>();
 
     @JsonProperty("IsTruncated")
     private boolean truncated;
@@ -61,7 +61,7 @@ public class ListMultiPartUploadPartsApiBean {
     private UUID uploadId;
 
     // Constructor
-    public ListMultiPartUploadPartsApiBean() {
+    public ListPartsResult() {
         //pass
     }
 
@@ -121,11 +121,11 @@ public class ListMultiPartUploadPartsApiBean {
     }
 
 
-    public List<MultiPartUploadPartApiBean> getParts() {
+    public List<MultipartUploadPart> getParts() {
         return this.parts;
     }
 
-    public void setParts(final List<MultiPartUploadPartApiBean> parts) {
+    public void setParts(final List<MultipartUploadPart> parts) {
         this.parts = parts;
     }
 

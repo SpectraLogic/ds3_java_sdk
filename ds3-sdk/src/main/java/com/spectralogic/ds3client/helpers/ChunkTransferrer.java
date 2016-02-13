@@ -21,8 +21,8 @@ import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;
 import com.spectralogic.ds3client.Ds3Client;
 import com.spectralogic.ds3client.models.BulkObject;
-import com.spectralogic.ds3client.models.JobChunkApiBean;
-import com.spectralogic.ds3client.models.NodeApiBean;
+import com.spectralogic.ds3client.models.Objects;
+import com.spectralogic.ds3client.models.Ds3Node;
 import com.spectralogic.ds3client.serializer.XmlProcessingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -57,17 +57,17 @@ class ChunkTransferrer {
     }
     
     public void transferChunks(
-            final Iterable<NodeApiBean> nodes,
-            final Iterable<JobChunkApiBean> chunks)
+            final Iterable<Ds3Node> nodes,
+            final Iterable<Objects> chunks)
                 throws SignatureException, IOException, XmlProcessingException {
         LOG.debug("Getting ready to process chunks");
-        final Map<UUID, NodeApiBean> nodeMap = buildNodeMap(nodes);
+        final Map<UUID, Ds3Node> nodeMap = buildNodeMap(nodes);
         LOG.debug("Starting executor service");
         final ListeningExecutorService executor = MoreExecutors.listeningDecorator(Executors.newFixedThreadPool(maxParallelRequests));
         LOG.debug("Executor service started");
         try {
             final List<ListenableFuture<?>> tasks = new ArrayList<>();
-            for (final JobChunkApiBean chunk : chunks) {
+            for (final Objects chunk : chunks) {
                 LOG.debug("Processing parts for chunk: " + chunk.getChunkId().toString());
                 final Ds3Client client = mainClient.newForNode(nodeMap.get(chunk.getNodeId()));
                 for (final BulkObject ds3Object : chunk.getObjects()) {
@@ -93,9 +93,9 @@ class ChunkTransferrer {
         }
     }
 
-    private static Map<UUID, NodeApiBean> buildNodeMap(final Iterable<NodeApiBean> nodes) {
-        final Map<UUID, NodeApiBean> nodeMap = new HashMap<>();
-        for(final NodeApiBean node: nodes) {
+    private static Map<UUID, Ds3Node> buildNodeMap(final Iterable<Ds3Node> nodes) {
+        final Map<UUID, Ds3Node> nodeMap = new HashMap<>();
+        for(final Ds3Node node: nodes) {
             nodeMap.put(node.getId(), node);
         }
         return nodeMap;

@@ -19,13 +19,13 @@ package com.spectralogic.ds3client.commands.spectrads3;
 import com.spectralogic.ds3client.networking.WebResponse;
 import java.io.IOException;
 import java.io.InputStream;
-import com.spectralogic.ds3client.models.PhysicalPlacementApiBean;
+import com.spectralogic.ds3client.models.PhysicalPlacement;
 import com.spectralogic.ds3client.serializer.XmlOutput;
 import com.spectralogic.ds3client.commands.AbstractResponse;
 
 public class GetPhysicalPlacementForObjectsSpectraS3Response extends AbstractResponse {
 
-    private PhysicalPlacementApiBean physicalPlacementApiBeanResult;
+    private PhysicalPlacement physicalPlacementResult;
 
     public GetPhysicalPlacementForObjectsSpectraS3Response(final WebResponse response) throws IOException {
         super(response);
@@ -39,7 +39,7 @@ public class GetPhysicalPlacementForObjectsSpectraS3Response extends AbstractRes
             switch (this.getStatusCode()) {
             case 200:
                 try (final InputStream content = getResponse().getResponseStream()) {
-                    this.physicalPlacementApiBeanResult = XmlOutput.fromXml(content, PhysicalPlacementApiBean.class);
+                    this.physicalPlacementResult = XmlOutput.fromXml(content, PhysicalPlacement.class);
                 }
                 break;
             default:
@@ -50,8 +50,8 @@ public class GetPhysicalPlacementForObjectsSpectraS3Response extends AbstractRes
         }
     }
 
-    public PhysicalPlacementApiBean getPhysicalPlacementApiBeanResult() {
-        return this.physicalPlacementApiBeanResult;
+    public PhysicalPlacement getPhysicalPlacementResult() {
+        return this.physicalPlacementResult;
     }
 
 }

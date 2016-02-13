@@ -19,12 +19,12 @@ package com.spectralogic.ds3client.commands;
 import com.spectralogic.ds3client.networking.WebResponse;
 import java.io.IOException;
 import java.io.InputStream;
-import com.spectralogic.ds3client.models.InitiateMultipartUploadResultApiBean;
+import com.spectralogic.ds3client.models.InitiateMultipartUploadResult;
 import com.spectralogic.ds3client.serializer.XmlOutput;
 
 public class InitiateMultiPartUploadResponse extends AbstractResponse {
 
-    private InitiateMultipartUploadResultApiBean initiateMultipartUploadResultApiBeanResult;
+    private InitiateMultipartUploadResult initiateMultipartUploadResult;
 
     public InitiateMultiPartUploadResponse(final WebResponse response) throws IOException {
         super(response);
@@ -38,7 +38,7 @@ public class InitiateMultiPartUploadResponse extends AbstractResponse {
             switch (this.getStatusCode()) {
             case 200:
                 try (final InputStream content = getResponse().getResponseStream()) {
-                    this.initiateMultipartUploadResultApiBeanResult = XmlOutput.fromXml(content, InitiateMultipartUploadResultApiBean.class);
+                    this.initiateMultipartUploadResult = XmlOutput.fromXml(content, InitiateMultipartUploadResult.class);
                 }
                 break;
             default:
@@ -49,8 +49,8 @@ public class InitiateMultiPartUploadResponse extends AbstractResponse {
         }
     }
 
-    public InitiateMultipartUploadResultApiBean getInitiateMultipartUploadResultApiBeanResult() {
-        return this.initiateMultipartUploadResultApiBeanResult;
+    public InitiateMultipartUploadResult getInitiateMultipartUploadResult() {
+        return this.initiateMultipartUploadResult;
     }
 
 }

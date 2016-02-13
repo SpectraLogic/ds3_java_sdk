@@ -24,8 +24,8 @@ import com.spectralogic.ds3client.commands.spectrads3.CreateGetJobSpectraS3Reque
 import com.spectralogic.ds3client.commands.spectrads3.CreateGetJobSpectraS3Response;
 import com.spectralogic.ds3client.models.BulkObject;
 import com.spectralogic.ds3client.models.Contents;
-import com.spectralogic.ds3client.models.JobChunkApiBean;
-import com.spectralogic.ds3client.models.JobWithChunksApiBean;
+import com.spectralogic.ds3client.models.Objects;
+import com.spectralogic.ds3client.models.MasterObjectList;
 import com.spectralogic.ds3client.models.bulk.Ds3Object;
 import com.spectralogic.ds3client.serializer.XmlProcessingException;
 
@@ -53,7 +53,7 @@ public class Ds3BulkGetExample {
 
             // We now need to generate the list of Ds3Objects that we want to get from DS3.
             final List<Ds3Object> objectList = new ArrayList<>();
-            for (final Contents contents : response.getBucketObjectsApiBeanResult().getObjects()) {
+            for (final Contents contents : response.getListBucketResult().getObjects()) {
                 objectList.add(new Ds3Object(contents.getKey(), contents.getSize()));
             }
 
@@ -70,8 +70,8 @@ public class Ds3BulkGetExample {
                     .createGetJobSpectraS3(new CreateGetJobSpectraS3Request(bucket, objectList));
 
             // The bulk response returns a list of lists which is designed to optimize data transmission from DS3.
-            final JobWithChunksApiBean list = bulkResponse.getResult();
-            for (final JobChunkApiBean objects : list.getObjects()) {
+            final MasterObjectList list = bulkResponse.getResult();
+            for (final Objects objects : list.getObjects()) {
                 for (final BulkObject obj : objects.getObjects()) {
                     final FileChannel channel = FileChannel.open(
                             dirPath.resolve(obj.getName()),

@@ -19,12 +19,12 @@ package com.spectralogic.ds3client.commands;
 import com.spectralogic.ds3client.networking.WebResponse;
 import java.io.IOException;
 import java.io.InputStream;
-import com.spectralogic.ds3client.models.BucketsApiBean;
+import com.spectralogic.ds3client.models.ListAllMyBucketsResult;
 import com.spectralogic.ds3client.serializer.XmlOutput;
 
 public class GetBucketsResponse extends AbstractResponse {
 
-    private BucketsApiBean bucketsApiBeanResult;
+    private ListAllMyBucketsResult listAllMyBucketsResult;
 
     public GetBucketsResponse(final WebResponse response) throws IOException {
         super(response);
@@ -38,7 +38,7 @@ public class GetBucketsResponse extends AbstractResponse {
             switch (this.getStatusCode()) {
             case 200:
                 try (final InputStream content = getResponse().getResponseStream()) {
-                    this.bucketsApiBeanResult = XmlOutput.fromXml(content, BucketsApiBean.class);
+                    this.listAllMyBucketsResult = XmlOutput.fromXml(content, ListAllMyBucketsResult.class);
                 }
                 break;
             default:
@@ -49,8 +49,8 @@ public class GetBucketsResponse extends AbstractResponse {
         }
     }
 
-    public BucketsApiBean getBucketsApiBeanResult() {
-        return this.bucketsApiBeanResult;
+    public ListAllMyBucketsResult getListAllMyBucketsResult() {
+        return this.listAllMyBucketsResult;
     }
 
 }

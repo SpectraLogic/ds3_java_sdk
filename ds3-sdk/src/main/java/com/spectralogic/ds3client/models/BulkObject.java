@@ -22,7 +22,7 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import java.util.UUID;
 import java.lang.Boolean;
 import java.lang.String;
-import com.spectralogic.ds3client.models.PhysicalPlacementApiBean;
+import com.spectralogic.ds3client.models.PhysicalPlacement;
 
 @JacksonXmlRootElement(namespace = "Data")
 public class BulkObject {
@@ -47,7 +47,7 @@ public class BulkObject {
     private long offset;
 
     @JsonProperty("PhysicalPlacement")
-    private PhysicalPlacementApiBean physicalPlacement;
+    private PhysicalPlacement physicalPlacement;
 
     @JacksonXmlProperty(isAttribute = true, localName = "Version")
     private long version;
@@ -113,11 +113,11 @@ public class BulkObject {
     }
 
 
-    public PhysicalPlacementApiBean getPhysicalPlacement() {
+    public PhysicalPlacement getPhysicalPlacement() {
         return this.physicalPlacement;
     }
 
-    public void setPhysicalPlacement(final PhysicalPlacementApiBean physicalPlacement) {
+    public void setPhysicalPlacement(final PhysicalPlacement physicalPlacement) {
         this.physicalPlacement = physicalPlacement;
     }
 

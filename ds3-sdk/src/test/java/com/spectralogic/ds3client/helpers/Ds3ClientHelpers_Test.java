@@ -26,6 +26,7 @@ import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.Job;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.ObjectChannelBuilder;
 import com.spectralogic.ds3client.models.*;
 import com.spectralogic.ds3client.models.Error;
+import com.spectralogic.ds3client.models.Objects;
 import com.spectralogic.ds3client.models.bulk.Ds3Object;
 import com.spectralogic.ds3client.networking.ConnectionDetails;
 import com.spectralogic.ds3client.networking.FailedRequestException;
@@ -106,7 +107,7 @@ public class Ds3ClientHelpers_Test {
     public void testReadObjectsWithFailedGet() throws SignatureException, IOException, XmlProcessingException, ParseException {
         final Ds3Client ds3Client = mock(Ds3Client.class);
 
-        Mockito.when(ds3Client.newForNode(Mockito.<NodeApiBean>any())).thenReturn(ds3Client);
+        Mockito.when(ds3Client.newForNode(Mockito.<Ds3Node>any())).thenReturn(ds3Client);
 
         final CreateGetJobSpectraS3Response buildBulkGetResponse = buildBulkGetResponse();
         Mockito.when(ds3Client.createGetJobSpectraS3(hasChunkOrdering(JobChunkClientProcessingOrderGuarantee.NONE))).thenReturn(buildBulkGetResponse);
@@ -185,7 +186,7 @@ public class Ds3ClientHelpers_Test {
         final ConnectionDetails details = mock(ConnectionDetails.class);
         Mockito.when(details.getEndpoint()).thenReturn("localhost");
 
-        Mockito.when(ds3Client.newForNode(Mockito.<NodeApiBean>any())).thenReturn(ds3Client);
+        Mockito.when(ds3Client.newForNode(Mockito.<Ds3Node>any())).thenReturn(ds3Client);
         Mockito.when(ds3Client.getConnectionDetails()).thenReturn(details);
 
         final CreatePutJobSpectraS3Response buildBulkPutResponse = buildBulkPutResponse();
@@ -311,7 +312,7 @@ public class Ds3ClientHelpers_Test {
         }
 
         @Override
-        public BucketObjectsApiBean getBucketObjectsApiBeanResult() {
+        public ListBucketResult getListBucketResult() {
             try {
                 switch (this.invocationIndex) {
                     case 0: return buildListBucketResult(buildContentList0(), "", "baz", true);
@@ -326,12 +327,12 @@ public class Ds3ClientHelpers_Test {
             return null;
         }
 
-        private static BucketObjectsApiBean buildListBucketResult(
+        private static ListBucketResult buildListBucketResult(
                 final List<Contents> contentList,
                 final String marker,
                 final String nextMarker,
                 final boolean isTruncated) {
-            final BucketObjectsApiBean listBucketResult = new BucketObjectsApiBean();
+            final ListBucketResult listBucketResult = new ListBucketResult();
             listBucketResult.setObjects(contentList);
             listBucketResult.setDelimiter("");
             listBucketResult.setMarker(marker);
@@ -391,7 +392,7 @@ public class Ds3ClientHelpers_Test {
             .thenReturn(jobChunksResponse2)
             .thenReturn(jobChunksResponse3);
 
-        Mockito.when(ds3Client.newForNode(Mockito.<NodeApiBean>any())).thenReturn(ds3Client);
+        Mockito.when(ds3Client.newForNode(Mockito.<Ds3Node>any())).thenReturn(ds3Client);
         Mockito.when(ds3Client.getConnectionDetails()).thenReturn(details);
         return ds3Client;
     }
@@ -480,12 +481,12 @@ public class Ds3ClientHelpers_Test {
         return allocated(chunk2(false));
     }
 
-    private static JobWithChunksApiBean buildJobResponse(
+    private static MasterObjectList buildJobResponse(
             final JobRequestType requestType,
             final JobChunkClientProcessingOrderGuarantee chunkOrdering,
             final long cachedSizeInBytes,
             final long completedSizeInBytes,
-            final JobChunkApiBean ... chunks) throws ParseException {
+            final Objects... chunks) throws ParseException {
         return ResponseBuilders.jobResponse(
                 jobId,
                 MYBUCKET,
@@ -505,7 +506,7 @@ public class Ds3ClientHelpers_Test {
     }
 
     private static final UUID CHUNK_ID_1 = UUID.fromString("f44f1aab-f365-4814-883f-037d6afa6bcf");
-    private static JobChunkApiBean chunk1(final boolean inCache) {
+    private static Objects chunk1(final boolean inCache) {
         return chunk(
                 1,
                 CHUNK_ID_1,
@@ -517,7 +518,7 @@ public class Ds3ClientHelpers_Test {
     }
 
     private static final UUID CHUNK_ID_2 = UUID.fromString("7cda9f1a-3a7d-44a5-813e-29535228c40c");
-    private static JobChunkApiBean chunk2(final boolean inCache) {
+    private static Objects chunk2(final boolean inCache) {
         return chunk(
                 2,
                 CHUNK_ID_2,

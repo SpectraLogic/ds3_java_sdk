@@ -22,7 +22,7 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import java.lang.String;
 import com.spectralogic.ds3client.models.JobChunkClientProcessingOrderGuarantee;
 import java.util.UUID;
-import com.spectralogic.ds3client.models.NodeApiBean;
+import com.spectralogic.ds3client.models.Ds3Node;
 import java.util.List;
 import java.util.ArrayList;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
@@ -62,7 +62,7 @@ public class JobApiBean {
 
     @JsonProperty("Nodes")
     @JacksonXmlElementWrapper(useWrapping = true)
-    private List<NodeApiBean> nodes = new ArrayList<>();
+    private List<Ds3Node> nodes = new ArrayList<>();
 
     @JacksonXmlProperty(isAttribute = true, localName = "OriginalSizeInBytes")
     private long originalSizeInBytes;
@@ -167,11 +167,11 @@ public class JobApiBean {
     }
 
 
-    public List<NodeApiBean> getNodes() {
+    public List<Ds3Node> getNodes() {
         return this.nodes;
     }
 
-    public void setNodes(final List<NodeApiBean> nodes) {
+    public void setNodes(final List<Ds3Node> nodes) {
         this.nodes = nodes;
     }
 

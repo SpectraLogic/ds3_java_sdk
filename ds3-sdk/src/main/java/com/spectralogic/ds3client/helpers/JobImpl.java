@@ -17,35 +17,35 @@ package com.spectralogic.ds3client.helpers;
 
 import com.spectralogic.ds3client.Ds3Client;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.Job;
-import com.spectralogic.ds3client.models.JobWithChunksApiBean;
+import com.spectralogic.ds3client.models.MasterObjectList;
 
 import java.util.UUID;
 
 abstract class JobImpl implements Job {
     protected final Ds3Client client;
-    protected final JobWithChunksApiBean jobWithChunksApiBean;
+    protected final MasterObjectList masterObjectList;
     protected boolean running = false;
     protected int maxParallelRequests = 10;
 
-    public JobImpl(final Ds3Client client, final JobWithChunksApiBean jobWithChunksApiBean) {
+    public JobImpl(final Ds3Client client, final MasterObjectList masterObjectList) {
         this.client = client;
-        this.jobWithChunksApiBean = jobWithChunksApiBean;
+        this.masterObjectList = masterObjectList;
     }
     
     @Override
     public UUID getJobId() {
-        if (this.jobWithChunksApiBean == null) {
+        if (this.masterObjectList == null) {
             return null;
         }
-        return this.jobWithChunksApiBean.getJobId();
+        return this.masterObjectList.getJobId();
     }
 
     @Override
     public String getBucketName() {
-        if (this.jobWithChunksApiBean == null) {
+        if (this.masterObjectList == null) {
             return null;
         }
-        return this.jobWithChunksApiBean.getBucketName();
+        return this.masterObjectList.getBucketName();
     }
     
     @Override

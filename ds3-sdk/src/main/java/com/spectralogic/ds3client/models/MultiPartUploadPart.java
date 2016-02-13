@@ -20,75 +20,52 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import java.lang.String;
+import java.util.Date;
 
-@JacksonXmlRootElement(namespace = "Error")
-public class HttpErrorResultApiBean {
+@JacksonXmlRootElement(namespace = "Data")
+public class MultipartUploadPart {
 
     // Variables
-    @JsonProperty("Code")
-    private String code;
+    @JsonProperty("ETag")
+    private String eTag;
 
-    @JsonProperty("HttpErrorCode")
-    private int httpErrorCode;
+    @JsonProperty("LastModified")
+    private Date lastModified;
 
-    @JsonProperty("Message")
-    private String message;
-
-    @JsonProperty("Resource")
-    private String resource;
-
-    @JsonProperty("ResourceId")
-    private long resourceId;
+    @JsonProperty("PartNumber")
+    private int partNumber;
 
     // Constructor
-    public HttpErrorResultApiBean() {
+    public MultipartUploadPart() {
         //pass
     }
 
     // Getters and Setters
     
-    public String getCode() {
-        return this.code;
+    public String getETag() {
+        return this.eTag;
     }
 
-    public void setCode(final String code) {
-        this.code = code;
-    }
-
-
-    public int getHttpErrorCode() {
-        return this.httpErrorCode;
-    }
-
-    public void setHttpErrorCode(final int httpErrorCode) {
-        this.httpErrorCode = httpErrorCode;
+    public void setETag(final String eTag) {
+        this.eTag = eTag;
     }
 
 
-    public String getMessage() {
-        return this.message;
+    public Date getLastModified() {
+        return this.lastModified;
     }
 
-    public void setMessage(final String message) {
-        this.message = message;
-    }
-
-
-    public String getResource() {
-        return this.resource;
-    }
-
-    public void setResource(final String resource) {
-        this.resource = resource;
+    public void setLastModified(final Date lastModified) {
+        this.lastModified = lastModified;
     }
 
 
-    public long getResourceId() {
-        return this.resourceId;
+    public int getPartNumber() {
+        return this.partNumber;
     }
 
-    public void setResourceId(final long resourceId) {
-        this.resourceId = resourceId;
+    public void setPartNumber(final int partNumber) {
+        this.partNumber = partNumber;
     }
 
 }

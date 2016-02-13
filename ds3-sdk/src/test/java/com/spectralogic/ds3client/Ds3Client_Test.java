@@ -22,6 +22,7 @@ import com.spectralogic.ds3client.commands.*;
 import com.spectralogic.ds3client.commands.spectrads3.*;
 import com.spectralogic.ds3client.exceptions.ContentLengthNotMatchException;
 import com.spectralogic.ds3client.models.*;
+import com.spectralogic.ds3client.models.Objects;
 import com.spectralogic.ds3client.models.bulk.Ds3Object;
 import com.spectralogic.ds3client.networking.FailedRequestException;
 import com.spectralogic.ds3client.serializer.XmlProcessingException;
@@ -95,13 +96,13 @@ public class Ds3Client_Test {
             .returning(200, stringResponse)
             .asClient()
             .getBuckets(new GetBucketsRequest());
-        final BucketsApiBean result = response.getBucketsApiBeanResult();
+        final ListAllMyBucketsResult result = response.getListAllMyBucketsResult();
         assertThat(result.getOwner().getDisplayName(), is("ryan"));
         assertThat(result.getOwner().getId(), is(id));
         
-        final List<BucketApiBean> buckets = result.getBuckets();
+        final List<Ds3Bucket> buckets = result.getBuckets();
         final List<String> bucketNames = new ArrayList<>();
-        for (final BucketApiBean bucket : buckets) {
+        for (final Ds3Bucket bucket : buckets) {
             bucketNames.add(bucket.getName());
             assertThat(bucket.getCreationDate(), is(DATE_FORMAT.parse("2013-12-11T23:20:09.000Z")));
         }
@@ -125,12 +126,12 @@ public class Ds3Client_Test {
                 "<Owner><ID>" + id.toString() + "</ID><DisplayName>ryan</DisplayName></Owner></Contents><Contents><Key>user/hduser/gutenberg/4300.txt.utf-8</Key><LastModified>2014-01-03T13:26:47.000Z</LastModified><ETag>33EE4519EA7DDAB27CA4E2742326D70B</ETag><Size>1573150</Size><StorageClass>DEEP</StorageClass>" +
                 "<Owner><ID>" + id.toString() + "</ID><DisplayName>ryan</DisplayName></Owner></Contents></ListBucketResult>";
         
-        final BucketObjectsApiBean result = MockNetwork
+        final ListBucketResult result = MockNetwork
             .expecting(HttpVerb.GET, "/remoteTest16", null, null)
             .returning(200, xmlResponse)
             .asClient()
             .getBucket(new GetBucketRequest("remoteTest16"))
-            .getBucketObjectsApiBeanResult();
+            .getListBucketResult();
         
         assertThat(result.getName(), is("remoteTest16"));
         assertThat(result.getPrefix(), is(nullValue()));
@@ -290,8 +291,8 @@ public class Ds3Client_Test {
                 "</DeleteResult>")
             .asClient()
             .deleteObjects(new DeleteObjectsRequest("bucketName", objsToDelete));
-        assertThat(response.getDeleteResultApiBeanResult().getDeletedObjects().size(), is(1));
-        assertThat(response.getDeleteResultApiBeanResult().getErrors().size(), is(1));
+        assertThat(response.getDeleteResult().getDeletedObjects().size(), is(1));
+        assertThat(response.getDeleteResult().getErrors().size(), is(1));
     }
 
     @Test(expected = FailedRequestException.class)
@@ -428,7 +429,7 @@ public class Ds3Client_Test {
     public void createPutJobSpectraS3() throws IOException, SignatureException, XmlProcessingException {
         this.runBulkTest(BulkCommand.PUT, new BulkTestDriver() {
             @Override
-            public JobWithChunksApiBean performRestCall(final Ds3Client client, final String bucket, final List<Ds3Object> objects)
+            public MasterObjectList performRestCall(final Ds3Client client, final String bucket, final List<Ds3Object> objects)
                     throws SignatureException, IOException, XmlProcessingException {
                 return client.createPutJobSpectraS3(new CreatePutJobSpectraS3Request(bucket, objects)).getResult();
             }
@@ -439,7 +440,7 @@ public class Ds3Client_Test {
     public void createGetJobSpectraS3() throws IOException, SignatureException, XmlProcessingException {
         this.runBulkTest(BulkCommand.GET, new BulkTestDriver() {
             @Override
-            public JobWithChunksApiBean performRestCall(final Ds3Client client, final String bucket, final List<Ds3Object> objects)
+            public MasterObjectList performRestCall(final Ds3Client client, final String bucket, final List<Ds3Object> objects)
                     throws SignatureException, IOException, XmlProcessingException {
                 return client.createGetJobSpectraS3(new CreateGetJobSpectraS3Request(bucket, objects)).getResult();
             }
@@ -447,7 +448,7 @@ public class Ds3Client_Test {
     }
     
     private interface BulkTestDriver {
-        JobWithChunksApiBean performRestCall(final Ds3Client client, final String bucket, final List<Ds3Object> objects)
+        MasterObjectList performRestCall(final Ds3Client client, final String bucket, final List<Ds3Object> objects)
                 throws SignatureException, IOException, XmlProcessingException;
     }
     
@@ -477,7 +478,7 @@ public class Ds3Client_Test {
             .returning(200, xmlResponse)
             .asClient();
         
-        final List<JobChunkApiBean> objectListList = driver.performRestCall(client, "bulkTest", objects).getObjects();
+        final List<Objects> objectListList = driver.performRestCall(client, "bulkTest", objects).getObjects();
         assertThat(objectListList.size(), is(1));
         
         final List<BulkObject> objectList = objectListList.get(0).getObjects();
@@ -514,7 +515,7 @@ public class Ds3Client_Test {
             .allocateJobChunkSpectraS3(new AllocateJobChunkSpectraS3Request(chunkId));
         
         assertThat(response.getStatus(), is(AllocateJobChunkSpectraS3Response.Status.ALLOCATED));
-        final JobChunkApiBean chunk = response.getJobChunkApiBeanResult();
+        final Objects chunk = response.getObjectsResult();
         
         assertThat(chunk.getChunkId(), is(chunkId));
         assertThat(chunk.getChunkNumber(), is(3));
@@ -577,7 +578,7 @@ public class Ds3Client_Test {
         
         assertThat(response.getStatus(), is(GetJobChunksReadyForClientProcessingSpectraS3Response.Status.AVAILABLE));
 
-        checkJobWithChunksApiBean(response.getJobWithChunksApiBeanResult());
+        checkJobWithChunksApiBean(response.getMasterObjectListResult());
     }
 
     @Test
@@ -684,7 +685,7 @@ public class Ds3Client_Test {
         assertThat(job.getUserId(), is(userId));
         assertThat(job.getUserName(), is(userName));
         assertThat(job.getWriteOptimization(), is(writeOptimization));
-        final NodeApiBean node = job.getNodes().get(0);
+        final Ds3Node node = job.getNodes().get(0);
         assertThat(node.getEndPoint(), is("10.10.10.10"));
         assertThat(node.getHttpPort(), is(80));
         assertThat(node.getHttpsPort(), is(443));
@@ -698,32 +699,32 @@ public class Ds3Client_Test {
                         .returning(200, MASTER_OBJECT_LIST_XML)
                         .asClient()
                         .getJobSpectraS3(new GetJobSpectraS3Request(UUID.fromString("1a85e743-ec8f-4789-afec-97e587a26936")))
-                        .getJobWithChunksApiBeanResult()
+                        .getMasterObjectListResult()
         );
     }
 
-    private static void checkJobWithChunksApiBean(final JobWithChunksApiBean jobWithChunksApiBean) throws ParseException {
-        assertThat(jobWithChunksApiBean.getBucketName(), is("bucket8192000000"));
-        assertThat(jobWithChunksApiBean.getJobId(), is(MASTER_OBJECT_LIST_JOB_ID));
-        assertThat(jobWithChunksApiBean.getPriority(), is(BlobStoreTaskPriority.NORMAL));
-        assertThat(jobWithChunksApiBean.getRequestType(), is(JobRequestType.GET));
-        assertThat(jobWithChunksApiBean.getStartDate(), is(DATE_FORMAT.parse("2014-07-01T20:12:52.000Z")));
+    private static void checkJobWithChunksApiBean(final MasterObjectList masterObjectList) throws ParseException {
+        assertThat(masterObjectList.getBucketName(), is("bucket8192000000"));
+        assertThat(masterObjectList.getJobId(), is(MASTER_OBJECT_LIST_JOB_ID));
+        assertThat(masterObjectList.getPriority(), is(BlobStoreTaskPriority.NORMAL));
+        assertThat(masterObjectList.getRequestType(), is(JobRequestType.GET));
+        assertThat(masterObjectList.getStartDate(), is(DATE_FORMAT.parse("2014-07-01T20:12:52.000Z")));
 
-        final List<NodeApiBean> nodes = jobWithChunksApiBean.getNodes();
+        final List<Ds3Node> nodes = masterObjectList.getNodes();
         assertThat(nodes.size(), is(2));
-        final NodeApiBean node0 = nodes.get(0);
+        final Ds3Node node0 = nodes.get(0);
         assertThat(node0.getEndPoint(), is("10.1.18.12"));
         assertThat(node0.getHttpPort(), is(80));
         assertThat(node0.getHttpsPort(), is(443));
-        final NodeApiBean node1 = nodes.get(1);
+        final Ds3Node node1 = nodes.get(1);
         assertThat(node1.getEndPoint(), is("10.1.18.13"));
         assertThat(node1.getHttpPort(), is(nullValue())); //TODO verify this is correct change from is(0)
         assertThat(node1.getHttpsPort(), is(443)); 
         
-        final List<JobChunkApiBean> chunkList = jobWithChunksApiBean.getObjects();
+        final List<Objects> chunkList = masterObjectList.getObjects();
         assertThat(chunkList.size(), is(2));
 
-        final JobChunkApiBean chunk0 = chunkList.get(0);
+        final Objects chunk0 = chunkList.get(0);
         assertThat(chunk0.getChunkId(), is(UUID.fromString("f58370c2-2538-4e78-a9f8-e4d2676bdf44")));
         assertThat(chunk0.getChunkNumber(), is(0));
         assertThat(chunk0.getNodeId(), is(UUID.fromString("a02053b9-0147-11e4-8d6a-002590c1177c")));
@@ -740,7 +741,7 @@ public class Ds3Client_Test {
         assertThat(bulkObject0_1.getLength(), is(2823290880L));
         assertThat(bulkObject0_1.getInCache(), is(true));
 
-        final JobChunkApiBean chunk1 = chunkList.get(1);
+        final Objects chunk1 = chunkList.get(1);
         assertThat(chunk1.getChunkId(), is(UUID.fromString("4137d768-25bb-4942-9d36-b92dfbe75e01")));
         assertThat(chunk1.getChunkNumber(), is(1));
         assertThat(chunk1.getNodeId(), is(UUID.fromString("95e97010-8e70-4733-926c-aeeb21796848")));
@@ -776,7 +777,7 @@ public class Ds3Client_Test {
                         .returning(200, MASTER_OBJECT_LIST_XML)
                         .asClient()
                         .modifyJobSpectraS3(new ModifyJobSpectraS3Request(MASTER_OBJECT_LIST_JOB_ID))
-                        .getJobWithChunksApiBeanResult()
+                        .getMasterObjectListResult()
         );
     }
 
@@ -804,7 +805,7 @@ public class Ds3Client_Test {
     public void newForNode() {
         final Ds3Client client = Ds3ClientBuilder.create("endpoint", new Credentials("access", "key")).build();
 
-        final NodeApiBean node = new NodeApiBean();
+        final Ds3Node node = new Ds3Node();
         node.setEndPoint("newEndpoint");
         node.setHttpPort(80);
         node.setHttpsPort(443);
@@ -825,8 +826,8 @@ public class Ds3Client_Test {
                 .asClient()
                 .verifySystemHealthSpectraS3(new VerifySystemHealthSpectraS3Request());
 
-        assertThat(response.getHealthVerificationResultResult(), is(notNullValue()));
-        assertThat(response.getHealthVerificationResultResult().getMsRequiredToVerifyDataPlannerHealth(), is(0L));
+        assertThat(response.getHealthVerificationResult(), is(notNullValue()));
+        assertThat(response.getHealthVerificationResult().getMsRequiredToVerifyDataPlannerHealth(), is(0L));
     }
 
     @Test
@@ -839,7 +840,7 @@ public class Ds3Client_Test {
                 .asClient()
                 .getSystemInformationSpectraS3(new GetSystemInformationSpectraS3Request());
 
-        assertThat(response.getSystemInformationApiBeanResult(), is(notNullValue()));
+        assertThat(response.getSystemInformationResult(), is(notNullValue()));
     }
 
     @Test

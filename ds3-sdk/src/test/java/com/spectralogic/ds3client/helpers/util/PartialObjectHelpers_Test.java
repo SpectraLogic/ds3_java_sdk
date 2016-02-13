@@ -2,7 +2,7 @@ package com.spectralogic.ds3client.helpers.util;
 
 import com.google.common.collect.*;
 import com.spectralogic.ds3client.models.BulkObject;
-import com.spectralogic.ds3client.models.JobChunkApiBean;
+import com.spectralogic.ds3client.models.Objects;
 import com.spectralogic.ds3client.models.Range;
 import com.spectralogic.ds3client.models.bulk.Ds3Object;
 import com.spectralogic.ds3client.models.bulk.PartialDs3Object;
@@ -116,7 +116,7 @@ public class PartialObjectHelpers_Test {
         blobs.add(blob1);
         blobs.add(blob2);
 
-        final JobChunkApiBean chunk1 =  new JobChunkApiBean();
+        final Objects chunk1 =  new Objects();
         chunk1.setObjects(blobs);
 
         final BulkObject blob3 = new BulkObject();
@@ -128,10 +128,10 @@ public class PartialObjectHelpers_Test {
         blobs = Lists.newArrayList();
         blobs.add(blob3);
 
-        final JobChunkApiBean chunk2 = new JobChunkApiBean();
+        final Objects chunk2 = new Objects();
         chunk2.setObjects(blobs);
 
-        final List<JobChunkApiBean> chunks = Lists.newArrayList();
+        final List<Objects> chunks = Lists.newArrayList();
         chunks.add(chunk1);
         chunks.add(chunk2);
 
@@ -244,14 +244,14 @@ public class PartialObjectHelpers_Test {
         blob3.setInCache(true);
         blob3.setOffset(20);
 
-        final List<JobChunkApiBean> objects = Lists.newArrayList();
-        final JobChunkApiBean objs1 = new JobChunkApiBean();
+        final List<Objects> objects = Lists.newArrayList();
+        final Objects objs1 = new Objects();
         objs1.setObjects(Lists.newArrayList(blob1));
 
-        final JobChunkApiBean objs2 = new JobChunkApiBean();
+        final Objects objs2 = new Objects();
         objs2.setObjects(Lists.newArrayList(blob2));
 
-        final JobChunkApiBean objs3 = new JobChunkApiBean();
+        final Objects objs3 = new Objects();
         objs3.setObjects(Lists.newArrayList(blob3));
 
         objects.add(objs1);

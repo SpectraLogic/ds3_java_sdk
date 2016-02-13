@@ -19,41 +19,76 @@ package com.spectralogic.ds3client.models;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import java.util.Date;
 import java.lang.String;
 
-@JacksonXmlRootElement(namespace = "Data")
-public class BucketApiBean {
+@JacksonXmlRootElement(namespace = "Error")
+public class HttpError {
 
     // Variables
-    @JsonProperty("CreationDate")
-    private Date creationDate;
+    @JsonProperty("Code")
+    private String code;
 
-    @JsonProperty("Name")
-    private String name;
+    @JsonProperty("HttpErrorCode")
+    private int httpErrorCode;
+
+    @JsonProperty("Message")
+    private String message;
+
+    @JsonProperty("Resource")
+    private String resource;
+
+    @JsonProperty("ResourceId")
+    private long resourceId;
 
     // Constructor
-    public BucketApiBean() {
+    public HttpError() {
         //pass
     }
 
     // Getters and Setters
     
-    public Date getCreationDate() {
-        return this.creationDate;
+    public String getCode() {
+        return this.code;
     }
 
-    public void setCreationDate(final Date creationDate) {
-        this.creationDate = creationDate;
+    public void setCode(final String code) {
+        this.code = code;
     }
 
 
-    public String getName() {
-        return this.name;
+    public int getHttpErrorCode() {
+        return this.httpErrorCode;
     }
 
-    public void setName(final String name) {
-        this.name = name;
+    public void setHttpErrorCode(final int httpErrorCode) {
+        this.httpErrorCode = httpErrorCode;
+    }
+
+
+    public String getMessage() {
+        return this.message;
+    }
+
+    public void setMessage(final String message) {
+        this.message = message;
+    }
+
+
+    public String getResource() {
+        return this.resource;
+    }
+
+    public void setResource(final String resource) {
+        this.resource = resource;
+    }
+
+
+    public long getResourceId() {
+        return this.resourceId;
+    }
+
+    public void setResourceId(final long resourceId) {
+        this.resourceId = resourceId;
     }
 
 }

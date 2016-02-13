@@ -19,7 +19,7 @@ package com.spectralogic.ds3client.commands.spectrads3;
 import com.spectralogic.ds3client.networking.WebResponse;
 import java.io.IOException;
 import java.io.InputStream;
-import com.spectralogic.ds3client.models.JobWithChunksApiBean;
+import com.spectralogic.ds3client.models.MasterObjectList;
 import com.spectralogic.ds3client.serializer.XmlOutput;
 import com.spectralogic.ds3client.commands.AbstractResponse;
 import com.spectralogic.ds3client.commands.RetryAfterExpectedException;
@@ -28,7 +28,7 @@ import static com.spectralogic.ds3client.utils.Guard.isNullOrEmpty;
 
 public class GetJobChunksReadyForClientProcessingSpectraS3Response extends AbstractResponse {
 
-    private JobWithChunksApiBean jobWithChunksApiBeanResult;
+    private MasterObjectList masterObjectListResult;
 
     public enum Status {
         AVAILABLE, RETRYLATER
@@ -57,8 +57,8 @@ public class GetJobChunksReadyForClientProcessingSpectraS3Response extends Abstr
             switch (this.getStatusCode()) {
             case 200:
                 try (final InputStream content = webResponse.getResponseStream()) {
-                    this.jobWithChunksApiBeanResult = XmlOutput.fromXml(content, JobWithChunksApiBean.class);
-                    if (isNullOrEmpty(this.jobWithChunksApiBeanResult.getObjects())) {
+                    this.masterObjectListResult = XmlOutput.fromXml(content, MasterObjectList.class);
+                    if (isNullOrEmpty(this.masterObjectListResult.getObjects())) {
                         this.status = Status.RETRYLATER;
                         this.retryAfterSeconds = parseRetryAfter(webResponse);
                     } else {
@@ -82,8 +82,8 @@ public class GetJobChunksReadyForClientProcessingSpectraS3Response extends Abstr
         return Integer.parseInt(retryAfter);
     }
 
-    public JobWithChunksApiBean getJobWithChunksApiBeanResult() {
-        return this.jobWithChunksApiBeanResult;
+    public MasterObjectList getMasterObjectListResult() {
+        return this.masterObjectListResult;
     }
 
 

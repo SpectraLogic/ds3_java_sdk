@@ -144,15 +144,15 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
     @Override
     public Ds3ClientHelpers.Job recoverWriteJob(final UUID jobId) throws SignatureException, IOException, XmlProcessingException, JobRecoveryException {
         final ModifyJobSpectraS3Response jobResponse = this.client.modifyJobSpectraS3(new ModifyJobSpectraS3Request(jobId));
-        if (JobRequestType.PUT != jobResponse.getJobWithChunksApiBeanResult().getRequestType()) {
+        if (JobRequestType.PUT != jobResponse.getMasterObjectListResult().getRequestType()) {
             throw new JobRecoveryException(
                     RequestType.PUT.toString(),
-                    jobResponse.getJobWithChunksApiBeanResult().getRequestType().toString());
+                    jobResponse.getMasterObjectListResult().getRequestType().toString());
         }
         // TODO Need to allow the user to pass in the checksumming information again
         return new WriteJobImpl(
                 this.client,
-                jobResponse.getJobWithChunksApiBeanResult(),
+                jobResponse.getMasterObjectListResult(),
                 this.retryAfter,
                 ChecksumType.Type.NONE);
     }
@@ -161,14 +161,14 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
     //TODO add a partial object read recovery method.  That method will require the list of partial objects.
     public Ds3ClientHelpers.Job recoverReadJob(final UUID jobId) throws SignatureException, IOException, XmlProcessingException, JobRecoveryException {
         final ModifyJobSpectraS3Response jobResponse = this.client.modifyJobSpectraS3(new ModifyJobSpectraS3Request(jobId));
-        if (JobRequestType.GET != jobResponse.getJobWithChunksApiBeanResult().getRequestType()){
+        if (JobRequestType.GET != jobResponse.getMasterObjectListResult().getRequestType()){
             throw new JobRecoveryException(
                     RequestType.GET.toString(),
-                    jobResponse.getJobWithChunksApiBeanResult().getRequestType().toString() );
+                    jobResponse.getMasterObjectListResult().getRequestType().toString() );
         }
         return new ReadJobImpl(
                 this.client,
-                jobResponse.getJobWithChunksApiBeanResult(),
+                jobResponse.getMasterObjectListResult(),
                 ImmutableMultimap.<String, Range>of(),
                 this.retryAfter);
     }
@@ -223,8 +223,7 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
             }
 
             final GetBucketResponse response = this.client.getBucket(request);
-            //final ListBucketResult result = response.getResult();
-            final BucketObjectsApiBean result = response.getBucketObjectsApiBeanResult();
+            final ListBucketResult result = response.getListBucketResult();
 
             isTruncated = result.getTruncated();
             marker = result.getNextMarker();

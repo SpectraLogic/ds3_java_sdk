@@ -24,7 +24,7 @@ import com.spectralogic.ds3client.models.BuildInformation;
 import java.util.UUID;
 
 @JacksonXmlRootElement(namespace = "Data")
-public class SystemInformationApiBean {
+public class SystemInformation {
 
     // Variables
     @JsonProperty("ApiVersion")
@@ -43,7 +43,7 @@ public class SystemInformationApiBean {
     private String serialNumber;
 
     // Constructor
-    public SystemInformationApiBean() {
+    public SystemInformation() {
         //pass
     }
 

@@ -25,7 +25,7 @@ import com.spectralogic.ds3client.commands.AbstractResponse;
 
 public class VerifySystemHealthSpectraS3Response extends AbstractResponse {
 
-    private HealthVerificationResult healthVerificationResultResult;
+    private HealthVerificationResult healthVerificationResult;
 
     public VerifySystemHealthSpectraS3Response(final WebResponse response) throws IOException {
         super(response);
@@ -39,7 +39,7 @@ public class VerifySystemHealthSpectraS3Response extends AbstractResponse {
             switch (this.getStatusCode()) {
             case 200:
                 try (final InputStream content = getResponse().getResponseStream()) {
-                    this.healthVerificationResultResult = XmlOutput.fromXml(content, HealthVerificationResult.class);
+                    this.healthVerificationResult = XmlOutput.fromXml(content, HealthVerificationResult.class);
                 }
                 break;
             default:
@@ -50,8 +50,8 @@ public class VerifySystemHealthSpectraS3Response extends AbstractResponse {
         }
     }
 
-    public HealthVerificationResult getHealthVerificationResultResult() {
-        return this.healthVerificationResultResult;
+    public HealthVerificationResult getHealthVerificationResult() {
+        return this.healthVerificationResult;
     }
 
 }

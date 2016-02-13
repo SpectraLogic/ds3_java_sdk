@@ -19,12 +19,12 @@ package com.spectralogic.ds3client.commands;
 import com.spectralogic.ds3client.networking.WebResponse;
 import java.io.IOException;
 import java.io.InputStream;
-import com.spectralogic.ds3client.models.DeleteResultApiBean;
+import com.spectralogic.ds3client.models.DeleteResult;
 import com.spectralogic.ds3client.serializer.XmlOutput;
 
 public class DeleteObjectsResponse extends AbstractResponse {
 
-    private DeleteResultApiBean deleteResultApiBeanResult;
+    private DeleteResult deleteResult;
 
     public DeleteObjectsResponse(final WebResponse response) throws IOException {
         super(response);
@@ -38,7 +38,7 @@ public class DeleteObjectsResponse extends AbstractResponse {
             switch (this.getStatusCode()) {
             case 200:
                 try (final InputStream content = getResponse().getResponseStream()) {
-                    this.deleteResultApiBeanResult = XmlOutput.fromXml(content, DeleteResultApiBean.class);
+                    this.deleteResult = XmlOutput.fromXml(content, DeleteResult.class);
                 }
                 break;
             default:
@@ -49,8 +49,8 @@ public class DeleteObjectsResponse extends AbstractResponse {
         }
     }
 
-    public DeleteResultApiBean getDeleteResultApiBeanResult() {
-        return this.deleteResultApiBeanResult;
+    public DeleteResult getDeleteResult() {
+        return this.deleteResult;
     }
 
 }

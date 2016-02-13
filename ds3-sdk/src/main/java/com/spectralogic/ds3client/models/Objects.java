@@ -19,46 +19,69 @@ package com.spectralogic.ds3client.models;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import com.spectralogic.ds3client.models.S3ObjectToDeleteApiBean;
+import java.util.UUID;
+import com.spectralogic.ds3client.models.BulkObject;
 import java.util.List;
 import java.util.ArrayList;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
-import com.spectralogic.ds3client.models.DeleteObjectErrorResultApiBean;
 
-@JacksonXmlRootElement(namespace = "DeleteResult")
-public class DeleteResultApiBean {
+@JacksonXmlRootElement(namespace = "Objects")
+public class Objects {
 
     // Variables
-    @JsonProperty("Deleted")
-    @JacksonXmlElementWrapper(useWrapping = false)
-    private List<S3ObjectToDeleteApiBean> deletedObjects = new ArrayList<>();
+    @JacksonXmlProperty(isAttribute = true, localName = "ChunkId")
+    private UUID chunkId;
 
-    @JsonProperty("Error")
+    @JacksonXmlProperty(isAttribute = true, localName = "ChunkNumber")
+    private int chunkNumber;
+
+    @JacksonXmlProperty(isAttribute = true, localName = "NodeId")
+    private UUID nodeId;
+
+    @JsonProperty("Object")
     @JacksonXmlElementWrapper(useWrapping = false)
-    private List<DeleteObjectErrorResultApiBean> errors = new ArrayList<>();
+    private List<BulkObject> objects = new ArrayList<>();
 
     // Constructor
-    public DeleteResultApiBean() {
+    public Objects() {
         //pass
     }
 
     // Getters and Setters
     
-    public List<S3ObjectToDeleteApiBean> getDeletedObjects() {
-        return this.deletedObjects;
+    public UUID getChunkId() {
+        return this.chunkId;
     }
 
-    public void setDeletedObjects(final List<S3ObjectToDeleteApiBean> deletedObjects) {
-        this.deletedObjects = deletedObjects;
+    public void setChunkId(final UUID chunkId) {
+        this.chunkId = chunkId;
     }
 
 
-    public List<DeleteObjectErrorResultApiBean> getErrors() {
-        return this.errors;
+    public int getChunkNumber() {
+        return this.chunkNumber;
     }
 
-    public void setErrors(final List<DeleteObjectErrorResultApiBean> errors) {
-        this.errors = errors;
+    public void setChunkNumber(final int chunkNumber) {
+        this.chunkNumber = chunkNumber;
+    }
+
+
+    public UUID getNodeId() {
+        return this.nodeId;
+    }
+
+    public void setNodeId(final UUID nodeId) {
+        this.nodeId = nodeId;
+    }
+
+
+    public List<BulkObject> getObjects() {
+        return this.objects;
+    }
+
+    public void setObjects(final List<BulkObject> objects) {
+        this.objects = objects;
     }
 
 }

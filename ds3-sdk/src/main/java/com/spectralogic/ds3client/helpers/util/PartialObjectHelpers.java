@@ -2,7 +2,7 @@ package com.spectralogic.ds3client.helpers.util;
 
 import com.google.common.collect.*;
 import com.spectralogic.ds3client.models.BulkObject;
-import com.spectralogic.ds3client.models.JobChunkApiBean;
+import com.spectralogic.ds3client.models.Objects;
 import com.spectralogic.ds3client.models.Range;
 import com.spectralogic.ds3client.models.bulk.Ds3Object;
 import com.spectralogic.ds3client.models.bulk.PartialDs3Object;
@@ -30,12 +30,12 @@ public final class PartialObjectHelpers {
     }
 
     public static ImmutableMap<String, ImmutableMultimap<BulkObject, Range>> mapRangesToBlob(
-            final List<JobChunkApiBean> chunks,
+            final List<Objects> chunks,
             final ImmutableMultimap<String, Range> partialObjects) {
 
         final Map<String, ImmutableMultimap.Builder<BulkObject, Range>> objectMapperBuilders = new HashMap<>();
 
-        for (final JobChunkApiBean chunk : chunks) {
+        for (final Objects chunk : chunks) {
             for (final BulkObject blob : chunk.getObjects()) {
                 final ImmutableCollection<Range> ranges = partialObjects.get(blob.getName());
 

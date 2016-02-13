@@ -4,7 +4,7 @@ import com.spectralogic.ds3client.Ds3Client;
 import com.spectralogic.ds3client.commands.GetBucketRequest;
 import com.spectralogic.ds3client.commands.GetBucketResponse;
 import com.spectralogic.ds3client.commands.spectrads3.*;
-import com.spectralogic.ds3client.models.BucketObjectsApiBean;
+import com.spectralogic.ds3client.models.ListBucketResult;
 import com.spectralogic.ds3client.models.PoolType;
 import com.spectralogic.ds3client.models.StorageDomainMember;
 import com.spectralogic.ds3client.models.VersioningLevel;
@@ -274,14 +274,14 @@ public class AdvancedBucketManagement_Test {
 
             final GetBucketResponse response1 = client
                     .getBucket(new GetBucketRequest(bucketName));
-            final BucketObjectsApiBean result1 = response1.getBucketObjectsApiBeanResult();
+            final ListBucketResult result1 = response1.getListBucketResult();
             assertFalse(result1.getObjects().isEmpty());
             assertThat(result1.getObjects().size(), is(4));
 
             //Load the set of books a second time, and verify no errors
             final GetBucketResponse response2 = client
                     .getBucket(new GetBucketRequest(bucketName));
-            final BucketObjectsApiBean result2 = response2.getBucketObjectsApiBeanResult();
+            final ListBucketResult result2 = response2.getListBucketResult();
             assertFalse(result2.getObjects().isEmpty());
             assertThat(result2.getObjects().size(), is(4));
 
@@ -346,7 +346,7 @@ public class AdvancedBucketManagement_Test {
 
             final GetBucketResponse response1 = client
                     .getBucket(new GetBucketRequest(bucketName));
-            final BucketObjectsApiBean result1 = response1.getBucketObjectsApiBeanResult();
+            final ListBucketResult result1 = response1.getListBucketResult();
             assertFalse(result1.getObjects().isEmpty());
             assertThat(result1.getObjects().size(), is(4));
 

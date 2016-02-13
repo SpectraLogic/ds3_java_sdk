@@ -19,63 +19,26 @@ package com.spectralogic.ds3client.models;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import java.util.UUID;
 import com.spectralogic.ds3client.models.BulkObject;
 import java.util.List;
 import java.util.ArrayList;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 
-@JacksonXmlRootElement(namespace = "Objects")
-public class JobChunkApiBean {
+@JacksonXmlRootElement(namespace = "Data")
+public class BulkObjectList {
 
     // Variables
-    @JacksonXmlProperty(isAttribute = true, localName = "ChunkId")
-    private UUID chunkId;
-
-    @JacksonXmlProperty(isAttribute = true, localName = "ChunkNumber")
-    private int chunkNumber;
-
-    @JacksonXmlProperty(isAttribute = true, localName = "NodeId")
-    private UUID nodeId;
-
     @JsonProperty("Object")
     @JacksonXmlElementWrapper(useWrapping = false)
     private List<BulkObject> objects = new ArrayList<>();
 
     // Constructor
-    public JobChunkApiBean() {
+    public BulkObjectList() {
         //pass
     }
 
     // Getters and Setters
     
-    public UUID getChunkId() {
-        return this.chunkId;
-    }
-
-    public void setChunkId(final UUID chunkId) {
-        this.chunkId = chunkId;
-    }
-
-
-    public int getChunkNumber() {
-        return this.chunkNumber;
-    }
-
-    public void setChunkNumber(final int chunkNumber) {
-        this.chunkNumber = chunkNumber;
-    }
-
-
-    public UUID getNodeId() {
-        return this.nodeId;
-    }
-
-    public void setNodeId(final UUID nodeId) {
-        this.nodeId = nodeId;
-    }
-
-
     public List<BulkObject> getObjects() {
         return this.objects;
     }
