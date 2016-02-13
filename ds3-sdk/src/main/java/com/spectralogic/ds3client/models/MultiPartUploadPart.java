@@ -23,7 +23,7 @@ import java.lang.String;
 import java.util.Date;
 
 @JacksonXmlRootElement(namespace = "Data")
-public class MultipartUploadPart {
+public class MultiPartUploadPart {
 
     // Variables
     @JsonProperty("ETag")
@@ -36,7 +36,7 @@ public class MultipartUploadPart {
     private int partNumber;
 
     // Constructor
-    public MultipartUploadPart() {
+    public MultiPartUploadPart() {
         //pass
     }
 

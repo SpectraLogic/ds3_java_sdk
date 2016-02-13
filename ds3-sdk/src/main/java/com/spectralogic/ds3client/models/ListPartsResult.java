@@ -22,7 +22,7 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import java.lang.String;
 import com.spectralogic.ds3client.models.UserApiBean;
 import java.lang.Integer;
-import com.spectralogic.ds3client.models.MultipartUploadPart;
+import com.spectralogic.ds3client.models.MultiPartUploadPart;
 import java.util.List;
 import java.util.ArrayList;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
@@ -52,7 +52,7 @@ public class ListPartsResult {
 
     @JsonProperty("Part")
     @JacksonXmlElementWrapper(useWrapping = false)
-    private List<MultipartUploadPart> parts = new ArrayList<>();
+    private List<MultiPartUploadPart> parts = new ArrayList<>();
 
     @JsonProperty("IsTruncated")
     private boolean truncated;
@@ -121,11 +121,11 @@ public class ListPartsResult {
     }
 
 
-    public List<MultipartUploadPart> getParts() {
+    public List<MultiPartUploadPart> getParts() {
         return this.parts;
     }
 
-    public void setParts(final List<MultipartUploadPart> parts) {
+    public void setParts(final List<MultiPartUploadPart> parts) {
         this.parts = parts;
     }
 

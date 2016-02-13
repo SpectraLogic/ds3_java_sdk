@@ -26,7 +26,7 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.spectralogic.ds3client.models.MultiPartUpload;
 
 @JacksonXmlRootElement(namespace = "ListMultipartUploadsResult")
-public class ListMultipartUploadsResult {
+public class ListMultiPartUploadsResult {
 
     // Variables
     @JsonProperty("Bucket")
@@ -65,7 +65,7 @@ public class ListMultipartUploadsResult {
     private List<MultiPartUpload> uploads = new ArrayList<>();
 
     // Constructor
-    public ListMultipartUploadsResult() {
+    public ListMultiPartUploadsResult() {
         //pass
     }
 
