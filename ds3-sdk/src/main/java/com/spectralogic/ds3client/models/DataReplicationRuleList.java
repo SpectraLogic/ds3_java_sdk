@@ -30,7 +30,7 @@ public class DataReplicationRuleList {
     // Variables
     @JsonProperty("DataReplicationRule")
     @JacksonXmlElementWrapper(useWrapping = false)
-    private List<DataReplicationRule> dataReplicationRule = new ArrayList<>();
+    private List<DataReplicationRule> dataReplicationRules = new ArrayList<>();
 
     // Constructor
     public DataReplicationRuleList() {
@@ -39,12 +39,12 @@ public class DataReplicationRuleList {
 
     // Getters and Setters
     
-    public List<DataReplicationRule> getDataReplicationRule() {
-        return this.dataReplicationRule;
+    public List<DataReplicationRule> getDataReplicationRules() {
+        return this.dataReplicationRules;
     }
 
-    public void setDataReplicationRule(final List<DataReplicationRule> dataReplicationRule) {
-        this.dataReplicationRule = dataReplicationRule;
+    public void setDataReplicationRules(final List<DataReplicationRule> dataReplicationRules) {
+        this.dataReplicationRules = dataReplicationRules;
     }
 
 }

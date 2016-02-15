@@ -30,7 +30,7 @@ public class SystemFailureNotificationRegistrationList {
     // Variables
     @JsonProperty("SystemFailureNotificationRegistration")
     @JacksonXmlElementWrapper(useWrapping = false)
-    private List<SystemFailureNotificationRegistration> systemFailureNotificationRegistration = new ArrayList<>();
+    private List<SystemFailureNotificationRegistration> systemFailureNotificationRegistrations = new ArrayList<>();
 
     // Constructor
     public SystemFailureNotificationRegistrationList() {
@@ -39,12 +39,12 @@ public class SystemFailureNotificationRegistrationList {
 
     // Getters and Setters
     
-    public List<SystemFailureNotificationRegistration> getSystemFailureNotificationRegistration() {
-        return this.systemFailureNotificationRegistration;
+    public List<SystemFailureNotificationRegistration> getSystemFailureNotificationRegistrations() {
+        return this.systemFailureNotificationRegistrations;
     }
 
-    public void setSystemFailureNotificationRegistration(final List<SystemFailureNotificationRegistration> systemFailureNotificationRegistration) {
-        this.systemFailureNotificationRegistration = systemFailureNotificationRegistration;
+    public void setSystemFailureNotificationRegistrations(final List<SystemFailureNotificationRegistration> systemFailureNotificationRegistrations) {
+        this.systemFailureNotificationRegistrations = systemFailureNotificationRegistrations;
     }
 
 }

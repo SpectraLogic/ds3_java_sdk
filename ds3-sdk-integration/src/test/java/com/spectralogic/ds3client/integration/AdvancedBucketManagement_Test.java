@@ -138,7 +138,7 @@ public class AdvancedBucketManagement_Test {
                             .withPoolPartitionId(createPoolPartition.getPoolPartitionResult().getId())
                             .withStorageDomainId(createStorageDomain.getStorageDomainResult().getId()));
 
-            final List<StorageDomainMember> members = getMembers.getStorageDomainMemberListResult().getStorageDomainMember();
+            final List<StorageDomainMember> members = getMembers.getStorageDomainMemberListResult().getStorageDomainMembers();
             assertThat(members.size(), is(1));
             assertThat(members.get(0).getPoolPartitionId(), is(createPoolPartition.getPoolPartitionResult().getId()));
             assertThat(members.get(0).getStorageDomainId(), is(createStorageDomain.getStorageDomainResult().getId()));

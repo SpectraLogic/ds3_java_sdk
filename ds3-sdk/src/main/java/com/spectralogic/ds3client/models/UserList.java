@@ -30,7 +30,7 @@ public class UserList {
     // Variables
     @JsonProperty("User")
     @JacksonXmlElementWrapper(useWrapping = false)
-    private List<User> user = new ArrayList<>();
+    private List<User> users = new ArrayList<>();
 
     // Constructor
     public UserList() {
@@ -39,12 +39,12 @@ public class UserList {
 
     // Getters and Setters
     
-    public List<User> getUser() {
-        return this.user;
+    public List<User> getUsers() {
+        return this.users;
     }
 
-    public void setUser(final List<User> user) {
-        this.user = user;
+    public void setUsers(final List<User> users) {
+        this.users = users;
     }
 
 }

@@ -30,7 +30,7 @@ public class CacheFilesystemList {
     // Variables
     @JsonProperty("CacheFilesystem")
     @JacksonXmlElementWrapper(useWrapping = false)
-    private List<CacheFilesystem> cacheFilesystem = new ArrayList<>();
+    private List<CacheFilesystem> cacheFilesystems = new ArrayList<>();
 
     // Constructor
     public CacheFilesystemList() {
@@ -39,12 +39,12 @@ public class CacheFilesystemList {
 
     // Getters and Setters
     
-    public List<CacheFilesystem> getCacheFilesystem() {
-        return this.cacheFilesystem;
+    public List<CacheFilesystem> getCacheFilesystems() {
+        return this.cacheFilesystems;
     }
 
-    public void setCacheFilesystem(final List<CacheFilesystem> cacheFilesystem) {
-        this.cacheFilesystem = cacheFilesystem;
+    public void setCacheFilesystems(final List<CacheFilesystem> cacheFilesystems) {
+        this.cacheFilesystems = cacheFilesystems;
     }
 
 }

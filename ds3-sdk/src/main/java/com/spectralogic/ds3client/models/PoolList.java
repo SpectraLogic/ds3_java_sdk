@@ -30,7 +30,7 @@ public class PoolList {
     // Variables
     @JsonProperty("Pool")
     @JacksonXmlElementWrapper(useWrapping = false)
-    private List<Pool> pool = new ArrayList<>();
+    private List<Pool> pools = new ArrayList<>();
 
     // Constructor
     public PoolList() {
@@ -39,12 +39,12 @@ public class PoolList {
 
     // Getters and Setters
     
-    public List<Pool> getPool() {
-        return this.pool;
+    public List<Pool> getPools() {
+        return this.pools;
     }
 
-    public void setPool(final List<Pool> pool) {
-        this.pool = pool;
+    public void setPools(final List<Pool> pools) {
+        this.pools = pools;
     }
 
 }

@@ -30,7 +30,7 @@ public class StorageDomainFailureNotificationRegistrationList {
     // Variables
     @JsonProperty("StorageDomainFailureNotificationRegistration")
     @JacksonXmlElementWrapper(useWrapping = false)
-    private List<StorageDomainFailureNotificationRegistration> storageDomainFailureNotificationRegistration = new ArrayList<>();
+    private List<StorageDomainFailureNotificationRegistration> storageDomainFailureNotificationRegistrations = new ArrayList<>();
 
     // Constructor
     public StorageDomainFailureNotificationRegistrationList() {
@@ -39,12 +39,12 @@ public class StorageDomainFailureNotificationRegistrationList {
 
     // Getters and Setters
     
-    public List<StorageDomainFailureNotificationRegistration> getStorageDomainFailureNotificationRegistration() {
-        return this.storageDomainFailureNotificationRegistration;
+    public List<StorageDomainFailureNotificationRegistration> getStorageDomainFailureNotificationRegistrations() {
+        return this.storageDomainFailureNotificationRegistrations;
     }
 
-    public void setStorageDomainFailureNotificationRegistration(final List<StorageDomainFailureNotificationRegistration> storageDomainFailureNotificationRegistration) {
-        this.storageDomainFailureNotificationRegistration = storageDomainFailureNotificationRegistration;
+    public void setStorageDomainFailureNotificationRegistrations(final List<StorageDomainFailureNotificationRegistration> storageDomainFailureNotificationRegistrations) {
+        this.storageDomainFailureNotificationRegistrations = storageDomainFailureNotificationRegistrations;
     }
 
 }

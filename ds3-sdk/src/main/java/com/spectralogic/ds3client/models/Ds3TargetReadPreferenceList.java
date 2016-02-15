@@ -30,7 +30,7 @@ public class Ds3TargetReadPreferenceList {
     // Variables
     @JsonProperty("Ds3TargetReadPreference")
     @JacksonXmlElementWrapper(useWrapping = false)
-    private List<Ds3TargetReadPreference> ds3TargetReadPreference = new ArrayList<>();
+    private List<Ds3TargetReadPreference> ds3TargetReadPreferences = new ArrayList<>();
 
     // Constructor
     public Ds3TargetReadPreferenceList() {
@@ -39,12 +39,12 @@ public class Ds3TargetReadPreferenceList {
 
     // Getters and Setters
     
-    public List<Ds3TargetReadPreference> getDs3TargetReadPreference() {
-        return this.ds3TargetReadPreference;
+    public List<Ds3TargetReadPreference> getDs3TargetReadPreferences() {
+        return this.ds3TargetReadPreferences;
     }
 
-    public void setDs3TargetReadPreference(final List<Ds3TargetReadPreference> ds3TargetReadPreference) {
-        this.ds3TargetReadPreference = ds3TargetReadPreference;
+    public void setDs3TargetReadPreferences(final List<Ds3TargetReadPreference> ds3TargetReadPreferences) {
+        this.ds3TargetReadPreferences = ds3TargetReadPreferences;
     }
 
 }

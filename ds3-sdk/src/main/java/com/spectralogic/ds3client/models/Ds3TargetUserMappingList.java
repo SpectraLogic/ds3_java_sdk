@@ -30,7 +30,7 @@ public class Ds3TargetUserMappingList {
     // Variables
     @JsonProperty("Ds3TargetUserMapping")
     @JacksonXmlElementWrapper(useWrapping = false)
-    private List<Ds3TargetUserMapping> ds3TargetUserMapping = new ArrayList<>();
+    private List<Ds3TargetUserMapping> ds3TargetUserMappings = new ArrayList<>();
 
     // Constructor
     public Ds3TargetUserMappingList() {
@@ -39,12 +39,12 @@ public class Ds3TargetUserMappingList {
 
     // Getters and Setters
     
-    public List<Ds3TargetUserMapping> getDs3TargetUserMapping() {
-        return this.ds3TargetUserMapping;
+    public List<Ds3TargetUserMapping> getDs3TargetUserMappings() {
+        return this.ds3TargetUserMappings;
     }
 
-    public void setDs3TargetUserMapping(final List<Ds3TargetUserMapping> ds3TargetUserMapping) {
-        this.ds3TargetUserMapping = ds3TargetUserMapping;
+    public void setDs3TargetUserMappings(final List<Ds3TargetUserMapping> ds3TargetUserMappings) {
+        this.ds3TargetUserMappings = ds3TargetUserMappings;
     }
 
 }

@@ -30,7 +30,7 @@ public class TapePartitionFailureNotificationRegistrationList {
     // Variables
     @JsonProperty("TapePartitionFailureNotificationRegistration")
     @JacksonXmlElementWrapper(useWrapping = false)
-    private List<TapePartitionFailureNotificationRegistration> tapePartitionFailureNotificationRegistration = new ArrayList<>();
+    private List<TapePartitionFailureNotificationRegistration> tapePartitionFailureNotificationRegistrations = new ArrayList<>();
 
     // Constructor
     public TapePartitionFailureNotificationRegistrationList() {
@@ -39,12 +39,12 @@ public class TapePartitionFailureNotificationRegistrationList {
 
     // Getters and Setters
     
-    public List<TapePartitionFailureNotificationRegistration> getTapePartitionFailureNotificationRegistration() {
-        return this.tapePartitionFailureNotificationRegistration;
+    public List<TapePartitionFailureNotificationRegistration> getTapePartitionFailureNotificationRegistrations() {
+        return this.tapePartitionFailureNotificationRegistrations;
     }
 
-    public void setTapePartitionFailureNotificationRegistration(final List<TapePartitionFailureNotificationRegistration> tapePartitionFailureNotificationRegistration) {
-        this.tapePartitionFailureNotificationRegistration = tapePartitionFailureNotificationRegistration;
+    public void setTapePartitionFailureNotificationRegistrations(final List<TapePartitionFailureNotificationRegistration> tapePartitionFailureNotificationRegistrations) {
+        this.tapePartitionFailureNotificationRegistrations = tapePartitionFailureNotificationRegistrations;
     }
 
 }

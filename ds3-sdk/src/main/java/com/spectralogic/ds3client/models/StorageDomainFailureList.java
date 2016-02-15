@@ -30,7 +30,7 @@ public class StorageDomainFailureList {
     // Variables
     @JsonProperty("StorageDomainFailure")
     @JacksonXmlElementWrapper(useWrapping = false)
-    private List<StorageDomainFailure> storageDomainFailure = new ArrayList<>();
+    private List<StorageDomainFailure> storageDomainFailures = new ArrayList<>();
 
     // Constructor
     public StorageDomainFailureList() {
@@ -39,12 +39,12 @@ public class StorageDomainFailureList {
 
     // Getters and Setters
     
-    public List<StorageDomainFailure> getStorageDomainFailure() {
-        return this.storageDomainFailure;
+    public List<StorageDomainFailure> getStorageDomainFailures() {
+        return this.storageDomainFailures;
     }
 
-    public void setStorageDomainFailure(final List<StorageDomainFailure> storageDomainFailure) {
-        this.storageDomainFailure = storageDomainFailure;
+    public void setStorageDomainFailures(final List<StorageDomainFailure> storageDomainFailures) {
+        this.storageDomainFailures = storageDomainFailures;
     }
 
 }

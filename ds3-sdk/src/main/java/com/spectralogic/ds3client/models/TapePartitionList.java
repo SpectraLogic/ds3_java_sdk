@@ -30,7 +30,7 @@ public class TapePartitionList {
     // Variables
     @JsonProperty("TapePartition")
     @JacksonXmlElementWrapper(useWrapping = false)
-    private List<TapePartition> tapePartition = new ArrayList<>();
+    private List<TapePartition> tapePartitions = new ArrayList<>();
 
     // Constructor
     public TapePartitionList() {
@@ -39,12 +39,12 @@ public class TapePartitionList {
 
     // Getters and Setters
     
-    public List<TapePartition> getTapePartition() {
-        return this.tapePartition;
+    public List<TapePartition> getTapePartitions() {
+        return this.tapePartitions;
     }
 
-    public void setTapePartition(final List<TapePartition> tapePartition) {
-        this.tapePartition = tapePartition;
+    public void setTapePartitions(final List<TapePartition> tapePartitions) {
+        this.tapePartitions = tapePartitions;
     }
 
 }

@@ -30,7 +30,7 @@ public class PoolPartitionList {
     // Variables
     @JsonProperty("PoolPartition")
     @JacksonXmlElementWrapper(useWrapping = false)
-    private List<PoolPartition> poolPartition = new ArrayList<>();
+    private List<PoolPartition> poolPartitions = new ArrayList<>();
 
     // Constructor
     public PoolPartitionList() {
@@ -39,12 +39,12 @@ public class PoolPartitionList {
 
     // Getters and Setters
     
-    public List<PoolPartition> getPoolPartition() {
-        return this.poolPartition;
+    public List<PoolPartition> getPoolPartitions() {
+        return this.poolPartitions;
     }
 
-    public void setPoolPartition(final List<PoolPartition> poolPartition) {
-        this.poolPartition = poolPartition;
+    public void setPoolPartitions(final List<PoolPartition> poolPartitions) {
+        this.poolPartitions = poolPartitions;
     }
 
 }

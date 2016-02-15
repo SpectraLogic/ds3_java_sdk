@@ -30,7 +30,7 @@ public class JobCompletedNotificationRegistrationList {
     // Variables
     @JsonProperty("JobCompletedNotificationRegistration")
     @JacksonXmlElementWrapper(useWrapping = false)
-    private List<JobCompletedNotificationRegistration> jobCompletedNotificationRegistration = new ArrayList<>();
+    private List<JobCompletedNotificationRegistration> jobCompletedNotificationRegistrations = new ArrayList<>();
 
     // Constructor
     public JobCompletedNotificationRegistrationList() {
@@ -39,12 +39,12 @@ public class JobCompletedNotificationRegistrationList {
 
     // Getters and Setters
     
-    public List<JobCompletedNotificationRegistration> getJobCompletedNotificationRegistration() {
-        return this.jobCompletedNotificationRegistration;
+    public List<JobCompletedNotificationRegistration> getJobCompletedNotificationRegistrations() {
+        return this.jobCompletedNotificationRegistrations;
     }
 
-    public void setJobCompletedNotificationRegistration(final List<JobCompletedNotificationRegistration> jobCompletedNotificationRegistration) {
-        this.jobCompletedNotificationRegistration = jobCompletedNotificationRegistration;
+    public void setJobCompletedNotificationRegistrations(final List<JobCompletedNotificationRegistration> jobCompletedNotificationRegistrations) {
+        this.jobCompletedNotificationRegistrations = jobCompletedNotificationRegistrations;
     }
 
 }

@@ -30,7 +30,7 @@ public class BucketAclList {
     // Variables
     @JsonProperty("BucketAcl")
     @JacksonXmlElementWrapper(useWrapping = false)
-    private List<BucketAcl> bucketAcl = new ArrayList<>();
+    private List<BucketAcl> bucketAcls = new ArrayList<>();
 
     // Constructor
     public BucketAclList() {
@@ -39,12 +39,12 @@ public class BucketAclList {
 
     // Getters and Setters
     
-    public List<BucketAcl> getBucketAcl() {
-        return this.bucketAcl;
+    public List<BucketAcl> getBucketAcls() {
+        return this.bucketAcls;
     }
 
-    public void setBucketAcl(final List<BucketAcl> bucketAcl) {
-        this.bucketAcl = bucketAcl;
+    public void setBucketAcls(final List<BucketAcl> bucketAcls) {
+        this.bucketAcls = bucketAcls;
     }
 
 }

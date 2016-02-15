@@ -30,7 +30,7 @@ public class S3ObjectPersistedNotificationRegistrationList {
     // Variables
     @JsonProperty("S3ObjectPersistedNotificationRegistration")
     @JacksonXmlElementWrapper(useWrapping = false)
-    private List<S3ObjectPersistedNotificationRegistration> s3ObjectPersistedNotificationRegistration = new ArrayList<>();
+    private List<S3ObjectPersistedNotificationRegistration> s3ObjectPersistedNotificationRegistrations = new ArrayList<>();
 
     // Constructor
     public S3ObjectPersistedNotificationRegistrationList() {
@@ -39,12 +39,12 @@ public class S3ObjectPersistedNotificationRegistrationList {
 
     // Getters and Setters
     
-    public List<S3ObjectPersistedNotificationRegistration> getS3ObjectPersistedNotificationRegistration() {
-        return this.s3ObjectPersistedNotificationRegistration;
+    public List<S3ObjectPersistedNotificationRegistration> getS3ObjectPersistedNotificationRegistrations() {
+        return this.s3ObjectPersistedNotificationRegistrations;
     }
 
-    public void setS3ObjectPersistedNotificationRegistration(final List<S3ObjectPersistedNotificationRegistration> s3ObjectPersistedNotificationRegistration) {
-        this.s3ObjectPersistedNotificationRegistration = s3ObjectPersistedNotificationRegistration;
+    public void setS3ObjectPersistedNotificationRegistrations(final List<S3ObjectPersistedNotificationRegistration> s3ObjectPersistedNotificationRegistrations) {
+        this.s3ObjectPersistedNotificationRegistrations = s3ObjectPersistedNotificationRegistrations;
     }
 
 }

@@ -30,7 +30,7 @@ public class TapeLibraryList {
     // Variables
     @JsonProperty("TapeLibrary")
     @JacksonXmlElementWrapper(useWrapping = false)
-    private List<TapeLibrary> tapeLibrary = new ArrayList<>();
+    private List<TapeLibrary> tapeLibraries = new ArrayList<>();
 
     // Constructor
     public TapeLibraryList() {
@@ -39,12 +39,12 @@ public class TapeLibraryList {
 
     // Getters and Setters
     
-    public List<TapeLibrary> getTapeLibrary() {
-        return this.tapeLibrary;
+    public List<TapeLibrary> getTapeLibraries() {
+        return this.tapeLibraries;
     }
 
-    public void setTapeLibrary(final List<TapeLibrary> tapeLibrary) {
-        this.tapeLibrary = tapeLibrary;
+    public void setTapeLibraries(final List<TapeLibrary> tapeLibraries) {
+        this.tapeLibraries = tapeLibraries;
     }
 
 }

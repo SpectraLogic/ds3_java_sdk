@@ -30,7 +30,7 @@ public class NodeList {
     // Variables
     @JsonProperty("Node")
     @JacksonXmlElementWrapper(useWrapping = false)
-    private List<Node> node = new ArrayList<>();
+    private List<Node> nodes = new ArrayList<>();
 
     // Constructor
     public NodeList() {
@@ -39,12 +39,12 @@ public class NodeList {
 
     // Getters and Setters
     
-    public List<Node> getNode() {
-        return this.node;
+    public List<Node> getNodes() {
+        return this.nodes;
     }
 
-    public void setNode(final List<Node> node) {
-        this.node = node;
+    public void setNodes(final List<Node> nodes) {
+        this.nodes = nodes;
     }
 
 }

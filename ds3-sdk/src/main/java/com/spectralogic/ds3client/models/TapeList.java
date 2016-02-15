@@ -30,7 +30,7 @@ public class TapeList {
     // Variables
     @JsonProperty("Tape")
     @JacksonXmlElementWrapper(useWrapping = false)
-    private List<Tape> tape = new ArrayList<>();
+    private List<Tape> tapes = new ArrayList<>();
 
     // Constructor
     public TapeList() {
@@ -39,12 +39,12 @@ public class TapeList {
 
     // Getters and Setters
     
-    public List<Tape> getTape() {
-        return this.tape;
+    public List<Tape> getTapes() {
+        return this.tapes;
     }
 
-    public void setTape(final List<Tape> tape) {
-        this.tape = tape;
+    public void setTapes(final List<Tape> tapes) {
+        this.tapes = tapes;
     }
 
 }

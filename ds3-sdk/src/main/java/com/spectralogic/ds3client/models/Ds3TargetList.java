@@ -30,7 +30,7 @@ public class Ds3TargetList {
     // Variables
     @JsonProperty("Ds3Target")
     @JacksonXmlElementWrapper(useWrapping = false)
-    private List<Ds3Target> ds3Target = new ArrayList<>();
+    private List<Ds3Target> ds3Targets = new ArrayList<>();
 
     // Constructor
     public Ds3TargetList() {
@@ -39,12 +39,12 @@ public class Ds3TargetList {
 
     // Getters and Setters
     
-    public List<Ds3Target> getDs3Target() {
-        return this.ds3Target;
+    public List<Ds3Target> getDs3Targets() {
+        return this.ds3Targets;
     }
 
-    public void setDs3Target(final List<Ds3Target> ds3Target) {
-        this.ds3Target = ds3Target;
+    public void setDs3Targets(final List<Ds3Target> ds3Targets) {
+        this.ds3Targets = ds3Targets;
     }
 
 }

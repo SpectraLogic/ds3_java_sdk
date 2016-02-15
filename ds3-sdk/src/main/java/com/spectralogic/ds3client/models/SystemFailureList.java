@@ -30,7 +30,7 @@ public class SystemFailureList {
     // Variables
     @JsonProperty("SystemFailure")
     @JacksonXmlElementWrapper(useWrapping = false)
-    private List<SystemFailure> systemFailure = new ArrayList<>();
+    private List<SystemFailure> systemFailures = new ArrayList<>();
 
     // Constructor
     public SystemFailureList() {
@@ -39,12 +39,12 @@ public class SystemFailureList {
 
     // Getters and Setters
     
-    public List<SystemFailure> getSystemFailure() {
-        return this.systemFailure;
+    public List<SystemFailure> getSystemFailures() {
+        return this.systemFailures;
     }
 
-    public void setSystemFailure(final List<SystemFailure> systemFailure) {
-        this.systemFailure = systemFailure;
+    public void setSystemFailures(final List<SystemFailure> systemFailures) {
+        this.systemFailures = systemFailures;
     }
 
 }

@@ -196,7 +196,7 @@ public class Ds3Client_Test {
                 .asClient()
                 .getObjectsSpectraS3(new GetObjectsSpectraS3Request().withBucketId(bucketId))
                 .getS3ObjectListResult()
-                .getS3Object();
+                .getS3Objects();
 
         final S3Object beowulf = new S3Object();
         beowulf.setBucketId(UUID.fromString("a24d14f3-e2f0-4bfb-ab71-f99d5ef43745"));
@@ -853,7 +853,7 @@ public class Ds3Client_Test {
                 .asClient()
                 .getTapeLibrariesSpectraS3(new GetTapeLibrariesSpectraS3Request());
 
-        final List<TapeLibrary> libraries = response.getTapeLibraryListResult().getTapeLibrary();
+        final List<TapeLibrary> libraries = response.getTapeLibraryListResult().getTapeLibraries();
 
         assertThat(libraries.size(), is(2));
         assertThat(libraries.get(0).getId().toString(), is("f4dae25d-e52a-4430-82bd-525e4f15493c"));
@@ -883,7 +883,7 @@ public class Ds3Client_Test {
                 .asClient()
                 .getTapeFailuresSpectraS3(new GetTapeFailuresSpectraS3Request());
 
-        final List<TapeFailure> tapeFailures = response.getTapeFailureListResult().getTapeFailure();
+        final List<TapeFailure> tapeFailures = response.getTapeFailureListResult().getTapeFailures();
 
         assertThat(tapeFailures, is(notNullValue()));
         assertThat(tapeFailures.size(), is(1));
@@ -900,7 +900,7 @@ public class Ds3Client_Test {
                 .asClient()
                 .getTapeDrivesSpectraS3(new GetTapeDrivesSpectraS3Request());
 
-        final List<TapeDrive> tapeDrives = response.getTapeDriveListResult().getTapeDrive();
+        final List<TapeDrive> tapeDrives = response.getTapeDriveListResult().getTapeDrives();
 
         assertThat(tapeDrives, is(notNullValue()));
         assertThat(tapeDrives.size(), is(2));
@@ -933,7 +933,7 @@ public class Ds3Client_Test {
                 .asClient()
                 .getTapesSpectraS3(new GetTapesSpectraS3Request());
 
-        final List<Tape> tapes = response.getTapeListResult().getTape();
+        final List<Tape> tapes = response.getTapeListResult().getTapes();
 
         assertThat(tapes.size(), is(not(0)));
         assertThat(tapes.get(0).getId(), is(notNullValue()));

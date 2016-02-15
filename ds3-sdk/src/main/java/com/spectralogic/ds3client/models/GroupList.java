@@ -30,7 +30,7 @@ public class GroupList {
     // Variables
     @JsonProperty("Group")
     @JacksonXmlElementWrapper(useWrapping = false)
-    private List<Group> group = new ArrayList<>();
+    private List<Group> groups = new ArrayList<>();
 
     // Constructor
     public GroupList() {
@@ -39,12 +39,12 @@ public class GroupList {
 
     // Getters and Setters
     
-    public List<Group> getGroup() {
-        return this.group;
+    public List<Group> getGroups() {
+        return this.groups;
     }
 
-    public void setGroup(final List<Group> group) {
-        this.group = group;
+    public void setGroups(final List<Group> groups) {
+        this.groups = groups;
     }
 
 }

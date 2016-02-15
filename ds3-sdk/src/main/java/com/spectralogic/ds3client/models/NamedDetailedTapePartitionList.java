@@ -30,7 +30,7 @@ public class NamedDetailedTapePartitionList {
     // Variables
     @JsonProperty("NamedDetailedTapePartition")
     @JacksonXmlElementWrapper(useWrapping = false)
-    private List<NamedDetailedTapePartition> namedDetailedTapePartition = new ArrayList<>();
+    private List<NamedDetailedTapePartition> namedDetailedTapePartitions = new ArrayList<>();
 
     // Constructor
     public NamedDetailedTapePartitionList() {
@@ -39,12 +39,12 @@ public class NamedDetailedTapePartitionList {
 
     // Getters and Setters
     
-    public List<NamedDetailedTapePartition> getNamedDetailedTapePartition() {
-        return this.namedDetailedTapePartition;
+    public List<NamedDetailedTapePartition> getNamedDetailedTapePartitions() {
+        return this.namedDetailedTapePartitions;
     }
 
-    public void setNamedDetailedTapePartition(final List<NamedDetailedTapePartition> namedDetailedTapePartition) {
-        this.namedDetailedTapePartition = namedDetailedTapePartition;
+    public void setNamedDetailedTapePartitions(final List<NamedDetailedTapePartition> namedDetailedTapePartitions) {
+        this.namedDetailedTapePartitions = namedDetailedTapePartitions;
     }
 
 }

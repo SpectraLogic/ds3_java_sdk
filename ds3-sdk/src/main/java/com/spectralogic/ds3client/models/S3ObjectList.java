@@ -30,7 +30,7 @@ public class S3ObjectList {
     // Variables
     @JsonProperty("S3Object")
     @JacksonXmlElementWrapper(useWrapping = false)
-    private List<S3Object> s3Object = new ArrayList<>();
+    private List<S3Object> s3Objects = new ArrayList<>();
 
     // Constructor
     public S3ObjectList() {
@@ -39,12 +39,12 @@ public class S3ObjectList {
 
     // Getters and Setters
     
-    public List<S3Object> getS3Object() {
-        return this.s3Object;
+    public List<S3Object> getS3Objects() {
+        return this.s3Objects;
     }
 
-    public void setS3Object(final List<S3Object> s3Object) {
-        this.s3Object = s3Object;
+    public void setS3Objects(final List<S3Object> s3Objects) {
+        this.s3Objects = s3Objects;
     }
 
 }

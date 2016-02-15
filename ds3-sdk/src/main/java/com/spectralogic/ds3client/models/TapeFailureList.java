@@ -30,7 +30,7 @@ public class TapeFailureList {
     // Variables
     @JsonProperty("TapeFailure")
     @JacksonXmlElementWrapper(useWrapping = false)
-    private List<TapeFailure> tapeFailure = new ArrayList<>();
+    private List<TapeFailure> tapeFailures = new ArrayList<>();
 
     // Constructor
     public TapeFailureList() {
@@ -39,12 +39,12 @@ public class TapeFailureList {
 
     // Getters and Setters
     
-    public List<TapeFailure> getTapeFailure() {
-        return this.tapeFailure;
+    public List<TapeFailure> getTapeFailures() {
+        return this.tapeFailures;
     }
 
-    public void setTapeFailure(final List<TapeFailure> tapeFailure) {
-        this.tapeFailure = tapeFailure;
+    public void setTapeFailures(final List<TapeFailure> tapeFailures) {
+        this.tapeFailures = tapeFailures;
     }
 
 }

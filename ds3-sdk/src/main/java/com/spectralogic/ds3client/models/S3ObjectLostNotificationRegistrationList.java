@@ -30,7 +30,7 @@ public class S3ObjectLostNotificationRegistrationList {
     // Variables
     @JsonProperty("S3ObjectLostNotificationRegistration")
     @JacksonXmlElementWrapper(useWrapping = false)
-    private List<S3ObjectLostNotificationRegistration> s3ObjectLostNotificationRegistration = new ArrayList<>();
+    private List<S3ObjectLostNotificationRegistration> s3ObjectLostNotificationRegistrations = new ArrayList<>();
 
     // Constructor
     public S3ObjectLostNotificationRegistrationList() {
@@ -39,12 +39,12 @@ public class S3ObjectLostNotificationRegistrationList {
 
     // Getters and Setters
     
-    public List<S3ObjectLostNotificationRegistration> getS3ObjectLostNotificationRegistration() {
-        return this.s3ObjectLostNotificationRegistration;
+    public List<S3ObjectLostNotificationRegistration> getS3ObjectLostNotificationRegistrations() {
+        return this.s3ObjectLostNotificationRegistrations;
     }
 
-    public void setS3ObjectLostNotificationRegistration(final List<S3ObjectLostNotificationRegistration> s3ObjectLostNotificationRegistration) {
-        this.s3ObjectLostNotificationRegistration = s3ObjectLostNotificationRegistration;
+    public void setS3ObjectLostNotificationRegistrations(final List<S3ObjectLostNotificationRegistration> s3ObjectLostNotificationRegistrations) {
+        this.s3ObjectLostNotificationRegistrations = s3ObjectLostNotificationRegistrations;
     }
 
 }

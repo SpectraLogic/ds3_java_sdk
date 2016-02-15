@@ -30,7 +30,7 @@ public class BucketList {
     // Variables
     @JsonProperty("Bucket")
     @JacksonXmlElementWrapper(useWrapping = false)
-    private List<Bucket> bucket = new ArrayList<>();
+    private List<Bucket> buckets = new ArrayList<>();
 
     // Constructor
     public BucketList() {
@@ -39,12 +39,12 @@ public class BucketList {
 
     // Getters and Setters
     
-    public List<Bucket> getBucket() {
-        return this.bucket;
+    public List<Bucket> getBuckets() {
+        return this.buckets;
     }
 
-    public void setBucket(final List<Bucket> bucket) {
-        this.bucket = bucket;
+    public void setBuckets(final List<Bucket> buckets) {
+        this.buckets = buckets;
     }
 
 }

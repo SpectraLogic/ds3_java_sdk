@@ -30,7 +30,7 @@ public class PoolFailureNotificationRegistrationList {
     // Variables
     @JsonProperty("PoolFailureNotificationRegistration")
     @JacksonXmlElementWrapper(useWrapping = false)
-    private List<PoolFailureNotificationRegistration> poolFailureNotificationRegistration = new ArrayList<>();
+    private List<PoolFailureNotificationRegistration> poolFailureNotificationRegistrations = new ArrayList<>();
 
     // Constructor
     public PoolFailureNotificationRegistrationList() {
@@ -39,12 +39,12 @@ public class PoolFailureNotificationRegistrationList {
 
     // Getters and Setters
     
-    public List<PoolFailureNotificationRegistration> getPoolFailureNotificationRegistration() {
-        return this.poolFailureNotificationRegistration;
+    public List<PoolFailureNotificationRegistration> getPoolFailureNotificationRegistrations() {
+        return this.poolFailureNotificationRegistrations;
     }
 
-    public void setPoolFailureNotificationRegistration(final List<PoolFailureNotificationRegistration> poolFailureNotificationRegistration) {
-        this.poolFailureNotificationRegistration = poolFailureNotificationRegistration;
+    public void setPoolFailureNotificationRegistrations(final List<PoolFailureNotificationRegistration> poolFailureNotificationRegistrations) {
+        this.poolFailureNotificationRegistrations = poolFailureNotificationRegistrations;
     }
 
 }

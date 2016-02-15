@@ -30,7 +30,7 @@ public class PoolFailureList {
     // Variables
     @JsonProperty("PoolFailure")
     @JacksonXmlElementWrapper(useWrapping = false)
-    private List<PoolFailure> poolFailure = new ArrayList<>();
+    private List<PoolFailure> poolFailures = new ArrayList<>();
 
     // Constructor
     public PoolFailureList() {
@@ -39,12 +39,12 @@ public class PoolFailureList {
 
     // Getters and Setters
     
-    public List<PoolFailure> getPoolFailure() {
-        return this.poolFailure;
+    public List<PoolFailure> getPoolFailures() {
+        return this.poolFailures;
     }
 
-    public void setPoolFailure(final List<PoolFailure> poolFailure) {
-        this.poolFailure = poolFailure;
+    public void setPoolFailures(final List<PoolFailure> poolFailures) {
+        this.poolFailures = poolFailures;
     }
 
 }

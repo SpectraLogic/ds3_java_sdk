@@ -30,7 +30,7 @@ public class TapeDensityDirectiveList {
     // Variables
     @JsonProperty("TapeDensityDirective")
     @JacksonXmlElementWrapper(useWrapping = false)
-    private List<TapeDensityDirective> tapeDensityDirective = new ArrayList<>();
+    private List<TapeDensityDirective> tapeDensityDirectives = new ArrayList<>();
 
     // Constructor
     public TapeDensityDirectiveList() {
@@ -39,12 +39,12 @@ public class TapeDensityDirectiveList {
 
     // Getters and Setters
     
-    public List<TapeDensityDirective> getTapeDensityDirective() {
-        return this.tapeDensityDirective;
+    public List<TapeDensityDirective> getTapeDensityDirectives() {
+        return this.tapeDensityDirectives;
     }
 
-    public void setTapeDensityDirective(final List<TapeDensityDirective> tapeDensityDirective) {
-        this.tapeDensityDirective = tapeDensityDirective;
+    public void setTapeDensityDirectives(final List<TapeDensityDirective> tapeDensityDirectives) {
+        this.tapeDensityDirectives = tapeDensityDirectives;
     }
 
 }

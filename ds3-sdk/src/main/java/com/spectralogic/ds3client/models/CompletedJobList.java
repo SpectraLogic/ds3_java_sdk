@@ -30,7 +30,7 @@ public class CompletedJobList {
     // Variables
     @JsonProperty("CompletedJob")
     @JacksonXmlElementWrapper(useWrapping = false)
-    private List<CompletedJob> completedJob = new ArrayList<>();
+    private List<CompletedJob> completedJobs = new ArrayList<>();
 
     // Constructor
     public CompletedJobList() {
@@ -39,12 +39,12 @@ public class CompletedJobList {
 
     // Getters and Setters
     
-    public List<CompletedJob> getCompletedJob() {
-        return this.completedJob;
+    public List<CompletedJob> getCompletedJobs() {
+        return this.completedJobs;
     }
 
-    public void setCompletedJob(final List<CompletedJob> completedJob) {
-        this.completedJob = completedJob;
+    public void setCompletedJobs(final List<CompletedJob> completedJobs) {
+        this.completedJobs = completedJobs;
     }
 
 }

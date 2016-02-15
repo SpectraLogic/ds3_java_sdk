@@ -188,7 +188,7 @@ public final class ABMTestHelper {
                     new GetStorageDomainMembersSpectraS3Request()
                             .withPoolPartitionId(poolPartitionId)
                             .withStorageDomainId(storageDomainId));
-            assertThat(getMembers.getStorageDomainMemberListResult().getStorageDomainMember().size(), is(0));
+            assertThat(getMembers.getStorageDomainMemberListResult().getStorageDomainMembers().size(), is(0));
         } catch (final IOException e) {
             //Pass: expected storage domain member to not exist
         }
@@ -239,7 +239,7 @@ public final class ABMTestHelper {
                 new GetDataPersistenceRulesSpectraS3Request()
                         .withDataPolicyId(dataPolicyId)
                         .withStorageDomainId(storageDomainId));
-        assertThat(response.getDataPersistenceRuleListResult().getDataPersistenceRule().size(), is(0));
+        assertThat(response.getDataPersistenceRuleListResult().getDataPersistenceRules().size(), is(0));
 
         //Create the data persistence rule
         return client.createDataPersistenceRuleSpectraS3(new CreateDataPersistenceRuleSpectraS3Request(
@@ -334,7 +334,7 @@ public final class ABMTestHelper {
                 new GetDataPolicyAclsSpectraS3Request()
                         .withDataPolicyId(dataPolicyId)
                         .withGroupId(groupId));
-        assertThat(response.getDataPolicyAclListResult().getDataPolicyAcl().size(), is(0));
+        assertThat(response.getDataPolicyAclListResult().getDataPolicyAcls().size(), is(0));
 
         //Create the data policy Acl
         return client.createDataPolicyAclForGroupSpectraS3(new CreateDataPolicyAclForGroupSpectraS3Request(

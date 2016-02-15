@@ -83,8 +83,8 @@ public class GroupManagement_Test {
                             .withDataPolicyId(createDataPolicy.getDataPolicyResult().getId())
                             .withGroupId(createGroup.getGroupResult().getId()));
 
-            assertThat(verifyAcl.getDataPolicyAclListResult().getDataPolicyAcl().size(), is(1));
-            aclId = verifyAcl.getDataPolicyAclListResult().getDataPolicyAcl().get(0).getId();
+            assertThat(verifyAcl.getDataPolicyAclListResult().getDataPolicyAcls().size(), is(1));
+            aclId = verifyAcl.getDataPolicyAclListResult().getDataPolicyAcls().get(0).getId();
 
         } finally {
             deleteDataPolicyAclForGroup(aclId, client);
@@ -130,7 +130,7 @@ public class GroupManagement_Test {
             final GetGroupMembersSpectraS3Response groupMembers = client
                     .getGroupMembersSpectraS3(new GetGroupMembersSpectraS3Request()
                             .withGroupId(parentId));
-            assertThat(groupMembers.getGroupMemberListResult().getGroupMember().size(), is(0));
+            assertThat(groupMembers.getGroupMemberListResult().getGroupMembers().size(), is(0));
         } finally {
             //Delete the groups
             deleteGroup(childGroupName, client);
@@ -165,8 +165,8 @@ public class GroupManagement_Test {
                     .getBucketAclsSpectraS3(new GetBucketAclsSpectraS3Request()
                             .withBucketId(bucketName)
                             .withGroupId(createGroup.getGroupResult().getId()));
-            assertThat(getAcls.getBucketAclListResult().getBucketAcl().size(), is(1));
-            assertThat(getAcls.getBucketAclListResult().getBucketAcl().get(0).getPermission(),
+            assertThat(getAcls.getBucketAclListResult().getBucketAcls().size(), is(1));
+            assertThat(getAcls.getBucketAclListResult().getBucketAcls().get(0).getPermission(),
                     is(BucketAclPermission.READ));
 
             //Delete acl
@@ -179,7 +179,7 @@ public class GroupManagement_Test {
                     .getBucketAclsSpectraS3(new GetBucketAclsSpectraS3Request()
                             .withBucketId(bucketName)
                             .withGroupId(createGroup.getGroupResult().getId()));
-            assertThat(verifyDelete.getBucketAclListResult().getBucketAcl().size(), is(0));
+            assertThat(verifyDelete.getBucketAclListResult().getBucketAcls().size(), is(0));
         } finally {
             deleteAllContents(client, bucketName);
             deleteGroup(groupName, client);

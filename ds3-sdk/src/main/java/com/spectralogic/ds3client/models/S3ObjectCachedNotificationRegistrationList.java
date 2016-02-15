@@ -30,7 +30,7 @@ public class S3ObjectCachedNotificationRegistrationList {
     // Variables
     @JsonProperty("S3ObjectCachedNotificationRegistration")
     @JacksonXmlElementWrapper(useWrapping = false)
-    private List<S3ObjectCachedNotificationRegistration> s3ObjectCachedNotificationRegistration = new ArrayList<>();
+    private List<S3ObjectCachedNotificationRegistration> s3ObjectCachedNotificationRegistrations = new ArrayList<>();
 
     // Constructor
     public S3ObjectCachedNotificationRegistrationList() {
@@ -39,12 +39,12 @@ public class S3ObjectCachedNotificationRegistrationList {
 
     // Getters and Setters
     
-    public List<S3ObjectCachedNotificationRegistration> getS3ObjectCachedNotificationRegistration() {
-        return this.s3ObjectCachedNotificationRegistration;
+    public List<S3ObjectCachedNotificationRegistration> getS3ObjectCachedNotificationRegistrations() {
+        return this.s3ObjectCachedNotificationRegistrations;
     }
 
-    public void setS3ObjectCachedNotificationRegistration(final List<S3ObjectCachedNotificationRegistration> s3ObjectCachedNotificationRegistration) {
-        this.s3ObjectCachedNotificationRegistration = s3ObjectCachedNotificationRegistration;
+    public void setS3ObjectCachedNotificationRegistrations(final List<S3ObjectCachedNotificationRegistration> s3ObjectCachedNotificationRegistrations) {
+        this.s3ObjectCachedNotificationRegistrations = s3ObjectCachedNotificationRegistrations;
     }
 
 }

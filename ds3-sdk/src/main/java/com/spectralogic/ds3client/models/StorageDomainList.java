@@ -30,7 +30,7 @@ public class StorageDomainList {
     // Variables
     @JsonProperty("StorageDomain")
     @JacksonXmlElementWrapper(useWrapping = false)
-    private List<StorageDomain> storageDomain = new ArrayList<>();
+    private List<StorageDomain> storageDomains = new ArrayList<>();
 
     // Constructor
     public StorageDomainList() {
@@ -39,12 +39,12 @@ public class StorageDomainList {
 
     // Getters and Setters
     
-    public List<StorageDomain> getStorageDomain() {
-        return this.storageDomain;
+    public List<StorageDomain> getStorageDomains() {
+        return this.storageDomains;
     }
 
-    public void setStorageDomain(final List<StorageDomain> storageDomain) {
-        this.storageDomain = storageDomain;
+    public void setStorageDomains(final List<StorageDomain> storageDomains) {
+        this.storageDomains = storageDomains;
     }
 
 }

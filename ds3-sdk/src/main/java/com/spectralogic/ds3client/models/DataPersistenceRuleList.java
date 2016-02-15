@@ -30,7 +30,7 @@ public class DataPersistenceRuleList {
     // Variables
     @JsonProperty("DataPersistenceRule")
     @JacksonXmlElementWrapper(useWrapping = false)
-    private List<DataPersistenceRule> dataPersistenceRule = new ArrayList<>();
+    private List<DataPersistenceRule> dataPersistenceRules = new ArrayList<>();
 
     // Constructor
     public DataPersistenceRuleList() {
@@ -39,12 +39,12 @@ public class DataPersistenceRuleList {
 
     // Getters and Setters
     
-    public List<DataPersistenceRule> getDataPersistenceRule() {
-        return this.dataPersistenceRule;
+    public List<DataPersistenceRule> getDataPersistenceRules() {
+        return this.dataPersistenceRules;
     }
 
-    public void setDataPersistenceRule(final List<DataPersistenceRule> dataPersistenceRule) {
-        this.dataPersistenceRule = dataPersistenceRule;
+    public void setDataPersistenceRules(final List<DataPersistenceRule> dataPersistenceRules) {
+        this.dataPersistenceRules = dataPersistenceRules;
     }
 
 }

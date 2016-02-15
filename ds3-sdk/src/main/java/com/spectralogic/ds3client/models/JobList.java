@@ -30,7 +30,7 @@ public class JobList {
     // Variables
     @JsonProperty("Job")
     @JacksonXmlElementWrapper(useWrapping = false)
-    private List<Job> job = new ArrayList<>();
+    private List<Job> jobs = new ArrayList<>();
 
     // Constructor
     public JobList() {
@@ -39,12 +39,12 @@ public class JobList {
 
     // Getters and Setters
     
-    public List<Job> getJob() {
-        return this.job;
+    public List<Job> getJobs() {
+        return this.jobs;
     }
 
-    public void setJob(final List<Job> job) {
-        this.job = job;
+    public void setJobs(final List<Job> jobs) {
+        this.jobs = jobs;
     }
 
 }

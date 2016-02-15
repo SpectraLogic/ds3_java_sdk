@@ -154,9 +154,9 @@ public class Smoke_Test {
             final GetObjectsSpectraS3Response response = client
                     .getObjectsSpectraS3(new GetObjectsSpectraS3Request().withBucketId("test_get_objs"));
 
-            assertFalse(response.getS3ObjectListResult().getS3Object().isEmpty());
-            assertThat(response.getS3ObjectListResult().getS3Object().size(), is(4));
-            assertTrue(s3ObjectExists(response.getS3ObjectListResult().getS3Object(), "beowulf.txt"));
+            assertFalse(response.getS3ObjectListResult().getS3Objects().isEmpty());
+            assertThat(response.getS3ObjectListResult().getS3Objects().size(), is(4));
+            assertTrue(s3ObjectExists(response.getS3ObjectListResult().getS3Objects(), "beowulf.txt"));
 
         } finally {
             deleteAllContents(client,bucketName);
@@ -572,10 +572,10 @@ public class Smoke_Test {
         final TapeList tapes = response.getTapeListResult();
 
         assumeThat(tapes, is(notNullValue()));
-        assumeThat(tapes.getTape(), is(notNullValue()));
-        assumeThat(tapes.getTape().size(), is(not(0)));
+        assumeThat(tapes.getTapes(), is(notNullValue()));
+        assumeThat(tapes.getTapes().size(), is(not(0)));
 
-        assertThat(tapes.getTape().get(0).getId(), is(notNullValue()));
+        assertThat(tapes.getTapes().get(0).getId(), is(notNullValue()));
     }
 
     @Test
@@ -585,11 +585,11 @@ public class Smoke_Test {
         final TapeList tapes = tapesResponse.getTapeListResult();
 
         assumeThat(tapes, is(notNullValue()));
-        assumeThat(tapes.getTape(), is(notNullValue()));
-        assumeThat(tapes.getTape().size(), is(not(0)));
+        assumeThat(tapes.getTapes(), is(notNullValue()));
+        assumeThat(tapes.getTapes().size(), is(not(0)));
 
         final GetTapeSpectraS3Response tapeResponse = client
-                .getTapeSpectraS3(new GetTapeSpectraS3Request(tapes.getTape().get(0).getId()));
+                .getTapeSpectraS3(new GetTapeSpectraS3Request(tapes.getTapes().get(0).getId()));
 
         final Tape tape = tapeResponse.getTapeResult();
 

@@ -30,7 +30,7 @@ public class DataPolicyAclList {
     // Variables
     @JsonProperty("DataPolicyAcl")
     @JacksonXmlElementWrapper(useWrapping = false)
-    private List<DataPolicyAcl> dataPolicyAcl = new ArrayList<>();
+    private List<DataPolicyAcl> dataPolicyAcls = new ArrayList<>();
 
     // Constructor
     public DataPolicyAclList() {
@@ -39,12 +39,12 @@ public class DataPolicyAclList {
 
     // Getters and Setters
     
-    public List<DataPolicyAcl> getDataPolicyAcl() {
-        return this.dataPolicyAcl;
+    public List<DataPolicyAcl> getDataPolicyAcls() {
+        return this.dataPolicyAcls;
     }
 
-    public void setDataPolicyAcl(final List<DataPolicyAcl> dataPolicyAcl) {
-        this.dataPolicyAcl = dataPolicyAcl;
+    public void setDataPolicyAcls(final List<DataPolicyAcl> dataPolicyAcls) {
+        this.dataPolicyAcls = dataPolicyAcls;
     }
 
 }

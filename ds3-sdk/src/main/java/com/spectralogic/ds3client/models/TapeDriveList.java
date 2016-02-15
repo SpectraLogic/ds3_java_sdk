@@ -30,7 +30,7 @@ public class TapeDriveList {
     // Variables
     @JsonProperty("TapeDrive")
     @JacksonXmlElementWrapper(useWrapping = false)
-    private List<TapeDrive> tapeDrive = new ArrayList<>();
+    private List<TapeDrive> tapeDrives = new ArrayList<>();
 
     // Constructor
     public TapeDriveList() {
@@ -39,12 +39,12 @@ public class TapeDriveList {
 
     // Getters and Setters
     
-    public List<TapeDrive> getTapeDrive() {
-        return this.tapeDrive;
+    public List<TapeDrive> getTapeDrives() {
+        return this.tapeDrives;
     }
 
-    public void setTapeDrive(final List<TapeDrive> tapeDrive) {
-        this.tapeDrive = tapeDrive;
+    public void setTapeDrives(final List<TapeDrive> tapeDrives) {
+        this.tapeDrives = tapeDrives;
     }
 
 }

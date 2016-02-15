@@ -30,7 +30,7 @@ public class NamedDetailedTapeList {
     // Variables
     @JsonProperty("NamedDetailedTape")
     @JacksonXmlElementWrapper(useWrapping = false)
-    private List<NamedDetailedTape> namedDetailedTape = new ArrayList<>();
+    private List<NamedDetailedTape> namedDetailedTapes = new ArrayList<>();
 
     // Constructor
     public NamedDetailedTapeList() {
@@ -39,12 +39,12 @@ public class NamedDetailedTapeList {
 
     // Getters and Setters
     
-    public List<NamedDetailedTape> getNamedDetailedTape() {
-        return this.namedDetailedTape;
+    public List<NamedDetailedTape> getNamedDetailedTapes() {
+        return this.namedDetailedTapes;
     }
 
-    public void setNamedDetailedTape(final List<NamedDetailedTape> namedDetailedTape) {
-        this.namedDetailedTape = namedDetailedTape;
+    public void setNamedDetailedTapes(final List<NamedDetailedTape> namedDetailedTapes) {
+        this.namedDetailedTapes = namedDetailedTapes;
     }
 
 }
