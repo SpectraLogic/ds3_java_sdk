@@ -18,13 +18,13 @@ package com.spectralogic.ds3client.commands;
 
 import com.spectralogic.ds3client.HttpVerb;
 
-public class GetBucketsRequest extends AbstractRequest {
+public class GetServiceRequest extends AbstractRequest {
 
     // Variables
     
     // Constructor
     
-    public GetBucketsRequest() {
+    public GetServiceRequest() {
             }
 
 

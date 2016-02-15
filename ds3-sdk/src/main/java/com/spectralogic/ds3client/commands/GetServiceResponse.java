@@ -22,11 +22,11 @@ import java.io.InputStream;
 import com.spectralogic.ds3client.models.ListAllMyBucketsResult;
 import com.spectralogic.ds3client.serializer.XmlOutput;
 
-public class GetBucketsResponse extends AbstractResponse {
+public class GetServiceResponse extends AbstractResponse {
 
     private ListAllMyBucketsResult listAllMyBucketsResult;
 
-    public GetBucketsResponse(final WebResponse response) throws IOException {
+    public GetServiceResponse(final WebResponse response) throws IOException {
         super(response);
     }
 

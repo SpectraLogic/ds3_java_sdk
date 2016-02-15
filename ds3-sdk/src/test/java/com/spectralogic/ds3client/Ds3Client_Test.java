@@ -91,11 +91,11 @@ public class Ds3Client_Test {
             "testbucket"
         );
         
-        final GetBucketsResponse response = MockNetwork
+        final GetServiceResponse response = MockNetwork
             .expecting(HttpVerb.GET, "/", null, null)
             .returning(200, stringResponse)
             .asClient()
-            .getBuckets(new GetBucketsRequest());
+            .getService(new GetServiceRequest());
         final ListAllMyBucketsResult result = response.getListAllMyBucketsResult();
         assertThat(result.getOwner().getDisplayName(), is("ryan"));
         assertThat(result.getOwner().getId(), is(id));
@@ -115,7 +115,7 @@ public class Ds3Client_Test {
             .expecting(HttpVerb.GET, "/", null, null)
             .returning(400, "")
             .asClient()
-            .getBuckets(new GetBucketsRequest());
+            .getService(new GetServiceRequest());
     }
 
     @Test

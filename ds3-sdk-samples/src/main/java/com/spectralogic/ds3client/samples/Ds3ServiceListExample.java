@@ -17,8 +17,8 @@ package com.spectralogic.ds3client.samples;
 
 import com.spectralogic.ds3client.Ds3Client;
 import com.spectralogic.ds3client.Ds3ClientBuilder;
-import com.spectralogic.ds3client.commands.GetBucketsRequest;
-import com.spectralogic.ds3client.commands.GetBucketsResponse;
+import com.spectralogic.ds3client.commands.GetServiceRequest;
+import com.spectralogic.ds3client.commands.GetServiceResponse;
 import com.spectralogic.ds3client.models.Ds3Bucket;
 import com.spectralogic.ds3client.models.Credentials;
 
@@ -34,7 +34,7 @@ public class Ds3ServiceListExample {
                 new Credentials("accessKey", "secretKey")).withHttps(false).build()) {
 
             // Tell the client to get us a list of all buckets, this is called a service list.
-            final GetBucketsResponse response = client.getBuckets(new GetBucketsRequest());
+            final GetServiceResponse response = client.getService(new GetServiceRequest());
 
             // Iterate through all the buckets and print them to the console.
             for (final Ds3Bucket bucket : response.getListAllMyBucketsResult().getBuckets()) {

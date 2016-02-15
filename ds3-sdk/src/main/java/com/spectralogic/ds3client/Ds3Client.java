@@ -48,7 +48,7 @@ public interface Ds3Client extends Closeable {
             throws IOException, SignatureException;
     GetBucketResponse getBucket(GetBucketRequest request)
             throws IOException, SignatureException;
-    GetBucketsResponse getBuckets(GetBucketsRequest request)
+    GetServiceResponse getService(GetServiceRequest request)
             throws IOException, SignatureException;
     HeadBucketResponse headBucket(HeadBucketRequest request)
             throws IOException, SignatureException;

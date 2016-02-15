@@ -78,8 +78,8 @@ public class Ds3ClientImpl implements Ds3Client {
         return new GetBucketResponse(this.netClient.getResponse(request));
     }
     @Override
-    public GetBucketsResponse getBuckets(GetBucketsRequest request) throws IOException, SignatureException {
-        return new GetBucketsResponse(this.netClient.getResponse(request));
+    public GetServiceResponse getService(GetServiceRequest request) throws IOException, SignatureException {
+        return new GetServiceResponse(this.netClient.getResponse(request));
     }
     @Override
     public HeadBucketResponse headBucket(HeadBucketRequest request) throws IOException, SignatureException {
