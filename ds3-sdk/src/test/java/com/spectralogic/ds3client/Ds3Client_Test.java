@@ -234,7 +234,7 @@ public class Ds3Client_Test {
             .expecting(HttpVerb.PUT, "/bucketName", null, null)
             .returning(200, "")
             .asClient()
-            .createBucket(new CreateBucketRequest("bucketName"));
+            .putBucket(new PutBucketRequest("bucketName"));
     }
     
     @Test
@@ -341,7 +341,7 @@ public class Ds3Client_Test {
             .expecting(HttpVerb.PUT, "/bucketName/objectName", queryParams, output)
             .returning(200, "")
             .asClient()
-            .createObject(new CreateObjectRequest(
+            .putObject(new PutObjectRequest(
                     "bucketName",
                     "objectName",
                     channel,
@@ -362,7 +362,7 @@ public class Ds3Client_Test {
         final String output = new String(fileBytes, Charset.forName("UTF-8"));
         final FileChannel channel = FileChannel.open(resourcePath, StandardOpenOption.READ);
 
-        final CreateObjectRequest por = new CreateObjectRequest(
+        final PutObjectRequest por = new PutObjectRequest(
                 "bucketName",
                 "objectName",
                 channel,
@@ -383,7 +383,7 @@ public class Ds3Client_Test {
             .expecting(HttpVerb.PUT, "/bucketName/objectName", queryParams, expectedRequestHeaders, output)
             .returning(200, "")
             .asClient()
-            .createObject(por);
+            .putObject(por);
     }
 
     @Test
@@ -431,7 +431,7 @@ public class Ds3Client_Test {
             @Override
             public MasterObjectList performRestCall(final Ds3Client client, final String bucket, final List<Ds3Object> objects)
                     throws SignatureException, IOException, XmlProcessingException {
-                return client.createPutJobSpectraS3(new CreatePutJobSpectraS3Request(bucket, objects)).getResult();
+                return client.putBulkJobSpectraS3(new PutBulkJobSpectraS3Request(bucket, objects)).getResult();
             }
         });
     }
@@ -442,7 +442,7 @@ public class Ds3Client_Test {
             @Override
             public MasterObjectList performRestCall(final Ds3Client client, final String bucket, final List<Ds3Object> objects)
                     throws SignatureException, IOException, XmlProcessingException {
-                return client.createGetJobSpectraS3(new CreateGetJobSpectraS3Request(bucket, objects)).getResult();
+                return client.getBulkJobSpectraS3(new GetBulkJobSpectraS3Request(bucket, objects)).getResult();
             }
         });
     }

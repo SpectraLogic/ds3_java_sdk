@@ -17,7 +17,7 @@ package com.spectralogic.ds3client.integration;
 
 import com.google.common.collect.Lists;
 import com.spectralogic.ds3client.Ds3Client;
-import com.spectralogic.ds3client.commands.spectrads3.CreatePutJobSpectraS3Request;
+import com.spectralogic.ds3client.commands.spectrads3.PutBulkJobSpectraS3Request;
 import com.spectralogic.ds3client.helpers.ChecksumFunction;
 import com.spectralogic.ds3client.helpers.ChecksumListener;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers;
@@ -119,7 +119,7 @@ public class DataIntegrity_Test {
         final String bucketName = "java_integration_test";
         final String randomFileName = "random.txt";
         final long seed = 12345689;
-        final int length = 2 * CreatePutJobSpectraS3Request.MIN_UPLOAD_SIZE_IN_BYTES;
+        final int length = 2 * PutBulkJobSpectraS3Request.MIN_UPLOAD_SIZE_IN_BYTES;
 
         sendAndVerifySingleFile(bucketName, randomFileName, seed, length);
     }
@@ -129,7 +129,7 @@ public class DataIntegrity_Test {
         final String bucketName = "java_integration_test";
         final String randomFileName = "random.txt";
         final long seed = 12345;
-        final int length = CreatePutJobSpectraS3Request.MIN_UPLOAD_SIZE_IN_BYTES + 1;
+        final int length = PutBulkJobSpectraS3Request.MIN_UPLOAD_SIZE_IN_BYTES + 1;
 
         sendAndVerifySingleFile(bucketName, randomFileName, seed, length);
     }
@@ -139,7 +139,7 @@ public class DataIntegrity_Test {
         final String bucketName = "java_integration_test";
         final String randomFileName = "random.txt";
         final long seed = 12345;
-        final int length = 3 * CreatePutJobSpectraS3Request.MIN_UPLOAD_SIZE_IN_BYTES;
+        final int length = 3 * PutBulkJobSpectraS3Request.MIN_UPLOAD_SIZE_IN_BYTES;
 
         sendAndVerifySingleFile(bucketName, randomFileName, seed, length);
     }
@@ -149,7 +149,7 @@ public class DataIntegrity_Test {
         final String bucketName = "java_integration_test";
         final String randomFileName = "random.txt";
         final long seed = 12345;
-        final int length = 2 * CreatePutJobSpectraS3Request.MIN_UPLOAD_SIZE_IN_BYTES + 1;
+        final int length = 2 * PutBulkJobSpectraS3Request.MIN_UPLOAD_SIZE_IN_BYTES + 1;
 
         sendAndVerifySingleFile(bucketName, randomFileName, seed, length);
     }
@@ -415,7 +415,7 @@ public class DataIntegrity_Test {
             final Ds3Object obj = new Ds3Object(fileName, length);
 
             final Ds3ClientHelpers.Job putJob = helpers.startWriteJob(bucketName, Lists.newArrayList(obj),
-                    WriteJobOptions.create().withMaxUploadSize(CreatePutJobSpectraS3Request.MIN_UPLOAD_SIZE_IN_BYTES));
+                    WriteJobOptions.create().withMaxUploadSize(PutBulkJobSpectraS3Request.MIN_UPLOAD_SIZE_IN_BYTES));
             putJob.transfer(new Ds3ClientHelpers.ObjectChannelBuilder() {
                 @Override
                 public SeekableByteChannel buildChannel(final String key) throws IOException {

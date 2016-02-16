@@ -27,7 +27,7 @@ public final class ABMTestHelper {
      * policy with the same name does not currently exist. If a policy already
      * exists with the specified name, an error is thrown.
      */
-    public static CreateDataPolicySpectraS3Response createDataPolicyWithVersioning(
+    public static PutDataPolicySpectraS3Response createDataPolicyWithVersioning(
             final String dataPolicyName,
             final VersioningLevel versioningLevel,
             final Ds3Client client) throws IOException, SignatureException {
@@ -43,7 +43,7 @@ public final class ABMTestHelper {
      * policy with the same name does not currently exist. If a policy already
      * exists with the specified name, an error is thrown.
      */
-    public static CreateDataPolicySpectraS3Response createDataPolicyWithVersioningAndCrcRequired(
+    public static PutDataPolicySpectraS3Response createDataPolicyWithVersioningAndCrcRequired(
             final String dataPolicyName,
             final VersioningLevel versioningLevel,
             final ChecksumType.Type checksumType,
@@ -58,11 +58,11 @@ public final class ABMTestHelper {
 
         if (checksumType == null) {
             //Create the data policy with versioning
-            return client.createDataPolicySpectraS3(new CreateDataPolicySpectraS3Request(dataPolicyName)
+            return client.putDataPolicySpectraS3(new PutDataPolicySpectraS3Request(dataPolicyName)
                     .withVersioning(versioningLevel));
         }
         //Create the data policy with versioning and checksum
-        return client.createDataPolicySpectraS3(new CreateDataPolicySpectraS3Request(dataPolicyName)
+        return client.putDataPolicySpectraS3(new PutDataPolicySpectraS3Request(dataPolicyName)
                 .withVersioning(versioningLevel)
                 .withEndToEndCrcRequired(true)
                 .withChecksumType(checksumType));
@@ -94,7 +94,7 @@ public final class ABMTestHelper {
      * partition with the same name does not currently exist. If a partition
      * already exists with the specified name, an error is thrown.
      */
-    public static CreatePoolPartitionSpectraS3Response createPoolPartition(
+    public static PutPoolPartitionSpectraS3Response createPoolPartition(
             final String poolPartitionName,
             final PoolType poolType,
             final Ds3Client client) throws IOException, SignatureException {
@@ -107,7 +107,7 @@ public final class ABMTestHelper {
         }
 
         //Create the pool partition
-        return client.createPoolPartitionSpectraS3(new CreatePoolPartitionSpectraS3Request(
+        return client.putPoolPartitionSpectraS3(new PutPoolPartitionSpectraS3Request(
                 poolPartitionName,
                 poolType));
     }
@@ -137,7 +137,7 @@ public final class ABMTestHelper {
      * Creates a storage domain if one does not already exist with the specified name. If a
      * storage domain already exists with the specified name, an error is thrown.
      */
-    public static CreateStorageDomainSpectraS3Response createStorageDomain(
+    public static PutStorageDomainSpectraS3Response createStorageDomain(
             final String storageDomainName,
             final Ds3Client client) throws IOException, SignatureException {
         //Check if storage domain already exists
@@ -149,7 +149,7 @@ public final class ABMTestHelper {
         }
 
         //Create the storage domain
-        return client.createStorageDomainSpectraS3(new CreateStorageDomainSpectraS3Request(storageDomainName));
+        return client.putStorageDomainSpectraS3(new PutStorageDomainSpectraS3Request(storageDomainName));
     }
 
     /**
@@ -178,7 +178,7 @@ public final class ABMTestHelper {
      * storage domain and pool partition. If a storage domain member already exists,an
      * error is thrown.
      */
-    public static CreatePoolStorageDomainMemberSpectraS3Response createPoolStorageDomainMember(
+    public static PutPoolStorageDomainMemberSpectraS3Response createPoolStorageDomainMember(
             final UUID storageDomainId,
             final UUID poolPartitionId,
             final Ds3Client client) throws IOException, SignatureException {
@@ -194,7 +194,7 @@ public final class ABMTestHelper {
         }
 
         //Create the storage domain
-        return client.createPoolStorageDomainMemberSpectraS3(new CreatePoolStorageDomainMemberSpectraS3Request(
+        return client.putPoolStorageDomainMemberSpectraS3(new PutPoolStorageDomainMemberSpectraS3Request(
                 poolPartitionId,
                 storageDomainId));
     }
@@ -230,7 +230,7 @@ public final class ABMTestHelper {
      * Creates a data persistence rule to link the specified data policy and storage domain,
      * if said rule does not already exist.
      */
-    public static CreateDataPersistenceRuleSpectraS3Response createDataPersistenceRule(
+    public static PutDataPersistenceRuleSpectraS3Response createDataPersistenceRule(
             final UUID dataPolicyId,
             final UUID storageDomainId,
             final Ds3Client client) throws IOException, SignatureException {
@@ -242,7 +242,7 @@ public final class ABMTestHelper {
         assertThat(response.getDataPersistenceRuleListResult().getDataPersistenceRules().size(), is(0));
 
         //Create the data persistence rule
-        return client.createDataPersistenceRuleSpectraS3(new CreateDataPersistenceRuleSpectraS3Request(
+        return client.putDataPersistenceRuleSpectraS3(new PutDataPersistenceRuleSpectraS3Request(
                 dataPolicyId,
                 DataIsolationLevel.STANDARD,
                 storageDomainId,
@@ -281,7 +281,7 @@ public final class ABMTestHelper {
      * name does not currently exist. If a group exists with the specified
      * name, an error is thrown.
      */
-    public static CreateGroupSpectraS3Response createGroup(
+    public static PutGroupSpectraS3Response createGroup(
             final String groupName,
             final Ds3Client client) throws IOException, SignatureException {
         //Check if group already exists
@@ -294,7 +294,7 @@ public final class ABMTestHelper {
         }
 
         //Create the group
-        return client.createGroupSpectraS3(new CreateGroupSpectraS3Request(groupName));
+        return client.putGroupSpectraS3(new PutGroupSpectraS3Request(groupName));
     }
 
     /**
@@ -319,13 +319,11 @@ public final class ABMTestHelper {
         }
     }
 
-
-
     /**
      * Creates a data policy acl for group to link the specified data policy and group,
      * if said rule does not already exist.
      */
-    public static CreateDataPolicyAclForGroupSpectraS3Response createDataPolicyAclForGroup(
+    public static PutDataPolicyAclForGroupSpectraS3Response createDataPolicyAclForGroup(
             final UUID dataPolicyId,
             final UUID groupId,
             final Ds3Client client) throws IOException, SignatureException {
@@ -337,7 +335,7 @@ public final class ABMTestHelper {
         assertThat(response.getDataPolicyAclListResult().getDataPolicyAcls().size(), is(0));
 
         //Create the data policy Acl
-        return client.createDataPolicyAclForGroupSpectraS3(new CreateDataPolicyAclForGroupSpectraS3Request(
+        return client.putDataPolicyAclForGroupSpectraS3(new PutDataPolicyAclForGroupSpectraS3Request(
                 dataPolicyId,
                 groupId));
     }

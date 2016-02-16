@@ -80,8 +80,8 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
                                                          final Iterable<Ds3Object> objectsToWrite,
                                                          final WriteJobOptions options)
             throws SignatureException, IOException, XmlProcessingException {
-        final CreatePutJobSpectraS3Response prime = this.client.createPutJobSpectraS3(
-                new CreatePutJobSpectraS3Request(bucket, Lists.newArrayList(objectsToWrite))
+        final PutBulkJobSpectraS3Response prime = this.client.putBulkJobSpectraS3(
+                new PutBulkJobSpectraS3Request(bucket, Lists.newArrayList(objectsToWrite))
                 .withPriority(options.getPriority())
                 .withMaxUploadSize(options.getMaxUploadSize()));
         return new WriteJobImpl(this.client, prime.getResult(), this.retryAfter, options.getChecksumType());
@@ -105,7 +105,7 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
     private Ds3ClientHelpers.Job innerStartReadJob(final String bucket, final Iterable<Ds3Object> objectsToRead, final ReadJobOptions options)
             throws SignatureException, IOException, XmlProcessingException {
         final List<Ds3Object> objects = Lists.newArrayList(objectsToRead);
-        final CreateGetJobSpectraS3Response prime = this.client.createGetJobSpectraS3(new CreateGetJobSpectraS3Request(bucket, objects)
+        final GetBulkJobSpectraS3Response prime = this.client.getBulkJobSpectraS3(new GetBulkJobSpectraS3Request(bucket, objects)
                 .withChunkClientProcessingOrderGuarantee(JobChunkClientProcessingOrderGuarantee.NONE)
                 .withPriority(options.getPriority()));
 
@@ -178,7 +178,7 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
         final HeadBucketResponse response = this.client.headBucket(new HeadBucketRequest(bucket));
         if (response.getStatus() == HeadBucketResponse.Status.DOESNTEXIST) {
             try {
-                this.client.createBucket(new CreateBucketRequest(bucket));
+                this.client.putBucket(new PutBucketRequest(bucket));
             } catch (final FailedRequestException e) {
                 if (e.getStatusCode() != 409) {
                     throw e;

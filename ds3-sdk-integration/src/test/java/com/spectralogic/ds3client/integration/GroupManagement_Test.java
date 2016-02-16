@@ -38,7 +38,7 @@ public class GroupManagement_Test {
 
         try {
             //Create the group
-            final CreateGroupSpectraS3Response groupResponse = createGroup(groupName, client);
+            final PutGroupSpectraS3Response groupResponse = createGroup(groupName, client);
             assertThat(groupResponse.getStatusCode(), is(201));
             assertThat(groupResponse.getGroupResult().getName(), is(groupName));
 
@@ -60,18 +60,18 @@ public class GroupManagement_Test {
 
         try {
             //Create the group
-            final CreateGroupSpectraS3Response createGroup = createGroup(groupName, client);
+            final PutGroupSpectraS3Response createGroup = createGroup(groupName, client);
             assertThat(createGroup.getGroupResult().getName(), is(groupName));
 
             //Create the data policy
-            final CreateDataPolicySpectraS3Response createDataPolicy = createDataPolicyWithVersioning(
+            final PutDataPolicySpectraS3Response createDataPolicy = createDataPolicyWithVersioning(
                     dataPolicyName,
                     VersioningLevel.KEEP_LATEST,
                     client);
             assertThat(createDataPolicy.getDataPolicyResult().getName(), is(dataPolicyName));
 
             //Create the data policy Acl for group
-            final CreateDataPolicyAclForGroupSpectraS3Response createAcl = createDataPolicyAclForGroup(
+            final PutDataPolicyAclForGroupSpectraS3Response createAcl = createDataPolicyAclForGroup(
                     createDataPolicy.getDataPolicyResult().getId(),
                     createGroup.getGroupResult().getId(),
                     client);
@@ -100,12 +100,12 @@ public class GroupManagement_Test {
 
         try {
             //Create the parent group
-            final CreateGroupSpectraS3Response createParent = createGroup(parentGroupName, client);
+            final PutGroupSpectraS3Response createParent = createGroup(parentGroupName, client);
             assertThat(createParent.getStatusCode(), is(201));
             assertThat(createParent.getGroupResult().getName(), is(parentGroupName));
 
             //Create the child group
-            final CreateGroupSpectraS3Response createChild = createGroup(childGroupName, client);
+            final PutGroupSpectraS3Response createChild = createGroup(childGroupName, client);
             assertThat(createChild.getStatusCode(), is(201));
             assertThat(createChild.getGroupResult().getName(), is(childGroupName));
 
@@ -113,8 +113,8 @@ public class GroupManagement_Test {
             final UUID parentId = createParent.getGroupResult().getId();
             final UUID childId = createChild.getGroupResult().getId();
 
-            final CreateGroupGroupMemberSpectraS3Response groupGroup = client
-                    .createGroupGroupMemberSpectraS3(new CreateGroupGroupMemberSpectraS3Request(
+            final PutGroupGroupMemberSpectraS3Response groupGroup = client
+                    .putGroupGroupMemberSpectraS3(new PutGroupGroupMemberSpectraS3Request(
                             parentId,
                             childId));
             assertThat(groupGroup.getStatusCode(), is(201));
@@ -145,17 +145,17 @@ public class GroupManagement_Test {
 
         try {
             //Create bucket
-            final CreateBucketSpectraS3Response createBucket = client
-                    .createBucketSpectraS3(new CreateBucketSpectraS3Request(bucketName));
+            final PutBucketSpectraS3Response createBucket = client
+                    .putBucketSpectraS3(new PutBucketSpectraS3Request(bucketName));
             assertThat(createBucket.getBucketResult().getName(), is(bucketName));
 
             //Create group
-            final CreateGroupSpectraS3Response createGroup = createGroup(groupName, client);
+            final PutGroupSpectraS3Response createGroup = createGroup(groupName, client);
             assertThat(createGroup.getGroupResult().getName(), is(groupName));
 
             //Create acl between bucket and group
-            final CreateBucketAclForGroupSpectraS3Response createAcl = client
-                    .createBucketAclForGroupSpectraS3(new CreateBucketAclForGroupSpectraS3Request(
+            final PutBucketAclForGroupSpectraS3Response createAcl = client
+                    .putBucketAclForGroupSpectraS3(new PutBucketAclForGroupSpectraS3Request(
                             bucketName,
                             createGroup.getGroupResult().getId(),
                             BucketAclPermission.READ));

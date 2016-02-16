@@ -40,14 +40,14 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public class ResponseBuilders {
-    public static CreateGetJobSpectraS3Response bulkGetResponse(final MasterObjectList masterObjectList) {
-        final CreateGetJobSpectraS3Response response = mock(CreateGetJobSpectraS3Response.class);
+    public static GetBulkJobSpectraS3Response bulkGetResponse(final MasterObjectList masterObjectList) {
+        final GetBulkJobSpectraS3Response response = mock(GetBulkJobSpectraS3Response.class);
         when(response.getResult()).thenReturn(masterObjectList);
         return response;
     }
 
-    public static CreatePutJobSpectraS3Response bulkPutResponse(final MasterObjectList masterObjectList) {
-        final CreatePutJobSpectraS3Response response = mock(CreatePutJobSpectraS3Response.class);
+    public static PutBulkJobSpectraS3Response bulkPutResponse(final MasterObjectList masterObjectList) {
+        final PutBulkJobSpectraS3Response response = mock(PutBulkJobSpectraS3Response.class);
         when(response.getResult()).thenReturn(masterObjectList);
         return response;
     }

@@ -45,7 +45,7 @@ public class AdvancedBucketManagement_Test {
 
         try {
             //Create the data policy
-            final CreateDataPolicySpectraS3Response createDataPolicy = createDataPolicyWithVersioning(
+            final PutDataPolicySpectraS3Response createDataPolicy = createDataPolicyWithVersioning(
                     dataPolicyName,
                     VersioningLevel.KEEP_LATEST,
                     client);
@@ -71,7 +71,7 @@ public class AdvancedBucketManagement_Test {
 
         try {
             //Create a test storage domain
-            final CreateStorageDomainSpectraS3Response storageDomainResponse = createStorageDomain(
+            final PutStorageDomainSpectraS3Response storageDomainResponse = createStorageDomain(
                     storageDomainName,
                     client);
 
@@ -89,7 +89,7 @@ public class AdvancedBucketManagement_Test {
 
         try {
             //Create the pool partition
-            final CreatePoolPartitionSpectraS3Response createPoolResponse = createPoolPartition(
+            final PutPoolPartitionSpectraS3Response createPoolResponse = createPoolPartition(
                     poolPartitionName,
                     PoolType.ONLINE,
                     client);
@@ -115,18 +115,18 @@ public class AdvancedBucketManagement_Test {
         final String poolPartitionName = "create_pool_storage_domain_member_pp";
         try {
             //Create storage domain
-            final CreateStorageDomainSpectraS3Response createStorageDomain = createStorageDomain(
+            final PutStorageDomainSpectraS3Response createStorageDomain = createStorageDomain(
                     storageDomainName,
                     client);
 
             //Create pool partition
-            final CreatePoolPartitionSpectraS3Response createPoolPartition = createPoolPartition(
+            final PutPoolPartitionSpectraS3Response createPoolPartition = createPoolPartition(
                     poolPartitionName,
                     PoolType.ONLINE,
                     client);
 
             //Create storage domain member linking pool partition to storage domain
-            final CreatePoolStorageDomainMemberSpectraS3Response createMemberResponse = createPoolStorageDomainMember(
+            final PutPoolStorageDomainMemberSpectraS3Response createMemberResponse = createPoolStorageDomainMember(
                     createStorageDomain.getStorageDomainResult().getId(),
                     createPoolPartition.getPoolPartitionResult().getId(),
                     client);
@@ -155,8 +155,8 @@ public class AdvancedBucketManagement_Test {
     public void createBucketSpectraS3_Test() throws IOException, SignatureException {
         final String bucketName = "create_bucket_spectra_s3";
         try {
-            final CreateBucketSpectraS3Response response = client
-                    .createBucketSpectraS3(new CreateBucketSpectraS3Request(bucketName));
+            final PutBucketSpectraS3Response response = client
+                    .putBucketSpectraS3(new PutBucketSpectraS3Request(bucketName));
 
             assertThat(response.getStatusCode(), is(201));
             assertThat(response.getBucketResult().getName(), is(bucketName));
@@ -175,39 +175,39 @@ public class AdvancedBucketManagement_Test {
         UUID dataPersistenceRuleId = null;
         try {
             //Create data policy
-            final CreateDataPolicySpectraS3Response dataPolicyResponse = createDataPolicyWithVersioning(
+            final PutDataPolicySpectraS3Response dataPolicyResponse = createDataPolicyWithVersioning(
                     dataPolicyName,
                     VersioningLevel.KEEP_LATEST,
                     client);
 
             //Create storage domain
-            final CreateStorageDomainSpectraS3Response storageDomainResponse = createStorageDomain(
+            final PutStorageDomainSpectraS3Response storageDomainResponse = createStorageDomain(
                     storageDomainName,
                     client);
 
             //Create pool partition
-            final CreatePoolPartitionSpectraS3Response poolPartitionResponse = createPoolPartition(
+            final PutPoolPartitionSpectraS3Response poolPartitionResponse = createPoolPartition(
                     poolPartitionName,
                     PoolType.ONLINE,
                     client);
 
             //Create storage domain member linking pool partition to storage domain
-            final CreatePoolStorageDomainMemberSpectraS3Response memberResponse = createPoolStorageDomainMember(
+            final PutPoolStorageDomainMemberSpectraS3Response memberResponse = createPoolStorageDomainMember(
                     storageDomainResponse.getStorageDomainResult().getId(),
                     poolPartitionResponse.getPoolPartitionResult().getId(),
                     client);
             storageDomainMemberId = memberResponse.getStorageDomainMemberResult().getId();
 
             //create data persistence rule
-            final CreateDataPersistenceRuleSpectraS3Response dataPersistenceResponse = createDataPersistenceRule(
+            final PutDataPersistenceRuleSpectraS3Response dataPersistenceResponse = createDataPersistenceRule(
                     dataPolicyResponse.getDataPolicyResult().getId(),
                     storageDomainResponse.getStorageDomainResult().getId(),
                     client);
             dataPersistenceRuleId = dataPersistenceResponse.getDataPersistenceRuleResult().getDataPolicyId();
 
             //Create bucket with data policy
-            final CreateBucketSpectraS3Response bucketResponse = client
-                    .createBucketSpectraS3(new CreateBucketSpectraS3Request(bucketName)
+            final PutBucketSpectraS3Response bucketResponse = client
+                    .putBucketSpectraS3(new PutBucketSpectraS3Request(bucketName)
                             .withDataPolicyId(dataPolicyResponse.getDataPolicyResult().getId()));
 
 
@@ -235,39 +235,39 @@ public class AdvancedBucketManagement_Test {
         UUID dataPersistenceRuleId = null;
         try {
             //Create data policy
-            final CreateDataPolicySpectraS3Response dataPolicyResponse = createDataPolicyWithVersioning(
+            final PutDataPolicySpectraS3Response dataPolicyResponse = createDataPolicyWithVersioning(
                     dataPolicyName,
                     VersioningLevel.KEEP_LATEST,
                     client);
 
             //Create storage domain
-            final CreateStorageDomainSpectraS3Response storageDomainResponse = createStorageDomain(
+            final PutStorageDomainSpectraS3Response storageDomainResponse = createStorageDomain(
                     storageDomainName,
                     client);
 
             //Create pool partition
-            final CreatePoolPartitionSpectraS3Response poolPartitionResponse = createPoolPartition(
+            final PutPoolPartitionSpectraS3Response poolPartitionResponse = createPoolPartition(
                     poolPartitionName,
                     PoolType.ONLINE,
                     client);
 
             //Create storage domain member linking pool partition to storage domain
-            final CreatePoolStorageDomainMemberSpectraS3Response memberResponse = createPoolStorageDomainMember(
+            final PutPoolStorageDomainMemberSpectraS3Response memberResponse = createPoolStorageDomainMember(
                     storageDomainResponse.getStorageDomainResult().getId(),
                     poolPartitionResponse.getPoolPartitionResult().getId(),
                     client);
             storageDomainMemberId = memberResponse.getStorageDomainMemberResult().getId();
 
             //create data persistence rule
-            final CreateDataPersistenceRuleSpectraS3Response dataPersistenceResponse = createDataPersistenceRule(
+            final PutDataPersistenceRuleSpectraS3Response dataPersistenceResponse = createDataPersistenceRule(
                     dataPolicyResponse.getDataPolicyResult().getId(),
                     storageDomainResponse.getStorageDomainResult().getId(),
                     client);
             dataPersistenceRuleId = dataPersistenceResponse.getDataPersistenceRuleResult().getDataPolicyId();
 
             //Create bucket with data policy
-            client.createBucketSpectraS3(new CreateBucketSpectraS3Request(bucketName)
-                            .withDataPolicyId(dataPolicyResponse.getDataPolicyResult().getId()));
+            client.putBucketSpectraS3(new PutBucketSpectraS3Request(bucketName)
+                    .withDataPolicyId(dataPolicyResponse.getDataPolicyResult().getId()));
 
             //Load the set of books and verify they exist
             loadBookTestData(client, bucketName);
@@ -307,39 +307,39 @@ public class AdvancedBucketManagement_Test {
         UUID dataPersistenceRuleId = null;
         try {
             //Create data policy
-            final CreateDataPolicySpectraS3Response dataPolicyResponse = createDataPolicyWithVersioning(
+            final PutDataPolicySpectraS3Response dataPolicyResponse = createDataPolicyWithVersioning(
                     dataPolicyName,
                     VersioningLevel.NONE,
                     client);
 
             //Create storage domain
-            final CreateStorageDomainSpectraS3Response storageDomainResponse = createStorageDomain(
+            final PutStorageDomainSpectraS3Response storageDomainResponse = createStorageDomain(
                     storageDomainName,
                     client);
 
             //Create pool partition
-            final CreatePoolPartitionSpectraS3Response poolPartitionResponse = createPoolPartition(
+            final PutPoolPartitionSpectraS3Response poolPartitionResponse = createPoolPartition(
                     poolPartitionName,
                     PoolType.ONLINE,
                     client);
 
             //Create storage domain member linking pool partition to storage domain
-            final CreatePoolStorageDomainMemberSpectraS3Response memberResponse = createPoolStorageDomainMember(
+            final PutPoolStorageDomainMemberSpectraS3Response memberResponse = createPoolStorageDomainMember(
                     storageDomainResponse.getStorageDomainResult().getId(),
                     poolPartitionResponse.getPoolPartitionResult().getId(),
                     client);
             storageDomainMemberId = memberResponse.getStorageDomainMemberResult().getId();
 
             //create data persistence rule
-            final CreateDataPersistenceRuleSpectraS3Response dataPersistenceResponse = createDataPersistenceRule(
+            final PutDataPersistenceRuleSpectraS3Response dataPersistenceResponse = createDataPersistenceRule(
                     dataPolicyResponse.getDataPolicyResult().getId(),
                     storageDomainResponse.getStorageDomainResult().getId(),
                     client);
             dataPersistenceRuleId = dataPersistenceResponse.getDataPersistenceRuleResult().getDataPolicyId();
 
             //Create bucket with data policy
-            client.createBucketSpectraS3(new CreateBucketSpectraS3Request(bucketName)
-                            .withDataPolicyId(dataPolicyResponse.getDataPolicyResult().getId()));
+            client.putBucketSpectraS3(new PutBucketSpectraS3Request(bucketName)
+                    .withDataPolicyId(dataPolicyResponse.getDataPolicyResult().getId()));
 
             //Load the set of books and verify they exist
             loadBookTestData(client, bucketName);

@@ -20,8 +20,8 @@ import com.spectralogic.ds3client.Ds3ClientBuilder;
 import com.spectralogic.ds3client.commands.GetBucketRequest;
 import com.spectralogic.ds3client.commands.GetBucketResponse;
 import com.spectralogic.ds3client.commands.GetObjectRequest;
-import com.spectralogic.ds3client.commands.spectrads3.CreateGetJobSpectraS3Request;
-import com.spectralogic.ds3client.commands.spectrads3.CreateGetJobSpectraS3Response;
+import com.spectralogic.ds3client.commands.spectrads3.GetBulkJobSpectraS3Request;
+import com.spectralogic.ds3client.commands.spectrads3.GetBulkJobSpectraS3Response;
 import com.spectralogic.ds3client.models.BulkObject;
 import com.spectralogic.ds3client.models.Contents;
 import com.spectralogic.ds3client.models.Objects;
@@ -66,8 +66,8 @@ public class Ds3BulkGetExample {
             }
 
             // Prime DS3 with the BulkGet command so that it can start to get objects off of tape.
-            final CreateGetJobSpectraS3Response bulkResponse = client
-                    .createGetJobSpectraS3(new CreateGetJobSpectraS3Request(bucket, objectList));
+            final GetBulkJobSpectraS3Response bulkResponse = client
+                    .getBulkJobSpectraS3(new GetBulkJobSpectraS3Request(bucket, objectList));
 
             // The bulk response returns a list of lists which is designed to optimize data transmission from DS3.
             final MasterObjectList list = bulkResponse.getResult();

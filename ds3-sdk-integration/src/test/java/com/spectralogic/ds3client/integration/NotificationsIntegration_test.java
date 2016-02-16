@@ -16,7 +16,7 @@
 package com.spectralogic.ds3client.integration;
 
 import com.spectralogic.ds3client.Ds3Client;
-import com.spectralogic.ds3client.commands.CreateBucketRequest;
+import com.spectralogic.ds3client.commands.PutBucketRequest;
 import com.spectralogic.ds3client.commands.spectrads3.notifications.*;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers;
 import com.spectralogic.ds3client.serializer.XmlProcessingException;
@@ -49,8 +49,8 @@ public class NotificationsIntegration_test {
 
     @Test
     public void objectCompletionRegistration() throws IOException, SignatureException {
-        final CreateObjectCachedNotificationRegistrationSpectraS3Response response = client.createObjectCachedNotificationRegistrationSpectraS3(
-                new CreateObjectCachedNotificationRegistrationSpectraS3Request("192.168.56.101"));
+        final PutObjectCachedNotificationRegistrationSpectraS3Response response = client.putObjectCachedNotificationRegistrationSpectraS3(
+                new PutObjectCachedNotificationRegistrationSpectraS3Request("192.168.56.101"));
         assertThat(response, is(notNullValue()));
         assertThat(response.getS3ObjectCachedNotificationRegistrationResult(), is(notNullValue()));
 
@@ -69,8 +69,8 @@ public class NotificationsIntegration_test {
 
     @Test
     public void jobCompletionRegistration() throws IOException, SignatureException {
-        final CreateJobCompletedNotificationRegistrationSpectraS3Response response = client.createJobCompletedNotificationRegistrationSpectraS3(
-                new CreateJobCompletedNotificationRegistrationSpectraS3Request("192.168.56.101/other"));
+        final PutJobCompletedNotificationRegistrationSpectraS3Response response = client.putJobCompletedNotificationRegistrationSpectraS3(
+                new PutJobCompletedNotificationRegistrationSpectraS3Request("192.168.56.101/other"));
         assertThat(response, is(notNullValue()));
         assertThat(response.getJobCompletedNotificationRegistrationResult(), is(notNullValue()));
 
@@ -88,9 +88,9 @@ public class NotificationsIntegration_test {
 
     @Test
     public void jobCreateRegistration() throws IOException, SignatureException {
-        final CreateJobCreatedNotificationRegistrationSpectraS3Response response = client
-                .createJobCreatedNotificationRegistrationSpectraS3(
-                        new CreateJobCreatedNotificationRegistrationSpectraS3Request("192.168.56.101/other"));
+        final PutJobCreatedNotificationRegistrationSpectraS3Response response = client
+                .putJobCreatedNotificationRegistrationSpectraS3(
+                        new PutJobCreatedNotificationRegistrationSpectraS3Request("192.168.56.101/other"));
         assertThat(response, is(notNullValue()));
         assertThat(response.getJobCreatedNotificationRegistrationResult(), is(notNullValue()));
 
@@ -109,9 +109,9 @@ public class NotificationsIntegration_test {
 
     @Test
     public void objectLostRegistration() throws IOException, SignatureException {
-        final CreateObjectLostNotificationRegistrationSpectraS3Response response = client
-                .createObjectLostNotificationRegistrationSpectraS3(
-                        new CreateObjectLostNotificationRegistrationSpectraS3Request("192.168.56.101/other"));
+        final PutObjectLostNotificationRegistrationSpectraS3Response response = client
+                .putObjectLostNotificationRegistrationSpectraS3(
+                        new PutObjectLostNotificationRegistrationSpectraS3Request("192.168.56.101/other"));
         assertThat(response, is(notNullValue()));
         assertThat(response.getS3ObjectLostNotificationRegistrationResult(), is(notNullValue()));
 
@@ -133,12 +133,12 @@ public class NotificationsIntegration_test {
         final String bucketName = "test_bucket";
 
         try {
-            client.createBucket(new CreateBucketRequest(bucketName));
+            client.putBucket(new PutBucketRequest(bucketName));
             final Ds3ClientHelpers.Job job = Util.getLoadJob(client, bucketName, Util.RESOURCE_BASE_NAME);
 
-            final CreateObjectPersistedNotificationRegistrationSpectraS3Response response = client
-                    .createObjectPersistedNotificationRegistrationSpectraS3(
-                            new CreateObjectPersistedNotificationRegistrationSpectraS3Request("192.168.56.101/other")
+            final PutObjectPersistedNotificationRegistrationSpectraS3Response response = client
+                    .putObjectPersistedNotificationRegistrationSpectraS3(
+                            new PutObjectPersistedNotificationRegistrationSpectraS3Request("192.168.56.101/other")
                                     .withJobId(job.getJobId()));
             assertThat(response, is(notNullValue()));
             assertThat(response.getS3ObjectPersistedNotificationRegistrationResult(), is(notNullValue()));
@@ -163,9 +163,9 @@ public class NotificationsIntegration_test {
 
     @Test
     public void partitionFailureRegistration() throws IOException, SignatureException {
-        final CreateTapePartitionFailureNotificationRegistrationSpectraS3Response response = client
-                .createTapePartitionFailureNotificationRegistrationSpectraS3(
-                        new CreateTapePartitionFailureNotificationRegistrationSpectraS3Request("192.168.56.101/other"));
+        final PutTapePartitionFailureNotificationRegistrationSpectraS3Response response = client
+                .putTapePartitionFailureNotificationRegistrationSpectraS3(
+                        new PutTapePartitionFailureNotificationRegistrationSpectraS3Request("192.168.56.101/other"));
         assertThat(response, is(notNullValue()));
         assertThat(response.getTapePartitionFailureNotificationRegistrationResult(), is(notNullValue()));
 
@@ -184,9 +184,9 @@ public class NotificationsIntegration_test {
 
     @Test
     public void tapeFailureRegistration() throws IOException, SignatureException {
-        final CreateTapeFailureNotificationRegistrationSpectraS3Response response = client
-                .createTapeFailureNotificationRegistrationSpectraS3(
-                        new CreateTapeFailureNotificationRegistrationSpectraS3Request("192.168.56.101/other"));
+        final PutTapeFailureNotificationRegistrationSpectraS3Response response = client
+                .putTapeFailureNotificationRegistrationSpectraS3(
+                        new PutTapeFailureNotificationRegistrationSpectraS3Request("192.168.56.101/other"));
         assertThat(response, is(notNullValue()));
         assertThat(response.getTapeFailureNotificationRegistrationResult(), is(notNullValue()));
 

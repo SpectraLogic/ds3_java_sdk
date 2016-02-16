@@ -18,8 +18,8 @@ package com.spectralogic.ds3client;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Multimap;
 import com.google.common.net.UrlEscapers;
-import com.spectralogic.ds3client.commands.CreateObjectRequest;
 import com.spectralogic.ds3client.commands.Ds3Request;
+import com.spectralogic.ds3client.commands.PutObjectRequest;
 import com.spectralogic.ds3client.models.ChecksumType;
 import com.spectralogic.ds3client.models.SignatureDetails;
 import com.spectralogic.ds3client.networking.*;
@@ -301,7 +301,7 @@ public class NetworkClientImpl implements NetworkClient {
             for (final Map.Entry<String, Collection<String>> header : customHeaders
                     .asMap().entrySet()) {
                 final String key = header.getKey().toLowerCase();
-                if (key.startsWith(CreateObjectRequest.AMZ_META_HEADER)
+                if (key.startsWith(PutObjectRequest.AMZ_META_HEADER)
                         && header.getValue().size() > 0) {
                     ret.append(key).append(":");
                     ret.append(Joiner.on(",").join(header.getValue()));

@@ -34,11 +34,11 @@ public interface Ds3Client extends Closeable {
             throws IOException, SignatureException;
     CompleteMultiPartUploadResponse completeMultiPartUpload(CompleteMultiPartUploadRequest request)
             throws IOException, SignatureException;
-    CreateBucketResponse createBucket(CreateBucketRequest request)
+    PutBucketResponse putBucket(PutBucketRequest request)
             throws IOException, SignatureException;
-    CreateMultiPartUploadPartResponse createMultiPartUploadPart(CreateMultiPartUploadPartRequest request)
+    PutMultiPartUploadPartResponse putMultiPartUploadPart(PutMultiPartUploadPartRequest request)
             throws IOException, SignatureException;
-    CreateObjectResponse createObject(CreateObjectRequest request)
+    PutObjectResponse putObject(PutObjectRequest request)
             throws IOException, SignatureException;
     DeleteBucketResponse deleteBucket(DeleteBucketRequest request)
             throws IOException, SignatureException;
@@ -60,21 +60,21 @@ public interface Ds3Client extends Closeable {
             throws IOException, SignatureException;
     ListMultiPartUploadsResponse listMultiPartUploads(ListMultiPartUploadsRequest request)
             throws IOException, SignatureException;
-    CreateBucketAclForGroupSpectraS3Response createBucketAclForGroupSpectraS3(CreateBucketAclForGroupSpectraS3Request request)
+    PutBucketAclForGroupSpectraS3Response putBucketAclForGroupSpectraS3(PutBucketAclForGroupSpectraS3Request request)
             throws IOException, SignatureException;
-    CreateBucketAclForUserSpectraS3Response createBucketAclForUserSpectraS3(CreateBucketAclForUserSpectraS3Request request)
+    PutBucketAclForUserSpectraS3Response putBucketAclForUserSpectraS3(PutBucketAclForUserSpectraS3Request request)
             throws IOException, SignatureException;
-    CreateDataPolicyAclForGroupSpectraS3Response createDataPolicyAclForGroupSpectraS3(CreateDataPolicyAclForGroupSpectraS3Request request)
+    PutDataPolicyAclForGroupSpectraS3Response putDataPolicyAclForGroupSpectraS3(PutDataPolicyAclForGroupSpectraS3Request request)
             throws IOException, SignatureException;
-    CreateDataPolicyAclForUserSpectraS3Response createDataPolicyAclForUserSpectraS3(CreateDataPolicyAclForUserSpectraS3Request request)
+    PutDataPolicyAclForUserSpectraS3Response putDataPolicyAclForUserSpectraS3(PutDataPolicyAclForUserSpectraS3Request request)
             throws IOException, SignatureException;
-    CreateGlobalBucketAclForGroupSpectraS3Response createGlobalBucketAclForGroupSpectraS3(CreateGlobalBucketAclForGroupSpectraS3Request request)
+    PutGlobalBucketAclForGroupSpectraS3Response putGlobalBucketAclForGroupSpectraS3(PutGlobalBucketAclForGroupSpectraS3Request request)
             throws IOException, SignatureException;
-    CreateGlobalBucketAclForUserSpectraS3Response createGlobalBucketAclForUserSpectraS3(CreateGlobalBucketAclForUserSpectraS3Request request)
+    PutGlobalBucketAclForUserSpectraS3Response putGlobalBucketAclForUserSpectraS3(PutGlobalBucketAclForUserSpectraS3Request request)
             throws IOException, SignatureException;
-    CreateGlobalDataPolicyAclForGroupSpectraS3Response createGlobalDataPolicyAclForGroupSpectraS3(CreateGlobalDataPolicyAclForGroupSpectraS3Request request)
+    PutGlobalDataPolicyAclForGroupSpectraS3Response putGlobalDataPolicyAclForGroupSpectraS3(PutGlobalDataPolicyAclForGroupSpectraS3Request request)
             throws IOException, SignatureException;
-    CreateGlobalDataPolicyAclForUserSpectraS3Response createGlobalDataPolicyAclForUserSpectraS3(CreateGlobalDataPolicyAclForUserSpectraS3Request request)
+    PutGlobalDataPolicyAclForUserSpectraS3Response putGlobalDataPolicyAclForUserSpectraS3(PutGlobalDataPolicyAclForUserSpectraS3Request request)
             throws IOException, SignatureException;
     DeleteBucketAclSpectraS3Response deleteBucketAclSpectraS3(DeleteBucketAclSpectraS3Request request)
             throws IOException, SignatureException;
@@ -88,7 +88,7 @@ public interface Ds3Client extends Closeable {
             throws IOException, SignatureException;
     GetDataPolicyAclsSpectraS3Response getDataPolicyAclsSpectraS3(GetDataPolicyAclsSpectraS3Request request)
             throws IOException, SignatureException;
-    CreateBucketSpectraS3Response createBucketSpectraS3(CreateBucketSpectraS3Request request)
+    PutBucketSpectraS3Response putBucketSpectraS3(PutBucketSpectraS3Request request)
             throws IOException, SignatureException;
     DeleteBucketSpectraS3Response deleteBucketSpectraS3(DeleteBucketSpectraS3Request request)
             throws IOException, SignatureException;
@@ -120,11 +120,11 @@ public interface Ds3Client extends Closeable {
             throws IOException, SignatureException;
     ModifyDataPathBackendSpectraS3Response modifyDataPathBackendSpectraS3(ModifyDataPathBackendSpectraS3Request request)
             throws IOException, SignatureException;
-    CreateDataPersistenceRuleSpectraS3Response createDataPersistenceRuleSpectraS3(CreateDataPersistenceRuleSpectraS3Request request)
+    PutDataPersistenceRuleSpectraS3Response putDataPersistenceRuleSpectraS3(PutDataPersistenceRuleSpectraS3Request request)
             throws IOException, SignatureException;
-    CreateDataPolicySpectraS3Response createDataPolicySpectraS3(CreateDataPolicySpectraS3Request request)
+    PutDataPolicySpectraS3Response putDataPolicySpectraS3(PutDataPolicySpectraS3Request request)
             throws IOException, SignatureException;
-    CreateDataReplicationRuleSpectraS3Response createDataReplicationRuleSpectraS3(CreateDataReplicationRuleSpectraS3Request request)
+    PutDataReplicationRuleSpectraS3Response putDataReplicationRuleSpectraS3(PutDataReplicationRuleSpectraS3Request request)
             throws IOException, SignatureException;
     DeleteDataPersistenceRuleSpectraS3Response deleteDataPersistenceRuleSpectraS3(DeleteDataPersistenceRuleSpectraS3Request request)
             throws IOException, SignatureException;
@@ -156,11 +156,11 @@ public interface Ds3Client extends Closeable {
             throws IOException, SignatureException;
     GetDegradedDataReplicationRulesSpectraS3Response getDegradedDataReplicationRulesSpectraS3(GetDegradedDataReplicationRulesSpectraS3Request request)
             throws IOException, SignatureException;
-    CreateGroupGroupMemberSpectraS3Response createGroupGroupMemberSpectraS3(CreateGroupGroupMemberSpectraS3Request request)
+    PutGroupGroupMemberSpectraS3Response putGroupGroupMemberSpectraS3(PutGroupGroupMemberSpectraS3Request request)
             throws IOException, SignatureException;
-    CreateGroupSpectraS3Response createGroupSpectraS3(CreateGroupSpectraS3Request request)
+    PutGroupSpectraS3Response putGroupSpectraS3(PutGroupSpectraS3Request request)
             throws IOException, SignatureException;
-    CreateUserGroupMemberSpectraS3Response createUserGroupMemberSpectraS3(CreateUserGroupMemberSpectraS3Request request)
+    PutUserGroupMemberSpectraS3Response putUserGroupMemberSpectraS3(PutUserGroupMemberSpectraS3Request request)
             throws IOException, SignatureException;
     DeleteGroupMemberSpectraS3Response deleteGroupMemberSpectraS3(DeleteGroupMemberSpectraS3Request request)
             throws IOException, SignatureException;
@@ -188,11 +188,11 @@ public interface Ds3Client extends Closeable {
             throws IOException, SignatureException;
     ClearAllCompletedJobsSpectraS3Response clearAllCompletedJobsSpectraS3(ClearAllCompletedJobsSpectraS3Request request)
             throws IOException, SignatureException;
-    CreateGetJobSpectraS3Response createGetJobSpectraS3(CreateGetJobSpectraS3Request request)
+    GetBulkJobSpectraS3Response getBulkJobSpectraS3(GetBulkJobSpectraS3Request request)
             throws IOException, SignatureException;
-    CreatePutJobSpectraS3Response createPutJobSpectraS3(CreatePutJobSpectraS3Request request)
+    PutBulkJobSpectraS3Response putBulkJobSpectraS3(PutBulkJobSpectraS3Request request)
             throws IOException, SignatureException;
-    CreateVerifyJobSpectraS3Response createVerifyJobSpectraS3(CreateVerifyJobSpectraS3Request request)
+    VerifyBulkJobSpectraS3Response verifyBulkJobSpectraS3(VerifyBulkJobSpectraS3Request request)
             throws IOException, SignatureException;
     GetActiveJobsSpectraS3Response getActiveJobsSpectraS3(GetActiveJobsSpectraS3Request request)
             throws IOException, SignatureException;
@@ -220,25 +220,25 @@ public interface Ds3Client extends Closeable {
             throws IOException, SignatureException;
     ModifyNodeSpectraS3Response modifyNodeSpectraS3(ModifyNodeSpectraS3Request request)
             throws IOException, SignatureException;
-    CreateJobCompletedNotificationRegistrationSpectraS3Response createJobCompletedNotificationRegistrationSpectraS3(CreateJobCompletedNotificationRegistrationSpectraS3Request request)
+    PutJobCompletedNotificationRegistrationSpectraS3Response putJobCompletedNotificationRegistrationSpectraS3(PutJobCompletedNotificationRegistrationSpectraS3Request request)
             throws IOException, SignatureException;
-    CreateJobCreatedNotificationRegistrationSpectraS3Response createJobCreatedNotificationRegistrationSpectraS3(CreateJobCreatedNotificationRegistrationSpectraS3Request request)
+    PutJobCreatedNotificationRegistrationSpectraS3Response putJobCreatedNotificationRegistrationSpectraS3(PutJobCreatedNotificationRegistrationSpectraS3Request request)
             throws IOException, SignatureException;
-    CreateObjectCachedNotificationRegistrationSpectraS3Response createObjectCachedNotificationRegistrationSpectraS3(CreateObjectCachedNotificationRegistrationSpectraS3Request request)
+    PutObjectCachedNotificationRegistrationSpectraS3Response putObjectCachedNotificationRegistrationSpectraS3(PutObjectCachedNotificationRegistrationSpectraS3Request request)
             throws IOException, SignatureException;
-    CreateObjectLostNotificationRegistrationSpectraS3Response createObjectLostNotificationRegistrationSpectraS3(CreateObjectLostNotificationRegistrationSpectraS3Request request)
+    PutObjectLostNotificationRegistrationSpectraS3Response putObjectLostNotificationRegistrationSpectraS3(PutObjectLostNotificationRegistrationSpectraS3Request request)
             throws IOException, SignatureException;
-    CreateObjectPersistedNotificationRegistrationSpectraS3Response createObjectPersistedNotificationRegistrationSpectraS3(CreateObjectPersistedNotificationRegistrationSpectraS3Request request)
+    PutObjectPersistedNotificationRegistrationSpectraS3Response putObjectPersistedNotificationRegistrationSpectraS3(PutObjectPersistedNotificationRegistrationSpectraS3Request request)
             throws IOException, SignatureException;
-    CreatePoolFailureNotificationRegistrationSpectraS3Response createPoolFailureNotificationRegistrationSpectraS3(CreatePoolFailureNotificationRegistrationSpectraS3Request request)
+    PutPoolFailureNotificationRegistrationSpectraS3Response putPoolFailureNotificationRegistrationSpectraS3(PutPoolFailureNotificationRegistrationSpectraS3Request request)
             throws IOException, SignatureException;
-    CreateStorageDomainFailureNotificationRegistrationSpectraS3Response createStorageDomainFailureNotificationRegistrationSpectraS3(CreateStorageDomainFailureNotificationRegistrationSpectraS3Request request)
+    PutStorageDomainFailureNotificationRegistrationSpectraS3Response putStorageDomainFailureNotificationRegistrationSpectraS3(PutStorageDomainFailureNotificationRegistrationSpectraS3Request request)
             throws IOException, SignatureException;
-    CreateSystemFailureNotificationRegistrationSpectraS3Response createSystemFailureNotificationRegistrationSpectraS3(CreateSystemFailureNotificationRegistrationSpectraS3Request request)
+    PutSystemFailureNotificationRegistrationSpectraS3Response putSystemFailureNotificationRegistrationSpectraS3(PutSystemFailureNotificationRegistrationSpectraS3Request request)
             throws IOException, SignatureException;
-    CreateTapeFailureNotificationRegistrationSpectraS3Response createTapeFailureNotificationRegistrationSpectraS3(CreateTapeFailureNotificationRegistrationSpectraS3Request request)
+    PutTapeFailureNotificationRegistrationSpectraS3Response putTapeFailureNotificationRegistrationSpectraS3(PutTapeFailureNotificationRegistrationSpectraS3Request request)
             throws IOException, SignatureException;
-    CreateTapePartitionFailureNotificationRegistrationSpectraS3Response createTapePartitionFailureNotificationRegistrationSpectraS3(CreateTapePartitionFailureNotificationRegistrationSpectraS3Request request)
+    PutTapePartitionFailureNotificationRegistrationSpectraS3Response putTapePartitionFailureNotificationRegistrationSpectraS3(PutTapePartitionFailureNotificationRegistrationSpectraS3Request request)
             throws IOException, SignatureException;
     DeleteJobCompletedNotificationRegistrationSpectraS3Response deleteJobCompletedNotificationRegistrationSpectraS3(DeleteJobCompletedNotificationRegistrationSpectraS3Request request)
             throws IOException, SignatureException;
@@ -324,7 +324,7 @@ public interface Ds3Client extends Closeable {
             throws IOException, SignatureException;
     CompactPoolSpectraS3Response compactPoolSpectraS3(CompactPoolSpectraS3Request request)
             throws IOException, SignatureException;
-    CreatePoolPartitionSpectraS3Response createPoolPartitionSpectraS3(CreatePoolPartitionSpectraS3Request request)
+    PutPoolPartitionSpectraS3Response putPoolPartitionSpectraS3(PutPoolPartitionSpectraS3Request request)
             throws IOException, SignatureException;
     DeallocatePoolSpectraS3Response deallocatePoolSpectraS3(DeallocatePoolSpectraS3Request request)
             throws IOException, SignatureException;
@@ -366,11 +366,11 @@ public interface Ds3Client extends Closeable {
             throws IOException, SignatureException;
     VerifyPoolSpectraS3Response verifyPoolSpectraS3(VerifyPoolSpectraS3Request request)
             throws IOException, SignatureException;
-    CreatePoolStorageDomainMemberSpectraS3Response createPoolStorageDomainMemberSpectraS3(CreatePoolStorageDomainMemberSpectraS3Request request)
+    PutPoolStorageDomainMemberSpectraS3Response putPoolStorageDomainMemberSpectraS3(PutPoolStorageDomainMemberSpectraS3Request request)
             throws IOException, SignatureException;
-    CreateStorageDomainSpectraS3Response createStorageDomainSpectraS3(CreateStorageDomainSpectraS3Request request)
+    PutStorageDomainSpectraS3Response putStorageDomainSpectraS3(PutStorageDomainSpectraS3Request request)
             throws IOException, SignatureException;
-    CreateTapeStorageDomainMemberSpectraS3Response createTapeStorageDomainMemberSpectraS3(CreateTapeStorageDomainMemberSpectraS3Request request)
+    PutTapeStorageDomainMemberSpectraS3Response putTapeStorageDomainMemberSpectraS3(PutTapeStorageDomainMemberSpectraS3Request request)
             throws IOException, SignatureException;
     DeleteStorageDomainFailureSpectraS3Response deleteStorageDomainFailureSpectraS3(DeleteStorageDomainFailureSpectraS3Request request)
             throws IOException, SignatureException;
@@ -418,7 +418,7 @@ public interface Ds3Client extends Closeable {
             throws IOException, SignatureException;
     CleanTapeDriveSpectraS3Response cleanTapeDriveSpectraS3(CleanTapeDriveSpectraS3Request request)
             throws IOException, SignatureException;
-    CreateTapeDensityDirectiveSpectraS3Response createTapeDensityDirectiveSpectraS3(CreateTapeDensityDirectiveSpectraS3Request request)
+    PutTapeDensityDirectiveSpectraS3Response putTapeDensityDirectiveSpectraS3(PutTapeDensityDirectiveSpectraS3Request request)
             throws IOException, SignatureException;
     DeletePermanentlyLostTapeSpectraS3Response deletePermanentlyLostTapeSpectraS3(DeletePermanentlyLostTapeSpectraS3Request request)
             throws IOException, SignatureException;
@@ -502,9 +502,9 @@ public interface Ds3Client extends Closeable {
             throws IOException, SignatureException;
     VerifyTapeSpectraS3Response verifyTapeSpectraS3(VerifyTapeSpectraS3Request request)
             throws IOException, SignatureException;
-    CreateDs3TargetReadPreferenceSpectraS3Response createDs3TargetReadPreferenceSpectraS3(CreateDs3TargetReadPreferenceSpectraS3Request request)
+    PutDs3TargetReadPreferenceSpectraS3Response putDs3TargetReadPreferenceSpectraS3(PutDs3TargetReadPreferenceSpectraS3Request request)
             throws IOException, SignatureException;
-    CreateDs3TargetUserMappingSpectraS3Response createDs3TargetUserMappingSpectraS3(CreateDs3TargetUserMappingSpectraS3Request request)
+    PutDs3TargetUserMappingSpectraS3Response putDs3TargetUserMappingSpectraS3(PutDs3TargetUserMappingSpectraS3Request request)
             throws IOException, SignatureException;
     DeleteDs3TargetReadPreferenceSpectraS3Response deleteDs3TargetReadPreferenceSpectraS3(DeleteDs3TargetReadPreferenceSpectraS3Request request)
             throws IOException, SignatureException;

@@ -66,8 +66,8 @@ public class Ds3ClientHelpers_Test {
         final Ds3Client ds3Client = buildDs3ClientForBulk();
 
 
-        final CreateGetJobSpectraS3Response buildBulkGetResponse = buildBulkGetResponse();
-        Mockito.when(ds3Client.createGetJobSpectraS3(hasChunkOrdering(JobChunkClientProcessingOrderGuarantee.NONE))).thenReturn(buildBulkGetResponse);
+        final GetBulkJobSpectraS3Response buildBulkGetResponse = buildBulkGetResponse();
+        Mockito.when(ds3Client.getBulkJobSpectraS3(hasChunkOrdering(JobChunkClientProcessingOrderGuarantee.NONE))).thenReturn(buildBulkGetResponse);
 
         Mockito.when(ds3Client.getObject(getRequestHas(MYBUCKET, "foo", jobId, 0))).then(getObjectAnswer("foo co"));
         Mockito.when(ds3Client.getObject(getRequestHas(MYBUCKET, "bar", jobId, 0))).then(getObjectAnswer("bar contents"));
@@ -109,8 +109,8 @@ public class Ds3ClientHelpers_Test {
 
         Mockito.when(ds3Client.newForNode(Mockito.<Ds3Node>any())).thenReturn(ds3Client);
 
-        final CreateGetJobSpectraS3Response buildBulkGetResponse = buildBulkGetResponse();
-        Mockito.when(ds3Client.createGetJobSpectraS3(hasChunkOrdering(JobChunkClientProcessingOrderGuarantee.NONE))).thenReturn(buildBulkGetResponse);
+        final GetBulkJobSpectraS3Response buildBulkGetResponse = buildBulkGetResponse();
+        Mockito.when(ds3Client.getBulkJobSpectraS3(hasChunkOrdering(JobChunkClientProcessingOrderGuarantee.NONE))).thenReturn(buildBulkGetResponse);
 
         final GetJobChunksReadyForClientProcessingSpectraS3Response jobChunksResponse = buildJobChunksResponse2();
         Mockito.when(ds3Client.getJobChunksReadyForClientProcessingSpectraS3(hasJobId(jobId))).thenReturn(jobChunksResponse);
@@ -137,8 +137,8 @@ public class Ds3ClientHelpers_Test {
     public void testWriteObjects() throws SignatureException, IOException, XmlProcessingException, ParseException {
         final Ds3Client ds3Client = buildDs3ClientForBulk();
         
-        final CreatePutJobSpectraS3Response bulkPutResponse = buildBulkPutResponse();
-        Mockito.when(ds3Client.createPutJobSpectraS3(Mockito.any(CreatePutJobSpectraS3Request.class))).thenReturn(bulkPutResponse);
+        final PutBulkJobSpectraS3Response bulkPutResponse = buildBulkPutResponse();
+        Mockito.when(ds3Client.putBulkJobSpectraS3(Mockito.any(PutBulkJobSpectraS3Request.class))).thenReturn(bulkPutResponse);
         
         final AllocateJobChunkSpectraS3Response allocateResponse1 = buildAllocateResponse1();
         final AllocateJobChunkSpectraS3Response allocateResponse2 = buildAllocateResponse2();
@@ -149,12 +149,12 @@ public class Ds3ClientHelpers_Test {
         Mockito.when(ds3Client.allocateJobChunkSpectraS3(hasChunkId(CHUNK_ID_2)))
             .thenReturn(allocateResponse3);
 
-        final CreateObjectResponse response = mock(CreateObjectResponse.class);
-        Mockito.when(ds3Client.createObject(putRequestHas(MYBUCKET, "foo", jobId, 0, "foo co"))).thenReturn(response);
-        Mockito.when(ds3Client.createObject(putRequestHas(MYBUCKET, "bar", jobId, 0, "bar contents"))).thenReturn(response);
-        Mockito.when(ds3Client.createObject(putRequestHas(MYBUCKET, "baz", jobId, 0, "baz co"))).thenReturn(response);
-        Mockito.when(ds3Client.createObject(putRequestHas(MYBUCKET, "foo", jobId, 6, "ntents"))).thenReturn(response);
-        Mockito.when(ds3Client.createObject(putRequestHas(MYBUCKET, "baz", jobId, 6, "ntents"))).thenReturn(response);
+        final PutObjectResponse response = mock(PutObjectResponse.class);
+        Mockito.when(ds3Client.putObject(putRequestHas(MYBUCKET, "foo", jobId, 0, "foo co"))).thenReturn(response);
+        Mockito.when(ds3Client.putObject(putRequestHas(MYBUCKET, "bar", jobId, 0, "bar contents"))).thenReturn(response);
+        Mockito.when(ds3Client.putObject(putRequestHas(MYBUCKET, "baz", jobId, 0, "baz co"))).thenReturn(response);
+        Mockito.when(ds3Client.putObject(putRequestHas(MYBUCKET, "foo", jobId, 6, "ntents"))).thenReturn(response);
+        Mockito.when(ds3Client.putObject(putRequestHas(MYBUCKET, "baz", jobId, 6, "ntents"))).thenReturn(response);
         
         final Job job = Ds3ClientHelpers.wrap(ds3Client).startWriteJob(MYBUCKET, Lists.newArrayList(
                 new Ds3Object("foo", 12),
@@ -189,15 +189,15 @@ public class Ds3ClientHelpers_Test {
         Mockito.when(ds3Client.newForNode(Mockito.<Ds3Node>any())).thenReturn(ds3Client);
         Mockito.when(ds3Client.getConnectionDetails()).thenReturn(details);
 
-        final CreatePutJobSpectraS3Response buildBulkPutResponse = buildBulkPutResponse();
-        Mockito.when(ds3Client.createPutJobSpectraS3(Mockito.any(CreatePutJobSpectraS3Request.class))).thenReturn(buildBulkPutResponse);
+        final PutBulkJobSpectraS3Response buildBulkPutResponse = buildBulkPutResponse();
+        Mockito.when(ds3Client.putBulkJobSpectraS3(Mockito.any(PutBulkJobSpectraS3Request.class))).thenReturn(buildBulkPutResponse);
 
         final AllocateJobChunkSpectraS3Response allocateResponse = buildAllocateResponse2();
         Mockito.when(ds3Client.allocateJobChunkSpectraS3(hasChunkId(CHUNK_ID_1))).thenReturn(allocateResponse);
 
-        final CreateObjectResponse putResponse = mock(CreateObjectResponse.class);
-        Mockito.when(ds3Client.createObject(putRequestHas(MYBUCKET, "foo", jobId, 0, "foo co"))).thenThrow(new StubException());
-        Mockito.when(ds3Client.createObject(putRequestHas(MYBUCKET, "baz", jobId, 0, "baz co"))).thenReturn(putResponse);
+        final PutObjectResponse putResponse = mock(PutObjectResponse.class);
+        Mockito.when(ds3Client.putObject(putRequestHas(MYBUCKET, "foo", jobId, 0, "foo co"))).thenThrow(new StubException());
+        Mockito.when(ds3Client.putObject(putRequestHas(MYBUCKET, "baz", jobId, 0, "baz co"))).thenReturn(putResponse);
 
         final Job job = Ds3ClientHelpers.wrap(ds3Client).startWriteJob(MYBUCKET, Lists.newArrayList(
             new Ds3Object("foo"),
@@ -397,7 +397,7 @@ public class Ds3ClientHelpers_Test {
         return ds3Client;
     }
 
-    private static CreateGetJobSpectraS3Response buildBulkGetResponse() throws ParseException {
+    private static GetBulkJobSpectraS3Response buildBulkGetResponse() throws ParseException {
         return bulkGetResponse(buildJobResponse(
                 JobRequestType.GET,
                 JobChunkClientProcessingOrderGuarantee.NONE,
@@ -436,7 +436,7 @@ public class Ds3ClientHelpers_Test {
         ));
     }
 
-    private static CreatePutJobSpectraS3Response buildBulkPutResponse() throws ParseException {
+    private static PutBulkJobSpectraS3Response buildBulkPutResponse() throws ParseException {
         return bulkPutResponse(buildJobResponse(
                 JobRequestType.PUT,
                 JobChunkClientProcessingOrderGuarantee.IN_ORDER,
@@ -580,17 +580,17 @@ public class Ds3ClientHelpers_Test {
     public void testWriteObjectsWithRetryAfter() throws SignatureException, IOException, XmlProcessingException, ParseException {
         final Ds3Client ds3Client = buildDs3ClientForBulk();
 
-        final CreatePutJobSpectraS3Response bulkPutResponse = buildBulkPutResponse();
+        final PutBulkJobSpectraS3Response bulkPutResponse = buildBulkPutResponse();
         Mockito.when(ds3Client
-                .createPutJobSpectraS3(Mockito.any(CreatePutJobSpectraS3Request.class)))
+                .putBulkJobSpectraS3(Mockito.any(PutBulkJobSpectraS3Request.class)))
                 .thenReturn(bulkPutResponse);
 
         final AllocateJobChunkSpectraS3Response allocateResponse1 = buildAllocateResponse1();
         Mockito.when(ds3Client.allocateJobChunkSpectraS3(hasChunkId(CHUNK_ID_1)))
                 .thenReturn(allocateResponse1);
 
-        final CreateObjectResponse response = mock(CreateObjectResponse.class);
-        Mockito.when(ds3Client.createObject(putRequestHas(MYBUCKET, "foo", jobId, 0, "foo co"))).thenReturn(response);
+        final PutObjectResponse response = mock(PutObjectResponse.class);
+        Mockito.when(ds3Client.putObject(putRequestHas(MYBUCKET, "foo", jobId, 0, "foo co"))).thenReturn(response);
 
         final Job job = Ds3ClientHelpers.wrap(ds3Client, 1).startWriteJob(MYBUCKET, Lists.newArrayList(
                 new Ds3Object("foo", 12)
@@ -609,8 +609,8 @@ public class Ds3ClientHelpers_Test {
     public void testReadObjectsWithRetryAfter() throws SignatureException, IOException, XmlProcessingException, ParseException {
         final Ds3Client ds3Client = mock(Ds3Client.class);
 
-        final CreateGetJobSpectraS3Response buildBulkGetResponse = buildBulkGetResponse();
-        Mockito.when(ds3Client.createGetJobSpectraS3(hasChunkOrdering(JobChunkClientProcessingOrderGuarantee.NONE)))
+        final GetBulkJobSpectraS3Response buildBulkGetResponse = buildBulkGetResponse();
+        Mockito.when(ds3Client.getBulkJobSpectraS3(hasChunkOrdering(JobChunkClientProcessingOrderGuarantee.NONE)))
                 .thenReturn(buildBulkGetResponse);
 
         final GetJobChunksReadyForClientProcessingSpectraS3Response jobChunksResponse =
@@ -641,13 +641,13 @@ public class Ds3ClientHelpers_Test {
         final Ds3Client ds3Client = mock(Ds3Client.class);
         final HeadBucketResponse response = buildHeadBucketResponse(HeadBucketResponse.Status.DOESNTEXIST);
         Mockito.when(ds3Client.headBucket(Mockito.any(HeadBucketRequest.class))).thenReturn(response);
-        Mockito.when(ds3Client.createBucket(Mockito.any(CreateBucketRequest.class)))
+        Mockito.when(ds3Client.putBucket(Mockito.any(PutBucketRequest.class)))
                 .thenThrow(new FailedRequestException(ImmutableList.of(202, 409), 409, new Error(), "Conflict"));
 
         final Ds3ClientHelpers helpers = Ds3ClientHelpers.wrap(ds3Client);
 
         helpers.ensureBucketExists("fake_bucket"); // if this throws an exception, then this test should fail
-        verify(ds3Client, atLeastOnce()).createBucket(Mockito.any(CreateBucketRequest.class));
+        verify(ds3Client, atLeastOnce()).putBucket(Mockito.any(PutBucketRequest.class));
     }
 
     @Test(expected = FailedRequestException.class)
@@ -655,7 +655,7 @@ public class Ds3ClientHelpers_Test {
         final Ds3Client ds3Client = mock(Ds3Client.class);
         final HeadBucketResponse response = buildHeadBucketResponse(HeadBucketResponse.Status.DOESNTEXIST);
         Mockito.when(ds3Client.headBucket(Mockito.any(HeadBucketRequest.class))).thenReturn(response);
-        Mockito.when(ds3Client.createBucket(Mockito.any(CreateBucketRequest.class)))
+        Mockito.when(ds3Client.putBucket(Mockito.any(PutBucketRequest.class)))
                 .thenThrow(new FailedRequestException(ImmutableList.of(202, 409, 500), 500, new Error(), "Error"));
 
         final Ds3ClientHelpers helpers = Ds3ClientHelpers.wrap(ds3Client);

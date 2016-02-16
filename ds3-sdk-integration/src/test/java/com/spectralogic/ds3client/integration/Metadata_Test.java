@@ -4,8 +4,8 @@ import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Lists;
 import com.spectralogic.ds3client.Ds3Client;
 import com.spectralogic.ds3client.commands.*;
-import com.spectralogic.ds3client.commands.spectrads3.CreatePutJobSpectraS3Request;
-import com.spectralogic.ds3client.commands.spectrads3.CreatePutJobSpectraS3Response;
+import com.spectralogic.ds3client.commands.spectrads3.PutBulkJobSpectraS3Request;
+import com.spectralogic.ds3client.commands.spectrads3.PutBulkJobSpectraS3Response;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers;
 import com.spectralogic.ds3client.models.bulk.Ds3Object;
 import com.spectralogic.ds3client.networking.Metadata;
@@ -115,8 +115,8 @@ public class Metadata_Test {
 
         try {
             final Ds3Object obj = new Ds3Object("obj.txt", 1024);
-            final CreatePutJobSpectraS3Response putResponse = client.createPutJobSpectraS3(new CreatePutJobSpectraS3Request(bucketName, Lists.newArrayList(obj)));
-            final CreateObjectRequest request = new CreateObjectRequest(
+            final PutBulkJobSpectraS3Response putResponse = client.putBulkJobSpectraS3(new PutBulkJobSpectraS3Request(bucketName, Lists.newArrayList(obj)));
+            final PutObjectRequest request = new PutObjectRequest(
                     bucketName,
                     obj.getName(),
                     buildRandomChannel(1024),
@@ -128,7 +128,7 @@ public class Metadata_Test {
                 request.withMetaData(entry.getKey(), entry.getValue());
             }
 
-            final CreateObjectResponse putObjResponse = client.createObject(request);
+            final PutObjectResponse putObjResponse = client.putObject(request);
 
             assertThat(putObjResponse.getStatusCode(), is(200));
 

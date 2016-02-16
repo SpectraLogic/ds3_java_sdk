@@ -15,11 +15,11 @@
 
 package com.spectralogic.ds3client.helpers;
 
-import com.spectralogic.ds3client.commands.CreateObjectRequest;
 import com.spectralogic.ds3client.commands.GetBucketRequest;
 import com.spectralogic.ds3client.commands.GetObjectRequest;
+import com.spectralogic.ds3client.commands.PutObjectRequest;
 import com.spectralogic.ds3client.commands.spectrads3.AllocateJobChunkSpectraS3Request;
-import com.spectralogic.ds3client.commands.spectrads3.CreateGetJobSpectraS3Request;
+import com.spectralogic.ds3client.commands.spectrads3.GetBulkJobSpectraS3Request;
 import com.spectralogic.ds3client.commands.spectrads3.GetJobChunksReadyForClientProcessingSpectraS3Request;
 import com.spectralogic.ds3client.models.JobChunkClientProcessingOrderGuarantee;
 import org.apache.commons.io.IOUtils;
@@ -35,10 +35,10 @@ import java.util.UUID;
 import static org.mockito.Matchers.argThat;
 
 public class RequestMatchers {
-    public static CreateGetJobSpectraS3Request hasChunkOrdering(final JobChunkClientProcessingOrderGuarantee chunkOrdering) {
-        return argThat(new TypeSafeMatcher<CreateGetJobSpectraS3Request>() {
+    public static GetBulkJobSpectraS3Request hasChunkOrdering(final JobChunkClientProcessingOrderGuarantee chunkOrdering) {
+        return argThat(new TypeSafeMatcher<GetBulkJobSpectraS3Request>() {
             @Override
-            protected boolean matchesSafely(final CreateGetJobSpectraS3Request item) {
+            protected boolean matchesSafely(final GetBulkJobSpectraS3Request item) {
                 return item.getChunkClientProcessingOrderGuarantee() == null
                         ? chunkOrdering == null
                         : item.getChunkClientProcessingOrderGuarantee().equals(chunkOrdering);
@@ -50,7 +50,7 @@ public class RequestMatchers {
             }
             
             @Override
-            protected void describeMismatchSafely(final CreateGetJobSpectraS3Request item, final Description mismatchDescription) {
+            protected void describeMismatchSafely(final GetBulkJobSpectraS3Request item, final Description mismatchDescription) {
                 describe(item.getChunkClientProcessingOrderGuarantee(), mismatchDescription);
             }
 
@@ -147,15 +147,15 @@ public class RequestMatchers {
         });
     }
 
-    public static CreateObjectRequest putRequestHas(
+    public static PutObjectRequest putRequestHas(
             final String bucket,
             final String key,
             final UUID jobId,
             final long offset,
             final String expectedContents) {
-        return argThat(new TypeSafeMatcher<CreateObjectRequest>() {
+        return argThat(new TypeSafeMatcher<PutObjectRequest>() {
             @Override
-            protected boolean matchesSafely(final CreateObjectRequest item) {
+            protected boolean matchesSafely(final PutObjectRequest item) {
                 return
                         item.getBucketName().equals(bucket)
                         && item.getObjectName().equals(key)
@@ -172,7 +172,7 @@ public class RequestMatchers {
             }
             
             @Override
-            protected void describeMismatchSafely(final CreateObjectRequest item, final Description mismatchDescription) {
+            protected void describeMismatchSafely(final PutObjectRequest item, final Description mismatchDescription) {
                 describeTransferRequest(
                         item.getBucketName(),
                         item.getObjectName(),

@@ -19,7 +19,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Iterables;
 import com.spectralogic.ds3client.Ds3Client;
-import com.spectralogic.ds3client.commands.CreateObjectRequest;
+import com.spectralogic.ds3client.commands.PutObjectRequest;
 import com.spectralogic.ds3client.commands.spectrads3.AllocateJobChunkSpectraS3Request;
 import com.spectralogic.ds3client.commands.spectrads3.AllocateJobChunkSpectraS3Response;
 import com.spectralogic.ds3client.exceptions.Ds3NoMoreRetriesException;
@@ -249,13 +249,13 @@ class WriteJobImpl extends JobImpl {
         @Override
         public void transferItem(final Ds3Client client, final BulkObject ds3Object)
                 throws SignatureException, IOException {
-            client.createObject(createRequest(ds3Object));
+            client.putObject(createRequest(ds3Object));
         }
 
-        private CreateObjectRequest createRequest(final BulkObject ds3Object) throws IOException {
+        private PutObjectRequest createRequest(final BulkObject ds3Object) throws IOException {
             final SeekableByteChannel channel = jobState.getChannel(ds3Object.getName(), ds3Object.getOffset(), ds3Object.getLength());
 
-            final CreateObjectRequest request = new CreateObjectRequest(
+            final PutObjectRequest request = new PutObjectRequest(
                     WriteJobImpl.this.masterObjectList.getBucketName(),
                     ds3Object.getName(),
                     jobState.getChannel(ds3Object.getName(), ds3Object.getOffset(), ds3Object.getLength()),
