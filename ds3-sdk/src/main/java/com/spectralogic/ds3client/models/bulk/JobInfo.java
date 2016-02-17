@@ -17,7 +17,7 @@ package com.spectralogic.ds3client.models.bulk;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
-import com.spectralogic.ds3client.models.BlobStoreTaskPriority;
+import com.spectralogic.ds3client.models.Priority;
 import com.spectralogic.ds3client.models.JobChunkClientProcessingOrderGuarantee;
 import com.spectralogic.ds3client.models.JobStatus;
 import com.spectralogic.ds3client.models.Ds3Node;
@@ -52,7 +52,7 @@ public class JobInfo {
     private String userName;
 
     @JsonProperty("Priority")
-    private BlobStoreTaskPriority priority;
+    private Priority priority;
 
     @JsonProperty("RequestType")
     private RequestType requestType;
@@ -98,11 +98,11 @@ public class JobInfo {
         this.bucketName = bucketName;
     }
 
-    public BlobStoreTaskPriority getPriority() {
+    public Priority getPriority() {
         return priority;
     }
 
-    public void setPriority(final BlobStoreTaskPriority priority) {
+    public void setPriority(final Priority priority) {
         this.priority = priority;
     }
 

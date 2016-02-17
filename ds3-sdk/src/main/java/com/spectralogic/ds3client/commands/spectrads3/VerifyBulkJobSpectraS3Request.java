@@ -25,7 +25,7 @@ import java.io.InputStream;
 import java.util.List;
 import com.spectralogic.ds3client.commands.AbstractRequest;
 import com.google.common.net.UrlEscapers;
-import com.spectralogic.ds3client.models.BlobStoreTaskPriority;
+import com.spectralogic.ds3client.models.Priority;
 
 public class VerifyBulkJobSpectraS3Request extends AbstractRequest {
 
@@ -39,7 +39,7 @@ public class VerifyBulkJobSpectraS3Request extends AbstractRequest {
 
     private String name;
 
-    private BlobStoreTaskPriority priority;
+    private Priority priority;
 
     // Constructor
     
@@ -62,7 +62,7 @@ public class VerifyBulkJobSpectraS3Request extends AbstractRequest {
         return this;
     }
 
-    public VerifyBulkJobSpectraS3Request withPriority(final BlobStoreTaskPriority priority) {
+    public VerifyBulkJobSpectraS3Request withPriority(final Priority priority) {
         this.priority = priority;
         this.updateQueryParam("priority", priority.toString());
         return this;
@@ -109,7 +109,7 @@ public class VerifyBulkJobSpectraS3Request extends AbstractRequest {
     }
 
 
-    public BlobStoreTaskPriority getPriority() {
+    public Priority getPriority() {
         return this.priority;
     }
 

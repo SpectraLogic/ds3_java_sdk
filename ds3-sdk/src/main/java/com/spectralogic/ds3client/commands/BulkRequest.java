@@ -17,7 +17,7 @@ package com.spectralogic.ds3client.commands;
 
 import com.spectralogic.ds3client.BulkCommand;
 import com.spectralogic.ds3client.HttpVerb;
-import com.spectralogic.ds3client.models.BlobStoreTaskPriority;
+import com.spectralogic.ds3client.models.Priority;
 import com.spectralogic.ds3client.models.JobChunkClientProcessingOrderGuarantee;
 import com.spectralogic.ds3client.models.WriteOptimization;
 import com.spectralogic.ds3client.models.bulk.*;
@@ -34,7 +34,7 @@ public abstract class BulkRequest extends AbstractRequest {
     private final List<Ds3Object> ds3Objects;
     private InputStream stream;
     private long size;
-    private BlobStoreTaskPriority priority;
+    private Priority priority;
     private WriteOptimization writeOptimization;
     protected JobChunkClientProcessingOrderGuarantee chunkOrdering;
 
@@ -43,7 +43,7 @@ public abstract class BulkRequest extends AbstractRequest {
         this.ds3Objects = objects;
     }
 
-    public BulkRequest withPriority(final BlobStoreTaskPriority priority) {
+    public BulkRequest withPriority(final Priority priority) {
         this.priority = priority;
         return this;
     }
@@ -106,7 +106,7 @@ public abstract class BulkRequest extends AbstractRequest {
         return this.stream;
     }
 
-    public BlobStoreTaskPriority getPriority() {
+    public Priority getPriority() {
         return priority;
     }
 

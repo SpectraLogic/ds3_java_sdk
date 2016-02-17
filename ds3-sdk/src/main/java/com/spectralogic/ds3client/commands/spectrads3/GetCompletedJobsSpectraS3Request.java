@@ -21,7 +21,7 @@ import com.spectralogic.ds3client.commands.AbstractRequest;
 import com.google.common.net.UrlEscapers;
 import com.spectralogic.ds3client.models.JobChunkClientProcessingOrderGuarantee;
 import java.util.UUID;
-import com.spectralogic.ds3client.models.BlobStoreTaskPriority;
+import com.spectralogic.ds3client.models.Priority;
 import java.util.Date;
 import com.spectralogic.ds3client.models.JobRequestType;
 
@@ -43,7 +43,7 @@ public class GetCompletedJobsSpectraS3Request extends AbstractRequest {
 
     private UUID pageStartMarker;
 
-    private BlobStoreTaskPriority priority;
+    private Priority priority;
 
     private Date rechunked;
 
@@ -104,7 +104,7 @@ public class GetCompletedJobsSpectraS3Request extends AbstractRequest {
         return this;
     }
 
-    public GetCompletedJobsSpectraS3Request withPriority(final BlobStoreTaskPriority priority) {
+    public GetCompletedJobsSpectraS3Request withPriority(final Priority priority) {
         this.priority = priority;
         this.updateQueryParam("priority", priority.toString());
         return this;
@@ -180,7 +180,7 @@ public class GetCompletedJobsSpectraS3Request extends AbstractRequest {
     }
 
 
-    public BlobStoreTaskPriority getPriority() {
+    public Priority getPriority() {
         return this.priority;
     }
 

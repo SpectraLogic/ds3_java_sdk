@@ -638,7 +638,7 @@ public class Ds3Client_Test {
                 0L,
                 UUID.fromString("0807ff11-a9f6-4d55-bb92-b452c1bb00c7"),
                 69880L,
-                BlobStoreTaskPriority.NORMAL,
+                Priority.NORMAL,
                 JobRequestType.PUT,
                 //date,
                 DATE_FORMAT.parse("2014-09-04T17:23:45.000Z"),
@@ -654,7 +654,7 @@ public class Ds3Client_Test {
                 0L,
                 UUID.fromString("c18554ba-e3a8-4905-91fd-3e6eec71bf45"),
                 69880L,
-                BlobStoreTaskPriority.HIGH,
+                Priority.HIGH,
                 JobRequestType.GET,
                 DATE_FORMAT.parse("2014-09-04T17:24:04.000Z"),
                 UUID.fromString("a7d3eff9-e6d2-4e37-8a0b-84e76211a18a"),
@@ -669,7 +669,7 @@ public class Ds3Client_Test {
             final long cachedSizeInBytes,
             final JobChunkClientProcessingOrderGuarantee chunkProcessingOrderGuarantee,
             final long completedSizeInBytes, final UUID jobId,
-            final long originalSizeInBytes, final BlobStoreTaskPriority priority,
+            final long originalSizeInBytes, final Priority priority,
             final JobRequestType requestType, final Date startDate,
             final UUID userId, final String userName,
             final WriteOptimization writeOptimization) {
@@ -706,7 +706,7 @@ public class Ds3Client_Test {
     private static void checkJobWithChunksApiBean(final MasterObjectList masterObjectList) throws ParseException {
         assertThat(masterObjectList.getBucketName(), is("bucket8192000000"));
         assertThat(masterObjectList.getJobId(), is(MASTER_OBJECT_LIST_JOB_ID));
-        assertThat(masterObjectList.getPriority(), is(BlobStoreTaskPriority.NORMAL));
+        assertThat(masterObjectList.getPriority(), is(Priority.NORMAL));
         assertThat(masterObjectList.getRequestType(), is(JobRequestType.GET));
         assertThat(masterObjectList.getStartDate(), is(DATE_FORMAT.parse("2014-07-01T20:12:52.000Z")));
 

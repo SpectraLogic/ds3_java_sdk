@@ -26,7 +26,7 @@ import com.spectralogic.ds3client.models.Ds3Node;
 import java.util.List;
 import java.util.ArrayList;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
-import com.spectralogic.ds3client.models.BlobStoreTaskPriority;
+import com.spectralogic.ds3client.models.Priority;
 import com.spectralogic.ds3client.models.JobRequestType;
 import java.util.Date;
 import com.spectralogic.ds3client.models.JobStatus;
@@ -68,7 +68,7 @@ public class JobApiBean {
     private long originalSizeInBytes;
 
     @JacksonXmlProperty(isAttribute = true, localName = "Priority")
-    private BlobStoreTaskPriority priority;
+    private Priority priority;
 
     @JacksonXmlProperty(isAttribute = true, localName = "RequestType")
     private JobRequestType requestType;
@@ -185,11 +185,11 @@ public class JobApiBean {
     }
 
 
-    public BlobStoreTaskPriority getPriority() {
+    public Priority getPriority() {
         return this.priority;
     }
 
-    public void setPriority(final BlobStoreTaskPriority priority) {
+    public void setPriority(final Priority priority) {
         this.priority = priority;
     }
 

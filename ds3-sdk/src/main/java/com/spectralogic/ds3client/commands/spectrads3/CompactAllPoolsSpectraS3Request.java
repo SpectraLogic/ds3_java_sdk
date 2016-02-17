@@ -18,13 +18,13 @@ package com.spectralogic.ds3client.commands.spectrads3;
 
 import com.spectralogic.ds3client.HttpVerb;
 import com.spectralogic.ds3client.commands.AbstractRequest;
-import com.spectralogic.ds3client.models.BlobStoreTaskPriority;
+import com.spectralogic.ds3client.models.Priority;
 
 public class CompactAllPoolsSpectraS3Request extends AbstractRequest {
 
     // Variables
     
-    private BlobStoreTaskPriority priority;
+    private Priority priority;
 
     // Constructor
     
@@ -33,7 +33,7 @@ public class CompactAllPoolsSpectraS3Request extends AbstractRequest {
         this.getQueryParams().put("operation", "compact");
     }
 
-    public CompactAllPoolsSpectraS3Request withPriority(final BlobStoreTaskPriority priority) {
+    public CompactAllPoolsSpectraS3Request withPriority(final Priority priority) {
         this.priority = priority;
         this.updateQueryParam("priority", priority.toString());
         return this;
@@ -50,7 +50,7 @@ public class CompactAllPoolsSpectraS3Request extends AbstractRequest {
         return "/_rest_/pool";
     }
     
-    public BlobStoreTaskPriority getPriority() {
+    public Priority getPriority() {
         return this.priority;
     }
 

@@ -23,7 +23,7 @@ import com.spectralogic.ds3client.serializer.XmlProcessingException;
 import com.spectralogic.ds3client.commands.BulkRequest;
 import com.spectralogic.ds3client.models.JobChunkClientProcessingOrderGuarantee;
 import com.google.common.net.UrlEscapers;
-import com.spectralogic.ds3client.models.BlobStoreTaskPriority;
+import com.spectralogic.ds3client.models.Priority;
 
 public class GetBulkJobSpectraS3Request extends BulkRequest {
 
@@ -61,7 +61,7 @@ public class GetBulkJobSpectraS3Request extends BulkRequest {
     }
 
     @Override
-    public GetBulkJobSpectraS3Request withPriority(final BlobStoreTaskPriority priority) {
+    public GetBulkJobSpectraS3Request withPriority(final Priority priority) {
         super.withPriority(priority);
         return this;
     }

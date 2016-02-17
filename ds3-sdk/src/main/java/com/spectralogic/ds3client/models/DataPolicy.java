@@ -22,7 +22,7 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.spectralogic.ds3client.models.ChecksumType;
 import java.util.Date;
 import java.lang.Long;
-import com.spectralogic.ds3client.models.BlobStoreTaskPriority;
+import com.spectralogic.ds3client.models.Priority;
 import java.util.UUID;
 import java.lang.String;
 import com.spectralogic.ds3client.models.VersioningLevel;
@@ -44,13 +44,13 @@ public class DataPolicy {
     private Long defaultBlobSize;
 
     @JsonProperty("DefaultGetJobPriority")
-    private BlobStoreTaskPriority defaultGetJobPriority;
+    private Priority defaultGetJobPriority;
 
     @JsonProperty("DefaultPutJobPriority")
-    private BlobStoreTaskPriority defaultPutJobPriority;
+    private Priority defaultPutJobPriority;
 
     @JsonProperty("DefaultVerifyJobPriority")
-    private BlobStoreTaskPriority defaultVerifyJobPriority;
+    private Priority defaultVerifyJobPriority;
 
     @JsonProperty("EndToEndCrcRequired")
     private boolean endToEndCrcRequired;
@@ -65,7 +65,7 @@ public class DataPolicy {
     private String name;
 
     @JsonProperty("RebuildPriority")
-    private BlobStoreTaskPriority rebuildPriority;
+    private Priority rebuildPriority;
 
     @JsonProperty("Versioning")
     private VersioningLevel versioning;
@@ -113,29 +113,29 @@ public class DataPolicy {
     }
 
 
-    public BlobStoreTaskPriority getDefaultGetJobPriority() {
+    public Priority getDefaultGetJobPriority() {
         return this.defaultGetJobPriority;
     }
 
-    public void setDefaultGetJobPriority(final BlobStoreTaskPriority defaultGetJobPriority) {
+    public void setDefaultGetJobPriority(final Priority defaultGetJobPriority) {
         this.defaultGetJobPriority = defaultGetJobPriority;
     }
 
 
-    public BlobStoreTaskPriority getDefaultPutJobPriority() {
+    public Priority getDefaultPutJobPriority() {
         return this.defaultPutJobPriority;
     }
 
-    public void setDefaultPutJobPriority(final BlobStoreTaskPriority defaultPutJobPriority) {
+    public void setDefaultPutJobPriority(final Priority defaultPutJobPriority) {
         this.defaultPutJobPriority = defaultPutJobPriority;
     }
 
 
-    public BlobStoreTaskPriority getDefaultVerifyJobPriority() {
+    public Priority getDefaultVerifyJobPriority() {
         return this.defaultVerifyJobPriority;
     }
 
-    public void setDefaultVerifyJobPriority(final BlobStoreTaskPriority defaultVerifyJobPriority) {
+    public void setDefaultVerifyJobPriority(final Priority defaultVerifyJobPriority) {
         this.defaultVerifyJobPriority = defaultVerifyJobPriority;
     }
 
@@ -176,11 +176,11 @@ public class DataPolicy {
     }
 
 
-    public BlobStoreTaskPriority getRebuildPriority() {
+    public Priority getRebuildPriority() {
         return this.rebuildPriority;
     }
 
-    public void setRebuildPriority(final BlobStoreTaskPriority rebuildPriority) {
+    public void setRebuildPriority(final Priority rebuildPriority) {
         this.rebuildPriority = rebuildPriority;
     }
 

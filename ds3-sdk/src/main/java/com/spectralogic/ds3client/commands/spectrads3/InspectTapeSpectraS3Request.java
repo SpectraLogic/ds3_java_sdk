@@ -18,7 +18,7 @@ package com.spectralogic.ds3client.commands.spectrads3;
 
 import com.spectralogic.ds3client.HttpVerb;
 import com.spectralogic.ds3client.commands.AbstractRequest;
-import com.spectralogic.ds3client.models.BlobStoreTaskPriority;
+import com.spectralogic.ds3client.models.Priority;
 import java.util.UUID;
 
 public class InspectTapeSpectraS3Request extends AbstractRequest {
@@ -27,7 +27,7 @@ public class InspectTapeSpectraS3Request extends AbstractRequest {
     
     private final UUID tapeId;
 
-    private BlobStoreTaskPriority taskPriority;
+    private Priority taskPriority;
 
     // Constructor
     
@@ -37,7 +37,7 @@ public class InspectTapeSpectraS3Request extends AbstractRequest {
         this.getQueryParams().put("operation", "inspect");
     }
 
-    public InspectTapeSpectraS3Request withTaskPriority(final BlobStoreTaskPriority taskPriority) {
+    public InspectTapeSpectraS3Request withTaskPriority(final Priority taskPriority) {
         this.taskPriority = taskPriority;
         this.updateQueryParam("task_priority", taskPriority.toString());
         return this;
@@ -59,7 +59,7 @@ public class InspectTapeSpectraS3Request extends AbstractRequest {
     }
 
 
-    public BlobStoreTaskPriority getTaskPriority() {
+    public Priority getTaskPriority() {
         return this.taskPriority;
     }
 

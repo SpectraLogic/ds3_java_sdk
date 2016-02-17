@@ -16,7 +16,7 @@
 // This code is auto-generated, do not modify
 package com.spectralogic.ds3client.models;
 
-public enum BlobStoreTaskPriority {
+public enum Priority {
     CRITICAL,
     URGENT,
     HIGH,

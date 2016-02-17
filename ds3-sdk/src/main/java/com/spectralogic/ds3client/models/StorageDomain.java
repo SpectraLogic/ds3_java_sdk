@@ -22,7 +22,7 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import java.lang.String;
 import java.util.UUID;
 import com.spectralogic.ds3client.models.LtfsFileNamingMode;
-import com.spectralogic.ds3client.models.BlobStoreTaskPriority;
+import com.spectralogic.ds3client.models.Priority;
 import com.spectralogic.ds3client.models.WriteOptimization;
 
 @JacksonXmlRootElement(namespace = "Data")
@@ -60,7 +60,7 @@ public class StorageDomain {
     private String name;
 
     @JsonProperty("VerifyPriorToAutoEject")
-    private BlobStoreTaskPriority verifyPriorToAutoEject;
+    private Priority verifyPriorToAutoEject;
 
     @JsonProperty("WriteOptimization")
     private WriteOptimization writeOptimization;
@@ -162,11 +162,11 @@ public class StorageDomain {
     }
 
 
-    public BlobStoreTaskPriority getVerifyPriorToAutoEject() {
+    public Priority getVerifyPriorToAutoEject() {
         return this.verifyPriorToAutoEject;
     }
 
-    public void setVerifyPriorToAutoEject(final BlobStoreTaskPriority verifyPriorToAutoEject) {
+    public void setVerifyPriorToAutoEject(final Priority verifyPriorToAutoEject) {
         this.verifyPriorToAutoEject = verifyPriorToAutoEject;
     }
 

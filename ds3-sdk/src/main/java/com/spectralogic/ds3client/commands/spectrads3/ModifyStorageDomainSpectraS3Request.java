@@ -20,7 +20,7 @@ import com.spectralogic.ds3client.HttpVerb;
 import com.spectralogic.ds3client.commands.AbstractRequest;
 import com.google.common.net.UrlEscapers;
 import com.spectralogic.ds3client.models.LtfsFileNamingMode;
-import com.spectralogic.ds3client.models.BlobStoreTaskPriority;
+import com.spectralogic.ds3client.models.Priority;
 import com.spectralogic.ds3client.models.WriteOptimization;
 
 public class ModifyStorageDomainSpectraS3Request extends AbstractRequest {
@@ -47,7 +47,7 @@ public class ModifyStorageDomainSpectraS3Request extends AbstractRequest {
 
     private String name;
 
-    private BlobStoreTaskPriority verifyPriorToAutoEject;
+    private Priority verifyPriorToAutoEject;
 
     private WriteOptimization writeOptimization;
 
@@ -111,7 +111,7 @@ public class ModifyStorageDomainSpectraS3Request extends AbstractRequest {
         return this;
     }
 
-    public ModifyStorageDomainSpectraS3Request withVerifyPriorToAutoEject(final BlobStoreTaskPriority verifyPriorToAutoEject) {
+    public ModifyStorageDomainSpectraS3Request withVerifyPriorToAutoEject(final Priority verifyPriorToAutoEject) {
         this.verifyPriorToAutoEject = verifyPriorToAutoEject;
         this.updateQueryParam("verify_prior_to_auto_eject", verifyPriorToAutoEject.toString());
         return this;
@@ -184,7 +184,7 @@ public class ModifyStorageDomainSpectraS3Request extends AbstractRequest {
     }
 
 
-    public BlobStoreTaskPriority getVerifyPriorToAutoEject() {
+    public Priority getVerifyPriorToAutoEject() {
         return this.verifyPriorToAutoEject;
     }
 

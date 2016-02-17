@@ -15,12 +15,12 @@
 
 package com.spectralogic.ds3client.helpers.options;
 
-import com.spectralogic.ds3client.models.BlobStoreTaskPriority;
+import com.spectralogic.ds3client.models.Priority;
 import com.spectralogic.ds3client.models.ChecksumType;
 import com.spectralogic.ds3client.models.WriteOptimization;
 
 public class WriteJobOptions {
-    private BlobStoreTaskPriority priority;
+    private Priority priority;
     private WriteOptimization writeOptimization;
     private int maxUploadSize;
     private ChecksumType.Type checksumType;
@@ -58,16 +58,16 @@ public class WriteJobOptions {
         this.writeOptimization = writeOptimization;
     }
 
-    public WriteJobOptions withPriority(final BlobStoreTaskPriority priority) {
+    public WriteJobOptions withPriority(final Priority priority) {
         this.priority = priority;
         return this;
     }
 
-    public BlobStoreTaskPriority getPriority() {
+    public Priority getPriority() {
         return priority;
     }
 
-    public void setPriority(final BlobStoreTaskPriority priority) {
+    public void setPriority(final Priority priority) {
         this.priority = priority;
     }
 

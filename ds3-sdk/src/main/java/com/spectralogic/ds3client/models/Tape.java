@@ -25,7 +25,7 @@ import java.util.UUID;
 import java.util.Date;
 import com.spectralogic.ds3client.models.TapeState;
 import com.spectralogic.ds3client.models.TapeType;
-import com.spectralogic.ds3client.models.BlobStoreTaskPriority;
+import com.spectralogic.ds3client.models.Priority;
 
 @JacksonXmlRootElement(namespace = "Data")
 public class Tape {
@@ -101,7 +101,7 @@ public class Tape {
     private TapeType type;
 
     @JsonProperty("VerifyPending")
-    private BlobStoreTaskPriority verifyPending;
+    private Priority verifyPending;
 
     @JsonProperty("WriteProtected")
     private boolean writeProtected;
@@ -320,11 +320,11 @@ public class Tape {
     }
 
 
-    public BlobStoreTaskPriority getVerifyPending() {
+    public Priority getVerifyPending() {
         return this.verifyPending;
     }
 
-    public void setVerifyPending(final BlobStoreTaskPriority verifyPending) {
+    public void setVerifyPending(final Priority verifyPending) {
         this.verifyPending = verifyPending;
     }
 

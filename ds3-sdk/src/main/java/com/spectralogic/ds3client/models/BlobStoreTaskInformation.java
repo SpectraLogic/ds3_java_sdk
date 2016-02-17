@@ -23,7 +23,7 @@ import java.util.Date;
 import java.lang.String;
 import java.util.UUID;
 import com.spectralogic.ds3client.models.Duration;
-import com.spectralogic.ds3client.models.BlobStoreTaskPriority;
+import com.spectralogic.ds3client.models.Priority;
 import com.spectralogic.ds3client.models.BlobStoreTaskState;
 
 @JacksonXmlRootElement(namespace = "Data")
@@ -58,7 +58,7 @@ public class BlobStoreTaskInformation {
     private UUID poolId;
 
     @JsonProperty("Priority")
-    private BlobStoreTaskPriority priority;
+    private Priority priority;
 
     @JsonProperty("State")
     private BlobStoreTaskState state;
@@ -154,11 +154,11 @@ public class BlobStoreTaskInformation {
     }
 
 
-    public BlobStoreTaskPriority getPriority() {
+    public Priority getPriority() {
         return this.priority;
     }
 
-    public void setPriority(final BlobStoreTaskPriority priority) {
+    public void setPriority(final Priority priority) {
         this.priority = priority;
     }
 

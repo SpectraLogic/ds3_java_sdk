@@ -18,13 +18,13 @@ package com.spectralogic.ds3client.commands.spectrads3;
 
 import com.spectralogic.ds3client.HttpVerb;
 import com.spectralogic.ds3client.commands.AbstractRequest;
-import com.spectralogic.ds3client.models.BlobStoreTaskPriority;
+import com.spectralogic.ds3client.models.Priority;
 
 public class VerifyAllTapesSpectraS3Request extends AbstractRequest {
 
     // Variables
     
-    private BlobStoreTaskPriority taskPriority;
+    private Priority taskPriority;
 
     // Constructor
     
@@ -33,7 +33,7 @@ public class VerifyAllTapesSpectraS3Request extends AbstractRequest {
         this.getQueryParams().put("operation", "verify");
     }
 
-    public VerifyAllTapesSpectraS3Request withTaskPriority(final BlobStoreTaskPriority taskPriority) {
+    public VerifyAllTapesSpectraS3Request withTaskPriority(final Priority taskPriority) {
         this.taskPriority = taskPriority;
         this.updateQueryParam("task_priority", taskPriority.toString());
         return this;
@@ -50,7 +50,7 @@ public class VerifyAllTapesSpectraS3Request extends AbstractRequest {
         return "/_rest_/tape";
     }
     
-    public BlobStoreTaskPriority getTaskPriority() {
+    public Priority getTaskPriority() {
         return this.taskPriority;
     }
 

@@ -94,7 +94,7 @@ public class ResponseBuilders {
             final long cachedSizeInBytes,
             final long completedSizeInBytes,
             final JobChunkClientProcessingOrderGuarantee chunkClientProcessingOrderGuarantee,
-            final BlobStoreTaskPriority priority,
+            final Priority priority,
             final String startDate,
             final UUID userId,
             final String userName,

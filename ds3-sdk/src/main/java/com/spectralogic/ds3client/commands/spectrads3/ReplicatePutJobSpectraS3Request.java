@@ -22,7 +22,7 @@ import com.spectralogic.ds3client.models.bulk.Ds3Object;
 import com.spectralogic.ds3client.serializer.XmlProcessingException;
 import com.spectralogic.ds3client.commands.BulkRequest;
 import com.spectralogic.ds3client.models.ReplicationConflictResolutionMode;
-import com.spectralogic.ds3client.models.BlobStoreTaskPriority;
+import com.spectralogic.ds3client.models.Priority;
 import com.google.common.net.UrlEscapers;
 
 public class ReplicatePutJobSpectraS3Request extends BulkRequest {
@@ -46,7 +46,7 @@ public class ReplicatePutJobSpectraS3Request extends BulkRequest {
     }
 
     @Override
-    public ReplicatePutJobSpectraS3Request withPriority(final BlobStoreTaskPriority priority) {
+    public ReplicatePutJobSpectraS3Request withPriority(final Priority priority) {
         super.withPriority(priority);
         return this;
     }

@@ -20,7 +20,7 @@ import com.spectralogic.ds3client.HttpVerb;
 import com.spectralogic.ds3client.commands.AbstractRequest;
 import com.spectralogic.ds3client.models.ChecksumType;
 import java.lang.Long;
-import com.spectralogic.ds3client.models.BlobStoreTaskPriority;
+import com.spectralogic.ds3client.models.Priority;
 import com.google.common.net.UrlEscapers;
 import com.spectralogic.ds3client.models.VersioningLevel;
 
@@ -36,17 +36,17 @@ public class ModifyDataPolicySpectraS3Request extends AbstractRequest {
 
     private Long defaultBlobSize;
 
-    private BlobStoreTaskPriority defaultGetJobPriority;
+    private Priority defaultGetJobPriority;
 
-    private BlobStoreTaskPriority defaultPutJobPriority;
+    private Priority defaultPutJobPriority;
 
-    private BlobStoreTaskPriority defaultVerifyJobPriority;
+    private Priority defaultVerifyJobPriority;
 
     private boolean endToEndCrcRequired;
 
     private String name;
 
-    private BlobStoreTaskPriority rebuildPriority;
+    private Priority rebuildPriority;
 
     private VersioningLevel versioning;
 
@@ -74,19 +74,19 @@ public class ModifyDataPolicySpectraS3Request extends AbstractRequest {
         return this;
     }
 
-    public ModifyDataPolicySpectraS3Request withDefaultGetJobPriority(final BlobStoreTaskPriority defaultGetJobPriority) {
+    public ModifyDataPolicySpectraS3Request withDefaultGetJobPriority(final Priority defaultGetJobPriority) {
         this.defaultGetJobPriority = defaultGetJobPriority;
         this.updateQueryParam("default_get_job_priority", defaultGetJobPriority.toString());
         return this;
     }
 
-    public ModifyDataPolicySpectraS3Request withDefaultPutJobPriority(final BlobStoreTaskPriority defaultPutJobPriority) {
+    public ModifyDataPolicySpectraS3Request withDefaultPutJobPriority(final Priority defaultPutJobPriority) {
         this.defaultPutJobPriority = defaultPutJobPriority;
         this.updateQueryParam("default_put_job_priority", defaultPutJobPriority.toString());
         return this;
     }
 
-    public ModifyDataPolicySpectraS3Request withDefaultVerifyJobPriority(final BlobStoreTaskPriority defaultVerifyJobPriority) {
+    public ModifyDataPolicySpectraS3Request withDefaultVerifyJobPriority(final Priority defaultVerifyJobPriority) {
         this.defaultVerifyJobPriority = defaultVerifyJobPriority;
         this.updateQueryParam("default_verify_job_priority", defaultVerifyJobPriority.toString());
         return this;
@@ -104,7 +104,7 @@ public class ModifyDataPolicySpectraS3Request extends AbstractRequest {
         return this;
     }
 
-    public ModifyDataPolicySpectraS3Request withRebuildPriority(final BlobStoreTaskPriority rebuildPriority) {
+    public ModifyDataPolicySpectraS3Request withRebuildPriority(final Priority rebuildPriority) {
         this.rebuildPriority = rebuildPriority;
         this.updateQueryParam("rebuild_priority", rebuildPriority.toString());
         return this;
@@ -147,17 +147,17 @@ public class ModifyDataPolicySpectraS3Request extends AbstractRequest {
     }
 
 
-    public BlobStoreTaskPriority getDefaultGetJobPriority() {
+    public Priority getDefaultGetJobPriority() {
         return this.defaultGetJobPriority;
     }
 
 
-    public BlobStoreTaskPriority getDefaultPutJobPriority() {
+    public Priority getDefaultPutJobPriority() {
         return this.defaultPutJobPriority;
     }
 
 
-    public BlobStoreTaskPriority getDefaultVerifyJobPriority() {
+    public Priority getDefaultVerifyJobPriority() {
         return this.defaultVerifyJobPriority;
     }
 
@@ -172,7 +172,7 @@ public class ModifyDataPolicySpectraS3Request extends AbstractRequest {
     }
 
 
-    public BlobStoreTaskPriority getRebuildPriority() {
+    public Priority getRebuildPriority() {
         return this.rebuildPriority;
     }
 
