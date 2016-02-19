@@ -36,6 +36,7 @@ public class VerifyPhysicalPlacementForObjectsWithFullDetailsSpectraS3Request ex
     private final List<Ds3Object> objects;
 
     private UUID storageDomainId;
+    private long size = 0;
 
     // Constructor
     
@@ -62,7 +63,13 @@ public class VerifyPhysicalPlacementForObjectsWithFullDetailsSpectraS3Request ex
         final String xmlOutput = XmlOutput.toXml(objects, false);
 
         final byte[] stringBytes = xmlOutput.getBytes();
+        this.size = stringBytes.length;
         return new ByteArrayInputStream(stringBytes);
+    }
+
+    @Override
+    public long getSize() {
+        return this.size;
     }
 
     @Override

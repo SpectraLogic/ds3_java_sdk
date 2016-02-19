@@ -33,6 +33,7 @@ public class GetBlobsOnTapeSpectraS3Request extends AbstractRequest {
     private final UUID tapeId;
 
     private final List<Ds3Object> objects;
+    private long size = 0;
 
     // Constructor
     
@@ -52,7 +53,13 @@ public class GetBlobsOnTapeSpectraS3Request extends AbstractRequest {
         final String xmlOutput = XmlOutput.toXml(objects, false);
 
         final byte[] stringBytes = xmlOutput.getBytes();
+        this.size = stringBytes.length;
         return new ByteArrayInputStream(stringBytes);
+    }
+
+    @Override
+    public long getSize() {
+        return this.size;
     }
 
     @Override

@@ -40,6 +40,7 @@ public class VerifyBulkJobSpectraS3Request extends AbstractRequest {
     private String name;
 
     private Priority priority;
+    private long size = 0;
 
     // Constructor
     
@@ -77,7 +78,13 @@ public class VerifyBulkJobSpectraS3Request extends AbstractRequest {
         final String xmlOutput = XmlOutput.toXml(objects, false);
 
         final byte[] stringBytes = xmlOutput.getBytes();
+        this.size = stringBytes.length;
         return new ByteArrayInputStream(stringBytes);
+    }
+
+    @Override
+    public long getSize() {
+        return this.size;
     }
 
     @Override

@@ -36,6 +36,7 @@ public class GetPhysicalPlacementForObjectsSpectraS3Request extends AbstractRequ
     private final List<Ds3Object> objects;
 
     private UUID storageDomainId;
+    private long size = 0;
 
     // Constructor
     
@@ -61,7 +62,13 @@ public class GetPhysicalPlacementForObjectsSpectraS3Request extends AbstractRequ
         final String xmlOutput = XmlOutput.toXml(objects, false);
 
         final byte[] stringBytes = xmlOutput.getBytes();
+        this.size = stringBytes.length;
         return new ByteArrayInputStream(stringBytes);
+    }
+
+    @Override
+    public long getSize() {
+        return this.size;
     }
 
     @Override
