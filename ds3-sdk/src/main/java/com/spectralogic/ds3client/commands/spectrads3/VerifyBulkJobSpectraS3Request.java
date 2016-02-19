@@ -69,7 +69,8 @@ public class VerifyBulkJobSpectraS3Request extends AbstractRequest {
     }
 
 
-    public InputStream getContentStream() {
+    @Override
+    public InputStream getStream() {
         final Ds3ObjectList objects = new Ds3ObjectList();
         objects.setObjects(this.objects);
 

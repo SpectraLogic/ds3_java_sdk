@@ -53,7 +53,8 @@ public class GetPhysicalPlacementForObjectsSpectraS3Request extends AbstractRequ
     }
 
 
-    public InputStream getContentStream() {
+    @Override
+    public InputStream getStream() {
         final Ds3ObjectList objects = new Ds3ObjectList();
         objects.setObjects(this.objects);
 
