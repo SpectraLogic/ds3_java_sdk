@@ -29,14 +29,14 @@ public class JobUtils {
         final GetJobsSpectraS3Response response = client.getJobsSpectraS3(new GetJobsSpectraS3Request());
         final List<UUID> jobIds = new ArrayList<>();
 
-        for (final JobApiBean jobApiBean : response.getJobsApiBeanResult().getJobs()) {
-            if (!jobApiBean.getBucketName().equals(bucketName) || jobApiBean.getStatus() != JobStatus.IN_PROGRESS || jobApiBean.getRequestType() != type) continue;
-            final GetJobSpectraS3Response jobResponse = client.getJobSpectraS3(new GetJobSpectraS3Request(jobApiBean.getJobId()));
+        for (final Job job : response.getJobListResult().getJobs()) {
+            if (!job.getBucketName().equals(bucketName) || job.getStatus() != JobStatus.IN_PROGRESS || job.getRequestType() != type) continue;
+            final GetJobSpectraS3Response jobResponse = client.getJobSpectraS3(new GetJobSpectraS3Request(job.getJobId()));
             final MasterObjectList masterObjectList = jobResponse.getMasterObjectListResult();
 
             for (final Objects objects : masterObjectList.getObjects()) {
                 if (chunkAndSetIntersects(objects, files)){
-                    jobIds.add(jobApiBean.getJobId());
+                    jobIds.add(job.getJobId());
                     break;  // move onto the next job
                 }
             }

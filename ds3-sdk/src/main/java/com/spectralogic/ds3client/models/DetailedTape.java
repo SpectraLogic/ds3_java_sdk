@@ -23,7 +23,7 @@ import java.lang.Long;
 import java.lang.String;
 import java.util.UUID;
 import java.util.Date;
-import com.spectralogic.ds3client.models.TapeFailure;
+import com.spectralogic.ds3client.models.DetailedTapeFailure;
 import com.spectralogic.ds3client.models.TapeState;
 import com.spectralogic.ds3client.models.TapeType;
 import com.spectralogic.ds3client.models.Priority;
@@ -78,7 +78,7 @@ public class DetailedTape {
     private Date lastVerified;
 
     @JsonProperty("MostRecentFailure")
-    private TapeFailure mostRecentFailure;
+    private DetailedTapeFailure mostRecentFailure;
 
     @JsonProperty("PartitionId")
     private UUID partitionId;
@@ -252,11 +252,11 @@ public class DetailedTape {
     }
 
 
-    public TapeFailure getMostRecentFailure() {
+    public DetailedTapeFailure getMostRecentFailure() {
         return this.mostRecentFailure;
     }
 
-    public void setMostRecentFailure(final TapeFailure mostRecentFailure) {
+    public void setMostRecentFailure(final DetailedTapeFailure mostRecentFailure) {
         this.mostRecentFailure = mostRecentFailure;
     }
 

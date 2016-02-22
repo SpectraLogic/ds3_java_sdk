@@ -19,32 +19,32 @@ package com.spectralogic.ds3client.models;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import com.spectralogic.ds3client.models.User;
+import com.spectralogic.ds3client.models.DetailedTapeFailure;
 import java.util.List;
 import java.util.ArrayList;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 
 @JacksonXmlRootElement(namespace = "Data")
-public class UserList {
+public class DetailedTapeFailureList {
 
     // Variables
-    @JsonProperty("User")
+    @JsonProperty("TapeFailure")
     @JacksonXmlElementWrapper(useWrapping = false)
-    private List<User> users = new ArrayList<>();
+    private List<DetailedTapeFailure> detailedTapeFailures = new ArrayList<>();
 
     // Constructor
-    public UserList() {
+    public DetailedTapeFailureList() {
         //pass
     }
 
     // Getters and Setters
     
-    public List<User> getUsers() {
-        return this.users;
+    public List<DetailedTapeFailure> getDetailedTapeFailures() {
+        return this.detailedTapeFailures;
     }
 
-    public void setUsers(final List<User> users) {
-        this.users = users;
+    public void setDetailedTapeFailures(final List<DetailedTapeFailure> detailedTapeFailures) {
+        this.detailedTapeFailures = detailedTapeFailures;
     }
 
 }

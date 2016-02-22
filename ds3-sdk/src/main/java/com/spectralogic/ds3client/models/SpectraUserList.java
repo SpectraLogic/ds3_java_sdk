@@ -19,32 +19,32 @@ package com.spectralogic.ds3client.models;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import com.spectralogic.ds3client.models.JobApiBean;
+import com.spectralogic.ds3client.models.SpectraUser;
 import java.util.List;
 import java.util.ArrayList;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 
-@JacksonXmlRootElement(namespace = "Jobs")
-public class JobsApiBean {
+@JacksonXmlRootElement(namespace = "Data")
+public class SpectraUserList {
 
     // Variables
-    @JsonProperty("Job")
+    @JsonProperty("User")
     @JacksonXmlElementWrapper(useWrapping = false)
-    private List<JobApiBean> jobs = new ArrayList<>();
+    private List<SpectraUser> spectraUsers = new ArrayList<>();
 
     // Constructor
-    public JobsApiBean() {
+    public SpectraUserList() {
         //pass
     }
 
     // Getters and Setters
     
-    public List<JobApiBean> getJobs() {
-        return this.jobs;
+    public List<SpectraUser> getSpectraUsers() {
+        return this.spectraUsers;
     }
 
-    public void setJobs(final List<JobApiBean> jobs) {
-        this.jobs = jobs;
+    public void setSpectraUsers(final List<SpectraUser> spectraUsers) {
+        this.spectraUsers = spectraUsers;
     }
 
 }

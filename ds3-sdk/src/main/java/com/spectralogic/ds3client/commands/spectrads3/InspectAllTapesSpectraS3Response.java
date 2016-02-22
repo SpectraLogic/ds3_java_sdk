@@ -19,13 +19,13 @@ package com.spectralogic.ds3client.commands.spectrads3;
 import com.spectralogic.ds3client.networking.WebResponse;
 import java.io.IOException;
 import java.io.InputStream;
-import com.spectralogic.ds3client.models.TapeFailuresApiBean;
+import com.spectralogic.ds3client.models.TapeFailureList;
 import com.spectralogic.ds3client.serializer.XmlOutput;
 import com.spectralogic.ds3client.commands.AbstractResponse;
 
 public class InspectAllTapesSpectraS3Response extends AbstractResponse {
 
-    private TapeFailuresApiBean tapeFailuresApiBeanResult;
+    private TapeFailureList tapeFailureListResult;
 
     public InspectAllTapesSpectraS3Response(final WebResponse response) throws IOException {
         super(response);
@@ -42,7 +42,7 @@ public class InspectAllTapesSpectraS3Response extends AbstractResponse {
                 break;
             case 207:
                 try (final InputStream content = getResponse().getResponseStream()) {
-                    this.tapeFailuresApiBeanResult = XmlOutput.fromXml(content, TapeFailuresApiBean.class);
+                    this.tapeFailureListResult = XmlOutput.fromXml(content, TapeFailureList.class);
                 }
                 break;
             default:
@@ -53,8 +53,8 @@ public class InspectAllTapesSpectraS3Response extends AbstractResponse {
         }
     }
 
-    public TapeFailuresApiBean getTapeFailuresApiBeanResult() {
-        return this.tapeFailuresApiBeanResult;
+    public TapeFailureList getTapeFailureListResult() {
+        return this.tapeFailureListResult;
     }
 
 }

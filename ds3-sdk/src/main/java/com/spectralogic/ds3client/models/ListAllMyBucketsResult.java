@@ -23,7 +23,7 @@ import com.spectralogic.ds3client.models.Ds3Bucket;
 import java.util.List;
 import java.util.ArrayList;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
-import com.spectralogic.ds3client.models.UserApiBean;
+import com.spectralogic.ds3client.models.User;
 
 @JacksonXmlRootElement(namespace = "ListAllMyBucketsResult")
 public class ListAllMyBucketsResult {
@@ -34,7 +34,7 @@ public class ListAllMyBucketsResult {
     private List<Ds3Bucket> buckets = new ArrayList<>();
 
     @JsonProperty("Owner")
-    private UserApiBean owner;
+    private User owner;
 
     // Constructor
     public ListAllMyBucketsResult() {
@@ -52,11 +52,11 @@ public class ListAllMyBucketsResult {
     }
 
 
-    public UserApiBean getOwner() {
+    public User getOwner() {
         return this.owner;
     }
 
-    public void setOwner(final UserApiBean owner) {
+    public void setOwner(final User owner) {
         this.owner = owner;
     }
 
