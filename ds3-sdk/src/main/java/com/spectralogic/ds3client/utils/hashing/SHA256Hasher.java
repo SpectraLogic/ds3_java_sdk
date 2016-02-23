@@ -7,7 +7,7 @@ public class SHA256Hasher extends DigestHasher {
     @Override
     MessageDigest getDigest() {
         try {
-            return MessageDigest.getInstance("SHA256");
+            return MessageDigest.getInstance("SHA-256");
         } catch (final NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
         }
