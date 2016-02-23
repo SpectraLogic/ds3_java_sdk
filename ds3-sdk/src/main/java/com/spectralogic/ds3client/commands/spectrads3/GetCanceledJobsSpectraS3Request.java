@@ -112,7 +112,7 @@ public class GetCanceledJobsSpectraS3Request extends AbstractRequest {
 
     public GetCanceledJobsSpectraS3Request withRechunked(final Date rechunked) {
         this.rechunked = rechunked;
-        this.updateQueryParam("rechunked", rechunked.toString());
+        this.updateQueryParam("rechunked", Long.toString(rechunked.getTime()));
         return this;
     }
 

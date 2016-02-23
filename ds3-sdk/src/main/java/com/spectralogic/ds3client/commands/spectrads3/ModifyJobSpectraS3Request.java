@@ -43,7 +43,7 @@ public class ModifyJobSpectraS3Request extends AbstractRequest {
 
     public ModifyJobSpectraS3Request withCreatedAt(final Date createdAt) {
         this.createdAt = createdAt;
-        this.updateQueryParam("created_at", createdAt.toString());
+        this.updateQueryParam("created_at", Long.toString(createdAt.getTime()));
         return this;
     }
 
