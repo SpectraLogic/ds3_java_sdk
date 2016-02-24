@@ -23,28 +23,46 @@ import java.lang.String;
 import java.util.UUID;
 
 @JacksonXmlRootElement(namespace = "Data")
-public class UserApiBean {
+public class SpectraUser {
 
     // Variables
-    @JsonProperty("DisplayName")
-    private String displayName;
+    @JsonProperty("AuthId")
+    private String authId;
 
-    @JsonProperty("ID")
+    @JsonProperty("DefaultDataPolicyId")
+    private UUID defaultDataPolicyId;
+
+    @JsonProperty("Id")
     private UUID id;
 
+    @JsonProperty("Name")
+    private String name;
+
+    @JsonProperty("SecretKey")
+    private String secretKey;
+
     // Constructor
-    public UserApiBean() {
+    public SpectraUser() {
         //pass
     }
 
     // Getters and Setters
     
-    public String getDisplayName() {
-        return this.displayName;
+    public String getAuthId() {
+        return this.authId;
     }
 
-    public void setDisplayName(final String displayName) {
-        this.displayName = displayName;
+    public void setAuthId(final String authId) {
+        this.authId = authId;
+    }
+
+
+    public UUID getDefaultDataPolicyId() {
+        return this.defaultDataPolicyId;
+    }
+
+    public void setDefaultDataPolicyId(final UUID defaultDataPolicyId) {
+        this.defaultDataPolicyId = defaultDataPolicyId;
     }
 
 
@@ -54,6 +72,24 @@ public class UserApiBean {
 
     public void setId(final UUID id) {
         this.id = id;
+    }
+
+
+    public String getName() {
+        return this.name;
+    }
+
+    public void setName(final String name) {
+        this.name = name;
+    }
+
+
+    public String getSecretKey() {
+        return this.secretKey;
+    }
+
+    public void setSecretKey(final String secretKey) {
+        this.secretKey = secretKey;
     }
 
 }

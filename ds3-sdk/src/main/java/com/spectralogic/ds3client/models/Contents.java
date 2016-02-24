@@ -21,7 +21,7 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import java.lang.String;
 import java.util.Date;
-import com.spectralogic.ds3client.models.UserApiBean;
+import com.spectralogic.ds3client.models.User;
 import java.lang.Object;
 
 @JacksonXmlRootElement(namespace = "Data")
@@ -38,7 +38,7 @@ public class Contents {
     private Date lastModified;
 
     @JsonProperty("Owner")
-    private UserApiBean owner;
+    private User owner;
 
     @JsonProperty("Size")
     private long size;
@@ -80,11 +80,11 @@ public class Contents {
     }
 
 
-    public UserApiBean getOwner() {
+    public User getOwner() {
         return this.owner;
     }
 
-    public void setOwner(final UserApiBean owner) {
+    public void setOwner(final User owner) {
         this.owner = owner;
     }
 

@@ -627,7 +627,7 @@ public class Ds3Client_Test {
             .asClient()
             .getJobsSpectraS3(new GetJobsSpectraS3Request());
         
-        final List<JobApiBean> jobs = response.getJobsApiBeanResult().getJobs();
+        final List<Job> jobs = response.getJobListResult().getJobs();
         //final Date date = this.dateFormat.parse("2014-09-04T17:23:45.000Z");
         assertThat(jobs.size(), is(2));
         checkJob(
@@ -664,7 +664,7 @@ public class Ds3Client_Test {
     }
 
     private static void checkJob(
-            final JobApiBean job,
+            final Job job,
             final String bucketName,
             final long cachedSizeInBytes,
             final JobChunkClientProcessingOrderGuarantee chunkProcessingOrderGuarantee,
@@ -883,7 +883,7 @@ public class Ds3Client_Test {
                 .asClient()
                 .getTapeFailuresSpectraS3(new GetTapeFailuresSpectraS3Request());
 
-        final List<TapeFailure> tapeFailures = response.getTapeFailureListResult().getTapeFailures();
+        final List<DetailedTapeFailure> tapeFailures = response.getDetailedTapeFailureListResult().getDetailedTapeFailures();
 
         assertThat(tapeFailures, is(notNullValue()));
         assertThat(tapeFailures.size(), is(1));

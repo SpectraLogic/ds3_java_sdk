@@ -28,9 +28,9 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 public class TapeFailureList {
 
     // Variables
-    @JsonProperty("TapeFailure")
+    @JsonProperty("Failure")
     @JacksonXmlElementWrapper(useWrapping = false)
-    private List<TapeFailure> tapeFailures = new ArrayList<>();
+    private List<TapeFailure> failures = new ArrayList<>();
 
     // Constructor
     public TapeFailureList() {
@@ -39,12 +39,12 @@ public class TapeFailureList {
 
     // Getters and Setters
     
-    public List<TapeFailure> getTapeFailures() {
-        return this.tapeFailures;
+    public List<TapeFailure> getFailures() {
+        return this.failures;
     }
 
-    public void setTapeFailures(final List<TapeFailure> tapeFailures) {
-        this.tapeFailures = tapeFailures;
+    public void setFailures(final List<TapeFailure> failures) {
+        this.failures = failures;
     }
 
 }

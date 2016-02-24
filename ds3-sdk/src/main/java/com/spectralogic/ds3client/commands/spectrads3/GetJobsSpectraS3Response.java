@@ -19,13 +19,13 @@ package com.spectralogic.ds3client.commands.spectrads3;
 import com.spectralogic.ds3client.networking.WebResponse;
 import java.io.IOException;
 import java.io.InputStream;
-import com.spectralogic.ds3client.models.JobsApiBean;
+import com.spectralogic.ds3client.models.JobList;
 import com.spectralogic.ds3client.serializer.XmlOutput;
 import com.spectralogic.ds3client.commands.AbstractResponse;
 
 public class GetJobsSpectraS3Response extends AbstractResponse {
 
-    private JobsApiBean jobsApiBeanResult;
+    private JobList jobListResult;
 
     public GetJobsSpectraS3Response(final WebResponse response) throws IOException {
         super(response);
@@ -39,7 +39,7 @@ public class GetJobsSpectraS3Response extends AbstractResponse {
             switch (this.getStatusCode()) {
             case 200:
                 try (final InputStream content = getResponse().getResponseStream()) {
-                    this.jobsApiBeanResult = XmlOutput.fromXml(content, JobsApiBean.class);
+                    this.jobListResult = XmlOutput.fromXml(content, JobList.class);
                 }
                 break;
             default:
@@ -50,8 +50,8 @@ public class GetJobsSpectraS3Response extends AbstractResponse {
         }
     }
 
-    public JobsApiBean getJobsApiBeanResult() {
-        return this.jobsApiBeanResult;
+    public JobList getJobListResult() {
+        return this.jobListResult;
     }
 
 }

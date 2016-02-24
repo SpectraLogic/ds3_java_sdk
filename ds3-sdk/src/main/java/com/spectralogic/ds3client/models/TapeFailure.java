@@ -19,32 +19,18 @@ package com.spectralogic.ds3client.models;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import java.util.Date;
 import java.lang.String;
-import java.util.UUID;
-import com.spectralogic.ds3client.models.TapeFailureType;
+import com.spectralogic.ds3client.models.Tape;
 
 @JacksonXmlRootElement(namespace = "Data")
 public class TapeFailure {
 
     // Variables
-    @JsonProperty("Date")
-    private Date date;
+    @JsonProperty("Cause")
+    private String cause;
 
-    @JsonProperty("ErrorMessage")
-    private String errorMessage;
-
-    @JsonProperty("Id")
-    private UUID id;
-
-    @JsonProperty("TapeDriveId")
-    private UUID tapeDriveId;
-
-    @JsonProperty("TapeId")
-    private UUID tapeId;
-
-    @JsonProperty("Type")
-    private TapeFailureType type;
+    @JsonProperty("Tape")
+    private Tape tape;
 
     // Constructor
     public TapeFailure() {
@@ -53,57 +39,21 @@ public class TapeFailure {
 
     // Getters and Setters
     
-    public Date getDate() {
-        return this.date;
+    public String getCause() {
+        return this.cause;
     }
 
-    public void setDate(final Date date) {
-        this.date = date;
-    }
-
-
-    public String getErrorMessage() {
-        return this.errorMessage;
-    }
-
-    public void setErrorMessage(final String errorMessage) {
-        this.errorMessage = errorMessage;
+    public void setCause(final String cause) {
+        this.cause = cause;
     }
 
 
-    public UUID getId() {
-        return this.id;
+    public Tape getTape() {
+        return this.tape;
     }
 
-    public void setId(final UUID id) {
-        this.id = id;
-    }
-
-
-    public UUID getTapeDriveId() {
-        return this.tapeDriveId;
-    }
-
-    public void setTapeDriveId(final UUID tapeDriveId) {
-        this.tapeDriveId = tapeDriveId;
-    }
-
-
-    public UUID getTapeId() {
-        return this.tapeId;
-    }
-
-    public void setTapeId(final UUID tapeId) {
-        this.tapeId = tapeId;
-    }
-
-
-    public TapeFailureType getType() {
-        return this.type;
-    }
-
-    public void setType(final TapeFailureType type) {
-        this.type = type;
+    public void setTape(final Tape tape) {
+        this.tape = tape;
     }
 
 }

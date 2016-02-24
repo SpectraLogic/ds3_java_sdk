@@ -21,7 +21,7 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import java.util.Date;
 import java.lang.String;
-import com.spectralogic.ds3client.models.UserApiBean;
+import com.spectralogic.ds3client.models.User;
 import java.util.UUID;
 
 @JacksonXmlRootElement(namespace = "Data")
@@ -35,7 +35,7 @@ public class MultiPartUpload {
     private String key;
 
     @JsonProperty("Owner")
-    private UserApiBean owner;
+    private User owner;
 
     @JsonProperty("UploadId")
     private UUID uploadId;
@@ -65,11 +65,11 @@ public class MultiPartUpload {
     }
 
 
-    public UserApiBean getOwner() {
+    public User getOwner() {
         return this.owner;
     }
 
-    public void setOwner(final UserApiBean owner) {
+    public void setOwner(final User owner) {
         this.owner = owner;
     }
 

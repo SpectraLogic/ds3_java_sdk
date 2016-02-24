@@ -20,7 +20,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import java.lang.String;
-import com.spectralogic.ds3client.models.UserApiBean;
+import com.spectralogic.ds3client.models.User;
 import java.lang.Integer;
 import com.spectralogic.ds3client.models.MultiPartUploadPart;
 import java.util.List;
@@ -45,7 +45,7 @@ public class ListPartsResult {
     private int nextPartNumberMarker;
 
     @JsonProperty("Owner")
-    private UserApiBean owner;
+    private User owner;
 
     @JsonProperty("PartNumberMarker")
     private Integer partNumberMarker;
@@ -103,11 +103,11 @@ public class ListPartsResult {
     }
 
 
-    public UserApiBean getOwner() {
+    public User getOwner() {
         return this.owner;
     }
 
-    public void setOwner(final UserApiBean owner) {
+    public void setOwner(final User owner) {
         this.owner = owner;
     }
 

@@ -19,13 +19,13 @@ package com.spectralogic.ds3client.commands.spectrads3;
 import com.spectralogic.ds3client.networking.WebResponse;
 import java.io.IOException;
 import java.io.InputStream;
-import com.spectralogic.ds3client.models.User;
+import com.spectralogic.ds3client.models.SpectraUser;
 import com.spectralogic.ds3client.serializer.XmlOutput;
 import com.spectralogic.ds3client.commands.AbstractResponse;
 
 public class ModifyUserSpectraS3Response extends AbstractResponse {
 
-    private User userResult;
+    private SpectraUser spectraUserResult;
 
     public ModifyUserSpectraS3Response(final WebResponse response) throws IOException {
         super(response);
@@ -39,7 +39,7 @@ public class ModifyUserSpectraS3Response extends AbstractResponse {
             switch (this.getStatusCode()) {
             case 200:
                 try (final InputStream content = getResponse().getResponseStream()) {
-                    this.userResult = XmlOutput.fromXml(content, User.class);
+                    this.spectraUserResult = XmlOutput.fromXml(content, SpectraUser.class);
                 }
                 break;
             default:
@@ -50,8 +50,8 @@ public class ModifyUserSpectraS3Response extends AbstractResponse {
         }
     }
 
-    public User getUserResult() {
-        return this.userResult;
+    public SpectraUser getSpectraUserResult() {
+        return this.spectraUserResult;
     }
 
 }
