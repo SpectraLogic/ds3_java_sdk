@@ -17,12 +17,16 @@ package com.spectralogic.ds3client.integration;
 
 import com.google.common.collect.Lists;
 import com.spectralogic.ds3client.Ds3Client;
+import com.spectralogic.ds3client.commands.PutBucketRequest;
+import com.spectralogic.ds3client.commands.spectrads3.PutBucketSpectraS3Request;
 import com.spectralogic.ds3client.commands.spectrads3.PutBulkJobSpectraS3Request;
 import com.spectralogic.ds3client.helpers.ChecksumFunction;
 import com.spectralogic.ds3client.helpers.ChecksumListener;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers;
 import com.spectralogic.ds3client.helpers.FileObjectGetter;
 import com.spectralogic.ds3client.helpers.options.WriteJobOptions;
+import com.spectralogic.ds3client.integration.test.helpers.TempStorageIds;
+import com.spectralogic.ds3client.integration.test.helpers.TempStorageUtil;
 import com.spectralogic.ds3client.models.BulkObject;
 import com.spectralogic.ds3client.models.ChecksumType;
 import com.spectralogic.ds3client.models.bulk.Ds3Object;
@@ -46,6 +50,7 @@ import java.security.SignatureException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static org.hamcrest.CoreMatchers.*;
@@ -53,21 +58,27 @@ import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 public class DataIntegrity_Test {
+
     private static Ds3Client client;
+    private static final String TEST_ENV_NAME = "data_integrity_test";
+    private static TempStorageIds envStorageIds;
 
     @BeforeClass
-    public static void startup() {
+    public static void startup() throws IOException, SignatureException {
         client = Util.fromEnv();
+        final UUID dataPolicyId = TempStorageUtil.setupDataPolicy(TEST_ENV_NAME, true, ChecksumType.Type.MD5, client);
+        envStorageIds = TempStorageUtil.setup(TEST_ENV_NAME, dataPolicyId, client);
     }
 
     @AfterClass
-    public static void teardown() throws IOException {
+    public static void teardown() throws IOException, SignatureException {
+        TempStorageUtil.teardown(TEST_ENV_NAME, envStorageIds, client);
         client.close();
     }
 
     @Test
     public void singleFilePut() throws IOException, URISyntaxException, XmlProcessingException, SignatureException {
-        final String bucketName = "java_integration_test";
+        final String bucketName = "single_file_put_test";
         final String book = "beowulf.txt";
 
         final Ds3ClientHelpers helpers = Ds3ClientHelpers.wrap(client);
@@ -96,7 +107,7 @@ public class DataIntegrity_Test {
 
     @Test
     public void randomDataFile() throws IOException, SignatureException, URISyntaxException, XmlProcessingException {
-        final String bucketName = "java_integration_test";
+        final String bucketName = "random_data_file_test";
         final String randomFileName = "random.txt";
         final long seed = 12345689;
         final int length = 2048;
@@ -106,7 +117,7 @@ public class DataIntegrity_Test {
 
     @Test
     public void randomSingleByte() throws XmlProcessingException, SignatureException, IOException {
-        final String bucketName = "java_integration_test";
+        final String bucketName = "random_single_byte_test";
         final String randomFileName = "random.txt";
         final long seed = 12345689;
         final int length = 1;
@@ -116,7 +127,7 @@ public class DataIntegrity_Test {
 
     @Test
     public void multiBlob() throws IOException, SignatureException, XmlProcessingException {
-        final String bucketName = "java_integration_test";
+        final String bucketName = "multi_blob_test";
         final String randomFileName = "random.txt";
         final long seed = 12345689;
         final int length = 2 * PutBulkJobSpectraS3Request.MIN_UPLOAD_SIZE_IN_BYTES;
@@ -126,7 +137,7 @@ public class DataIntegrity_Test {
 
     @Test
     public void fullBlobPlusOneByte() throws XmlProcessingException, SignatureException, IOException {
-        final String bucketName = "java_integration_test";
+        final String bucketName = "full_blob_plus_one_byte_test";
         final String randomFileName = "random.txt";
         final long seed = 12345;
         final int length = PutBulkJobSpectraS3Request.MIN_UPLOAD_SIZE_IN_BYTES + 1;
@@ -136,7 +147,7 @@ public class DataIntegrity_Test {
 
     @Test
     public void threeFullBlobs() throws XmlProcessingException, SignatureException, IOException {
-        final String bucketName = "java_integration_test";
+        final String bucketName = "three_full_blobs_test";
         final String randomFileName = "random.txt";
         final long seed = 12345;
         final int length = 3 * PutBulkJobSpectraS3Request.MIN_UPLOAD_SIZE_IN_BYTES;
@@ -146,7 +157,7 @@ public class DataIntegrity_Test {
 
     @Test
     public void twoFullBlobsPlusOneByte() throws XmlProcessingException, SignatureException, IOException {
-        final String bucketName = "java_integration_test";
+        final String bucketName = "two_full_blobs_plus_one_byte_test";
         final String randomFileName = "random.txt";
         final long seed = 12345;
         final int length = 2 * PutBulkJobSpectraS3Request.MIN_UPLOAD_SIZE_IN_BYTES + 1;
@@ -156,7 +167,7 @@ public class DataIntegrity_Test {
 
     @Test
     public void autoChecksumming() throws IOException, SignatureException, XmlProcessingException {
-        final String bucketName = "auto_checksumming";
+        final String bucketName = "auto_checksumming_test";
         final Ds3ClientHelpers helpers = Ds3ClientHelpers.wrap(client);
 
         helpers.ensureBucketExists(bucketName);
@@ -185,7 +196,7 @@ public class DataIntegrity_Test {
 
     @Test
     public void callerSuppliedChecksum() throws IOException, SignatureException, XmlProcessingException {
-        final String bucketName = "auto_checksumming";
+        final String bucketName = "caller_supplied_checksum_test";
         final Ds3ClientHelpers helpers = Ds3ClientHelpers.wrap(client);
 
         helpers.ensureBucketExists(bucketName);
@@ -227,7 +238,7 @@ public class DataIntegrity_Test {
 
     @Test
     public void getChecksum() throws IOException, SignatureException, XmlProcessingException {
-        final String bucketName = "auto_checksumming";
+        final String bucketName = "get_checksum_test";
         final Ds3ClientHelpers helpers = Ds3ClientHelpers.wrap(client);
 
         helpers.ensureBucketExists(bucketName);
@@ -269,7 +280,7 @@ public class DataIntegrity_Test {
 
     @Test
     public void getChecksumComputedByBp() throws IOException, SignatureException, URISyntaxException, XmlProcessingException {
-        final String bucketName = "bpComputedChecksum";
+        final String bucketName = "get_checksum_computed_by_bp_test";
 
         final Ds3ClientHelpers helpers = Ds3ClientHelpers.wrap(client);
 
@@ -300,7 +311,7 @@ public class DataIntegrity_Test {
 
     @Test
     public void getMultiFileChecksum() throws IOException, SignatureException, URISyntaxException, XmlProcessingException {
-        final String bucketName = "bpComputedChecksum";
+        final String bucketName = "get_multi_file_checksum_test";
 
         final Ds3ClientHelpers helpers = Ds3ClientHelpers.wrap(client);
 
@@ -341,7 +352,7 @@ public class DataIntegrity_Test {
 
     @Test
     public void setAndGetMultiFileChecksum() throws IOException, SignatureException, URISyntaxException, XmlProcessingException {
-        final String bucketName = "bpComputedChecksum";
+        final String bucketName = "set_and_get_multi_file_checksum_test";
 
         final Ds3ClientHelpers helpers = Ds3ClientHelpers.wrap(client);
 

@@ -4,10 +4,9 @@ import com.spectralogic.ds3client.Ds3Client;
 import com.spectralogic.ds3client.commands.GetBucketRequest;
 import com.spectralogic.ds3client.commands.GetBucketResponse;
 import com.spectralogic.ds3client.commands.spectrads3.*;
-import com.spectralogic.ds3client.models.ListBucketResult;
-import com.spectralogic.ds3client.models.PoolType;
-import com.spectralogic.ds3client.models.StorageDomainMember;
-import com.spectralogic.ds3client.models.VersioningLevel;
+import com.spectralogic.ds3client.integration.test.helpers.TempStorageIds;
+import com.spectralogic.ds3client.integration.test.helpers.TempStorageUtil;
+import com.spectralogic.ds3client.models.*;
 import com.spectralogic.ds3client.networking.FailedRequestException;
 import com.spectralogic.ds3client.serializer.XmlProcessingException;
 import org.junit.AfterClass;
@@ -28,14 +27,19 @@ import static org.junit.Assert.*;
 public class AdvancedBucketManagement_Test {
 
     private static Ds3Client client;
+    private static final String TEST_ENV_NAME = "advanced_bucket_management_test";
+    private static TempStorageIds envStorageIds;
 
     @BeforeClass
-    public static void startup() {
-        client = fromEnv();
+    public static void startup() throws IOException, SignatureException {
+        client = Util.fromEnv();
+        final UUID dataPolicyId = TempStorageUtil.setupDataPolicy(TEST_ENV_NAME, true, ChecksumType.Type.MD5, client);
+        envStorageIds = TempStorageUtil.setup(TEST_ENV_NAME, dataPolicyId, client);
     }
 
     @AfterClass
-    public static void teardown() throws IOException {
+    public static void teardown() throws IOException, SignatureException {
+        TempStorageUtil.teardown(TEST_ENV_NAME, envStorageIds, client);
         client.close();
     }
 
