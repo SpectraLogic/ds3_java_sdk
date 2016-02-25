@@ -19,13 +19,13 @@ package com.spectralogic.ds3client.commands.spectrads3;
 import com.spectralogic.ds3client.networking.WebResponse;
 import java.io.IOException;
 import java.io.InputStream;
-import com.spectralogic.ds3client.models.UserList;
+import com.spectralogic.ds3client.models.SpectraUserList;
 import com.spectralogic.ds3client.serializer.XmlOutput;
 import com.spectralogic.ds3client.commands.AbstractResponse;
 
 public class GetUsersSpectraS3Response extends AbstractResponse {
 
-    private UserList userListResult;
+    private SpectraUserList spectraUserListResult;
 
     public GetUsersSpectraS3Response(final WebResponse response) throws IOException {
         super(response);
@@ -39,7 +39,7 @@ public class GetUsersSpectraS3Response extends AbstractResponse {
             switch (this.getStatusCode()) {
             case 200:
                 try (final InputStream content = getResponse().getResponseStream()) {
-                    this.userListResult = XmlOutput.fromXml(content, UserList.class);
+                    this.spectraUserListResult = XmlOutput.fromXml(content, SpectraUserList.class);
                 }
                 break;
             default:
@@ -50,8 +50,8 @@ public class GetUsersSpectraS3Response extends AbstractResponse {
         }
     }
 
-    public UserList getUserListResult() {
-        return this.userListResult;
+    public SpectraUserList getSpectraUserListResult() {
+        return this.spectraUserListResult;
     }
 
 }

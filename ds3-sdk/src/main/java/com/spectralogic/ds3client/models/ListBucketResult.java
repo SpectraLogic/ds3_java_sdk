@@ -31,8 +31,8 @@ public class ListBucketResult {
 
     // Variables
     @JsonProperty("CommonPrefixes")
-    @JacksonXmlElementWrapper(useWrapping = true)
-    private List<String> commonPrefixes = new ArrayList<>();
+    @JacksonXmlElementWrapper(useWrapping = false)
+    private List<CommonPrefixes> commonPrefixes = new ArrayList<>();
 
     @JsonProperty("CreationDate")
     private Date creationDate;
@@ -69,11 +69,11 @@ public class ListBucketResult {
 
     // Getters and Setters
     
-    public List<String> getCommonPrefixes() {
+    public List<CommonPrefixes> getCommonPrefixes() {
         return this.commonPrefixes;
     }
 
-    public void setCommonPrefixes(final List<String> commonPrefixes) {
+    public void setCommonPrefixes(final List<CommonPrefixes> commonPrefixes) {
         this.commonPrefixes = commonPrefixes;
     }
 

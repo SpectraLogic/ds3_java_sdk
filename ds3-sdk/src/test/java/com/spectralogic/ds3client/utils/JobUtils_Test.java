@@ -33,18 +33,18 @@ public class JobUtils_Test {
         final GetJobSpectraS3Response jobResponse = mock(GetJobSpectraS3Response.class);
 
         final UUID realJobId = UUID.randomUUID();
-        final List<JobApiBean> jobs = new ArrayList<>();
+        final List<Job> jobs = new ArrayList<>();
 
-        final JobApiBean job1 = new JobApiBean();
+        final Job job1 = new Job();
         job1.setJobId(realJobId);
         job1.setStatus(JobStatus.IN_PROGRESS);
         job1.setBucketName("bucket");
         job1.setRequestType(JobRequestType.PUT);
         jobs.add(job1);
 
-        final JobsApiBean container = new JobsApiBean();
+        final JobList container = new JobList();
         container.setJobs(jobs);
-        when(jobsResponse.getJobsApiBeanResult()).thenReturn(container);
+        when(jobsResponse.getJobListResult()).thenReturn(container);
 
         final MasterObjectList mob = new MasterObjectList();
         mob.setStatus(JobStatus.IN_PROGRESS);
@@ -95,26 +95,26 @@ public class JobUtils_Test {
         final GetJobSpectraS3Response jobResponse = mock(GetJobSpectraS3Response.class);
 
         final UUID realJobId = UUID.randomUUID();
-        final List<JobApiBean> jobs = new ArrayList<>();
+        final List<Job> jobs = new ArrayList<>();
 
-        final JobApiBean job1 = new JobApiBean();
+        final Job job1 = new Job();
         job1.setJobId(UUID.randomUUID());
         job1.setStatus(JobStatus.IN_PROGRESS);
         job1.setBucketName("bucket2");
         job1.setRequestType(JobRequestType.PUT);
         jobs.add(job1);
 
-        final JobApiBean job2 = new JobApiBean();
+        final Job job2 = new Job();
         job2.setJobId(realJobId);
         job2.setStatus(JobStatus.IN_PROGRESS);
         job2.setBucketName("bucket");
         job2.setRequestType(JobRequestType.PUT);
         jobs.add(job2);
 
-        final JobsApiBean container = new JobsApiBean();
+        final JobList container = new JobList();
         container.setJobs(jobs);
 
-        when(jobsResponse.getJobsApiBeanResult()).thenReturn(container);
+        when(jobsResponse.getJobListResult()).thenReturn(container);
 
         final MasterObjectList mob = new MasterObjectList();
         mob.setStatus(JobStatus.IN_PROGRESS);
@@ -165,26 +165,26 @@ public class JobUtils_Test {
         final GetJobSpectraS3Response jobResponse = mock(GetJobSpectraS3Response.class);
 
         final UUID realJobId = UUID.randomUUID();
-        final List<JobApiBean> jobs = new ArrayList<>();
+        final List<Job> jobs = new ArrayList<>();
 
-        final JobApiBean job1 = new JobApiBean();
+        final Job job1 = new Job();
         job1.setJobId(UUID.randomUUID());
         job1.setStatus(JobStatus.COMPLETED);
         job1.setBucketName("bucket");
         job1.setRequestType(JobRequestType.PUT);
         jobs.add(job1);
 
-        final JobApiBean job2 = new JobApiBean();
+        final Job job2 = new Job();
         job2.setJobId(realJobId);
         job2.setStatus(JobStatus.IN_PROGRESS);
         job2.setBucketName("bucket");
         job2.setRequestType(JobRequestType.PUT);
         jobs.add(job2);
 
-        final JobsApiBean container = new JobsApiBean();
+        final JobList container = new JobList();
         container.setJobs(jobs);
 
-        when(jobsResponse.getJobsApiBeanResult()).thenReturn(container);
+        when(jobsResponse.getJobListResult()).thenReturn(container);
 
         final MasterObjectList mob = new MasterObjectList();
         mob.setStatus(JobStatus.IN_PROGRESS);
@@ -235,26 +235,26 @@ public class JobUtils_Test {
         final GetJobSpectraS3Response jobResponse = mock(GetJobSpectraS3Response.class);
 
         final UUID realJobId = UUID.randomUUID();
-        final List<JobApiBean> jobs = new ArrayList<>();
+        final List<Job> jobs = new ArrayList<>();
 
-        final JobApiBean job1 = new JobApiBean();
+        final Job job1 = new Job();
         job1.setJobId(UUID.randomUUID());
         job1.setStatus(JobStatus.COMPLETED);
         job1.setBucketName("bucket");
         job1.setRequestType(JobRequestType.PUT);
         jobs.add(job1);
 
-        final JobApiBean job2 = new JobApiBean();
+        final Job job2 = new Job();
         job2.setJobId(realJobId);
         job2.setStatus(JobStatus.IN_PROGRESS);
         job2.setBucketName("bucket");
         job2.setRequestType(JobRequestType.PUT);
         jobs.add(job2);
 
-        final JobsApiBean container = new JobsApiBean();
+        final JobList container = new JobList();
         container.setJobs(jobs);
 
-        when(jobsResponse.getJobsApiBeanResult()).thenReturn(container);
+        when(jobsResponse.getJobListResult()).thenReturn(container);
 
         final MasterObjectList mob = new MasterObjectList();
         mob.setStatus(JobStatus.IN_PROGRESS);
@@ -305,9 +305,9 @@ public class JobUtils_Test {
         final GetJobSpectraS3Response jobResponse2 = mock(GetJobSpectraS3Response.class);
 
         final UUID realJobId = UUID.randomUUID();
-        final List<JobApiBean> jobs = new ArrayList<>();
+        final List<Job> jobs = new ArrayList<>();
 
-        final JobApiBean job1 = new JobApiBean();
+        final Job job1 = new Job();
         job1.setJobId(UUID.randomUUID());
         job1.setStatus(JobStatus.IN_PROGRESS);
         job1.setBucketName("bucket");
@@ -336,17 +336,17 @@ public class JobUtils_Test {
 
         mob1.setObjects(chunks1);
 
-        final JobApiBean job2 = new JobApiBean();
+        final Job job2 = new Job();
         job2.setJobId(realJobId);
         job2.setStatus(JobStatus.IN_PROGRESS);
         job2.setBucketName("bucket");
         job2.setRequestType(JobRequestType.PUT);
         jobs.add(job2);
 
-        final JobsApiBean container = new JobsApiBean();
+        final JobList container = new JobList();
         container.setJobs(jobs);
 
-        when(jobsResponse.getJobsApiBeanResult()).thenReturn(container);
+        when(jobsResponse.getJobListResult()).thenReturn(container);
 
         final MasterObjectList mob2 = new MasterObjectList();
         mob2.setStatus(JobStatus.IN_PROGRESS);
@@ -412,9 +412,9 @@ public class JobUtils_Test {
         final GetJobSpectraS3Response jobResponse2 = mock(GetJobSpectraS3Response.class);
 
         final UUID realJobId = UUID.randomUUID();
-        final List<JobApiBean> jobs = new ArrayList<>();
+        final List<Job> jobs = new ArrayList<>();
 
-        final JobApiBean job1 = new JobApiBean();
+        final Job job1 = new Job();
         job1.setJobId(UUID.randomUUID());
         job1.setStatus(JobStatus.IN_PROGRESS);
         job1.setBucketName("bucket");
@@ -443,17 +443,17 @@ public class JobUtils_Test {
 
         mob1.setObjects(chunks1);
 
-        final JobApiBean job2 = new JobApiBean();
+        final Job job2 = new Job();
         job2.setJobId(realJobId);
         job2.setStatus(JobStatus.IN_PROGRESS);
         job2.setBucketName("bucket");
         job2.setRequestType(JobRequestType.GET);
         jobs.add(job2);
 
-        final JobsApiBean container = new JobsApiBean();
+        final JobList container = new JobList();
         container.setJobs(jobs);
 
-        when(jobsResponse.getJobsApiBeanResult()).thenReturn(container);
+        when(jobsResponse.getJobListResult()).thenReturn(container);
 
         final MasterObjectList mob2 = new MasterObjectList();
         mob2.setStatus(JobStatus.IN_PROGRESS);
@@ -510,26 +510,26 @@ public class JobUtils_Test {
         final GetJobSpectraS3Response jobResponse = mock(GetJobSpectraS3Response.class);
 
         final UUID realJobId = UUID.randomUUID();
-        final List<JobApiBean> jobs = new ArrayList<>();
+        final List<Job> jobs = new ArrayList<>();
 
-        final JobApiBean job1 = new JobApiBean();
+        final Job job1 = new Job();
         job1.setJobId(UUID.randomUUID());
         job1.setStatus(JobStatus.IN_PROGRESS);
         job1.setBucketName("bucket");
         job1.setRequestType(JobRequestType.GET);
         jobs.add(job1);
 
-        final JobApiBean job2 = new JobApiBean();
+        final Job job2 = new Job();
         job2.setJobId(realJobId);
         job2.setStatus(JobStatus.IN_PROGRESS);
         job2.setBucketName("bucket");
         job2.setRequestType(JobRequestType.PUT);
         jobs.add(job2);
 
-        final JobsApiBean container = new JobsApiBean();
+        final JobList container = new JobList();
         container.setJobs(jobs);
 
-        when(jobsResponse.getJobsApiBeanResult()).thenReturn(container);
+        when(jobsResponse.getJobListResult()).thenReturn(container);
 
         final MasterObjectList mob = new MasterObjectList();
         mob.setStatus(JobStatus.IN_PROGRESS);

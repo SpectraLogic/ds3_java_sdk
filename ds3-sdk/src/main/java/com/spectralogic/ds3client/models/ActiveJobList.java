@@ -19,41 +19,32 @@ package com.spectralogic.ds3client.models;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import java.lang.String;
-import com.spectralogic.ds3client.models.Tape;
+import com.spectralogic.ds3client.models.ActiveJob;
+import java.util.List;
+import java.util.ArrayList;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 
 @JacksonXmlRootElement(namespace = "Data")
-public class TapeFailureApiBean {
+public class ActiveJobList {
 
     // Variables
-    @JsonProperty("Cause")
-    private String cause;
-
-    @JsonProperty("Tape")
-    private Tape tape;
+    @JsonProperty("Job")
+    @JacksonXmlElementWrapper(useWrapping = false)
+    private List<ActiveJob> activeJobs = new ArrayList<>();
 
     // Constructor
-    public TapeFailureApiBean() {
+    public ActiveJobList() {
         //pass
     }
 
     // Getters and Setters
     
-    public String getCause() {
-        return this.cause;
+    public List<ActiveJob> getActiveJobs() {
+        return this.activeJobs;
     }
 
-    public void setCause(final String cause) {
-        this.cause = cause;
-    }
-
-
-    public Tape getTape() {
-        return this.tape;
-    }
-
-    public void setTape(final Tape tape) {
-        this.tape = tape;
+    public void setActiveJobs(final List<ActiveJob> activeJobs) {
+        this.activeJobs = activeJobs;
     }
 
 }

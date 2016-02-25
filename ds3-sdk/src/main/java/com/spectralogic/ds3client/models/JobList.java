@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.ArrayList;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 
-@JacksonXmlRootElement(namespace = "Data")
+@JacksonXmlRootElement(namespace = "Jobs")
 public class JobList {
 
     // Variables

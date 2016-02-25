@@ -57,6 +57,14 @@ task genConfigProperties << {
     }
 }
 
+task zip(type: Zip) {
+  from configurations.runtime.allArtifacts.files
+  from configurations.runtime
+  into (project.name + "-" + project.version)
+}
+
+zip.dependsOn jar
+
 jar {
     from sourceSets.main.allJava
 }
@@ -68,8 +76,8 @@ dependencies {
     compile     'commons-codec:commons-codec:1.10'
     compile     'commons-io:commons-io:2.4'
     compile     'org.codehaus.woodstox:woodstox-core-asl:4.4.1'
-    compile     'com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.6.4'
+    compile     'com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.7.1'
     compile     'com.google.guava:guava:19.0'
-    compile     'com.google.code.findbugs:annotations:3.0.0'
+    compile     'com.google.code.findbugs:annotations:3.0.1'
     testCompile 'org.hamcrest:hamcrest-library:1.3'
 }

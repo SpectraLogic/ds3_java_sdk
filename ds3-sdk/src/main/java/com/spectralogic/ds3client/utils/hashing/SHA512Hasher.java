@@ -7,7 +7,7 @@ public class SHA512Hasher extends DigestHasher{
     @Override
     MessageDigest getDigest() {
         try {
-            return MessageDigest.getInstance("SHA512");
+            return MessageDigest.getInstance("SHA-512");
         } catch (final NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
         }

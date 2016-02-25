@@ -19,64 +19,74 @@ package com.spectralogic.ds3client.models;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import java.util.UUID;
-import com.spectralogic.ds3client.models.JobChunkClientProcessingOrderGuarantee;
-import java.util.Date;
 import java.lang.String;
+import com.spectralogic.ds3client.models.JobChunkClientProcessingOrderGuarantee;
+import java.util.UUID;
+import com.spectralogic.ds3client.models.Ds3Node;
+import java.util.List;
+import java.util.ArrayList;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.spectralogic.ds3client.models.Priority;
 import com.spectralogic.ds3client.models.JobRequestType;
+import java.util.Date;
+import com.spectralogic.ds3client.models.JobStatus;
+import com.spectralogic.ds3client.models.WriteOptimization;
 
 @JacksonXmlRootElement(namespace = "Data")
 public class Job {
 
     // Variables
-    @JsonProperty("Aggregating")
+    @JacksonXmlProperty(isAttribute = true, localName = "Aggregating")
     private boolean aggregating;
 
-    @JsonProperty("BucketId")
-    private UUID bucketId;
+    @JacksonXmlProperty(isAttribute = true, localName = "BucketName")
+    private String bucketName;
 
-    @JsonProperty("CachedSizeInBytes")
+    @JacksonXmlProperty(isAttribute = true, localName = "CachedSizeInBytes")
     private long cachedSizeInBytes;
 
-    @JsonProperty("ChunkClientProcessingOrderGuarantee")
+    @JacksonXmlProperty(isAttribute = true, localName = "ChunkClientProcessingOrderGuarantee")
     private JobChunkClientProcessingOrderGuarantee chunkClientProcessingOrderGuarantee;
 
-    @JsonProperty("CompletedSizeInBytes")
+    @JacksonXmlProperty(isAttribute = true, localName = "CompletedSizeInBytes")
     private long completedSizeInBytes;
 
-    @JsonProperty("CreatedAt")
-    private Date createdAt;
+    @JacksonXmlProperty(isAttribute = true, localName = "JobId")
+    private UUID jobId;
 
-    @JsonProperty("ErrorMessage")
-    private String errorMessage;
-
-    @JsonProperty("Id")
-    private UUID id;
-
-    @JsonProperty("Naked")
+    @JacksonXmlProperty(isAttribute = true, localName = "Naked")
     private boolean naked;
 
-    @JsonProperty("Name")
+    @JacksonXmlProperty(isAttribute = true, localName = "Name")
     private String name;
 
-    @JsonProperty("OriginalSizeInBytes")
+    @JsonProperty("Nodes")
+    @JacksonXmlElementWrapper(useWrapping = true)
+    private List<Ds3Node> nodes = new ArrayList<>();
+
+    @JacksonXmlProperty(isAttribute = true, localName = "OriginalSizeInBytes")
     private long originalSizeInBytes;
 
-    @JsonProperty("Priority")
+    @JacksonXmlProperty(isAttribute = true, localName = "Priority")
     private Priority priority;
 
-    @JsonProperty("Rechunked")
-    private Date rechunked;
-
-    @JsonProperty("RequestType")
+    @JacksonXmlProperty(isAttribute = true, localName = "RequestType")
     private JobRequestType requestType;
 
-    @JsonProperty("Truncated")
-    private boolean truncated;
+    @JacksonXmlProperty(isAttribute = true, localName = "StartDate")
+    private Date startDate;
 
-    @JsonProperty("UserId")
+    @JacksonXmlProperty(isAttribute = true, localName = "Status")
+    private JobStatus status;
+
+    @JacksonXmlProperty(isAttribute = true, localName = "UserId")
     private UUID userId;
+
+    @JacksonXmlProperty(isAttribute = true, localName = "UserName")
+    private String userName;
+
+    @JacksonXmlProperty(isAttribute = true, localName = "WriteOptimization")
+    private WriteOptimization writeOptimization;
 
     // Constructor
     public Job() {
@@ -94,12 +104,12 @@ public class Job {
     }
 
 
-    public UUID getBucketId() {
-        return this.bucketId;
+    public String getBucketName() {
+        return this.bucketName;
     }
 
-    public void setBucketId(final UUID bucketId) {
-        this.bucketId = bucketId;
+    public void setBucketName(final String bucketName) {
+        this.bucketName = bucketName;
     }
 
 
@@ -130,30 +140,12 @@ public class Job {
     }
 
 
-    public Date getCreatedAt() {
-        return this.createdAt;
+    public UUID getJobId() {
+        return this.jobId;
     }
 
-    public void setCreatedAt(final Date createdAt) {
-        this.createdAt = createdAt;
-    }
-
-
-    public String getErrorMessage() {
-        return this.errorMessage;
-    }
-
-    public void setErrorMessage(final String errorMessage) {
-        this.errorMessage = errorMessage;
-    }
-
-
-    public UUID getId() {
-        return this.id;
-    }
-
-    public void setId(final UUID id) {
-        this.id = id;
+    public void setJobId(final UUID jobId) {
+        this.jobId = jobId;
     }
 
 
@@ -175,6 +167,15 @@ public class Job {
     }
 
 
+    public List<Ds3Node> getNodes() {
+        return this.nodes;
+    }
+
+    public void setNodes(final List<Ds3Node> nodes) {
+        this.nodes = nodes;
+    }
+
+
     public long getOriginalSizeInBytes() {
         return this.originalSizeInBytes;
     }
@@ -193,15 +194,6 @@ public class Job {
     }
 
 
-    public Date getRechunked() {
-        return this.rechunked;
-    }
-
-    public void setRechunked(final Date rechunked) {
-        this.rechunked = rechunked;
-    }
-
-
     public JobRequestType getRequestType() {
         return this.requestType;
     }
@@ -211,12 +203,21 @@ public class Job {
     }
 
 
-    public boolean getTruncated() {
-        return this.truncated;
+    public Date getStartDate() {
+        return this.startDate;
     }
 
-    public void setTruncated(final boolean truncated) {
-        this.truncated = truncated;
+    public void setStartDate(final Date startDate) {
+        this.startDate = startDate;
+    }
+
+
+    public JobStatus getStatus() {
+        return this.status;
+    }
+
+    public void setStatus(final JobStatus status) {
+        this.status = status;
     }
 
 
@@ -226,6 +227,24 @@ public class Job {
 
     public void setUserId(final UUID userId) {
         this.userId = userId;
+    }
+
+
+    public String getUserName() {
+        return this.userName;
+    }
+
+    public void setUserName(final String userName) {
+        this.userName = userName;
+    }
+
+
+    public WriteOptimization getWriteOptimization() {
+        return this.writeOptimization;
+    }
+
+    public void setWriteOptimization(final WriteOptimization writeOptimization) {
+        this.writeOptimization = writeOptimization;
     }
 
 }

@@ -29,4 +29,23 @@ public class ModelParsing_Test {
         assertThat(result.getObjects().get(0).getKey(), is("movies/movie1.mov"));
         assertThat(result.getObjects().get(1).getETag(), is(nullValue()));
     }
+
+    @Test
+    public void listBucketResult_CommonPrefixes_Test() throws IOException {
+        final String input = "<ListBucketResult>" +
+                "<CommonPrefixes><Prefix>movies/</Prefix></CommonPrefixes>" +
+                "<CommonPrefixes><Prefix>scores/</Prefix></CommonPrefixes>" +
+                "<Contents><ETag/><Key>music.mp3</Key><LastModified/><Owner><DisplayName>jason</DisplayName>" +
+                "<ID>04531ac9-6639-4bee-8c09-9c8f0fbdbdcb</ID></Owner><Size>0</Size><StorageClass/></Contents>" +
+                "<Contents><ETag/><Key>song.mp3</Key><LastModified/><Owner><DisplayName>jason</DisplayName>" +
+                "<ID>04531ac9-6639-4bee-8c09-9c8f0fbdbdcb</ID></Owner><Size>0</Size><StorageClass/></Contents>" +
+                "<CreationDate>2016-01-21T01:14:32.000Z</CreationDate><Delimiter>/</Delimiter>" +
+                "<IsTruncated>false</IsTruncated><Marker/><MaxKeys>1000</MaxKeys><Name>bucket1</Name><NextMarker/>" +
+                "<Prefix/></ListBucketResult>";
+
+        final ListBucketResult result = XmlOutput.fromXml(input, ListBucketResult.class);
+        assertThat(result.getCommonPrefixes().size(), is(2));
+        assertThat(result.getCommonPrefixes().get(0).getPrefix(), is("movies/"));
+        assertThat(result.getCommonPrefixes().get(1).getPrefix(), is("scores/"));
+    }
 }

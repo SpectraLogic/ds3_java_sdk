@@ -366,7 +366,7 @@ public class Ds3ClientHelpers_Test {
             contents.setETag(eTag);
             contents.setKey(key);
             contents.setLastModified(DATE_FORMAT.parse(lastModified));
-            final UserApiBean owner = new UserApiBean();
+            final User owner = new User();
             owner.setDisplayName("person@spectralogic.com");
             owner.setId(UUID.randomUUID());
             contents.setOwner(owner);
