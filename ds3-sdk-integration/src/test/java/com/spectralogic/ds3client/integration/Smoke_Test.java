@@ -111,34 +111,6 @@ public class Smoke_Test {
     }
 
     @Test
-    public void modifyJob() throws IOException, SignatureException, XmlProcessingException, URISyntaxException {
-        final String bucketName = "test_modify_job";
-        try {
-            client.putBucket(new PutBucketRequest(bucketName));
-
-            final List<Ds3Object> objects = new ArrayList<>();
-            final Ds3Object obj = new Ds3Object("test", 2);
-            objects.add(obj);
-
-            final WriteJobOptions jobOptions = WriteJobOptions.create().withPriority(Priority.LOW);
-
-            final Ds3ClientHelpers.Job job = com.spectralogic.ds3client.helpers.Ds3ClientHelpers
-                    .wrap(client).startWriteJob(bucketName, objects, jobOptions);
-
-            client.modifyJobSpectraS3(new ModifyJobSpectraS3Request(job.getJobId())
-                    .withPriority(Priority.HIGH));
-
-            final GetJobSpectraS3Response response = client
-                    .getJobSpectraS3(new GetJobSpectraS3Request(job.getJobId()));
-
-            assertThat(response.getMasterObjectListResult().getPriority(), is(Priority.HIGH));
-
-        } finally {
-            deleteAllContents(client, bucketName);
-        }
-    }
-
-    @Test
     public void getObjects() throws IOException, SignatureException, URISyntaxException, XmlProcessingException {
         final String bucketName = "test_get_objs";
         try {

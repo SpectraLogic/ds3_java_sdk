@@ -20,15 +20,12 @@ import com.spectralogic.ds3client.Ds3Client;
 import com.spectralogic.ds3client.commands.*;
 import com.spectralogic.ds3client.commands.spectrads3.*;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers;
-import com.spectralogic.ds3client.helpers.FileObjectPutter;
-import com.spectralogic.ds3client.helpers.JobRecoveryException;
 import com.spectralogic.ds3client.helpers.options.WriteJobOptions;
 import com.spectralogic.ds3client.models.*;
 import com.spectralogic.ds3client.models.bulk.Ds3Object;
-import com.spectralogic.ds3client.networking.FailedRequestException;
 import com.spectralogic.ds3client.serializer.XmlProcessingException;
 import com.spectralogic.ds3client.utils.ResourceUtils;
-import javafx.util.converter.DateTimeStringConverter;
+import junit.framework.Assert;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -36,9 +33,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URISyntaxException;
-import java.nio.channels.FileChannel;
 import java.nio.channels.SeekableByteChannel;
 import java.nio.file.*;
 import java.security.SignatureException;
@@ -53,9 +48,9 @@ import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 import static org.junit.Assume.assumeThat;
 
-public class Job_management {
+public class JobManagement_Test {
 
-    private static final Logger LOG = LoggerFactory.getLogger(Job_management.class);
+    private static final Logger LOG = LoggerFactory.getLogger(JobManagement_Test.class);
 
     private static Ds3Client client;
 
@@ -69,7 +64,7 @@ public class Job_management {
         client.close();
     }
 
-    @Test //also in smoke test--
+    @Test
     public void modifyJobPriority() throws IOException, SignatureException, XmlProcessingException {
         final String bucketName = "test_modify_job_priority";
         try {
@@ -204,7 +199,7 @@ public class Job_management {
             long cachedSize =0;
             while (cachedSize == 0) {
                 Thread.sleep(500);
-                MasterObjectList mol = client.getJobSpectraS3(new GetJobSpectraS3Request(jobId)).getMasterObjectListResult();
+                final MasterObjectList mol = client.getJobSpectraS3(new GetJobSpectraS3Request(jobId)).getMasterObjectListResult();
                 cachedSize = mol.getCachedSizeInBytes();
                 assertTrue((System.nanoTime() - startTime)/1000000000 < testTimeOutSeconds );
             }
@@ -213,7 +208,7 @@ public class Job_management {
             failedResponse.checkStatusCode(400);
 
             final GetJobSpectraS3Response truncatedJob = client.getJobSpectraS3(new GetJobSpectraS3Request(jobId));
-            assertEquals(truncatedJob.getMasterObjectListResult().getOriginalSizeInBytes(),Files.size(objPath1));
+            assertEquals(truncatedJob.getMasterObjectListResult().getOriginalSizeInBytes(), Files.size(objPath1));
 
         } finally {
             deleteAllContents(client, bucketName);
@@ -298,7 +293,7 @@ public class Job_management {
 
             assertTrue(client.getActiveJobsSpectraS3(new GetActiveJobsSpectraS3Request())
                     .getActiveJobListResult().getActiveJobs().isEmpty());
-            } finally {
+        } finally {
             deleteAllContents(client, bucketName);
         }
     }
@@ -325,15 +320,11 @@ public class Job_management {
                 final GetCanceledJobsSpectraS3Response getCanceledJobsResponse = client
                         .getCanceledJobsSpectraS3(new GetCanceledJobsSpectraS3Request());
 
+                List<UUID> canceledJobsUUIDs = new ArrayList<>();
                 for (CanceledJob job : getCanceledJobsResponse.getCanceledJobListResult().getCanceledJobs()) {
-                    LOG.error("**********jobId: "+job.getId()+"\tjobOneID: "+jobOneId);
-                    if (job.getId().equals(jobOneId)){
-
-                        return;
-                    }
+                    canceledJobsUUIDs.add(job.getId());
                 }
-
-                assertTrue(false);
+                assertTrue(canceledJobsUUIDs.contains(jobOneId));
 
             } finally {
                 deleteAllContents(client, bucketName);
