@@ -98,9 +98,7 @@ public class JobManagement_Test {
         try {
             client.putBucket(new PutBucketRequest(bucketName));
 
-            final List<Ds3Object> objects = new ArrayList<>();
-            final Ds3Object obj = new Ds3Object("test", 2);
-            objects.add(obj);
+            final List<Ds3Object> objects = Lists.newArrayList(new Ds3Object("test",2));
 
             final Ds3ClientHelpers.Job job =
                     wrap(client).startWriteJob(bucketName, objects);
@@ -235,13 +233,13 @@ public class JobManagement_Test {
             client.putObject(new PutObjectRequest(bucketName, book1, book1Channel, jobId, 0, Files.size(objPath1)));
 
             //make sure black pearl has updated it's job to show 1 object in cache
-            long startTime = System.nanoTime();
+            final long startTimePutObject = System.nanoTime();
             long cachedSize =0;
             while (cachedSize == 0) {
                 Thread.sleep(500);
                 final MasterObjectList mol = client.getJobSpectraS3(new GetJobSpectraS3Request(jobId)).getMasterObjectListResult();
                 cachedSize = mol.getCachedSizeInBytes();
-                assertTrue((System.nanoTime() - startTime)/1000000000 < testTimeOutSeconds );
+                assertTrue((System.nanoTime() - startTimePutObject)/1000000000 < testTimeOutSeconds );
             }
 
             final CancelJobSpectraS3Response responseWithForce = client
@@ -249,7 +247,7 @@ public class JobManagement_Test {
             assertEquals(responseWithForce.getStatusCode(), 204);
 
             //Allow for lag time before canceled job appears~1.5 seconds in unloaded system
-            startTime = System.nanoTime();
+            final long startTimeCanceledUpdate = System.nanoTime();
             boolean isACanceledJob = false;
             while (!isACanceledJob) {
                 Thread.sleep(500);
@@ -259,7 +257,7 @@ public class JobManagement_Test {
                         isACanceledJob = true;
                     }
                 }
-                assertTrue((System.nanoTime() - startTime)/1000000000 < testTimeOutSeconds );
+                assertTrue((System.nanoTime() - startTimeCanceledUpdate)/1000000000 < testTimeOutSeconds );
             }
 
         } finally {
