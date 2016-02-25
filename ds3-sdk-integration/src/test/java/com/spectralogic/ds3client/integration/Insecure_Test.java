@@ -18,12 +18,16 @@ package com.spectralogic.ds3client.integration;
 import com.spectralogic.ds3client.Ds3Client;
 import com.spectralogic.ds3client.commands.GetServiceRequest;
 import com.spectralogic.ds3client.commands.GetServiceResponse;
+import com.spectralogic.ds3client.integration.test.helpers.TempStorageIds;
+import com.spectralogic.ds3client.integration.test.helpers.TempStorageUtil;
+import com.spectralogic.ds3client.models.ChecksumType;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.IOException;
 import java.security.SignatureException;
+import java.util.UUID;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
@@ -37,14 +41,19 @@ import static org.junit.Assert.assertThat;
 public class Insecure_Test {
 
     private static Ds3Client client;
+    private static final String TEST_ENV_NAME = "insecure_test";
+    private static TempStorageIds envStorageIds;
 
     @BeforeClass
-    public static void startup() {
-        client = Util.insecureFromEnv();
+    public static void startup() throws IOException, SignatureException {
+        client = Util.fromEnv();
+        final UUID dataPolicyId = TempStorageUtil.setupDataPolicy(TEST_ENV_NAME, true, ChecksumType.Type.MD5, client);
+        envStorageIds = TempStorageUtil.setup(TEST_ENV_NAME, dataPolicyId, client);
     }
 
     @AfterClass
-    public static void teardown() throws IOException {
+    public static void teardown() throws IOException, SignatureException {
+        TempStorageUtil.teardown(TEST_ENV_NAME, envStorageIds, client);
         client.close();
     }
 

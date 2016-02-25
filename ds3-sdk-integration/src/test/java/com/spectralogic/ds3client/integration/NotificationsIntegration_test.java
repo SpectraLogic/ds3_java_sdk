@@ -19,6 +19,9 @@ import com.spectralogic.ds3client.Ds3Client;
 import com.spectralogic.ds3client.commands.PutBucketRequest;
 import com.spectralogic.ds3client.commands.spectrads3.notifications.*;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers;
+import com.spectralogic.ds3client.integration.test.helpers.TempStorageIds;
+import com.spectralogic.ds3client.integration.test.helpers.TempStorageUtil;
+import com.spectralogic.ds3client.models.ChecksumType;
 import com.spectralogic.ds3client.serializer.XmlProcessingException;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -36,14 +39,19 @@ import static org.junit.Assert.assertThat;
 public class NotificationsIntegration_test {
 
     private static Ds3Client client;
+    private static final String TEST_ENV_NAME = "notifications_integration_test";
+    private static TempStorageIds envStorageIds;
 
     @BeforeClass
-    public static void startup() {
+    public static void startup() throws IOException, SignatureException {
         client = Util.fromEnv();
+        final UUID dataPolicyId = TempStorageUtil.setupDataPolicy(TEST_ENV_NAME, true, ChecksumType.Type.MD5, client);
+        envStorageIds = TempStorageUtil.setup(TEST_ENV_NAME, dataPolicyId, client);
     }
 
     @AfterClass
-    public static void teardown() throws IOException {
+    public static void teardown() throws IOException, SignatureException {
+        TempStorageUtil.teardown(TEST_ENV_NAME, envStorageIds, client);
         client.close();
     }
 

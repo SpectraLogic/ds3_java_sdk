@@ -7,6 +7,9 @@ import com.spectralogic.ds3client.commands.spectrads3.CancelJobSpectraS3Request;
 import com.spectralogic.ds3client.commands.spectrads3.CancelJobSpectraS3Response;
 import com.spectralogic.ds3client.commands.spectrads3.GetJobChunksReadyForClientProcessingSpectraS3Request;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers;
+import com.spectralogic.ds3client.integration.test.helpers.TempStorageIds;
+import com.spectralogic.ds3client.integration.test.helpers.TempStorageUtil;
+import com.spectralogic.ds3client.models.ChecksumType;
 import com.spectralogic.ds3client.models.Contents;
 import com.spectralogic.ds3client.models.bulk.Ds3Object;
 import com.spectralogic.ds3client.networking.FailedRequestException;
@@ -22,6 +25,7 @@ import java.nio.channels.SeekableByteChannel;
 import java.security.SignatureException;
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
@@ -32,14 +36,19 @@ public class Regression_Test {
     private static final Logger LOG = LoggerFactory.getLogger(Regression_Test.class);
 
     private static Ds3Client client;
+    private static final String TEST_ENV_NAME = "regression_test";
+    private static TempStorageIds envStorageIds;
 
     @BeforeClass
-    public static void startup() {
+    public static void startup() throws IOException, SignatureException {
         client = Util.fromEnv();
+        final UUID dataPolicyId = TempStorageUtil.setupDataPolicy(TEST_ENV_NAME, true, ChecksumType.Type.MD5, client);
+        envStorageIds = TempStorageUtil.setup(TEST_ENV_NAME, dataPolicyId, client);
     }
 
     @AfterClass
-    public static void teardown() throws IOException {
+    public static void teardown() throws IOException, SignatureException {
+        TempStorageUtil.teardown(TEST_ENV_NAME, envStorageIds, client);
         client.close();
     }
 

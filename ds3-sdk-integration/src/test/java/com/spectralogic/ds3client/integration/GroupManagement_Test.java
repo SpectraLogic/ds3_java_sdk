@@ -2,7 +2,10 @@ package com.spectralogic.ds3client.integration;
 
 import com.spectralogic.ds3client.Ds3Client;
 import com.spectralogic.ds3client.commands.spectrads3.*;
+import com.spectralogic.ds3client.integration.test.helpers.TempStorageIds;
+import com.spectralogic.ds3client.integration.test.helpers.TempStorageUtil;
 import com.spectralogic.ds3client.models.BucketAclPermission;
+import com.spectralogic.ds3client.models.ChecksumType;
 import com.spectralogic.ds3client.models.VersioningLevel;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -13,7 +16,6 @@ import java.security.SignatureException;
 import java.util.UUID;
 
 import static com.spectralogic.ds3client.integration.Util.deleteAllContents;
-import static com.spectralogic.ds3client.integration.Util.fromEnv;
 import static com.spectralogic.ds3client.integration.test.helpers.ABMTestHelper.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -21,14 +23,19 @@ import static org.junit.Assert.assertThat;
 public class GroupManagement_Test {
 
     private static Ds3Client client;
+    private static final String TEST_ENV_NAME = "group_management_test";
+    private static TempStorageIds envStorageIds;
 
     @BeforeClass
-    public static void startup() {
-        client = fromEnv();
+    public static void startup() throws IOException, SignatureException {
+        client = Util.fromEnv();
+        final UUID dataPolicyId = TempStorageUtil.setupDataPolicy(TEST_ENV_NAME, true, ChecksumType.Type.MD5, client);
+        envStorageIds = TempStorageUtil.setup(TEST_ENV_NAME, dataPolicyId, client);
     }
 
     @AfterClass
-    public static void teardown() throws IOException {
+    public static void teardown() throws IOException, SignatureException {
+        TempStorageUtil.teardown(TEST_ENV_NAME, envStorageIds, client);
         client.close();
     }
 
