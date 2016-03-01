@@ -27,8 +27,7 @@ import com.spectralogic.ds3client.models.*;
 import com.spectralogic.ds3client.models.bulk.Ds3Object;
 import com.spectralogic.ds3client.serializer.XmlProcessingException;
 import com.spectralogic.ds3client.utils.ResourceUtils;
-import org.hamcrest.CoreMatchers;
-import org.hamcrest.MatcherAssert;
+import static org.hamcrest.Matchers.*;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -45,8 +44,6 @@ import java.util.UUID;
 
 import static com.spectralogic.ds3client.helpers.Ds3ClientHelpers.*;
 import static com.spectralogic.ds3client.integration.Util.*;
-import static org.hamcrest.CoreMatchers.*;
-import org.hamcrest.Matcher;
 import static org.junit.Assert.*;
 
 public class PutJobManagement_Test {
@@ -67,9 +64,9 @@ public class PutJobManagement_Test {
         TempStorageUtil.teardown(TEST_ENV_NAME, envStorageIds, client);
         client.close();
     }
-    private void checkTimeOut(long startTime, int testTimeOutSeconds){
+    private void checkTimeOut(final long startTime, final int testTimeOutSeconds){
         assertTrue((System.nanoTime() - startTime)/1000000000 <= testTimeOutSeconds);
-        //assertThat((System.nanoTime() - startTime)/1000000000, is(lessThan(testTimeOutSeconds));
+        assertThat((System.nanoTime() - startTime)/1000000000, lessThan((long) testTimeOutSeconds));
     }
 
     @Test
@@ -312,7 +309,7 @@ public class PutJobManagement_Test {
                 final GetCanceledJobsSpectraS3Response getCanceledJobsResponse = client
                         .getCanceledJobsSpectraS3(new GetCanceledJobsSpectraS3Request());
 
-                List<UUID> canceledJobsUUIDs = new ArrayList<>();
+                final List<UUID> canceledJobsUUIDs = new ArrayList<>();
                 for (final CanceledJob job : getCanceledJobsResponse.getCanceledJobListResult().getCanceledJobs()) {
                     canceledJobsUUIDs.add(job.getId());
                 }
