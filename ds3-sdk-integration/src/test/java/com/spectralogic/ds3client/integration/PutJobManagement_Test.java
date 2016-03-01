@@ -27,11 +27,11 @@ import com.spectralogic.ds3client.models.*;
 import com.spectralogic.ds3client.models.bulk.Ds3Object;
 import com.spectralogic.ds3client.serializer.XmlProcessingException;
 import com.spectralogic.ds3client.utils.ResourceUtils;
+import org.hamcrest.CoreMatchers;
+import org.hamcrest.MatcherAssert;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -46,12 +46,10 @@ import java.util.UUID;
 import static com.spectralogic.ds3client.helpers.Ds3ClientHelpers.*;
 import static com.spectralogic.ds3client.integration.Util.*;
 import static org.hamcrest.CoreMatchers.*;
+import org.hamcrest.Matcher;
 import static org.junit.Assert.*;
-import static org.junit.Assume.assumeThat;
 
 public class PutJobManagement_Test {
-
-    private static final Logger LOG = LoggerFactory.getLogger(PutJobManagement_Test.class);
 
     private static Ds3Client client;
     private static final String TEST_ENV_NAME = "PutJobManagement_Test";
@@ -69,16 +67,18 @@ public class PutJobManagement_Test {
         TempStorageUtil.teardown(TEST_ENV_NAME, envStorageIds, client);
         client.close();
     }
+    private void checkTimeOut(long startTime, int testTimeOutSeconds){
+        assertTrue((System.nanoTime() - startTime)/1000000000 <= testTimeOutSeconds);
+        //assertThat((System.nanoTime() - startTime)/1000000000, is(lessThan(testTimeOutSeconds));
+    }
 
     @Test
     public void modifyJobPriority() throws IOException, SignatureException, XmlProcessingException {
         final String bucketName = "test_modify_job_priority";
         try {
-            client.putBucket(new PutBucketRequest(bucketName));
-
-            final List<Ds3Object> objects = new ArrayList<>();
-            final Ds3Object obj = new Ds3Object("test", 2);
-            objects.add(obj);
+            Ds3ClientHelpers.wrap(client).ensureBucketExists(bucketName);
+            
+            final List<Ds3Object> objects = Lists.newArrayList( new Ds3Object("test", 2));
 
             final WriteJobOptions jobOptions = WriteJobOptions.create().withPriority(Priority.LOW);
 
@@ -102,8 +102,8 @@ public class PutJobManagement_Test {
     public void modifyJobName() throws IOException, SignatureException, XmlProcessingException {
         final String bucketName = "test_modify_job_name";
         try {
-            client.putBucket(new PutBucketRequest(bucketName));
-
+            Ds3ClientHelpers.wrap(client).ensureBucketExists(bucketName);
+            
             final List<Ds3Object> objects = Lists.newArrayList(new Ds3Object("test",2));
 
             final Ds3ClientHelpers.Job job =
@@ -126,11 +126,9 @@ public class PutJobManagement_Test {
     public void modifyJobCreationDate() throws IOException, SignatureException, XmlProcessingException {
         final String bucketName = "test_modify_job_creation_date";
         try {
-            client.putBucket(new PutBucketRequest(bucketName));
+            Ds3ClientHelpers.wrap(client).ensureBucketExists(bucketName);
 
-            final List<Ds3Object> objects = new ArrayList<>();
-            final Ds3Object obj = new Ds3Object("test", 2);
-            objects.add(obj);
+            final List<Ds3Object> objects = Lists.newArrayList(new Ds3Object("test", 2));
 
             final Ds3ClientHelpers.Job job =
                     wrap(client).startWriteJob(bucketName, objects);
@@ -157,18 +155,16 @@ public class PutJobManagement_Test {
     public void cancelJob() throws IOException, SignatureException, XmlProcessingException {
         final String bucketName = "test_cancel_job";
         try {
-            client.putBucket(new PutBucketRequest(bucketName));
+            Ds3ClientHelpers.wrap(client).ensureBucketExists(bucketName);
 
-            final List<Ds3Object> objectsOne = new ArrayList<>();
-            final Ds3Object obj = new Ds3Object("testOne", 2);
-            objectsOne.add(obj);
+            final List<Ds3Object> objectsOne = Lists.newArrayList(new Ds3Object("testOne", 2));
 
             final Ds3ClientHelpers.Job job =
                     wrap(client).startWriteJob(bucketName, objectsOne);
 
             final CancelJobSpectraS3Response response = client
                     .cancelJobSpectraS3(new CancelJobSpectraS3Request(job.getJobId()));
-            response.checkStatusCode(204);
+            assertEquals(response.getStatusCode(),204);
 
             assertTrue(client.getActiveJobsSpectraS3(new GetActiveJobsSpectraS3Request())
                     .getActiveJobListResult().getActiveJobs().isEmpty());
@@ -187,10 +183,9 @@ public class PutJobManagement_Test {
         final Path objPath1 = ResourceUtils.loadFileResource(RESOURCE_BASE_NAME + book1);
         final Ds3Object obj1 = new Ds3Object(book1, Files.size(objPath1));
         final Ds3Object obj2 = new Ds3Object("place_holder", 5000000);
-        final Path dirPath = FileSystems.getDefault().getPath("output");
 
         try {
-            client.putBucket(new PutBucketRequest(bucketName));
+            Ds3ClientHelpers.wrap(client).ensureBucketExists(bucketName);
             Ds3ClientHelpers.wrap(client).ensureBucketExists(bucketName);
 
             final Ds3ClientHelpers.Job putJob = Ds3ClientHelpers.wrap(client).startWriteJob(bucketName, Lists.newArrayList(obj1, obj2));
@@ -200,16 +195,16 @@ public class PutJobManagement_Test {
 
             //make sure black pearl has updated it's job to show 1 object in cache
             final long startTime = System.nanoTime();
-            long cachedSize =0;
+            long cachedSize = 0;
             while (cachedSize == 0) {
                 Thread.sleep(500);
                 final MasterObjectList mol = client.getJobSpectraS3(new GetJobSpectraS3Request(jobId)).getMasterObjectListResult();
                 cachedSize = mol.getCachedSizeInBytes();
-                assertTrue((System.nanoTime() - startTime)/1000000000 < testTimeOutSeconds );
+                checkTimeOut(startTime, testTimeOutSeconds);
             }
 
             final CancelJobSpectraS3Response failedResponse = client.cancelJobSpectraS3(new CancelJobSpectraS3Request(jobId));
-            failedResponse.checkStatusCode(400);
+            assertThat(failedResponse.getStatusCode(),is(400));
 
             final GetJobSpectraS3Response truncatedJob = client.getJobSpectraS3(new GetJobSpectraS3Request(jobId));
             assertEquals(truncatedJob.getMasterObjectListResult().getOriginalSizeInBytes(), Files.size(objPath1));
@@ -230,7 +225,7 @@ public class PutJobManagement_Test {
         final Ds3Object obj2 = new Ds3Object("place_holder", 5000000);
 
         try {
-            client.putBucket(new PutBucketRequest(bucketName));
+            Ds3ClientHelpers.wrap(client).ensureBucketExists(bucketName);
             Ds3ClientHelpers.wrap(client).ensureBucketExists(bucketName);
 
             final Ds3ClientHelpers.Job putJob = Ds3ClientHelpers.wrap(client).startWriteJob(bucketName, Lists.newArrayList(obj1, obj2));
@@ -240,12 +235,12 @@ public class PutJobManagement_Test {
 
             //make sure black pearl has updated it's job to show 1 object in cache
             final long startTimePutObject = System.nanoTime();
-            long cachedSize =0;
+            long cachedSize = 0;
             while (cachedSize == 0) {
                 Thread.sleep(500);
                 final MasterObjectList mol = client.getJobSpectraS3(new GetJobSpectraS3Request(jobId)).getMasterObjectListResult();
                 cachedSize = mol.getCachedSizeInBytes();
-                assertTrue((System.nanoTime() - startTimePutObject)/1000000000 < testTimeOutSeconds );
+               checkTimeOut(startTimePutObject, testTimeOutSeconds);
             }
 
             final CancelJobSpectraS3Response responseWithForce = client
@@ -254,16 +249,16 @@ public class PutJobManagement_Test {
 
             //Allow for lag time before canceled job appears~1.5 seconds in unloaded system
             final long startTimeCanceledUpdate = System.nanoTime();
-            boolean isACanceledJob = false;
-            while (!isACanceledJob) {
+            boolean jobCanceled = false;
+            while (!jobCanceled) {
                 Thread.sleep(500);
-                GetCanceledJobsSpectraS3Response canceledJobs = client.getCanceledJobsSpectraS3(new GetCanceledJobsSpectraS3Request());
-                for (CanceledJob canceledJob : canceledJobs.getCanceledJobListResult().getCanceledJobs()){
+                final GetCanceledJobsSpectraS3Response canceledJobs = client.getCanceledJobsSpectraS3(new GetCanceledJobsSpectraS3Request());
+                for (final CanceledJob canceledJob : canceledJobs.getCanceledJobListResult().getCanceledJobs()){
                     if (canceledJob.getId().equals(jobId)){
-                        isACanceledJob = true;
+                        jobCanceled = true;
                     }
                 }
-                assertTrue((System.nanoTime() - startTimeCanceledUpdate)/1000000000 < testTimeOutSeconds );
+                checkTimeOut(startTimeCanceledUpdate, testTimeOutSeconds);
             }
 
         } finally {
@@ -275,21 +270,15 @@ public class PutJobManagement_Test {
     public void cancelAllJobs() throws IOException, SignatureException, XmlProcessingException {
         final String bucketName = "test_cancel_all_jobs";
         try {
-            client.putBucket(new PutBucketRequest(bucketName));
+            Ds3ClientHelpers.wrap(client).ensureBucketExists(bucketName);
 
-            final List<Ds3Object> objectsOne = new ArrayList<>();
-            final Ds3Object obj = new Ds3Object("testOne", 2);
-            objectsOne.add(obj);
+            final List<Ds3Object> objectsOne = Lists.newArrayList(new Ds3Object("testOne", 2));
 
-            final Ds3ClientHelpers.Job jobOne =
-                    wrap(client).startWriteJob(bucketName, objectsOne);
+            wrap(client).startWriteJob(bucketName, objectsOne);
 
-            final List<Ds3Object> objectsTwo = new ArrayList<>();
-            final Ds3Object objTwo = new Ds3Object("testTwo", 2);
-            objectsTwo.add(objTwo);
+            final List<Ds3Object> objectsTwo = Lists.newArrayList(new Ds3Object("testTwo", 2));
 
-            final Ds3ClientHelpers.Job jobTwo =
-                    wrap(client).startWriteJob(bucketName, objectsTwo);
+            wrap(client).startWriteJob(bucketName, objectsTwo);
 
             final CancelAllJobsSpectraS3Response response = client
                     .cancelAllJobsSpectraS3(new CancelAllJobsSpectraS3Request());
@@ -309,7 +298,7 @@ public class PutJobManagement_Test {
         public void getCanceledJobs() throws IOException, SignatureException, XmlProcessingException {
             final String bucketName = "test_get_canceled_jobs";
             try {
-                client.putBucket(new PutBucketRequest(bucketName));
+                Ds3ClientHelpers.wrap(client).ensureBucketExists(bucketName);
 
                 final List<Ds3Object> objectsOne = new ArrayList<>();
                 final Ds3Object obj = new Ds3Object("testOne", 2);
@@ -318,14 +307,13 @@ public class PutJobManagement_Test {
                 final Ds3ClientHelpers.Job jobOne =
                         wrap(client).startWriteJob(bucketName, objectsOne);
                 final UUID jobOneId = jobOne.getJobId();
-                final CancelJobSpectraS3Response cancelResponse = client
-                        .cancelJobSpectraS3(new CancelJobSpectraS3Request(jobOneId));
+                client.cancelJobSpectraS3(new CancelJobSpectraS3Request(jobOneId));
 
                 final GetCanceledJobsSpectraS3Response getCanceledJobsResponse = client
                         .getCanceledJobsSpectraS3(new GetCanceledJobsSpectraS3Request());
 
                 List<UUID> canceledJobsUUIDs = new ArrayList<>();
-                for (CanceledJob job : getCanceledJobsResponse.getCanceledJobListResult().getCanceledJobs()) {
+                for (final CanceledJob job : getCanceledJobsResponse.getCanceledJobListResult().getCanceledJobs()) {
                     canceledJobsUUIDs.add(job.getId());
                 }
                 assertTrue(canceledJobsUUIDs.contains(jobOneId));

@@ -16,4 +16,6 @@
 dependencies {
     compile 'commons-codec:commons-codec:1.10'
     compile 'junit:junit:4.12'
+    testCompile 'org.hamcrest:hamcrest-library:1.3'
 }
+
