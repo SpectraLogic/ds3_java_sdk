@@ -183,7 +183,6 @@ public class PutJobManagement_Test {
 
         try {
             Ds3ClientHelpers.wrap(client).ensureBucketExists(bucketName);
-            Ds3ClientHelpers.wrap(client).ensureBucketExists(bucketName);
 
             final Ds3ClientHelpers.Job putJob = Ds3ClientHelpers.wrap(client).startWriteJob(bucketName, Lists.newArrayList(obj1, obj2));
             final UUID jobId = putJob.getJobId();
@@ -279,7 +278,6 @@ public class PutJobManagement_Test {
 
             final CancelAllJobsSpectraS3Response response = client
                     .cancelAllJobsSpectraS3(new CancelAllJobsSpectraS3Request());
-            response.checkStatusCode(204);
 
             assertTrue(client.getActiveJobsSpectraS3(new GetActiveJobsSpectraS3Request())
                     .getActiveJobListResult().getActiveJobs().isEmpty());
@@ -288,8 +286,132 @@ public class PutJobManagement_Test {
         }
     }
 
-    //todo public void cancelAllJobs() without force and 1 object uploaded
-    //todo public void cancelAllJobs() with force and 1 object uploaded
+    @Test
+    public void truncateCancelAllJobsWithoutForce() throws IOException, SignatureException, XmlProcessingException, InterruptedException, URISyntaxException {
+
+        final int testTimeOutSeconds = 5;
+        final String bucketName = "test_cancel_all_jobs_without_force";
+        final String book1 = "beowulf.txt";
+        final Path objPath1 = ResourceUtils.loadFileResource(RESOURCE_BASE_NAME + book1);
+        final String book2 = "ulysses.txt";
+        final Path objPath2 = ResourceUtils.loadFileResource(RESOURCE_BASE_NAME + book2);
+        final Ds3Object obj1 = new Ds3Object(book1, Files.size(objPath1));
+        final Ds3Object obj2 = new Ds3Object("place_holder_1", 5000000);
+        final Ds3Object obj3 = new Ds3Object(book2, Files.size(objPath2));
+        final Ds3Object obj4 = new Ds3Object("place_holder_2", 5000000);
+
+        try {
+            Ds3ClientHelpers.wrap(client).ensureBucketExists(bucketName);
+
+            final Ds3ClientHelpers.Job putJob1 = Ds3ClientHelpers.wrap(client).startWriteJob(bucketName, Lists
+                    .newArrayList(obj1, obj2));
+            final UUID jobId1 = putJob1.getJobId();
+            final SeekableByteChannel book1Channel = new ResourceObjectPutter(RESOURCE_BASE_NAME).buildChannel(book1);
+            client.putObject(new PutObjectRequest(bucketName, book1, book1Channel, jobId1, 0, Files.size(objPath1)));
+
+            final Ds3ClientHelpers.Job putJob2 = Ds3ClientHelpers.wrap(client).startWriteJob(bucketName, Lists
+                    .newArrayList(obj3, obj4));
+            final UUID jobId2 = putJob2.getJobId();
+            final SeekableByteChannel book2Channel = new ResourceObjectPutter(RESOURCE_BASE_NAME).buildChannel(book2);
+            client.putObject(new PutObjectRequest(bucketName, book2, book2Channel, jobId2, 0, Files.size(objPath2)));
+
+            final Ds3ClientHelpers.Job putJob3 = Ds3ClientHelpers.wrap(client).startWriteJob(bucketName, Lists
+                    .newArrayList(new Ds3Object("place_holder_3", 1000000)));
+            final UUID jobId3 = putJob3.getJobId();
+
+            //make sure black pearl has updated the first 2 jobs to show 1 object in cache each
+            final long startTime = System.nanoTime();
+            boolean cachedSizeUpdated = false;
+            while (!cachedSizeUpdated) {
+                Thread.sleep(500);
+                final MasterObjectList job1mol = client.getJobSpectraS3(new GetJobSpectraS3Request(jobId1)).getMasterObjectListResult();
+                final long job1CachedSize = job1mol.getCachedSizeInBytes();
+                final MasterObjectList job2mol = client.getJobSpectraS3(new GetJobSpectraS3Request(jobId2)).getMasterObjectListResult();
+                final long job2CachedSize = job1mol.getCachedSizeInBytes();
+                if (job1CachedSize > 0 && job2CachedSize > 0) {
+                    cachedSizeUpdated = true;
+                }
+                checkTimeOut(startTime, testTimeOutSeconds);
+            }
+
+            final CancelAllJobsSpectraS3Response failedResponse = client
+                    .cancelAllJobsSpectraS3(new CancelAllJobsSpectraS3Request());
+
+            assertThat(failedResponse.getStatusCode(), is(400));
+
+            final GetJobSpectraS3Response truncatedJob1 = client.getJobSpectraS3(new GetJobSpectraS3Request(jobId1));
+            assertEquals(truncatedJob1.getMasterObjectListResult().getOriginalSizeInBytes(), Files.size(objPath1));
+
+            final GetJobSpectraS3Response truncatedJob2 = client.getJobSpectraS3(new GetJobSpectraS3Request(jobId2));
+            assertEquals(truncatedJob2.getMasterObjectListResult().getOriginalSizeInBytes(), Files.size(objPath2));
+
+            assertThat(client.getActiveJobsSpectraS3(new GetActiveJobsSpectraS3Request())
+                    .getActiveJobListResult().getActiveJobs().size(), is(2));
+
+        } finally {
+            deleteAllContents(client, bucketName);
+        }
+    }
+
+    @Test
+    public void cancelAllJobsWithForce ()throws IOException, SignatureException, XmlProcessingException, InterruptedException, URISyntaxException {
+
+        final int testTimeOutSeconds = 5;
+        final String bucketName = "test_cancel_all_jobs_without_force";
+        final String book1 = "beowulf.txt";
+        final Path objPath1 = ResourceUtils.loadFileResource(RESOURCE_BASE_NAME + book1);
+        final String book2 = "ulysses.txt";
+        final Path objPath2 = ResourceUtils.loadFileResource(RESOURCE_BASE_NAME + book2);
+        final Ds3Object obj1 = new Ds3Object(book1, Files.size(objPath1));
+        final Ds3Object obj2 = new Ds3Object("place_holder_1", 5000000);
+        final Ds3Object obj3 = new Ds3Object(book2, Files.size(objPath2));
+        final Ds3Object obj4 = new Ds3Object("place_holder_2", 5000000);
+
+        try {
+            Ds3ClientHelpers.wrap(client).ensureBucketExists(bucketName);
+
+            final Ds3ClientHelpers.Job putJob1 = Ds3ClientHelpers.wrap(client).startWriteJob(bucketName, Lists
+                    .newArrayList(obj1, obj2));
+            final UUID jobId1 = putJob1.getJobId();
+            final SeekableByteChannel book1Channel = new ResourceObjectPutter(RESOURCE_BASE_NAME).buildChannel(book1);
+            client.putObject(new PutObjectRequest(bucketName, book1, book1Channel, jobId1, 0, Files.size(objPath1)));
+
+            final Ds3ClientHelpers.Job putJob2 = Ds3ClientHelpers.wrap(client).startWriteJob(bucketName, Lists
+                    .newArrayList(obj3, obj4));
+            final UUID jobId2 = putJob2.getJobId();
+            final SeekableByteChannel book2Channel = new ResourceObjectPutter(RESOURCE_BASE_NAME).buildChannel(book2);
+            client.putObject(new PutObjectRequest(bucketName, book2, book2Channel, jobId2, 0, Files.size(objPath2)));
+
+            final Ds3ClientHelpers.Job putJob3 = Ds3ClientHelpers.wrap(client).startWriteJob(bucketName, Lists
+                    .newArrayList(new Ds3Object("place_holder_3", 1000000)));
+            final UUID jobId3 = putJob3.getJobId();
+
+            //make sure black pearl has updated the first 2 jobs to show 1 object in cache each
+            final long startTime = System.nanoTime();
+            boolean cachedSizeUpdated = false;
+            while (!cachedSizeUpdated) {
+                Thread.sleep(500);
+                final MasterObjectList job1mol = client.getJobSpectraS3(new GetJobSpectraS3Request(jobId1)).getMasterObjectListResult();
+                final long job1CachedSize = job1mol.getCachedSizeInBytes();
+                final MasterObjectList job2mol = client.getJobSpectraS3(new GetJobSpectraS3Request(jobId2)).getMasterObjectListResult();
+                final long job2CachedSize = job1mol.getCachedSizeInBytes();
+                if (job1CachedSize > 0 && job2CachedSize > 0) {
+                    cachedSizeUpdated = true;
+                }
+                checkTimeOut(startTime, testTimeOutSeconds);
+            }
+
+            final CancelAllJobsSpectraS3Response response = client
+                    .cancelAllJobsSpectraS3(new CancelAllJobsSpectraS3Request().withForce(true));
+
+            assertTrue(client.getActiveJobsSpectraS3(new GetActiveJobsSpectraS3Request())
+                    .getActiveJobListResult().getActiveJobs().isEmpty());
+
+        } finally {
+            deleteAllContents(client, bucketName);
+        }
+    }
+
 
     @Test
         public void getCanceledJobs() throws IOException, SignatureException, XmlProcessingException {
