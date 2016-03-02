@@ -64,6 +64,7 @@ public class PutJobManagement_Test {
         TempStorageUtil.teardown(TEST_ENV_NAME, envStorageIds, client);
         client.close();
     }
+
     private void checkTimeOut(final long startTime, final int testTimeOutSeconds){
         assertTrue((System.nanoTime() - startTime)/1000000000 <= testTimeOutSeconds);
         assertThat((System.nanoTime() - startTime)/1000000000, lessThan((long) testTimeOutSeconds));
@@ -101,10 +102,8 @@ public class PutJobManagement_Test {
         try {
             Ds3ClientHelpers.wrap(client).ensureBucketExists(bucketName);
             
-            final List<Ds3Object> objects = Lists.newArrayList(new Ds3Object("test",2));
-
             final Ds3ClientHelpers.Job job =
-                    wrap(client).startWriteJob(bucketName, objects);
+                    wrap(client).startWriteJob(bucketName, Lists.newArrayList(new Ds3Object("testOne", 2)));
 
             client.modifyJobSpectraS3(new ModifyJobSpectraS3Request(job.getJobId())
                     .withName("newName"));
@@ -125,10 +124,8 @@ public class PutJobManagement_Test {
         try {
             Ds3ClientHelpers.wrap(client).ensureBucketExists(bucketName);
 
-            final List<Ds3Object> objects = Lists.newArrayList(new Ds3Object("test", 2));
-
             final Ds3ClientHelpers.Job job =
-                    wrap(client).startWriteJob(bucketName, objects);
+                    wrap(client).startWriteJob(bucketName, Lists.newArrayList(new Ds3Object("testOne", 2)));
             final GetJobSpectraS3Response jobResponse = client
                     .getJobSpectraS3(new GetJobSpectraS3Request(job.getJobId()));
 
@@ -154,10 +151,8 @@ public class PutJobManagement_Test {
         try {
             Ds3ClientHelpers.wrap(client).ensureBucketExists(bucketName);
 
-            final List<Ds3Object> objectsOne = Lists.newArrayList(new Ds3Object("testOne", 2));
-
             final Ds3ClientHelpers.Job job =
-                    wrap(client).startWriteJob(bucketName, objectsOne);
+                    wrap(client).startWriteJob(bucketName, Lists.newArrayList(new Ds3Object("testOne", 2)));
 
             final CancelJobSpectraS3Response response = client
                     .cancelJobSpectraS3(new CancelJobSpectraS3Request(job.getJobId()));
@@ -222,7 +217,6 @@ public class PutJobManagement_Test {
 
         try {
             Ds3ClientHelpers.wrap(client).ensureBucketExists(bucketName);
-            Ds3ClientHelpers.wrap(client).ensureBucketExists(bucketName);
 
             final Ds3ClientHelpers.Job putJob = Ds3ClientHelpers.wrap(client).startWriteJob(bucketName, Lists.newArrayList(obj1, obj2));
             final UUID jobId = putJob.getJobId();
@@ -270,7 +264,7 @@ public class PutJobManagement_Test {
 
             final List<Ds3Object> objectsOne = Lists.newArrayList(new Ds3Object("testOne", 2));
 
-            wrap(client).startWriteJob(bucketName, objectsOne);
+            wrap(client).startWriteJob(bucketName, Lists.newArrayList(new Ds3Object("testOne", 2)));
 
             final List<Ds3Object> objectsTwo = Lists.newArrayList(new Ds3Object("testTwo", 2));
 
@@ -412,19 +406,14 @@ public class PutJobManagement_Test {
         }
     }
 
-
     @Test
         public void getCanceledJobs() throws IOException, SignatureException, XmlProcessingException {
             final String bucketName = "test_get_canceled_jobs";
             try {
                 Ds3ClientHelpers.wrap(client).ensureBucketExists(bucketName);
 
-                final List<Ds3Object> objectsOne = new ArrayList<>();
-                final Ds3Object obj = new Ds3Object("testOne", 2);
-                objectsOne.add(obj);
-
                 final Ds3ClientHelpers.Job jobOne =
-                        wrap(client).startWriteJob(bucketName, objectsOne);
+                        wrap(client).startWriteJob(bucketName, Lists.newArrayList(new Ds3Object("test", 2)));
                 final UUID jobOneId = jobOne.getJobId();
                 client.cancelJobSpectraS3(new CancelJobSpectraS3Request(jobOneId));
 
@@ -440,5 +429,28 @@ public class PutJobManagement_Test {
             } finally {
                 deleteAllContents(client, bucketName);
             }
+    }
+
+    @Test
+    public void aggregateTwoJobs() throws IOException, SignatureException, XmlProcessingException {
+        final String bucketName = "aggregate_two_jobs";
+        try {
+            Ds3ClientHelpers.wrap(client).ensureBucketExists(bucketName);
+
+            final WriteJobOptions writeJobOptions = WriteJobOptions.create().withAggregating();
+
+            final Ds3ClientHelpers.Job jobOne =
+                    wrap(client).startWriteJob(bucketName, Lists.newArrayList(new Ds3Object("test", 2)), writeJobOptions);
+            final UUID jobOneId = jobOne.getJobId();
+
+            final Ds3ClientHelpers.Job jobTwo =
+                    wrap(client).startWriteJob(bucketName, Lists.newArrayList(new Ds3Object("test2", 2)), writeJobOptions);
+            final UUID jobTwoId = jobTwo.getJobId();
+
+            assertThat(jobOneId, is(jobTwoId));
+
+        } finally {
+            deleteAllContents(client, bucketName);
+        }
     }
 }

@@ -24,12 +24,14 @@ public class WriteJobOptions {
     private WriteOptimization writeOptimization;
     private int maxUploadSize;
     private ChecksumType.Type checksumType;
+    private boolean aggregating;
 
     private WriteJobOptions() {
         this.priority = null;
         this.writeOptimization = null;
         this.maxUploadSize = 0;
         this.checksumType = ChecksumType.Type.NONE;
+        this.aggregating = false;
     }
 
     public static WriteJobOptions create() {
@@ -82,5 +84,18 @@ public class WriteJobOptions {
 
     public void setChecksumType(final ChecksumType.Type checksumType) {
         this.checksumType = checksumType;
+    }
+
+    public WriteJobOptions withAggregating() {
+        this.aggregating = true;
+        return this;
+    }
+
+    public boolean isAggregating() {
+        return aggregating;
+    }
+
+    public void setAggregating(final boolean aggregating) {
+        this.aggregating = aggregating;
     }
 }
