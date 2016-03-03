@@ -76,6 +76,11 @@ public class PutJobManagement_Test {
         client.close();
     }
 
+
+    private void checkTimeOut(final long testTimeOutSeconds, final long startTime) {
+        assertThat((System.nanoTime() - startTime)/1000000000, lessThan(testTimeOutSeconds));
+    }
+
     private void waitForObjectToBeInCache(final int testTimeOutSeconds, final UUID jobId) throws InterruptedException, IOException, SignatureException {
         final long startTime = System.nanoTime();
         long cachedSize = 0;
@@ -83,7 +88,7 @@ public class PutJobManagement_Test {
             Thread.sleep(500);
             final MasterObjectList mol = client.getJobSpectraS3(new GetJobSpectraS3Request(jobId)).getMasterObjectListResult();
             cachedSize = mol.getCachedSizeInBytes();
-            assertThat((System.nanoTime() - startTime)/1000000000, lessThan((long) testTimeOutSeconds));
+            checkTimeOut(testTimeOutSeconds, startTime);
         }
     }
 
@@ -299,7 +304,7 @@ public class PutJobManagement_Test {
                         jobCanceled = true;
                     }
                 }
-                assertThat((System.nanoTime() - startTimeCanceledUpdate)/1000000000, lessThan((long) testTimeOutSeconds));
+                checkTimeOut(testTimeOutSeconds, startTimeCanceledUpdate);
             }
 
         } finally {
