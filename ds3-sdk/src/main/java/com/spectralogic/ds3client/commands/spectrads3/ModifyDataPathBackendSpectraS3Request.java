@@ -48,7 +48,7 @@ public class ModifyDataPathBackendSpectraS3Request extends AbstractRequest {
 
     public ModifyDataPathBackendSpectraS3Request withActivated(final boolean activated) {
         this.activated = activated;
-        this.updateQueryParam("activated", null);
+        this.updateQueryParam("activated", String.valueOf(activated));
         return this;
     }
 

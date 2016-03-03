@@ -68,7 +68,7 @@ public class GetTapesSpectraS3Request extends AbstractRequest {
 
     public GetTapesSpectraS3Request withAssignedToStorageDomain(final boolean assignedToStorageDomain) {
         this.assignedToStorageDomain = assignedToStorageDomain;
-        this.updateQueryParam("assigned_to_storage_domain", null);
+        this.updateQueryParam("assigned_to_storage_domain", String.valueOf(assignedToStorageDomain));
         return this;
     }
 
@@ -98,7 +98,7 @@ public class GetTapesSpectraS3Request extends AbstractRequest {
 
     public GetTapesSpectraS3Request withFullOfData(final boolean fullOfData) {
         this.fullOfData = fullOfData;
-        this.updateQueryParam("full_of_data", null);
+        this.updateQueryParam("full_of_data", String.valueOf(fullOfData));
         return this;
     }
 
@@ -168,7 +168,7 @@ public class GetTapesSpectraS3Request extends AbstractRequest {
 
     public GetTapesSpectraS3Request withWriteProtected(final boolean writeProtected) {
         this.writeProtected = writeProtected;
-        this.updateQueryParam("write_protected", null);
+        this.updateQueryParam("write_protected", String.valueOf(writeProtected));
         return this;
     }
 

@@ -53,7 +53,7 @@ public class VerifyBulkJobSpectraS3Request extends AbstractRequest {
 
     public VerifyBulkJobSpectraS3Request withAggregating(final boolean aggregating) {
         this.aggregating = aggregating;
-        this.updateQueryParam("aggregating", null);
+        this.updateQueryParam("aggregating", String.valueOf(aggregating));
         return this;
     }
 

@@ -53,7 +53,7 @@ public class GetDataPoliciesSpectraS3Request extends AbstractRequest {
 
     public GetDataPoliciesSpectraS3Request withEndToEndCrcRequired(final boolean endToEndCrcRequired) {
         this.endToEndCrcRequired = endToEndCrcRequired;
-        this.updateQueryParam("end_to_end_crc_required", null);
+        this.updateQueryParam("end_to_end_crc_required", String.valueOf(endToEndCrcRequired));
         return this;
     }
 

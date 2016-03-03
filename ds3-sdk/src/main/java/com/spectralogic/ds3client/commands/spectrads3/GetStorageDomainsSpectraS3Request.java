@@ -61,19 +61,19 @@ public class GetStorageDomainsSpectraS3Request extends AbstractRequest {
 
     public GetStorageDomainsSpectraS3Request withAutoEjectUponJobCancellation(final boolean autoEjectUponJobCancellation) {
         this.autoEjectUponJobCancellation = autoEjectUponJobCancellation;
-        this.updateQueryParam("auto_eject_upon_job_cancellation", null);
+        this.updateQueryParam("auto_eject_upon_job_cancellation", String.valueOf(autoEjectUponJobCancellation));
         return this;
     }
 
     public GetStorageDomainsSpectraS3Request withAutoEjectUponJobCompletion(final boolean autoEjectUponJobCompletion) {
         this.autoEjectUponJobCompletion = autoEjectUponJobCompletion;
-        this.updateQueryParam("auto_eject_upon_job_completion", null);
+        this.updateQueryParam("auto_eject_upon_job_completion", String.valueOf(autoEjectUponJobCompletion));
         return this;
     }
 
     public GetStorageDomainsSpectraS3Request withAutoEjectUponMediaFull(final boolean autoEjectUponMediaFull) {
         this.autoEjectUponMediaFull = autoEjectUponMediaFull;
-        this.updateQueryParam("auto_eject_upon_media_full", null);
+        this.updateQueryParam("auto_eject_upon_media_full", String.valueOf(autoEjectUponMediaFull));
         return this;
     }
 
@@ -89,7 +89,7 @@ public class GetStorageDomainsSpectraS3Request extends AbstractRequest {
 
     public GetStorageDomainsSpectraS3Request withMediaEjectionAllowed(final boolean mediaEjectionAllowed) {
         this.mediaEjectionAllowed = mediaEjectionAllowed;
-        this.updateQueryParam("media_ejection_allowed", null);
+        this.updateQueryParam("media_ejection_allowed", String.valueOf(mediaEjectionAllowed));
         return this;
     }
 
