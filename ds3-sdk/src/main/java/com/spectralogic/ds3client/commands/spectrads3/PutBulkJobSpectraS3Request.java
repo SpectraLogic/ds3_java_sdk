@@ -45,7 +45,7 @@ public class PutBulkJobSpectraS3Request extends BulkRequest {
 
     public PutBulkJobSpectraS3Request withAggregating(final boolean aggregating) {
         this.aggregating = aggregating;
-        this.updateQueryParam("aggregating", null);
+        this.updateQueryParam("aggregating", String.valueOf(aggregating));
         return this;
     }
 
