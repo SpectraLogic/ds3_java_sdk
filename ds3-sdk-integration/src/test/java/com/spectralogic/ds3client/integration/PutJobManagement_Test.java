@@ -19,11 +19,16 @@ import com.google.common.collect.Lists;
 import com.spectralogic.ds3client.Ds3Client;
 import com.spectralogic.ds3client.commands.*;
 import com.spectralogic.ds3client.commands.spectrads3.*;
+import com.spectralogic.ds3client.commands.spectrads3.notifications.GetObjectCachedNotificationRegistrationSpectraS3Request;
+import com.spectralogic.ds3client.commands.spectrads3.notifications.GetObjectCachedNotificationRegistrationSpectraS3Response;
+import com.spectralogic.ds3client.commands.spectrads3.notifications.PutObjectCachedNotificationRegistrationSpectraS3Request;
+import com.spectralogic.ds3client.commands.spectrads3.notifications.PutObjectCachedNotificationRegistrationSpectraS3Response;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers;
 import com.spectralogic.ds3client.helpers.options.WriteJobOptions;
 import com.spectralogic.ds3client.integration.test.helpers.TempStorageIds;
 import com.spectralogic.ds3client.integration.test.helpers.TempStorageUtil;
 import com.spectralogic.ds3client.models.*;
+import com.spectralogic.ds3client.models.Job;
 import com.spectralogic.ds3client.models.bulk.Ds3Object;
 import com.spectralogic.ds3client.serializer.XmlProcessingException;
 import com.spectralogic.ds3client.utils.ResourceUtils;
@@ -75,17 +80,62 @@ public class PutJobManagement_Test {
     }
 
     private void checkTimeOut(final long startTime, final int testTimeOutSeconds){
-        assertTrue((System.nanoTime() - startTime)/1000000000 <= testTimeOutSeconds);
         assertThat((System.nanoTime() - startTime)/1000000000, lessThan((long) testTimeOutSeconds));
     }
 
-    //todo verify naked s3 somewhere
+    @Test
+    public void nakedS3Put() throws IOException, SignatureException, XmlProcessingException, URISyntaxException {
+        try {
+            final Path beowulfPath = ResourceUtils.loadFileResource(RESOURCE_BASE_NAME + "beowulf.txt");
+            final SeekableByteChannel beowulfChannel = new ResourceObjectPutter(RESOURCE_BASE_NAME).buildChannel("beowulf.txt");
+            final PutObjectResponse job = client.putObject(new PutObjectRequest(BUCKET_NAME, "beowulf.txt",
+                    beowulfChannel, Files.size(beowulfPath)));
+            assertThat(job.getStatusCode(), is(200));
+        } finally {
+            deleteAllContents(client, BUCKET_NAME);
+        }
+    }
+
+    @Test
+    public void getActiveJobs() throws IOException, SignatureException, XmlProcessingException, URISyntaxException {
+        try {
+            final UUID jobID = HELPERS
+                    .startWriteJob(BUCKET_NAME, Lists.newArrayList( new Ds3Object("test", 2))).getJobId();
+            final GetActiveJobsSpectraS3Response activeJobsResponse = client.
+                    getActiveJobsSpectraS3(new GetActiveJobsSpectraS3Request());
+            final ArrayList<UUID> activeJobsUUIDs = new ArrayList<>();
+            for (final ActiveJob job : activeJobsResponse.getActiveJobListResult().getActiveJobs()){
+                activeJobsUUIDs.add(job.getId());
+            }
+            assertThat(activeJobsUUIDs, contains(jobID));
+        } finally {
+            deleteAllContents(client, BUCKET_NAME);
+        }
+    }
+
+    @Test
+    public void getJobs() throws IOException, SignatureException, XmlProcessingException {
+        try {
+            final UUID jobID = HELPERS
+                    .startWriteJob(BUCKET_NAME, Lists.newArrayList( new Ds3Object("test", 2))).getJobId();
+            final GetJobsSpectraS3Response getJobsResponse = client.
+                    getJobsSpectraS3(new GetJobsSpectraS3Request());
+            final ArrayList<UUID> jobUUIDs = new ArrayList<>();
+            for (final Job job : getJobsResponse.getJobListResult().getJobs()){
+                jobUUIDs.add(job.getJobId());
+            }
+            assertThat(jobUUIDs, contains(jobID));
+
+        } finally {
+            deleteAllContents(client, BUCKET_NAME);
+        }
+    }
 
     @Test
     public void modifyJobPriority() throws IOException, SignatureException, XmlProcessingException {
         try {
             final Ds3ClientHelpers.Job job =
-                    wrap(client).startWriteJob(BUCKET_NAME, Lists.newArrayList( new Ds3Object("test", 2)),
+                    HELPERS.startWriteJob(BUCKET_NAME, Lists.newArrayList( new Ds3Object("test", 2)),
                             WriteJobOptions.create().withPriority(Priority.LOW));
 
             client.modifyJobSpectraS3(new ModifyJobSpectraS3Request(job.getJobId())
@@ -106,7 +156,7 @@ public class PutJobManagement_Test {
         
         try {
             final Ds3ClientHelpers.Job job =
-                    wrap(client).startWriteJob(BUCKET_NAME, Lists.newArrayList(new Ds3Object("testOne", 2)));
+                    HELPERS.startWriteJob(BUCKET_NAME, Lists.newArrayList(new Ds3Object("testOne", 2)));
 
             client.modifyJobSpectraS3(new ModifyJobSpectraS3Request(job.getJobId())
                     .withName("newName"));
@@ -126,7 +176,7 @@ public class PutJobManagement_Test {
         
         try {
             final Ds3ClientHelpers.Job job =
-                    wrap(client).startWriteJob(BUCKET_NAME, Lists.newArrayList(new Ds3Object("testOne", 2)));
+                    HELPERS.startWriteJob(BUCKET_NAME, Lists.newArrayList(new Ds3Object("testOne", 2)));
             final GetJobSpectraS3Response jobResponse = client
                     .getJobSpectraS3(new GetJobSpectraS3Request(job.getJobId()));
 
@@ -151,7 +201,7 @@ public class PutJobManagement_Test {
         
         try {
             final Ds3ClientHelpers.Job job =
-                    wrap(client).startWriteJob(BUCKET_NAME, Lists.newArrayList(new Ds3Object("testOne", 2)));
+                    HELPERS.startWriteJob(BUCKET_NAME, Lists.newArrayList(new Ds3Object("testOne", 2)));
 
             final CancelJobSpectraS3Response response = client
                     .cancelJobSpectraS3(new CancelJobSpectraS3Request(job.getJobId()));
@@ -159,6 +209,26 @@ public class PutJobManagement_Test {
 
             assertTrue(client.getActiveJobsSpectraS3(new GetActiveJobsSpectraS3Request())
                     .getActiveJobListResult().getActiveJobs().isEmpty());
+
+        } finally {
+            deleteAllContents(client, BUCKET_NAME);
+        }
+    }
+
+    @Test
+    public void clearAllCanceledJobs() throws IOException, SignatureException, XmlProcessingException {
+
+        try {
+            final Ds3ClientHelpers.Job job =
+                    HELPERS.startWriteJob(BUCKET_NAME, Lists.newArrayList(new Ds3Object("testOne", 2)));
+            final CancelJobSpectraS3Response response = client
+                    .cancelJobSpectraS3(new CancelJobSpectraS3Request(job.getJobId()));
+            client.clearAllCanceledJobsSpectraS3(new ClearAllCanceledJobsSpectraS3Request());
+            final List canceledJobsList = client.
+                    getCanceledJobsSpectraS3(new GetCanceledJobsSpectraS3Request())
+                    .getCanceledJobListResult().getCanceledJobs();
+
+            assertTrue(canceledJobsList.isEmpty());
 
         } finally {
             deleteAllContents(client, BUCKET_NAME);
@@ -256,11 +326,11 @@ public class PutJobManagement_Test {
         try {
             final List<Ds3Object> objectsOne = Lists.newArrayList(new Ds3Object("testOne", 2));
 
-            wrap(client).startWriteJob(BUCKET_NAME, Lists.newArrayList(new Ds3Object("testOne", 2)));
+            HELPERS.startWriteJob(BUCKET_NAME, Lists.newArrayList(new Ds3Object("testOne", 2)));
 
             final List<Ds3Object> objectsTwo = Lists.newArrayList(new Ds3Object("testTwo", 2));
 
-            wrap(client).startWriteJob(BUCKET_NAME, objectsTwo);
+            HELPERS.startWriteJob(BUCKET_NAME, objectsTwo);
 
             final CancelAllJobsSpectraS3Response response = client
                     .cancelAllJobsSpectraS3(new CancelAllJobsSpectraS3Request());
@@ -286,8 +356,6 @@ public class PutJobManagement_Test {
         final Ds3Object obj4 = new Ds3Object("place_holder_2", 5000000);
 
         try {
-            
-
             final Ds3ClientHelpers.Job putJob1 = HELPERS.startWriteJob(BUCKET_NAME, Lists
                     .newArrayList(obj1, obj2));
             final UUID jobId1 = putJob1.getJobId();
@@ -395,69 +463,68 @@ public class PutJobManagement_Test {
     }
 
     @Test
-        public void getCanceledJobs() throws IOException, SignatureException, XmlProcessingException {
+    public void getCanceledJobs() throws IOException, SignatureException, XmlProcessingException {
             
-            try {
-                
-
-                final Ds3ClientHelpers.Job jobOne =
-                        wrap(client).startWriteJob(BUCKET_NAME, Lists.newArrayList(new Ds3Object("test", 2)));
-                final UUID jobOneId = jobOne.getJobId();
-                client.cancelJobSpectraS3(new CancelJobSpectraS3Request(jobOneId));
-
-                final GetCanceledJobsSpectraS3Response getCanceledJobsResponse = client
-                        .getCanceledJobsSpectraS3(new GetCanceledJobsSpectraS3Request());
-
-                final List<UUID> canceledJobsUUIDs = new ArrayList<>();
-                for (final CanceledJob job : getCanceledJobsResponse.getCanceledJobListResult().getCanceledJobs()) {
-                    canceledJobsUUIDs.add(job.getId());
-                }
-                assertTrue(canceledJobsUUIDs.contains(jobOneId));
-
-            } finally {
-                deleteAllContents(client, BUCKET_NAME);
-            }
-    }
-
-    @Test  //todo
-    public void getJobChunksReady() throws IOException, SignatureException, XmlProcessingException {
-        
         try {
-            
-
-            final WriteJobOptions writeJobOptions = WriteJobOptions.create().withAggregating();
-
             final Ds3ClientHelpers.Job jobOne =
-                    wrap(client).startWriteJob(BUCKET_NAME, Lists.newArrayList(new Ds3Object("test", 2)), writeJobOptions);
+                    HELPERS.startWriteJob(BUCKET_NAME, Lists.newArrayList(new Ds3Object("test", 2)));
             final UUID jobOneId = jobOne.getJobId();
+            client.cancelJobSpectraS3(new CancelJobSpectraS3Request(jobOneId));
 
-            final Ds3ClientHelpers.Job jobTwo =
-                    wrap(client).startWriteJob(BUCKET_NAME, Lists.newArrayList(new Ds3Object("test2", 2)), writeJobOptions);
-            final UUID jobTwoId = jobTwo.getJobId();
+            final GetCanceledJobsSpectraS3Response getCanceledJobsResponse = client
+                    .getCanceledJobsSpectraS3(new GetCanceledJobsSpectraS3Request());
 
-            assertThat(jobOneId, is(jobTwoId));
+            final List<UUID> canceledJobsUUIDs = new ArrayList<>();
+            for (final CanceledJob job : getCanceledJobsResponse.getCanceledJobListResult().getCanceledJobs()) {
+                canceledJobsUUIDs.add(job.getId());
+            }
+
+            assertTrue(canceledJobsUUIDs.contains(jobOneId));
 
         } finally {
             deleteAllContents(client, BUCKET_NAME);
         }
     }
 
+    @Test
+    public void getJobChunksReady() throws IOException, SignatureException, XmlProcessingException {
+        
+        try {
+            final Ds3Object ds3Object = new Ds3Object("test", 2);
+            final Ds3ClientHelpers.Job jobOne =
+                    HELPERS.startWriteJob(BUCKET_NAME, Lists.newArrayList(ds3Object));
+            final UUID jobOneId = jobOne.getJobId();
 
+            final GetJobChunksReadyForClientProcessingSpectraS3Response response = client
+                    .getJobChunksReadyForClientProcessingSpectraS3
+                            (new GetJobChunksReadyForClientProcessingSpectraS3Request(jobOneId));
+
+            final List<String> chunkNames = new ArrayList<>();
+            for (final Objects objectList : response.getMasterObjectListResult().getObjects()) {
+                for (final BulkObject bulkObject : objectList.getObjects()){
+                    chunkNames.add(bulkObject.getName());
+                }
+            }
+
+            assertThat(chunkNames, contains(ds3Object.getName()));
+
+        } finally {
+            deleteAllContents(client, BUCKET_NAME);
+        }
+    }
 
     @Test
     public void aggregateTwoJobs() throws IOException, SignatureException, XmlProcessingException {
         
         try {
-            
-
             final WriteJobOptions writeJobOptions = WriteJobOptions.create().withAggregating();
 
             final Ds3ClientHelpers.Job jobOne =
-                    wrap(client).startWriteJob(BUCKET_NAME, Lists.newArrayList(new Ds3Object("test", 2)), writeJobOptions);
+                    HELPERS.startWriteJob(BUCKET_NAME, Lists.newArrayList(new Ds3Object("test", 2)), writeJobOptions);
             final UUID jobOneId = jobOne.getJobId();
 
             final Ds3ClientHelpers.Job jobTwo =
-                    wrap(client).startWriteJob(BUCKET_NAME, Lists.newArrayList(new Ds3Object("test2", 2)), writeJobOptions);
+                    HELPERS.startWriteJob(BUCKET_NAME, Lists.newArrayList(new Ds3Object("test2", 2)), writeJobOptions);
             final UUID jobTwoId = jobTwo.getJobId();
 
             assertThat(jobOneId, is(jobTwoId));
@@ -467,26 +534,67 @@ public class PutJobManagement_Test {
         }
     }
 
-    @Test //todo
+    @Test
     public void allocateJobChunk() throws IOException, SignatureException, XmlProcessingException {
         
         try {
-            
+            final PutBulkJobSpectraS3Response putBulkResponse = client.
+                    putBulkJobSpectraS3(new PutBulkJobSpectraS3Request(BUCKET_NAME, Lists.newArrayList(new Ds3Object("test", 2))));
+            final UUID chunkUUID = putBulkResponse.getResult().getObjects().get(0).getChunkId();
+            final AllocateJobChunkSpectraS3Response allocateResponse = client
+                    .allocateJobChunkSpectraS3(new AllocateJobChunkSpectraS3Request(chunkUUID));
 
-            final WriteJobOptions writeJobOptions = WriteJobOptions.create().withAggregating();
-
-            final Ds3ClientHelpers.Job jobOne =
-                    wrap(client).startWriteJob(BUCKET_NAME, Lists.newArrayList(new Ds3Object("test", 2)), writeJobOptions);
-            final UUID jobOneId = jobOne.getJobId();
-
-            final Ds3ClientHelpers.Job jobTwo =
-                    wrap(client).startWriteJob(BUCKET_NAME, Lists.newArrayList(new Ds3Object("test2", 2)), writeJobOptions);
-            final UUID jobTwoId = jobTwo.getJobId();
-
-            assertThat(jobOneId, is(jobTwoId));
+            assertThat(allocateResponse.getStatusCode(), is(200));
 
         } finally {
             deleteAllContents(client, BUCKET_NAME);
         }
     }
+
+    @Test
+    public void putObjectCachedNotification() throws IOException, SignatureException, XmlProcessingException {
+        try {
+            final PutObjectCachedNotificationRegistrationSpectraS3Response putNotificationResponse = client
+                    .putObjectCachedNotificationRegistrationSpectraS3
+                            (new PutObjectCachedNotificationRegistrationSpectraS3Request("test@test.test"));
+
+            assertThat(putNotificationResponse.getStatusCode(), is(201));
+
+        } finally {
+            deleteAllContents(client, BUCKET_NAME);
+        }
+    }
+
+    @Test
+    public void getObjectCachedNotification() throws IOException, SignatureException, XmlProcessingException {
+
+        try {
+            final PutObjectCachedNotificationRegistrationSpectraS3Response putNotificationResponse = client
+                    .putObjectCachedNotificationRegistrationSpectraS3
+                            (new PutObjectCachedNotificationRegistrationSpectraS3Request("test@test.test"));
+            final GetObjectCachedNotificationRegistrationSpectraS3Response getNotificationResponse = client
+                    .getObjectCachedNotificationRegistrationSpectraS3(
+                            (new GetObjectCachedNotificationRegistrationSpectraS3Request
+                                    (putNotificationResponse.getS3ObjectCachedNotificationRegistrationResult().getId())));
+            assertThat(getNotificationResponse.getStatusCode(), is(200));
+
+        } finally {
+            deleteAllContents(client, BUCKET_NAME);
+        }
+    }
+
+    @Test
+    public void getCompletedJobs() throws IOException, SignatureException, XmlProcessingException {
+        try {
+            final GetCompletedJobsSpectraS3Response getCompletedJobsResponse = client.
+                    getCompletedJobsSpectraS3(new GetCompletedJobsSpectraS3Request());
+
+            assertThat(getCompletedJobsResponse.getStatusCode(), is(200));
+
+        } finally {
+            deleteAllContents(client, BUCKET_NAME);
+        }
+    }
+
+
 }
