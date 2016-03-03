@@ -28,7 +28,6 @@ import com.spectralogic.ds3client.helpers.options.WriteJobOptions;
 import com.spectralogic.ds3client.integration.test.helpers.TempStorageIds;
 import com.spectralogic.ds3client.integration.test.helpers.TempStorageUtil;
 import com.spectralogic.ds3client.models.*;
-import com.spectralogic.ds3client.models.Job;
 import com.spectralogic.ds3client.models.bulk.Ds3Object;
 import com.spectralogic.ds3client.serializer.XmlProcessingException;
 import com.spectralogic.ds3client.utils.ResourceUtils;
@@ -48,7 +47,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
-import static com.spectralogic.ds3client.helpers.Ds3ClientHelpers.*;
 import static com.spectralogic.ds3client.integration.Util.*;
 import static org.junit.Assert.*;
 
@@ -63,7 +61,6 @@ public class PutJobManagement_Test {
 
     @BeforeClass
     public static void startup() throws IOException, SignatureException {
-        //client = Util.fromEnv();
         final UUID dataPolicyId = TempStorageUtil.setupDataPolicy(TEST_ENV_NAME, true, ChecksumType.Type.MD5, client);
         envStorageIds = TempStorageUtil.setup(TEST_ENV_NAME, dataPolicyId, client);
     }
@@ -79,8 +76,15 @@ public class PutJobManagement_Test {
         client.close();
     }
 
-    private void checkTimeOut(final long startTime, final int testTimeOutSeconds){
-        assertThat((System.nanoTime() - startTime)/1000000000, lessThan((long) testTimeOutSeconds));
+    private void waitForObjectToBeInCache(final int testTimeOutSeconds, final UUID jobId) throws InterruptedException, IOException, SignatureException {
+        final long startTime = System.nanoTime();
+        long cachedSize = 0;
+        while (cachedSize == 0) {
+            Thread.sleep(500);
+            final MasterObjectList mol = client.getJobSpectraS3(new GetJobSpectraS3Request(jobId)).getMasterObjectListResult();
+            cachedSize = mol.getCachedSizeInBytes();
+            assertThat((System.nanoTime() - startTime)/1000000000, lessThan((long) testTimeOutSeconds));
+        }
     }
 
     @Test
@@ -88,9 +92,9 @@ public class PutJobManagement_Test {
         try {
             final Path beowulfPath = ResourceUtils.loadFileResource(RESOURCE_BASE_NAME + "beowulf.txt");
             final SeekableByteChannel beowulfChannel = new ResourceObjectPutter(RESOURCE_BASE_NAME).buildChannel("beowulf.txt");
-            final PutObjectResponse job = client.putObject(new PutObjectRequest(BUCKET_NAME, "beowulf.txt",
+            final PutObjectResponse putObjectResponse = client.putObject(new PutObjectRequest(BUCKET_NAME, "beowulf.txt",
                     beowulfChannel, Files.size(beowulfPath)));
-            assertThat(job.getStatusCode(), is(200));
+            assertThat(putObjectResponse.getStatusCode(), is(200));
         } finally {
             deleteAllContents(client, BUCKET_NAME);
         }
@@ -221,8 +225,7 @@ public class PutJobManagement_Test {
         try {
             final Ds3ClientHelpers.Job job =
                     HELPERS.startWriteJob(BUCKET_NAME, Lists.newArrayList(new Ds3Object("testOne", 2)));
-            final CancelJobSpectraS3Response response = client
-                    .cancelJobSpectraS3(new CancelJobSpectraS3Request(job.getJobId()));
+            client.cancelJobSpectraS3(new CancelJobSpectraS3Request(job.getJobId()));
             client.clearAllCanceledJobsSpectraS3(new ClearAllCanceledJobsSpectraS3Request());
             final List canceledJobsList = client.
                     getCanceledJobsSpectraS3(new GetCanceledJobsSpectraS3Request())
@@ -250,15 +253,7 @@ public class PutJobManagement_Test {
             final SeekableByteChannel book1Channel = new ResourceObjectPutter(RESOURCE_BASE_NAME).buildChannel(book1);
             client.putObject(new PutObjectRequest(BUCKET_NAME, book1, book1Channel, jobId, 0, Files.size(objPath1)));
 
-            //make sure black pearl has updated it's job to show 1 object in cache
-            final long startTime = System.nanoTime();
-            long cachedSize = 0;
-            while (cachedSize == 0) {
-                Thread.sleep(500);
-                final MasterObjectList mol = client.getJobSpectraS3(new GetJobSpectraS3Request(jobId)).getMasterObjectListResult();
-                cachedSize = mol.getCachedSizeInBytes();
-                checkTimeOut(startTime, testTimeOutSeconds);
-            }
+            waitForObjectToBeInCache(testTimeOutSeconds, jobId);
 
             final CancelJobSpectraS3Response failedResponse = client.cancelJobSpectraS3(new CancelJobSpectraS3Request(jobId));
             assertThat(failedResponse.getStatusCode(),is(400));
@@ -270,6 +265,8 @@ public class PutJobManagement_Test {
             deleteAllContents(client, BUCKET_NAME);
         }
     }
+
+
 
     @Test
     public void cancelJobWithForce() throws IOException, SignatureException, XmlProcessingException, URISyntaxException, InterruptedException {
@@ -288,14 +285,8 @@ public class PutJobManagement_Test {
             client.putObject(new PutObjectRequest(BUCKET_NAME, book1, book1Channel, jobId, 0, Files.size(objPath1)));
 
             //make sure black pearl has updated it's job to show 1 object in cache
-            final long startTimePutObject = System.nanoTime();
-            long cachedSize = 0;
-            while (cachedSize == 0) {
-                Thread.sleep(500);
-                final MasterObjectList mol = client.getJobSpectraS3(new GetJobSpectraS3Request(jobId)).getMasterObjectListResult();
-                cachedSize = mol.getCachedSizeInBytes();
-               checkTimeOut(startTimePutObject, testTimeOutSeconds);
-            }
+
+            waitForObjectToBeInCache(testTimeOutSeconds, jobId);
 
             final CancelJobSpectraS3Response responseWithForce = client
                     .cancelJobSpectraS3(new CancelJobSpectraS3Request(jobId).withForce(true));
@@ -312,7 +303,7 @@ public class PutJobManagement_Test {
                         jobCanceled = true;
                     }
                 }
-                checkTimeOut(startTimeCanceledUpdate, testTimeOutSeconds);
+                assertThat((System.nanoTime() - startTimeCanceledUpdate)/1000000000, lessThan((long) testTimeOutSeconds));
             }
 
         } finally {
@@ -324,16 +315,10 @@ public class PutJobManagement_Test {
     public void cancelAllJobs() throws IOException, SignatureException, XmlProcessingException {
         
         try {
-            final List<Ds3Object> objectsOne = Lists.newArrayList(new Ds3Object("testOne", 2));
-
             HELPERS.startWriteJob(BUCKET_NAME, Lists.newArrayList(new Ds3Object("testOne", 2)));
-
             final List<Ds3Object> objectsTwo = Lists.newArrayList(new Ds3Object("testTwo", 2));
-
             HELPERS.startWriteJob(BUCKET_NAME, objectsTwo);
-
-            final CancelAllJobsSpectraS3Response response = client
-                    .cancelAllJobsSpectraS3(new CancelAllJobsSpectraS3Request());
+            client.cancelAllJobsSpectraS3(new CancelAllJobsSpectraS3Request());
 
             assertTrue(client.getActiveJobsSpectraS3(new GetActiveJobsSpectraS3Request())
                     .getActiveJobListResult().getActiveJobs().isEmpty());
@@ -368,24 +353,11 @@ public class PutJobManagement_Test {
             final SeekableByteChannel book2Channel = new ResourceObjectPutter(RESOURCE_BASE_NAME).buildChannel(book2);
             client.putObject(new PutObjectRequest(BUCKET_NAME, book2, book2Channel, jobId2, 0, Files.size(objPath2)));
 
-            final Ds3ClientHelpers.Job putJob3 = HELPERS.startWriteJob(BUCKET_NAME, Lists
+            HELPERS.startWriteJob(BUCKET_NAME, Lists
                     .newArrayList(new Ds3Object("place_holder_3", 1000000)));
-            final UUID jobId3 = putJob3.getJobId();
 
-            //make sure black pearl has updated the first 2 jobs to show 1 object in cache each
-            final long startTime = System.nanoTime();
-            boolean cachedSizeUpdated = false;
-            while (!cachedSizeUpdated) {
-                Thread.sleep(500);
-                final MasterObjectList job1mol = client.getJobSpectraS3(new GetJobSpectraS3Request(jobId1)).getMasterObjectListResult();
-                final long job1CachedSize = job1mol.getCachedSizeInBytes();
-                final MasterObjectList job2mol = client.getJobSpectraS3(new GetJobSpectraS3Request(jobId2)).getMasterObjectListResult();
-                final long job2CachedSize = job1mol.getCachedSizeInBytes();
-                if (job1CachedSize > 0 && job2CachedSize > 0) {
-                    cachedSizeUpdated = true;
-                }
-                checkTimeOut(startTime, testTimeOutSeconds);
-            }
+            waitForObjectToBeInCache(testTimeOutSeconds, jobId1);
+            waitForObjectToBeInCache(testTimeOutSeconds, jobId2);
 
             final CancelAllJobsSpectraS3Response failedResponse = client
                     .cancelAllJobsSpectraS3(new CancelAllJobsSpectraS3Request());
@@ -432,27 +404,13 @@ public class PutJobManagement_Test {
             final SeekableByteChannel book2Channel = new ResourceObjectPutter(RESOURCE_BASE_NAME).buildChannel(book2);
             client.putObject(new PutObjectRequest(BUCKET_NAME, book2, book2Channel, jobId2, 0, Files.size(objPath2)));
 
-            final Ds3ClientHelpers.Job putJob3 = HELPERS.startWriteJob(BUCKET_NAME, Lists
+            HELPERS.startWriteJob(BUCKET_NAME, Lists
                     .newArrayList(new Ds3Object("place_holder_3", 1000000)));
-            final UUID jobId3 = putJob3.getJobId();
 
-            //make sure black pearl has updated the first 2 jobs to show 1 object in cache each
-            final long startTime = System.nanoTime();
-            boolean cachedSizeUpdated = false;
-            while (!cachedSizeUpdated) {
-                Thread.sleep(500);
-                final MasterObjectList job1mol = client.getJobSpectraS3(new GetJobSpectraS3Request(jobId1)).getMasterObjectListResult();
-                final long job1CachedSize = job1mol.getCachedSizeInBytes();
-                final MasterObjectList job2mol = client.getJobSpectraS3(new GetJobSpectraS3Request(jobId2)).getMasterObjectListResult();
-                final long job2CachedSize = job1mol.getCachedSizeInBytes();
-                if (job1CachedSize > 0 && job2CachedSize > 0) {
-                    cachedSizeUpdated = true;
-                }
-                checkTimeOut(startTime, testTimeOutSeconds);
-            }
+            waitForObjectToBeInCache(testTimeOutSeconds, jobId1);
+            waitForObjectToBeInCache(testTimeOutSeconds, jobId2);
 
-            final CancelAllJobsSpectraS3Response response = client
-                    .cancelAllJobsSpectraS3(new CancelAllJobsSpectraS3Request().withForce(true));
+            client.cancelAllJobsSpectraS3(new CancelAllJobsSpectraS3Request().withForce(true));
 
             assertTrue(client.getActiveJobsSpectraS3(new GetActiveJobsSpectraS3Request())
                     .getActiveJobListResult().getActiveJobs().isEmpty());
@@ -595,6 +553,4 @@ public class PutJobManagement_Test {
             deleteAllContents(client, BUCKET_NAME);
         }
     }
-
-
 }
