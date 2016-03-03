@@ -252,7 +252,6 @@ public class PutJobManagement_Test {
             final UUID jobId = putJob.getJobId();
             final SeekableByteChannel book1Channel = new ResourceObjectPutter(RESOURCE_BASE_NAME).buildChannel(book1);
             client.putObject(new PutObjectRequest(BUCKET_NAME, book1, book1Channel, jobId, 0, Files.size(objPath1)));
-
             waitForObjectToBeInCache(testTimeOutSeconds, jobId);
 
             final CancelJobSpectraS3Response failedResponse = client.cancelJobSpectraS3(new CancelJobSpectraS3Request(jobId));
@@ -283,9 +282,6 @@ public class PutJobManagement_Test {
             final UUID jobId = putJob.getJobId();
             final SeekableByteChannel book1Channel = new ResourceObjectPutter(RESOURCE_BASE_NAME).buildChannel(book1);
             client.putObject(new PutObjectRequest(BUCKET_NAME, book1, book1Channel, jobId, 0, Files.size(objPath1)));
-
-            //make sure black pearl has updated it's job to show 1 object in cache
-
             waitForObjectToBeInCache(testTimeOutSeconds, jobId);
 
             final CancelJobSpectraS3Response responseWithForce = client
@@ -511,46 +507,32 @@ public class PutJobManagement_Test {
 
     @Test
     public void putObjectCachedNotification() throws IOException, SignatureException, XmlProcessingException {
-        try {
             final PutObjectCachedNotificationRegistrationSpectraS3Response putNotificationResponse = client
                     .putObjectCachedNotificationRegistrationSpectraS3
                             (new PutObjectCachedNotificationRegistrationSpectraS3Request("test@test.test"));
 
             assertThat(putNotificationResponse.getStatusCode(), is(201));
-
-        } finally {
-            deleteAllContents(client, BUCKET_NAME);
-        }
     }
 
     @Test
     public void getObjectCachedNotification() throws IOException, SignatureException, XmlProcessingException {
 
-        try {
-            final PutObjectCachedNotificationRegistrationSpectraS3Response putNotificationResponse = client
-                    .putObjectCachedNotificationRegistrationSpectraS3
-                            (new PutObjectCachedNotificationRegistrationSpectraS3Request("test@test.test"));
-            final GetObjectCachedNotificationRegistrationSpectraS3Response getNotificationResponse = client
-                    .getObjectCachedNotificationRegistrationSpectraS3(
-                            (new GetObjectCachedNotificationRegistrationSpectraS3Request
-                                    (putNotificationResponse.getS3ObjectCachedNotificationRegistrationResult().getId())));
-            assertThat(getNotificationResponse.getStatusCode(), is(200));
+        final PutObjectCachedNotificationRegistrationSpectraS3Response putNotificationResponse = client
+                .putObjectCachedNotificationRegistrationSpectraS3
+                        (new PutObjectCachedNotificationRegistrationSpectraS3Request("test@test.test"));
+        final GetObjectCachedNotificationRegistrationSpectraS3Response getNotificationResponse = client
+                .getObjectCachedNotificationRegistrationSpectraS3(
+                        (new GetObjectCachedNotificationRegistrationSpectraS3Request
+                                (putNotificationResponse.getS3ObjectCachedNotificationRegistrationResult().getId())));
 
-        } finally {
-            deleteAllContents(client, BUCKET_NAME);
-        }
+        assertThat(getNotificationResponse.getStatusCode(), is(200));
     }
 
     @Test
     public void getCompletedJobs() throws IOException, SignatureException, XmlProcessingException {
-        try {
-            final GetCompletedJobsSpectraS3Response getCompletedJobsResponse = client.
-                    getCompletedJobsSpectraS3(new GetCompletedJobsSpectraS3Request());
+        final GetCompletedJobsSpectraS3Response getCompletedJobsResponse = client.
+                getCompletedJobsSpectraS3(new GetCompletedJobsSpectraS3Request());
 
-            assertThat(getCompletedJobsResponse.getStatusCode(), is(200));
-
-        } finally {
-            deleteAllContents(client, BUCKET_NAME);
-        }
+        assertThat(getCompletedJobsResponse.getStatusCode(), is(200));
     }
 }
