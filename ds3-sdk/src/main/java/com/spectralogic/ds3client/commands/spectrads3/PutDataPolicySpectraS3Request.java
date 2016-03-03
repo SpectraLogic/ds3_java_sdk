@@ -57,7 +57,7 @@ public class PutDataPolicySpectraS3Request extends AbstractRequest {
 
     public PutDataPolicySpectraS3Request withBlobbingEnabled(final boolean blobbingEnabled) {
         this.blobbingEnabled = blobbingEnabled;
-        this.updateQueryParam("blobbing_enabled", null);
+        this.updateQueryParam("blobbing_enabled", String.valueOf(blobbingEnabled));
         return this;
     }
 
@@ -93,7 +93,7 @@ public class PutDataPolicySpectraS3Request extends AbstractRequest {
 
     public PutDataPolicySpectraS3Request withEndToEndCrcRequired(final boolean endToEndCrcRequired) {
         this.endToEndCrcRequired = endToEndCrcRequired;
-        this.updateQueryParam("end_to_end_crc_required", null);
+        this.updateQueryParam("end_to_end_crc_required", String.valueOf(endToEndCrcRequired));
         return this;
     }
 

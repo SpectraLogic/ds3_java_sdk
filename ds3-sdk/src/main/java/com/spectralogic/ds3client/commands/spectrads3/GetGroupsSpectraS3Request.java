@@ -44,7 +44,7 @@ public class GetGroupsSpectraS3Request extends AbstractRequest {
 
     public GetGroupsSpectraS3Request withBuiltIn(final boolean builtIn) {
         this.builtIn = builtIn;
-        this.updateQueryParam("built_in", null);
+        this.updateQueryParam("built_in", String.valueOf(builtIn));
         return this;
     }
 

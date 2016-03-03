@@ -62,7 +62,7 @@ public class GetActiveJobsSpectraS3Request extends AbstractRequest {
 
     public GetActiveJobsSpectraS3Request withAggregating(final boolean aggregating) {
         this.aggregating = aggregating;
-        this.updateQueryParam("aggregating", null);
+        this.updateQueryParam("aggregating", String.valueOf(aggregating));
         return this;
     }
 
@@ -132,7 +132,7 @@ public class GetActiveJobsSpectraS3Request extends AbstractRequest {
 
     public GetActiveJobsSpectraS3Request withTruncated(final boolean truncated) {
         this.truncated = truncated;
-        this.updateQueryParam("truncated", null);
+        this.updateQueryParam("truncated", String.valueOf(truncated));
         return this;
     }
 

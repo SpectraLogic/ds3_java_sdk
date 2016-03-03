@@ -124,7 +124,7 @@ public class GetCanceledJobsSpectraS3Request extends AbstractRequest {
 
     public GetCanceledJobsSpectraS3Request withTruncated(final boolean truncated) {
         this.truncated = truncated;
-        this.updateQueryParam("truncated", null);
+        this.updateQueryParam("truncated", String.valueOf(truncated));
         return this;
     }
 

@@ -61,7 +61,7 @@ public class GetPoolsSpectraS3Request extends AbstractRequest {
 
     public GetPoolsSpectraS3Request withAssignedToStorageDomain(final boolean assignedToStorageDomain) {
         this.assignedToStorageDomain = assignedToStorageDomain;
-        this.updateQueryParam("assigned_to_storage_domain", null);
+        this.updateQueryParam("assigned_to_storage_domain", String.valueOf(assignedToStorageDomain));
         return this;
     }
 
@@ -119,7 +119,7 @@ public class GetPoolsSpectraS3Request extends AbstractRequest {
 
     public GetPoolsSpectraS3Request withPoweredOn(final boolean poweredOn) {
         this.poweredOn = poweredOn;
-        this.updateQueryParam("powered_on", null);
+        this.updateQueryParam("powered_on", String.valueOf(poweredOn));
         return this;
     }
 

@@ -87,7 +87,7 @@ public class GetObjectsSpectraS3Request extends AbstractRequest {
 
     public GetObjectsSpectraS3Request withLatest(final boolean latest) {
         this.latest = latest;
-        this.updateQueryParam("latest", null);
+        this.updateQueryParam("latest", String.valueOf(latest));
         return this;
     }
 
