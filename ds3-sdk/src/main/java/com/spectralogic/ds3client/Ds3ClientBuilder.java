@@ -135,6 +135,10 @@ public class Ds3ClientBuilder implements Builder<Ds3Client> {
      * @throws IllegalArgumentException This will be thrown if the proxy endpoint is not a valid URI.
      */
     public Ds3ClientBuilder withProxy(final String proxy) throws IllegalArgumentException {
+        if (proxy == null) {
+            LOG.warn("Proxy was null");
+            return this;
+        }
         try {
             final URI proxyUri;
             if(!proxy.startsWith("http")) {
