@@ -23,7 +23,6 @@ import java.lang.String;
 import java.util.List;
 import java.util.ArrayList;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
-import com.spectralogic.ds3client.models.MultiPartUpload;
 
 @JacksonXmlRootElement(namespace = "ListMultipartUploadsResult")
 public class ListMultiPartUploadsResult {

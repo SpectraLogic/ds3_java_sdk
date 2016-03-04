@@ -21,11 +21,7 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import java.util.UUID;
 import java.lang.String;
-import com.spectralogic.ds3client.models.PoolHealth;
 import java.util.Date;
-import com.spectralogic.ds3client.models.Quiesced;
-import com.spectralogic.ds3client.models.PoolState;
-import com.spectralogic.ds3client.models.PoolType;
 
 @JacksonXmlRootElement(namespace = "Data")
 public class Pool {

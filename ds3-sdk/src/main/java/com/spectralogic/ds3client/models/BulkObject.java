@@ -22,7 +22,6 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import java.util.UUID;
 import java.lang.Boolean;
 import java.lang.String;
-import com.spectralogic.ds3client.models.PhysicalPlacement;
 
 @JacksonXmlRootElement(namespace = "Data")
 public class BulkObject {

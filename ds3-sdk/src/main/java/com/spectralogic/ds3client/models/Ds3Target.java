@@ -19,12 +19,8 @@ package com.spectralogic.ds3client.models;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import com.spectralogic.ds3client.models.Ds3TargetAccessControlReplication;
 import java.lang.String;
-import com.spectralogic.ds3client.models.TargetReadPreference;
 import java.util.UUID;
-import com.spectralogic.ds3client.models.Quiesced;
-import com.spectralogic.ds3client.models.TargetState;
 
 @JacksonXmlRootElement(namespace = "Data")
 public class Ds3Target {

@@ -20,18 +20,11 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import java.lang.String;
-import com.spectralogic.ds3client.models.JobChunkClientProcessingOrderGuarantee;
 import java.util.UUID;
-import com.spectralogic.ds3client.models.Ds3Node;
 import java.util.List;
 import java.util.ArrayList;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
-import com.spectralogic.ds3client.models.Objects;
-import com.spectralogic.ds3client.models.Priority;
-import com.spectralogic.ds3client.models.JobRequestType;
 import java.util.Date;
-import com.spectralogic.ds3client.models.JobStatus;
-import com.spectralogic.ds3client.models.WriteOptimization;
 
 @JacksonXmlRootElement(namespace = "MasterObjectList")
 public class MasterObjectList {

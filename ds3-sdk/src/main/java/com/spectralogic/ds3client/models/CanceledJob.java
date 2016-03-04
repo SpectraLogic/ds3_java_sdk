@@ -20,11 +20,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import java.util.UUID;
-import com.spectralogic.ds3client.models.JobChunkClientProcessingOrderGuarantee;
 import java.util.Date;
 import java.lang.String;
-import com.spectralogic.ds3client.models.Priority;
-import com.spectralogic.ds3client.models.JobRequestType;
 
 @JacksonXmlRootElement(namespace = "Data")
 public class CanceledJob {

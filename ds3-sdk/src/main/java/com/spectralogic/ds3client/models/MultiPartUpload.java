@@ -21,7 +21,6 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import java.util.Date;
 import java.lang.String;
-import com.spectralogic.ds3client.models.User;
 import java.util.UUID;
 
 @JacksonXmlRootElement(namespace = "Data")

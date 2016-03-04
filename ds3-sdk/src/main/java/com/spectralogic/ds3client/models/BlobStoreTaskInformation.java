@@ -22,9 +22,6 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import java.util.Date;
 import java.lang.String;
 import java.util.UUID;
-import com.spectralogic.ds3client.models.Duration;
-import com.spectralogic.ds3client.models.Priority;
-import com.spectralogic.ds3client.models.BlobStoreTaskState;
 
 @JacksonXmlRootElement(namespace = "Data")
 public class BlobStoreTaskInformation {

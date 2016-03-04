@@ -16,7 +16,7 @@
 package com.spectralogic.ds3client.commands;
 
 import com.google.common.collect.Multimap;
-import com.spectralogic.ds3client.HttpVerb;
+import com.spectralogic.ds3client.networking.HttpVerb;
 import com.spectralogic.ds3client.models.ChecksumType;
 
 import java.io.InputStream;

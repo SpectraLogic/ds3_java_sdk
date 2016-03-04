@@ -23,10 +23,6 @@ import java.lang.Long;
 import java.lang.String;
 import java.util.UUID;
 import java.util.Date;
-import com.spectralogic.ds3client.models.DetailedTapeFailure;
-import com.spectralogic.ds3client.models.TapeState;
-import com.spectralogic.ds3client.models.TapeType;
-import com.spectralogic.ds3client.models.Priority;
 
 @JacksonXmlRootElement(namespace = "Tape")
 public class NamedDetailedTape {

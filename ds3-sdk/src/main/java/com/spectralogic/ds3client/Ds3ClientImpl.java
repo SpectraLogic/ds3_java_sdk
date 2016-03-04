@@ -24,6 +24,7 @@ import com.spectralogic.ds3client.commands.spectrads3.notifications.*;
 import com.spectralogic.ds3client.models.Ds3Node;
 import com.spectralogic.ds3client.networking.ConnectionDetails;
 import com.spectralogic.ds3client.networking.NetworkClient;
+import com.spectralogic.ds3client.networking.NetworkClientImpl;
 
 public class Ds3ClientImpl implements Ds3Client {
     private final NetworkClient netClient;

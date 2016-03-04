@@ -22,7 +22,6 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import java.util.Date;
 import java.lang.String;
 import java.util.UUID;
-import com.spectralogic.ds3client.models.StorageDomainFailureType;
 
 @JacksonXmlRootElement(namespace = "Data")
 public class StorageDomainFailure {

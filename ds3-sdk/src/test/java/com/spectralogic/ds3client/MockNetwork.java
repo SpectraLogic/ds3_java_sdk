@@ -19,6 +19,7 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Multimap;
 import com.spectralogic.ds3client.commands.Ds3Request;
 import com.spectralogic.ds3client.networking.ConnectionDetails;
+import com.spectralogic.ds3client.networking.HttpVerb;
 import com.spectralogic.ds3client.networking.NetworkClient;
 import com.spectralogic.ds3client.networking.WebResponse;
 

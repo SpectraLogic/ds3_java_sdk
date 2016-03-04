@@ -21,9 +21,6 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import java.lang.String;
 import java.util.UUID;
-import com.spectralogic.ds3client.models.LtfsFileNamingMode;
-import com.spectralogic.ds3client.models.Priority;
-import com.spectralogic.ds3client.models.WriteOptimization;
 
 @JacksonXmlRootElement(namespace = "Data")
 public class StorageDomain {

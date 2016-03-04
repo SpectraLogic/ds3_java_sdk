@@ -22,8 +22,6 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import java.lang.String;
 import java.util.UUID;
 import java.util.Date;
-import com.spectralogic.ds3client.models.TapeDriveState;
-import com.spectralogic.ds3client.models.TapeDriveType;
 
 @JacksonXmlRootElement(namespace = "Data")
 public class TapeDrive {

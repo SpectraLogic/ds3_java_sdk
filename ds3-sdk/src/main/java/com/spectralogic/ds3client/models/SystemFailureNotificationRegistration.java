@@ -20,12 +20,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import java.util.Date;
-import com.spectralogic.ds3client.models.HttpResponseFormatType;
 import java.util.UUID;
 import java.lang.String;
 import java.lang.Integer;
-import com.spectralogic.ds3client.models.NamingConventionType;
-import com.spectralogic.ds3client.models.RequestType;
 
 @JacksonXmlRootElement(namespace = "Data")
 public class SystemFailureNotificationRegistration {

@@ -15,7 +15,7 @@
 
 package com.spectralogic.ds3client.utils;
 
-import com.spectralogic.ds3client.HttpVerb;
+import com.spectralogic.ds3client.networking.HttpVerb;
 import com.spectralogic.ds3client.models.Credentials;
 import com.spectralogic.ds3client.models.SignatureDetails;
 import org.junit.Test;
