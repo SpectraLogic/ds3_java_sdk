@@ -87,6 +87,7 @@ public class PutJobManagement_Test {
         }
     }
 
+    @SuppressWarnings("deprecation")
     @Test
     public void nakedS3Put() throws IOException, SignatureException, XmlProcessingException, URISyntaxException {
         try {
