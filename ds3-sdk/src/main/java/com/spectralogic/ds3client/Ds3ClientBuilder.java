@@ -58,7 +58,7 @@ public class Ds3ClientBuilder implements Builder<Ds3Client> {
         this.endpoint = endpoint;
         this.credentials = credentials;
     }
-    
+
     /**
      * Returns a Builder which is used to customize the behavior of the Ds3Client library.
      * @param endpoint The DS3 endpoint the library should connect to.
@@ -135,6 +135,10 @@ public class Ds3ClientBuilder implements Builder<Ds3Client> {
      * @throws IllegalArgumentException This will be thrown if the proxy endpoint is not a valid URI.
      */
     public Ds3ClientBuilder withProxy(final String proxy) throws IllegalArgumentException {
+        if (proxy == null) {
+            LOG.info("Proxy was null");
+            return this;
+        }
         try {
             final URI proxyUri;
             if(!proxy.startsWith("http")) {
