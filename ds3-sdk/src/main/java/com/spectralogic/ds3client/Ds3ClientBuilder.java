@@ -136,7 +136,7 @@ public class Ds3ClientBuilder implements Builder<Ds3Client> {
      */
     public Ds3ClientBuilder withProxy(final String proxy) throws IllegalArgumentException {
         if (proxy == null) {
-            LOG.warn("Proxy was null");
+            LOG.info("Proxy was null");
             return this;
         }
         try {

@@ -32,9 +32,13 @@ import org.apache.http.HttpStatus;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.protocol.HttpClientContext;
-import org.apache.http.conn.ssl.AllowAllHostnameVerifier;
+import org.apache.http.config.Registry;
+import org.apache.http.config.RegistryBuilder;
+import org.apache.http.conn.HttpClientConnectionManager;
+import org.apache.http.conn.socket.ConnectionSocketFactory;
+import org.apache.http.conn.socket.PlainConnectionSocketFactory;
+import org.apache.http.conn.ssl.NoopHostnameVerifier;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
-import org.apache.http.conn.ssl.SSLContexts;
 import org.apache.http.conn.ssl.TrustStrategy;
 import org.apache.http.entity.ContentType;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -42,6 +46,7 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.message.BasicHttpEntityEnclosingRequest;
 import org.apache.http.message.BasicHttpRequest;
+import org.apache.http.ssl.SSLContextBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -108,25 +113,10 @@ public class NetworkClientImpl implements NetworkClient {
 
 
     private static CloseableHttpClient createDefaultClient(final ConnectionDetails connectionDetails) {
-        final PoolingHttpClientConnectionManager connectionManager = new PoolingHttpClientConnectionManager();
-        connectionManager.setDefaultMaxPerRoute(MAX_CONNECTION_PER_ROUTE);
-        connectionManager.setMaxTotal(MAX_CONNECTION_TOTAL);
 
         if (connectionDetails.isHttps() && !connectionDetails.isCertificateVerification()) {
             try {
-
-                final SSLContext sslContext = SSLContexts.custom().loadTrustMaterial(null, new TrustStrategy() {
-                    @Override
-                    public boolean isTrusted(final X509Certificate[] chain, final String authType) throws CertificateException {
-                        return true;
-                    }
-                }).useTLS().build();
-
-                final SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(sslContext, new AllowAllHostnameVerifier());
-                return HttpClients.custom()
-                        .setConnectionManager(connectionManager)
-                        .setSSLSocketFactory(
-                        sslsf).build();
+                return createInsecureSslHttpClient();
 
             } catch (final NoSuchAlgorithmException | KeyStoreException | KeyManagementException e) {
                 throw new SSLSetupException(e);
@@ -134,9 +124,44 @@ public class NetworkClientImpl implements NetworkClient {
         }
         else {
             return HttpClients.custom()
-                    .setConnectionManager(connectionManager)
+                    .setConnectionManager(createConnectionManager(null))
                     .build();
         }
+    }
+
+    private static CloseableHttpClient createInsecureSslHttpClient() throws NoSuchAlgorithmException, KeyManagementException, KeyStoreException {
+        final SSLContext sslContext = new SSLContextBuilder().loadTrustMaterial(null, new TrustStrategy() {
+            @Override
+            public boolean isTrusted(final X509Certificate[] chain, final String authType) throws CertificateException {
+                return true;
+            }
+        }).build();
+
+        final SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(sslContext, new NoopHostnameVerifier());
+        final Registry<ConnectionSocketFactory> socketFactoryRegistry = RegistryBuilder.<ConnectionSocketFactory>create()
+                .register("http", PlainConnectionSocketFactory.getSocketFactory())
+                .register("https", sslsf)
+                .build();
+
+        final HttpClientConnectionManager connectionManager = createConnectionManager(socketFactoryRegistry);
+
+        return HttpClients.custom()
+                .setConnectionManager(connectionManager)
+                .setSSLSocketFactory(
+                sslsf).build();
+    }
+
+    private static HttpClientConnectionManager createConnectionManager(final Registry<ConnectionSocketFactory> socketFactoryRegistry) {
+        final PoolingHttpClientConnectionManager connectionManager;
+        if (socketFactoryRegistry != null) {
+            connectionManager = new PoolingHttpClientConnectionManager(socketFactoryRegistry);
+        } else {
+            connectionManager = new PoolingHttpClientConnectionManager();
+        }
+
+        connectionManager.setDefaultMaxPerRoute(MAX_CONNECTION_PER_ROUTE);
+        connectionManager.setMaxTotal(MAX_CONNECTION_TOTAL);
+        return connectionManager;
     }
 
     private static HttpHost buildHost(final ConnectionDetails connectionDetails) throws MalformedURLException {
