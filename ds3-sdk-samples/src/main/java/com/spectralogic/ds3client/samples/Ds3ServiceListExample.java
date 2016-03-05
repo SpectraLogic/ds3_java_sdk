@@ -40,6 +40,32 @@ public class Ds3ServiceListExample {
             for (final Ds3Bucket bucket : response.getListAllMyBucketsResult().getBuckets()) {
                 System.out.println(bucket.getName());
             }
+        // Catch any unknown host or authorization exceptions.
+        } catch (final IOException e) { 
+
+        	// By default include exception message.
+        	String msg = "IOException: " + e.getMessage();
+        	
+        	// If an invalid Secret Key was provided.
+        	if (e.getMessage().contains("signature is invalid")) {
+        	
+        		msg = "Invalid Secret Key";
+        	
+        	// If an invalid Access ID was provided.
+        	} else if (e.getMessage().contains("Authorization id") && e.getMessage().contains("unknown")) {
+        	
+        		msg = "Invalid Access ID";
+        		
+        	// If the Endpoint was not found.
+        	} else if (e.getClass().getName().contains("UnknownHostException")) {
+        		
+        		msg = "Invalid Endpoint Server Name or IP Address";
+        		
+        	}
+        	
+        	// Print out message.
+        	System.out.println(msg);
+        	
         }
     }
 }
