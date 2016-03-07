@@ -18,7 +18,6 @@ package com.spectralogic.ds3client.commands.spectrads3.notifications;
 
 import com.spectralogic.ds3client.networking.WebResponse;
 import java.io.IOException;
-import java.io.InputStream;
 import com.spectralogic.ds3client.commands.AbstractResponse;
 
 public class DeleteSystemFailureNotificationRegistrationSpectraS3Response extends AbstractResponse {
