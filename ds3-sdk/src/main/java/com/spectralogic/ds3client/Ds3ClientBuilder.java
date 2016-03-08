@@ -17,6 +17,7 @@ package com.spectralogic.ds3client;
 
 import com.spectralogic.ds3client.models.Credentials;
 import com.spectralogic.ds3client.networking.NetworkClient;
+import com.spectralogic.ds3client.networking.NetworkClientImpl;
 import com.spectralogic.ds3client.utils.Builder;
 import com.spectralogic.ds3client.utils.Guard;
 import org.slf4j.Logger;

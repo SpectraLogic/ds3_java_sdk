@@ -13,10 +13,8 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3client;
+package com.spectralogic.ds3client.networking;
 
-import com.spectralogic.ds3client.networking.Headers;
-import com.spectralogic.ds3client.networking.WebResponse;
 import org.apache.http.client.methods.CloseableHttpResponse;
 
 import javax.annotation.Nonnull;

@@ -15,7 +15,7 @@
 
 package com.spectralogic.ds3client.models;
 
-import com.spectralogic.ds3client.HttpVerb;
+import com.spectralogic.ds3client.networking.HttpVerb;
 
 public class SignatureDetails {
     final private HttpVerb verb;

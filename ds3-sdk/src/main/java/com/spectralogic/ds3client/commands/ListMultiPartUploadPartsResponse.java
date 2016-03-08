@@ -18,8 +18,8 @@ package com.spectralogic.ds3client.commands;
 
 import com.spectralogic.ds3client.networking.WebResponse;
 import java.io.IOException;
-import java.io.InputStream;
 import com.spectralogic.ds3client.models.ListPartsResult;
+import java.io.InputStream;
 import com.spectralogic.ds3client.serializer.XmlOutput;
 
 public class ListMultiPartUploadPartsResponse extends AbstractResponse {

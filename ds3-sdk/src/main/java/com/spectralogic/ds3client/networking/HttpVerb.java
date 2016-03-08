@@ -13,7 +13,7 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3client;
+package com.spectralogic.ds3client.networking;
 
 public enum HttpVerb {
     GET,PUT,DELETE,HEAD,POST

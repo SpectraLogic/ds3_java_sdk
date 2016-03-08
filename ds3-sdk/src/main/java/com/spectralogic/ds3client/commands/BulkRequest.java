@@ -16,7 +16,7 @@
 package com.spectralogic.ds3client.commands;
 
 import com.spectralogic.ds3client.BulkCommand;
-import com.spectralogic.ds3client.HttpVerb;
+import com.spectralogic.ds3client.networking.HttpVerb;
 import com.spectralogic.ds3client.models.Priority;
 import com.spectralogic.ds3client.models.JobChunkClientProcessingOrderGuarantee;
 import com.spectralogic.ds3client.models.WriteOptimization;

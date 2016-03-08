@@ -13,7 +13,7 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3client;
+package com.spectralogic.ds3client.networking;
 
 import com.spectralogic.ds3client.models.ChecksumType;
 import com.spectralogic.ds3client.utils.hashing.*;

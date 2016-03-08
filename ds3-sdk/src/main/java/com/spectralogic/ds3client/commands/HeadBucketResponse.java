@@ -18,7 +18,6 @@ package com.spectralogic.ds3client.commands;
 
 import com.spectralogic.ds3client.networking.WebResponse;
 import java.io.IOException;
-import java.io.InputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

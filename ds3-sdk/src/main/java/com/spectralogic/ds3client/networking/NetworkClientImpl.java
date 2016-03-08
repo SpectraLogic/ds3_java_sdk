@@ -13,16 +13,16 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3client;
+package com.spectralogic.ds3client.networking;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.Multimap;
 import com.google.common.net.UrlEscapers;
+import com.spectralogic.ds3client.Ds3InputStreamEntity;
 import com.spectralogic.ds3client.commands.Ds3Request;
 import com.spectralogic.ds3client.commands.PutObjectRequest;
 import com.spectralogic.ds3client.models.ChecksumType;
 import com.spectralogic.ds3client.models.SignatureDetails;
-import com.spectralogic.ds3client.networking.*;
 import com.spectralogic.ds3client.utils.DateFormatter;
 import com.spectralogic.ds3client.utils.SSLSetupException;
 import com.spectralogic.ds3client.utils.Signature;
