@@ -32,10 +32,7 @@ import com.spectralogic.ds3client.models.*;
 import com.spectralogic.ds3client.models.bulk.Ds3Object;
 import com.spectralogic.ds3client.serializer.XmlProcessingException;
 import com.spectralogic.ds3client.utils.ResourceUtils;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.*;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -242,6 +239,7 @@ public class PutJobManagement_Test {
         }
     }
 
+    @Ignore("Disabling until the TruncateJob request is implemented.")
     @Test
     public void truncateJobCancelWithOutForce() throws IOException, SignatureException, XmlProcessingException, URISyntaxException, InterruptedException {
 
@@ -268,8 +266,6 @@ public class PutJobManagement_Test {
             deleteAllContents(client, BUCKET_NAME);
         }
     }
-
-
 
     @Test
     public void cancelJobWithForce() throws IOException, SignatureException, XmlProcessingException, URISyntaxException, InterruptedException {
@@ -327,6 +323,7 @@ public class PutJobManagement_Test {
         }
     }
 
+    @Ignore("Disabling until the TruncateJob request is implemented.")
     @Test
     public void truncateCancelAllJobsWithoutForce() throws IOException, SignatureException, XmlProcessingException, InterruptedException, URISyntaxException {
 
