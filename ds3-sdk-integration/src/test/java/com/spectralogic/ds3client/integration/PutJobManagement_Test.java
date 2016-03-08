@@ -242,6 +242,8 @@ public class PutJobManagement_Test {
         }
     }
 
+    /**
+     * Disabling until the TruncateJob request is implemented.
     @Test
     public void truncateJobCancelWithOutForce() throws IOException, SignatureException, XmlProcessingException, URISyntaxException, InterruptedException {
 
@@ -267,9 +269,7 @@ public class PutJobManagement_Test {
         } finally {
             deleteAllContents(client, BUCKET_NAME);
         }
-    }
-
-
+    }*/
 
     @Test
     public void cancelJobWithForce() throws IOException, SignatureException, XmlProcessingException, URISyntaxException, InterruptedException {
@@ -327,6 +327,8 @@ public class PutJobManagement_Test {
         }
     }
 
+    /**
+     * Disabling until the TruncateJob request is implemented.
     @Test
     public void truncateCancelAllJobsWithoutForce() throws IOException, SignatureException, XmlProcessingException, InterruptedException, URISyntaxException {
 
@@ -376,7 +378,7 @@ public class PutJobManagement_Test {
         } finally {
             deleteAllContents(client, BUCKET_NAME);
         }
-    }
+    }*/
 
     @Test
     public void cancelAllJobsWithForce ()throws IOException, SignatureException, XmlProcessingException, InterruptedException, URISyntaxException {
