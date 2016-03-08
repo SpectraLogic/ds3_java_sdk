@@ -63,6 +63,10 @@ public class Ds3ServiceListExample {
         		
         	}
                 
-        } 
+        } catch (final IOException e) {
+            
+                System.out.println("Encountered a networking error");
+            
+        }
     }
 }
