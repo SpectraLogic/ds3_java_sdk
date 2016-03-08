@@ -29,7 +29,7 @@ import com.spectralogic.ds3client.networking.NetworkClientImpl;
 public class Ds3ClientImpl implements Ds3Client {
     private final NetworkClient netClient;
 
-    Ds3ClientImpl(final NetworkClient netClient) {
+    public Ds3ClientImpl(final NetworkClient netClient) {
         this.netClient = netClient;
     }
 
