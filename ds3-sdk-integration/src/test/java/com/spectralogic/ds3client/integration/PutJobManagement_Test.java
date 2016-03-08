@@ -17,7 +17,8 @@ package com.spectralogic.ds3client.integration;
 
 import com.google.common.collect.Lists;
 import com.spectralogic.ds3client.Ds3Client;
-import com.spectralogic.ds3client.commands.*;
+import com.spectralogic.ds3client.commands.PutObjectRequest;
+import com.spectralogic.ds3client.commands.PutObjectResponse;
 import com.spectralogic.ds3client.commands.spectrads3.*;
 import com.spectralogic.ds3client.commands.spectrads3.notifications.GetObjectCachedNotificationRegistrationSpectraS3Request;
 import com.spectralogic.ds3client.commands.spectrads3.notifications.GetObjectCachedNotificationRegistrationSpectraS3Response;
@@ -31,7 +32,6 @@ import com.spectralogic.ds3client.models.*;
 import com.spectralogic.ds3client.models.bulk.Ds3Object;
 import com.spectralogic.ds3client.serializer.XmlProcessingException;
 import com.spectralogic.ds3client.utils.ResourceUtils;
-import static org.hamcrest.Matchers.*;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -40,14 +40,17 @@ import org.junit.Test;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.channels.SeekableByteChannel;
-import java.nio.file.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.security.SignatureException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
-import static com.spectralogic.ds3client.integration.Util.*;
+import static com.spectralogic.ds3client.integration.Util.RESOURCE_BASE_NAME;
+import static com.spectralogic.ds3client.integration.Util.deleteAllContents;
+import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
 
 public class PutJobManagement_Test {
@@ -61,7 +64,7 @@ public class PutJobManagement_Test {
 
     @BeforeClass
     public static void startup() throws IOException, SignatureException {
-        final UUID dataPolicyId = TempStorageUtil.setupDataPolicy(TEST_ENV_NAME, true, ChecksumType.Type.MD5, client);
+        final UUID dataPolicyId = TempStorageUtil.setupDataPolicy(TEST_ENV_NAME, false, ChecksumType.Type.MD5, client);
         envStorageIds = TempStorageUtil.setup(TEST_ENV_NAME, dataPolicyId, client);
     }
 
@@ -158,7 +161,7 @@ public class PutJobManagement_Test {
 
     @Test
     public void modifyJobName() throws IOException, SignatureException, XmlProcessingException {
-        
+
         try {
             final Ds3ClientHelpers.Job job =
                     HELPERS.startWriteJob(BUCKET_NAME, Lists.newArrayList(new Ds3Object("testOne", 2)));
@@ -178,7 +181,7 @@ public class PutJobManagement_Test {
 
     @Test
     public void modifyJobCreationDate() throws IOException, SignatureException, XmlProcessingException {
-        
+
         try {
             final Ds3ClientHelpers.Job job =
                     HELPERS.startWriteJob(BUCKET_NAME, Lists.newArrayList(new Ds3Object("testOne", 2)));
@@ -203,7 +206,7 @@ public class PutJobManagement_Test {
 
     @Test
     public void cancelJob() throws IOException, SignatureException, XmlProcessingException {
-        
+
         try {
             final Ds3ClientHelpers.Job job =
                     HELPERS.startWriteJob(BUCKET_NAME, Lists.newArrayList(new Ds3Object("testOne", 2)));
@@ -272,7 +275,7 @@ public class PutJobManagement_Test {
     public void cancelJobWithForce() throws IOException, SignatureException, XmlProcessingException, URISyntaxException, InterruptedException {
 
         final int testTimeOutSeconds = 5;
-        
+
         final String book1 = "beowulf.txt";
         final Path objPath1 = ResourceUtils.loadFileResource(RESOURCE_BASE_NAME + book1);
         final Ds3Object obj1 = new Ds3Object(book1, Files.size(objPath1));
@@ -310,7 +313,7 @@ public class PutJobManagement_Test {
 
     @Test
     public void cancelAllJobs() throws IOException, SignatureException, XmlProcessingException {
-        
+
         try {
             HELPERS.startWriteJob(BUCKET_NAME, Lists.newArrayList(new Ds3Object("testOne", 2)));
             final List<Ds3Object> objectsTwo = Lists.newArrayList(new Ds3Object("testTwo", 2));
@@ -419,7 +422,7 @@ public class PutJobManagement_Test {
 
     @Test
     public void getCanceledJobs() throws IOException, SignatureException, XmlProcessingException {
-            
+
         try {
             final Ds3ClientHelpers.Job jobOne =
                     HELPERS.startWriteJob(BUCKET_NAME, Lists.newArrayList(new Ds3Object("test", 2)));
@@ -443,7 +446,7 @@ public class PutJobManagement_Test {
 
     @Test
     public void getJobChunksReady() throws IOException, SignatureException, XmlProcessingException {
-        
+
         try {
             final Ds3Object ds3Object = new Ds3Object("test", 2);
             final Ds3ClientHelpers.Job jobOne =
@@ -470,7 +473,7 @@ public class PutJobManagement_Test {
 
     @Test
     public void aggregateTwoJobs() throws IOException, SignatureException, XmlProcessingException {
-        
+
         try {
             final WriteJobOptions writeJobOptions = WriteJobOptions.create().withAggregating();
 
@@ -491,7 +494,7 @@ public class PutJobManagement_Test {
 
     @Test
     public void allocateJobChunk() throws IOException, SignatureException, XmlProcessingException {
-        
+
         try {
             final PutBulkJobSpectraS3Response putBulkResponse = client.
                     putBulkJobSpectraS3(new PutBulkJobSpectraS3Request(BUCKET_NAME, Lists.newArrayList(new Ds3Object("test", 2))));
