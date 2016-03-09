@@ -17,6 +17,7 @@ package com.spectralogic.ds3client;
 
 import com.spectralogic.ds3client.models.Credentials;
 import com.spectralogic.ds3client.networking.NetworkClient;
+import com.spectralogic.ds3client.networking.NetworkClientImpl;
 import com.spectralogic.ds3client.utils.Builder;
 import com.spectralogic.ds3client.utils.Guard;
 import org.slf4j.Logger;
@@ -135,6 +136,10 @@ public class Ds3ClientBuilder implements Builder<Ds3Client> {
      * @throws IllegalArgumentException This will be thrown if the proxy endpoint is not a valid URI.
      */
     public Ds3ClientBuilder withProxy(final String proxy) throws IllegalArgumentException {
+        if (proxy == null) {
+            LOG.info("Proxy was null");
+            return this;
+        }
         try {
             final URI proxyUri;
             if(!proxy.startsWith("http")) {

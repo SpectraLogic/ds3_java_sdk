@@ -16,7 +16,7 @@
 // This code is auto-generated, do not modify
 package com.spectralogic.ds3client.commands;
 
-import com.spectralogic.ds3client.HttpVerb;
+import com.spectralogic.ds3client.networking.HttpVerb;
 import com.google.common.net.UrlEscapers;
 
 public class ListMultiPartUploadsRequest extends AbstractRequest {

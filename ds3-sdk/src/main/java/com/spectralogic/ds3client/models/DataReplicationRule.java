@@ -18,12 +18,8 @@ package com.spectralogic.ds3client.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import com.spectralogic.ds3client.models.ReplicationConflictResolutionMode;
 import java.util.UUID;
 import java.lang.String;
-import com.spectralogic.ds3client.models.DataPersistenceRuleState;
-import com.spectralogic.ds3client.models.DataReplicationRuleType;
 
 @JacksonXmlRootElement(namespace = "Data")
 public class DataReplicationRule {

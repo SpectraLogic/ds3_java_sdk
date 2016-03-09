@@ -18,9 +18,7 @@ package com.spectralogic.ds3client.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import java.util.UUID;
-import com.spectralogic.ds3client.models.BucketAclPermission;
 
 @JacksonXmlRootElement(namespace = "Data")
 public class BucketAcl {

@@ -15,7 +15,7 @@
 
 package com.spectralogic.ds3client.commands.notifications;
 
-import com.spectralogic.ds3client.HttpVerb;
+import com.spectralogic.ds3client.networking.HttpVerb;
 import com.spectralogic.ds3client.commands.AbstractRequest;
 
 public abstract class AbstractCreateNotificationRequest extends AbstractRequest {

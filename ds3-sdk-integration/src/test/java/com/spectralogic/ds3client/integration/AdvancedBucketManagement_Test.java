@@ -19,7 +19,8 @@ import java.security.SignatureException;
 import java.util.List;
 import java.util.UUID;
 
-import static com.spectralogic.ds3client.integration.Util.*;
+import static com.spectralogic.ds3client.integration.Util.deleteAllContents;
+import static com.spectralogic.ds3client.integration.Util.loadBookTestData;
 import static com.spectralogic.ds3client.integration.test.helpers.ABMTestHelper.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
@@ -33,7 +34,7 @@ public class AdvancedBucketManagement_Test {
     @BeforeClass
     public static void startup() throws IOException, SignatureException {
         client = Util.fromEnv();
-        final UUID dataPolicyId = TempStorageUtil.setupDataPolicy(TEST_ENV_NAME, true, ChecksumType.Type.MD5, client);
+        final UUID dataPolicyId = TempStorageUtil.setupDataPolicy(TEST_ENV_NAME, false, ChecksumType.Type.MD5, client);
         envStorageIds = TempStorageUtil.setup(TEST_ENV_NAME, dataPolicyId, client);
     }
 

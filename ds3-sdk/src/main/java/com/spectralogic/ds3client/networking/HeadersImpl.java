@@ -13,37 +13,41 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3client;
+package com.spectralogic.ds3client.networking;
 
+import com.google.common.collect.ImmutableMultimap;
 import com.spectralogic.ds3client.networking.Headers;
 import org.apache.http.Header;
-import org.apache.http.message.BasicHeader;
-import org.junit.Test;
 
 import java.util.List;
+import java.util.Set;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+class HeadersImpl implements Headers {
 
-public class HeadersImpl_Test {
+    private final ImmutableMultimap<String, String> headers;
 
-    @Test
-    public void findHeader() {
-        final Headers headers = genHeaders(new BasicHeader("content-md5", "Q2hlY2sgSW50ZWdyaXR5IQ=="));
-        final String value = headers.get("content-md5").get(0);
-        assertThat(value, is("Q2hlY2sgSW50ZWdyaXR5IQ=="));
+
+    HeadersImpl(final Header[] allHeaders){
+        this.headers = toMultiMap(allHeaders);
     }
 
-    @Test
-    public void unknownHeader() {
-        final Headers headers = genHeaders();
-        final List<String> value = headers.get("Content-Md5");
-        assertTrue(value.isEmpty());
+    private static ImmutableMultimap<String, String> toMultiMap(final Header[] headers){
+        final ImmutableMultimap.Builder<String, String> builder = ImmutableMultimap.builder();
+
+        for (final Header header : headers) {
+            builder.put(header.getName().toLowerCase(), header.getValue());
+        }
+
+        return builder.build();
     }
 
-    public Headers genHeaders(final Header... headers) {
-        return new HeadersImpl(headers);
+    @Override
+    public List<String> get(final String key) {
+        return headers.get(key.toLowerCase()).asList();
+    }
+
+    @Override
+    public Set<String> keys() {
+        return headers.keySet();
     }
 }

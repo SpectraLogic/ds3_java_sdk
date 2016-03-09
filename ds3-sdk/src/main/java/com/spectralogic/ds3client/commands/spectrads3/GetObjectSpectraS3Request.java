@@ -19,7 +19,7 @@ package com.spectralogic.ds3client.commands.spectrads3;
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableCollection;
 import com.google.common.collect.ImmutableList;
-import com.spectralogic.ds3client.HttpVerb;
+import com.spectralogic.ds3client.networking.HttpVerb;
 import com.spectralogic.ds3client.models.Range;
 import org.apache.http.entity.ContentType;
 import java.nio.channels.WritableByteChannel;

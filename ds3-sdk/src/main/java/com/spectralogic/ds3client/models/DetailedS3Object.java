@@ -18,13 +18,10 @@ package com.spectralogic.ds3client.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import com.spectralogic.ds3client.models.BulkObjectList;
 import java.lang.Integer;
 import java.util.UUID;
 import java.util.Date;
 import java.lang.String;
-import com.spectralogic.ds3client.models.S3ObjectType;
 
 @JacksonXmlRootElement(namespace = "Object")
 public class DetailedS3Object {

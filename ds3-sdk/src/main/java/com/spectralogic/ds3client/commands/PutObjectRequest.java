@@ -16,7 +16,7 @@
 // This code is auto-generated, do not modify
 package com.spectralogic.ds3client.commands;
 
-import com.spectralogic.ds3client.HttpVerb;
+import com.spectralogic.ds3client.networking.HttpVerb;
 import java.io.InputStream;
 import java.nio.channels.SeekableByteChannel;
 import com.spectralogic.ds3client.utils.SeekableByteChannelInputStream;
