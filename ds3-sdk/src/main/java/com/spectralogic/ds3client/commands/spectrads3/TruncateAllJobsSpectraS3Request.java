@@ -21,7 +21,7 @@ import com.spectralogic.ds3client.commands.AbstractRequest;
 import com.google.common.net.UrlEscapers;
 import com.spectralogic.ds3client.models.JobRequestType;
 
-public class CancelAllJobsSpectraS3Request extends AbstractRequest {
+public class TruncateAllJobsSpectraS3Request extends AbstractRequest {
 
     // Variables
     
@@ -31,17 +31,16 @@ public class CancelAllJobsSpectraS3Request extends AbstractRequest {
 
     // Constructor
     
-    public CancelAllJobsSpectraS3Request() {
-                this.getQueryParams().put("force", null);
-    }
+    public TruncateAllJobsSpectraS3Request() {
+            }
 
-    public CancelAllJobsSpectraS3Request withBucketId(final String bucketId) {
+    public TruncateAllJobsSpectraS3Request withBucketId(final String bucketId) {
         this.bucketId = bucketId;
         this.updateQueryParam("bucket_id", bucketId);
         return this;
     }
 
-    public CancelAllJobsSpectraS3Request withRequestType(final JobRequestType requestType) {
+    public TruncateAllJobsSpectraS3Request withRequestType(final JobRequestType requestType) {
         this.requestType = requestType;
         this.updateQueryParam("request_type", requestType.toString());
         return this;

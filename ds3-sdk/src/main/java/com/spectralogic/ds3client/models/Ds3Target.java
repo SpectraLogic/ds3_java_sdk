@@ -19,6 +19,7 @@ package com.spectralogic.ds3client.models;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import java.lang.String;
+import java.lang.Integer;
 import java.util.UUID;
 
 @JacksonXmlRootElement(namespace = "Data")
@@ -34,8 +35,20 @@ public class Ds3Target {
     @JsonProperty("AdminSecretKey")
     private String adminSecretKey;
 
-    @JsonProperty("DataPath")
-    private String dataPath;
+    @JsonProperty("DataPathEndPoint")
+    private String dataPathEndPoint;
+
+    @JsonProperty("DataPathHttps")
+    private boolean dataPathHttps;
+
+    @JsonProperty("DataPathPort")
+    private Integer dataPathPort;
+
+    @JsonProperty("DataPathProxy")
+    private String dataPathProxy;
+
+    @JsonProperty("DataPathVerifyCertificate")
+    private boolean dataPathVerifyCertificate;
 
     @JsonProperty("DefaultReadPreference")
     private TargetReadPreference defaultReadPreference;
@@ -95,12 +108,48 @@ public class Ds3Target {
     }
 
 
-    public String getDataPath() {
-        return this.dataPath;
+    public String getDataPathEndPoint() {
+        return this.dataPathEndPoint;
     }
 
-    public void setDataPath(final String dataPath) {
-        this.dataPath = dataPath;
+    public void setDataPathEndPoint(final String dataPathEndPoint) {
+        this.dataPathEndPoint = dataPathEndPoint;
+    }
+
+
+    public boolean getDataPathHttps() {
+        return this.dataPathHttps;
+    }
+
+    public void setDataPathHttps(final boolean dataPathHttps) {
+        this.dataPathHttps = dataPathHttps;
+    }
+
+
+    public Integer getDataPathPort() {
+        return this.dataPathPort;
+    }
+
+    public void setDataPathPort(final Integer dataPathPort) {
+        this.dataPathPort = dataPathPort;
+    }
+
+
+    public String getDataPathProxy() {
+        return this.dataPathProxy;
+    }
+
+    public void setDataPathProxy(final String dataPathProxy) {
+        this.dataPathProxy = dataPathProxy;
+    }
+
+
+    public boolean getDataPathVerifyCertificate() {
+        return this.dataPathVerifyCertificate;
+    }
+
+    public void setDataPathVerifyCertificate(final boolean dataPathVerifyCertificate) {
+        this.dataPathVerifyCertificate = dataPathVerifyCertificate;
     }
 
 

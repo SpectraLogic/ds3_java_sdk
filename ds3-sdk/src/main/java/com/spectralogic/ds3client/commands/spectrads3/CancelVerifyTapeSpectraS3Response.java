@@ -18,24 +18,29 @@ package com.spectralogic.ds3client.commands.spectrads3;
 
 import com.spectralogic.ds3client.networking.WebResponse;
 import java.io.IOException;
+import com.spectralogic.ds3client.models.Tape;
+import java.io.InputStream;
+import com.spectralogic.ds3client.serializer.XmlOutput;
 import com.spectralogic.ds3client.commands.AbstractResponse;
 
-public class ImportAllTapesSpectraS3Response extends AbstractResponse {
+public class CancelVerifyTapeSpectraS3Response extends AbstractResponse {
 
+    private Tape tapeResult;
 
-
-    public ImportAllTapesSpectraS3Response(final WebResponse response) throws IOException {
+    public CancelVerifyTapeSpectraS3Response(final WebResponse response) throws IOException {
         super(response);
     }
 
     @Override
     protected void processResponse() throws IOException {
         try {
-            this.checkStatusCode(204);
+            this.checkStatusCode(200);
 
             switch (this.getStatusCode()) {
-            case 204:
-                //Do nothing, payload is null
+            case 200:
+                try (final InputStream content = getResponse().getResponseStream()) {
+                    this.tapeResult = XmlOutput.fromXml(content, Tape.class);
+                }
                 break;
             default:
                 assert false : "checkStatusCode should have made it impossible to reach this line.";
@@ -45,5 +50,8 @@ public class ImportAllTapesSpectraS3Response extends AbstractResponse {
         }
     }
 
+    public Tape getTapeResult() {
+        return this.tapeResult;
+    }
 
 }

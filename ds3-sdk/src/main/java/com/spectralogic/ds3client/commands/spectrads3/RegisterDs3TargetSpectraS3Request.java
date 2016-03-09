@@ -20,6 +20,7 @@ import com.spectralogic.ds3client.networking.HttpVerb;
 import com.spectralogic.ds3client.commands.AbstractRequest;
 import com.google.common.net.UrlEscapers;
 import com.spectralogic.ds3client.models.Ds3TargetAccessControlReplication;
+import java.lang.Integer;
 import com.spectralogic.ds3client.models.TargetReadPreference;
 import java.util.UUID;
 
@@ -31,11 +32,19 @@ public class RegisterDs3TargetSpectraS3Request extends AbstractRequest {
 
     private final String adminSecretKey;
 
-    private final String dataPath;
+    private final String dataPathEndPoint;
 
     private final String name;
 
     private Ds3TargetAccessControlReplication accessControlReplication;
+
+    private boolean dataPathHttps;
+
+    private int dataPathPort;
+
+    private String dataPathProxy;
+
+    private boolean dataPathVerifyCertificate;
 
     private TargetReadPreference defaultReadPreference;
 
@@ -47,20 +56,44 @@ public class RegisterDs3TargetSpectraS3Request extends AbstractRequest {
 
     // Constructor
     
-    public RegisterDs3TargetSpectraS3Request(final String adminAuthId, final String adminSecretKey, final String dataPath, final String name) {
+    public RegisterDs3TargetSpectraS3Request(final String adminAuthId, final String adminSecretKey, final String dataPathEndPoint, final String name) {
         this.adminAuthId = adminAuthId;
         this.adminSecretKey = adminSecretKey;
-        this.dataPath = dataPath;
+        this.dataPathEndPoint = dataPathEndPoint;
         this.name = name;
                 this.getQueryParams().put("admin_auth_id", UrlEscapers.urlFragmentEscaper().escape(adminAuthId));
         this.getQueryParams().put("admin_secret_key", UrlEscapers.urlFragmentEscaper().escape(adminSecretKey));
-        this.getQueryParams().put("data_path", UrlEscapers.urlFragmentEscaper().escape(dataPath));
+        this.getQueryParams().put("data_path_end_point", UrlEscapers.urlFragmentEscaper().escape(dataPathEndPoint));
         this.getQueryParams().put("name", UrlEscapers.urlFragmentEscaper().escape(name));
     }
 
     public RegisterDs3TargetSpectraS3Request withAccessControlReplication(final Ds3TargetAccessControlReplication accessControlReplication) {
         this.accessControlReplication = accessControlReplication;
         this.updateQueryParam("access_control_replication", accessControlReplication.toString());
+        return this;
+    }
+
+    public RegisterDs3TargetSpectraS3Request withDataPathHttps(final boolean dataPathHttps) {
+        this.dataPathHttps = dataPathHttps;
+        this.updateQueryParam("data_path_https", String.valueOf(dataPathHttps));
+        return this;
+    }
+
+    public RegisterDs3TargetSpectraS3Request withDataPathPort(final int dataPathPort) {
+        this.dataPathPort = dataPathPort;
+        this.updateQueryParam("data_path_port", Integer.toString(dataPathPort));
+        return this;
+    }
+
+    public RegisterDs3TargetSpectraS3Request withDataPathProxy(final String dataPathProxy) {
+        this.dataPathProxy = dataPathProxy;
+        this.updateQueryParam("data_path_proxy", UrlEscapers.urlFragmentEscaper().escape(dataPathProxy));
+        return this;
+    }
+
+    public RegisterDs3TargetSpectraS3Request withDataPathVerifyCertificate(final boolean dataPathVerifyCertificate) {
+        this.dataPathVerifyCertificate = dataPathVerifyCertificate;
+        this.updateQueryParam("data_path_verify_certificate", String.valueOf(dataPathVerifyCertificate));
         return this;
     }
 
@@ -109,8 +142,8 @@ public class RegisterDs3TargetSpectraS3Request extends AbstractRequest {
     }
 
 
-    public String getDataPath() {
-        return this.dataPath;
+    public String getDataPathEndPoint() {
+        return this.dataPathEndPoint;
     }
 
 
@@ -121,6 +154,26 @@ public class RegisterDs3TargetSpectraS3Request extends AbstractRequest {
 
     public Ds3TargetAccessControlReplication getAccessControlReplication() {
         return this.accessControlReplication;
+    }
+
+
+    public boolean getDataPathHttps() {
+        return this.dataPathHttps;
+    }
+
+
+    public int getDataPathPort() {
+        return this.dataPathPort;
+    }
+
+
+    public String getDataPathProxy() {
+        return this.dataPathProxy;
+    }
+
+
+    public boolean getDataPathVerifyCertificate() {
+        return this.dataPathVerifyCertificate;
     }
 
 

@@ -285,7 +285,7 @@ public class PutJobManagement_Test {
             waitForObjectToBeInCache(testTimeOutSeconds, jobId);
 
             final CancelJobSpectraS3Response responseWithForce = client
-                    .cancelJobSpectraS3(new CancelJobSpectraS3Request(jobId).withForce(true));
+                    .cancelJobSpectraS3(new CancelJobSpectraS3Request(jobId));
             assertEquals(responseWithForce.getStatusCode(), 204);
 
             //Allow for lag time before canceled job appears~1.5 seconds in unloaded system
@@ -407,7 +407,7 @@ public class PutJobManagement_Test {
             waitForObjectToBeInCache(testTimeOutSeconds, jobId1);
             waitForObjectToBeInCache(testTimeOutSeconds, jobId2);
 
-            client.cancelAllJobsSpectraS3(new CancelAllJobsSpectraS3Request().withForce(true));
+            client.cancelAllJobsSpectraS3(new CancelAllJobsSpectraS3Request());
 
             assertTrue(client.getActiveJobsSpectraS3(new GetActiveJobsSpectraS3Request())
                     .getActiveJobListResult().getActiveJobs().isEmpty());

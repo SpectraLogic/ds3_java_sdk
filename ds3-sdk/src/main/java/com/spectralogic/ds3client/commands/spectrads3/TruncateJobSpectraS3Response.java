@@ -20,11 +20,11 @@ import com.spectralogic.ds3client.networking.WebResponse;
 import java.io.IOException;
 import com.spectralogic.ds3client.commands.AbstractResponse;
 
-public class ImportAllTapesSpectraS3Response extends AbstractResponse {
+public class TruncateJobSpectraS3Response extends AbstractResponse {
 
 
 
-    public ImportAllTapesSpectraS3Response(final WebResponse response) throws IOException {
+    public TruncateJobSpectraS3Response(final WebResponse response) throws IOException {
         super(response);
     }
 

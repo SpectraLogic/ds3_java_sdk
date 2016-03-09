@@ -14,28 +14,37 @@
  */
 
 // This code is auto-generated, do not modify
-package com.spectralogic.ds3client.models;
+package com.spectralogic.ds3client.commands.spectrads3;
 
-public enum RestOperationType {
-    ALLOCATE,
-    CANCEL_EJECT,
-    CANCEL_FORMAT,
-    CANCEL_IMPORT,
-    CANCEL_ONLINE,
-    CANCEL_VERIFY,
-    CLEAN,
-    COMPACT,
-    DEALLOCATE,
-    EJECT,
-    FORMAT,
-    GET_PHYSICAL_PLACEMENT,
-    IMPORT,
-    INSPECT,
-    ONLINE,
-    REGENERATE_SECRET_KEY,
-    START_BULK_GET,
-    START_BULK_PUT,
-    START_BULK_VERIFY,
-    VERIFY,
-    VERIFY_PHYSICAL_PLACEMENT
+import com.spectralogic.ds3client.networking.HttpVerb;
+import com.spectralogic.ds3client.commands.AbstractRequest;
+import java.util.UUID;
+
+public class TruncateJobSpectraS3Request extends AbstractRequest {
+
+    // Variables
+    
+    private final UUID jobId;
+
+    // Constructor
+    
+    public TruncateJobSpectraS3Request(final UUID jobId) {
+        this.jobId = jobId;
+            }
+
+
+    @Override
+    public HttpVerb getVerb() {
+        return HttpVerb.DELETE;
+    }
+
+    @Override
+    public String getPath() {
+        return "/_rest_/job/" + jobId.toString();
+    }
+    
+    public UUID getJobId() {
+        return this.jobId;
+    }
+
 }

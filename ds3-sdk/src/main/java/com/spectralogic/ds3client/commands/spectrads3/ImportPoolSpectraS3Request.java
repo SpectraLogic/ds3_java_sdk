@@ -20,6 +20,7 @@ import com.spectralogic.ds3client.networking.HttpVerb;
 import com.spectralogic.ds3client.commands.AbstractRequest;
 import com.spectralogic.ds3client.models.ImportConflictResolutionMode;
 import java.util.UUID;
+import com.spectralogic.ds3client.models.Priority;
 import com.google.common.net.UrlEscapers;
 
 public class ImportPoolSpectraS3Request extends AbstractRequest {
@@ -32,9 +33,15 @@ public class ImportPoolSpectraS3Request extends AbstractRequest {
 
     private UUID dataPolicyId;
 
+    private Priority priority;
+
     private UUID storageDomainId;
 
     private UUID userId;
+
+    private Priority verifyDataAfterImport;
+
+    private boolean verifyDataPriorToImport;
 
     // Constructor
     
@@ -56,6 +63,12 @@ public class ImportPoolSpectraS3Request extends AbstractRequest {
         return this;
     }
 
+    public ImportPoolSpectraS3Request withPriority(final Priority priority) {
+        this.priority = priority;
+        this.updateQueryParam("priority", priority.toString());
+        return this;
+    }
+
     public ImportPoolSpectraS3Request withStorageDomainId(final UUID storageDomainId) {
         this.storageDomainId = storageDomainId;
         this.updateQueryParam("storage_domain_id", storageDomainId.toString());
@@ -65,6 +78,18 @@ public class ImportPoolSpectraS3Request extends AbstractRequest {
     public ImportPoolSpectraS3Request withUserId(final UUID userId) {
         this.userId = userId;
         this.updateQueryParam("user_id", userId.toString());
+        return this;
+    }
+
+    public ImportPoolSpectraS3Request withVerifyDataAfterImport(final Priority verifyDataAfterImport) {
+        this.verifyDataAfterImport = verifyDataAfterImport;
+        this.updateQueryParam("verify_data_after_import", verifyDataAfterImport.toString());
+        return this;
+    }
+
+    public ImportPoolSpectraS3Request withVerifyDataPriorToImport(final boolean verifyDataPriorToImport) {
+        this.verifyDataPriorToImport = verifyDataPriorToImport;
+        this.updateQueryParam("verify_data_prior_to_import", String.valueOf(verifyDataPriorToImport));
         return this;
     }
 
@@ -94,6 +119,11 @@ public class ImportPoolSpectraS3Request extends AbstractRequest {
     }
 
 
+    public Priority getPriority() {
+        return this.priority;
+    }
+
+
     public UUID getStorageDomainId() {
         return this.storageDomainId;
     }
@@ -101,6 +131,16 @@ public class ImportPoolSpectraS3Request extends AbstractRequest {
 
     public UUID getUserId() {
         return this.userId;
+    }
+
+
+    public Priority getVerifyDataAfterImport() {
+        return this.verifyDataAfterImport;
+    }
+
+
+    public boolean getVerifyDataPriorToImport() {
+        return this.verifyDataPriorToImport;
     }
 
 }

@@ -19,52 +19,60 @@ package com.spectralogic.ds3client.commands.spectrads3;
 import com.spectralogic.ds3client.networking.HttpVerb;
 import com.spectralogic.ds3client.commands.AbstractRequest;
 import com.google.common.net.UrlEscapers;
-import com.spectralogic.ds3client.models.JobRequestType;
+import java.util.UUID;
 
-public class CancelAllJobsSpectraS3Request extends AbstractRequest {
+public class DelegateCreateUserSpectraS3Request extends AbstractRequest {
 
     // Variables
     
-    private String bucketId;
+    private final String name;
 
-    private JobRequestType requestType;
+    private UUID id;
+
+    private String secretKey;
 
     // Constructor
     
-    public CancelAllJobsSpectraS3Request() {
-                this.getQueryParams().put("force", null);
+    public DelegateCreateUserSpectraS3Request(final String name) {
+        this.name = name;
+                this.getQueryParams().put("name", UrlEscapers.urlFragmentEscaper().escape(name));
     }
 
-    public CancelAllJobsSpectraS3Request withBucketId(final String bucketId) {
-        this.bucketId = bucketId;
-        this.updateQueryParam("bucket_id", bucketId);
+    public DelegateCreateUserSpectraS3Request withId(final UUID id) {
+        this.id = id;
+        this.updateQueryParam("id", id.toString());
         return this;
     }
 
-    public CancelAllJobsSpectraS3Request withRequestType(final JobRequestType requestType) {
-        this.requestType = requestType;
-        this.updateQueryParam("request_type", requestType.toString());
+    public DelegateCreateUserSpectraS3Request withSecretKey(final String secretKey) {
+        this.secretKey = secretKey;
+        this.updateQueryParam("secret_key", UrlEscapers.urlFragmentEscaper().escape(secretKey));
         return this;
     }
 
 
     @Override
     public HttpVerb getVerb() {
-        return HttpVerb.DELETE;
+        return HttpVerb.POST;
     }
 
     @Override
     public String getPath() {
-        return "/_rest_/job";
+        return "/_rest_/user";
     }
     
-    public String getBucketId() {
-        return this.bucketId;
+    public String getName() {
+        return this.name;
     }
 
 
-    public JobRequestType getRequestType() {
-        return this.requestType;
+    public UUID getId() {
+        return this.id;
+    }
+
+
+    public String getSecretKey() {
+        return this.secretKey;
     }
 
 }

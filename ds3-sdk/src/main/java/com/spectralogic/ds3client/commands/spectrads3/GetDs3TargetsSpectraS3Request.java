@@ -19,6 +19,7 @@ package com.spectralogic.ds3client.commands.spectrads3;
 import com.spectralogic.ds3client.networking.HttpVerb;
 import com.spectralogic.ds3client.commands.AbstractRequest;
 import com.google.common.net.UrlEscapers;
+import java.lang.Integer;
 import com.spectralogic.ds3client.models.TargetReadPreference;
 import java.util.UUID;
 import com.spectralogic.ds3client.models.Quiesced;
@@ -30,7 +31,15 @@ public class GetDs3TargetsSpectraS3Request extends AbstractRequest {
     
     private String adminAuthId;
 
-    private String dataPath;
+    private String dataPathEndPoint;
+
+    private boolean dataPathHttps;
+
+    private int dataPathPort;
+
+    private String dataPathProxy;
+
+    private boolean dataPathVerifyCertificate;
 
     private TargetReadPreference defaultReadPreference;
 
@@ -59,9 +68,33 @@ public class GetDs3TargetsSpectraS3Request extends AbstractRequest {
         return this;
     }
 
-    public GetDs3TargetsSpectraS3Request withDataPath(final String dataPath) {
-        this.dataPath = dataPath;
-        this.updateQueryParam("data_path", UrlEscapers.urlFragmentEscaper().escape(dataPath));
+    public GetDs3TargetsSpectraS3Request withDataPathEndPoint(final String dataPathEndPoint) {
+        this.dataPathEndPoint = dataPathEndPoint;
+        this.updateQueryParam("data_path_end_point", UrlEscapers.urlFragmentEscaper().escape(dataPathEndPoint));
+        return this;
+    }
+
+    public GetDs3TargetsSpectraS3Request withDataPathHttps(final boolean dataPathHttps) {
+        this.dataPathHttps = dataPathHttps;
+        this.updateQueryParam("data_path_https", String.valueOf(dataPathHttps));
+        return this;
+    }
+
+    public GetDs3TargetsSpectraS3Request withDataPathPort(final int dataPathPort) {
+        this.dataPathPort = dataPathPort;
+        this.updateQueryParam("data_path_port", Integer.toString(dataPathPort));
+        return this;
+    }
+
+    public GetDs3TargetsSpectraS3Request withDataPathProxy(final String dataPathProxy) {
+        this.dataPathProxy = dataPathProxy;
+        this.updateQueryParam("data_path_proxy", UrlEscapers.urlFragmentEscaper().escape(dataPathProxy));
+        return this;
+    }
+
+    public GetDs3TargetsSpectraS3Request withDataPathVerifyCertificate(final boolean dataPathVerifyCertificate) {
+        this.dataPathVerifyCertificate = dataPathVerifyCertificate;
+        this.updateQueryParam("data_path_verify_certificate", String.valueOf(dataPathVerifyCertificate));
         return this;
     }
 
@@ -133,8 +166,28 @@ public class GetDs3TargetsSpectraS3Request extends AbstractRequest {
     }
 
 
-    public String getDataPath() {
-        return this.dataPath;
+    public String getDataPathEndPoint() {
+        return this.dataPathEndPoint;
+    }
+
+
+    public boolean getDataPathHttps() {
+        return this.dataPathHttps;
+    }
+
+
+    public int getDataPathPort() {
+        return this.dataPathPort;
+    }
+
+
+    public String getDataPathProxy() {
+        return this.dataPathProxy;
+    }
+
+
+    public boolean getDataPathVerifyCertificate() {
+        return this.dataPathVerifyCertificate;
     }
 
 
