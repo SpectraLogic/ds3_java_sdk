@@ -264,7 +264,7 @@ public class Smoke_Test {
 
                 try {
                     TimeUnit.MILLISECONDS.sleep(500);
-                } catch (InterruptedException e) {
+                } catch (final InterruptedException e) {
                     LOG.warn("Caught interrupt", e);
                 }
             }
