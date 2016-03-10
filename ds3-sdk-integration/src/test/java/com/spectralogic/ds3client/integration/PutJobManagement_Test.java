@@ -26,6 +26,7 @@ import com.spectralogic.ds3client.integration.test.helpers.TempStorageIds;
 import com.spectralogic.ds3client.integration.test.helpers.TempStorageUtil;
 import com.spectralogic.ds3client.models.*;
 import com.spectralogic.ds3client.models.bulk.Ds3Object;
+import com.spectralogic.ds3client.networking.FailedRequestException;
 import com.spectralogic.ds3client.serializer.XmlProcessingException;
 import com.spectralogic.ds3client.utils.ResourceUtils;
 import org.junit.*;
@@ -64,7 +65,7 @@ public class PutJobManagement_Test {
     @Before
     public void setupBucket() throws IOException, SignatureException {
         HELPERS.ensureBucketExists(BUCKET_NAME);
-    }
+        }
 
     @AfterClass
     public static void teardown() throws IOException, SignatureException {
@@ -79,6 +80,18 @@ public class PutJobManagement_Test {
             final MasterObjectList mol = client.getJobSpectraS3(new GetJobSpectraS3Request(jobId)).getMasterObjectListResult();
             cachedSize = mol.getCachedSizeInBytes();
         }
+    }
+
+    private long getCacheBytesAvailable() throws IOException, SignatureException {
+        long cacheAvailableBytes = 0;
+        final List<CacheFilesystemInformation> cacheFilesystemInformationList = client.getCacheStateSpectraS3(
+                new GetCacheStateSpectraS3Request()).getCacheInformationResult().getFilesystems();
+        for (final CacheFilesystemInformation filesystemInformation : cacheFilesystemInformationList){
+            if (filesystemInformation.getAvailableCapacityInBytes() > cacheAvailableBytes){
+                cacheAvailableBytes = filesystemInformation.getAvailableCapacityInBytes();
+            }
+        }
+        return cacheAvailableBytes;
     }
 
     @SuppressWarnings("deprecation")
@@ -233,8 +246,7 @@ public class PutJobManagement_Test {
         }
     }
 
-    @Ignore("Disabling until the TruncateJob request is implemented.")
-    @Test(timeout = 5000)
+    @Test(timeout = 10000)
     public void truncateJobCancelWithOutForce() throws IOException, SignatureException, XmlProcessingException, URISyntaxException, InterruptedException {
 
         final String book1 = "beowulf.txt";
@@ -249,8 +261,12 @@ public class PutJobManagement_Test {
             client.putObject(new PutObjectRequest(BUCKET_NAME, book1, book1Channel, jobId, 0, Files.size(objPath1)));
             waitForObjectToBeInCache(jobId);
 
-            final CancelJobSpectraS3Response failedResponse = client.cancelJobSpectraS3(new CancelJobSpectraS3Request(jobId));
-            assertThat(failedResponse.getStatusCode(),is(400));
+            try {
+                client.cancelJobSpectraS3(new CancelJobSpectraS3Request(jobId));
+            } catch (final FailedRequestException e) {
+
+            assertThat(e.getStatusCode(), is(400));
+            }
 
             final GetJobSpectraS3Response truncatedJob = client.getJobSpectraS3(new GetJobSpectraS3Request(jobId));
             assertEquals(truncatedJob.getMasterObjectListResult().getOriginalSizeInBytes(), Files.size(objPath1));
@@ -312,7 +328,6 @@ public class PutJobManagement_Test {
         }
     }
 
-    @Ignore("Disabling until the TruncateJob request is implemented.")
     @Test(timeout = 10000)
     public void truncateCancelAllJobsWithoutForce() throws IOException, SignatureException, XmlProcessingException, InterruptedException, URISyntaxException {
 
@@ -344,10 +359,11 @@ public class PutJobManagement_Test {
             waitForObjectToBeInCache(jobId1);
             waitForObjectToBeInCache(jobId2);
 
-            final CancelAllJobsSpectraS3Response failedResponse = client
-                    .cancelAllJobsSpectraS3(new CancelAllJobsSpectraS3Request());
-
-            assertThat(failedResponse.getStatusCode(), is(400));
+            try {
+                client.cancelAllJobsSpectraS3(new CancelAllJobsSpectraS3Request());
+            } catch (final FailedRequestException e) {
+                assertThat(e.getStatusCode(), is(400));
+            }
 
             final GetJobSpectraS3Response truncatedJob1 = client.getJobSpectraS3(new GetJobSpectraS3Request(jobId1));
             assertEquals(truncatedJob1.getMasterObjectListResult().getOriginalSizeInBytes(), Files.size(objPath1));
@@ -601,19 +617,19 @@ public class PutJobManagement_Test {
 
     @Test
     public void InitiateMultipartUpload() throws IOException, SignatureException {
-        String uploadID = null;
         try {
             final InitiateMultiPartUploadResponse multiPartUploadResponse = client.initiateMultiPartUpload(
-                    new InitiateMultiPartUploadRequest(BUCKET_NAME,"beowulf" ));
-            uploadID = multiPartUploadResponse.getInitiateMultipartUploadResult().getUploadId();
+                    new InitiateMultiPartUploadRequest(BUCKET_NAME, "beowulf"));
 
-        assertThat(multiPartUploadResponse.getStatusCode(), is(201));
+            assertThat(multiPartUploadResponse.getStatusCode(), is(201));
+
+        } catch (final FailedRequestException e) {
+
+            assertThat(getCacheBytesAvailable(), lessThan(5000000000000L));
+            assertThat(e.getStatusCode(), is(400));
 
         } finally {
             deleteAllContents(client, BUCKET_NAME);
-
-//   TODO cleanup?         client.abortMultiPartUpload(new AbortMultiPartUploadRequest(
-//                    BUCKET_NAME,"beowulf", UUID.fromString(uploadID)));
         }
     }
 
@@ -621,21 +637,92 @@ public class PutJobManagement_Test {
     public void AbortMultipartUpload() throws IOException, SignatureException {
         String uploadID = null;
         try {
-            final InitiateMultiPartUploadResponse multiPartUploadResponse = client.initiateMultiPartUpload(
-                    new InitiateMultiPartUploadRequest(BUCKET_NAME,"beowulf" ));
-            uploadID = multiPartUploadResponse.getInitiateMultipartUploadResult().getUploadId();
+            try {
+                final InitiateMultiPartUploadResponse multiPartUploadResponse = client.initiateMultiPartUpload(
+                        new InitiateMultiPartUploadRequest(BUCKET_NAME, "beowulf"));
+                uploadID = multiPartUploadResponse.getInitiateMultipartUploadResult().getUploadId();
+            } catch (final FailedRequestException e) {
+                assertThat(getCacheBytesAvailable(), lessThan(5000000000000L));
+                assertThat(e.getStatusCode(), is(400));
+            }
+            UUID uuid = UUID.randomUUID();
+            if (uploadID != null){
+                uuid = UUID.fromString(uploadID);
+            }
             final AbortMultiPartUploadResponse abortResponse = client.abortMultiPartUpload(
-                    new AbortMultiPartUploadRequest(BUCKET_NAME,"beowulf", UUID.fromString(uploadID)));
+                    new AbortMultiPartUploadRequest(BUCKET_NAME, "beowulf", uuid));
 
             assertThat(abortResponse.getStatusCode(), is(204));
 
+        } catch (final FailedRequestException e) {
+
+            assertThat(e.getStatusCode(), is(404));
+
         } finally {
             deleteAllContents(client, BUCKET_NAME);
-
-//            client.abortMultiPartUpload(new AbortMultiPartUploadRequest(
-//                    BUCKET_NAME,"beowulf", UUID.fromString(uploadID)));
         }
     }
-    //TODO CompleteMultiPartUpload, CreateMultiPartUploadPart,
-    // TODO ListMultiPartUploadParts, ListMultiPartUploads,
+
+    @Test //TODO expand positive test if test target >5 TB cache is available
+    public void ListMultiPartUploadParts() throws IOException, SignatureException {
+        try {
+           final ListMultiPartUploadPartsResponse response = client.listMultiPartUploadParts(
+                    new ListMultiPartUploadPartsRequest(BUCKET_NAME, "beowulf", UUID.randomUUID()));
+
+            assertThat(response.getStatusCode(), is(200));
+            assertTrue(response.getListPartsResult().getParts().isEmpty());
+
+        } finally {
+            deleteAllContents(client, BUCKET_NAME);
+        }
+    }
+
+    @Test //TODO expand positive test if test target >5 TB cache is available
+    public void CompleteMultiPartUpload() throws IOException, SignatureException {
+        try {
+            client.completeMultiPartUpload(
+                    new CompleteMultiPartUploadRequest(BUCKET_NAME, "beowulf", UUID.randomUUID()));
+
+            fail("Response should have failed because upload part does not exist");
+
+        } catch (final FailedRequestException e) {
+
+            assertThat(e.getStatusCode(), is(404));
+
+        } finally {
+            deleteAllContents(client, BUCKET_NAME);
+        }
+    }
+
+    @Test //TODO expand positive test if test target >5 TB cache is available
+    public void ListMultiPartUploads() throws IOException, SignatureException {
+        try {
+            final ListMultiPartUploadsResponse response = client.listMultiPartUploads(
+                    new ListMultiPartUploadsRequest(BUCKET_NAME));
+
+            assertThat(response.getStatusCode(), is(200));
+            assertTrue(response.getListMultiPartUploadsResult().getUploads().isEmpty());
+
+        } finally {
+            deleteAllContents(client, BUCKET_NAME);
+        }
+    }
+
+    @Ignore("Pending resolution of Content-Length fail in header")
+    @Test //TODO expand positive test if test target >5 TB cache is available
+    public void PutMultiPartUploadPart() throws IOException, SignatureException {
+        try {
+            client.putMultiPartUploadPart(
+                    new PutMultiPartUploadPartRequest(BUCKET_NAME, "beowulf", 5, UUID.randomUUID()));
+
+            fail("Response should have failed because part does not exist");
+
+        } catch (final FailedRequestException e) {
+
+            assertThat(e.getStatusCode(), is(404));
+
+        } finally {
+            deleteAllContents(client, BUCKET_NAME);
+        }
+    }
 }

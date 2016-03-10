@@ -44,6 +44,7 @@ import org.apache.http.entity.ContentType;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
+import org.apache.http.impl.entity.StrictContentLengthStrategy;
 import org.apache.http.message.BasicHttpEntityEnclosingRequest;
 import org.apache.http.message.BasicHttpRequest;
 import org.apache.http.ssl.SSLContextBuilder;
@@ -64,7 +65,9 @@ import java.security.SignatureException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 
 public class NetworkClientImpl implements NetworkClient {
     final static private Logger LOG = LoggerFactory.getLogger(NetworkClientImpl.class);
@@ -181,6 +184,7 @@ public class NetworkClientImpl implements NetworkClient {
 
     @Override
     public WebResponse getResponse(final Ds3Request request) throws IOException, SignatureException {
+
         try (final RequestExecutor requestExecutor = new RequestExecutor(this.client, host, request)) {
             int redirectCount = 0;
             do {
@@ -277,7 +281,6 @@ public class NetworkClientImpl implements NetworkClient {
             if (!this.hash.isEmpty()) {
                 httpRequest.addHeader(getHashType(ds3Request.getChecksumType()), this.hash);
             }
-            
             // Add the signature header.
             httpRequest.addHeader(AUTHORIZATION, this.getSignature(new SignatureDetails(
                 this.ds3Request.getVerb(),
@@ -317,6 +320,12 @@ public class NetworkClientImpl implements NetworkClient {
                 canonicalizedResource.append("?versioning=").append(queryParams.get("versioning"));
             }
 
+            if (queryParams.containsKey("uploads")) {
+                canonicalizedResource.append("?uploads");
+                if (queryParams.get("uploads")!=null){
+                    canonicalizedResource.append("=").append(queryParams.get("uploads"));
+                }
+            }
             return canonicalizedResource.toString();
         }
 
