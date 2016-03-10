@@ -18,8 +18,8 @@ package com.spectralogic.ds3client.samples;
 import com.google.common.collect.Lists;
 import com.spectralogic.ds3client.Ds3Client;
 import com.spectralogic.ds3client.Ds3ClientBuilder;
-import com.spectralogic.ds3client.commands.GetObjectRequest;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers;
+import com.spectralogic.ds3client.helpers.FileObjectGetter;
 import com.spectralogic.ds3client.helpers.FileObjectPutter;
 import com.spectralogic.ds3client.helpers.JobRecoveryException;
 import com.spectralogic.ds3client.models.bulk.Ds3Object;
@@ -27,7 +27,6 @@ import com.spectralogic.ds3client.serializer.XmlProcessingException;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.nio.channels.FileChannel;
 import java.nio.file.*;
 import java.security.SignatureException;
 import java.util.List;
@@ -44,7 +43,8 @@ public class RecoverJobExample {
 
             // Our local path which contains all the files that we want to transfer
             // This example assumes that there is at least 2 files in the "input" directory
-            final Path inputPath = Paths.get("input");
+            final String inputDir = "input/";
+            final Path inputPath = Paths.get(inputDir);
 
             // Get the list of files that are contained in the inputPath
             final Iterable<Ds3Object> objects = helper.listObjectsForDirectory(inputPath);
@@ -58,38 +58,27 @@ public class RecoverJobExample {
             job.transfer(new FileObjectPutter(inputPath));
 
             // Create a local output directory to place retrieved objects into
-            final Path downloadPath = FileSystems.getDefault().getPath("output");
+            final Path downloadPath = FileSystems.getDefault().getPath("output/");
             if (!Files.exists(downloadPath)) {
                 Files.createDirectory(downloadPath);
             }
 
             // Get the first object
             final List<Ds3Object> objectsList = Lists.newArrayList(objects);
-            final Ds3Object object1 = objectsList.get(0);
-            final FileChannel channel1 = FileChannel.open(
-                    downloadPath.resolve(object1.getName()),
-                    StandardOpenOption.WRITE,
-                    StandardOpenOption.CREATE,
-                    StandardOpenOption.TRUNCATE_EXISTING
-            );
             final Ds3ClientHelpers.Job readJob = helper.startReadJob(bucketName, objectsList);
-            client.getObject(new GetObjectRequest(bucketName, object1.getName(), 0, readJob.getJobId(), channel1));
+            final Path object1Path = Paths.get(inputDir + objectsList.get(0).getName());
+            // Use the transfer() method for multithreaded parallel transfer.
+            readJob.transfer(new FileObjectGetter(object1Path));
 
             /**
              * Here is where we attempt to recover from a hypothetical interruption - before we get the 2nd object,
              * and while the job is still "In Progress"
              */
             try {
+                // Ask the server for all unsent chunks from readJob
                 final Ds3ClientHelpers.Job recoverJob = helper.recoverReadJob(readJob.getJobId());
-                final Ds3Object object2 = objectsList.get(1);
-                final FileChannel channel2 = FileChannel.open(
-                        downloadPath.resolve(object2.getName()),
-                        StandardOpenOption.WRITE,
-                        StandardOpenOption.CREATE,
-                        StandardOpenOption.TRUNCATE_EXISTING
-                );
-
-                client.getObject(new GetObjectRequest(bucketName, object2.getName(), 0, recoverJob.getJobId(), channel2));
+                final Path object2Path = Paths.get(inputDir + objectsList.get(1).getName());
+                recoverJob.transfer(new FileObjectGetter(object2Path));
             } catch (final JobRecoveryException e) {
                 System.out.println("Could not recover ReadJob " + readJob.getJobId().toString());
                 e.printStackTrace();
