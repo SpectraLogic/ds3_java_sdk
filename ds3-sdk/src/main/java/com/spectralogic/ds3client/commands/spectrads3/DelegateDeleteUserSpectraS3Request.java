@@ -24,11 +24,11 @@ public class DelegateDeleteUserSpectraS3Request extends AbstractRequest {
 
     // Variables
     
-    private final UUID userId;
+    private final String userId;
 
     // Constructor
     
-    public DelegateDeleteUserSpectraS3Request(final UUID userId) {
+    public DelegateDeleteUserSpectraS3Request(final String userId) {
         this.userId = userId;
             }
 
@@ -40,10 +40,10 @@ public class DelegateDeleteUserSpectraS3Request extends AbstractRequest {
 
     @Override
     public String getPath() {
-        return "/_rest_/user/" + userId.toString();
+        return "/_rest_/user/" + userId;
     }
     
-    public UUID getUserId() {
+    public String getUserId() {
         return this.userId;
     }
 

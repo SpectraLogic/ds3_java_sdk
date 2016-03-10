@@ -26,17 +26,17 @@ public class ImportTapeSpectraS3Request extends AbstractRequest {
 
     // Variables
     
-    private final UUID tapeId;
+    private final String tapeId;
 
     private ImportConflictResolutionMode conflictResolutionMode;
 
-    private UUID dataPolicyId;
+    private String dataPolicyId;
 
     private Priority priority;
 
-    private UUID storageDomainId;
+    private String storageDomainId;
 
-    private UUID userId;
+    private String userId;
 
     private Priority verifyDataAfterImport;
 
@@ -44,7 +44,7 @@ public class ImportTapeSpectraS3Request extends AbstractRequest {
 
     // Constructor
     
-    public ImportTapeSpectraS3Request(final UUID tapeId) {
+    public ImportTapeSpectraS3Request(final String tapeId) {
         this.tapeId = tapeId;
         
         this.getQueryParams().put("operation", "import");
@@ -56,9 +56,9 @@ public class ImportTapeSpectraS3Request extends AbstractRequest {
         return this;
     }
 
-    public ImportTapeSpectraS3Request withDataPolicyId(final UUID dataPolicyId) {
+    public ImportTapeSpectraS3Request withDataPolicyId(final String dataPolicyId) {
         this.dataPolicyId = dataPolicyId;
-        this.updateQueryParam("data_policy_id", dataPolicyId.toString());
+        this.updateQueryParam("data_policy_id", dataPolicyId);
         return this;
     }
 
@@ -68,15 +68,15 @@ public class ImportTapeSpectraS3Request extends AbstractRequest {
         return this;
     }
 
-    public ImportTapeSpectraS3Request withStorageDomainId(final UUID storageDomainId) {
+    public ImportTapeSpectraS3Request withStorageDomainId(final String storageDomainId) {
         this.storageDomainId = storageDomainId;
-        this.updateQueryParam("storage_domain_id", storageDomainId.toString());
+        this.updateQueryParam("storage_domain_id", storageDomainId);
         return this;
     }
 
-    public ImportTapeSpectraS3Request withUserId(final UUID userId) {
+    public ImportTapeSpectraS3Request withUserId(final String userId) {
         this.userId = userId;
-        this.updateQueryParam("user_id", userId.toString());
+        this.updateQueryParam("user_id", userId);
         return this;
     }
 
@@ -100,10 +100,10 @@ public class ImportTapeSpectraS3Request extends AbstractRequest {
 
     @Override
     public String getPath() {
-        return "/_rest_/tape/" + tapeId.toString();
+        return "/_rest_/tape/" + tapeId;
     }
     
-    public UUID getTapeId() {
+    public String getTapeId() {
         return this.tapeId;
     }
 
@@ -113,7 +113,7 @@ public class ImportTapeSpectraS3Request extends AbstractRequest {
     }
 
 
-    public UUID getDataPolicyId() {
+    public String getDataPolicyId() {
         return this.dataPolicyId;
     }
 
@@ -123,12 +123,12 @@ public class ImportTapeSpectraS3Request extends AbstractRequest {
     }
 
 
-    public UUID getStorageDomainId() {
+    public String getStorageDomainId() {
         return this.storageDomainId;
     }
 
 
-    public UUID getUserId() {
+    public String getUserId() {
         return this.userId;
     }
 

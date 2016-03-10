@@ -34,9 +34,9 @@ public class GetTapePartitionFailuresSpectraS3Request extends AbstractRequest {
 
     private int pageOffset;
 
-    private UUID pageStartMarker;
+    private String pageStartMarker;
 
-    private UUID partitionId;
+    private String partitionId;
 
     private TapePartitionFailureType type;
 
@@ -73,15 +73,15 @@ public class GetTapePartitionFailuresSpectraS3Request extends AbstractRequest {
         return this;
     }
 
-    public GetTapePartitionFailuresSpectraS3Request withPageStartMarker(final UUID pageStartMarker) {
+    public GetTapePartitionFailuresSpectraS3Request withPageStartMarker(final String pageStartMarker) {
         this.pageStartMarker = pageStartMarker;
-        this.updateQueryParam("page_start_marker", pageStartMarker.toString());
+        this.updateQueryParam("page_start_marker", pageStartMarker);
         return this;
     }
 
-    public GetTapePartitionFailuresSpectraS3Request withPartitionId(final UUID partitionId) {
+    public GetTapePartitionFailuresSpectraS3Request withPartitionId(final String partitionId) {
         this.partitionId = partitionId;
-        this.updateQueryParam("partition_id", partitionId.toString());
+        this.updateQueryParam("partition_id", partitionId);
         return this;
     }
 
@@ -122,12 +122,12 @@ public class GetTapePartitionFailuresSpectraS3Request extends AbstractRequest {
     }
 
 
-    public UUID getPageStartMarker() {
+    public String getPageStartMarker() {
         return this.pageStartMarker;
     }
 
 
-    public UUID getPartitionId() {
+    public String getPartitionId() {
         return this.partitionId;
     }
 

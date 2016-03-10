@@ -24,11 +24,11 @@ public class GetTapeDriveSpectraS3Request extends AbstractRequest {
 
     // Variables
     
-    private final UUID tapeDriveId;
+    private final String tapeDriveId;
 
     // Constructor
     
-    public GetTapeDriveSpectraS3Request(final UUID tapeDriveId) {
+    public GetTapeDriveSpectraS3Request(final String tapeDriveId) {
         this.tapeDriveId = tapeDriveId;
             }
 
@@ -40,10 +40,10 @@ public class GetTapeDriveSpectraS3Request extends AbstractRequest {
 
     @Override
     public String getPath() {
-        return "/_rest_/tape_drive/" + tapeDriveId.toString();
+        return "/_rest_/tape_drive/" + tapeDriveId;
     }
     
-    public UUID getTapeDriveId() {
+    public String getTapeDriveId() {
         return this.tapeDriveId;
     }
 

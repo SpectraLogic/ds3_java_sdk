@@ -26,9 +26,9 @@ public class PutDataReplicationRuleSpectraS3Request extends AbstractRequest {
 
     // Variables
     
-    private final UUID dataPolicyId;
+    private final String dataPolicyId;
 
-    private final UUID ds3TargetId;
+    private final String ds3TargetId;
 
     private final DataReplicationRuleType type;
 
@@ -36,12 +36,12 @@ public class PutDataReplicationRuleSpectraS3Request extends AbstractRequest {
 
     // Constructor
     
-    public PutDataReplicationRuleSpectraS3Request(final UUID dataPolicyId, final UUID ds3TargetId, final DataReplicationRuleType type) {
+    public PutDataReplicationRuleSpectraS3Request(final String dataPolicyId, final String ds3TargetId, final DataReplicationRuleType type) {
         this.dataPolicyId = dataPolicyId;
         this.ds3TargetId = ds3TargetId;
         this.type = type;
-                this.getQueryParams().put("data_policy_id", dataPolicyId.toString());
-        this.getQueryParams().put("ds3_target_id", ds3TargetId.toString());
+                this.getQueryParams().put("data_policy_id", dataPolicyId);
+        this.getQueryParams().put("ds3_target_id", ds3TargetId);
         this.getQueryParams().put("type", type.toString());
     }
 
@@ -62,12 +62,12 @@ public class PutDataReplicationRuleSpectraS3Request extends AbstractRequest {
         return "/_rest_/data_replication_rule";
     }
     
-    public UUID getDataPolicyId() {
+    public String getDataPolicyId() {
         return this.dataPolicyId;
     }
 
 
-    public UUID getDs3TargetId() {
+    public String getDs3TargetId() {
         return this.ds3TargetId;
     }
 

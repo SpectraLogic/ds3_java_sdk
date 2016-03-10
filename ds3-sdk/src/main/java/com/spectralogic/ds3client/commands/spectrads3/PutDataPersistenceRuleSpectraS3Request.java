@@ -27,11 +27,11 @@ public class PutDataPersistenceRuleSpectraS3Request extends AbstractRequest {
 
     // Variables
     
-    private final UUID dataPolicyId;
+    private final String dataPolicyId;
 
     private final DataIsolationLevel isolationLevel;
 
-    private final UUID storageDomainId;
+    private final String storageDomainId;
 
     private final DataPersistenceRuleType type;
 
@@ -39,14 +39,14 @@ public class PutDataPersistenceRuleSpectraS3Request extends AbstractRequest {
 
     // Constructor
     
-    public PutDataPersistenceRuleSpectraS3Request(final UUID dataPolicyId, final DataIsolationLevel isolationLevel, final UUID storageDomainId, final DataPersistenceRuleType type) {
+    public PutDataPersistenceRuleSpectraS3Request(final String dataPolicyId, final DataIsolationLevel isolationLevel, final String storageDomainId, final DataPersistenceRuleType type) {
         this.dataPolicyId = dataPolicyId;
         this.isolationLevel = isolationLevel;
         this.storageDomainId = storageDomainId;
         this.type = type;
-                this.getQueryParams().put("data_policy_id", dataPolicyId.toString());
+                this.getQueryParams().put("data_policy_id", dataPolicyId);
         this.getQueryParams().put("isolation_level", isolationLevel.toString());
-        this.getQueryParams().put("storage_domain_id", storageDomainId.toString());
+        this.getQueryParams().put("storage_domain_id", storageDomainId);
         this.getQueryParams().put("type", type.toString());
     }
 
@@ -67,7 +67,7 @@ public class PutDataPersistenceRuleSpectraS3Request extends AbstractRequest {
         return "/_rest_/data_persistence_rule";
     }
     
-    public UUID getDataPolicyId() {
+    public String getDataPolicyId() {
         return this.dataPolicyId;
     }
 
@@ -77,7 +77,7 @@ public class PutDataPersistenceRuleSpectraS3Request extends AbstractRequest {
     }
 
 
-    public UUID getStorageDomainId() {
+    public String getStorageDomainId() {
         return this.storageDomainId;
     }
 

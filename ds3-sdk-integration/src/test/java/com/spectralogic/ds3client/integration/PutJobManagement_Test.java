@@ -81,7 +81,7 @@ public class PutJobManagement_Test {
         long cachedSize = 0;
         while (cachedSize == 0) {
             Thread.sleep(500);
-            final MasterObjectList mol = client.getJobSpectraS3(new GetJobSpectraS3Request(jobId)).getMasterObjectListResult();
+            final MasterObjectList mol = client.getJobSpectraS3(new GetJobSpectraS3Request(jobId.toString())).getMasterObjectListResult();
             cachedSize = mol.getCachedSizeInBytes();
             assertThat((System.nanoTime() - startTime)/1000000000, lessThan((long) testTimeOutSeconds));
         }
@@ -143,11 +143,11 @@ public class PutJobManagement_Test {
                     HELPERS.startWriteJob(BUCKET_NAME, Lists.newArrayList( new Ds3Object("test", 2)),
                             WriteJobOptions.create().withPriority(Priority.LOW));
 
-            client.modifyJobSpectraS3(new ModifyJobSpectraS3Request(job.getJobId())
+            client.modifyJobSpectraS3(new ModifyJobSpectraS3Request(job.getJobId().toString())
                     .withPriority(Priority.HIGH));
 
             final GetJobSpectraS3Response response = client
-                    .getJobSpectraS3(new GetJobSpectraS3Request(job.getJobId()));
+                    .getJobSpectraS3(new GetJobSpectraS3Request(job.getJobId().toString()));
 
             assertThat(response.getMasterObjectListResult().getPriority(), is(Priority.HIGH));
 
@@ -163,11 +163,11 @@ public class PutJobManagement_Test {
             final Ds3ClientHelpers.Job job =
                     HELPERS.startWriteJob(BUCKET_NAME, Lists.newArrayList(new Ds3Object("testOne", 2)));
 
-            client.modifyJobSpectraS3(new ModifyJobSpectraS3Request(job.getJobId())
+            client.modifyJobSpectraS3(new ModifyJobSpectraS3Request(job.getJobId().toString())
                     .withName("newName"));
 
             final GetJobSpectraS3Response response = client
-                    .getJobSpectraS3(new GetJobSpectraS3Request(job.getJobId()));
+                    .getJobSpectraS3(new GetJobSpectraS3Request(job.getJobId().toString()));
 
             assertThat(response.getMasterObjectListResult().getName(), is("newName"));
 
@@ -183,16 +183,16 @@ public class PutJobManagement_Test {
             final Ds3ClientHelpers.Job job =
                     HELPERS.startWriteJob(BUCKET_NAME, Lists.newArrayList(new Ds3Object("testOne", 2)));
             final GetJobSpectraS3Response jobResponse = client
-                    .getJobSpectraS3(new GetJobSpectraS3Request(job.getJobId()));
+                    .getJobSpectraS3(new GetJobSpectraS3Request(job.getJobId().toString()));
 
             final Date originalDate = jobResponse.getMasterObjectListResult().getStartDate();
             final Date newDate = new Date(originalDate.getTime() - 1000);
 
-            client.modifyJobSpectraS3(new ModifyJobSpectraS3Request(job.getJobId())
+            client.modifyJobSpectraS3(new ModifyJobSpectraS3Request(job.getJobId().toString())
                     .withCreatedAt(newDate));
 
             final GetJobSpectraS3Response responseAfterModify = client
-                    .getJobSpectraS3(new GetJobSpectraS3Request(job.getJobId()));
+                    .getJobSpectraS3(new GetJobSpectraS3Request(job.getJobId().toString()));
 
             assertThat(responseAfterModify.getMasterObjectListResult().getStartDate(), is(newDate));
 
@@ -209,7 +209,7 @@ public class PutJobManagement_Test {
                     HELPERS.startWriteJob(BUCKET_NAME, Lists.newArrayList(new Ds3Object("testOne", 2)));
 
             final CancelJobSpectraS3Response response = client
-                    .cancelJobSpectraS3(new CancelJobSpectraS3Request(job.getJobId()));
+                    .cancelJobSpectraS3(new CancelJobSpectraS3Request(job.getJobId().toString()));
             assertEquals(response.getStatusCode(),204);
 
             assertTrue(client.getActiveJobsSpectraS3(new GetActiveJobsSpectraS3Request())
@@ -226,7 +226,7 @@ public class PutJobManagement_Test {
         try {
             final Ds3ClientHelpers.Job job =
                     HELPERS.startWriteJob(BUCKET_NAME, Lists.newArrayList(new Ds3Object("testOne", 2)));
-            client.cancelJobSpectraS3(new CancelJobSpectraS3Request(job.getJobId()));
+            client.cancelJobSpectraS3(new CancelJobSpectraS3Request(job.getJobId().toString()));
             client.clearAllCanceledJobsSpectraS3(new ClearAllCanceledJobsSpectraS3Request());
             final List canceledJobsList = client.
                     getCanceledJobsSpectraS3(new GetCanceledJobsSpectraS3Request())
@@ -253,13 +253,13 @@ public class PutJobManagement_Test {
             final Ds3ClientHelpers.Job putJob = HELPERS.startWriteJob(BUCKET_NAME, Lists.newArrayList(obj1, obj2));
             final UUID jobId = putJob.getJobId();
             final SeekableByteChannel book1Channel = new ResourceObjectPutter(RESOURCE_BASE_NAME).buildChannel(book1);
-            client.putObject(new PutObjectRequest(BUCKET_NAME, book1, book1Channel, jobId, 0, Files.size(objPath1)));
+            client.putObject(new PutObjectRequest(BUCKET_NAME, book1, book1Channel, jobId.toString(), 0, Files.size(objPath1)));
             waitForObjectToBeInCache(testTimeOutSeconds, jobId);
 
-            final CancelJobSpectraS3Response failedResponse = client.cancelJobSpectraS3(new CancelJobSpectraS3Request(jobId));
+            final CancelJobSpectraS3Response failedResponse = client.cancelJobSpectraS3(new CancelJobSpectraS3Request(jobId.toString()));
             assertThat(failedResponse.getStatusCode(),is(400));
 
-            final GetJobSpectraS3Response truncatedJob = client.getJobSpectraS3(new GetJobSpectraS3Request(jobId));
+            final GetJobSpectraS3Response truncatedJob = client.getJobSpectraS3(new GetJobSpectraS3Request(jobId.toString()));
             assertEquals(truncatedJob.getMasterObjectListResult().getOriginalSizeInBytes(), Files.size(objPath1));
 
         } finally {
@@ -281,11 +281,11 @@ public class PutJobManagement_Test {
             final Ds3ClientHelpers.Job putJob = HELPERS.startWriteJob(BUCKET_NAME, Lists.newArrayList(obj1, obj2));
             final UUID jobId = putJob.getJobId();
             final SeekableByteChannel book1Channel = new ResourceObjectPutter(RESOURCE_BASE_NAME).buildChannel(book1);
-            client.putObject(new PutObjectRequest(BUCKET_NAME, book1, book1Channel, jobId, 0, Files.size(objPath1)));
+            client.putObject(new PutObjectRequest(BUCKET_NAME, book1, book1Channel, jobId.toString(), 0, Files.size(objPath1)));
             waitForObjectToBeInCache(testTimeOutSeconds, jobId);
 
             final CancelJobSpectraS3Response responseWithForce = client
-                    .cancelJobSpectraS3(new CancelJobSpectraS3Request(jobId));
+                    .cancelJobSpectraS3(new CancelJobSpectraS3Request(jobId.toString()));
             assertEquals(responseWithForce.getStatusCode(), 204);
 
             //Allow for lag time before canceled job appears~1.5 seconds in unloaded system
@@ -342,13 +342,13 @@ public class PutJobManagement_Test {
                     .newArrayList(obj1, obj2));
             final UUID jobId1 = putJob1.getJobId();
             final SeekableByteChannel book1Channel = new ResourceObjectPutter(RESOURCE_BASE_NAME).buildChannel(book1);
-            client.putObject(new PutObjectRequest(BUCKET_NAME, book1, book1Channel, jobId1, 0, Files.size(objPath1)));
+            client.putObject(new PutObjectRequest(BUCKET_NAME, book1, book1Channel, jobId1.toString(), 0, Files.size(objPath1)));
 
             final Ds3ClientHelpers.Job putJob2 = HELPERS.startWriteJob(BUCKET_NAME, Lists
                     .newArrayList(obj3, obj4));
             final UUID jobId2 = putJob2.getJobId();
             final SeekableByteChannel book2Channel = new ResourceObjectPutter(RESOURCE_BASE_NAME).buildChannel(book2);
-            client.putObject(new PutObjectRequest(BUCKET_NAME, book2, book2Channel, jobId2, 0, Files.size(objPath2)));
+            client.putObject(new PutObjectRequest(BUCKET_NAME, book2, book2Channel, jobId2.toString(), 0, Files.size(objPath2)));
 
             HELPERS.startWriteJob(BUCKET_NAME, Lists
                     .newArrayList(new Ds3Object("place_holder_3", 1000000)));
@@ -361,10 +361,10 @@ public class PutJobManagement_Test {
 
             assertThat(failedResponse.getStatusCode(), is(400));
 
-            final GetJobSpectraS3Response truncatedJob1 = client.getJobSpectraS3(new GetJobSpectraS3Request(jobId1));
+            final GetJobSpectraS3Response truncatedJob1 = client.getJobSpectraS3(new GetJobSpectraS3Request(jobId1.toString()));
             assertEquals(truncatedJob1.getMasterObjectListResult().getOriginalSizeInBytes(), Files.size(objPath1));
 
-            final GetJobSpectraS3Response truncatedJob2 = client.getJobSpectraS3(new GetJobSpectraS3Request(jobId2));
+            final GetJobSpectraS3Response truncatedJob2 = client.getJobSpectraS3(new GetJobSpectraS3Request(jobId2.toString()));
             assertEquals(truncatedJob2.getMasterObjectListResult().getOriginalSizeInBytes(), Files.size(objPath2));
 
             assertThat(client.getActiveJobsSpectraS3(new GetActiveJobsSpectraS3Request())
@@ -393,13 +393,13 @@ public class PutJobManagement_Test {
                     .newArrayList(obj1, obj2));
             final UUID jobId1 = putJob1.getJobId();
             final SeekableByteChannel book1Channel = new ResourceObjectPutter(RESOURCE_BASE_NAME).buildChannel(book1);
-            client.putObject(new PutObjectRequest(BUCKET_NAME, book1, book1Channel, jobId1, 0, Files.size(objPath1)));
+            client.putObject(new PutObjectRequest(BUCKET_NAME, book1, book1Channel, jobId1.toString(), 0, Files.size(objPath1)));
 
             final Ds3ClientHelpers.Job putJob2 = HELPERS.startWriteJob(BUCKET_NAME, Lists
                     .newArrayList(obj3, obj4));
             final UUID jobId2 = putJob2.getJobId();
             final SeekableByteChannel book2Channel = new ResourceObjectPutter(RESOURCE_BASE_NAME).buildChannel(book2);
-            client.putObject(new PutObjectRequest(BUCKET_NAME, book2, book2Channel, jobId2, 0, Files.size(objPath2)));
+            client.putObject(new PutObjectRequest(BUCKET_NAME, book2, book2Channel, jobId2.toString(), 0, Files.size(objPath2)));
 
             HELPERS.startWriteJob(BUCKET_NAME, Lists
                     .newArrayList(new Ds3Object("place_holder_3", 1000000)));
@@ -424,7 +424,7 @@ public class PutJobManagement_Test {
             final Ds3ClientHelpers.Job jobOne =
                     HELPERS.startWriteJob(BUCKET_NAME, Lists.newArrayList(new Ds3Object("test", 2)));
             final UUID jobOneId = jobOne.getJobId();
-            client.cancelJobSpectraS3(new CancelJobSpectraS3Request(jobOneId));
+            client.cancelJobSpectraS3(new CancelJobSpectraS3Request(jobOneId.toString()));
 
             final GetCanceledJobsSpectraS3Response getCanceledJobsResponse = client
                     .getCanceledJobsSpectraS3(new GetCanceledJobsSpectraS3Request());
@@ -452,7 +452,7 @@ public class PutJobManagement_Test {
 
             final GetJobChunksReadyForClientProcessingSpectraS3Response response = client
                     .getJobChunksReadyForClientProcessingSpectraS3
-                            (new GetJobChunksReadyForClientProcessingSpectraS3Request(jobOneId));
+                            (new GetJobChunksReadyForClientProcessingSpectraS3Request(jobOneId.toString()));
 
             final List<String> chunkNames = new ArrayList<>();
             for (final Objects objectList : response.getMasterObjectListResult().getObjects()) {
@@ -497,7 +497,7 @@ public class PutJobManagement_Test {
                     putBulkJobSpectraS3(new PutBulkJobSpectraS3Request(BUCKET_NAME, Lists.newArrayList(new Ds3Object("test", 2))));
             final UUID chunkUUID = putBulkResponse.getResult().getObjects().get(0).getChunkId();
             final AllocateJobChunkSpectraS3Response allocateResponse = client
-                    .allocateJobChunkSpectraS3(new AllocateJobChunkSpectraS3Request(chunkUUID));
+                    .allocateJobChunkSpectraS3(new AllocateJobChunkSpectraS3Request(chunkUUID.toString()));
 
             assertThat(allocateResponse.getStatusCode(), is(200));
 
@@ -524,7 +524,7 @@ public class PutJobManagement_Test {
         final GetObjectCachedNotificationRegistrationSpectraS3Response getNotificationResponse = client
                 .getObjectCachedNotificationRegistrationSpectraS3(
                         (new GetObjectCachedNotificationRegistrationSpectraS3Request
-                                (putNotificationResponse.getS3ObjectCachedNotificationRegistrationResult().getId())));
+                                (putNotificationResponse.getS3ObjectCachedNotificationRegistrationResult().getId().toString())));
 
         assertThat(getNotificationResponse.getStatusCode(), is(200));
     }

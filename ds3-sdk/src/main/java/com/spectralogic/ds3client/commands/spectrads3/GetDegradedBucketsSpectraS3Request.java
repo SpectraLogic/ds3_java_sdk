@@ -25,7 +25,7 @@ public class GetDegradedBucketsSpectraS3Request extends AbstractRequest {
 
     // Variables
     
-    private UUID dataPolicyId;
+    private String dataPolicyId;
 
     private boolean lastPage;
 
@@ -35,18 +35,18 @@ public class GetDegradedBucketsSpectraS3Request extends AbstractRequest {
 
     private int pageOffset;
 
-    private UUID pageStartMarker;
+    private String pageStartMarker;
 
-    private UUID userId;
+    private String userId;
 
     // Constructor
     
     public GetDegradedBucketsSpectraS3Request() {
             }
 
-    public GetDegradedBucketsSpectraS3Request withDataPolicyId(final UUID dataPolicyId) {
+    public GetDegradedBucketsSpectraS3Request withDataPolicyId(final String dataPolicyId) {
         this.dataPolicyId = dataPolicyId;
-        this.updateQueryParam("data_policy_id", dataPolicyId.toString());
+        this.updateQueryParam("data_policy_id", dataPolicyId);
         return this;
     }
 
@@ -78,15 +78,15 @@ public class GetDegradedBucketsSpectraS3Request extends AbstractRequest {
         return this;
     }
 
-    public GetDegradedBucketsSpectraS3Request withPageStartMarker(final UUID pageStartMarker) {
+    public GetDegradedBucketsSpectraS3Request withPageStartMarker(final String pageStartMarker) {
         this.pageStartMarker = pageStartMarker;
-        this.updateQueryParam("page_start_marker", pageStartMarker.toString());
+        this.updateQueryParam("page_start_marker", pageStartMarker);
         return this;
     }
 
-    public GetDegradedBucketsSpectraS3Request withUserId(final UUID userId) {
+    public GetDegradedBucketsSpectraS3Request withUserId(final String userId) {
         this.userId = userId;
-        this.updateQueryParam("user_id", userId.toString());
+        this.updateQueryParam("user_id", userId);
         return this;
     }
 
@@ -101,7 +101,7 @@ public class GetDegradedBucketsSpectraS3Request extends AbstractRequest {
         return "/_rest_/degraded_bucket";
     }
     
-    public UUID getDataPolicyId() {
+    public String getDataPolicyId() {
         return this.dataPolicyId;
     }
 
@@ -126,12 +126,12 @@ public class GetDegradedBucketsSpectraS3Request extends AbstractRequest {
     }
 
 
-    public UUID getPageStartMarker() {
+    public String getPageStartMarker() {
         return this.pageStartMarker;
     }
 
 
-    public UUID getUserId() {
+    public String getUserId() {
         return this.userId;
     }
 

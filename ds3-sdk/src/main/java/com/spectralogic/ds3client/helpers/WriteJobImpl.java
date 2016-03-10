@@ -177,7 +177,7 @@ class WriteJobImpl extends JobImpl {
 
     private Objects tryAllocateChunk(final Objects filtered) throws IOException, SignatureException {
         final AllocateJobChunkSpectraS3Response response =
-                this.client.allocateJobChunkSpectraS3(new AllocateJobChunkSpectraS3Request(filtered.getChunkId()));
+                this.client.allocateJobChunkSpectraS3(new AllocateJobChunkSpectraS3Request(filtered.getChunkId().toString()));
 
         LOG.info("AllocatedJobChunkResponse status: " + response.getStatus().toString());
         switch (response.getStatus()) {
@@ -259,7 +259,7 @@ class WriteJobImpl extends JobImpl {
                     WriteJobImpl.this.masterObjectList.getBucketName(),
                     ds3Object.getName(),
                     jobState.getChannel(ds3Object.getName(), ds3Object.getOffset(), ds3Object.getLength()),
-                    WriteJobImpl.this.getJobId(),
+                    WriteJobImpl.this.getJobId().toString(),
                     ds3Object.getOffset(),
                     ds3Object.getLength()
             );

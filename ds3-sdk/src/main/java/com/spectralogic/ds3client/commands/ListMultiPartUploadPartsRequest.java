@@ -28,7 +28,7 @@ public class ListMultiPartUploadPartsRequest extends AbstractRequest {
 
     private final String objectName;
 
-    private final UUID uploadId;
+    private final String uploadId;
 
     private int maxParts;
 
@@ -36,11 +36,11 @@ public class ListMultiPartUploadPartsRequest extends AbstractRequest {
 
     // Constructor
     
-    public ListMultiPartUploadPartsRequest(final String bucketName, final String objectName, final UUID uploadId) {
+    public ListMultiPartUploadPartsRequest(final String bucketName, final String objectName, final String uploadId) {
         this.bucketName = bucketName;
         this.objectName = objectName;
         this.uploadId = uploadId;
-                this.getQueryParams().put("upload_id", uploadId.toString());
+                this.getQueryParams().put("upload_id", uploadId);
     }
 
     public ListMultiPartUploadPartsRequest withMaxParts(final int maxParts) {
@@ -76,7 +76,7 @@ public class ListMultiPartUploadPartsRequest extends AbstractRequest {
     }
 
 
-    public UUID getUploadId() {
+    public String getUploadId() {
         return this.uploadId;
     }
 

@@ -66,13 +66,13 @@ public class NotificationsIntegration_test {
 
         final GetObjectCachedNotificationRegistrationSpectraS3Response getResponse = client
                 .getObjectCachedNotificationRegistrationSpectraS3(
-                        new GetObjectCachedNotificationRegistrationSpectraS3Request(registrationId));
+                        new GetObjectCachedNotificationRegistrationSpectraS3Request(registrationId.toString()));
         assertThat(getResponse, is(notNullValue()));
         assertThat(getResponse.getS3ObjectCachedNotificationRegistrationResult(), is(notNullValue()));
         assertThat(getResponse.getS3ObjectCachedNotificationRegistrationResult().getId(), is(notNullValue()));
 
         assertThat(client.deleteObjectCachedNotificationRegistrationSpectraS3(
-                new DeleteObjectCachedNotificationRegistrationSpectraS3Request(registrationId)), is(notNullValue()));
+                new DeleteObjectCachedNotificationRegistrationSpectraS3Request(registrationId.toString())), is(notNullValue()));
     }
 
     @Test
@@ -86,12 +86,12 @@ public class NotificationsIntegration_test {
 
         final GetJobCompletedNotificationRegistrationSpectraS3Response getResponse = client
                 .getJobCompletedNotificationRegistrationSpectraS3(
-                        new GetJobCompletedNotificationRegistrationSpectraS3Request(registrationId));
+                        new GetJobCompletedNotificationRegistrationSpectraS3Request(registrationId.toString()));
         assertThat(getResponse, is(notNullValue()));
         assertThat(getResponse.getJobCompletedNotificationRegistrationResult(), is(notNullValue()));
         assertThat(getResponse.getJobCompletedNotificationRegistrationResult().getId(), is(notNullValue()));
 
-        assertThat(client.deleteJobCompletedNotificationRegistrationSpectraS3(new DeleteJobCompletedNotificationRegistrationSpectraS3Request(registrationId)), is(notNullValue()));
+        assertThat(client.deleteJobCompletedNotificationRegistrationSpectraS3(new DeleteJobCompletedNotificationRegistrationSpectraS3Request(registrationId.toString())), is(notNullValue()));
     }
 
     @Test
@@ -106,13 +106,13 @@ public class NotificationsIntegration_test {
 
         final GetJobCreatedNotificationRegistrationSpectraS3Response getResponse = client
                 .getJobCreatedNotificationRegistrationSpectraS3(
-                        new GetJobCreatedNotificationRegistrationSpectraS3Request(registrationId));
+                        new GetJobCreatedNotificationRegistrationSpectraS3Request(registrationId.toString()));
         assertThat(getResponse, is(notNullValue()));
         assertThat(getResponse.getJobCreatedNotificationRegistrationResult(), is(notNullValue()));
         assertThat(getResponse.getJobCreatedNotificationRegistrationResult().getId(), is(notNullValue()));
 
         assertThat(client.deleteJobCreatedNotificationRegistrationSpectraS3(
-                new DeleteJobCreatedNotificationRegistrationSpectraS3Request(registrationId)), is(notNullValue()));
+                new DeleteJobCreatedNotificationRegistrationSpectraS3Request(registrationId.toString())), is(notNullValue()));
     }
 
     @Test
@@ -127,13 +127,13 @@ public class NotificationsIntegration_test {
 
         final GetObjectLostNotificationRegistrationSpectraS3Response getResponse = client
                 .getObjectLostNotificationRegistrationSpectraS3(
-                        new GetObjectLostNotificationRegistrationSpectraS3Request(registrationId));
+                        new GetObjectLostNotificationRegistrationSpectraS3Request(registrationId.toString()));
         assertThat(getResponse, is(notNullValue()));
         assertThat(getResponse.getS3ObjectLostNotificationRegistrationResult(), is(notNullValue()));
         assertThat(getResponse.getS3ObjectLostNotificationRegistrationResult().getId(), is(notNullValue()));
 
         assertThat(client.deleteObjectLostNotificationRegistrationSpectraS3(
-                new DeleteObjectLostNotificationRegistrationSpectraS3Request(registrationId)), is(notNullValue()));
+                new DeleteObjectLostNotificationRegistrationSpectraS3Request(registrationId.toString())), is(notNullValue()));
     }
 
     @Test
@@ -147,7 +147,7 @@ public class NotificationsIntegration_test {
             final PutObjectPersistedNotificationRegistrationSpectraS3Response response = client
                     .putObjectPersistedNotificationRegistrationSpectraS3(
                             new PutObjectPersistedNotificationRegistrationSpectraS3Request("192.168.56.101/other")
-                                    .withJobId(job.getJobId()));
+                                    .withJobId(job.getJobId().toString()));
             assertThat(response, is(notNullValue()));
             assertThat(response.getS3ObjectPersistedNotificationRegistrationResult(), is(notNullValue()));
 
@@ -157,13 +157,13 @@ public class NotificationsIntegration_test {
 
             final GetObjectPersistedNotificationRegistrationSpectraS3Response getResponse = client
                     .getObjectPersistedNotificationRegistrationSpectraS3(
-                            new GetObjectPersistedNotificationRegistrationSpectraS3Request(registrationId));
+                            new GetObjectPersistedNotificationRegistrationSpectraS3Request(registrationId.toString()));
             assertThat(getResponse, is(notNullValue()));
             assertThat(getResponse.getS3ObjectPersistedNotificationRegistrationResult(), is(notNullValue()));
             assertThat(getResponse.getS3ObjectPersistedNotificationRegistrationResult().getId(), is(notNullValue()));
 
             assertThat(client.deleteObjectPersistedNotificationRegistrationSpectraS3(
-                    new DeleteObjectPersistedNotificationRegistrationSpectraS3Request(registrationId)), is(notNullValue()));
+                    new DeleteObjectPersistedNotificationRegistrationSpectraS3Request(registrationId.toString())), is(notNullValue()));
         } finally {
             Util.deleteAllContents(client, bucketName);
         }
@@ -181,13 +181,13 @@ public class NotificationsIntegration_test {
 
         final GetTapePartitionFailureNotificationRegistrationSpectraS3Response getResponse = client
                 .getTapePartitionFailureNotificationRegistrationSpectraS3(
-                        new GetTapePartitionFailureNotificationRegistrationSpectraS3Request(registrationId));
+                        new GetTapePartitionFailureNotificationRegistrationSpectraS3Request(registrationId.toString()));
         assertThat(getResponse, is(notNullValue()));
         assertThat(getResponse.getTapePartitionFailureNotificationRegistrationResult(), is(notNullValue()));
         assertThat(getResponse.getTapePartitionFailureNotificationRegistrationResult().getId(), is(notNullValue()));
 
         assertThat(client.deleteTapePartitionFailureNotificationRegistrationSpectraS3(
-                new DeleteTapePartitionFailureNotificationRegistrationSpectraS3Request(registrationId)), is(notNullValue()));
+                new DeleteTapePartitionFailureNotificationRegistrationSpectraS3Request(registrationId.toString())), is(notNullValue()));
     }
 
     @Test
@@ -202,12 +202,12 @@ public class NotificationsIntegration_test {
 
         final GetTapeFailureNotificationRegistrationSpectraS3Response getResponse = client
                 .getTapeFailureNotificationRegistrationSpectraS3(
-                        new GetTapeFailureNotificationRegistrationSpectraS3Request(registrationId));
+                        new GetTapeFailureNotificationRegistrationSpectraS3Request(registrationId.toString()));
         assertThat(getResponse, is(notNullValue()));
         assertThat(getResponse.getTapeFailureNotificationRegistrationResult(), is(notNullValue()));
         assertThat(getResponse.getTapeFailureNotificationRegistrationResult().getId(), is(notNullValue()));
 
         assertThat(client.deleteTapeFailureNotificationRegistrationSpectraS3(
-                new DeleteTapeFailureNotificationRegistrationSpectraS3Request(registrationId)), is(notNullValue()));
+                new DeleteTapeFailureNotificationRegistrationSpectraS3Request(registrationId.toString())), is(notNullValue()));
     }
 }

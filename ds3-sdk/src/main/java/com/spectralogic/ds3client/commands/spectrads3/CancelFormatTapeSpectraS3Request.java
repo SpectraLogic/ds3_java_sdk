@@ -24,11 +24,11 @@ public class CancelFormatTapeSpectraS3Request extends AbstractRequest {
 
     // Variables
     
-    private final UUID tapeId;
+    private final String tapeId;
 
     // Constructor
     
-    public CancelFormatTapeSpectraS3Request(final UUID tapeId) {
+    public CancelFormatTapeSpectraS3Request(final String tapeId) {
         this.tapeId = tapeId;
         
         this.getQueryParams().put("operation", "cancel_format");
@@ -42,10 +42,10 @@ public class CancelFormatTapeSpectraS3Request extends AbstractRequest {
 
     @Override
     public String getPath() {
-        return "/_rest_/tape/" + tapeId.toString();
+        return "/_rest_/tape/" + tapeId;
     }
     
-    public UUID getTapeId() {
+    public String getTapeId() {
         return this.tapeId;
     }
 

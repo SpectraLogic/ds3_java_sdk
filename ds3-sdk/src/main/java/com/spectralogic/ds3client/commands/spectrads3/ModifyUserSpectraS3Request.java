@@ -25,9 +25,9 @@ public class ModifyUserSpectraS3Request extends AbstractRequest {
 
     // Variables
     
-    private final UUID userId;
+    private final String userId;
 
-    private UUID defaultDataPolicyId;
+    private String defaultDataPolicyId;
 
     private String name;
 
@@ -35,13 +35,13 @@ public class ModifyUserSpectraS3Request extends AbstractRequest {
 
     // Constructor
     
-    public ModifyUserSpectraS3Request(final UUID userId) {
+    public ModifyUserSpectraS3Request(final String userId) {
         this.userId = userId;
             }
 
-    public ModifyUserSpectraS3Request withDefaultDataPolicyId(final UUID defaultDataPolicyId) {
+    public ModifyUserSpectraS3Request withDefaultDataPolicyId(final String defaultDataPolicyId) {
         this.defaultDataPolicyId = defaultDataPolicyId;
-        this.updateQueryParam("default_data_policy_id", defaultDataPolicyId.toString());
+        this.updateQueryParam("default_data_policy_id", defaultDataPolicyId);
         return this;
     }
 
@@ -65,15 +65,15 @@ public class ModifyUserSpectraS3Request extends AbstractRequest {
 
     @Override
     public String getPath() {
-        return "/_rest_/user/" + userId.toString();
+        return "/_rest_/user/" + userId;
     }
     
-    public UUID getUserId() {
+    public String getUserId() {
         return this.userId;
     }
 
 
-    public UUID getDefaultDataPolicyId() {
+    public String getDefaultDataPolicyId() {
         return this.defaultDataPolicyId;
     }
 

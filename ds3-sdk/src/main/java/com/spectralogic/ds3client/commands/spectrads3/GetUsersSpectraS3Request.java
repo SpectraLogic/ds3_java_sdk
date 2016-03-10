@@ -27,7 +27,7 @@ public class GetUsersSpectraS3Request extends AbstractRequest {
     
     private String authId;
 
-    private UUID defaultDataPolicyId;
+    private String defaultDataPolicyId;
 
     private boolean lastPage;
 
@@ -37,7 +37,7 @@ public class GetUsersSpectraS3Request extends AbstractRequest {
 
     private int pageOffset;
 
-    private UUID pageStartMarker;
+    private String pageStartMarker;
 
     // Constructor
     
@@ -50,9 +50,9 @@ public class GetUsersSpectraS3Request extends AbstractRequest {
         return this;
     }
 
-    public GetUsersSpectraS3Request withDefaultDataPolicyId(final UUID defaultDataPolicyId) {
+    public GetUsersSpectraS3Request withDefaultDataPolicyId(final String defaultDataPolicyId) {
         this.defaultDataPolicyId = defaultDataPolicyId;
-        this.updateQueryParam("default_data_policy_id", defaultDataPolicyId.toString());
+        this.updateQueryParam("default_data_policy_id", defaultDataPolicyId);
         return this;
     }
 
@@ -84,9 +84,9 @@ public class GetUsersSpectraS3Request extends AbstractRequest {
         return this;
     }
 
-    public GetUsersSpectraS3Request withPageStartMarker(final UUID pageStartMarker) {
+    public GetUsersSpectraS3Request withPageStartMarker(final String pageStartMarker) {
         this.pageStartMarker = pageStartMarker;
-        this.updateQueryParam("page_start_marker", pageStartMarker.toString());
+        this.updateQueryParam("page_start_marker", pageStartMarker);
         return this;
     }
 
@@ -106,7 +106,7 @@ public class GetUsersSpectraS3Request extends AbstractRequest {
     }
 
 
-    public UUID getDefaultDataPolicyId() {
+    public String getDefaultDataPolicyId() {
         return this.defaultDataPolicyId;
     }
 
@@ -131,7 +131,7 @@ public class GetUsersSpectraS3Request extends AbstractRequest {
     }
 
 
-    public UUID getPageStartMarker() {
+    public String getPageStartMarker() {
         return this.pageStartMarker;
     }
 

@@ -89,7 +89,7 @@ public class Ds3BulkGetExample {
                             bucket,
                             obj.getName(),
                             channel,
-                            list.getJobId(),
+                            list.getJobId().toString(),
                             obj.getOffset()
                     ));
                 }

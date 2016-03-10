@@ -25,7 +25,7 @@ public class GetTapePartitionFailureNotificationRegistrationSpectraS3Request ext
     
     // Constructor
     
-    public GetTapePartitionFailureNotificationRegistrationSpectraS3Request(final UUID notificationId) {
+    public GetTapePartitionFailureNotificationRegistrationSpectraS3Request(final String notificationId) {
         super(notificationId);
 
         

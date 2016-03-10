@@ -28,7 +28,7 @@ public class ModifyPoolSpectraS3Request extends AbstractRequest {
     
     private final String pool;
 
-    private UUID partitionId;
+    private String partitionId;
 
     private Quiesced quiesced;
 
@@ -38,9 +38,9 @@ public class ModifyPoolSpectraS3Request extends AbstractRequest {
         this.pool = pool;
             }
 
-    public ModifyPoolSpectraS3Request withPartitionId(final UUID partitionId) {
+    public ModifyPoolSpectraS3Request withPartitionId(final String partitionId) {
         this.partitionId = partitionId;
-        this.updateQueryParam("partition_id", partitionId.toString());
+        this.updateQueryParam("partition_id", partitionId);
         return this;
     }
 
@@ -66,7 +66,7 @@ public class ModifyPoolSpectraS3Request extends AbstractRequest {
     }
 
 
-    public UUID getPartitionId() {
+    public String getPartitionId() {
         return this.partitionId;
     }
 

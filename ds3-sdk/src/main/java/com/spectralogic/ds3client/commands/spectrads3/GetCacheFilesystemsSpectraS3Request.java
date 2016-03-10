@@ -26,13 +26,13 @@ public class GetCacheFilesystemsSpectraS3Request extends AbstractRequest {
     
     private boolean lastPage;
 
-    private UUID nodeId;
+    private String nodeId;
 
     private int pageLength;
 
     private int pageOffset;
 
-    private UUID pageStartMarker;
+    private String pageStartMarker;
 
     // Constructor
     
@@ -49,9 +49,9 @@ public class GetCacheFilesystemsSpectraS3Request extends AbstractRequest {
         return this;
     }
 
-    public GetCacheFilesystemsSpectraS3Request withNodeId(final UUID nodeId) {
+    public GetCacheFilesystemsSpectraS3Request withNodeId(final String nodeId) {
         this.nodeId = nodeId;
-        this.updateQueryParam("node_id", nodeId.toString());
+        this.updateQueryParam("node_id", nodeId);
         return this;
     }
 
@@ -67,9 +67,9 @@ public class GetCacheFilesystemsSpectraS3Request extends AbstractRequest {
         return this;
     }
 
-    public GetCacheFilesystemsSpectraS3Request withPageStartMarker(final UUID pageStartMarker) {
+    public GetCacheFilesystemsSpectraS3Request withPageStartMarker(final String pageStartMarker) {
         this.pageStartMarker = pageStartMarker;
-        this.updateQueryParam("page_start_marker", pageStartMarker.toString());
+        this.updateQueryParam("page_start_marker", pageStartMarker);
         return this;
     }
 
@@ -89,7 +89,7 @@ public class GetCacheFilesystemsSpectraS3Request extends AbstractRequest {
     }
 
 
-    public UUID getNodeId() {
+    public String getNodeId() {
         return this.nodeId;
     }
 
@@ -104,7 +104,7 @@ public class GetCacheFilesystemsSpectraS3Request extends AbstractRequest {
     }
 
 
-    public UUID getPageStartMarker() {
+    public String getPageStartMarker() {
         return this.pageStartMarker;
     }
 

@@ -31,13 +31,13 @@ public class ImportPoolSpectraS3Request extends AbstractRequest {
 
     private ImportConflictResolutionMode conflictResolutionMode;
 
-    private UUID dataPolicyId;
+    private String dataPolicyId;
 
     private Priority priority;
 
-    private UUID storageDomainId;
+    private String storageDomainId;
 
-    private UUID userId;
+    private String userId;
 
     private Priority verifyDataAfterImport;
 
@@ -57,9 +57,9 @@ public class ImportPoolSpectraS3Request extends AbstractRequest {
         return this;
     }
 
-    public ImportPoolSpectraS3Request withDataPolicyId(final UUID dataPolicyId) {
+    public ImportPoolSpectraS3Request withDataPolicyId(final String dataPolicyId) {
         this.dataPolicyId = dataPolicyId;
-        this.updateQueryParam("data_policy_id", dataPolicyId.toString());
+        this.updateQueryParam("data_policy_id", dataPolicyId);
         return this;
     }
 
@@ -69,15 +69,15 @@ public class ImportPoolSpectraS3Request extends AbstractRequest {
         return this;
     }
 
-    public ImportPoolSpectraS3Request withStorageDomainId(final UUID storageDomainId) {
+    public ImportPoolSpectraS3Request withStorageDomainId(final String storageDomainId) {
         this.storageDomainId = storageDomainId;
-        this.updateQueryParam("storage_domain_id", storageDomainId.toString());
+        this.updateQueryParam("storage_domain_id", storageDomainId);
         return this;
     }
 
-    public ImportPoolSpectraS3Request withUserId(final UUID userId) {
+    public ImportPoolSpectraS3Request withUserId(final String userId) {
         this.userId = userId;
-        this.updateQueryParam("user_id", userId.toString());
+        this.updateQueryParam("user_id", userId);
         return this;
     }
 
@@ -114,7 +114,7 @@ public class ImportPoolSpectraS3Request extends AbstractRequest {
     }
 
 
-    public UUID getDataPolicyId() {
+    public String getDataPolicyId() {
         return this.dataPolicyId;
     }
 
@@ -124,12 +124,12 @@ public class ImportPoolSpectraS3Request extends AbstractRequest {
     }
 
 
-    public UUID getStorageDomainId() {
+    public String getStorageDomainId() {
         return this.storageDomainId;
     }
 
 
-    public UUID getUserId() {
+    public String getUserId() {
         return this.userId;
     }
 

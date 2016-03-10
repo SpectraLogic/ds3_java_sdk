@@ -24,28 +24,28 @@ public class GetGroupMembersSpectraS3Request extends AbstractRequest {
 
     // Variables
     
-    private UUID groupId;
+    private String groupId;
 
     private boolean lastPage;
 
-    private UUID memberGroupId;
+    private String memberGroupId;
 
-    private UUID memberUserId;
+    private String memberUserId;
 
     private int pageLength;
 
     private int pageOffset;
 
-    private UUID pageStartMarker;
+    private String pageStartMarker;
 
     // Constructor
     
     public GetGroupMembersSpectraS3Request() {
             }
 
-    public GetGroupMembersSpectraS3Request withGroupId(final UUID groupId) {
+    public GetGroupMembersSpectraS3Request withGroupId(final String groupId) {
         this.groupId = groupId;
-        this.updateQueryParam("group_id", groupId.toString());
+        this.updateQueryParam("group_id", groupId);
         return this;
     }
 
@@ -59,15 +59,15 @@ public class GetGroupMembersSpectraS3Request extends AbstractRequest {
         return this;
     }
 
-    public GetGroupMembersSpectraS3Request withMemberGroupId(final UUID memberGroupId) {
+    public GetGroupMembersSpectraS3Request withMemberGroupId(final String memberGroupId) {
         this.memberGroupId = memberGroupId;
-        this.updateQueryParam("member_group_id", memberGroupId.toString());
+        this.updateQueryParam("member_group_id", memberGroupId);
         return this;
     }
 
-    public GetGroupMembersSpectraS3Request withMemberUserId(final UUID memberUserId) {
+    public GetGroupMembersSpectraS3Request withMemberUserId(final String memberUserId) {
         this.memberUserId = memberUserId;
-        this.updateQueryParam("member_user_id", memberUserId.toString());
+        this.updateQueryParam("member_user_id", memberUserId);
         return this;
     }
 
@@ -83,9 +83,9 @@ public class GetGroupMembersSpectraS3Request extends AbstractRequest {
         return this;
     }
 
-    public GetGroupMembersSpectraS3Request withPageStartMarker(final UUID pageStartMarker) {
+    public GetGroupMembersSpectraS3Request withPageStartMarker(final String pageStartMarker) {
         this.pageStartMarker = pageStartMarker;
-        this.updateQueryParam("page_start_marker", pageStartMarker.toString());
+        this.updateQueryParam("page_start_marker", pageStartMarker);
         return this;
     }
 
@@ -100,7 +100,7 @@ public class GetGroupMembersSpectraS3Request extends AbstractRequest {
         return "/_rest_/group_member";
     }
     
-    public UUID getGroupId() {
+    public String getGroupId() {
         return this.groupId;
     }
 
@@ -110,12 +110,12 @@ public class GetGroupMembersSpectraS3Request extends AbstractRequest {
     }
 
 
-    public UUID getMemberGroupId() {
+    public String getMemberGroupId() {
         return this.memberGroupId;
     }
 
 
-    public UUID getMemberUserId() {
+    public String getMemberUserId() {
         return this.memberUserId;
     }
 
@@ -130,7 +130,7 @@ public class GetGroupMembersSpectraS3Request extends AbstractRequest {
     }
 
 
-    public UUID getPageStartMarker() {
+    public String getPageStartMarker() {
         return this.pageStartMarker;
     }
 

@@ -48,9 +48,9 @@ public class RegisterDs3TargetSpectraS3Request extends AbstractRequest {
 
     private TargetReadPreference defaultReadPreference;
 
-    private UUID localAdminUserId;
+    private String localAdminUserId;
 
-    private UUID localReplicatedUserDefaultDataPolicyId;
+    private String localReplicatedUserDefaultDataPolicyId;
 
     private String replicatedUserDefaultDataPolicy;
 
@@ -103,15 +103,15 @@ public class RegisterDs3TargetSpectraS3Request extends AbstractRequest {
         return this;
     }
 
-    public RegisterDs3TargetSpectraS3Request withLocalAdminUserId(final UUID localAdminUserId) {
+    public RegisterDs3TargetSpectraS3Request withLocalAdminUserId(final String localAdminUserId) {
         this.localAdminUserId = localAdminUserId;
-        this.updateQueryParam("local_admin_user_id", localAdminUserId.toString());
+        this.updateQueryParam("local_admin_user_id", localAdminUserId);
         return this;
     }
 
-    public RegisterDs3TargetSpectraS3Request withLocalReplicatedUserDefaultDataPolicyId(final UUID localReplicatedUserDefaultDataPolicyId) {
+    public RegisterDs3TargetSpectraS3Request withLocalReplicatedUserDefaultDataPolicyId(final String localReplicatedUserDefaultDataPolicyId) {
         this.localReplicatedUserDefaultDataPolicyId = localReplicatedUserDefaultDataPolicyId;
-        this.updateQueryParam("local_replicated_user_default_data_policy_id", localReplicatedUserDefaultDataPolicyId.toString());
+        this.updateQueryParam("local_replicated_user_default_data_policy_id", localReplicatedUserDefaultDataPolicyId);
         return this;
     }
 
@@ -182,12 +182,12 @@ public class RegisterDs3TargetSpectraS3Request extends AbstractRequest {
     }
 
 
-    public UUID getLocalAdminUserId() {
+    public String getLocalAdminUserId() {
         return this.localAdminUserId;
     }
 
 
-    public UUID getLocalReplicatedUserDefaultDataPolicyId() {
+    public String getLocalReplicatedUserDefaultDataPolicyId() {
         return this.localReplicatedUserDefaultDataPolicyId;
     }
 

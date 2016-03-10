@@ -25,7 +25,7 @@ public class DeleteObjectPersistedNotificationRegistrationSpectraS3Request exten
     
     //Constructor
     
-    public DeleteObjectPersistedNotificationRegistrationSpectraS3Request(final UUID notificationId) {
+    public DeleteObjectPersistedNotificationRegistrationSpectraS3Request(final String notificationId) {
         super(notificationId);
 
         

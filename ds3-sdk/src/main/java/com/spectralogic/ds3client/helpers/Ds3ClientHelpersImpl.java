@@ -144,7 +144,7 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
 
     @Override
     public Ds3ClientHelpers.Job recoverWriteJob(final UUID jobId) throws SignatureException, IOException, XmlProcessingException, JobRecoveryException {
-        final ModifyJobSpectraS3Response jobResponse = this.client.modifyJobSpectraS3(new ModifyJobSpectraS3Request(jobId));
+        final ModifyJobSpectraS3Response jobResponse = this.client.modifyJobSpectraS3(new ModifyJobSpectraS3Request(jobId.toString()));
         if (JobRequestType.PUT != jobResponse.getMasterObjectListResult().getRequestType()) {
             throw new JobRecoveryException(
                     RequestType.PUT.toString(),
@@ -161,7 +161,7 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
     @Override
     //TODO add a partial object read recovery method.  That method will require the list of partial objects.
     public Ds3ClientHelpers.Job recoverReadJob(final UUID jobId) throws SignatureException, IOException, XmlProcessingException, JobRecoveryException {
-        final ModifyJobSpectraS3Response jobResponse = this.client.modifyJobSpectraS3(new ModifyJobSpectraS3Request(jobId));
+        final ModifyJobSpectraS3Response jobResponse = this.client.modifyJobSpectraS3(new ModifyJobSpectraS3Request(jobId.toString()));
         if (JobRequestType.GET != jobResponse.getMasterObjectListResult().getRequestType()){
             throw new JobRecoveryException(
                     RequestType.GET.toString(),

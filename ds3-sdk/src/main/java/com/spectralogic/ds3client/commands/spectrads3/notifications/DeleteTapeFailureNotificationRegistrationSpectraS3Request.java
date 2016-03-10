@@ -25,7 +25,7 @@ public class DeleteTapeFailureNotificationRegistrationSpectraS3Request extends A
     
     //Constructor
     
-    public DeleteTapeFailureNotificationRegistrationSpectraS3Request(final UUID notificationId) {
+    public DeleteTapeFailureNotificationRegistrationSpectraS3Request(final String notificationId) {
         super(notificationId);
 
         

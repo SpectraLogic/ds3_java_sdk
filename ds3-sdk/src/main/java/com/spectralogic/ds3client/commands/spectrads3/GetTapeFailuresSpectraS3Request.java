@@ -34,11 +34,11 @@ public class GetTapeFailuresSpectraS3Request extends AbstractRequest {
 
     private int pageOffset;
 
-    private UUID pageStartMarker;
+    private String pageStartMarker;
 
-    private UUID tapeDriveId;
+    private String tapeDriveId;
 
-    private UUID tapeId;
+    private String tapeId;
 
     private TapeFailureType type;
 
@@ -75,21 +75,21 @@ public class GetTapeFailuresSpectraS3Request extends AbstractRequest {
         return this;
     }
 
-    public GetTapeFailuresSpectraS3Request withPageStartMarker(final UUID pageStartMarker) {
+    public GetTapeFailuresSpectraS3Request withPageStartMarker(final String pageStartMarker) {
         this.pageStartMarker = pageStartMarker;
-        this.updateQueryParam("page_start_marker", pageStartMarker.toString());
+        this.updateQueryParam("page_start_marker", pageStartMarker);
         return this;
     }
 
-    public GetTapeFailuresSpectraS3Request withTapeDriveId(final UUID tapeDriveId) {
+    public GetTapeFailuresSpectraS3Request withTapeDriveId(final String tapeDriveId) {
         this.tapeDriveId = tapeDriveId;
-        this.updateQueryParam("tape_drive_id", tapeDriveId.toString());
+        this.updateQueryParam("tape_drive_id", tapeDriveId);
         return this;
     }
 
-    public GetTapeFailuresSpectraS3Request withTapeId(final UUID tapeId) {
+    public GetTapeFailuresSpectraS3Request withTapeId(final String tapeId) {
         this.tapeId = tapeId;
-        this.updateQueryParam("tape_id", tapeId.toString());
+        this.updateQueryParam("tape_id", tapeId);
         return this;
     }
 
@@ -130,17 +130,17 @@ public class GetTapeFailuresSpectraS3Request extends AbstractRequest {
     }
 
 
-    public UUID getPageStartMarker() {
+    public String getPageStartMarker() {
         return this.pageStartMarker;
     }
 
 
-    public UUID getTapeDriveId() {
+    public String getTapeDriveId() {
         return this.tapeDriveId;
     }
 
 
-    public UUID getTapeId() {
+    public String getTapeId() {
         return this.tapeId;
     }
 

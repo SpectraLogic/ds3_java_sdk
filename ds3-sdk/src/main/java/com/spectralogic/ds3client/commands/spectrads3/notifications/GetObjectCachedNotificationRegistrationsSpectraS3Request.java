@@ -29,13 +29,13 @@ public class GetObjectCachedNotificationRegistrationsSpectraS3Request extends Ab
 
     private int pageOffset;
 
-    private UUID pageStartMarker;
+    private String pageStartMarker;
 
-    private UUID userId;
+    private String userId;
 
     // Constructor
     
-    public GetObjectCachedNotificationRegistrationsSpectraS3Request(final UUID notificationId) {
+    public GetObjectCachedNotificationRegistrationsSpectraS3Request(final String notificationId) {
         super(notificationId);
 
         
@@ -63,15 +63,15 @@ public class GetObjectCachedNotificationRegistrationsSpectraS3Request extends Ab
         return this;
     }
 
-    public GetObjectCachedNotificationRegistrationsSpectraS3Request withPageStartMarker(final UUID pageStartMarker) {
+    public GetObjectCachedNotificationRegistrationsSpectraS3Request withPageStartMarker(final String pageStartMarker) {
         this.pageStartMarker = pageStartMarker;
-        this.updateQueryParam("page_start_marker", pageStartMarker.toString());
+        this.updateQueryParam("page_start_marker", pageStartMarker);
         return this;
     }
 
-    public GetObjectCachedNotificationRegistrationsSpectraS3Request withUserId(final UUID userId) {
+    public GetObjectCachedNotificationRegistrationsSpectraS3Request withUserId(final String userId) {
         this.userId = userId;
-        this.updateQueryParam("user_id", userId.toString());
+        this.updateQueryParam("user_id", userId);
         return this;
     }
 
@@ -97,12 +97,12 @@ public class GetObjectCachedNotificationRegistrationsSpectraS3Request extends Ab
     }
 
 
-    public UUID getPageStartMarker() {
+    public String getPageStartMarker() {
         return this.pageStartMarker;
     }
 
 
-    public UUID getUserId() {
+    public String getUserId() {
         return this.userId;
     }
 

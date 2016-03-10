@@ -27,7 +27,7 @@ public class DelegateCreateUserSpectraS3Request extends AbstractRequest {
     
     private final String name;
 
-    private UUID id;
+    private String id;
 
     private String secretKey;
 
@@ -38,9 +38,9 @@ public class DelegateCreateUserSpectraS3Request extends AbstractRequest {
                 this.getQueryParams().put("name", UrlEscapers.urlFragmentEscaper().escape(name));
     }
 
-    public DelegateCreateUserSpectraS3Request withId(final UUID id) {
+    public DelegateCreateUserSpectraS3Request withId(final String id) {
         this.id = id;
-        this.updateQueryParam("id", id.toString());
+        this.updateQueryParam("id", id);
         return this;
     }
 
@@ -66,7 +66,7 @@ public class DelegateCreateUserSpectraS3Request extends AbstractRequest {
     }
 
 
-    public UUID getId() {
+    public String getId() {
         return this.id;
     }
 

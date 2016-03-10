@@ -35,7 +35,7 @@ public class GetGroupsSpectraS3Request extends AbstractRequest {
 
     private int pageOffset;
 
-    private UUID pageStartMarker;
+    private String pageStartMarker;
 
     // Constructor
     
@@ -76,9 +76,9 @@ public class GetGroupsSpectraS3Request extends AbstractRequest {
         return this;
     }
 
-    public GetGroupsSpectraS3Request withPageStartMarker(final UUID pageStartMarker) {
+    public GetGroupsSpectraS3Request withPageStartMarker(final String pageStartMarker) {
         this.pageStartMarker = pageStartMarker;
-        this.updateQueryParam("page_start_marker", pageStartMarker.toString());
+        this.updateQueryParam("page_start_marker", pageStartMarker);
         return this;
     }
 
@@ -118,7 +118,7 @@ public class GetGroupsSpectraS3Request extends AbstractRequest {
     }
 
 
-    public UUID getPageStartMarker() {
+    public String getPageStartMarker() {
         return this.pageStartMarker;
     }
 
