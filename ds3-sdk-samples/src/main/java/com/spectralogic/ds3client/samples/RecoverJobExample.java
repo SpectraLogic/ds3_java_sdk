@@ -66,9 +66,9 @@ public class RecoverJobExample {
             // Get the first object
             final List<Ds3Object> objectsList = Lists.newArrayList(objects);
             final Ds3ClientHelpers.Job readJob = helper.startReadJob(bucketName, objectsList);
-            final Path object1Path = Paths.get(inputDir + objectsList.get(0).getName());
+
             // Use the transfer() method for multithreaded parallel transfer.
-            readJob.transfer(new FileObjectGetter(object1Path));
+            readJob.transfer(new FileObjectGetter(downloadPath));
 
             /**
              * Here is where we attempt to recover from a hypothetical interruption - before we get the 2nd object,
@@ -77,8 +77,7 @@ public class RecoverJobExample {
             try {
                 // Ask the server for all unsent chunks from readJob
                 final Ds3ClientHelpers.Job recoverJob = helper.recoverReadJob(readJob.getJobId());
-                final Path object2Path = Paths.get(inputDir + objectsList.get(1).getName());
-                recoverJob.transfer(new FileObjectGetter(object2Path));
+                recoverJob.transfer(new FileObjectGetter(downloadPath));
             } catch (final JobRecoveryException e) {
                 System.out.println("Could not recover ReadJob " + readJob.getJobId().toString());
                 e.printStackTrace();
