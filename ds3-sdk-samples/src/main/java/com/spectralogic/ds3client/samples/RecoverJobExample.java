@@ -67,17 +67,17 @@ public class RecoverJobExample {
 
             // Get the first object
             final List<Ds3Object> objectsList = Lists.newArrayList(objects);
-            final Ds3Object object1 = objectsList.get(0);
-            final FileChannel channel1 = FileChannel.open(
-                downloadPath.resolve(object1.getName()),
-                StandardOpenOption.WRITE,
-                StandardOpenOption.CREATE,
-                StandardOpenOption.TRUNCATE_EXISTING
-            );
 
             final Ds3ClientHelpers.Job readJob = helper.startReadJob(bucketName, objectsList);
 
             // Explicitly only get the 1st object for this example, in order to "recover" the job while in progress.
+            final Ds3Object object1 = objectsList.get(0);
+            final FileChannel channel1 = FileChannel.open(
+                    downloadPath.resolve(object1.getName()),
+                    StandardOpenOption.WRITE,
+                    StandardOpenOption.CREATE,
+                    StandardOpenOption.TRUNCATE_EXISTING
+            );
             client.getObject(new GetObjectRequest(bucketName, object1.getName(), 0, readJob.getJobId(), channel1));
 
             /**
