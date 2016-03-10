@@ -18,6 +18,7 @@ package com.spectralogic.ds3client.samples;
 import com.google.common.collect.Lists;
 import com.spectralogic.ds3client.Ds3Client;
 import com.spectralogic.ds3client.Ds3ClientBuilder;
+import com.spectralogic.ds3client.commands.GetObjectRequest;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers;
 import com.spectralogic.ds3client.helpers.FileObjectGetter;
 import com.spectralogic.ds3client.helpers.FileObjectPutter;
@@ -27,6 +28,7 @@ import com.spectralogic.ds3client.serializer.XmlProcessingException;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.nio.channels.FileChannel;
 import java.nio.file.*;
 import java.security.SignatureException;
 import java.util.List;
@@ -65,10 +67,18 @@ public class RecoverJobExample {
 
             // Get the first object
             final List<Ds3Object> objectsList = Lists.newArrayList(objects);
+            final Ds3Object object1 = objectsList.get(0);
+            final FileChannel channel1 = FileChannel.open(
+                downloadPath.resolve(object1.getName()),
+                StandardOpenOption.WRITE,
+                StandardOpenOption.CREATE,
+                StandardOpenOption.TRUNCATE_EXISTING
+            );
+
             final Ds3ClientHelpers.Job readJob = helper.startReadJob(bucketName, objectsList);
 
-            // Use the transfer() method for multithreaded parallel transfer.
-            readJob.transfer(new FileObjectGetter(downloadPath));
+            // Explicitly only get the 1st object for this example, in order to "recover" the job while in progress.
+            client.getObject(new GetObjectRequest(bucketName, object1.getName(), 0, readJob.getJobId(), channel1));
 
             /**
              * Here is where we attempt to recover from a hypothetical interruption - before we get the 2nd object,
@@ -77,6 +87,7 @@ public class RecoverJobExample {
             try {
                 // Ask the server for all unsent chunks from readJob
                 final Ds3ClientHelpers.Job recoverJob = helper.recoverReadJob(readJob.getJobId());
+                // Use the transfer() method for multithreaded parallel transfer.
                 recoverJob.transfer(new FileObjectGetter(downloadPath));
             } catch (final JobRecoveryException e) {
                 System.out.println("Could not recover ReadJob " + readJob.getJobId().toString());
