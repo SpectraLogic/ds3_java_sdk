@@ -39,18 +39,19 @@ public class RecoverJobExample {
         // Get a client builder and then build a client instance.  This is the main entry point to the SDK.
         try (final Ds3Client client = Ds3ClientBuilder.fromEnv().withHttps(false).build()) {
             final String bucketName = "recover_get_books_job_bucket";  //The bucket we are interested in getting objects from.
-            Ds3ClientHelpers.wrap(client).ensureBucketExists(bucketName);
+            Ds3ClientHelpers helper = Ds3ClientHelpers.wrap(client);
+            helper.ensureBucketExists(bucketName);
 
             // Our local path which contains all the files that we want to transfer
             // This example assumes that there is at least 2 files in the "input" directory
             final Path inputPath = Paths.get("input");
 
             // Get the list of files that are contained in the inputPath
-            final Iterable<Ds3Object> objects = Ds3ClientHelpers.wrap(client).listObjectsForDirectory(inputPath);
+            final Iterable<Ds3Object> objects = helper.listObjectsForDirectory(inputPath);
 
             // Create the write job with the bucket we want to write to and the list
             // of objects that will be written
-            final Ds3ClientHelpers.Job job = Ds3ClientHelpers.wrap(client).startWriteJob(bucketName, objects);
+            final Ds3ClientHelpers.Job job = helper.startWriteJob(bucketName, objects);
 
             // Start the write job using an Object Putter that will read the files
             // from the local file system.
@@ -71,7 +72,7 @@ public class RecoverJobExample {
                     StandardOpenOption.CREATE,
                     StandardOpenOption.TRUNCATE_EXISTING
             );
-            final Ds3ClientHelpers.Job readJob = Ds3ClientHelpers.wrap(client).startReadJob(bucketName, objectsList);
+            final Ds3ClientHelpers.Job readJob = helper.startReadJob(bucketName, objectsList);
             client.getObject(new GetObjectRequest(bucketName, object1.getName(), 0, readJob.getJobId(), channel1));
 
             /**
@@ -79,7 +80,7 @@ public class RecoverJobExample {
              * and while the job is still "In Progress"
              */
             try {
-                final Ds3ClientHelpers.Job recoverJob = Ds3ClientHelpers.wrap(client).recoverReadJob(readJob.getJobId());
+                final Ds3ClientHelpers.Job recoverJob = helper.recoverReadJob(readJob.getJobId());
                 final Ds3Object object2 = objectsList.get(1);
                 final FileChannel channel2 = FileChannel.open(
                         downloadPath.resolve(object2.getName()),
@@ -89,11 +90,11 @@ public class RecoverJobExample {
                 );
 
                 client.getObject(new GetObjectRequest(bucketName, object2.getName(), 0, recoverJob.getJobId(), channel2));
-            } catch (JobRecoveryException e) {
+            } catch (final JobRecoveryException e) {
                 System.out.println("Could not recover ReadJob " + readJob.getJobId().toString());
                 e.printStackTrace();
             }
-        } catch (IOException e) {
+        } catch (final IOException e) {
                 System.out.println("Unable to create a client from ENV.  Please verify that DS3_ENDPOINT, DS3_ACCESS_KEY, and DS3_SECRET_KEY are defined.");
         }
     }
