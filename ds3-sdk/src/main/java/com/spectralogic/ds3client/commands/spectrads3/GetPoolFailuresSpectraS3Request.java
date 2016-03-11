@@ -47,7 +47,7 @@ public class GetPoolFailuresSpectraS3Request extends AbstractRequest {
 
     public GetPoolFailuresSpectraS3Request withErrorMessage(final String errorMessage) {
         this.errorMessage = errorMessage;
-        this.updateQueryParam("error_message", UrlEscapers.urlFragmentEscaper().escape(errorMessage).replace('+', ' '));
+        this.updateQueryParam("error_message", UrlEscapers.urlFragmentEscaper().escape(errorMessage));
         return this;
     }
 

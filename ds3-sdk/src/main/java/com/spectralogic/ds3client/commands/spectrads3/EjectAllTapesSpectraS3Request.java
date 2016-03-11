@@ -37,13 +37,13 @@ public class EjectAllTapesSpectraS3Request extends AbstractRequest {
 
     public EjectAllTapesSpectraS3Request withEjectLabel(final String ejectLabel) {
         this.ejectLabel = ejectLabel;
-        this.updateQueryParam("eject_label", UrlEscapers.urlFragmentEscaper().escape(ejectLabel).replace('+', ' '));
+        this.updateQueryParam("eject_label", UrlEscapers.urlFragmentEscaper().escape(ejectLabel));
         return this;
     }
 
     public EjectAllTapesSpectraS3Request withEjectLocation(final String ejectLocation) {
         this.ejectLocation = ejectLocation;
-        this.updateQueryParam("eject_location", UrlEscapers.urlFragmentEscaper().escape(ejectLocation).replace('+', ' '));
+        this.updateQueryParam("eject_location", UrlEscapers.urlFragmentEscaper().escape(ejectLocation));
         return this;
     }
 

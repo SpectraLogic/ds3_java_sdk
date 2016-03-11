@@ -56,13 +56,13 @@ public class GetTapeLibrariesSpectraS3Request extends AbstractRequest {
 
     public GetTapeLibrariesSpectraS3Request withManagementUrl(final String managementUrl) {
         this.managementUrl = managementUrl;
-        this.updateQueryParam("management_url", UrlEscapers.urlFragmentEscaper().escape(managementUrl).replace('+', ' '));
+        this.updateQueryParam("management_url", UrlEscapers.urlFragmentEscaper().escape(managementUrl));
         return this;
     }
 
     public GetTapeLibrariesSpectraS3Request withName(final String name) {
         this.name = name;
-        this.updateQueryParam("name", UrlEscapers.urlFragmentEscaper().escape(name).replace('+', ' '));
+        this.updateQueryParam("name", UrlEscapers.urlFragmentEscaper().escape(name));
         return this;
     }
 
@@ -86,7 +86,7 @@ public class GetTapeLibrariesSpectraS3Request extends AbstractRequest {
 
     public GetTapeLibrariesSpectraS3Request withSerialNumber(final String serialNumber) {
         this.serialNumber = serialNumber;
-        this.updateQueryParam("serial_number", UrlEscapers.urlFragmentEscaper().escape(serialNumber).replace('+', ' '));
+        this.updateQueryParam("serial_number", UrlEscapers.urlFragmentEscaper().escape(serialNumber));
         return this;
     }
 
