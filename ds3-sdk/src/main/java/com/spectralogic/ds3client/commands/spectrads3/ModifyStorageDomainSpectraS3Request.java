@@ -59,7 +59,7 @@ public class ModifyStorageDomainSpectraS3Request extends AbstractRequest {
 
     public ModifyStorageDomainSpectraS3Request withAutoEjectUponCron(final String autoEjectUponCron) {
         this.autoEjectUponCron = autoEjectUponCron;
-        this.updateQueryParam("auto_eject_upon_cron", UrlEscapers.urlFragmentEscaper().escape(autoEjectUponCron));
+        this.updateQueryParam("auto_eject_upon_cron", UrlEscapers.urlFragmentEscaper().escape(autoEjectUponCron).replace("+", "%2B"));
         return this;
     }
 
@@ -107,7 +107,7 @@ public class ModifyStorageDomainSpectraS3Request extends AbstractRequest {
 
     public ModifyStorageDomainSpectraS3Request withName(final String name) {
         this.name = name;
-        this.updateQueryParam("name", UrlEscapers.urlFragmentEscaper().escape(name));
+        this.updateQueryParam("name", UrlEscapers.urlFragmentEscaper().escape(name).replace("+", "%2B"));
         return this;
     }
 

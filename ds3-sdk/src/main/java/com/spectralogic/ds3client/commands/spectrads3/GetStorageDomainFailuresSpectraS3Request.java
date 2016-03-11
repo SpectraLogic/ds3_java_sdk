@@ -47,7 +47,7 @@ public class GetStorageDomainFailuresSpectraS3Request extends AbstractRequest {
 
     public GetStorageDomainFailuresSpectraS3Request withErrorMessage(final String errorMessage) {
         this.errorMessage = errorMessage;
-        this.updateQueryParam("error_message", UrlEscapers.urlFragmentEscaper().escape(errorMessage));
+        this.updateQueryParam("error_message", UrlEscapers.urlFragmentEscaper().escape(errorMessage).replace("+", "%2B"));
         return this;
     }
 

@@ -69,7 +69,7 @@ public class GetDataPoliciesSpectraS3Request extends AbstractRequest {
 
     public GetDataPoliciesSpectraS3Request withName(final String name) {
         this.name = name;
-        this.updateQueryParam("name", UrlEscapers.urlFragmentEscaper().escape(name));
+        this.updateQueryParam("name", UrlEscapers.urlFragmentEscaper().escape(name).replace("+", "%2B"));
         return this;
     }
 

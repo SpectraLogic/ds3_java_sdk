@@ -35,7 +35,7 @@ public class PutDataPersistenceRuleSpectraS3Request extends AbstractRequest {
 
     private final DataPersistenceRuleType type;
 
-    private int minimumDaysToRetain;
+    private Integer minimumDaysToRetain;
 
     // Constructor
     
@@ -50,9 +50,9 @@ public class PutDataPersistenceRuleSpectraS3Request extends AbstractRequest {
         this.getQueryParams().put("type", type.toString());
     }
 
-    public PutDataPersistenceRuleSpectraS3Request withMinimumDaysToRetain(final int minimumDaysToRetain) {
+    public PutDataPersistenceRuleSpectraS3Request withMinimumDaysToRetain(final Integer minimumDaysToRetain) {
         this.minimumDaysToRetain = minimumDaysToRetain;
-        this.updateQueryParam("minimum_days_to_retain", Integer.toString(minimumDaysToRetain));
+        this.updateQueryParam("minimum_days_to_retain", String.valueOf(minimumDaysToRetain));
         return this;
     }
 
@@ -87,7 +87,7 @@ public class PutDataPersistenceRuleSpectraS3Request extends AbstractRequest {
     }
 
 
-    public int getMinimumDaysToRetain() {
+    public Integer getMinimumDaysToRetain() {
         return this.minimumDaysToRetain;
     }
 
