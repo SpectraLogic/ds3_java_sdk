@@ -264,8 +264,7 @@ public class PutJobManagement_Test {
             try {
                 client.cancelJobSpectraS3(new CancelJobSpectraS3Request(jobId));
             } catch (final FailedRequestException e) {
-
-            assertThat(e.getStatusCode(), is(400));
+                assertThat(e.getStatusCode(), is(400));
             }
 
             final GetJobSpectraS3Response truncatedJob = client.getJobSpectraS3(new GetJobSpectraS3Request(jobId));
@@ -550,22 +549,37 @@ public class PutJobManagement_Test {
 
     @Test
     public void putJobCreatedNotification() throws IOException, SignatureException {
-        final PutJobCreatedNotificationRegistrationSpectraS3Response response = client
-                .putJobCreatedNotificationRegistrationSpectraS3(new PutJobCreatedNotificationRegistrationSpectraS3Request("test@test.test"));
+        UUID notificationUUID = null;
+        try {
+            final PutJobCreatedNotificationRegistrationSpectraS3Response response = client
+                    .putJobCreatedNotificationRegistrationSpectraS3(new PutJobCreatedNotificationRegistrationSpectraS3Request("test@test.test"));
+            notificationUUID = response.getJobCreatedNotificationRegistrationResult().getId();
+            assertThat(response.getStatusCode(), is(201));
 
-        assertThat(response.getStatusCode(), is(201));
+        } finally {
+            client.deleteJobCreatedNotificationRegistrationSpectraS3(
+                    new DeleteJobCreatedNotificationRegistrationSpectraS3Request(notificationUUID));
+        }
     }
 
     @Test
     public void getJobCreatedNotification() throws IOException, SignatureException {
-        final UUID notificationUUID = client.putJobCreatedNotificationRegistrationSpectraS3(
-                new PutJobCreatedNotificationRegistrationSpectraS3Request("test@test.test"))
-                .getJobCreatedNotificationRegistrationResult().getId();
+        UUID notificationUUID = null;
+        try {
+            notificationUUID = client.putJobCreatedNotificationRegistrationSpectraS3(
+                    new PutJobCreatedNotificationRegistrationSpectraS3Request("test@test.test"))
+                    .getJobCreatedNotificationRegistrationResult().getId();
 
-        final GetJobCreatedNotificationRegistrationSpectraS3Response response = client
-                .getJobCreatedNotificationRegistrationSpectraS3(new GetJobCreatedNotificationRegistrationSpectraS3Request(notificationUUID));
+            final GetJobCreatedNotificationRegistrationSpectraS3Response response = client
+                    .getJobCreatedNotificationRegistrationSpectraS3(new
+                            GetJobCreatedNotificationRegistrationSpectraS3Request(notificationUUID));
 
-        assertThat(response.getStatusCode(), is(200));
+            assertThat(response.getStatusCode(), is(200));
+
+        } finally {
+            client.deleteJobCreatedNotificationRegistrationSpectraS3(
+                    new DeleteJobCreatedNotificationRegistrationSpectraS3Request(notificationUUID));
+        }
     }
 
     @Test
@@ -582,24 +596,37 @@ public class PutJobManagement_Test {
 
     @Test
     public void putJobCompletedNotification() throws IOException, SignatureException {
-        final PutJobCompletedNotificationRegistrationSpectraS3Response response = client
-                .putJobCompletedNotificationRegistrationSpectraS3(
-                        new PutJobCompletedNotificationRegistrationSpectraS3Request("test@test.test"));
-
-        assertThat(response.getStatusCode(), is(201));
+        UUID notificationUUID = null;
+        try {
+            final PutJobCompletedNotificationRegistrationSpectraS3Response response = client
+                    .putJobCompletedNotificationRegistrationSpectraS3(
+                            new PutJobCompletedNotificationRegistrationSpectraS3Request("test@test.test"));
+            notificationUUID = response.getJobCompletedNotificationRegistrationResult().getId();
+            assertThat(response.getStatusCode(), is(201));
+        } finally {
+            client.deleteJobCompletedNotificationRegistrationSpectraS3(
+                    new DeleteJobCompletedNotificationRegistrationSpectraS3Request(notificationUUID));
+        }
     }
 
     @Test
     public void getJobCompletedNotification() throws IOException, SignatureException {
-        final UUID notificationUUID = client.putJobCompletedNotificationRegistrationSpectraS3(
-                new PutJobCompletedNotificationRegistrationSpectraS3Request("test@test.test"))
-                .getJobCompletedNotificationRegistrationResult().getId();
+        UUID notificationUUID = null;
+        try {
+            notificationUUID = client.putJobCompletedNotificationRegistrationSpectraS3(
+                    new PutJobCompletedNotificationRegistrationSpectraS3Request("test@test.test"))
+                    .getJobCompletedNotificationRegistrationResult().getId();
 
-        final GetJobCompletedNotificationRegistrationSpectraS3Response response = client
-                .getJobCompletedNotificationRegistrationSpectraS3(
-                        new GetJobCompletedNotificationRegistrationSpectraS3Request(notificationUUID));
+            final GetJobCompletedNotificationRegistrationSpectraS3Response response = client
+                    .getJobCompletedNotificationRegistrationSpectraS3(
+                            new GetJobCompletedNotificationRegistrationSpectraS3Request(notificationUUID));
 
-        assertThat(response.getStatusCode(), is(200));
+            assertThat(response.getStatusCode(), is(200));
+
+        } finally {
+            client.deleteJobCompletedNotificationRegistrationSpectraS3(
+                    new DeleteJobCompletedNotificationRegistrationSpectraS3Request(notificationUUID));
+        }
     }
 
     @Test
