@@ -56,7 +56,7 @@ public class PutStorageDomainSpectraS3Request extends AbstractRequest {
     
     public PutStorageDomainSpectraS3Request(final String name) {
         this.name = name;
-                this.getQueryParams().put("name", UrlEscapers.urlFragmentEscaper().escape(name).replace('+', ' '));
+                this.getQueryParams().put("name", UrlEscapers.urlFragmentEscaper().escape(name));
     }
 
     public PutStorageDomainSpectraS3Request withAutoEjectMediaFullThreshold(final Long autoEjectMediaFullThreshold) {
@@ -67,7 +67,7 @@ public class PutStorageDomainSpectraS3Request extends AbstractRequest {
 
     public PutStorageDomainSpectraS3Request withAutoEjectUponCron(final String autoEjectUponCron) {
         this.autoEjectUponCron = autoEjectUponCron;
-        this.updateQueryParam("auto_eject_upon_cron", UrlEscapers.urlFragmentEscaper().escape(autoEjectUponCron).replace('+', ' '));
+        this.updateQueryParam("auto_eject_upon_cron", UrlEscapers.urlFragmentEscaper().escape(autoEjectUponCron));
         return this;
     }
 

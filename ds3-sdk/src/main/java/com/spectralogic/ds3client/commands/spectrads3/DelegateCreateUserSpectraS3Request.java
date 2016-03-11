@@ -35,7 +35,7 @@ public class DelegateCreateUserSpectraS3Request extends AbstractRequest {
     
     public DelegateCreateUserSpectraS3Request(final String name) {
         this.name = name;
-                this.getQueryParams().put("name", UrlEscapers.urlFragmentEscaper().escape(name).replace('+', ' '));
+                this.getQueryParams().put("name", UrlEscapers.urlFragmentEscaper().escape(name));
     }
 
     public DelegateCreateUserSpectraS3Request withId(final String id) {
@@ -46,7 +46,7 @@ public class DelegateCreateUserSpectraS3Request extends AbstractRequest {
 
     public DelegateCreateUserSpectraS3Request withSecretKey(final String secretKey) {
         this.secretKey = secretKey;
-        this.updateQueryParam("secret_key", UrlEscapers.urlFragmentEscaper().escape(secretKey).replace('+', ' '));
+        this.updateQueryParam("secret_key", UrlEscapers.urlFragmentEscaper().escape(secretKey));
         return this;
     }
 

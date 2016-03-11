@@ -75,7 +75,7 @@ public class GetTapesWithFullDetailsSpectraS3Request extends AbstractRequest {
 
     public GetTapesWithFullDetailsSpectraS3Request withBarCode(final String barCode) {
         this.barCode = barCode;
-        this.updateQueryParam("bar_code", UrlEscapers.urlFragmentEscaper().escape(barCode).replace('+', ' '));
+        this.updateQueryParam("bar_code", UrlEscapers.urlFragmentEscaper().escape(barCode));
         return this;
     }
 
@@ -87,13 +87,13 @@ public class GetTapesWithFullDetailsSpectraS3Request extends AbstractRequest {
 
     public GetTapesWithFullDetailsSpectraS3Request withEjectLabel(final String ejectLabel) {
         this.ejectLabel = ejectLabel;
-        this.updateQueryParam("eject_label", UrlEscapers.urlFragmentEscaper().escape(ejectLabel).replace('+', ' '));
+        this.updateQueryParam("eject_label", UrlEscapers.urlFragmentEscaper().escape(ejectLabel));
         return this;
     }
 
     public GetTapesWithFullDetailsSpectraS3Request withEjectLocation(final String ejectLocation) {
         this.ejectLocation = ejectLocation;
-        this.updateQueryParam("eject_location", UrlEscapers.urlFragmentEscaper().escape(ejectLocation).replace('+', ' '));
+        this.updateQueryParam("eject_location", UrlEscapers.urlFragmentEscaper().escape(ejectLocation));
         return this;
     }
 
@@ -145,7 +145,7 @@ public class GetTapesWithFullDetailsSpectraS3Request extends AbstractRequest {
 
     public GetTapesWithFullDetailsSpectraS3Request withSerialNumber(final String serialNumber) {
         this.serialNumber = serialNumber;
-        this.updateQueryParam("serial_number", UrlEscapers.urlFragmentEscaper().escape(serialNumber).replace('+', ' '));
+        this.updateQueryParam("serial_number", UrlEscapers.urlFragmentEscaper().escape(serialNumber));
         return this;
     }
 

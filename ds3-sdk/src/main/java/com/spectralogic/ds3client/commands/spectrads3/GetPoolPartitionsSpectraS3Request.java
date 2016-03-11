@@ -55,7 +55,7 @@ public class GetPoolPartitionsSpectraS3Request extends AbstractRequest {
 
     public GetPoolPartitionsSpectraS3Request withName(final String name) {
         this.name = name;
-        this.updateQueryParam("name", UrlEscapers.urlFragmentEscaper().escape(name).replace('+', ' '));
+        this.updateQueryParam("name", UrlEscapers.urlFragmentEscaper().escape(name));
         return this;
     }
 

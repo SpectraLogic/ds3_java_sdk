@@ -47,7 +47,7 @@ public class PutDataReplicationRuleSpectraS3Request extends AbstractRequest {
 
     public PutDataReplicationRuleSpectraS3Request withDs3TargetDataPolicy(final String ds3TargetDataPolicy) {
         this.ds3TargetDataPolicy = ds3TargetDataPolicy;
-        this.updateQueryParam("ds3_target_data_policy", UrlEscapers.urlFragmentEscaper().escape(ds3TargetDataPolicy).replace('+', ' '));
+        this.updateQueryParam("ds3_target_data_policy", UrlEscapers.urlFragmentEscaper().escape(ds3TargetDataPolicy));
         return this;
     }
 
