@@ -52,6 +52,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -253,9 +254,21 @@ public class Smoke_Test {
                 }
             });
 
-            final GetJobResponse jobResponse = client.getJob(new GetJobRequest(jobId));
-            assertThat(jobResponse.getMasterObjectList().getStatus(), is(JobStatus.COMPLETED));
+            // Work around Job Status timing issue found only in r1.x
+            JobStatus getJobResponseStatus = JobStatus.IN_PROGRESS;
+            for (int retry = 0; retry < 3; retry++) {
+                final GetJobResponse jobResponse = client.getJob(new GetJobRequest(jobId));
+                getJobResponseStatus = jobResponse.getMasterObjectList().getStatus();
 
+                if (getJobResponseStatus == JobStatus.COMPLETED) break;
+
+                try {
+                    TimeUnit.MILLISECONDS.sleep(500);
+                } catch (final InterruptedException e) {
+                    LOG.warn("Caught interrupt", e);
+                }
+            }
+            assertThat(getJobResponseStatus, is(JobStatus.COMPLETED));
         } finally {
             deleteAllContents(client, bucketName);
         }
