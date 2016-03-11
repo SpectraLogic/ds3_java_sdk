@@ -77,7 +77,7 @@ public class GetTapePartitionsSpectraS3Request extends AbstractRequest {
 
     public GetTapePartitionsSpectraS3Request withName(final String name) {
         this.name = name;
-        this.updateQueryParam("name", UrlEscapers.urlFragmentEscaper().escape(name).replace('+', ' '));
+        this.updateQueryParam("name", UrlEscapers.urlFragmentEscaper().escape(name).replace("+", "%2B"));
         return this;
     }
 
@@ -107,7 +107,7 @@ public class GetTapePartitionsSpectraS3Request extends AbstractRequest {
 
     public GetTapePartitionsSpectraS3Request withSerialNumber(final String serialNumber) {
         this.serialNumber = serialNumber;
-        this.updateQueryParam("serial_number", UrlEscapers.urlFragmentEscaper().escape(serialNumber).replace('+', ' '));
+        this.updateQueryParam("serial_number", UrlEscapers.urlFragmentEscaper().escape(serialNumber).replace("+", "%2B"));
         return this;
     }
 

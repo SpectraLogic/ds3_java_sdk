@@ -47,7 +47,7 @@ public class GetTapePartitionFailuresSpectraS3Request extends AbstractRequest {
 
     public GetTapePartitionFailuresSpectraS3Request withErrorMessage(final String errorMessage) {
         this.errorMessage = errorMessage;
-        this.updateQueryParam("error_message", UrlEscapers.urlFragmentEscaper().escape(errorMessage).replace('+', ' '));
+        this.updateQueryParam("error_message", UrlEscapers.urlFragmentEscaper().escape(errorMessage).replace("+", "%2B"));
         return this;
     }
 

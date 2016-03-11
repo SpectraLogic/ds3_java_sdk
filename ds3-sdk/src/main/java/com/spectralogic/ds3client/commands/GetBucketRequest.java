@@ -47,7 +47,7 @@ public class GetBucketRequest extends AbstractRequest {
 
     public GetBucketRequest withMarker(final String marker) {
         this.marker = marker;
-        this.updateQueryParam("marker", UrlEscapers.urlFragmentEscaper().escape(marker).replace('+', ' '));
+        this.updateQueryParam("marker", UrlEscapers.urlFragmentEscaper().escape(marker).replace("+", "%2B"));
         return this;
     }
 
@@ -59,7 +59,7 @@ public class GetBucketRequest extends AbstractRequest {
 
     public GetBucketRequest withPrefix(final String prefix) {
         this.prefix = prefix;
-        this.updateQueryParam("prefix", UrlEscapers.urlFragmentEscaper().escape(prefix).replace('+', ' '));
+        this.updateQueryParam("prefix", UrlEscapers.urlFragmentEscaper().escape(prefix).replace("+", "%2B"));
         return this;
     }
 

@@ -62,7 +62,7 @@ public class GetBucketsSpectraS3Request extends AbstractRequest {
 
     public GetBucketsSpectraS3Request withName(final String name) {
         this.name = name;
-        this.updateQueryParam("name", UrlEscapers.urlFragmentEscaper().escape(name).replace('+', ' '));
+        this.updateQueryParam("name", UrlEscapers.urlFragmentEscaper().escape(name).replace("+", "%2B"));
         return this;
     }
 

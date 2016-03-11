@@ -46,7 +46,7 @@ public class GetUsersSpectraS3Request extends AbstractRequest {
 
     public GetUsersSpectraS3Request withAuthId(final String authId) {
         this.authId = authId;
-        this.updateQueryParam("auth_id", UrlEscapers.urlFragmentEscaper().escape(authId).replace('+', ' '));
+        this.updateQueryParam("auth_id", UrlEscapers.urlFragmentEscaper().escape(authId).replace("+", "%2B"));
         return this;
     }
 
@@ -68,7 +68,7 @@ public class GetUsersSpectraS3Request extends AbstractRequest {
 
     public GetUsersSpectraS3Request withName(final String name) {
         this.name = name;
-        this.updateQueryParam("name", UrlEscapers.urlFragmentEscaper().escape(name).replace('+', ' '));
+        this.updateQueryParam("name", UrlEscapers.urlFragmentEscaper().escape(name).replace("+", "%2B"));
         return this;
     }
 

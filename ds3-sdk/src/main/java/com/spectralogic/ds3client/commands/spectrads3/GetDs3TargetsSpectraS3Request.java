@@ -55,13 +55,13 @@ public class GetDs3TargetsSpectraS3Request extends AbstractRequest {
 
     public GetDs3TargetsSpectraS3Request withAdminAuthId(final String adminAuthId) {
         this.adminAuthId = adminAuthId;
-        this.updateQueryParam("admin_auth_id", UrlEscapers.urlFragmentEscaper().escape(adminAuthId).replace('+', ' '));
+        this.updateQueryParam("admin_auth_id", UrlEscapers.urlFragmentEscaper().escape(adminAuthId).replace("+", "%2B"));
         return this;
     }
 
     public GetDs3TargetsSpectraS3Request withDataPath(final String dataPath) {
         this.dataPath = dataPath;
-        this.updateQueryParam("data_path", UrlEscapers.urlFragmentEscaper().escape(dataPath).replace('+', ' '));
+        this.updateQueryParam("data_path", UrlEscapers.urlFragmentEscaper().escape(dataPath).replace("+", "%2B"));
         return this;
     }
 
@@ -83,7 +83,7 @@ public class GetDs3TargetsSpectraS3Request extends AbstractRequest {
 
     public GetDs3TargetsSpectraS3Request withName(final String name) {
         this.name = name;
-        this.updateQueryParam("name", UrlEscapers.urlFragmentEscaper().escape(name).replace('+', ' '));
+        this.updateQueryParam("name", UrlEscapers.urlFragmentEscaper().escape(name).replace("+", "%2B"));
         return this;
     }
 
