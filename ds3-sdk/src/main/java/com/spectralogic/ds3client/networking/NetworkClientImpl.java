@@ -44,7 +44,6 @@ import org.apache.http.entity.ContentType;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
-import org.apache.http.impl.entity.StrictContentLengthStrategy;
 import org.apache.http.message.BasicHttpEntityEnclosingRequest;
 import org.apache.http.message.BasicHttpRequest;
 import org.apache.http.ssl.SSLContextBuilder;
@@ -322,7 +321,7 @@ public class NetworkClientImpl implements NetworkClient {
 
             if (queryParams.containsKey("uploads")) {
                 canonicalizedResource.append("?uploads");
-                if (queryParams.get("uploads")!=null){
+                if (queryParams.get("uploads") != null){
                     canonicalizedResource.append("=").append(queryParams.get("uploads"));
                 }
             }

@@ -65,7 +65,7 @@ public class PutJobManagement_Test {
     @Before
     public void setupBucket() throws IOException, SignatureException {
         HELPERS.ensureBucketExists(BUCKET_NAME);
-        }
+    }
 
     @AfterClass
     public static void teardown() throws IOException, SignatureException {
@@ -557,6 +557,7 @@ public class PutJobManagement_Test {
             assertThat(response.getStatusCode(), is(201));
 
         } finally {
+            assertNotNull(notificationUUID);
             client.deleteJobCreatedNotificationRegistrationSpectraS3(
                     new DeleteJobCreatedNotificationRegistrationSpectraS3Request(notificationUUID));
         }
@@ -577,6 +578,7 @@ public class PutJobManagement_Test {
             assertThat(response.getStatusCode(), is(200));
 
         } finally {
+            assertNotNull(notificationUUID);
             client.deleteJobCreatedNotificationRegistrationSpectraS3(
                     new DeleteJobCreatedNotificationRegistrationSpectraS3Request(notificationUUID));
         }
@@ -604,6 +606,7 @@ public class PutJobManagement_Test {
             notificationUUID = response.getJobCompletedNotificationRegistrationResult().getId();
             assertThat(response.getStatusCode(), is(201));
         } finally {
+            assertNotNull(notificationUUID);
             client.deleteJobCompletedNotificationRegistrationSpectraS3(
                     new DeleteJobCompletedNotificationRegistrationSpectraS3Request(notificationUUID));
         }
@@ -624,13 +627,14 @@ public class PutJobManagement_Test {
             assertThat(response.getStatusCode(), is(200));
 
         } finally {
+            assertNotNull(notificationUUID);
             client.deleteJobCompletedNotificationRegistrationSpectraS3(
                     new DeleteJobCompletedNotificationRegistrationSpectraS3Request(notificationUUID));
         }
     }
 
     @Test
-    public void DeleteJobCompletedNotification() throws IOException, SignatureException {
+    public void deleteJobCompletedNotification() throws IOException, SignatureException {
         final UUID notificationUUID = client.putJobCompletedNotificationRegistrationSpectraS3(
                 new PutJobCompletedNotificationRegistrationSpectraS3Request("test@test.test"))
                 .getJobCompletedNotificationRegistrationResult().getId();
@@ -643,7 +647,7 @@ public class PutJobManagement_Test {
     }
 
     @Test
-    public void InitiateMultipartUpload() throws IOException, SignatureException {
+    public void initiateMultipartUpload() throws IOException, SignatureException {
         try {
             final InitiateMultiPartUploadResponse multiPartUploadResponse = client.initiateMultiPartUpload(
                     new InitiateMultiPartUploadRequest(BUCKET_NAME, "beowulf"));
@@ -661,7 +665,7 @@ public class PutJobManagement_Test {
     }
 
     @Test
-    public void AbortMultipartUpload() throws IOException, SignatureException {
+    public void abortMultipartUpload() throws IOException, SignatureException {
         String uploadID = null;
         try {
             try {
@@ -672,10 +676,14 @@ public class PutJobManagement_Test {
                 assertThat(getCacheBytesAvailable(), lessThan(5000000000000L));
                 assertThat(e.getStatusCode(), is(400));
             }
-            UUID uuid = UUID.randomUUID();
-            if (uploadID != null){
+
+            final UUID uuid;
+            if (uploadID != null) {
                 uuid = UUID.fromString(uploadID);
+            } else {
+                uuid = UUID.randomUUID();
             }
+
             final AbortMultiPartUploadResponse abortResponse = client.abortMultiPartUpload(
                     new AbortMultiPartUploadRequest(BUCKET_NAME, "beowulf", uuid));
 
@@ -691,7 +699,7 @@ public class PutJobManagement_Test {
     }
 
     @Test //TODO expand positive test if test target >5 TB cache is available
-    public void ListMultiPartUploadParts() throws IOException, SignatureException {
+    public void listMultiPartUploadParts() throws IOException, SignatureException {
         try {
            final ListMultiPartUploadPartsResponse response = client.listMultiPartUploadParts(
                     new ListMultiPartUploadPartsRequest(BUCKET_NAME, "beowulf", UUID.randomUUID()));
@@ -705,7 +713,7 @@ public class PutJobManagement_Test {
     }
 
     @Test //TODO expand positive test if test target >5 TB cache is available
-    public void CompleteMultiPartUpload() throws IOException, SignatureException {
+    public void completeMultiPartUpload() throws IOException, SignatureException {
         try {
             client.completeMultiPartUpload(
                     new CompleteMultiPartUploadRequest(BUCKET_NAME, "beowulf", UUID.randomUUID()));
@@ -722,7 +730,7 @@ public class PutJobManagement_Test {
     }
 
     @Test //TODO expand positive test if test target >5 TB cache is available
-    public void ListMultiPartUploads() throws IOException, SignatureException {
+    public void listMultiPartUploads() throws IOException, SignatureException {
         try {
             final ListMultiPartUploadsResponse response = client.listMultiPartUploads(
                     new ListMultiPartUploadsRequest(BUCKET_NAME));
@@ -737,7 +745,7 @@ public class PutJobManagement_Test {
 
     @Ignore("Pending resolution of Content-Length fail in header")
     @Test //TODO expand positive test if test target >5 TB cache is available
-    public void PutMultiPartUploadPart() throws IOException, SignatureException {
+    public void putMultiPartUploadPart() throws IOException, SignatureException {
         try {
             client.putMultiPartUploadPart(
                     new PutMultiPartUploadPartRequest(BUCKET_NAME, "beowulf", 5, UUID.randomUUID()));
