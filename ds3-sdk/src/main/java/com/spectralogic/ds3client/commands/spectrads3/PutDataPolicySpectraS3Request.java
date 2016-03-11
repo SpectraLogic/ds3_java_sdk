@@ -52,7 +52,7 @@ public class PutDataPolicySpectraS3Request extends AbstractRequest {
     
     public PutDataPolicySpectraS3Request(final String name) {
         this.name = name;
-                this.getQueryParams().put("name", UrlEscapers.urlFragmentEscaper().escape(name));
+                this.getQueryParams().put("name", UrlEscapers.urlFragmentEscaper().escape(name).replace('+', ' '));
     }
 
     public PutDataPolicySpectraS3Request withBlobbingEnabled(final boolean blobbingEnabled) {
