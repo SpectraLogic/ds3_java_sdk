@@ -45,7 +45,7 @@ public class GetSystemFailuresSpectraS3Request extends AbstractRequest {
 
     public GetSystemFailuresSpectraS3Request withErrorMessage(final String errorMessage) {
         this.errorMessage = errorMessage;
-        this.updateQueryParam("error_message", UrlEscapers.urlFragmentEscaper().escape(errorMessage));
+        this.updateQueryParam("error_message", UrlEscapers.urlFragmentEscaper().escape(errorMessage).replace('+', ' '));
         return this;
     }
 

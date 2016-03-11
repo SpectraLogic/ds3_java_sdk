@@ -29,7 +29,7 @@ public class ModifyDataPathBackendSpectraS3Request extends AbstractRequest {
     
     private boolean activated;
 
-    private int autoActivateTimeoutInMins;
+    private Integer autoActivateTimeoutInMins;
 
     private AutoInspectMode autoInspect;
 
@@ -52,9 +52,9 @@ public class ModifyDataPathBackendSpectraS3Request extends AbstractRequest {
         return this;
     }
 
-    public ModifyDataPathBackendSpectraS3Request withAutoActivateTimeoutInMins(final int autoActivateTimeoutInMins) {
+    public ModifyDataPathBackendSpectraS3Request withAutoActivateTimeoutInMins(final Integer autoActivateTimeoutInMins) {
         this.autoActivateTimeoutInMins = autoActivateTimeoutInMins;
-        this.updateQueryParam("auto_activate_timeout_in_mins", Integer.toString(autoActivateTimeoutInMins));
+        this.updateQueryParam("auto_activate_timeout_in_mins", String.valueOf(autoActivateTimeoutInMins));
         return this;
     }
 
@@ -104,7 +104,7 @@ public class ModifyDataPathBackendSpectraS3Request extends AbstractRequest {
     }
 
 
-    public int getAutoActivateTimeoutInMins() {
+    public Integer getAutoActivateTimeoutInMins() {
         return this.autoActivateTimeoutInMins;
     }
 

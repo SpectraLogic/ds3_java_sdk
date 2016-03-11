@@ -34,7 +34,7 @@ public class PutPoolPartitionSpectraS3Request extends AbstractRequest {
     public PutPoolPartitionSpectraS3Request(final String name, final PoolType type) {
         this.name = name;
         this.type = type;
-                this.getQueryParams().put("name", UrlEscapers.urlFragmentEscaper().escape(name));
+                this.getQueryParams().put("name", UrlEscapers.urlFragmentEscaper().escape(name).replace('+', ' '));
         this.getQueryParams().put("type", type.toString());
     }
 

@@ -61,7 +61,7 @@ public class GetObjectsSpectraS3Request extends AbstractRequest {
 
     public GetObjectsSpectraS3Request withFolder(final String folder) {
         this.folder = folder;
-        this.updateQueryParam("folder", UrlEscapers.urlFragmentEscaper().escape(folder));
+        this.updateQueryParam("folder", UrlEscapers.urlFragmentEscaper().escape(folder).replace('+', ' '));
         return this;
     }
 
@@ -93,7 +93,7 @@ public class GetObjectsSpectraS3Request extends AbstractRequest {
 
     public GetObjectsSpectraS3Request withName(final String name) {
         this.name = name;
-        this.updateQueryParam("name", UrlEscapers.urlFragmentEscaper().escape(name));
+        this.updateQueryParam("name", UrlEscapers.urlFragmentEscaper().escape(name).replace('+', ' '));
         return this;
     }
 

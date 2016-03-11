@@ -50,7 +50,7 @@ public class ListMultiPartUploadsRequest extends AbstractRequest {
 
     public ListMultiPartUploadsRequest withKeyMarker(final String keyMarker) {
         this.keyMarker = keyMarker;
-        this.updateQueryParam("key_marker", UrlEscapers.urlFragmentEscaper().escape(keyMarker));
+        this.updateQueryParam("key_marker", UrlEscapers.urlFragmentEscaper().escape(keyMarker).replace('+', ' '));
         return this;
     }
 
@@ -62,13 +62,13 @@ public class ListMultiPartUploadsRequest extends AbstractRequest {
 
     public ListMultiPartUploadsRequest withPrefix(final String prefix) {
         this.prefix = prefix;
-        this.updateQueryParam("prefix", UrlEscapers.urlFragmentEscaper().escape(prefix));
+        this.updateQueryParam("prefix", UrlEscapers.urlFragmentEscaper().escape(prefix).replace('+', ' '));
         return this;
     }
 
     public ListMultiPartUploadsRequest withUploadIdMarker(final String uploadIdMarker) {
         this.uploadIdMarker = uploadIdMarker;
-        this.updateQueryParam("upload_id_marker", UrlEscapers.urlFragmentEscaper().escape(uploadIdMarker));
+        this.updateQueryParam("upload_id_marker", UrlEscapers.urlFragmentEscaper().escape(uploadIdMarker).replace('+', ' '));
         return this;
     }
 
