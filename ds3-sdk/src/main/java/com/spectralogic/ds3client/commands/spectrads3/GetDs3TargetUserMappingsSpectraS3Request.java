@@ -52,7 +52,7 @@ public class GetDs3TargetUserMappingsSpectraS3Request extends AbstractRequest {
 
     public GetDs3TargetUserMappingsSpectraS3Request withAuthId(final String authId) {
         this.authId = authId;
-        this.updateQueryParam("auth_id", UrlEscapers.urlFragmentEscaper().escape(authId));
+        this.updateQueryParam("auth_id", UrlEscapers.urlFragmentEscaper().escape(authId).replace("+", "%2B"));
         return this;
     }
 
