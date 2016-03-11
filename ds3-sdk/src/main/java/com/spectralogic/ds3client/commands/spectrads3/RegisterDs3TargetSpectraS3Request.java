@@ -61,10 +61,10 @@ public class RegisterDs3TargetSpectraS3Request extends AbstractRequest {
         this.adminSecretKey = adminSecretKey;
         this.dataPathEndPoint = dataPathEndPoint;
         this.name = name;
-                this.getQueryParams().put("admin_auth_id", UrlEscapers.urlFragmentEscaper().escape(adminAuthId));
-        this.getQueryParams().put("admin_secret_key", UrlEscapers.urlFragmentEscaper().escape(adminSecretKey));
-        this.getQueryParams().put("data_path_end_point", UrlEscapers.urlFragmentEscaper().escape(dataPathEndPoint));
-        this.getQueryParams().put("name", UrlEscapers.urlFragmentEscaper().escape(name));
+                this.getQueryParams().put("admin_auth_id", UrlEscapers.urlFragmentEscaper().escape(adminAuthId).replace('+', ' '));
+        this.getQueryParams().put("admin_secret_key", UrlEscapers.urlFragmentEscaper().escape(adminSecretKey).replace('+', ' '));
+        this.getQueryParams().put("data_path_end_point", UrlEscapers.urlFragmentEscaper().escape(dataPathEndPoint).replace('+', ' '));
+        this.getQueryParams().put("name", UrlEscapers.urlFragmentEscaper().escape(name).replace('+', ' '));
     }
 
     public RegisterDs3TargetSpectraS3Request withAccessControlReplication(final Ds3TargetAccessControlReplication accessControlReplication) {
@@ -87,7 +87,7 @@ public class RegisterDs3TargetSpectraS3Request extends AbstractRequest {
 
     public RegisterDs3TargetSpectraS3Request withDataPathProxy(final String dataPathProxy) {
         this.dataPathProxy = dataPathProxy;
-        this.updateQueryParam("data_path_proxy", UrlEscapers.urlFragmentEscaper().escape(dataPathProxy));
+        this.updateQueryParam("data_path_proxy", UrlEscapers.urlFragmentEscaper().escape(dataPathProxy).replace('+', ' '));
         return this;
     }
 
@@ -117,7 +117,7 @@ public class RegisterDs3TargetSpectraS3Request extends AbstractRequest {
 
     public RegisterDs3TargetSpectraS3Request withReplicatedUserDefaultDataPolicy(final String replicatedUserDefaultDataPolicy) {
         this.replicatedUserDefaultDataPolicy = replicatedUserDefaultDataPolicy;
-        this.updateQueryParam("replicated_user_default_data_policy", UrlEscapers.urlFragmentEscaper().escape(replicatedUserDefaultDataPolicy));
+        this.updateQueryParam("replicated_user_default_data_policy", UrlEscapers.urlFragmentEscaper().escape(replicatedUserDefaultDataPolicy).replace('+', ' '));
         return this;
     }
 

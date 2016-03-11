@@ -84,7 +84,7 @@ public class GetTapeDrivesSpectraS3Request extends AbstractRequest {
 
     public GetTapeDrivesSpectraS3Request withSerialNumber(final String serialNumber) {
         this.serialNumber = serialNumber;
-        this.updateQueryParam("serial_number", UrlEscapers.urlFragmentEscaper().escape(serialNumber));
+        this.updateQueryParam("serial_number", UrlEscapers.urlFragmentEscaper().escape(serialNumber).replace('+', ' '));
         return this;
     }
 

@@ -68,19 +68,19 @@ public class ModifyDs3TargetSpectraS3Request extends AbstractRequest {
 
     public ModifyDs3TargetSpectraS3Request withAdminAuthId(final String adminAuthId) {
         this.adminAuthId = adminAuthId;
-        this.updateQueryParam("admin_auth_id", UrlEscapers.urlFragmentEscaper().escape(adminAuthId));
+        this.updateQueryParam("admin_auth_id", UrlEscapers.urlFragmentEscaper().escape(adminAuthId).replace('+', ' '));
         return this;
     }
 
     public ModifyDs3TargetSpectraS3Request withAdminSecretKey(final String adminSecretKey) {
         this.adminSecretKey = adminSecretKey;
-        this.updateQueryParam("admin_secret_key", UrlEscapers.urlFragmentEscaper().escape(adminSecretKey));
+        this.updateQueryParam("admin_secret_key", UrlEscapers.urlFragmentEscaper().escape(adminSecretKey).replace('+', ' '));
         return this;
     }
 
     public ModifyDs3TargetSpectraS3Request withDataPathEndPoint(final String dataPathEndPoint) {
         this.dataPathEndPoint = dataPathEndPoint;
-        this.updateQueryParam("data_path_end_point", UrlEscapers.urlFragmentEscaper().escape(dataPathEndPoint));
+        this.updateQueryParam("data_path_end_point", UrlEscapers.urlFragmentEscaper().escape(dataPathEndPoint).replace('+', ' '));
         return this;
     }
 
@@ -98,7 +98,7 @@ public class ModifyDs3TargetSpectraS3Request extends AbstractRequest {
 
     public ModifyDs3TargetSpectraS3Request withDataPathProxy(final String dataPathProxy) {
         this.dataPathProxy = dataPathProxy;
-        this.updateQueryParam("data_path_proxy", UrlEscapers.urlFragmentEscaper().escape(dataPathProxy));
+        this.updateQueryParam("data_path_proxy", UrlEscapers.urlFragmentEscaper().escape(dataPathProxy).replace('+', ' '));
         return this;
     }
 
@@ -116,7 +116,7 @@ public class ModifyDs3TargetSpectraS3Request extends AbstractRequest {
 
     public ModifyDs3TargetSpectraS3Request withName(final String name) {
         this.name = name;
-        this.updateQueryParam("name", UrlEscapers.urlFragmentEscaper().escape(name));
+        this.updateQueryParam("name", UrlEscapers.urlFragmentEscaper().escape(name).replace('+', ' '));
         return this;
     }
 
@@ -128,7 +128,7 @@ public class ModifyDs3TargetSpectraS3Request extends AbstractRequest {
 
     public ModifyDs3TargetSpectraS3Request withReplicatedUserDefaultDataPolicy(final String replicatedUserDefaultDataPolicy) {
         this.replicatedUserDefaultDataPolicy = replicatedUserDefaultDataPolicy;
-        this.updateQueryParam("replicated_user_default_data_policy", UrlEscapers.urlFragmentEscaper().escape(replicatedUserDefaultDataPolicy));
+        this.updateQueryParam("replicated_user_default_data_policy", UrlEscapers.urlFragmentEscaper().escape(replicatedUserDefaultDataPolicy).replace('+', ' '));
         return this;
     }
 
