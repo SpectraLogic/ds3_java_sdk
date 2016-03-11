@@ -32,7 +32,7 @@ public class ListMultiPartUploadPartsRequest extends AbstractRequest {
 
     private int maxParts;
 
-    private int partNumberMarker;
+    private Integer partNumberMarker;
 
     // Constructor
     
@@ -49,9 +49,9 @@ public class ListMultiPartUploadPartsRequest extends AbstractRequest {
         return this;
     }
 
-    public ListMultiPartUploadPartsRequest withPartNumberMarker(final int partNumberMarker) {
+    public ListMultiPartUploadPartsRequest withPartNumberMarker(final Integer partNumberMarker) {
         this.partNumberMarker = partNumberMarker;
-        this.updateQueryParam("part_number_marker", Integer.toString(partNumberMarker));
+        this.updateQueryParam("part_number_marker", String.valueOf(partNumberMarker));
         return this;
     }
 
@@ -86,7 +86,7 @@ public class ListMultiPartUploadPartsRequest extends AbstractRequest {
     }
 
 
-    public int getPartNumberMarker() {
+    public Integer getPartNumberMarker() {
         return this.partNumberMarker;
     }
 

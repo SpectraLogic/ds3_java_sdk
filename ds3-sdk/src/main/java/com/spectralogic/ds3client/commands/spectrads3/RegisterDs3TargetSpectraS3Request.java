@@ -40,7 +40,7 @@ public class RegisterDs3TargetSpectraS3Request extends AbstractRequest {
 
     private boolean dataPathHttps;
 
-    private int dataPathPort;
+    private Integer dataPathPort;
 
     private String dataPathProxy;
 
@@ -79,9 +79,9 @@ public class RegisterDs3TargetSpectraS3Request extends AbstractRequest {
         return this;
     }
 
-    public RegisterDs3TargetSpectraS3Request withDataPathPort(final int dataPathPort) {
+    public RegisterDs3TargetSpectraS3Request withDataPathPort(final Integer dataPathPort) {
         this.dataPathPort = dataPathPort;
-        this.updateQueryParam("data_path_port", Integer.toString(dataPathPort));
+        this.updateQueryParam("data_path_port", String.valueOf(dataPathPort));
         return this;
     }
 
@@ -162,7 +162,7 @@ public class RegisterDs3TargetSpectraS3Request extends AbstractRequest {
     }
 
 
-    public int getDataPathPort() {
+    public Integer getDataPathPort() {
         return this.dataPathPort;
     }
 
