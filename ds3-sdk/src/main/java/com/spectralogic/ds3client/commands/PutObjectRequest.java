@@ -35,7 +35,7 @@ public class PutObjectRequest extends AbstractRequest {
 
     private final long size;
 
-    private UUID job;
+    private String job;
 
     private long offset;
     private SeekableByteChannel channel;
@@ -54,7 +54,7 @@ public class PutObjectRequest extends AbstractRequest {
         
     }
 
-    public PutObjectRequest(final String bucketName, final String objectName, final SeekableByteChannel channel, final UUID job, final long offset, final long size) {
+    public PutObjectRequest(final String bucketName, final String objectName, final SeekableByteChannel channel, final String job, final long offset, final long size) {
         this.bucketName = bucketName;
         this.objectName = objectName;
         this.size = size;
@@ -62,27 +62,27 @@ public class PutObjectRequest extends AbstractRequest {
         this.offset = offset;
         this.channel = channel;
         this.stream = new SeekableByteChannelInputStream(channel);
-                this.getQueryParams().put("job", job.toString());
+                this.getQueryParams().put("job", job);
         this.getQueryParams().put("offset", Long.toString(offset));
 
     }
 
-    public PutObjectRequest(final String bucketName, final String objectName, final UUID job, final long offset, final long size, final InputStream stream) {
+    public PutObjectRequest(final String bucketName, final String objectName, final String job, final long offset, final long size, final InputStream stream) {
         this.bucketName = bucketName;
         this.objectName = objectName;
         this.size = size;
         this.job = job;
         this.offset = offset;
         this.stream = stream;
-                this.getQueryParams().put("job", job.toString());
+                this.getQueryParams().put("job", job);
         this.getQueryParams().put("offset", Long.toString(offset));
 
     }
 
 
-    public PutObjectRequest withJob(final UUID job) {
+    public PutObjectRequest withJob(final String job) {
         this.job = job;
-        this.updateQueryParam("job", job.toString());
+        this.updateQueryParam("job", job);
         return this;
     }
 
@@ -163,7 +163,7 @@ public class PutObjectRequest extends AbstractRequest {
         return this.objectName;
     }
 
-    public UUID getJob() {
+    public String getJob() {
         return this.job;
     }
 

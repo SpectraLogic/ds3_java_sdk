@@ -31,7 +31,7 @@ public class JobUtils {
 
         for (final Job job : response.getJobListResult().getJobs()) {
             if (!job.getBucketName().equals(bucketName) || job.getStatus() != JobStatus.IN_PROGRESS || job.getRequestType() != type) continue;
-            final GetJobSpectraS3Response jobResponse = client.getJobSpectraS3(new GetJobSpectraS3Request(job.getJobId()));
+            final GetJobSpectraS3Response jobResponse = client.getJobSpectraS3(new GetJobSpectraS3Request(job.getJobId().toString()));
             final MasterObjectList masterObjectList = jobResponse.getMasterObjectListResult();
 
             for (final Objects objects : masterObjectList.getObjects()) {

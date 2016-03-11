@@ -24,11 +24,11 @@ public class GetPutJobToReplicateSpectraS3Request extends AbstractRequest {
 
     // Variables
     
-    private final UUID jobId;
+    private final String jobId;
 
     // Constructor
     
-    public GetPutJobToReplicateSpectraS3Request(final UUID jobId) {
+    public GetPutJobToReplicateSpectraS3Request(final String jobId) {
         this.jobId = jobId;
                 this.getQueryParams().put("replicate", null);
     }
@@ -41,10 +41,10 @@ public class GetPutJobToReplicateSpectraS3Request extends AbstractRequest {
 
     @Override
     public String getPath() {
-        return "/_rest_/job/" + jobId.toString();
+        return "/_rest_/job/" + jobId;
     }
     
-    public UUID getJobId() {
+    public String getJobId() {
         return this.jobId;
     }
 

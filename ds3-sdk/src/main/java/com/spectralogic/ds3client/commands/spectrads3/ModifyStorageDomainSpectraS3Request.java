@@ -18,6 +18,7 @@ package com.spectralogic.ds3client.commands.spectrads3;
 
 import com.spectralogic.ds3client.networking.HttpVerb;
 import com.spectralogic.ds3client.commands.AbstractRequest;
+import java.lang.Long;
 import com.google.common.net.UrlEscapers;
 import com.spectralogic.ds3client.models.LtfsFileNamingMode;
 import com.spectralogic.ds3client.models.Priority;
@@ -28,6 +29,8 @@ public class ModifyStorageDomainSpectraS3Request extends AbstractRequest {
     // Variables
     
     private final String storageDomain;
+
+    private Long autoEjectMediaFullThreshold;
 
     private String autoEjectUponCron;
 
@@ -56,6 +59,12 @@ public class ModifyStorageDomainSpectraS3Request extends AbstractRequest {
     public ModifyStorageDomainSpectraS3Request(final String storageDomain) {
         this.storageDomain = storageDomain;
             }
+
+    public ModifyStorageDomainSpectraS3Request withAutoEjectMediaFullThreshold(final Long autoEjectMediaFullThreshold) {
+        this.autoEjectMediaFullThreshold = autoEjectMediaFullThreshold;
+        this.updateQueryParam("auto_eject_media_full_threshold", Long.toString(autoEjectMediaFullThreshold));
+        return this;
+    }
 
     public ModifyStorageDomainSpectraS3Request withAutoEjectUponCron(final String autoEjectUponCron) {
         this.autoEjectUponCron = autoEjectUponCron;
@@ -136,6 +145,11 @@ public class ModifyStorageDomainSpectraS3Request extends AbstractRequest {
     
     public String getStorageDomain() {
         return this.storageDomain;
+    }
+
+
+    public Long getAutoEjectMediaFullThreshold() {
+        return this.autoEjectMediaFullThreshold;
     }
 
 

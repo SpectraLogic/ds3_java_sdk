@@ -36,7 +36,7 @@ public class GetObjectRequest extends AbstractRequest {
 
     private final WritableByteChannel channel;
 
-    private UUID job;
+    private String job;
 
     private long offset;
     private ImmutableCollection<Range> byteRanges = null;
@@ -53,21 +53,21 @@ public class GetObjectRequest extends AbstractRequest {
         
     }
 
-    public GetObjectRequest(final String bucketName, final String objectName, final WritableByteChannel channel, final UUID job, final long offset) {
+    public GetObjectRequest(final String bucketName, final String objectName, final WritableByteChannel channel, final String job, final long offset) {
         this.bucketName = bucketName;
         this.objectName = objectName;
         this.channel = channel;
         this.job = job;
         this.offset = offset;
-                this.getQueryParams().put("job", job.toString());
+                this.getQueryParams().put("job", job);
         this.getQueryParams().put("offset", Long.toString(offset));
 
     }
 
 
-    public GetObjectRequest withJob(final UUID job) {
+    public GetObjectRequest withJob(final String job) {
         this.job = job;
-        this.updateQueryParam("job", job.toString());
+        this.updateQueryParam("job", job);
         return this;
     }
 
@@ -168,7 +168,7 @@ public class GetObjectRequest extends AbstractRequest {
     }
 
 
-    public UUID getJob() {
+    public String getJob() {
         return this.job;
     }
 

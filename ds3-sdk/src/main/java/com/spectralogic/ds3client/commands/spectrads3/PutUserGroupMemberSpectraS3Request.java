@@ -24,17 +24,17 @@ public class PutUserGroupMemberSpectraS3Request extends AbstractRequest {
 
     // Variables
     
-    private final UUID groupId;
+    private final String groupId;
 
-    private final UUID memberUserId;
+    private final String memberUserId;
 
     // Constructor
     
-    public PutUserGroupMemberSpectraS3Request(final UUID groupId, final UUID memberUserId) {
+    public PutUserGroupMemberSpectraS3Request(final String groupId, final String memberUserId) {
         this.groupId = groupId;
         this.memberUserId = memberUserId;
-                this.getQueryParams().put("group_id", groupId.toString());
-        this.getQueryParams().put("member_user_id", memberUserId.toString());
+                this.getQueryParams().put("group_id", groupId);
+        this.getQueryParams().put("member_user_id", memberUserId);
     }
 
 
@@ -48,12 +48,12 @@ public class PutUserGroupMemberSpectraS3Request extends AbstractRequest {
         return "/_rest_/group_member";
     }
     
-    public UUID getGroupId() {
+    public String getGroupId() {
         return this.groupId;
     }
 
 
-    public UUID getMemberUserId() {
+    public String getMemberUserId() {
         return this.memberUserId;
     }
 

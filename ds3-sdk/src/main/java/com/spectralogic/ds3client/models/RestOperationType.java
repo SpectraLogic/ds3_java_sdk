@@ -22,6 +22,7 @@ public enum RestOperationType {
     CANCEL_FORMAT,
     CANCEL_IMPORT,
     CANCEL_ONLINE,
+    CANCEL_VERIFY,
     CLEAN,
     COMPACT,
     DEALLOCATE,

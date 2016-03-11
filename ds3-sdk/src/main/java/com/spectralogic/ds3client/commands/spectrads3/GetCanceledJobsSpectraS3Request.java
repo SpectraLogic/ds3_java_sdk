@@ -41,7 +41,7 @@ public class GetCanceledJobsSpectraS3Request extends AbstractRequest {
 
     private int pageOffset;
 
-    private UUID pageStartMarker;
+    private String pageStartMarker;
 
     private Priority priority;
 
@@ -51,7 +51,7 @@ public class GetCanceledJobsSpectraS3Request extends AbstractRequest {
 
     private boolean truncated;
 
-    private UUID userId;
+    private String userId;
 
     // Constructor
     
@@ -98,9 +98,9 @@ public class GetCanceledJobsSpectraS3Request extends AbstractRequest {
         return this;
     }
 
-    public GetCanceledJobsSpectraS3Request withPageStartMarker(final UUID pageStartMarker) {
+    public GetCanceledJobsSpectraS3Request withPageStartMarker(final String pageStartMarker) {
         this.pageStartMarker = pageStartMarker;
-        this.updateQueryParam("page_start_marker", pageStartMarker.toString());
+        this.updateQueryParam("page_start_marker", pageStartMarker);
         return this;
     }
 
@@ -128,9 +128,9 @@ public class GetCanceledJobsSpectraS3Request extends AbstractRequest {
         return this;
     }
 
-    public GetCanceledJobsSpectraS3Request withUserId(final UUID userId) {
+    public GetCanceledJobsSpectraS3Request withUserId(final String userId) {
         this.userId = userId;
-        this.updateQueryParam("user_id", userId.toString());
+        this.updateQueryParam("user_id", userId);
         return this;
     }
 
@@ -175,7 +175,7 @@ public class GetCanceledJobsSpectraS3Request extends AbstractRequest {
     }
 
 
-    public UUID getPageStartMarker() {
+    public String getPageStartMarker() {
         return this.pageStartMarker;
     }
 
@@ -200,7 +200,7 @@ public class GetCanceledJobsSpectraS3Request extends AbstractRequest {
     }
 
 
-    public UUID getUserId() {
+    public String getUserId() {
         return this.userId;
     }
 

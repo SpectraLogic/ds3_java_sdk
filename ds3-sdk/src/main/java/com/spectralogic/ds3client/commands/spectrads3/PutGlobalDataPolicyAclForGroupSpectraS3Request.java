@@ -24,13 +24,13 @@ public class PutGlobalDataPolicyAclForGroupSpectraS3Request extends AbstractRequ
 
     // Variables
     
-    private final UUID groupId;
+    private final String groupId;
 
     // Constructor
     
-    public PutGlobalDataPolicyAclForGroupSpectraS3Request(final UUID groupId) {
+    public PutGlobalDataPolicyAclForGroupSpectraS3Request(final String groupId) {
         this.groupId = groupId;
-                this.getQueryParams().put("group_id", groupId.toString());
+                this.getQueryParams().put("group_id", groupId);
     }
 
 
@@ -44,7 +44,7 @@ public class PutGlobalDataPolicyAclForGroupSpectraS3Request extends AbstractRequ
         return "/_rest_/data_policy_acl";
     }
     
-    public UUID getGroupId() {
+    public String getGroupId() {
         return this.groupId;
     }
 

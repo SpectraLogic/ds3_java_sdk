@@ -28,7 +28,7 @@ public class GetBucketAclsSpectraS3Request extends AbstractRequest {
     
     private String bucketId;
 
-    private UUID groupId;
+    private String groupId;
 
     private boolean lastPage;
 
@@ -36,11 +36,11 @@ public class GetBucketAclsSpectraS3Request extends AbstractRequest {
 
     private int pageOffset;
 
-    private UUID pageStartMarker;
+    private String pageStartMarker;
 
     private BucketAclPermission permission;
 
-    private UUID userId;
+    private String userId;
 
     // Constructor
     
@@ -53,9 +53,9 @@ public class GetBucketAclsSpectraS3Request extends AbstractRequest {
         return this;
     }
 
-    public GetBucketAclsSpectraS3Request withGroupId(final UUID groupId) {
+    public GetBucketAclsSpectraS3Request withGroupId(final String groupId) {
         this.groupId = groupId;
-        this.updateQueryParam("group_id", groupId.toString());
+        this.updateQueryParam("group_id", groupId);
         return this;
     }
 
@@ -81,9 +81,9 @@ public class GetBucketAclsSpectraS3Request extends AbstractRequest {
         return this;
     }
 
-    public GetBucketAclsSpectraS3Request withPageStartMarker(final UUID pageStartMarker) {
+    public GetBucketAclsSpectraS3Request withPageStartMarker(final String pageStartMarker) {
         this.pageStartMarker = pageStartMarker;
-        this.updateQueryParam("page_start_marker", pageStartMarker.toString());
+        this.updateQueryParam("page_start_marker", pageStartMarker);
         return this;
     }
 
@@ -93,9 +93,9 @@ public class GetBucketAclsSpectraS3Request extends AbstractRequest {
         return this;
     }
 
-    public GetBucketAclsSpectraS3Request withUserId(final UUID userId) {
+    public GetBucketAclsSpectraS3Request withUserId(final String userId) {
         this.userId = userId;
-        this.updateQueryParam("user_id", userId.toString());
+        this.updateQueryParam("user_id", userId);
         return this;
     }
 
@@ -115,7 +115,7 @@ public class GetBucketAclsSpectraS3Request extends AbstractRequest {
     }
 
 
-    public UUID getGroupId() {
+    public String getGroupId() {
         return this.groupId;
     }
 
@@ -135,7 +135,7 @@ public class GetBucketAclsSpectraS3Request extends AbstractRequest {
     }
 
 
-    public UUID getPageStartMarker() {
+    public String getPageStartMarker() {
         return this.pageStartMarker;
     }
 
@@ -145,7 +145,7 @@ public class GetBucketAclsSpectraS3Request extends AbstractRequest {
     }
 
 
-    public UUID getUserId() {
+    public String getUserId() {
         return this.userId;
     }
 

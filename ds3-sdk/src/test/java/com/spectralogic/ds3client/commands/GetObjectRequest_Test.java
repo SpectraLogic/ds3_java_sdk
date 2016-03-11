@@ -19,7 +19,7 @@ public class GetObjectRequest_Test {
                "bucketName",
                "objectName",
                null,
-               UUID.randomUUID(),
+               UUID.randomUUID().toString(),
                0);
 
         request.withByteRanges(Range.byPosition(0, 100));
@@ -38,7 +38,7 @@ public class GetObjectRequest_Test {
                 "bucketName",
                 "objectName",
                 null,
-                UUID.randomUUID(),
+                UUID.randomUUID().toString(),
                 0);
 
         request.withByteRanges(Range.byPosition(0, 100), Range.byPosition(150, 200));

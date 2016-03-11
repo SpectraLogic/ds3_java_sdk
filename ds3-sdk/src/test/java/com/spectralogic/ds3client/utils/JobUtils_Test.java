@@ -77,7 +77,7 @@ public class JobUtils_Test {
         when(jobResponse.getMasterObjectListResult()).thenReturn(mob);
 
         when(client.getJobsSpectraS3(any(GetJobsSpectraS3Request.class))).thenReturn(jobsResponse);
-        when(client.getJobSpectraS3(new GetJobSpectraS3Request(realJobId))).thenReturn(jobResponse);
+        when(client.getJobSpectraS3(new GetJobSpectraS3Request(realJobId.toString()))).thenReturn(jobResponse);
 
         final Set<String> fileNames = Sets.newSet("file1");
 
@@ -147,7 +147,7 @@ public class JobUtils_Test {
         when(jobResponse.getMasterObjectListResult()).thenReturn(mob);
 
         when(client.getJobsSpectraS3(any(GetJobsSpectraS3Request.class))).thenReturn(jobsResponse);
-        when(client.getJobSpectraS3(new GetJobSpectraS3Request(realJobId))).thenReturn(jobResponse);
+        when(client.getJobSpectraS3(new GetJobSpectraS3Request(realJobId.toString()))).thenReturn(jobResponse);
 
         final Set<String> fileNames = Sets.newSet("file1");
 
@@ -217,7 +217,7 @@ public class JobUtils_Test {
         when(jobResponse.getMasterObjectListResult()).thenReturn(mob);
 
         when(client.getJobsSpectraS3(any(GetJobsSpectraS3Request.class))).thenReturn(jobsResponse);
-        when(client.getJobSpectraS3(new GetJobSpectraS3Request(realJobId))).thenReturn(jobResponse);
+        when(client.getJobSpectraS3(new GetJobSpectraS3Request(realJobId.toString()))).thenReturn(jobResponse);
 
         final Set<String> fileNames = Sets.newSet("file1");
 
@@ -287,7 +287,7 @@ public class JobUtils_Test {
         when(jobResponse.getMasterObjectListResult()).thenReturn(mob);
 
         when(client.getJobsSpectraS3(any(GetJobsSpectraS3Request.class))).thenReturn(jobsResponse);
-        when(client.getJobSpectraS3(new GetJobSpectraS3Request(realJobId))).thenReturn(jobResponse);
+        when(client.getJobSpectraS3(new GetJobSpectraS3Request(realJobId.toString()))).thenReturn(jobResponse);
 
         final Set<String> fileNames = Sets.newSet("file3");
 
@@ -392,8 +392,8 @@ public class JobUtils_Test {
         when(jobResponse2.getMasterObjectListResult()).thenReturn(mob2);
 
         when(client.getJobsSpectraS3(any(GetJobsSpectraS3Request.class))).thenReturn(jobsResponse);
-        when(client.getJobSpectraS3(new GetJobSpectraS3Request(job1.getJobId()))).thenReturn(jobResponse1);
-        when(client.getJobSpectraS3(new GetJobSpectraS3Request(job2.getJobId()))).thenReturn(jobResponse2);
+        when(client.getJobSpectraS3(new GetJobSpectraS3Request(job1.getJobId().toString()))).thenReturn(jobResponse1);
+        when(client.getJobSpectraS3(new GetJobSpectraS3Request(job2.getJobId().toString()))).thenReturn(jobResponse2);
 
         final Set<String> fileNames = Sets.newSet("file3");
 
@@ -492,8 +492,8 @@ public class JobUtils_Test {
         when(jobResponse2.getMasterObjectListResult()).thenReturn(mob2);
 
         when(client.getJobsSpectraS3(any(GetJobsSpectraS3Request.class))).thenReturn(jobsResponse);
-        when(client.getJobSpectraS3(new GetJobSpectraS3Request(job1.getJobId()))).thenReturn(jobResponse1);
-        when(client.getJobSpectraS3(new GetJobSpectraS3Request(job2.getJobId()))).thenReturn(jobResponse2);
+        when(client.getJobSpectraS3(new GetJobSpectraS3Request(job1.getJobId().toString()))).thenReturn(jobResponse1);
+        when(client.getJobSpectraS3(new GetJobSpectraS3Request(job2.getJobId().toString()))).thenReturn(jobResponse2);
 
         final Set<String> fileNames = Sets.newSet("file3");
 
@@ -562,7 +562,7 @@ public class JobUtils_Test {
         when(jobResponse.getMasterObjectListResult()).thenReturn(mob);
 
         when(client.getJobsSpectraS3(any(GetJobsSpectraS3Request.class))).thenReturn(jobsResponse);
-        when(client.getJobSpectraS3(new GetJobSpectraS3Request(realJobId))).thenReturn(jobResponse);
+        when(client.getJobSpectraS3(new GetJobSpectraS3Request(realJobId.toString()))).thenReturn(jobResponse);
 
         final Set<String> fileNames = Sets.newSet("file1");
 

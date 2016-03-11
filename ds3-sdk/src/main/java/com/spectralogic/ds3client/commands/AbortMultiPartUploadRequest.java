@@ -27,15 +27,15 @@ public class AbortMultiPartUploadRequest extends AbstractRequest {
 
     private final String objectName;
 
-    private final UUID uploadId;
+    private final String uploadId;
 
     // Constructor
     
-    public AbortMultiPartUploadRequest(final String bucketName, final String objectName, final UUID uploadId) {
+    public AbortMultiPartUploadRequest(final String bucketName, final String objectName, final String uploadId) {
         this.bucketName = bucketName;
         this.objectName = objectName;
         this.uploadId = uploadId;
-                this.getQueryParams().put("upload_id", uploadId.toString());
+                this.getQueryParams().put("upload_id", uploadId);
     }
 
 
@@ -59,7 +59,7 @@ public class AbortMultiPartUploadRequest extends AbstractRequest {
     }
 
 
-    public UUID getUploadId() {
+    public String getUploadId() {
         return this.uploadId;
     }
 

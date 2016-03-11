@@ -32,7 +32,7 @@ public class GetTapePartitionsWithFullDetailsSpectraS3Request extends AbstractRe
 
     private boolean lastPage;
 
-    private UUID libraryId;
+    private String libraryId;
 
     private String name;
 
@@ -40,7 +40,7 @@ public class GetTapePartitionsWithFullDetailsSpectraS3Request extends AbstractRe
 
     private int pageOffset;
 
-    private UUID pageStartMarker;
+    private String pageStartMarker;
 
     private Quiesced quiesced;
 
@@ -70,9 +70,9 @@ public class GetTapePartitionsWithFullDetailsSpectraS3Request extends AbstractRe
         return this;
     }
 
-    public GetTapePartitionsWithFullDetailsSpectraS3Request withLibraryId(final UUID libraryId) {
+    public GetTapePartitionsWithFullDetailsSpectraS3Request withLibraryId(final String libraryId) {
         this.libraryId = libraryId;
-        this.updateQueryParam("library_id", libraryId.toString());
+        this.updateQueryParam("library_id", libraryId);
         return this;
     }
 
@@ -94,9 +94,9 @@ public class GetTapePartitionsWithFullDetailsSpectraS3Request extends AbstractRe
         return this;
     }
 
-    public GetTapePartitionsWithFullDetailsSpectraS3Request withPageStartMarker(final UUID pageStartMarker) {
+    public GetTapePartitionsWithFullDetailsSpectraS3Request withPageStartMarker(final String pageStartMarker) {
         this.pageStartMarker = pageStartMarker;
-        this.updateQueryParam("page_start_marker", pageStartMarker.toString());
+        this.updateQueryParam("page_start_marker", pageStartMarker);
         return this;
     }
 
@@ -139,7 +139,7 @@ public class GetTapePartitionsWithFullDetailsSpectraS3Request extends AbstractRe
     }
 
 
-    public UUID getLibraryId() {
+    public String getLibraryId() {
         return this.libraryId;
     }
 
@@ -159,7 +159,7 @@ public class GetTapePartitionsWithFullDetailsSpectraS3Request extends AbstractRe
     }
 
 
-    public UUID getPageStartMarker() {
+    public String getPageStartMarker() {
         return this.pageStartMarker;
     }
 

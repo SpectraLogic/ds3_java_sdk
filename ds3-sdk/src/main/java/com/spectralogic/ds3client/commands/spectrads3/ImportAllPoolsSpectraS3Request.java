@@ -20,6 +20,7 @@ import com.spectralogic.ds3client.networking.HttpVerb;
 import com.spectralogic.ds3client.commands.AbstractRequest;
 import com.spectralogic.ds3client.models.ImportConflictResolutionMode;
 import java.util.UUID;
+import com.spectralogic.ds3client.models.Priority;
 
 public class ImportAllPoolsSpectraS3Request extends AbstractRequest {
 
@@ -27,11 +28,17 @@ public class ImportAllPoolsSpectraS3Request extends AbstractRequest {
     
     private ImportConflictResolutionMode conflictResolutionMode;
 
-    private UUID dataPolicyId;
+    private String dataPolicyId;
 
-    private UUID storageDomainId;
+    private Priority priority;
 
-    private UUID userId;
+    private String storageDomainId;
+
+    private String userId;
+
+    private Priority verifyDataAfterImport;
+
+    private boolean verifyDataPriorToImport;
 
     // Constructor
     
@@ -46,21 +53,39 @@ public class ImportAllPoolsSpectraS3Request extends AbstractRequest {
         return this;
     }
 
-    public ImportAllPoolsSpectraS3Request withDataPolicyId(final UUID dataPolicyId) {
+    public ImportAllPoolsSpectraS3Request withDataPolicyId(final String dataPolicyId) {
         this.dataPolicyId = dataPolicyId;
-        this.updateQueryParam("data_policy_id", dataPolicyId.toString());
+        this.updateQueryParam("data_policy_id", dataPolicyId);
         return this;
     }
 
-    public ImportAllPoolsSpectraS3Request withStorageDomainId(final UUID storageDomainId) {
+    public ImportAllPoolsSpectraS3Request withPriority(final Priority priority) {
+        this.priority = priority;
+        this.updateQueryParam("priority", priority.toString());
+        return this;
+    }
+
+    public ImportAllPoolsSpectraS3Request withStorageDomainId(final String storageDomainId) {
         this.storageDomainId = storageDomainId;
-        this.updateQueryParam("storage_domain_id", storageDomainId.toString());
+        this.updateQueryParam("storage_domain_id", storageDomainId);
         return this;
     }
 
-    public ImportAllPoolsSpectraS3Request withUserId(final UUID userId) {
+    public ImportAllPoolsSpectraS3Request withUserId(final String userId) {
         this.userId = userId;
-        this.updateQueryParam("user_id", userId.toString());
+        this.updateQueryParam("user_id", userId);
+        return this;
+    }
+
+    public ImportAllPoolsSpectraS3Request withVerifyDataAfterImport(final Priority verifyDataAfterImport) {
+        this.verifyDataAfterImport = verifyDataAfterImport;
+        this.updateQueryParam("verify_data_after_import", verifyDataAfterImport.toString());
+        return this;
+    }
+
+    public ImportAllPoolsSpectraS3Request withVerifyDataPriorToImport(final boolean verifyDataPriorToImport) {
+        this.verifyDataPriorToImport = verifyDataPriorToImport;
+        this.updateQueryParam("verify_data_prior_to_import", String.valueOf(verifyDataPriorToImport));
         return this;
     }
 
@@ -80,18 +105,33 @@ public class ImportAllPoolsSpectraS3Request extends AbstractRequest {
     }
 
 
-    public UUID getDataPolicyId() {
+    public String getDataPolicyId() {
         return this.dataPolicyId;
     }
 
 
-    public UUID getStorageDomainId() {
+    public Priority getPriority() {
+        return this.priority;
+    }
+
+
+    public String getStorageDomainId() {
         return this.storageDomainId;
     }
 
 
-    public UUID getUserId() {
+    public String getUserId() {
         return this.userId;
+    }
+
+
+    public Priority getVerifyDataAfterImport() {
+        return this.verifyDataAfterImport;
+    }
+
+
+    public boolean getVerifyDataPriorToImport() {
+        return this.verifyDataPriorToImport;
     }
 
 }

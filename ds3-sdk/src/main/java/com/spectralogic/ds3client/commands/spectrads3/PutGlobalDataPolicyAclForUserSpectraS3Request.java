@@ -24,13 +24,13 @@ public class PutGlobalDataPolicyAclForUserSpectraS3Request extends AbstractReque
 
     // Variables
     
-    private final UUID userId;
+    private final String userId;
 
     // Constructor
     
-    public PutGlobalDataPolicyAclForUserSpectraS3Request(final UUID userId) {
+    public PutGlobalDataPolicyAclForUserSpectraS3Request(final String userId) {
         this.userId = userId;
-                this.getQueryParams().put("user_id", userId.toString());
+                this.getQueryParams().put("user_id", userId);
     }
 
 
@@ -44,7 +44,7 @@ public class PutGlobalDataPolicyAclForUserSpectraS3Request extends AbstractReque
         return "/_rest_/data_policy_acl";
     }
     
-    public UUID getUserId() {
+    public String getUserId() {
         return this.userId;
     }
 

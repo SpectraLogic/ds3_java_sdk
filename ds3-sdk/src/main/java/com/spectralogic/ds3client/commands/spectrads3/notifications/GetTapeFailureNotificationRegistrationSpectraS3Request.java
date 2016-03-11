@@ -25,7 +25,7 @@ public class GetTapeFailureNotificationRegistrationSpectraS3Request extends Abst
     
     // Constructor
     
-    public GetTapeFailureNotificationRegistrationSpectraS3Request(final UUID notificationId) {
+    public GetTapeFailureNotificationRegistrationSpectraS3Request(final String notificationId) {
         super(notificationId);
 
         

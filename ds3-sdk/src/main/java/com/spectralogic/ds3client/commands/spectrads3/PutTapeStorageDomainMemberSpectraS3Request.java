@@ -26,9 +26,9 @@ public class PutTapeStorageDomainMemberSpectraS3Request extends AbstractRequest 
 
     // Variables
     
-    private final UUID storageDomainId;
+    private final String storageDomainId;
 
-    private final UUID tapePartitionId;
+    private final String tapePartitionId;
 
     private final TapeType tapeType;
 
@@ -36,12 +36,12 @@ public class PutTapeStorageDomainMemberSpectraS3Request extends AbstractRequest 
 
     // Constructor
     
-    public PutTapeStorageDomainMemberSpectraS3Request(final UUID storageDomainId, final UUID tapePartitionId, final TapeType tapeType) {
+    public PutTapeStorageDomainMemberSpectraS3Request(final String storageDomainId, final String tapePartitionId, final TapeType tapeType) {
         this.storageDomainId = storageDomainId;
         this.tapePartitionId = tapePartitionId;
         this.tapeType = tapeType;
-                this.getQueryParams().put("storage_domain_id", storageDomainId.toString());
-        this.getQueryParams().put("tape_partition_id", tapePartitionId.toString());
+                this.getQueryParams().put("storage_domain_id", storageDomainId);
+        this.getQueryParams().put("tape_partition_id", tapePartitionId);
         this.getQueryParams().put("tape_type", tapeType.toString());
     }
 
@@ -62,12 +62,12 @@ public class PutTapeStorageDomainMemberSpectraS3Request extends AbstractRequest 
         return "/_rest_/storage_domain_member";
     }
     
-    public UUID getStorageDomainId() {
+    public String getStorageDomainId() {
         return this.storageDomainId;
     }
 
 
-    public UUID getTapePartitionId() {
+    public String getTapePartitionId() {
         return this.tapePartitionId;
     }
 

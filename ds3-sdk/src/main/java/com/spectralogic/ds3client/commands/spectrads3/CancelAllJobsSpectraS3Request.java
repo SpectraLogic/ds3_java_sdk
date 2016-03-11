@@ -27,28 +27,17 @@ public class CancelAllJobsSpectraS3Request extends AbstractRequest {
     
     private String bucketId;
 
-    private boolean force;
-
     private JobRequestType requestType;
 
     // Constructor
     
     public CancelAllJobsSpectraS3Request() {
-            }
+                this.getQueryParams().put("force", null);
+    }
 
     public CancelAllJobsSpectraS3Request withBucketId(final String bucketId) {
         this.bucketId = bucketId;
         this.updateQueryParam("bucket_id", bucketId);
-        return this;
-    }
-
-    public CancelAllJobsSpectraS3Request withForce(final boolean force) {
-        this.force = force;
-        if (this.force) {
-            this.getQueryParams().put("force", null);
-        } else {
-            this.getQueryParams().remove("force");
-        }
         return this;
     }
 
@@ -71,11 +60,6 @@ public class CancelAllJobsSpectraS3Request extends AbstractRequest {
     
     public String getBucketId() {
         return this.bucketId;
-    }
-
-
-    public boolean getForce() {
-        return this.force;
     }
 
 

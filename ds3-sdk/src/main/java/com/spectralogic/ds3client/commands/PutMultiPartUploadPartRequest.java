@@ -29,17 +29,17 @@ public class PutMultiPartUploadPartRequest extends AbstractRequest {
 
     private final int partNumber;
 
-    private final UUID uploadId;
+    private final String uploadId;
 
     // Constructor
     
-    public PutMultiPartUploadPartRequest(final String bucketName, final String objectName, final int partNumber, final UUID uploadId) {
+    public PutMultiPartUploadPartRequest(final String bucketName, final String objectName, final int partNumber, final String uploadId) {
         this.bucketName = bucketName;
         this.objectName = objectName;
         this.partNumber = partNumber;
         this.uploadId = uploadId;
                 this.getQueryParams().put("part_number", Integer.toString(partNumber));
-        this.getQueryParams().put("upload_id", uploadId.toString());
+        this.getQueryParams().put("upload_id", uploadId);
     }
 
 
@@ -68,7 +68,7 @@ public class PutMultiPartUploadPartRequest extends AbstractRequest {
     }
 
 
-    public UUID getUploadId() {
+    public String getUploadId() {
         return this.uploadId;
     }
 

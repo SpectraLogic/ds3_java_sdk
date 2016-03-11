@@ -30,17 +30,17 @@ public class PutBucketAclForUserSpectraS3Request extends AbstractRequest {
 
     private final BucketAclPermission permission;
 
-    private final UUID userId;
+    private final String userId;
 
     // Constructor
     
-    public PutBucketAclForUserSpectraS3Request(final String bucketId, final BucketAclPermission permission, final UUID userId) {
+    public PutBucketAclForUserSpectraS3Request(final String bucketId, final BucketAclPermission permission, final String userId) {
         this.bucketId = bucketId;
         this.permission = permission;
         this.userId = userId;
                 this.getQueryParams().put("bucket_id", bucketId);
         this.getQueryParams().put("permission", permission.toString());
-        this.getQueryParams().put("user_id", userId.toString());
+        this.getQueryParams().put("user_id", userId);
     }
 
 
@@ -64,7 +64,7 @@ public class PutBucketAclForUserSpectraS3Request extends AbstractRequest {
     }
 
 
-    public UUID getUserId() {
+    public String getUserId() {
         return this.userId;
     }
 

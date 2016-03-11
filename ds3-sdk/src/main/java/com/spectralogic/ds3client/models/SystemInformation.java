@@ -37,6 +37,9 @@ public class SystemInformation {
     @JsonProperty("InstanceId")
     private UUID instanceId;
 
+    @JsonProperty("Now")
+    private long now;
+
     @JsonProperty("SerialNumber")
     private String serialNumber;
 
@@ -80,6 +83,15 @@ public class SystemInformation {
 
     public void setInstanceId(final UUID instanceId) {
         this.instanceId = instanceId;
+    }
+
+
+    public long getNow() {
+        return this.now;
+    }
+
+    public void setNow(final long now) {
+        this.now = now;
     }
 
 

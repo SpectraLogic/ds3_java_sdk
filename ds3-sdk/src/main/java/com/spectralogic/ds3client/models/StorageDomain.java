@@ -18,6 +18,7 @@ package com.spectralogic.ds3client.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+import java.lang.Long;
 import java.lang.String;
 import java.util.UUID;
 
@@ -25,6 +26,9 @@ import java.util.UUID;
 public class StorageDomain {
 
     // Variables
+    @JsonProperty("AutoEjectMediaFullThreshold")
+    private Long autoEjectMediaFullThreshold;
+
     @JsonProperty("AutoEjectUponCron")
     private String autoEjectUponCron;
 
@@ -68,6 +72,15 @@ public class StorageDomain {
 
     // Getters and Setters
     
+    public Long getAutoEjectMediaFullThreshold() {
+        return this.autoEjectMediaFullThreshold;
+    }
+
+    public void setAutoEjectMediaFullThreshold(final Long autoEjectMediaFullThreshold) {
+        this.autoEjectMediaFullThreshold = autoEjectMediaFullThreshold;
+    }
+
+
     public String getAutoEjectUponCron() {
         return this.autoEjectUponCron;
     }

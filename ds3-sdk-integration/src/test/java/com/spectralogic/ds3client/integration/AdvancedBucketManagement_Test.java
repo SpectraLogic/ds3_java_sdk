@@ -140,8 +140,8 @@ public class AdvancedBucketManagement_Test {
             //Verify that the storage domain member exists
             final GetStorageDomainMembersSpectraS3Response getMembers = client.getStorageDomainMembersSpectraS3(
                     new GetStorageDomainMembersSpectraS3Request()
-                            .withPoolPartitionId(createPoolPartition.getPoolPartitionResult().getId())
-                            .withStorageDomainId(createStorageDomain.getStorageDomainResult().getId()));
+                            .withPoolPartitionId(createPoolPartition.getPoolPartitionResult().getId().toString())
+                            .withStorageDomainId(createStorageDomain.getStorageDomainResult().getId().toString()));
 
             final List<StorageDomainMember> members = getMembers.getStorageDomainMemberListResult().getStorageDomainMembers();
             assertThat(members.size(), is(1));
@@ -213,7 +213,7 @@ public class AdvancedBucketManagement_Test {
             //Create bucket with data policy
             final PutBucketSpectraS3Response bucketResponse = client
                     .putBucketSpectraS3(new PutBucketSpectraS3Request(bucketName)
-                            .withDataPolicyId(dataPolicyResponse.getDataPolicyResult().getId()));
+                            .withDataPolicyId(dataPolicyResponse.getDataPolicyResult().getId().toString()));
 
 
             assertThat(bucketResponse.getStatusCode(), is(201));
@@ -272,7 +272,7 @@ public class AdvancedBucketManagement_Test {
 
             //Create bucket with data policy
             client.putBucketSpectraS3(new PutBucketSpectraS3Request(bucketName)
-                    .withDataPolicyId(dataPolicyResponse.getDataPolicyResult().getId()));
+                    .withDataPolicyId(dataPolicyResponse.getDataPolicyResult().getId().toString()));
 
             //Load the set of books and verify they exist
             loadBookTestData(client, bucketName);
@@ -344,7 +344,7 @@ public class AdvancedBucketManagement_Test {
 
             //Create bucket with data policy
             client.putBucketSpectraS3(new PutBucketSpectraS3Request(bucketName)
-                    .withDataPolicyId(dataPolicyResponse.getDataPolicyResult().getId()));
+                    .withDataPolicyId(dataPolicyResponse.getDataPolicyResult().getId().toString()));
 
             //Load the set of books and verify they exist
             loadBookTestData(client, bucketName);

@@ -30,14 +30,14 @@ public class GetBlobsOnTapeSpectraS3Request extends AbstractRequest {
 
     // Variables
     
-    private final UUID tapeId;
+    private final String tapeId;
 
     private final List<Ds3Object> objects;
     private long size = 0;
 
     // Constructor
     
-    public GetBlobsOnTapeSpectraS3Request(final List<Ds3Object> objects, final UUID tapeId) {
+    public GetBlobsOnTapeSpectraS3Request(final List<Ds3Object> objects, final String tapeId) {
         this.tapeId = tapeId;
         this.objects = objects;
         
@@ -69,10 +69,10 @@ public class GetBlobsOnTapeSpectraS3Request extends AbstractRequest {
 
     @Override
     public String getPath() {
-        return "/_rest_/tape/" + tapeId.toString();
+        return "/_rest_/tape/" + tapeId;
     }
     
-    public UUID getTapeId() {
+    public String getTapeId() {
         return this.tapeId;
     }
 

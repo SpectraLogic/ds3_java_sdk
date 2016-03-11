@@ -29,13 +29,13 @@ public class GetTapeFailureNotificationRegistrationsSpectraS3Request extends Abs
 
     private int pageOffset;
 
-    private UUID pageStartMarker;
+    private String pageStartMarker;
 
-    private UUID userId;
+    private String userId;
 
     // Constructor
     
-    public GetTapeFailureNotificationRegistrationsSpectraS3Request(final UUID notificationId) {
+    public GetTapeFailureNotificationRegistrationsSpectraS3Request(final String notificationId) {
         super(notificationId);
 
         
@@ -63,15 +63,15 @@ public class GetTapeFailureNotificationRegistrationsSpectraS3Request extends Abs
         return this;
     }
 
-    public GetTapeFailureNotificationRegistrationsSpectraS3Request withPageStartMarker(final UUID pageStartMarker) {
+    public GetTapeFailureNotificationRegistrationsSpectraS3Request withPageStartMarker(final String pageStartMarker) {
         this.pageStartMarker = pageStartMarker;
-        this.updateQueryParam("page_start_marker", pageStartMarker.toString());
+        this.updateQueryParam("page_start_marker", pageStartMarker);
         return this;
     }
 
-    public GetTapeFailureNotificationRegistrationsSpectraS3Request withUserId(final UUID userId) {
+    public GetTapeFailureNotificationRegistrationsSpectraS3Request withUserId(final String userId) {
         this.userId = userId;
-        this.updateQueryParam("user_id", userId.toString());
+        this.updateQueryParam("user_id", userId);
         return this;
     }
 
@@ -97,12 +97,12 @@ public class GetTapeFailureNotificationRegistrationsSpectraS3Request extends Abs
     }
 
 
-    public UUID getPageStartMarker() {
+    public String getPageStartMarker() {
         return this.pageStartMarker;
     }
 
 
-    public UUID getUserId() {
+    public String getUserId() {
         return this.userId;
     }
 

@@ -24,11 +24,11 @@ public class GetTapeWithFullDetailsSpectraS3Request extends AbstractRequest {
 
     // Variables
     
-    private final UUID tapeId;
+    private final String tapeId;
 
     // Constructor
     
-    public GetTapeWithFullDetailsSpectraS3Request(final UUID tapeId) {
+    public GetTapeWithFullDetailsSpectraS3Request(final String tapeId) {
         this.tapeId = tapeId;
                 this.getQueryParams().put("full_details", null);
     }
@@ -41,10 +41,10 @@ public class GetTapeWithFullDetailsSpectraS3Request extends AbstractRequest {
 
     @Override
     public String getPath() {
-        return "/_rest_/tape/" + tapeId.toString();
+        return "/_rest_/tape/" + tapeId;
     }
     
-    public UUID getTapeId() {
+    public String getTapeId() {
         return this.tapeId;
     }
 

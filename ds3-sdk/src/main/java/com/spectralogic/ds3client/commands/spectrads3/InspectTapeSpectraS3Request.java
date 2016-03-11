@@ -25,13 +25,13 @@ public class InspectTapeSpectraS3Request extends AbstractRequest {
 
     // Variables
     
-    private final UUID tapeId;
+    private final String tapeId;
 
     private Priority taskPriority;
 
     // Constructor
     
-    public InspectTapeSpectraS3Request(final UUID tapeId) {
+    public InspectTapeSpectraS3Request(final String tapeId) {
         this.tapeId = tapeId;
         
         this.getQueryParams().put("operation", "inspect");
@@ -51,10 +51,10 @@ public class InspectTapeSpectraS3Request extends AbstractRequest {
 
     @Override
     public String getPath() {
-        return "/_rest_/tape/" + tapeId.toString();
+        return "/_rest_/tape/" + tapeId;
     }
     
-    public UUID getTapeId() {
+    public String getTapeId() {
         return this.tapeId;
     }
 

@@ -25,7 +25,7 @@ public class DeleteObjectLostNotificationRegistrationSpectraS3Request extends Ab
     
     //Constructor
     
-    public DeleteObjectLostNotificationRegistrationSpectraS3Request(final UUID notificationId) {
+    public DeleteObjectLostNotificationRegistrationSpectraS3Request(final String notificationId) {
         super(notificationId);
 
         

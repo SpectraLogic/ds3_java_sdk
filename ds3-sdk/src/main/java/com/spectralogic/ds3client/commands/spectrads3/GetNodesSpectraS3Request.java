@@ -30,7 +30,7 @@ public class GetNodesSpectraS3Request extends AbstractRequest {
 
     private int pageOffset;
 
-    private UUID pageStartMarker;
+    private String pageStartMarker;
 
     // Constructor
     
@@ -59,9 +59,9 @@ public class GetNodesSpectraS3Request extends AbstractRequest {
         return this;
     }
 
-    public GetNodesSpectraS3Request withPageStartMarker(final UUID pageStartMarker) {
+    public GetNodesSpectraS3Request withPageStartMarker(final String pageStartMarker) {
         this.pageStartMarker = pageStartMarker;
-        this.updateQueryParam("page_start_marker", pageStartMarker.toString());
+        this.updateQueryParam("page_start_marker", pageStartMarker);
         return this;
     }
 
@@ -91,7 +91,7 @@ public class GetNodesSpectraS3Request extends AbstractRequest {
     }
 
 
-    public UUID getPageStartMarker() {
+    public String getPageStartMarker() {
         return this.pageStartMarker;
     }
 

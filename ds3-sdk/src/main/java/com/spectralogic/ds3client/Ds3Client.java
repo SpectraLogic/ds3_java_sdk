@@ -214,6 +214,10 @@ public interface Ds3Client extends Closeable {
             throws IOException, SignatureException;
     ReplicatePutJobSpectraS3Response replicatePutJobSpectraS3(ReplicatePutJobSpectraS3Request request)
             throws IOException, SignatureException;
+    TruncateAllJobsSpectraS3Response truncateAllJobsSpectraS3(TruncateAllJobsSpectraS3Request request)
+            throws IOException, SignatureException;
+    TruncateJobSpectraS3Response truncateJobSpectraS3(TruncateJobSpectraS3Request request)
+            throws IOException, SignatureException;
     GetNodeSpectraS3Response getNodeSpectraS3(GetNodeSpectraS3Request request)
             throws IOException, SignatureException;
     GetNodesSpectraS3Response getNodesSpectraS3(GetNodesSpectraS3Request request)
@@ -416,6 +420,10 @@ public interface Ds3Client extends Closeable {
             throws IOException, SignatureException;
     CancelOnlineTapeSpectraS3Response cancelOnlineTapeSpectraS3(CancelOnlineTapeSpectraS3Request request)
             throws IOException, SignatureException;
+    CancelVerifyOnAllTapesSpectraS3Response cancelVerifyOnAllTapesSpectraS3(CancelVerifyOnAllTapesSpectraS3Request request)
+            throws IOException, SignatureException;
+    CancelVerifyTapeSpectraS3Response cancelVerifyTapeSpectraS3(CancelVerifyTapeSpectraS3Request request)
+            throws IOException, SignatureException;
     CleanTapeDriveSpectraS3Response cleanTapeDriveSpectraS3(CleanTapeDriveSpectraS3Request request)
             throws IOException, SignatureException;
     PutTapeDensityDirectiveSpectraS3Response putTapeDensityDirectiveSpectraS3(PutTapeDensityDirectiveSpectraS3Request request)
@@ -531,6 +539,10 @@ public interface Ds3Client extends Closeable {
     ModifyDs3TargetUserMappingSpectraS3Response modifyDs3TargetUserMappingSpectraS3(ModifyDs3TargetUserMappingSpectraS3Request request)
             throws IOException, SignatureException;
     RegisterDs3TargetSpectraS3Response registerDs3TargetSpectraS3(RegisterDs3TargetSpectraS3Request request)
+            throws IOException, SignatureException;
+    DelegateCreateUserSpectraS3Response delegateCreateUserSpectraS3(DelegateCreateUserSpectraS3Request request)
+            throws IOException, SignatureException;
+    DelegateDeleteUserSpectraS3Response delegateDeleteUserSpectraS3(DelegateDeleteUserSpectraS3Request request)
             throws IOException, SignatureException;
     GetUserSpectraS3Response getUserSpectraS3(GetUserSpectraS3Request request)
             throws IOException, SignatureException;

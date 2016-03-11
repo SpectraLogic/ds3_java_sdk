@@ -411,6 +411,14 @@ public class Ds3ClientImpl implements Ds3Client {
         return new ReplicatePutJobSpectraS3Response(this.netClient.getResponse(request));
     }
     @Override
+    public TruncateAllJobsSpectraS3Response truncateAllJobsSpectraS3(TruncateAllJobsSpectraS3Request request) throws IOException, SignatureException {
+        return new TruncateAllJobsSpectraS3Response(this.netClient.getResponse(request));
+    }
+    @Override
+    public TruncateJobSpectraS3Response truncateJobSpectraS3(TruncateJobSpectraS3Request request) throws IOException, SignatureException {
+        return new TruncateJobSpectraS3Response(this.netClient.getResponse(request));
+    }
+    @Override
     public GetNodeSpectraS3Response getNodeSpectraS3(GetNodeSpectraS3Request request) throws IOException, SignatureException {
         return new GetNodeSpectraS3Response(this.netClient.getResponse(request));
     }
@@ -815,6 +823,14 @@ public class Ds3ClientImpl implements Ds3Client {
         return new CancelOnlineTapeSpectraS3Response(this.netClient.getResponse(request));
     }
     @Override
+    public CancelVerifyOnAllTapesSpectraS3Response cancelVerifyOnAllTapesSpectraS3(CancelVerifyOnAllTapesSpectraS3Request request) throws IOException, SignatureException {
+        return new CancelVerifyOnAllTapesSpectraS3Response(this.netClient.getResponse(request));
+    }
+    @Override
+    public CancelVerifyTapeSpectraS3Response cancelVerifyTapeSpectraS3(CancelVerifyTapeSpectraS3Request request) throws IOException, SignatureException {
+        return new CancelVerifyTapeSpectraS3Response(this.netClient.getResponse(request));
+    }
+    @Override
     public CleanTapeDriveSpectraS3Response cleanTapeDriveSpectraS3(CleanTapeDriveSpectraS3Request request) throws IOException, SignatureException {
         return new CleanTapeDriveSpectraS3Response(this.netClient.getResponse(request));
     }
@@ -1045,6 +1061,14 @@ public class Ds3ClientImpl implements Ds3Client {
     @Override
     public RegisterDs3TargetSpectraS3Response registerDs3TargetSpectraS3(RegisterDs3TargetSpectraS3Request request) throws IOException, SignatureException {
         return new RegisterDs3TargetSpectraS3Response(this.netClient.getResponse(request));
+    }
+    @Override
+    public DelegateCreateUserSpectraS3Response delegateCreateUserSpectraS3(DelegateCreateUserSpectraS3Request request) throws IOException, SignatureException {
+        return new DelegateCreateUserSpectraS3Response(this.netClient.getResponse(request));
+    }
+    @Override
+    public DelegateDeleteUserSpectraS3Response delegateDeleteUserSpectraS3(DelegateDeleteUserSpectraS3Request request) throws IOException, SignatureException {
+        return new DelegateDeleteUserSpectraS3Response(this.netClient.getResponse(request));
     }
     @Override
     public GetUserSpectraS3Response getUserSpectraS3(GetUserSpectraS3Request request) throws IOException, SignatureException {

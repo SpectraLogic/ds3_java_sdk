@@ -25,19 +25,19 @@ public class PutPoolStorageDomainMemberSpectraS3Request extends AbstractRequest 
 
     // Variables
     
-    private final UUID poolPartitionId;
+    private final String poolPartitionId;
 
-    private final UUID storageDomainId;
+    private final String storageDomainId;
 
     private WritePreferenceLevel writePreference;
 
     // Constructor
     
-    public PutPoolStorageDomainMemberSpectraS3Request(final UUID poolPartitionId, final UUID storageDomainId) {
+    public PutPoolStorageDomainMemberSpectraS3Request(final String poolPartitionId, final String storageDomainId) {
         this.poolPartitionId = poolPartitionId;
         this.storageDomainId = storageDomainId;
-                this.getQueryParams().put("pool_partition_id", poolPartitionId.toString());
-        this.getQueryParams().put("storage_domain_id", storageDomainId.toString());
+                this.getQueryParams().put("pool_partition_id", poolPartitionId);
+        this.getQueryParams().put("storage_domain_id", storageDomainId);
     }
 
     public PutPoolStorageDomainMemberSpectraS3Request withWritePreference(final WritePreferenceLevel writePreference) {
@@ -57,12 +57,12 @@ public class PutPoolStorageDomainMemberSpectraS3Request extends AbstractRequest 
         return "/_rest_/storage_domain_member";
     }
     
-    public UUID getPoolPartitionId() {
+    public String getPoolPartitionId() {
         return this.poolPartitionId;
     }
 
 
-    public UUID getStorageDomainId() {
+    public String getStorageDomainId() {
         return this.storageDomainId;
     }
 
