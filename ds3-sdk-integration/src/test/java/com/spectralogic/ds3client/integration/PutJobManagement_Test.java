@@ -557,9 +557,10 @@ public class PutJobManagement_Test {
             assertThat(response.getStatusCode(), is(201));
 
         } finally {
-            assertNotNull(notificationUUID);
-            client.deleteJobCreatedNotificationRegistrationSpectraS3(
-                    new DeleteJobCreatedNotificationRegistrationSpectraS3Request(notificationUUID));
+            if (notificationUUID != null) {
+                client.deleteJobCreatedNotificationRegistrationSpectraS3(
+                        new DeleteJobCreatedNotificationRegistrationSpectraS3Request(notificationUUID));
+            }
         }
     }
 
@@ -578,9 +579,10 @@ public class PutJobManagement_Test {
             assertThat(response.getStatusCode(), is(200));
 
         } finally {
-            assertNotNull(notificationUUID);
-            client.deleteJobCreatedNotificationRegistrationSpectraS3(
-                    new DeleteJobCreatedNotificationRegistrationSpectraS3Request(notificationUUID));
+            if (notificationUUID != null) {
+                client.deleteJobCreatedNotificationRegistrationSpectraS3(
+                        new DeleteJobCreatedNotificationRegistrationSpectraS3Request(notificationUUID));
+            }
         }
     }
 
@@ -606,9 +608,10 @@ public class PutJobManagement_Test {
             notificationUUID = response.getJobCompletedNotificationRegistrationResult().getId();
             assertThat(response.getStatusCode(), is(201));
         } finally {
-            assertNotNull(notificationUUID);
-            client.deleteJobCompletedNotificationRegistrationSpectraS3(
-                    new DeleteJobCompletedNotificationRegistrationSpectraS3Request(notificationUUID));
+            if (notificationUUID != null) {
+                client.deleteJobCompletedNotificationRegistrationSpectraS3(
+                        new DeleteJobCompletedNotificationRegistrationSpectraS3Request(notificationUUID));
+            }
         }
     }
 
@@ -627,9 +630,10 @@ public class PutJobManagement_Test {
             assertThat(response.getStatusCode(), is(200));
 
         } finally {
-            assertNotNull(notificationUUID);
-            client.deleteJobCompletedNotificationRegistrationSpectraS3(
-                    new DeleteJobCompletedNotificationRegistrationSpectraS3Request(notificationUUID));
+            if (notificationUUID != null) {
+                client.deleteJobCompletedNotificationRegistrationSpectraS3(
+                       new DeleteJobCompletedNotificationRegistrationSpectraS3Request(notificationUUID));
+            }
         }
     }
 
