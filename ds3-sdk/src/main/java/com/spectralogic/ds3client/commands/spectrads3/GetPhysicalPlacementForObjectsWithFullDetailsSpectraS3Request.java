@@ -50,7 +50,7 @@ public class GetPhysicalPlacementForObjectsWithFullDetailsSpectraS3Request exten
 
     public GetPhysicalPlacementForObjectsWithFullDetailsSpectraS3Request withStorageDomainId(final UUID storageDomainId) {
         this.storageDomainId = storageDomainId;
-        this.updateQueryParam("storage_domain_id", storageDomainId.toString());
+        this.updateQueryParam("storage_domain_id", storageDomainId);
         return this;
     }
 

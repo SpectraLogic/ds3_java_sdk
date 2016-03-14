@@ -52,13 +52,13 @@ public class GetDegradedDataPersistenceRulesSpectraS3Request extends AbstractReq
 
     public GetDegradedDataPersistenceRulesSpectraS3Request withDataPolicyId(final UUID dataPolicyId) {
         this.dataPolicyId = dataPolicyId;
-        this.updateQueryParam("data_policy_id", dataPolicyId.toString());
+        this.updateQueryParam("data_policy_id", dataPolicyId);
         return this;
     }
 
     public GetDegradedDataPersistenceRulesSpectraS3Request withIsolationLevel(final DataIsolationLevel isolationLevel) {
         this.isolationLevel = isolationLevel;
-        this.updateQueryParam("isolation_level", isolationLevel.toString());
+        this.updateQueryParam("isolation_level", isolationLevel);
         return this;
     }
 
@@ -74,37 +74,37 @@ public class GetDegradedDataPersistenceRulesSpectraS3Request extends AbstractReq
 
     public GetDegradedDataPersistenceRulesSpectraS3Request withPageLength(final int pageLength) {
         this.pageLength = pageLength;
-        this.updateQueryParam("page_length", Integer.toString(pageLength));
+        this.updateQueryParam("page_length", pageLength);
         return this;
     }
 
     public GetDegradedDataPersistenceRulesSpectraS3Request withPageOffset(final int pageOffset) {
         this.pageOffset = pageOffset;
-        this.updateQueryParam("page_offset", Integer.toString(pageOffset));
+        this.updateQueryParam("page_offset", pageOffset);
         return this;
     }
 
     public GetDegradedDataPersistenceRulesSpectraS3Request withPageStartMarker(final UUID pageStartMarker) {
         this.pageStartMarker = pageStartMarker;
-        this.updateQueryParam("page_start_marker", pageStartMarker.toString());
+        this.updateQueryParam("page_start_marker", pageStartMarker);
         return this;
     }
 
     public GetDegradedDataPersistenceRulesSpectraS3Request withState(final DataPersistenceRuleState state) {
         this.state = state;
-        this.updateQueryParam("state", state.toString());
+        this.updateQueryParam("state", state);
         return this;
     }
 
     public GetDegradedDataPersistenceRulesSpectraS3Request withStorageDomainId(final UUID storageDomainId) {
         this.storageDomainId = storageDomainId;
-        this.updateQueryParam("storage_domain_id", storageDomainId.toString());
+        this.updateQueryParam("storage_domain_id", storageDomainId);
         return this;
     }
 
     public GetDegradedDataPersistenceRulesSpectraS3Request withType(final DataPersistenceRuleType type) {
         this.type = type;
-        this.updateQueryParam("type", type.toString());
+        this.updateQueryParam("type", type);
         return this;
     }
 

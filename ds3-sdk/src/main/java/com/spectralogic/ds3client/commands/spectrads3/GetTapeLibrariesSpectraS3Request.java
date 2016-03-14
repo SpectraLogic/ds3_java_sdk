@@ -56,37 +56,37 @@ public class GetTapeLibrariesSpectraS3Request extends AbstractRequest {
 
     public GetTapeLibrariesSpectraS3Request withManagementUrl(final String managementUrl) {
         this.managementUrl = managementUrl;
-        this.updateQueryParam("management_url", UrlEscapers.urlFragmentEscaper().escape(managementUrl).replace("+", "%2B"));
+        this.updateQueryParam("management_url", managementUrl);
         return this;
     }
 
     public GetTapeLibrariesSpectraS3Request withName(final String name) {
         this.name = name;
-        this.updateQueryParam("name", UrlEscapers.urlFragmentEscaper().escape(name).replace("+", "%2B"));
+        this.updateQueryParam("name", name);
         return this;
     }
 
     public GetTapeLibrariesSpectraS3Request withPageLength(final int pageLength) {
         this.pageLength = pageLength;
-        this.updateQueryParam("page_length", Integer.toString(pageLength));
+        this.updateQueryParam("page_length", pageLength);
         return this;
     }
 
     public GetTapeLibrariesSpectraS3Request withPageOffset(final int pageOffset) {
         this.pageOffset = pageOffset;
-        this.updateQueryParam("page_offset", Integer.toString(pageOffset));
+        this.updateQueryParam("page_offset", pageOffset);
         return this;
     }
 
     public GetTapeLibrariesSpectraS3Request withPageStartMarker(final UUID pageStartMarker) {
         this.pageStartMarker = pageStartMarker;
-        this.updateQueryParam("page_start_marker", pageStartMarker.toString());
+        this.updateQueryParam("page_start_marker", pageStartMarker);
         return this;
     }
 
     public GetTapeLibrariesSpectraS3Request withSerialNumber(final String serialNumber) {
         this.serialNumber = serialNumber;
-        this.updateQueryParam("serial_number", UrlEscapers.urlFragmentEscaper().escape(serialNumber).replace("+", "%2B"));
+        this.updateQueryParam("serial_number", serialNumber);
         return this;
     }
 

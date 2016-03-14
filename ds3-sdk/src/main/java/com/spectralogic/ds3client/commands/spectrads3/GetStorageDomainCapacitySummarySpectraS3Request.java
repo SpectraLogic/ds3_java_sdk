@@ -50,31 +50,31 @@ public class GetStorageDomainCapacitySummarySpectraS3Request extends AbstractReq
 
     public GetStorageDomainCapacitySummarySpectraS3Request withPoolHealth(final PoolHealth poolHealth) {
         this.poolHealth = poolHealth;
-        this.updateQueryParam("pool_health", poolHealth.toString());
+        this.updateQueryParam("pool_health", poolHealth);
         return this;
     }
 
     public GetStorageDomainCapacitySummarySpectraS3Request withPoolState(final PoolState poolState) {
         this.poolState = poolState;
-        this.updateQueryParam("pool_state", poolState.toString());
+        this.updateQueryParam("pool_state", poolState);
         return this;
     }
 
     public GetStorageDomainCapacitySummarySpectraS3Request withPoolType(final PoolType poolType) {
         this.poolType = poolType;
-        this.updateQueryParam("pool_type", poolType.toString());
+        this.updateQueryParam("pool_type", poolType);
         return this;
     }
 
     public GetStorageDomainCapacitySummarySpectraS3Request withTapeState(final TapeState tapeState) {
         this.tapeState = tapeState;
-        this.updateQueryParam("tape_state", tapeState.toString());
+        this.updateQueryParam("tape_state", tapeState);
         return this;
     }
 
     public GetStorageDomainCapacitySummarySpectraS3Request withTapeType(final TapeType tapeType) {
         this.tapeType = tapeType;
-        this.updateQueryParam("tape_type", tapeType.toString());
+        this.updateQueryParam("tape_type", tapeType);
         return this;
     }
 

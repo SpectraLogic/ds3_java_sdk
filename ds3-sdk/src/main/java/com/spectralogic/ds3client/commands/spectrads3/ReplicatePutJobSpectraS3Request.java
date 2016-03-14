@@ -41,7 +41,7 @@ public class ReplicatePutJobSpectraS3Request extends BulkRequest {
 
     public ReplicatePutJobSpectraS3Request withConflictResolutionMode(final ReplicationConflictResolutionMode conflictResolutionMode) {
         this.conflictResolutionMode = conflictResolutionMode;
-        this.updateQueryParam("conflict_resolution_mode", conflictResolutionMode.toString());
+        this.updateQueryParam("conflict_resolution_mode", conflictResolutionMode);
         return this;
     }
 

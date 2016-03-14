@@ -40,13 +40,13 @@ public class ModifyPoolSpectraS3Request extends AbstractRequest {
 
     public ModifyPoolSpectraS3Request withPartitionId(final UUID partitionId) {
         this.partitionId = partitionId;
-        this.updateQueryParam("partition_id", partitionId.toString());
+        this.updateQueryParam("partition_id", partitionId);
         return this;
     }
 
     public ModifyPoolSpectraS3Request withQuiesced(final Quiesced quiesced) {
         this.quiesced = quiesced;
-        this.updateQueryParam("quiesced", quiesced.toString());
+        this.updateQueryParam("quiesced", quiesced);
         return this;
     }
 

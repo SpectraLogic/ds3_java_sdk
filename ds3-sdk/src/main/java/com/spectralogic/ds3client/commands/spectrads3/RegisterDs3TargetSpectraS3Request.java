@@ -60,31 +60,31 @@ public class RegisterDs3TargetSpectraS3Request extends AbstractRequest {
 
     public RegisterDs3TargetSpectraS3Request withAccessControlReplication(final Ds3TargetAccessControlReplication accessControlReplication) {
         this.accessControlReplication = accessControlReplication;
-        this.updateQueryParam("access_control_replication", accessControlReplication.toString());
+        this.updateQueryParam("access_control_replication", accessControlReplication);
         return this;
     }
 
     public RegisterDs3TargetSpectraS3Request withDefaultReadPreference(final TargetReadPreference defaultReadPreference) {
         this.defaultReadPreference = defaultReadPreference;
-        this.updateQueryParam("default_read_preference", defaultReadPreference.toString());
+        this.updateQueryParam("default_read_preference", defaultReadPreference);
         return this;
     }
 
     public RegisterDs3TargetSpectraS3Request withLocalAdminUserId(final UUID localAdminUserId) {
         this.localAdminUserId = localAdminUserId;
-        this.updateQueryParam("local_admin_user_id", localAdminUserId.toString());
+        this.updateQueryParam("local_admin_user_id", localAdminUserId);
         return this;
     }
 
     public RegisterDs3TargetSpectraS3Request withLocalReplicatedUserDefaultDataPolicyId(final UUID localReplicatedUserDefaultDataPolicyId) {
         this.localReplicatedUserDefaultDataPolicyId = localReplicatedUserDefaultDataPolicyId;
-        this.updateQueryParam("local_replicated_user_default_data_policy_id", localReplicatedUserDefaultDataPolicyId.toString());
+        this.updateQueryParam("local_replicated_user_default_data_policy_id", localReplicatedUserDefaultDataPolicyId);
         return this;
     }
 
     public RegisterDs3TargetSpectraS3Request withReplicatedUserDefaultDataPolicy(final String replicatedUserDefaultDataPolicy) {
         this.replicatedUserDefaultDataPolicy = replicatedUserDefaultDataPolicy;
-        this.updateQueryParam("replicated_user_default_data_policy", UrlEscapers.urlFragmentEscaper().escape(replicatedUserDefaultDataPolicy).replace("+", "%2B"));
+        this.updateQueryParam("replicated_user_default_data_policy", replicatedUserDefaultDataPolicy);
         return this;
     }
 

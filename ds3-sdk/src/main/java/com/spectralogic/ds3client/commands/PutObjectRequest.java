@@ -82,13 +82,13 @@ public class PutObjectRequest extends AbstractRequest {
 
     public PutObjectRequest withJob(final UUID job) {
         this.job = job;
-        this.updateQueryParam("job", job.toString());
+        this.updateQueryParam("job", job);
         return this;
     }
 
     public PutObjectRequest withOffset(final long offset) {
         this.offset = offset;
-        this.updateQueryParam("offset", Long.toString(offset));
+        this.updateQueryParam("offset", offset);
         return this;
     }
 
