@@ -43,7 +43,7 @@ public class PutObjectCachedNotificationRegistrationSpectraS3Request extends Abs
 
     public PutObjectCachedNotificationRegistrationSpectraS3Request withFormat(final HttpResponseFormatType format) {
         this.format = format;
-        this.updateQueryParam("format", format.toString());
+        this.updateQueryParam("format", format);
         return this;
     }
 
@@ -55,13 +55,13 @@ public class PutObjectCachedNotificationRegistrationSpectraS3Request extends Abs
 
     public PutObjectCachedNotificationRegistrationSpectraS3Request withNamingConvention(final NamingConventionType namingConvention) {
         this.namingConvention = namingConvention;
-        this.updateQueryParam("naming_convention", namingConvention.toString());
+        this.updateQueryParam("naming_convention", namingConvention);
         return this;
     }
 
     public PutObjectCachedNotificationRegistrationSpectraS3Request withNotificationHttpMethod(final RequestType notificationHttpMethod) {
         this.notificationHttpMethod = notificationHttpMethod;
-        this.updateQueryParam("notification_http_method", notificationHttpMethod.toString());
+        this.updateQueryParam("notification_http_method", notificationHttpMethod);
         return this;
     }
 

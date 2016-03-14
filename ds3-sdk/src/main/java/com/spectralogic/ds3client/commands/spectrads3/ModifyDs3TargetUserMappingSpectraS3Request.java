@@ -49,7 +49,7 @@ public class ModifyDs3TargetUserMappingSpectraS3Request extends AbstractRequest 
 
     public ModifyDs3TargetUserMappingSpectraS3Request withAuthId(final String authId) {
         this.authId = authId;
-        this.updateQueryParam("auth_id", UrlEscapers.urlFragmentEscaper().escape(authId).replace("+", "%2B"));
+        this.updateQueryParam("auth_id", authId);
         return this;
     }
 
@@ -67,13 +67,13 @@ public class ModifyDs3TargetUserMappingSpectraS3Request extends AbstractRequest 
 
     public ModifyDs3TargetUserMappingSpectraS3Request withOrderNum(final long orderNum) {
         this.orderNum = orderNum;
-        this.updateQueryParam("order_num", Long.toString(orderNum));
+        this.updateQueryParam("order_num", orderNum);
         return this;
     }
 
     public ModifyDs3TargetUserMappingSpectraS3Request withSecretKey(final String secretKey) {
         this.secretKey = secretKey;
-        this.updateQueryParam("secret_key", UrlEscapers.urlFragmentEscaper().escape(secretKey).replace("+", "%2B"));
+        this.updateQueryParam("secret_key", secretKey);
         return this;
     }
 

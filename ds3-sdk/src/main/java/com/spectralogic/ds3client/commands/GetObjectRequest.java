@@ -73,7 +73,7 @@ public class GetObjectRequest extends AbstractRequest {
 
     public GetObjectRequest withOffset(final long offset) {
         this.offset = offset;
-        this.updateQueryParam("offset", Long.toString(offset));
+        this.updateQueryParam("offset", offset);
         return this;
     }
 

@@ -43,7 +43,7 @@ public class CancelAllJobsSpectraS3Request extends AbstractRequest {
 
     public CancelAllJobsSpectraS3Request withRequestType(final JobRequestType requestType) {
         this.requestType = requestType;
-        this.updateQueryParam("request_type", requestType.toString());
+        this.updateQueryParam("request_type", requestType);
         return this;
     }
 

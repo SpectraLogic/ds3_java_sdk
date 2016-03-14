@@ -63,13 +63,13 @@ public class GetDs3TargetReadPreferencesSpectraS3Request extends AbstractRequest
 
     public GetDs3TargetReadPreferencesSpectraS3Request withPageLength(final int pageLength) {
         this.pageLength = pageLength;
-        this.updateQueryParam("page_length", Integer.toString(pageLength));
+        this.updateQueryParam("page_length", pageLength);
         return this;
     }
 
     public GetDs3TargetReadPreferencesSpectraS3Request withPageOffset(final int pageOffset) {
         this.pageOffset = pageOffset;
-        this.updateQueryParam("page_offset", Integer.toString(pageOffset));
+        this.updateQueryParam("page_offset", pageOffset);
         return this;
     }
 
@@ -81,7 +81,7 @@ public class GetDs3TargetReadPreferencesSpectraS3Request extends AbstractRequest
 
     public GetDs3TargetReadPreferencesSpectraS3Request withReadPreference(final TargetReadPreference readPreference) {
         this.readPreference = readPreference;
-        this.updateQueryParam("read_preference", readPreference.toString());
+        this.updateQueryParam("read_preference", readPreference);
         return this;
     }
 

@@ -52,7 +52,7 @@ public class GetDs3TargetUserMappingsSpectraS3Request extends AbstractRequest {
 
     public GetDs3TargetUserMappingsSpectraS3Request withAuthId(final String authId) {
         this.authId = authId;
-        this.updateQueryParam("auth_id", UrlEscapers.urlFragmentEscaper().escape(authId).replace("+", "%2B"));
+        this.updateQueryParam("auth_id", authId);
         return this;
     }
 
@@ -80,19 +80,19 @@ public class GetDs3TargetUserMappingsSpectraS3Request extends AbstractRequest {
 
     public GetDs3TargetUserMappingsSpectraS3Request withOrderNum(final long orderNum) {
         this.orderNum = orderNum;
-        this.updateQueryParam("order_num", Long.toString(orderNum));
+        this.updateQueryParam("order_num", orderNum);
         return this;
     }
 
     public GetDs3TargetUserMappingsSpectraS3Request withPageLength(final int pageLength) {
         this.pageLength = pageLength;
-        this.updateQueryParam("page_length", Integer.toString(pageLength));
+        this.updateQueryParam("page_length", pageLength);
         return this;
     }
 
     public GetDs3TargetUserMappingsSpectraS3Request withPageOffset(final int pageOffset) {
         this.pageOffset = pageOffset;
-        this.updateQueryParam("page_offset", Integer.toString(pageOffset));
+        this.updateQueryParam("page_offset", pageOffset);
         return this;
     }
 

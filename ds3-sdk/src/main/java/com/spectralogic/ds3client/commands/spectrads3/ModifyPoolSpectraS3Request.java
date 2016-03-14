@@ -46,7 +46,7 @@ public class ModifyPoolSpectraS3Request extends AbstractRequest {
 
     public ModifyPoolSpectraS3Request withQuiesced(final Quiesced quiesced) {
         this.quiesced = quiesced;
-        this.updateQueryParam("quiesced", quiesced.toString());
+        this.updateQueryParam("quiesced", quiesced);
         return this;
     }
 

@@ -46,7 +46,7 @@ public class DelegateCreateUserSpectraS3Request extends AbstractRequest {
 
     public DelegateCreateUserSpectraS3Request withSecretKey(final String secretKey) {
         this.secretKey = secretKey;
-        this.updateQueryParam("secret_key", UrlEscapers.urlFragmentEscaper().escape(secretKey).replace("+", "%2B"));
+        this.updateQueryParam("secret_key", secretKey);
         return this;
     }
 

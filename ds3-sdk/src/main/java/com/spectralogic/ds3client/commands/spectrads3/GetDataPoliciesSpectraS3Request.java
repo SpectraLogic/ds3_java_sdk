@@ -47,13 +47,13 @@ public class GetDataPoliciesSpectraS3Request extends AbstractRequest {
 
     public GetDataPoliciesSpectraS3Request withChecksumType(final ChecksumType.Type checksumType) {
         this.checksumType = checksumType;
-        this.updateQueryParam("checksum_type", checksumType.toString());
+        this.updateQueryParam("checksum_type", checksumType);
         return this;
     }
 
     public GetDataPoliciesSpectraS3Request withEndToEndCrcRequired(final boolean endToEndCrcRequired) {
         this.endToEndCrcRequired = endToEndCrcRequired;
-        this.updateQueryParam("end_to_end_crc_required", String.valueOf(endToEndCrcRequired));
+        this.updateQueryParam("end_to_end_crc_required", endToEndCrcRequired);
         return this;
     }
 
@@ -69,19 +69,19 @@ public class GetDataPoliciesSpectraS3Request extends AbstractRequest {
 
     public GetDataPoliciesSpectraS3Request withName(final String name) {
         this.name = name;
-        this.updateQueryParam("name", UrlEscapers.urlFragmentEscaper().escape(name).replace("+", "%2B"));
+        this.updateQueryParam("name", name);
         return this;
     }
 
     public GetDataPoliciesSpectraS3Request withPageLength(final int pageLength) {
         this.pageLength = pageLength;
-        this.updateQueryParam("page_length", Integer.toString(pageLength));
+        this.updateQueryParam("page_length", pageLength);
         return this;
     }
 
     public GetDataPoliciesSpectraS3Request withPageOffset(final int pageOffset) {
         this.pageOffset = pageOffset;
-        this.updateQueryParam("page_offset", Integer.toString(pageOffset));
+        this.updateQueryParam("page_offset", pageOffset);
         return this;
     }
 

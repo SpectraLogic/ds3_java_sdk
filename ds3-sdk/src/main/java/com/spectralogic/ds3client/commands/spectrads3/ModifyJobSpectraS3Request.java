@@ -43,19 +43,19 @@ public class ModifyJobSpectraS3Request extends AbstractRequest {
 
     public ModifyJobSpectraS3Request withCreatedAt(final Date createdAt) {
         this.createdAt = createdAt;
-        this.updateQueryParam("created_at", Long.toString(createdAt.getTime()));
+        this.updateQueryParam("created_at", createdAt);
         return this;
     }
 
     public ModifyJobSpectraS3Request withName(final String name) {
         this.name = name;
-        this.updateQueryParam("name", UrlEscapers.urlFragmentEscaper().escape(name).replace("+", "%2B"));
+        this.updateQueryParam("name", name);
         return this;
     }
 
     public ModifyJobSpectraS3Request withPriority(final Priority priority) {
         this.priority = priority;
-        this.updateQueryParam("priority", priority.toString());
+        this.updateQueryParam("priority", priority);
         return this;
     }
 

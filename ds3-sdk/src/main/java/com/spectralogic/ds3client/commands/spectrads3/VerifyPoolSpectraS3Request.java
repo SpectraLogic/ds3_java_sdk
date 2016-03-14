@@ -39,7 +39,7 @@ public class VerifyPoolSpectraS3Request extends AbstractRequest {
 
     public VerifyPoolSpectraS3Request withPriority(final Priority priority) {
         this.priority = priority;
-        this.updateQueryParam("priority", priority.toString());
+        this.updateQueryParam("priority", priority);
         return this;
     }
 
