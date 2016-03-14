@@ -471,6 +471,31 @@ public class PutJobManagement_Test {
     }
 
     @Test
+    public void getJobChunk() throws IOException, SignatureException, XmlProcessingException {
+
+        try {
+            final Ds3Object ds3Object = new Ds3Object("test", 2);
+            final Ds3ClientHelpers.Job jobOne =
+                    HELPERS.startWriteJob(BUCKET_NAME, Lists.newArrayList(ds3Object));
+            final UUID jobOneId = jobOne.getJobId();
+
+            final GetJobChunksReadyForClientProcessingSpectraS3Response response = client
+                    .getJobChunksReadyForClientProcessingSpectraS3
+                            (new GetJobChunksReadyForClientProcessingSpectraS3Request(jobOneId));
+
+            final UUID aJobChunkID = response.getMasterObjectListResult().getObjects().get(0).getChunkId();
+
+            final GetJobChunkSpectraS3Response getJobChunkSpectraS3Response = client.getJobChunkSpectraS3(
+                    new GetJobChunkSpectraS3Request(aJobChunkID));
+
+            assertThat(getJobChunkSpectraS3Response.getStatusCode(), is(200));
+
+        } finally {
+            deleteAllContents(client, BUCKET_NAME);
+        }
+    }
+
+    @Test
     public void aggregateTwoJobs() throws IOException, SignatureException, XmlProcessingException {
 
         try {
