@@ -34,16 +34,17 @@ public class GetPoolFailuresSpectraS3Request extends AbstractRequest {
 
     private int pageOffset;
 
-    private UUID pageStartMarker;
+    private String pageStartMarker;
 
-    private UUID poolId;
+    private String poolId;
 
     private PoolFailureType type;
 
     // Constructor
     
     public GetPoolFailuresSpectraS3Request() {
-            }
+        
+    }
 
     public GetPoolFailuresSpectraS3Request withErrorMessage(final String errorMessage) {
         this.errorMessage = errorMessage;
@@ -74,12 +75,24 @@ public class GetPoolFailuresSpectraS3Request extends AbstractRequest {
     }
 
     public GetPoolFailuresSpectraS3Request withPageStartMarker(final UUID pageStartMarker) {
+        this.pageStartMarker = pageStartMarker.toString();
+        this.updateQueryParam("page_start_marker", pageStartMarker);
+        return this;
+    }
+
+    public GetPoolFailuresSpectraS3Request withPageStartMarker(final String pageStartMarker) {
         this.pageStartMarker = pageStartMarker;
         this.updateQueryParam("page_start_marker", pageStartMarker);
         return this;
     }
 
     public GetPoolFailuresSpectraS3Request withPoolId(final UUID poolId) {
+        this.poolId = poolId.toString();
+        this.updateQueryParam("pool_id", poolId);
+        return this;
+    }
+
+    public GetPoolFailuresSpectraS3Request withPoolId(final String poolId) {
         this.poolId = poolId;
         this.updateQueryParam("pool_id", poolId);
         return this;
@@ -122,12 +135,12 @@ public class GetPoolFailuresSpectraS3Request extends AbstractRequest {
     }
 
 
-    public UUID getPageStartMarker() {
+    public String getPageStartMarker() {
         return this.pageStartMarker;
     }
 
 
-    public UUID getPoolId() {
+    public String getPoolId() {
         return this.poolId;
     }
 

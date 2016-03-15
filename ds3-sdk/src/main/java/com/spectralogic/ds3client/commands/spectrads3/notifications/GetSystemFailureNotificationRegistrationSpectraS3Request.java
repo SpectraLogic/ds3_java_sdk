@@ -29,6 +29,14 @@ public class GetSystemFailureNotificationRegistrationSpectraS3Request extends Ab
         super(notificationId);
 
         
+
+    }
+
+    public GetSystemFailureNotificationRegistrationSpectraS3Request(final String notificationId) {
+        super(notificationId);
+
+        
+
     }
 
 

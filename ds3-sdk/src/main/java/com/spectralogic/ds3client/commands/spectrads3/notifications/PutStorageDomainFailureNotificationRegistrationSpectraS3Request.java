@@ -36,6 +36,7 @@ public class PutStorageDomainFailureNotificationRegistrationSpectraS3Request ext
         super(notificationEndPoint);
 
         
+
     }
 
     public PutStorageDomainFailureNotificationRegistrationSpectraS3Request withFormat(final HttpResponseFormatType format) {

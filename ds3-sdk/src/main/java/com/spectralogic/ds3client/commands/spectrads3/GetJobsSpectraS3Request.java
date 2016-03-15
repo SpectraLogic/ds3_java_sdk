@@ -31,7 +31,8 @@ public class GetJobsSpectraS3Request extends AbstractRequest {
     // Constructor
     
     public GetJobsSpectraS3Request() {
-            }
+        
+    }
 
     public GetJobsSpectraS3Request withBucketId(final String bucketId) {
         this.bucketId = bucketId;

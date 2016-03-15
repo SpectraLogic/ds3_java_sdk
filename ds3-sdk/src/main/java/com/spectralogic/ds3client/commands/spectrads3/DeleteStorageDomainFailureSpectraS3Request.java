@@ -30,7 +30,8 @@ public class DeleteStorageDomainFailureSpectraS3Request extends AbstractRequest 
     
     public DeleteStorageDomainFailureSpectraS3Request(final String storageDomainFailure) {
         this.storageDomainFailure = storageDomainFailure;
-            }
+        
+    }
 
 
     @Override

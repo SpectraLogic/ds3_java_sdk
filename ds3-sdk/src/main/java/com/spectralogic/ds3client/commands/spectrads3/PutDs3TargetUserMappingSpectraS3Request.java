@@ -33,11 +33,11 @@ public class PutDs3TargetUserMappingSpectraS3Request extends AbstractRequest {
 
     private String bucketId;
 
-    private UUID groupId;
+    private String groupId;
 
-    private UUID targetId;
+    private String targetId;
 
-    private UUID userId;
+    private String userId;
 
     // Constructor
     
@@ -45,7 +45,8 @@ public class PutDs3TargetUserMappingSpectraS3Request extends AbstractRequest {
         this.authId = authId;
         this.orderNum = orderNum;
         this.secretKey = secretKey;
-                this.getQueryParams().put("auth_id", UrlEscapers.urlFragmentEscaper().escape(authId).replace("+", "%2B"));
+        
+        this.getQueryParams().put("auth_id", UrlEscapers.urlFragmentEscaper().escape(authId).replace("+", "%2B"));
         this.getQueryParams().put("order_num", Long.toString(orderNum));
         this.getQueryParams().put("secret_key", UrlEscapers.urlFragmentEscaper().escape(secretKey).replace("+", "%2B"));
     }
@@ -57,18 +58,36 @@ public class PutDs3TargetUserMappingSpectraS3Request extends AbstractRequest {
     }
 
     public PutDs3TargetUserMappingSpectraS3Request withGroupId(final UUID groupId) {
+        this.groupId = groupId.toString();
+        this.updateQueryParam("group_id", groupId);
+        return this;
+    }
+
+    public PutDs3TargetUserMappingSpectraS3Request withGroupId(final String groupId) {
         this.groupId = groupId;
         this.updateQueryParam("group_id", groupId);
         return this;
     }
 
     public PutDs3TargetUserMappingSpectraS3Request withTargetId(final UUID targetId) {
+        this.targetId = targetId.toString();
+        this.updateQueryParam("target_id", targetId);
+        return this;
+    }
+
+    public PutDs3TargetUserMappingSpectraS3Request withTargetId(final String targetId) {
         this.targetId = targetId;
         this.updateQueryParam("target_id", targetId);
         return this;
     }
 
     public PutDs3TargetUserMappingSpectraS3Request withUserId(final UUID userId) {
+        this.userId = userId.toString();
+        this.updateQueryParam("user_id", userId);
+        return this;
+    }
+
+    public PutDs3TargetUserMappingSpectraS3Request withUserId(final String userId) {
         this.userId = userId;
         this.updateQueryParam("user_id", userId);
         return this;
@@ -105,17 +124,17 @@ public class PutDs3TargetUserMappingSpectraS3Request extends AbstractRequest {
     }
 
 
-    public UUID getGroupId() {
+    public String getGroupId() {
         return this.groupId;
     }
 
 
-    public UUID getTargetId() {
+    public String getTargetId() {
         return this.targetId;
     }
 
 
-    public UUID getUserId() {
+    public String getUserId() {
         return this.userId;
     }
 

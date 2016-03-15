@@ -31,6 +31,7 @@ public class CompactAllPoolsSpectraS3Request extends AbstractRequest {
     public CompactAllPoolsSpectraS3Request() {
         
         this.getQueryParams().put("operation", "compact");
+
     }
 
     public CompactAllPoolsSpectraS3Request withPriority(final Priority priority) {

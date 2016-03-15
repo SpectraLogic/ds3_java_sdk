@@ -30,7 +30,8 @@ public class GetDs3TargetUserMappingSpectraS3Request extends AbstractRequest {
     
     public GetDs3TargetUserMappingSpectraS3Request(final String ds3TargetUserMapping) {
         this.ds3TargetUserMapping = ds3TargetUserMapping;
-            }
+        
+    }
 
 
     @Override

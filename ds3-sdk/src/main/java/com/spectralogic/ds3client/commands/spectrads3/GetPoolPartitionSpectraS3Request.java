@@ -30,7 +30,8 @@ public class GetPoolPartitionSpectraS3Request extends AbstractRequest {
     
     public GetPoolPartitionSpectraS3Request(final String poolPartition) {
         this.poolPartition = poolPartition;
-            }
+        
+    }
 
 
     @Override

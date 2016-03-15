@@ -30,17 +30,28 @@ public class PutDs3TargetReadPreferenceSpectraS3Request extends AbstractRequest 
 
     private final TargetReadPreference readPreference;
 
-    private final UUID targetId;
+    private final String targetId;
 
     // Constructor
     
     public PutDs3TargetReadPreferenceSpectraS3Request(final String bucketId, final TargetReadPreference readPreference, final UUID targetId) {
         this.bucketId = bucketId;
         this.readPreference = readPreference;
-        this.targetId = targetId;
-                this.getQueryParams().put("bucket_id", bucketId);
+        this.targetId = targetId.toString();
+        
+        this.getQueryParams().put("bucket_id", bucketId);
         this.getQueryParams().put("read_preference", readPreference.toString());
         this.getQueryParams().put("target_id", targetId.toString());
+    }
+
+    public PutDs3TargetReadPreferenceSpectraS3Request(final String bucketId, final TargetReadPreference readPreference, final String targetId) {
+        this.bucketId = bucketId;
+        this.readPreference = readPreference;
+        this.targetId = targetId;
+        
+        this.getQueryParams().put("bucket_id", bucketId);
+        this.getQueryParams().put("read_preference", readPreference.toString());
+        this.getQueryParams().put("target_id", UrlEscapers.urlFragmentEscaper().escape(targetId).replace("+", "%2B"));
     }
 
 
@@ -64,7 +75,7 @@ public class PutDs3TargetReadPreferenceSpectraS3Request extends AbstractRequest 
     }
 
 
-    public UUID getTargetId() {
+    public String getTargetId() {
         return this.targetId;
     }
 

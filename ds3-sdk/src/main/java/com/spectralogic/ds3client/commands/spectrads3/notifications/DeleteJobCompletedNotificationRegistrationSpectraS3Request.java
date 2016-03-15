@@ -29,6 +29,14 @@ public class DeleteJobCompletedNotificationRegistrationSpectraS3Request extends 
         super(notificationId);
 
         
+
+    }
+
+    public DeleteJobCompletedNotificationRegistrationSpectraS3Request(final String notificationId) {
+        super(notificationId);
+
+        
+
     }
 
     @Override

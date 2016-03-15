@@ -19,20 +19,27 @@ package com.spectralogic.ds3client.commands.spectrads3;
 import com.spectralogic.ds3client.networking.HttpVerb;
 import com.spectralogic.ds3client.commands.AbstractRequest;
 import java.util.UUID;
+import com.google.common.net.UrlEscapers;
 
 public class CancelJobSpectraS3Request extends AbstractRequest {
 
     // Variables
     
-    private final UUID jobId;
+    private final String jobId;
 
     private boolean force;
 
     // Constructor
     
     public CancelJobSpectraS3Request(final UUID jobId) {
+        this.jobId = jobId.toString();
+        
+    }
+
+    public CancelJobSpectraS3Request(final String jobId) {
         this.jobId = jobId;
-            }
+        
+    }
 
     public CancelJobSpectraS3Request withForce(final boolean force) {
         this.force = force;
@@ -52,10 +59,10 @@ public class CancelJobSpectraS3Request extends AbstractRequest {
 
     @Override
     public String getPath() {
-        return "/_rest_/job/" + jobId.toString();
+        return "/_rest_/job/" + jobId;
     }
     
-    public UUID getJobId() {
+    public String getJobId() {
         return this.jobId;
     }
 

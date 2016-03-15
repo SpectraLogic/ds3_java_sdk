@@ -30,7 +30,8 @@ public class ModifyAllTapePartitionsSpectraS3Request extends AbstractRequest {
     
     public ModifyAllTapePartitionsSpectraS3Request(final Quiesced quiesced) {
         this.quiesced = quiesced;
-                this.getQueryParams().put("quiesced", quiesced.toString());
+        
+        this.getQueryParams().put("quiesced", quiesced.toString());
     }
 
 

@@ -28,6 +28,7 @@ public class CancelImportOnAllTapesSpectraS3Request extends AbstractRequest {
     public CancelImportOnAllTapesSpectraS3Request() {
         
         this.getQueryParams().put("operation", "cancel_import");
+
     }
 
 

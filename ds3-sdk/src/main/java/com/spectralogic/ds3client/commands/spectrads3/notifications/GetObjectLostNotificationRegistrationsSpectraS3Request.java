@@ -18,6 +18,7 @@ package com.spectralogic.ds3client.commands.spectrads3.notifications;
 
 import com.spectralogic.ds3client.commands.notifications.AbstractGetNotificationRequest;
 import java.util.UUID;
+import com.google.common.net.UrlEscapers;
 
 public class GetObjectLostNotificationRegistrationsSpectraS3Request extends AbstractGetNotificationRequest {
 
@@ -29,9 +30,9 @@ public class GetObjectLostNotificationRegistrationsSpectraS3Request extends Abst
 
     private int pageOffset;
 
-    private UUID pageStartMarker;
+    private String pageStartMarker;
 
-    private UUID userId;
+    private String userId;
 
     // Constructor
     
@@ -39,6 +40,14 @@ public class GetObjectLostNotificationRegistrationsSpectraS3Request extends Abst
         super(notificationId);
 
         
+
+    }
+
+    public GetObjectLostNotificationRegistrationsSpectraS3Request(final String notificationId) {
+        super(notificationId);
+
+        
+
     }
 
     public GetObjectLostNotificationRegistrationsSpectraS3Request withLastPage(final boolean lastPage) {
@@ -64,12 +73,24 @@ public class GetObjectLostNotificationRegistrationsSpectraS3Request extends Abst
     }
 
     public GetObjectLostNotificationRegistrationsSpectraS3Request withPageStartMarker(final UUID pageStartMarker) {
+        this.pageStartMarker = pageStartMarker.toString();
+        this.updateQueryParam("page_start_marker", pageStartMarker);
+        return this;
+    }
+
+    public GetObjectLostNotificationRegistrationsSpectraS3Request withPageStartMarker(final String pageStartMarker) {
         this.pageStartMarker = pageStartMarker;
         this.updateQueryParam("page_start_marker", pageStartMarker);
         return this;
     }
 
     public GetObjectLostNotificationRegistrationsSpectraS3Request withUserId(final UUID userId) {
+        this.userId = userId.toString();
+        this.updateQueryParam("user_id", userId);
+        return this;
+    }
+
+    public GetObjectLostNotificationRegistrationsSpectraS3Request withUserId(final String userId) {
         this.userId = userId;
         this.updateQueryParam("user_id", userId);
         return this;
@@ -97,12 +118,12 @@ public class GetObjectLostNotificationRegistrationsSpectraS3Request extends Abst
     }
 
 
-    public UUID getPageStartMarker() {
+    public String getPageStartMarker() {
         return this.pageStartMarker;
     }
 
 
-    public UUID getUserId() {
+    public String getUserId() {
         return this.userId;
     }
 

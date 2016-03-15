@@ -19,18 +19,25 @@ package com.spectralogic.ds3client.commands.spectrads3;
 import com.spectralogic.ds3client.networking.HttpVerb;
 import com.spectralogic.ds3client.commands.AbstractRequest;
 import java.util.UUID;
+import com.google.common.net.UrlEscapers;
 
 public class GetJobChunkSpectraS3Request extends AbstractRequest {
 
     // Variables
     
-    private final UUID jobChunkId;
+    private final String jobChunkId;
 
     // Constructor
     
     public GetJobChunkSpectraS3Request(final UUID jobChunkId) {
+        this.jobChunkId = jobChunkId.toString();
+        
+    }
+
+    public GetJobChunkSpectraS3Request(final String jobChunkId) {
         this.jobChunkId = jobChunkId;
-            }
+        
+    }
 
 
     @Override
@@ -40,10 +47,10 @@ public class GetJobChunkSpectraS3Request extends AbstractRequest {
 
     @Override
     public String getPath() {
-        return "/_rest_/job_chunk/" + jobChunkId.toString();
+        return "/_rest_/job_chunk/" + jobChunkId;
     }
     
-    public UUID getJobChunkId() {
+    public String getJobChunkId() {
         return this.jobChunkId;
     }
 

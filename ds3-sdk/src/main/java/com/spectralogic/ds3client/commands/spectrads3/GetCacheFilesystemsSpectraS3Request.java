@@ -19,6 +19,7 @@ package com.spectralogic.ds3client.commands.spectrads3;
 import com.spectralogic.ds3client.networking.HttpVerb;
 import com.spectralogic.ds3client.commands.AbstractRequest;
 import java.util.UUID;
+import com.google.common.net.UrlEscapers;
 
 public class GetCacheFilesystemsSpectraS3Request extends AbstractRequest {
 
@@ -26,18 +27,19 @@ public class GetCacheFilesystemsSpectraS3Request extends AbstractRequest {
     
     private boolean lastPage;
 
-    private UUID nodeId;
+    private String nodeId;
 
     private int pageLength;
 
     private int pageOffset;
 
-    private UUID pageStartMarker;
+    private String pageStartMarker;
 
     // Constructor
     
     public GetCacheFilesystemsSpectraS3Request() {
-            }
+        
+    }
 
     public GetCacheFilesystemsSpectraS3Request withLastPage(final boolean lastPage) {
         this.lastPage = lastPage;
@@ -50,6 +52,12 @@ public class GetCacheFilesystemsSpectraS3Request extends AbstractRequest {
     }
 
     public GetCacheFilesystemsSpectraS3Request withNodeId(final UUID nodeId) {
+        this.nodeId = nodeId.toString();
+        this.updateQueryParam("node_id", nodeId);
+        return this;
+    }
+
+    public GetCacheFilesystemsSpectraS3Request withNodeId(final String nodeId) {
         this.nodeId = nodeId;
         this.updateQueryParam("node_id", nodeId);
         return this;
@@ -68,6 +76,12 @@ public class GetCacheFilesystemsSpectraS3Request extends AbstractRequest {
     }
 
     public GetCacheFilesystemsSpectraS3Request withPageStartMarker(final UUID pageStartMarker) {
+        this.pageStartMarker = pageStartMarker.toString();
+        this.updateQueryParam("page_start_marker", pageStartMarker);
+        return this;
+    }
+
+    public GetCacheFilesystemsSpectraS3Request withPageStartMarker(final String pageStartMarker) {
         this.pageStartMarker = pageStartMarker;
         this.updateQueryParam("page_start_marker", pageStartMarker);
         return this;
@@ -89,7 +103,7 @@ public class GetCacheFilesystemsSpectraS3Request extends AbstractRequest {
     }
 
 
-    public UUID getNodeId() {
+    public String getNodeId() {
         return this.nodeId;
     }
 
@@ -104,7 +118,7 @@ public class GetCacheFilesystemsSpectraS3Request extends AbstractRequest {
     }
 
 
-    public UUID getPageStartMarker() {
+    public String getPageStartMarker() {
         return this.pageStartMarker;
     }
 

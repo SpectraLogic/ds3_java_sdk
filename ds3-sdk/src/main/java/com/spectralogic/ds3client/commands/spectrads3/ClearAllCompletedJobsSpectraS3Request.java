@@ -26,7 +26,8 @@ public class ClearAllCompletedJobsSpectraS3Request extends AbstractRequest {
     // Constructor
     
     public ClearAllCompletedJobsSpectraS3Request() {
-            }
+        
+    }
 
 
     @Override

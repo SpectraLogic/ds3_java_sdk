@@ -19,8 +19,8 @@ package com.spectralogic.ds3client.commands.spectrads3;
 import com.spectralogic.ds3client.networking.HttpVerb;
 import com.spectralogic.ds3client.commands.AbstractRequest;
 import java.util.UUID;
-import com.spectralogic.ds3client.models.Quiesced;
 import com.google.common.net.UrlEscapers;
+import com.spectralogic.ds3client.models.Quiesced;
 
 public class ModifyPoolSpectraS3Request extends AbstractRequest {
 
@@ -28,7 +28,7 @@ public class ModifyPoolSpectraS3Request extends AbstractRequest {
     
     private final String pool;
 
-    private UUID partitionId;
+    private String partitionId;
 
     private Quiesced quiesced;
 
@@ -36,9 +36,16 @@ public class ModifyPoolSpectraS3Request extends AbstractRequest {
     
     public ModifyPoolSpectraS3Request(final String pool) {
         this.pool = pool;
-            }
+        
+    }
 
     public ModifyPoolSpectraS3Request withPartitionId(final UUID partitionId) {
+        this.partitionId = partitionId.toString();
+        this.updateQueryParam("partition_id", partitionId);
+        return this;
+    }
+
+    public ModifyPoolSpectraS3Request withPartitionId(final String partitionId) {
         this.partitionId = partitionId;
         this.updateQueryParam("partition_id", partitionId);
         return this;
@@ -66,7 +73,7 @@ public class ModifyPoolSpectraS3Request extends AbstractRequest {
     }
 
 
-    public UUID getPartitionId() {
+    public String getPartitionId() {
         return this.partitionId;
     }
 

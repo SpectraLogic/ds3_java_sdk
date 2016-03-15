@@ -29,6 +29,14 @@ public class DeleteObjectLostNotificationRegistrationSpectraS3Request extends Ab
         super(notificationId);
 
         
+
+    }
+
+    public DeleteObjectLostNotificationRegistrationSpectraS3Request(final String notificationId) {
+        super(notificationId);
+
+        
+
     }
 
     @Override

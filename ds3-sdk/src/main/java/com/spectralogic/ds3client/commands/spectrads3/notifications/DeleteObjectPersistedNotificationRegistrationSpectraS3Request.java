@@ -29,6 +29,14 @@ public class DeleteObjectPersistedNotificationRegistrationSpectraS3Request exten
         super(notificationId);
 
         
+
+    }
+
+    public DeleteObjectPersistedNotificationRegistrationSpectraS3Request(final String notificationId) {
+        super(notificationId);
+
+        
+
     }
 
     @Override

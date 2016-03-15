@@ -32,7 +32,8 @@ public class DeleteBucketSpectraS3Request extends AbstractRequest {
     
     public DeleteBucketSpectraS3Request(final String bucketName) {
         this.bucketName = bucketName;
-            }
+        
+    }
 
     public DeleteBucketSpectraS3Request withForce(final boolean force) {
         this.force = force;

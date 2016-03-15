@@ -30,7 +30,8 @@ public class DeleteBucketAclSpectraS3Request extends AbstractRequest {
     
     public DeleteBucketAclSpectraS3Request(final String bucketAcl) {
         this.bucketAcl = bucketAcl;
-            }
+        
+    }
 
 
     @Override

@@ -30,7 +30,8 @@ public class GetGroupMemberSpectraS3Request extends AbstractRequest {
     
     public GetGroupMemberSpectraS3Request(final String groupMember) {
         this.groupMember = groupMember;
-            }
+        
+    }
 
 
     @Override

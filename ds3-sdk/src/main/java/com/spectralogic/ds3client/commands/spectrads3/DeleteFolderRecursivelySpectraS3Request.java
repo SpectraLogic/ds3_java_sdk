@@ -35,7 +35,8 @@ public class DeleteFolderRecursivelySpectraS3Request extends AbstractRequest {
     public DeleteFolderRecursivelySpectraS3Request(final String bucketId, final String folder) {
         this.folder = folder;
         this.bucketId = bucketId;
-                this.getQueryParams().put("bucket_id", bucketId);
+        
+        this.getQueryParams().put("bucket_id", bucketId);
         this.getQueryParams().put("recursive", null);
     }
 

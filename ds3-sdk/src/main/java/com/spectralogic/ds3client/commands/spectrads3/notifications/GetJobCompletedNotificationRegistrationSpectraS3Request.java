@@ -29,6 +29,14 @@ public class GetJobCompletedNotificationRegistrationSpectraS3Request extends Abs
         super(notificationId);
 
         
+
+    }
+
+    public GetJobCompletedNotificationRegistrationSpectraS3Request(final String notificationId) {
+        super(notificationId);
+
+        
+
     }
 
 

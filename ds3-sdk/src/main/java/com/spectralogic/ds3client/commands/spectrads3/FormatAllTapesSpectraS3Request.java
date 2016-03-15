@@ -30,6 +30,7 @@ public class FormatAllTapesSpectraS3Request extends AbstractRequest {
     public FormatAllTapesSpectraS3Request() {
         
         this.getQueryParams().put("operation", "format");
+
     }
 
     public FormatAllTapesSpectraS3Request withForce(final boolean force) {

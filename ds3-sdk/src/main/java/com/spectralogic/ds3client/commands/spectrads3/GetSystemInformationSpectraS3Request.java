@@ -26,7 +26,8 @@ public class GetSystemInformationSpectraS3Request extends AbstractRequest {
     // Constructor
     
     public GetSystemInformationSpectraS3Request() {
-            }
+        
+    }
 
 
     @Override

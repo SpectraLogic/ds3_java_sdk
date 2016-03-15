@@ -19,6 +19,7 @@ package com.spectralogic.ds3client.commands.spectrads3;
 import com.spectralogic.ds3client.networking.HttpVerb;
 import com.spectralogic.ds3client.commands.AbstractRequest;
 import java.util.UUID;
+import com.google.common.net.UrlEscapers;
 import com.spectralogic.ds3client.models.PoolHealth;
 import com.spectralogic.ds3client.models.PoolState;
 import com.spectralogic.ds3client.models.PoolType;
@@ -29,7 +30,7 @@ public class GetStorageDomainCapacitySummarySpectraS3Request extends AbstractReq
 
     // Variables
     
-    private final UUID storageDomainId;
+    private final String storageDomainId;
 
     private PoolHealth poolHealth;
 
@@ -44,8 +45,15 @@ public class GetStorageDomainCapacitySummarySpectraS3Request extends AbstractReq
     // Constructor
     
     public GetStorageDomainCapacitySummarySpectraS3Request(final UUID storageDomainId) {
+        this.storageDomainId = storageDomainId.toString();
+        
+        this.getQueryParams().put("storage_domain_id", storageDomainId.toString());
+    }
+
+    public GetStorageDomainCapacitySummarySpectraS3Request(final String storageDomainId) {
         this.storageDomainId = storageDomainId;
-                this.getQueryParams().put("storage_domain_id", storageDomainId.toString());
+        
+        this.getQueryParams().put("storage_domain_id", UrlEscapers.urlFragmentEscaper().escape(storageDomainId).replace("+", "%2B"));
     }
 
     public GetStorageDomainCapacitySummarySpectraS3Request withPoolHealth(final PoolHealth poolHealth) {
@@ -89,7 +97,7 @@ public class GetStorageDomainCapacitySummarySpectraS3Request extends AbstractReq
         return "/_rest_/capacity_summary";
     }
     
-    public UUID getStorageDomainId() {
+    public String getStorageDomainId() {
         return this.storageDomainId;
     }
 

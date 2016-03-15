@@ -34,7 +34,8 @@ public class ModifyNodeSpectraS3Request extends AbstractRequest {
     
     public ModifyNodeSpectraS3Request(final String node) {
         this.node = node;
-            }
+        
+    }
 
     public ModifyNodeSpectraS3Request withDnsName(final String dnsName) {
         this.dnsName = dnsName;

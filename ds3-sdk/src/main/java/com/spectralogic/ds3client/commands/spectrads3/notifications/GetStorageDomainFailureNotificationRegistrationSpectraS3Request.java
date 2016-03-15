@@ -29,6 +29,14 @@ public class GetStorageDomainFailureNotificationRegistrationSpectraS3Request ext
         super(notificationId);
 
         
+
+    }
+
+    public GetStorageDomainFailureNotificationRegistrationSpectraS3Request(final String notificationId) {
+        super(notificationId);
+
+        
+
     }
 
 

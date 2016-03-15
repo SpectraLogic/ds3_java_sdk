@@ -41,7 +41,7 @@ public class GetCompletedJobsSpectraS3Request extends AbstractRequest {
 
     private int pageOffset;
 
-    private UUID pageStartMarker;
+    private String pageStartMarker;
 
     private Priority priority;
 
@@ -51,12 +51,13 @@ public class GetCompletedJobsSpectraS3Request extends AbstractRequest {
 
     private boolean truncated;
 
-    private UUID userId;
+    private String userId;
 
     // Constructor
     
     public GetCompletedJobsSpectraS3Request() {
-            }
+        
+    }
 
     public GetCompletedJobsSpectraS3Request withBucketId(final String bucketId) {
         this.bucketId = bucketId;
@@ -99,6 +100,12 @@ public class GetCompletedJobsSpectraS3Request extends AbstractRequest {
     }
 
     public GetCompletedJobsSpectraS3Request withPageStartMarker(final UUID pageStartMarker) {
+        this.pageStartMarker = pageStartMarker.toString();
+        this.updateQueryParam("page_start_marker", pageStartMarker);
+        return this;
+    }
+
+    public GetCompletedJobsSpectraS3Request withPageStartMarker(final String pageStartMarker) {
         this.pageStartMarker = pageStartMarker;
         this.updateQueryParam("page_start_marker", pageStartMarker);
         return this;
@@ -129,6 +136,12 @@ public class GetCompletedJobsSpectraS3Request extends AbstractRequest {
     }
 
     public GetCompletedJobsSpectraS3Request withUserId(final UUID userId) {
+        this.userId = userId.toString();
+        this.updateQueryParam("user_id", userId);
+        return this;
+    }
+
+    public GetCompletedJobsSpectraS3Request withUserId(final String userId) {
         this.userId = userId;
         this.updateQueryParam("user_id", userId);
         return this;
@@ -175,7 +188,7 @@ public class GetCompletedJobsSpectraS3Request extends AbstractRequest {
     }
 
 
-    public UUID getPageStartMarker() {
+    public String getPageStartMarker() {
         return this.pageStartMarker;
     }
 
@@ -200,7 +213,7 @@ public class GetCompletedJobsSpectraS3Request extends AbstractRequest {
     }
 
 
-    public UUID getUserId() {
+    public String getUserId() {
         return this.userId;
     }
 

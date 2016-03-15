@@ -42,7 +42,7 @@ public class GetObjectsWithFullDetailsSpectraS3Request extends AbstractRequest {
 
     private int pageOffset;
 
-    private UUID pageStartMarker;
+    private String pageStartMarker;
 
     private S3ObjectType type;
 
@@ -51,7 +51,8 @@ public class GetObjectsWithFullDetailsSpectraS3Request extends AbstractRequest {
     // Constructor
     
     public GetObjectsWithFullDetailsSpectraS3Request() {
-                this.getQueryParams().put("full_details", null);
+        
+        this.getQueryParams().put("full_details", null);
     }
 
     public GetObjectsWithFullDetailsSpectraS3Request withBucketId(final String bucketId) {
@@ -111,6 +112,12 @@ public class GetObjectsWithFullDetailsSpectraS3Request extends AbstractRequest {
     }
 
     public GetObjectsWithFullDetailsSpectraS3Request withPageStartMarker(final UUID pageStartMarker) {
+        this.pageStartMarker = pageStartMarker.toString();
+        this.updateQueryParam("page_start_marker", pageStartMarker);
+        return this;
+    }
+
+    public GetObjectsWithFullDetailsSpectraS3Request withPageStartMarker(final String pageStartMarker) {
         this.pageStartMarker = pageStartMarker;
         this.updateQueryParam("page_start_marker", pageStartMarker);
         return this;
@@ -179,7 +186,7 @@ public class GetObjectsWithFullDetailsSpectraS3Request extends AbstractRequest {
     }
 
 
-    public UUID getPageStartMarker() {
+    public String getPageStartMarker() {
         return this.pageStartMarker;
     }
 

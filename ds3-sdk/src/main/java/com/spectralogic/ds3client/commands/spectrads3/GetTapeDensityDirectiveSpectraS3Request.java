@@ -30,7 +30,8 @@ public class GetTapeDensityDirectiveSpectraS3Request extends AbstractRequest {
     
     public GetTapeDensityDirectiveSpectraS3Request(final String tapeDensityDirective) {
         this.tapeDensityDirective = tapeDensityDirective;
-            }
+        
+    }
 
 
     @Override

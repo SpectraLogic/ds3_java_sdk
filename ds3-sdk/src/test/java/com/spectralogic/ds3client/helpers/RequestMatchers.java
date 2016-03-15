@@ -73,14 +73,14 @@ public class RequestMatchers {
 
             @Override
             protected boolean matchesSafely(final GetJobChunksReadyForClientProcessingSpectraS3Request item) {
-                return jobId.equals(item.getJob());
+                return jobId.toString().equals(item.getJob());
             }
             
             @Override
             protected void describeMismatchSafely(
                     final GetJobChunksReadyForClientProcessingSpectraS3Request item,
                     final Description mismatchDescription) {
-                describeRequest(item.getJob(), mismatchDescription);
+                describeRequest(UUID.fromString(item.getJob()), mismatchDescription);
             }
 
             private void describeRequest(final UUID jobIdValue, final Description description) {
@@ -100,14 +100,14 @@ public class RequestMatchers {
 
             @Override
             protected boolean matchesSafely(final AllocateJobChunkSpectraS3Request item) {
-                return chunkId.equals(item.getJobChunkId());
+                return chunkId.toString().equals(item.getJobChunkId());
             }
             
             @Override
             protected void describeMismatchSafely(
                     final AllocateJobChunkSpectraS3Request item,
                     final Description mismatchDescription) {
-                describeRequest(item.getJobChunkId(), mismatchDescription);
+                describeRequest(UUID.fromString(item.getJobChunkId()), mismatchDescription);
             }
 
             private void describeRequest(final UUID chunkIdValue, final Description description) {
@@ -125,7 +125,7 @@ public class RequestMatchers {
                 return
                         item.getBucketName().equals(bucket)
                         && item.getObjectName().equals(key)
-                        && (item.getJob() == null ? jobId == null : item.getJob().equals(jobId))
+                        && (item.getJob() == null ? jobId == null : item.getJob().equals(jobId.toString()))
                         && item.getOffset() == offset;
             }
 
@@ -139,7 +139,7 @@ public class RequestMatchers {
                 describeTransferRequest(
                         item.getBucketName(),
                         item.getObjectName(),
-                        item.getJob(),
+                        UUID.fromString(item.getJob()),
                         item.getOffset(),
                         mismatchDescription
                 );
@@ -159,7 +159,7 @@ public class RequestMatchers {
                 return
                         item.getBucketName().equals(bucket)
                         && item.getObjectName().equals(key)
-                        && (item.getJob() == null ? jobId == null : item.getJob().equals(jobId))
+                        && (item.getJob() == null ? jobId == null : item.getJob().equals(jobId.toString()))
                         && item.getOffset() == offset
                         && channelToString(item.getChannel()).equals(expectedContents);
             }
@@ -176,7 +176,7 @@ public class RequestMatchers {
                 describeTransferRequest(
                         item.getBucketName(),
                         item.getObjectName(),
-                        item.getJob(),
+                        UUID.fromString(item.getJob()),
                         item.getOffset(),
                         mismatchDescription
                 )

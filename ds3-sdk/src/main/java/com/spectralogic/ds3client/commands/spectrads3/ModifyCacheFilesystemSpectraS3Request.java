@@ -39,7 +39,8 @@ public class ModifyCacheFilesystemSpectraS3Request extends AbstractRequest {
     
     public ModifyCacheFilesystemSpectraS3Request(final String cacheFilesystem) {
         this.cacheFilesystem = cacheFilesystem;
-            }
+        
+    }
 
     public ModifyCacheFilesystemSpectraS3Request withAutoReclaimInitiateThreshold(final double autoReclaimInitiateThreshold) {
         this.autoReclaimInitiateThreshold = autoReclaimInitiateThreshold;

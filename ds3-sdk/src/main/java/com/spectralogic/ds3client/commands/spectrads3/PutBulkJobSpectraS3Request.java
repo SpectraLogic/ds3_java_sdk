@@ -41,6 +41,7 @@ public class PutBulkJobSpectraS3Request extends BulkRequest {
         super(bucketName, objects);
         
         this.getQueryParams().put("operation", "start_bulk_put");
+
     }
 
     public PutBulkJobSpectraS3Request withAggregating(final boolean aggregating) {
