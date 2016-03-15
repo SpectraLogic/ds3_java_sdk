@@ -69,37 +69,37 @@ public class RegisterDs3TargetSpectraS3Request extends AbstractRequest {
 
     public RegisterDs3TargetSpectraS3Request withAccessControlReplication(final Ds3TargetAccessControlReplication accessControlReplication) {
         this.accessControlReplication = accessControlReplication;
-        this.updateQueryParam("access_control_replication", accessControlReplication.toString());
+        this.updateQueryParam("access_control_replication", accessControlReplication);
         return this;
     }
 
     public RegisterDs3TargetSpectraS3Request withDataPathHttps(final boolean dataPathHttps) {
         this.dataPathHttps = dataPathHttps;
-        this.updateQueryParam("data_path_https", String.valueOf(dataPathHttps));
+        this.updateQueryParam("data_path_https", dataPathHttps);
         return this;
     }
 
     public RegisterDs3TargetSpectraS3Request withDataPathPort(final Integer dataPathPort) {
         this.dataPathPort = dataPathPort;
-        this.updateQueryParam("data_path_port", String.valueOf(dataPathPort));
+        this.updateQueryParam("data_path_port", dataPathPort);
         return this;
     }
 
     public RegisterDs3TargetSpectraS3Request withDataPathProxy(final String dataPathProxy) {
         this.dataPathProxy = dataPathProxy;
-        this.updateQueryParam("data_path_proxy", UrlEscapers.urlFragmentEscaper().escape(dataPathProxy).replace("+", "%2B"));
+        this.updateQueryParam("data_path_proxy", dataPathProxy);
         return this;
     }
 
     public RegisterDs3TargetSpectraS3Request withDataPathVerifyCertificate(final boolean dataPathVerifyCertificate) {
         this.dataPathVerifyCertificate = dataPathVerifyCertificate;
-        this.updateQueryParam("data_path_verify_certificate", String.valueOf(dataPathVerifyCertificate));
+        this.updateQueryParam("data_path_verify_certificate", dataPathVerifyCertificate);
         return this;
     }
 
     public RegisterDs3TargetSpectraS3Request withDefaultReadPreference(final TargetReadPreference defaultReadPreference) {
         this.defaultReadPreference = defaultReadPreference;
-        this.updateQueryParam("default_read_preference", defaultReadPreference.toString());
+        this.updateQueryParam("default_read_preference", defaultReadPreference);
         return this;
     }
 
@@ -117,7 +117,7 @@ public class RegisterDs3TargetSpectraS3Request extends AbstractRequest {
 
     public RegisterDs3TargetSpectraS3Request withReplicatedUserDefaultDataPolicy(final String replicatedUserDefaultDataPolicy) {
         this.replicatedUserDefaultDataPolicy = replicatedUserDefaultDataPolicy;
-        this.updateQueryParam("replicated_user_default_data_policy", UrlEscapers.urlFragmentEscaper().escape(replicatedUserDefaultDataPolicy).replace("+", "%2B"));
+        this.updateQueryParam("replicated_user_default_data_policy", replicatedUserDefaultDataPolicy);
         return this;
     }
 

@@ -53,7 +53,7 @@ public class ImportPoolSpectraS3Request extends AbstractRequest {
 
     public ImportPoolSpectraS3Request withConflictResolutionMode(final ImportConflictResolutionMode conflictResolutionMode) {
         this.conflictResolutionMode = conflictResolutionMode;
-        this.updateQueryParam("conflict_resolution_mode", conflictResolutionMode.toString());
+        this.updateQueryParam("conflict_resolution_mode", conflictResolutionMode);
         return this;
     }
 
@@ -65,7 +65,7 @@ public class ImportPoolSpectraS3Request extends AbstractRequest {
 
     public ImportPoolSpectraS3Request withPriority(final Priority priority) {
         this.priority = priority;
-        this.updateQueryParam("priority", priority.toString());
+        this.updateQueryParam("priority", priority);
         return this;
     }
 
@@ -83,13 +83,13 @@ public class ImportPoolSpectraS3Request extends AbstractRequest {
 
     public ImportPoolSpectraS3Request withVerifyDataAfterImport(final Priority verifyDataAfterImport) {
         this.verifyDataAfterImport = verifyDataAfterImport;
-        this.updateQueryParam("verify_data_after_import", verifyDataAfterImport.toString());
+        this.updateQueryParam("verify_data_after_import", verifyDataAfterImport);
         return this;
     }
 
     public ImportPoolSpectraS3Request withVerifyDataPriorToImport(final boolean verifyDataPriorToImport) {
         this.verifyDataPriorToImport = verifyDataPriorToImport;
-        this.updateQueryParam("verify_data_prior_to_import", String.valueOf(verifyDataPriorToImport));
+        this.updateQueryParam("verify_data_prior_to_import", verifyDataPriorToImport);
         return this;
     }
 

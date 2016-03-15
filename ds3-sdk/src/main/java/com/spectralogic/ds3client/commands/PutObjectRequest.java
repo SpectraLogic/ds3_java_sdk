@@ -88,7 +88,7 @@ public class PutObjectRequest extends AbstractRequest {
 
     public PutObjectRequest withOffset(final long offset) {
         this.offset = offset;
-        this.updateQueryParam("offset", Long.toString(offset));
+        this.updateQueryParam("offset", offset);
         return this;
     }
 

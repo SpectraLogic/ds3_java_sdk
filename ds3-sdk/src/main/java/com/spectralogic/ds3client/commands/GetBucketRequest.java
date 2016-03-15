@@ -47,19 +47,19 @@ public class GetBucketRequest extends AbstractRequest {
 
     public GetBucketRequest withMarker(final String marker) {
         this.marker = marker;
-        this.updateQueryParam("marker", UrlEscapers.urlFragmentEscaper().escape(marker).replace("+", "%2B"));
+        this.updateQueryParam("marker", marker);
         return this;
     }
 
     public GetBucketRequest withMaxKeys(final int maxKeys) {
         this.maxKeys = maxKeys;
-        this.updateQueryParam("max_keys", Integer.toString(maxKeys));
+        this.updateQueryParam("max_keys", maxKeys);
         return this;
     }
 
     public GetBucketRequest withPrefix(final String prefix) {
         this.prefix = prefix;
-        this.updateQueryParam("prefix", UrlEscapers.urlFragmentEscaper().escape(prefix).replace("+", "%2B"));
+        this.updateQueryParam("prefix", prefix);
         return this;
     }
 

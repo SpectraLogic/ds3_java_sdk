@@ -47,7 +47,7 @@ public class GetTapePartitionFailuresSpectraS3Request extends AbstractRequest {
 
     public GetTapePartitionFailuresSpectraS3Request withErrorMessage(final String errorMessage) {
         this.errorMessage = errorMessage;
-        this.updateQueryParam("error_message", UrlEscapers.urlFragmentEscaper().escape(errorMessage).replace("+", "%2B"));
+        this.updateQueryParam("error_message", errorMessage);
         return this;
     }
 
@@ -63,13 +63,13 @@ public class GetTapePartitionFailuresSpectraS3Request extends AbstractRequest {
 
     public GetTapePartitionFailuresSpectraS3Request withPageLength(final int pageLength) {
         this.pageLength = pageLength;
-        this.updateQueryParam("page_length", Integer.toString(pageLength));
+        this.updateQueryParam("page_length", pageLength);
         return this;
     }
 
     public GetTapePartitionFailuresSpectraS3Request withPageOffset(final int pageOffset) {
         this.pageOffset = pageOffset;
-        this.updateQueryParam("page_offset", Integer.toString(pageOffset));
+        this.updateQueryParam("page_offset", pageOffset);
         return this;
     }
 
@@ -87,7 +87,7 @@ public class GetTapePartitionFailuresSpectraS3Request extends AbstractRequest {
 
     public GetTapePartitionFailuresSpectraS3Request withType(final TapePartitionFailureType type) {
         this.type = type;
-        this.updateQueryParam("type", type.toString());
+        this.updateQueryParam("type", type);
         return this;
     }
 

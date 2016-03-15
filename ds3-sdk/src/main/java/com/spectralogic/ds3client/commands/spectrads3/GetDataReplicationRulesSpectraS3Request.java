@@ -71,13 +71,13 @@ public class GetDataReplicationRulesSpectraS3Request extends AbstractRequest {
 
     public GetDataReplicationRulesSpectraS3Request withPageLength(final int pageLength) {
         this.pageLength = pageLength;
-        this.updateQueryParam("page_length", Integer.toString(pageLength));
+        this.updateQueryParam("page_length", pageLength);
         return this;
     }
 
     public GetDataReplicationRulesSpectraS3Request withPageOffset(final int pageOffset) {
         this.pageOffset = pageOffset;
-        this.updateQueryParam("page_offset", Integer.toString(pageOffset));
+        this.updateQueryParam("page_offset", pageOffset);
         return this;
     }
 
@@ -89,13 +89,13 @@ public class GetDataReplicationRulesSpectraS3Request extends AbstractRequest {
 
     public GetDataReplicationRulesSpectraS3Request withState(final DataPersistenceRuleState state) {
         this.state = state;
-        this.updateQueryParam("state", state.toString());
+        this.updateQueryParam("state", state);
         return this;
     }
 
     public GetDataReplicationRulesSpectraS3Request withType(final DataReplicationRuleType type) {
         this.type = type;
-        this.updateQueryParam("type", type.toString());
+        this.updateQueryParam("type", type);
         return this;
     }
 

@@ -64,43 +64,43 @@ public class GetDs3TargetsSpectraS3Request extends AbstractRequest {
 
     public GetDs3TargetsSpectraS3Request withAdminAuthId(final String adminAuthId) {
         this.adminAuthId = adminAuthId;
-        this.updateQueryParam("admin_auth_id", UrlEscapers.urlFragmentEscaper().escape(adminAuthId).replace("+", "%2B"));
+        this.updateQueryParam("admin_auth_id", adminAuthId);
         return this;
     }
 
     public GetDs3TargetsSpectraS3Request withDataPathEndPoint(final String dataPathEndPoint) {
         this.dataPathEndPoint = dataPathEndPoint;
-        this.updateQueryParam("data_path_end_point", UrlEscapers.urlFragmentEscaper().escape(dataPathEndPoint).replace("+", "%2B"));
+        this.updateQueryParam("data_path_end_point", dataPathEndPoint);
         return this;
     }
 
     public GetDs3TargetsSpectraS3Request withDataPathHttps(final boolean dataPathHttps) {
         this.dataPathHttps = dataPathHttps;
-        this.updateQueryParam("data_path_https", String.valueOf(dataPathHttps));
+        this.updateQueryParam("data_path_https", dataPathHttps);
         return this;
     }
 
     public GetDs3TargetsSpectraS3Request withDataPathPort(final Integer dataPathPort) {
         this.dataPathPort = dataPathPort;
-        this.updateQueryParam("data_path_port", String.valueOf(dataPathPort));
+        this.updateQueryParam("data_path_port", dataPathPort);
         return this;
     }
 
     public GetDs3TargetsSpectraS3Request withDataPathProxy(final String dataPathProxy) {
         this.dataPathProxy = dataPathProxy;
-        this.updateQueryParam("data_path_proxy", UrlEscapers.urlFragmentEscaper().escape(dataPathProxy).replace("+", "%2B"));
+        this.updateQueryParam("data_path_proxy", dataPathProxy);
         return this;
     }
 
     public GetDs3TargetsSpectraS3Request withDataPathVerifyCertificate(final boolean dataPathVerifyCertificate) {
         this.dataPathVerifyCertificate = dataPathVerifyCertificate;
-        this.updateQueryParam("data_path_verify_certificate", String.valueOf(dataPathVerifyCertificate));
+        this.updateQueryParam("data_path_verify_certificate", dataPathVerifyCertificate);
         return this;
     }
 
     public GetDs3TargetsSpectraS3Request withDefaultReadPreference(final TargetReadPreference defaultReadPreference) {
         this.defaultReadPreference = defaultReadPreference;
-        this.updateQueryParam("default_read_preference", defaultReadPreference.toString());
+        this.updateQueryParam("default_read_preference", defaultReadPreference);
         return this;
     }
 
@@ -116,19 +116,19 @@ public class GetDs3TargetsSpectraS3Request extends AbstractRequest {
 
     public GetDs3TargetsSpectraS3Request withName(final String name) {
         this.name = name;
-        this.updateQueryParam("name", UrlEscapers.urlFragmentEscaper().escape(name).replace("+", "%2B"));
+        this.updateQueryParam("name", name);
         return this;
     }
 
     public GetDs3TargetsSpectraS3Request withPageLength(final int pageLength) {
         this.pageLength = pageLength;
-        this.updateQueryParam("page_length", Integer.toString(pageLength));
+        this.updateQueryParam("page_length", pageLength);
         return this;
     }
 
     public GetDs3TargetsSpectraS3Request withPageOffset(final int pageOffset) {
         this.pageOffset = pageOffset;
-        this.updateQueryParam("page_offset", Integer.toString(pageOffset));
+        this.updateQueryParam("page_offset", pageOffset);
         return this;
     }
 
@@ -140,13 +140,13 @@ public class GetDs3TargetsSpectraS3Request extends AbstractRequest {
 
     public GetDs3TargetsSpectraS3Request withQuiesced(final Quiesced quiesced) {
         this.quiesced = quiesced;
-        this.updateQueryParam("quiesced", quiesced.toString());
+        this.updateQueryParam("quiesced", quiesced);
         return this;
     }
 
     public GetDs3TargetsSpectraS3Request withState(final TargetState state) {
         this.state = state;
-        this.updateQueryParam("state", state.toString());
+        this.updateQueryParam("state", state);
         return this;
     }
 

@@ -37,7 +37,7 @@ public class ModifyTapePartitionSpectraS3Request extends AbstractRequest {
 
     public ModifyTapePartitionSpectraS3Request withQuiesced(final Quiesced quiesced) {
         this.quiesced = quiesced;
-        this.updateQueryParam("quiesced", quiesced.toString());
+        this.updateQueryParam("quiesced", quiesced);
         return this;
     }
 

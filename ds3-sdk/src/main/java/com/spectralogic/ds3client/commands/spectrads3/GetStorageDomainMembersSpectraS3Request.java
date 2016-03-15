@@ -64,13 +64,13 @@ public class GetStorageDomainMembersSpectraS3Request extends AbstractRequest {
 
     public GetStorageDomainMembersSpectraS3Request withPageLength(final int pageLength) {
         this.pageLength = pageLength;
-        this.updateQueryParam("page_length", Integer.toString(pageLength));
+        this.updateQueryParam("page_length", pageLength);
         return this;
     }
 
     public GetStorageDomainMembersSpectraS3Request withPageOffset(final int pageOffset) {
         this.pageOffset = pageOffset;
-        this.updateQueryParam("page_offset", Integer.toString(pageOffset));
+        this.updateQueryParam("page_offset", pageOffset);
         return this;
     }
 
@@ -88,7 +88,7 @@ public class GetStorageDomainMembersSpectraS3Request extends AbstractRequest {
 
     public GetStorageDomainMembersSpectraS3Request withState(final StorageDomainMemberState state) {
         this.state = state;
-        this.updateQueryParam("state", state.toString());
+        this.updateQueryParam("state", state);
         return this;
     }
 
@@ -106,13 +106,13 @@ public class GetStorageDomainMembersSpectraS3Request extends AbstractRequest {
 
     public GetStorageDomainMembersSpectraS3Request withTapeType(final TapeType tapeType) {
         this.tapeType = tapeType;
-        this.updateQueryParam("tape_type", tapeType.toString());
+        this.updateQueryParam("tape_type", tapeType);
         return this;
     }
 
     public GetStorageDomainMembersSpectraS3Request withWritePreference(final WritePreferenceLevel writePreference) {
         this.writePreference = writePreference;
-        this.updateQueryParam("write_preference", writePreference.toString());
+        this.updateQueryParam("write_preference", writePreference);
         return this;
     }
 

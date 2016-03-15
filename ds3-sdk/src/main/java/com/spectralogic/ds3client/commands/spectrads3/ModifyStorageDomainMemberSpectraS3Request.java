@@ -37,7 +37,7 @@ public class ModifyStorageDomainMemberSpectraS3Request extends AbstractRequest {
 
     public ModifyStorageDomainMemberSpectraS3Request withWritePreference(final WritePreferenceLevel writePreference) {
         this.writePreference = writePreference;
-        this.updateQueryParam("write_preference", writePreference.toString());
+        this.updateQueryParam("write_preference", writePreference);
         return this;
     }
 

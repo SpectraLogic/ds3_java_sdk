@@ -71,13 +71,13 @@ public class GetBucketAclsSpectraS3Request extends AbstractRequest {
 
     public GetBucketAclsSpectraS3Request withPageLength(final int pageLength) {
         this.pageLength = pageLength;
-        this.updateQueryParam("page_length", Integer.toString(pageLength));
+        this.updateQueryParam("page_length", pageLength);
         return this;
     }
 
     public GetBucketAclsSpectraS3Request withPageOffset(final int pageOffset) {
         this.pageOffset = pageOffset;
-        this.updateQueryParam("page_offset", Integer.toString(pageOffset));
+        this.updateQueryParam("page_offset", pageOffset);
         return this;
     }
 
@@ -89,7 +89,7 @@ public class GetBucketAclsSpectraS3Request extends AbstractRequest {
 
     public GetBucketAclsSpectraS3Request withPermission(final BucketAclPermission permission) {
         this.permission = permission;
-        this.updateQueryParam("permission", permission.toString());
+        this.updateQueryParam("permission", permission);
         return this;
     }
 

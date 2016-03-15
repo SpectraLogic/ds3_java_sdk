@@ -40,19 +40,19 @@ public class PutPoolFailureNotificationRegistrationSpectraS3Request extends Abst
 
     public PutPoolFailureNotificationRegistrationSpectraS3Request withFormat(final HttpResponseFormatType format) {
         this.format = format;
-        this.updateQueryParam("format", format.toString());
+        this.updateQueryParam("format", format);
         return this;
     }
 
     public PutPoolFailureNotificationRegistrationSpectraS3Request withNamingConvention(final NamingConventionType namingConvention) {
         this.namingConvention = namingConvention;
-        this.updateQueryParam("naming_convention", namingConvention.toString());
+        this.updateQueryParam("naming_convention", namingConvention);
         return this;
     }
 
     public PutPoolFailureNotificationRegistrationSpectraS3Request withNotificationHttpMethod(final RequestType notificationHttpMethod) {
         this.notificationHttpMethod = notificationHttpMethod;
-        this.updateQueryParam("notification_http_method", notificationHttpMethod.toString());
+        this.updateQueryParam("notification_http_method", notificationHttpMethod);
         return this;
     }
 

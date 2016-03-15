@@ -45,13 +45,13 @@ public class ListMultiPartUploadPartsRequest extends AbstractRequest {
 
     public ListMultiPartUploadPartsRequest withMaxParts(final int maxParts) {
         this.maxParts = maxParts;
-        this.updateQueryParam("max_parts", Integer.toString(maxParts));
+        this.updateQueryParam("max_parts", maxParts);
         return this;
     }
 
     public ListMultiPartUploadPartsRequest withPartNumberMarker(final Integer partNumberMarker) {
         this.partNumberMarker = partNumberMarker;
-        this.updateQueryParam("part_number_marker", String.valueOf(partNumberMarker));
+        this.updateQueryParam("part_number_marker", partNumberMarker);
         return this;
     }
 
