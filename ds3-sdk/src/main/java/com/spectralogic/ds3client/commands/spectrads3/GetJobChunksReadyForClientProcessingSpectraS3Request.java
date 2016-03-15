@@ -37,7 +37,7 @@ public class GetJobChunksReadyForClientProcessingSpectraS3Request extends Abstra
 
     public GetJobChunksReadyForClientProcessingSpectraS3Request withPreferredNumberOfChunks(final int preferredNumberOfChunks) {
         this.preferredNumberOfChunks = preferredNumberOfChunks;
-        this.updateQueryParam("preferred_number_of_chunks", Integer.toString(preferredNumberOfChunks));
+        this.updateQueryParam("preferred_number_of_chunks", preferredNumberOfChunks);
         return this;
     }
 

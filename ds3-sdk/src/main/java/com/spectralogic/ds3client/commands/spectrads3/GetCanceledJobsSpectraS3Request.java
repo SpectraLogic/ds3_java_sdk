@@ -66,7 +66,7 @@ public class GetCanceledJobsSpectraS3Request extends AbstractRequest {
 
     public GetCanceledJobsSpectraS3Request withChunkClientProcessingOrderGuarantee(final JobChunkClientProcessingOrderGuarantee chunkClientProcessingOrderGuarantee) {
         this.chunkClientProcessingOrderGuarantee = chunkClientProcessingOrderGuarantee;
-        this.updateQueryParam("chunk_client_processing_order_guarantee", chunkClientProcessingOrderGuarantee.toString());
+        this.updateQueryParam("chunk_client_processing_order_guarantee", chunkClientProcessingOrderGuarantee);
         return this;
     }
 
@@ -82,55 +82,55 @@ public class GetCanceledJobsSpectraS3Request extends AbstractRequest {
 
     public GetCanceledJobsSpectraS3Request withName(final String name) {
         this.name = name;
-        this.updateQueryParam("name", UrlEscapers.urlFragmentEscaper().escape(name).replace("+", "%2B"));
+        this.updateQueryParam("name", name);
         return this;
     }
 
     public GetCanceledJobsSpectraS3Request withPageLength(final int pageLength) {
         this.pageLength = pageLength;
-        this.updateQueryParam("page_length", Integer.toString(pageLength));
+        this.updateQueryParam("page_length", pageLength);
         return this;
     }
 
     public GetCanceledJobsSpectraS3Request withPageOffset(final int pageOffset) {
         this.pageOffset = pageOffset;
-        this.updateQueryParam("page_offset", Integer.toString(pageOffset));
+        this.updateQueryParam("page_offset", pageOffset);
         return this;
     }
 
     public GetCanceledJobsSpectraS3Request withPageStartMarker(final UUID pageStartMarker) {
         this.pageStartMarker = pageStartMarker;
-        this.updateQueryParam("page_start_marker", pageStartMarker.toString());
+        this.updateQueryParam("page_start_marker", pageStartMarker);
         return this;
     }
 
     public GetCanceledJobsSpectraS3Request withPriority(final Priority priority) {
         this.priority = priority;
-        this.updateQueryParam("priority", priority.toString());
+        this.updateQueryParam("priority", priority);
         return this;
     }
 
     public GetCanceledJobsSpectraS3Request withRechunked(final Date rechunked) {
         this.rechunked = rechunked;
-        this.updateQueryParam("rechunked", Long.toString(rechunked.getTime()));
+        this.updateQueryParam("rechunked", rechunked);
         return this;
     }
 
     public GetCanceledJobsSpectraS3Request withRequestType(final JobRequestType requestType) {
         this.requestType = requestType;
-        this.updateQueryParam("request_type", requestType.toString());
+        this.updateQueryParam("request_type", requestType);
         return this;
     }
 
     public GetCanceledJobsSpectraS3Request withTruncated(final boolean truncated) {
         this.truncated = truncated;
-        this.updateQueryParam("truncated", String.valueOf(truncated));
+        this.updateQueryParam("truncated", truncated);
         return this;
     }
 
     public GetCanceledJobsSpectraS3Request withUserId(final UUID userId) {
         this.userId = userId;
-        this.updateQueryParam("user_id", userId.toString());
+        this.updateQueryParam("user_id", userId);
         return this;
     }
 

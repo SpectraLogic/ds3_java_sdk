@@ -55,25 +55,25 @@ public class GetStorageDomainsSpectraS3Request extends AbstractRequest {
 
     public GetStorageDomainsSpectraS3Request withAutoEjectUponCron(final String autoEjectUponCron) {
         this.autoEjectUponCron = autoEjectUponCron;
-        this.updateQueryParam("auto_eject_upon_cron", UrlEscapers.urlFragmentEscaper().escape(autoEjectUponCron).replace("+", "%2B"));
+        this.updateQueryParam("auto_eject_upon_cron", autoEjectUponCron);
         return this;
     }
 
     public GetStorageDomainsSpectraS3Request withAutoEjectUponJobCancellation(final boolean autoEjectUponJobCancellation) {
         this.autoEjectUponJobCancellation = autoEjectUponJobCancellation;
-        this.updateQueryParam("auto_eject_upon_job_cancellation", String.valueOf(autoEjectUponJobCancellation));
+        this.updateQueryParam("auto_eject_upon_job_cancellation", autoEjectUponJobCancellation);
         return this;
     }
 
     public GetStorageDomainsSpectraS3Request withAutoEjectUponJobCompletion(final boolean autoEjectUponJobCompletion) {
         this.autoEjectUponJobCompletion = autoEjectUponJobCompletion;
-        this.updateQueryParam("auto_eject_upon_job_completion", String.valueOf(autoEjectUponJobCompletion));
+        this.updateQueryParam("auto_eject_upon_job_completion", autoEjectUponJobCompletion);
         return this;
     }
 
     public GetStorageDomainsSpectraS3Request withAutoEjectUponMediaFull(final boolean autoEjectUponMediaFull) {
         this.autoEjectUponMediaFull = autoEjectUponMediaFull;
-        this.updateQueryParam("auto_eject_upon_media_full", String.valueOf(autoEjectUponMediaFull));
+        this.updateQueryParam("auto_eject_upon_media_full", autoEjectUponMediaFull);
         return this;
     }
 
@@ -89,37 +89,37 @@ public class GetStorageDomainsSpectraS3Request extends AbstractRequest {
 
     public GetStorageDomainsSpectraS3Request withMediaEjectionAllowed(final boolean mediaEjectionAllowed) {
         this.mediaEjectionAllowed = mediaEjectionAllowed;
-        this.updateQueryParam("media_ejection_allowed", String.valueOf(mediaEjectionAllowed));
+        this.updateQueryParam("media_ejection_allowed", mediaEjectionAllowed);
         return this;
     }
 
     public GetStorageDomainsSpectraS3Request withName(final String name) {
         this.name = name;
-        this.updateQueryParam("name", UrlEscapers.urlFragmentEscaper().escape(name).replace("+", "%2B"));
+        this.updateQueryParam("name", name);
         return this;
     }
 
     public GetStorageDomainsSpectraS3Request withPageLength(final int pageLength) {
         this.pageLength = pageLength;
-        this.updateQueryParam("page_length", Integer.toString(pageLength));
+        this.updateQueryParam("page_length", pageLength);
         return this;
     }
 
     public GetStorageDomainsSpectraS3Request withPageOffset(final int pageOffset) {
         this.pageOffset = pageOffset;
-        this.updateQueryParam("page_offset", Integer.toString(pageOffset));
+        this.updateQueryParam("page_offset", pageOffset);
         return this;
     }
 
     public GetStorageDomainsSpectraS3Request withPageStartMarker(final UUID pageStartMarker) {
         this.pageStartMarker = pageStartMarker;
-        this.updateQueryParam("page_start_marker", pageStartMarker.toString());
+        this.updateQueryParam("page_start_marker", pageStartMarker);
         return this;
     }
 
     public GetStorageDomainsSpectraS3Request withWriteOptimization(final WriteOptimization writeOptimization) {
         this.writeOptimization = writeOptimization;
-        this.updateQueryParam("write_optimization", writeOptimization.toString());
+        this.updateQueryParam("write_optimization", writeOptimization);
         return this;
     }
 

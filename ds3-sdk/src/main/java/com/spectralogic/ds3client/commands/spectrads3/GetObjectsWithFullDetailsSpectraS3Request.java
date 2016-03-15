@@ -62,7 +62,7 @@ public class GetObjectsWithFullDetailsSpectraS3Request extends AbstractRequest {
 
     public GetObjectsWithFullDetailsSpectraS3Request withFolder(final String folder) {
         this.folder = folder;
-        this.updateQueryParam("folder", UrlEscapers.urlFragmentEscaper().escape(folder).replace("+", "%2B"));
+        this.updateQueryParam("folder", folder);
         return this;
     }
 
@@ -88,43 +88,43 @@ public class GetObjectsWithFullDetailsSpectraS3Request extends AbstractRequest {
 
     public GetObjectsWithFullDetailsSpectraS3Request withLatest(final boolean latest) {
         this.latest = latest;
-        this.updateQueryParam("latest", String.valueOf(latest));
+        this.updateQueryParam("latest", latest);
         return this;
     }
 
     public GetObjectsWithFullDetailsSpectraS3Request withName(final String name) {
         this.name = name;
-        this.updateQueryParam("name", UrlEscapers.urlFragmentEscaper().escape(name).replace("+", "%2B"));
+        this.updateQueryParam("name", name);
         return this;
     }
 
     public GetObjectsWithFullDetailsSpectraS3Request withPageLength(final int pageLength) {
         this.pageLength = pageLength;
-        this.updateQueryParam("page_length", Integer.toString(pageLength));
+        this.updateQueryParam("page_length", pageLength);
         return this;
     }
 
     public GetObjectsWithFullDetailsSpectraS3Request withPageOffset(final int pageOffset) {
         this.pageOffset = pageOffset;
-        this.updateQueryParam("page_offset", Integer.toString(pageOffset));
+        this.updateQueryParam("page_offset", pageOffset);
         return this;
     }
 
     public GetObjectsWithFullDetailsSpectraS3Request withPageStartMarker(final UUID pageStartMarker) {
         this.pageStartMarker = pageStartMarker;
-        this.updateQueryParam("page_start_marker", pageStartMarker.toString());
+        this.updateQueryParam("page_start_marker", pageStartMarker);
         return this;
     }
 
     public GetObjectsWithFullDetailsSpectraS3Request withType(final S3ObjectType type) {
         this.type = type;
-        this.updateQueryParam("type", type.toString());
+        this.updateQueryParam("type", type);
         return this;
     }
 
     public GetObjectsWithFullDetailsSpectraS3Request withVersion(final long version) {
         this.version = version;
-        this.updateQueryParam("version", Long.toString(version));
+        this.updateQueryParam("version", version);
         return this;
     }
 

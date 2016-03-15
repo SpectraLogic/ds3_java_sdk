@@ -42,7 +42,7 @@ public class PutPoolStorageDomainMemberSpectraS3Request extends AbstractRequest 
 
     public PutPoolStorageDomainMemberSpectraS3Request withWritePreference(final WritePreferenceLevel writePreference) {
         this.writePreference = writePreference;
-        this.updateQueryParam("write_preference", writePreference.toString());
+        this.updateQueryParam("write_preference", writePreference);
         return this;
     }
 

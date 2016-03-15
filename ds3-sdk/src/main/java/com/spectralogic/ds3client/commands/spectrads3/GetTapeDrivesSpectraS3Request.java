@@ -60,43 +60,43 @@ public class GetTapeDrivesSpectraS3Request extends AbstractRequest {
 
     public GetTapeDrivesSpectraS3Request withPageLength(final int pageLength) {
         this.pageLength = pageLength;
-        this.updateQueryParam("page_length", Integer.toString(pageLength));
+        this.updateQueryParam("page_length", pageLength);
         return this;
     }
 
     public GetTapeDrivesSpectraS3Request withPageOffset(final int pageOffset) {
         this.pageOffset = pageOffset;
-        this.updateQueryParam("page_offset", Integer.toString(pageOffset));
+        this.updateQueryParam("page_offset", pageOffset);
         return this;
     }
 
     public GetTapeDrivesSpectraS3Request withPageStartMarker(final UUID pageStartMarker) {
         this.pageStartMarker = pageStartMarker;
-        this.updateQueryParam("page_start_marker", pageStartMarker.toString());
+        this.updateQueryParam("page_start_marker", pageStartMarker);
         return this;
     }
 
     public GetTapeDrivesSpectraS3Request withPartitionId(final UUID partitionId) {
         this.partitionId = partitionId;
-        this.updateQueryParam("partition_id", partitionId.toString());
+        this.updateQueryParam("partition_id", partitionId);
         return this;
     }
 
     public GetTapeDrivesSpectraS3Request withSerialNumber(final String serialNumber) {
         this.serialNumber = serialNumber;
-        this.updateQueryParam("serial_number", UrlEscapers.urlFragmentEscaper().escape(serialNumber).replace("+", "%2B"));
+        this.updateQueryParam("serial_number", serialNumber);
         return this;
     }
 
     public GetTapeDrivesSpectraS3Request withState(final TapeDriveState state) {
         this.state = state;
-        this.updateQueryParam("state", state.toString());
+        this.updateQueryParam("state", state);
         return this;
     }
 
     public GetTapeDrivesSpectraS3Request withType(final TapeDriveType type) {
         this.type = type;
-        this.updateQueryParam("type", type.toString());
+        this.updateQueryParam("type", type);
         return this;
     }
 

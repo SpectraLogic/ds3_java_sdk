@@ -39,13 +39,13 @@ public class ModifyBucketSpectraS3Request extends AbstractRequest {
 
     public ModifyBucketSpectraS3Request withDataPolicyId(final UUID dataPolicyId) {
         this.dataPolicyId = dataPolicyId;
-        this.updateQueryParam("data_policy_id", dataPolicyId.toString());
+        this.updateQueryParam("data_policy_id", dataPolicyId);
         return this;
     }
 
     public ModifyBucketSpectraS3Request withUserId(final UUID userId) {
         this.userId = userId;
-        this.updateQueryParam("user_id", userId.toString());
+        this.updateQueryParam("user_id", userId);
         return this;
     }
 

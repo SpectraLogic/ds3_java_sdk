@@ -43,19 +43,19 @@ public class ModifyDataPersistenceRuleSpectraS3Request extends AbstractRequest {
 
     public ModifyDataPersistenceRuleSpectraS3Request withIsolationLevel(final DataIsolationLevel isolationLevel) {
         this.isolationLevel = isolationLevel;
-        this.updateQueryParam("isolation_level", isolationLevel.toString());
+        this.updateQueryParam("isolation_level", isolationLevel);
         return this;
     }
 
     public ModifyDataPersistenceRuleSpectraS3Request withMinimumDaysToRetain(final Integer minimumDaysToRetain) {
         this.minimumDaysToRetain = minimumDaysToRetain;
-        this.updateQueryParam("minimum_days_to_retain", String.valueOf(minimumDaysToRetain));
+        this.updateQueryParam("minimum_days_to_retain", minimumDaysToRetain);
         return this;
     }
 
     public ModifyDataPersistenceRuleSpectraS3Request withType(final DataPersistenceRuleType type) {
         this.type = type;
-        this.updateQueryParam("type", type.toString());
+        this.updateQueryParam("type", type);
         return this;
     }
 

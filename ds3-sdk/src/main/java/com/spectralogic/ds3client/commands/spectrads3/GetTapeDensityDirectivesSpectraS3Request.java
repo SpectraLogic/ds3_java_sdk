@@ -47,7 +47,7 @@ public class GetTapeDensityDirectivesSpectraS3Request extends AbstractRequest {
 
     public GetTapeDensityDirectivesSpectraS3Request withDensity(final TapeDriveType density) {
         this.density = density;
-        this.updateQueryParam("density", density.toString());
+        this.updateQueryParam("density", density);
         return this;
     }
 
@@ -63,31 +63,31 @@ public class GetTapeDensityDirectivesSpectraS3Request extends AbstractRequest {
 
     public GetTapeDensityDirectivesSpectraS3Request withPageLength(final int pageLength) {
         this.pageLength = pageLength;
-        this.updateQueryParam("page_length", Integer.toString(pageLength));
+        this.updateQueryParam("page_length", pageLength);
         return this;
     }
 
     public GetTapeDensityDirectivesSpectraS3Request withPageOffset(final int pageOffset) {
         this.pageOffset = pageOffset;
-        this.updateQueryParam("page_offset", Integer.toString(pageOffset));
+        this.updateQueryParam("page_offset", pageOffset);
         return this;
     }
 
     public GetTapeDensityDirectivesSpectraS3Request withPageStartMarker(final UUID pageStartMarker) {
         this.pageStartMarker = pageStartMarker;
-        this.updateQueryParam("page_start_marker", pageStartMarker.toString());
+        this.updateQueryParam("page_start_marker", pageStartMarker);
         return this;
     }
 
     public GetTapeDensityDirectivesSpectraS3Request withPartitionId(final UUID partitionId) {
         this.partitionId = partitionId;
-        this.updateQueryParam("partition_id", partitionId.toString());
+        this.updateQueryParam("partition_id", partitionId);
         return this;
     }
 
     public GetTapeDensityDirectivesSpectraS3Request withTapeType(final TapeType tapeType) {
         this.tapeType = tapeType;
-        this.updateQueryParam("tape_type", tapeType.toString());
+        this.updateQueryParam("tape_type", tapeType);
         return this;
     }
 

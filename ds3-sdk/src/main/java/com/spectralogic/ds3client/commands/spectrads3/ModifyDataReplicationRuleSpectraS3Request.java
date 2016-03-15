@@ -39,13 +39,13 @@ public class ModifyDataReplicationRuleSpectraS3Request extends AbstractRequest {
 
     public ModifyDataReplicationRuleSpectraS3Request withDs3TargetDataPolicy(final String ds3TargetDataPolicy) {
         this.ds3TargetDataPolicy = ds3TargetDataPolicy;
-        this.updateQueryParam("ds3_target_data_policy", UrlEscapers.urlFragmentEscaper().escape(ds3TargetDataPolicy).replace("+", "%2B"));
+        this.updateQueryParam("ds3_target_data_policy", ds3TargetDataPolicy);
         return this;
     }
 
     public ModifyDataReplicationRuleSpectraS3Request withType(final DataReplicationRuleType type) {
         this.type = type;
-        this.updateQueryParam("type", type.toString());
+        this.updateQueryParam("type", type);
         return this;
     }
 

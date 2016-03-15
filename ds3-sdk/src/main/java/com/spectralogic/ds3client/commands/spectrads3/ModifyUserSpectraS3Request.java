@@ -41,19 +41,19 @@ public class ModifyUserSpectraS3Request extends AbstractRequest {
 
     public ModifyUserSpectraS3Request withDefaultDataPolicyId(final UUID defaultDataPolicyId) {
         this.defaultDataPolicyId = defaultDataPolicyId;
-        this.updateQueryParam("default_data_policy_id", defaultDataPolicyId.toString());
+        this.updateQueryParam("default_data_policy_id", defaultDataPolicyId);
         return this;
     }
 
     public ModifyUserSpectraS3Request withName(final String name) {
         this.name = name;
-        this.updateQueryParam("name", UrlEscapers.urlFragmentEscaper().escape(name).replace("+", "%2B"));
+        this.updateQueryParam("name", name);
         return this;
     }
 
     public ModifyUserSpectraS3Request withSecretKey(final String secretKey) {
         this.secretKey = secretKey;
-        this.updateQueryParam("secret_key", UrlEscapers.urlFragmentEscaper().escape(secretKey).replace("+", "%2B"));
+        this.updateQueryParam("secret_key", secretKey);
         return this;
     }
 

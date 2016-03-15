@@ -47,7 +47,7 @@ public class GetStorageDomainFailuresSpectraS3Request extends AbstractRequest {
 
     public GetStorageDomainFailuresSpectraS3Request withErrorMessage(final String errorMessage) {
         this.errorMessage = errorMessage;
-        this.updateQueryParam("error_message", UrlEscapers.urlFragmentEscaper().escape(errorMessage).replace("+", "%2B"));
+        this.updateQueryParam("error_message", errorMessage);
         return this;
     }
 
@@ -63,31 +63,31 @@ public class GetStorageDomainFailuresSpectraS3Request extends AbstractRequest {
 
     public GetStorageDomainFailuresSpectraS3Request withPageLength(final int pageLength) {
         this.pageLength = pageLength;
-        this.updateQueryParam("page_length", Integer.toString(pageLength));
+        this.updateQueryParam("page_length", pageLength);
         return this;
     }
 
     public GetStorageDomainFailuresSpectraS3Request withPageOffset(final int pageOffset) {
         this.pageOffset = pageOffset;
-        this.updateQueryParam("page_offset", Integer.toString(pageOffset));
+        this.updateQueryParam("page_offset", pageOffset);
         return this;
     }
 
     public GetStorageDomainFailuresSpectraS3Request withPageStartMarker(final UUID pageStartMarker) {
         this.pageStartMarker = pageStartMarker;
-        this.updateQueryParam("page_start_marker", pageStartMarker.toString());
+        this.updateQueryParam("page_start_marker", pageStartMarker);
         return this;
     }
 
     public GetStorageDomainFailuresSpectraS3Request withStorageDomainId(final UUID storageDomainId) {
         this.storageDomainId = storageDomainId;
-        this.updateQueryParam("storage_domain_id", storageDomainId.toString());
+        this.updateQueryParam("storage_domain_id", storageDomainId);
         return this;
     }
 
     public GetStorageDomainFailuresSpectraS3Request withType(final StorageDomainFailureType type) {
         this.type = type;
-        this.updateQueryParam("type", type.toString());
+        this.updateQueryParam("type", type);
         return this;
     }
 

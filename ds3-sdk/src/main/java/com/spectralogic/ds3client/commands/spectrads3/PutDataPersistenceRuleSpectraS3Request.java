@@ -52,7 +52,7 @@ public class PutDataPersistenceRuleSpectraS3Request extends AbstractRequest {
 
     public PutDataPersistenceRuleSpectraS3Request withMinimumDaysToRetain(final Integer minimumDaysToRetain) {
         this.minimumDaysToRetain = minimumDaysToRetain;
-        this.updateQueryParam("minimum_days_to_retain", String.valueOf(minimumDaysToRetain));
+        this.updateQueryParam("minimum_days_to_retain", minimumDaysToRetain);
         return this;
     }
 
