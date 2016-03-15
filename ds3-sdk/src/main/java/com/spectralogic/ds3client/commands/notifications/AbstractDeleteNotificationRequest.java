@@ -29,6 +29,11 @@ public abstract class AbstractDeleteNotificationRequest extends AbstractRequest 
         this.notificationId = notificationId;
     }
 
+    public AbstractDeleteNotificationRequest(final UUID notificationId) {
+        super();
+        this.notificationId = notificationId.toString();
+    }
+
     public String getNotificationId() {
         return this.notificationId;
     }

@@ -29,6 +29,11 @@ public abstract class AbstractGetNotificationRequest extends AbstractRequest {
         this.notificationId = notificationId;
     }
 
+    public AbstractGetNotificationRequest(final UUID notificationId) {
+        super();
+        this.notificationId = notificationId.toString();
+    }
+
     @Override
     public HttpVerb getVerb() {
         return HttpVerb.GET;
