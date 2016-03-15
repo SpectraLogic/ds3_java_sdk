@@ -33,7 +33,8 @@ public class ModifyTapePartitionSpectraS3Request extends AbstractRequest {
     
     public ModifyTapePartitionSpectraS3Request(final String tapePartition) {
         this.tapePartition = tapePartition;
-            }
+        
+    }
 
     public ModifyTapePartitionSpectraS3Request withQuiesced(final Quiesced quiesced) {
         this.quiesced = quiesced;

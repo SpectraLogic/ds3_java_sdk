@@ -35,7 +35,8 @@ public class ModifyBucketSpectraS3Request extends AbstractRequest {
     
     public ModifyBucketSpectraS3Request(final String bucketName) {
         this.bucketName = bucketName;
-            }
+        
+    }
 
     public ModifyBucketSpectraS3Request withDataPolicyId(final UUID dataPolicyId) {
         this.dataPolicyId = dataPolicyId.toString();

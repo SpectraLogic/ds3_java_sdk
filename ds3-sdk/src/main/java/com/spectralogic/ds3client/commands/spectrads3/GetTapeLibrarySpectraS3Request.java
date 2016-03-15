@@ -31,11 +31,13 @@ public class GetTapeLibrarySpectraS3Request extends AbstractRequest {
     
     public GetTapeLibrarySpectraS3Request(final UUID tapeLibraryId) {
         this.tapeLibraryId = tapeLibraryId.toString();
-            }
+        
+    }
 
     public GetTapeLibrarySpectraS3Request(final String tapeLibraryId) {
         this.tapeLibraryId = tapeLibraryId;
-            }
+        
+    }
 
 
     @Override

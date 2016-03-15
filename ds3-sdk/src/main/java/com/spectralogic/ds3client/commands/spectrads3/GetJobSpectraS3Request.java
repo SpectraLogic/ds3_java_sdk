@@ -31,11 +31,13 @@ public class GetJobSpectraS3Request extends AbstractRequest {
     
     public GetJobSpectraS3Request(final UUID jobId) {
         this.jobId = jobId.toString();
-            }
+        
+    }
 
     public GetJobSpectraS3Request(final String jobId) {
         this.jobId = jobId;
-            }
+        
+    }
 
 
     @Override

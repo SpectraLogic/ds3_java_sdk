@@ -51,7 +51,8 @@ public class GetStorageDomainsSpectraS3Request extends AbstractRequest {
     // Constructor
     
     public GetStorageDomainsSpectraS3Request() {
-            }
+        
+    }
 
     public GetStorageDomainsSpectraS3Request withAutoEjectUponCron(final String autoEjectUponCron) {
         this.autoEjectUponCron = autoEjectUponCron;

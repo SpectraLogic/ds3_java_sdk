@@ -52,6 +52,7 @@ public class GetObjectRequest extends AbstractRequest {
         this.objectName = objectName;
         this.channel = channel;
         
+
     }
 
     public GetObjectRequest(final String bucketName, final String objectName, final WritableByteChannel channel, final UUID job, final long offset) {
@@ -60,7 +61,8 @@ public class GetObjectRequest extends AbstractRequest {
         this.channel = channel;
         this.job = job.toString();
         this.offset = offset;
-                this.getQueryParams().put("job", job.toString());
+        
+        this.getQueryParams().put("job", job.toString());
         this.getQueryParams().put("offset", Long.toString(offset));
 
     }
@@ -71,7 +73,8 @@ public class GetObjectRequest extends AbstractRequest {
         this.channel = channel;
         this.job = job;
         this.offset = offset;
-                this.getQueryParams().put("job", UrlEscapers.urlFragmentEscaper().escape(job).replace("+", "%2B"));
+        
+        this.getQueryParams().put("job", UrlEscapers.urlFragmentEscaper().escape(job).replace("+", "%2B"));
         this.getQueryParams().put("offset", Long.toString(offset));
 
     }

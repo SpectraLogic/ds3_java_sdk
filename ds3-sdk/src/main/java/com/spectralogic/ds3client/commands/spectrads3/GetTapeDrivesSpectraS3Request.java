@@ -46,7 +46,8 @@ public class GetTapeDrivesSpectraS3Request extends AbstractRequest {
     // Constructor
     
     public GetTapeDrivesSpectraS3Request() {
-            }
+        
+    }
 
     public GetTapeDrivesSpectraS3Request withLastPage(final boolean lastPage) {
         this.lastPage = lastPage;

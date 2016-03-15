@@ -31,12 +31,14 @@ public class CancelJobSpectraS3Request extends AbstractRequest {
     
     public CancelJobSpectraS3Request(final UUID jobId) {
         this.jobId = jobId.toString();
-                this.getQueryParams().put("force", null);
+        
+        this.getQueryParams().put("force", null);
     }
 
     public CancelJobSpectraS3Request(final String jobId) {
         this.jobId = jobId;
-                this.getQueryParams().put("force", null);
+        
+        this.getQueryParams().put("force", null);
     }
 
 

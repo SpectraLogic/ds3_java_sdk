@@ -35,7 +35,8 @@ public class PutBucketSpectraS3Request extends AbstractRequest {
     
     public PutBucketSpectraS3Request(final String name) {
         this.name = name;
-                this.getQueryParams().put("name", UrlEscapers.urlFragmentEscaper().escape(name).replace("+", "%2B"));
+        
+        this.getQueryParams().put("name", UrlEscapers.urlFragmentEscaper().escape(name).replace("+", "%2B"));
     }
 
     public PutBucketSpectraS3Request withDataPolicyId(final UUID dataPolicyId) {

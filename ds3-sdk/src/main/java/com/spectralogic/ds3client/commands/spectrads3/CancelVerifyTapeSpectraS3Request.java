@@ -33,12 +33,14 @@ public class CancelVerifyTapeSpectraS3Request extends AbstractRequest {
         this.tapeId = tapeId.toString();
         
         this.getQueryParams().put("operation", "cancel_verify");
+
     }
 
     public CancelVerifyTapeSpectraS3Request(final String tapeId) {
         this.tapeId = tapeId;
         
         this.getQueryParams().put("operation", "cancel_verify");
+
     }
 
 

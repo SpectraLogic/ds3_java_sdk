@@ -30,7 +30,8 @@ public class DeleteDs3TargetSpectraS3Request extends AbstractRequest {
     
     public DeleteDs3TargetSpectraS3Request(final String ds3Target) {
         this.ds3Target = ds3Target;
-            }
+        
+    }
 
 
     @Override

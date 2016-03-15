@@ -45,7 +45,8 @@ public class ModifyDs3TargetUserMappingSpectraS3Request extends AbstractRequest 
     
     public ModifyDs3TargetUserMappingSpectraS3Request(final String ds3TargetUserMapping) {
         this.ds3TargetUserMapping = ds3TargetUserMapping;
-            }
+        
+    }
 
     public ModifyDs3TargetUserMappingSpectraS3Request withAuthId(final String authId) {
         this.authId = authId;

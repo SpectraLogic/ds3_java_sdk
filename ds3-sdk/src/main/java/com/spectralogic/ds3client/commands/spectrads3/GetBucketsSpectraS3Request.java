@@ -42,7 +42,8 @@ public class GetBucketsSpectraS3Request extends AbstractRequest {
     // Constructor
     
     public GetBucketsSpectraS3Request() {
-            }
+        
+    }
 
     public GetBucketsSpectraS3Request withDataPolicyId(final UUID dataPolicyId) {
         this.dataPolicyId = dataPolicyId.toString();

@@ -37,12 +37,14 @@ public class EjectTapeSpectraS3Request extends AbstractRequest {
         this.tapeId = tapeId.toString();
         
         this.getQueryParams().put("operation", "eject");
+
     }
 
     public EjectTapeSpectraS3Request(final String tapeId) {
         this.tapeId = tapeId;
         
         this.getQueryParams().put("operation", "eject");
+
     }
 
     public EjectTapeSpectraS3Request withEjectLabel(final String ejectLabel) {

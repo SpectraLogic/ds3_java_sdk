@@ -45,6 +45,7 @@ public class GetPhysicalPlacementForObjectsWithFullDetailsSpectraS3Request exten
         this.objects = objects;
         
         this.getQueryParams().put("operation", "get_physical_placement");
+
         this.getQueryParams().put("full_details", null);
     }
 

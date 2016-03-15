@@ -45,7 +45,8 @@ public class PutDataPersistenceRuleSpectraS3Request extends AbstractRequest {
         this.isolationLevel = isolationLevel;
         this.storageDomainId = storageDomainId.toString();
         this.type = type;
-                this.getQueryParams().put("data_policy_id", dataPolicyId.toString());
+        
+        this.getQueryParams().put("data_policy_id", dataPolicyId.toString());
         this.getQueryParams().put("isolation_level", isolationLevel.toString());
         this.getQueryParams().put("storage_domain_id", storageDomainId.toString());
         this.getQueryParams().put("type", type.toString());
@@ -56,7 +57,8 @@ public class PutDataPersistenceRuleSpectraS3Request extends AbstractRequest {
         this.isolationLevel = isolationLevel;
         this.storageDomainId = storageDomainId;
         this.type = type;
-                this.getQueryParams().put("data_policy_id", UrlEscapers.urlFragmentEscaper().escape(dataPolicyId).replace("+", "%2B"));
+        
+        this.getQueryParams().put("data_policy_id", UrlEscapers.urlFragmentEscaper().escape(dataPolicyId).replace("+", "%2B"));
         this.getQueryParams().put("isolation_level", isolationLevel.toString());
         this.getQueryParams().put("storage_domain_id", UrlEscapers.urlFragmentEscaper().escape(storageDomainId).replace("+", "%2B"));
         this.getQueryParams().put("type", type.toString());

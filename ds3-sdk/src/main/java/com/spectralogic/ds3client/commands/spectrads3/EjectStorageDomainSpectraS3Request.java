@@ -39,6 +39,7 @@ public class EjectStorageDomainSpectraS3Request extends AbstractRequest {
         this.storageDomainId = storageDomainId.toString();
         
         this.getQueryParams().put("operation", "eject");
+
         this.getQueryParams().put("storage_domain_id", storageDomainId.toString());
     }
 
@@ -46,6 +47,7 @@ public class EjectStorageDomainSpectraS3Request extends AbstractRequest {
         this.storageDomainId = storageDomainId;
         
         this.getQueryParams().put("operation", "eject");
+
         this.getQueryParams().put("storage_domain_id", UrlEscapers.urlFragmentEscaper().escape(storageDomainId).replace("+", "%2B"));
     }
 

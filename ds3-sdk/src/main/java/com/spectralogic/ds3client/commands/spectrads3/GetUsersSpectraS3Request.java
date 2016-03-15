@@ -42,7 +42,8 @@ public class GetUsersSpectraS3Request extends AbstractRequest {
     // Constructor
     
     public GetUsersSpectraS3Request() {
-            }
+        
+    }
 
     public GetUsersSpectraS3Request withAuthId(final String authId) {
         this.authId = authId;

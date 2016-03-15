@@ -58,7 +58,8 @@ public class GetActiveJobsSpectraS3Request extends AbstractRequest {
     // Constructor
     
     public GetActiveJobsSpectraS3Request() {
-            }
+        
+    }
 
     public GetActiveJobsSpectraS3Request withAggregating(final boolean aggregating) {
         this.aggregating = aggregating;

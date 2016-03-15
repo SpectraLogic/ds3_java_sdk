@@ -31,11 +31,13 @@ public class GetUserSpectraS3Request extends AbstractRequest {
     
     public GetUserSpectraS3Request(final UUID userId) {
         this.userId = userId.toString();
-            }
+        
+    }
 
     public GetUserSpectraS3Request(final String userId) {
         this.userId = userId;
-            }
+        
+    }
 
 
     @Override

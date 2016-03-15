@@ -35,6 +35,7 @@ public class VerifyUserIsMemberOfGroupSpectraS3Request extends AbstractRequest {
         this.group = group;
         
         this.getQueryParams().put("operation", "verify");
+
     }
 
     public VerifyUserIsMemberOfGroupSpectraS3Request withUserId(final UUID userId) {

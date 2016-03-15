@@ -43,7 +43,8 @@ public class GetTapePartitionFailuresSpectraS3Request extends AbstractRequest {
     // Constructor
     
     public GetTapePartitionFailuresSpectraS3Request() {
-            }
+        
+    }
 
     public GetTapePartitionFailuresSpectraS3Request withErrorMessage(final String errorMessage) {
         this.errorMessage = errorMessage;

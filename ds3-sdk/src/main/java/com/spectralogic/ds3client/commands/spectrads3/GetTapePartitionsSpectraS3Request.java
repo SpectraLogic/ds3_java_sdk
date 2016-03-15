@@ -51,7 +51,8 @@ public class GetTapePartitionsSpectraS3Request extends AbstractRequest {
     // Constructor
     
     public GetTapePartitionsSpectraS3Request() {
-            }
+        
+    }
 
     public GetTapePartitionsSpectraS3Request withImportExportConfiguration(final ImportExportConfiguration importExportConfiguration) {
         this.importExportConfiguration = importExportConfiguration;

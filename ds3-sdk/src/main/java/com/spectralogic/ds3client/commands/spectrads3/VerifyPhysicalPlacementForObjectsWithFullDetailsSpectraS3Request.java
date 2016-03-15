@@ -45,6 +45,7 @@ public class VerifyPhysicalPlacementForObjectsWithFullDetailsSpectraS3Request ex
         this.objects = objects;
         
         this.getQueryParams().put("operation", "verify_physical_placement");
+
         this.getQueryParams().put("full_details", null);
     }
 

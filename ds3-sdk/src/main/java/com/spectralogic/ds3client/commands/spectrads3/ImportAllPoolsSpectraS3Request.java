@@ -46,6 +46,7 @@ public class ImportAllPoolsSpectraS3Request extends AbstractRequest {
     public ImportAllPoolsSpectraS3Request() {
         
         this.getQueryParams().put("operation", "import");
+
     }
 
     public ImportAllPoolsSpectraS3Request withConflictResolutionMode(final ImportConflictResolutionMode conflictResolutionMode) {

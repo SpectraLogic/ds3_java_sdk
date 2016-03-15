@@ -33,12 +33,14 @@ public class RegenerateUserSecretKeySpectraS3Request extends AbstractRequest {
         this.userId = userId.toString();
         
         this.getQueryParams().put("operation", "regenerate_secret_key");
+
     }
 
     public RegenerateUserSecretKeySpectraS3Request(final String userId) {
         this.userId = userId;
         
         this.getQueryParams().put("operation", "regenerate_secret_key");
+
     }
 
 

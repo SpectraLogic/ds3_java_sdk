@@ -40,12 +40,14 @@ public class GetTapeFailureNotificationRegistrationsSpectraS3Request extends Abs
         super(notificationId);
 
         
+
     }
 
     public GetTapeFailureNotificationRegistrationsSpectraS3Request(final String notificationId) {
         super(notificationId);
 
         
+
     }
 
     public GetTapeFailureNotificationRegistrationsSpectraS3Request withLastPage(final boolean lastPage) {

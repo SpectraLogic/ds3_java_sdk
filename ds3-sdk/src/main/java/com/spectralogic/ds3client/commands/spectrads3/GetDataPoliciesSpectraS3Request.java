@@ -43,7 +43,8 @@ public class GetDataPoliciesSpectraS3Request extends AbstractRequest {
     // Constructor
     
     public GetDataPoliciesSpectraS3Request() {
-            }
+        
+    }
 
     public GetDataPoliciesSpectraS3Request withChecksumType(final ChecksumType.Type checksumType) {
         this.checksumType = checksumType;

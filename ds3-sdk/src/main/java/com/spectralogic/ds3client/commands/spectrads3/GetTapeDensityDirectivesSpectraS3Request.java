@@ -44,7 +44,8 @@ public class GetTapeDensityDirectivesSpectraS3Request extends AbstractRequest {
     // Constructor
     
     public GetTapeDensityDirectivesSpectraS3Request() {
-            }
+        
+    }
 
     public GetTapeDensityDirectivesSpectraS3Request withDensity(final TapeDriveType density) {
         this.density = density;

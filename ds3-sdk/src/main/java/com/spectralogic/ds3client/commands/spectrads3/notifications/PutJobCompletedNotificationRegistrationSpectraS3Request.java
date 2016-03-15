@@ -39,6 +39,7 @@ public class PutJobCompletedNotificationRegistrationSpectraS3Request extends Abs
         super(notificationEndPoint);
 
         
+
     }
 
     public PutJobCompletedNotificationRegistrationSpectraS3Request withFormat(final HttpResponseFormatType format) {

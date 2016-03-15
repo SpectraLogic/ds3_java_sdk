@@ -39,7 +39,8 @@ public class PutMultiPartUploadPartRequest extends AbstractRequest {
         this.objectName = objectName;
         this.partNumber = partNumber;
         this.uploadId = uploadId.toString();
-                this.getQueryParams().put("part_number", Integer.toString(partNumber));
+        
+        this.getQueryParams().put("part_number", Integer.toString(partNumber));
         this.getQueryParams().put("upload_id", uploadId.toString());
     }
 
@@ -48,7 +49,8 @@ public class PutMultiPartUploadPartRequest extends AbstractRequest {
         this.objectName = objectName;
         this.partNumber = partNumber;
         this.uploadId = uploadId;
-                this.getQueryParams().put("part_number", Integer.toString(partNumber));
+        
+        this.getQueryParams().put("part_number", Integer.toString(partNumber));
         this.getQueryParams().put("upload_id", UrlEscapers.urlFragmentEscaper().escape(uploadId).replace("+", "%2B"));
     }
 

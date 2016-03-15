@@ -51,7 +51,8 @@ public class GetObjectsSpectraS3Request extends AbstractRequest {
     // Constructor
     
     public GetObjectsSpectraS3Request() {
-            }
+        
+    }
 
     public GetObjectsSpectraS3Request withBucketId(final String bucketId) {
         this.bucketId = bucketId;

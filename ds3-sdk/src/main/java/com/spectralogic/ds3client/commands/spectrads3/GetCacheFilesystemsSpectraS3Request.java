@@ -38,7 +38,8 @@ public class GetCacheFilesystemsSpectraS3Request extends AbstractRequest {
     // Constructor
     
     public GetCacheFilesystemsSpectraS3Request() {
-            }
+        
+    }
 
     public GetCacheFilesystemsSpectraS3Request withLastPage(final boolean lastPage) {
         this.lastPage = lastPage;

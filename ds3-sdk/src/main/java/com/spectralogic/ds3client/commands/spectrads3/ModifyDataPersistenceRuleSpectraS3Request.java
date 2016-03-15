@@ -39,7 +39,8 @@ public class ModifyDataPersistenceRuleSpectraS3Request extends AbstractRequest {
     
     public ModifyDataPersistenceRuleSpectraS3Request(final String dataPersistenceRule) {
         this.dataPersistenceRule = dataPersistenceRule;
-            }
+        
+    }
 
     public ModifyDataPersistenceRuleSpectraS3Request withIsolationLevel(final DataIsolationLevel isolationLevel) {
         this.isolationLevel = isolationLevel;

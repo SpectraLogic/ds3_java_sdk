@@ -51,7 +51,8 @@ public class GetStorageDomainMembersSpectraS3Request extends AbstractRequest {
     // Constructor
     
     public GetStorageDomainMembersSpectraS3Request() {
-            }
+        
+    }
 
     public GetStorageDomainMembersSpectraS3Request withLastPage(final boolean lastPage) {
         this.lastPage = lastPage;

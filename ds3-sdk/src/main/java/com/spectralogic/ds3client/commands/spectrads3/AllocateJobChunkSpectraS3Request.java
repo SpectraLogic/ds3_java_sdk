@@ -33,12 +33,14 @@ public class AllocateJobChunkSpectraS3Request extends AbstractRequest {
         this.jobChunkId = jobChunkId.toString();
         
         this.getQueryParams().put("operation", "allocate");
+
     }
 
     public AllocateJobChunkSpectraS3Request(final String jobChunkId) {
         this.jobChunkId = jobChunkId;
         
         this.getQueryParams().put("operation", "allocate");
+
     }
 
 

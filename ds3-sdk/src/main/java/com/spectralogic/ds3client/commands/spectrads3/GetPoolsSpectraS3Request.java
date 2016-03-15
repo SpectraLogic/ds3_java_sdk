@@ -57,7 +57,8 @@ public class GetPoolsSpectraS3Request extends AbstractRequest {
     // Constructor
     
     public GetPoolsSpectraS3Request() {
-            }
+        
+    }
 
     public GetPoolsSpectraS3Request withAssignedToStorageDomain(final boolean assignedToStorageDomain) {
         this.assignedToStorageDomain = assignedToStorageDomain;

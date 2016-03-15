@@ -45,6 +45,7 @@ public class GetPhysicalPlacementForObjectsSpectraS3Request extends AbstractRequ
         this.objects = objects;
         
         this.getQueryParams().put("operation", "get_physical_placement");
+
     }
 
     public GetPhysicalPlacementForObjectsSpectraS3Request withStorageDomainId(final UUID storageDomainId) {

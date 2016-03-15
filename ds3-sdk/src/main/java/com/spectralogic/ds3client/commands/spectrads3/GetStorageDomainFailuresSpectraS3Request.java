@@ -43,7 +43,8 @@ public class GetStorageDomainFailuresSpectraS3Request extends AbstractRequest {
     // Constructor
     
     public GetStorageDomainFailuresSpectraS3Request() {
-            }
+        
+    }
 
     public GetStorageDomainFailuresSpectraS3Request withErrorMessage(final String errorMessage) {
         this.errorMessage = errorMessage;

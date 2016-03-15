@@ -41,7 +41,8 @@ public class GetSystemFailuresSpectraS3Request extends AbstractRequest {
     // Constructor
     
     public GetSystemFailuresSpectraS3Request() {
-            }
+        
+    }
 
     public GetSystemFailuresSpectraS3Request withErrorMessage(final String errorMessage) {
         this.errorMessage = errorMessage;

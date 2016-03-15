@@ -40,7 +40,8 @@ public class PutDataReplicationRuleSpectraS3Request extends AbstractRequest {
         this.dataPolicyId = dataPolicyId.toString();
         this.ds3TargetId = ds3TargetId.toString();
         this.type = type;
-                this.getQueryParams().put("data_policy_id", dataPolicyId.toString());
+        
+        this.getQueryParams().put("data_policy_id", dataPolicyId.toString());
         this.getQueryParams().put("ds3_target_id", ds3TargetId.toString());
         this.getQueryParams().put("type", type.toString());
     }
@@ -49,7 +50,8 @@ public class PutDataReplicationRuleSpectraS3Request extends AbstractRequest {
         this.dataPolicyId = dataPolicyId;
         this.ds3TargetId = ds3TargetId;
         this.type = type;
-                this.getQueryParams().put("data_policy_id", UrlEscapers.urlFragmentEscaper().escape(dataPolicyId).replace("+", "%2B"));
+        
+        this.getQueryParams().put("data_policy_id", UrlEscapers.urlFragmentEscaper().escape(dataPolicyId).replace("+", "%2B"));
         this.getQueryParams().put("ds3_target_id", UrlEscapers.urlFragmentEscaper().escape(ds3TargetId).replace("+", "%2B"));
         this.getQueryParams().put("type", type.toString());
     }

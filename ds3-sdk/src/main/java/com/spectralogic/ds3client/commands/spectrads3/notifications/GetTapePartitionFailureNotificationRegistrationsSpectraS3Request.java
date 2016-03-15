@@ -40,12 +40,14 @@ public class GetTapePartitionFailureNotificationRegistrationsSpectraS3Request ex
         super(notificationId);
 
         
+
     }
 
     public GetTapePartitionFailureNotificationRegistrationsSpectraS3Request(final String notificationId) {
         super(notificationId);
 
         
+
     }
 
     public GetTapePartitionFailureNotificationRegistrationsSpectraS3Request withLastPage(final boolean lastPage) {

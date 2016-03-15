@@ -40,12 +40,14 @@ public class GetObjectCachedNotificationRegistrationsSpectraS3Request extends Ab
         super(notificationId);
 
         
+
     }
 
     public GetObjectCachedNotificationRegistrationsSpectraS3Request(final String notificationId) {
         super(notificationId);
 
         
+
     }
 
     public GetObjectCachedNotificationRegistrationsSpectraS3Request withLastPage(final boolean lastPage) {

@@ -36,12 +36,14 @@ public class InspectTapeSpectraS3Request extends AbstractRequest {
         this.tapeId = tapeId.toString();
         
         this.getQueryParams().put("operation", "inspect");
+
     }
 
     public InspectTapeSpectraS3Request(final String tapeId) {
         this.tapeId = tapeId;
         
         this.getQueryParams().put("operation", "inspect");
+
     }
 
     public InspectTapeSpectraS3Request withTaskPriority(final Priority taskPriority) {

@@ -49,7 +49,8 @@ public class GetDataPersistenceRulesSpectraS3Request extends AbstractRequest {
     // Constructor
     
     public GetDataPersistenceRulesSpectraS3Request() {
-            }
+        
+    }
 
     public GetDataPersistenceRulesSpectraS3Request withDataPolicyId(final UUID dataPolicyId) {
         this.dataPolicyId = dataPolicyId.toString();

@@ -40,12 +40,14 @@ public class GetJobCreatedNotificationRegistrationsSpectraS3Request extends Abst
         super(notificationId);
 
         
+
     }
 
     public GetJobCreatedNotificationRegistrationsSpectraS3Request(final String notificationId) {
         super(notificationId);
 
         
+
     }
 
     public GetJobCreatedNotificationRegistrationsSpectraS3Request withLastPage(final boolean lastPage) {

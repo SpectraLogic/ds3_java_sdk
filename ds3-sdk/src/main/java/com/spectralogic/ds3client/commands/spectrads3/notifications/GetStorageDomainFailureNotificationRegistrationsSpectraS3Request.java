@@ -40,12 +40,14 @@ public class GetStorageDomainFailureNotificationRegistrationsSpectraS3Request ex
         super(notificationId);
 
         
+
     }
 
     public GetStorageDomainFailureNotificationRegistrationsSpectraS3Request(final String notificationId) {
         super(notificationId);
 
         
+
     }
 
     public GetStorageDomainFailureNotificationRegistrationsSpectraS3Request withLastPage(final boolean lastPage) {

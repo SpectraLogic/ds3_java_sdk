@@ -32,7 +32,8 @@ public class TruncateAllJobsSpectraS3Request extends AbstractRequest {
     // Constructor
     
     public TruncateAllJobsSpectraS3Request() {
-            }
+        
+    }
 
     public TruncateAllJobsSpectraS3Request withBucketId(final String bucketId) {
         this.bucketId = bucketId;

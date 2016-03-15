@@ -60,7 +60,8 @@ public class GetDs3TargetsSpectraS3Request extends AbstractRequest {
     // Constructor
     
     public GetDs3TargetsSpectraS3Request() {
-            }
+        
+    }
 
     public GetDs3TargetsSpectraS3Request withAdminAuthId(final String adminAuthId) {
         this.adminAuthId = adminAuthId;

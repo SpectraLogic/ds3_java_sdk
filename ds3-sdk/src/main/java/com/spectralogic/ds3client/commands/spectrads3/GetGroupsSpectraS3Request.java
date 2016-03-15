@@ -40,7 +40,8 @@ public class GetGroupsSpectraS3Request extends AbstractRequest {
     // Constructor
     
     public GetGroupsSpectraS3Request() {
-            }
+        
+    }
 
     public GetGroupsSpectraS3Request withBuiltIn(final boolean builtIn) {
         this.builtIn = builtIn;

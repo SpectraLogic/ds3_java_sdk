@@ -33,12 +33,14 @@ public class CleanTapeDriveSpectraS3Request extends AbstractRequest {
         this.tapeDriveId = tapeDriveId.toString();
         
         this.getQueryParams().put("operation", "clean");
+
     }
 
     public CleanTapeDriveSpectraS3Request(final String tapeDriveId) {
         this.tapeDriveId = tapeDriveId;
         
         this.getQueryParams().put("operation", "clean");
+
     }
 
 

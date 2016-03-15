@@ -46,7 +46,8 @@ public class GetDataReplicationRulesSpectraS3Request extends AbstractRequest {
     // Constructor
     
     public GetDataReplicationRulesSpectraS3Request() {
-            }
+        
+    }
 
     public GetDataReplicationRulesSpectraS3Request withDataPolicyId(final UUID dataPolicyId) {
         this.dataPolicyId = dataPolicyId.toString();

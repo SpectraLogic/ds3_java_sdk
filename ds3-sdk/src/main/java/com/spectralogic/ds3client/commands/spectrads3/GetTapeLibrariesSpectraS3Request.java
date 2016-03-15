@@ -42,7 +42,8 @@ public class GetTapeLibrariesSpectraS3Request extends AbstractRequest {
     // Constructor
     
     public GetTapeLibrariesSpectraS3Request() {
-            }
+        
+    }
 
     public GetTapeLibrariesSpectraS3Request withLastPage(final boolean lastPage) {
         this.lastPage = lastPage;

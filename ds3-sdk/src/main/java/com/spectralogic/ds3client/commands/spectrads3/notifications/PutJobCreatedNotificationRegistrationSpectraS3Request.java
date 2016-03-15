@@ -36,6 +36,7 @@ public class PutJobCreatedNotificationRegistrationSpectraS3Request extends Abstr
         super(notificationEndPoint);
 
         
+
     }
 
     public PutJobCreatedNotificationRegistrationSpectraS3Request withFormat(final HttpResponseFormatType format) {

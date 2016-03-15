@@ -33,12 +33,14 @@ public class CancelFormatTapeSpectraS3Request extends AbstractRequest {
         this.tapeId = tapeId.toString();
         
         this.getQueryParams().put("operation", "cancel_format");
+
     }
 
     public CancelFormatTapeSpectraS3Request(final String tapeId) {
         this.tapeId = tapeId;
         
         this.getQueryParams().put("operation", "cancel_format");
+
     }
 
 

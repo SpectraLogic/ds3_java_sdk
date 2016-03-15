@@ -31,12 +31,14 @@ public class GetPutJobToReplicateSpectraS3Request extends AbstractRequest {
     
     public GetPutJobToReplicateSpectraS3Request(final UUID jobId) {
         this.jobId = jobId.toString();
-                this.getQueryParams().put("replicate", null);
+        
+        this.getQueryParams().put("replicate", null);
     }
 
     public GetPutJobToReplicateSpectraS3Request(final String jobId) {
         this.jobId = jobId;
-                this.getQueryParams().put("replicate", null);
+        
+        this.getQueryParams().put("replicate", null);
     }
 
 

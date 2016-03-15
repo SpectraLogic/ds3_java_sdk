@@ -39,6 +39,7 @@ public class PutObjectCachedNotificationRegistrationSpectraS3Request extends Abs
         super(notificationEndPoint);
 
         
+
     }
 
     public PutObjectCachedNotificationRegistrationSpectraS3Request withFormat(final HttpResponseFormatType format) {

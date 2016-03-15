@@ -39,6 +39,7 @@ public class PutObjectPersistedNotificationRegistrationSpectraS3Request extends 
         super(notificationEndPoint);
 
         
+
     }
 
     public PutObjectPersistedNotificationRegistrationSpectraS3Request withFormat(final HttpResponseFormatType format) {

@@ -40,12 +40,14 @@ public class GetSystemFailureNotificationRegistrationsSpectraS3Request extends A
         super(notificationId);
 
         
+
     }
 
     public GetSystemFailureNotificationRegistrationsSpectraS3Request(final String notificationId) {
         super(notificationId);
 
         
+
     }
 
     public GetSystemFailureNotificationRegistrationsSpectraS3Request withLastPage(final boolean lastPage) {

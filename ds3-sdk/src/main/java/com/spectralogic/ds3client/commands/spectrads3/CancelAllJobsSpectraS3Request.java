@@ -32,7 +32,8 @@ public class CancelAllJobsSpectraS3Request extends AbstractRequest {
     // Constructor
     
     public CancelAllJobsSpectraS3Request() {
-                this.getQueryParams().put("force", null);
+        
+        this.getQueryParams().put("force", null);
     }
 
     public CancelAllJobsSpectraS3Request withBucketId(final String bucketId) {

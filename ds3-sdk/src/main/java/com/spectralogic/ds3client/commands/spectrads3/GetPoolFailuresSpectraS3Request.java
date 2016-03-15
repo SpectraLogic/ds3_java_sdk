@@ -43,7 +43,8 @@ public class GetPoolFailuresSpectraS3Request extends AbstractRequest {
     // Constructor
     
     public GetPoolFailuresSpectraS3Request() {
-            }
+        
+    }
 
     public GetPoolFailuresSpectraS3Request withErrorMessage(final String errorMessage) {
         this.errorMessage = errorMessage;

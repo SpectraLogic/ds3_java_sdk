@@ -36,14 +36,16 @@ public class CompleteMultiPartUploadRequest extends AbstractRequest {
         this.bucketName = bucketName;
         this.objectName = objectName;
         this.uploadId = uploadId.toString();
-                this.getQueryParams().put("upload_id", uploadId.toString());
+        
+        this.getQueryParams().put("upload_id", uploadId.toString());
     }
 
     public CompleteMultiPartUploadRequest(final String bucketName, final String objectName, final String uploadId) {
         this.bucketName = bucketName;
         this.objectName = objectName;
         this.uploadId = uploadId;
-                this.getQueryParams().put("upload_id", UrlEscapers.urlFragmentEscaper().escape(uploadId).replace("+", "%2B"));
+        
+        this.getQueryParams().put("upload_id", UrlEscapers.urlFragmentEscaper().escape(uploadId).replace("+", "%2B"));
     }
 
 

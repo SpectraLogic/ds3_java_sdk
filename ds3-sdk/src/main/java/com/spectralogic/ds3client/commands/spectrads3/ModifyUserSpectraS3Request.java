@@ -37,11 +37,13 @@ public class ModifyUserSpectraS3Request extends AbstractRequest {
     
     public ModifyUserSpectraS3Request(final UUID userId) {
         this.userId = userId.toString();
-            }
+        
+    }
 
     public ModifyUserSpectraS3Request(final String userId) {
         this.userId = userId;
-            }
+        
+    }
 
     public ModifyUserSpectraS3Request withDefaultDataPolicyId(final UUID defaultDataPolicyId) {
         this.defaultDataPolicyId = defaultDataPolicyId.toString();

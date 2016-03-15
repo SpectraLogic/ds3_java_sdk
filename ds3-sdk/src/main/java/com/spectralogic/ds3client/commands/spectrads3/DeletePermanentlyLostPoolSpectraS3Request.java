@@ -30,7 +30,8 @@ public class DeletePermanentlyLostPoolSpectraS3Request extends AbstractRequest {
     
     public DeletePermanentlyLostPoolSpectraS3Request(final String pool) {
         this.pool = pool;
-            }
+        
+    }
 
 
     @Override

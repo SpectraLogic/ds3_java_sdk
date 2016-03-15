@@ -51,7 +51,8 @@ public class GetTapePartitionsWithFullDetailsSpectraS3Request extends AbstractRe
     // Constructor
     
     public GetTapePartitionsWithFullDetailsSpectraS3Request() {
-                this.getQueryParams().put("full_details", null);
+        
+        this.getQueryParams().put("full_details", null);
     }
 
     public GetTapePartitionsWithFullDetailsSpectraS3Request withImportExportConfiguration(final ImportExportConfiguration importExportConfiguration) {

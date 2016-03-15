@@ -56,7 +56,8 @@ public class GetCompletedJobsSpectraS3Request extends AbstractRequest {
     // Constructor
     
     public GetCompletedJobsSpectraS3Request() {
-            }
+        
+    }
 
     public GetCompletedJobsSpectraS3Request withBucketId(final String bucketId) {
         this.bucketId = bucketId;

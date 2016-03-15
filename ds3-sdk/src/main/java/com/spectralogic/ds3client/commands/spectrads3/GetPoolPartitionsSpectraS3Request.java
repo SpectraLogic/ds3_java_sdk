@@ -41,7 +41,8 @@ public class GetPoolPartitionsSpectraS3Request extends AbstractRequest {
     // Constructor
     
     public GetPoolPartitionsSpectraS3Request() {
-            }
+        
+    }
 
     public GetPoolPartitionsSpectraS3Request withLastPage(final boolean lastPage) {
         this.lastPage = lastPage;

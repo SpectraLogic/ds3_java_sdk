@@ -45,7 +45,8 @@ public class PutDs3TargetUserMappingSpectraS3Request extends AbstractRequest {
         this.authId = authId;
         this.orderNum = orderNum;
         this.secretKey = secretKey;
-                this.getQueryParams().put("auth_id", UrlEscapers.urlFragmentEscaper().escape(authId).replace("+", "%2B"));
+        
+        this.getQueryParams().put("auth_id", UrlEscapers.urlFragmentEscaper().escape(authId).replace("+", "%2B"));
         this.getQueryParams().put("order_num", Long.toString(orderNum));
         this.getQueryParams().put("secret_key", UrlEscapers.urlFragmentEscaper().escape(secretKey).replace("+", "%2B"));
     }

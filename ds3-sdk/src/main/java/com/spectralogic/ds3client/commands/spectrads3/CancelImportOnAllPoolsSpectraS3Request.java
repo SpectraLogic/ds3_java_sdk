@@ -28,6 +28,7 @@ public class CancelImportOnAllPoolsSpectraS3Request extends AbstractRequest {
     public CancelImportOnAllPoolsSpectraS3Request() {
         
         this.getQueryParams().put("operation", "cancel_import");
+
     }
 
 

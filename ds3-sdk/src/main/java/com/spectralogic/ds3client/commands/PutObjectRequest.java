@@ -53,6 +53,7 @@ public class PutObjectRequest extends AbstractRequest {
         this.channel = channel;
         this.stream = new SeekableByteChannelInputStream(channel);
         
+
     }
 
     public PutObjectRequest(final String bucketName, final String objectName, final SeekableByteChannel channel, final UUID job, final long offset, final long size) {
@@ -63,7 +64,8 @@ public class PutObjectRequest extends AbstractRequest {
         this.offset = offset;
         this.channel = channel;
         this.stream = new SeekableByteChannelInputStream(channel);
-                this.getQueryParams().put("job", job.toString());
+        
+        this.getQueryParams().put("job", job.toString());
         this.getQueryParams().put("offset", Long.toString(offset));
 
     }
@@ -76,7 +78,8 @@ public class PutObjectRequest extends AbstractRequest {
         this.offset = offset;
         this.channel = channel;
         this.stream = new SeekableByteChannelInputStream(channel);
-                this.getQueryParams().put("job", UrlEscapers.urlFragmentEscaper().escape(job).replace("+", "%2B"));
+        
+        this.getQueryParams().put("job", UrlEscapers.urlFragmentEscaper().escape(job).replace("+", "%2B"));
         this.getQueryParams().put("offset", Long.toString(offset));
 
     }
@@ -88,7 +91,8 @@ public class PutObjectRequest extends AbstractRequest {
         this.job = job.toString();
         this.offset = offset;
         this.stream = stream;
-                this.getQueryParams().put("job", job.toString());
+        
+        this.getQueryParams().put("job", job.toString());
         this.getQueryParams().put("offset", Long.toString(offset));
 
     }
@@ -100,7 +104,8 @@ public class PutObjectRequest extends AbstractRequest {
         this.job = job;
         this.offset = offset;
         this.stream = stream;
-                this.getQueryParams().put("job", UrlEscapers.urlFragmentEscaper().escape(job).replace("+", "%2B"));
+        
+        this.getQueryParams().put("job", UrlEscapers.urlFragmentEscaper().escape(job).replace("+", "%2B"));
         this.getQueryParams().put("offset", Long.toString(offset));
 
     }

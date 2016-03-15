@@ -30,7 +30,8 @@ public class GetCacheFilesystemSpectraS3Request extends AbstractRequest {
     
     public GetCacheFilesystemSpectraS3Request(final String cacheFilesystem) {
         this.cacheFilesystem = cacheFilesystem;
-            }
+        
+    }
 
 
     @Override

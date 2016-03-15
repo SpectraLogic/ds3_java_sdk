@@ -36,12 +36,14 @@ public class VerifyTapeSpectraS3Request extends AbstractRequest {
         this.tapeId = tapeId.toString();
         
         this.getQueryParams().put("operation", "verify");
+
     }
 
     public VerifyTapeSpectraS3Request(final String tapeId) {
         this.tapeId = tapeId;
         
         this.getQueryParams().put("operation", "verify");
+
     }
 
     public VerifyTapeSpectraS3Request withTaskPriority(final Priority taskPriority) {

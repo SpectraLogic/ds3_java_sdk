@@ -31,11 +31,13 @@ public class GetTapeDriveSpectraS3Request extends AbstractRequest {
     
     public GetTapeDriveSpectraS3Request(final UUID tapeDriveId) {
         this.tapeDriveId = tapeDriveId.toString();
-            }
+        
+    }
 
     public GetTapeDriveSpectraS3Request(final String tapeDriveId) {
         this.tapeDriveId = tapeDriveId;
-            }
+        
+    }
 
 
     @Override

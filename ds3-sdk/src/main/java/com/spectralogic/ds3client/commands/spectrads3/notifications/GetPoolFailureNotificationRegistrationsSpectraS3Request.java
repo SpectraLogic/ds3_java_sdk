@@ -40,12 +40,14 @@ public class GetPoolFailureNotificationRegistrationsSpectraS3Request extends Abs
         super(notificationId);
 
         
+
     }
 
     public GetPoolFailureNotificationRegistrationsSpectraS3Request(final String notificationId) {
         super(notificationId);
 
         
+
     }
 
     public GetPoolFailureNotificationRegistrationsSpectraS3Request withLastPage(final boolean lastPage) {

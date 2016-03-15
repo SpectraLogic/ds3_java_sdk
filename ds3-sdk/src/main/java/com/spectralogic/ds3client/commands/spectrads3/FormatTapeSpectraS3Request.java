@@ -35,12 +35,14 @@ public class FormatTapeSpectraS3Request extends AbstractRequest {
         this.tapeId = tapeId.toString();
         
         this.getQueryParams().put("operation", "format");
+
     }
 
     public FormatTapeSpectraS3Request(final String tapeId) {
         this.tapeId = tapeId;
         
         this.getQueryParams().put("operation", "format");
+
     }
 
     public FormatTapeSpectraS3Request withForce(final boolean force) {

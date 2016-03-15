@@ -36,7 +36,8 @@ public class GetNodesSpectraS3Request extends AbstractRequest {
     // Constructor
     
     public GetNodesSpectraS3Request() {
-            }
+        
+    }
 
     public GetNodesSpectraS3Request withLastPage(final boolean lastPage) {
         this.lastPage = lastPage;

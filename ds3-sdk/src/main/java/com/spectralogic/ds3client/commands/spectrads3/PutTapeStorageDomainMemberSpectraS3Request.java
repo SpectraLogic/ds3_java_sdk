@@ -41,7 +41,8 @@ public class PutTapeStorageDomainMemberSpectraS3Request extends AbstractRequest 
         this.storageDomainId = storageDomainId.toString();
         this.tapePartitionId = tapePartitionId.toString();
         this.tapeType = tapeType;
-                this.getQueryParams().put("storage_domain_id", storageDomainId.toString());
+        
+        this.getQueryParams().put("storage_domain_id", storageDomainId.toString());
         this.getQueryParams().put("tape_partition_id", tapePartitionId.toString());
         this.getQueryParams().put("tape_type", tapeType.toString());
     }
@@ -50,7 +51,8 @@ public class PutTapeStorageDomainMemberSpectraS3Request extends AbstractRequest 
         this.storageDomainId = storageDomainId;
         this.tapePartitionId = tapePartitionId;
         this.tapeType = tapeType;
-                this.getQueryParams().put("storage_domain_id", UrlEscapers.urlFragmentEscaper().escape(storageDomainId).replace("+", "%2B"));
+        
+        this.getQueryParams().put("storage_domain_id", UrlEscapers.urlFragmentEscaper().escape(storageDomainId).replace("+", "%2B"));
         this.getQueryParams().put("tape_partition_id", UrlEscapers.urlFragmentEscaper().escape(tapePartitionId).replace("+", "%2B"));
         this.getQueryParams().put("tape_type", tapeType.toString());
     }

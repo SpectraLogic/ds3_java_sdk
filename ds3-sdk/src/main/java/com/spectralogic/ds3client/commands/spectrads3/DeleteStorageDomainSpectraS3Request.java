@@ -30,7 +30,8 @@ public class DeleteStorageDomainSpectraS3Request extends AbstractRequest {
     
     public DeleteStorageDomainSpectraS3Request(final String storageDomain) {
         this.storageDomain = storageDomain;
-            }
+        
+    }
 
 
     @Override

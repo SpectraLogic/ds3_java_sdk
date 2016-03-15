@@ -49,12 +49,14 @@ public class ImportTapeSpectraS3Request extends AbstractRequest {
         this.tapeId = tapeId.toString();
         
         this.getQueryParams().put("operation", "import");
+
     }
 
     public ImportTapeSpectraS3Request(final String tapeId) {
         this.tapeId = tapeId;
         
         this.getQueryParams().put("operation", "import");
+
     }
 
     public ImportTapeSpectraS3Request withConflictResolutionMode(final ImportConflictResolutionMode conflictResolutionMode) {

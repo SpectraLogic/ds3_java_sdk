@@ -39,7 +39,8 @@ public class ListMultiPartUploadsRequest extends AbstractRequest {
     
     public ListMultiPartUploadsRequest(final String bucketName) {
         this.bucketName = bucketName;
-                this.getQueryParams().put("uploads", null);
+        
+        this.getQueryParams().put("uploads", null);
     }
 
     public ListMultiPartUploadsRequest withDelimiter(final String delimiter) {

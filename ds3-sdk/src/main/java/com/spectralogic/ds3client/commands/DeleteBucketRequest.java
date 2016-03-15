@@ -28,7 +28,8 @@ public class DeleteBucketRequest extends AbstractRequest {
     
     public DeleteBucketRequest(final String bucketName) {
         this.bucketName = bucketName;
-            }
+        
+    }
 
 
     @Override

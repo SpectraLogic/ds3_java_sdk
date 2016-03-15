@@ -36,7 +36,8 @@ public class ModifyPoolSpectraS3Request extends AbstractRequest {
     
     public ModifyPoolSpectraS3Request(final String pool) {
         this.pool = pool;
-            }
+        
+    }
 
     public ModifyPoolSpectraS3Request withPartitionId(final UUID partitionId) {
         this.partitionId = partitionId.toString();

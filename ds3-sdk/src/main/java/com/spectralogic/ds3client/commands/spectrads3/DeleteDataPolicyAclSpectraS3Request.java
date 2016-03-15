@@ -30,7 +30,8 @@ public class DeleteDataPolicyAclSpectraS3Request extends AbstractRequest {
     
     public DeleteDataPolicyAclSpectraS3Request(final String dataPolicyAcl) {
         this.dataPolicyAcl = dataPolicyAcl;
-            }
+        
+    }
 
 
     @Override

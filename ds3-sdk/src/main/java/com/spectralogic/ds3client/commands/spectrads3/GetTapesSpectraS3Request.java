@@ -64,7 +64,8 @@ public class GetTapesSpectraS3Request extends AbstractRequest {
     // Constructor
     
     public GetTapesSpectraS3Request() {
-            }
+        
+    }
 
     public GetTapesSpectraS3Request withAssignedToStorageDomain(final boolean assignedToStorageDomain) {
         this.assignedToStorageDomain = assignedToStorageDomain;

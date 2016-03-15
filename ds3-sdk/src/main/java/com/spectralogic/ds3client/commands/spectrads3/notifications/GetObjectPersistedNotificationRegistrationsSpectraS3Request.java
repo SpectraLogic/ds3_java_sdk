@@ -40,12 +40,14 @@ public class GetObjectPersistedNotificationRegistrationsSpectraS3Request extends
         super(notificationId);
 
         
+
     }
 
     public GetObjectPersistedNotificationRegistrationsSpectraS3Request(final String notificationId) {
         super(notificationId);
 
         
+
     }
 
     public GetObjectPersistedNotificationRegistrationsSpectraS3Request withLastPage(final boolean lastPage) {

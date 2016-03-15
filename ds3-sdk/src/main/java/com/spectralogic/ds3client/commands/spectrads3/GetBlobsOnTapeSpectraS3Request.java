@@ -43,6 +43,7 @@ public class GetBlobsOnTapeSpectraS3Request extends AbstractRequest {
         this.objects = objects;
         
         this.getQueryParams().put("operation", "get_physical_placement");
+
     }
 
     public GetBlobsOnTapeSpectraS3Request(final List<Ds3Object> objects, final String tapeId) {
@@ -50,6 +51,7 @@ public class GetBlobsOnTapeSpectraS3Request extends AbstractRequest {
         this.objects = objects;
         
         this.getQueryParams().put("operation", "get_physical_placement");
+
     }
 
 

@@ -30,7 +30,8 @@ public class DeleteDs3TargetReadPreferenceSpectraS3Request extends AbstractReque
     
     public DeleteDs3TargetReadPreferenceSpectraS3Request(final String ds3TargetReadPreference) {
         this.ds3TargetReadPreference = ds3TargetReadPreference;
-            }
+        
+    }
 
 
     @Override

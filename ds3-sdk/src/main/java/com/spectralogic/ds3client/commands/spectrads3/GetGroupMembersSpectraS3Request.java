@@ -42,7 +42,8 @@ public class GetGroupMembersSpectraS3Request extends AbstractRequest {
     // Constructor
     
     public GetGroupMembersSpectraS3Request() {
-            }
+        
+    }
 
     public GetGroupMembersSpectraS3Request withGroupId(final UUID groupId) {
         this.groupId = groupId.toString();

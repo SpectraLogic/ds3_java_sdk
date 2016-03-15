@@ -64,7 +64,8 @@ public class GetTapesWithFullDetailsSpectraS3Request extends AbstractRequest {
     // Constructor
     
     public GetTapesWithFullDetailsSpectraS3Request() {
-                this.getQueryParams().put("full_details", null);
+        
+        this.getQueryParams().put("full_details", null);
     }
 
     public GetTapesWithFullDetailsSpectraS3Request withAssignedToStorageDomain(final boolean assignedToStorageDomain) {

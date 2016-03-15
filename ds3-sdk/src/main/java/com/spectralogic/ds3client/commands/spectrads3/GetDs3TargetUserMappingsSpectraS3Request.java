@@ -48,7 +48,8 @@ public class GetDs3TargetUserMappingsSpectraS3Request extends AbstractRequest {
     // Constructor
     
     public GetDs3TargetUserMappingsSpectraS3Request() {
-            }
+        
+    }
 
     public GetDs3TargetUserMappingsSpectraS3Request withAuthId(final String authId) {
         this.authId = authId;

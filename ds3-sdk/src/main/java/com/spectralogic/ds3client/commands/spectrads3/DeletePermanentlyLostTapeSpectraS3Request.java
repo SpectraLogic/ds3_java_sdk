@@ -31,11 +31,13 @@ public class DeletePermanentlyLostTapeSpectraS3Request extends AbstractRequest {
     
     public DeletePermanentlyLostTapeSpectraS3Request(final UUID tapeId) {
         this.tapeId = tapeId.toString();
-            }
+        
+    }
 
     public DeletePermanentlyLostTapeSpectraS3Request(final String tapeId) {
         this.tapeId = tapeId;
-            }
+        
+    }
 
 
     @Override

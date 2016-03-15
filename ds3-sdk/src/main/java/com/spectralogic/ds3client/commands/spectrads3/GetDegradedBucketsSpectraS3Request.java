@@ -42,7 +42,8 @@ public class GetDegradedBucketsSpectraS3Request extends AbstractRequest {
     // Constructor
     
     public GetDegradedBucketsSpectraS3Request() {
-            }
+        
+    }
 
     public GetDegradedBucketsSpectraS3Request withDataPolicyId(final UUID dataPolicyId) {
         this.dataPolicyId = dataPolicyId.toString();

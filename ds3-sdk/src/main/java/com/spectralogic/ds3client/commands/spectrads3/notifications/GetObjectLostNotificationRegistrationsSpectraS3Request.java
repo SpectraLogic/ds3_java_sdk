@@ -40,12 +40,14 @@ public class GetObjectLostNotificationRegistrationsSpectraS3Request extends Abst
         super(notificationId);
 
         
+
     }
 
     public GetObjectLostNotificationRegistrationsSpectraS3Request(final String notificationId) {
         super(notificationId);
 
         
+
     }
 
     public GetObjectLostNotificationRegistrationsSpectraS3Request withLastPage(final boolean lastPage) {

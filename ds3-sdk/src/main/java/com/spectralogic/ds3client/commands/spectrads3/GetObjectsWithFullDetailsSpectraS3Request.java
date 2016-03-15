@@ -51,7 +51,8 @@ public class GetObjectsWithFullDetailsSpectraS3Request extends AbstractRequest {
     // Constructor
     
     public GetObjectsWithFullDetailsSpectraS3Request() {
-                this.getQueryParams().put("full_details", null);
+        
+        this.getQueryParams().put("full_details", null);
     }
 
     public GetObjectsWithFullDetailsSpectraS3Request withBucketId(final String bucketId) {

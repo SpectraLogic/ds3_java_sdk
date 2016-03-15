@@ -56,7 +56,8 @@ public class GetCanceledJobsSpectraS3Request extends AbstractRequest {
     // Constructor
     
     public GetCanceledJobsSpectraS3Request() {
-            }
+        
+    }
 
     public GetCanceledJobsSpectraS3Request withBucketId(final String bucketId) {
         this.bucketId = bucketId;

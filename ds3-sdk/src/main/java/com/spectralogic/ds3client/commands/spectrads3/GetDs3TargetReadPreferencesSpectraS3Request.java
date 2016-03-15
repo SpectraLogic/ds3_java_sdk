@@ -43,7 +43,8 @@ public class GetDs3TargetReadPreferencesSpectraS3Request extends AbstractRequest
     // Constructor
     
     public GetDs3TargetReadPreferencesSpectraS3Request() {
-            }
+        
+    }
 
     public GetDs3TargetReadPreferencesSpectraS3Request withBucketId(final String bucketId) {
         this.bucketId = bucketId;

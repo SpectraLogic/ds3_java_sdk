@@ -45,7 +45,8 @@ public class GetTapeFailuresSpectraS3Request extends AbstractRequest {
     // Constructor
     
     public GetTapeFailuresSpectraS3Request() {
-            }
+        
+    }
 
     public GetTapeFailuresSpectraS3Request withErrorMessage(final String errorMessage) {
         this.errorMessage = errorMessage;
