@@ -19,6 +19,7 @@ package com.spectralogic.ds3client.commands.spectrads3;
 import com.spectralogic.ds3client.networking.HttpVerb;
 import com.spectralogic.ds3client.commands.AbstractRequest;
 import java.util.UUID;
+import com.google.common.net.UrlEscapers;
 
 public class GetNodesSpectraS3Request extends AbstractRequest {
 
@@ -56,6 +57,12 @@ public class GetNodesSpectraS3Request extends AbstractRequest {
     public GetNodesSpectraS3Request withPageOffset(final int pageOffset) {
         this.pageOffset = pageOffset;
         this.updateQueryParam("page_offset", pageOffset);
+        return this;
+    }
+
+    public GetNodesSpectraS3Request withPageStartMarker(final UUID pageStartMarker) {
+        this.pageStartMarker = pageStartMarker.toString();
+        this.updateQueryParam("page_start_marker", pageStartMarker);
         return this;
     }
 

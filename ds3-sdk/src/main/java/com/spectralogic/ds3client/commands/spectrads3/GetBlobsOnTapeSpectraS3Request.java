@@ -25,6 +25,7 @@ import java.io.InputStream;
 import java.util.List;
 import com.spectralogic.ds3client.commands.AbstractRequest;
 import java.util.UUID;
+import com.google.common.net.UrlEscapers;
 
 public class GetBlobsOnTapeSpectraS3Request extends AbstractRequest {
 
@@ -37,6 +38,13 @@ public class GetBlobsOnTapeSpectraS3Request extends AbstractRequest {
 
     // Constructor
     
+    public GetBlobsOnTapeSpectraS3Request(final List<Ds3Object> objects, final UUID tapeId) {
+        this.tapeId = tapeId.toString();
+        this.objects = objects;
+        
+        this.getQueryParams().put("operation", "get_physical_placement");
+    }
+
     public GetBlobsOnTapeSpectraS3Request(final List<Ds3Object> objects, final String tapeId) {
         this.tapeId = tapeId;
         this.objects = objects;

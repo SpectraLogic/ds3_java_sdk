@@ -20,6 +20,7 @@ import com.spectralogic.ds3client.networking.HttpVerb;
 import com.spectralogic.ds3client.commands.AbstractRequest;
 import com.spectralogic.ds3client.models.BucketAclPermission;
 import java.util.UUID;
+import com.google.common.net.UrlEscapers;
 
 public class PutGlobalBucketAclForUserSpectraS3Request extends AbstractRequest {
 
@@ -31,11 +32,18 @@ public class PutGlobalBucketAclForUserSpectraS3Request extends AbstractRequest {
 
     // Constructor
     
+    public PutGlobalBucketAclForUserSpectraS3Request(final BucketAclPermission permission, final UUID userId) {
+        this.permission = permission;
+        this.userId = userId.toString();
+                this.getQueryParams().put("permission", permission.toString());
+        this.getQueryParams().put("user_id", userId.toString());
+    }
+
     public PutGlobalBucketAclForUserSpectraS3Request(final BucketAclPermission permission, final String userId) {
         this.permission = permission;
         this.userId = userId;
                 this.getQueryParams().put("permission", permission.toString());
-        this.getQueryParams().put("user_id", userId);
+        this.getQueryParams().put("user_id", UrlEscapers.urlFragmentEscaper().escape(userId).replace("+", "%2B"));
     }
 
 

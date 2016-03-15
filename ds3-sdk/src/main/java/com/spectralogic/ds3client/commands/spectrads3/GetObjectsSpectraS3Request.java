@@ -109,6 +109,12 @@ public class GetObjectsSpectraS3Request extends AbstractRequest {
         return this;
     }
 
+    public GetObjectsSpectraS3Request withPageStartMarker(final UUID pageStartMarker) {
+        this.pageStartMarker = pageStartMarker.toString();
+        this.updateQueryParam("page_start_marker", pageStartMarker);
+        return this;
+    }
+
     public GetObjectsSpectraS3Request withPageStartMarker(final String pageStartMarker) {
         this.pageStartMarker = pageStartMarker;
         this.updateQueryParam("page_start_marker", pageStartMarker);

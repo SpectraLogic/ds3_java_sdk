@@ -85,6 +85,12 @@ public class GetDataPoliciesSpectraS3Request extends AbstractRequest {
         return this;
     }
 
+    public GetDataPoliciesSpectraS3Request withPageStartMarker(final UUID pageStartMarker) {
+        this.pageStartMarker = pageStartMarker.toString();
+        this.updateQueryParam("page_start_marker", pageStartMarker);
+        return this;
+    }
+
     public GetDataPoliciesSpectraS3Request withPageStartMarker(final String pageStartMarker) {
         this.pageStartMarker = pageStartMarker;
         this.updateQueryParam("page_start_marker", pageStartMarker);

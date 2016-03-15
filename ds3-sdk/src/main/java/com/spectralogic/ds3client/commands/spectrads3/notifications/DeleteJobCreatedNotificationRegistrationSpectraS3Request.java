@@ -25,6 +25,12 @@ public class DeleteJobCreatedNotificationRegistrationSpectraS3Request extends Ab
     
     //Constructor
     
+    public DeleteJobCreatedNotificationRegistrationSpectraS3Request(final UUID notificationId) {
+        super(notificationId);
+
+        
+    }
+
     public DeleteJobCreatedNotificationRegistrationSpectraS3Request(final String notificationId) {
         super(notificationId);
 

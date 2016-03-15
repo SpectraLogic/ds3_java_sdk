@@ -19,6 +19,7 @@ package com.spectralogic.ds3client.commands.spectrads3;
 import com.spectralogic.ds3client.networking.HttpVerb;
 import com.spectralogic.ds3client.commands.AbstractRequest;
 import java.util.UUID;
+import com.google.common.net.UrlEscapers;
 
 public class GetDataPolicyAclsSpectraS3Request extends AbstractRequest {
 
@@ -43,9 +44,21 @@ public class GetDataPolicyAclsSpectraS3Request extends AbstractRequest {
     public GetDataPolicyAclsSpectraS3Request() {
             }
 
+    public GetDataPolicyAclsSpectraS3Request withDataPolicyId(final UUID dataPolicyId) {
+        this.dataPolicyId = dataPolicyId.toString();
+        this.updateQueryParam("data_policy_id", dataPolicyId);
+        return this;
+    }
+
     public GetDataPolicyAclsSpectraS3Request withDataPolicyId(final String dataPolicyId) {
         this.dataPolicyId = dataPolicyId;
         this.updateQueryParam("data_policy_id", dataPolicyId);
+        return this;
+    }
+
+    public GetDataPolicyAclsSpectraS3Request withGroupId(final UUID groupId) {
+        this.groupId = groupId.toString();
+        this.updateQueryParam("group_id", groupId);
         return this;
     }
 
@@ -77,9 +90,21 @@ public class GetDataPolicyAclsSpectraS3Request extends AbstractRequest {
         return this;
     }
 
+    public GetDataPolicyAclsSpectraS3Request withPageStartMarker(final UUID pageStartMarker) {
+        this.pageStartMarker = pageStartMarker.toString();
+        this.updateQueryParam("page_start_marker", pageStartMarker);
+        return this;
+    }
+
     public GetDataPolicyAclsSpectraS3Request withPageStartMarker(final String pageStartMarker) {
         this.pageStartMarker = pageStartMarker;
         this.updateQueryParam("page_start_marker", pageStartMarker);
+        return this;
+    }
+
+    public GetDataPolicyAclsSpectraS3Request withUserId(final UUID userId) {
+        this.userId = userId.toString();
+        this.updateQueryParam("user_id", userId);
         return this;
     }
 

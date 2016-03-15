@@ -47,6 +47,12 @@ public class PutObjectPersistedNotificationRegistrationSpectraS3Request extends 
         return this;
     }
 
+    public PutObjectPersistedNotificationRegistrationSpectraS3Request withJobId(final UUID jobId) {
+        this.jobId = jobId.toString();
+        this.updateQueryParam("job_id", jobId);
+        return this;
+    }
+
     public PutObjectPersistedNotificationRegistrationSpectraS3Request withJobId(final String jobId) {
         this.jobId = jobId;
         this.updateQueryParam("job_id", jobId);

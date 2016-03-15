@@ -20,6 +20,7 @@ import com.spectralogic.ds3client.networking.HttpVerb;
 import com.spectralogic.ds3client.commands.AbstractRequest;
 import com.spectralogic.ds3client.models.Priority;
 import java.util.UUID;
+import com.google.common.net.UrlEscapers;
 
 public class InspectTapeSpectraS3Request extends AbstractRequest {
 
@@ -31,6 +32,12 @@ public class InspectTapeSpectraS3Request extends AbstractRequest {
 
     // Constructor
     
+    public InspectTapeSpectraS3Request(final UUID tapeId) {
+        this.tapeId = tapeId.toString();
+        
+        this.getQueryParams().put("operation", "inspect");
+    }
+
     public InspectTapeSpectraS3Request(final String tapeId) {
         this.tapeId = tapeId;
         

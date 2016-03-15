@@ -103,9 +103,21 @@ public class RegisterDs3TargetSpectraS3Request extends AbstractRequest {
         return this;
     }
 
+    public RegisterDs3TargetSpectraS3Request withLocalAdminUserId(final UUID localAdminUserId) {
+        this.localAdminUserId = localAdminUserId.toString();
+        this.updateQueryParam("local_admin_user_id", localAdminUserId);
+        return this;
+    }
+
     public RegisterDs3TargetSpectraS3Request withLocalAdminUserId(final String localAdminUserId) {
         this.localAdminUserId = localAdminUserId;
         this.updateQueryParam("local_admin_user_id", localAdminUserId);
+        return this;
+    }
+
+    public RegisterDs3TargetSpectraS3Request withLocalReplicatedUserDefaultDataPolicyId(final UUID localReplicatedUserDefaultDataPolicyId) {
+        this.localReplicatedUserDefaultDataPolicyId = localReplicatedUserDefaultDataPolicyId.toString();
+        this.updateQueryParam("local_replicated_user_default_data_policy_id", localReplicatedUserDefaultDataPolicyId);
         return this;
     }
 

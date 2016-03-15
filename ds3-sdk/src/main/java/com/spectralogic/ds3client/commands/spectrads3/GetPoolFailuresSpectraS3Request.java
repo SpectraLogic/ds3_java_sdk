@@ -73,9 +73,21 @@ public class GetPoolFailuresSpectraS3Request extends AbstractRequest {
         return this;
     }
 
+    public GetPoolFailuresSpectraS3Request withPageStartMarker(final UUID pageStartMarker) {
+        this.pageStartMarker = pageStartMarker.toString();
+        this.updateQueryParam("page_start_marker", pageStartMarker);
+        return this;
+    }
+
     public GetPoolFailuresSpectraS3Request withPageStartMarker(final String pageStartMarker) {
         this.pageStartMarker = pageStartMarker;
         this.updateQueryParam("page_start_marker", pageStartMarker);
+        return this;
+    }
+
+    public GetPoolFailuresSpectraS3Request withPoolId(final UUID poolId) {
+        this.poolId = poolId.toString();
+        this.updateQueryParam("pool_id", poolId);
         return this;
     }
 

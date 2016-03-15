@@ -47,6 +47,12 @@ public class PutObjectCachedNotificationRegistrationSpectraS3Request extends Abs
         return this;
     }
 
+    public PutObjectCachedNotificationRegistrationSpectraS3Request withJobId(final UUID jobId) {
+        this.jobId = jobId.toString();
+        this.updateQueryParam("job_id", jobId);
+        return this;
+    }
+
     public PutObjectCachedNotificationRegistrationSpectraS3Request withJobId(final String jobId) {
         this.jobId = jobId;
         this.updateQueryParam("job_id", jobId);

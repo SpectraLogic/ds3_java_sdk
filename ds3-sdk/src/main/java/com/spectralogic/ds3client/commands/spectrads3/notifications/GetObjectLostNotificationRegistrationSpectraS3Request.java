@@ -25,6 +25,12 @@ public class GetObjectLostNotificationRegistrationSpectraS3Request extends Abstr
     
     // Constructor
     
+    public GetObjectLostNotificationRegistrationSpectraS3Request(final UUID notificationId) {
+        super(notificationId);
+
+        
+    }
+
     public GetObjectLostNotificationRegistrationSpectraS3Request(final String notificationId) {
         super(notificationId);
 

@@ -38,9 +38,21 @@ public class PutBucketSpectraS3Request extends AbstractRequest {
                 this.getQueryParams().put("name", UrlEscapers.urlFragmentEscaper().escape(name).replace("+", "%2B"));
     }
 
+    public PutBucketSpectraS3Request withDataPolicyId(final UUID dataPolicyId) {
+        this.dataPolicyId = dataPolicyId.toString();
+        this.updateQueryParam("data_policy_id", dataPolicyId);
+        return this;
+    }
+
     public PutBucketSpectraS3Request withDataPolicyId(final String dataPolicyId) {
         this.dataPolicyId = dataPolicyId;
         this.updateQueryParam("data_policy_id", dataPolicyId);
+        return this;
+    }
+
+    public PutBucketSpectraS3Request withUserId(final UUID userId) {
+        this.userId = userId.toString();
+        this.updateQueryParam("user_id", userId);
         return this;
     }
 

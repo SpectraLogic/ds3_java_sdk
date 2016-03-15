@@ -25,6 +25,12 @@ public class GetObjectCachedNotificationRegistrationSpectraS3Request extends Abs
     
     // Constructor
     
+    public GetObjectCachedNotificationRegistrationSpectraS3Request(final UUID notificationId) {
+        super(notificationId);
+
+        
+    }
+
     public GetObjectCachedNotificationRegistrationSpectraS3Request(final String notificationId) {
         super(notificationId);
 

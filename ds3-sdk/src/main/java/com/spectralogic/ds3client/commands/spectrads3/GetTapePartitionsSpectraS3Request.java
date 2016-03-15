@@ -69,6 +69,12 @@ public class GetTapePartitionsSpectraS3Request extends AbstractRequest {
         return this;
     }
 
+    public GetTapePartitionsSpectraS3Request withLibraryId(final UUID libraryId) {
+        this.libraryId = libraryId.toString();
+        this.updateQueryParam("library_id", libraryId);
+        return this;
+    }
+
     public GetTapePartitionsSpectraS3Request withLibraryId(final String libraryId) {
         this.libraryId = libraryId;
         this.updateQueryParam("library_id", libraryId);
@@ -90,6 +96,12 @@ public class GetTapePartitionsSpectraS3Request extends AbstractRequest {
     public GetTapePartitionsSpectraS3Request withPageOffset(final int pageOffset) {
         this.pageOffset = pageOffset;
         this.updateQueryParam("page_offset", pageOffset);
+        return this;
+    }
+
+    public GetTapePartitionsSpectraS3Request withPageStartMarker(final UUID pageStartMarker) {
+        this.pageStartMarker = pageStartMarker.toString();
+        this.updateQueryParam("page_start_marker", pageStartMarker);
         return this;
     }
 

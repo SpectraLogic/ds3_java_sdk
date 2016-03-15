@@ -98,6 +98,12 @@ public class GetCanceledJobsSpectraS3Request extends AbstractRequest {
         return this;
     }
 
+    public GetCanceledJobsSpectraS3Request withPageStartMarker(final UUID pageStartMarker) {
+        this.pageStartMarker = pageStartMarker.toString();
+        this.updateQueryParam("page_start_marker", pageStartMarker);
+        return this;
+    }
+
     public GetCanceledJobsSpectraS3Request withPageStartMarker(final String pageStartMarker) {
         this.pageStartMarker = pageStartMarker;
         this.updateQueryParam("page_start_marker", pageStartMarker);
@@ -125,6 +131,12 @@ public class GetCanceledJobsSpectraS3Request extends AbstractRequest {
     public GetCanceledJobsSpectraS3Request withTruncated(final boolean truncated) {
         this.truncated = truncated;
         this.updateQueryParam("truncated", truncated);
+        return this;
+    }
+
+    public GetCanceledJobsSpectraS3Request withUserId(final UUID userId) {
+        this.userId = userId.toString();
+        this.updateQueryParam("user_id", userId);
         return this;
     }
 

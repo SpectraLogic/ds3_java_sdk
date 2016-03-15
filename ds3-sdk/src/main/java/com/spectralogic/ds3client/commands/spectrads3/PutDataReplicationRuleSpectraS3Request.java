@@ -19,8 +19,8 @@ package com.spectralogic.ds3client.commands.spectrads3;
 import com.spectralogic.ds3client.networking.HttpVerb;
 import com.spectralogic.ds3client.commands.AbstractRequest;
 import java.util.UUID;
-import com.spectralogic.ds3client.models.DataReplicationRuleType;
 import com.google.common.net.UrlEscapers;
+import com.spectralogic.ds3client.models.DataReplicationRuleType;
 
 public class PutDataReplicationRuleSpectraS3Request extends AbstractRequest {
 
@@ -36,12 +36,21 @@ public class PutDataReplicationRuleSpectraS3Request extends AbstractRequest {
 
     // Constructor
     
+    public PutDataReplicationRuleSpectraS3Request(final UUID dataPolicyId, final UUID ds3TargetId, final DataReplicationRuleType type) {
+        this.dataPolicyId = dataPolicyId.toString();
+        this.ds3TargetId = ds3TargetId.toString();
+        this.type = type;
+                this.getQueryParams().put("data_policy_id", dataPolicyId.toString());
+        this.getQueryParams().put("ds3_target_id", ds3TargetId.toString());
+        this.getQueryParams().put("type", type.toString());
+    }
+
     public PutDataReplicationRuleSpectraS3Request(final String dataPolicyId, final String ds3TargetId, final DataReplicationRuleType type) {
         this.dataPolicyId = dataPolicyId;
         this.ds3TargetId = ds3TargetId;
         this.type = type;
-                this.getQueryParams().put("data_policy_id", dataPolicyId);
-        this.getQueryParams().put("ds3_target_id", ds3TargetId);
+                this.getQueryParams().put("data_policy_id", UrlEscapers.urlFragmentEscaper().escape(dataPolicyId).replace("+", "%2B"));
+        this.getQueryParams().put("ds3_target_id", UrlEscapers.urlFragmentEscaper().escape(ds3TargetId).replace("+", "%2B"));
         this.getQueryParams().put("type", type.toString());
     }
 

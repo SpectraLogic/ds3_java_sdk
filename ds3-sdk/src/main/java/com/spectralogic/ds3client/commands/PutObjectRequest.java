@@ -21,6 +21,7 @@ import java.io.InputStream;
 import java.nio.channels.SeekableByteChannel;
 import com.spectralogic.ds3client.utils.SeekableByteChannelInputStream;
 import java.util.UUID;
+import com.google.common.net.UrlEscapers;
 import com.spectralogic.ds3client.models.ChecksumType;
 public class PutObjectRequest extends AbstractRequest {
 
@@ -54,6 +55,19 @@ public class PutObjectRequest extends AbstractRequest {
         
     }
 
+    public PutObjectRequest(final String bucketName, final String objectName, final SeekableByteChannel channel, final UUID job, final long offset, final long size) {
+        this.bucketName = bucketName;
+        this.objectName = objectName;
+        this.size = size;
+        this.job = job.toString();
+        this.offset = offset;
+        this.channel = channel;
+        this.stream = new SeekableByteChannelInputStream(channel);
+                this.getQueryParams().put("job", job.toString());
+        this.getQueryParams().put("offset", Long.toString(offset));
+
+    }
+
     public PutObjectRequest(final String bucketName, final String objectName, final SeekableByteChannel channel, final String job, final long offset, final long size) {
         this.bucketName = bucketName;
         this.objectName = objectName;
@@ -62,7 +76,19 @@ public class PutObjectRequest extends AbstractRequest {
         this.offset = offset;
         this.channel = channel;
         this.stream = new SeekableByteChannelInputStream(channel);
-                this.getQueryParams().put("job", job);
+                this.getQueryParams().put("job", UrlEscapers.urlFragmentEscaper().escape(job).replace("+", "%2B"));
+        this.getQueryParams().put("offset", Long.toString(offset));
+
+    }
+
+    public PutObjectRequest(final String bucketName, final String objectName, final UUID job, final long offset, final long size, final InputStream stream) {
+        this.bucketName = bucketName;
+        this.objectName = objectName;
+        this.size = size;
+        this.job = job.toString();
+        this.offset = offset;
+        this.stream = stream;
+                this.getQueryParams().put("job", job.toString());
         this.getQueryParams().put("offset", Long.toString(offset));
 
     }
@@ -74,11 +100,17 @@ public class PutObjectRequest extends AbstractRequest {
         this.job = job;
         this.offset = offset;
         this.stream = stream;
-                this.getQueryParams().put("job", job);
+                this.getQueryParams().put("job", UrlEscapers.urlFragmentEscaper().escape(job).replace("+", "%2B"));
         this.getQueryParams().put("offset", Long.toString(offset));
 
     }
 
+
+    public PutObjectRequest withJob(final UUID job) {
+        this.job = job.toString();
+        this.updateQueryParam("job", job);
+        return this;
+    }
 
     public PutObjectRequest withJob(final String job) {
         this.job = job;

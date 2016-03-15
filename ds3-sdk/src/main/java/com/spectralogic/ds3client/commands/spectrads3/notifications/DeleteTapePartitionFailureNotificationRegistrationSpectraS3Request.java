@@ -25,6 +25,12 @@ public class DeleteTapePartitionFailureNotificationRegistrationSpectraS3Request 
     
     //Constructor
     
+    public DeleteTapePartitionFailureNotificationRegistrationSpectraS3Request(final UUID notificationId) {
+        super(notificationId);
+
+        
+    }
+
     public DeleteTapePartitionFailureNotificationRegistrationSpectraS3Request(final String notificationId) {
         super(notificationId);
 

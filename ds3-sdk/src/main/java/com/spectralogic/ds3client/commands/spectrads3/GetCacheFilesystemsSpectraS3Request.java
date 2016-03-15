@@ -19,6 +19,7 @@ package com.spectralogic.ds3client.commands.spectrads3;
 import com.spectralogic.ds3client.networking.HttpVerb;
 import com.spectralogic.ds3client.commands.AbstractRequest;
 import java.util.UUID;
+import com.google.common.net.UrlEscapers;
 
 public class GetCacheFilesystemsSpectraS3Request extends AbstractRequest {
 
@@ -49,6 +50,12 @@ public class GetCacheFilesystemsSpectraS3Request extends AbstractRequest {
         return this;
     }
 
+    public GetCacheFilesystemsSpectraS3Request withNodeId(final UUID nodeId) {
+        this.nodeId = nodeId.toString();
+        this.updateQueryParam("node_id", nodeId);
+        return this;
+    }
+
     public GetCacheFilesystemsSpectraS3Request withNodeId(final String nodeId) {
         this.nodeId = nodeId;
         this.updateQueryParam("node_id", nodeId);
@@ -64,6 +71,12 @@ public class GetCacheFilesystemsSpectraS3Request extends AbstractRequest {
     public GetCacheFilesystemsSpectraS3Request withPageOffset(final int pageOffset) {
         this.pageOffset = pageOffset;
         this.updateQueryParam("page_offset", pageOffset);
+        return this;
+    }
+
+    public GetCacheFilesystemsSpectraS3Request withPageStartMarker(final UUID pageStartMarker) {
+        this.pageStartMarker = pageStartMarker.toString();
+        this.updateQueryParam("page_start_marker", pageStartMarker);
         return this;
     }
 

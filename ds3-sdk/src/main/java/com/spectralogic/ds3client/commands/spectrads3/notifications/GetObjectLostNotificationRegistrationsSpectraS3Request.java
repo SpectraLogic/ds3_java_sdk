@@ -18,6 +18,7 @@ package com.spectralogic.ds3client.commands.spectrads3.notifications;
 
 import com.spectralogic.ds3client.commands.notifications.AbstractGetNotificationRequest;
 import java.util.UUID;
+import com.google.common.net.UrlEscapers;
 
 public class GetObjectLostNotificationRegistrationsSpectraS3Request extends AbstractGetNotificationRequest {
 
@@ -35,6 +36,12 @@ public class GetObjectLostNotificationRegistrationsSpectraS3Request extends Abst
 
     // Constructor
     
+    public GetObjectLostNotificationRegistrationsSpectraS3Request(final UUID notificationId) {
+        super(notificationId);
+
+        
+    }
+
     public GetObjectLostNotificationRegistrationsSpectraS3Request(final String notificationId) {
         super(notificationId);
 
@@ -63,9 +70,21 @@ public class GetObjectLostNotificationRegistrationsSpectraS3Request extends Abst
         return this;
     }
 
+    public GetObjectLostNotificationRegistrationsSpectraS3Request withPageStartMarker(final UUID pageStartMarker) {
+        this.pageStartMarker = pageStartMarker.toString();
+        this.updateQueryParam("page_start_marker", pageStartMarker);
+        return this;
+    }
+
     public GetObjectLostNotificationRegistrationsSpectraS3Request withPageStartMarker(final String pageStartMarker) {
         this.pageStartMarker = pageStartMarker;
         this.updateQueryParam("page_start_marker", pageStartMarker);
+        return this;
+    }
+
+    public GetObjectLostNotificationRegistrationsSpectraS3Request withUserId(final UUID userId) {
+        this.userId = userId.toString();
+        this.updateQueryParam("user_id", userId);
         return this;
     }
 

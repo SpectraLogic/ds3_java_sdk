@@ -18,6 +18,7 @@ package com.spectralogic.ds3client.commands;
 
 import com.spectralogic.ds3client.networking.HttpVerb;
 import java.util.UUID;
+import com.google.common.net.UrlEscapers;
 
 public class CompleteMultiPartUploadRequest extends AbstractRequest {
 
@@ -31,11 +32,18 @@ public class CompleteMultiPartUploadRequest extends AbstractRequest {
 
     // Constructor
     
+    public CompleteMultiPartUploadRequest(final String bucketName, final String objectName, final UUID uploadId) {
+        this.bucketName = bucketName;
+        this.objectName = objectName;
+        this.uploadId = uploadId.toString();
+                this.getQueryParams().put("upload_id", uploadId.toString());
+    }
+
     public CompleteMultiPartUploadRequest(final String bucketName, final String objectName, final String uploadId) {
         this.bucketName = bucketName;
         this.objectName = objectName;
         this.uploadId = uploadId;
-                this.getQueryParams().put("upload_id", uploadId);
+                this.getQueryParams().put("upload_id", UrlEscapers.urlFragmentEscaper().escape(uploadId).replace("+", "%2B"));
     }
 
 
