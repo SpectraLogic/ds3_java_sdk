@@ -29,6 +29,14 @@ public class DeleteTapePartitionFailureNotificationRegistrationSpectraS3Request 
         super(notificationId);
 
         
+
+    }
+
+    public DeleteTapePartitionFailureNotificationRegistrationSpectraS3Request(final String notificationId) {
+        super(notificationId);
+
+        
+
     }
 
     @Override

@@ -45,7 +45,8 @@ public class GetObjectSpectraS3Request extends AbstractRequest {
         this.objectName = objectName;
         this.channel = channel;
         this.bucketId = bucketId;
-                this.getQueryParams().put("bucket_id", bucketId);
+        
+        this.getQueryParams().put("bucket_id", bucketId);
 
     }
 

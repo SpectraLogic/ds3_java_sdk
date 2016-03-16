@@ -29,7 +29,7 @@ public class PutObjectPersistedNotificationRegistrationSpectraS3Request extends 
     
     private HttpResponseFormatType format;
 
-    private UUID jobId;
+    private String jobId;
 
     private NamingConventionType namingConvention;
 
@@ -39,6 +39,7 @@ public class PutObjectPersistedNotificationRegistrationSpectraS3Request extends 
         super(notificationEndPoint);
 
         
+
     }
 
     public PutObjectPersistedNotificationRegistrationSpectraS3Request withFormat(final HttpResponseFormatType format) {
@@ -48,6 +49,12 @@ public class PutObjectPersistedNotificationRegistrationSpectraS3Request extends 
     }
 
     public PutObjectPersistedNotificationRegistrationSpectraS3Request withJobId(final UUID jobId) {
+        this.jobId = jobId.toString();
+        this.updateQueryParam("job_id", jobId);
+        return this;
+    }
+
+    public PutObjectPersistedNotificationRegistrationSpectraS3Request withJobId(final String jobId) {
         this.jobId = jobId;
         this.updateQueryParam("job_id", jobId);
         return this;
@@ -77,7 +84,7 @@ public class PutObjectPersistedNotificationRegistrationSpectraS3Request extends 
     }
 
 
-    public UUID getJobId() {
+    public String getJobId() {
         return this.jobId;
     }
 

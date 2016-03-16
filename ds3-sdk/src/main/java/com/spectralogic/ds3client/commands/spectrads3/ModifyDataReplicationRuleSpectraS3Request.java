@@ -35,7 +35,8 @@ public class ModifyDataReplicationRuleSpectraS3Request extends AbstractRequest {
     
     public ModifyDataReplicationRuleSpectraS3Request(final String dataReplicationRule) {
         this.dataReplicationRule = dataReplicationRule;
-            }
+        
+    }
 
     public ModifyDataReplicationRuleSpectraS3Request withDs3TargetDataPolicy(final String ds3TargetDataPolicy) {
         this.ds3TargetDataPolicy = ds3TargetDataPolicy;

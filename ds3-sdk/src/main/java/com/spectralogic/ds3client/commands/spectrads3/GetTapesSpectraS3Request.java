@@ -45,9 +45,9 @@ public class GetTapesSpectraS3Request extends AbstractRequest {
 
     private int pageOffset;
 
-    private UUID pageStartMarker;
+    private String pageStartMarker;
 
-    private UUID partitionId;
+    private String partitionId;
 
     private TapeState previousState;
 
@@ -55,7 +55,7 @@ public class GetTapesSpectraS3Request extends AbstractRequest {
 
     private TapeState state;
 
-    private UUID storageDomainId;
+    private String storageDomainId;
 
     private TapeType type;
 
@@ -64,7 +64,8 @@ public class GetTapesSpectraS3Request extends AbstractRequest {
     // Constructor
     
     public GetTapesSpectraS3Request() {
-            }
+        
+    }
 
     public GetTapesSpectraS3Request withAssignedToStorageDomain(final boolean assignedToStorageDomain) {
         this.assignedToStorageDomain = assignedToStorageDomain;
@@ -125,12 +126,24 @@ public class GetTapesSpectraS3Request extends AbstractRequest {
     }
 
     public GetTapesSpectraS3Request withPageStartMarker(final UUID pageStartMarker) {
+        this.pageStartMarker = pageStartMarker.toString();
+        this.updateQueryParam("page_start_marker", pageStartMarker);
+        return this;
+    }
+
+    public GetTapesSpectraS3Request withPageStartMarker(final String pageStartMarker) {
         this.pageStartMarker = pageStartMarker;
         this.updateQueryParam("page_start_marker", pageStartMarker);
         return this;
     }
 
     public GetTapesSpectraS3Request withPartitionId(final UUID partitionId) {
+        this.partitionId = partitionId.toString();
+        this.updateQueryParam("partition_id", partitionId);
+        return this;
+    }
+
+    public GetTapesSpectraS3Request withPartitionId(final String partitionId) {
         this.partitionId = partitionId;
         this.updateQueryParam("partition_id", partitionId);
         return this;
@@ -155,6 +168,12 @@ public class GetTapesSpectraS3Request extends AbstractRequest {
     }
 
     public GetTapesSpectraS3Request withStorageDomainId(final UUID storageDomainId) {
+        this.storageDomainId = storageDomainId.toString();
+        this.updateQueryParam("storage_domain_id", storageDomainId);
+        return this;
+    }
+
+    public GetTapesSpectraS3Request withStorageDomainId(final String storageDomainId) {
         this.storageDomainId = storageDomainId;
         this.updateQueryParam("storage_domain_id", storageDomainId);
         return this;
@@ -228,12 +247,12 @@ public class GetTapesSpectraS3Request extends AbstractRequest {
     }
 
 
-    public UUID getPageStartMarker() {
+    public String getPageStartMarker() {
         return this.pageStartMarker;
     }
 
 
-    public UUID getPartitionId() {
+    public String getPartitionId() {
         return this.partitionId;
     }
 
@@ -253,7 +272,7 @@ public class GetTapesSpectraS3Request extends AbstractRequest {
     }
 
 
-    public UUID getStorageDomainId() {
+    public String getStorageDomainId() {
         return this.storageDomainId;
     }
 

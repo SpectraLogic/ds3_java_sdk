@@ -30,7 +30,8 @@ public class DeletePoolPartitionSpectraS3Request extends AbstractRequest {
     
     public DeletePoolPartitionSpectraS3Request(final String poolPartition) {
         this.poolPartition = poolPartition;
-            }
+        
+    }
 
 
     @Override

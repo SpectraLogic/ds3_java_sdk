@@ -31,21 +31,22 @@ public class ModifyDs3TargetUserMappingSpectraS3Request extends AbstractRequest 
 
     private String bucketId;
 
-    private UUID groupId;
+    private String groupId;
 
     private long orderNum;
 
     private String secretKey;
 
-    private UUID targetId;
+    private String targetId;
 
-    private UUID userId;
+    private String userId;
 
     // Constructor
     
     public ModifyDs3TargetUserMappingSpectraS3Request(final String ds3TargetUserMapping) {
         this.ds3TargetUserMapping = ds3TargetUserMapping;
-            }
+        
+    }
 
     public ModifyDs3TargetUserMappingSpectraS3Request withAuthId(final String authId) {
         this.authId = authId;
@@ -60,6 +61,12 @@ public class ModifyDs3TargetUserMappingSpectraS3Request extends AbstractRequest 
     }
 
     public ModifyDs3TargetUserMappingSpectraS3Request withGroupId(final UUID groupId) {
+        this.groupId = groupId.toString();
+        this.updateQueryParam("group_id", groupId);
+        return this;
+    }
+
+    public ModifyDs3TargetUserMappingSpectraS3Request withGroupId(final String groupId) {
         this.groupId = groupId;
         this.updateQueryParam("group_id", groupId);
         return this;
@@ -78,12 +85,24 @@ public class ModifyDs3TargetUserMappingSpectraS3Request extends AbstractRequest 
     }
 
     public ModifyDs3TargetUserMappingSpectraS3Request withTargetId(final UUID targetId) {
+        this.targetId = targetId.toString();
+        this.updateQueryParam("target_id", targetId);
+        return this;
+    }
+
+    public ModifyDs3TargetUserMappingSpectraS3Request withTargetId(final String targetId) {
         this.targetId = targetId;
         this.updateQueryParam("target_id", targetId);
         return this;
     }
 
     public ModifyDs3TargetUserMappingSpectraS3Request withUserId(final UUID userId) {
+        this.userId = userId.toString();
+        this.updateQueryParam("user_id", userId);
+        return this;
+    }
+
+    public ModifyDs3TargetUserMappingSpectraS3Request withUserId(final String userId) {
         this.userId = userId;
         this.updateQueryParam("user_id", userId);
         return this;
@@ -115,7 +134,7 @@ public class ModifyDs3TargetUserMappingSpectraS3Request extends AbstractRequest 
     }
 
 
-    public UUID getGroupId() {
+    public String getGroupId() {
         return this.groupId;
     }
 
@@ -130,12 +149,12 @@ public class ModifyDs3TargetUserMappingSpectraS3Request extends AbstractRequest 
     }
 
 
-    public UUID getTargetId() {
+    public String getTargetId() {
         return this.targetId;
     }
 
 
-    public UUID getUserId() {
+    public String getUserId() {
         return this.userId;
     }
 

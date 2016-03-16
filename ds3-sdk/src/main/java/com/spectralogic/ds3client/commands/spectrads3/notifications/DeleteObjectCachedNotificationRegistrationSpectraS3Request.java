@@ -29,6 +29,14 @@ public class DeleteObjectCachedNotificationRegistrationSpectraS3Request extends 
         super(notificationId);
 
         
+
+    }
+
+    public DeleteObjectCachedNotificationRegistrationSpectraS3Request(final String notificationId) {
+        super(notificationId);
+
+        
+
     }
 
     @Override

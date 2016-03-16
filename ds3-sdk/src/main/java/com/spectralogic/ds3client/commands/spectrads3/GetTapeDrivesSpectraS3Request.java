@@ -33,9 +33,9 @@ public class GetTapeDrivesSpectraS3Request extends AbstractRequest {
 
     private int pageOffset;
 
-    private UUID pageStartMarker;
+    private String pageStartMarker;
 
-    private UUID partitionId;
+    private String partitionId;
 
     private String serialNumber;
 
@@ -46,7 +46,8 @@ public class GetTapeDrivesSpectraS3Request extends AbstractRequest {
     // Constructor
     
     public GetTapeDrivesSpectraS3Request() {
-            }
+        
+    }
 
     public GetTapeDrivesSpectraS3Request withLastPage(final boolean lastPage) {
         this.lastPage = lastPage;
@@ -71,12 +72,24 @@ public class GetTapeDrivesSpectraS3Request extends AbstractRequest {
     }
 
     public GetTapeDrivesSpectraS3Request withPageStartMarker(final UUID pageStartMarker) {
+        this.pageStartMarker = pageStartMarker.toString();
+        this.updateQueryParam("page_start_marker", pageStartMarker);
+        return this;
+    }
+
+    public GetTapeDrivesSpectraS3Request withPageStartMarker(final String pageStartMarker) {
         this.pageStartMarker = pageStartMarker;
         this.updateQueryParam("page_start_marker", pageStartMarker);
         return this;
     }
 
     public GetTapeDrivesSpectraS3Request withPartitionId(final UUID partitionId) {
+        this.partitionId = partitionId.toString();
+        this.updateQueryParam("partition_id", partitionId);
+        return this;
+    }
+
+    public GetTapeDrivesSpectraS3Request withPartitionId(final String partitionId) {
         this.partitionId = partitionId;
         this.updateQueryParam("partition_id", partitionId);
         return this;
@@ -126,12 +139,12 @@ public class GetTapeDrivesSpectraS3Request extends AbstractRequest {
     }
 
 
-    public UUID getPageStartMarker() {
+    public String getPageStartMarker() {
         return this.pageStartMarker;
     }
 
 
-    public UUID getPartitionId() {
+    public String getPartitionId() {
         return this.partitionId;
     }
 

@@ -29,6 +29,14 @@ public class GetTapePartitionFailureNotificationRegistrationSpectraS3Request ext
         super(notificationId);
 
         
+
+    }
+
+    public GetTapePartitionFailureNotificationRegistrationSpectraS3Request(final String notificationId) {
+        super(notificationId);
+
+        
+
     }
 
 

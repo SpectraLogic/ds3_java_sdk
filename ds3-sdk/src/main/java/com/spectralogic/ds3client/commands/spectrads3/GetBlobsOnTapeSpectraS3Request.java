@@ -25,12 +25,13 @@ import java.io.InputStream;
 import java.util.List;
 import com.spectralogic.ds3client.commands.AbstractRequest;
 import java.util.UUID;
+import com.google.common.net.UrlEscapers;
 
 public class GetBlobsOnTapeSpectraS3Request extends AbstractRequest {
 
     // Variables
     
-    private final UUID tapeId;
+    private final String tapeId;
 
     private final List<Ds3Object> objects;
     private long size = 0;
@@ -38,10 +39,19 @@ public class GetBlobsOnTapeSpectraS3Request extends AbstractRequest {
     // Constructor
     
     public GetBlobsOnTapeSpectraS3Request(final List<Ds3Object> objects, final UUID tapeId) {
+        this.tapeId = tapeId.toString();
+        this.objects = objects;
+        
+        this.getQueryParams().put("operation", "get_physical_placement");
+
+    }
+
+    public GetBlobsOnTapeSpectraS3Request(final List<Ds3Object> objects, final String tapeId) {
         this.tapeId = tapeId;
         this.objects = objects;
         
         this.getQueryParams().put("operation", "get_physical_placement");
+
     }
 
 
@@ -69,10 +79,10 @@ public class GetBlobsOnTapeSpectraS3Request extends AbstractRequest {
 
     @Override
     public String getPath() {
-        return "/_rest_/tape/" + tapeId.toString();
+        return "/_rest_/tape/" + tapeId;
     }
     
-    public UUID getTapeId() {
+    public String getTapeId() {
         return this.tapeId;
     }
 

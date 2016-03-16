@@ -32,6 +32,7 @@ public class DeallocatePoolSpectraS3Request extends AbstractRequest {
         this.pool = pool;
         
         this.getQueryParams().put("operation", "deallocate");
+
     }
 
 

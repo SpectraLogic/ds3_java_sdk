@@ -31,7 +31,8 @@ public class InitiateMultiPartUploadRequest extends AbstractRequest {
     public InitiateMultiPartUploadRequest(final String bucketName, final String objectName) {
         this.bucketName = bucketName;
         this.objectName = objectName;
-                this.getQueryParams().put("uploads", null);
+        
+        this.getQueryParams().put("uploads", null);
     }
 
 

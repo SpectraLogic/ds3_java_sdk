@@ -22,14 +22,19 @@ import java.util.UUID;
 
 public abstract class AbstractDeleteNotificationRequest extends AbstractRequest {
 
-    private final UUID notificationId;
+    private final String notificationId;
 
     public AbstractDeleteNotificationRequest(final UUID notificationId) {
+        super();
+        this.notificationId = notificationId.toString();
+    }
+
+    public AbstractDeleteNotificationRequest(final String notificationId) {
         super();
         this.notificationId = notificationId;
     }
 
-    public UUID getNotificationId() {
+    public String getNotificationId() {
         return this.notificationId;
     }
 

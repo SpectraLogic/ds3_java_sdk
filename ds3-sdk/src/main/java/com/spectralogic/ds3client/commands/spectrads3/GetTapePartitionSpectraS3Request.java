@@ -30,7 +30,8 @@ public class GetTapePartitionSpectraS3Request extends AbstractRequest {
     
     public GetTapePartitionSpectraS3Request(final String tapePartition) {
         this.tapePartition = tapePartition;
-            }
+        
+    }
 
 
     @Override

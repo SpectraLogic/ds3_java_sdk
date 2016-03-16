@@ -35,14 +35,15 @@ public class GetTapeLibrariesSpectraS3Request extends AbstractRequest {
 
     private int pageOffset;
 
-    private UUID pageStartMarker;
+    private String pageStartMarker;
 
     private String serialNumber;
 
     // Constructor
     
     public GetTapeLibrariesSpectraS3Request() {
-            }
+        
+    }
 
     public GetTapeLibrariesSpectraS3Request withLastPage(final boolean lastPage) {
         this.lastPage = lastPage;
@@ -79,6 +80,12 @@ public class GetTapeLibrariesSpectraS3Request extends AbstractRequest {
     }
 
     public GetTapeLibrariesSpectraS3Request withPageStartMarker(final UUID pageStartMarker) {
+        this.pageStartMarker = pageStartMarker.toString();
+        this.updateQueryParam("page_start_marker", pageStartMarker);
+        return this;
+    }
+
+    public GetTapeLibrariesSpectraS3Request withPageStartMarker(final String pageStartMarker) {
         this.pageStartMarker = pageStartMarker;
         this.updateQueryParam("page_start_marker", pageStartMarker);
         return this;
@@ -126,7 +133,7 @@ public class GetTapeLibrariesSpectraS3Request extends AbstractRequest {
     }
 
 
-    public UUID getPageStartMarker() {
+    public String getPageStartMarker() {
         return this.pageStartMarker;
     }
 

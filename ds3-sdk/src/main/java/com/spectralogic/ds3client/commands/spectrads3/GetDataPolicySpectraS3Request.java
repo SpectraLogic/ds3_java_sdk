@@ -30,7 +30,8 @@ public class GetDataPolicySpectraS3Request extends AbstractRequest {
     
     public GetDataPolicySpectraS3Request(final String dataPolicy) {
         this.dataPolicy = dataPolicy;
-            }
+        
+    }
 
 
     @Override

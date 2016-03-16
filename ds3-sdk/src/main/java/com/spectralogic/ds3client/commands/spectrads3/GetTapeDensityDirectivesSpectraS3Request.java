@@ -20,6 +20,7 @@ import com.spectralogic.ds3client.networking.HttpVerb;
 import com.spectralogic.ds3client.commands.AbstractRequest;
 import com.spectralogic.ds3client.models.TapeDriveType;
 import java.util.UUID;
+import com.google.common.net.UrlEscapers;
 import com.spectralogic.ds3client.models.TapeType;
 
 public class GetTapeDensityDirectivesSpectraS3Request extends AbstractRequest {
@@ -34,16 +35,17 @@ public class GetTapeDensityDirectivesSpectraS3Request extends AbstractRequest {
 
     private int pageOffset;
 
-    private UUID pageStartMarker;
+    private String pageStartMarker;
 
-    private UUID partitionId;
+    private String partitionId;
 
     private TapeType tapeType;
 
     // Constructor
     
     public GetTapeDensityDirectivesSpectraS3Request() {
-            }
+        
+    }
 
     public GetTapeDensityDirectivesSpectraS3Request withDensity(final TapeDriveType density) {
         this.density = density;
@@ -74,12 +76,24 @@ public class GetTapeDensityDirectivesSpectraS3Request extends AbstractRequest {
     }
 
     public GetTapeDensityDirectivesSpectraS3Request withPageStartMarker(final UUID pageStartMarker) {
+        this.pageStartMarker = pageStartMarker.toString();
+        this.updateQueryParam("page_start_marker", pageStartMarker);
+        return this;
+    }
+
+    public GetTapeDensityDirectivesSpectraS3Request withPageStartMarker(final String pageStartMarker) {
         this.pageStartMarker = pageStartMarker;
         this.updateQueryParam("page_start_marker", pageStartMarker);
         return this;
     }
 
     public GetTapeDensityDirectivesSpectraS3Request withPartitionId(final UUID partitionId) {
+        this.partitionId = partitionId.toString();
+        this.updateQueryParam("partition_id", partitionId);
+        return this;
+    }
+
+    public GetTapeDensityDirectivesSpectraS3Request withPartitionId(final String partitionId) {
         this.partitionId = partitionId;
         this.updateQueryParam("partition_id", partitionId);
         return this;
@@ -122,12 +136,12 @@ public class GetTapeDensityDirectivesSpectraS3Request extends AbstractRequest {
     }
 
 
-    public UUID getPageStartMarker() {
+    public String getPageStartMarker() {
         return this.pageStartMarker;
     }
 
 
-    public UUID getPartitionId() {
+    public String getPartitionId() {
         return this.partitionId;
     }
 

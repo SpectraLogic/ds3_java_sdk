@@ -30,7 +30,8 @@ public class GetPoolSpectraS3Request extends AbstractRequest {
     
     public GetPoolSpectraS3Request(final String pool) {
         this.pool = pool;
-            }
+        
+    }
 
 
     @Override

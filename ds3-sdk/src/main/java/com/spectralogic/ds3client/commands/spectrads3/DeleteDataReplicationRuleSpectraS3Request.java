@@ -30,7 +30,8 @@ public class DeleteDataReplicationRuleSpectraS3Request extends AbstractRequest {
     
     public DeleteDataReplicationRuleSpectraS3Request(final String dataReplicationRule) {
         this.dataReplicationRule = dataReplicationRule;
-            }
+        
+    }
 
 
     @Override

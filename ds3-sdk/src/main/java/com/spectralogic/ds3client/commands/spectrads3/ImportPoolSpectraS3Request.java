@@ -30,11 +30,11 @@ public class ImportPoolSpectraS3Request extends AbstractRequest {
 
     private ImportConflictResolutionMode conflictResolutionMode;
 
-    private UUID dataPolicyId;
+    private String dataPolicyId;
 
-    private UUID storageDomainId;
+    private String storageDomainId;
 
-    private UUID userId;
+    private String userId;
 
     // Constructor
     
@@ -42,6 +42,7 @@ public class ImportPoolSpectraS3Request extends AbstractRequest {
         this.pool = pool;
         
         this.getQueryParams().put("operation", "import");
+
     }
 
     public ImportPoolSpectraS3Request withConflictResolutionMode(final ImportConflictResolutionMode conflictResolutionMode) {
@@ -51,18 +52,36 @@ public class ImportPoolSpectraS3Request extends AbstractRequest {
     }
 
     public ImportPoolSpectraS3Request withDataPolicyId(final UUID dataPolicyId) {
+        this.dataPolicyId = dataPolicyId.toString();
+        this.updateQueryParam("data_policy_id", dataPolicyId);
+        return this;
+    }
+
+    public ImportPoolSpectraS3Request withDataPolicyId(final String dataPolicyId) {
         this.dataPolicyId = dataPolicyId;
         this.updateQueryParam("data_policy_id", dataPolicyId);
         return this;
     }
 
     public ImportPoolSpectraS3Request withStorageDomainId(final UUID storageDomainId) {
+        this.storageDomainId = storageDomainId.toString();
+        this.updateQueryParam("storage_domain_id", storageDomainId);
+        return this;
+    }
+
+    public ImportPoolSpectraS3Request withStorageDomainId(final String storageDomainId) {
         this.storageDomainId = storageDomainId;
         this.updateQueryParam("storage_domain_id", storageDomainId);
         return this;
     }
 
     public ImportPoolSpectraS3Request withUserId(final UUID userId) {
+        this.userId = userId.toString();
+        this.updateQueryParam("user_id", userId);
+        return this;
+    }
+
+    public ImportPoolSpectraS3Request withUserId(final String userId) {
         this.userId = userId;
         this.updateQueryParam("user_id", userId);
         return this;
@@ -89,17 +108,17 @@ public class ImportPoolSpectraS3Request extends AbstractRequest {
     }
 
 
-    public UUID getDataPolicyId() {
+    public String getDataPolicyId() {
         return this.dataPolicyId;
     }
 
 
-    public UUID getStorageDomainId() {
+    public String getStorageDomainId() {
         return this.storageDomainId;
     }
 
 
-    public UUID getUserId() {
+    public String getUserId() {
         return this.userId;
     }
 

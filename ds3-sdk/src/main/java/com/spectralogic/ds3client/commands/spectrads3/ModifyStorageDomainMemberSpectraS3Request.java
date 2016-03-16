@@ -33,7 +33,8 @@ public class ModifyStorageDomainMemberSpectraS3Request extends AbstractRequest {
     
     public ModifyStorageDomainMemberSpectraS3Request(final String storageDomainMember) {
         this.storageDomainMember = storageDomainMember;
-            }
+        
+    }
 
     public ModifyStorageDomainMemberSpectraS3Request withWritePreference(final WritePreferenceLevel writePreference) {
         this.writePreference = writePreference;

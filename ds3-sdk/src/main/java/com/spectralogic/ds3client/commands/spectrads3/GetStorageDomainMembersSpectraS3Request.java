@@ -19,6 +19,7 @@ package com.spectralogic.ds3client.commands.spectrads3;
 import com.spectralogic.ds3client.networking.HttpVerb;
 import com.spectralogic.ds3client.commands.AbstractRequest;
 import java.util.UUID;
+import com.google.common.net.UrlEscapers;
 import com.spectralogic.ds3client.models.StorageDomainMemberState;
 import com.spectralogic.ds3client.models.TapeType;
 import com.spectralogic.ds3client.models.WritePreferenceLevel;
@@ -33,15 +34,15 @@ public class GetStorageDomainMembersSpectraS3Request extends AbstractRequest {
 
     private int pageOffset;
 
-    private UUID pageStartMarker;
+    private String pageStartMarker;
 
-    private UUID poolPartitionId;
+    private String poolPartitionId;
 
     private StorageDomainMemberState state;
 
-    private UUID storageDomainId;
+    private String storageDomainId;
 
-    private UUID tapePartitionId;
+    private String tapePartitionId;
 
     private TapeType tapeType;
 
@@ -50,7 +51,8 @@ public class GetStorageDomainMembersSpectraS3Request extends AbstractRequest {
     // Constructor
     
     public GetStorageDomainMembersSpectraS3Request() {
-            }
+        
+    }
 
     public GetStorageDomainMembersSpectraS3Request withLastPage(final boolean lastPage) {
         this.lastPage = lastPage;
@@ -75,12 +77,24 @@ public class GetStorageDomainMembersSpectraS3Request extends AbstractRequest {
     }
 
     public GetStorageDomainMembersSpectraS3Request withPageStartMarker(final UUID pageStartMarker) {
+        this.pageStartMarker = pageStartMarker.toString();
+        this.updateQueryParam("page_start_marker", pageStartMarker);
+        return this;
+    }
+
+    public GetStorageDomainMembersSpectraS3Request withPageStartMarker(final String pageStartMarker) {
         this.pageStartMarker = pageStartMarker;
         this.updateQueryParam("page_start_marker", pageStartMarker);
         return this;
     }
 
     public GetStorageDomainMembersSpectraS3Request withPoolPartitionId(final UUID poolPartitionId) {
+        this.poolPartitionId = poolPartitionId.toString();
+        this.updateQueryParam("pool_partition_id", poolPartitionId);
+        return this;
+    }
+
+    public GetStorageDomainMembersSpectraS3Request withPoolPartitionId(final String poolPartitionId) {
         this.poolPartitionId = poolPartitionId;
         this.updateQueryParam("pool_partition_id", poolPartitionId);
         return this;
@@ -93,12 +107,24 @@ public class GetStorageDomainMembersSpectraS3Request extends AbstractRequest {
     }
 
     public GetStorageDomainMembersSpectraS3Request withStorageDomainId(final UUID storageDomainId) {
+        this.storageDomainId = storageDomainId.toString();
+        this.updateQueryParam("storage_domain_id", storageDomainId);
+        return this;
+    }
+
+    public GetStorageDomainMembersSpectraS3Request withStorageDomainId(final String storageDomainId) {
         this.storageDomainId = storageDomainId;
         this.updateQueryParam("storage_domain_id", storageDomainId);
         return this;
     }
 
     public GetStorageDomainMembersSpectraS3Request withTapePartitionId(final UUID tapePartitionId) {
+        this.tapePartitionId = tapePartitionId.toString();
+        this.updateQueryParam("tape_partition_id", tapePartitionId);
+        return this;
+    }
+
+    public GetStorageDomainMembersSpectraS3Request withTapePartitionId(final String tapePartitionId) {
         this.tapePartitionId = tapePartitionId;
         this.updateQueryParam("tape_partition_id", tapePartitionId);
         return this;
@@ -142,12 +168,12 @@ public class GetStorageDomainMembersSpectraS3Request extends AbstractRequest {
     }
 
 
-    public UUID getPageStartMarker() {
+    public String getPageStartMarker() {
         return this.pageStartMarker;
     }
 
 
-    public UUID getPoolPartitionId() {
+    public String getPoolPartitionId() {
         return this.poolPartitionId;
     }
 
@@ -157,12 +183,12 @@ public class GetStorageDomainMembersSpectraS3Request extends AbstractRequest {
     }
 
 
-    public UUID getStorageDomainId() {
+    public String getStorageDomainId() {
         return this.storageDomainId;
     }
 
 
-    public UUID getTapePartitionId() {
+    public String getTapePartitionId() {
         return this.tapePartitionId;
     }
 

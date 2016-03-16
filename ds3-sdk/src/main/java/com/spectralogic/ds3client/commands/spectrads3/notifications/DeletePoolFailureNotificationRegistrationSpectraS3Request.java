@@ -29,6 +29,14 @@ public class DeletePoolFailureNotificationRegistrationSpectraS3Request extends A
         super(notificationId);
 
         
+
+    }
+
+    public DeletePoolFailureNotificationRegistrationSpectraS3Request(final String notificationId) {
+        super(notificationId);
+
+        
+
     }
 
     @Override

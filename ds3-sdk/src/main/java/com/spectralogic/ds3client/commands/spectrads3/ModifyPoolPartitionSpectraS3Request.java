@@ -32,7 +32,8 @@ public class ModifyPoolPartitionSpectraS3Request extends AbstractRequest {
     
     public ModifyPoolPartitionSpectraS3Request(final String poolPartition) {
         this.poolPartition = poolPartition;
-            }
+        
+    }
 
     public ModifyPoolPartitionSpectraS3Request withName(final String name) {
         this.name = name;

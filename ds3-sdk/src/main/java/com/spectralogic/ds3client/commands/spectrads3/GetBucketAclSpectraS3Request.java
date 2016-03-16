@@ -30,7 +30,8 @@ public class GetBucketAclSpectraS3Request extends AbstractRequest {
     
     public GetBucketAclSpectraS3Request(final String bucketAcl) {
         this.bucketAcl = bucketAcl;
-            }
+        
+    }
 
 
     @Override

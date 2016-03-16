@@ -30,7 +30,8 @@ public class GetDs3TargetReadPreferenceSpectraS3Request extends AbstractRequest 
     
     public GetDs3TargetReadPreferenceSpectraS3Request(final String ds3TargetReadPreference) {
         this.ds3TargetReadPreference = ds3TargetReadPreference;
-            }
+        
+    }
 
 
     @Override

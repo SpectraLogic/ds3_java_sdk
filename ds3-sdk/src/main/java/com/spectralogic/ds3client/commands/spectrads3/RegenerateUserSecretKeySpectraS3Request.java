@@ -19,19 +19,28 @@ package com.spectralogic.ds3client.commands.spectrads3;
 import com.spectralogic.ds3client.networking.HttpVerb;
 import com.spectralogic.ds3client.commands.AbstractRequest;
 import java.util.UUID;
+import com.google.common.net.UrlEscapers;
 
 public class RegenerateUserSecretKeySpectraS3Request extends AbstractRequest {
 
     // Variables
     
-    private final UUID userId;
+    private final String userId;
 
     // Constructor
     
     public RegenerateUserSecretKeySpectraS3Request(final UUID userId) {
+        this.userId = userId.toString();
+        
+        this.getQueryParams().put("operation", "regenerate_secret_key");
+
+    }
+
+    public RegenerateUserSecretKeySpectraS3Request(final String userId) {
         this.userId = userId;
         
         this.getQueryParams().put("operation", "regenerate_secret_key");
+
     }
 
 
@@ -42,10 +51,10 @@ public class RegenerateUserSecretKeySpectraS3Request extends AbstractRequest {
 
     @Override
     public String getPath() {
-        return "/_rest_/user/" + userId.toString();
+        return "/_rest_/user/" + userId;
     }
     
-    public UUID getUserId() {
+    public String getUserId() {
         return this.userId;
     }
 

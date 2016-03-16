@@ -20,21 +20,30 @@ import com.spectralogic.ds3client.networking.HttpVerb;
 import com.spectralogic.ds3client.commands.AbstractRequest;
 import com.spectralogic.ds3client.models.Priority;
 import java.util.UUID;
+import com.google.common.net.UrlEscapers;
 
 public class VerifyTapeSpectraS3Request extends AbstractRequest {
 
     // Variables
     
-    private final UUID tapeId;
+    private final String tapeId;
 
     private Priority taskPriority;
 
     // Constructor
     
     public VerifyTapeSpectraS3Request(final UUID tapeId) {
+        this.tapeId = tapeId.toString();
+        
+        this.getQueryParams().put("operation", "verify");
+
+    }
+
+    public VerifyTapeSpectraS3Request(final String tapeId) {
         this.tapeId = tapeId;
         
         this.getQueryParams().put("operation", "verify");
+
     }
 
     public VerifyTapeSpectraS3Request withTaskPriority(final Priority taskPriority) {
@@ -51,10 +60,10 @@ public class VerifyTapeSpectraS3Request extends AbstractRequest {
 
     @Override
     public String getPath() {
-        return "/_rest_/tape/" + tapeId.toString();
+        return "/_rest_/tape/" + tapeId;
     }
     
-    public UUID getTapeId() {
+    public String getTapeId() {
         return this.tapeId;
     }
 

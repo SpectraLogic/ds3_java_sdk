@@ -30,7 +30,8 @@ public class GetDs3TargetSpectraS3Request extends AbstractRequest {
     
     public GetDs3TargetSpectraS3Request(final String ds3Target) {
         this.ds3Target = ds3Target;
-            }
+        
+    }
 
 
     @Override

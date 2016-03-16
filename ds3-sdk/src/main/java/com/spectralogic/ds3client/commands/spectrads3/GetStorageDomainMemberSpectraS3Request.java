@@ -30,7 +30,8 @@ public class GetStorageDomainMemberSpectraS3Request extends AbstractRequest {
     
     public GetStorageDomainMemberSpectraS3Request(final String storageDomainMember) {
         this.storageDomainMember = storageDomainMember;
-            }
+        
+    }
 
 
     @Override

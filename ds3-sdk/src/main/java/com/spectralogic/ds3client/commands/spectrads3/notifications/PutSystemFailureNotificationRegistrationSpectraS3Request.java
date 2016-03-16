@@ -36,6 +36,7 @@ public class PutSystemFailureNotificationRegistrationSpectraS3Request extends Ab
         super(notificationEndPoint);
 
         
+
     }
 
     public PutSystemFailureNotificationRegistrationSpectraS3Request withFormat(final HttpResponseFormatType format) {

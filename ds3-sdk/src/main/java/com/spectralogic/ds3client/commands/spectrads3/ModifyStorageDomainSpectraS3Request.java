@@ -55,7 +55,8 @@ public class ModifyStorageDomainSpectraS3Request extends AbstractRequest {
     
     public ModifyStorageDomainSpectraS3Request(final String storageDomain) {
         this.storageDomain = storageDomain;
-            }
+        
+    }
 
     public ModifyStorageDomainSpectraS3Request withAutoEjectUponCron(final String autoEjectUponCron) {
         this.autoEjectUponCron = autoEjectUponCron;

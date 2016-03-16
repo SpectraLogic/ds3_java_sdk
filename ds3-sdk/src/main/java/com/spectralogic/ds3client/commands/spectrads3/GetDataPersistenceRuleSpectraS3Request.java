@@ -30,7 +30,8 @@ public class GetDataPersistenceRuleSpectraS3Request extends AbstractRequest {
     
     public GetDataPersistenceRuleSpectraS3Request(final String dataPersistenceRule) {
         this.dataPersistenceRule = dataPersistenceRule;
-            }
+        
+    }
 
 
     @Override

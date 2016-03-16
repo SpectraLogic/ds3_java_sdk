@@ -41,7 +41,8 @@ public class GetSystemCapacitySummarySpectraS3Request extends AbstractRequest {
     // Constructor
     
     public GetSystemCapacitySummarySpectraS3Request() {
-            }
+        
+    }
 
     public GetSystemCapacitySummarySpectraS3Request withPoolHealth(final PoolHealth poolHealth) {
         this.poolHealth = poolHealth;

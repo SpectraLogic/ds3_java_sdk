@@ -19,18 +19,26 @@ package com.spectralogic.ds3client.commands.spectrads3;
 import com.spectralogic.ds3client.networking.HttpVerb;
 import com.spectralogic.ds3client.commands.AbstractRequest;
 import java.util.UUID;
+import com.google.common.net.UrlEscapers;
 
 public class PutGlobalDataPolicyAclForUserSpectraS3Request extends AbstractRequest {
 
     // Variables
     
-    private final UUID userId;
+    private final String userId;
 
     // Constructor
     
     public PutGlobalDataPolicyAclForUserSpectraS3Request(final UUID userId) {
+        this.userId = userId.toString();
+        
+        this.getQueryParams().put("user_id", userId.toString());
+    }
+
+    public PutGlobalDataPolicyAclForUserSpectraS3Request(final String userId) {
         this.userId = userId;
-                this.getQueryParams().put("user_id", userId.toString());
+        
+        this.getQueryParams().put("user_id", UrlEscapers.urlFragmentEscaper().escape(userId).replace("+", "%2B"));
     }
 
 
@@ -44,7 +52,7 @@ public class PutGlobalDataPolicyAclForUserSpectraS3Request extends AbstractReque
         return "/_rest_/data_policy_acl";
     }
     
-    public UUID getUserId() {
+    public String getUserId() {
         return this.userId;
     }
 
