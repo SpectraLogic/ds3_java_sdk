@@ -49,6 +49,7 @@ public class VerifyBulkJobSpectraS3Request extends AbstractRequest {
         this.objects = objects;
         
         this.getQueryParams().put("operation", "start_bulk_verify");
+
     }
 
     public VerifyBulkJobSpectraS3Request withAggregating(final boolean aggregating) {

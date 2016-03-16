@@ -20,8 +20,8 @@ import com.spectralogic.ds3client.networking.HttpVerb;
 import com.spectralogic.ds3client.commands.AbstractRequest;
 import com.spectralogic.ds3client.models.ImportConflictResolutionMode;
 import java.util.UUID;
-import com.spectralogic.ds3client.models.Priority;
 import com.google.common.net.UrlEscapers;
+import com.spectralogic.ds3client.models.Priority;
 
 public class ImportPoolSpectraS3Request extends AbstractRequest {
 
@@ -49,11 +49,18 @@ public class ImportPoolSpectraS3Request extends AbstractRequest {
         this.pool = pool;
         
         this.getQueryParams().put("operation", "import");
+
     }
 
     public ImportPoolSpectraS3Request withConflictResolutionMode(final ImportConflictResolutionMode conflictResolutionMode) {
         this.conflictResolutionMode = conflictResolutionMode;
         this.updateQueryParam("conflict_resolution_mode", conflictResolutionMode);
+        return this;
+    }
+
+    public ImportPoolSpectraS3Request withDataPolicyId(final UUID dataPolicyId) {
+        this.dataPolicyId = dataPolicyId.toString();
+        this.updateQueryParam("data_policy_id", dataPolicyId);
         return this;
     }
 
@@ -69,9 +76,21 @@ public class ImportPoolSpectraS3Request extends AbstractRequest {
         return this;
     }
 
+    public ImportPoolSpectraS3Request withStorageDomainId(final UUID storageDomainId) {
+        this.storageDomainId = storageDomainId.toString();
+        this.updateQueryParam("storage_domain_id", storageDomainId);
+        return this;
+    }
+
     public ImportPoolSpectraS3Request withStorageDomainId(final String storageDomainId) {
         this.storageDomainId = storageDomainId;
         this.updateQueryParam("storage_domain_id", storageDomainId);
+        return this;
+    }
+
+    public ImportPoolSpectraS3Request withUserId(final UUID userId) {
+        this.userId = userId.toString();
+        this.updateQueryParam("user_id", userId);
         return this;
     }
 

@@ -36,6 +36,7 @@ public class PutPoolFailureNotificationRegistrationSpectraS3Request extends Abst
         super(notificationEndPoint);
 
         
+
     }
 
     public PutPoolFailureNotificationRegistrationSpectraS3Request withFormat(final HttpResponseFormatType format) {

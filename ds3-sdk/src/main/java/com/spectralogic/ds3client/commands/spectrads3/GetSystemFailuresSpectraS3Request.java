@@ -41,7 +41,8 @@ public class GetSystemFailuresSpectraS3Request extends AbstractRequest {
     // Constructor
     
     public GetSystemFailuresSpectraS3Request() {
-            }
+        
+    }
 
     public GetSystemFailuresSpectraS3Request withErrorMessage(final String errorMessage) {
         this.errorMessage = errorMessage;
@@ -68,6 +69,12 @@ public class GetSystemFailuresSpectraS3Request extends AbstractRequest {
     public GetSystemFailuresSpectraS3Request withPageOffset(final int pageOffset) {
         this.pageOffset = pageOffset;
         this.updateQueryParam("page_offset", pageOffset);
+        return this;
+    }
+
+    public GetSystemFailuresSpectraS3Request withPageStartMarker(final UUID pageStartMarker) {
+        this.pageStartMarker = pageStartMarker.toString();
+        this.updateQueryParam("page_start_marker", pageStartMarker);
         return this;
     }
 

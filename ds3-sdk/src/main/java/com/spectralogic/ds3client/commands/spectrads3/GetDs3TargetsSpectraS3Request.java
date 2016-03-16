@@ -60,7 +60,8 @@ public class GetDs3TargetsSpectraS3Request extends AbstractRequest {
     // Constructor
     
     public GetDs3TargetsSpectraS3Request() {
-            }
+        
+    }
 
     public GetDs3TargetsSpectraS3Request withAdminAuthId(final String adminAuthId) {
         this.adminAuthId = adminAuthId;
@@ -129,6 +130,12 @@ public class GetDs3TargetsSpectraS3Request extends AbstractRequest {
     public GetDs3TargetsSpectraS3Request withPageOffset(final int pageOffset) {
         this.pageOffset = pageOffset;
         this.updateQueryParam("page_offset", pageOffset);
+        return this;
+    }
+
+    public GetDs3TargetsSpectraS3Request withPageStartMarker(final UUID pageStartMarker) {
+        this.pageStartMarker = pageStartMarker.toString();
+        this.updateQueryParam("page_start_marker", pageStartMarker);
         return this;
     }
 

@@ -39,11 +39,18 @@ public class PutJobCompletedNotificationRegistrationSpectraS3Request extends Abs
         super(notificationEndPoint);
 
         
+
     }
 
     public PutJobCompletedNotificationRegistrationSpectraS3Request withFormat(final HttpResponseFormatType format) {
         this.format = format;
         this.updateQueryParam("format", format);
+        return this;
+    }
+
+    public PutJobCompletedNotificationRegistrationSpectraS3Request withJobId(final UUID jobId) {
+        this.jobId = jobId.toString();
+        this.updateQueryParam("job_id", jobId);
         return this;
     }
 

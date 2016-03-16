@@ -19,6 +19,7 @@ package com.spectralogic.ds3client.commands.spectrads3;
 import com.spectralogic.ds3client.networking.HttpVerb;
 import com.spectralogic.ds3client.commands.AbstractRequest;
 import java.util.UUID;
+import com.google.common.net.UrlEscapers;
 import com.spectralogic.ds3client.models.WritePreferenceLevel;
 
 public class PutPoolStorageDomainMemberSpectraS3Request extends AbstractRequest {
@@ -33,11 +34,20 @@ public class PutPoolStorageDomainMemberSpectraS3Request extends AbstractRequest 
 
     // Constructor
     
+    public PutPoolStorageDomainMemberSpectraS3Request(final UUID poolPartitionId, final UUID storageDomainId) {
+        this.poolPartitionId = poolPartitionId.toString();
+        this.storageDomainId = storageDomainId.toString();
+        
+        this.getQueryParams().put("pool_partition_id", poolPartitionId.toString());
+        this.getQueryParams().put("storage_domain_id", storageDomainId.toString());
+    }
+
     public PutPoolStorageDomainMemberSpectraS3Request(final String poolPartitionId, final String storageDomainId) {
         this.poolPartitionId = poolPartitionId;
         this.storageDomainId = storageDomainId;
-                this.getQueryParams().put("pool_partition_id", poolPartitionId);
-        this.getQueryParams().put("storage_domain_id", storageDomainId);
+        
+        this.getQueryParams().put("pool_partition_id", UrlEscapers.urlFragmentEscaper().escape(poolPartitionId).replace("+", "%2B"));
+        this.getQueryParams().put("storage_domain_id", UrlEscapers.urlFragmentEscaper().escape(storageDomainId).replace("+", "%2B"));
     }
 
     public PutPoolStorageDomainMemberSpectraS3Request withWritePreference(final WritePreferenceLevel writePreference) {

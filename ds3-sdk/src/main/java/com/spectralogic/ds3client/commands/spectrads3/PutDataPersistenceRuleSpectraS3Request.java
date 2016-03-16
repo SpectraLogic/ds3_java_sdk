@@ -19,6 +19,7 @@ package com.spectralogic.ds3client.commands.spectrads3;
 import com.spectralogic.ds3client.networking.HttpVerb;
 import com.spectralogic.ds3client.commands.AbstractRequest;
 import java.util.UUID;
+import com.google.common.net.UrlEscapers;
 import com.spectralogic.ds3client.models.DataIsolationLevel;
 import com.spectralogic.ds3client.models.DataPersistenceRuleType;
 import java.lang.Integer;
@@ -39,14 +40,27 @@ public class PutDataPersistenceRuleSpectraS3Request extends AbstractRequest {
 
     // Constructor
     
+    public PutDataPersistenceRuleSpectraS3Request(final UUID dataPolicyId, final DataIsolationLevel isolationLevel, final UUID storageDomainId, final DataPersistenceRuleType type) {
+        this.dataPolicyId = dataPolicyId.toString();
+        this.isolationLevel = isolationLevel;
+        this.storageDomainId = storageDomainId.toString();
+        this.type = type;
+        
+        this.getQueryParams().put("data_policy_id", dataPolicyId.toString());
+        this.getQueryParams().put("isolation_level", isolationLevel.toString());
+        this.getQueryParams().put("storage_domain_id", storageDomainId.toString());
+        this.getQueryParams().put("type", type.toString());
+    }
+
     public PutDataPersistenceRuleSpectraS3Request(final String dataPolicyId, final DataIsolationLevel isolationLevel, final String storageDomainId, final DataPersistenceRuleType type) {
         this.dataPolicyId = dataPolicyId;
         this.isolationLevel = isolationLevel;
         this.storageDomainId = storageDomainId;
         this.type = type;
-                this.getQueryParams().put("data_policy_id", dataPolicyId);
+        
+        this.getQueryParams().put("data_policy_id", UrlEscapers.urlFragmentEscaper().escape(dataPolicyId).replace("+", "%2B"));
         this.getQueryParams().put("isolation_level", isolationLevel.toString());
-        this.getQueryParams().put("storage_domain_id", storageDomainId);
+        this.getQueryParams().put("storage_domain_id", UrlEscapers.urlFragmentEscaper().escape(storageDomainId).replace("+", "%2B"));
         this.getQueryParams().put("type", type.toString());
     }
 

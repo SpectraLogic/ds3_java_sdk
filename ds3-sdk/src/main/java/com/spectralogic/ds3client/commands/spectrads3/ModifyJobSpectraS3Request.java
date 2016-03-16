@@ -37,9 +37,15 @@ public class ModifyJobSpectraS3Request extends AbstractRequest {
 
     // Constructor
     
+    public ModifyJobSpectraS3Request(final UUID jobId) {
+        this.jobId = jobId.toString();
+        
+    }
+
     public ModifyJobSpectraS3Request(final String jobId) {
         this.jobId = jobId;
-            }
+        
+    }
 
     public ModifyJobSpectraS3Request withCreatedAt(final Date createdAt) {
         this.createdAt = createdAt;

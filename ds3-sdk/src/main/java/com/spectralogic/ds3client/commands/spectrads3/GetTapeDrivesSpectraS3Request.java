@@ -46,7 +46,8 @@ public class GetTapeDrivesSpectraS3Request extends AbstractRequest {
     // Constructor
     
     public GetTapeDrivesSpectraS3Request() {
-            }
+        
+    }
 
     public GetTapeDrivesSpectraS3Request withLastPage(final boolean lastPage) {
         this.lastPage = lastPage;
@@ -70,9 +71,21 @@ public class GetTapeDrivesSpectraS3Request extends AbstractRequest {
         return this;
     }
 
+    public GetTapeDrivesSpectraS3Request withPageStartMarker(final UUID pageStartMarker) {
+        this.pageStartMarker = pageStartMarker.toString();
+        this.updateQueryParam("page_start_marker", pageStartMarker);
+        return this;
+    }
+
     public GetTapeDrivesSpectraS3Request withPageStartMarker(final String pageStartMarker) {
         this.pageStartMarker = pageStartMarker;
         this.updateQueryParam("page_start_marker", pageStartMarker);
+        return this;
+    }
+
+    public GetTapeDrivesSpectraS3Request withPartitionId(final UUID partitionId) {
+        this.partitionId = partitionId.toString();
+        this.updateQueryParam("partition_id", partitionId);
         return this;
     }
 

@@ -42,6 +42,7 @@ public class GetBlobsOnPoolSpectraS3Request extends AbstractRequest {
         this.objects = objects;
         
         this.getQueryParams().put("operation", "get_physical_placement");
+
     }
 
 

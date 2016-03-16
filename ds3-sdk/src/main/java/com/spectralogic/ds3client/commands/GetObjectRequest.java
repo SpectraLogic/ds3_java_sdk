@@ -25,6 +25,7 @@ import org.apache.http.entity.ContentType;
 import java.nio.channels.WritableByteChannel;
 import java.util.Collection;
 import java.util.UUID;
+import com.google.common.net.UrlEscapers;
 import com.spectralogic.ds3client.models.ChecksumType;
 public class GetObjectRequest extends AbstractRequest {
 
@@ -51,6 +52,19 @@ public class GetObjectRequest extends AbstractRequest {
         this.objectName = objectName;
         this.channel = channel;
         
+
+    }
+
+    public GetObjectRequest(final String bucketName, final String objectName, final WritableByteChannel channel, final UUID job, final long offset) {
+        this.bucketName = bucketName;
+        this.objectName = objectName;
+        this.channel = channel;
+        this.job = job.toString();
+        this.offset = offset;
+        
+        this.getQueryParams().put("job", job.toString());
+        this.getQueryParams().put("offset", Long.toString(offset));
+
     }
 
     public GetObjectRequest(final String bucketName, final String objectName, final WritableByteChannel channel, final String job, final long offset) {
@@ -59,11 +73,18 @@ public class GetObjectRequest extends AbstractRequest {
         this.channel = channel;
         this.job = job;
         this.offset = offset;
-                this.getQueryParams().put("job", job);
+        
+        this.getQueryParams().put("job", UrlEscapers.urlFragmentEscaper().escape(job).replace("+", "%2B"));
         this.getQueryParams().put("offset", Long.toString(offset));
 
     }
 
+
+    public GetObjectRequest withJob(final UUID job) {
+        this.job = job.toString();
+        this.updateQueryParam("job", job);
+        return this;
+    }
 
     public GetObjectRequest withJob(final String job) {
         this.job = job;

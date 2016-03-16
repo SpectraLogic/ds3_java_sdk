@@ -37,7 +37,8 @@ public class GetBucketRequest extends AbstractRequest {
     
     public GetBucketRequest(final String bucketName) {
         this.bucketName = bucketName;
-            }
+        
+    }
 
     public GetBucketRequest withDelimiter(final String delimiter) {
         this.delimiter = delimiter;

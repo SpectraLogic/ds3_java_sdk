@@ -51,7 +51,8 @@ public class GetStorageDomainsSpectraS3Request extends AbstractRequest {
     // Constructor
     
     public GetStorageDomainsSpectraS3Request() {
-            }
+        
+    }
 
     public GetStorageDomainsSpectraS3Request withAutoEjectUponCron(final String autoEjectUponCron) {
         this.autoEjectUponCron = autoEjectUponCron;
@@ -108,6 +109,12 @@ public class GetStorageDomainsSpectraS3Request extends AbstractRequest {
     public GetStorageDomainsSpectraS3Request withPageOffset(final int pageOffset) {
         this.pageOffset = pageOffset;
         this.updateQueryParam("page_offset", pageOffset);
+        return this;
+    }
+
+    public GetStorageDomainsSpectraS3Request withPageStartMarker(final UUID pageStartMarker) {
+        this.pageStartMarker = pageStartMarker.toString();
+        this.updateQueryParam("page_start_marker", pageStartMarker);
         return this;
     }
 

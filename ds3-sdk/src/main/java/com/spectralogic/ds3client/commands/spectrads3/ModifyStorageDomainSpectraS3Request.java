@@ -58,7 +58,8 @@ public class ModifyStorageDomainSpectraS3Request extends AbstractRequest {
     
     public ModifyStorageDomainSpectraS3Request(final String storageDomain) {
         this.storageDomain = storageDomain;
-            }
+        
+    }
 
     public ModifyStorageDomainSpectraS3Request withAutoEjectMediaFullThreshold(final Long autoEjectMediaFullThreshold) {
         this.autoEjectMediaFullThreshold = autoEjectMediaFullThreshold;

@@ -42,11 +42,18 @@ public class GetUsersSpectraS3Request extends AbstractRequest {
     // Constructor
     
     public GetUsersSpectraS3Request() {
-            }
+        
+    }
 
     public GetUsersSpectraS3Request withAuthId(final String authId) {
         this.authId = authId;
         this.updateQueryParam("auth_id", authId);
+        return this;
+    }
+
+    public GetUsersSpectraS3Request withDefaultDataPolicyId(final UUID defaultDataPolicyId) {
+        this.defaultDataPolicyId = defaultDataPolicyId.toString();
+        this.updateQueryParam("default_data_policy_id", defaultDataPolicyId);
         return this;
     }
 
@@ -81,6 +88,12 @@ public class GetUsersSpectraS3Request extends AbstractRequest {
     public GetUsersSpectraS3Request withPageOffset(final int pageOffset) {
         this.pageOffset = pageOffset;
         this.updateQueryParam("page_offset", pageOffset);
+        return this;
+    }
+
+    public GetUsersSpectraS3Request withPageStartMarker(final UUID pageStartMarker) {
+        this.pageStartMarker = pageStartMarker.toString();
+        this.updateQueryParam("page_start_marker", pageStartMarker);
         return this;
     }
 

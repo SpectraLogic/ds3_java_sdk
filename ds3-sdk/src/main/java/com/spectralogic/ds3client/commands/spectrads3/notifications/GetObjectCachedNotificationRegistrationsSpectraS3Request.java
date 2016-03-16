@@ -18,6 +18,7 @@ package com.spectralogic.ds3client.commands.spectrads3.notifications;
 
 import com.spectralogic.ds3client.commands.notifications.AbstractGetNotificationRequest;
 import java.util.UUID;
+import com.google.common.net.UrlEscapers;
 
 public class GetObjectCachedNotificationRegistrationsSpectraS3Request extends AbstractGetNotificationRequest {
 
@@ -35,10 +36,18 @@ public class GetObjectCachedNotificationRegistrationsSpectraS3Request extends Ab
 
     // Constructor
     
+    public GetObjectCachedNotificationRegistrationsSpectraS3Request(final UUID notificationId) {
+        super(notificationId);
+
+        
+
+    }
+
     public GetObjectCachedNotificationRegistrationsSpectraS3Request(final String notificationId) {
         super(notificationId);
 
         
+
     }
 
     public GetObjectCachedNotificationRegistrationsSpectraS3Request withLastPage(final boolean lastPage) {
@@ -63,9 +72,21 @@ public class GetObjectCachedNotificationRegistrationsSpectraS3Request extends Ab
         return this;
     }
 
+    public GetObjectCachedNotificationRegistrationsSpectraS3Request withPageStartMarker(final UUID pageStartMarker) {
+        this.pageStartMarker = pageStartMarker.toString();
+        this.updateQueryParam("page_start_marker", pageStartMarker);
+        return this;
+    }
+
     public GetObjectCachedNotificationRegistrationsSpectraS3Request withPageStartMarker(final String pageStartMarker) {
         this.pageStartMarker = pageStartMarker;
         this.updateQueryParam("page_start_marker", pageStartMarker);
+        return this;
+    }
+
+    public GetObjectCachedNotificationRegistrationsSpectraS3Request withUserId(final UUID userId) {
+        this.userId = userId.toString();
+        this.updateQueryParam("user_id", userId);
         return this;
     }
 

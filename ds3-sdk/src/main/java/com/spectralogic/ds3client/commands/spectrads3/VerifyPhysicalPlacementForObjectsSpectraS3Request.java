@@ -45,6 +45,13 @@ public class VerifyPhysicalPlacementForObjectsSpectraS3Request extends AbstractR
         this.objects = objects;
         
         this.getQueryParams().put("operation", "verify_physical_placement");
+
+    }
+
+    public VerifyPhysicalPlacementForObjectsSpectraS3Request withStorageDomainId(final UUID storageDomainId) {
+        this.storageDomainId = storageDomainId.toString();
+        this.updateQueryParam("storage_domain_id", storageDomainId);
+        return this;
     }
 
     public VerifyPhysicalPlacementForObjectsSpectraS3Request withStorageDomainId(final String storageDomainId) {

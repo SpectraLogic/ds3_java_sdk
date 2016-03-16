@@ -43,7 +43,8 @@ public class GetDataPoliciesSpectraS3Request extends AbstractRequest {
     // Constructor
     
     public GetDataPoliciesSpectraS3Request() {
-            }
+        
+    }
 
     public GetDataPoliciesSpectraS3Request withChecksumType(final ChecksumType.Type checksumType) {
         this.checksumType = checksumType;
@@ -82,6 +83,12 @@ public class GetDataPoliciesSpectraS3Request extends AbstractRequest {
     public GetDataPoliciesSpectraS3Request withPageOffset(final int pageOffset) {
         this.pageOffset = pageOffset;
         this.updateQueryParam("page_offset", pageOffset);
+        return this;
+    }
+
+    public GetDataPoliciesSpectraS3Request withPageStartMarker(final UUID pageStartMarker) {
+        this.pageStartMarker = pageStartMarker.toString();
+        this.updateQueryParam("page_start_marker", pageStartMarker);
         return this;
     }
 

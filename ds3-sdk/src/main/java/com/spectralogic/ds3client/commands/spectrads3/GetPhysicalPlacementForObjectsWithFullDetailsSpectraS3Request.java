@@ -45,7 +45,14 @@ public class GetPhysicalPlacementForObjectsWithFullDetailsSpectraS3Request exten
         this.objects = objects;
         
         this.getQueryParams().put("operation", "get_physical_placement");
+
         this.getQueryParams().put("full_details", null);
+    }
+
+    public GetPhysicalPlacementForObjectsWithFullDetailsSpectraS3Request withStorageDomainId(final UUID storageDomainId) {
+        this.storageDomainId = storageDomainId.toString();
+        this.updateQueryParam("storage_domain_id", storageDomainId);
+        return this;
     }
 
     public GetPhysicalPlacementForObjectsWithFullDetailsSpectraS3Request withStorageDomainId(final String storageDomainId) {

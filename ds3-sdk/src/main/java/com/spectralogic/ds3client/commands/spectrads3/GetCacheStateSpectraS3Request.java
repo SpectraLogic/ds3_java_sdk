@@ -26,7 +26,8 @@ public class GetCacheStateSpectraS3Request extends AbstractRequest {
     // Constructor
     
     public GetCacheStateSpectraS3Request() {
-            }
+        
+    }
 
 
     @Override

@@ -43,7 +43,8 @@ public class GetStorageDomainFailuresSpectraS3Request extends AbstractRequest {
     // Constructor
     
     public GetStorageDomainFailuresSpectraS3Request() {
-            }
+        
+    }
 
     public GetStorageDomainFailuresSpectraS3Request withErrorMessage(final String errorMessage) {
         this.errorMessage = errorMessage;
@@ -73,9 +74,21 @@ public class GetStorageDomainFailuresSpectraS3Request extends AbstractRequest {
         return this;
     }
 
+    public GetStorageDomainFailuresSpectraS3Request withPageStartMarker(final UUID pageStartMarker) {
+        this.pageStartMarker = pageStartMarker.toString();
+        this.updateQueryParam("page_start_marker", pageStartMarker);
+        return this;
+    }
+
     public GetStorageDomainFailuresSpectraS3Request withPageStartMarker(final String pageStartMarker) {
         this.pageStartMarker = pageStartMarker;
         this.updateQueryParam("page_start_marker", pageStartMarker);
+        return this;
+    }
+
+    public GetStorageDomainFailuresSpectraS3Request withStorageDomainId(final UUID storageDomainId) {
+        this.storageDomainId = storageDomainId.toString();
+        this.updateQueryParam("storage_domain_id", storageDomainId);
         return this;
     }
 

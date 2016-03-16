@@ -19,6 +19,7 @@ package com.spectralogic.ds3client.commands.spectrads3;
 import com.spectralogic.ds3client.networking.HttpVerb;
 import com.spectralogic.ds3client.commands.AbstractRequest;
 import java.util.UUID;
+import com.google.common.net.UrlEscapers;
 
 public class GetTapeSpectraS3Request extends AbstractRequest {
 
@@ -28,9 +29,15 @@ public class GetTapeSpectraS3Request extends AbstractRequest {
 
     // Constructor
     
+    public GetTapeSpectraS3Request(final UUID tapeId) {
+        this.tapeId = tapeId.toString();
+        
+    }
+
     public GetTapeSpectraS3Request(final String tapeId) {
         this.tapeId = tapeId;
-            }
+        
+    }
 
 
     @Override

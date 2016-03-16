@@ -45,11 +45,18 @@ public class GetBucketAclsSpectraS3Request extends AbstractRequest {
     // Constructor
     
     public GetBucketAclsSpectraS3Request() {
-            }
+        
+    }
 
     public GetBucketAclsSpectraS3Request withBucketId(final String bucketId) {
         this.bucketId = bucketId;
         this.updateQueryParam("bucket_id", bucketId);
+        return this;
+    }
+
+    public GetBucketAclsSpectraS3Request withGroupId(final UUID groupId) {
+        this.groupId = groupId.toString();
+        this.updateQueryParam("group_id", groupId);
         return this;
     }
 
@@ -81,6 +88,12 @@ public class GetBucketAclsSpectraS3Request extends AbstractRequest {
         return this;
     }
 
+    public GetBucketAclsSpectraS3Request withPageStartMarker(final UUID pageStartMarker) {
+        this.pageStartMarker = pageStartMarker.toString();
+        this.updateQueryParam("page_start_marker", pageStartMarker);
+        return this;
+    }
+
     public GetBucketAclsSpectraS3Request withPageStartMarker(final String pageStartMarker) {
         this.pageStartMarker = pageStartMarker;
         this.updateQueryParam("page_start_marker", pageStartMarker);
@@ -90,6 +103,12 @@ public class GetBucketAclsSpectraS3Request extends AbstractRequest {
     public GetBucketAclsSpectraS3Request withPermission(final BucketAclPermission permission) {
         this.permission = permission;
         this.updateQueryParam("permission", permission);
+        return this;
+    }
+
+    public GetBucketAclsSpectraS3Request withUserId(final UUID userId) {
+        this.userId = userId.toString();
+        this.updateQueryParam("user_id", userId);
         return this;
     }
 

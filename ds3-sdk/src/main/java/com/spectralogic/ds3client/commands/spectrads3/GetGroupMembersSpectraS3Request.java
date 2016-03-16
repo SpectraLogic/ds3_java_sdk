@@ -19,6 +19,7 @@ package com.spectralogic.ds3client.commands.spectrads3;
 import com.spectralogic.ds3client.networking.HttpVerb;
 import com.spectralogic.ds3client.commands.AbstractRequest;
 import java.util.UUID;
+import com.google.common.net.UrlEscapers;
 
 public class GetGroupMembersSpectraS3Request extends AbstractRequest {
 
@@ -41,7 +42,14 @@ public class GetGroupMembersSpectraS3Request extends AbstractRequest {
     // Constructor
     
     public GetGroupMembersSpectraS3Request() {
-            }
+        
+    }
+
+    public GetGroupMembersSpectraS3Request withGroupId(final UUID groupId) {
+        this.groupId = groupId.toString();
+        this.updateQueryParam("group_id", groupId);
+        return this;
+    }
 
     public GetGroupMembersSpectraS3Request withGroupId(final String groupId) {
         this.groupId = groupId;
@@ -59,9 +67,21 @@ public class GetGroupMembersSpectraS3Request extends AbstractRequest {
         return this;
     }
 
+    public GetGroupMembersSpectraS3Request withMemberGroupId(final UUID memberGroupId) {
+        this.memberGroupId = memberGroupId.toString();
+        this.updateQueryParam("member_group_id", memberGroupId);
+        return this;
+    }
+
     public GetGroupMembersSpectraS3Request withMemberGroupId(final String memberGroupId) {
         this.memberGroupId = memberGroupId;
         this.updateQueryParam("member_group_id", memberGroupId);
+        return this;
+    }
+
+    public GetGroupMembersSpectraS3Request withMemberUserId(final UUID memberUserId) {
+        this.memberUserId = memberUserId.toString();
+        this.updateQueryParam("member_user_id", memberUserId);
         return this;
     }
 
@@ -80,6 +100,12 @@ public class GetGroupMembersSpectraS3Request extends AbstractRequest {
     public GetGroupMembersSpectraS3Request withPageOffset(final int pageOffset) {
         this.pageOffset = pageOffset;
         this.updateQueryParam("page_offset", pageOffset);
+        return this;
+    }
+
+    public GetGroupMembersSpectraS3Request withPageStartMarker(final UUID pageStartMarker) {
+        this.pageStartMarker = pageStartMarker.toString();
+        this.updateQueryParam("page_start_marker", pageStartMarker);
         return this;
     }
 

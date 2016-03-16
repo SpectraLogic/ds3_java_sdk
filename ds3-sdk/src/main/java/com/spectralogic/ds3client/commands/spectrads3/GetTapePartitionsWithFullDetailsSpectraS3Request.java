@@ -51,7 +51,8 @@ public class GetTapePartitionsWithFullDetailsSpectraS3Request extends AbstractRe
     // Constructor
     
     public GetTapePartitionsWithFullDetailsSpectraS3Request() {
-                this.getQueryParams().put("full_details", null);
+        
+        this.getQueryParams().put("full_details", null);
     }
 
     public GetTapePartitionsWithFullDetailsSpectraS3Request withImportExportConfiguration(final ImportExportConfiguration importExportConfiguration) {
@@ -67,6 +68,12 @@ public class GetTapePartitionsWithFullDetailsSpectraS3Request extends AbstractRe
         } else {
             this.getQueryParams().remove("last_page");
         }
+        return this;
+    }
+
+    public GetTapePartitionsWithFullDetailsSpectraS3Request withLibraryId(final UUID libraryId) {
+        this.libraryId = libraryId.toString();
+        this.updateQueryParam("library_id", libraryId);
         return this;
     }
 
@@ -91,6 +98,12 @@ public class GetTapePartitionsWithFullDetailsSpectraS3Request extends AbstractRe
     public GetTapePartitionsWithFullDetailsSpectraS3Request withPageOffset(final int pageOffset) {
         this.pageOffset = pageOffset;
         this.updateQueryParam("page_offset", pageOffset);
+        return this;
+    }
+
+    public GetTapePartitionsWithFullDetailsSpectraS3Request withPageStartMarker(final UUID pageStartMarker) {
+        this.pageStartMarker = pageStartMarker.toString();
+        this.updateQueryParam("page_start_marker", pageStartMarker);
         return this;
     }
 

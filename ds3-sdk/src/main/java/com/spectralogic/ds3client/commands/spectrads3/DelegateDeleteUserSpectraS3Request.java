@@ -19,6 +19,7 @@ package com.spectralogic.ds3client.commands.spectrads3;
 import com.spectralogic.ds3client.networking.HttpVerb;
 import com.spectralogic.ds3client.commands.AbstractRequest;
 import java.util.UUID;
+import com.google.common.net.UrlEscapers;
 
 public class DelegateDeleteUserSpectraS3Request extends AbstractRequest {
 
@@ -28,9 +29,15 @@ public class DelegateDeleteUserSpectraS3Request extends AbstractRequest {
 
     // Constructor
     
+    public DelegateDeleteUserSpectraS3Request(final UUID userId) {
+        this.userId = userId.toString();
+        
+    }
+
     public DelegateDeleteUserSpectraS3Request(final String userId) {
         this.userId = userId;
-            }
+        
+    }
 
 
     @Override

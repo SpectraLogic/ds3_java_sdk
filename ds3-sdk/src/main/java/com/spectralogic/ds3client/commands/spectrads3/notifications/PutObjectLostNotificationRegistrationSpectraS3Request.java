@@ -36,6 +36,7 @@ public class PutObjectLostNotificationRegistrationSpectraS3Request extends Abstr
         super(notificationEndPoint);
 
         
+
     }
 
     public PutObjectLostNotificationRegistrationSpectraS3Request withFormat(final HttpResponseFormatType format) {

@@ -51,7 +51,8 @@ public class GetObjectsSpectraS3Request extends AbstractRequest {
     // Constructor
     
     public GetObjectsSpectraS3Request() {
-            }
+        
+    }
 
     public GetObjectsSpectraS3Request withBucketId(final String bucketId) {
         this.bucketId = bucketId;
@@ -106,6 +107,12 @@ public class GetObjectsSpectraS3Request extends AbstractRequest {
     public GetObjectsSpectraS3Request withPageOffset(final int pageOffset) {
         this.pageOffset = pageOffset;
         this.updateQueryParam("page_offset", pageOffset);
+        return this;
+    }
+
+    public GetObjectsSpectraS3Request withPageStartMarker(final UUID pageStartMarker) {
+        this.pageStartMarker = pageStartMarker.toString();
+        this.updateQueryParam("page_start_marker", pageStartMarker);
         return this;
     }
 

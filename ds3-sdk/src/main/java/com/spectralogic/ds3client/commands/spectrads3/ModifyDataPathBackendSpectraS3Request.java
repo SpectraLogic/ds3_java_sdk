@@ -44,7 +44,8 @@ public class ModifyDataPathBackendSpectraS3Request extends AbstractRequest {
     // Constructor
     
     public ModifyDataPathBackendSpectraS3Request() {
-            }
+        
+    }
 
     public ModifyDataPathBackendSpectraS3Request withActivated(final boolean activated) {
         this.activated = activated;

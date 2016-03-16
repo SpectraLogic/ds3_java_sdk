@@ -45,7 +45,8 @@ public class PutDs3TargetUserMappingSpectraS3Request extends AbstractRequest {
         this.authId = authId;
         this.orderNum = orderNum;
         this.secretKey = secretKey;
-                this.getQueryParams().put("auth_id", UrlEscapers.urlFragmentEscaper().escape(authId).replace("+", "%2B"));
+        
+        this.getQueryParams().put("auth_id", UrlEscapers.urlFragmentEscaper().escape(authId).replace("+", "%2B"));
         this.getQueryParams().put("order_num", Long.toString(orderNum));
         this.getQueryParams().put("secret_key", UrlEscapers.urlFragmentEscaper().escape(secretKey).replace("+", "%2B"));
     }
@@ -56,15 +57,33 @@ public class PutDs3TargetUserMappingSpectraS3Request extends AbstractRequest {
         return this;
     }
 
+    public PutDs3TargetUserMappingSpectraS3Request withGroupId(final UUID groupId) {
+        this.groupId = groupId.toString();
+        this.updateQueryParam("group_id", groupId);
+        return this;
+    }
+
     public PutDs3TargetUserMappingSpectraS3Request withGroupId(final String groupId) {
         this.groupId = groupId;
         this.updateQueryParam("group_id", groupId);
         return this;
     }
 
+    public PutDs3TargetUserMappingSpectraS3Request withTargetId(final UUID targetId) {
+        this.targetId = targetId.toString();
+        this.updateQueryParam("target_id", targetId);
+        return this;
+    }
+
     public PutDs3TargetUserMappingSpectraS3Request withTargetId(final String targetId) {
         this.targetId = targetId;
         this.updateQueryParam("target_id", targetId);
+        return this;
+    }
+
+    public PutDs3TargetUserMappingSpectraS3Request withUserId(final UUID userId) {
+        this.userId = userId.toString();
+        this.updateQueryParam("user_id", userId);
         return this;
     }
 

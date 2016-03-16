@@ -58,7 +58,8 @@ public class ModifyDs3TargetSpectraS3Request extends AbstractRequest {
     
     public ModifyDs3TargetSpectraS3Request(final String ds3Target) {
         this.ds3Target = ds3Target;
-            }
+        
+    }
 
     public ModifyDs3TargetSpectraS3Request withAccessControlReplication(final Ds3TargetAccessControlReplication accessControlReplication) {
         this.accessControlReplication = accessControlReplication;

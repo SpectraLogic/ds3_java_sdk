@@ -25,10 +25,18 @@ public class DeleteSystemFailureNotificationRegistrationSpectraS3Request extends
     
     //Constructor
     
+    public DeleteSystemFailureNotificationRegistrationSpectraS3Request(final UUID notificationId) {
+        super(notificationId);
+
+        
+
+    }
+
     public DeleteSystemFailureNotificationRegistrationSpectraS3Request(final String notificationId) {
         super(notificationId);
 
         
+
     }
 
     @Override

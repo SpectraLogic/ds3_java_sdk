@@ -40,7 +40,8 @@ public class GetGroupsSpectraS3Request extends AbstractRequest {
     // Constructor
     
     public GetGroupsSpectraS3Request() {
-            }
+        
+    }
 
     public GetGroupsSpectraS3Request withBuiltIn(final boolean builtIn) {
         this.builtIn = builtIn;
@@ -73,6 +74,12 @@ public class GetGroupsSpectraS3Request extends AbstractRequest {
     public GetGroupsSpectraS3Request withPageOffset(final int pageOffset) {
         this.pageOffset = pageOffset;
         this.updateQueryParam("page_offset", pageOffset);
+        return this;
+    }
+
+    public GetGroupsSpectraS3Request withPageStartMarker(final UUID pageStartMarker) {
+        this.pageStartMarker = pageStartMarker.toString();
+        this.updateQueryParam("page_start_marker", pageStartMarker);
         return this;
     }
 

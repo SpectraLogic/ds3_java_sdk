@@ -36,9 +36,15 @@ public class ModifyTapeSpectraS3Request extends AbstractRequest {
 
     // Constructor
     
+    public ModifyTapeSpectraS3Request(final UUID tapeId) {
+        this.tapeId = tapeId.toString();
+        
+    }
+
     public ModifyTapeSpectraS3Request(final String tapeId) {
         this.tapeId = tapeId;
-            }
+        
+    }
 
     public ModifyTapeSpectraS3Request withEjectLabel(final String ejectLabel) {
         this.ejectLabel = ejectLabel;

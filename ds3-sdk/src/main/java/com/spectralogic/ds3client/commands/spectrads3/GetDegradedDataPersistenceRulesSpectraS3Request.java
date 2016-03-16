@@ -19,6 +19,7 @@ package com.spectralogic.ds3client.commands.spectrads3;
 import com.spectralogic.ds3client.networking.HttpVerb;
 import com.spectralogic.ds3client.commands.AbstractRequest;
 import java.util.UUID;
+import com.google.common.net.UrlEscapers;
 import com.spectralogic.ds3client.models.DataIsolationLevel;
 import com.spectralogic.ds3client.models.DataPersistenceRuleState;
 import com.spectralogic.ds3client.models.DataPersistenceRuleType;
@@ -48,7 +49,14 @@ public class GetDegradedDataPersistenceRulesSpectraS3Request extends AbstractReq
     // Constructor
     
     public GetDegradedDataPersistenceRulesSpectraS3Request() {
-            }
+        
+    }
+
+    public GetDegradedDataPersistenceRulesSpectraS3Request withDataPolicyId(final UUID dataPolicyId) {
+        this.dataPolicyId = dataPolicyId.toString();
+        this.updateQueryParam("data_policy_id", dataPolicyId);
+        return this;
+    }
 
     public GetDegradedDataPersistenceRulesSpectraS3Request withDataPolicyId(final String dataPolicyId) {
         this.dataPolicyId = dataPolicyId;
@@ -84,6 +92,12 @@ public class GetDegradedDataPersistenceRulesSpectraS3Request extends AbstractReq
         return this;
     }
 
+    public GetDegradedDataPersistenceRulesSpectraS3Request withPageStartMarker(final UUID pageStartMarker) {
+        this.pageStartMarker = pageStartMarker.toString();
+        this.updateQueryParam("page_start_marker", pageStartMarker);
+        return this;
+    }
+
     public GetDegradedDataPersistenceRulesSpectraS3Request withPageStartMarker(final String pageStartMarker) {
         this.pageStartMarker = pageStartMarker;
         this.updateQueryParam("page_start_marker", pageStartMarker);
@@ -93,6 +107,12 @@ public class GetDegradedDataPersistenceRulesSpectraS3Request extends AbstractReq
     public GetDegradedDataPersistenceRulesSpectraS3Request withState(final DataPersistenceRuleState state) {
         this.state = state;
         this.updateQueryParam("state", state);
+        return this;
+    }
+
+    public GetDegradedDataPersistenceRulesSpectraS3Request withStorageDomainId(final UUID storageDomainId) {
+        this.storageDomainId = storageDomainId.toString();
+        this.updateQueryParam("storage_domain_id", storageDomainId);
         return this;
     }
 

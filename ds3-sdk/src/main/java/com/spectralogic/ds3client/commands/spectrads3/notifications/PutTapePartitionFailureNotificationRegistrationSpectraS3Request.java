@@ -36,6 +36,7 @@ public class PutTapePartitionFailureNotificationRegistrationSpectraS3Request ext
         super(notificationEndPoint);
 
         
+
     }
 
     public PutTapePartitionFailureNotificationRegistrationSpectraS3Request withFormat(final HttpResponseFormatType format) {

@@ -42,7 +42,8 @@ public class GetTapeLibrariesSpectraS3Request extends AbstractRequest {
     // Constructor
     
     public GetTapeLibrariesSpectraS3Request() {
-            }
+        
+    }
 
     public GetTapeLibrariesSpectraS3Request withLastPage(final boolean lastPage) {
         this.lastPage = lastPage;
@@ -75,6 +76,12 @@ public class GetTapeLibrariesSpectraS3Request extends AbstractRequest {
     public GetTapeLibrariesSpectraS3Request withPageOffset(final int pageOffset) {
         this.pageOffset = pageOffset;
         this.updateQueryParam("page_offset", pageOffset);
+        return this;
+    }
+
+    public GetTapeLibrariesSpectraS3Request withPageStartMarker(final UUID pageStartMarker) {
+        this.pageStartMarker = pageStartMarker.toString();
+        this.updateQueryParam("page_start_marker", pageStartMarker);
         return this;
     }
 

@@ -41,7 +41,8 @@ public class GetPoolPartitionsSpectraS3Request extends AbstractRequest {
     // Constructor
     
     public GetPoolPartitionsSpectraS3Request() {
-            }
+        
+    }
 
     public GetPoolPartitionsSpectraS3Request withLastPage(final boolean lastPage) {
         this.lastPage = lastPage;
@@ -68,6 +69,12 @@ public class GetPoolPartitionsSpectraS3Request extends AbstractRequest {
     public GetPoolPartitionsSpectraS3Request withPageOffset(final int pageOffset) {
         this.pageOffset = pageOffset;
         this.updateQueryParam("page_offset", pageOffset);
+        return this;
+    }
+
+    public GetPoolPartitionsSpectraS3Request withPageStartMarker(final UUID pageStartMarker) {
+        this.pageStartMarker = pageStartMarker.toString();
+        this.updateQueryParam("page_start_marker", pageStartMarker);
         return this;
     }
 

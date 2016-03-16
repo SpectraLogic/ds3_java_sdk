@@ -19,6 +19,7 @@ package com.spectralogic.ds3client.commands.spectrads3;
 import com.spectralogic.ds3client.networking.HttpVerb;
 import com.spectralogic.ds3client.commands.AbstractRequest;
 import java.util.UUID;
+import com.google.common.net.UrlEscapers;
 
 public class PutGlobalDataPolicyAclForUserSpectraS3Request extends AbstractRequest {
 
@@ -28,9 +29,16 @@ public class PutGlobalDataPolicyAclForUserSpectraS3Request extends AbstractReque
 
     // Constructor
     
+    public PutGlobalDataPolicyAclForUserSpectraS3Request(final UUID userId) {
+        this.userId = userId.toString();
+        
+        this.getQueryParams().put("user_id", userId.toString());
+    }
+
     public PutGlobalDataPolicyAclForUserSpectraS3Request(final String userId) {
         this.userId = userId;
-                this.getQueryParams().put("user_id", userId);
+        
+        this.getQueryParams().put("user_id", UrlEscapers.urlFragmentEscaper().escape(userId).replace("+", "%2B"));
     }
 
 

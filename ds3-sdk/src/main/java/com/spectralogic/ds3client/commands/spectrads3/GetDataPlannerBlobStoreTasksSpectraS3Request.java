@@ -28,7 +28,8 @@ public class GetDataPlannerBlobStoreTasksSpectraS3Request extends AbstractReques
     // Constructor
     
     public GetDataPlannerBlobStoreTasksSpectraS3Request() {
-            }
+        
+    }
 
     public GetDataPlannerBlobStoreTasksSpectraS3Request withFullDetails(final boolean fullDetails) {
         this.fullDetails = fullDetails;

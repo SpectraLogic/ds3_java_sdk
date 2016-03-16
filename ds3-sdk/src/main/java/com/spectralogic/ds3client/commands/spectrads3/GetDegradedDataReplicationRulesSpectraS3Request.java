@@ -19,6 +19,7 @@ package com.spectralogic.ds3client.commands.spectrads3;
 import com.spectralogic.ds3client.networking.HttpVerb;
 import com.spectralogic.ds3client.commands.AbstractRequest;
 import java.util.UUID;
+import com.google.common.net.UrlEscapers;
 import com.spectralogic.ds3client.models.DataPersistenceRuleState;
 import com.spectralogic.ds3client.models.DataReplicationRuleType;
 
@@ -45,11 +46,24 @@ public class GetDegradedDataReplicationRulesSpectraS3Request extends AbstractReq
     // Constructor
     
     public GetDegradedDataReplicationRulesSpectraS3Request() {
-            }
+        
+    }
+
+    public GetDegradedDataReplicationRulesSpectraS3Request withDataPolicyId(final UUID dataPolicyId) {
+        this.dataPolicyId = dataPolicyId.toString();
+        this.updateQueryParam("data_policy_id", dataPolicyId);
+        return this;
+    }
 
     public GetDegradedDataReplicationRulesSpectraS3Request withDataPolicyId(final String dataPolicyId) {
         this.dataPolicyId = dataPolicyId;
         this.updateQueryParam("data_policy_id", dataPolicyId);
+        return this;
+    }
+
+    public GetDegradedDataReplicationRulesSpectraS3Request withDs3TargetId(final UUID ds3TargetId) {
+        this.ds3TargetId = ds3TargetId.toString();
+        this.updateQueryParam("ds3_target_id", ds3TargetId);
         return this;
     }
 
@@ -78,6 +92,12 @@ public class GetDegradedDataReplicationRulesSpectraS3Request extends AbstractReq
     public GetDegradedDataReplicationRulesSpectraS3Request withPageOffset(final int pageOffset) {
         this.pageOffset = pageOffset;
         this.updateQueryParam("page_offset", pageOffset);
+        return this;
+    }
+
+    public GetDegradedDataReplicationRulesSpectraS3Request withPageStartMarker(final UUID pageStartMarker) {
+        this.pageStartMarker = pageStartMarker.toString();
+        this.updateQueryParam("page_start_marker", pageStartMarker);
         return this;
     }
 

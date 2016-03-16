@@ -19,6 +19,7 @@ package com.spectralogic.ds3client.commands.spectrads3;
 import com.spectralogic.ds3client.networking.HttpVerb;
 import com.spectralogic.ds3client.commands.AbstractRequest;
 import java.util.UUID;
+import com.google.common.net.UrlEscapers;
 
 public class CleanTapeDriveSpectraS3Request extends AbstractRequest {
 
@@ -28,10 +29,18 @@ public class CleanTapeDriveSpectraS3Request extends AbstractRequest {
 
     // Constructor
     
+    public CleanTapeDriveSpectraS3Request(final UUID tapeDriveId) {
+        this.tapeDriveId = tapeDriveId.toString();
+        
+        this.getQueryParams().put("operation", "clean");
+
+    }
+
     public CleanTapeDriveSpectraS3Request(final String tapeDriveId) {
         this.tapeDriveId = tapeDriveId;
         
         this.getQueryParams().put("operation", "clean");
+
     }
 
 

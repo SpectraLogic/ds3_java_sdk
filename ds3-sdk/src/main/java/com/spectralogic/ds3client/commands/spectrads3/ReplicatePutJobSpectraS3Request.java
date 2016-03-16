@@ -36,6 +36,7 @@ public class ReplicatePutJobSpectraS3Request extends BulkRequest {
         super(bucketName, objects);
         
         this.getQueryParams().put("operation", "start_bulk_put");
+
         this.getQueryParams().put("replicate", null);
     }
 

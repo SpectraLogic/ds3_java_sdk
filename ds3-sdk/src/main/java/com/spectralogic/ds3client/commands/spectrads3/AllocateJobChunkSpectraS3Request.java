@@ -19,6 +19,7 @@ package com.spectralogic.ds3client.commands.spectrads3;
 import com.spectralogic.ds3client.networking.HttpVerb;
 import com.spectralogic.ds3client.commands.AbstractRequest;
 import java.util.UUID;
+import com.google.common.net.UrlEscapers;
 
 public class AllocateJobChunkSpectraS3Request extends AbstractRequest {
 
@@ -28,10 +29,18 @@ public class AllocateJobChunkSpectraS3Request extends AbstractRequest {
 
     // Constructor
     
+    public AllocateJobChunkSpectraS3Request(final UUID jobChunkId) {
+        this.jobChunkId = jobChunkId.toString();
+        
+        this.getQueryParams().put("operation", "allocate");
+
+    }
+
     public AllocateJobChunkSpectraS3Request(final String jobChunkId) {
         this.jobChunkId = jobChunkId;
         
         this.getQueryParams().put("operation", "allocate");
+
     }
 
 

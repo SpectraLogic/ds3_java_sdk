@@ -31,6 +31,7 @@ public class VerifyAllPoolsSpectraS3Request extends AbstractRequest {
     public VerifyAllPoolsSpectraS3Request() {
         
         this.getQueryParams().put("operation", "verify");
+
     }
 
     public VerifyAllPoolsSpectraS3Request withPriority(final Priority priority) {

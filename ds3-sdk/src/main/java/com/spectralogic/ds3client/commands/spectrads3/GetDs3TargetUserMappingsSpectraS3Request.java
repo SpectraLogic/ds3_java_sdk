@@ -48,7 +48,8 @@ public class GetDs3TargetUserMappingsSpectraS3Request extends AbstractRequest {
     // Constructor
     
     public GetDs3TargetUserMappingsSpectraS3Request() {
-            }
+        
+    }
 
     public GetDs3TargetUserMappingsSpectraS3Request withAuthId(final String authId) {
         this.authId = authId;
@@ -59,6 +60,12 @@ public class GetDs3TargetUserMappingsSpectraS3Request extends AbstractRequest {
     public GetDs3TargetUserMappingsSpectraS3Request withBucketId(final String bucketId) {
         this.bucketId = bucketId;
         this.updateQueryParam("bucket_id", bucketId);
+        return this;
+    }
+
+    public GetDs3TargetUserMappingsSpectraS3Request withGroupId(final UUID groupId) {
+        this.groupId = groupId.toString();
+        this.updateQueryParam("group_id", groupId);
         return this;
     }
 
@@ -96,15 +103,33 @@ public class GetDs3TargetUserMappingsSpectraS3Request extends AbstractRequest {
         return this;
     }
 
+    public GetDs3TargetUserMappingsSpectraS3Request withPageStartMarker(final UUID pageStartMarker) {
+        this.pageStartMarker = pageStartMarker.toString();
+        this.updateQueryParam("page_start_marker", pageStartMarker);
+        return this;
+    }
+
     public GetDs3TargetUserMappingsSpectraS3Request withPageStartMarker(final String pageStartMarker) {
         this.pageStartMarker = pageStartMarker;
         this.updateQueryParam("page_start_marker", pageStartMarker);
         return this;
     }
 
+    public GetDs3TargetUserMappingsSpectraS3Request withTargetId(final UUID targetId) {
+        this.targetId = targetId.toString();
+        this.updateQueryParam("target_id", targetId);
+        return this;
+    }
+
     public GetDs3TargetUserMappingsSpectraS3Request withTargetId(final String targetId) {
         this.targetId = targetId;
         this.updateQueryParam("target_id", targetId);
+        return this;
+    }
+
+    public GetDs3TargetUserMappingsSpectraS3Request withUserId(final UUID userId) {
+        this.userId = userId.toString();
+        this.updateQueryParam("user_id", userId);
         return this;
     }
 

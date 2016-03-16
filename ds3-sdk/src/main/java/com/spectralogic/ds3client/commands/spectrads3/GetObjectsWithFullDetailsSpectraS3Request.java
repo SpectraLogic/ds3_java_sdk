@@ -51,7 +51,8 @@ public class GetObjectsWithFullDetailsSpectraS3Request extends AbstractRequest {
     // Constructor
     
     public GetObjectsWithFullDetailsSpectraS3Request() {
-                this.getQueryParams().put("full_details", null);
+        
+        this.getQueryParams().put("full_details", null);
     }
 
     public GetObjectsWithFullDetailsSpectraS3Request withBucketId(final String bucketId) {
@@ -107,6 +108,12 @@ public class GetObjectsWithFullDetailsSpectraS3Request extends AbstractRequest {
     public GetObjectsWithFullDetailsSpectraS3Request withPageOffset(final int pageOffset) {
         this.pageOffset = pageOffset;
         this.updateQueryParam("page_offset", pageOffset);
+        return this;
+    }
+
+    public GetObjectsWithFullDetailsSpectraS3Request withPageStartMarker(final UUID pageStartMarker) {
+        this.pageStartMarker = pageStartMarker.toString();
+        this.updateQueryParam("page_start_marker", pageStartMarker);
         return this;
     }
 
