@@ -30,7 +30,8 @@ public class GetTapePartitionWithFullDetailsSpectraS3Request extends AbstractReq
     
     public GetTapePartitionWithFullDetailsSpectraS3Request(final String tapePartition) {
         this.tapePartition = tapePartition;
-                this.getQueryParams().put("full_details", null);
+        
+        this.getQueryParams().put("full_details", null);
     }
 
 

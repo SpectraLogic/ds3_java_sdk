@@ -39,9 +39,9 @@ public class RegisterDs3TargetSpectraS3Request extends AbstractRequest {
 
     private TargetReadPreference defaultReadPreference;
 
-    private UUID localAdminUserId;
+    private String localAdminUserId;
 
-    private UUID localReplicatedUserDefaultDataPolicyId;
+    private String localReplicatedUserDefaultDataPolicyId;
 
     private String replicatedUserDefaultDataPolicy;
 
@@ -52,39 +52,52 @@ public class RegisterDs3TargetSpectraS3Request extends AbstractRequest {
         this.adminSecretKey = adminSecretKey;
         this.dataPath = dataPath;
         this.name = name;
-                this.getQueryParams().put("admin_auth_id", UrlEscapers.urlFragmentEscaper().escape(adminAuthId));
-        this.getQueryParams().put("admin_secret_key", UrlEscapers.urlFragmentEscaper().escape(adminSecretKey));
-        this.getQueryParams().put("data_path", UrlEscapers.urlFragmentEscaper().escape(dataPath));
-        this.getQueryParams().put("name", UrlEscapers.urlFragmentEscaper().escape(name));
+        
+        this.getQueryParams().put("admin_auth_id", UrlEscapers.urlFragmentEscaper().escape(adminAuthId).replace("+", "%2B"));
+        this.getQueryParams().put("admin_secret_key", UrlEscapers.urlFragmentEscaper().escape(adminSecretKey).replace("+", "%2B"));
+        this.getQueryParams().put("data_path", UrlEscapers.urlFragmentEscaper().escape(dataPath).replace("+", "%2B"));
+        this.getQueryParams().put("name", UrlEscapers.urlFragmentEscaper().escape(name).replace("+", "%2B"));
     }
 
     public RegisterDs3TargetSpectraS3Request withAccessControlReplication(final Ds3TargetAccessControlReplication accessControlReplication) {
         this.accessControlReplication = accessControlReplication;
-        this.updateQueryParam("access_control_replication", accessControlReplication.toString());
+        this.updateQueryParam("access_control_replication", accessControlReplication);
         return this;
     }
 
     public RegisterDs3TargetSpectraS3Request withDefaultReadPreference(final TargetReadPreference defaultReadPreference) {
         this.defaultReadPreference = defaultReadPreference;
-        this.updateQueryParam("default_read_preference", defaultReadPreference.toString());
+        this.updateQueryParam("default_read_preference", defaultReadPreference);
         return this;
     }
 
     public RegisterDs3TargetSpectraS3Request withLocalAdminUserId(final UUID localAdminUserId) {
+        this.localAdminUserId = localAdminUserId.toString();
+        this.updateQueryParam("local_admin_user_id", localAdminUserId);
+        return this;
+    }
+
+    public RegisterDs3TargetSpectraS3Request withLocalAdminUserId(final String localAdminUserId) {
         this.localAdminUserId = localAdminUserId;
-        this.updateQueryParam("local_admin_user_id", localAdminUserId.toString());
+        this.updateQueryParam("local_admin_user_id", localAdminUserId);
         return this;
     }
 
     public RegisterDs3TargetSpectraS3Request withLocalReplicatedUserDefaultDataPolicyId(final UUID localReplicatedUserDefaultDataPolicyId) {
+        this.localReplicatedUserDefaultDataPolicyId = localReplicatedUserDefaultDataPolicyId.toString();
+        this.updateQueryParam("local_replicated_user_default_data_policy_id", localReplicatedUserDefaultDataPolicyId);
+        return this;
+    }
+
+    public RegisterDs3TargetSpectraS3Request withLocalReplicatedUserDefaultDataPolicyId(final String localReplicatedUserDefaultDataPolicyId) {
         this.localReplicatedUserDefaultDataPolicyId = localReplicatedUserDefaultDataPolicyId;
-        this.updateQueryParam("local_replicated_user_default_data_policy_id", localReplicatedUserDefaultDataPolicyId.toString());
+        this.updateQueryParam("local_replicated_user_default_data_policy_id", localReplicatedUserDefaultDataPolicyId);
         return this;
     }
 
     public RegisterDs3TargetSpectraS3Request withReplicatedUserDefaultDataPolicy(final String replicatedUserDefaultDataPolicy) {
         this.replicatedUserDefaultDataPolicy = replicatedUserDefaultDataPolicy;
-        this.updateQueryParam("replicated_user_default_data_policy", UrlEscapers.urlFragmentEscaper().escape(replicatedUserDefaultDataPolicy));
+        this.updateQueryParam("replicated_user_default_data_policy", replicatedUserDefaultDataPolicy);
         return this;
     }
 
@@ -129,12 +142,12 @@ public class RegisterDs3TargetSpectraS3Request extends AbstractRequest {
     }
 
 
-    public UUID getLocalAdminUserId() {
+    public String getLocalAdminUserId() {
         return this.localAdminUserId;
     }
 
 
-    public UUID getLocalReplicatedUserDefaultDataPolicyId() {
+    public String getLocalReplicatedUserDefaultDataPolicyId() {
         return this.localReplicatedUserDefaultDataPolicyId;
     }
 

@@ -30,7 +30,8 @@ public class DeletePoolFailureSpectraS3Request extends AbstractRequest {
     
     public DeletePoolFailureSpectraS3Request(final String poolFailure) {
         this.poolFailure = poolFailure;
-            }
+        
+    }
 
 
     @Override

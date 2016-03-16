@@ -34,7 +34,8 @@ public class CancelAllJobsSpectraS3Request extends AbstractRequest {
     // Constructor
     
     public CancelAllJobsSpectraS3Request() {
-            }
+        
+    }
 
     public CancelAllJobsSpectraS3Request withBucketId(final String bucketId) {
         this.bucketId = bucketId;
@@ -54,7 +55,7 @@ public class CancelAllJobsSpectraS3Request extends AbstractRequest {
 
     public CancelAllJobsSpectraS3Request withRequestType(final JobRequestType requestType) {
         this.requestType = requestType;
-        this.updateQueryParam("request_type", requestType.toString());
+        this.updateQueryParam("request_type", requestType);
         return this;
     }
 

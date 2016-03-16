@@ -41,11 +41,12 @@ public class PutBulkJobSpectraS3Request extends BulkRequest {
         super(bucketName, objects);
         
         this.getQueryParams().put("operation", "start_bulk_put");
+
     }
 
     public PutBulkJobSpectraS3Request withAggregating(final boolean aggregating) {
         this.aggregating = aggregating;
-        this.updateQueryParam("aggregating", String.valueOf(aggregating));
+        this.updateQueryParam("aggregating", aggregating);
         return this;
     }
 
@@ -70,7 +71,7 @@ public class PutBulkJobSpectraS3Request extends BulkRequest {
 
     public PutBulkJobSpectraS3Request withName(final String name) {
         this.name = name;
-        this.updateQueryParam("name", UrlEscapers.urlFragmentEscaper().escape(name));
+        this.updateQueryParam("name", name);
         return this;
     }
 

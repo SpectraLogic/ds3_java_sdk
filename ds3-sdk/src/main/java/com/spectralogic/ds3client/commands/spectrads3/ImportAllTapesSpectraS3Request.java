@@ -20,6 +20,7 @@ import com.spectralogic.ds3client.networking.HttpVerb;
 import com.spectralogic.ds3client.commands.AbstractRequest;
 import com.spectralogic.ds3client.models.ImportConflictResolutionMode;
 import java.util.UUID;
+import com.google.common.net.UrlEscapers;
 
 public class ImportAllTapesSpectraS3Request extends AbstractRequest {
 
@@ -27,40 +28,59 @@ public class ImportAllTapesSpectraS3Request extends AbstractRequest {
     
     private ImportConflictResolutionMode conflictResolutionMode;
 
-    private UUID dataPolicyId;
+    private String dataPolicyId;
 
-    private UUID storageDomainId;
+    private String storageDomainId;
 
-    private UUID userId;
+    private String userId;
 
     // Constructor
     
     public ImportAllTapesSpectraS3Request() {
         
         this.getQueryParams().put("operation", "import");
+
     }
 
     public ImportAllTapesSpectraS3Request withConflictResolutionMode(final ImportConflictResolutionMode conflictResolutionMode) {
         this.conflictResolutionMode = conflictResolutionMode;
-        this.updateQueryParam("conflict_resolution_mode", conflictResolutionMode.toString());
+        this.updateQueryParam("conflict_resolution_mode", conflictResolutionMode);
         return this;
     }
 
     public ImportAllTapesSpectraS3Request withDataPolicyId(final UUID dataPolicyId) {
+        this.dataPolicyId = dataPolicyId.toString();
+        this.updateQueryParam("data_policy_id", dataPolicyId);
+        return this;
+    }
+
+    public ImportAllTapesSpectraS3Request withDataPolicyId(final String dataPolicyId) {
         this.dataPolicyId = dataPolicyId;
-        this.updateQueryParam("data_policy_id", dataPolicyId.toString());
+        this.updateQueryParam("data_policy_id", dataPolicyId);
         return this;
     }
 
     public ImportAllTapesSpectraS3Request withStorageDomainId(final UUID storageDomainId) {
+        this.storageDomainId = storageDomainId.toString();
+        this.updateQueryParam("storage_domain_id", storageDomainId);
+        return this;
+    }
+
+    public ImportAllTapesSpectraS3Request withStorageDomainId(final String storageDomainId) {
         this.storageDomainId = storageDomainId;
-        this.updateQueryParam("storage_domain_id", storageDomainId.toString());
+        this.updateQueryParam("storage_domain_id", storageDomainId);
         return this;
     }
 
     public ImportAllTapesSpectraS3Request withUserId(final UUID userId) {
+        this.userId = userId.toString();
+        this.updateQueryParam("user_id", userId);
+        return this;
+    }
+
+    public ImportAllTapesSpectraS3Request withUserId(final String userId) {
         this.userId = userId;
-        this.updateQueryParam("user_id", userId.toString());
+        this.updateQueryParam("user_id", userId);
         return this;
     }
 
@@ -80,17 +100,17 @@ public class ImportAllTapesSpectraS3Request extends AbstractRequest {
     }
 
 
-    public UUID getDataPolicyId() {
+    public String getDataPolicyId() {
         return this.dataPolicyId;
     }
 
 
-    public UUID getStorageDomainId() {
+    public String getStorageDomainId() {
         return this.storageDomainId;
     }
 
 
-    public UUID getUserId() {
+    public String getUserId() {
         return this.userId;
     }
 

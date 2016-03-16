@@ -25,7 +25,7 @@ public class EjectTapeSpectraS3Request extends AbstractRequest {
 
     // Variables
     
-    private final UUID tapeId;
+    private final String tapeId;
 
     private String ejectLabel;
 
@@ -34,20 +34,28 @@ public class EjectTapeSpectraS3Request extends AbstractRequest {
     // Constructor
     
     public EjectTapeSpectraS3Request(final UUID tapeId) {
+        this.tapeId = tapeId.toString();
+        
+        this.getQueryParams().put("operation", "eject");
+
+    }
+
+    public EjectTapeSpectraS3Request(final String tapeId) {
         this.tapeId = tapeId;
         
         this.getQueryParams().put("operation", "eject");
+
     }
 
     public EjectTapeSpectraS3Request withEjectLabel(final String ejectLabel) {
         this.ejectLabel = ejectLabel;
-        this.updateQueryParam("eject_label", UrlEscapers.urlFragmentEscaper().escape(ejectLabel));
+        this.updateQueryParam("eject_label", ejectLabel);
         return this;
     }
 
     public EjectTapeSpectraS3Request withEjectLocation(final String ejectLocation) {
         this.ejectLocation = ejectLocation;
-        this.updateQueryParam("eject_location", UrlEscapers.urlFragmentEscaper().escape(ejectLocation));
+        this.updateQueryParam("eject_location", ejectLocation);
         return this;
     }
 
@@ -59,10 +67,10 @@ public class EjectTapeSpectraS3Request extends AbstractRequest {
 
     @Override
     public String getPath() {
-        return "/_rest_/tape/" + tapeId.toString();
+        return "/_rest_/tape/" + tapeId;
     }
     
-    public UUID getTapeId() {
+    public String getTapeId() {
         return this.tapeId;
     }
 

@@ -20,6 +20,7 @@ import com.spectralogic.ds3client.networking.HttpVerb;
 import com.spectralogic.ds3client.commands.AbstractRequest;
 import com.spectralogic.ds3client.models.TapeDriveType;
 import java.util.UUID;
+import com.google.common.net.UrlEscapers;
 import com.spectralogic.ds3client.models.TapeType;
 
 public class PutTapeDensityDirectiveSpectraS3Request extends AbstractRequest {
@@ -28,7 +29,7 @@ public class PutTapeDensityDirectiveSpectraS3Request extends AbstractRequest {
     
     private final TapeDriveType density;
 
-    private final UUID partitionId;
+    private final String partitionId;
 
     private final TapeType tapeType;
 
@@ -36,10 +37,21 @@ public class PutTapeDensityDirectiveSpectraS3Request extends AbstractRequest {
     
     public PutTapeDensityDirectiveSpectraS3Request(final TapeDriveType density, final UUID partitionId, final TapeType tapeType) {
         this.density = density;
+        this.partitionId = partitionId.toString();
+        this.tapeType = tapeType;
+        
+        this.getQueryParams().put("density", density.toString());
+        this.getQueryParams().put("partition_id", partitionId.toString());
+        this.getQueryParams().put("tape_type", tapeType.toString());
+    }
+
+    public PutTapeDensityDirectiveSpectraS3Request(final TapeDriveType density, final String partitionId, final TapeType tapeType) {
+        this.density = density;
         this.partitionId = partitionId;
         this.tapeType = tapeType;
-                this.getQueryParams().put("density", density.toString());
-        this.getQueryParams().put("partition_id", partitionId.toString());
+        
+        this.getQueryParams().put("density", density.toString());
+        this.getQueryParams().put("partition_id", UrlEscapers.urlFragmentEscaper().escape(partitionId).replace("+", "%2B"));
         this.getQueryParams().put("tape_type", tapeType.toString());
     }
 
@@ -59,7 +71,7 @@ public class PutTapeDensityDirectiveSpectraS3Request extends AbstractRequest {
     }
 
 
-    public UUID getPartitionId() {
+    public String getPartitionId() {
         return this.partitionId;
     }
 

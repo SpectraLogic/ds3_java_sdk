@@ -36,23 +36,24 @@ public class PutSystemFailureNotificationRegistrationSpectraS3Request extends Ab
         super(notificationEndPoint);
 
         
+
     }
 
     public PutSystemFailureNotificationRegistrationSpectraS3Request withFormat(final HttpResponseFormatType format) {
         this.format = format;
-        this.updateQueryParam("format", format.toString());
+        this.updateQueryParam("format", format);
         return this;
     }
 
     public PutSystemFailureNotificationRegistrationSpectraS3Request withNamingConvention(final NamingConventionType namingConvention) {
         this.namingConvention = namingConvention;
-        this.updateQueryParam("naming_convention", namingConvention.toString());
+        this.updateQueryParam("naming_convention", namingConvention);
         return this;
     }
 
     public PutSystemFailureNotificationRegistrationSpectraS3Request withNotificationHttpMethod(final RequestType notificationHttpMethod) {
         this.notificationHttpMethod = notificationHttpMethod;
-        this.updateQueryParam("notification_http_method", notificationHttpMethod.toString());
+        this.updateQueryParam("notification_http_method", notificationHttpMethod);
         return this;
     }
 

@@ -30,7 +30,8 @@ public class DeleteGroupSpectraS3Request extends AbstractRequest {
     
     public DeleteGroupSpectraS3Request(final String group) {
         this.group = group;
-            }
+        
+    }
 
 
     @Override

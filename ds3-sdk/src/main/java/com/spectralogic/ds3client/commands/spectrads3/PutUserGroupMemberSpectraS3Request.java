@@ -19,22 +19,32 @@ package com.spectralogic.ds3client.commands.spectrads3;
 import com.spectralogic.ds3client.networking.HttpVerb;
 import com.spectralogic.ds3client.commands.AbstractRequest;
 import java.util.UUID;
+import com.google.common.net.UrlEscapers;
 
 public class PutUserGroupMemberSpectraS3Request extends AbstractRequest {
 
     // Variables
     
-    private final UUID groupId;
+    private final String groupId;
 
-    private final UUID memberUserId;
+    private final String memberUserId;
 
     // Constructor
     
     public PutUserGroupMemberSpectraS3Request(final UUID groupId, final UUID memberUserId) {
+        this.groupId = groupId.toString();
+        this.memberUserId = memberUserId.toString();
+        
+        this.getQueryParams().put("group_id", groupId.toString());
+        this.getQueryParams().put("member_user_id", memberUserId.toString());
+    }
+
+    public PutUserGroupMemberSpectraS3Request(final String groupId, final String memberUserId) {
         this.groupId = groupId;
         this.memberUserId = memberUserId;
-                this.getQueryParams().put("group_id", groupId.toString());
-        this.getQueryParams().put("member_user_id", memberUserId.toString());
+        
+        this.getQueryParams().put("group_id", UrlEscapers.urlFragmentEscaper().escape(groupId).replace("+", "%2B"));
+        this.getQueryParams().put("member_user_id", UrlEscapers.urlFragmentEscaper().escape(memberUserId).replace("+", "%2B"));
     }
 
 
@@ -48,12 +58,12 @@ public class PutUserGroupMemberSpectraS3Request extends AbstractRequest {
         return "/_rest_/group_member";
     }
     
-    public UUID getGroupId() {
+    public String getGroupId() {
         return this.groupId;
     }
 
 
-    public UUID getMemberUserId() {
+    public String getMemberUserId() {
         return this.memberUserId;
     }
 

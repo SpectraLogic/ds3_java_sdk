@@ -34,20 +34,21 @@ public class GetTapePartitionFailuresSpectraS3Request extends AbstractRequest {
 
     private int pageOffset;
 
-    private UUID pageStartMarker;
+    private String pageStartMarker;
 
-    private UUID partitionId;
+    private String partitionId;
 
     private TapePartitionFailureType type;
 
     // Constructor
     
     public GetTapePartitionFailuresSpectraS3Request() {
-            }
+        
+    }
 
     public GetTapePartitionFailuresSpectraS3Request withErrorMessage(final String errorMessage) {
         this.errorMessage = errorMessage;
-        this.updateQueryParam("error_message", UrlEscapers.urlFragmentEscaper().escape(errorMessage));
+        this.updateQueryParam("error_message", errorMessage);
         return this;
     }
 
@@ -63,31 +64,43 @@ public class GetTapePartitionFailuresSpectraS3Request extends AbstractRequest {
 
     public GetTapePartitionFailuresSpectraS3Request withPageLength(final int pageLength) {
         this.pageLength = pageLength;
-        this.updateQueryParam("page_length", Integer.toString(pageLength));
+        this.updateQueryParam("page_length", pageLength);
         return this;
     }
 
     public GetTapePartitionFailuresSpectraS3Request withPageOffset(final int pageOffset) {
         this.pageOffset = pageOffset;
-        this.updateQueryParam("page_offset", Integer.toString(pageOffset));
+        this.updateQueryParam("page_offset", pageOffset);
         return this;
     }
 
     public GetTapePartitionFailuresSpectraS3Request withPageStartMarker(final UUID pageStartMarker) {
+        this.pageStartMarker = pageStartMarker.toString();
+        this.updateQueryParam("page_start_marker", pageStartMarker);
+        return this;
+    }
+
+    public GetTapePartitionFailuresSpectraS3Request withPageStartMarker(final String pageStartMarker) {
         this.pageStartMarker = pageStartMarker;
-        this.updateQueryParam("page_start_marker", pageStartMarker.toString());
+        this.updateQueryParam("page_start_marker", pageStartMarker);
         return this;
     }
 
     public GetTapePartitionFailuresSpectraS3Request withPartitionId(final UUID partitionId) {
+        this.partitionId = partitionId.toString();
+        this.updateQueryParam("partition_id", partitionId);
+        return this;
+    }
+
+    public GetTapePartitionFailuresSpectraS3Request withPartitionId(final String partitionId) {
         this.partitionId = partitionId;
-        this.updateQueryParam("partition_id", partitionId.toString());
+        this.updateQueryParam("partition_id", partitionId);
         return this;
     }
 
     public GetTapePartitionFailuresSpectraS3Request withType(final TapePartitionFailureType type) {
         this.type = type;
-        this.updateQueryParam("type", type.toString());
+        this.updateQueryParam("type", type);
         return this;
     }
 
@@ -122,12 +135,12 @@ public class GetTapePartitionFailuresSpectraS3Request extends AbstractRequest {
     }
 
 
-    public UUID getPageStartMarker() {
+    public String getPageStartMarker() {
         return this.pageStartMarker;
     }
 
 
-    public UUID getPartitionId() {
+    public String getPartitionId() {
         return this.partitionId;
     }
 

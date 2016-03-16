@@ -37,7 +37,8 @@ public class GetBucketRequest extends AbstractRequest {
     
     public GetBucketRequest(final String bucketName) {
         this.bucketName = bucketName;
-            }
+        
+    }
 
     public GetBucketRequest withDelimiter(final String delimiter) {
         this.delimiter = delimiter;
@@ -47,19 +48,19 @@ public class GetBucketRequest extends AbstractRequest {
 
     public GetBucketRequest withMarker(final String marker) {
         this.marker = marker;
-        this.updateQueryParam("marker", UrlEscapers.urlFragmentEscaper().escape(marker));
+        this.updateQueryParam("marker", marker);
         return this;
     }
 
     public GetBucketRequest withMaxKeys(final int maxKeys) {
         this.maxKeys = maxKeys;
-        this.updateQueryParam("max_keys", Integer.toString(maxKeys));
+        this.updateQueryParam("max_keys", maxKeys);
         return this;
     }
 
     public GetBucketRequest withPrefix(final String prefix) {
         this.prefix = prefix;
-        this.updateQueryParam("prefix", UrlEscapers.urlFragmentEscaper().escape(prefix));
+        this.updateQueryParam("prefix", prefix);
         return this;
     }
 

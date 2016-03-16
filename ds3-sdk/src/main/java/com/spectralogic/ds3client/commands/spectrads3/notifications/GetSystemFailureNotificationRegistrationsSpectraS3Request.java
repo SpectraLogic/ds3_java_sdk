@@ -18,6 +18,7 @@ package com.spectralogic.ds3client.commands.spectrads3.notifications;
 
 import com.spectralogic.ds3client.commands.notifications.AbstractGetNotificationRequest;
 import java.util.UUID;
+import com.google.common.net.UrlEscapers;
 
 public class GetSystemFailureNotificationRegistrationsSpectraS3Request extends AbstractGetNotificationRequest {
 
@@ -29,9 +30,9 @@ public class GetSystemFailureNotificationRegistrationsSpectraS3Request extends A
 
     private int pageOffset;
 
-    private UUID pageStartMarker;
+    private String pageStartMarker;
 
-    private UUID userId;
+    private String userId;
 
     // Constructor
     
@@ -39,6 +40,14 @@ public class GetSystemFailureNotificationRegistrationsSpectraS3Request extends A
         super(notificationId);
 
         
+
+    }
+
+    public GetSystemFailureNotificationRegistrationsSpectraS3Request(final String notificationId) {
+        super(notificationId);
+
+        
+
     }
 
     public GetSystemFailureNotificationRegistrationsSpectraS3Request withLastPage(final boolean lastPage) {
@@ -53,25 +62,37 @@ public class GetSystemFailureNotificationRegistrationsSpectraS3Request extends A
 
     public GetSystemFailureNotificationRegistrationsSpectraS3Request withPageLength(final int pageLength) {
         this.pageLength = pageLength;
-        this.updateQueryParam("page_length", Integer.toString(pageLength));
+        this.updateQueryParam("page_length", pageLength);
         return this;
     }
 
     public GetSystemFailureNotificationRegistrationsSpectraS3Request withPageOffset(final int pageOffset) {
         this.pageOffset = pageOffset;
-        this.updateQueryParam("page_offset", Integer.toString(pageOffset));
+        this.updateQueryParam("page_offset", pageOffset);
         return this;
     }
 
     public GetSystemFailureNotificationRegistrationsSpectraS3Request withPageStartMarker(final UUID pageStartMarker) {
+        this.pageStartMarker = pageStartMarker.toString();
+        this.updateQueryParam("page_start_marker", pageStartMarker);
+        return this;
+    }
+
+    public GetSystemFailureNotificationRegistrationsSpectraS3Request withPageStartMarker(final String pageStartMarker) {
         this.pageStartMarker = pageStartMarker;
-        this.updateQueryParam("page_start_marker", pageStartMarker.toString());
+        this.updateQueryParam("page_start_marker", pageStartMarker);
         return this;
     }
 
     public GetSystemFailureNotificationRegistrationsSpectraS3Request withUserId(final UUID userId) {
+        this.userId = userId.toString();
+        this.updateQueryParam("user_id", userId);
+        return this;
+    }
+
+    public GetSystemFailureNotificationRegistrationsSpectraS3Request withUserId(final String userId) {
         this.userId = userId;
-        this.updateQueryParam("user_id", userId.toString());
+        this.updateQueryParam("user_id", userId);
         return this;
     }
 
@@ -97,12 +118,12 @@ public class GetSystemFailureNotificationRegistrationsSpectraS3Request extends A
     }
 
 
-    public UUID getPageStartMarker() {
+    public String getPageStartMarker() {
         return this.pageStartMarker;
     }
 
 
-    public UUID getUserId() {
+    public String getUserId() {
         return this.userId;
     }
 

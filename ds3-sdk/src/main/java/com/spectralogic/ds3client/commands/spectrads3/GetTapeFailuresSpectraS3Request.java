@@ -34,22 +34,23 @@ public class GetTapeFailuresSpectraS3Request extends AbstractRequest {
 
     private int pageOffset;
 
-    private UUID pageStartMarker;
+    private String pageStartMarker;
 
-    private UUID tapeDriveId;
+    private String tapeDriveId;
 
-    private UUID tapeId;
+    private String tapeId;
 
     private TapeFailureType type;
 
     // Constructor
     
     public GetTapeFailuresSpectraS3Request() {
-            }
+        
+    }
 
     public GetTapeFailuresSpectraS3Request withErrorMessage(final String errorMessage) {
         this.errorMessage = errorMessage;
-        this.updateQueryParam("error_message", UrlEscapers.urlFragmentEscaper().escape(errorMessage));
+        this.updateQueryParam("error_message", errorMessage);
         return this;
     }
 
@@ -65,37 +66,55 @@ public class GetTapeFailuresSpectraS3Request extends AbstractRequest {
 
     public GetTapeFailuresSpectraS3Request withPageLength(final int pageLength) {
         this.pageLength = pageLength;
-        this.updateQueryParam("page_length", Integer.toString(pageLength));
+        this.updateQueryParam("page_length", pageLength);
         return this;
     }
 
     public GetTapeFailuresSpectraS3Request withPageOffset(final int pageOffset) {
         this.pageOffset = pageOffset;
-        this.updateQueryParam("page_offset", Integer.toString(pageOffset));
+        this.updateQueryParam("page_offset", pageOffset);
         return this;
     }
 
     public GetTapeFailuresSpectraS3Request withPageStartMarker(final UUID pageStartMarker) {
+        this.pageStartMarker = pageStartMarker.toString();
+        this.updateQueryParam("page_start_marker", pageStartMarker);
+        return this;
+    }
+
+    public GetTapeFailuresSpectraS3Request withPageStartMarker(final String pageStartMarker) {
         this.pageStartMarker = pageStartMarker;
-        this.updateQueryParam("page_start_marker", pageStartMarker.toString());
+        this.updateQueryParam("page_start_marker", pageStartMarker);
         return this;
     }
 
     public GetTapeFailuresSpectraS3Request withTapeDriveId(final UUID tapeDriveId) {
+        this.tapeDriveId = tapeDriveId.toString();
+        this.updateQueryParam("tape_drive_id", tapeDriveId);
+        return this;
+    }
+
+    public GetTapeFailuresSpectraS3Request withTapeDriveId(final String tapeDriveId) {
         this.tapeDriveId = tapeDriveId;
-        this.updateQueryParam("tape_drive_id", tapeDriveId.toString());
+        this.updateQueryParam("tape_drive_id", tapeDriveId);
         return this;
     }
 
     public GetTapeFailuresSpectraS3Request withTapeId(final UUID tapeId) {
+        this.tapeId = tapeId.toString();
+        this.updateQueryParam("tape_id", tapeId);
+        return this;
+    }
+
+    public GetTapeFailuresSpectraS3Request withTapeId(final String tapeId) {
         this.tapeId = tapeId;
-        this.updateQueryParam("tape_id", tapeId.toString());
+        this.updateQueryParam("tape_id", tapeId);
         return this;
     }
 
     public GetTapeFailuresSpectraS3Request withType(final TapeFailureType type) {
         this.type = type;
-        this.updateQueryParam("type", type.toString());
+        this.updateQueryParam("type", type);
         return this;
     }
 
@@ -130,17 +149,17 @@ public class GetTapeFailuresSpectraS3Request extends AbstractRequest {
     }
 
 
-    public UUID getPageStartMarker() {
+    public String getPageStartMarker() {
         return this.pageStartMarker;
     }
 
 
-    public UUID getTapeDriveId() {
+    public String getTapeDriveId() {
         return this.tapeDriveId;
     }
 
 
-    public UUID getTapeId() {
+    public String getTapeId() {
         return this.tapeId;
     }
 

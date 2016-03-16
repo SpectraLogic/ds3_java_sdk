@@ -31,7 +31,8 @@ public class HeadObjectRequest extends AbstractRequest {
     public HeadObjectRequest(final String bucketName, final String objectName) {
         this.bucketName = bucketName;
         this.objectName = objectName;
-            }
+        
+    }
 
 
     @Override

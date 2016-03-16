@@ -32,7 +32,7 @@ public class GetTapePartitionsWithFullDetailsSpectraS3Request extends AbstractRe
 
     private boolean lastPage;
 
-    private UUID libraryId;
+    private String libraryId;
 
     private String name;
 
@@ -40,7 +40,7 @@ public class GetTapePartitionsWithFullDetailsSpectraS3Request extends AbstractRe
 
     private int pageOffset;
 
-    private UUID pageStartMarker;
+    private String pageStartMarker;
 
     private Quiesced quiesced;
 
@@ -51,12 +51,13 @@ public class GetTapePartitionsWithFullDetailsSpectraS3Request extends AbstractRe
     // Constructor
     
     public GetTapePartitionsWithFullDetailsSpectraS3Request() {
-                this.getQueryParams().put("full_details", null);
+        
+        this.getQueryParams().put("full_details", null);
     }
 
     public GetTapePartitionsWithFullDetailsSpectraS3Request withImportExportConfiguration(final ImportExportConfiguration importExportConfiguration) {
         this.importExportConfiguration = importExportConfiguration;
-        this.updateQueryParam("import_export_configuration", importExportConfiguration.toString());
+        this.updateQueryParam("import_export_configuration", importExportConfiguration);
         return this;
     }
 
@@ -71,50 +72,62 @@ public class GetTapePartitionsWithFullDetailsSpectraS3Request extends AbstractRe
     }
 
     public GetTapePartitionsWithFullDetailsSpectraS3Request withLibraryId(final UUID libraryId) {
+        this.libraryId = libraryId.toString();
+        this.updateQueryParam("library_id", libraryId);
+        return this;
+    }
+
+    public GetTapePartitionsWithFullDetailsSpectraS3Request withLibraryId(final String libraryId) {
         this.libraryId = libraryId;
-        this.updateQueryParam("library_id", libraryId.toString());
+        this.updateQueryParam("library_id", libraryId);
         return this;
     }
 
     public GetTapePartitionsWithFullDetailsSpectraS3Request withName(final String name) {
         this.name = name;
-        this.updateQueryParam("name", UrlEscapers.urlFragmentEscaper().escape(name));
+        this.updateQueryParam("name", name);
         return this;
     }
 
     public GetTapePartitionsWithFullDetailsSpectraS3Request withPageLength(final int pageLength) {
         this.pageLength = pageLength;
-        this.updateQueryParam("page_length", Integer.toString(pageLength));
+        this.updateQueryParam("page_length", pageLength);
         return this;
     }
 
     public GetTapePartitionsWithFullDetailsSpectraS3Request withPageOffset(final int pageOffset) {
         this.pageOffset = pageOffset;
-        this.updateQueryParam("page_offset", Integer.toString(pageOffset));
+        this.updateQueryParam("page_offset", pageOffset);
         return this;
     }
 
     public GetTapePartitionsWithFullDetailsSpectraS3Request withPageStartMarker(final UUID pageStartMarker) {
+        this.pageStartMarker = pageStartMarker.toString();
+        this.updateQueryParam("page_start_marker", pageStartMarker);
+        return this;
+    }
+
+    public GetTapePartitionsWithFullDetailsSpectraS3Request withPageStartMarker(final String pageStartMarker) {
         this.pageStartMarker = pageStartMarker;
-        this.updateQueryParam("page_start_marker", pageStartMarker.toString());
+        this.updateQueryParam("page_start_marker", pageStartMarker);
         return this;
     }
 
     public GetTapePartitionsWithFullDetailsSpectraS3Request withQuiesced(final Quiesced quiesced) {
         this.quiesced = quiesced;
-        this.updateQueryParam("quiesced", quiesced.toString());
+        this.updateQueryParam("quiesced", quiesced);
         return this;
     }
 
     public GetTapePartitionsWithFullDetailsSpectraS3Request withSerialNumber(final String serialNumber) {
         this.serialNumber = serialNumber;
-        this.updateQueryParam("serial_number", UrlEscapers.urlFragmentEscaper().escape(serialNumber));
+        this.updateQueryParam("serial_number", serialNumber);
         return this;
     }
 
     public GetTapePartitionsWithFullDetailsSpectraS3Request withState(final TapePartitionState state) {
         this.state = state;
-        this.updateQueryParam("state", state.toString());
+        this.updateQueryParam("state", state);
         return this;
     }
 
@@ -139,7 +152,7 @@ public class GetTapePartitionsWithFullDetailsSpectraS3Request extends AbstractRe
     }
 
 
-    public UUID getLibraryId() {
+    public String getLibraryId() {
         return this.libraryId;
     }
 
@@ -159,7 +172,7 @@ public class GetTapePartitionsWithFullDetailsSpectraS3Request extends AbstractRe
     }
 
 
-    public UUID getPageStartMarker() {
+    public String getPageStartMarker() {
         return this.pageStartMarker;
     }
 

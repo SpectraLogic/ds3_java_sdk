@@ -32,7 +32,7 @@ public class GetBucketCapacitySummarySpectraS3Request extends AbstractRequest {
     
     private final String bucketId;
 
-    private final UUID storageDomainId;
+    private final String storageDomainId;
 
     private PoolHealth poolHealth;
 
@@ -48,38 +48,47 @@ public class GetBucketCapacitySummarySpectraS3Request extends AbstractRequest {
     
     public GetBucketCapacitySummarySpectraS3Request(final String bucketId, final UUID storageDomainId) {
         this.bucketId = bucketId;
-        this.storageDomainId = storageDomainId;
-                this.getQueryParams().put("bucket_id", bucketId);
+        this.storageDomainId = storageDomainId.toString();
+        
+        this.getQueryParams().put("bucket_id", bucketId);
         this.getQueryParams().put("storage_domain_id", storageDomainId.toString());
+    }
+
+    public GetBucketCapacitySummarySpectraS3Request(final String bucketId, final String storageDomainId) {
+        this.bucketId = bucketId;
+        this.storageDomainId = storageDomainId;
+        
+        this.getQueryParams().put("bucket_id", bucketId);
+        this.getQueryParams().put("storage_domain_id", UrlEscapers.urlFragmentEscaper().escape(storageDomainId).replace("+", "%2B"));
     }
 
     public GetBucketCapacitySummarySpectraS3Request withPoolHealth(final PoolHealth poolHealth) {
         this.poolHealth = poolHealth;
-        this.updateQueryParam("pool_health", poolHealth.toString());
+        this.updateQueryParam("pool_health", poolHealth);
         return this;
     }
 
     public GetBucketCapacitySummarySpectraS3Request withPoolState(final PoolState poolState) {
         this.poolState = poolState;
-        this.updateQueryParam("pool_state", poolState.toString());
+        this.updateQueryParam("pool_state", poolState);
         return this;
     }
 
     public GetBucketCapacitySummarySpectraS3Request withPoolType(final PoolType poolType) {
         this.poolType = poolType;
-        this.updateQueryParam("pool_type", poolType.toString());
+        this.updateQueryParam("pool_type", poolType);
         return this;
     }
 
     public GetBucketCapacitySummarySpectraS3Request withTapeState(final TapeState tapeState) {
         this.tapeState = tapeState;
-        this.updateQueryParam("tape_state", tapeState.toString());
+        this.updateQueryParam("tape_state", tapeState);
         return this;
     }
 
     public GetBucketCapacitySummarySpectraS3Request withTapeType(final TapeType tapeType) {
         this.tapeType = tapeType;
-        this.updateQueryParam("tape_type", tapeType.toString());
+        this.updateQueryParam("tape_type", tapeType);
         return this;
     }
 
@@ -99,7 +108,7 @@ public class GetBucketCapacitySummarySpectraS3Request extends AbstractRequest {
     }
 
 
-    public UUID getStorageDomainId() {
+    public String getStorageDomainId() {
         return this.storageDomainId;
     }
 

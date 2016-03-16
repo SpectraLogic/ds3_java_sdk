@@ -29,6 +29,14 @@ public class DeleteTapeFailureNotificationRegistrationSpectraS3Request extends A
         super(notificationId);
 
         
+
+    }
+
+    public DeleteTapeFailureNotificationRegistrationSpectraS3Request(final String notificationId) {
+        super(notificationId);
+
+        
+
     }
 
     @Override

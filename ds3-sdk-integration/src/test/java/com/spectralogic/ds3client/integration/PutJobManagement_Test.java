@@ -681,8 +681,7 @@ public class PutJobManagement_Test {
             final InitiateMultiPartUploadResponse multiPartUploadResponse = client.initiateMultiPartUpload(
                     new InitiateMultiPartUploadRequest(BUCKET_NAME, "beowulf"));
 
-            assertThat(multiPartUploadResponse.getStatusCode(), is(201));
-
+            assertThat(multiPartUploadResponse.getStatusCode(), is(200));
         } catch (final FailedRequestException e) {
 
             assertThat(getCacheBytesAvailable(), lessThan(5000000000000L));

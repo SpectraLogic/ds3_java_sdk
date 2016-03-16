@@ -36,23 +36,24 @@ public class PutTapePartitionFailureNotificationRegistrationSpectraS3Request ext
         super(notificationEndPoint);
 
         
+
     }
 
     public PutTapePartitionFailureNotificationRegistrationSpectraS3Request withFormat(final HttpResponseFormatType format) {
         this.format = format;
-        this.updateQueryParam("format", format.toString());
+        this.updateQueryParam("format", format);
         return this;
     }
 
     public PutTapePartitionFailureNotificationRegistrationSpectraS3Request withNamingConvention(final NamingConventionType namingConvention) {
         this.namingConvention = namingConvention;
-        this.updateQueryParam("naming_convention", namingConvention.toString());
+        this.updateQueryParam("naming_convention", namingConvention);
         return this;
     }
 
     public PutTapePartitionFailureNotificationRegistrationSpectraS3Request withNotificationHttpMethod(final RequestType notificationHttpMethod) {
         this.notificationHttpMethod = notificationHttpMethod;
-        this.updateQueryParam("notification_http_method", notificationHttpMethod.toString());
+        this.updateQueryParam("notification_http_method", notificationHttpMethod);
         return this;
     }
 

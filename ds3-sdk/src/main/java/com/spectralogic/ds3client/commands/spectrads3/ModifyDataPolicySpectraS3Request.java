@@ -54,65 +54,66 @@ public class ModifyDataPolicySpectraS3Request extends AbstractRequest {
     
     public ModifyDataPolicySpectraS3Request(final String dataPolicy) {
         this.dataPolicy = dataPolicy;
-            }
+        
+    }
 
     public ModifyDataPolicySpectraS3Request withBlobbingEnabled(final boolean blobbingEnabled) {
         this.blobbingEnabled = blobbingEnabled;
-        this.updateQueryParam("blobbing_enabled", String.valueOf(blobbingEnabled));
+        this.updateQueryParam("blobbing_enabled", blobbingEnabled);
         return this;
     }
 
     public ModifyDataPolicySpectraS3Request withChecksumType(final ChecksumType.Type checksumType) {
         this.checksumType = checksumType;
-        this.updateQueryParam("checksum_type", checksumType.toString());
+        this.updateQueryParam("checksum_type", checksumType);
         return this;
     }
 
     public ModifyDataPolicySpectraS3Request withDefaultBlobSize(final Long defaultBlobSize) {
         this.defaultBlobSize = defaultBlobSize;
-        this.updateQueryParam("default_blob_size", Long.toString(defaultBlobSize));
+        this.updateQueryParam("default_blob_size", defaultBlobSize);
         return this;
     }
 
     public ModifyDataPolicySpectraS3Request withDefaultGetJobPriority(final Priority defaultGetJobPriority) {
         this.defaultGetJobPriority = defaultGetJobPriority;
-        this.updateQueryParam("default_get_job_priority", defaultGetJobPriority.toString());
+        this.updateQueryParam("default_get_job_priority", defaultGetJobPriority);
         return this;
     }
 
     public ModifyDataPolicySpectraS3Request withDefaultPutJobPriority(final Priority defaultPutJobPriority) {
         this.defaultPutJobPriority = defaultPutJobPriority;
-        this.updateQueryParam("default_put_job_priority", defaultPutJobPriority.toString());
+        this.updateQueryParam("default_put_job_priority", defaultPutJobPriority);
         return this;
     }
 
     public ModifyDataPolicySpectraS3Request withDefaultVerifyJobPriority(final Priority defaultVerifyJobPriority) {
         this.defaultVerifyJobPriority = defaultVerifyJobPriority;
-        this.updateQueryParam("default_verify_job_priority", defaultVerifyJobPriority.toString());
+        this.updateQueryParam("default_verify_job_priority", defaultVerifyJobPriority);
         return this;
     }
 
     public ModifyDataPolicySpectraS3Request withEndToEndCrcRequired(final boolean endToEndCrcRequired) {
         this.endToEndCrcRequired = endToEndCrcRequired;
-        this.updateQueryParam("end_to_end_crc_required", String.valueOf(endToEndCrcRequired));
+        this.updateQueryParam("end_to_end_crc_required", endToEndCrcRequired);
         return this;
     }
 
     public ModifyDataPolicySpectraS3Request withName(final String name) {
         this.name = name;
-        this.updateQueryParam("name", UrlEscapers.urlFragmentEscaper().escape(name));
+        this.updateQueryParam("name", name);
         return this;
     }
 
     public ModifyDataPolicySpectraS3Request withRebuildPriority(final Priority rebuildPriority) {
         this.rebuildPriority = rebuildPriority;
-        this.updateQueryParam("rebuild_priority", rebuildPriority.toString());
+        this.updateQueryParam("rebuild_priority", rebuildPriority);
         return this;
     }
 
     public ModifyDataPolicySpectraS3Request withVersioning(final VersioningLevel versioning) {
         this.versioning = versioning;
-        this.updateQueryParam("versioning", versioning.toString());
+        this.updateQueryParam("versioning", versioning);
         return this;
     }
 

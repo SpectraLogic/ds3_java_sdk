@@ -30,7 +30,8 @@ public class GetBucketSpectraS3Request extends AbstractRequest {
     
     public GetBucketSpectraS3Request(final String bucketName) {
         this.bucketName = bucketName;
-            }
+        
+    }
 
 
     @Override

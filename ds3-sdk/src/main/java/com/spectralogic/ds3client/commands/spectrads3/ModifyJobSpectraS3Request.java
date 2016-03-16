@@ -27,7 +27,7 @@ public class ModifyJobSpectraS3Request extends AbstractRequest {
 
     // Variables
     
-    private final UUID jobId;
+    private final String jobId;
 
     private Date createdAt;
 
@@ -38,24 +38,30 @@ public class ModifyJobSpectraS3Request extends AbstractRequest {
     // Constructor
     
     public ModifyJobSpectraS3Request(final UUID jobId) {
+        this.jobId = jobId.toString();
+        
+    }
+
+    public ModifyJobSpectraS3Request(final String jobId) {
         this.jobId = jobId;
-            }
+        
+    }
 
     public ModifyJobSpectraS3Request withCreatedAt(final Date createdAt) {
         this.createdAt = createdAt;
-        this.updateQueryParam("created_at", Long.toString(createdAt.getTime()));
+        this.updateQueryParam("created_at", createdAt);
         return this;
     }
 
     public ModifyJobSpectraS3Request withName(final String name) {
         this.name = name;
-        this.updateQueryParam("name", UrlEscapers.urlFragmentEscaper().escape(name));
+        this.updateQueryParam("name", name);
         return this;
     }
 
     public ModifyJobSpectraS3Request withPriority(final Priority priority) {
         this.priority = priority;
-        this.updateQueryParam("priority", priority.toString());
+        this.updateQueryParam("priority", priority);
         return this;
     }
 
@@ -67,10 +73,10 @@ public class ModifyJobSpectraS3Request extends AbstractRequest {
 
     @Override
     public String getPath() {
-        return "/_rest_/job/" + jobId.toString();
+        return "/_rest_/job/" + jobId;
     }
     
-    public UUID getJobId() {
+    public String getJobId() {
         return this.jobId;
     }
 

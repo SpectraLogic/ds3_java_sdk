@@ -19,25 +19,33 @@ package com.spectralogic.ds3client.commands.spectrads3;
 import com.spectralogic.ds3client.networking.HttpVerb;
 import com.spectralogic.ds3client.commands.AbstractRequest;
 import java.util.UUID;
+import com.google.common.net.UrlEscapers;
 
 public class GetJobChunksReadyForClientProcessingSpectraS3Request extends AbstractRequest {
 
     // Variables
     
-    private final UUID job;
+    private final String job;
 
     private int preferredNumberOfChunks;
 
     // Constructor
     
     public GetJobChunksReadyForClientProcessingSpectraS3Request(final UUID job) {
+        this.job = job.toString();
+        
+        this.getQueryParams().put("job", job.toString());
+    }
+
+    public GetJobChunksReadyForClientProcessingSpectraS3Request(final String job) {
         this.job = job;
-                this.getQueryParams().put("job", job.toString());
+        
+        this.getQueryParams().put("job", UrlEscapers.urlFragmentEscaper().escape(job).replace("+", "%2B"));
     }
 
     public GetJobChunksReadyForClientProcessingSpectraS3Request withPreferredNumberOfChunks(final int preferredNumberOfChunks) {
         this.preferredNumberOfChunks = preferredNumberOfChunks;
-        this.updateQueryParam("preferred_number_of_chunks", Integer.toString(preferredNumberOfChunks));
+        this.updateQueryParam("preferred_number_of_chunks", preferredNumberOfChunks);
         return this;
     }
 
@@ -52,7 +60,7 @@ public class GetJobChunksReadyForClientProcessingSpectraS3Request extends Abstra
         return "/_rest_/job_chunk";
     }
     
-    public UUID getJob() {
+    public String getJob() {
         return this.job;
     }
 

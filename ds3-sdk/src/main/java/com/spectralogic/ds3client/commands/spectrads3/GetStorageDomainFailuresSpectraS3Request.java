@@ -34,20 +34,21 @@ public class GetStorageDomainFailuresSpectraS3Request extends AbstractRequest {
 
     private int pageOffset;
 
-    private UUID pageStartMarker;
+    private String pageStartMarker;
 
-    private UUID storageDomainId;
+    private String storageDomainId;
 
     private StorageDomainFailureType type;
 
     // Constructor
     
     public GetStorageDomainFailuresSpectraS3Request() {
-            }
+        
+    }
 
     public GetStorageDomainFailuresSpectraS3Request withErrorMessage(final String errorMessage) {
         this.errorMessage = errorMessage;
-        this.updateQueryParam("error_message", UrlEscapers.urlFragmentEscaper().escape(errorMessage));
+        this.updateQueryParam("error_message", errorMessage);
         return this;
     }
 
@@ -63,31 +64,43 @@ public class GetStorageDomainFailuresSpectraS3Request extends AbstractRequest {
 
     public GetStorageDomainFailuresSpectraS3Request withPageLength(final int pageLength) {
         this.pageLength = pageLength;
-        this.updateQueryParam("page_length", Integer.toString(pageLength));
+        this.updateQueryParam("page_length", pageLength);
         return this;
     }
 
     public GetStorageDomainFailuresSpectraS3Request withPageOffset(final int pageOffset) {
         this.pageOffset = pageOffset;
-        this.updateQueryParam("page_offset", Integer.toString(pageOffset));
+        this.updateQueryParam("page_offset", pageOffset);
         return this;
     }
 
     public GetStorageDomainFailuresSpectraS3Request withPageStartMarker(final UUID pageStartMarker) {
+        this.pageStartMarker = pageStartMarker.toString();
+        this.updateQueryParam("page_start_marker", pageStartMarker);
+        return this;
+    }
+
+    public GetStorageDomainFailuresSpectraS3Request withPageStartMarker(final String pageStartMarker) {
         this.pageStartMarker = pageStartMarker;
-        this.updateQueryParam("page_start_marker", pageStartMarker.toString());
+        this.updateQueryParam("page_start_marker", pageStartMarker);
         return this;
     }
 
     public GetStorageDomainFailuresSpectraS3Request withStorageDomainId(final UUID storageDomainId) {
+        this.storageDomainId = storageDomainId.toString();
+        this.updateQueryParam("storage_domain_id", storageDomainId);
+        return this;
+    }
+
+    public GetStorageDomainFailuresSpectraS3Request withStorageDomainId(final String storageDomainId) {
         this.storageDomainId = storageDomainId;
-        this.updateQueryParam("storage_domain_id", storageDomainId.toString());
+        this.updateQueryParam("storage_domain_id", storageDomainId);
         return this;
     }
 
     public GetStorageDomainFailuresSpectraS3Request withType(final StorageDomainFailureType type) {
         this.type = type;
-        this.updateQueryParam("type", type.toString());
+        this.updateQueryParam("type", type);
         return this;
     }
 
@@ -122,12 +135,12 @@ public class GetStorageDomainFailuresSpectraS3Request extends AbstractRequest {
     }
 
 
-    public UUID getPageStartMarker() {
+    public String getPageStartMarker() {
         return this.pageStartMarker;
     }
 
 
-    public UUID getStorageDomainId() {
+    public String getStorageDomainId() {
         return this.storageDomainId;
     }
 

@@ -19,18 +19,25 @@ package com.spectralogic.ds3client.commands.spectrads3;
 import com.spectralogic.ds3client.networking.HttpVerb;
 import com.spectralogic.ds3client.commands.AbstractRequest;
 import java.util.UUID;
+import com.google.common.net.UrlEscapers;
 
 public class GetUserSpectraS3Request extends AbstractRequest {
 
     // Variables
     
-    private final UUID userId;
+    private final String userId;
 
     // Constructor
     
     public GetUserSpectraS3Request(final UUID userId) {
+        this.userId = userId.toString();
+        
+    }
+
+    public GetUserSpectraS3Request(final String userId) {
         this.userId = userId;
-            }
+        
+    }
 
 
     @Override
@@ -40,10 +47,10 @@ public class GetUserSpectraS3Request extends AbstractRequest {
 
     @Override
     public String getPath() {
-        return "/_rest_/user/" + userId.toString();
+        return "/_rest_/user/" + userId;
     }
     
-    public UUID getUserId() {
+    public String getUserId() {
         return this.userId;
     }
 

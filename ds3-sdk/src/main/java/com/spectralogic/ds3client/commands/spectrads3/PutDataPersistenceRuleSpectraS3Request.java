@@ -19,6 +19,7 @@ package com.spectralogic.ds3client.commands.spectrads3;
 import com.spectralogic.ds3client.networking.HttpVerb;
 import com.spectralogic.ds3client.commands.AbstractRequest;
 import java.util.UUID;
+import com.google.common.net.UrlEscapers;
 import com.spectralogic.ds3client.models.DataIsolationLevel;
 import com.spectralogic.ds3client.models.DataPersistenceRuleType;
 import java.lang.Integer;
@@ -27,32 +28,45 @@ public class PutDataPersistenceRuleSpectraS3Request extends AbstractRequest {
 
     // Variables
     
-    private final UUID dataPolicyId;
+    private final String dataPolicyId;
 
     private final DataIsolationLevel isolationLevel;
 
-    private final UUID storageDomainId;
+    private final String storageDomainId;
 
     private final DataPersistenceRuleType type;
 
-    private int minimumDaysToRetain;
+    private Integer minimumDaysToRetain;
 
     // Constructor
     
     public PutDataPersistenceRuleSpectraS3Request(final UUID dataPolicyId, final DataIsolationLevel isolationLevel, final UUID storageDomainId, final DataPersistenceRuleType type) {
-        this.dataPolicyId = dataPolicyId;
+        this.dataPolicyId = dataPolicyId.toString();
         this.isolationLevel = isolationLevel;
-        this.storageDomainId = storageDomainId;
+        this.storageDomainId = storageDomainId.toString();
         this.type = type;
-                this.getQueryParams().put("data_policy_id", dataPolicyId.toString());
+        
+        this.getQueryParams().put("data_policy_id", dataPolicyId.toString());
         this.getQueryParams().put("isolation_level", isolationLevel.toString());
         this.getQueryParams().put("storage_domain_id", storageDomainId.toString());
         this.getQueryParams().put("type", type.toString());
     }
 
-    public PutDataPersistenceRuleSpectraS3Request withMinimumDaysToRetain(final int minimumDaysToRetain) {
+    public PutDataPersistenceRuleSpectraS3Request(final String dataPolicyId, final DataIsolationLevel isolationLevel, final String storageDomainId, final DataPersistenceRuleType type) {
+        this.dataPolicyId = dataPolicyId;
+        this.isolationLevel = isolationLevel;
+        this.storageDomainId = storageDomainId;
+        this.type = type;
+        
+        this.getQueryParams().put("data_policy_id", UrlEscapers.urlFragmentEscaper().escape(dataPolicyId).replace("+", "%2B"));
+        this.getQueryParams().put("isolation_level", isolationLevel.toString());
+        this.getQueryParams().put("storage_domain_id", UrlEscapers.urlFragmentEscaper().escape(storageDomainId).replace("+", "%2B"));
+        this.getQueryParams().put("type", type.toString());
+    }
+
+    public PutDataPersistenceRuleSpectraS3Request withMinimumDaysToRetain(final Integer minimumDaysToRetain) {
         this.minimumDaysToRetain = minimumDaysToRetain;
-        this.updateQueryParam("minimum_days_to_retain", Integer.toString(minimumDaysToRetain));
+        this.updateQueryParam("minimum_days_to_retain", minimumDaysToRetain);
         return this;
     }
 
@@ -67,7 +81,7 @@ public class PutDataPersistenceRuleSpectraS3Request extends AbstractRequest {
         return "/_rest_/data_persistence_rule";
     }
     
-    public UUID getDataPolicyId() {
+    public String getDataPolicyId() {
         return this.dataPolicyId;
     }
 
@@ -77,7 +91,7 @@ public class PutDataPersistenceRuleSpectraS3Request extends AbstractRequest {
     }
 
 
-    public UUID getStorageDomainId() {
+    public String getStorageDomainId() {
         return this.storageDomainId;
     }
 
@@ -87,7 +101,7 @@ public class PutDataPersistenceRuleSpectraS3Request extends AbstractRequest {
     }
 
 
-    public int getMinimumDaysToRetain() {
+    public Integer getMinimumDaysToRetain() {
         return this.minimumDaysToRetain;
     }
 

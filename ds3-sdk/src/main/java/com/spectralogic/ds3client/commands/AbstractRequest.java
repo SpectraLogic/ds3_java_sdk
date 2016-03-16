@@ -18,6 +18,7 @@ package com.spectralogic.ds3client.commands;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.TreeMultimap;
 import com.spectralogic.ds3client.models.ChecksumType;
+import com.spectralogic.ds3client.utils.SafeStringManipulation;
 import org.apache.http.entity.ContentType;
 
 import java.io.InputStream;
@@ -71,12 +72,12 @@ public abstract class AbstractRequest implements Ds3Request {
         return this.headers;
     }
 
-    protected final void updateQueryParam(final String name, final String param) {
+    protected final <T> void updateQueryParam(final String name, final T param) {
         if(param == null) {
             this.queryParams.remove(name);
         }
         else {
-            this.queryParams.put(name, param);
+            this.queryParams.put(name, SafeStringManipulation.safeUrlEscape(param));
         }
     }
 }

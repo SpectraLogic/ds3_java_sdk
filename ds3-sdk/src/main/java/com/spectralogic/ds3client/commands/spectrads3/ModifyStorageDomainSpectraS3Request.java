@@ -55,71 +55,72 @@ public class ModifyStorageDomainSpectraS3Request extends AbstractRequest {
     
     public ModifyStorageDomainSpectraS3Request(final String storageDomain) {
         this.storageDomain = storageDomain;
-            }
+        
+    }
 
     public ModifyStorageDomainSpectraS3Request withAutoEjectUponCron(final String autoEjectUponCron) {
         this.autoEjectUponCron = autoEjectUponCron;
-        this.updateQueryParam("auto_eject_upon_cron", UrlEscapers.urlFragmentEscaper().escape(autoEjectUponCron));
+        this.updateQueryParam("auto_eject_upon_cron", autoEjectUponCron);
         return this;
     }
 
     public ModifyStorageDomainSpectraS3Request withAutoEjectUponJobCancellation(final boolean autoEjectUponJobCancellation) {
         this.autoEjectUponJobCancellation = autoEjectUponJobCancellation;
-        this.updateQueryParam("auto_eject_upon_job_cancellation", String.valueOf(autoEjectUponJobCancellation));
+        this.updateQueryParam("auto_eject_upon_job_cancellation", autoEjectUponJobCancellation);
         return this;
     }
 
     public ModifyStorageDomainSpectraS3Request withAutoEjectUponJobCompletion(final boolean autoEjectUponJobCompletion) {
         this.autoEjectUponJobCompletion = autoEjectUponJobCompletion;
-        this.updateQueryParam("auto_eject_upon_job_completion", String.valueOf(autoEjectUponJobCompletion));
+        this.updateQueryParam("auto_eject_upon_job_completion", autoEjectUponJobCompletion);
         return this;
     }
 
     public ModifyStorageDomainSpectraS3Request withAutoEjectUponMediaFull(final boolean autoEjectUponMediaFull) {
         this.autoEjectUponMediaFull = autoEjectUponMediaFull;
-        this.updateQueryParam("auto_eject_upon_media_full", String.valueOf(autoEjectUponMediaFull));
+        this.updateQueryParam("auto_eject_upon_media_full", autoEjectUponMediaFull);
         return this;
     }
 
     public ModifyStorageDomainSpectraS3Request withLtfsFileNaming(final LtfsFileNamingMode ltfsFileNaming) {
         this.ltfsFileNaming = ltfsFileNaming;
-        this.updateQueryParam("ltfs_file_naming", ltfsFileNaming.toString());
+        this.updateQueryParam("ltfs_file_naming", ltfsFileNaming);
         return this;
     }
 
     public ModifyStorageDomainSpectraS3Request withMaxTapeFragmentationPercent(final int maxTapeFragmentationPercent) {
         this.maxTapeFragmentationPercent = maxTapeFragmentationPercent;
-        this.updateQueryParam("max_tape_fragmentation_percent", Integer.toString(maxTapeFragmentationPercent));
+        this.updateQueryParam("max_tape_fragmentation_percent", maxTapeFragmentationPercent);
         return this;
     }
 
     public ModifyStorageDomainSpectraS3Request withMaximumAutoVerificationFrequencyInDays(final int maximumAutoVerificationFrequencyInDays) {
         this.maximumAutoVerificationFrequencyInDays = maximumAutoVerificationFrequencyInDays;
-        this.updateQueryParam("maximum_auto_verification_frequency_in_days", Integer.toString(maximumAutoVerificationFrequencyInDays));
+        this.updateQueryParam("maximum_auto_verification_frequency_in_days", maximumAutoVerificationFrequencyInDays);
         return this;
     }
 
     public ModifyStorageDomainSpectraS3Request withMediaEjectionAllowed(final boolean mediaEjectionAllowed) {
         this.mediaEjectionAllowed = mediaEjectionAllowed;
-        this.updateQueryParam("media_ejection_allowed", String.valueOf(mediaEjectionAllowed));
+        this.updateQueryParam("media_ejection_allowed", mediaEjectionAllowed);
         return this;
     }
 
     public ModifyStorageDomainSpectraS3Request withName(final String name) {
         this.name = name;
-        this.updateQueryParam("name", UrlEscapers.urlFragmentEscaper().escape(name));
+        this.updateQueryParam("name", name);
         return this;
     }
 
     public ModifyStorageDomainSpectraS3Request withVerifyPriorToAutoEject(final Priority verifyPriorToAutoEject) {
         this.verifyPriorToAutoEject = verifyPriorToAutoEject;
-        this.updateQueryParam("verify_prior_to_auto_eject", verifyPriorToAutoEject.toString());
+        this.updateQueryParam("verify_prior_to_auto_eject", verifyPriorToAutoEject);
         return this;
     }
 
     public ModifyStorageDomainSpectraS3Request withWriteOptimization(final WriteOptimization writeOptimization) {
         this.writeOptimization = writeOptimization;
-        this.updateQueryParam("write_optimization", writeOptimization.toString());
+        this.updateQueryParam("write_optimization", writeOptimization);
         return this;
     }
 

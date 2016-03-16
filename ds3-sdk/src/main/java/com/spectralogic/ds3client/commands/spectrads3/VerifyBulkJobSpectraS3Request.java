@@ -49,23 +49,24 @@ public class VerifyBulkJobSpectraS3Request extends AbstractRequest {
         this.objects = objects;
         
         this.getQueryParams().put("operation", "start_bulk_verify");
+
     }
 
     public VerifyBulkJobSpectraS3Request withAggregating(final boolean aggregating) {
         this.aggregating = aggregating;
-        this.updateQueryParam("aggregating", String.valueOf(aggregating));
+        this.updateQueryParam("aggregating", aggregating);
         return this;
     }
 
     public VerifyBulkJobSpectraS3Request withName(final String name) {
         this.name = name;
-        this.updateQueryParam("name", UrlEscapers.urlFragmentEscaper().escape(name));
+        this.updateQueryParam("name", name);
         return this;
     }
 
     public VerifyBulkJobSpectraS3Request withPriority(final Priority priority) {
         this.priority = priority;
-        this.updateQueryParam("priority", priority.toString());
+        this.updateQueryParam("priority", priority);
         return this;
     }
 

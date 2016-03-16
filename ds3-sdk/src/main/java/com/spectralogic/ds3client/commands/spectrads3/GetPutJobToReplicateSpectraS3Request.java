@@ -19,18 +19,26 @@ package com.spectralogic.ds3client.commands.spectrads3;
 import com.spectralogic.ds3client.networking.HttpVerb;
 import com.spectralogic.ds3client.commands.AbstractRequest;
 import java.util.UUID;
+import com.google.common.net.UrlEscapers;
 
 public class GetPutJobToReplicateSpectraS3Request extends AbstractRequest {
 
     // Variables
     
-    private final UUID jobId;
+    private final String jobId;
 
     // Constructor
     
     public GetPutJobToReplicateSpectraS3Request(final UUID jobId) {
+        this.jobId = jobId.toString();
+        
+        this.getQueryParams().put("replicate", null);
+    }
+
+    public GetPutJobToReplicateSpectraS3Request(final String jobId) {
         this.jobId = jobId;
-                this.getQueryParams().put("replicate", null);
+        
+        this.getQueryParams().put("replicate", null);
     }
 
 
@@ -41,10 +49,10 @@ public class GetPutJobToReplicateSpectraS3Request extends AbstractRequest {
 
     @Override
     public String getPath() {
-        return "/_rest_/job/" + jobId.toString();
+        return "/_rest_/job/" + jobId;
     }
     
-    public UUID getJobId() {
+    public String getJobId() {
         return this.jobId;
     }
 

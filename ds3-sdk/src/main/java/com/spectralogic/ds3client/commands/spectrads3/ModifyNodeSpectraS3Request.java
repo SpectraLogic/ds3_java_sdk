@@ -34,17 +34,18 @@ public class ModifyNodeSpectraS3Request extends AbstractRequest {
     
     public ModifyNodeSpectraS3Request(final String node) {
         this.node = node;
-            }
+        
+    }
 
     public ModifyNodeSpectraS3Request withDnsName(final String dnsName) {
         this.dnsName = dnsName;
-        this.updateQueryParam("dns_name", UrlEscapers.urlFragmentEscaper().escape(dnsName));
+        this.updateQueryParam("dns_name", dnsName);
         return this;
     }
 
     public ModifyNodeSpectraS3Request withName(final String name) {
         this.name = name;
-        this.updateQueryParam("name", UrlEscapers.urlFragmentEscaper().escape(name));
+        this.updateQueryParam("name", name);
         return this;
     }
 

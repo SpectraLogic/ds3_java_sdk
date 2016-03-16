@@ -29,7 +29,7 @@ public class PutObjectCachedNotificationRegistrationSpectraS3Request extends Abs
     
     private HttpResponseFormatType format;
 
-    private UUID jobId;
+    private String jobId;
 
     private NamingConventionType namingConvention;
 
@@ -39,29 +39,36 @@ public class PutObjectCachedNotificationRegistrationSpectraS3Request extends Abs
         super(notificationEndPoint);
 
         
+
     }
 
     public PutObjectCachedNotificationRegistrationSpectraS3Request withFormat(final HttpResponseFormatType format) {
         this.format = format;
-        this.updateQueryParam("format", format.toString());
+        this.updateQueryParam("format", format);
         return this;
     }
 
     public PutObjectCachedNotificationRegistrationSpectraS3Request withJobId(final UUID jobId) {
+        this.jobId = jobId.toString();
+        this.updateQueryParam("job_id", jobId);
+        return this;
+    }
+
+    public PutObjectCachedNotificationRegistrationSpectraS3Request withJobId(final String jobId) {
         this.jobId = jobId;
-        this.updateQueryParam("job_id", jobId.toString());
+        this.updateQueryParam("job_id", jobId);
         return this;
     }
 
     public PutObjectCachedNotificationRegistrationSpectraS3Request withNamingConvention(final NamingConventionType namingConvention) {
         this.namingConvention = namingConvention;
-        this.updateQueryParam("naming_convention", namingConvention.toString());
+        this.updateQueryParam("naming_convention", namingConvention);
         return this;
     }
 
     public PutObjectCachedNotificationRegistrationSpectraS3Request withNotificationHttpMethod(final RequestType notificationHttpMethod) {
         this.notificationHttpMethod = notificationHttpMethod;
-        this.updateQueryParam("notification_http_method", notificationHttpMethod.toString());
+        this.updateQueryParam("notification_http_method", notificationHttpMethod);
         return this;
     }
 
@@ -77,7 +84,7 @@ public class PutObjectCachedNotificationRegistrationSpectraS3Request extends Abs
     }
 
 
-    public UUID getJobId() {
+    public String getJobId() {
         return this.jobId;
     }
 

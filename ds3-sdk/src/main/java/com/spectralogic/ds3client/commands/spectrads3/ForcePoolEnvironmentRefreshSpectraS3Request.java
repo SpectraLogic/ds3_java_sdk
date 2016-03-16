@@ -26,7 +26,8 @@ public class ForcePoolEnvironmentRefreshSpectraS3Request extends AbstractRequest
     // Constructor
     
     public ForcePoolEnvironmentRefreshSpectraS3Request() {
-            }
+        
+    }
 
 
     @Override

@@ -43,7 +43,7 @@ public class GetActiveJobsSpectraS3Request extends AbstractRequest {
 
     private int pageOffset;
 
-    private UUID pageStartMarker;
+    private String pageStartMarker;
 
     private Priority priority;
 
@@ -53,16 +53,17 @@ public class GetActiveJobsSpectraS3Request extends AbstractRequest {
 
     private boolean truncated;
 
-    private UUID userId;
+    private String userId;
 
     // Constructor
     
     public GetActiveJobsSpectraS3Request() {
-            }
+        
+    }
 
     public GetActiveJobsSpectraS3Request withAggregating(final boolean aggregating) {
         this.aggregating = aggregating;
-        this.updateQueryParam("aggregating", String.valueOf(aggregating));
+        this.updateQueryParam("aggregating", aggregating);
         return this;
     }
 
@@ -74,7 +75,7 @@ public class GetActiveJobsSpectraS3Request extends AbstractRequest {
 
     public GetActiveJobsSpectraS3Request withChunkClientProcessingOrderGuarantee(final JobChunkClientProcessingOrderGuarantee chunkClientProcessingOrderGuarantee) {
         this.chunkClientProcessingOrderGuarantee = chunkClientProcessingOrderGuarantee;
-        this.updateQueryParam("chunk_client_processing_order_guarantee", chunkClientProcessingOrderGuarantee.toString());
+        this.updateQueryParam("chunk_client_processing_order_guarantee", chunkClientProcessingOrderGuarantee);
         return this;
     }
 
@@ -90,55 +91,67 @@ public class GetActiveJobsSpectraS3Request extends AbstractRequest {
 
     public GetActiveJobsSpectraS3Request withName(final String name) {
         this.name = name;
-        this.updateQueryParam("name", UrlEscapers.urlFragmentEscaper().escape(name));
+        this.updateQueryParam("name", name);
         return this;
     }
 
     public GetActiveJobsSpectraS3Request withPageLength(final int pageLength) {
         this.pageLength = pageLength;
-        this.updateQueryParam("page_length", Integer.toString(pageLength));
+        this.updateQueryParam("page_length", pageLength);
         return this;
     }
 
     public GetActiveJobsSpectraS3Request withPageOffset(final int pageOffset) {
         this.pageOffset = pageOffset;
-        this.updateQueryParam("page_offset", Integer.toString(pageOffset));
+        this.updateQueryParam("page_offset", pageOffset);
         return this;
     }
 
     public GetActiveJobsSpectraS3Request withPageStartMarker(final UUID pageStartMarker) {
+        this.pageStartMarker = pageStartMarker.toString();
+        this.updateQueryParam("page_start_marker", pageStartMarker);
+        return this;
+    }
+
+    public GetActiveJobsSpectraS3Request withPageStartMarker(final String pageStartMarker) {
         this.pageStartMarker = pageStartMarker;
-        this.updateQueryParam("page_start_marker", pageStartMarker.toString());
+        this.updateQueryParam("page_start_marker", pageStartMarker);
         return this;
     }
 
     public GetActiveJobsSpectraS3Request withPriority(final Priority priority) {
         this.priority = priority;
-        this.updateQueryParam("priority", priority.toString());
+        this.updateQueryParam("priority", priority);
         return this;
     }
 
     public GetActiveJobsSpectraS3Request withRechunked(final Date rechunked) {
         this.rechunked = rechunked;
-        this.updateQueryParam("rechunked", Long.toString(rechunked.getTime()));
+        this.updateQueryParam("rechunked", rechunked);
         return this;
     }
 
     public GetActiveJobsSpectraS3Request withRequestType(final JobRequestType requestType) {
         this.requestType = requestType;
-        this.updateQueryParam("request_type", requestType.toString());
+        this.updateQueryParam("request_type", requestType);
         return this;
     }
 
     public GetActiveJobsSpectraS3Request withTruncated(final boolean truncated) {
         this.truncated = truncated;
-        this.updateQueryParam("truncated", String.valueOf(truncated));
+        this.updateQueryParam("truncated", truncated);
         return this;
     }
 
     public GetActiveJobsSpectraS3Request withUserId(final UUID userId) {
+        this.userId = userId.toString();
+        this.updateQueryParam("user_id", userId);
+        return this;
+    }
+
+    public GetActiveJobsSpectraS3Request withUserId(final String userId) {
         this.userId = userId;
-        this.updateQueryParam("user_id", userId.toString());
+        this.updateQueryParam("user_id", userId);
         return this;
     }
 
@@ -188,7 +201,7 @@ public class GetActiveJobsSpectraS3Request extends AbstractRequest {
     }
 
 
-    public UUID getPageStartMarker() {
+    public String getPageStartMarker() {
         return this.pageStartMarker;
     }
 
@@ -213,7 +226,7 @@ public class GetActiveJobsSpectraS3Request extends AbstractRequest {
     }
 
 
-    public UUID getUserId() {
+    public String getUserId() {
         return this.userId;
     }
 

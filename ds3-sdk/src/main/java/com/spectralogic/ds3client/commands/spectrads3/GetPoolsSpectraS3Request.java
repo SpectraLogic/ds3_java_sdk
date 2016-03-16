@@ -42,26 +42,27 @@ public class GetPoolsSpectraS3Request extends AbstractRequest {
 
     private int pageOffset;
 
-    private UUID pageStartMarker;
+    private String pageStartMarker;
 
-    private UUID partitionId;
+    private String partitionId;
 
     private boolean poweredOn;
 
     private PoolState state;
 
-    private UUID storageDomainId;
+    private String storageDomainId;
 
     private PoolType type;
 
     // Constructor
     
     public GetPoolsSpectraS3Request() {
-            }
+        
+    }
 
     public GetPoolsSpectraS3Request withAssignedToStorageDomain(final boolean assignedToStorageDomain) {
         this.assignedToStorageDomain = assignedToStorageDomain;
-        this.updateQueryParam("assigned_to_storage_domain", String.valueOf(assignedToStorageDomain));
+        this.updateQueryParam("assigned_to_storage_domain", assignedToStorageDomain);
         return this;
     }
 
@@ -73,7 +74,7 @@ public class GetPoolsSpectraS3Request extends AbstractRequest {
 
     public GetPoolsSpectraS3Request withHealth(final PoolHealth health) {
         this.health = health;
-        this.updateQueryParam("health", health.toString());
+        this.updateQueryParam("health", health);
         return this;
     }
 
@@ -89,55 +90,73 @@ public class GetPoolsSpectraS3Request extends AbstractRequest {
 
     public GetPoolsSpectraS3Request withName(final String name) {
         this.name = name;
-        this.updateQueryParam("name", UrlEscapers.urlFragmentEscaper().escape(name));
+        this.updateQueryParam("name", name);
         return this;
     }
 
     public GetPoolsSpectraS3Request withPageLength(final int pageLength) {
         this.pageLength = pageLength;
-        this.updateQueryParam("page_length", Integer.toString(pageLength));
+        this.updateQueryParam("page_length", pageLength);
         return this;
     }
 
     public GetPoolsSpectraS3Request withPageOffset(final int pageOffset) {
         this.pageOffset = pageOffset;
-        this.updateQueryParam("page_offset", Integer.toString(pageOffset));
+        this.updateQueryParam("page_offset", pageOffset);
         return this;
     }
 
     public GetPoolsSpectraS3Request withPageStartMarker(final UUID pageStartMarker) {
+        this.pageStartMarker = pageStartMarker.toString();
+        this.updateQueryParam("page_start_marker", pageStartMarker);
+        return this;
+    }
+
+    public GetPoolsSpectraS3Request withPageStartMarker(final String pageStartMarker) {
         this.pageStartMarker = pageStartMarker;
-        this.updateQueryParam("page_start_marker", pageStartMarker.toString());
+        this.updateQueryParam("page_start_marker", pageStartMarker);
         return this;
     }
 
     public GetPoolsSpectraS3Request withPartitionId(final UUID partitionId) {
+        this.partitionId = partitionId.toString();
+        this.updateQueryParam("partition_id", partitionId);
+        return this;
+    }
+
+    public GetPoolsSpectraS3Request withPartitionId(final String partitionId) {
         this.partitionId = partitionId;
-        this.updateQueryParam("partition_id", partitionId.toString());
+        this.updateQueryParam("partition_id", partitionId);
         return this;
     }
 
     public GetPoolsSpectraS3Request withPoweredOn(final boolean poweredOn) {
         this.poweredOn = poweredOn;
-        this.updateQueryParam("powered_on", String.valueOf(poweredOn));
+        this.updateQueryParam("powered_on", poweredOn);
         return this;
     }
 
     public GetPoolsSpectraS3Request withState(final PoolState state) {
         this.state = state;
-        this.updateQueryParam("state", state.toString());
+        this.updateQueryParam("state", state);
         return this;
     }
 
     public GetPoolsSpectraS3Request withStorageDomainId(final UUID storageDomainId) {
+        this.storageDomainId = storageDomainId.toString();
+        this.updateQueryParam("storage_domain_id", storageDomainId);
+        return this;
+    }
+
+    public GetPoolsSpectraS3Request withStorageDomainId(final String storageDomainId) {
         this.storageDomainId = storageDomainId;
-        this.updateQueryParam("storage_domain_id", storageDomainId.toString());
+        this.updateQueryParam("storage_domain_id", storageDomainId);
         return this;
     }
 
     public GetPoolsSpectraS3Request withType(final PoolType type) {
         this.type = type;
-        this.updateQueryParam("type", type.toString());
+        this.updateQueryParam("type", type);
         return this;
     }
 
@@ -187,12 +206,12 @@ public class GetPoolsSpectraS3Request extends AbstractRequest {
     }
 
 
-    public UUID getPageStartMarker() {
+    public String getPageStartMarker() {
         return this.pageStartMarker;
     }
 
 
-    public UUID getPartitionId() {
+    public String getPartitionId() {
         return this.partitionId;
     }
 
@@ -207,7 +226,7 @@ public class GetPoolsSpectraS3Request extends AbstractRequest {
     }
 
 
-    public UUID getStorageDomainId() {
+    public String getStorageDomainId() {
         return this.storageDomainId;
     }
 

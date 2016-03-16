@@ -43,12 +43,14 @@ public class DeleteObjectsRequest extends AbstractRequest {
     public DeleteObjectsRequest(final String bucketName, final List<String> objects) {
         this.bucketName = bucketName;
         this.objects = objects;
-                this.getQueryParams().put("delete", null);
+        
+        this.getQueryParams().put("delete", null);
     }
 
     public DeleteObjectsRequest(final String bucketName, final Iterable<Contents> objs) {
         this.bucketName = bucketName;
-                this.getQueryParams().put("delete", null);
+        
+        this.getQueryParams().put("delete", null);
         this.objects = contentsToString(objs);
     }
 

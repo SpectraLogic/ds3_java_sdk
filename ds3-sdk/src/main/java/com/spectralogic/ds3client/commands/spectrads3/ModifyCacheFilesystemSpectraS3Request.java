@@ -39,29 +39,30 @@ public class ModifyCacheFilesystemSpectraS3Request extends AbstractRequest {
     
     public ModifyCacheFilesystemSpectraS3Request(final String cacheFilesystem) {
         this.cacheFilesystem = cacheFilesystem;
-            }
+        
+    }
 
     public ModifyCacheFilesystemSpectraS3Request withAutoReclaimInitiateThreshold(final double autoReclaimInitiateThreshold) {
         this.autoReclaimInitiateThreshold = autoReclaimInitiateThreshold;
-        this.updateQueryParam("auto_reclaim_initiate_threshold", Double.toString(autoReclaimInitiateThreshold));
+        this.updateQueryParam("auto_reclaim_initiate_threshold", autoReclaimInitiateThreshold);
         return this;
     }
 
     public ModifyCacheFilesystemSpectraS3Request withAutoReclaimTerminateThreshold(final double autoReclaimTerminateThreshold) {
         this.autoReclaimTerminateThreshold = autoReclaimTerminateThreshold;
-        this.updateQueryParam("auto_reclaim_terminate_threshold", Double.toString(autoReclaimTerminateThreshold));
+        this.updateQueryParam("auto_reclaim_terminate_threshold", autoReclaimTerminateThreshold);
         return this;
     }
 
     public ModifyCacheFilesystemSpectraS3Request withBurstThreshold(final double burstThreshold) {
         this.burstThreshold = burstThreshold;
-        this.updateQueryParam("burst_threshold", Double.toString(burstThreshold));
+        this.updateQueryParam("burst_threshold", burstThreshold);
         return this;
     }
 
     public ModifyCacheFilesystemSpectraS3Request withMaxCapacityInBytes(final Long maxCapacityInBytes) {
         this.maxCapacityInBytes = maxCapacityInBytes;
-        this.updateQueryParam("max_capacity_in_bytes", Long.toString(maxCapacityInBytes));
+        this.updateQueryParam("max_capacity_in_bytes", maxCapacityInBytes);
         return this;
     }
 

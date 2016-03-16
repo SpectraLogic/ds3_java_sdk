@@ -31,11 +31,12 @@ public class VerifyAllTapesSpectraS3Request extends AbstractRequest {
     public VerifyAllTapesSpectraS3Request() {
         
         this.getQueryParams().put("operation", "verify");
+
     }
 
     public VerifyAllTapesSpectraS3Request withTaskPriority(final Priority taskPriority) {
         this.taskPriority = taskPriority;
-        this.updateQueryParam("task_priority", taskPriority.toString());
+        this.updateQueryParam("task_priority", taskPriority);
         return this;
     }
 

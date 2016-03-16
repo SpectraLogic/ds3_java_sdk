@@ -19,6 +19,7 @@ package com.spectralogic.ds3client.commands.spectrads3;
 import com.spectralogic.ds3client.networking.HttpVerb;
 import com.spectralogic.ds3client.commands.AbstractRequest;
 import java.util.UUID;
+import com.google.common.net.UrlEscapers;
 import com.spectralogic.ds3client.models.DataPersistenceRuleState;
 import com.spectralogic.ds3client.models.DataReplicationRuleType;
 
@@ -26,9 +27,9 @@ public class GetDataReplicationRulesSpectraS3Request extends AbstractRequest {
 
     // Variables
     
-    private UUID dataPolicyId;
+    private String dataPolicyId;
 
-    private UUID ds3TargetId;
+    private String ds3TargetId;
 
     private boolean lastPage;
 
@@ -36,7 +37,7 @@ public class GetDataReplicationRulesSpectraS3Request extends AbstractRequest {
 
     private int pageOffset;
 
-    private UUID pageStartMarker;
+    private String pageStartMarker;
 
     private DataPersistenceRuleState state;
 
@@ -45,17 +46,30 @@ public class GetDataReplicationRulesSpectraS3Request extends AbstractRequest {
     // Constructor
     
     public GetDataReplicationRulesSpectraS3Request() {
-            }
+        
+    }
 
     public GetDataReplicationRulesSpectraS3Request withDataPolicyId(final UUID dataPolicyId) {
+        this.dataPolicyId = dataPolicyId.toString();
+        this.updateQueryParam("data_policy_id", dataPolicyId);
+        return this;
+    }
+
+    public GetDataReplicationRulesSpectraS3Request withDataPolicyId(final String dataPolicyId) {
         this.dataPolicyId = dataPolicyId;
-        this.updateQueryParam("data_policy_id", dataPolicyId.toString());
+        this.updateQueryParam("data_policy_id", dataPolicyId);
         return this;
     }
 
     public GetDataReplicationRulesSpectraS3Request withDs3TargetId(final UUID ds3TargetId) {
+        this.ds3TargetId = ds3TargetId.toString();
+        this.updateQueryParam("ds3_target_id", ds3TargetId);
+        return this;
+    }
+
+    public GetDataReplicationRulesSpectraS3Request withDs3TargetId(final String ds3TargetId) {
         this.ds3TargetId = ds3TargetId;
-        this.updateQueryParam("ds3_target_id", ds3TargetId.toString());
+        this.updateQueryParam("ds3_target_id", ds3TargetId);
         return this;
     }
 
@@ -71,31 +85,37 @@ public class GetDataReplicationRulesSpectraS3Request extends AbstractRequest {
 
     public GetDataReplicationRulesSpectraS3Request withPageLength(final int pageLength) {
         this.pageLength = pageLength;
-        this.updateQueryParam("page_length", Integer.toString(pageLength));
+        this.updateQueryParam("page_length", pageLength);
         return this;
     }
 
     public GetDataReplicationRulesSpectraS3Request withPageOffset(final int pageOffset) {
         this.pageOffset = pageOffset;
-        this.updateQueryParam("page_offset", Integer.toString(pageOffset));
+        this.updateQueryParam("page_offset", pageOffset);
         return this;
     }
 
     public GetDataReplicationRulesSpectraS3Request withPageStartMarker(final UUID pageStartMarker) {
+        this.pageStartMarker = pageStartMarker.toString();
+        this.updateQueryParam("page_start_marker", pageStartMarker);
+        return this;
+    }
+
+    public GetDataReplicationRulesSpectraS3Request withPageStartMarker(final String pageStartMarker) {
         this.pageStartMarker = pageStartMarker;
-        this.updateQueryParam("page_start_marker", pageStartMarker.toString());
+        this.updateQueryParam("page_start_marker", pageStartMarker);
         return this;
     }
 
     public GetDataReplicationRulesSpectraS3Request withState(final DataPersistenceRuleState state) {
         this.state = state;
-        this.updateQueryParam("state", state.toString());
+        this.updateQueryParam("state", state);
         return this;
     }
 
     public GetDataReplicationRulesSpectraS3Request withType(final DataReplicationRuleType type) {
         this.type = type;
-        this.updateQueryParam("type", type.toString());
+        this.updateQueryParam("type", type);
         return this;
     }
 
@@ -110,12 +130,12 @@ public class GetDataReplicationRulesSpectraS3Request extends AbstractRequest {
         return "/_rest_/data_replication_rule";
     }
     
-    public UUID getDataPolicyId() {
+    public String getDataPolicyId() {
         return this.dataPolicyId;
     }
 
 
-    public UUID getDs3TargetId() {
+    public String getDs3TargetId() {
         return this.ds3TargetId;
     }
 
@@ -135,7 +155,7 @@ public class GetDataReplicationRulesSpectraS3Request extends AbstractRequest {
     }
 
 
-    public UUID getPageStartMarker() {
+    public String getPageStartMarker() {
         return this.pageStartMarker;
     }
 

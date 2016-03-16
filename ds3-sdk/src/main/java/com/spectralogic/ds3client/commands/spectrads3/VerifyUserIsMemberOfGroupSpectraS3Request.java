@@ -27,7 +27,7 @@ public class VerifyUserIsMemberOfGroupSpectraS3Request extends AbstractRequest {
     
     private final String group;
 
-    private UUID userId;
+    private String userId;
 
     // Constructor
     
@@ -35,11 +35,18 @@ public class VerifyUserIsMemberOfGroupSpectraS3Request extends AbstractRequest {
         this.group = group;
         
         this.getQueryParams().put("operation", "verify");
+
     }
 
     public VerifyUserIsMemberOfGroupSpectraS3Request withUserId(final UUID userId) {
+        this.userId = userId.toString();
+        this.updateQueryParam("user_id", userId);
+        return this;
+    }
+
+    public VerifyUserIsMemberOfGroupSpectraS3Request withUserId(final String userId) {
         this.userId = userId;
-        this.updateQueryParam("user_id", userId.toString());
+        this.updateQueryParam("user_id", userId);
         return this;
     }
 
@@ -59,7 +66,7 @@ public class VerifyUserIsMemberOfGroupSpectraS3Request extends AbstractRequest {
     }
 
 
-    public UUID getUserId() {
+    public String getUserId() {
         return this.userId;
     }
 

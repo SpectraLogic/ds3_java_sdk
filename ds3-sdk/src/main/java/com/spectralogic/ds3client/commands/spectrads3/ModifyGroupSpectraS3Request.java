@@ -32,11 +32,12 @@ public class ModifyGroupSpectraS3Request extends AbstractRequest {
     
     public ModifyGroupSpectraS3Request(final String group) {
         this.group = group;
-            }
+        
+    }
 
     public ModifyGroupSpectraS3Request withName(final String name) {
         this.name = name;
-        this.updateQueryParam("name", UrlEscapers.urlFragmentEscaper().escape(name));
+        this.updateQueryParam("name", name);
         return this;
     }
 

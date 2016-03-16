@@ -29,6 +29,14 @@ public class GetObjectPersistedNotificationRegistrationSpectraS3Request extends 
         super(notificationId);
 
         
+
+    }
+
+    public GetObjectPersistedNotificationRegistrationSpectraS3Request(final String notificationId) {
+        super(notificationId);
+
+        
+
     }
 
 

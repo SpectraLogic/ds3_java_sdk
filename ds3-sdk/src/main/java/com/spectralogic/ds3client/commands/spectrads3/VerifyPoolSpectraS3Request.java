@@ -35,11 +35,12 @@ public class VerifyPoolSpectraS3Request extends AbstractRequest {
         this.pool = pool;
         
         this.getQueryParams().put("operation", "verify");
+
     }
 
     public VerifyPoolSpectraS3Request withPriority(final Priority priority) {
         this.priority = priority;
-        this.updateQueryParam("priority", priority.toString());
+        this.updateQueryParam("priority", priority);
         return this;
     }
 

@@ -31,11 +31,12 @@ public class InspectAllTapesSpectraS3Request extends AbstractRequest {
     public InspectAllTapesSpectraS3Request() {
         
         this.getQueryParams().put("operation", "inspect");
+
     }
 
     public InspectAllTapesSpectraS3Request withTaskPriority(final Priority taskPriority) {
         this.taskPriority = taskPriority;
-        this.updateQueryParam("task_priority", taskPriority.toString());
+        this.updateQueryParam("task_priority", taskPriority);
         return this;
     }
 

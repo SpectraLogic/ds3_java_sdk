@@ -34,20 +34,21 @@ public class GetPoolFailuresSpectraS3Request extends AbstractRequest {
 
     private int pageOffset;
 
-    private UUID pageStartMarker;
+    private String pageStartMarker;
 
-    private UUID poolId;
+    private String poolId;
 
     private PoolFailureType type;
 
     // Constructor
     
     public GetPoolFailuresSpectraS3Request() {
-            }
+        
+    }
 
     public GetPoolFailuresSpectraS3Request withErrorMessage(final String errorMessage) {
         this.errorMessage = errorMessage;
-        this.updateQueryParam("error_message", UrlEscapers.urlFragmentEscaper().escape(errorMessage));
+        this.updateQueryParam("error_message", errorMessage);
         return this;
     }
 
@@ -63,31 +64,43 @@ public class GetPoolFailuresSpectraS3Request extends AbstractRequest {
 
     public GetPoolFailuresSpectraS3Request withPageLength(final int pageLength) {
         this.pageLength = pageLength;
-        this.updateQueryParam("page_length", Integer.toString(pageLength));
+        this.updateQueryParam("page_length", pageLength);
         return this;
     }
 
     public GetPoolFailuresSpectraS3Request withPageOffset(final int pageOffset) {
         this.pageOffset = pageOffset;
-        this.updateQueryParam("page_offset", Integer.toString(pageOffset));
+        this.updateQueryParam("page_offset", pageOffset);
         return this;
     }
 
     public GetPoolFailuresSpectraS3Request withPageStartMarker(final UUID pageStartMarker) {
+        this.pageStartMarker = pageStartMarker.toString();
+        this.updateQueryParam("page_start_marker", pageStartMarker);
+        return this;
+    }
+
+    public GetPoolFailuresSpectraS3Request withPageStartMarker(final String pageStartMarker) {
         this.pageStartMarker = pageStartMarker;
-        this.updateQueryParam("page_start_marker", pageStartMarker.toString());
+        this.updateQueryParam("page_start_marker", pageStartMarker);
         return this;
     }
 
     public GetPoolFailuresSpectraS3Request withPoolId(final UUID poolId) {
+        this.poolId = poolId.toString();
+        this.updateQueryParam("pool_id", poolId);
+        return this;
+    }
+
+    public GetPoolFailuresSpectraS3Request withPoolId(final String poolId) {
         this.poolId = poolId;
-        this.updateQueryParam("pool_id", poolId.toString());
+        this.updateQueryParam("pool_id", poolId);
         return this;
     }
 
     public GetPoolFailuresSpectraS3Request withType(final PoolFailureType type) {
         this.type = type;
-        this.updateQueryParam("type", type.toString());
+        this.updateQueryParam("type", type);
         return this;
     }
 
@@ -122,12 +135,12 @@ public class GetPoolFailuresSpectraS3Request extends AbstractRequest {
     }
 
 
-    public UUID getPageStartMarker() {
+    public String getPageStartMarker() {
         return this.pageStartMarker;
     }
 
 
-    public UUID getPoolId() {
+    public String getPoolId() {
         return this.poolId;
     }
 

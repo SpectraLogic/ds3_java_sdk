@@ -27,7 +27,7 @@ public class GetUsersSpectraS3Request extends AbstractRequest {
     
     private String authId;
 
-    private UUID defaultDataPolicyId;
+    private String defaultDataPolicyId;
 
     private boolean lastPage;
 
@@ -37,22 +37,29 @@ public class GetUsersSpectraS3Request extends AbstractRequest {
 
     private int pageOffset;
 
-    private UUID pageStartMarker;
+    private String pageStartMarker;
 
     // Constructor
     
     public GetUsersSpectraS3Request() {
-            }
+        
+    }
 
     public GetUsersSpectraS3Request withAuthId(final String authId) {
         this.authId = authId;
-        this.updateQueryParam("auth_id", UrlEscapers.urlFragmentEscaper().escape(authId));
+        this.updateQueryParam("auth_id", authId);
         return this;
     }
 
     public GetUsersSpectraS3Request withDefaultDataPolicyId(final UUID defaultDataPolicyId) {
+        this.defaultDataPolicyId = defaultDataPolicyId.toString();
+        this.updateQueryParam("default_data_policy_id", defaultDataPolicyId);
+        return this;
+    }
+
+    public GetUsersSpectraS3Request withDefaultDataPolicyId(final String defaultDataPolicyId) {
         this.defaultDataPolicyId = defaultDataPolicyId;
-        this.updateQueryParam("default_data_policy_id", defaultDataPolicyId.toString());
+        this.updateQueryParam("default_data_policy_id", defaultDataPolicyId);
         return this;
     }
 
@@ -68,25 +75,31 @@ public class GetUsersSpectraS3Request extends AbstractRequest {
 
     public GetUsersSpectraS3Request withName(final String name) {
         this.name = name;
-        this.updateQueryParam("name", UrlEscapers.urlFragmentEscaper().escape(name));
+        this.updateQueryParam("name", name);
         return this;
     }
 
     public GetUsersSpectraS3Request withPageLength(final int pageLength) {
         this.pageLength = pageLength;
-        this.updateQueryParam("page_length", Integer.toString(pageLength));
+        this.updateQueryParam("page_length", pageLength);
         return this;
     }
 
     public GetUsersSpectraS3Request withPageOffset(final int pageOffset) {
         this.pageOffset = pageOffset;
-        this.updateQueryParam("page_offset", Integer.toString(pageOffset));
+        this.updateQueryParam("page_offset", pageOffset);
         return this;
     }
 
     public GetUsersSpectraS3Request withPageStartMarker(final UUID pageStartMarker) {
+        this.pageStartMarker = pageStartMarker.toString();
+        this.updateQueryParam("page_start_marker", pageStartMarker);
+        return this;
+    }
+
+    public GetUsersSpectraS3Request withPageStartMarker(final String pageStartMarker) {
         this.pageStartMarker = pageStartMarker;
-        this.updateQueryParam("page_start_marker", pageStartMarker.toString());
+        this.updateQueryParam("page_start_marker", pageStartMarker);
         return this;
     }
 
@@ -106,7 +119,7 @@ public class GetUsersSpectraS3Request extends AbstractRequest {
     }
 
 
-    public UUID getDefaultDataPolicyId() {
+    public String getDefaultDataPolicyId() {
         return this.defaultDataPolicyId;
     }
 
@@ -131,7 +144,7 @@ public class GetUsersSpectraS3Request extends AbstractRequest {
     }
 
 
-    public UUID getPageStartMarker() {
+    public String getPageStartMarker() {
         return this.pageStartMarker;
     }
 

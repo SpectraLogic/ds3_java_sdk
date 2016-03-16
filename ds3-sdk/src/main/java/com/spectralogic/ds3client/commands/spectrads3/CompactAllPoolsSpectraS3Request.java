@@ -31,11 +31,12 @@ public class CompactAllPoolsSpectraS3Request extends AbstractRequest {
     public CompactAllPoolsSpectraS3Request() {
         
         this.getQueryParams().put("operation", "compact");
+
     }
 
     public CompactAllPoolsSpectraS3Request withPriority(final Priority priority) {
         this.priority = priority;
-        this.updateQueryParam("priority", priority.toString());
+        this.updateQueryParam("priority", priority);
         return this;
     }
 

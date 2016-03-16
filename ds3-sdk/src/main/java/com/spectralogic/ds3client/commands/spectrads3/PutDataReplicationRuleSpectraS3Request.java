@@ -19,16 +19,16 @@ package com.spectralogic.ds3client.commands.spectrads3;
 import com.spectralogic.ds3client.networking.HttpVerb;
 import com.spectralogic.ds3client.commands.AbstractRequest;
 import java.util.UUID;
-import com.spectralogic.ds3client.models.DataReplicationRuleType;
 import com.google.common.net.UrlEscapers;
+import com.spectralogic.ds3client.models.DataReplicationRuleType;
 
 public class PutDataReplicationRuleSpectraS3Request extends AbstractRequest {
 
     // Variables
     
-    private final UUID dataPolicyId;
+    private final String dataPolicyId;
 
-    private final UUID ds3TargetId;
+    private final String ds3TargetId;
 
     private final DataReplicationRuleType type;
 
@@ -37,17 +37,28 @@ public class PutDataReplicationRuleSpectraS3Request extends AbstractRequest {
     // Constructor
     
     public PutDataReplicationRuleSpectraS3Request(final UUID dataPolicyId, final UUID ds3TargetId, final DataReplicationRuleType type) {
+        this.dataPolicyId = dataPolicyId.toString();
+        this.ds3TargetId = ds3TargetId.toString();
+        this.type = type;
+        
+        this.getQueryParams().put("data_policy_id", dataPolicyId.toString());
+        this.getQueryParams().put("ds3_target_id", ds3TargetId.toString());
+        this.getQueryParams().put("type", type.toString());
+    }
+
+    public PutDataReplicationRuleSpectraS3Request(final String dataPolicyId, final String ds3TargetId, final DataReplicationRuleType type) {
         this.dataPolicyId = dataPolicyId;
         this.ds3TargetId = ds3TargetId;
         this.type = type;
-                this.getQueryParams().put("data_policy_id", dataPolicyId.toString());
-        this.getQueryParams().put("ds3_target_id", ds3TargetId.toString());
+        
+        this.getQueryParams().put("data_policy_id", UrlEscapers.urlFragmentEscaper().escape(dataPolicyId).replace("+", "%2B"));
+        this.getQueryParams().put("ds3_target_id", UrlEscapers.urlFragmentEscaper().escape(ds3TargetId).replace("+", "%2B"));
         this.getQueryParams().put("type", type.toString());
     }
 
     public PutDataReplicationRuleSpectraS3Request withDs3TargetDataPolicy(final String ds3TargetDataPolicy) {
         this.ds3TargetDataPolicy = ds3TargetDataPolicy;
-        this.updateQueryParam("ds3_target_data_policy", UrlEscapers.urlFragmentEscaper().escape(ds3TargetDataPolicy));
+        this.updateQueryParam("ds3_target_data_policy", ds3TargetDataPolicy);
         return this;
     }
 
@@ -62,12 +73,12 @@ public class PutDataReplicationRuleSpectraS3Request extends AbstractRequest {
         return "/_rest_/data_replication_rule";
     }
     
-    public UUID getDataPolicyId() {
+    public String getDataPolicyId() {
         return this.dataPolicyId;
     }
 
 
-    public UUID getDs3TargetId() {
+    public String getDs3TargetId() {
         return this.ds3TargetId;
     }
 

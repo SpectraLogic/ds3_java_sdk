@@ -29,7 +29,7 @@ public class ModifyDataPathBackendSpectraS3Request extends AbstractRequest {
     
     private boolean activated;
 
-    private int autoActivateTimeoutInMins;
+    private Integer autoActivateTimeoutInMins;
 
     private AutoInspectMode autoInspect;
 
@@ -44,47 +44,48 @@ public class ModifyDataPathBackendSpectraS3Request extends AbstractRequest {
     // Constructor
     
     public ModifyDataPathBackendSpectraS3Request() {
-            }
+        
+    }
 
     public ModifyDataPathBackendSpectraS3Request withActivated(final boolean activated) {
         this.activated = activated;
-        this.updateQueryParam("activated", String.valueOf(activated));
+        this.updateQueryParam("activated", activated);
         return this;
     }
 
-    public ModifyDataPathBackendSpectraS3Request withAutoActivateTimeoutInMins(final int autoActivateTimeoutInMins) {
+    public ModifyDataPathBackendSpectraS3Request withAutoActivateTimeoutInMins(final Integer autoActivateTimeoutInMins) {
         this.autoActivateTimeoutInMins = autoActivateTimeoutInMins;
-        this.updateQueryParam("auto_activate_timeout_in_mins", Integer.toString(autoActivateTimeoutInMins));
+        this.updateQueryParam("auto_activate_timeout_in_mins", autoActivateTimeoutInMins);
         return this;
     }
 
     public ModifyDataPathBackendSpectraS3Request withAutoInspect(final AutoInspectMode autoInspect) {
         this.autoInspect = autoInspect;
-        this.updateQueryParam("auto_inspect", autoInspect.toString());
+        this.updateQueryParam("auto_inspect", autoInspect);
         return this;
     }
 
     public ModifyDataPathBackendSpectraS3Request withDefaultImportConflictResolutionMode(final ImportConflictResolutionMode defaultImportConflictResolutionMode) {
         this.defaultImportConflictResolutionMode = defaultImportConflictResolutionMode;
-        this.updateQueryParam("default_import_conflict_resolution_mode", defaultImportConflictResolutionMode.toString());
+        this.updateQueryParam("default_import_conflict_resolution_mode", defaultImportConflictResolutionMode);
         return this;
     }
 
     public ModifyDataPathBackendSpectraS3Request withUnavailableMediaPolicy(final UnavailableMediaUsagePolicy unavailableMediaPolicy) {
         this.unavailableMediaPolicy = unavailableMediaPolicy;
-        this.updateQueryParam("unavailable_media_policy", unavailableMediaPolicy.toString());
+        this.updateQueryParam("unavailable_media_policy", unavailableMediaPolicy);
         return this;
     }
 
     public ModifyDataPathBackendSpectraS3Request withUnavailablePoolMaxJobRetryInMins(final int unavailablePoolMaxJobRetryInMins) {
         this.unavailablePoolMaxJobRetryInMins = unavailablePoolMaxJobRetryInMins;
-        this.updateQueryParam("unavailable_pool_max_job_retry_in_mins", Integer.toString(unavailablePoolMaxJobRetryInMins));
+        this.updateQueryParam("unavailable_pool_max_job_retry_in_mins", unavailablePoolMaxJobRetryInMins);
         return this;
     }
 
     public ModifyDataPathBackendSpectraS3Request withUnavailableTapePartitionMaxJobRetryInMins(final int unavailableTapePartitionMaxJobRetryInMins) {
         this.unavailableTapePartitionMaxJobRetryInMins = unavailableTapePartitionMaxJobRetryInMins;
-        this.updateQueryParam("unavailable_tape_partition_max_job_retry_in_mins", Integer.toString(unavailableTapePartitionMaxJobRetryInMins));
+        this.updateQueryParam("unavailable_tape_partition_max_job_retry_in_mins", unavailableTapePartitionMaxJobRetryInMins);
         return this;
     }
 
@@ -104,7 +105,7 @@ public class ModifyDataPathBackendSpectraS3Request extends AbstractRequest {
     }
 
 
-    public int getAutoActivateTimeoutInMins() {
+    public Integer getAutoActivateTimeoutInMins() {
         return this.autoActivateTimeoutInMins;
     }
 

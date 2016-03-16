@@ -30,7 +30,8 @@ public class GetStorageDomainSpectraS3Request extends AbstractRequest {
     
     public GetStorageDomainSpectraS3Request(final String storageDomain) {
         this.storageDomain = storageDomain;
-            }
+        
+    }
 
 
     @Override

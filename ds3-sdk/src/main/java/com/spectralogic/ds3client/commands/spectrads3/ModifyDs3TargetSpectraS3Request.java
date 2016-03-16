@@ -49,53 +49,54 @@ public class ModifyDs3TargetSpectraS3Request extends AbstractRequest {
     
     public ModifyDs3TargetSpectraS3Request(final String ds3Target) {
         this.ds3Target = ds3Target;
-            }
+        
+    }
 
     public ModifyDs3TargetSpectraS3Request withAccessControlReplication(final Ds3TargetAccessControlReplication accessControlReplication) {
         this.accessControlReplication = accessControlReplication;
-        this.updateQueryParam("access_control_replication", accessControlReplication.toString());
+        this.updateQueryParam("access_control_replication", accessControlReplication);
         return this;
     }
 
     public ModifyDs3TargetSpectraS3Request withAdminAuthId(final String adminAuthId) {
         this.adminAuthId = adminAuthId;
-        this.updateQueryParam("admin_auth_id", UrlEscapers.urlFragmentEscaper().escape(adminAuthId));
+        this.updateQueryParam("admin_auth_id", adminAuthId);
         return this;
     }
 
     public ModifyDs3TargetSpectraS3Request withAdminSecretKey(final String adminSecretKey) {
         this.adminSecretKey = adminSecretKey;
-        this.updateQueryParam("admin_secret_key", UrlEscapers.urlFragmentEscaper().escape(adminSecretKey));
+        this.updateQueryParam("admin_secret_key", adminSecretKey);
         return this;
     }
 
     public ModifyDs3TargetSpectraS3Request withDataPath(final String dataPath) {
         this.dataPath = dataPath;
-        this.updateQueryParam("data_path", UrlEscapers.urlFragmentEscaper().escape(dataPath));
+        this.updateQueryParam("data_path", dataPath);
         return this;
     }
 
     public ModifyDs3TargetSpectraS3Request withDefaultReadPreference(final TargetReadPreference defaultReadPreference) {
         this.defaultReadPreference = defaultReadPreference;
-        this.updateQueryParam("default_read_preference", defaultReadPreference.toString());
+        this.updateQueryParam("default_read_preference", defaultReadPreference);
         return this;
     }
 
     public ModifyDs3TargetSpectraS3Request withName(final String name) {
         this.name = name;
-        this.updateQueryParam("name", UrlEscapers.urlFragmentEscaper().escape(name));
+        this.updateQueryParam("name", name);
         return this;
     }
 
     public ModifyDs3TargetSpectraS3Request withQuiesced(final Quiesced quiesced) {
         this.quiesced = quiesced;
-        this.updateQueryParam("quiesced", quiesced.toString());
+        this.updateQueryParam("quiesced", quiesced);
         return this;
     }
 
     public ModifyDs3TargetSpectraS3Request withReplicatedUserDefaultDataPolicy(final String replicatedUserDefaultDataPolicy) {
         this.replicatedUserDefaultDataPolicy = replicatedUserDefaultDataPolicy;
-        this.updateQueryParam("replicated_user_default_data_policy", UrlEscapers.urlFragmentEscaper().escape(replicatedUserDefaultDataPolicy));
+        this.updateQueryParam("replicated_user_default_data_policy", replicatedUserDefaultDataPolicy);
         return this;
     }
 

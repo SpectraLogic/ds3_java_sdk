@@ -28,7 +28,8 @@ public class HeadBucketRequest extends AbstractRequest {
     
     public HeadBucketRequest(final String bucketName) {
         this.bucketName = bucketName;
-            }
+        
+    }
 
 
     @Override

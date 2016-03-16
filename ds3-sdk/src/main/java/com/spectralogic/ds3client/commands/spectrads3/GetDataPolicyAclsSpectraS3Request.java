@@ -19,14 +19,15 @@ package com.spectralogic.ds3client.commands.spectrads3;
 import com.spectralogic.ds3client.networking.HttpVerb;
 import com.spectralogic.ds3client.commands.AbstractRequest;
 import java.util.UUID;
+import com.google.common.net.UrlEscapers;
 
 public class GetDataPolicyAclsSpectraS3Request extends AbstractRequest {
 
     // Variables
     
-    private UUID dataPolicyId;
+    private String dataPolicyId;
 
-    private UUID groupId;
+    private String groupId;
 
     private boolean lastPage;
 
@@ -34,24 +35,37 @@ public class GetDataPolicyAclsSpectraS3Request extends AbstractRequest {
 
     private int pageOffset;
 
-    private UUID pageStartMarker;
+    private String pageStartMarker;
 
-    private UUID userId;
+    private String userId;
 
     // Constructor
     
     public GetDataPolicyAclsSpectraS3Request() {
-            }
+        
+    }
 
     public GetDataPolicyAclsSpectraS3Request withDataPolicyId(final UUID dataPolicyId) {
+        this.dataPolicyId = dataPolicyId.toString();
+        this.updateQueryParam("data_policy_id", dataPolicyId);
+        return this;
+    }
+
+    public GetDataPolicyAclsSpectraS3Request withDataPolicyId(final String dataPolicyId) {
         this.dataPolicyId = dataPolicyId;
-        this.updateQueryParam("data_policy_id", dataPolicyId.toString());
+        this.updateQueryParam("data_policy_id", dataPolicyId);
         return this;
     }
 
     public GetDataPolicyAclsSpectraS3Request withGroupId(final UUID groupId) {
+        this.groupId = groupId.toString();
+        this.updateQueryParam("group_id", groupId);
+        return this;
+    }
+
+    public GetDataPolicyAclsSpectraS3Request withGroupId(final String groupId) {
         this.groupId = groupId;
-        this.updateQueryParam("group_id", groupId.toString());
+        this.updateQueryParam("group_id", groupId);
         return this;
     }
 
@@ -67,25 +81,37 @@ public class GetDataPolicyAclsSpectraS3Request extends AbstractRequest {
 
     public GetDataPolicyAclsSpectraS3Request withPageLength(final int pageLength) {
         this.pageLength = pageLength;
-        this.updateQueryParam("page_length", Integer.toString(pageLength));
+        this.updateQueryParam("page_length", pageLength);
         return this;
     }
 
     public GetDataPolicyAclsSpectraS3Request withPageOffset(final int pageOffset) {
         this.pageOffset = pageOffset;
-        this.updateQueryParam("page_offset", Integer.toString(pageOffset));
+        this.updateQueryParam("page_offset", pageOffset);
         return this;
     }
 
     public GetDataPolicyAclsSpectraS3Request withPageStartMarker(final UUID pageStartMarker) {
+        this.pageStartMarker = pageStartMarker.toString();
+        this.updateQueryParam("page_start_marker", pageStartMarker);
+        return this;
+    }
+
+    public GetDataPolicyAclsSpectraS3Request withPageStartMarker(final String pageStartMarker) {
         this.pageStartMarker = pageStartMarker;
-        this.updateQueryParam("page_start_marker", pageStartMarker.toString());
+        this.updateQueryParam("page_start_marker", pageStartMarker);
         return this;
     }
 
     public GetDataPolicyAclsSpectraS3Request withUserId(final UUID userId) {
+        this.userId = userId.toString();
+        this.updateQueryParam("user_id", userId);
+        return this;
+    }
+
+    public GetDataPolicyAclsSpectraS3Request withUserId(final String userId) {
         this.userId = userId;
-        this.updateQueryParam("user_id", userId.toString());
+        this.updateQueryParam("user_id", userId);
         return this;
     }
 
@@ -100,12 +126,12 @@ public class GetDataPolicyAclsSpectraS3Request extends AbstractRequest {
         return "/_rest_/data_policy_acl";
     }
     
-    public UUID getDataPolicyId() {
+    public String getDataPolicyId() {
         return this.dataPolicyId;
     }
 
 
-    public UUID getGroupId() {
+    public String getGroupId() {
         return this.groupId;
     }
 
@@ -125,12 +151,12 @@ public class GetDataPolicyAclsSpectraS3Request extends AbstractRequest {
     }
 
 
-    public UUID getPageStartMarker() {
+    public String getPageStartMarker() {
         return this.pageStartMarker;
     }
 
 
-    public UUID getUserId() {
+    public String getUserId() {
         return this.userId;
     }
 

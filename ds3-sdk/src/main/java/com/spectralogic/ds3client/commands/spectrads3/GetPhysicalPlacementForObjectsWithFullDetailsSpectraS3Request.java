@@ -35,7 +35,7 @@ public class GetPhysicalPlacementForObjectsWithFullDetailsSpectraS3Request exten
 
     private final List<Ds3Object> objects;
 
-    private UUID storageDomainId;
+    private String storageDomainId;
     private long size = 0;
 
     // Constructor
@@ -45,12 +45,19 @@ public class GetPhysicalPlacementForObjectsWithFullDetailsSpectraS3Request exten
         this.objects = objects;
         
         this.getQueryParams().put("operation", "get_physical_placement");
+
         this.getQueryParams().put("full_details", null);
     }
 
     public GetPhysicalPlacementForObjectsWithFullDetailsSpectraS3Request withStorageDomainId(final UUID storageDomainId) {
+        this.storageDomainId = storageDomainId.toString();
+        this.updateQueryParam("storage_domain_id", storageDomainId);
+        return this;
+    }
+
+    public GetPhysicalPlacementForObjectsWithFullDetailsSpectraS3Request withStorageDomainId(final String storageDomainId) {
         this.storageDomainId = storageDomainId;
-        this.updateQueryParam("storage_domain_id", storageDomainId.toString());
+        this.updateQueryParam("storage_domain_id", storageDomainId);
         return this;
     }
 
@@ -92,7 +99,7 @@ public class GetPhysicalPlacementForObjectsWithFullDetailsSpectraS3Request exten
     }
 
 
-    public UUID getStorageDomainId() {
+    public String getStorageDomainId() {
         return this.storageDomainId;
     }
 

@@ -19,18 +19,26 @@ package com.spectralogic.ds3client.commands.spectrads3;
 import com.spectralogic.ds3client.networking.HttpVerb;
 import com.spectralogic.ds3client.commands.AbstractRequest;
 import java.util.UUID;
+import com.google.common.net.UrlEscapers;
 
 public class GetTapeWithFullDetailsSpectraS3Request extends AbstractRequest {
 
     // Variables
     
-    private final UUID tapeId;
+    private final String tapeId;
 
     // Constructor
     
     public GetTapeWithFullDetailsSpectraS3Request(final UUID tapeId) {
+        this.tapeId = tapeId.toString();
+        
+        this.getQueryParams().put("full_details", null);
+    }
+
+    public GetTapeWithFullDetailsSpectraS3Request(final String tapeId) {
         this.tapeId = tapeId;
-                this.getQueryParams().put("full_details", null);
+        
+        this.getQueryParams().put("full_details", null);
     }
 
 
@@ -41,10 +49,10 @@ public class GetTapeWithFullDetailsSpectraS3Request extends AbstractRequest {
 
     @Override
     public String getPath() {
-        return "/_rest_/tape/" + tapeId.toString();
+        return "/_rest_/tape/" + tapeId;
     }
     
-    public UUID getTapeId() {
+    public String getTapeId() {
         return this.tapeId;
     }
 

@@ -28,7 +28,8 @@ public class PutBucketRequest extends AbstractRequest {
     
     public PutBucketRequest(final String bucketName) {
         this.bucketName = bucketName;
-            }
+        
+    }
 
 
     @Override

@@ -29,6 +29,14 @@ public class GetObjectCachedNotificationRegistrationSpectraS3Request extends Abs
         super(notificationId);
 
         
+
+    }
+
+    public GetObjectCachedNotificationRegistrationSpectraS3Request(final String notificationId) {
+        super(notificationId);
+
+        
+
     }
 
 

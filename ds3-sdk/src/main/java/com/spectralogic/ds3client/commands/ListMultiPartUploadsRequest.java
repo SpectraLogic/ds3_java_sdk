@@ -39,7 +39,8 @@ public class ListMultiPartUploadsRequest extends AbstractRequest {
     
     public ListMultiPartUploadsRequest(final String bucketName) {
         this.bucketName = bucketName;
-                this.getQueryParams().put("uploads", null);
+        
+        this.getQueryParams().put("uploads", null);
     }
 
     public ListMultiPartUploadsRequest withDelimiter(final String delimiter) {
@@ -50,25 +51,25 @@ public class ListMultiPartUploadsRequest extends AbstractRequest {
 
     public ListMultiPartUploadsRequest withKeyMarker(final String keyMarker) {
         this.keyMarker = keyMarker;
-        this.updateQueryParam("key_marker", UrlEscapers.urlFragmentEscaper().escape(keyMarker));
+        this.updateQueryParam("key_marker", keyMarker);
         return this;
     }
 
     public ListMultiPartUploadsRequest withMaxUploads(final int maxUploads) {
         this.maxUploads = maxUploads;
-        this.updateQueryParam("max_uploads", Integer.toString(maxUploads));
+        this.updateQueryParam("max_uploads", maxUploads);
         return this;
     }
 
     public ListMultiPartUploadsRequest withPrefix(final String prefix) {
         this.prefix = prefix;
-        this.updateQueryParam("prefix", UrlEscapers.urlFragmentEscaper().escape(prefix));
+        this.updateQueryParam("prefix", prefix);
         return this;
     }
 
     public ListMultiPartUploadsRequest withUploadIdMarker(final String uploadIdMarker) {
         this.uploadIdMarker = uploadIdMarker;
-        this.updateQueryParam("upload_id_marker", UrlEscapers.urlFragmentEscaper().escape(uploadIdMarker));
+        this.updateQueryParam("upload_id_marker", uploadIdMarker);
         return this;
     }
 
