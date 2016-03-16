@@ -21,6 +21,7 @@ import com.spectralogic.ds3client.commands.*;
 import com.spectralogic.ds3client.commands.spectrads3.*;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers;
 import com.spectralogic.ds3client.helpers.options.ReadJobOptions;
+import com.spectralogic.ds3client.integration.test.helpers.ABMTestHelper;
 import com.spectralogic.ds3client.integration.test.helpers.TempStorageIds;
 import com.spectralogic.ds3client.integration.test.helpers.TempStorageUtil;
 import com.spectralogic.ds3client.models.*;
@@ -68,20 +69,6 @@ public class GetJobManagement_Test {
         client.close();
     }
 
-    private static void waitForObjectToBeInCache(final UUID jobId) throws Exception {
-        long cachedSize = 0;
-        int cycles = 0;
-        while (cachedSize == 0) {
-            Thread.sleep(500);
-            final MasterObjectList mol = client.getJobSpectraS3(new GetJobSpectraS3Request(jobId)).getMasterObjectListResult();
-            cachedSize = mol.getCachedSizeInBytes();
-            cycles++;
-            if (cycles > 20) {
-                throw new Exception("Failed to upload object to cache in 10 seconds");
-            }
-        }
-    }
-
     private static void putBeowulf() throws Exception {
         final String book1 = "beowulf.txt";
         final Path objPath1 = ResourceUtils.loadFileResource(RESOURCE_BASE_NAME + book1);
@@ -91,7 +78,7 @@ public class GetJobManagement_Test {
         final UUID jobId = job.getJobId();
         final SeekableByteChannel book1Channel = new ResourceObjectPutter(RESOURCE_BASE_NAME).buildChannel(book1);
         client.putObject(new PutObjectRequest(BUCKET_NAME, book1, book1Channel, jobId, 0, Files.size(objPath1)));
-        waitForObjectToBeInCache(jobId);
+        ABMTestHelper.waitForJobCachedSizeToBeMoreThanZero(jobId, client, 20);
     }
 
     @SuppressWarnings("deprecation")
@@ -99,11 +86,8 @@ public class GetJobManagement_Test {
     public void nakedS3Get() throws IOException, SignatureException, XmlProcessingException,
             URISyntaxException, InterruptedException {
 
-        final WritableByteChannel writeChannel = Channels.newChannel(new OutputStream() {
-            @Override
-            public void write(final int b) throws IOException {
-            }
-        });
+        final WritableByteChannel writeChannel = new NullChannel();
+
         final GetObjectResponse getObjectResponse = client.getObject(
                 new GetObjectRequest(BUCKET_NAME, "beowulf.txt", writeChannel));
 
@@ -134,17 +118,29 @@ public class GetJobManagement_Test {
         assertThat(jobSpectraS3Response.getMasterObjectListResult().getPriority(), is(Priority.LOW));
     }
 
-    @Ignore("Ignore pending implementation of withName option")
     @Test
     public void createReadJobWithNameOption() throws IOException, SignatureException, XmlProcessingException,
             URISyntaxException, InterruptedException {
 
-        //TODO: REMOVE COMMENT BELOW AND VERIFY SYNTAX FOR JOB NAME
         final Ds3ClientHelpers.Job readJob = HELPERS.startReadJob(BUCKET_NAME, Lists.newArrayList(
-                new Ds3Object("beowulf.txt", 10))/*, ReadJobOptions.create().withName("test_job")*/);
+                new Ds3Object("beowulf.txt", 10)), ReadJobOptions.create().withName("test_job"));
         final GetJobSpectraS3Response jobSpectraS3Response = client
                 .getJobSpectraS3(new GetJobSpectraS3Request(readJob.getJobId()));
 
         assertThat(jobSpectraS3Response.getMasterObjectListResult().getName(), is("test_job"));
+    }
+
+    @Test
+    public void createReadJobWithNameAndPriorityOptions() throws IOException, SignatureException, XmlProcessingException,
+            URISyntaxException, InterruptedException {
+
+        final Ds3ClientHelpers.Job readJob = HELPERS.startReadJob(BUCKET_NAME, Lists.newArrayList(
+                new Ds3Object("beowulf.txt", 10)), ReadJobOptions.create()
+                .withName("test_job").withPriority(Priority.LOW));
+        final GetJobSpectraS3Response jobSpectraS3Response = client
+                .getJobSpectraS3(new GetJobSpectraS3Request(readJob.getJobId()));
+
+        assertThat(jobSpectraS3Response.getMasterObjectListResult().getName(), is("test_job"));
+        assertThat(jobSpectraS3Response.getMasterObjectListResult().getPriority(), is(Priority.LOW));
     }
 }
