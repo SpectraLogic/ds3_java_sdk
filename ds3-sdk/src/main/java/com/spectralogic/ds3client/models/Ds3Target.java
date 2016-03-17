@@ -56,12 +56,6 @@ public class Ds3Target {
     @JsonProperty("Id")
     private UUID id;
 
-    @JsonProperty("LocalAdminUserId")
-    private UUID localAdminUserId;
-
-    @JsonProperty("LocalReplicatedUserDefaultDataPolicyId")
-    private UUID localReplicatedUserDefaultDataPolicyId;
-
     @JsonProperty("Name")
     private String name;
 
@@ -168,24 +162,6 @@ public class Ds3Target {
 
     public void setId(final UUID id) {
         this.id = id;
-    }
-
-
-    public UUID getLocalAdminUserId() {
-        return this.localAdminUserId;
-    }
-
-    public void setLocalAdminUserId(final UUID localAdminUserId) {
-        this.localAdminUserId = localAdminUserId;
-    }
-
-
-    public UUID getLocalReplicatedUserDefaultDataPolicyId() {
-        return this.localReplicatedUserDefaultDataPolicyId;
-    }
-
-    public void setLocalReplicatedUserDefaultDataPolicyId(final UUID localReplicatedUserDefaultDataPolicyId) {
-        this.localReplicatedUserDefaultDataPolicyId = localReplicatedUserDefaultDataPolicyId;
     }
 
 

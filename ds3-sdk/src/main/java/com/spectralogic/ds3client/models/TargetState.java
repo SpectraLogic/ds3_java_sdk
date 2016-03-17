@@ -18,5 +18,6 @@ package com.spectralogic.ds3client.models;
 
 public enum TargetState {
     ONLINE,
+    LIMITED_ACCESS,
     OFFLINE
 }

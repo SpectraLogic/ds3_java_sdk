@@ -32,6 +32,7 @@ public enum RestOperationType {
     IMPORT,
     INSPECT,
     ONLINE,
+    PAIR_BACK,
     REGENERATE_SECRET_KEY,
     START_BULK_GET,
     START_BULK_PUT,

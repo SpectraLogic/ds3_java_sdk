@@ -14,12 +14,38 @@
  */
 
 // This code is auto-generated, do not modify
-package com.spectralogic.ds3client.models;
+package com.spectralogic.ds3client.commands.spectrads3;
 
-public enum TargetReadPreference {
-    AFTER_ONLINE_POOL,
-    AFTER_NEARLINE_POOL,
-    AFTER_NON_EJECTABLE_TAPE,
-    LAST_RESORT,
-    NEVER
+import com.spectralogic.ds3client.networking.HttpVerb;
+import com.spectralogic.ds3client.commands.AbstractRequest;
+import com.google.common.net.UrlEscapers;
+
+public class GetCompletedJobSpectraS3Request extends AbstractRequest {
+
+    // Variables
+    
+    private final String completedJob;
+
+    // Constructor
+    
+    public GetCompletedJobSpectraS3Request(final String completedJob) {
+        this.completedJob = completedJob;
+        
+    }
+
+
+    @Override
+    public HttpVerb getVerb() {
+        return HttpVerb.GET;
+    }
+
+    @Override
+    public String getPath() {
+        return "/_rest_/completed_job/" + completedJob;
+    }
+    
+    public String getCompletedJob() {
+        return this.completedJob;
+    }
+
 }
