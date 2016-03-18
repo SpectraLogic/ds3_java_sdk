@@ -194,9 +194,15 @@ public interface Ds3Client extends Closeable {
             throws IOException, SignatureException;
     VerifyBulkJobSpectraS3Response verifyBulkJobSpectraS3(VerifyBulkJobSpectraS3Request request)
             throws IOException, SignatureException;
+    GetActiveJobSpectraS3Response getActiveJobSpectraS3(GetActiveJobSpectraS3Request request)
+            throws IOException, SignatureException;
     GetActiveJobsSpectraS3Response getActiveJobsSpectraS3(GetActiveJobsSpectraS3Request request)
             throws IOException, SignatureException;
+    GetCanceledJobSpectraS3Response getCanceledJobSpectraS3(GetCanceledJobSpectraS3Request request)
+            throws IOException, SignatureException;
     GetCanceledJobsSpectraS3Response getCanceledJobsSpectraS3(GetCanceledJobsSpectraS3Request request)
+            throws IOException, SignatureException;
+    GetCompletedJobSpectraS3Response getCompletedJobSpectraS3(GetCompletedJobSpectraS3Request request)
             throws IOException, SignatureException;
     GetCompletedJobsSpectraS3Response getCompletedJobsSpectraS3(GetCompletedJobsSpectraS3Request request)
             throws IOException, SignatureException;
@@ -224,6 +230,8 @@ public interface Ds3Client extends Closeable {
             throws IOException, SignatureException;
     ModifyNodeSpectraS3Response modifyNodeSpectraS3(ModifyNodeSpectraS3Request request)
             throws IOException, SignatureException;
+    PutDs3TargetFailureNotificationRegistrationSpectraS3Response putDs3TargetFailureNotificationRegistrationSpectraS3(PutDs3TargetFailureNotificationRegistrationSpectraS3Request request)
+            throws IOException, SignatureException;
     PutJobCompletedNotificationRegistrationSpectraS3Response putJobCompletedNotificationRegistrationSpectraS3(PutJobCompletedNotificationRegistrationSpectraS3Request request)
             throws IOException, SignatureException;
     PutJobCreatedNotificationRegistrationSpectraS3Response putJobCreatedNotificationRegistrationSpectraS3(PutJobCreatedNotificationRegistrationSpectraS3Request request)
@@ -244,6 +252,8 @@ public interface Ds3Client extends Closeable {
             throws IOException, SignatureException;
     PutTapePartitionFailureNotificationRegistrationSpectraS3Response putTapePartitionFailureNotificationRegistrationSpectraS3(PutTapePartitionFailureNotificationRegistrationSpectraS3Request request)
             throws IOException, SignatureException;
+    DeleteDs3TargetFailureNotificationRegistrationSpectraS3Response deleteDs3TargetFailureNotificationRegistrationSpectraS3(DeleteDs3TargetFailureNotificationRegistrationSpectraS3Request request)
+            throws IOException, SignatureException;
     DeleteJobCompletedNotificationRegistrationSpectraS3Response deleteJobCompletedNotificationRegistrationSpectraS3(DeleteJobCompletedNotificationRegistrationSpectraS3Request request)
             throws IOException, SignatureException;
     DeleteJobCreatedNotificationRegistrationSpectraS3Response deleteJobCreatedNotificationRegistrationSpectraS3(DeleteJobCreatedNotificationRegistrationSpectraS3Request request)
@@ -263,6 +273,10 @@ public interface Ds3Client extends Closeable {
     DeleteTapeFailureNotificationRegistrationSpectraS3Response deleteTapeFailureNotificationRegistrationSpectraS3(DeleteTapeFailureNotificationRegistrationSpectraS3Request request)
             throws IOException, SignatureException;
     DeleteTapePartitionFailureNotificationRegistrationSpectraS3Response deleteTapePartitionFailureNotificationRegistrationSpectraS3(DeleteTapePartitionFailureNotificationRegistrationSpectraS3Request request)
+            throws IOException, SignatureException;
+    GetDs3TargetFailureNotificationRegistrationSpectraS3Response getDs3TargetFailureNotificationRegistrationSpectraS3(GetDs3TargetFailureNotificationRegistrationSpectraS3Request request)
+            throws IOException, SignatureException;
+    GetDs3TargetFailureNotificationRegistrationsSpectraS3Response getDs3TargetFailureNotificationRegistrationsSpectraS3(GetDs3TargetFailureNotificationRegistrationsSpectraS3Request request)
             throws IOException, SignatureException;
     GetJobCompletedNotificationRegistrationSpectraS3Response getJobCompletedNotificationRegistrationSpectraS3(GetJobCompletedNotificationRegistrationSpectraS3Request request)
             throws IOException, SignatureException;
@@ -514,11 +528,15 @@ public interface Ds3Client extends Closeable {
             throws IOException, SignatureException;
     PutDs3TargetUserMappingSpectraS3Response putDs3TargetUserMappingSpectraS3(PutDs3TargetUserMappingSpectraS3Request request)
             throws IOException, SignatureException;
+    DeleteDs3TargetFailureSpectraS3Response deleteDs3TargetFailureSpectraS3(DeleteDs3TargetFailureSpectraS3Request request)
+            throws IOException, SignatureException;
     DeleteDs3TargetReadPreferenceSpectraS3Response deleteDs3TargetReadPreferenceSpectraS3(DeleteDs3TargetReadPreferenceSpectraS3Request request)
             throws IOException, SignatureException;
     DeleteDs3TargetSpectraS3Response deleteDs3TargetSpectraS3(DeleteDs3TargetSpectraS3Request request)
             throws IOException, SignatureException;
     DeleteDs3TargetUserMappingSpectraS3Response deleteDs3TargetUserMappingSpectraS3(DeleteDs3TargetUserMappingSpectraS3Request request)
+            throws IOException, SignatureException;
+    GetDs3TargetFailuresSpectraS3Response getDs3TargetFailuresSpectraS3(GetDs3TargetFailuresSpectraS3Request request)
             throws IOException, SignatureException;
     GetDs3TargetReadPreferenceSpectraS3Response getDs3TargetReadPreferenceSpectraS3(GetDs3TargetReadPreferenceSpectraS3Request request)
             throws IOException, SignatureException;
@@ -538,7 +556,11 @@ public interface Ds3Client extends Closeable {
             throws IOException, SignatureException;
     ModifyDs3TargetUserMappingSpectraS3Response modifyDs3TargetUserMappingSpectraS3(ModifyDs3TargetUserMappingSpectraS3Request request)
             throws IOException, SignatureException;
+    PairBackRegisteredDs3TargetSpectraS3Response pairBackRegisteredDs3TargetSpectraS3(PairBackRegisteredDs3TargetSpectraS3Request request)
+            throws IOException, SignatureException;
     RegisterDs3TargetSpectraS3Response registerDs3TargetSpectraS3(RegisterDs3TargetSpectraS3Request request)
+            throws IOException, SignatureException;
+    VerifyDs3TargetSpectraS3Response verifyDs3TargetSpectraS3(VerifyDs3TargetSpectraS3Request request)
             throws IOException, SignatureException;
     DelegateCreateUserSpectraS3Response delegateCreateUserSpectraS3(DelegateCreateUserSpectraS3Request request)
             throws IOException, SignatureException;

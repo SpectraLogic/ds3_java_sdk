@@ -14,12 +14,38 @@
  */
 
 // This code is auto-generated, do not modify
-package com.spectralogic.ds3client.models;
+package com.spectralogic.ds3client.commands.spectrads3;
 
-public enum TargetReadPreference {
-    AFTER_ONLINE_POOL,
-    AFTER_NEARLINE_POOL,
-    AFTER_NON_EJECTABLE_TAPE,
-    LAST_RESORT,
-    NEVER
+import com.spectralogic.ds3client.networking.HttpVerb;
+import com.spectralogic.ds3client.commands.AbstractRequest;
+import com.google.common.net.UrlEscapers;
+
+public class GetCanceledJobSpectraS3Request extends AbstractRequest {
+
+    // Variables
+    
+    private final String canceledJob;
+
+    // Constructor
+    
+    public GetCanceledJobSpectraS3Request(final String canceledJob) {
+        this.canceledJob = canceledJob;
+        
+    }
+
+
+    @Override
+    public HttpVerb getVerb() {
+        return HttpVerb.GET;
+    }
+
+    @Override
+    public String getPath() {
+        return "/_rest_/canceled_job/" + canceledJob;
+    }
+    
+    public String getCanceledJob() {
+        return this.canceledJob;
+    }
+
 }
