@@ -108,7 +108,7 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
         final List<Ds3Object> objects = Lists.newArrayList(objectsToRead);
         final GetBulkJobSpectraS3Response prime = this.client.getBulkJobSpectraS3(new GetBulkJobSpectraS3Request(bucket, objects)
                 .withChunkClientProcessingOrderGuarantee(JobChunkClientProcessingOrderGuarantee.NONE)
-                .withPriority(options.getPriority()));
+                .withPriority(options.getPriority()).withName(options.getName()));
 
         final ImmutableMultimap<String, Range> partialRanges = PartialObjectHelpers.getPartialObjectsRanges(objects);
 

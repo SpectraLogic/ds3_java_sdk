@@ -22,6 +22,7 @@ import com.spectralogic.ds3client.commands.spectrads3.*;
 import com.spectralogic.ds3client.commands.spectrads3.notifications.*;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers;
 import com.spectralogic.ds3client.helpers.options.WriteJobOptions;
+import com.spectralogic.ds3client.integration.test.helpers.ABMTestHelper;
 import com.spectralogic.ds3client.integration.test.helpers.TempStorageIds;
 import com.spectralogic.ds3client.integration.test.helpers.TempStorageUtil;
 import com.spectralogic.ds3client.models.*;
@@ -71,15 +72,6 @@ public class PutJobManagement_Test {
     public static void teardown() throws IOException, SignatureException {
         TempStorageUtil.teardown(TEST_ENV_NAME, envStorageIds, client);
         client.close();
-    }
-
-    private void waitForObjectToBeInCache(final UUID jobId) throws InterruptedException, IOException, SignatureException {
-        long cachedSize = 0;
-        while (cachedSize == 0) {
-            Thread.sleep(500);
-            final MasterObjectList mol = client.getJobSpectraS3(new GetJobSpectraS3Request(jobId)).getMasterObjectListResult();
-            cachedSize = mol.getCachedSizeInBytes();
-        }
     }
 
     private long getCacheBytesAvailable() throws IOException, SignatureException {
@@ -246,8 +238,8 @@ public class PutJobManagement_Test {
         }
     }
 
-    @Test(timeout = 10000)
-    public void truncateJobCancelWithOutForce() throws IOException, SignatureException, XmlProcessingException, URISyntaxException, InterruptedException {
+    @Test
+    public void truncateJobCancelWithOutForce() throws Exception {
 
         final String book1 = "beowulf.txt";
         final Path objPath1 = ResourceUtils.loadFileResource(RESOURCE_BASE_NAME + book1);
@@ -259,7 +251,7 @@ public class PutJobManagement_Test {
             final UUID jobId = putJob.getJobId();
             final SeekableByteChannel book1Channel = new ResourceObjectPutter(RESOURCE_BASE_NAME).buildChannel(book1);
             client.putObject(new PutObjectRequest(BUCKET_NAME, book1, book1Channel, jobId, 0, Files.size(objPath1)));
-            waitForObjectToBeInCache(jobId);
+            ABMTestHelper.waitForJobCachedSizeToBeMoreThanZero(jobId, client, 20);
 
             try {
                 client.cancelJobSpectraS3(new CancelJobSpectraS3Request(jobId));
@@ -275,8 +267,8 @@ public class PutJobManagement_Test {
         }
     }
 
-    @Test(timeout = 5000)
-    public void cancelJobWithForce() throws IOException, SignatureException, XmlProcessingException, URISyntaxException, InterruptedException {
+    @Test
+    public void cancelJobWithForce() throws Exception {
 
         final String book1 = "beowulf.txt";
         final Path objPath1 = ResourceUtils.loadFileResource(RESOURCE_BASE_NAME + book1);
@@ -288,7 +280,7 @@ public class PutJobManagement_Test {
             final UUID jobId = putJob.getJobId();
             final SeekableByteChannel book1Channel = new ResourceObjectPutter(RESOURCE_BASE_NAME).buildChannel(book1);
             client.putObject(new PutObjectRequest(BUCKET_NAME, book1, book1Channel, jobId, 0, Files.size(objPath1)));
-            waitForObjectToBeInCache(jobId);
+            ABMTestHelper.waitForJobCachedSizeToBeMoreThanZero(jobId, client, 20);
 
             final CancelJobSpectraS3Response responseWithForce = client
                     .cancelJobSpectraS3(new CancelJobSpectraS3Request(jobId).withForce(true));
@@ -327,8 +319,8 @@ public class PutJobManagement_Test {
         }
     }
 
-    @Test(timeout = 10000)
-    public void truncateCancelAllJobsWithoutForce() throws IOException, SignatureException, XmlProcessingException, InterruptedException, URISyntaxException {
+    @Test
+    public void truncateCancelAllJobsWithoutForce() throws Exception {
 
         final String book1 = "beowulf.txt";
         final Path objPath1 = ResourceUtils.loadFileResource(RESOURCE_BASE_NAME + book1);
@@ -355,8 +347,8 @@ public class PutJobManagement_Test {
             HELPERS.startWriteJob(BUCKET_NAME, Lists
                     .newArrayList(new Ds3Object("place_holder_3", 1000000)));
 
-            waitForObjectToBeInCache(jobId1);
-            waitForObjectToBeInCache(jobId2);
+            ABMTestHelper.waitForJobCachedSizeToBeMoreThanZero(jobId1, client, 20);
+            ABMTestHelper.waitForJobCachedSizeToBeMoreThanZero(jobId2, client, 20);
 
             try {
                 client.cancelAllJobsSpectraS3(new CancelAllJobsSpectraS3Request());
@@ -378,8 +370,8 @@ public class PutJobManagement_Test {
         }
     }
 
-    @Test(timeout = 10000)
-    public void cancelAllJobsWithForce ()throws IOException, SignatureException, XmlProcessingException, InterruptedException, URISyntaxException {
+    @Test
+    public void cancelAllJobsWithForce () throws Exception {
 
         final String book1 = "beowulf.txt";
         final Path objPath1 = ResourceUtils.loadFileResource(RESOURCE_BASE_NAME + book1);
@@ -406,8 +398,8 @@ public class PutJobManagement_Test {
             HELPERS.startWriteJob(BUCKET_NAME, Lists
                     .newArrayList(new Ds3Object("place_holder_3", 1000000)));
 
-            waitForObjectToBeInCache(jobId1);
-            waitForObjectToBeInCache(jobId2);
+            ABMTestHelper.waitForJobCachedSizeToBeMoreThanZero(jobId1, client, 20);
+            ABMTestHelper.waitForJobCachedSizeToBeMoreThanZero(jobId2, client, 20);
 
             client.cancelAllJobsSpectraS3(new CancelAllJobsSpectraS3Request().withForce(true));
 
@@ -464,6 +456,31 @@ public class PutJobManagement_Test {
             }
 
             assertThat(chunkNames, contains(ds3Object.getName()));
+
+        } finally {
+            deleteAllContents(client, BUCKET_NAME);
+        }
+    }
+
+    @Test
+    public void getJobChunk() throws IOException, SignatureException, XmlProcessingException {
+
+        try {
+            final Ds3Object ds3Object = new Ds3Object("test", 2);
+            final Ds3ClientHelpers.Job jobOne =
+                    HELPERS.startWriteJob(BUCKET_NAME, Lists.newArrayList(ds3Object));
+            final UUID jobOneId = jobOne.getJobId();
+
+            final GetJobChunksReadyForClientProcessingSpectraS3Response response = client
+                    .getJobChunksReadyForClientProcessingSpectraS3
+                            (new GetJobChunksReadyForClientProcessingSpectraS3Request(jobOneId));
+
+            final UUID aJobChunkID = response.getMasterObjectListResult().getObjects().get(0).getChunkId();
+
+            final GetJobChunkSpectraS3Response getJobChunkSpectraS3Response = client.getJobChunkSpectraS3(
+                    new GetJobChunkSpectraS3Request(aJobChunkID));
+
+            assertThat(getJobChunkSpectraS3Response.getStatusCode(), is(200));
 
         } finally {
             deleteAllContents(client, BUCKET_NAME);
