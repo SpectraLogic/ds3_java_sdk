@@ -23,6 +23,7 @@ import com.spectralogic.ds3client.serializer.XmlOutput;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.List;
+import com.spectralogic.ds3client.utils.Guard;
 import com.spectralogic.ds3client.commands.AbstractRequest;
 import java.util.UUID;
 import com.google.common.net.UrlEscapers;
@@ -63,7 +64,7 @@ public class GetPhysicalPlacementForObjectsSpectraS3Request extends AbstractRequ
 
     @Override
     public InputStream getStream() {
-        if (objects == null || objects.isEmpty()) {
+        if (Guard.isNullOrEmpty(objects)) {
             return null;
         }
         final Ds3ObjectList objects = new Ds3ObjectList();
