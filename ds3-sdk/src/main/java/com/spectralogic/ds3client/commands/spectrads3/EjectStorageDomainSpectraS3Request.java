@@ -83,6 +83,9 @@ public class EjectStorageDomainSpectraS3Request extends AbstractRequest {
 
     @Override
     public InputStream getStream() {
+        if (objects == null || objects.isEmpty()) {
+            return null;
+        }
         final Ds3ObjectList objects = new Ds3ObjectList();
         objects.setObjects(this.objects);
 
