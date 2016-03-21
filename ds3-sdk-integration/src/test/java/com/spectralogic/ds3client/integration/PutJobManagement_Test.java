@@ -29,11 +29,14 @@ import com.spectralogic.ds3client.models.*;
 import com.spectralogic.ds3client.models.bulk.Ds3Object;
 import com.spectralogic.ds3client.networking.FailedRequestException;
 import com.spectralogic.ds3client.serializer.XmlProcessingException;
+import com.spectralogic.ds3client.utils.ByteArraySeekableByteChannel;
 import com.spectralogic.ds3client.utils.ResourceUtils;
+import org.apache.commons.io.IOUtils;
 import org.junit.*;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.nio.ByteBuffer;
 import java.nio.channels.SeekableByteChannel;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -763,12 +766,19 @@ public class PutJobManagement_Test {
         }
     }
 
-    @Ignore("Pending resolution of Content-Length fail in header")
     @Test //TODO expand positive test if test target >5 TB cache is available
     public void putMultiPartUploadPart() throws IOException, SignatureException {
         try {
+            final int length = 1024;
+            final Ds3Object obj = new Ds3Object("obj.txt", length);
+            final byte[] randomData = IOUtils.toByteArray(new RandomDataInputStream(System.currentTimeMillis(), obj.getSize()));
+            final ByteBuffer randomBuffer = ByteBuffer.wrap(randomData);
+
+            final ByteArraySeekableByteChannel channel = new ByteArraySeekableByteChannel(length);
+            channel.write(randomBuffer);
+
             client.putMultiPartUploadPart(
-                    new PutMultiPartUploadPartRequest(BUCKET_NAME, "beowulf", 5, UUID.randomUUID()));
+                    new PutMultiPartUploadPartRequest(BUCKET_NAME, obj.getName(), channel, 5, length, UUID.randomUUID()));
 
             fail("Response should have failed because part does not exist");
 
