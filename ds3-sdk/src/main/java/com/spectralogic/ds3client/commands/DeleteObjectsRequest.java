@@ -34,6 +34,8 @@ public class DeleteObjectsRequest extends AbstractRequest {
     
     private final String bucketName;
 
+    private boolean replicate;
+
     private boolean rollBack;
     private boolean quiet = false;
     private long size;
@@ -60,6 +62,16 @@ public class DeleteObjectsRequest extends AbstractRequest {
             objKeyList.add(obj.getKey());
         }
         return objKeyList;
+    }
+
+    public DeleteObjectsRequest withReplicate(final boolean replicate) {
+        this.replicate = replicate;
+        if (this.replicate) {
+            this.getQueryParams().put("replicate", null);
+        } else {
+            this.getQueryParams().remove("replicate");
+        }
+        return this;
     }
 
     public DeleteObjectsRequest withRollBack(final boolean rollBack) {
@@ -120,6 +132,11 @@ public class DeleteObjectsRequest extends AbstractRequest {
     
     public String getBucketName() {
         return this.bucketName;
+    }
+
+
+    public boolean getReplicate() {
+        return this.replicate;
     }
 
 
