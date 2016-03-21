@@ -17,6 +17,12 @@
 package com.spectralogic.ds3client.commands.spectrads3;
 
 import com.spectralogic.ds3client.networking.HttpVerb;
+import com.spectralogic.ds3client.models.bulk.Ds3Object;
+import com.spectralogic.ds3client.models.bulk.Ds3ObjectList;
+import com.spectralogic.ds3client.serializer.XmlOutput;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.util.List;
 import com.spectralogic.ds3client.commands.AbstractRequest;
 import com.google.common.net.UrlEscapers;
 import java.util.UUID;
@@ -29,15 +35,19 @@ public class EjectStorageDomainBlobsSpectraS3Request extends AbstractRequest {
 
     private final String storageDomainId;
 
+    private final List<Ds3Object> objects;
+
     private String ejectLabel;
 
     private String ejectLocation;
+    private long size = 0;
 
     // Constructor
     
-    public EjectStorageDomainBlobsSpectraS3Request(final String bucketId, final UUID storageDomainId) {
+    public EjectStorageDomainBlobsSpectraS3Request(final String bucketId, final List<Ds3Object> objects, final UUID storageDomainId) {
         this.bucketId = bucketId;
         this.storageDomainId = storageDomainId.toString();
+        this.objects = objects;
         
         this.getQueryParams().put("operation", "eject");
 
@@ -46,9 +56,10 @@ public class EjectStorageDomainBlobsSpectraS3Request extends AbstractRequest {
         this.getQueryParams().put("storage_domain_id", storageDomainId.toString());
     }
 
-    public EjectStorageDomainBlobsSpectraS3Request(final String bucketId, final String storageDomainId) {
+    public EjectStorageDomainBlobsSpectraS3Request(final String bucketId, final List<Ds3Object> objects, final String storageDomainId) {
         this.bucketId = bucketId;
         this.storageDomainId = storageDomainId;
+        this.objects = objects;
         
         this.getQueryParams().put("operation", "eject");
 
@@ -71,6 +82,23 @@ public class EjectStorageDomainBlobsSpectraS3Request extends AbstractRequest {
 
 
     @Override
+    public InputStream getStream() {
+        final Ds3ObjectList objects = new Ds3ObjectList();
+        objects.setObjects(this.objects);
+
+        final String xmlOutput = XmlOutput.toXml(objects, false);
+
+        final byte[] stringBytes = xmlOutput.getBytes();
+        this.size = stringBytes.length;
+        return new ByteArrayInputStream(stringBytes);
+    }
+
+    @Override
+    public long getSize() {
+        return this.size;
+    }
+
+    @Override
     public HttpVerb getVerb() {
         return HttpVerb.PUT;
     }
@@ -90,6 +118,11 @@ public class EjectStorageDomainBlobsSpectraS3Request extends AbstractRequest {
     }
 
 
+    public List<Ds3Object> getObjects() {
+        return this.objects;
+    }
+
+
     public String getEjectLabel() {
         return this.ejectLabel;
     }
@@ -98,5 +131,6 @@ public class EjectStorageDomainBlobsSpectraS3Request extends AbstractRequest {
     public String getEjectLocation() {
         return this.ejectLocation;
     }
+
 
 }
