@@ -30,6 +30,8 @@ public class PutDataPolicySpectraS3Request extends AbstractRequest {
     
     private final String name;
 
+    private boolean alwaysReplicateDeletes;
+
     private boolean blobbingEnabled;
 
     private ChecksumType.Type checksumType;
@@ -54,6 +56,12 @@ public class PutDataPolicySpectraS3Request extends AbstractRequest {
         this.name = name;
         
         this.getQueryParams().put("name", UrlEscapers.urlFragmentEscaper().escape(name).replace("+", "%2B"));
+    }
+
+    public PutDataPolicySpectraS3Request withAlwaysReplicateDeletes(final boolean alwaysReplicateDeletes) {
+        this.alwaysReplicateDeletes = alwaysReplicateDeletes;
+        this.updateQueryParam("always_replicate_deletes", alwaysReplicateDeletes);
+        return this;
     }
 
     public PutDataPolicySpectraS3Request withBlobbingEnabled(final boolean blobbingEnabled) {
@@ -123,6 +131,11 @@ public class PutDataPolicySpectraS3Request extends AbstractRequest {
     
     public String getName() {
         return this.name;
+    }
+
+
+    public boolean getAlwaysReplicateDeletes() {
+        return this.alwaysReplicateDeletes;
     }
 
 

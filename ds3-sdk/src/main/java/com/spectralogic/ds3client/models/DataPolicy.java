@@ -27,6 +27,9 @@ import java.lang.String;
 public class DataPolicy {
 
     // Variables
+    @JsonProperty("AlwaysReplicateDeletes")
+    private boolean alwaysReplicateDeletes;
+
     @JsonProperty("BlobbingEnabled")
     private boolean blobbingEnabled;
 
@@ -73,6 +76,15 @@ public class DataPolicy {
 
     // Getters and Setters
     
+    public boolean getAlwaysReplicateDeletes() {
+        return this.alwaysReplicateDeletes;
+    }
+
+    public void setAlwaysReplicateDeletes(final boolean alwaysReplicateDeletes) {
+        this.alwaysReplicateDeletes = alwaysReplicateDeletes;
+    }
+
+
     public boolean getBlobbingEnabled() {
         return this.blobbingEnabled;
     }

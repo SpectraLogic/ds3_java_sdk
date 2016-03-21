@@ -526,15 +526,11 @@ public interface Ds3Client extends Closeable {
             throws IOException, SignatureException;
     PutDs3TargetReadPreferenceSpectraS3Response putDs3TargetReadPreferenceSpectraS3(PutDs3TargetReadPreferenceSpectraS3Request request)
             throws IOException, SignatureException;
-    PutDs3TargetUserMappingSpectraS3Response putDs3TargetUserMappingSpectraS3(PutDs3TargetUserMappingSpectraS3Request request)
-            throws IOException, SignatureException;
     DeleteDs3TargetFailureSpectraS3Response deleteDs3TargetFailureSpectraS3(DeleteDs3TargetFailureSpectraS3Request request)
             throws IOException, SignatureException;
     DeleteDs3TargetReadPreferenceSpectraS3Response deleteDs3TargetReadPreferenceSpectraS3(DeleteDs3TargetReadPreferenceSpectraS3Request request)
             throws IOException, SignatureException;
     DeleteDs3TargetSpectraS3Response deleteDs3TargetSpectraS3(DeleteDs3TargetSpectraS3Request request)
-            throws IOException, SignatureException;
-    DeleteDs3TargetUserMappingSpectraS3Response deleteDs3TargetUserMappingSpectraS3(DeleteDs3TargetUserMappingSpectraS3Request request)
             throws IOException, SignatureException;
     GetDs3TargetFailuresSpectraS3Response getDs3TargetFailuresSpectraS3(GetDs3TargetFailuresSpectraS3Request request)
             throws IOException, SignatureException;
@@ -544,17 +540,11 @@ public interface Ds3Client extends Closeable {
             throws IOException, SignatureException;
     GetDs3TargetSpectraS3Response getDs3TargetSpectraS3(GetDs3TargetSpectraS3Request request)
             throws IOException, SignatureException;
-    GetDs3TargetUserMappingSpectraS3Response getDs3TargetUserMappingSpectraS3(GetDs3TargetUserMappingSpectraS3Request request)
-            throws IOException, SignatureException;
-    GetDs3TargetUserMappingsSpectraS3Response getDs3TargetUserMappingsSpectraS3(GetDs3TargetUserMappingsSpectraS3Request request)
-            throws IOException, SignatureException;
     GetDs3TargetsSpectraS3Response getDs3TargetsSpectraS3(GetDs3TargetsSpectraS3Request request)
             throws IOException, SignatureException;
     ModifyAllDs3TargetsSpectraS3Response modifyAllDs3TargetsSpectraS3(ModifyAllDs3TargetsSpectraS3Request request)
             throws IOException, SignatureException;
     ModifyDs3TargetSpectraS3Response modifyDs3TargetSpectraS3(ModifyDs3TargetSpectraS3Request request)
-            throws IOException, SignatureException;
-    ModifyDs3TargetUserMappingSpectraS3Response modifyDs3TargetUserMappingSpectraS3(ModifyDs3TargetUserMappingSpectraS3Request request)
             throws IOException, SignatureException;
     PairBackRegisteredDs3TargetSpectraS3Response pairBackRegisteredDs3TargetSpectraS3(PairBackRegisteredDs3TargetSpectraS3Request request)
             throws IOException, SignatureException;

@@ -30,6 +30,8 @@ public class ModifyDataPolicySpectraS3Request extends AbstractRequest {
     
     private final String dataPolicy;
 
+    private boolean alwaysReplicateDeletes;
+
     private boolean blobbingEnabled;
 
     private ChecksumType.Type checksumType;
@@ -55,6 +57,12 @@ public class ModifyDataPolicySpectraS3Request extends AbstractRequest {
     public ModifyDataPolicySpectraS3Request(final String dataPolicy) {
         this.dataPolicy = dataPolicy;
         
+    }
+
+    public ModifyDataPolicySpectraS3Request withAlwaysReplicateDeletes(final boolean alwaysReplicateDeletes) {
+        this.alwaysReplicateDeletes = alwaysReplicateDeletes;
+        this.updateQueryParam("always_replicate_deletes", alwaysReplicateDeletes);
+        return this;
     }
 
     public ModifyDataPolicySpectraS3Request withBlobbingEnabled(final boolean blobbingEnabled) {
@@ -130,6 +138,11 @@ public class ModifyDataPolicySpectraS3Request extends AbstractRequest {
     
     public String getDataPolicy() {
         return this.dataPolicy;
+    }
+
+
+    public boolean getAlwaysReplicateDeletes() {
+        return this.alwaysReplicateDeletes;
     }
 
 
