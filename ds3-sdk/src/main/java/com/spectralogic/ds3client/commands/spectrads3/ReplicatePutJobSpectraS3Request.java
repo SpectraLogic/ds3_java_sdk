@@ -19,6 +19,7 @@ package com.spectralogic.ds3client.commands.spectrads3;
 import com.spectralogic.ds3client.networking.HttpVerb;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.nio.charset.Charset;
 import com.spectralogic.ds3client.utils.Guard;
 import com.spectralogic.ds3client.commands.AbstractRequest;
 import com.spectralogic.ds3client.models.ReplicationConflictResolutionMode;
@@ -76,7 +77,7 @@ public class ReplicatePutJobSpectraS3Request extends AbstractRequest {
         if (Guard.isStringNullOrEmpty(requestPayload)) {
             return null;
         }
-        final byte[] stringBytes = requestPayload.getBytes();
+        final byte[] stringBytes = requestPayload.getBytes(Charset.forName("UTF-8"));
         this.size = stringBytes.length;
         return new ByteArrayInputStream(stringBytes);
     }
