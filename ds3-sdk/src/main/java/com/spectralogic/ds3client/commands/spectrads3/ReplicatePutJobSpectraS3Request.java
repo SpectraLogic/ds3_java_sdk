@@ -16,24 +16,34 @@
 // This code is auto-generated, do not modify
 package com.spectralogic.ds3client.commands.spectrads3;
 
-import java.util.List;
-import com.spectralogic.ds3client.BulkCommand;
-import com.spectralogic.ds3client.models.bulk.Ds3Object;
-import com.spectralogic.ds3client.serializer.XmlProcessingException;
-import com.spectralogic.ds3client.commands.BulkRequest;
+import com.spectralogic.ds3client.networking.HttpVerb;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.nio.charset.Charset;
+import com.spectralogic.ds3client.utils.Guard;
+import com.spectralogic.ds3client.commands.AbstractRequest;
 import com.spectralogic.ds3client.models.ReplicationConflictResolutionMode;
 import com.spectralogic.ds3client.models.Priority;
 import com.google.common.net.UrlEscapers;
 
-public class ReplicatePutJobSpectraS3Request extends BulkRequest {
+public class ReplicatePutJobSpectraS3Request extends AbstractRequest {
 
-
+    // Variables
     
+    private final String bucketName;
+
+    private final String requestPayload;
+
     private ReplicationConflictResolutionMode conflictResolutionMode;
 
+    private Priority priority;
+    private long size = 0;
+
     // Constructor
-    public ReplicatePutJobSpectraS3Request(final String bucketName, final List<Ds3Object> objects) throws XmlProcessingException {
-        super(bucketName, objects);
+    
+    public ReplicatePutJobSpectraS3Request(final String bucketName, final String requestPayload) {
+        this.bucketName = bucketName;
+        this.requestPayload = requestPayload;
         
         this.getQueryParams().put("operation", "start_bulk_put");
 
@@ -46,21 +56,55 @@ public class ReplicatePutJobSpectraS3Request extends BulkRequest {
         return this;
     }
 
-    @Override
     public ReplicatePutJobSpectraS3Request withPriority(final Priority priority) {
-        super.withPriority(priority);
+        this.priority = priority;
+        this.updateQueryParam("priority", priority);
         return this;
     }
 
 
+    @Override
+    public HttpVerb getVerb() {
+        return HttpVerb.PUT;
+    }
+
+    @Override
+    public String getPath() {
+        return "/_rest_/bucket/" + this.bucketName;
+    }
+    @Override
+    public InputStream getStream() {
+        if (Guard.isStringNullOrEmpty(requestPayload)) {
+            return null;
+        }
+        final byte[] stringBytes = requestPayload.getBytes(Charset.forName("UTF-8"));
+        this.size = stringBytes.length;
+        return new ByteArrayInputStream(stringBytes);
+    }
+
+    @Override
+    public long getSize() {
+        return this.size;
+    }
+
     
+    public String getBucketName() {
+        return this.bucketName;
+    }
+
+
+    public String getRequestPayload() {
+        return this.requestPayload;
+    }
+
+
     public ReplicationConflictResolutionMode getConflictResolutionMode() {
         return this.conflictResolutionMode;
     }
 
 
-    @Override
-    public BulkCommand getCommand() {
-        return BulkCommand.PUT;
+    public Priority getPriority() {
+        return this.priority;
     }
+
 }

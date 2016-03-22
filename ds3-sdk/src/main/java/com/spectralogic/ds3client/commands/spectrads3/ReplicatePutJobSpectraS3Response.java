@@ -18,10 +18,43 @@ package com.spectralogic.ds3client.commands.spectrads3;
 
 import com.spectralogic.ds3client.networking.WebResponse;
 import java.io.IOException;
-import com.spectralogic.ds3client.commands.BulkResponse;
+import com.spectralogic.ds3client.models.MasterObjectList;
+import java.io.InputStream;
+import com.spectralogic.ds3client.serializer.XmlOutput;
+import com.spectralogic.ds3client.commands.AbstractResponse;
 
-public class ReplicatePutJobSpectraS3Response extends BulkResponse {
+public class ReplicatePutJobSpectraS3Response extends AbstractResponse {
+
+    private MasterObjectList masterObjectListResult;
+
     public ReplicatePutJobSpectraS3Response(final WebResponse response) throws IOException {
         super(response);
     }
+
+    @Override
+    protected void processResponse() throws IOException {
+        try {
+            this.checkStatusCode(200, 204);
+
+            switch (this.getStatusCode()) {
+            case 200:
+                try (final InputStream content = getResponse().getResponseStream()) {
+                    this.masterObjectListResult = XmlOutput.fromXml(content, MasterObjectList.class);
+                }
+                break;
+            case 204:
+                //Do nothing, payload is null
+                break;
+            default:
+                assert false : "checkStatusCode should have made it impossible to reach this line.";
+            }
+        } finally {
+            this.getResponse().close();
+        }
+    }
+
+    public MasterObjectList getMasterObjectListResult() {
+        return this.masterObjectListResult;
+    }
+
 }
