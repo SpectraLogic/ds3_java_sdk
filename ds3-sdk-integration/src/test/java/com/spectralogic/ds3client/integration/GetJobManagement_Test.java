@@ -56,7 +56,7 @@ public class GetJobManagement_Test {
 
     @BeforeClass
     public static void startup() throws Exception {
-        final UUID dataPolicyId = TempStorageUtil.setupDataPolicy(TEST_ENV_NAME, true, ChecksumType.Type.MD5, client);
+        final UUID dataPolicyId = TempStorageUtil.setupDataPolicy(TEST_ENV_NAME, false, ChecksumType.Type.MD5, client);
         envStorageIds = TempStorageUtil.setup(TEST_ENV_NAME, dataPolicyId, client);
         HELPERS.ensureBucketExists(BUCKET_NAME);
         putBeowulf();
