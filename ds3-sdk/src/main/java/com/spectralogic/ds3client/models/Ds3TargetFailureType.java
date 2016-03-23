@@ -19,6 +19,7 @@ package com.spectralogic.ds3client.models;
 public enum Ds3TargetFailureType {
     NOT_ONLINE,
     WRITE_FAILED,
+    WRITE_INITIATE_FAILED,
     READ_FAILED,
     VERIFY_FAILED
 }
