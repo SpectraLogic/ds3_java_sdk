@@ -364,4 +364,24 @@ public final class ABMTestHelper {
             //Pass: expected data policy acl to not exist
         }
     }
+
+    /**
+     * Gets the cached size in bytes for the job UUID provided every 500 milliseconds
+     * and returns when greater than zero, or fails after timeoutSeconds.
+     */
+    public static void waitForJobCachedSizeToBeMoreThanZero(final UUID jobId
+            , final Ds3Client client, final int timeoutSeconds) throws Exception {
+
+        long cachedSize = 0;
+        int cycles = 0;
+        while (cachedSize == 0) {
+            Thread.sleep(500);
+            final MasterObjectList mol = client.getJobSpectraS3(new GetJobSpectraS3Request(jobId)).getMasterObjectListResult();
+            cachedSize = mol.getCachedSizeInBytes();
+            cycles++;
+            if (cycles > timeoutSeconds * 2) {
+                throw new Exception("Failed to put data in cache after "+ timeoutSeconds + " seconds");
+            }
+        }
+    }
 }

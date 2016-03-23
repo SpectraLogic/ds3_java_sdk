@@ -26,6 +26,7 @@ import com.spectralogic.ds3client.commands.spectrads3.notifications.PutObjectCac
 import com.spectralogic.ds3client.commands.spectrads3.notifications.PutObjectCachedNotificationRegistrationSpectraS3Response;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers;
 import com.spectralogic.ds3client.helpers.options.WriteJobOptions;
+import com.spectralogic.ds3client.integration.test.helpers.ABMTestHelper;
 import com.spectralogic.ds3client.integration.test.helpers.TempStorageIds;
 import com.spectralogic.ds3client.integration.test.helpers.TempStorageUtil;
 import com.spectralogic.ds3client.models.*;
@@ -74,17 +75,6 @@ public class PutJobManagement_Test {
     public static void teardown() throws IOException, SignatureException {
         TempStorageUtil.teardown(TEST_ENV_NAME, envStorageIds, client);
         client.close();
-    }
-
-    private void waitForObjectToBeInCache(final int testTimeOutSeconds, final UUID jobId) throws InterruptedException, IOException, SignatureException {
-        final long startTime = System.nanoTime();
-        long cachedSize = 0;
-        while (cachedSize == 0) {
-            Thread.sleep(500);
-            final MasterObjectList mol = client.getJobSpectraS3(new GetJobSpectraS3Request(jobId.toString())).getMasterObjectListResult();
-            cachedSize = mol.getCachedSizeInBytes();
-            assertThat((System.nanoTime() - startTime)/1000000000, lessThan((long) testTimeOutSeconds));
-        }
     }
 
     @SuppressWarnings("deprecation")
@@ -239,9 +229,8 @@ public class PutJobManagement_Test {
         }
     }
 
-    @Ignore("Disabling until the TruncateJob request is implemented.")
     @Test
-    public void truncateJobCancelWithOutForce() throws IOException, SignatureException, XmlProcessingException, URISyntaxException, InterruptedException {
+    public void truncateJobCancelWithOutForce() throws Exception {
 
         final int testTimeOutSeconds = 5;
         final String book1 = "beowulf.txt";
@@ -253,8 +242,9 @@ public class PutJobManagement_Test {
             final Ds3ClientHelpers.Job putJob = HELPERS.startWriteJob(BUCKET_NAME, Lists.newArrayList(obj1, obj2));
             final UUID jobId = putJob.getJobId();
             final SeekableByteChannel book1Channel = new ResourceObjectPutter(RESOURCE_BASE_NAME).buildChannel(book1);
-            client.putObject(new PutObjectRequest(BUCKET_NAME, book1, book1Channel, jobId.toString(), 0, Files.size(objPath1)));
-            waitForObjectToBeInCache(testTimeOutSeconds, jobId);
+
+            client.putObject(new PutObjectRequest(BUCKET_NAME, book1, book1Channel, jobId, 0, Files.size(objPath1)));
+            ABMTestHelper.waitForJobCachedSizeToBeMoreThanZero(jobId, client, 20);
 
             final CancelJobSpectraS3Response failedResponse = client.cancelJobSpectraS3(new CancelJobSpectraS3Request(jobId.toString()));
             assertThat(failedResponse.getStatusCode(),is(400));
@@ -268,7 +258,7 @@ public class PutJobManagement_Test {
     }
 
     @Test
-    public void cancelJobWithForce() throws IOException, SignatureException, XmlProcessingException, URISyntaxException, InterruptedException {
+    public void cancelJobWithForce() throws Exception {
 
         final int testTimeOutSeconds = 5;
 
@@ -281,8 +271,9 @@ public class PutJobManagement_Test {
             final Ds3ClientHelpers.Job putJob = HELPERS.startWriteJob(BUCKET_NAME, Lists.newArrayList(obj1, obj2));
             final UUID jobId = putJob.getJobId();
             final SeekableByteChannel book1Channel = new ResourceObjectPutter(RESOURCE_BASE_NAME).buildChannel(book1);
-            client.putObject(new PutObjectRequest(BUCKET_NAME, book1, book1Channel, jobId.toString(), 0, Files.size(objPath1)));
-            waitForObjectToBeInCache(testTimeOutSeconds, jobId);
+
+            client.putObject(new PutObjectRequest(BUCKET_NAME, book1, book1Channel, jobId, 0, Files.size(objPath1)));
+            ABMTestHelper.waitForJobCachedSizeToBeMoreThanZero(jobId, client, 20);
 
             final CancelJobSpectraS3Response responseWithForce = client
                     .cancelJobSpectraS3(new CancelJobSpectraS3Request(jobId.toString()));
@@ -323,9 +314,8 @@ public class PutJobManagement_Test {
         }
     }
 
-    @Ignore("Disabling until the TruncateJob request is implemented.")
     @Test
-    public void truncateCancelAllJobsWithoutForce() throws IOException, SignatureException, XmlProcessingException, InterruptedException, URISyntaxException {
+    public void truncateCancelAllJobsWithoutForce() throws Exception {
 
         final int testTimeOutSeconds = 5;
         final String book1 = "beowulf.txt";
@@ -353,8 +343,8 @@ public class PutJobManagement_Test {
             HELPERS.startWriteJob(BUCKET_NAME, Lists
                     .newArrayList(new Ds3Object("place_holder_3", 1000000)));
 
-            waitForObjectToBeInCache(testTimeOutSeconds, jobId1);
-            waitForObjectToBeInCache(testTimeOutSeconds, jobId2);
+            ABMTestHelper.waitForJobCachedSizeToBeMoreThanZero(jobId1, client, 20);
+            ABMTestHelper.waitForJobCachedSizeToBeMoreThanZero(jobId2, client, 20);
 
             final CancelAllJobsSpectraS3Response failedResponse = client
                     .cancelAllJobsSpectraS3(new CancelAllJobsSpectraS3Request());
@@ -376,7 +366,7 @@ public class PutJobManagement_Test {
     }
 
     @Test
-    public void cancelAllJobsWithForce ()throws IOException, SignatureException, XmlProcessingException, InterruptedException, URISyntaxException {
+    public void cancelAllJobsWithForce () throws Exception {
 
         final int testTimeOutSeconds = 5;
         final String book1 = "beowulf.txt";
@@ -404,8 +394,8 @@ public class PutJobManagement_Test {
             HELPERS.startWriteJob(BUCKET_NAME, Lists
                     .newArrayList(new Ds3Object("place_holder_3", 1000000)));
 
-            waitForObjectToBeInCache(testTimeOutSeconds, jobId1);
-            waitForObjectToBeInCache(testTimeOutSeconds, jobId2);
+            ABMTestHelper.waitForJobCachedSizeToBeMoreThanZero(jobId1, client, 20);
+            ABMTestHelper.waitForJobCachedSizeToBeMoreThanZero(jobId2, client, 20);
 
             client.cancelAllJobsSpectraS3(new CancelAllJobsSpectraS3Request());
 
