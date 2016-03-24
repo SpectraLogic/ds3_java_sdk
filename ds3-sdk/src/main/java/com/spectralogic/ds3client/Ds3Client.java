@@ -1227,6 +1227,7 @@ public interface Ds3Client extends Closeable {
     @Resource("USER")
     RegenerateUserSecretKeySpectraS3Response regenerateUserSecretKeySpectraS3(RegenerateUserSecretKeySpectraS3Request request)
             throws IOException, SignatureException;
+    
     GetObjectResponse getObject(GetObjectRequest request)
             throws IOException, SignatureException;
 
