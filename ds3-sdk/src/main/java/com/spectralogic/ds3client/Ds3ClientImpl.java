@@ -395,6 +395,10 @@ public class Ds3ClientImpl implements Ds3Client {
         return new GetCompletedJobsSpectraS3Response(this.netClient.getResponse(request));
     }
     @Override
+    public GetJobChunkDaoSpectraS3Response getJobChunkDaoSpectraS3(GetJobChunkDaoSpectraS3Request request) throws IOException, SignatureException {
+        return new GetJobChunkDaoSpectraS3Response(this.netClient.getResponse(request));
+    }
+    @Override
     public GetJobChunkSpectraS3Response getJobChunkSpectraS3(GetJobChunkSpectraS3Request request) throws IOException, SignatureException {
         return new GetJobChunkSpectraS3Response(this.netClient.getResponse(request));
     }
@@ -621,6 +625,10 @@ public class Ds3ClientImpl implements Ds3Client {
     @Override
     public DeleteFolderRecursivelySpectraS3Response deleteFolderRecursivelySpectraS3(DeleteFolderRecursivelySpectraS3Request request) throws IOException, SignatureException {
         return new DeleteFolderRecursivelySpectraS3Response(this.netClient.getResponse(request));
+    }
+    @Override
+    public GetBlobPersistenceSpectraS3Response getBlobPersistenceSpectraS3(GetBlobPersistenceSpectraS3Request request) throws IOException, SignatureException {
+        return new GetBlobPersistenceSpectraS3Response(this.netClient.getResponse(request));
     }
     @Override
     public GetObjectSpectraS3Response getObjectSpectraS3(GetObjectSpectraS3Request request) throws IOException, SignatureException {

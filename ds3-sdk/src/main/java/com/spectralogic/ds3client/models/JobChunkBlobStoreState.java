@@ -16,11 +16,8 @@
 // This code is auto-generated, do not modify
 package com.spectralogic.ds3client.models;
 
-public enum TargetReadPreference {
-    AUTOMATIC,
-    AFTER_ONLINE_POOL,
-    AFTER_NEARLINE_POOL,
-    AFTER_NON_EJECTABLE_TAPE,
-    LAST_RESORT,
-    NEVER
+public enum JobChunkBlobStoreState {
+    PENDING,
+    IN_PROGRESS,
+    COMPLETED
 }

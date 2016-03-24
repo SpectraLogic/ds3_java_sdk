@@ -430,6 +430,11 @@ public interface Ds3Client extends Closeable {
     @Resource("COMPLETED_JOB")
     GetCompletedJobsSpectraS3Response getCompletedJobsSpectraS3(GetCompletedJobsSpectraS3Request request)
             throws IOException, SignatureException;
+    @ResponsePayloadModel("JobChunk")
+    @Action("SHOW")
+    @Resource("JOB_CHUNK_DAO")
+    GetJobChunkDaoSpectraS3Response getJobChunkDaoSpectraS3(GetJobChunkDaoSpectraS3Request request)
+            throws IOException, SignatureException;
     @ResponsePayloadModel("Objects")
     @Action("SHOW")
     @Resource("JOB_CHUNK")
@@ -700,6 +705,11 @@ public interface Ds3Client extends Closeable {
     @Action("DELETE")
     @Resource("FOLDER")
     DeleteFolderRecursivelySpectraS3Response deleteFolderRecursivelySpectraS3(DeleteFolderRecursivelySpectraS3Request request)
+            throws IOException, SignatureException;
+    @ResponsePayloadModel("String")
+    @Action("LIST")
+    @Resource("BLOB_PERSISTENCE")
+    GetBlobPersistenceSpectraS3Response getBlobPersistenceSpectraS3(GetBlobPersistenceSpectraS3Request request)
             throws IOException, SignatureException;
     @ResponsePayloadModel("S3Object")
     @Action("SHOW")

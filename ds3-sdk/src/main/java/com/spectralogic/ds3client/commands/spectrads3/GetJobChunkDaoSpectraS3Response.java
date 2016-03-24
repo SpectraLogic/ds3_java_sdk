@@ -18,18 +18,16 @@ package com.spectralogic.ds3client.commands.spectrads3;
 
 import com.spectralogic.ds3client.networking.WebResponse;
 import java.io.IOException;
-import java.lang.String;
+import com.spectralogic.ds3client.models.JobChunk;
 import java.io.InputStream;
 import com.spectralogic.ds3client.serializer.XmlOutput;
-import java.nio.charset.StandardCharsets;
-import org.apache.commons.io.IOUtils;
 import com.spectralogic.ds3client.commands.AbstractResponse;
 
-public class GetPutJobToReplicateSpectraS3Response extends AbstractResponse {
+public class GetJobChunkDaoSpectraS3Response extends AbstractResponse {
 
-    private String stringResult;
+    private JobChunk jobChunkResult;
 
-    public GetPutJobToReplicateSpectraS3Response(final WebResponse response) throws IOException {
+    public GetJobChunkDaoSpectraS3Response(final WebResponse response) throws IOException {
         super(response);
     }
 
@@ -41,7 +39,7 @@ public class GetPutJobToReplicateSpectraS3Response extends AbstractResponse {
             switch (this.getStatusCode()) {
             case 200:
                 try (final InputStream content = getResponse().getResponseStream()) {
-                    this.stringResult = IOUtils.toString(content, StandardCharsets.UTF_8);
+                    this.jobChunkResult = XmlOutput.fromXml(content, JobChunk.class);
                 }
                 break;
             default:
@@ -52,8 +50,8 @@ public class GetPutJobToReplicateSpectraS3Response extends AbstractResponse {
         }
     }
 
-    public String getStringResult() {
-        return this.stringResult;
+    public JobChunk getJobChunkResult() {
+        return this.jobChunkResult;
     }
 
 }
