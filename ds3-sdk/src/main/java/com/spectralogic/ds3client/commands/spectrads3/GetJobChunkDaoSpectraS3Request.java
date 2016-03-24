@@ -14,13 +14,38 @@
  */
 
 // This code is auto-generated, do not modify
-package com.spectralogic.ds3client.models;
+package com.spectralogic.ds3client.commands.spectrads3;
 
-public enum TargetReadPreference {
-    AUTOMATIC,
-    AFTER_ONLINE_POOL,
-    AFTER_NEARLINE_POOL,
-    AFTER_NON_EJECTABLE_TAPE,
-    LAST_RESORT,
-    NEVER
+import com.spectralogic.ds3client.networking.HttpVerb;
+import com.spectralogic.ds3client.commands.AbstractRequest;
+import com.google.common.net.UrlEscapers;
+
+public class GetJobChunkDaoSpectraS3Request extends AbstractRequest {
+
+    // Variables
+    
+    private final String jobChunkDao;
+
+    // Constructor
+    
+    public GetJobChunkDaoSpectraS3Request(final String jobChunkDao) {
+        this.jobChunkDao = jobChunkDao;
+        
+    }
+
+
+    @Override
+    public HttpVerb getVerb() {
+        return HttpVerb.GET;
+    }
+
+    @Override
+    public String getPath() {
+        return "/_rest_/job_chunk_dao/" + jobChunkDao;
+    }
+    
+    public String getJobChunkDao() {
+        return this.jobChunkDao;
+    }
+
 }

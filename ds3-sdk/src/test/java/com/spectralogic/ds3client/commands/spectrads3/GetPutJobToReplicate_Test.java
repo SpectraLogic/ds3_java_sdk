@@ -14,13 +14,24 @@
  */
 
 // This code is auto-generated, do not modify
-package com.spectralogic.ds3client.models;
 
-public enum TargetReadPreference {
-    AUTOMATIC,
-    AFTER_ONLINE_POOL,
-    AFTER_NEARLINE_POOL,
-    AFTER_NON_EJECTABLE_TAPE,
-    LAST_RESORT,
-    NEVER
+package com.spectralogic.ds3client.commands.spectrads3;
+
+import com.google.common.collect.ImmutableMap;
+import com.spectralogic.ds3client.MockedWebResponse;
+import com.spectralogic.ds3client.networking.WebResponse;
+import org.junit.Test;
+
+import java.io.IOException;
+
+public class GetPutJobToReplicate_Test {
+
+    @Test
+    public void getPutJobToReplicate_ProcessResponse_Test() throws IOException {
+        final String responsePayload = "Some response payload";
+        final ImmutableMap<String, String> emptyMap = ImmutableMap.of();
+        final WebResponse webResponse = new MockedWebResponse(responsePayload, 200, emptyMap);
+        final GetPutJobToReplicateSpectraS3Response response = new GetPutJobToReplicateSpectraS3Response(webResponse);
+        response.processResponse();
+    }
 }
