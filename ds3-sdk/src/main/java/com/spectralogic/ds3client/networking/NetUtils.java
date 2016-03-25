@@ -40,7 +40,9 @@ public class NetUtils {
 
     public static URL buildUrl(final ConnectionDetails connectionDetails, final String path, final Map<String, String> params) throws MalformedURLException {
         final StringBuilder builder = new StringBuilder();
-        builder.append(connectionDetails.isHttps()? "https": "http").append("://");
+        if (!connectionDetails.getEndpoint().startsWith("http")) {
+            builder.append(connectionDetails.isHttps() ? "https" : "http").append("://");
+        }
         builder.append(connectionDetails.getEndpoint());
         if(!path.startsWith("/")) {
             builder.append('/');
