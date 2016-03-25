@@ -17,6 +17,10 @@
 package com.spectralogic.ds3client.commands;
 
 import com.spectralogic.ds3client.networking.HttpVerb;
+import com.spectralogic.ds3client.models.multipart.CompleteMultipartUpload;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import com.spectralogic.ds3client.serializer.XmlOutput;
 import java.util.UUID;
 import com.google.common.net.UrlEscapers;
 
@@ -30,20 +34,25 @@ public class CompleteMultiPartUploadRequest extends AbstractRequest {
 
     private final String uploadId;
 
+    private final CompleteMultipartUpload requestPayload;
+    private long size = 0;
+
     // Constructor
     
-    public CompleteMultiPartUploadRequest(final String bucketName, final String objectName, final UUID uploadId) {
+    public CompleteMultiPartUploadRequest(final String bucketName, final String objectName, final CompleteMultipartUpload requestPayload, final UUID uploadId) {
         this.bucketName = bucketName;
         this.objectName = objectName;
         this.uploadId = uploadId.toString();
+        this.requestPayload = requestPayload;
         
         this.getQueryParams().put("upload_id", uploadId.toString());
     }
 
-    public CompleteMultiPartUploadRequest(final String bucketName, final String objectName, final String uploadId) {
+    public CompleteMultiPartUploadRequest(final String bucketName, final String objectName, final CompleteMultipartUpload requestPayload, final String uploadId) {
         this.bucketName = bucketName;
         this.objectName = objectName;
         this.uploadId = uploadId;
+        this.requestPayload = requestPayload;
         
         this.getQueryParams().put("upload_id", UrlEscapers.urlFragmentEscaper().escape(uploadId).replace("+", "%2B"));
     }
@@ -58,6 +67,24 @@ public class CompleteMultiPartUploadRequest extends AbstractRequest {
     public String getPath() {
         return "/" + this.bucketName + "/" + this.objectName;
     }
+    @Override
+    public long getSize() {
+        return this.size;
+    }
+
+    @Override
+    public InputStream getStream() {
+        if (requestPayload == null) {
+            return null;
+        }
+
+        final String xmlOutput = XmlOutput.toXml(requestPayload);
+
+        final byte[] stringBytes = xmlOutput.getBytes();
+        this.size = stringBytes.length;
+        return new ByteArrayInputStream(stringBytes);
+    }
+
     
     public String getBucketName() {
         return this.bucketName;
@@ -71,6 +98,11 @@ public class CompleteMultiPartUploadRequest extends AbstractRequest {
 
     public String getUploadId() {
         return this.uploadId;
+    }
+
+
+    public CompleteMultipartUpload getRequestPayload() {
+        return this.requestPayload;
     }
 
 }
