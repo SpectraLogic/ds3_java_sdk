@@ -21,6 +21,8 @@ import java.io.IOException;
 import java.lang.String;
 import java.io.InputStream;
 import com.spectralogic.ds3client.serializer.XmlOutput;
+import java.nio.charset.StandardCharsets;
+import org.apache.commons.io.IOUtils;
 import com.spectralogic.ds3client.commands.AbstractResponse;
 
 public class GetPutJobToReplicateSpectraS3Response extends AbstractResponse {
@@ -39,7 +41,7 @@ public class GetPutJobToReplicateSpectraS3Response extends AbstractResponse {
             switch (this.getStatusCode()) {
             case 200:
                 try (final InputStream content = getResponse().getResponseStream()) {
-                    this.stringResult = XmlOutput.fromXml(content, String.class);
+                    this.stringResult = IOUtils.toString(content, StandardCharsets.UTF_8);
                 }
                 break;
             default:

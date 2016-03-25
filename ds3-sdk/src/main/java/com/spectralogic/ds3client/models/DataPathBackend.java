@@ -41,9 +41,6 @@ public class DataPathBackend {
     @JsonProperty("Id")
     private UUID id;
 
-    @JsonProperty("InstanceId")
-    private UUID instanceId;
-
     @JsonProperty("LastHeartbeat")
     private Date lastHeartbeat;
 
@@ -105,15 +102,6 @@ public class DataPathBackend {
 
     public void setId(final UUID id) {
         this.id = id;
-    }
-
-
-    public UUID getInstanceId() {
-        return this.instanceId;
-    }
-
-    public void setInstanceId(final UUID instanceId) {
-        this.instanceId = instanceId;
     }
 
 
