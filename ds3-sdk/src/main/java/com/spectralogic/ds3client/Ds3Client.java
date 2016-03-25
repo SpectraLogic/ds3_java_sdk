@@ -234,11 +234,6 @@ public interface Ds3Client extends Closeable {
     @Resource("DATA_POLICY")
     PutDataPolicySpectraS3Response putDataPolicySpectraS3(PutDataPolicySpectraS3Request request)
             throws IOException, SignatureException;
-    @ResponsePayloadModel("DataReplicationRule")
-    @Action("CREATE")
-    @Resource("DATA_REPLICATION_RULE")
-    PutDataReplicationRuleSpectraS3Response putDataReplicationRuleSpectraS3(PutDataReplicationRuleSpectraS3Request request)
-            throws IOException, SignatureException;
     @Action("DELETE")
     @Resource("DATA_PERSISTENCE_RULE")
     DeleteDataPersistenceRuleSpectraS3Response deleteDataPersistenceRuleSpectraS3(DeleteDataPersistenceRuleSpectraS3Request request)
@@ -246,10 +241,6 @@ public interface Ds3Client extends Closeable {
     @Action("DELETE")
     @Resource("DATA_POLICY")
     DeleteDataPolicySpectraS3Response deleteDataPolicySpectraS3(DeleteDataPolicySpectraS3Request request)
-            throws IOException, SignatureException;
-    @Action("DELETE")
-    @Resource("DATA_REPLICATION_RULE")
-    DeleteDataReplicationRuleSpectraS3Response deleteDataReplicationRuleSpectraS3(DeleteDataReplicationRuleSpectraS3Request request)
             throws IOException, SignatureException;
     @ResponsePayloadModel("DataPersistenceRule")
     @Action("SHOW")
@@ -271,16 +262,6 @@ public interface Ds3Client extends Closeable {
     @Resource("DATA_POLICY")
     GetDataPolicySpectraS3Response getDataPolicySpectraS3(GetDataPolicySpectraS3Request request)
             throws IOException, SignatureException;
-    @ResponsePayloadModel("DataReplicationRule")
-    @Action("SHOW")
-    @Resource("DATA_REPLICATION_RULE")
-    GetDataReplicationRuleSpectraS3Response getDataReplicationRuleSpectraS3(GetDataReplicationRuleSpectraS3Request request)
-            throws IOException, SignatureException;
-    @ResponsePayloadModel("DataReplicationRuleList")
-    @Action("LIST")
-    @Resource("DATA_REPLICATION_RULE")
-    GetDataReplicationRulesSpectraS3Response getDataReplicationRulesSpectraS3(GetDataReplicationRulesSpectraS3Request request)
-            throws IOException, SignatureException;
     @ResponsePayloadModel("DataPersistenceRule")
     @Action("MODIFY")
     @Resource("DATA_PERSISTENCE_RULE")
@@ -291,11 +272,6 @@ public interface Ds3Client extends Closeable {
     @Resource("DATA_POLICY")
     ModifyDataPolicySpectraS3Response modifyDataPolicySpectraS3(ModifyDataPolicySpectraS3Request request)
             throws IOException, SignatureException;
-    @ResponsePayloadModel("DataReplicationRule")
-    @Action("MODIFY")
-    @Resource("DATA_REPLICATION_RULE")
-    ModifyDataReplicationRuleSpectraS3Response modifyDataReplicationRuleSpectraS3(ModifyDataReplicationRuleSpectraS3Request request)
-            throws IOException, SignatureException;
     @ResponsePayloadModel("BucketList")
     @Action("LIST")
     @Resource("DEGRADED_BUCKET")
@@ -305,11 +281,6 @@ public interface Ds3Client extends Closeable {
     @Action("LIST")
     @Resource("DEGRADED_DATA_PERSISTENCE_RULE")
     GetDegradedDataPersistenceRulesSpectraS3Response getDegradedDataPersistenceRulesSpectraS3(GetDegradedDataPersistenceRulesSpectraS3Request request)
-            throws IOException, SignatureException;
-    @ResponsePayloadModel("DataReplicationRuleList")
-    @Action("LIST")
-    @Resource("DEGRADED_DATA_REPLICATION_RULE")
-    GetDegradedDataReplicationRulesSpectraS3Response getDegradedDataReplicationRulesSpectraS3(GetDegradedDataReplicationRulesSpectraS3Request request)
             throws IOException, SignatureException;
     @ResponsePayloadModel("GroupMember")
     @Action("CREATE")
@@ -880,11 +851,6 @@ public interface Ds3Client extends Closeable {
     @Resource("SYSTEM_INFORMATION")
     GetSystemInformationSpectraS3Response getSystemInformationSpectraS3(GetSystemInformationSpectraS3Request request)
             throws IOException, SignatureException;
-    @ResponsePayloadModel("DataPathBackend")
-    @Action("BULK_MODIFY")
-    @Resource("INSTANCE_IDENTIFIER")
-    ResetInstanceIdentifierSpectraS3Response resetInstanceIdentifierSpectraS3(ResetInstanceIdentifierSpectraS3Request request)
-            throws IOException, SignatureException;
     @ResponsePayloadModel("HealthVerificationResult")
     @Action("LIST")
     @Resource("SYSTEM_HEALTH")
@@ -1136,77 +1102,6 @@ public interface Ds3Client extends Closeable {
     @Resource("TAPE")
     VerifyTapeSpectraS3Response verifyTapeSpectraS3(VerifyTapeSpectraS3Request request)
             throws IOException, SignatureException;
-    @ResponsePayloadModel("Ds3TargetReadPreference")
-    @Action("CREATE")
-    @Resource("DS3_TARGET_READ_PREFERENCE")
-    PutDs3TargetReadPreferenceSpectraS3Response putDs3TargetReadPreferenceSpectraS3(PutDs3TargetReadPreferenceSpectraS3Request request)
-            throws IOException, SignatureException;
-    @ResponsePayloadModel("Ds3TargetUserMapping")
-    @Action("CREATE")
-    @Resource("DS3_TARGET_USER_MAPPING")
-    PutDs3TargetUserMappingSpectraS3Response putDs3TargetUserMappingSpectraS3(PutDs3TargetUserMappingSpectraS3Request request)
-            throws IOException, SignatureException;
-    @Action("DELETE")
-    @Resource("DS3_TARGET_READ_PREFERENCE")
-    DeleteDs3TargetReadPreferenceSpectraS3Response deleteDs3TargetReadPreferenceSpectraS3(DeleteDs3TargetReadPreferenceSpectraS3Request request)
-            throws IOException, SignatureException;
-    @Action("DELETE")
-    @Resource("DS3_TARGET")
-    DeleteDs3TargetSpectraS3Response deleteDs3TargetSpectraS3(DeleteDs3TargetSpectraS3Request request)
-            throws IOException, SignatureException;
-    @Action("DELETE")
-    @Resource("DS3_TARGET_USER_MAPPING")
-    DeleteDs3TargetUserMappingSpectraS3Response deleteDs3TargetUserMappingSpectraS3(DeleteDs3TargetUserMappingSpectraS3Request request)
-            throws IOException, SignatureException;
-    @ResponsePayloadModel("Ds3TargetReadPreference")
-    @Action("SHOW")
-    @Resource("DS3_TARGET_READ_PREFERENCE")
-    GetDs3TargetReadPreferenceSpectraS3Response getDs3TargetReadPreferenceSpectraS3(GetDs3TargetReadPreferenceSpectraS3Request request)
-            throws IOException, SignatureException;
-    @ResponsePayloadModel("Ds3TargetReadPreferenceList")
-    @Action("LIST")
-    @Resource("DS3_TARGET_READ_PREFERENCE")
-    GetDs3TargetReadPreferencesSpectraS3Response getDs3TargetReadPreferencesSpectraS3(GetDs3TargetReadPreferencesSpectraS3Request request)
-            throws IOException, SignatureException;
-    @ResponsePayloadModel("Ds3Target")
-    @Action("SHOW")
-    @Resource("DS3_TARGET")
-    GetDs3TargetSpectraS3Response getDs3TargetSpectraS3(GetDs3TargetSpectraS3Request request)
-            throws IOException, SignatureException;
-    @ResponsePayloadModel("Ds3TargetUserMapping")
-    @Action("SHOW")
-    @Resource("DS3_TARGET_USER_MAPPING")
-    GetDs3TargetUserMappingSpectraS3Response getDs3TargetUserMappingSpectraS3(GetDs3TargetUserMappingSpectraS3Request request)
-            throws IOException, SignatureException;
-    @ResponsePayloadModel("Ds3TargetUserMappingList")
-    @Action("LIST")
-    @Resource("DS3_TARGET_USER_MAPPING")
-    GetDs3TargetUserMappingsSpectraS3Response getDs3TargetUserMappingsSpectraS3(GetDs3TargetUserMappingsSpectraS3Request request)
-            throws IOException, SignatureException;
-    @ResponsePayloadModel("Ds3TargetList")
-    @Action("LIST")
-    @Resource("DS3_TARGET")
-    GetDs3TargetsSpectraS3Response getDs3TargetsSpectraS3(GetDs3TargetsSpectraS3Request request)
-            throws IOException, SignatureException;
-    @Action("BULK_MODIFY")
-    @Resource("DS3_TARGET")
-    ModifyAllDs3TargetsSpectraS3Response modifyAllDs3TargetsSpectraS3(ModifyAllDs3TargetsSpectraS3Request request)
-            throws IOException, SignatureException;
-    @ResponsePayloadModel("Ds3Target")
-    @Action("MODIFY")
-    @Resource("DS3_TARGET")
-    ModifyDs3TargetSpectraS3Response modifyDs3TargetSpectraS3(ModifyDs3TargetSpectraS3Request request)
-            throws IOException, SignatureException;
-    @ResponsePayloadModel("Ds3TargetUserMapping")
-    @Action("MODIFY")
-    @Resource("DS3_TARGET_USER_MAPPING")
-    ModifyDs3TargetUserMappingSpectraS3Response modifyDs3TargetUserMappingSpectraS3(ModifyDs3TargetUserMappingSpectraS3Request request)
-            throws IOException, SignatureException;
-    @ResponsePayloadModel("Ds3Target")
-    @Action("CREATE")
-    @Resource("DS3_TARGET")
-    RegisterDs3TargetSpectraS3Response registerDs3TargetSpectraS3(RegisterDs3TargetSpectraS3Request request)
-            throws IOException, SignatureException;
     @ResponsePayloadModel("SpectraUser")
     @Action("SHOW")
     @Resource("USER")
@@ -1227,6 +1122,7 @@ public interface Ds3Client extends Closeable {
     @Resource("USER")
     RegenerateUserSecretKeySpectraS3Response regenerateUserSecretKeySpectraS3(RegenerateUserSecretKeySpectraS3Request request)
             throws IOException, SignatureException;
+    
     GetObjectResponse getObject(GetObjectRequest request)
             throws IOException, SignatureException;
 

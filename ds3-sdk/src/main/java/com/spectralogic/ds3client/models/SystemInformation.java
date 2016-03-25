@@ -19,7 +19,6 @@ package com.spectralogic.ds3client.models;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import java.lang.String;
-import java.util.UUID;
 
 @JacksonXmlRootElement(namespace = "Data")
 public class SystemInformation {
@@ -33,9 +32,6 @@ public class SystemInformation {
 
     @JsonProperty("BuildInformation")
     private BuildInformation buildInformation;
-
-    @JsonProperty("InstanceId")
-    private UUID instanceId;
 
     @JsonProperty("SerialNumber")
     private String serialNumber;
@@ -71,15 +67,6 @@ public class SystemInformation {
 
     public void setBuildInformation(final BuildInformation buildInformation) {
         this.buildInformation = buildInformation;
-    }
-
-
-    public UUID getInstanceId() {
-        return this.instanceId;
-    }
-
-    public void setInstanceId(final UUID instanceId) {
-        this.instanceId = instanceId;
     }
 
 

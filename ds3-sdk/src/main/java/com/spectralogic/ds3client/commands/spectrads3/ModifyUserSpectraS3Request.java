@@ -31,8 +31,6 @@ public class ModifyUserSpectraS3Request extends AbstractRequest {
 
     private String name;
 
-    private String secretKey;
-
     // Constructor
     
     public ModifyUserSpectraS3Request(final UUID userId) {
@@ -63,12 +61,6 @@ public class ModifyUserSpectraS3Request extends AbstractRequest {
         return this;
     }
 
-    public ModifyUserSpectraS3Request withSecretKey(final String secretKey) {
-        this.secretKey = secretKey;
-        this.updateQueryParam("secret_key", secretKey);
-        return this;
-    }
-
 
     @Override
     public HttpVerb getVerb() {
@@ -92,11 +84,6 @@ public class ModifyUserSpectraS3Request extends AbstractRequest {
 
     public String getName() {
         return this.name;
-    }
-
-
-    public String getSecretKey() {
-        return this.secretKey;
     }
 
 }

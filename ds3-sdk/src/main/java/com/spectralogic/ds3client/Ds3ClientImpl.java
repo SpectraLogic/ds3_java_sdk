@@ -231,20 +231,12 @@ public class Ds3ClientImpl implements Ds3Client {
         return new PutDataPolicySpectraS3Response(this.netClient.getResponse(request));
     }
     @Override
-    public PutDataReplicationRuleSpectraS3Response putDataReplicationRuleSpectraS3(PutDataReplicationRuleSpectraS3Request request) throws IOException, SignatureException {
-        return new PutDataReplicationRuleSpectraS3Response(this.netClient.getResponse(request));
-    }
-    @Override
     public DeleteDataPersistenceRuleSpectraS3Response deleteDataPersistenceRuleSpectraS3(DeleteDataPersistenceRuleSpectraS3Request request) throws IOException, SignatureException {
         return new DeleteDataPersistenceRuleSpectraS3Response(this.netClient.getResponse(request));
     }
     @Override
     public DeleteDataPolicySpectraS3Response deleteDataPolicySpectraS3(DeleteDataPolicySpectraS3Request request) throws IOException, SignatureException {
         return new DeleteDataPolicySpectraS3Response(this.netClient.getResponse(request));
-    }
-    @Override
-    public DeleteDataReplicationRuleSpectraS3Response deleteDataReplicationRuleSpectraS3(DeleteDataReplicationRuleSpectraS3Request request) throws IOException, SignatureException {
-        return new DeleteDataReplicationRuleSpectraS3Response(this.netClient.getResponse(request));
     }
     @Override
     public GetDataPersistenceRuleSpectraS3Response getDataPersistenceRuleSpectraS3(GetDataPersistenceRuleSpectraS3Request request) throws IOException, SignatureException {
@@ -263,14 +255,6 @@ public class Ds3ClientImpl implements Ds3Client {
         return new GetDataPolicySpectraS3Response(this.netClient.getResponse(request));
     }
     @Override
-    public GetDataReplicationRuleSpectraS3Response getDataReplicationRuleSpectraS3(GetDataReplicationRuleSpectraS3Request request) throws IOException, SignatureException {
-        return new GetDataReplicationRuleSpectraS3Response(this.netClient.getResponse(request));
-    }
-    @Override
-    public GetDataReplicationRulesSpectraS3Response getDataReplicationRulesSpectraS3(GetDataReplicationRulesSpectraS3Request request) throws IOException, SignatureException {
-        return new GetDataReplicationRulesSpectraS3Response(this.netClient.getResponse(request));
-    }
-    @Override
     public ModifyDataPersistenceRuleSpectraS3Response modifyDataPersistenceRuleSpectraS3(ModifyDataPersistenceRuleSpectraS3Request request) throws IOException, SignatureException {
         return new ModifyDataPersistenceRuleSpectraS3Response(this.netClient.getResponse(request));
     }
@@ -279,20 +263,12 @@ public class Ds3ClientImpl implements Ds3Client {
         return new ModifyDataPolicySpectraS3Response(this.netClient.getResponse(request));
     }
     @Override
-    public ModifyDataReplicationRuleSpectraS3Response modifyDataReplicationRuleSpectraS3(ModifyDataReplicationRuleSpectraS3Request request) throws IOException, SignatureException {
-        return new ModifyDataReplicationRuleSpectraS3Response(this.netClient.getResponse(request));
-    }
-    @Override
     public GetDegradedBucketsSpectraS3Response getDegradedBucketsSpectraS3(GetDegradedBucketsSpectraS3Request request) throws IOException, SignatureException {
         return new GetDegradedBucketsSpectraS3Response(this.netClient.getResponse(request));
     }
     @Override
     public GetDegradedDataPersistenceRulesSpectraS3Response getDegradedDataPersistenceRulesSpectraS3(GetDegradedDataPersistenceRulesSpectraS3Request request) throws IOException, SignatureException {
         return new GetDegradedDataPersistenceRulesSpectraS3Response(this.netClient.getResponse(request));
-    }
-    @Override
-    public GetDegradedDataReplicationRulesSpectraS3Response getDegradedDataReplicationRulesSpectraS3(GetDegradedDataReplicationRulesSpectraS3Request request) throws IOException, SignatureException {
-        return new GetDegradedDataReplicationRulesSpectraS3Response(this.netClient.getResponse(request));
     }
     @Override
     public PutGroupGroupMemberSpectraS3Response putGroupGroupMemberSpectraS3(PutGroupGroupMemberSpectraS3Request request) throws IOException, SignatureException {
@@ -775,10 +751,6 @@ public class Ds3ClientImpl implements Ds3Client {
         return new GetSystemInformationSpectraS3Response(this.netClient.getResponse(request));
     }
     @Override
-    public ResetInstanceIdentifierSpectraS3Response resetInstanceIdentifierSpectraS3(ResetInstanceIdentifierSpectraS3Request request) throws IOException, SignatureException {
-        return new ResetInstanceIdentifierSpectraS3Response(this.netClient.getResponse(request));
-    }
-    @Override
     public VerifySystemHealthSpectraS3Response verifySystemHealthSpectraS3(VerifySystemHealthSpectraS3Request request) throws IOException, SignatureException {
         return new VerifySystemHealthSpectraS3Response(this.netClient.getResponse(request));
     }
@@ -985,66 +957,6 @@ public class Ds3ClientImpl implements Ds3Client {
     @Override
     public VerifyTapeSpectraS3Response verifyTapeSpectraS3(VerifyTapeSpectraS3Request request) throws IOException, SignatureException {
         return new VerifyTapeSpectraS3Response(this.netClient.getResponse(request));
-    }
-    @Override
-    public PutDs3TargetReadPreferenceSpectraS3Response putDs3TargetReadPreferenceSpectraS3(PutDs3TargetReadPreferenceSpectraS3Request request) throws IOException, SignatureException {
-        return new PutDs3TargetReadPreferenceSpectraS3Response(this.netClient.getResponse(request));
-    }
-    @Override
-    public PutDs3TargetUserMappingSpectraS3Response putDs3TargetUserMappingSpectraS3(PutDs3TargetUserMappingSpectraS3Request request) throws IOException, SignatureException {
-        return new PutDs3TargetUserMappingSpectraS3Response(this.netClient.getResponse(request));
-    }
-    @Override
-    public DeleteDs3TargetReadPreferenceSpectraS3Response deleteDs3TargetReadPreferenceSpectraS3(DeleteDs3TargetReadPreferenceSpectraS3Request request) throws IOException, SignatureException {
-        return new DeleteDs3TargetReadPreferenceSpectraS3Response(this.netClient.getResponse(request));
-    }
-    @Override
-    public DeleteDs3TargetSpectraS3Response deleteDs3TargetSpectraS3(DeleteDs3TargetSpectraS3Request request) throws IOException, SignatureException {
-        return new DeleteDs3TargetSpectraS3Response(this.netClient.getResponse(request));
-    }
-    @Override
-    public DeleteDs3TargetUserMappingSpectraS3Response deleteDs3TargetUserMappingSpectraS3(DeleteDs3TargetUserMappingSpectraS3Request request) throws IOException, SignatureException {
-        return new DeleteDs3TargetUserMappingSpectraS3Response(this.netClient.getResponse(request));
-    }
-    @Override
-    public GetDs3TargetReadPreferenceSpectraS3Response getDs3TargetReadPreferenceSpectraS3(GetDs3TargetReadPreferenceSpectraS3Request request) throws IOException, SignatureException {
-        return new GetDs3TargetReadPreferenceSpectraS3Response(this.netClient.getResponse(request));
-    }
-    @Override
-    public GetDs3TargetReadPreferencesSpectraS3Response getDs3TargetReadPreferencesSpectraS3(GetDs3TargetReadPreferencesSpectraS3Request request) throws IOException, SignatureException {
-        return new GetDs3TargetReadPreferencesSpectraS3Response(this.netClient.getResponse(request));
-    }
-    @Override
-    public GetDs3TargetSpectraS3Response getDs3TargetSpectraS3(GetDs3TargetSpectraS3Request request) throws IOException, SignatureException {
-        return new GetDs3TargetSpectraS3Response(this.netClient.getResponse(request));
-    }
-    @Override
-    public GetDs3TargetUserMappingSpectraS3Response getDs3TargetUserMappingSpectraS3(GetDs3TargetUserMappingSpectraS3Request request) throws IOException, SignatureException {
-        return new GetDs3TargetUserMappingSpectraS3Response(this.netClient.getResponse(request));
-    }
-    @Override
-    public GetDs3TargetUserMappingsSpectraS3Response getDs3TargetUserMappingsSpectraS3(GetDs3TargetUserMappingsSpectraS3Request request) throws IOException, SignatureException {
-        return new GetDs3TargetUserMappingsSpectraS3Response(this.netClient.getResponse(request));
-    }
-    @Override
-    public GetDs3TargetsSpectraS3Response getDs3TargetsSpectraS3(GetDs3TargetsSpectraS3Request request) throws IOException, SignatureException {
-        return new GetDs3TargetsSpectraS3Response(this.netClient.getResponse(request));
-    }
-    @Override
-    public ModifyAllDs3TargetsSpectraS3Response modifyAllDs3TargetsSpectraS3(ModifyAllDs3TargetsSpectraS3Request request) throws IOException, SignatureException {
-        return new ModifyAllDs3TargetsSpectraS3Response(this.netClient.getResponse(request));
-    }
-    @Override
-    public ModifyDs3TargetSpectraS3Response modifyDs3TargetSpectraS3(ModifyDs3TargetSpectraS3Request request) throws IOException, SignatureException {
-        return new ModifyDs3TargetSpectraS3Response(this.netClient.getResponse(request));
-    }
-    @Override
-    public ModifyDs3TargetUserMappingSpectraS3Response modifyDs3TargetUserMappingSpectraS3(ModifyDs3TargetUserMappingSpectraS3Request request) throws IOException, SignatureException {
-        return new ModifyDs3TargetUserMappingSpectraS3Response(this.netClient.getResponse(request));
-    }
-    @Override
-    public RegisterDs3TargetSpectraS3Response registerDs3TargetSpectraS3(RegisterDs3TargetSpectraS3Request request) throws IOException, SignatureException {
-        return new RegisterDs3TargetSpectraS3Response(this.netClient.getResponse(request));
     }
     @Override
     public GetUserSpectraS3Response getUserSpectraS3(GetUserSpectraS3Request request) throws IOException, SignatureException {
