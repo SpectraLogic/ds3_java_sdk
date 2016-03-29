@@ -22,9 +22,8 @@ import java.lang.String;
 import java.util.List;
 import java.util.ArrayList;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
-import com.spectralogic.ds3client.models.common.CommonPrefixes;
-
 import java.util.Date;
+import com.spectralogic.ds3client.models.common.CommonPrefixes;
 
 @JacksonXmlRootElement(namespace = "ListBucketResult")
 public class ListBucketResult {

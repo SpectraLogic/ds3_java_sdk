@@ -25,6 +25,7 @@ import java.io.InputStream;
 import java.util.List;
 import com.spectralogic.ds3client.utils.Guard;
 import com.spectralogic.ds3client.commands.interfaces.AbstractRequest;
+import com.google.common.net.UrlEscapers;
 
 public class GetBlobsOnPoolSpectraS3Request extends AbstractRequest {
 

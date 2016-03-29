@@ -16,12 +16,12 @@
 // This code is auto-generated, do not modify
 package com.spectralogic.ds3client.commands;
 
-import com.spectralogic.ds3client.commands.interfaces.AbstractRequest;
 import com.spectralogic.ds3client.networking.HttpVerb;
 import com.spectralogic.ds3client.models.multipart.CompleteMultipartUpload;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import com.spectralogic.ds3client.serializer.XmlOutput;
+import com.spectralogic.ds3client.commands.interfaces.AbstractRequest;
 import java.util.UUID;
 import com.google.common.net.UrlEscapers;
 

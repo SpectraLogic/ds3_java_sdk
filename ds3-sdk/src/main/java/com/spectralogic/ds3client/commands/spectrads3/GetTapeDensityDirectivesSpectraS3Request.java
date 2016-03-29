@@ -20,7 +20,7 @@ import com.spectralogic.ds3client.networking.HttpVerb;
 import com.spectralogic.ds3client.commands.interfaces.AbstractRequest;
 import com.spectralogic.ds3client.models.TapeDriveType;
 import java.util.UUID;
-
+import com.google.common.net.UrlEscapers;
 import com.spectralogic.ds3client.models.TapeType;
 
 public class GetTapeDensityDirectivesSpectraS3Request extends AbstractRequest {

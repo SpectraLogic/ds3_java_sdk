@@ -17,6 +17,7 @@
 package com.spectralogic.ds3client.commands.spectrads3.notifications;
 
 import com.spectralogic.ds3client.commands.interfaces.AbstractCreateNotificationRequest;
+import com.google.common.net.UrlEscapers;
 import com.spectralogic.ds3client.models.HttpResponseFormatType;
 import java.util.UUID;
 import com.spectralogic.ds3client.models.NamingConventionType;

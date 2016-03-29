@@ -18,6 +18,7 @@ package com.spectralogic.ds3client.commands.spectrads3.notifications;
 
 import com.spectralogic.ds3client.commands.interfaces.AbstractGetNotificationRequest;
 import java.util.UUID;
+import com.google.common.net.UrlEscapers;
 
 public class GetTapeFailureNotificationRegistrationsSpectraS3Request extends AbstractGetNotificationRequest {
 

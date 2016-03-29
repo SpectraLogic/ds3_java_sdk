@@ -18,6 +18,7 @@ package com.spectralogic.ds3client.commands.spectrads3;
 
 import com.spectralogic.ds3client.networking.HttpVerb;
 import com.spectralogic.ds3client.commands.interfaces.AbstractRequest;
+import com.google.common.net.UrlEscapers;
 
 public class GetBucketSpectraS3Request extends AbstractRequest {
 

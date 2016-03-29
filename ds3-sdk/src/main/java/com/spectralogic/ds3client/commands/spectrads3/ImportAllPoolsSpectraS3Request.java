@@ -20,6 +20,7 @@ import com.spectralogic.ds3client.networking.HttpVerb;
 import com.spectralogic.ds3client.commands.interfaces.AbstractRequest;
 import com.spectralogic.ds3client.models.ImportConflictResolutionMode;
 import java.util.UUID;
+import com.google.common.net.UrlEscapers;
 
 public class ImportAllPoolsSpectraS3Request extends AbstractRequest {
 
