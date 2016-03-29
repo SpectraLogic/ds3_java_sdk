@@ -749,12 +749,11 @@ public class UsersAndGroups_Test {
 
             assertThat(deleteBucketAclSpectraS3Response.getStatusCode(), is(204));
 
-        } catch (final Exception e){
+        } finally {
             if (putBucketAclForUserSpectraS3Response != null) {
                 client.deleteBucketAclSpectraS3(new DeleteBucketAclSpectraS3Request(
                         putBucketAclForUserSpectraS3Response.getBucketAclResult().getId().toString()));
             }
-            throw e;
         }
     }
 
