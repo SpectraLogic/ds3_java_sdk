@@ -1,6 +1,6 @@
 package com.spectralogic.ds3client.commands;
 
-import com.spectralogic.ds3client.models.Range;
+import com.spectralogic.ds3client.models.common.Range;
 import org.junit.Test;
 
 import java.util.ArrayList;

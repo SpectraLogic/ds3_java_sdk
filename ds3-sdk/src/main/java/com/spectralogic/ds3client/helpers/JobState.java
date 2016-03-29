@@ -23,7 +23,7 @@ import com.spectralogic.ds3client.helpers.channels.RangedSeekableByteChannel;
 import com.spectralogic.ds3client.helpers.channels.WindowedChannelFactory;
 import com.spectralogic.ds3client.models.BulkObject;
 import com.spectralogic.ds3client.models.Objects;
-import com.spectralogic.ds3client.models.Range;
+import com.spectralogic.ds3client.models.common.Range;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

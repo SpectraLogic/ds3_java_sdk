@@ -13,7 +13,7 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3client.models;
+package com.spectralogic.ds3client.models.common;
 
 import com.spectralogic.ds3client.networking.HttpVerb;
 

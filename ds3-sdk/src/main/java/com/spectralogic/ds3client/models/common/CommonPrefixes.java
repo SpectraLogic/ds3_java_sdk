@@ -13,30 +13,19 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3client.models;
+package com.spectralogic.ds3client.models.common;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-import com.spectralogic.ds3client.utils.Guard;
+public class CommonPrefixes {
+    @JsonProperty("Prefix")
+    private String prefix;
 
-public class Credentials {
-
-    private final String clientId;
-    private final String key;
-
-    public Credentials(final String clientId, final String key) {
-        this.clientId = clientId;
-        this.key = key;
+    public String getPrefix() {
+        return prefix;
     }
 
-    public String getClientId() {
-        return clientId;
-    }
-
-    public String getKey() {
-        return key;
-    }
-
-    public boolean isValid() {
-        return !(Guard.isStringNullOrEmpty(clientId) || Guard.isStringNullOrEmpty(key));
+    public void setPrefix(final String prefix) {
+        this.prefix = prefix;
     }
 }
