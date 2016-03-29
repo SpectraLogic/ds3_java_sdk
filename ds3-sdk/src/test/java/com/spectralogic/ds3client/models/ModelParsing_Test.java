@@ -1,9 +1,13 @@
 package com.spectralogic.ds3client.models;
 
+import com.google.common.collect.ImmutableList;
+import com.spectralogic.ds3client.models.multipart.CompleteMultipartUpload;
+import com.spectralogic.ds3client.models.multipart.Part;
 import com.spectralogic.ds3client.serializer.XmlOutput;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
@@ -47,5 +51,47 @@ public class ModelParsing_Test {
         assertThat(result.getCommonPrefixes().size(), is(2));
         assertThat(result.getCommonPrefixes().get(0).getPrefix(), is("movies/"));
         assertThat(result.getCommonPrefixes().get(1).getPrefix(), is("scores/"));
+    }
+
+    @Test
+    public void completeMultipartUpload_Parse_Test() throws IOException {
+        final String input = "<CompleteMultipartUpload>" +
+                "<Part><PartNumber>1</PartNumber><ETag>a54357aff0632cce46d942af68356b38</ETag></Part>" +
+                "<Part><PartNumber>2</PartNumber><ETag>0c78aef83f66abc1fa1e8477f296d394</ETag></Part>" +
+                "<Part><PartNumber>3</PartNumber><ETag>8e86fe4f25cc4ddca48cc5fdcb4adb1c</ETag></Part>" +
+                "</CompleteMultipartUpload>";
+
+        final CompleteMultipartUpload result = XmlOutput.fromXml(input, CompleteMultipartUpload.class);
+        assertThat(result.getParts().size(), is(3));
+        assertThat(result.getParts().get(0).getPartNumber(), is(1));
+        assertThat(result.getParts().get(0).geteTag(), is("a54357aff0632cce46d942af68356b38"));
+        assertThat(result.getParts().get(1).getPartNumber(), is(2));
+        assertThat(result.getParts().get(1).geteTag(), is("0c78aef83f66abc1fa1e8477f296d394"));
+        assertThat(result.getParts().get(2).getPartNumber(), is(3));
+        assertThat(result.getParts().get(2).geteTag(), is("8e86fe4f25cc4ddca48cc5fdcb4adb1c"));
+    }
+
+    @Test
+    public void completeMultipartUpload_ToString_Test() {
+        final String expected = "<CompleteMultipartUpload>" +
+                "<Part><PartNumber>1</PartNumber><ETag>a54357aff0632cce46d942af68356b38</ETag></Part>" +
+                "<Part><PartNumber>2</PartNumber><ETag>0c78aef83f66abc1fa1e8477f296d394</ETag></Part>" +
+                "</CompleteMultipartUpload>";
+
+        final Part part1 = new Part();
+        part1.setPartNumber(1);
+        part1.seteTag("a54357aff0632cce46d942af68356b38");
+
+        final Part part2 = new Part();
+        part2.setPartNumber(2);
+        part2.seteTag("0c78aef83f66abc1fa1e8477f296d394");
+
+        final ImmutableList parts = ImmutableList.of(part1, part2);
+        final CompleteMultipartUpload input = new CompleteMultipartUpload();
+        input.setParts(parts.asList());
+
+        final String result = XmlOutput.toXml(input);
+
+        assertThat(result, is(expected));
     }
 }
