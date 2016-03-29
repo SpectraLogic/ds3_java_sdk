@@ -21,6 +21,7 @@ import com.spectralogic.ds3client.models.multipart.CompleteMultipartUpload;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import com.spectralogic.ds3client.serializer.XmlOutput;
+import com.spectralogic.ds3client.commands.interfaces.AbstractRequest;
 import java.util.UUID;
 import com.google.common.net.UrlEscapers;
 

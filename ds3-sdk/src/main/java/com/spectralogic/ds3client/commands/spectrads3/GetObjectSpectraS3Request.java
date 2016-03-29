@@ -24,7 +24,7 @@ import com.spectralogic.ds3client.models.Range;
 import org.apache.http.entity.ContentType;
 import java.nio.channels.WritableByteChannel;
 import java.util.Collection;
-import com.spectralogic.ds3client.commands.AbstractRequest;
+import com.spectralogic.ds3client.commands.interfaces.AbstractRequest;
 import com.google.common.net.UrlEscapers;
 import com.spectralogic.ds3client.models.ChecksumType;
 public class GetObjectSpectraS3Request extends AbstractRequest {

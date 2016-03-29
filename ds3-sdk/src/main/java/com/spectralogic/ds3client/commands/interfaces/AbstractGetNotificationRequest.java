@@ -13,31 +13,33 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3client.commands;
+package com.spectralogic.ds3client.commands.interfaces;
 
-import com.google.common.collect.Multimap;
 import com.spectralogic.ds3client.networking.HttpVerb;
-import com.spectralogic.ds3client.models.ChecksumType;
+import com.spectralogic.ds3client.commands.interfaces.AbstractRequest;
 
-import java.io.InputStream;
-import java.util.Map;
+import java.util.UUID;
 
-public interface Ds3Request {
+public abstract class AbstractGetNotificationRequest extends AbstractRequest {
 
-    String getPath();
-    HttpVerb getVerb();
+    private final String notificationId;
 
-    String getContentType();
+    public AbstractGetNotificationRequest(final String notificationId) {
+        super();
+        this.notificationId = notificationId;
+    }
 
-    InputStream getStream();
+    public AbstractGetNotificationRequest(final UUID notificationId) {
+        super();
+        this.notificationId = notificationId.toString();
+    }
 
-    long getSize();
+    @Override
+    public HttpVerb getVerb() {
+        return HttpVerb.GET;
+    }
 
-    ChecksumType getChecksum();
-
-    ChecksumType.Type getChecksumType();
-
-    Map<String, String> getQueryParams();
-
-    Multimap<String, String> getHeaders();
+    public String getNotificationId() {
+        return notificationId;
+    }
 }

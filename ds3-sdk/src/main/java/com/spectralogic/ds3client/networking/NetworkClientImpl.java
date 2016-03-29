@@ -19,7 +19,7 @@ import com.google.common.base.Joiner;
 import com.google.common.collect.Multimap;
 import com.google.common.net.UrlEscapers;
 import com.spectralogic.ds3client.Ds3InputStreamEntity;
-import com.spectralogic.ds3client.commands.Ds3Request;
+import com.spectralogic.ds3client.commands.interfaces.Ds3Request;
 import com.spectralogic.ds3client.commands.PutObjectRequest;
 import com.spectralogic.ds3client.models.ChecksumType;
 import com.spectralogic.ds3client.models.SignatureDetails;

@@ -24,7 +24,7 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.List;
 import com.spectralogic.ds3client.utils.Guard;
-import com.spectralogic.ds3client.commands.AbstractRequest;
+import com.spectralogic.ds3client.commands.interfaces.AbstractRequest;
 import com.google.common.net.UrlEscapers;
 import com.spectralogic.ds3client.models.Priority;
 

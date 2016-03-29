@@ -13,20 +13,12 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3client.commands.notifications;
+package com.spectralogic.ds3client.exceptions;
 
-import com.spectralogic.ds3client.networking.HttpVerb;
-import com.spectralogic.ds3client.commands.AbstractRequest;
-
-public abstract class AbstractCreateNotificationRequest extends AbstractRequest {
-
-    public AbstractCreateNotificationRequest(final String endpoint) {
-        super();
-        this.getQueryParams().put("notification_end_point", endpoint);
-    }
-
-    @Override
-    public HttpVerb getVerb() {
-        return HttpVerb.POST;
+public class RetryAfterExpectedException extends RuntimeException {
+    private static final long serialVersionUID = 6193215224073981762L;
+    
+    public RetryAfterExpectedException() {
+        super("Based on the response the server should have returned a Retry-After HTTP header.");
     }
 }
