@@ -16,9 +16,8 @@
 // This code is auto-generated, do not modify
 package com.spectralogic.ds3client.commands.spectrads3.notifications;
 
-import com.spectralogic.ds3client.commands.notifications.AbstractGetNotificationRequest;
+import com.spectralogic.ds3client.commands.interfaces.AbstractGetNotificationRequest;
 import java.util.UUID;
-import com.google.common.net.UrlEscapers;
 
 public class GetObjectPersistedNotificationRegistrationsSpectraS3Request extends AbstractGetNotificationRequest {
 

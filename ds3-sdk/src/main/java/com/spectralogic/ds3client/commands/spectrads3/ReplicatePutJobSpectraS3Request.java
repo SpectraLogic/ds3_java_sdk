@@ -21,10 +21,9 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.nio.charset.Charset;
 import com.spectralogic.ds3client.utils.Guard;
-import com.spectralogic.ds3client.commands.AbstractRequest;
+import com.spectralogic.ds3client.commands.interfaces.AbstractRequest;
 import com.spectralogic.ds3client.models.ReplicationConflictResolutionMode;
 import com.spectralogic.ds3client.models.Priority;
-import com.google.common.net.UrlEscapers;
 
 public class ReplicatePutJobSpectraS3Request extends AbstractRequest {
 

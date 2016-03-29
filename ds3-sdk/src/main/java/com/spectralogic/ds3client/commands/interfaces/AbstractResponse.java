@@ -13,7 +13,7 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3client.commands;
+package com.spectralogic.ds3client.commands.interfaces;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableSet;
@@ -35,7 +35,7 @@ import java.io.InputStream;
 import java.io.StringWriter;
 import java.util.List;
 
-public abstract class AbstractResponse implements Ds3Response{
+public abstract class AbstractResponse implements Ds3Response {
     final private static Logger LOG = LoggerFactory.getLogger(AbstractResponse.class);
 
     final public static String UTF8 = "UTF-8";

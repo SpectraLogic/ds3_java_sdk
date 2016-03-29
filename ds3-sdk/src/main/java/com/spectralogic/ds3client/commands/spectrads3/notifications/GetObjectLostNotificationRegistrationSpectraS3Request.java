@@ -16,7 +16,7 @@
 // This code is auto-generated, do not modify
 package com.spectralogic.ds3client.commands.spectrads3.notifications;
 
-import com.spectralogic.ds3client.commands.notifications.AbstractGetNotificationRequest;
+import com.spectralogic.ds3client.commands.interfaces.AbstractGetNotificationRequest;
 import java.util.UUID;
 
 public class GetObjectLostNotificationRegistrationSpectraS3Request extends AbstractGetNotificationRequest {

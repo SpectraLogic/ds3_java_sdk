@@ -18,7 +18,7 @@ package com.spectralogic.ds3client.commands.spectrads3;
 
 import com.spectralogic.ds3client.networking.WebResponse;
 import java.io.IOException;
-import com.spectralogic.ds3client.commands.BulkResponse;
+import com.spectralogic.ds3client.commands.interfaces.BulkResponse;
 
 public class GetBulkJobSpectraS3Response extends BulkResponse {
     public GetBulkJobSpectraS3Response(final WebResponse response) throws IOException {

@@ -16,8 +16,7 @@
 // This code is auto-generated, do not modify
 package com.spectralogic.ds3client.commands.spectrads3.notifications;
 
-import com.spectralogic.ds3client.commands.notifications.AbstractCreateNotificationRequest;
-import com.google.common.net.UrlEscapers;
+import com.spectralogic.ds3client.commands.interfaces.AbstractCreateNotificationRequest;
 import com.spectralogic.ds3client.models.HttpResponseFormatType;
 import com.spectralogic.ds3client.models.NamingConventionType;
 import com.spectralogic.ds3client.models.RequestType;

@@ -16,6 +16,7 @@
 // This code is auto-generated, do not modify
 package com.spectralogic.ds3client.commands;
 
+import com.spectralogic.ds3client.commands.interfaces.AbstractResponse;
 import com.spectralogic.ds3client.networking.WebResponse;
 import java.io.IOException;
 

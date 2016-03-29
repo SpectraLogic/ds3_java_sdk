@@ -13,30 +13,12 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3client.models;
+package com.spectralogic.ds3client.exceptions;
 
-
-import com.spectralogic.ds3client.utils.Guard;
-
-public class Credentials {
-
-    private final String clientId;
-    private final String key;
-
-    public Credentials(final String clientId, final String key) {
-        this.clientId = clientId;
-        this.key = key;
-    }
-
-    public String getClientId() {
-        return clientId;
-    }
-
-    public String getKey() {
-        return key;
-    }
-
-    public boolean isValid() {
-        return !(Guard.isStringNullOrEmpty(clientId) || Guard.isStringNullOrEmpty(key));
+public class RetryAfterExpectedException extends RuntimeException {
+    private static final long serialVersionUID = 6193215224073981762L;
+    
+    public RetryAfterExpectedException() {
+        super("Based on the response the server should have returned a Retry-After HTTP header.");
     }
 }

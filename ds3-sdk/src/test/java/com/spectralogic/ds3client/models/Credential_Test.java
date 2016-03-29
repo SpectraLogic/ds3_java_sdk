@@ -16,6 +16,7 @@
 package com.spectralogic.ds3client.models;
 
 
+import com.spectralogic.ds3client.models.common.Credentials;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;

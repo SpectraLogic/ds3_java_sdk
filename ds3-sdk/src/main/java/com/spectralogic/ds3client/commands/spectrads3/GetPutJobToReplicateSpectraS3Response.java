@@ -20,10 +20,9 @@ import com.spectralogic.ds3client.networking.WebResponse;
 import java.io.IOException;
 import java.lang.String;
 import java.io.InputStream;
-import com.spectralogic.ds3client.serializer.XmlOutput;
 import java.nio.charset.StandardCharsets;
 import org.apache.commons.io.IOUtils;
-import com.spectralogic.ds3client.commands.AbstractResponse;
+import com.spectralogic.ds3client.commands.interfaces.AbstractResponse;
 
 public class GetPutJobToReplicateSpectraS3Response extends AbstractResponse {
 

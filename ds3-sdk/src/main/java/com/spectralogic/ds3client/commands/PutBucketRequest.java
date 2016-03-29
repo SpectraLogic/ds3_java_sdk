@@ -16,6 +16,7 @@
 // This code is auto-generated, do not modify
 package com.spectralogic.ds3client.commands;
 
+import com.spectralogic.ds3client.commands.interfaces.AbstractRequest;
 import com.spectralogic.ds3client.networking.HttpVerb;
 
 public class PutBucketRequest extends AbstractRequest {

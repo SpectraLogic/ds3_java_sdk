@@ -13,7 +13,7 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3client.commands;
+package com.spectralogic.ds3client.commands.interfaces;
 
 import com.google.common.collect.Multimap;
 import com.google.common.collect.TreeMultimap;

@@ -13,8 +13,19 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3client.commands;
+package com.spectralogic.ds3client.models.common;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-public interface Ds3Response {
+public class CommonPrefixes {
+    @JsonProperty("Prefix")
+    private String prefix;
+
+    public String getPrefix() {
+        return prefix;
+    }
+
+    public void setPrefix(final String prefix) {
+        this.prefix = prefix;
+    }
 }

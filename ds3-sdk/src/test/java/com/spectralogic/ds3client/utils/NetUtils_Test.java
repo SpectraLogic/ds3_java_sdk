@@ -17,7 +17,7 @@ package com.spectralogic.ds3client.utils;
 
 import com.spectralogic.ds3client.BulkCommand;
 import com.spectralogic.ds3client.ConnectionFixture;
-import com.spectralogic.ds3client.models.Credentials;
+import com.spectralogic.ds3client.models.common.Credentials;
 import com.spectralogic.ds3client.networking.ConnectionDetails;
 import com.spectralogic.ds3client.networking.NetUtils;
 import org.junit.Test;

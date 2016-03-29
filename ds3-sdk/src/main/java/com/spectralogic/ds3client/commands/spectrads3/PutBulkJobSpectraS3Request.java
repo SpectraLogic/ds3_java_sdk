@@ -20,8 +20,7 @@ import java.util.List;
 import com.spectralogic.ds3client.BulkCommand;
 import com.spectralogic.ds3client.models.bulk.Ds3Object;
 import com.spectralogic.ds3client.serializer.XmlProcessingException;
-import com.spectralogic.ds3client.commands.BulkRequest;
-import com.google.common.net.UrlEscapers;
+import com.spectralogic.ds3client.commands.interfaces.BulkRequest;
 import com.spectralogic.ds3client.models.Priority;
 
 public class PutBulkJobSpectraS3Request extends BulkRequest {
