@@ -739,7 +739,8 @@ public class PutJobManagement_Test {
     public void completeMultiPartUpload() throws IOException, SignatureException {
         try {
             client.completeMultiPartUpload(
-                    new CompleteMultiPartUploadRequest(BUCKET_NAME, "beowulf", UUID.randomUUID()));
+                    //Passing in a null request payload, which is sufficient for checking error code
+                    new CompleteMultiPartUploadRequest(BUCKET_NAME, "beowulf", null, UUID.randomUUID()));
 
             fail("Response should have failed because upload part does not exist");
 
