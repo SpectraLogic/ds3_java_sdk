@@ -3,7 +3,7 @@ package com.spectralogic.ds3client.helpers.channels;
 import com.google.common.collect.*;
 import com.spectralogic.ds3client.helpers.TruncateNotAllowedException;
 import com.spectralogic.ds3client.models.BulkObject;
-import com.spectralogic.ds3client.models.Range;
+import com.spectralogic.ds3client.models.common.Range;
 import com.spectralogic.ds3client.utils.Guard;
 
 import java.io.IOException;

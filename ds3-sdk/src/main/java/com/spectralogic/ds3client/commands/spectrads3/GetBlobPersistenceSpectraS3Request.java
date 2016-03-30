@@ -21,7 +21,7 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.nio.charset.Charset;
 import com.spectralogic.ds3client.utils.Guard;
-import com.spectralogic.ds3client.commands.AbstractRequest;
+import com.spectralogic.ds3client.commands.interfaces.AbstractRequest;
 
 public class GetBlobPersistenceSpectraS3Request extends AbstractRequest {
 

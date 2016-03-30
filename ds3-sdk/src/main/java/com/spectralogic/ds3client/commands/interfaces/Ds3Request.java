@@ -13,30 +13,31 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3client.models;
+package com.spectralogic.ds3client.commands.interfaces;
 
+import com.google.common.collect.Multimap;
+import com.spectralogic.ds3client.networking.HttpVerb;
+import com.spectralogic.ds3client.models.ChecksumType;
 
-import com.spectralogic.ds3client.utils.Guard;
+import java.io.InputStream;
+import java.util.Map;
 
-public class Credentials {
+public interface Ds3Request {
 
-    private final String clientId;
-    private final String key;
+    String getPath();
+    HttpVerb getVerb();
 
-    public Credentials(final String clientId, final String key) {
-        this.clientId = clientId;
-        this.key = key;
-    }
+    String getContentType();
 
-    public String getClientId() {
-        return clientId;
-    }
+    InputStream getStream();
 
-    public String getKey() {
-        return key;
-    }
+    long getSize();
 
-    public boolean isValid() {
-        return !(Guard.isStringNullOrEmpty(clientId) || Guard.isStringNullOrEmpty(key));
-    }
+    ChecksumType getChecksum();
+
+    ChecksumType.Type getChecksumType();
+
+    Map<String, String> getQueryParams();
+
+    Multimap<String, String> getHeaders();
 }

@@ -20,9 +20,9 @@ import com.spectralogic.ds3client.networking.WebResponse;
 import java.io.IOException;
 import com.spectralogic.ds3client.models.MasterObjectList;
 import java.io.InputStream;
+import com.spectralogic.ds3client.commands.interfaces.AbstractResponse;
 import com.spectralogic.ds3client.serializer.XmlOutput;
-import com.spectralogic.ds3client.commands.AbstractResponse;
-import com.spectralogic.ds3client.commands.RetryAfterExpectedException;
+import com.spectralogic.ds3client.exceptions.RetryAfterExpectedException;
 
 import static com.spectralogic.ds3client.utils.Guard.isNullOrEmpty;
 

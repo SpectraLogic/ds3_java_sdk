@@ -13,7 +13,7 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3client.commands;
+package com.spectralogic.ds3client.commands.interfaces;
 
 import com.spectralogic.ds3client.models.MasterObjectList;
 import com.spectralogic.ds3client.networking.WebResponse;

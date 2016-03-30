@@ -27,6 +27,7 @@ import com.spectralogic.ds3client.helpers.ChunkTransferrer.ItemTransferrer;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.ObjectChannelBuilder;
 import com.spectralogic.ds3client.models.*;
 import com.spectralogic.ds3client.models.Objects;
+import com.spectralogic.ds3client.models.common.Range;
 import com.spectralogic.ds3client.serializer.XmlProcessingException;
 import com.spectralogic.ds3client.utils.Guard;
 import com.spectralogic.ds3client.utils.SeekableByteChannelInputStream;

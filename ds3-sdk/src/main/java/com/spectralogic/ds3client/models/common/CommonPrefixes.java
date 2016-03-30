@@ -13,20 +13,19 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3client.commands.notifications;
+package com.spectralogic.ds3client.models.common;
 
-import com.spectralogic.ds3client.networking.HttpVerb;
-import com.spectralogic.ds3client.commands.AbstractRequest;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-public abstract class AbstractCreateNotificationRequest extends AbstractRequest {
+public class CommonPrefixes {
+    @JsonProperty("Prefix")
+    private String prefix;
 
-    public AbstractCreateNotificationRequest(final String endpoint) {
-        super();
-        this.getQueryParams().put("notification_end_point", endpoint);
+    public String getPrefix() {
+        return prefix;
     }
 
-    @Override
-    public HttpVerb getVerb() {
-        return HttpVerb.POST;
+    public void setPrefix(final String prefix) {
+        this.prefix = prefix;
     }
 }

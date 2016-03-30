@@ -13,36 +13,12 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3client.models;
+package com.spectralogic.ds3client.exceptions;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
-public class Owner {
-    @JsonProperty("ID")
-    private String id;
-    @JsonProperty("DisplayName")
-    private String displayName;
-
-    public Owner() {}
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(final String id) {
-        this.id = id;
-    }
-
-    public String getDisplayName() {
-        return displayName;
-    }
-
-    public void setDisplayName(final String displayName) {
-        this.displayName = displayName;
-    }
-
-    @Override
-    public String toString() {
-        return "id: " + id + " displayName: " + displayName;
+public class RetryAfterExpectedException extends RuntimeException {
+    private static final long serialVersionUID = 6193215224073981762L;
+    
+    public RetryAfterExpectedException() {
+        super("Based on the response the server should have returned a Retry-After HTTP header.");
     }
 }

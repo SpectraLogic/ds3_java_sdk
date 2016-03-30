@@ -13,33 +13,30 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3client.commands.notifications;
+package com.spectralogic.ds3client.models.common;
 
-import com.spectralogic.ds3client.networking.HttpVerb;
-import com.spectralogic.ds3client.commands.AbstractRequest;
 
-import java.util.UUID;
+import com.spectralogic.ds3client.utils.Guard;
 
-public abstract class AbstractGetNotificationRequest extends AbstractRequest {
+public class Credentials {
 
-    private final String notificationId;
+    private final String clientId;
+    private final String key;
 
-    public AbstractGetNotificationRequest(final String notificationId) {
-        super();
-        this.notificationId = notificationId;
+    public Credentials(final String clientId, final String key) {
+        this.clientId = clientId;
+        this.key = key;
     }
 
-    public AbstractGetNotificationRequest(final UUID notificationId) {
-        super();
-        this.notificationId = notificationId.toString();
+    public String getClientId() {
+        return clientId;
     }
 
-    @Override
-    public HttpVerb getVerb() {
-        return HttpVerb.GET;
+    public String getKey() {
+        return key;
     }
 
-    public String getNotificationId() {
-        return notificationId;
+    public boolean isValid() {
+        return !(Guard.isStringNullOrEmpty(clientId) || Guard.isStringNullOrEmpty(key));
     }
 }

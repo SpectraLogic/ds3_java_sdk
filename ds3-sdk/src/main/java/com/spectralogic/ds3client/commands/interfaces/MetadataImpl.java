@@ -1,4 +1,4 @@
-package com.spectralogic.ds3client.commands;
+package com.spectralogic.ds3client.commands.interfaces;
 
 import com.google.common.collect.ImmutableMultimap;
 import com.spectralogic.ds3client.networking.Headers;
@@ -9,12 +9,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-class MetadataImpl implements Metadata {
+public class MetadataImpl implements Metadata {
 
     private static final String X_AMZ_META = "x-amz-meta-";
     final ImmutableMultimap<String, String> metadata;
 
-    MetadataImpl(final Headers headers) {
+    public MetadataImpl(final Headers headers) {
         this.metadata  = genMetadata(headers);
     }
 
