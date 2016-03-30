@@ -19,10 +19,10 @@ import com.google.common.base.Joiner;
 import com.google.common.collect.Multimap;
 import com.google.common.net.UrlEscapers;
 import com.spectralogic.ds3client.Ds3InputStreamEntity;
-import com.spectralogic.ds3client.commands.Ds3Request;
+import com.spectralogic.ds3client.commands.interfaces.Ds3Request;
 import com.spectralogic.ds3client.commands.PutObjectRequest;
 import com.spectralogic.ds3client.models.ChecksumType;
-import com.spectralogic.ds3client.models.SignatureDetails;
+import com.spectralogic.ds3client.models.common.SignatureDetails;
 import com.spectralogic.ds3client.utils.DateFormatter;
 import com.spectralogic.ds3client.utils.SSLSetupException;
 import com.spectralogic.ds3client.utils.Signature;
@@ -64,9 +64,7 @@ import java.security.SignatureException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.Map;
-import java.util.Set;
 
 public class NetworkClientImpl implements NetworkClient {
     final static private Logger LOG = LoggerFactory.getLogger(NetworkClientImpl.class);

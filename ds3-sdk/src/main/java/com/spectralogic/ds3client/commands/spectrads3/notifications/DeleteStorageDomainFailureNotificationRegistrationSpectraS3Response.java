@@ -18,7 +18,7 @@ package com.spectralogic.ds3client.commands.spectrads3.notifications;
 
 import com.spectralogic.ds3client.networking.WebResponse;
 import java.io.IOException;
-import com.spectralogic.ds3client.commands.AbstractResponse;
+import com.spectralogic.ds3client.commands.interfaces.AbstractResponse;
 
 public class DeleteStorageDomainFailureNotificationRegistrationSpectraS3Response extends AbstractResponse {
 

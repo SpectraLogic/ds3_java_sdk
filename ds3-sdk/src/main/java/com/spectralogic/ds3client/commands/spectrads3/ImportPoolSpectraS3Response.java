@@ -21,7 +21,7 @@ import java.io.IOException;
 import com.spectralogic.ds3client.models.Pool;
 import java.io.InputStream;
 import com.spectralogic.ds3client.serializer.XmlOutput;
-import com.spectralogic.ds3client.commands.AbstractResponse;
+import com.spectralogic.ds3client.commands.interfaces.AbstractResponse;
 
 public class ImportPoolSpectraS3Response extends AbstractResponse {
 

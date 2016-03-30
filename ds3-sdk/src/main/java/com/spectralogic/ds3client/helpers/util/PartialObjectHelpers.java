@@ -3,7 +3,7 @@ package com.spectralogic.ds3client.helpers.util;
 import com.google.common.collect.*;
 import com.spectralogic.ds3client.models.BulkObject;
 import com.spectralogic.ds3client.models.Objects;
-import com.spectralogic.ds3client.models.Range;
+import com.spectralogic.ds3client.models.common.Range;
 import com.spectralogic.ds3client.models.bulk.Ds3Object;
 import com.spectralogic.ds3client.models.bulk.PartialDs3Object;
 import com.spectralogic.ds3client.utils.Guard;

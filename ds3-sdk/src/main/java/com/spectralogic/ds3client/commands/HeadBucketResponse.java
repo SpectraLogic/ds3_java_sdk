@@ -18,6 +18,7 @@ package com.spectralogic.ds3client.commands;
 
 import com.spectralogic.ds3client.networking.WebResponse;
 import java.io.IOException;
+import com.spectralogic.ds3client.commands.interfaces.AbstractResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

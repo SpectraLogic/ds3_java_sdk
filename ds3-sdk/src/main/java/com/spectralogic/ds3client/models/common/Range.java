@@ -1,4 +1,4 @@
-package com.spectralogic.ds3client.models;
+package com.spectralogic.ds3client.models.common;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;

@@ -13,12 +13,7 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3client.commands;
-
-public class RetryAfterExpectedException extends RuntimeException {
-    private static final long serialVersionUID = 6193215224073981762L;
-    
-    public RetryAfterExpectedException() {
-        super("Based on the response the server should have returned a Retry-After HTTP header.");
-    }
-}
+/**
+ * Model objects representing the XML data returned by DS3.
+ */
+package com.spectralogic.ds3client.models;

@@ -21,6 +21,7 @@ import java.io.IOException;
 import com.spectralogic.ds3client.models.CompleteMultipartUploadResult;
 import java.io.InputStream;
 import com.spectralogic.ds3client.serializer.XmlOutput;
+import com.spectralogic.ds3client.commands.interfaces.AbstractResponse;
 
 public class CompleteMultiPartUploadResponse extends AbstractResponse {
 

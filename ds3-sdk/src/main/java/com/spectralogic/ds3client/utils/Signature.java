@@ -15,7 +15,7 @@
 
 package com.spectralogic.ds3client.utils;
 
-import com.spectralogic.ds3client.models.SignatureDetails;
+import com.spectralogic.ds3client.models.common.SignatureDetails;
 
 import org.apache.commons.codec.binary.Base64;
 import org.slf4j.Logger;

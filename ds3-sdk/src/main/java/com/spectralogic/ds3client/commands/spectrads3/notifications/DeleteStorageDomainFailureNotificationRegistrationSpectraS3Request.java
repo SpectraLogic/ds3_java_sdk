@@ -16,7 +16,7 @@
 // This code is auto-generated, do not modify
 package com.spectralogic.ds3client.commands.spectrads3.notifications;
 
-import com.spectralogic.ds3client.commands.notifications.AbstractDeleteNotificationRequest;
+import com.spectralogic.ds3client.commands.interfaces.AbstractDeleteNotificationRequest;
 import java.util.UUID;
 
 public class DeleteStorageDomainFailureNotificationRegistrationSpectraS3Request extends AbstractDeleteNotificationRequest {

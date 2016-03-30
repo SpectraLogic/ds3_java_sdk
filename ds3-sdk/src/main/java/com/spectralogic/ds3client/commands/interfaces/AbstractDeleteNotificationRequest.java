@@ -13,20 +13,32 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3client.commands.notifications;
+package com.spectralogic.ds3client.commands.interfaces;
 
 import com.spectralogic.ds3client.networking.HttpVerb;
-import com.spectralogic.ds3client.commands.AbstractRequest;
 
-public abstract class AbstractCreateNotificationRequest extends AbstractRequest {
+import java.util.UUID;
 
-    public AbstractCreateNotificationRequest(final String endpoint) {
+public abstract class AbstractDeleteNotificationRequest extends AbstractRequest {
+
+    private final String notificationId;
+
+    public AbstractDeleteNotificationRequest(final UUID notificationId) {
         super();
-        this.getQueryParams().put("notification_end_point", endpoint);
+        this.notificationId = notificationId.toString();
+    }
+
+    public AbstractDeleteNotificationRequest(final String notificationId) {
+        super();
+        this.notificationId = notificationId;
+    }
+
+    public String getNotificationId() {
+        return this.notificationId;
     }
 
     @Override
     public HttpVerb getVerb() {
-        return HttpVerb.POST;
+        return HttpVerb.DELETE;
     }
 }

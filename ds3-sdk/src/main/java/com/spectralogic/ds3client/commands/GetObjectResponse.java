@@ -21,6 +21,8 @@ import java.io.IOException;
 import com.spectralogic.ds3client.models.Error;
 import java.io.InputStream;
 import com.spectralogic.ds3client.serializer.XmlOutput;
+import com.spectralogic.ds3client.commands.interfaces.AbstractResponse;
+import com.spectralogic.ds3client.commands.interfaces.MetadataImpl;
 import com.spectralogic.ds3client.networking.Metadata;
 import java.nio.channels.WritableByteChannel;
 import com.spectralogic.ds3client.utils.IOUtils;

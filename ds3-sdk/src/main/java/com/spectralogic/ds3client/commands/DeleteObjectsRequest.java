@@ -26,6 +26,7 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import com.spectralogic.ds3client.commands.interfaces.AbstractRequest;
 
 public class DeleteObjectsRequest extends AbstractRequest {
 

@@ -15,7 +15,7 @@
 
 package com.spectralogic.ds3client.networking;
 
-import com.spectralogic.ds3client.models.Credentials;
+import com.spectralogic.ds3client.models.common.Credentials;
 
 import java.net.URI;
 

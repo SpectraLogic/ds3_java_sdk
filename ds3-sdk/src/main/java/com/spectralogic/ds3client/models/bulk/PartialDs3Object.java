@@ -1,7 +1,7 @@
 package com.spectralogic.ds3client.models.bulk;
 
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
-import com.spectralogic.ds3client.models.Range;
+import com.spectralogic.ds3client.models.common.Range;
 
 public class PartialDs3Object extends Ds3Object {
 
