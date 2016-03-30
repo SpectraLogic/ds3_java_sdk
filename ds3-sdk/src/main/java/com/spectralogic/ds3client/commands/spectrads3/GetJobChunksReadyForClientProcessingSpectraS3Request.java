@@ -27,6 +27,8 @@ public class GetJobChunksReadyForClientProcessingSpectraS3Request extends Abstra
     
     private final String job;
 
+    private String jobChunk;
+
     private int preferredNumberOfChunks;
 
     // Constructor
@@ -41,6 +43,18 @@ public class GetJobChunksReadyForClientProcessingSpectraS3Request extends Abstra
         this.job = job;
         
         this.getQueryParams().put("job", UrlEscapers.urlFragmentEscaper().escape(job).replace("+", "%2B"));
+    }
+
+    public GetJobChunksReadyForClientProcessingSpectraS3Request withJobChunk(final UUID jobChunk) {
+        this.jobChunk = jobChunk.toString();
+        this.updateQueryParam("job_chunk", jobChunk);
+        return this;
+    }
+
+    public GetJobChunksReadyForClientProcessingSpectraS3Request withJobChunk(final String jobChunk) {
+        this.jobChunk = jobChunk;
+        this.updateQueryParam("job_chunk", jobChunk);
+        return this;
     }
 
     public GetJobChunksReadyForClientProcessingSpectraS3Request withPreferredNumberOfChunks(final int preferredNumberOfChunks) {
@@ -62,6 +76,11 @@ public class GetJobChunksReadyForClientProcessingSpectraS3Request extends Abstra
     
     public String getJob() {
         return this.job;
+    }
+
+
+    public String getJobChunk() {
+        return this.jobChunk;
     }
 
 
