@@ -120,7 +120,16 @@ public class NetUtils {
     }
 
     public static String buildHostField(final ConnectionDetails details) {
-        return details.getEndpoint();
+        return filterHttp(details.getEndpoint());
+    }
+
+    public static String filterHttp(final String url) {
+        if (url.startsWith("http://") || url.startsWith("https://"))
+        {
+            final int colonIndex = url.indexOf(":");
+            return url.substring(colonIndex + 3);
+        }
+        return url;
     }
 
     public static int getPort(final URL url) {
