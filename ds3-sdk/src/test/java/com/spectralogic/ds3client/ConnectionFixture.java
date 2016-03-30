@@ -27,4 +27,12 @@ public class ConnectionFixture {
     public static ConnectionDetails getConnection(final int port) {
         return ConnectionDetailsImpl.builder("localhost:" + port, new Credentials("id", "key")).build();
     }
+
+    public static ConnectionDetails getHttpConnection() {
+        return getHttpConnection(8080);
+    }
+
+    public static ConnectionDetails getHttpConnection(final int port) {
+        return ConnectionDetailsImpl.builder("http://localhost:" + port, new Credentials("id", "key")).build();
+    }
 }
