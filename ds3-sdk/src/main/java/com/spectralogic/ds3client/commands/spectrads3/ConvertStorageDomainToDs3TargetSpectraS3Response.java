@@ -20,11 +20,11 @@ import com.spectralogic.ds3client.networking.WebResponse;
 import java.io.IOException;
 import com.spectralogic.ds3client.commands.interfaces.AbstractResponse;
 
-public class DeleteTapePartitionFailureSpectraS3Response extends AbstractResponse {
+public class ConvertStorageDomainToDs3TargetSpectraS3Response extends AbstractResponse {
 
 
 
-    public DeleteTapePartitionFailureSpectraS3Response(final WebResponse response) throws IOException {
+    public ConvertStorageDomainToDs3TargetSpectraS3Response(final WebResponse response) throws IOException {
         super(response);
     }
 

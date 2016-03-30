@@ -860,6 +860,10 @@ public interface Ds3Client extends Closeable {
     @Resource("POOL")
     VerifyPoolSpectraS3Response verifyPoolSpectraS3(VerifyPoolSpectraS3Request request)
             throws IOException, SignatureException;
+    @Action("MODIFY")
+    @Resource("STORAGE_DOMAIN")
+    ConvertStorageDomainToDs3TargetSpectraS3Response convertStorageDomainToDs3TargetSpectraS3(ConvertStorageDomainToDs3TargetSpectraS3Request request)
+            throws IOException, SignatureException;
     @ResponsePayloadModel("StorageDomainMember")
     @Action("CREATE")
     @Resource("STORAGE_DOMAIN_MEMBER")

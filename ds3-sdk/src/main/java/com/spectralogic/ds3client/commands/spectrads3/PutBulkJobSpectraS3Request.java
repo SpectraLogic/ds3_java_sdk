@@ -34,6 +34,8 @@ public class PutBulkJobSpectraS3Request extends BulkRequest {
 
     private boolean ignoreNamingConflicts;
 
+    private boolean minimizeSpanningAcrossMedia;
+
     private String name;
 
     // Constructor
@@ -69,6 +71,12 @@ public class PutBulkJobSpectraS3Request extends BulkRequest {
         return this;
     }
 
+    public PutBulkJobSpectraS3Request withMinimizeSpanningAcrossMedia(final boolean minimizeSpanningAcrossMedia) {
+        this.minimizeSpanningAcrossMedia = minimizeSpanningAcrossMedia;
+        this.updateQueryParam("minimize_spanning_across_media", minimizeSpanningAcrossMedia);
+        return this;
+    }
+
     public PutBulkJobSpectraS3Request withName(final String name) {
         this.name = name;
         this.updateQueryParam("name", name);
@@ -90,6 +98,11 @@ public class PutBulkJobSpectraS3Request extends BulkRequest {
 
     public boolean getIgnoreNamingConflicts() {
         return this.ignoreNamingConflicts;
+    }
+
+
+    public boolean getMinimizeSpanningAcrossMedia() {
+        return this.minimizeSpanningAcrossMedia;
     }
 
 
