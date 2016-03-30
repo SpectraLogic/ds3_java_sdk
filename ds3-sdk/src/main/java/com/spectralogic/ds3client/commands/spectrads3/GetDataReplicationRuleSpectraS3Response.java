@@ -20,8 +20,8 @@ import com.spectralogic.ds3client.networking.WebResponse;
 import java.io.IOException;
 import com.spectralogic.ds3client.models.DataReplicationRule;
 import java.io.InputStream;
-import com.spectralogic.ds3client.commands.interfaces.AbstractResponse;
 import com.spectralogic.ds3client.serializer.XmlOutput;
+import com.spectralogic.ds3client.commands.interfaces.AbstractResponse;
 
 public class GetDataReplicationRuleSpectraS3Response extends AbstractResponse {
 

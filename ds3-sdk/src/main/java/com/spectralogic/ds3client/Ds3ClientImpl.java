@@ -759,6 +759,10 @@ public class Ds3ClientImpl implements Ds3Client {
         return new VerifyPoolSpectraS3Response(this.netClient.getResponse(request));
     }
     @Override
+    public ConvertStorageDomainToDs3TargetSpectraS3Response convertStorageDomainToDs3TargetSpectraS3(ConvertStorageDomainToDs3TargetSpectraS3Request request) throws IOException, SignatureException {
+        return new ConvertStorageDomainToDs3TargetSpectraS3Response(this.netClient.getResponse(request));
+    }
+    @Override
     public PutPoolStorageDomainMemberSpectraS3Response putPoolStorageDomainMemberSpectraS3(PutPoolStorageDomainMemberSpectraS3Request request) throws IOException, SignatureException {
         return new PutPoolStorageDomainMemberSpectraS3Response(this.netClient.getResponse(request));
     }

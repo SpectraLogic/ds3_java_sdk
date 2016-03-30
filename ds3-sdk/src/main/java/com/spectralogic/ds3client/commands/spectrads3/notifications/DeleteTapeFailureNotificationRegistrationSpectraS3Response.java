@@ -19,7 +19,6 @@ package com.spectralogic.ds3client.commands.spectrads3.notifications;
 import com.spectralogic.ds3client.networking.WebResponse;
 import java.io.IOException;
 import com.spectralogic.ds3client.commands.interfaces.AbstractResponse;
-import com.spectralogic.ds3client.serializer.XmlOutput;
 
 public class DeleteTapeFailureNotificationRegistrationSpectraS3Response extends AbstractResponse {
 

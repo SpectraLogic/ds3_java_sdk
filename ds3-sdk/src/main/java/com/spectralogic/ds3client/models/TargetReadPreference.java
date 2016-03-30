@@ -17,7 +17,7 @@
 package com.spectralogic.ds3client.models;
 
 public enum TargetReadPreference {
-    AUTOMATIC,
+    MINIMUM_LATENCY,
     AFTER_ONLINE_POOL,
     AFTER_NEARLINE_POOL,
     AFTER_NON_EJECTABLE_TAPE,
