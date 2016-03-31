@@ -168,6 +168,12 @@ public class NetUtils_Test {
     }
 
     @Test
+    public void buildHostFieldWithHttp() {
+        final String result = NetUtils.buildHostField(ConnectionFixture.getHttpConnection());
+        assertThat(result, is("localhost:8080"));
+    }
+
+    @Test
     public void buildHost() throws MalformedURLException {
         final ConnectionDetails details = new ConnectionDetails() {
             @Override
