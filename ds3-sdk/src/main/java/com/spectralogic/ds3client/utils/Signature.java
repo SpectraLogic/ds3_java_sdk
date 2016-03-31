@@ -15,6 +15,10 @@
 
 package com.spectralogic.ds3client.utils;
 
+import com.google.common.base.Joiner;
+import com.google.common.collect.Multimap;
+import com.google.common.net.UrlEscapers;
+import com.spectralogic.ds3client.commands.PutObjectRequest;
 import com.spectralogic.ds3client.models.common.SignatureDetails;
 
 import org.apache.commons.codec.binary.Base64;
@@ -23,6 +27,8 @@ import org.slf4j.LoggerFactory;
 
 import java.nio.charset.Charset;
 import java.security.SignatureException;
+import java.util.Collection;
+import java.util.Map;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
@@ -45,7 +51,7 @@ public class Signature {
     public static String calculateRFC2104HMAC(final String data, final String key)
             throws java.security.SignatureException
     {
-        LOG.debug("String to sign: " + data.replace("\n", "\\n"));
+        LOG.info("String to sign: " + data.replace("\n", "\\n"));
         final String result;
         try {
             // get an hmac_sha1 key from the raw key bytes
@@ -79,5 +85,36 @@ public class Signature {
                     + signatureDetails.getCanonicalizedResource(),
                 signatureDetails.getCredentials().getKey()
         );
+    }
+
+    public static String canonicalizeResource(final String path, final Map<String, String> queryParams) {
+        final StringBuilder canonicalizedResource = new StringBuilder();
+        canonicalizedResource.append(UrlEscapers.urlFragmentEscaper().escape(path));
+
+        if (queryParams != null) {
+            if (queryParams.containsKey("delete")) {
+                canonicalizedResource.append("?delete");
+            }
+
+            if (queryParams.containsKey("versioning")) {
+                canonicalizedResource.append("?versioning=").append(queryParams.get("versioning"));
+            }
+        }
+        return canonicalizedResource.toString();
+    }
+
+    public static String canonicalizeAmzHeaders(
+            final MultiMap<String, String> customHeaders) {
+        final StringBuilder ret = new StringBuilder();
+        for (final Map.Entry<String, Collection<String>> header : customHeaders.entrySet()) {
+            final String key = header.getKey().toLowerCase();
+            if (key.startsWith(PutObjectRequest.AMZ_META_HEADER)
+                    && header.getValue().size() > 0) {
+                ret.append(key).append(":");
+                ret.append(Joiner.on(",").join(header.getValue()));
+                ret.append('\n');
+            }
+        }
+        return ret.toString();
     }
 }
