@@ -147,7 +147,7 @@ public class UsersAndGroups_Test {
     }
 
     @Test
-    public void getUsersWithCobination() throws IOException, SignatureException {
+    public void getUsersWithCombination() throws IOException, SignatureException {
 
         final GetUsersSpectraS3Response getUsersResponse = client.getUsersSpectraS3(
                 new GetUsersSpectraS3Request().withAuthId("123").withDefaultDataPolicyId(UUID.randomUUID())
