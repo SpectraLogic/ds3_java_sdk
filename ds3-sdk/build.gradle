@@ -30,11 +30,11 @@ shadowJar {
     relocate 'org.apache', 'ds3fatjar.org.apache'
     relocate 'org.codehaus', 'ds3fatjar.org.codehaus'
     relocate 'com.fasterxml', 'ds3fatjar.com.fasterxml'
-    relocate 'org.slf4j', 'ds3fatjar.org.slf4j'
     dependencies {
         exclude(dependency('org.hamcrest:hamcrest-library:1.3'))
         exclude(dependency('org.mockito:mockito-core:1.10.19'))
         exclude(dependency('junit:junit:4.12'))
+        exclude(dependency('org.slf4j:slf4j-api:1.7.16'))
     }
 }
 
