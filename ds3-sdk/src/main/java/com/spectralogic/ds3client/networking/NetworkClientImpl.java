@@ -15,15 +15,13 @@
 
 package com.spectralogic.ds3client.networking;
 
-import com.google.common.base.Joiner;
-import com.google.common.collect.Multimap;
 import com.google.common.net.UrlEscapers;
 import com.spectralogic.ds3client.Ds3InputStreamEntity;
 import com.spectralogic.ds3client.commands.interfaces.Ds3Request;
-import com.spectralogic.ds3client.commands.PutObjectRequest;
 import com.spectralogic.ds3client.models.ChecksumType;
 import com.spectralogic.ds3client.models.common.SignatureDetails;
 import com.spectralogic.ds3client.utils.DateFormatter;
+import com.spectralogic.ds3client.utils.MultiMapImpl;
 import com.spectralogic.ds3client.utils.SSLSetupException;
 import com.spectralogic.ds3client.utils.Signature;
 import org.apache.http.HttpHost;
@@ -63,8 +61,10 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SignatureException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
-import java.util.Collection;
 import java.util.Map;
+
+import static com.spectralogic.ds3client.utils.Signature.canonicalizeAmzHeaders;
+import static com.spectralogic.ds3client.utils.Signature.canonicalizeResource;
 
 public class NetworkClientImpl implements NetworkClient {
     final static private Logger LOG = LoggerFactory.getLogger(NetworkClientImpl.class);
@@ -284,7 +284,7 @@ public class NetworkClientImpl implements NetworkClient {
                 this.hash,
                 this.ds3Request.getContentType(),
                 date,
-                canonicalizeAmzHeaders(this.ds3Request.getHeaders()),
+                canonicalizeAmzHeaders(new MultiMapImpl<>(this.ds3Request.getHeaders())),
                 canonicalizeResource(this.ds3Request.getPath(), this.ds3Request.getQueryParams()),
                 NetworkClientImpl.this.connectionDetails.getCredentials()
             )));
@@ -301,39 +301,6 @@ public class NetworkClientImpl implements NetworkClient {
                 default:
                     return "";
             }
-        }
-
-
-        private String canonicalizeResource(final String path, final Map<String, String> queryParams) {
-
-            final StringBuilder canonicalizedResource = new StringBuilder();
-            canonicalizedResource.append(UrlEscapers.urlFragmentEscaper().escape(path));
-
-            if (queryParams.containsKey("delete")) {
-                canonicalizedResource.append("?delete");
-            }
-
-            if (queryParams.containsKey("versioning")) {
-                canonicalizedResource.append("?versioning=").append(queryParams.get("versioning"));
-            }
-
-            return canonicalizedResource.toString();
-        }
-
-        private String canonicalizeAmzHeaders(
-                final Multimap<String, String> customHeaders) {
-            final StringBuilder ret = new StringBuilder();
-            for (final Map.Entry<String, Collection<String>> header : customHeaders
-                    .asMap().entrySet()) {
-                final String key = header.getKey().toLowerCase();
-                if (key.startsWith(PutObjectRequest.AMZ_META_HEADER)
-                        && header.getValue().size() > 0) {
-                    ret.append(key).append(":");
-                    ret.append(Joiner.on(",").join(header.getValue()));
-                    ret.append('\n');
-                }
-            }
-            return ret.toString();
         }
 
         private String buildHash() throws IOException {
