@@ -74,8 +74,7 @@ class JobState implements AutoCloseable {
                 public WindowedChannelFactory get(final String key) {
                     try {
                         LOG.debug("Opening channel for : " + key);
-                        return new WindowedChannelFactory(RangedSeekableByteChannel
-                                .wrap(channelBuilder.buildChannel(key), objectRanges.get(key)));
+                        return new WindowedChannelFactory(RangedSeekableByteChannel.wrap(channelBuilder.buildChannel(key), objectRanges.get(key), key));
                     } catch (final IOException e) {
                         throw new RuntimeException(e);
                     }
