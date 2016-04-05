@@ -740,22 +740,13 @@ public class UsersAndGroups_Test {
     @Test
     public void deleteBucketAcl() throws IOException, SignatureException {
         PutBucketAclForUserSpectraS3Response putBucketAclForUserSpectraS3Response = null;
-        try {
-            putBucketAclForUserSpectraS3Response = client.putBucketAclForUserSpectraS3(
-                    new PutBucketAclForUserSpectraS3Request(BUCKET_NAME, BucketAclPermission.DELETE,
-                            spectraUUID));
-            final DeleteBucketAclSpectraS3Response deleteBucketAclSpectraS3Response = client
-                    .deleteBucketAclSpectraS3(new DeleteBucketAclSpectraS3Request(
-                            putBucketAclForUserSpectraS3Response.getBucketAclResult().getId().toString()));
-
-            assertThat(deleteBucketAclSpectraS3Response.getStatusCode(), is(204));
-
-        } finally {
-            if (putBucketAclForUserSpectraS3Response != null) {
-                client.deleteBucketAclSpectraS3(new DeleteBucketAclSpectraS3Request(
+        putBucketAclForUserSpectraS3Response = client.putBucketAclForUserSpectraS3(
+                new PutBucketAclForUserSpectraS3Request(BUCKET_NAME, BucketAclPermission.DELETE, spectraUUID));
+        final DeleteBucketAclSpectraS3Response deleteBucketAclSpectraS3Response = client
+                .deleteBucketAclSpectraS3(new DeleteBucketAclSpectraS3Request(
                         putBucketAclForUserSpectraS3Response.getBucketAclResult().getId().toString()));
-            }
-        }
+
+        assertThat(deleteBucketAclSpectraS3Response.getStatusCode(), is(204));
     }
 
     @Test
