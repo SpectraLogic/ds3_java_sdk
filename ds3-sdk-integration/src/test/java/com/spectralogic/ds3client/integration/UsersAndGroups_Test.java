@@ -205,8 +205,9 @@ public class UsersAndGroups_Test {
     @Test
     public void ModifyUserSecretKey() throws IOException, SignatureException {
         try {
-            client.modifyUserSpectraS3(new ModifyUserSpectraS3Request(UUID.randomUUID())
-                            .withSecretKey("should_never_apply_this"));
+            client.modifyUserSpectraS3(new ModifyUserSpectraS3Request(UUID.randomUUID()));
+                            // an ignored test still needs to be valid java.
+                            //.withSecretKey("should_never_apply_this"));
             fail("The user for the above should not be found and throw exception.");
         } catch (final FailedRequestException e) {
             assertThat(e.getStatusCode(), is(404));
