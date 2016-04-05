@@ -201,18 +201,6 @@ public class UsersAndGroups_Test {
         assertThat(modifyUserSpectraS3Response.getStatusCode(), is(200));
     }
 
-    @Ignore("Will fail against current 3.x code not supporting this request param")
-    @Test
-    public void ModifyUserSecretKey() throws IOException, SignatureException {
-        try {
-            client.modifyUserSpectraS3(new ModifyUserSpectraS3Request(UUID.randomUUID())
-                            .withSecretKey("should_never_apply_this"));
-            fail("The user for the above should not be found and throw exception.");
-        } catch (final FailedRequestException e) {
-            assertThat(e.getStatusCode(), is(404));
-        }
-    }
-
     @Test
     public void RegenerateUserSecretKey() throws IOException, SignatureException {
         try {
@@ -738,23 +726,13 @@ public class UsersAndGroups_Test {
 
     @Test
     public void deleteBucketAcl() throws IOException, SignatureException {
-        PutBucketAclForUserSpectraS3Response putBucketAclForUserSpectraS3Response = null;
-        try {
-            putBucketAclForUserSpectraS3Response = client.putBucketAclForUserSpectraS3(
-                    new PutBucketAclForUserSpectraS3Request(BUCKET_NAME, BucketAclPermission.DELETE,
-                            spectraUUID));
-            final DeleteBucketAclSpectraS3Response deleteBucketAclSpectraS3Response = client
-                    .deleteBucketAclSpectraS3(new DeleteBucketAclSpectraS3Request(
-                            putBucketAclForUserSpectraS3Response.getBucketAclResult().getId().toString()));
-
-            assertThat(deleteBucketAclSpectraS3Response.getStatusCode(), is(204));
-
-        } finally {
-            if (putBucketAclForUserSpectraS3Response != null) {
-                client.deleteBucketAclSpectraS3(new DeleteBucketAclSpectraS3Request(
+        final PutBucketAclForUserSpectraS3Response putBucketAclForUserSpectraS3Response = client.putBucketAclForUserSpectraS3(
+                new PutBucketAclForUserSpectraS3Request(BUCKET_NAME, BucketAclPermission.DELETE, spectraUUID));
+        final DeleteBucketAclSpectraS3Response deleteBucketAclSpectraS3Response = client
+                .deleteBucketAclSpectraS3(new DeleteBucketAclSpectraS3Request(
                         putBucketAclForUserSpectraS3Response.getBucketAclResult().getId().toString()));
-            }
-        }
+
+        assertThat(deleteBucketAclSpectraS3Response.getStatusCode(), is(204));
     }
 
     @Test
