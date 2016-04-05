@@ -726,7 +726,7 @@ public class UsersAndGroups_Test {
 
     @Test
     public void deleteBucketAcl() throws IOException, SignatureException {
-        PutBucketAclForUserSpectraS3Response putBucketAclForUserSpectraS3Response = client.putBucketAclForUserSpectraS3(
+        final PutBucketAclForUserSpectraS3Response putBucketAclForUserSpectraS3Response = client.putBucketAclForUserSpectraS3(
                 new PutBucketAclForUserSpectraS3Request(BUCKET_NAME, BucketAclPermission.DELETE, spectraUUID));
         final DeleteBucketAclSpectraS3Response deleteBucketAclSpectraS3Response = client
                 .deleteBucketAclSpectraS3(new DeleteBucketAclSpectraS3Request(
