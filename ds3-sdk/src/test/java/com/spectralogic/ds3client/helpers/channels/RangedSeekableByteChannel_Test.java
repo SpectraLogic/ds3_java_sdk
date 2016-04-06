@@ -44,7 +44,7 @@ public class RangedSeekableByteChannel_Test {
         final ImmutableMultimap<BulkObject, Range> ranges = builder.build();
 
         final ByteArraySeekableByteChannel channel = new ByteArraySeekableByteChannel();
-        try (final RangedSeekableByteChannel rangedChannel = new RangedSeekableByteChannel(channel, ranges)) {
+        try (final RangedSeekableByteChannel rangedChannel = new RangedSeekableByteChannel(channel, ranges, "name")) {
 
             rangedChannel.position(50).write(secondBlobData);
             rangedChannel.position(0).write(firstBlobData);
@@ -85,7 +85,7 @@ public class RangedSeekableByteChannel_Test {
         final ImmutableMultimap<BulkObject, Range> ranges = builder.build();
 
         final ByteArraySeekableByteChannel channel = new ByteArraySeekableByteChannel();
-        try (final RangedSeekableByteChannel rangedChannel = new RangedSeekableByteChannel(channel, ranges)) {
+        try (final RangedSeekableByteChannel rangedChannel = new RangedSeekableByteChannel(channel, ranges, "name")) {
 
             rangedChannel.position(50).write(secondBlobData);
             rangedChannel.position(0).write(firstBlobData);
@@ -120,7 +120,7 @@ public class RangedSeekableByteChannel_Test {
         final ImmutableMultimap<BulkObject, Range> ranges = builder.build();
 
         final ByteArraySeekableByteChannel channel = new ByteArraySeekableByteChannel();
-        try (final RangedSeekableByteChannel rangedChannel = new RangedSeekableByteChannel(channel, ranges)) {
+        try (final RangedSeekableByteChannel rangedChannel = new RangedSeekableByteChannel(channel, ranges, "name")) {
             rangedChannel.position(17);
         }
     }
