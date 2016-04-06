@@ -21,6 +21,7 @@ import com.google.common.net.UrlEscapers;
 import com.spectralogic.ds3client.Ds3InputStreamEntity;
 import com.spectralogic.ds3client.commands.interfaces.Ds3Request;
 import com.spectralogic.ds3client.commands.PutObjectRequest;
+import com.spectralogic.ds3client.exceptions.InvalidCertificate;
 import com.spectralogic.ds3client.models.ChecksumType;
 import com.spectralogic.ds3client.models.common.SignatureDetails;
 import com.spectralogic.ds3client.utils.DateFormatter;
@@ -235,7 +236,11 @@ public class NetworkClientImpl implements NetworkClient {
             
             final HttpRequest httpRequest = this.buildHttpRequest();
             this.addHeaders(httpRequest);
-            return client.execute(this.host, httpRequest, this.getContext());
+            try {
+                return client.execute(this.host, httpRequest, this.getContext());
+            } catch (final javax.net.ssl.SSLHandshakeException e) {
+                throw new InvalidCertificate("The certificate on black pearl is not a strong certificate and the request is being aborted.  Configure with the insecure option to perform the request.", e);
+            }
         }
 
         private HttpRequest buildHttpRequest() throws IOException {
