@@ -161,11 +161,9 @@ public class UsersAndGroups_Test {
 
         final GetUserSpectraS3Response getSpectraResponse = client
                 .getUserSpectraS3(new GetUserSpectraS3Request(spectraUUID));
-        final UUID spectraDefaultDataPolicyId = getSpectraResponse.getSpectraUserResult()
-                .getDefaultDataPolicyId();
         final ModifyUserSpectraS3Response modifyUserSpectraS3Response = client
                 .modifyUserSpectraS3(new ModifyUserSpectraS3Request(spectraUUID)
-                        .withDefaultDataPolicyId(spectraDefaultDataPolicyId));
+                        .withDefaultDataPolicyId(dataPolicyId));
 
         assertThat(modifyUserSpectraS3Response.getStatusCode(), is(200));
     }
@@ -192,11 +190,9 @@ public class UsersAndGroups_Test {
                 .getUserSpectraS3(new GetUserSpectraS3Request(spectraUUID));
         final String spectraName = getSpectraResponse.getSpectraUserResult()
                 .getName();
-        final UUID spectraDefaultDataPolicyId = getSpectraResponse.getSpectraUserResult()
-                .getDefaultDataPolicyId();
         final ModifyUserSpectraS3Response modifyUserSpectraS3Response = client
                 .modifyUserSpectraS3(new ModifyUserSpectraS3Request(spectraUUID)
-                        .withName(spectraName).withDefaultDataPolicyId(spectraDefaultDataPolicyId));
+                        .withName(spectraName).withDefaultDataPolicyId(dataPolicyId));
 
         assertThat(modifyUserSpectraS3Response.getStatusCode(), is(200));
     }
