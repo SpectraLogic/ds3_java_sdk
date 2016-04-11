@@ -273,6 +273,7 @@ public class NetworkClientImpl implements NetworkClient {
             httpRequest.addHeader(HOST, NetUtils.buildHostField(NetworkClientImpl.this.connectionDetails));
             httpRequest.addHeader(DATE, date);
             httpRequest.addHeader(CONTENT_TYPE, this.ds3Request.getContentType());
+            httpRequest.addHeader("User-Agent", "ds3_java_sdk");
             
             // Add custom headers.
             for(final Map.Entry<String, String> header: this.ds3Request.getHeaders().entries()) {
