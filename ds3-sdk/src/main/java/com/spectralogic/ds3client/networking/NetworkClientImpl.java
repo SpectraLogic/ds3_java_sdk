@@ -73,6 +73,8 @@ public class NetworkClientImpl implements NetworkClient {
     final static private String DATE = "DATE";
     final static private String AUTHORIZATION = "Authorization";
     final static private String CONTENT_TYPE = "Content-Type";
+    final static private String USER_AGENT = "User-Agent";
+    final static private String AGENT_DS3_JAVA_SDK = "ds3_java_sdk";
     final static private String CONTENT_MD5 = "Content-MD5";
     final static private String CONTENT_SHA256 = "Content-SHA256";
     final static private String CONTENT_SHA512 = "Content-SHA512";
@@ -272,7 +274,7 @@ public class NetworkClientImpl implements NetworkClient {
             httpRequest.addHeader(HOST, NetUtils.buildHostField(NetworkClientImpl.this.connectionDetails));
             httpRequest.addHeader(DATE, date);
             httpRequest.addHeader(CONTENT_TYPE, this.ds3Request.getContentType());
-            httpRequest.addHeader("User-Agent", "ds3_java_sdk");
+            httpRequest.addHeader(USER_AGENT, AGENT_DS3_JAVA_SDK);
             
             // Add custom headers.
             for(final Map.Entry<String, String> header: this.ds3Request.getHeaders().entries()) {
