@@ -14,24 +14,40 @@
  */
 
 // This code is auto-generated, do not modify
-
 package com.spectralogic.ds3client.commands.spectrads3;
 
-import com.google.common.collect.ImmutableMap;
-import com.spectralogic.ds3client.MockedWebResponse;
-import com.spectralogic.ds3client.networking.WebResponse;
-import org.junit.Test;
+import com.spectralogic.ds3client.networking.HttpVerb;
+import com.spectralogic.ds3client.commands.interfaces.AbstractRequest;
+import com.google.common.net.UrlEscapers;
 
-import java.io.IOException;
+public class VerifySafeToCreatePutJobSpectraS3Request extends AbstractRequest {
 
-public class GetPutJobToReplicate_Test {
+    // Variables
+    
+    private final String bucketName;
 
-    @Test
-    public void getPutJobToReplicate_ProcessResponse_Test() throws IOException {
-        final String responsePayload = "Some response payload";
-        final ImmutableMap<String, String> emptyMap = ImmutableMap.of();
-        final WebResponse webResponse = new MockedWebResponse(responsePayload, 200, emptyMap);
-        final GetJobToReplicateSpectraS3Response response = new GetJobToReplicateSpectraS3Response(webResponse);
-        response.processResponse();
+    // Constructor
+    
+    public VerifySafeToCreatePutJobSpectraS3Request(final String bucketName) {
+        this.bucketName = bucketName;
+        
+        this.getQueryParams().put("operation", "verify_safe_to_start_bulk_put");
+
     }
+
+
+    @Override
+    public HttpVerb getVerb() {
+        return HttpVerb.PUT;
+    }
+
+    @Override
+    public String getPath() {
+        return "/_rest_/bucket/" + this.bucketName;
+    }
+    
+    public String getBucketName() {
+        return this.bucketName;
+    }
+
 }

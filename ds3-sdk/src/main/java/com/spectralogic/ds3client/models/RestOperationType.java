@@ -38,5 +38,6 @@ public enum RestOperationType {
     START_BULK_PUT,
     START_BULK_VERIFY,
     VERIFY,
+    VERIFY_SAFE_TO_START_BULK_PUT,
     VERIFY_PHYSICAL_PLACEMENT
 }

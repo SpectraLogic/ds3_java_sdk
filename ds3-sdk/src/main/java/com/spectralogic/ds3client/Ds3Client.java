@@ -450,15 +450,15 @@ public interface Ds3Client extends Closeable {
     @Resource("JOB")
     GetJobSpectraS3Response getJobSpectraS3(GetJobSpectraS3Request request)
             throws IOException, SignatureException;
+    @ResponsePayloadModel("String")
+    @Action("SHOW")
+    @Resource("JOB")
+    GetJobToReplicateSpectraS3Response getJobToReplicateSpectraS3(GetJobToReplicateSpectraS3Request request)
+            throws IOException, SignatureException;
     @ResponsePayloadModel("JobList")
     @Action("LIST")
     @Resource("JOB")
     GetJobsSpectraS3Response getJobsSpectraS3(GetJobsSpectraS3Request request)
-            throws IOException, SignatureException;
-    @ResponsePayloadModel("String")
-    @Action("SHOW")
-    @Resource("JOB")
-    GetPutJobToReplicateSpectraS3Response getPutJobToReplicateSpectraS3(GetPutJobToReplicateSpectraS3Request request)
             throws IOException, SignatureException;
     @ResponsePayloadModel("MasterObjectList")
     @Action("MODIFY")
@@ -477,6 +477,10 @@ public interface Ds3Client extends Closeable {
     @Action("DELETE")
     @Resource("JOB")
     TruncateJobSpectraS3Response truncateJobSpectraS3(TruncateJobSpectraS3Request request)
+            throws IOException, SignatureException;
+    @Action("MODIFY")
+    @Resource("BUCKET")
+    VerifySafeToCreatePutJobSpectraS3Response verifySafeToCreatePutJobSpectraS3(VerifySafeToCreatePutJobSpectraS3Request request)
             throws IOException, SignatureException;
     @ResponsePayloadModel("Node")
     @Action("SHOW")
@@ -507,6 +511,11 @@ public interface Ds3Client extends Closeable {
     @Action("CREATE")
     @Resource("JOB_CREATED_NOTIFICATION_REGISTRATION")
     PutJobCreatedNotificationRegistrationSpectraS3Response putJobCreatedNotificationRegistrationSpectraS3(PutJobCreatedNotificationRegistrationSpectraS3Request request)
+            throws IOException, SignatureException;
+    @ResponsePayloadModel("JobCreationFailedNotificationRegistration")
+    @Action("CREATE")
+    @Resource("JOB_CREATION_FAILED_NOTIFICATION_REGISTRATION")
+    PutJobCreationFailedNotificationRegistrationSpectraS3Response putJobCreationFailedNotificationRegistrationSpectraS3(PutJobCreationFailedNotificationRegistrationSpectraS3Request request)
             throws IOException, SignatureException;
     @ResponsePayloadModel("S3ObjectCachedNotificationRegistration")
     @Action("CREATE")
@@ -559,6 +568,10 @@ public interface Ds3Client extends Closeable {
     @Action("DELETE")
     @Resource("JOB_CREATED_NOTIFICATION_REGISTRATION")
     DeleteJobCreatedNotificationRegistrationSpectraS3Response deleteJobCreatedNotificationRegistrationSpectraS3(DeleteJobCreatedNotificationRegistrationSpectraS3Request request)
+            throws IOException, SignatureException;
+    @Action("DELETE")
+    @Resource("JOB_CREATION_FAILED_NOTIFICATION_REGISTRATION")
+    DeleteJobCreationFailedNotificationRegistrationSpectraS3Response deleteJobCreationFailedNotificationRegistrationSpectraS3(DeleteJobCreationFailedNotificationRegistrationSpectraS3Request request)
             throws IOException, SignatureException;
     @Action("DELETE")
     @Resource("OBJECT_CACHED_NOTIFICATION_REGISTRATION")
@@ -621,6 +634,16 @@ public interface Ds3Client extends Closeable {
     @Action("LIST")
     @Resource("JOB_CREATED_NOTIFICATION_REGISTRATION")
     GetJobCreatedNotificationRegistrationsSpectraS3Response getJobCreatedNotificationRegistrationsSpectraS3(GetJobCreatedNotificationRegistrationsSpectraS3Request request)
+            throws IOException, SignatureException;
+    @ResponsePayloadModel("JobCreationFailedNotificationRegistration")
+    @Action("SHOW")
+    @Resource("JOB_CREATION_FAILED_NOTIFICATION_REGISTRATION")
+    GetJobCreationFailedNotificationRegistrationSpectraS3Response getJobCreationFailedNotificationRegistrationSpectraS3(GetJobCreationFailedNotificationRegistrationSpectraS3Request request)
+            throws IOException, SignatureException;
+    @ResponsePayloadModel("JobCreationFailedNotificationRegistrationList")
+    @Action("LIST")
+    @Resource("JOB_CREATION_FAILED_NOTIFICATION_REGISTRATION")
+    GetJobCreationFailedNotificationRegistrationsSpectraS3Response getJobCreationFailedNotificationRegistrationsSpectraS3(GetJobCreationFailedNotificationRegistrationsSpectraS3Request request)
             throws IOException, SignatureException;
     @ResponsePayloadModel("S3ObjectCachedNotificationRegistration")
     @Action("SHOW")

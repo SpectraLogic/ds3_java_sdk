@@ -26,6 +26,8 @@ public class GetDataPoliciesSpectraS3Request extends AbstractRequest {
 
     // Variables
     
+    private boolean alwaysForcePutJobCreation;
+
     private boolean alwaysReplicateDeletes;
 
     private ChecksumType.Type checksumType;
@@ -46,6 +48,12 @@ public class GetDataPoliciesSpectraS3Request extends AbstractRequest {
     
     public GetDataPoliciesSpectraS3Request() {
         
+    }
+
+    public GetDataPoliciesSpectraS3Request withAlwaysForcePutJobCreation(final boolean alwaysForcePutJobCreation) {
+        this.alwaysForcePutJobCreation = alwaysForcePutJobCreation;
+        this.updateQueryParam("always_force_put_job_creation", alwaysForcePutJobCreation);
+        return this;
     }
 
     public GetDataPoliciesSpectraS3Request withAlwaysReplicateDeletes(final boolean alwaysReplicateDeletes) {
@@ -117,6 +125,11 @@ public class GetDataPoliciesSpectraS3Request extends AbstractRequest {
         return "/_rest_/data_policy";
     }
     
+    public boolean getAlwaysForcePutJobCreation() {
+        return this.alwaysForcePutJobCreation;
+    }
+
+
     public boolean getAlwaysReplicateDeletes() {
         return this.alwaysReplicateDeletes;
     }

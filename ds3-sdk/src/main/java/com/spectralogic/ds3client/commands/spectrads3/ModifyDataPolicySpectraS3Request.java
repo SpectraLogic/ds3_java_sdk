@@ -30,6 +30,8 @@ public class ModifyDataPolicySpectraS3Request extends AbstractRequest {
     
     private final String dataPolicy;
 
+    private boolean alwaysForcePutJobCreation;
+
     private boolean alwaysReplicateDeletes;
 
     private boolean blobbingEnabled;
@@ -57,6 +59,12 @@ public class ModifyDataPolicySpectraS3Request extends AbstractRequest {
     public ModifyDataPolicySpectraS3Request(final String dataPolicy) {
         this.dataPolicy = dataPolicy;
         
+    }
+
+    public ModifyDataPolicySpectraS3Request withAlwaysForcePutJobCreation(final boolean alwaysForcePutJobCreation) {
+        this.alwaysForcePutJobCreation = alwaysForcePutJobCreation;
+        this.updateQueryParam("always_force_put_job_creation", alwaysForcePutJobCreation);
+        return this;
     }
 
     public ModifyDataPolicySpectraS3Request withAlwaysReplicateDeletes(final boolean alwaysReplicateDeletes) {
@@ -138,6 +146,11 @@ public class ModifyDataPolicySpectraS3Request extends AbstractRequest {
     
     public String getDataPolicy() {
         return this.dataPolicy;
+    }
+
+
+    public boolean getAlwaysForcePutJobCreation() {
+        return this.alwaysForcePutJobCreation;
     }
 
 

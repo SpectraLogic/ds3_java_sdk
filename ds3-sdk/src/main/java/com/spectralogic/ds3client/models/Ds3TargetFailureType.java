@@ -21,5 +21,6 @@ public enum Ds3TargetFailureType {
     WRITE_FAILED,
     WRITE_INITIATE_FAILED,
     READ_FAILED,
+    READ_INITIATE_FAILED,
     VERIFY_FAILED
 }

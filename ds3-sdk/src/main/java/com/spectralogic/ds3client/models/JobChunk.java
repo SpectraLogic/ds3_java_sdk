@@ -19,6 +19,7 @@ package com.spectralogic.ds3client.models;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import java.util.UUID;
+import java.util.Date;
 
 @JacksonXmlRootElement(namespace = "Data")
 public class JobChunk {
@@ -32,6 +33,9 @@ public class JobChunk {
 
     @JsonProperty("Id")
     private UUID id;
+
+    @JsonProperty("JobCreationDate")
+    private Date jobCreationDate;
 
     @JsonProperty("JobId")
     private UUID jobId;
@@ -82,6 +86,15 @@ public class JobChunk {
 
     public void setId(final UUID id) {
         this.id = id;
+    }
+
+
+    public Date getJobCreationDate() {
+        return this.jobCreationDate;
+    }
+
+    public void setJobCreationDate(final Date jobCreationDate) {
+        this.jobCreationDate = jobCreationDate;
     }
 
 

@@ -25,11 +25,11 @@ import java.nio.charset.StandardCharsets;
 import org.apache.commons.io.IOUtils;
 import com.spectralogic.ds3client.commands.interfaces.AbstractResponse;
 
-public class GetPutJobToReplicateSpectraS3Response extends AbstractResponse {
+public class GetJobToReplicateSpectraS3Response extends AbstractResponse {
 
     private String stringResult;
 
-    public GetPutJobToReplicateSpectraS3Response(final WebResponse response) throws IOException {
+    public GetJobToReplicateSpectraS3Response(final WebResponse response) throws IOException {
         super(response);
     }
 

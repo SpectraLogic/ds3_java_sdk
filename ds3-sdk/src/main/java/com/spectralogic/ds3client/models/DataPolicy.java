@@ -27,6 +27,9 @@ import java.lang.String;
 public class DataPolicy {
 
     // Variables
+    @JsonProperty("AlwaysForcePutJobCreation")
+    private boolean alwaysForcePutJobCreation;
+
     @JsonProperty("AlwaysReplicateDeletes")
     private boolean alwaysReplicateDeletes;
 
@@ -76,6 +79,15 @@ public class DataPolicy {
 
     // Getters and Setters
     
+    public boolean getAlwaysForcePutJobCreation() {
+        return this.alwaysForcePutJobCreation;
+    }
+
+    public void setAlwaysForcePutJobCreation(final boolean alwaysForcePutJobCreation) {
+        this.alwaysForcePutJobCreation = alwaysForcePutJobCreation;
+    }
+
+
     public boolean getAlwaysReplicateDeletes() {
         return this.alwaysReplicateDeletes;
     }

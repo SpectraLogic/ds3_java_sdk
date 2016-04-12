@@ -14,24 +14,36 @@
  */
 
 // This code is auto-generated, do not modify
+package com.spectralogic.ds3client.commands.spectrads3.notifications;
 
-package com.spectralogic.ds3client.commands.spectrads3;
-
-import com.google.common.collect.ImmutableMap;
-import com.spectralogic.ds3client.MockedWebResponse;
 import com.spectralogic.ds3client.networking.WebResponse;
-import org.junit.Test;
-
 import java.io.IOException;
+import com.spectralogic.ds3client.commands.interfaces.AbstractResponse;
 
-public class GetPutJobToReplicate_Test {
+public class DeleteJobCreationFailedNotificationRegistrationSpectraS3Response extends AbstractResponse {
 
-    @Test
-    public void getPutJobToReplicate_ProcessResponse_Test() throws IOException {
-        final String responsePayload = "Some response payload";
-        final ImmutableMap<String, String> emptyMap = ImmutableMap.of();
-        final WebResponse webResponse = new MockedWebResponse(responsePayload, 200, emptyMap);
-        final GetJobToReplicateSpectraS3Response response = new GetJobToReplicateSpectraS3Response(webResponse);
-        response.processResponse();
+
+
+    public DeleteJobCreationFailedNotificationRegistrationSpectraS3Response(final WebResponse response) throws IOException {
+        super(response);
     }
+
+    @Override
+    protected void processResponse() throws IOException {
+        try {
+            this.checkStatusCode(204);
+
+            switch (this.getStatusCode()) {
+            case 204:
+                //Do nothing, payload is null
+                break;
+            default:
+                assert false : "checkStatusCode should have made it impossible to reach this line.";
+            }
+        } finally {
+            this.getResponse().close();
+        }
+    }
+
+
 }

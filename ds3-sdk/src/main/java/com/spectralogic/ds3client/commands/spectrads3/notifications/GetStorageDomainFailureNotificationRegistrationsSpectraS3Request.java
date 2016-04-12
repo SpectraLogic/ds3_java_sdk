@@ -16,11 +16,12 @@
 // This code is auto-generated, do not modify
 package com.spectralogic.ds3client.commands.spectrads3.notifications;
 
-import com.spectralogic.ds3client.commands.interfaces.AbstractGetNotificationRequest;
+import com.spectralogic.ds3client.networking.HttpVerb;
+import com.spectralogic.ds3client.commands.interfaces.AbstractRequest;
 import java.util.UUID;
 import com.google.common.net.UrlEscapers;
 
-public class GetStorageDomainFailureNotificationRegistrationsSpectraS3Request extends AbstractGetNotificationRequest {
+public class GetStorageDomainFailureNotificationRegistrationsSpectraS3Request extends AbstractRequest {
 
     // Variables
     
@@ -36,18 +37,8 @@ public class GetStorageDomainFailureNotificationRegistrationsSpectraS3Request ex
 
     // Constructor
     
-    public GetStorageDomainFailureNotificationRegistrationsSpectraS3Request(final UUID notificationId) {
-        super(notificationId);
-
+    public GetStorageDomainFailureNotificationRegistrationsSpectraS3Request() {
         
-
-    }
-
-    public GetStorageDomainFailureNotificationRegistrationsSpectraS3Request(final String notificationId) {
-        super(notificationId);
-
-        
-
     }
 
     public GetStorageDomainFailureNotificationRegistrationsSpectraS3Request withLastPage(final boolean lastPage) {
@@ -98,10 +89,14 @@ public class GetStorageDomainFailureNotificationRegistrationsSpectraS3Request ex
 
 
     @Override
-    public String getPath() {
-        return "/_rest_/storage_domain_failure_notification_registration/" + this.getNotificationId().toString();
+    public HttpVerb getVerb() {
+        return HttpVerb.GET;
     }
 
+    @Override
+    public String getPath() {
+        return "/_rest_/storage_domain_failure_notification_registration";
+    }
     
     public boolean getLastPage() {
         return this.lastPage;
