@@ -47,6 +47,7 @@ public class Ds3ClientBuilder implements Builder<Ds3Client> {
     private boolean certificateVerification = true;
     private URI proxy = null;
     private int retries = 5;
+    private int connectionTimeout = 60 * 1000;
     private int bufferSize = 1024 * 1024;
 
     private Ds3ClientBuilder(final String endpoint, final Credentials credentials) throws IllegalArgumentException {
@@ -167,13 +168,27 @@ public class Ds3ClientBuilder implements Builder<Ds3Client> {
     }
 
     /**
+     * Sets the number of milliseconds to wait for a connection to be established before timing out.
+     */
+    public Ds3ClientBuilder withConnectionTimeout(final int timeout) {
+        this.connectionTimeout = timeout;
+        return this;
+    }
+
+    /**
      * Returns a new Ds3Client instance.
      */
     @Override
     public Ds3Client build() {
         LOG.info("Making connection details for endpoint: " + this.endpoint);
-        final ConnectionDetailsImpl.Builder connBuilder = ConnectionDetailsImpl.builder(this.endpoint, this.credentials)
-            .withProxy(this.proxy).withHttps(this.https).withCertificateVerification(this.certificateVerification).withRedirectRetries(this.retries).withBufferSize(this.bufferSize);
+        final ConnectionDetailsImpl.Builder connBuilder = ConnectionDetailsImpl
+                .builder(this.endpoint, this.credentials)
+                .withProxy(this.proxy)
+                .withHttps(this.https)
+                .withCertificateVerification(this.certificateVerification)
+                .withRedirectRetries(this.retries)
+                .withBufferSize(this.bufferSize)
+                .withConnectionTimeout(this.connectionTimeout);
 
         final NetworkClient netClient = new NetworkClientImpl(connBuilder.build());
         return new Ds3ClientImpl(netClient);
