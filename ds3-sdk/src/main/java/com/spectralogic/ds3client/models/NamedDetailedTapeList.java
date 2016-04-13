@@ -22,11 +22,10 @@ import java.util.List;
 import java.util.ArrayList;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 
-@JacksonXmlRootElement(namespace = "Data")
 public class NamedDetailedTapeList {
 
     // Variables
-    @JsonProperty("NamedDetailedTape")
+    @JsonProperty("Tape")
     @JacksonXmlElementWrapper(useWrapping = false)
     private List<NamedDetailedTape> namedDetailedTapes = new ArrayList<>();
 
