@@ -364,6 +364,7 @@ public class NetworkClientImpl implements NetworkClient {
                 RequestConfig
                     .custom()
                     .setRedirectsEnabled(false)
+                    .setConnectTimeout(NetworkClientImpl.this.connectionDetails.getConnectionTimeout())
                     .build()
             );
             return context;

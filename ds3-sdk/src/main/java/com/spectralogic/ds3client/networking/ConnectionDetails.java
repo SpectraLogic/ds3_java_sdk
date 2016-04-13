@@ -35,6 +35,8 @@ public interface ConnectionDetails {
 
     int getBufferSize();
 
+    int getConnectionTimeout();
+
     /**
      * Returns true if the network layer should perform certificate authentication for SSL.  False will disable
      * certificate authentication.
