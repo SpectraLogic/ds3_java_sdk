@@ -34,6 +34,7 @@ class ConnectionDetailsImpl implements ConnectionDetails {
         private URI proxy = null;
         private int retries = 5;
         private int bufferSize = 1024 * 1024;
+        private int connectionTimeout = 60 * 1000;
         private boolean certificateVerification;
 
         private Builder(final String endpoint, final Credentials credentials) {
@@ -58,6 +59,11 @@ class ConnectionDetailsImpl implements ConnectionDetails {
 
         public Builder withBufferSize(final int bufferSize) {
             this.bufferSize = bufferSize;
+            return this;
+        }
+
+        public Builder withConnectionTimeout(final int connectionTimeout) {
+            this.connectionTimeout = connectionTimeout;
             return this;
         }
 
@@ -87,6 +93,7 @@ class ConnectionDetailsImpl implements ConnectionDetails {
             .withHttps(connectionDetails.isHttps())
             .withCertificateVerification(connectionDetails.isCertificateVerification())
             .withBufferSize(connectionDetails.getBufferSize())
+            .withConnectionTimeout(connectionDetails.getConnectionTimeout())
             .withProxy(connectionDetails.getProxy());
 
         return connectionBuilder.build();
@@ -103,6 +110,7 @@ class ConnectionDetailsImpl implements ConnectionDetails {
     private final URI proxy;
     private final int retries;
     private final int bufferSize;
+    private final int connectionTimeout;
     private final boolean certificateVerification;
 
     static Builder builder(final String uriEndpoint, final Credentials credentials) {
@@ -116,6 +124,7 @@ class ConnectionDetailsImpl implements ConnectionDetails {
         this.proxy = builder.proxy;
         this.retries = builder.retries;
         this.bufferSize = builder.bufferSize;
+        this.connectionTimeout = builder.connectionTimeout;
         this.certificateVerification = builder.certificateVerification;
     }
 
@@ -147,6 +156,11 @@ class ConnectionDetailsImpl implements ConnectionDetails {
     @Override
     public int getBufferSize() {
         return bufferSize;
+    }
+
+    @Override
+    public int getConnectionTimeout() {
+        return connectionTimeout;
     }
 
     @Override
