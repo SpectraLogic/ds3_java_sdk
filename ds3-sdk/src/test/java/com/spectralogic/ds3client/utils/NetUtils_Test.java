@@ -207,6 +207,11 @@ public class NetUtils_Test {
             }
 
             @Override
+            public int getConnectionTimeout() {
+                return 0;
+            }
+
+            @Override
             public boolean isCertificateVerification() {
                 return false;
             }
