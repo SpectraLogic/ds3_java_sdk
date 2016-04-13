@@ -14,24 +14,35 @@
  */
 
 // This code is auto-generated, do not modify
+package com.spectralogic.ds3client.commands.spectrads3.notifications;
 
-package com.spectralogic.ds3client.commands.spectrads3;
+import com.spectralogic.ds3client.commands.interfaces.AbstractGetNotificationRequest;
+import java.util.UUID;
 
-import com.google.common.collect.ImmutableMap;
-import com.spectralogic.ds3client.MockedWebResponse;
-import com.spectralogic.ds3client.networking.WebResponse;
-import org.junit.Test;
+public class GetJobCreationFailedNotificationRegistrationSpectraS3Request extends AbstractGetNotificationRequest {
 
-import java.io.IOException;
+    // Variables
+    
+    // Constructor
+    
+    public GetJobCreationFailedNotificationRegistrationSpectraS3Request(final UUID notificationId) {
+        super(notificationId);
 
-public class GetPutJobToReplicate_Test {
+        
 
-    @Test
-    public void getPutJobToReplicate_ProcessResponse_Test() throws IOException {
-        final String responsePayload = "Some response payload";
-        final ImmutableMap<String, String> emptyMap = ImmutableMap.of();
-        final WebResponse webResponse = new MockedWebResponse(responsePayload, 200, emptyMap);
-        final GetJobToReplicateSpectraS3Response response = new GetJobToReplicateSpectraS3Response(webResponse);
-        response.processResponse();
     }
-}
+
+    public GetJobCreationFailedNotificationRegistrationSpectraS3Request(final String notificationId) {
+        super(notificationId);
+
+        
+
+    }
+
+
+    @Override
+    public String getPath() {
+        return "/_rest_/job_creation_failed_notification_registration/" + this.getNotificationId().toString();
+    }
+
+    }

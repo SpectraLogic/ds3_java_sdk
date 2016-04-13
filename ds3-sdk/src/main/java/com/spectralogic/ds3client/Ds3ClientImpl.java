@@ -411,12 +411,12 @@ public class Ds3ClientImpl implements Ds3Client {
         return new GetJobSpectraS3Response(this.netClient.getResponse(request));
     }
     @Override
-    public GetJobsSpectraS3Response getJobsSpectraS3(GetJobsSpectraS3Request request) throws IOException, SignatureException {
-        return new GetJobsSpectraS3Response(this.netClient.getResponse(request));
+    public GetJobToReplicateSpectraS3Response getJobToReplicateSpectraS3(GetJobToReplicateSpectraS3Request request) throws IOException, SignatureException {
+        return new GetJobToReplicateSpectraS3Response(this.netClient.getResponse(request));
     }
     @Override
-    public GetPutJobToReplicateSpectraS3Response getPutJobToReplicateSpectraS3(GetPutJobToReplicateSpectraS3Request request) throws IOException, SignatureException {
-        return new GetPutJobToReplicateSpectraS3Response(this.netClient.getResponse(request));
+    public GetJobsSpectraS3Response getJobsSpectraS3(GetJobsSpectraS3Request request) throws IOException, SignatureException {
+        return new GetJobsSpectraS3Response(this.netClient.getResponse(request));
     }
     @Override
     public ModifyJobSpectraS3Response modifyJobSpectraS3(ModifyJobSpectraS3Request request) throws IOException, SignatureException {
@@ -433,6 +433,10 @@ public class Ds3ClientImpl implements Ds3Client {
     @Override
     public TruncateJobSpectraS3Response truncateJobSpectraS3(TruncateJobSpectraS3Request request) throws IOException, SignatureException {
         return new TruncateJobSpectraS3Response(this.netClient.getResponse(request));
+    }
+    @Override
+    public VerifySafeToCreatePutJobSpectraS3Response verifySafeToCreatePutJobSpectraS3(VerifySafeToCreatePutJobSpectraS3Request request) throws IOException, SignatureException {
+        return new VerifySafeToCreatePutJobSpectraS3Response(this.netClient.getResponse(request));
     }
     @Override
     public GetNodeSpectraS3Response getNodeSpectraS3(GetNodeSpectraS3Request request) throws IOException, SignatureException {
@@ -457,6 +461,10 @@ public class Ds3ClientImpl implements Ds3Client {
     @Override
     public PutJobCreatedNotificationRegistrationSpectraS3Response putJobCreatedNotificationRegistrationSpectraS3(PutJobCreatedNotificationRegistrationSpectraS3Request request) throws IOException, SignatureException {
         return new PutJobCreatedNotificationRegistrationSpectraS3Response(this.netClient.getResponse(request));
+    }
+    @Override
+    public PutJobCreationFailedNotificationRegistrationSpectraS3Response putJobCreationFailedNotificationRegistrationSpectraS3(PutJobCreationFailedNotificationRegistrationSpectraS3Request request) throws IOException, SignatureException {
+        return new PutJobCreationFailedNotificationRegistrationSpectraS3Response(this.netClient.getResponse(request));
     }
     @Override
     public PutObjectCachedNotificationRegistrationSpectraS3Response putObjectCachedNotificationRegistrationSpectraS3(PutObjectCachedNotificationRegistrationSpectraS3Request request) throws IOException, SignatureException {
@@ -501,6 +509,10 @@ public class Ds3ClientImpl implements Ds3Client {
     @Override
     public DeleteJobCreatedNotificationRegistrationSpectraS3Response deleteJobCreatedNotificationRegistrationSpectraS3(DeleteJobCreatedNotificationRegistrationSpectraS3Request request) throws IOException, SignatureException {
         return new DeleteJobCreatedNotificationRegistrationSpectraS3Response(this.netClient.getResponse(request));
+    }
+    @Override
+    public DeleteJobCreationFailedNotificationRegistrationSpectraS3Response deleteJobCreationFailedNotificationRegistrationSpectraS3(DeleteJobCreationFailedNotificationRegistrationSpectraS3Request request) throws IOException, SignatureException {
+        return new DeleteJobCreationFailedNotificationRegistrationSpectraS3Response(this.netClient.getResponse(request));
     }
     @Override
     public DeleteObjectCachedNotificationRegistrationSpectraS3Response deleteObjectCachedNotificationRegistrationSpectraS3(DeleteObjectCachedNotificationRegistrationSpectraS3Request request) throws IOException, SignatureException {
@@ -557,6 +569,14 @@ public class Ds3ClientImpl implements Ds3Client {
     @Override
     public GetJobCreatedNotificationRegistrationsSpectraS3Response getJobCreatedNotificationRegistrationsSpectraS3(GetJobCreatedNotificationRegistrationsSpectraS3Request request) throws IOException, SignatureException {
         return new GetJobCreatedNotificationRegistrationsSpectraS3Response(this.netClient.getResponse(request));
+    }
+    @Override
+    public GetJobCreationFailedNotificationRegistrationSpectraS3Response getJobCreationFailedNotificationRegistrationSpectraS3(GetJobCreationFailedNotificationRegistrationSpectraS3Request request) throws IOException, SignatureException {
+        return new GetJobCreationFailedNotificationRegistrationSpectraS3Response(this.netClient.getResponse(request));
+    }
+    @Override
+    public GetJobCreationFailedNotificationRegistrationsSpectraS3Response getJobCreationFailedNotificationRegistrationsSpectraS3(GetJobCreationFailedNotificationRegistrationsSpectraS3Request request) throws IOException, SignatureException {
+        return new GetJobCreationFailedNotificationRegistrationsSpectraS3Response(this.netClient.getResponse(request));
     }
     @Override
     public GetObjectCachedNotificationRegistrationSpectraS3Response getObjectCachedNotificationRegistrationSpectraS3(GetObjectCachedNotificationRegistrationSpectraS3Request request) throws IOException, SignatureException {

@@ -16,11 +16,12 @@
 // This code is auto-generated, do not modify
 package com.spectralogic.ds3client.commands.spectrads3.notifications;
 
-import com.spectralogic.ds3client.commands.interfaces.AbstractGetNotificationRequest;
+import com.spectralogic.ds3client.networking.HttpVerb;
+import com.spectralogic.ds3client.commands.interfaces.AbstractRequest;
 import java.util.UUID;
 import com.google.common.net.UrlEscapers;
 
-public class GetJobCompletedNotificationRegistrationsSpectraS3Request extends AbstractGetNotificationRequest {
+public class GetJobCompletedNotificationRegistrationsSpectraS3Request extends AbstractRequest {
 
     // Variables
     
@@ -36,18 +37,8 @@ public class GetJobCompletedNotificationRegistrationsSpectraS3Request extends Ab
 
     // Constructor
     
-    public GetJobCompletedNotificationRegistrationsSpectraS3Request(final UUID notificationId) {
-        super(notificationId);
-
+    public GetJobCompletedNotificationRegistrationsSpectraS3Request() {
         
-
-    }
-
-    public GetJobCompletedNotificationRegistrationsSpectraS3Request(final String notificationId) {
-        super(notificationId);
-
-        
-
     }
 
     public GetJobCompletedNotificationRegistrationsSpectraS3Request withLastPage(final boolean lastPage) {
@@ -98,10 +89,14 @@ public class GetJobCompletedNotificationRegistrationsSpectraS3Request extends Ab
 
 
     @Override
-    public String getPath() {
-        return "/_rest_/job_completed_notification_registration/" + this.getNotificationId().toString();
+    public HttpVerb getVerb() {
+        return HttpVerb.GET;
     }
 
+    @Override
+    public String getPath() {
+        return "/_rest_/job_completed_notification_registration";
+    }
     
     public boolean getLastPage() {
         return this.lastPage;

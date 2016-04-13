@@ -32,6 +32,8 @@ public class PutBulkJobSpectraS3Request extends BulkRequest {
     
     private boolean aggregating;
 
+    private boolean force;
+
     private boolean ignoreNamingConflicts;
 
     private boolean minimizeSpanningAcrossMedia;
@@ -49,6 +51,16 @@ public class PutBulkJobSpectraS3Request extends BulkRequest {
     public PutBulkJobSpectraS3Request withAggregating(final boolean aggregating) {
         this.aggregating = aggregating;
         this.updateQueryParam("aggregating", aggregating);
+        return this;
+    }
+
+    public PutBulkJobSpectraS3Request withForce(final boolean force) {
+        this.force = force;
+        if (this.force) {
+            this.getQueryParams().put("force", null);
+        } else {
+            this.getQueryParams().remove("force");
+        }
         return this;
     }
 
@@ -93,6 +105,11 @@ public class PutBulkJobSpectraS3Request extends BulkRequest {
     
     public boolean getAggregating() {
         return this.aggregating;
+    }
+
+
+    public boolean getForce() {
+        return this.force;
     }
 
 

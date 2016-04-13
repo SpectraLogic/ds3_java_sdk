@@ -30,8 +30,6 @@ public class GetObjectsSpectraS3Request extends AbstractRequest {
 
     private String folder;
 
-    private boolean includePhysicalPlacement;
-
     private boolean lastPage;
 
     private boolean latest;
@@ -63,16 +61,6 @@ public class GetObjectsSpectraS3Request extends AbstractRequest {
     public GetObjectsSpectraS3Request withFolder(final String folder) {
         this.folder = folder;
         this.updateQueryParam("folder", folder);
-        return this;
-    }
-
-    public GetObjectsSpectraS3Request withIncludePhysicalPlacement(final boolean includePhysicalPlacement) {
-        this.includePhysicalPlacement = includePhysicalPlacement;
-        if (this.includePhysicalPlacement) {
-            this.getQueryParams().put("include_physical_placement", null);
-        } else {
-            this.getQueryParams().remove("include_physical_placement");
-        }
         return this;
     }
 
@@ -152,11 +140,6 @@ public class GetObjectsSpectraS3Request extends AbstractRequest {
 
     public String getFolder() {
         return this.folder;
-    }
-
-
-    public boolean getIncludePhysicalPlacement() {
-        return this.includePhysicalPlacement;
     }
 
 
