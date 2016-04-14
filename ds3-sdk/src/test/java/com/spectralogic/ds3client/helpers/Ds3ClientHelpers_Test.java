@@ -133,10 +133,10 @@ public class Ds3ClientHelpers_Test {
         });
     }
     
-    @Test
+    @Test //failing
     public void testWriteObjects() throws SignatureException, IOException, XmlProcessingException, ParseException {
         final Ds3Client ds3Client = buildDs3ClientForBulk();
-        
+
         final PutBulkJobSpectraS3Response bulkPutResponse = buildBulkPutResponse();
         Mockito.when(ds3Client.putBulkJobSpectraS3(Mockito.any(PutBulkJobSpectraS3Request.class))).thenReturn(bulkPutResponse);
         
@@ -170,14 +170,16 @@ public class Ds3ClientHelpers_Test {
         channelMap.put("bar", channelWithContents("bar contents"));
         channelMap.put("baz", channelWithContents("baz contents"));
         
-        final Stopwatch stopwatch = Stopwatch.createStarted();
+        final Stopwatch stopwatch = Stopwatch.createUnstarted();
+        stopwatch.start();
         job.transfer(new ObjectChannelBuilder() {
             @Override
             public SeekableByteChannel buildChannel(final String key) throws IOException {
                 return channelMap.get(key);
             }
         });
-        assertThat(stopwatch.stop().elapsed(TimeUnit.MILLISECONDS), is(both(greaterThan(1000L)).and(lessThan(1250L))));
+        stopwatch.stop();
+        assertThat(stopwatch.elapsed(TimeUnit.MILLISECONDS), is(both(greaterThan(1000L)).and(lessThan(1250L))));
     }
     
     @Test
