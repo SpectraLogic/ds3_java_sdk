@@ -89,14 +89,16 @@ public class Ds3ClientHelpers_Test {
         channelMap.put("bar", new ByteArraySeekableByteChannel());
         channelMap.put("baz", new ByteArraySeekableByteChannel());
         
-        final Stopwatch stopwatch = Stopwatch.createStarted();
+        final Stopwatch stopwatch = Stopwatch.createUnstarted();
+        stopwatch.start();
         job.transfer(new ObjectChannelBuilder() {
             @Override
             public SeekableByteChannel buildChannel(final String key) throws IOException {
                 return channelMap.get(key);
             }
         });
-        assertThat(stopwatch.stop().elapsed(TimeUnit.MILLISECONDS), is(both(greaterThan(1000L)).and(lessThan(1250L))));
+        stopwatch.stop();
+        assertThat(stopwatch.elapsed(TimeUnit.MILLISECONDS), is(both(greaterThan(1000L)).and(lessThan(1250L))));
         
         for (final Map.Entry<String, ByteArraySeekableByteChannel> channelEntry : channelMap.entrySet()) {
             assertThat(channelEntry.getValue().toString(), is(channelEntry.getKey() + " contents"));
