@@ -133,7 +133,7 @@ public class Ds3ClientHelpers_Test {
         });
     }
     
-    @Test //failing
+    @Test
     public void testWriteObjects() throws SignatureException, IOException, XmlProcessingException, ParseException {
         final Ds3Client ds3Client = buildDs3ClientForBulk();
 
