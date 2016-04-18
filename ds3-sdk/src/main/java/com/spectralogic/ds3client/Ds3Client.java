@@ -369,6 +369,14 @@ public interface Ds3Client extends Closeable {
     @Resource("JOB_CHUNK")
     AllocateJobChunkSpectraS3Response allocateJobChunkSpectraS3(AllocateJobChunkSpectraS3Request request)
             throws IOException, SignatureException;
+    @Action("DELETE")
+    @Resource("ACTIVE_JOB")
+    CancelActiveJobSpectraS3Response cancelActiveJobSpectraS3(CancelActiveJobSpectraS3Request request)
+            throws IOException, SignatureException;
+    @Action("BULK_DELETE")
+    @Resource("ACTIVE_JOB")
+    CancelAllActiveJobsSpectraS3Response cancelAllActiveJobsSpectraS3(CancelAllActiveJobsSpectraS3Request request)
+            throws IOException, SignatureException;
     @Action("BULK_DELETE")
     @Resource("JOB")
     CancelAllJobsSpectraS3Response cancelAllJobsSpectraS3(CancelAllJobsSpectraS3Request request)
@@ -462,6 +470,11 @@ public interface Ds3Client extends Closeable {
             throws IOException, SignatureException;
     @ResponsePayloadModel("MasterObjectList")
     @Action("MODIFY")
+    @Resource("ACTIVE_JOB")
+    ModifyActiveJobSpectraS3Response modifyActiveJobSpectraS3(ModifyActiveJobSpectraS3Request request)
+            throws IOException, SignatureException;
+    @ResponsePayloadModel("MasterObjectList")
+    @Action("MODIFY")
     @Resource("JOB")
     ModifyJobSpectraS3Response modifyJobSpectraS3(ModifyJobSpectraS3Request request)
             throws IOException, SignatureException;
@@ -469,6 +482,14 @@ public interface Ds3Client extends Closeable {
     @Action("MODIFY")
     @Resource("BUCKET")
     ReplicatePutJobSpectraS3Response replicatePutJobSpectraS3(ReplicatePutJobSpectraS3Request request)
+            throws IOException, SignatureException;
+    @Action("DELETE")
+    @Resource("ACTIVE_JOB")
+    TruncateActiveJobSpectraS3Response truncateActiveJobSpectraS3(TruncateActiveJobSpectraS3Request request)
+            throws IOException, SignatureException;
+    @Action("BULK_DELETE")
+    @Resource("ACTIVE_JOB")
+    TruncateAllActiveJobsSpectraS3Response truncateAllActiveJobsSpectraS3(TruncateAllActiveJobsSpectraS3Request request)
             throws IOException, SignatureException;
     @Action("BULK_DELETE")
     @Resource("JOB")

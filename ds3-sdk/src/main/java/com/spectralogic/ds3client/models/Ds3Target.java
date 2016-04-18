@@ -59,6 +59,9 @@ public class Ds3Target {
     @JsonProperty("Name")
     private String name;
 
+    @JsonProperty("PermitGoingOutOfSync")
+    private boolean permitGoingOutOfSync;
+
     @JsonProperty("Quiesced")
     private Quiesced quiesced;
 
@@ -171,6 +174,15 @@ public class Ds3Target {
 
     public void setName(final String name) {
         this.name = name;
+    }
+
+
+    public boolean getPermitGoingOutOfSync() {
+        return this.permitGoingOutOfSync;
+    }
+
+    public void setPermitGoingOutOfSync(final boolean permitGoingOutOfSync) {
+        this.permitGoingOutOfSync = permitGoingOutOfSync;
     }
 
 

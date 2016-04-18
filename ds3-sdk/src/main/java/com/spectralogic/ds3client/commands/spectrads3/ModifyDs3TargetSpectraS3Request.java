@@ -50,6 +50,8 @@ public class ModifyDs3TargetSpectraS3Request extends AbstractRequest {
 
     private String name;
 
+    private boolean permitGoingOutOfSync;
+
     private Quiesced quiesced;
 
     private String replicatedUserDefaultDataPolicy;
@@ -118,6 +120,12 @@ public class ModifyDs3TargetSpectraS3Request extends AbstractRequest {
     public ModifyDs3TargetSpectraS3Request withName(final String name) {
         this.name = name;
         this.updateQueryParam("name", name);
+        return this;
+    }
+
+    public ModifyDs3TargetSpectraS3Request withPermitGoingOutOfSync(final boolean permitGoingOutOfSync) {
+        this.permitGoingOutOfSync = permitGoingOutOfSync;
+        this.updateQueryParam("permit_going_out_of_sync", permitGoingOutOfSync);
         return this;
     }
 
@@ -196,6 +204,11 @@ public class ModifyDs3TargetSpectraS3Request extends AbstractRequest {
 
     public String getName() {
         return this.name;
+    }
+
+
+    public boolean getPermitGoingOutOfSync() {
+        return this.permitGoingOutOfSync;
     }
 
 
