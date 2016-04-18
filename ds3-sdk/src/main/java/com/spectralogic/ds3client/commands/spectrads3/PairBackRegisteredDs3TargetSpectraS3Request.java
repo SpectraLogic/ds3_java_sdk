@@ -49,6 +49,8 @@ public class PairBackRegisteredDs3TargetSpectraS3Request extends AbstractRequest
 
     private String name;
 
+    private boolean permitGoingOutOfSync;
+
     private String replicatedUserDefaultDataPolicy;
 
     // Constructor
@@ -117,6 +119,12 @@ public class PairBackRegisteredDs3TargetSpectraS3Request extends AbstractRequest
     public PairBackRegisteredDs3TargetSpectraS3Request withName(final String name) {
         this.name = name;
         this.updateQueryParam("name", name);
+        return this;
+    }
+
+    public PairBackRegisteredDs3TargetSpectraS3Request withPermitGoingOutOfSync(final boolean permitGoingOutOfSync) {
+        this.permitGoingOutOfSync = permitGoingOutOfSync;
+        this.updateQueryParam("permit_going_out_of_sync", permitGoingOutOfSync);
         return this;
     }
 
@@ -189,6 +197,11 @@ public class PairBackRegisteredDs3TargetSpectraS3Request extends AbstractRequest
 
     public String getName() {
         return this.name;
+    }
+
+
+    public boolean getPermitGoingOutOfSync() {
+        return this.permitGoingOutOfSync;
     }
 
 

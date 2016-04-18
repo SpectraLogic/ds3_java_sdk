@@ -343,6 +343,14 @@ public class Ds3ClientImpl implements Ds3Client {
         return new AllocateJobChunkSpectraS3Response(this.netClient.getResponse(request));
     }
     @Override
+    public CancelActiveJobSpectraS3Response cancelActiveJobSpectraS3(CancelActiveJobSpectraS3Request request) throws IOException, SignatureException {
+        return new CancelActiveJobSpectraS3Response(this.netClient.getResponse(request));
+    }
+    @Override
+    public CancelAllActiveJobsSpectraS3Response cancelAllActiveJobsSpectraS3(CancelAllActiveJobsSpectraS3Request request) throws IOException, SignatureException {
+        return new CancelAllActiveJobsSpectraS3Response(this.netClient.getResponse(request));
+    }
+    @Override
     public CancelAllJobsSpectraS3Response cancelAllJobsSpectraS3(CancelAllJobsSpectraS3Request request) throws IOException, SignatureException {
         return new CancelAllJobsSpectraS3Response(this.netClient.getResponse(request));
     }
@@ -419,12 +427,24 @@ public class Ds3ClientImpl implements Ds3Client {
         return new GetJobsSpectraS3Response(this.netClient.getResponse(request));
     }
     @Override
+    public ModifyActiveJobSpectraS3Response modifyActiveJobSpectraS3(ModifyActiveJobSpectraS3Request request) throws IOException, SignatureException {
+        return new ModifyActiveJobSpectraS3Response(this.netClient.getResponse(request));
+    }
+    @Override
     public ModifyJobSpectraS3Response modifyJobSpectraS3(ModifyJobSpectraS3Request request) throws IOException, SignatureException {
         return new ModifyJobSpectraS3Response(this.netClient.getResponse(request));
     }
     @Override
     public ReplicatePutJobSpectraS3Response replicatePutJobSpectraS3(ReplicatePutJobSpectraS3Request request) throws IOException, SignatureException {
         return new ReplicatePutJobSpectraS3Response(this.netClient.getResponse(request));
+    }
+    @Override
+    public TruncateActiveJobSpectraS3Response truncateActiveJobSpectraS3(TruncateActiveJobSpectraS3Request request) throws IOException, SignatureException {
+        return new TruncateActiveJobSpectraS3Response(this.netClient.getResponse(request));
+    }
+    @Override
+    public TruncateAllActiveJobsSpectraS3Response truncateAllActiveJobsSpectraS3(TruncateAllActiveJobsSpectraS3Request request) throws IOException, SignatureException {
+        return new TruncateAllActiveJobsSpectraS3Response(this.netClient.getResponse(request));
     }
     @Override
     public TruncateAllJobsSpectraS3Response truncateAllJobsSpectraS3(TruncateAllJobsSpectraS3Request request) throws IOException, SignatureException {

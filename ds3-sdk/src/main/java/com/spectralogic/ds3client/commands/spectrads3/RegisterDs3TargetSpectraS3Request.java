@@ -47,6 +47,8 @@ public class RegisterDs3TargetSpectraS3Request extends AbstractRequest {
 
     private TargetReadPreference defaultReadPreference;
 
+    private boolean permitGoingOutOfSync;
+
     private String replicatedUserDefaultDataPolicy;
 
     // Constructor
@@ -96,6 +98,12 @@ public class RegisterDs3TargetSpectraS3Request extends AbstractRequest {
     public RegisterDs3TargetSpectraS3Request withDefaultReadPreference(final TargetReadPreference defaultReadPreference) {
         this.defaultReadPreference = defaultReadPreference;
         this.updateQueryParam("default_read_preference", defaultReadPreference);
+        return this;
+    }
+
+    public RegisterDs3TargetSpectraS3Request withPermitGoingOutOfSync(final boolean permitGoingOutOfSync) {
+        this.permitGoingOutOfSync = permitGoingOutOfSync;
+        this.updateQueryParam("permit_going_out_of_sync", permitGoingOutOfSync);
         return this;
     }
 
@@ -163,6 +171,11 @@ public class RegisterDs3TargetSpectraS3Request extends AbstractRequest {
 
     public TargetReadPreference getDefaultReadPreference() {
         return this.defaultReadPreference;
+    }
+
+
+    public boolean getPermitGoingOutOfSync() {
+        return this.permitGoingOutOfSync;
     }
 
 

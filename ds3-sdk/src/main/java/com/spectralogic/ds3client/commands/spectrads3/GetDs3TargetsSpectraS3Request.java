@@ -53,6 +53,8 @@ public class GetDs3TargetsSpectraS3Request extends AbstractRequest {
 
     private String pageStartMarker;
 
+    private boolean permitGoingOutOfSync;
+
     private Quiesced quiesced;
 
     private TargetState state;
@@ -145,6 +147,12 @@ public class GetDs3TargetsSpectraS3Request extends AbstractRequest {
         return this;
     }
 
+    public GetDs3TargetsSpectraS3Request withPermitGoingOutOfSync(final boolean permitGoingOutOfSync) {
+        this.permitGoingOutOfSync = permitGoingOutOfSync;
+        this.updateQueryParam("permit_going_out_of_sync", permitGoingOutOfSync);
+        return this;
+    }
+
     public GetDs3TargetsSpectraS3Request withQuiesced(final Quiesced quiesced) {
         this.quiesced = quiesced;
         this.updateQueryParam("quiesced", quiesced);
@@ -225,6 +233,11 @@ public class GetDs3TargetsSpectraS3Request extends AbstractRequest {
 
     public String getPageStartMarker() {
         return this.pageStartMarker;
+    }
+
+
+    public boolean getPermitGoingOutOfSync() {
+        return this.permitGoingOutOfSync;
     }
 
 
