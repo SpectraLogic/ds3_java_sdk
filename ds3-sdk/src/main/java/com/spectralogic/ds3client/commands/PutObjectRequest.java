@@ -45,7 +45,7 @@ public class PutObjectRequest extends AbstractRequest {
     private ChecksumType.Type checksumType = ChecksumType.Type.NONE;
 
     // Constructor
-    /** @deprecated use {@link #CreateObjectRequest(String, String, SeekableByteChannel, UUID, long, long)} instead */
+    /** @deprecated use {@link #PutObjectRequest(String, String, SeekableByteChannel, UUID, long, long)} instead */
     @Deprecated
     public PutObjectRequest(final String bucketName, final String objectName, final SeekableByteChannel channel, final long size) {
         this.bucketName = bucketName;
