@@ -34,7 +34,7 @@ import static org.junit.Assert.assertThat;
 public class Ds3Targets_Test {
 
     private static Ds3Client client;
-    private static final String TEST_ENV_NAME = "group_management_test";
+    private static final String TEST_ENV_NAME = "ds3_targets_test";
     private static TempStorageIds envStorageIds;
     private static UUID dataPolicyId;
 
