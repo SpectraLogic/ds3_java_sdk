@@ -41,7 +41,7 @@ public class Ds3Targets_Test {
     final String targetClientURL = "sm4u-26.eng.sldomain.com";
     final static String targetClientName = "sm4u-26";
     final String targetClientAccessKey = "c3BlY3RyYQ==";
-    final String targetClientSecretKey = "YRjsJjsh";
+    final String targetClientSecretKey = "RURZSaa7";
     private static String targetUUIDString;
 
     @BeforeClass

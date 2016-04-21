@@ -47,7 +47,7 @@ public class ReplicationExample {
             final String targetClientURL = "sm4u-26.eng.sldomain.com";
             final String targetClientName = "sm4u-26";
             final String targetClientAccessKey = "c3BlY3RyYQ==";
-            final String targetClientSecretKey = "YRjsJjsh";
+            final String targetClientSecretKey = "RURZSaa7";
 
             // The bucket that we will be writing to
             final String date = new Date(System.currentTimeMillis()).toString();
