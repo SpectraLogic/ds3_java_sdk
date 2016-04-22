@@ -53,10 +53,11 @@ public class GetJobManagement_Test {
     private static final String BUCKET_NAME = "Get_Job_Management_Test";
     private static final String TEST_ENV_NAME = "GetJobManagement_Test";
     private static TempStorageIds envStorageIds;
+    private static UUID dataPolicyId;
 
     @BeforeClass
     public static void startup() throws Exception {
-        final UUID dataPolicyId = TempStorageUtil.setupDataPolicy(TEST_ENV_NAME, true, ChecksumType.Type.MD5, client);
+        dataPolicyId = TempStorageUtil.setupDataPolicy(TEST_ENV_NAME, false, ChecksumType.Type.MD5, client);
         envStorageIds = TempStorageUtil.setup(TEST_ENV_NAME, dataPolicyId, client);
         HELPERS.ensureBucketExists(BUCKET_NAME);
         putBeowulf();
