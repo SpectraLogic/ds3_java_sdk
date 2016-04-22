@@ -59,13 +59,15 @@ public final class ABMTestHelper {
         if (checksumType == null) {
             //Create the data policy with versioning
             return client.putDataPolicySpectraS3(new PutDataPolicySpectraS3Request(dataPolicyName)
-                    .withVersioning(versioningLevel).withAlwaysForcePutJobCreation(true));
+                    .withVersioning(versioningLevel)
+                    .withAlwaysForcePutJobCreation(true));
         }
         //Create the data policy with versioning and checksum
         return client.putDataPolicySpectraS3(new PutDataPolicySpectraS3Request(dataPolicyName)
                 .withVersioning(versioningLevel)
                 .withEndToEndCrcRequired(true)
-                .withChecksumType(checksumType).withAlwaysForcePutJobCreation(true));
+                .withChecksumType(checksumType)
+                .withAlwaysForcePutJobCreation(true));
     }
 
     /**
