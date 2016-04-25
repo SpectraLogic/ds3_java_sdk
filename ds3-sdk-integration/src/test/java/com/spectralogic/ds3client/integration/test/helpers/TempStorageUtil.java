@@ -86,7 +86,9 @@ public class TempStorageUtil {
         final PutDataPolicySpectraS3Response dataPolicyResponse = client.putDataPolicySpectraS3(
                 new PutDataPolicySpectraS3Request(testSetName + DATA_POLICY_NAME)
                         .withEndToEndCrcRequired(withEndToEndCrcRequired)
-                        .withChecksumType(checksumType));
+                        .withChecksumType(checksumType).withAlwaysForcePutJobCreation(true));
+        client.modifyUserSpectraS3(new ModifyUserSpectraS3Request("spectra")
+                .withDefaultDataPolicyId(dataPolicyResponse.getDataPolicyResult().getId()));
         return dataPolicyResponse.getDataPolicyResult().getId();
     }
 }
