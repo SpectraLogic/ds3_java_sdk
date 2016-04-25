@@ -46,7 +46,7 @@ public class Ds3InputStreamEntity extends InputStreamEntity {
     @Override
     public void writeTo(final OutputStream outStream) throws IOException {
         final long startTime = PerformanceUtils.getCurrentTime();
-        final long totalBytes = IOUtils.copy(this.getContent(), outStream, bufferSize);
+        final long totalBytes = IOUtils.copy(this.getContent(), outStream, bufferSize, path, true);
         final long endTime = PerformanceUtils.getCurrentTime();
 
         if (this.getContentLength() != -1 && totalBytes != this.getContentLength()) {
