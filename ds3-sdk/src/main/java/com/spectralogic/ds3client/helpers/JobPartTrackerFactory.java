@@ -19,7 +19,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Maps.EntryTransformer;
-import com.spectralogic.ds3client.models.bulk.BulkObject;
+import com.spectralogic.ds3client.models.BulkObject;
 
 import javax.annotation.Nonnull;
 import java.util.Collection;

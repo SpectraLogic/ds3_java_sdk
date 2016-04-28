@@ -15,10 +15,12 @@
 
 package com.spectralogic.ds3client.helpers;
 
-import com.spectralogic.ds3client.commands.*;
-import com.spectralogic.ds3client.models.bulk.*;
+import com.spectralogic.ds3client.commands.GetObjectRequest;
+import com.spectralogic.ds3client.commands.GetObjectResponse;
+import com.spectralogic.ds3client.commands.HeadBucketResponse;
+import com.spectralogic.ds3client.commands.spectrads3.*;
+import com.spectralogic.ds3client.models.*;
 import com.spectralogic.ds3client.utils.ByteArraySeekableByteChannel;
-
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
@@ -27,55 +29,59 @@ import java.io.Writer;
 import java.nio.channels.Channels;
 import java.nio.channels.SeekableByteChannel;
 import java.nio.channels.WritableByteChannel;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.List;
+import java.util.TimeZone;
 import java.util.UUID;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class ResponseBuilders {
-    public static BulkGetResponse bulkGetResponse(final MasterObjectList masterObjectList) {
-        final BulkGetResponse response = mock(BulkGetResponse.class);
+    public static GetBulkJobSpectraS3Response bulkGetResponse(final MasterObjectList masterObjectList) {
+        final GetBulkJobSpectraS3Response response = mock(GetBulkJobSpectraS3Response.class);
         when(response.getResult()).thenReturn(masterObjectList);
         return response;
     }
 
-    public static BulkPutResponse bulkPutResponse(final MasterObjectList masterObjectList) {
-        final BulkPutResponse response = mock(BulkPutResponse.class);
+    public static PutBulkJobSpectraS3Response bulkPutResponse(final MasterObjectList masterObjectList) {
+        final PutBulkJobSpectraS3Response response = mock(PutBulkJobSpectraS3Response.class);
         when(response.getResult()).thenReturn(masterObjectList);
         return response;
     }
 
-    public static ModifyJobResponse modifyJobResponse(final MasterObjectList masterObjectList) {
-        final ModifyJobResponse response = mock(ModifyJobResponse.class);
-        when(response.getMasterObjectList()).thenReturn(masterObjectList);
+    public static ModifyJobSpectraS3Response modifyJobResponse(final MasterObjectList masterObjectList) {
+        final ModifyJobSpectraS3Response response = mock(ModifyJobSpectraS3Response.class);
+        when(response.getMasterObjectListResult()).thenReturn(masterObjectList);
         return response;
     }
 
-    public static GetAvailableJobChunksResponse availableJobChunks(final MasterObjectList masterObjectList) {
-        final GetAvailableJobChunksResponse response = mock(GetAvailableJobChunksResponse.class);
-        when(response.getStatus()).thenReturn(GetAvailableJobChunksResponse.Status.AVAILABLE);
-        when(response.getMasterObjectList()).thenReturn(masterObjectList);
+    public static GetJobChunksReadyForClientProcessingSpectraS3Response availableJobChunks(final MasterObjectList masterObjectList) {
+        final GetJobChunksReadyForClientProcessingSpectraS3Response response = mock(GetJobChunksReadyForClientProcessingSpectraS3Response.class);
+        when(response.getStatus()).thenReturn(GetJobChunksReadyForClientProcessingSpectraS3Response.Status.AVAILABLE);
+        when(response.getMasterObjectListResult()).thenReturn(masterObjectList);
         return response;
     }
     
-    public static GetAvailableJobChunksResponse retryGetAvailableAfter(final int retryAfterInSeconds) {
-        final GetAvailableJobChunksResponse response = mock(GetAvailableJobChunksResponse.class);
-        when(response.getStatus()).thenReturn(GetAvailableJobChunksResponse.Status.RETRYLATER);
+    public static GetJobChunksReadyForClientProcessingSpectraS3Response retryGetAvailableAfter(final int retryAfterInSeconds) {
+        final GetJobChunksReadyForClientProcessingSpectraS3Response response = mock(GetJobChunksReadyForClientProcessingSpectraS3Response.class);
+        when(response.getStatus()).thenReturn(GetJobChunksReadyForClientProcessingSpectraS3Response.Status.RETRYLATER);
         when(response.getRetryAfterSeconds()).thenReturn(retryAfterInSeconds);
         return response;
     }
     
-    public static AllocateJobChunkResponse allocated(final Objects chunk) {
-        final AllocateJobChunkResponse response = mock(AllocateJobChunkResponse.class);
-        when(response.getStatus()).thenReturn(AllocateJobChunkResponse.Status.ALLOCATED);
-        when(response.getObjects()).thenReturn(chunk);
+    public static AllocateJobChunkSpectraS3Response allocated(final Objects chunk) {
+        final AllocateJobChunkSpectraS3Response response = mock(AllocateJobChunkSpectraS3Response.class);
+        when(response.getStatus()).thenReturn(AllocateJobChunkSpectraS3Response.Status.ALLOCATED);
+        when(response.getObjectsResult()).thenReturn(chunk);
         return response;
     }
     
-    public static AllocateJobChunkResponse retryAllocateLater(final int retryAfterInSeconds) {
-        final AllocateJobChunkResponse response = mock(AllocateJobChunkResponse.class);
-        when(response.getStatus()).thenReturn(AllocateJobChunkResponse.Status.RETRYLATER);
+    public static AllocateJobChunkSpectraS3Response retryAllocateLater(final int retryAfterInSeconds) {
+        final AllocateJobChunkSpectraS3Response response = mock(AllocateJobChunkSpectraS3Response.class);
+        when(response.getStatus()).thenReturn(AllocateJobChunkSpectraS3Response.Status.RETRYLATER);
         when(response.getRetryAfterSeconds()).thenReturn(retryAfterInSeconds);
         return response;
     }
@@ -83,18 +89,18 @@ public class ResponseBuilders {
     public static MasterObjectList jobResponse(
             final UUID jobId,
             final String bucketName,
-            final RequestType requestType,
+            final JobRequestType requestType,
             final long originalSizeInBytes,
             final long cachedSizeInBytes,
             final long completedSizeInBytes,
-            final ChunkClientProcessingOrderGuarantee chunkClientProcessingOrderGuarantee,
+            final JobChunkClientProcessingOrderGuarantee chunkClientProcessingOrderGuarantee,
             final Priority priority,
             final String startDate,
             final UUID userId,
             final String userName,
             final WriteOptimization writeOptimization,
-            final List<Node> nodes,
-            final List<Objects> objects) {
+            final List<Ds3Node> nodes,
+            final List<Objects> objects) throws ParseException {
         final MasterObjectList masterObjectList = new MasterObjectList();
         masterObjectList.setJobId(jobId);
         masterObjectList.setBucketName(bucketName);
@@ -104,7 +110,11 @@ public class ResponseBuilders {
         masterObjectList.setCompletedSizeInBytes(completedSizeInBytes);
         masterObjectList.setChunkClientProcessingOrderGuarantee(chunkClientProcessingOrderGuarantee);
         masterObjectList.setPriority(priority);
-        masterObjectList.setStartDate(startDate);
+
+        final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+        dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+        masterObjectList.setStartDate(dateFormat.parse(startDate));
+
         masterObjectList.setUserId(userId);
         masterObjectList.setUserName(userName);
         masterObjectList.setWriteOptimization(writeOptimization);
@@ -113,28 +123,28 @@ public class ResponseBuilders {
         return masterObjectList;
     }
     
-    public static Node basicNode(final UUID nodeId, final String endpoint) {
+    public static Ds3Node basicNode(final UUID nodeId, final String endpoint) {
         return node(nodeId, endpoint, 80, 443);
     }
 
-    public static Node node(
+    public static Ds3Node node(
             final UUID nodeId,
             final String endpoint,
             final int httpPort,
             final int httpsPort) {
-        final Node node = new Node();
+        final Ds3Node node = new Ds3Node();
         node.setId(nodeId);
-        node.setEndpoint(endpoint);
+        node.setEndPoint(endpoint);
         node.setHttpPort(httpPort);
         node.setHttpsPort(httpsPort);
         return node;
     }
 
     public static Objects chunk(
-            final long chunkNumber,
+            final int chunkNumber,
             final UUID chunkId,
             final UUID nodeId,
-            final BulkObject ... chunkList) {
+            final BulkObject... chunkList) {
         final Objects objects = new Objects();
         objects.setChunkNumber(chunkNumber);
         objects.setChunkId(chunkId);
@@ -160,7 +170,7 @@ public class ResponseBuilders {
         return new Answer<GetObjectResponse>() {
             @Override
             public GetObjectResponse answer(final InvocationOnMock invocation) throws Throwable {
-                writeToChannel(result, ((GetObjectRequest)invocation.getArguments()[0]).getDestinationChannel());
+                writeToChannel(result, ((GetObjectRequest)invocation.getArguments()[0]).getChannel());
                 return mock(GetObjectResponse.class);
             }
         };

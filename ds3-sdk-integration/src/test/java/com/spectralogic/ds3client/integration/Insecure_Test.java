@@ -25,7 +25,8 @@ import org.junit.Test;
 import java.io.IOException;
 import java.security.SignatureException;
 
-import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 
 /**
@@ -38,12 +39,12 @@ public class Insecure_Test {
     private static Ds3Client client;
 
     @BeforeClass
-    public static void startup() {
+    public static void startup() throws IOException, SignatureException {
         client = Util.insecureFromEnv();
     }
 
     @AfterClass
-    public static void teardown() throws IOException {
+    public static void teardown() throws IOException, SignatureException {
         client.close();
     }
 

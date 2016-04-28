@@ -13,34 +13,45 @@
  * ****************************************************************************
  */
 
+// This code is auto-generated, do not modify
 package com.spectralogic.ds3client.commands;
 
-import com.spectralogic.ds3client.models.ListAllMyBucketsResult;
 import com.spectralogic.ds3client.networking.WebResponse;
-import com.spectralogic.ds3client.serializer.XmlOutput;
-
 import java.io.IOException;
+import com.spectralogic.ds3client.models.ListAllMyBucketsResult;
 import java.io.InputStream;
+import com.spectralogic.ds3client.serializer.XmlOutput;
+import com.spectralogic.ds3client.commands.interfaces.AbstractResponse;
 
 public class GetServiceResponse extends AbstractResponse {
 
-    private ListAllMyBucketsResult result;
+    private ListAllMyBucketsResult listAllMyBucketsResult;
 
     public GetServiceResponse(final WebResponse response) throws IOException {
         super(response);
     }
 
-    public ListAllMyBucketsResult getResult() {
-        return this.result;
-    }
-
     @Override
     protected void processResponse() throws IOException {
-        try (final WebResponse response = this.getResponse()) {
+        try {
             this.checkStatusCode(200);
-            try (final InputStream content = response.getResponseStream()) {
-                this.result = XmlOutput.fromXml(content, ListAllMyBucketsResult.class);
+
+            switch (this.getStatusCode()) {
+            case 200:
+                try (final InputStream content = getResponse().getResponseStream()) {
+                    this.listAllMyBucketsResult = XmlOutput.fromXml(content, ListAllMyBucketsResult.class);
+                }
+                break;
+            default:
+                assert false : "checkStatusCode should have made it impossible to reach this line.";
             }
+        } finally {
+            this.getResponse().close();
         }
     }
+
+    public ListAllMyBucketsResult getListAllMyBucketsResult() {
+        return this.listAllMyBucketsResult;
+    }
+
 }

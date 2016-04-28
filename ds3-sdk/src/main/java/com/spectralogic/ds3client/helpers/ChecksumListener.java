@@ -16,9 +16,9 @@
 package com.spectralogic.ds3client.helpers;
 
 
-import com.spectralogic.ds3client.models.Checksum;
-import com.spectralogic.ds3client.models.bulk.BulkObject;
+import com.spectralogic.ds3client.models.BulkObject;
+import com.spectralogic.ds3client.models.ChecksumType;
 
 public interface ChecksumListener {
-    void value(final BulkObject obj, final Checksum.Type type, final String checksum);
+    void value(final BulkObject obj, final ChecksumType.Type type, final String checksum);
 }

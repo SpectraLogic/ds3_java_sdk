@@ -15,21 +15,23 @@
 
 package com.spectralogic.ds3client.helpers.options;
 
-import com.spectralogic.ds3client.models.Checksum;
-import com.spectralogic.ds3client.models.bulk.Priority;
-import com.spectralogic.ds3client.models.bulk.WriteOptimization;
+import com.spectralogic.ds3client.models.Priority;
+import com.spectralogic.ds3client.models.ChecksumType;
+import com.spectralogic.ds3client.models.WriteOptimization;
 
 public class WriteJobOptions {
     private Priority priority;
     private WriteOptimization writeOptimization;
     private int maxUploadSize;
-    private Checksum.Type checksumType;
+    private ChecksumType.Type checksumType;
+    private boolean aggregating;
 
     private WriteJobOptions() {
         this.priority = null;
         this.writeOptimization = null;
         this.maxUploadSize = 0;
-        this.checksumType = Checksum.Type.NONE;
+        this.checksumType = ChecksumType.Type.NONE;
+        this.aggregating = false;
     }
 
     public static WriteJobOptions create() {
@@ -41,7 +43,7 @@ public class WriteJobOptions {
         return this;
     }
 
-    public int getMaxUploadSize() {
+    public long getMaxUploadSize() {
         return this.maxUploadSize;
     }
 
@@ -71,16 +73,29 @@ public class WriteJobOptions {
         this.priority = priority;
     }
 
-    public WriteJobOptions withChecksumType(final Checksum.Type checksumType) {
+    public WriteJobOptions withChecksumType(final ChecksumType.Type checksumType) {
         this.checksumType = checksumType;
         return this;
     }
 
-    public Checksum.Type getChecksumType() {
+    public ChecksumType.Type getChecksumType() {
         return checksumType;
     }
 
-    public void setChecksumType(final Checksum.Type checksumType) {
+    public void setChecksumType(final ChecksumType.Type checksumType) {
         this.checksumType = checksumType;
+    }
+
+    public WriteJobOptions withAggregating() {
+        this.aggregating = true;
+        return this;
+    }
+
+    public boolean isAggregating() {
+        return aggregating;
+    }
+
+    public void setAggregating(final boolean aggregating) {
+        this.aggregating = aggregating;
     }
 }

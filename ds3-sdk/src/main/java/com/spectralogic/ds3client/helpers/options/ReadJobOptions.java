@@ -15,11 +15,13 @@
 
 package com.spectralogic.ds3client.helpers.options;
 
-import com.spectralogic.ds3client.models.bulk.Priority;
+import com.spectralogic.ds3client.models.Priority;
 
 public class ReadJobOptions {
 
     private Priority priority;
+
+    private String name;
 
     private ReadJobOptions() {}
 
@@ -32,11 +34,24 @@ public class ReadJobOptions {
         return this;
     }
 
+    public ReadJobOptions withName(final String name) {
+        this.name = name;
+        return this;
+    }
+
     public Priority getPriority() {
         return priority;
     }
 
     public void setPriority(final Priority priority) {
         this.priority = priority;
+    }
+
+    public String getName() {
+        return this.name;
+    }
+
+    public void setName(final String name) {
+        this.name = name;
     }
 }

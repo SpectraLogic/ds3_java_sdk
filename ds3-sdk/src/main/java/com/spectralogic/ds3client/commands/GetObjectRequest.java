@@ -13,47 +13,117 @@
  * ****************************************************************************
  */
 
+// This code is auto-generated, do not modify
 package com.spectralogic.ds3client.commands;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableCollection;
 import com.google.common.collect.ImmutableList;
-import com.spectralogic.ds3client.HttpVerb;
-
-import com.spectralogic.ds3client.models.Range;
+import com.spectralogic.ds3client.networking.HttpVerb;
+import com.spectralogic.ds3client.models.common.Range;
 import org.apache.http.entity.ContentType;
-
 import java.nio.channels.WritableByteChannel;
 import java.util.Collection;
+import com.spectralogic.ds3client.commands.interfaces.AbstractRequest;
 import java.util.UUID;
-
-/**
- * Retrieves an object from DS3.  This should always be used within the context of a BulkGet command.
- * If not performance will be impacted.
- */
+import com.google.common.net.UrlEscapers;
+import com.spectralogic.ds3client.models.ChecksumType;
 public class GetObjectRequest extends AbstractRequest {
 
+    // Variables
+    
     private final String bucketName;
-    private final String objectName;
-    private final long offset;
-    private final UUID jobId;
-    private final WritableByteChannel channel;
-    private ImmutableCollection<Range> byteRanges = null;
 
-    /**
-     * Creates a request to get an object within the context of a bulk job.  This is the preferred method of creating a get object request.
-     * See {@link BulkGetRequest} for more information on creating a bulk get request.
-    */
-    public GetObjectRequest(final String bucketName, final String objectName, final long offset, final UUID jobId, final WritableByteChannel channel) {
+    private final String objectName;
+
+    private final WritableByteChannel channel;
+
+    private String job;
+
+    private long offset;
+    private ImmutableCollection<Range> byteRanges = null;
+    private ChecksumType checksum = ChecksumType.none();
+    private ChecksumType.Type checksumType = ChecksumType.Type.NONE;
+
+    // Constructor
+    /** @deprecated use {@link #GetObjectRequest(String, String, WritableByteChannel, UUID, long)} instead */
+    @Deprecated
+    public GetObjectRequest(final String bucketName, final String objectName, final WritableByteChannel channel) {
         this.bucketName = bucketName;
         this.objectName = objectName;
-        this.jobId = jobId;
-        this.offset = offset;
         this.channel = channel;
+        
 
-        this.getQueryParams().put("job", jobId.toString());
-        this.getQueryParams().put("offset", Long.toString(offset));
     }
+
+    public GetObjectRequest(final String bucketName, final String objectName, final WritableByteChannel channel, final UUID job, final long offset) {
+        this.bucketName = bucketName;
+        this.objectName = objectName;
+        this.channel = channel;
+        this.job = job.toString();
+        this.offset = offset;
+        
+        this.getQueryParams().put("job", job.toString());
+        this.getQueryParams().put("offset", Long.toString(offset));
+
+    }
+
+    public GetObjectRequest(final String bucketName, final String objectName, final WritableByteChannel channel, final String job, final long offset) {
+        this.bucketName = bucketName;
+        this.objectName = objectName;
+        this.channel = channel;
+        this.job = job;
+        this.offset = offset;
+        
+        this.getQueryParams().put("job", UrlEscapers.urlFragmentEscaper().escape(job).replace("+", "%2B"));
+        this.getQueryParams().put("offset", Long.toString(offset));
+
+    }
+
+
+    public GetObjectRequest withJob(final UUID job) {
+        this.job = job.toString();
+        this.updateQueryParam("job", job);
+        return this;
+    }
+
+    public GetObjectRequest withJob(final String job) {
+        this.job = job;
+        this.updateQueryParam("job", job);
+        return this;
+    }
+
+    public GetObjectRequest withOffset(final long offset) {
+        this.offset = offset;
+        this.updateQueryParam("offset", offset);
+        return this;
+    }
+
+
+    /**
+     * Set a MD5 checksum for the request.
+     */
+    public GetObjectRequest withChecksum(final ChecksumType checksum) {
+        return withChecksum(checksum, ChecksumType.Type.MD5);
+    }
+
+    public GetObjectRequest withChecksum(final ChecksumType checksum, final ChecksumType.Type checksumType) {
+        this.checksum = checksum;
+        this.checksumType = checksumType;
+        return this;
+    }
+
+    @Override
+    public ChecksumType getChecksum() {
+        return this.checksum;
+    }
+
+
+    @Override
+    public ChecksumType.Type getChecksumType() {
+        return this.checksumType;
+    }
+
 
     /**
      * Sets a Range of bytes that should be retrieved from the object in the
@@ -75,50 +145,19 @@ public class GetObjectRequest extends AbstractRequest {
 
     private void setRanges(final ImmutableList<Range> byteRanges) {
         this.byteRanges = byteRanges;
-
         if (this.getHeaders().containsKey("Range")) {
             this.getHeaders().removeAll("Range");
         }
-
         this.getHeaders().put("Range", buildRangeHeaderText(byteRanges));
     }
 
     private static String buildRangeHeaderText(final ImmutableList<Range> byteRanges) {
-
         final ImmutableList.Builder<String> builder = ImmutableList.builder();
-
         for (final Range range : byteRanges) {
             builder.add(String.format("%d-%d", range.getStart(), range.getEnd()));
         }
-
         final Joiner stringJoiner = Joiner.on(",");
-
         return "bytes=" + stringJoiner.join(builder.build());
-    }
-
-    public String getBucketName() {
-        return this.bucketName;
-    }
-
-    public String getObjectName() {
-        return this.objectName;
-    }
-
-    public Collection<Range> getByteRanges() {
-        return this.byteRanges;
-    }
-
-    public long getOffset() {
-        return offset;
-    }
-    @Override
-    public String getPath() {
-        return "/" + this.bucketName + "/" + this.objectName;
-    }
-
-    @Override
-    public String getContentType() {
-        return ContentType.APPLICATION_OCTET_STREAM.toString();
     }
 
     @Override
@@ -126,11 +165,44 @@ public class GetObjectRequest extends AbstractRequest {
         return HttpVerb.GET;
     }
 
-    public UUID getJobId() {
-        return this.jobId;
+    @Override
+    public String getPath() {
+        return "/" + this.bucketName + "/" + this.objectName;
+    }
+    @Override
+    public String getContentType() {
+        return ContentType.APPLICATION_OCTET_STREAM.toString();
     }
 
-    public WritableByteChannel getDestinationChannel() {
+    
+    public String getBucketName() {
+        return this.bucketName;
+    }
+
+
+    public String getObjectName() {
+        return this.objectName;
+    }
+
+
+    public WritableByteChannel getChannel() {
         return this.channel;
     }
+
+
+    public String getJob() {
+        return this.job;
+    }
+
+
+    public long getOffset() {
+        return this.offset;
+    }
+
+
+    public Collection<Range> getByteRanges() {
+        return this.byteRanges;
+    }
+
+
 }

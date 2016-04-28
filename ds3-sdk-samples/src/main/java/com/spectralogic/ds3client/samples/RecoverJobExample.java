@@ -78,7 +78,7 @@ public class RecoverJobExample {
                     StandardOpenOption.CREATE,
                     StandardOpenOption.TRUNCATE_EXISTING
             );
-            client.getObject(new GetObjectRequest(bucketName, object1.getName(), 0, readJob.getJobId(), channel1));
+            client.getObject(new GetObjectRequest(bucketName, object1.getName(), channel1, readJob.getJobId(), 0));
 
             /**
              * Here is where we attempt to recover from a hypothetical interruption - before we get the 2nd object,

@@ -1,11 +1,11 @@
 package com.spectralogic.ds3client.helpers.channels;
 
-import com.spectralogic.ds3client.models.bulk.BulkObject;
+import com.spectralogic.ds3client.models.BulkObject;
 
 import java.util.Comparator;
 
 /**
- * Used to sort BulkObjects (Blobs).  We only care about the starting
+ * Used to sort BlobApiBean (Blobs).  We only care about the starting
  * offset, so that is what is used to compare.
  */
 public class BlobComparator implements Comparator<BulkObject> {

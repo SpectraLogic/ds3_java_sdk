@@ -15,7 +15,7 @@
 
 package com.spectralogic.ds3client.networking;
 
-import com.spectralogic.ds3client.commands.Ds3Request;
+import com.spectralogic.ds3client.commands.interfaces.Ds3Request;
 
 import java.io.Closeable;
 import java.io.IOException;

@@ -19,7 +19,7 @@ import com.spectralogic.ds3client.Ds3Client;
 import com.spectralogic.ds3client.Ds3ClientBuilder;
 import com.spectralogic.ds3client.commands.DeleteBucketRequest;
 import com.spectralogic.ds3client.commands.DeleteObjectRequest;
-import com.spectralogic.ds3client.commands.GetSystemInformationRequest;
+import com.spectralogic.ds3client.commands.spectrads3.GetSystemInformationSpectraS3Request;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers;
 import com.spectralogic.ds3client.helpers.channelbuilders.PrefixAdderObjectChannelBuilder;
 import com.spectralogic.ds3client.models.Contents;
@@ -58,8 +58,8 @@ public class Util {
     }
 
     public static void assumeVersion1_2(final Ds3Client client) throws IOException, SignatureException {
-        final int majorVersion = Integer.parseInt(client.getSystemInformation(
-                new GetSystemInformationRequest()).getSystemInformation().getBuildInformation().getVersion().split("\\.")[0]);
+        final int majorVersion = Integer.parseInt(client.getSystemInformationSpectraS3(
+                new GetSystemInformationSpectraS3Request()).getSystemInformationResult().getBuildInformation().getVersion().split("\\.")[0]);
         assumeThat(majorVersion, is(1));
     }
 

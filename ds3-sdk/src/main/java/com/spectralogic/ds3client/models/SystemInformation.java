@@ -13,74 +13,69 @@
  * ****************************************************************************
  */
 
+// This code is auto-generated, do not modify
 package com.spectralogic.ds3client.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+import java.lang.String;
 
 @JacksonXmlRootElement(namespace = "Data")
 public class SystemInformation {
+
+    // Variables
     @JsonProperty("ApiVersion")
     private String apiVersion;
+
+    @JsonProperty("BackendActivated")
+    private boolean backendActivated;
+
     @JsonProperty("BuildInformation")
     private BuildInformation buildInformation;
+
     @JsonProperty("SerialNumber")
     private String serialNumber;
 
-    public String getApiVersion() {
-        return apiVersion;
+    // Constructor
+    public SystemInformation() {
+        //pass
     }
 
-    public void setApiVersion(String apiVersion) {
+    // Getters and Setters
+    
+    public String getApiVersion() {
+        return this.apiVersion;
+    }
+
+    public void setApiVersion(final String apiVersion) {
         this.apiVersion = apiVersion;
     }
 
-    public BuildInformation getBuildInformation() {
-        return buildInformation;
+
+    public boolean getBackendActivated() {
+        return this.backendActivated;
     }
 
-    public void setBuildInformation(BuildInformation buildInformation) {
+    public void setBackendActivated(final boolean backendActivated) {
+        this.backendActivated = backendActivated;
+    }
+
+
+    public BuildInformation getBuildInformation() {
+        return this.buildInformation;
+    }
+
+    public void setBuildInformation(final BuildInformation buildInformation) {
         this.buildInformation = buildInformation;
     }
 
+
     public String getSerialNumber() {
-        return serialNumber;
+        return this.serialNumber;
     }
 
-    public void setSerialNumber(String serialNumber) {
+    public void setSerialNumber(final String serialNumber) {
         this.serialNumber = serialNumber;
     }
 
-    public static class BuildInformation {
-        @JsonProperty("Branch")
-        private String branch;
-        @JsonProperty("Revision")
-        private String revision;
-        @JsonProperty("Version")
-        private String version;
-
-        public String getBranch() {
-            return branch;
-        }
-
-        public void setBranch(String branch) {
-            this.branch = branch;
-        }
-
-        public String getRevision() {
-            return revision;
-        }
-
-        public void setRevision(String revision) {
-            this.revision = revision;
-        }
-
-        public String getVersion() {
-            return version;
-        }
-
-        public void setVersion(String version) {
-            this.version = version;
-        }
-    }
 }

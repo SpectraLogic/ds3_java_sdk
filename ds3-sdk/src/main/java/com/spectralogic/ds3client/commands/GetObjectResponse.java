@@ -13,33 +13,35 @@
  * ****************************************************************************
  */
 
+// This code is auto-generated, do not modify
 package com.spectralogic.ds3client.commands;
 
-import com.spectralogic.ds3client.exceptions.ContentLengthNotMatchException;
-import com.spectralogic.ds3client.networking.Metadata;
 import com.spectralogic.ds3client.networking.WebResponse;
+import java.io.IOException;
+import com.spectralogic.ds3client.models.Error;
+import java.io.InputStream;
+import com.spectralogic.ds3client.serializer.XmlOutput;
+import com.spectralogic.ds3client.commands.interfaces.AbstractResponse;
+import com.spectralogic.ds3client.commands.interfaces.MetadataImpl;
+import com.spectralogic.ds3client.networking.Metadata;
+import java.nio.channels.WritableByteChannel;
 import com.spectralogic.ds3client.utils.IOUtils;
 import com.spectralogic.ds3client.utils.PerformanceUtils;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.channels.WritableByteChannel;
+import com.spectralogic.ds3client.exceptions.ContentLengthNotMatchException;
 
 public class GetObjectResponse extends AbstractResponse {
+
     private Metadata metadata;
     private long objectSize;
+
     public GetObjectResponse(final WebResponse response, final WritableByteChannel destinationChannel, final int bufferSize, final String objName) throws IOException {
         super(response);
         download(destinationChannel, bufferSize, objName);
     }
 
-    public Metadata getMetadata() {
-        return metadata;
-    }
-
     @Override
     protected void processResponse() throws IOException {
-        this.checkStatusCode(200, 206);
+        this.checkStatusCode(200, 206, 307);
         this.metadata = new MetadataImpl(this.getResponse().getHeaders());
         this.objectSize = getSizeFromHeaders(this.getResponse().getHeaders());
     }
@@ -49,7 +51,7 @@ public class GetObjectResponse extends AbstractResponse {
                 final WebResponse response = this.getResponse();
                 final InputStream responseStream = response.getResponseStream()) {
             final long startTime = PerformanceUtils.getCurrentTime();
-            final long totalBytes = IOUtils.copy(responseStream, destinationChannel, bufferSize);
+            final long totalBytes = IOUtils.copy(responseStream, destinationChannel, bufferSize, objName, false);
             destinationChannel.close();
             final long endTime = PerformanceUtils.getCurrentTime();
 
@@ -59,6 +61,10 @@ public class GetObjectResponse extends AbstractResponse {
 
             PerformanceUtils.logMbps(startTime, endTime, totalBytes, objName, false);
         }
+    }
+
+    public Metadata getMetadata() {
+        return metadata;
     }
 
     public long getObjectSize() {

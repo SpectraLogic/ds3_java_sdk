@@ -13,19 +13,30 @@
  * ****************************************************************************
  */
 
+// This code is auto-generated, do not modify
 package com.spectralogic.ds3client.commands;
 
-import com.spectralogic.ds3client.HttpVerb;
+import com.spectralogic.ds3client.networking.HttpVerb;
+import com.spectralogic.ds3client.commands.interfaces.AbstractRequest;
 
 public class GetServiceRequest extends AbstractRequest {
 
-    @Override
-    public String getPath() {
-        return "/";
+    // Variables
+    
+    // Constructor
+    
+    public GetServiceRequest() {
+        
     }
+
 
     @Override
     public HttpVerb getVerb() {
         return HttpVerb.GET;
     }
-}
+
+    @Override
+    public String getPath() {
+        return "/";
+    }
+    }

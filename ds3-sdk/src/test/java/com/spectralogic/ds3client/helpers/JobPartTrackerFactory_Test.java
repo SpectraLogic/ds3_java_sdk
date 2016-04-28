@@ -15,8 +15,7 @@
 
 package com.spectralogic.ds3client.helpers;
 
-import com.spectralogic.ds3client.models.bulk.BulkObject;
-
+import com.spectralogic.ds3client.models.BulkObject;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -29,11 +28,32 @@ import static org.junit.Assert.assertThat;
 public class JobPartTrackerFactory_Test {
     @Test
     public void createdTrackerTracksParts() {
+        final BulkObject part1 = new BulkObject();
+        part1.setName("foo");
+        part1.setLength(10L);
+        part1.setInCache(false);
+        part1.setOffset(0L);
+
+        final BulkObject part2 = new BulkObject();
+        part2.setName("bar");
+        part2.setLength(13L);
+        part2.setInCache(false);
+        part2.setOffset(0L);
+
+        final BulkObject part3 = new BulkObject();
+        part3.setName("foo");
+        part3.setLength(11L);
+        part3.setInCache(true);
+        part3.setOffset(10L);
+
+        final BulkObject part4 = new BulkObject();
+        part4.setName("baz");
+        part4.setLength(12L);
+        part4.setInCache(true);
+        part4.setOffset(0L);
+
         final JobPartTracker tracker = JobPartTrackerFactory.buildPartTracker(Arrays.asList(
-            new BulkObject("foo", 10L, false, 0L),
-            new BulkObject("bar", 13L, false, 0L),
-            new BulkObject("foo", 11L, true, 10L),
-            new BulkObject("baz", 12L, true, 0L)
+                part1, part2, part3, part4
         ));
 
         final List<Long> transfers = new ArrayList<>();

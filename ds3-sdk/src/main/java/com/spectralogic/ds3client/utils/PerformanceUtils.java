@@ -28,17 +28,44 @@ public class PerformanceUtils {
 
     public static void logMbps(final long startTime, final long endTime, final long totalBytes, final String objName, final boolean isPutCommand) {
         final double time = (endTime - startTime == 0)? 1.0: (endTime - startTime)/1000D;
-        final double content = totalBytes/1024D/1024D;
+        final double content = convertBytesToMegaBytes(totalBytes);
         final double mbps = content / time;
 
-        final String messagePrefix;
-        if (isPutCommand) {
-            messagePrefix = "Putting";
-        }
-        else {
-            messagePrefix = "Getting";
-        }
+        final String messagePrefix = getMessagePrefix(isPutCommand);
         
         LOG.info(String.format("%s %s statistics: Length (%.03f MB), Time (%.03f sec), MBps (%.03f)", messagePrefix, objName, content, time, mbps));
+    }
+
+    /**
+     * Logs the current status of a get/put command
+     */
+    public static void logMbpsStatus(
+            final long startTime,
+            final long curTime,
+            final long curBytes,
+            final String objName,
+            final boolean isPutCommand) {
+        final double time = (curTime - startTime == 0)? 0.0: (curTime - startTime)/1000D;
+        final double curMegaBytes = convertBytesToMegaBytes(curBytes);
+        final String messagePrefix = getMessagePrefix(isPutCommand);
+
+        LOG.info(String.format("%s %s status: Transferred (%.03f MB), Time (%.03f sec)", messagePrefix, objName, curMegaBytes, time));
+    }
+
+    /**
+     * Creates the message prefix for the specified type of command
+     */
+    private static String getMessagePrefix(final boolean isPutCommand) {
+        if (isPutCommand) {
+            return  "Putting";
+        }
+        return  "Getting";
+    }
+
+    /**
+     * Converts bytes to megabytes
+     */
+    private static double convertBytesToMegaBytes(final long bytes) {
+        return bytes/1024D/1024D;
     }
 }
