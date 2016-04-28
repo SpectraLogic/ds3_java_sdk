@@ -26,15 +26,25 @@ public class IOUtils {
     public static long copy(
         final InputStream inputStream,
         final OutputStream outputStream,
-        final int bufferSize)
+        final int bufferSize,
+        final String objName,
+        final boolean isPutCommand)
             throws IOException {
         final byte[] buffer = new byte[bufferSize];
         int len;
         long totalBytes = 0;
 
+        final long startTime = PerformanceUtils.getCurrentTime();
+        long statusUpdateTime = startTime;
         while ((len = inputStream.read(buffer)) != -1) {
             totalBytes += len;
             outputStream.write(buffer, 0, len);
+
+            final long curTime = PerformanceUtils.getCurrentTime();
+            if (statusUpdateTime <= curTime) {
+                PerformanceUtils.logMbpsStatus(startTime, curTime, totalBytes, objName, isPutCommand);
+                statusUpdateTime += 60000D; //Only logs status once a minute
+            }
         }
 
        return totalBytes;
@@ -43,18 +53,28 @@ public class IOUtils {
     public static long copy(
         final InputStream inputStream,
         final WritableByteChannel writableByteChannel,
-        final int bufferSize)
+        final int bufferSize,
+        final String objName,
+        final boolean isPutCommand)
             throws IOException {
         final byte[] buffer = new byte[bufferSize];
         final ByteBuffer byteBuffer = ByteBuffer.wrap(buffer);
         int len;
         long totalBytes = 0;
 
+        final long startTime = PerformanceUtils.getCurrentTime();
+        long statusUpdateTime = startTime;
         while ((len = inputStream.read(buffer)) != -1) {
             totalBytes += len;
             byteBuffer.position(0);
             byteBuffer.limit(len);
             writableByteChannel.write(byteBuffer);
+
+            final long curTime = PerformanceUtils.getCurrentTime();
+            if (statusUpdateTime <= curTime) {
+                PerformanceUtils.logMbpsStatus(startTime, curTime, totalBytes, objName, isPutCommand);
+                statusUpdateTime += 60000D; //Only logs status once a minute
+            }
         }
         return totalBytes;
     }

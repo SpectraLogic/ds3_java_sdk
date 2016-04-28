@@ -15,7 +15,7 @@
 
 package com.spectralogic.ds3client.networking;
 
-import com.spectralogic.ds3client.models.Credentials;
+import com.spectralogic.ds3client.models.common.Credentials;
 
 import java.net.URI;
 
@@ -34,6 +34,8 @@ public interface ConnectionDetails {
     int getRetries();
 
     int getBufferSize();
+
+    int getConnectionTimeout();
 
     /**
      * Returns true if the network layer should perform certificate authentication for SSL.  False will disable

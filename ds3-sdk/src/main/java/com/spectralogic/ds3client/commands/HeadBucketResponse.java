@@ -13,30 +13,33 @@
  * ****************************************************************************
  */
 
+// This code is auto-generated, do not modify
 package com.spectralogic.ds3client.commands;
 
 import com.spectralogic.ds3client.networking.WebResponse;
+import java.io.IOException;
+import com.spectralogic.ds3client.commands.interfaces.AbstractResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.IOException;
 
 public class HeadBucketResponse extends AbstractResponse {
 
     private static final Logger LOG = LoggerFactory.getLogger(HeadBucketResponse.class);
+    private Status status;
 
     public enum Status {
         EXISTS, DOESNTEXIST, NOTAUTHORIZED, UNKNOWN
     }
 
-    private Status status;
+    public Status getStatus() {
+        return this.status;
+    }
+
+
+
 
     public HeadBucketResponse(final WebResponse response) throws IOException {
         super(response);
-    }
-
-    public Status getStatus() {
-        return this.status;
     }
 
     @Override
@@ -61,4 +64,6 @@ public class HeadBucketResponse extends AbstractResponse {
             }
         }
     }
+
+
 }

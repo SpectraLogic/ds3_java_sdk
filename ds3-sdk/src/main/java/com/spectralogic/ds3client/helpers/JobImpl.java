@@ -17,14 +17,13 @@ package com.spectralogic.ds3client.helpers;
 
 import com.spectralogic.ds3client.Ds3Client;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.Job;
-import com.spectralogic.ds3client.models.bulk.MasterObjectList;
+import com.spectralogic.ds3client.models.MasterObjectList;
 
 import java.util.UUID;
 
 abstract class JobImpl implements Job {
     protected final Ds3Client client;
     protected final MasterObjectList masterObjectList;
-
     protected boolean running = false;
     protected int maxParallelRequests = 10;
 

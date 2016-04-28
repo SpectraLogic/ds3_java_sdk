@@ -1,10 +1,10 @@
 package com.spectralogic.ds3client.helpers.util;
 
 import com.google.common.collect.*;
-import com.spectralogic.ds3client.models.Range;
-import com.spectralogic.ds3client.models.bulk.BulkObject;
+import com.spectralogic.ds3client.models.BulkObject;
+import com.spectralogic.ds3client.models.Objects;
+import com.spectralogic.ds3client.models.common.Range;
 import com.spectralogic.ds3client.models.bulk.Ds3Object;
-import com.spectralogic.ds3client.models.bulk.Objects;
 import com.spectralogic.ds3client.models.bulk.PartialDs3Object;
 import com.spectralogic.ds3client.utils.Guard;
 
@@ -29,7 +29,9 @@ public final class PartialObjectHelpers {
         return builder.build();
     }
 
-    public static ImmutableMap<String, ImmutableMultimap<BulkObject, Range>> mapRangesToBlob(final List<Objects> chunks, final ImmutableMultimap<String, Range> partialObjects) {
+    public static ImmutableMap<String, ImmutableMultimap<BulkObject, Range>> mapRangesToBlob(
+            final List<Objects> chunks,
+            final ImmutableMultimap<String, Range> partialObjects) {
 
         final Map<String, ImmutableMultimap.Builder<BulkObject, Range>> objectMapperBuilders = new HashMap<>();
 
@@ -93,7 +95,8 @@ public final class PartialObjectHelpers {
         return Ordering.natural().immutableSortedCopy(builder.build());
     }
 
-    private static ImmutableMultimap.Builder<BulkObject, Range> getMultiMapBuilder(final Map<String, ImmutableMultimap.Builder<BulkObject, Range>> mapper, final String file) {
+    private static ImmutableMultimap.Builder<BulkObject, Range> getMultiMapBuilder(
+            final Map<String, ImmutableMultimap.Builder<BulkObject, Range>> mapper, final String file) {
         if (mapper.containsKey(file)) {
             return mapper.get(file);
         } else {
@@ -103,7 +106,9 @@ public final class PartialObjectHelpers {
         }
     }
 
-    private static ImmutableList<Range> getRangesForBlob(final BulkObject object, final ImmutableCollection<Range> ranges) {
+    private static ImmutableList<Range> getRangesForBlob(
+            final BulkObject object,
+            final ImmutableCollection<Range> ranges) {
         final ImmutableList.Builder<Range> builder = ImmutableList.builder();
 
         final long start = object.getOffset();

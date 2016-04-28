@@ -2,11 +2,11 @@ package com.spectralogic.ds3client.utils;
 
 import com.google.common.collect.ImmutableSet;
 import com.spectralogic.ds3client.Ds3Client;
-import com.spectralogic.ds3client.commands.GetJobRequest;
-import com.spectralogic.ds3client.commands.GetJobResponse;
-import com.spectralogic.ds3client.commands.GetJobsRequest;
-import com.spectralogic.ds3client.commands.GetJobsResponse;
-import com.spectralogic.ds3client.models.bulk.*;
+import com.spectralogic.ds3client.commands.spectrads3.GetJobSpectraS3Request;
+import com.spectralogic.ds3client.commands.spectrads3.GetJobSpectraS3Response;
+import com.spectralogic.ds3client.commands.spectrads3.GetJobsSpectraS3Request;
+import com.spectralogic.ds3client.commands.spectrads3.GetJobsSpectraS3Response;
+import com.spectralogic.ds3client.models.*;
 
 import java.io.IOException;
 import java.security.SignatureException;
@@ -24,29 +24,31 @@ public class JobUtils {
      * only one job ID should be returned.  It is possible that when {@param type} is GET that there could be multiple
      * job IDs returned.
      */
-    public static List<UUID> findJob(final Ds3Client client, final RequestType type, final String bucketName, final Set<String> fileNames) throws IOException, SignatureException {
+    public static List<UUID> findJob(final Ds3Client client, final JobRequestType type, final String bucketName, final Set<String> fileNames) throws IOException, SignatureException {
         final ImmutableSet<String> files = ImmutableSet.copyOf(fileNames);
-        final GetJobsResponse response = client.getJobs(new GetJobsRequest());
-        final List<UUID> jobs = new ArrayList<>();
+        final GetJobsSpectraS3Response response = client.getJobsSpectraS3(new GetJobsSpectraS3Request());
+        final List<UUID> jobIds = new ArrayList<>();
 
-        for (final JobInfo jobInfo : response.getJobs()) {
-            if (!jobInfo.getBucketName().equals(bucketName) || jobInfo.getStatus() != JobStatus.IN_PROGRESS || jobInfo.getRequestType() != type) continue;
-            final GetJobResponse jobResponse = client.getJob(new GetJobRequest(jobInfo.getJobId()));
-            final MasterObjectList mol = jobResponse.getMasterObjectList();
+        for (final Job job : response.getJobListResult().getJobs()) {
+            if (!job.getBucketName().equals(bucketName) || job.getStatus() != JobStatus.IN_PROGRESS || job.getRequestType() != type) continue;
+            final GetJobSpectraS3Response jobResponse = client.getJobSpectraS3(new GetJobSpectraS3Request(job.getJobId()));
+            final MasterObjectList masterObjectList = jobResponse.getMasterObjectListResult();
 
-            for (final Objects chunk : mol.getObjects()) {
-                if (chunkAndSetIntersects(chunk, files)){
-                    jobs.add(jobInfo.getJobId());
+            for (final Objects objects : masterObjectList.getObjects()) {
+                if (chunkAndSetIntersects(objects, files)){
+                    jobIds.add(job.getJobId());
                     break;  // move onto the next job
                 }
             }
         }
-        return jobs;
+        return jobIds;
     }
 
-    private static boolean chunkAndSetIntersects(final Objects chunk, final ImmutableSet<String> fileNames) {
-        for (final BulkObject bulkObject : chunk.getObjects()) {
-            if (fileNames.contains(bulkObject.getName())) return true;
+    private static boolean chunkAndSetIntersects(
+            final Objects objects,
+            final ImmutableSet<String> fileNames) {
+        for (final BulkObject blobApiBean : objects.getObjects()) {
+            if (fileNames.contains(blobApiBean.getName())) return true;
         }
 
         return false;

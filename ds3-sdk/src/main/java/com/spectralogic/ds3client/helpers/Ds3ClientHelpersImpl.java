@@ -19,21 +19,24 @@ import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Lists;
 import com.spectralogic.ds3client.Ds3Client;
 import com.spectralogic.ds3client.commands.*;
+import com.spectralogic.ds3client.commands.spectrads3.*;
 import com.spectralogic.ds3client.helpers.options.ReadJobOptions;
 import com.spectralogic.ds3client.helpers.options.WriteJobOptions;
 import com.spectralogic.ds3client.helpers.util.PartialObjectHelpers;
-import com.spectralogic.ds3client.models.Checksum;
-import com.spectralogic.ds3client.models.Contents;
-import com.spectralogic.ds3client.models.ListBucketResult;
-import com.spectralogic.ds3client.models.Range;
-import com.spectralogic.ds3client.models.bulk.*;
+import com.spectralogic.ds3client.models.*;
+import com.spectralogic.ds3client.models.bulk.Ds3Object;
+import com.spectralogic.ds3client.models.bulk.RequestType;
+import com.spectralogic.ds3client.models.common.Range;
 import com.spectralogic.ds3client.networking.FailedRequestException;
 import com.spectralogic.ds3client.serializer.XmlProcessingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.nio.file.*;
+import java.nio.file.FileVisitResult;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.security.SignatureException;
 import java.util.ArrayList;
@@ -78,10 +81,11 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
                                                          final Iterable<Ds3Object> objectsToWrite,
                                                          final WriteJobOptions options)
             throws SignatureException, IOException, XmlProcessingException {
-        final BulkPutResponse prime = this.client.bulkPut(new BulkPutRequest(bucket, Lists.newArrayList(objectsToWrite))
+        final PutBulkJobSpectraS3Response prime = this.client.putBulkJobSpectraS3(
+                new PutBulkJobSpectraS3Request(bucket, Lists.newArrayList(objectsToWrite))
                 .withPriority(options.getPriority())
-                .withWriteOptimization(options.getWriteOptimization())
-                .withMaxUploadSize(options.getMaxUploadSize()));
+                .withMaxUploadSize(options.getMaxUploadSize())
+                .withAggregating(options.isAggregating()));
         return new WriteJobImpl(this.client, prime.getResult(), this.retryAfter, options.getChecksumType());
     }
 
@@ -103,9 +107,9 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
     private Ds3ClientHelpers.Job innerStartReadJob(final String bucket, final Iterable<Ds3Object> objectsToRead, final ReadJobOptions options)
             throws SignatureException, IOException, XmlProcessingException {
         final List<Ds3Object> objects = Lists.newArrayList(objectsToRead);
-        final BulkGetResponse prime = this.client.bulkGet(new BulkGetRequest(bucket, objects)
-                .withChunkOrdering(ChunkClientProcessingOrderGuarantee.NONE)
-                .withPriority(options.getPriority()));
+        final GetBulkJobSpectraS3Response prime = this.client.getBulkJobSpectraS3(new GetBulkJobSpectraS3Request(bucket, objects)
+                .withChunkClientProcessingOrderGuarantee(JobChunkClientProcessingOrderGuarantee.NONE)
+                .withPriority(options.getPriority()).withName(options.getName()));
 
         final ImmutableMultimap<String, Range> partialRanges = PartialObjectHelpers.getPartialObjectsRanges(objects);
 
@@ -132,8 +136,8 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
         final Iterable<Contents> contentsList = this.listObjects(bucket);
 
         final List<Ds3Object> ds3Objects = new ArrayList<>();
-        for (final Contents contents : contentsList) {
-            ds3Objects.add(new Ds3Object(contents.getKey()));
+        for (final Contents objectApiBean : contentsList) {
+            ds3Objects.add(new Ds3Object(objectApiBean.getKey()));
         }
 
         return this.startReadJob(bucket, ds3Objects, options);
@@ -141,23 +145,34 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
 
     @Override
     public Ds3ClientHelpers.Job recoverWriteJob(final UUID jobId) throws SignatureException, IOException, XmlProcessingException, JobRecoveryException {
-        final ModifyJobResponse jobResponse = this.client.modifyJob(new ModifyJobRequest(jobId));
-        if (RequestType.PUT != jobResponse.getMasterObjectList().getRequestType()){
-            throw new JobRecoveryException(RequestType.PUT.toString(), jobResponse.getMasterObjectList().getRequestType().toString() );
+        final ModifyJobSpectraS3Response jobResponse = this.client.modifyJobSpectraS3(new ModifyJobSpectraS3Request(jobId));
+        if (JobRequestType.PUT != jobResponse.getMasterObjectListResult().getRequestType()) {
+            throw new JobRecoveryException(
+                    RequestType.PUT.toString(),
+                    jobResponse.getMasterObjectListResult().getRequestType().toString());
         }
         // TODO Need to allow the user to pass in the checksumming information again
-        return new WriteJobImpl(this.client, jobResponse.getMasterObjectList(), this.retryAfter, Checksum.Type.NONE);
+        return new WriteJobImpl(
+                this.client,
+                jobResponse.getMasterObjectListResult(),
+                this.retryAfter,
+                ChecksumType.Type.NONE);
     }
 
     @Override
     //TODO add a partial object read recovery method.  That method will require the list of partial objects.
     public Ds3ClientHelpers.Job recoverReadJob(final UUID jobId) throws SignatureException, IOException, XmlProcessingException, JobRecoveryException {
-        final ModifyJobResponse jobResponse = this.client.modifyJob(new ModifyJobRequest(jobId));
-        if (RequestType.GET != jobResponse.getMasterObjectList().getRequestType()){
-            throw new JobRecoveryException(RequestType.GET.toString(), jobResponse.getMasterObjectList().getRequestType().toString() );
+        final ModifyJobSpectraS3Response jobResponse = this.client.modifyJobSpectraS3(new ModifyJobSpectraS3Request(jobId));
+        if (JobRequestType.GET != jobResponse.getMasterObjectListResult().getRequestType()){
+            throw new JobRecoveryException(
+                    RequestType.GET.toString(),
+                    jobResponse.getMasterObjectListResult().getRequestType().toString() );
         }
-
-        return new ReadJobImpl(this.client, jobResponse.getMasterObjectList(), ImmutableMultimap.<String, Range>of(), this.retryAfter);
+        return new ReadJobImpl(
+                this.client,
+                jobResponse.getMasterObjectListResult(),
+                ImmutableMultimap.<String, Range>of(),
+                this.retryAfter);
     }
 
     @Override
@@ -192,7 +207,7 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
 
     @Override
     public Iterable<Contents> listObjects(final String bucket, final String keyPrefix, final String nextMarker, final int maxKeys) throws SignatureException, IOException {
-        final List<Contents> contentList = new ArrayList<>();
+        final List<Contents> objectApiBeans = new ArrayList<>();
 
         int remainingKeys = maxKeys;
         boolean isTruncated = false;
@@ -206,22 +221,22 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
                 request.withPrefix(keyPrefix);
             }
             if (isTruncated) {
-                request.withNextMarker(marker);
+                request.withMarker(marker);
             }
 
             final GetBucketResponse response = this.client.getBucket(request);
-            final ListBucketResult result = response.getResult();
+            final ListBucketResult result = response.getListBucketResult();
 
-            isTruncated = result.isTruncated();
+            isTruncated = result.getTruncated();
             marker = result.getNextMarker();
-            remainingKeys -= result.getContentsList().size();
+            remainingKeys -= result.getObjects().size();
 
-            for (final Contents contents : result.getContentsList()) {
-                contentList.add(contents);
+            for (final Contents objectApiBean : result.getObjects()) {
+                objectApiBeans.add(objectApiBean);
             }
         } while (isTruncated && remainingKeys > 0);
 
-        return contentList;
+        return objectApiBeans;
     }
 
     @Override

@@ -15,8 +15,7 @@
 
 package com.spectralogic.ds3client.helpers;
 
-import com.spectralogic.ds3client.models.bulk.BulkObject;
-import com.spectralogic.ds3client.models.bulk.Ds3Object;
+import com.spectralogic.ds3client.models.BulkObject;
 
 import java.nio.channels.ByteChannel;
 

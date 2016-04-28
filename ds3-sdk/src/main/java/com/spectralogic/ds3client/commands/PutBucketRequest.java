@@ -13,30 +13,38 @@
  * ****************************************************************************
  */
 
+// This code is auto-generated, do not modify
 package com.spectralogic.ds3client.commands;
 
-import com.spectralogic.ds3client.HttpVerb;
+import com.spectralogic.ds3client.networking.HttpVerb;
+import com.spectralogic.ds3client.commands.interfaces.AbstractRequest;
 
 public class PutBucketRequest extends AbstractRequest {
 
-    final private String bucket;
+    // Variables
+    
+    private final String bucketName;
 
-    public PutBucketRequest(final String bucket) {
-        this.bucket = bucket;
+    // Constructor
+    
+    public PutBucketRequest(final String bucketName) {
+        this.bucketName = bucketName;
+        
     }
 
-    public String getBucket() {
-        return this.bucket;
-    }
-
-    @Override
-    public String getPath() {
-        return "/" + this.bucket;
-    }
 
     @Override
     public HttpVerb getVerb() {
         return HttpVerb.PUT;
+    }
+
+    @Override
+    public String getPath() {
+        return "/" + this.bucketName;
+    }
+    
+    public String getBucketName() {
+        return this.bucketName;
     }
 
 }

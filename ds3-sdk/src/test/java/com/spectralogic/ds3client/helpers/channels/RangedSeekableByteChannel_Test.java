@@ -1,8 +1,8 @@
 package com.spectralogic.ds3client.helpers.channels;
 
 import com.google.common.collect.ImmutableMultimap;
-import com.spectralogic.ds3client.models.Range;
-import com.spectralogic.ds3client.models.bulk.BulkObject;
+import com.spectralogic.ds3client.models.BulkObject;
+import com.spectralogic.ds3client.models.common.Range;
 import com.spectralogic.ds3client.utils.ByteArraySeekableByteChannel;
 import org.junit.Test;
 
@@ -26,8 +26,17 @@ public class RangedSeekableByteChannel_Test {
 
         final ImmutableMultimap.Builder<BulkObject, Range> builder = ImmutableMultimap.builder();
 
-        final BulkObject blob1 = new BulkObject("obj1.txt", 50, true, 0);
-        final BulkObject blob2 = new BulkObject("obj1.txt", 50, true, 50);
+        final BulkObject blob1 = new BulkObject();
+        blob1.setName("obj1.txt");
+        blob1.setLength(50);
+        blob1.setInCache(true);
+        blob1.setOffset(0);
+
+        final BulkObject blob2 = new BulkObject();
+        blob2.setName("obj1.txt");
+        blob2.setLength(50);
+        blob2.setInCache(true);
+        blob2.setOffset(50);
 
         builder.put(blob1, Range.byLength(0, firstBlobData.limit()));
         builder.put(blob2, Range.byLength(50, secondBlobData.limit()));
@@ -35,7 +44,7 @@ public class RangedSeekableByteChannel_Test {
         final ImmutableMultimap<BulkObject, Range> ranges = builder.build();
 
         final ByteArraySeekableByteChannel channel = new ByteArraySeekableByteChannel();
-        try (final RangedSeekableByteChannel rangedChannel = new RangedSeekableByteChannel(channel, ranges)) {
+        try (final RangedSeekableByteChannel rangedChannel = new RangedSeekableByteChannel(channel, ranges, "name")) {
 
             rangedChannel.position(50).write(secondBlobData);
             rangedChannel.position(0).write(firstBlobData);
@@ -58,8 +67,17 @@ public class RangedSeekableByteChannel_Test {
 
         final ImmutableMultimap.Builder<BulkObject, Range> builder = ImmutableMultimap.builder();
 
-        final BulkObject blob1 = new BulkObject("obj1.txt", 50, true, 0);
-        final BulkObject blob2 = new BulkObject("obj1.txt", 50, true, 50);
+        final BulkObject blob1 = new BulkObject();
+        blob1.setName("obj1.txt");
+        blob1.setLength(50);
+        blob1.setInCache(true);
+        blob1.setOffset(0);
+
+        final BulkObject blob2 = new BulkObject();
+        blob2.setName("obj1.txt");
+        blob2.setLength(50);
+        blob2.setInCache(true);
+        blob2.setOffset(50);
 
         builder.put(blob1, Range.byLength(5, firstBlobData.limit()));
         builder.put(blob2, Range.byLength(60, secondBlobData.limit()));
@@ -67,7 +85,7 @@ public class RangedSeekableByteChannel_Test {
         final ImmutableMultimap<BulkObject, Range> ranges = builder.build();
 
         final ByteArraySeekableByteChannel channel = new ByteArraySeekableByteChannel();
-        try (final RangedSeekableByteChannel rangedChannel = new RangedSeekableByteChannel(channel, ranges)) {
+        try (final RangedSeekableByteChannel rangedChannel = new RangedSeekableByteChannel(channel, ranges, "name")) {
 
             rangedChannel.position(50).write(secondBlobData);
             rangedChannel.position(0).write(firstBlobData);
@@ -84,8 +102,17 @@ public class RangedSeekableByteChannel_Test {
     public void seekToInvalidPosition() throws IOException {
         final ImmutableMultimap.Builder<BulkObject, Range> builder = ImmutableMultimap.builder();
 
-        final BulkObject blob1 = new BulkObject("obj1.txt", 20, true, 0);
-        final BulkObject blob2 = new BulkObject("obj1.txt", 20, true, 20);
+        final BulkObject blob1 = new BulkObject();
+        blob1.setName("obj1.txt");
+        blob1.setLength(20);
+        blob1.setInCache(true);
+        blob1.setOffset(0);
+
+        final BulkObject blob2 = new BulkObject();
+        blob2.setName("obj1.txt");
+        blob2.setLength(20);
+        blob2.setInCache(true);
+        blob2.setOffset(20);
 
         builder.put(blob1, Range.byPosition(5, 15));
         builder.put(blob2, Range.byPosition(20, 10));
@@ -93,7 +120,7 @@ public class RangedSeekableByteChannel_Test {
         final ImmutableMultimap<BulkObject, Range> ranges = builder.build();
 
         final ByteArraySeekableByteChannel channel = new ByteArraySeekableByteChannel();
-        try (final RangedSeekableByteChannel rangedChannel = new RangedSeekableByteChannel(channel, ranges)) {
+        try (final RangedSeekableByteChannel rangedChannel = new RangedSeekableByteChannel(channel, ranges, "name")) {
             rangedChannel.position(17);
         }
     }

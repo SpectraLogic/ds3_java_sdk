@@ -17,6 +17,10 @@ package com.spectralogic.ds3client.models.bulk;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
+import com.spectralogic.ds3client.models.Priority;
+import com.spectralogic.ds3client.models.JobChunkClientProcessingOrderGuarantee;
+import com.spectralogic.ds3client.models.JobStatus;
+import com.spectralogic.ds3client.models.Ds3Node;
 
 import java.util.List;
 import java.util.UUID;
@@ -24,7 +28,7 @@ import java.util.UUID;
 public class JobInfo {
     @JsonProperty("Nodes")
     @JacksonXmlElementWrapper
-    private List<Node> nodes;
+    private List<Ds3Node> nodes;
 
     @JsonProperty("CachedSizeInBytes")
     private long cachedSizeInBytes;
@@ -47,9 +51,6 @@ public class JobInfo {
     @JsonProperty("UserName")
     private String userName;
 
-    @JsonProperty("WriteOptimization")
-    private WriteOptimization writeOptimization;
-
     @JsonProperty("Priority")
     private Priority priority;
 
@@ -60,7 +61,7 @@ public class JobInfo {
     private String startDate;
 
     @JsonProperty("ChunkClientProcessingOrderGuarantee")
-    private ChunkClientProcessingOrderGuarantee chunkClientProcessingOrderGuarantee;
+    private JobChunkClientProcessingOrderGuarantee chunkClientProcessingOrderGuarantee;
 
     @JsonProperty("Status")
     private JobStatus status;
@@ -73,19 +74,19 @@ public class JobInfo {
         this.jobId = jobId;
     }
 
-    public ChunkClientProcessingOrderGuarantee getChunkClientProcessingOrderGuarantee() {
+    public JobChunkClientProcessingOrderGuarantee getChunkClientProcessingOrderGuarantee() {
         return chunkClientProcessingOrderGuarantee;
     }
 
-    public void setChunkClientProcessingOrderGuarantee(final ChunkClientProcessingOrderGuarantee chunkClientProcessingOrderGuarantee) {
+    public void setChunkClientProcessingOrderGuarantee(final JobChunkClientProcessingOrderGuarantee chunkClientProcessingOrderGuarantee) {
         this.chunkClientProcessingOrderGuarantee = chunkClientProcessingOrderGuarantee;
     }
 
-    public List<Node> getNodes() {
+    public List<Ds3Node> getNodes() {
         return nodes;
     }
 
-    public void setNodes(final List<Node> nodes) {
+    public void setNodes(final List<Ds3Node> nodes) {
         this.nodes = nodes;
     }
 
@@ -145,14 +146,6 @@ public class JobInfo {
         this.originalSizeInBytes = originalSizeInBytes;
     }
 
-    public WriteOptimization getWriteOptimization() {
-        return writeOptimization;
-    }
-
-    public void setWriteOptimization(final WriteOptimization writeOptimization) {
-        this.writeOptimization = writeOptimization;
-    }
-
     public String getUserName() {
         return userName;
     }
@@ -173,7 +166,7 @@ public class JobInfo {
         return status;
     }
 
-    public void setStatus(JobStatus status) {
+    public void setStatus(final JobStatus status) {
         this.status = status;
     }
 }

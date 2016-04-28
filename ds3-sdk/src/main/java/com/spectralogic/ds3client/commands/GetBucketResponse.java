@@ -13,39 +13,45 @@
  * ****************************************************************************
  */
 
+// This code is auto-generated, do not modify
 package com.spectralogic.ds3client.commands;
 
-
-import com.spectralogic.ds3client.models.ListBucketResult;
 import com.spectralogic.ds3client.networking.WebResponse;
-import com.spectralogic.ds3client.serializer.XmlOutput;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.IOException;
+import com.spectralogic.ds3client.models.ListBucketResult;
 import java.io.InputStream;
+import com.spectralogic.ds3client.serializer.XmlOutput;
+import com.spectralogic.ds3client.commands.interfaces.AbstractResponse;
 
 public class GetBucketResponse extends AbstractResponse {
-    private final static Logger LOG = LoggerFactory.getLogger(GetBucketResponse.class);
-    private ListBucketResult result;
+
+    private ListBucketResult listBucketResult;
 
     public GetBucketResponse(final WebResponse response) throws IOException {
         super(response);
-
-    }
-
-    public ListBucketResult getResult() {
-        return this.result;
     }
 
     @Override
     protected void processResponse() throws IOException {
-        try (final WebResponse response = this.getResponse();
-             final InputStream contentStream = response.getResponseStream()) {
+        try {
             this.checkStatusCode(200);
-            LOG.debug("Starting bucket xml parsing");
-            this.result = XmlOutput.fromXml(contentStream, ListBucketResult.class);
-            LOG.debug("Finished bucket xml parsing");
+
+            switch (this.getStatusCode()) {
+            case 200:
+                try (final InputStream content = getResponse().getResponseStream()) {
+                    this.listBucketResult = XmlOutput.fromXml(content, ListBucketResult.class);
+                }
+                break;
+            default:
+                assert false : "checkStatusCode should have made it impossible to reach this line.";
+            }
+        } finally {
+            this.getResponse().close();
         }
     }
+
+    public ListBucketResult getListBucketResult() {
+        return this.listBucketResult;
+    }
+
 }

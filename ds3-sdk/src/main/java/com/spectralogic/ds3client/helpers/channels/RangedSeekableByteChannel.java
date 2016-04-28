@@ -2,8 +2,8 @@ package com.spectralogic.ds3client.helpers.channels;
 
 import com.google.common.collect.*;
 import com.spectralogic.ds3client.helpers.TruncateNotAllowedException;
-import com.spectralogic.ds3client.models.Range;
-import com.spectralogic.ds3client.models.bulk.BulkObject;
+import com.spectralogic.ds3client.models.BulkObject;
+import com.spectralogic.ds3client.models.common.Range;
 import com.spectralogic.ds3client.utils.Guard;
 
 import java.io.IOException;
@@ -19,19 +19,21 @@ public class RangedSeekableByteChannel implements SeekableByteChannel {
     private final ImmutableMap<BulkObject, Long> blobSizes;
     private final ImmutableMap<BulkObject, Long> startingOffsetForBlob;
     private final long size;
+    private final String name;
 
     private long position;
     private boolean open;
 
-    public static RangedSeekableByteChannel wrap(final SeekableByteChannel byteChannel, final ImmutableMultimap<BulkObject, Range> ranges) throws IOException {
-        return new RangedSeekableByteChannel(byteChannel, ranges);
+    public static RangedSeekableByteChannel wrap(final SeekableByteChannel byteChannel, final ImmutableMultimap<BulkObject, Range> ranges, final String name) throws IOException {
+        return new RangedSeekableByteChannel(byteChannel, ranges, name);
     }
 
-    public RangedSeekableByteChannel(final SeekableByteChannel byteChannel, final ImmutableMultimap<BulkObject, Range> ranges) throws IOException {
+    public RangedSeekableByteChannel(final SeekableByteChannel byteChannel, final ImmutableMultimap<BulkObject, Range> ranges, final String name) throws IOException {
         this.byteChannel = byteChannel;
         this.ranges = ranges;
         this.position = 0;
         this.open = true;
+        this.name = name;
         this.size = getSize(byteChannel.size(), ranges);
         this.blobSizes = computesBlobSize(ranges);
         this.startingOffsetForBlob = computeRealBlobOffset(this.blobSizes);
@@ -47,8 +49,6 @@ public class RangedSeekableByteChannel implements SeekableByteChannel {
         final ImmutableList<BulkObject> sortedList = ImmutableList.copyOf(bulkObjects);
 
         final int listLength = sortedList.size();
-
-
 
         realOffsets.put(sortedList.get(0), 0L);
 
@@ -189,7 +189,7 @@ public class RangedSeekableByteChannel implements SeekableByteChannel {
 
     private void checkClosed() {
         if (!this.open) {
-            throw new IllegalStateException("Object already closed");
+            throw new IllegalStateException("Object " + name + " already closed");
         }
     }
 }

@@ -15,9 +15,13 @@
 
 package com.spectralogic.ds3client.helpers;
 
-import com.spectralogic.ds3client.commands.*;
-import com.spectralogic.ds3client.models.bulk.ChunkClientProcessingOrderGuarantee;
-
+import com.spectralogic.ds3client.commands.GetBucketRequest;
+import com.spectralogic.ds3client.commands.GetObjectRequest;
+import com.spectralogic.ds3client.commands.PutObjectRequest;
+import com.spectralogic.ds3client.commands.spectrads3.AllocateJobChunkSpectraS3Request;
+import com.spectralogic.ds3client.commands.spectrads3.GetBulkJobSpectraS3Request;
+import com.spectralogic.ds3client.commands.spectrads3.GetJobChunksReadyForClientProcessingSpectraS3Request;
+import com.spectralogic.ds3client.models.JobChunkClientProcessingOrderGuarantee;
 import org.apache.commons.io.IOUtils;
 import org.hamcrest.Description;
 import org.hamcrest.TypeSafeMatcher;
@@ -28,16 +32,16 @@ import java.nio.channels.Channels;
 import java.nio.channels.SeekableByteChannel;
 import java.util.UUID;
 
-import static org.mockito.Matchers.*;
+import static org.mockito.Matchers.argThat;
 
 public class RequestMatchers {
-    public static BulkGetRequest hasChunkOrdering(final ChunkClientProcessingOrderGuarantee chunkOrdering) {
-        return argThat(new TypeSafeMatcher<BulkGetRequest>() {
+    public static GetBulkJobSpectraS3Request hasChunkOrdering(final JobChunkClientProcessingOrderGuarantee chunkOrdering) {
+        return argThat(new TypeSafeMatcher<GetBulkJobSpectraS3Request>() {
             @Override
-            protected boolean matchesSafely(final BulkGetRequest item) {
-                return item.getChunkOrdering() == null
+            protected boolean matchesSafely(final GetBulkJobSpectraS3Request item) {
+                return item.getChunkClientProcessingOrderGuarantee() == null
                         ? chunkOrdering == null
-                        : item.getChunkOrdering().equals(chunkOrdering);
+                        : item.getChunkClientProcessingOrderGuarantee().equals(chunkOrdering);
             }
 
             @Override
@@ -46,12 +50,12 @@ public class RequestMatchers {
             }
             
             @Override
-            protected void describeMismatchSafely(final BulkGetRequest item, final Description mismatchDescription) {
-                describe(item.getChunkOrdering(), mismatchDescription);
+            protected void describeMismatchSafely(final GetBulkJobSpectraS3Request item, final Description mismatchDescription) {
+                describe(item.getChunkClientProcessingOrderGuarantee(), mismatchDescription);
             }
 
             private void describe(
-                    final ChunkClientProcessingOrderGuarantee chunkOrdering,
+                    final JobChunkClientProcessingOrderGuarantee chunkOrdering,
                     final Description description) {
                 description
                         .appendText("BulkGetRequest with Chunk Ordering: ")
@@ -60,23 +64,23 @@ public class RequestMatchers {
         });
     }
 
-    public static GetAvailableJobChunksRequest hasJobId(final UUID jobId) {
-        return argThat(new TypeSafeMatcher<GetAvailableJobChunksRequest>() {
+    public static GetJobChunksReadyForClientProcessingSpectraS3Request hasJobId(final UUID jobId) {
+        return argThat(new TypeSafeMatcher<GetJobChunksReadyForClientProcessingSpectraS3Request>() {
             @Override
             public void describeTo(final Description description) {
                 describeRequest(jobId, description);
             }
 
             @Override
-            protected boolean matchesSafely(final GetAvailableJobChunksRequest item) {
-                return jobId.equals(item.getJobId());
+            protected boolean matchesSafely(final GetJobChunksReadyForClientProcessingSpectraS3Request item) {
+                return jobId.toString().equals(item.getJob());
             }
             
             @Override
             protected void describeMismatchSafely(
-                    final GetAvailableJobChunksRequest item,
+                    final GetJobChunksReadyForClientProcessingSpectraS3Request item,
                     final Description mismatchDescription) {
-                describeRequest(item.getJobId(), mismatchDescription);
+                describeRequest(UUID.fromString(item.getJob()), mismatchDescription);
             }
 
             private void describeRequest(final UUID jobIdValue, final Description description) {
@@ -87,23 +91,23 @@ public class RequestMatchers {
         });
     }
 
-    public static AllocateJobChunkRequest hasChunkId(final UUID chunkId) {
-        return argThat(new TypeSafeMatcher<AllocateJobChunkRequest>() {
+    public static AllocateJobChunkSpectraS3Request hasChunkId(final UUID chunkId) {
+        return argThat(new TypeSafeMatcher<AllocateJobChunkSpectraS3Request>() {
             @Override
             public void describeTo(final Description description) {
                 describeRequest(chunkId, description);
             }
 
             @Override
-            protected boolean matchesSafely(final AllocateJobChunkRequest item) {
-                return chunkId.equals(item.getChunkId());
+            protected boolean matchesSafely(final AllocateJobChunkSpectraS3Request item) {
+                return chunkId.toString().equals(item.getJobChunkId());
             }
             
             @Override
             protected void describeMismatchSafely(
-                    final AllocateJobChunkRequest item,
+                    final AllocateJobChunkSpectraS3Request item,
                     final Description mismatchDescription) {
-                describeRequest(item.getChunkId(), mismatchDescription);
+                describeRequest(UUID.fromString(item.getJobChunkId()), mismatchDescription);
             }
 
             private void describeRequest(final UUID chunkIdValue, final Description description) {
@@ -121,7 +125,7 @@ public class RequestMatchers {
                 return
                         item.getBucketName().equals(bucket)
                         && item.getObjectName().equals(key)
-                        && (item.getJobId() == null ? jobId == null : item.getJobId().equals(jobId))
+                        && (item.getJob() == null ? jobId == null : item.getJob().equals(jobId.toString()))
                         && item.getOffset() == offset;
             }
 
@@ -135,7 +139,7 @@ public class RequestMatchers {
                 describeTransferRequest(
                         item.getBucketName(),
                         item.getObjectName(),
-                        item.getJobId(),
+                        UUID.fromString(item.getJob()),
                         item.getOffset(),
                         mismatchDescription
                 );
@@ -155,7 +159,7 @@ public class RequestMatchers {
                 return
                         item.getBucketName().equals(bucket)
                         && item.getObjectName().equals(key)
-                        && (item.getJobId() == null ? jobId == null : item.getJobId().equals(jobId))
+                        && (item.getJob() == null ? jobId == null : item.getJob().equals(jobId.toString()))
                         && item.getOffset() == offset
                         && channelToString(item.getChannel()).equals(expectedContents);
             }
@@ -172,7 +176,7 @@ public class RequestMatchers {
                 describeTransferRequest(
                         item.getBucketName(),
                         item.getObjectName(),
-                        item.getJobId(),
+                        UUID.fromString(item.getJob()),
                         item.getOffset(),
                         mismatchDescription
                 )
@@ -217,10 +221,10 @@ public class RequestMatchers {
                 }
                 final GetBucketRequest getBucketRequest = ((GetBucketRequest)argument);
                 return
-                        getBucketRequest.getBucket().equals(bucket)
+                        getBucketRequest.getBucketName().equals(bucket)
                         && (marker == null
-                            ? null == getBucketRequest.getNextMarker()
-                            : marker.equals(getBucketRequest.getNextMarker()));
+                            ? null == getBucketRequest.getMarker()
+                            : marker.equals(getBucketRequest.getMarker()));
                 
             }
         });

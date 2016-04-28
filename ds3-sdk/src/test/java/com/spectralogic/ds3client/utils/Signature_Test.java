@@ -15,9 +15,9 @@
 
 package com.spectralogic.ds3client.utils;
 
-import com.spectralogic.ds3client.HttpVerb;
-import com.spectralogic.ds3client.models.Credentials;
-import com.spectralogic.ds3client.models.SignatureDetails;
+import com.spectralogic.ds3client.networking.HttpVerb;
+import com.spectralogic.ds3client.models.common.Credentials;
+import com.spectralogic.ds3client.models.common.SignatureDetails;
 import org.junit.Test;
 
 import java.security.SignatureException;

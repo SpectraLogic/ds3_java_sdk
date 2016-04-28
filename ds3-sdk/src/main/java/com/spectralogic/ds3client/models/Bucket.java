@@ -13,37 +13,108 @@
  * ****************************************************************************
  */
 
+// This code is auto-generated, do not modify
 package com.spectralogic.ds3client.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+import java.util.Date;
+import java.util.UUID;
+import java.lang.Long;
+import java.lang.String;
 
+@JacksonXmlRootElement(namespace = "Data")
 public class Bucket {
+
+    // Variables
+    @JsonProperty("CreationDate")
+    private Date creationDate;
+
+    @JsonProperty("DataPolicyId")
+    private UUID dataPolicyId;
+
+    @JsonProperty("Id")
+    private UUID id;
+
+    @JsonProperty("LastPreferredChunkSizeInBytes")
+    private Long lastPreferredChunkSizeInBytes;
+
+    @JsonProperty("LogicalUsedCapacity")
+    private Long logicalUsedCapacity;
 
     @JsonProperty("Name")
     private String name;
-    @JsonProperty("CreationDate")
-    private String creationDate;
 
-    public Bucket() {}
+    @JsonProperty("UserId")
+    private UUID userId;
+
+    // Constructor
+    public Bucket() {
+        //pass
+    }
+
+    // Getters and Setters
+    
+    public Date getCreationDate() {
+        return this.creationDate;
+    }
+
+    public void setCreationDate(final Date creationDate) {
+        this.creationDate = creationDate;
+    }
+
+
+    public UUID getDataPolicyId() {
+        return this.dataPolicyId;
+    }
+
+    public void setDataPolicyId(final UUID dataPolicyId) {
+        this.dataPolicyId = dataPolicyId;
+    }
+
+
+    public UUID getId() {
+        return this.id;
+    }
+
+    public void setId(final UUID id) {
+        this.id = id;
+    }
+
+
+    public Long getLastPreferredChunkSizeInBytes() {
+        return this.lastPreferredChunkSizeInBytes;
+    }
+
+    public void setLastPreferredChunkSizeInBytes(final Long lastPreferredChunkSizeInBytes) {
+        this.lastPreferredChunkSizeInBytes = lastPreferredChunkSizeInBytes;
+    }
+
+
+    public Long getLogicalUsedCapacity() {
+        return this.logicalUsedCapacity;
+    }
+
+    public void setLogicalUsedCapacity(final Long logicalUsedCapacity) {
+        this.logicalUsedCapacity = logicalUsedCapacity;
+    }
+
 
     public String getName() {
-        return name;
+        return this.name;
     }
 
     public void setName(final String name) {
         this.name = name;
     }
 
-    public String getCreationDate() {
-        return creationDate;
+
+    public UUID getUserId() {
+        return this.userId;
     }
 
-    public void setCreationDate(final String creationDate) {
-        this.creationDate = creationDate;
+    public void setUserId(final UUID userId) {
+        this.userId = userId;
     }
 
-    @Override
-    public String toString() {
-        return "name: " + name + " creationDate: " + creationDate;
-    }
 }

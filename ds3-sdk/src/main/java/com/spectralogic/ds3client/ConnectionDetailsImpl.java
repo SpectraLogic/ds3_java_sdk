@@ -15,14 +15,13 @@
 
 package com.spectralogic.ds3client;
 
-import com.spectralogic.ds3client.models.Credentials;
-import com.spectralogic.ds3client.models.bulk.Node;
+import com.spectralogic.ds3client.models.common.Credentials;
+import com.spectralogic.ds3client.models.Ds3Node;
 import com.spectralogic.ds3client.networking.ConnectionDetails;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.net.URI;
-import java.sql.Connection;
 
 class ConnectionDetailsImpl implements ConnectionDetails {
     static private final Logger LOG = LoggerFactory.getLogger(ConnectionDetailsImpl.class);
@@ -35,6 +34,7 @@ class ConnectionDetailsImpl implements ConnectionDetails {
         private URI proxy = null;
         private int retries = 5;
         private int bufferSize = 1024 * 1024;
+        private int connectionTimeout = 60 * 1000;
         private boolean certificateVerification;
 
         private Builder(final String endpoint, final Credentials credentials) {
@@ -62,6 +62,11 @@ class ConnectionDetailsImpl implements ConnectionDetails {
             return this;
         }
 
+        public Builder withConnectionTimeout(final int connectionTimeout) {
+            this.connectionTimeout = connectionTimeout;
+            return this;
+        }
+
         public Builder withCertificateVerification(final boolean certificateVerification) {
             this.certificateVerification = certificateVerification;
             return this;
@@ -74,27 +79,28 @@ class ConnectionDetailsImpl implements ConnectionDetails {
 
     }
 
-    public static ConnectionDetails newForNode(final Node node, final ConnectionDetails connectionDetails) {
+    public static ConnectionDetails newForNode(final Ds3Node node, final ConnectionDetails connectionDetails) {
         final Builder connectionBuilder;
-        if (node.getEndpoint() == null || node.getEndpoint().equals("FAILED_TO_DETERMINE_DATAPATH_IP_ADDRESS")) {
+        if (node.getEndPoint() == null || node.getEndPoint().equals("FAILED_TO_DETERMINE_DATAPATH_IP_ADDRESS")) {
             LOG.trace("Running against an old version of the DS3 API, reusing existing endpoint configuration");
             connectionBuilder = builder(connectionDetails.getEndpoint(), connectionDetails.getCredentials());
         }
         else {
-            LOG.trace("Creating new Connection Details for endpoint: " + node.getEndpoint());
+            LOG.trace("Creating new Connection Details for endpoint: " + node.getEndPoint());
             connectionBuilder = builder(buildAuthority(node, connectionDetails), connectionDetails.getCredentials());
         }
         connectionBuilder.withRedirectRetries(connectionDetails.getRetries())
             .withHttps(connectionDetails.isHttps())
             .withCertificateVerification(connectionDetails.isCertificateVerification())
             .withBufferSize(connectionDetails.getBufferSize())
+            .withConnectionTimeout(connectionDetails.getConnectionTimeout())
             .withProxy(connectionDetails.getProxy());
 
         return connectionBuilder.build();
     }
 
-    private static String buildAuthority(final Node node, final ConnectionDetails connectionDetails) {
-        return node.getEndpoint() + ":" + Integer.toString(
+    private static String buildAuthority(final Ds3Node node, final ConnectionDetails connectionDetails) {
+        return node.getEndPoint() + ":" + Integer.toString(
                 (connectionDetails.isHttps() ? node.getHttpsPort() : node.getHttpPort()));
     }
 
@@ -104,6 +110,7 @@ class ConnectionDetailsImpl implements ConnectionDetails {
     private final URI proxy;
     private final int retries;
     private final int bufferSize;
+    private final int connectionTimeout;
     private final boolean certificateVerification;
 
     static Builder builder(final String uriEndpoint, final Credentials credentials) {
@@ -117,6 +124,7 @@ class ConnectionDetailsImpl implements ConnectionDetails {
         this.proxy = builder.proxy;
         this.retries = builder.retries;
         this.bufferSize = builder.bufferSize;
+        this.connectionTimeout = builder.connectionTimeout;
         this.certificateVerification = builder.certificateVerification;
     }
 
@@ -148,6 +156,11 @@ class ConnectionDetailsImpl implements ConnectionDetails {
     @Override
     public int getBufferSize() {
         return bufferSize;
+    }
+
+    @Override
+    public int getConnectionTimeout() {
+        return connectionTimeout;
     }
 
     @Override

@@ -13,17 +13,46 @@
  * ****************************************************************************
  */
 
+// This code is auto-generated, do not modify
 package com.spectralogic.ds3client.models;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+import java.util.Date;
+import java.lang.String;
 
+@JacksonXmlRootElement(namespace = "Data")
 public class Ds3Bucket {
 
-    private final String bucketName;
-    public Ds3Bucket(final String bucketName) {
-        this.bucketName = bucketName;
+    // Variables
+    @JsonProperty("CreationDate")
+    private Date creationDate;
+
+    @JsonProperty("Name")
+    private String name;
+
+    // Constructor
+    public Ds3Bucket() {
+        //pass
     }
 
-    public String getBucketName() {
-        return bucketName;
+    // Getters and Setters
+    
+    public Date getCreationDate() {
+        return this.creationDate;
     }
+
+    public void setCreationDate(final Date creationDate) {
+        this.creationDate = creationDate;
+    }
+
+
+    public String getName() {
+        return this.name;
+    }
+
+    public void setName(final String name) {
+        this.name = name;
+    }
+
 }

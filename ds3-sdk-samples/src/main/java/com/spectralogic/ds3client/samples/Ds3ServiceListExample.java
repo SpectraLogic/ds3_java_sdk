@@ -19,11 +19,13 @@ import com.spectralogic.ds3client.Ds3Client;
 import com.spectralogic.ds3client.Ds3ClientBuilder;
 import com.spectralogic.ds3client.commands.GetServiceRequest;
 import com.spectralogic.ds3client.commands.GetServiceResponse;
-import com.spectralogic.ds3client.models.Bucket;
-import com.spectralogic.ds3client.models.Credentials;
+import com.spectralogic.ds3client.models.Ds3Bucket;
+import com.spectralogic.ds3client.models.common.Credentials;
+import com.spectralogic.ds3client.networking.FailedRequestException;
 
 import java.io.IOException;
 import java.security.SignatureException;
+import java.net.UnknownHostException;
 
 public class Ds3ServiceListExample {
 
@@ -37,9 +39,34 @@ public class Ds3ServiceListExample {
             final GetServiceResponse response = client.getService(new GetServiceRequest());
 
             // Iterate through all the buckets and print them to the console.
-            for (final Bucket bucket : response.getResult().getBuckets()) {
+            for (final Ds3Bucket bucket : response.getListAllMyBucketsResult().getBuckets()) {
                 System.out.println(bucket.getName());
             }
+        // Catch unknown host exceptions.    
+        } catch (final UnknownHostException e) {
+        	
+        	System.out.println("Invalid Endpoint Server Name or IP Address");
+        	
+        // Catch failed requests with unexpected status codes.
+        } catch (final FailedRequestException e) {
+        	
+        	// If this is invalid authorization.
+        	if (e.getStatusCode() == 403) {
+        		
+        		System.out.println("Invalid Access ID or Secret Key");
+        	
+        	// Else unexpected status code.
+        	} else {
+        		
+        		System.out.println("BlackPearl return an unexpected status code we did not expect");
+                // e.getStatusCode() can be used to get the status code BlackPearl returned for more accurate error handling and detection
+        		
+        	}
+                
+        } catch (final IOException e) {
+            
+                System.out.println("Encountered a networking error");
+            
         }
     }
 }

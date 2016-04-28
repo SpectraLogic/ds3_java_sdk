@@ -3,10 +3,13 @@ package com.spectralogic.ds3client.integration;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.spectralogic.ds3client.Ds3Client;
-import com.spectralogic.ds3client.commands.CancelJobRequest;
-import com.spectralogic.ds3client.commands.CancelJobResponse;
-import com.spectralogic.ds3client.commands.GetAvailableJobChunksRequest;
+import com.spectralogic.ds3client.commands.spectrads3.CancelJobSpectraS3Request;
+import com.spectralogic.ds3client.commands.spectrads3.CancelJobSpectraS3Response;
+import com.spectralogic.ds3client.commands.spectrads3.GetJobChunksReadyForClientProcessingSpectraS3Request;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers;
+import com.spectralogic.ds3client.integration.test.helpers.TempStorageIds;
+import com.spectralogic.ds3client.integration.test.helpers.TempStorageUtil;
+import com.spectralogic.ds3client.models.ChecksumType;
 import com.spectralogic.ds3client.models.Contents;
 import com.spectralogic.ds3client.models.bulk.Ds3Object;
 import com.spectralogic.ds3client.networking.FailedRequestException;
@@ -14,15 +17,15 @@ import com.spectralogic.ds3client.serializer.XmlProcessingException;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.nio.channels.SeekableByteChannel;
 import java.security.SignatureException;
 import java.util.Collections;
 import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.UUID;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
@@ -33,14 +36,19 @@ public class Regression_Test {
     private static final Logger LOG = LoggerFactory.getLogger(Regression_Test.class);
 
     private static Ds3Client client;
+    private static final String TEST_ENV_NAME = "regression_test";
+    private static TempStorageIds envStorageIds;
 
     @BeforeClass
-    public static void startup() {
+    public static void startup() throws IOException, SignatureException {
         client = Util.fromEnv();
+        final UUID dataPolicyId = TempStorageUtil.setupDataPolicy(TEST_ENV_NAME, false, ChecksumType.Type.MD5, client);
+        envStorageIds = TempStorageUtil.setup(TEST_ENV_NAME, dataPolicyId, client);
     }
 
     @AfterClass
-    public static void teardown() throws IOException {
+    public static void teardown() throws IOException, SignatureException {
+        TempStorageUtil.teardown(TEST_ENV_NAME, envStorageIds, client);
         client.close();
     }
 
@@ -70,7 +78,8 @@ public class Regression_Test {
             assertTrue(Iterables.size(objs) == 1);
             assertTrue(foundObj4);
 
-            final CancelJobResponse cancelJobResponse = client.cancelJob(new CancelJobRequest(putJob.getJobId()));
+            final CancelJobSpectraS3Response cancelJobResponse = client
+                    .cancelJobSpectraS3(new CancelJobSpectraS3Request(putJob.getJobId()));
             assertEquals(204, cancelJobResponse.getStatusCode());
         } finally {
             Util.deleteAllContents(client, bucketName);
@@ -106,7 +115,8 @@ public class Regression_Test {
             assertTrue(foundObj2);
             assertTrue(foundObj4);
 
-            final CancelJobResponse cancelJobResponse = client.cancelJob(new CancelJobRequest(putJob.getJobId()));
+            final CancelJobSpectraS3Response cancelJobResponse = client
+                    .cancelJobSpectraS3(new CancelJobSpectraS3Request(putJob.getJobId()));
             assertEquals(204, cancelJobResponse.getStatusCode());
         } finally {
             Util.deleteAllContents(client, bucketName);
@@ -155,7 +165,8 @@ public class Regression_Test {
             assertTrue(foundObj3);
             assertTrue(foundObj4);
 
-            final CancelJobResponse cancelJobResponse = client.cancelJob(new CancelJobRequest(putJob.getJobId()));
+            final CancelJobSpectraS3Response cancelJobResponse = client
+                    .cancelJobSpectraS3(new CancelJobSpectraS3Request(putJob.getJobId()));
             assertEquals(204, cancelJobResponse.getStatusCode());
         } finally {
             Util.deleteAllContents(client, bucketName);
@@ -204,7 +215,8 @@ public class Regression_Test {
             assertTrue(foundObj3);
             assertTrue(foundObj4);
 
-            final CancelJobResponse cancelJobResponse = client.cancelJob(new CancelJobRequest(putJob.getJobId()));
+            final CancelJobSpectraS3Response cancelJobResponse = client
+                    .cancelJobSpectraS3(new CancelJobSpectraS3Request(putJob.getJobId()));
             assertEquals(204, cancelJobResponse.getStatusCode());
         } finally {
             Util.deleteAllContents(client, bucketName);
@@ -228,7 +240,8 @@ public class Regression_Test {
             assertThat(job, is(notNullValue()));
 
             try {
-                client.getAvailableJobChunks(new GetAvailableJobChunksRequest(job.getJobId()));
+                client.getJobChunksReadyForClientProcessingSpectraS3(
+                        new GetJobChunksReadyForClientProcessingSpectraS3Request(job.getJobId()));
                 fail();
             } catch(final FailedRequestException e) {
                 assertThat(e.getStatusCode(), is(404)); // this returns 410 in bp 3.0

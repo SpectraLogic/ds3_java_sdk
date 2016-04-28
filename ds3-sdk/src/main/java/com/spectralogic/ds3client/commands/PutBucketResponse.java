@@ -13,13 +13,17 @@
  * ****************************************************************************
  */
 
+// This code is auto-generated, do not modify
 package com.spectralogic.ds3client.commands;
 
 import com.spectralogic.ds3client.networking.WebResponse;
-
 import java.io.IOException;
+import com.spectralogic.ds3client.commands.interfaces.AbstractResponse;
 
 public class PutBucketResponse extends AbstractResponse {
+
+
+
     public PutBucketResponse(final WebResponse response) throws IOException {
         super(response);
     }
@@ -28,8 +32,18 @@ public class PutBucketResponse extends AbstractResponse {
     protected void processResponse() throws IOException {
         try {
             this.checkStatusCode(200);
+
+            switch (this.getStatusCode()) {
+            case 200:
+                //Do nothing, payload is null
+                break;
+            default:
+                assert false : "checkStatusCode should have made it impossible to reach this line.";
+            }
         } finally {
             this.getResponse().close();
         }
     }
+
+
 }

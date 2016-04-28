@@ -21,8 +21,8 @@ import com.spectralogic.ds3client.helpers.ChecksumListener;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers;
 import com.spectralogic.ds3client.helpers.FileObjectPutter;
 import com.spectralogic.ds3client.helpers.options.WriteJobOptions;
-import com.spectralogic.ds3client.models.Checksum;
-import com.spectralogic.ds3client.models.bulk.BulkObject;
+import com.spectralogic.ds3client.models.BulkObject;
+import com.spectralogic.ds3client.models.ChecksumType;
 import com.spectralogic.ds3client.models.bulk.Ds3Object;
 import com.spectralogic.ds3client.serializer.XmlProcessingException;
 
@@ -55,7 +55,7 @@ public class BulkPutWithChecksums {
             // helper functions, the helper functions must process the file twice.  Once
             // to calculate the checksum, and then once to send the object to the
             // Spectra S3 endpoint.
-            final WriteJobOptions options = WriteJobOptions.create().withChecksumType(Checksum.Type.MD5);
+            final WriteJobOptions options = WriteJobOptions.create().withChecksumType(ChecksumType.Type.MD5);
 
             // Create the write job with the bucket we want to write to and the list
             // of objects that will be written
@@ -66,7 +66,7 @@ public class BulkPutWithChecksums {
             // blob checksums
             job.attachChecksumListener(new ChecksumListener() {
                 @Override
-                public void value(final BulkObject obj, final Checksum.Type type, final String checksum) {
+                public void value(final BulkObject obj, final ChecksumType.Type type, final String checksum) {
                     // The checksum for each blob(BulkObject) is reported
                     System.out.println("The checksum for blob " + obj.toString() + " is " + checksum);
                 }
