@@ -1262,6 +1262,10 @@ public interface Ds3Client extends Closeable {
     @Resource("DS3_TARGET")
     DeleteDs3TargetSpectraS3Response deleteDs3TargetSpectraS3(DeleteDs3TargetSpectraS3Request request)
             throws IOException, SignatureException;
+    @Action("BULK_MODIFY")
+    @Resource("TARGET_ENVIRONMENT")
+    ForceTargetEnvironmentRefreshSpectraS3Response forceTargetEnvironmentRefreshSpectraS3(ForceTargetEnvironmentRefreshSpectraS3Request request)
+            throws IOException, SignatureException;
     @ResponsePayloadModel("Ds3TargetFailureList")
     @Action("LIST")
     @Resource("DS3_TARGET_FAILURE")
