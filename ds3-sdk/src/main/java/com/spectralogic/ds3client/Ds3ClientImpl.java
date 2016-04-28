@@ -1099,6 +1099,10 @@ public class Ds3ClientImpl implements Ds3Client {
         return new DeleteDs3TargetSpectraS3Response(this.netClient.getResponse(request));
     }
     @Override
+    public ForceTargetEnvironmentRefreshSpectraS3Response forceTargetEnvironmentRefreshSpectraS3(ForceTargetEnvironmentRefreshSpectraS3Request request) throws IOException, SignatureException {
+        return new ForceTargetEnvironmentRefreshSpectraS3Response(this.netClient.getResponse(request));
+    }
+    @Override
     public GetDs3TargetFailuresSpectraS3Response getDs3TargetFailuresSpectraS3(GetDs3TargetFailuresSpectraS3Request request) throws IOException, SignatureException {
         return new GetDs3TargetFailuresSpectraS3Response(this.netClient.getResponse(request));
     }
