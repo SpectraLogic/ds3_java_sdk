@@ -42,7 +42,7 @@ subprojects {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '2.11'
+    gradleVersion = '2.12'
 }
 
 project(':ds3-sdk-integration') {
