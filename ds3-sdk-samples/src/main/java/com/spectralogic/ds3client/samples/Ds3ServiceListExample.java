@@ -19,9 +19,12 @@ import com.spectralogic.ds3client.Ds3Client;
 import com.spectralogic.ds3client.Ds3ClientBuilder;
 import com.spectralogic.ds3client.commands.GetServiceRequest;
 import com.spectralogic.ds3client.commands.GetServiceResponse;
+import com.spectralogic.ds3client.commands.spectrads3.GetSystemInformationSpectraS3Request;
+import com.spectralogic.ds3client.commands.spectrads3.GetSystemInformationSpectraS3Response;
 import com.spectralogic.ds3client.models.Ds3Bucket;
 import com.spectralogic.ds3client.models.common.Credentials;
 import com.spectralogic.ds3client.networking.FailedRequestException;
+import com.spectralogic.ds3client.networking.FailedRequestUsingMgmtPortException;
 
 import java.io.IOException;
 import java.security.SignatureException;
@@ -32,8 +35,11 @@ public class Ds3ServiceListExample {
     public static void main(final String args[]) throws IOException, SignatureException {
 
         // Get a client builder and then build a client instance.  This is the main entry point to the SDK.
-        try (final Ds3Client client = Ds3ClientBuilder.create("ds3Endpoint:8080",
-                new Credentials("accessKey", "secretKey")).withHttps(false).build()) {
+        try (final Ds3Client client = Ds3ClientBuilder.fromEnv().withHttps(false).build()) {
+
+            // system info -- check connection
+            final GetSystemInformationSpectraS3Response sysreponse = client.getSystemInformationSpectraS3(new GetSystemInformationSpectraS3Request());
+            System.out.println(sysreponse.getSystemInformationResult().getApiVersion());
 
             // Tell the client to get us a list of all buckets, this is called a service list.
             final GetServiceResponse response = client.getService(new GetServiceRequest());
@@ -42,12 +48,17 @@ public class Ds3ServiceListExample {
             for (final Ds3Bucket bucket : response.getListAllMyBucketsResult().getBuckets()) {
                 System.out.println(bucket.getName());
             }
-        // Catch unknown host exceptions.    
+            // Catch unknown host exceptions.
         } catch (final UnknownHostException e) {
-        	
-        	System.out.println("Invalid Endpoint Server Name or IP Address");
-        	
-        // Catch failed requests with unexpected status codes.
+
+            System.out.println("Invalid Endpoint Server Name or IP Address");
+
+            // Catch unknown host exceptions.
+        } catch (final FailedRequestUsingMgmtPortException e) {
+
+            System.out.println("Attempted data access on management port -- check endpoint");
+
+            // Catch failed requests with unexpected status codes.
         } catch (final FailedRequestException e) {
         	
         	// If this is invalid authorization.
