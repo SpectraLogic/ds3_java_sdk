@@ -100,7 +100,7 @@ public abstract class AbstractResponse implements Ds3Response {
         final ImmutableSet<Integer> expectedSet = this.createExpectedSet(expectedStatuses);
         final int statusCode = this.getStatusCode();
         if (!expectedSet.contains(statusCode)) {
-            if (checkFotManagementPortException()) {
+            if (checkForManagementPortException()) {
                 throw new FailedRequestUsingMgmtPortException(ResponseUtils.toImmutableIntList(expectedStatuses));
             }
             final String responseString = this.readResponseString();
@@ -113,7 +113,7 @@ public abstract class AbstractResponse implements Ds3Response {
         }
     }
 
-    private boolean checkFotManagementPortException() {
+    private boolean checkForManagementPortException() {
         if (this.getStatusCode() == FailedRequestUsingMgmtPortException.MGMT_PORT_STATUS_CODE) {
             if (getFirstHeaderValue(getResponse().getHeaders(), FailedRequestUsingMgmtPortException.MGMT_PORT_HEADER) != null) {
                 return true;
