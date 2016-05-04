@@ -19,10 +19,7 @@ import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableSet;
 import com.spectralogic.ds3client.models.ChecksumType;
 import com.spectralogic.ds3client.models.Error;
-import com.spectralogic.ds3client.networking.FailedRequestException;
-import com.spectralogic.ds3client.networking.Headers;
-import com.spectralogic.ds3client.networking.ResponseProcessingException;
-import com.spectralogic.ds3client.networking.WebResponse;
+import com.spectralogic.ds3client.networking.*;
 import com.spectralogic.ds3client.serializer.XmlOutput;
 import com.spectralogic.ds3client.utils.Guard;
 import com.spectralogic.ds3client.utils.ResponseUtils;
@@ -103,6 +100,9 @@ public abstract class AbstractResponse implements Ds3Response {
         final ImmutableSet<Integer> expectedSet = this.createExpectedSet(expectedStatuses);
         final int statusCode = this.getStatusCode();
         if (!expectedSet.contains(statusCode)) {
+            if (checkForManagementPortException()) {
+                throw new FailedRequestUsingMgmtPortException(ResponseUtils.toImmutableIntList(expectedStatuses));
+            }
             final String responseString = this.readResponseString();
             throw new FailedRequestException(
                     ResponseUtils.toImmutableIntList(expectedStatuses),
@@ -111,6 +111,11 @@ public abstract class AbstractResponse implements Ds3Response {
                     responseString
             );
         }
+    }
+
+    private boolean checkForManagementPortException() {
+        return ((this.getStatusCode() == FailedRequestUsingMgmtPortException.MGMT_PORT_STATUS_CODE)
+            && (getFirstHeaderValue(getResponse().getHeaders(), FailedRequestUsingMgmtPortException.MGMT_PORT_HEADER) != null));
     }
 
     public int getStatusCode() {

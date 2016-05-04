@@ -26,6 +26,7 @@ import com.spectralogic.ds3client.models.Objects;
 import com.spectralogic.ds3client.models.bulk.Ds3Object;
 import com.spectralogic.ds3client.models.common.Credentials;
 import com.spectralogic.ds3client.networking.FailedRequestException;
+import com.spectralogic.ds3client.networking.FailedRequestUsingMgmtPortException;
 import com.spectralogic.ds3client.networking.HttpVerb;
 import com.spectralogic.ds3client.serializer.XmlProcessingException;
 import com.spectralogic.ds3client.utils.ByteArraySeekableByteChannel;
@@ -111,13 +112,24 @@ public class Ds3Client_Test {
         assertThat(bucketNames, is(expectedBucketNames));
     }
 
+    @Test(expected = FailedRequestUsingMgmtPortException.class)
+    public void getSystemInfoOffMgmtPort() throws IOException, SignatureException {
+        final Map<String, String> responseHeaders = new HashMap<>();
+        responseHeaders.put(FailedRequestUsingMgmtPortException.MGMT_PORT_HEADER, "true");
+        MockNetwork
+                .expecting(HttpVerb.GET, "/_rest_/system_information", null, null)
+                .returning(FailedRequestUsingMgmtPortException.MGMT_PORT_STATUS_CODE, "", responseHeaders)
+                .asClient()
+                .getSystemInformationSpectraS3(new GetSystemInformationSpectraS3Request());
+    }
+
     @Test(expected = FailedRequestException.class)
     public void getBadBuckets() throws IOException, SignatureException {
         MockNetwork
-            .expecting(HttpVerb.GET, "/", null, null)
-            .returning(400, "")
-            .asClient()
-            .getService(new GetServiceRequest());
+                .expecting(HttpVerb.GET, "/", null, null)
+                .returning(400, "")
+                .asClient()
+                .getService(new GetServiceRequest());
     }
 
     @Test
