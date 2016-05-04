@@ -114,12 +114,8 @@ public abstract class AbstractResponse implements Ds3Response {
     }
 
     private boolean checkForManagementPortException() {
-        if (this.getStatusCode() == FailedRequestUsingMgmtPortException.MGMT_PORT_STATUS_CODE) {
-            if (getFirstHeaderValue(getResponse().getHeaders(), FailedRequestUsingMgmtPortException.MGMT_PORT_HEADER) != null) {
-                return true;
-            }
-        }
-        return false;
+        return ((this.getStatusCode() == FailedRequestUsingMgmtPortException.MGMT_PORT_STATUS_CODE)
+            && (getFirstHeaderValue(getResponse().getHeaders(), FailedRequestUsingMgmtPortException.MGMT_PORT_HEADER) != null));
     }
 
     public int getStatusCode() {
