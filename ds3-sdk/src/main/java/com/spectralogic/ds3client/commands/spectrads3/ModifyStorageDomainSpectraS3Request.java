@@ -47,6 +47,8 @@ public class ModifyStorageDomainSpectraS3Request extends AbstractRequest {
 
     private String name;
 
+    private boolean secureMediaAllocation;
+
     private Priority verifyPriorToAutoEject;
 
     private WriteOptimization writeOptimization;
@@ -109,6 +111,12 @@ public class ModifyStorageDomainSpectraS3Request extends AbstractRequest {
     public ModifyStorageDomainSpectraS3Request withName(final String name) {
         this.name = name;
         this.updateQueryParam("name", name);
+        return this;
+    }
+
+    public ModifyStorageDomainSpectraS3Request withSecureMediaAllocation(final boolean secureMediaAllocation) {
+        this.secureMediaAllocation = secureMediaAllocation;
+        this.updateQueryParam("secure_media_allocation", secureMediaAllocation);
         return this;
     }
 
@@ -182,6 +190,11 @@ public class ModifyStorageDomainSpectraS3Request extends AbstractRequest {
 
     public String getName() {
         return this.name;
+    }
+
+
+    public boolean getSecureMediaAllocation() {
+        return this.secureMediaAllocation;
     }
 
 
