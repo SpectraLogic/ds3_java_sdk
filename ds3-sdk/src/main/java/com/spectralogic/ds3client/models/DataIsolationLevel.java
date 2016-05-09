@@ -18,6 +18,5 @@ package com.spectralogic.ds3client.models;
 
 public enum DataIsolationLevel {
     STANDARD,
-    BUCKET_ISOLATED,
-    SECURE_BUCKET_ISOLATED
+    BUCKET_ISOLATED
 }

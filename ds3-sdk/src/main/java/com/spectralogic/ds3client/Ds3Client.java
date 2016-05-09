@@ -1177,20 +1177,10 @@ public interface Ds3Client extends Closeable {
     @Resource("TAPE")
     GetTapeSpectraS3Response getTapeSpectraS3(GetTapeSpectraS3Request request)
             throws IOException, SignatureException;
-    @ResponsePayloadModel("DetailedTape")
-    @Action("SHOW")
-    @Resource("TAPE")
-    GetTapeWithFullDetailsSpectraS3Response getTapeWithFullDetailsSpectraS3(GetTapeWithFullDetailsSpectraS3Request request)
-            throws IOException, SignatureException;
     @ResponsePayloadModel("TapeList")
     @Action("LIST")
     @Resource("TAPE")
     GetTapesSpectraS3Response getTapesSpectraS3(GetTapesSpectraS3Request request)
-            throws IOException, SignatureException;
-    @ResponsePayloadModel("NamedDetailedTapeList")
-    @Action("LIST")
-    @Resource("TAPE")
-    GetTapesWithFullDetailsSpectraS3Response getTapesWithFullDetailsSpectraS3(GetTapesWithFullDetailsSpectraS3Request request)
             throws IOException, SignatureException;
     @Action("BULK_MODIFY")
     @Resource("TAPE")
@@ -1265,6 +1255,11 @@ public interface Ds3Client extends Closeable {
     @Action("BULK_MODIFY")
     @Resource("TARGET_ENVIRONMENT")
     ForceTargetEnvironmentRefreshSpectraS3Response forceTargetEnvironmentRefreshSpectraS3(ForceTargetEnvironmentRefreshSpectraS3Request request)
+            throws IOException, SignatureException;
+    @ResponsePayloadModel("TreeSet")
+    @Action("SHOW")
+    @Resource("DS3_TARGET_DATA_POLICIES")
+    GetDs3TargetDataPoliciesSpectraS3Response getDs3TargetDataPoliciesSpectraS3(GetDs3TargetDataPoliciesSpectraS3Request request)
             throws IOException, SignatureException;
     @ResponsePayloadModel("Ds3TargetFailureList")
     @Action("LIST")

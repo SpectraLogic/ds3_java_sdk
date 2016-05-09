@@ -1027,16 +1027,8 @@ public class Ds3ClientImpl implements Ds3Client {
         return new GetTapeSpectraS3Response(this.netClient.getResponse(request));
     }
     @Override
-    public GetTapeWithFullDetailsSpectraS3Response getTapeWithFullDetailsSpectraS3(GetTapeWithFullDetailsSpectraS3Request request) throws IOException, SignatureException {
-        return new GetTapeWithFullDetailsSpectraS3Response(this.netClient.getResponse(request));
-    }
-    @Override
     public GetTapesSpectraS3Response getTapesSpectraS3(GetTapesSpectraS3Request request) throws IOException, SignatureException {
         return new GetTapesSpectraS3Response(this.netClient.getResponse(request));
-    }
-    @Override
-    public GetTapesWithFullDetailsSpectraS3Response getTapesWithFullDetailsSpectraS3(GetTapesWithFullDetailsSpectraS3Request request) throws IOException, SignatureException {
-        return new GetTapesWithFullDetailsSpectraS3Response(this.netClient.getResponse(request));
     }
     @Override
     public ImportAllTapesSpectraS3Response importAllTapesSpectraS3(ImportAllTapesSpectraS3Request request) throws IOException, SignatureException {
@@ -1101,6 +1093,10 @@ public class Ds3ClientImpl implements Ds3Client {
     @Override
     public ForceTargetEnvironmentRefreshSpectraS3Response forceTargetEnvironmentRefreshSpectraS3(ForceTargetEnvironmentRefreshSpectraS3Request request) throws IOException, SignatureException {
         return new ForceTargetEnvironmentRefreshSpectraS3Response(this.netClient.getResponse(request));
+    }
+    @Override
+    public GetDs3TargetDataPoliciesSpectraS3Response getDs3TargetDataPoliciesSpectraS3(GetDs3TargetDataPoliciesSpectraS3Request request) throws IOException, SignatureException {
+        return new GetDs3TargetDataPoliciesSpectraS3Response(this.netClient.getResponse(request));
     }
     @Override
     public GetDs3TargetFailuresSpectraS3Response getDs3TargetFailuresSpectraS3(GetDs3TargetFailuresSpectraS3Request request) throws IOException, SignatureException {

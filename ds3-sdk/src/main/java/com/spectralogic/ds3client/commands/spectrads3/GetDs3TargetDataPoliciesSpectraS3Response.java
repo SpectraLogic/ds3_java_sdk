@@ -18,16 +18,16 @@ package com.spectralogic.ds3client.commands.spectrads3;
 
 import com.spectralogic.ds3client.networking.WebResponse;
 import java.io.IOException;
-import com.spectralogic.ds3client.models.NamedDetailedTapeList;
+import java.util.TreeSet;
 import java.io.InputStream;
 import com.spectralogic.ds3client.serializer.XmlOutput;
 import com.spectralogic.ds3client.commands.interfaces.AbstractResponse;
 
-public class GetTapesWithFullDetailsSpectraS3Response extends AbstractResponse {
+public class GetDs3TargetDataPoliciesSpectraS3Response extends AbstractResponse {
 
-    private NamedDetailedTapeList namedDetailedTapeListResult;
+    private TreeSet treeSetResult;
 
-    public GetTapesWithFullDetailsSpectraS3Response(final WebResponse response) throws IOException {
+    public GetDs3TargetDataPoliciesSpectraS3Response(final WebResponse response) throws IOException {
         super(response);
     }
 
@@ -39,7 +39,7 @@ public class GetTapesWithFullDetailsSpectraS3Response extends AbstractResponse {
             switch (this.getStatusCode()) {
             case 200:
                 try (final InputStream content = getResponse().getResponseStream()) {
-                    this.namedDetailedTapeListResult = XmlOutput.fromXml(content, NamedDetailedTapeList.class);
+                    this.treeSetResult = XmlOutput.fromXml(content, TreeSet.class);
                 }
                 break;
             default:
@@ -50,8 +50,8 @@ public class GetTapesWithFullDetailsSpectraS3Response extends AbstractResponse {
         }
     }
 
-    public NamedDetailedTapeList getNamedDetailedTapeListResult() {
-        return this.namedDetailedTapeListResult;
+    public TreeSet getTreeSetResult() {
+        return this.treeSetResult;
     }
 
 }

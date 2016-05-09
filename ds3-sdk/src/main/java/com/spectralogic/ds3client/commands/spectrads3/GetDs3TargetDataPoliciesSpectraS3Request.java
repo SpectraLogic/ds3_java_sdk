@@ -14,34 +14,38 @@
  */
 
 // This code is auto-generated, do not modify
-package com.spectralogic.ds3client.models;
+package com.spectralogic.ds3client.commands.spectrads3;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
-import java.util.List;
-import java.util.ArrayList;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
+import com.spectralogic.ds3client.networking.HttpVerb;
+import com.spectralogic.ds3client.commands.interfaces.AbstractRequest;
+import com.google.common.net.UrlEscapers;
 
-public class NamedDetailedTapeList {
+public class GetDs3TargetDataPoliciesSpectraS3Request extends AbstractRequest {
 
     // Variables
-    @JsonProperty("Tape")
-    @JacksonXmlElementWrapper(useWrapping = false)
-    private List<NamedDetailedTape> namedDetailedTapes = new ArrayList<>();
+    
+    private final String ds3TargetDataPolicies;
 
     // Constructor
-    public NamedDetailedTapeList() {
-        //pass
-    }
-
-    // Getters and Setters
     
-    public List<NamedDetailedTape> getNamedDetailedTapes() {
-        return this.namedDetailedTapes;
+    public GetDs3TargetDataPoliciesSpectraS3Request(final String ds3TargetDataPolicies) {
+        this.ds3TargetDataPolicies = ds3TargetDataPolicies;
+        
     }
 
-    public void setNamedDetailedTapes(final List<NamedDetailedTape> namedDetailedTapes) {
-        this.namedDetailedTapes = namedDetailedTapes;
+
+    @Override
+    public HttpVerb getVerb() {
+        return HttpVerb.GET;
+    }
+
+    @Override
+    public String getPath() {
+        return "/_rest_/ds3_target_data_policies/" + ds3TargetDataPolicies;
+    }
+    
+    public String getDs3TargetDataPolicies() {
+        return this.ds3TargetDataPolicies;
     }
 
 }
