@@ -246,9 +246,9 @@ public class PutJobManagement_Test {
             client.putObject(new PutObjectRequest(BUCKET_NAME, book1, book1Channel, jobId, 0, Files.size(objPath1)));
             ABMTestHelper.waitForJobCachedSizeToBeMoreThanZero(jobId, client, 20);
 
-            final TruncateJobSpectraS3Response failedResponse = client.truncateJobSpectraS3(
+            final TruncateJobSpectraS3Response truncateJobSpectraS3Response = client.truncateJobSpectraS3(
                     new TruncateJobSpectraS3Request(jobId.toString()));
-            assertThat(failedResponse.getStatusCode(),is(204));
+            assertThat(truncateJobSpectraS3Response.getStatusCode(),is(204));
 
             final GetJobSpectraS3Response truncatedJob = client.getJobSpectraS3(new GetJobSpectraS3Request(jobId.toString()));
             assertEquals(truncatedJob.getMasterObjectListResult().getOriginalSizeInBytes(), Files.size(objPath1));
@@ -347,10 +347,10 @@ public class PutJobManagement_Test {
             ABMTestHelper.waitForJobCachedSizeToBeMoreThanZero(jobId1, client, 20);
             ABMTestHelper.waitForJobCachedSizeToBeMoreThanZero(jobId2, client, 20);
 
-            final TruncateAllJobsSpectraS3Response failedResponse = client
+            final TruncateAllJobsSpectraS3Response truncateAllJobsSpectraS3Response = client
                     .truncateAllJobsSpectraS3(new TruncateAllJobsSpectraS3Request());
 
-            assertThat(failedResponse.getStatusCode(), is(204));
+            assertThat(truncateAllJobsSpectraS3Response.getStatusCode(), is(204));
 
             final GetJobSpectraS3Response truncatedJob1 = client.getJobSpectraS3(new GetJobSpectraS3Request(jobId1.toString()));
             assertEquals(truncatedJob1.getMasterObjectListResult().getOriginalSizeInBytes(), Files.size(objPath1));
