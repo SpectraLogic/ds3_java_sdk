@@ -98,8 +98,7 @@ public class ResponseBuilders {
             final String startDate,
             final UUID userId,
             final String userName,
-            final WriteOptimization writeOptimization,
-            final List<Ds3Node> nodes,
+            final List<JobNode> nodes,
             final List<Objects> objects) throws ParseException {
         final MasterObjectList masterObjectList = new MasterObjectList();
         masterObjectList.setJobId(jobId);
@@ -117,22 +116,21 @@ public class ResponseBuilders {
 
         masterObjectList.setUserId(userId);
         masterObjectList.setUserName(userName);
-        masterObjectList.setWriteOptimization(writeOptimization);
         masterObjectList.setNodes(nodes);
         masterObjectList.setObjects(objects);
         return masterObjectList;
     }
     
-    public static Ds3Node basicNode(final UUID nodeId, final String endpoint) {
+    public static JobNode basicNode(final UUID nodeId, final String endpoint) {
         return node(nodeId, endpoint, 80, 443);
     }
 
-    public static Ds3Node node(
+    public static JobNode node(
             final UUID nodeId,
             final String endpoint,
             final int httpPort,
             final int httpsPort) {
-        final Ds3Node node = new Ds3Node();
+        final JobNode node = new JobNode();
         node.setId(nodeId);
         node.setEndPoint(endpoint);
         node.setHttpPort(httpPort);
