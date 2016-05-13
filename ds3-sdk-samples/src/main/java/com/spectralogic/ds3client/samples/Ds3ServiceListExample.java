@@ -21,14 +21,13 @@ import com.spectralogic.ds3client.commands.GetServiceRequest;
 import com.spectralogic.ds3client.commands.GetServiceResponse;
 import com.spectralogic.ds3client.commands.spectrads3.GetSystemInformationSpectraS3Request;
 import com.spectralogic.ds3client.commands.spectrads3.GetSystemInformationSpectraS3Response;
-import com.spectralogic.ds3client.models.Ds3Bucket;
-import com.spectralogic.ds3client.models.common.Credentials;
+import com.spectralogic.ds3client.models.BucketDetails;
 import com.spectralogic.ds3client.networking.FailedRequestException;
 import com.spectralogic.ds3client.networking.FailedRequestUsingMgmtPortException;
 
 import java.io.IOException;
-import java.security.SignatureException;
 import java.net.UnknownHostException;
+import java.security.SignatureException;
 
 public class Ds3ServiceListExample {
 
@@ -45,7 +44,7 @@ public class Ds3ServiceListExample {
             final GetServiceResponse response = client.getService(new GetServiceRequest());
 
             // Iterate through all the buckets and print them to the console.
-            for (final Ds3Bucket bucket : response.getListAllMyBucketsResult().getBuckets()) {
+            for (final BucketDetails bucket : response.getListAllMyBucketsResult().getBuckets()) {
                 System.out.println(bucket.getName());
             }
             // Catch unknown host exceptions.

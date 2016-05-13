@@ -19,7 +19,5 @@ package com.spectralogic.ds3client.models;
 public enum ImportConflictResolutionMode {
     CANCEL,
     ACCEPT_MOST_RECENT,
-    ACCEPT_HIGHEST_VERSION,
-    ACCEPT_IMPORT,
     ACCEPT_EXISTING
 }

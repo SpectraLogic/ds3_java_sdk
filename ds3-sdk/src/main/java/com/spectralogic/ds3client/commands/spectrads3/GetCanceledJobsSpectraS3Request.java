@@ -31,6 +31,8 @@ public class GetCanceledJobsSpectraS3Request extends AbstractRequest {
     
     private String bucketId;
 
+    private boolean canceledDueToTimeout;
+
     private JobChunkClientProcessingOrderGuarantee chunkClientProcessingOrderGuarantee;
 
     private boolean lastPage;
@@ -62,6 +64,12 @@ public class GetCanceledJobsSpectraS3Request extends AbstractRequest {
     public GetCanceledJobsSpectraS3Request withBucketId(final String bucketId) {
         this.bucketId = bucketId;
         this.updateQueryParam("bucket_id", bucketId);
+        return this;
+    }
+
+    public GetCanceledJobsSpectraS3Request withCanceledDueToTimeout(final boolean canceledDueToTimeout) {
+        this.canceledDueToTimeout = canceledDueToTimeout;
+        this.updateQueryParam("canceled_due_to_timeout", canceledDueToTimeout);
         return this;
     }
 
@@ -160,6 +168,11 @@ public class GetCanceledJobsSpectraS3Request extends AbstractRequest {
     
     public String getBucketId() {
         return this.bucketId;
+    }
+
+
+    public boolean getCanceledDueToTimeout() {
+        return this.canceledDueToTimeout;
     }
 
 

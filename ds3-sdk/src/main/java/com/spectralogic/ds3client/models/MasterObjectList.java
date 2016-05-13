@@ -59,7 +59,7 @@ public class MasterObjectList {
 
     @JsonProperty("Nodes")
     @JacksonXmlElementWrapper(useWrapping = true)
-    private List<Ds3Node> nodes = new ArrayList<>();
+    private List<JobNode> nodes = new ArrayList<>();
 
     @JsonProperty("Objects")
     @JacksonXmlElementWrapper(useWrapping = false)
@@ -85,9 +85,6 @@ public class MasterObjectList {
 
     @JacksonXmlProperty(isAttribute = true, localName = "UserName")
     private String userName;
-
-    @JacksonXmlProperty(isAttribute = true, localName = "WriteOptimization")
-    private WriteOptimization writeOptimization;
 
     // Constructor
     public MasterObjectList() {
@@ -177,11 +174,11 @@ public class MasterObjectList {
     }
 
 
-    public List<Ds3Node> getNodes() {
+    public List<JobNode> getNodes() {
         return this.nodes;
     }
 
-    public void setNodes(final List<Ds3Node> nodes) {
+    public void setNodes(final List<JobNode> nodes) {
         this.nodes = nodes;
     }
 
@@ -255,15 +252,6 @@ public class MasterObjectList {
 
     public void setUserName(final String userName) {
         this.userName = userName;
-    }
-
-
-    public WriteOptimization getWriteOptimization() {
-        return this.writeOptimization;
-    }
-
-    public void setWriteOptimization(final WriteOptimization writeOptimization) {
-        this.writeOptimization = writeOptimization;
     }
 
 }

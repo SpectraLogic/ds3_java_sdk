@@ -21,7 +21,7 @@ import java.security.SignatureException;
 import com.spectralogic.ds3client.commands.*;
 import com.spectralogic.ds3client.commands.spectrads3.*;
 import com.spectralogic.ds3client.commands.spectrads3.notifications.*;
-import com.spectralogic.ds3client.models.Ds3Node;
+import com.spectralogic.ds3client.models.JobNode;
 import com.spectralogic.ds3client.networking.ConnectionDetails;
 import com.spectralogic.ds3client.networking.NetworkClient;
 import com.spectralogic.ds3client.networking.NetworkClientImpl;
@@ -1174,7 +1174,7 @@ public class Ds3ClientImpl implements Ds3Client {
     }
 
     @Override
-    public Ds3Client newForNode(final Ds3Node node) {
+    public Ds3Client newForNode(final JobNode node) {
         final ConnectionDetails newConnectionDetails = ConnectionDetailsImpl.newForNode(node, this.getConnectionDetails());
         final NetworkClient newNetClient = new NetworkClientImpl(newConnectionDetails);
         return new Ds3ClientImpl(newNetClient);

@@ -59,7 +59,7 @@ public class Job {
 
     @JsonProperty("Nodes")
     @JacksonXmlElementWrapper(useWrapping = true)
-    private List<Ds3Node> nodes = new ArrayList<>();
+    private List<JobNode> nodes = new ArrayList<>();
 
     @JacksonXmlProperty(isAttribute = true, localName = "OriginalSizeInBytes")
     private long originalSizeInBytes;
@@ -81,9 +81,6 @@ public class Job {
 
     @JacksonXmlProperty(isAttribute = true, localName = "UserName")
     private String userName;
-
-    @JacksonXmlProperty(isAttribute = true, localName = "WriteOptimization")
-    private WriteOptimization writeOptimization;
 
     // Constructor
     public Job() {
@@ -173,11 +170,11 @@ public class Job {
     }
 
 
-    public List<Ds3Node> getNodes() {
+    public List<JobNode> getNodes() {
         return this.nodes;
     }
 
-    public void setNodes(final List<Ds3Node> nodes) {
+    public void setNodes(final List<JobNode> nodes) {
         this.nodes = nodes;
     }
 
@@ -242,15 +239,6 @@ public class Job {
 
     public void setUserName(final String userName) {
         this.userName = userName;
-    }
-
-
-    public WriteOptimization getWriteOptimization() {
-        return this.writeOptimization;
-    }
-
-    public void setWriteOptimization(final WriteOptimization writeOptimization) {
-        this.writeOptimization = writeOptimization;
     }
 
 }

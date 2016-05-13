@@ -22,7 +22,7 @@ import com.google.common.util.concurrent.MoreExecutors;
 import com.spectralogic.ds3client.Ds3Client;
 import com.spectralogic.ds3client.models.BulkObject;
 import com.spectralogic.ds3client.models.Objects;
-import com.spectralogic.ds3client.models.Ds3Node;
+import com.spectralogic.ds3client.models.JobNode;
 import com.spectralogic.ds3client.serializer.XmlProcessingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -57,11 +57,11 @@ class ChunkTransferrer {
     }
     
     public void transferChunks(
-            final Iterable<Ds3Node> nodes,
+            final Iterable<JobNode> nodes,
             final Iterable<Objects> chunks)
                 throws SignatureException, IOException, XmlProcessingException {
         LOG.debug("Getting ready to process chunks");
-        final Map<UUID, Ds3Node> nodeMap = buildNodeMap(nodes);
+        final Map<UUID, JobNode> nodeMap = buildNodeMap(nodes);
         LOG.debug("Starting executor service");
         final ListeningExecutorService executor = MoreExecutors.listeningDecorator(Executors.newFixedThreadPool(maxParallelRequests));
         LOG.debug("Executor service started");
@@ -93,9 +93,9 @@ class ChunkTransferrer {
         }
     }
 
-    private static Map<UUID, Ds3Node> buildNodeMap(final Iterable<Ds3Node> nodes) {
-        final Map<UUID, Ds3Node> nodeMap = new HashMap<>();
-        for(final Ds3Node node: nodes) {
+    private static Map<UUID, JobNode> buildNodeMap(final Iterable<JobNode> nodes) {
+        final Map<UUID, JobNode> nodeMap = new HashMap<>();
+        for(final JobNode node: nodes) {
             nodeMap.put(node.getId(), node);
         }
         return nodeMap;

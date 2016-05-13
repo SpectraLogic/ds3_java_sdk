@@ -25,9 +25,6 @@ import java.lang.String;
 public class DataReplicationRule {
 
     // Variables
-    @JsonProperty("ConflictResolutionMode")
-    private ReplicationConflictResolutionMode conflictResolutionMode;
-
     @JsonProperty("DataPolicyId")
     private UUID dataPolicyId;
 
@@ -53,15 +50,6 @@ public class DataReplicationRule {
 
     // Getters and Setters
     
-    public ReplicationConflictResolutionMode getConflictResolutionMode() {
-        return this.conflictResolutionMode;
-    }
-
-    public void setConflictResolutionMode(final ReplicationConflictResolutionMode conflictResolutionMode) {
-        this.conflictResolutionMode = conflictResolutionMode;
-    }
-
-
     public UUID getDataPolicyId() {
         return this.dataPolicyId;
     }

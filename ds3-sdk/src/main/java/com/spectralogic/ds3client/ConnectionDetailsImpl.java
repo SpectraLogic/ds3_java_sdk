@@ -16,7 +16,7 @@
 package com.spectralogic.ds3client;
 
 import com.spectralogic.ds3client.models.common.Credentials;
-import com.spectralogic.ds3client.models.Ds3Node;
+import com.spectralogic.ds3client.models.JobNode;
 import com.spectralogic.ds3client.networking.ConnectionDetails;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -84,7 +84,7 @@ class ConnectionDetailsImpl implements ConnectionDetails {
         }
     }
 
-    public static ConnectionDetails newForNode(final Ds3Node node, final ConnectionDetails connectionDetails) {
+    public static ConnectionDetails newForNode(final JobNode node, final ConnectionDetails connectionDetails) {
         final Builder connectionBuilder;
         if (node.getEndPoint() == null || node.getEndPoint().equals("FAILED_TO_DETERMINE_DATAPATH_IP_ADDRESS")) {
             LOG.trace("Running against an old version of the DS3 API, reusing existing endpoint configuration");
@@ -105,7 +105,7 @@ class ConnectionDetailsImpl implements ConnectionDetails {
         return connectionBuilder.build();
     }
 
-    private static String buildAuthority(final Ds3Node node, final ConnectionDetails connectionDetails) {
+    private static String buildAuthority(final JobNode node, final ConnectionDetails connectionDetails) {
         return node.getEndPoint() + ":" + Integer.toString(
                 (connectionDetails.isHttps() ? node.getHttpsPort() : node.getHttpPort()));
     }
