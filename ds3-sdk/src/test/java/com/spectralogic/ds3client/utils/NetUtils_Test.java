@@ -212,6 +212,11 @@ public class NetUtils_Test {
             }
 
             @Override
+            public int getSocketTimeout() {
+                return 0;
+            }
+
+            @Override
             public boolean isCertificateVerification() {
                 return false;
             }
