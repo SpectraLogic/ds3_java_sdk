@@ -41,12 +41,6 @@ public class BlobStoreTaskInformation {
     @JsonProperty("Ds3TargetId")
     private UUID ds3TargetId;
 
-    @JsonProperty("DurationInProgress")
-    private Duration durationInProgress;
-
-    @JsonProperty("DurationScheduled")
-    private Duration durationScheduled;
-
     @JsonProperty("Id")
     private long id;
 
@@ -114,24 +108,6 @@ public class BlobStoreTaskInformation {
 
     public void setDs3TargetId(final UUID ds3TargetId) {
         this.ds3TargetId = ds3TargetId;
-    }
-
-
-    public Duration getDurationInProgress() {
-        return this.durationInProgress;
-    }
-
-    public void setDurationInProgress(final Duration durationInProgress) {
-        this.durationInProgress = durationInProgress;
-    }
-
-
-    public Duration getDurationScheduled() {
-        return this.durationScheduled;
-    }
-
-    public void setDurationScheduled(final Duration durationScheduled) {
-        this.durationScheduled = durationScheduled;
     }
 
 

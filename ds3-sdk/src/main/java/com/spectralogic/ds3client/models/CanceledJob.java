@@ -32,6 +32,9 @@ public class CanceledJob {
     @JsonProperty("CachedSizeInBytes")
     private long cachedSizeInBytes;
 
+    @JsonProperty("CanceledDueToTimeout")
+    private boolean canceledDueToTimeout;
+
     @JsonProperty("ChunkClientProcessingOrderGuarantee")
     private JobChunkClientProcessingOrderGuarantee chunkClientProcessingOrderGuarantee;
 
@@ -96,6 +99,15 @@ public class CanceledJob {
 
     public void setCachedSizeInBytes(final long cachedSizeInBytes) {
         this.cachedSizeInBytes = cachedSizeInBytes;
+    }
+
+
+    public boolean getCanceledDueToTimeout() {
+        return this.canceledDueToTimeout;
+    }
+
+    public void setCanceledDueToTimeout(final boolean canceledDueToTimeout) {
+        this.canceledDueToTimeout = canceledDueToTimeout;
     }
 
 

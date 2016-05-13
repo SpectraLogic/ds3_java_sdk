@@ -22,7 +22,6 @@ import java.io.InputStream;
 import java.nio.charset.Charset;
 import com.spectralogic.ds3client.utils.Guard;
 import com.spectralogic.ds3client.commands.interfaces.AbstractRequest;
-import com.spectralogic.ds3client.models.ReplicationConflictResolutionMode;
 import com.spectralogic.ds3client.models.Priority;
 import com.google.common.net.UrlEscapers;
 
@@ -33,8 +32,6 @@ public class ReplicatePutJobSpectraS3Request extends AbstractRequest {
     private final String bucketName;
 
     private final String requestPayload;
-
-    private ReplicationConflictResolutionMode conflictResolutionMode;
 
     private Priority priority;
     private long size = 0;
@@ -48,12 +45,6 @@ public class ReplicatePutJobSpectraS3Request extends AbstractRequest {
         this.getQueryParams().put("operation", "start_bulk_put");
 
         this.getQueryParams().put("replicate", null);
-    }
-
-    public ReplicatePutJobSpectraS3Request withConflictResolutionMode(final ReplicationConflictResolutionMode conflictResolutionMode) {
-        this.conflictResolutionMode = conflictResolutionMode;
-        this.updateQueryParam("conflict_resolution_mode", conflictResolutionMode);
-        return this;
     }
 
     public ReplicatePutJobSpectraS3Request withPriority(final Priority priority) {
@@ -95,11 +86,6 @@ public class ReplicatePutJobSpectraS3Request extends AbstractRequest {
 
     public String getRequestPayload() {
         return this.requestPayload;
-    }
-
-
-    public ReplicationConflictResolutionMode getConflictResolutionMode() {
-        return this.conflictResolutionMode;
     }
 
 

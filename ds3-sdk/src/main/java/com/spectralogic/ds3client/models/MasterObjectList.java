@@ -86,9 +86,6 @@ public class MasterObjectList {
     @JacksonXmlProperty(isAttribute = true, localName = "UserName")
     private String userName;
 
-    @JacksonXmlProperty(isAttribute = true, localName = "WriteOptimization")
-    private WriteOptimization writeOptimization;
-
     // Constructor
     public MasterObjectList() {
         //pass
@@ -255,15 +252,6 @@ public class MasterObjectList {
 
     public void setUserName(final String userName) {
         this.userName = userName;
-    }
-
-
-    public WriteOptimization getWriteOptimization() {
-        return this.writeOptimization;
-    }
-
-    public void setWriteOptimization(final WriteOptimization writeOptimization) {
-        this.writeOptimization = writeOptimization;
     }
 
 }

@@ -98,7 +98,6 @@ public class ResponseBuilders {
             final String startDate,
             final UUID userId,
             final String userName,
-            final WriteOptimization writeOptimization,
             final List<Ds3Node> nodes,
             final List<Objects> objects) throws ParseException {
         final MasterObjectList masterObjectList = new MasterObjectList();
@@ -117,7 +116,6 @@ public class ResponseBuilders {
 
         masterObjectList.setUserId(userId);
         masterObjectList.setUserName(userName);
-        masterObjectList.setWriteOptimization(writeOptimization);
         masterObjectList.setNodes(nodes);
         masterObjectList.setObjects(objects);
         return masterObjectList;
