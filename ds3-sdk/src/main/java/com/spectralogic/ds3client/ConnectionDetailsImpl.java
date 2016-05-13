@@ -34,7 +34,8 @@ class ConnectionDetailsImpl implements ConnectionDetails {
         private URI proxy = null;
         private int retries = 5;
         private int bufferSize = 1024 * 1024;
-        private int connectionTimeout = 60 * 1000;
+        private int connectionTimeout = 5 * 1000;
+        private int socketTimeout = 60 * 1000;
         private boolean certificateVerification;
 
         private Builder(final String endpoint, final Credentials credentials) {
@@ -72,11 +73,15 @@ class ConnectionDetailsImpl implements ConnectionDetails {
             return this;
         }
 
+        public Builder withSocketTimeout(final int socketTimeout) {
+            this.socketTimeout = socketTimeout;
+            return this;
+        }
+
         @Override
         public ConnectionDetailsImpl build() {
             return new ConnectionDetailsImpl(this);
         }
-
     }
 
     public static ConnectionDetails newForNode(final Ds3Node node, final ConnectionDetails connectionDetails) {
@@ -94,6 +99,7 @@ class ConnectionDetailsImpl implements ConnectionDetails {
             .withCertificateVerification(connectionDetails.isCertificateVerification())
             .withBufferSize(connectionDetails.getBufferSize())
             .withConnectionTimeout(connectionDetails.getConnectionTimeout())
+            .withSocketTimeout(connectionDetails.getSocketTimeout())
             .withProxy(connectionDetails.getProxy());
 
         return connectionBuilder.build();
@@ -111,6 +117,7 @@ class ConnectionDetailsImpl implements ConnectionDetails {
     private final int retries;
     private final int bufferSize;
     private final int connectionTimeout;
+    private final int socketTimeout;
     private final boolean certificateVerification;
 
     static Builder builder(final String uriEndpoint, final Credentials credentials) {
@@ -126,6 +133,7 @@ class ConnectionDetailsImpl implements ConnectionDetails {
         this.bufferSize = builder.bufferSize;
         this.connectionTimeout = builder.connectionTimeout;
         this.certificateVerification = builder.certificateVerification;
+        this.socketTimeout = builder.socketTimeout;
     }
 
     @Override
@@ -161,6 +169,11 @@ class ConnectionDetailsImpl implements ConnectionDetails {
     @Override
     public int getConnectionTimeout() {
         return connectionTimeout;
+    }
+
+    @Override
+    public int getSocketTimeout() {
+        return socketTimeout;
     }
 
     @Override

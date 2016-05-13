@@ -47,8 +47,9 @@ public class Ds3ClientBuilder implements Builder<Ds3Client> {
     private boolean certificateVerification = true;
     private URI proxy = null;
     private int retries = 5;
-    private int connectionTimeout = 60 * 1000;
+    private int connectionTimeout = 5 * 1000;
     private int bufferSize = 1024 * 1024;
+    private int socketTimeout = 1000 * 60;
 
     private Ds3ClientBuilder(final String endpoint, final Credentials credentials) throws IllegalArgumentException {
         if (Guard.isStringNullOrEmpty(endpoint)) {
@@ -169,9 +170,21 @@ public class Ds3ClientBuilder implements Builder<Ds3Client> {
 
     /**
      * Sets the number of milliseconds to wait for a connection to be established before timing out.
+     *
+     * Default: 5 minutes
      */
     public Ds3ClientBuilder withConnectionTimeout(final int timeout) {
         this.connectionTimeout = timeout;
+        return this;
+    }
+
+    /**
+     * Sets the number of milliseconds to wait between data packets before timing out a request.
+     *
+     * Default: 60 minutes
+     */
+    public Ds3ClientBuilder withSocketTimeout(final int timeout) {
+        this.socketTimeout = timeout;
         return this;
     }
 
@@ -189,7 +202,8 @@ public class Ds3ClientBuilder implements Builder<Ds3Client> {
                 .withCertificateVerification(this.certificateVerification)
                 .withRedirectRetries(this.retries)
                 .withBufferSize(this.bufferSize)
-                .withConnectionTimeout(this.connectionTimeout);
+                .withConnectionTimeout(this.connectionTimeout)
+                .withSocketTimeout(this.socketTimeout);
 
         final NetworkClient netClient = new NetworkClientImpl(connBuilder.build());
         return new Ds3ClientImpl(netClient);
