@@ -109,7 +109,7 @@ public class Ds3ClientHelpers_Test {
     public void testReadObjectsWithFailedGet() throws SignatureException, IOException, XmlProcessingException, ParseException {
         final Ds3Client ds3Client = mock(Ds3Client.class);
 
-        Mockito.when(ds3Client.newForNode(Mockito.<Ds3Node>any())).thenReturn(ds3Client);
+        Mockito.when(ds3Client.newForNode(Mockito.<JobNode>any())).thenReturn(ds3Client);
 
         final GetBulkJobSpectraS3Response buildBulkGetResponse = buildBulkGetResponse();
         Mockito.when(ds3Client.getBulkJobSpectraS3(hasChunkOrdering(JobChunkClientProcessingOrderGuarantee.NONE))).thenReturn(buildBulkGetResponse);
@@ -190,7 +190,7 @@ public class Ds3ClientHelpers_Test {
         final ConnectionDetails details = mock(ConnectionDetails.class);
         Mockito.when(details.getEndpoint()).thenReturn("localhost");
 
-        Mockito.when(ds3Client.newForNode(Mockito.<Ds3Node>any())).thenReturn(ds3Client);
+        Mockito.when(ds3Client.newForNode(Mockito.<JobNode>any())).thenReturn(ds3Client);
         Mockito.when(ds3Client.getConnectionDetails()).thenReturn(details);
 
         final PutBulkJobSpectraS3Response buildBulkPutResponse = buildBulkPutResponse();
@@ -396,7 +396,7 @@ public class Ds3ClientHelpers_Test {
             .thenReturn(jobChunksResponse2)
             .thenReturn(jobChunksResponse3);
 
-        Mockito.when(ds3Client.newForNode(Mockito.<Ds3Node>any())).thenReturn(ds3Client);
+        Mockito.when(ds3Client.newForNode(Mockito.<JobNode>any())).thenReturn(ds3Client);
         Mockito.when(ds3Client.getConnectionDetails()).thenReturn(details);
         return ds3Client;
     }
@@ -503,7 +503,6 @@ public class Ds3ClientHelpers_Test {
                 "2014-09-17T13:03:54.000Z",
                 UUID.fromString("57919d2d-448c-4e2a-8886-0413af22243e"),
                 "spectra",
-                WriteOptimization.CAPACITY,
                 Arrays.asList(basicNode(nodeId, "black-pearl")),
                 Arrays.asList(chunks)
         );

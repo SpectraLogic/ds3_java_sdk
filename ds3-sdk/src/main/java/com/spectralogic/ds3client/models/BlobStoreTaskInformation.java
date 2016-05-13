@@ -38,12 +38,6 @@ public class BlobStoreTaskInformation {
     @JsonProperty("DriveId")
     private UUID driveId;
 
-    @JsonProperty("DurationInProgress")
-    private Duration durationInProgress;
-
-    @JsonProperty("DurationScheduled")
-    private Duration durationScheduled;
-
     @JsonProperty("Id")
     private long id;
 
@@ -102,24 +96,6 @@ public class BlobStoreTaskInformation {
 
     public void setDriveId(final UUID driveId) {
         this.driveId = driveId;
-    }
-
-
-    public Duration getDurationInProgress() {
-        return this.durationInProgress;
-    }
-
-    public void setDurationInProgress(final Duration durationInProgress) {
-        this.durationInProgress = durationInProgress;
-    }
-
-
-    public Duration getDurationScheduled() {
-        return this.durationScheduled;
-    }
-
-    public void setDurationScheduled(final Duration durationScheduled) {
-        this.durationScheduled = durationScheduled;
     }
 
 

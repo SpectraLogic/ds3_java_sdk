@@ -18,41 +18,67 @@ package com.spectralogic.ds3client.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
-import java.util.Date;
 import java.lang.String;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import java.lang.Integer;
+import java.util.UUID;
 
 @JacksonXmlRootElement(namespace = "Data")
-public class Ds3Bucket {
+public class JobNode {
 
     // Variables
-    @JsonProperty("CreationDate")
-    private Date creationDate;
+    @JacksonXmlProperty(isAttribute = true, localName = "EndPoint")
+    private String endPoint;
 
-    @JsonProperty("Name")
-    private String name;
+    @JacksonXmlProperty(isAttribute = true, localName = "HttpPort")
+    private Integer httpPort;
+
+    @JacksonXmlProperty(isAttribute = true, localName = "HttpsPort")
+    private Integer httpsPort;
+
+    @JacksonXmlProperty(isAttribute = true, localName = "Id")
+    private UUID id;
 
     // Constructor
-    public Ds3Bucket() {
+    public JobNode() {
         //pass
     }
 
     // Getters and Setters
     
-    public Date getCreationDate() {
-        return this.creationDate;
+    public String getEndPoint() {
+        return this.endPoint;
     }
 
-    public void setCreationDate(final Date creationDate) {
-        this.creationDate = creationDate;
+    public void setEndPoint(final String endPoint) {
+        this.endPoint = endPoint;
     }
 
 
-    public String getName() {
-        return this.name;
+    public Integer getHttpPort() {
+        return this.httpPort;
     }
 
-    public void setName(final String name) {
-        this.name = name;
+    public void setHttpPort(final Integer httpPort) {
+        this.httpPort = httpPort;
+    }
+
+
+    public Integer getHttpsPort() {
+        return this.httpsPort;
+    }
+
+    public void setHttpsPort(final Integer httpsPort) {
+        this.httpsPort = httpsPort;
+    }
+
+
+    public UUID getId() {
+        return this.id;
+    }
+
+    public void setId(final UUID id) {
+        this.id = id;
     }
 
 }
