@@ -59,7 +59,7 @@ public class Job {
 
     @JsonProperty("Nodes")
     @JacksonXmlElementWrapper(useWrapping = true)
-    private List<Ds3Node> nodes = new ArrayList<>();
+    private List<JobNode> nodes = new ArrayList<>();
 
     @JacksonXmlProperty(isAttribute = true, localName = "OriginalSizeInBytes")
     private long originalSizeInBytes;
@@ -170,11 +170,11 @@ public class Job {
     }
 
 
-    public List<Ds3Node> getNodes() {
+    public List<JobNode> getNodes() {
         return this.nodes;
     }
 
-    public void setNodes(final List<Ds3Node> nodes) {
+    public void setNodes(final List<JobNode> nodes) {
         this.nodes = nodes;
     }
 

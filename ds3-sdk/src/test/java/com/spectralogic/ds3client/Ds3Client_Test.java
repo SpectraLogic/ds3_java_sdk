@@ -103,9 +103,9 @@ public class Ds3Client_Test {
         assertThat(result.getOwner().getDisplayName(), is("ryan"));
         assertThat(result.getOwner().getId(), is(id));
         
-        final List<Ds3Bucket> buckets = result.getBuckets();
+        final List<BucketDetails> buckets = result.getBuckets();
         final List<String> bucketNames = new ArrayList<>();
-        for (final Ds3Bucket bucket : buckets) {
+        for (final BucketDetails bucket : buckets) {
             bucketNames.add(bucket.getName());
             assertThat(bucket.getCreationDate(), is(DATE_FORMAT.parse("2013-12-11T23:20:09.000Z")));
         }
@@ -695,7 +695,7 @@ public class Ds3Client_Test {
         assertThat(job.getStartDate(), is(startDate));
         assertThat(job.getUserId(), is(userId));
         assertThat(job.getUserName(), is(userName));
-        final Ds3Node node = job.getNodes().get(0);
+        final JobNode node = job.getNodes().get(0);
         assertThat(node.getEndPoint(), is("10.10.10.10"));
         assertThat(node.getHttpPort(), is(80));
         assertThat(node.getHttpsPort(), is(443));
@@ -720,13 +720,13 @@ public class Ds3Client_Test {
         assertThat(masterObjectList.getRequestType(), is(JobRequestType.GET));
         assertThat(masterObjectList.getStartDate(), is(DATE_FORMAT.parse("2014-07-01T20:12:52.000Z")));
 
-        final List<Ds3Node> nodes = masterObjectList.getNodes();
+        final List<JobNode> nodes = masterObjectList.getNodes();
         assertThat(nodes.size(), is(2));
-        final Ds3Node node0 = nodes.get(0);
+        final JobNode node0 = nodes.get(0);
         assertThat(node0.getEndPoint(), is("10.1.18.12"));
         assertThat(node0.getHttpPort(), is(80));
         assertThat(node0.getHttpsPort(), is(443));
-        final Ds3Node node1 = nodes.get(1);
+        final JobNode node1 = nodes.get(1);
         assertThat(node1.getEndPoint(), is("10.1.18.13"));
         assertThat(node1.getHttpPort(), is(nullValue())); //TODO verify this is correct change from is(0)
         assertThat(node1.getHttpsPort(), is(443)); 
@@ -814,7 +814,7 @@ public class Ds3Client_Test {
     public void newForNode() {
         final Ds3Client client = Ds3ClientBuilder.create("endpoint", new Credentials("access", "key")).build();
 
-        final Ds3Node node = new Ds3Node();
+        final JobNode node = new JobNode();
         node.setEndPoint("newEndpoint");
         node.setHttpPort(80);
         node.setHttpsPort(443);

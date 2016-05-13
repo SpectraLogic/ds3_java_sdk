@@ -28,7 +28,7 @@ public class ListAllMyBucketsResult {
     // Variables
     @JsonProperty("Buckets")
     @JacksonXmlElementWrapper(useWrapping = true)
-    private List<Ds3Bucket> buckets = new ArrayList<>();
+    private List<BucketDetails> buckets = new ArrayList<>();
 
     @JsonProperty("Owner")
     private User owner;
@@ -40,11 +40,11 @@ public class ListAllMyBucketsResult {
 
     // Getters and Setters
     
-    public List<Ds3Bucket> getBuckets() {
+    public List<BucketDetails> getBuckets() {
         return this.buckets;
     }
 
-    public void setBuckets(final List<Ds3Bucket> buckets) {
+    public void setBuckets(final List<BucketDetails> buckets) {
         this.buckets = buckets;
     }
 
