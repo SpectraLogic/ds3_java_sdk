@@ -28,6 +28,8 @@ public class GetDataPoliciesSpectraS3Request extends AbstractRequest {
     
     private boolean alwaysForcePutJobCreation;
 
+    private boolean alwaysMinimizeSpanningAcrossMedia;
+
     private boolean alwaysReplicateDeletes;
 
     private ChecksumType.Type checksumType;
@@ -53,6 +55,12 @@ public class GetDataPoliciesSpectraS3Request extends AbstractRequest {
     public GetDataPoliciesSpectraS3Request withAlwaysForcePutJobCreation(final boolean alwaysForcePutJobCreation) {
         this.alwaysForcePutJobCreation = alwaysForcePutJobCreation;
         this.updateQueryParam("always_force_put_job_creation", alwaysForcePutJobCreation);
+        return this;
+    }
+
+    public GetDataPoliciesSpectraS3Request withAlwaysMinimizeSpanningAcrossMedia(final boolean alwaysMinimizeSpanningAcrossMedia) {
+        this.alwaysMinimizeSpanningAcrossMedia = alwaysMinimizeSpanningAcrossMedia;
+        this.updateQueryParam("always_minimize_spanning_across_media", alwaysMinimizeSpanningAcrossMedia);
         return this;
     }
 
@@ -127,6 +135,11 @@ public class GetDataPoliciesSpectraS3Request extends AbstractRequest {
     
     public boolean getAlwaysForcePutJobCreation() {
         return this.alwaysForcePutJobCreation;
+    }
+
+
+    public boolean getAlwaysMinimizeSpanningAcrossMedia() {
+        return this.alwaysMinimizeSpanningAcrossMedia;
     }
 
 
