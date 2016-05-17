@@ -30,6 +30,9 @@ public class DataPolicy {
     @JsonProperty("AlwaysForcePutJobCreation")
     private boolean alwaysForcePutJobCreation;
 
+    @JsonProperty("AlwaysMinimizeSpanningAcrossMedia")
+    private boolean alwaysMinimizeSpanningAcrossMedia;
+
     @JsonProperty("AlwaysReplicateDeletes")
     private boolean alwaysReplicateDeletes;
 
@@ -85,6 +88,15 @@ public class DataPolicy {
 
     public void setAlwaysForcePutJobCreation(final boolean alwaysForcePutJobCreation) {
         this.alwaysForcePutJobCreation = alwaysForcePutJobCreation;
+    }
+
+
+    public boolean getAlwaysMinimizeSpanningAcrossMedia() {
+        return this.alwaysMinimizeSpanningAcrossMedia;
+    }
+
+    public void setAlwaysMinimizeSpanningAcrossMedia(final boolean alwaysMinimizeSpanningAcrossMedia) {
+        this.alwaysMinimizeSpanningAcrossMedia = alwaysMinimizeSpanningAcrossMedia;
     }
 
 
