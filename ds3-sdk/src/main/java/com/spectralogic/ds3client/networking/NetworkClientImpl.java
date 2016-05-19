@@ -95,8 +95,6 @@ public class NetworkClientImpl implements NetworkClient {
             this.host = buildHost(connectionDetails);
             this.client = createDefaultClient(connectionDetails);
         } catch (final MalformedURLException e) {
-            // TODO In 3.0 we should remove this try catch and expose the exception so that
-            // we do not create a client that has a bad host url
             throw new RuntimeException(e);
         }
     }
@@ -183,7 +181,7 @@ public class NetworkClientImpl implements NetworkClient {
     }
 
     @Override
-    public WebResponse getResponse(final Ds3Request request) throws IOException, SignatureException {
+    public WebResponse getResponse(final Ds3Request request) throws IOException {
         try (final RequestExecutor requestExecutor = new RequestExecutor(this.client, host, request)) {
             int redirectCount = 0;
             do {
@@ -230,7 +228,7 @@ public class NetworkClientImpl implements NetworkClient {
             this.hash = this.buildHash();
         }
         
-        public CloseableHttpResponse execute() throws IOException, SignatureException {
+        public CloseableHttpResponse execute() throws IOException {
             if (this.content != null) {
                 this.content.reset();
             }
@@ -268,7 +266,7 @@ public class NetworkClientImpl implements NetworkClient {
             return path;
         }
 
-        private void addHeaders(final HttpRequest httpRequest) throws IOException, SignatureException {
+        private void addHeaders(final HttpRequest httpRequest) throws IOException {
             // Add common headers.
             final String date = DateFormatter.dateToRfc882();
             httpRequest.addHeader(HOST, NetUtils.buildHostField(NetworkClientImpl.this.connectionDetails));
@@ -287,15 +285,20 @@ public class NetworkClientImpl implements NetworkClient {
             }
             
             // Add the signature header.
-            httpRequest.addHeader(AUTHORIZATION, this.getSignature(new SignatureDetails(
-                this.ds3Request.getVerb(),
-                this.hash,
-                this.ds3Request.getContentType(),
-                date,
-                canonicalizeAmzHeaders(new MultiMapImpl<>(this.ds3Request.getHeaders())),
-                canonicalizeResource(this.ds3Request.getPath(), this.ds3Request.getQueryParams()),
-                NetworkClientImpl.this.connectionDetails.getCredentials()
-            )));
+            try {
+                httpRequest.addHeader(AUTHORIZATION, this.getSignature(new SignatureDetails(
+                        this.ds3Request.getVerb(),
+                        this.hash,
+                        this.ds3Request.getContentType(),
+                        date,
+                        canonicalizeAmzHeaders(new MultiMapImpl<>(this.ds3Request.getHeaders())),
+                        canonicalizeResource(this.ds3Request.getPath(), this.ds3Request.getQueryParams()),
+                        NetworkClientImpl.this.connectionDetails.getCredentials()
+                )));
+            } catch (final SignatureException e) {
+                LOG.error("Encountered an unrecoverable signature exception");
+                throw new RuntimeException(e);
+            }
         }
 
         private String getHashType(final ChecksumType.Type checksumType) {
