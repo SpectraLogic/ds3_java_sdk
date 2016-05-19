@@ -104,7 +104,7 @@ public class MockNetwork implements NetworkClient {
     
     @Override
     public WebResponse getResponse(final Ds3Request request)
-            throws IOException, SignatureException {
+            throws IOException {
         assertThat(request.getVerb(), is(this.verb));
         assertThat(request.getPath(), is(this.path));
         if (this.queryParams != null) {
