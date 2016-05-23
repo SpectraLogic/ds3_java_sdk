@@ -18,18 +18,24 @@ package com.spectralogic.ds3client.commands.spectrads3;
 
 import com.spectralogic.ds3client.networking.HttpVerb;
 import com.spectralogic.ds3client.commands.interfaces.AbstractRequest;
+import java.util.UUID;
 import com.google.common.net.UrlEscapers;
 
 public class DeleteDataPolicySpectraS3Request extends AbstractRequest {
 
     // Variables
     
-    private final String dataPolicy;
+    private final String dataPolicyId;
 
     // Constructor
     
-    public DeleteDataPolicySpectraS3Request(final String dataPolicy) {
-        this.dataPolicy = dataPolicy;
+    public DeleteDataPolicySpectraS3Request(final UUID dataPolicyId) {
+        this.dataPolicyId = dataPolicyId.toString();
+        
+    }
+
+    public DeleteDataPolicySpectraS3Request(final String dataPolicyId) {
+        this.dataPolicyId = dataPolicyId;
         
     }
 
@@ -41,11 +47,11 @@ public class DeleteDataPolicySpectraS3Request extends AbstractRequest {
 
     @Override
     public String getPath() {
-        return "/_rest_/data_policy/" + dataPolicy;
+        return "/_rest_/data_policy/" + dataPolicyId;
     }
     
-    public String getDataPolicy() {
-        return this.dataPolicy;
+    public String getDataPolicyId() {
+        return this.dataPolicyId;
     }
 
 }
