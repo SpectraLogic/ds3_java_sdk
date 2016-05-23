@@ -23,12 +23,13 @@ import java.lang.Long;
 import com.spectralogic.ds3client.models.Priority;
 import com.google.common.net.UrlEscapers;
 import com.spectralogic.ds3client.models.VersioningLevel;
+import java.util.UUID;
 
 public class ModifyDataPolicySpectraS3Request extends AbstractRequest {
 
     // Variables
     
-    private final String dataPolicy;
+    private final String dataPolicyId;
 
     private boolean blobbingEnabled;
 
@@ -52,8 +53,13 @@ public class ModifyDataPolicySpectraS3Request extends AbstractRequest {
 
     // Constructor
     
-    public ModifyDataPolicySpectraS3Request(final String dataPolicy) {
-        this.dataPolicy = dataPolicy;
+    public ModifyDataPolicySpectraS3Request(final UUID dataPolicyId) {
+        this.dataPolicyId = dataPolicyId.toString();
+        
+    }
+
+    public ModifyDataPolicySpectraS3Request(final String dataPolicyId) {
+        this.dataPolicyId = dataPolicyId;
         
     }
 
@@ -125,11 +131,11 @@ public class ModifyDataPolicySpectraS3Request extends AbstractRequest {
 
     @Override
     public String getPath() {
-        return "/_rest_/data_policy/" + dataPolicy;
+        return "/_rest_/data_policy/" + dataPolicyId;
     }
     
-    public String getDataPolicy() {
-        return this.dataPolicy;
+    public String getDataPolicyId() {
+        return this.dataPolicyId;
     }
 
 
