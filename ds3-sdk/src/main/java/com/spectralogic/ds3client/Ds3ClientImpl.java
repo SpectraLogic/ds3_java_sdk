@@ -282,6 +282,22 @@ public class Ds3ClientImpl implements Ds3Client {
         return new ModifyDataReplicationRuleSpectraS3Response(this.netClient.getResponse(request));
     }
     @Override
+    public ClearSuspectBlobPoolsSpectraS3Response clearSuspectBlobPoolsSpectraS3(ClearSuspectBlobPoolsSpectraS3Request request) throws IOException {
+        return new ClearSuspectBlobPoolsSpectraS3Response(this.netClient.getResponse(request));
+    }
+    @Override
+    public ClearSuspectBlobTapesSpectraS3Response clearSuspectBlobTapesSpectraS3(ClearSuspectBlobTapesSpectraS3Request request) throws IOException {
+        return new ClearSuspectBlobTapesSpectraS3Response(this.netClient.getResponse(request));
+    }
+    @Override
+    public ClearSuspectBlobTargetsSpectraS3Response clearSuspectBlobTargetsSpectraS3(ClearSuspectBlobTargetsSpectraS3Request request) throws IOException {
+        return new ClearSuspectBlobTargetsSpectraS3Response(this.netClient.getResponse(request));
+    }
+    @Override
+    public GetDegradedBlobsSpectraS3Response getDegradedBlobsSpectraS3(GetDegradedBlobsSpectraS3Request request) throws IOException {
+        return new GetDegradedBlobsSpectraS3Response(this.netClient.getResponse(request));
+    }
+    @Override
     public GetDegradedBucketsSpectraS3Response getDegradedBucketsSpectraS3(GetDegradedBucketsSpectraS3Request request) throws IOException {
         return new GetDegradedBucketsSpectraS3Response(this.netClient.getResponse(request));
     }
@@ -292,6 +308,42 @@ public class Ds3ClientImpl implements Ds3Client {
     @Override
     public GetDegradedDataReplicationRulesSpectraS3Response getDegradedDataReplicationRulesSpectraS3(GetDegradedDataReplicationRulesSpectraS3Request request) throws IOException {
         return new GetDegradedDataReplicationRulesSpectraS3Response(this.netClient.getResponse(request));
+    }
+    @Override
+    public GetSuspectBlobPoolsSpectraS3Response getSuspectBlobPoolsSpectraS3(GetSuspectBlobPoolsSpectraS3Request request) throws IOException {
+        return new GetSuspectBlobPoolsSpectraS3Response(this.netClient.getResponse(request));
+    }
+    @Override
+    public GetSuspectBlobTapesSpectraS3Response getSuspectBlobTapesSpectraS3(GetSuspectBlobTapesSpectraS3Request request) throws IOException {
+        return new GetSuspectBlobTapesSpectraS3Response(this.netClient.getResponse(request));
+    }
+    @Override
+    public GetSuspectBlobTargetsSpectraS3Response getSuspectBlobTargetsSpectraS3(GetSuspectBlobTargetsSpectraS3Request request) throws IOException {
+        return new GetSuspectBlobTargetsSpectraS3Response(this.netClient.getResponse(request));
+    }
+    @Override
+    public GetSuspectBucketsSpectraS3Response getSuspectBucketsSpectraS3(GetSuspectBucketsSpectraS3Request request) throws IOException {
+        return new GetSuspectBucketsSpectraS3Response(this.netClient.getResponse(request));
+    }
+    @Override
+    public GetSuspectObjectsSpectraS3Response getSuspectObjectsSpectraS3(GetSuspectObjectsSpectraS3Request request) throws IOException {
+        return new GetSuspectObjectsSpectraS3Response(this.netClient.getResponse(request));
+    }
+    @Override
+    public GetSuspectObjectsWithFullDetailsSpectraS3Response getSuspectObjectsWithFullDetailsSpectraS3(GetSuspectObjectsWithFullDetailsSpectraS3Request request) throws IOException {
+        return new GetSuspectObjectsWithFullDetailsSpectraS3Response(this.netClient.getResponse(request));
+    }
+    @Override
+    public MarkSuspectBlobPoolsAsDegradedSpectraS3Response markSuspectBlobPoolsAsDegradedSpectraS3(MarkSuspectBlobPoolsAsDegradedSpectraS3Request request) throws IOException {
+        return new MarkSuspectBlobPoolsAsDegradedSpectraS3Response(this.netClient.getResponse(request));
+    }
+    @Override
+    public MarkSuspectBlobTapesAsDegradedSpectraS3Response markSuspectBlobTapesAsDegradedSpectraS3(MarkSuspectBlobTapesAsDegradedSpectraS3Request request) throws IOException {
+        return new MarkSuspectBlobTapesAsDegradedSpectraS3Response(this.netClient.getResponse(request));
+    }
+    @Override
+    public MarkSuspectBlobTargetsAsDegradedSpectraS3Response markSuspectBlobTargetsAsDegradedSpectraS3(MarkSuspectBlobTargetsAsDegradedSpectraS3Request request) throws IOException {
+        return new MarkSuspectBlobTargetsAsDegradedSpectraS3Response(this.netClient.getResponse(request));
     }
     @Override
     public PutGroupGroupMemberSpectraS3Response putGroupGroupMemberSpectraS3(PutGroupGroupMemberSpectraS3Request request) throws IOException {

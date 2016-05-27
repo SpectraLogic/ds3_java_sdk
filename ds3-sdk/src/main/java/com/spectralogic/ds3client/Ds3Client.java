@@ -295,6 +295,23 @@ public interface Ds3Client extends Closeable {
     @Resource("DATA_REPLICATION_RULE")
     ModifyDataReplicationRuleSpectraS3Response modifyDataReplicationRuleSpectraS3(ModifyDataReplicationRuleSpectraS3Request request)
             throws IOException;
+    @Action("BULK_DELETE")
+    @Resource("SUSPECT_BLOB_POOL")
+    ClearSuspectBlobPoolsSpectraS3Response clearSuspectBlobPoolsSpectraS3(ClearSuspectBlobPoolsSpectraS3Request request)
+            throws IOException;
+    @Action("BULK_DELETE")
+    @Resource("SUSPECT_BLOB_TAPE")
+    ClearSuspectBlobTapesSpectraS3Response clearSuspectBlobTapesSpectraS3(ClearSuspectBlobTapesSpectraS3Request request)
+            throws IOException;
+    @Action("BULK_DELETE")
+    @Resource("SUSPECT_BLOB_TARGET")
+    ClearSuspectBlobTargetsSpectraS3Response clearSuspectBlobTargetsSpectraS3(ClearSuspectBlobTargetsSpectraS3Request request)
+            throws IOException;
+    @ResponsePayloadModel("DegradedBlobList")
+    @Action("LIST")
+    @Resource("DEGRADED_BLOB")
+    GetDegradedBlobsSpectraS3Response getDegradedBlobsSpectraS3(GetDegradedBlobsSpectraS3Request request)
+            throws IOException;
     @ResponsePayloadModel("BucketList")
     @Action("LIST")
     @Resource("DEGRADED_BUCKET")
@@ -309,6 +326,48 @@ public interface Ds3Client extends Closeable {
     @Action("LIST")
     @Resource("DEGRADED_DATA_REPLICATION_RULE")
     GetDegradedDataReplicationRulesSpectraS3Response getDegradedDataReplicationRulesSpectraS3(GetDegradedDataReplicationRulesSpectraS3Request request)
+            throws IOException;
+    @ResponsePayloadModel("SuspectBlobPoolList")
+    @Action("LIST")
+    @Resource("SUSPECT_BLOB_POOL")
+    GetSuspectBlobPoolsSpectraS3Response getSuspectBlobPoolsSpectraS3(GetSuspectBlobPoolsSpectraS3Request request)
+            throws IOException;
+    @ResponsePayloadModel("SuspectBlobTapeList")
+    @Action("LIST")
+    @Resource("SUSPECT_BLOB_TAPE")
+    GetSuspectBlobTapesSpectraS3Response getSuspectBlobTapesSpectraS3(GetSuspectBlobTapesSpectraS3Request request)
+            throws IOException;
+    @ResponsePayloadModel("SuspectBlobTargetList")
+    @Action("LIST")
+    @Resource("SUSPECT_BLOB_TARGET")
+    GetSuspectBlobTargetsSpectraS3Response getSuspectBlobTargetsSpectraS3(GetSuspectBlobTargetsSpectraS3Request request)
+            throws IOException;
+    @ResponsePayloadModel("BucketList")
+    @Action("LIST")
+    @Resource("SUSPECT_BUCKET")
+    GetSuspectBucketsSpectraS3Response getSuspectBucketsSpectraS3(GetSuspectBucketsSpectraS3Request request)
+            throws IOException;
+    @ResponsePayloadModel("PhysicalPlacement")
+    @Action("LIST")
+    @Resource("SUSPECT_OBJECT")
+    GetSuspectObjectsSpectraS3Response getSuspectObjectsSpectraS3(GetSuspectObjectsSpectraS3Request request)
+            throws IOException;
+    @ResponsePayloadModel("BulkObjectList")
+    @Action("LIST")
+    @Resource("SUSPECT_OBJECT")
+    GetSuspectObjectsWithFullDetailsSpectraS3Response getSuspectObjectsWithFullDetailsSpectraS3(GetSuspectObjectsWithFullDetailsSpectraS3Request request)
+            throws IOException;
+    @Action("BULK_MODIFY")
+    @Resource("SUSPECT_BLOB_POOL")
+    MarkSuspectBlobPoolsAsDegradedSpectraS3Response markSuspectBlobPoolsAsDegradedSpectraS3(MarkSuspectBlobPoolsAsDegradedSpectraS3Request request)
+            throws IOException;
+    @Action("BULK_MODIFY")
+    @Resource("SUSPECT_BLOB_TAPE")
+    MarkSuspectBlobTapesAsDegradedSpectraS3Response markSuspectBlobTapesAsDegradedSpectraS3(MarkSuspectBlobTapesAsDegradedSpectraS3Request request)
+            throws IOException;
+    @Action("BULK_MODIFY")
+    @Resource("SUSPECT_BLOB_TARGET")
+    MarkSuspectBlobTargetsAsDegradedSpectraS3Response markSuspectBlobTargetsAsDegradedSpectraS3(MarkSuspectBlobTargetsAsDegradedSpectraS3Request request)
             throws IOException;
     @ResponsePayloadModel("GroupMember")
     @Action("CREATE")
