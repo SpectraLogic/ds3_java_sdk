@@ -35,7 +35,7 @@ class ConnectionDetailsImpl implements ConnectionDetails {
         private int retries = 5;
         private int bufferSize = 1024 * 1024;
         private int connectionTimeout = 5 * 1000;
-        private int socketTimeout = 60 * 1000;
+        private int socketTimeout = 60 * 60 * 1000;
         private boolean certificateVerification;
 
         private Builder(final String endpoint, final Credentials credentials) {

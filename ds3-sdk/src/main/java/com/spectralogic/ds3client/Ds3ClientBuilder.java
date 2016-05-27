@@ -49,7 +49,7 @@ public class Ds3ClientBuilder implements Builder<Ds3Client> {
     private int retries = 5;
     private int connectionTimeout = 5 * 1000;
     private int bufferSize = 1024 * 1024;
-    private int socketTimeout = 1000 * 60;
+    private int socketTimeout = 1000 * 60 * 60;
 
     private Ds3ClientBuilder(final String endpoint, final Credentials credentials) throws IllegalArgumentException {
         if (Guard.isStringNullOrEmpty(endpoint)) {
