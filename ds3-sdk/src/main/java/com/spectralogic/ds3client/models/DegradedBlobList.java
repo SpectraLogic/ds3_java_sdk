@@ -16,8 +16,33 @@
 // This code is auto-generated, do not modify
 package com.spectralogic.ds3client.models;
 
-public enum SystemFailureType {
-    RECONCILE_TAPE_ENVIRONMENT_FAILED,
-    RECONCILE_POOL_ENVIRONMENT_FAILED,
-    SUSPECTED_DATA_LOSS_REQUIRES_USER_CONFIRMATION
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+import java.util.List;
+import java.util.ArrayList;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
+
+@JacksonXmlRootElement(namespace = "Data")
+public class DegradedBlobList {
+
+    // Variables
+    @JsonProperty("DegradedBlob")
+    @JacksonXmlElementWrapper(useWrapping = false)
+    private List<DegradedBlob> degradedBlobs = new ArrayList<>();
+
+    // Constructor
+    public DegradedBlobList() {
+        //pass
+    }
+
+    // Getters and Setters
+    
+    public List<DegradedBlob> getDegradedBlobs() {
+        return this.degradedBlobs;
+    }
+
+    public void setDegradedBlobs(final List<DegradedBlob> degradedBlobs) {
+        this.degradedBlobs = degradedBlobs;
+    }
+
 }

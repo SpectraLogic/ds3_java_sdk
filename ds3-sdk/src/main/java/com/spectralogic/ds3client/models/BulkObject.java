@@ -30,7 +30,7 @@ public class BulkObject {
     @JacksonXmlProperty(isAttribute = true, localName = "Bucket")
     private String bucket;
 
-    @JsonProperty("Id")
+    @JacksonXmlProperty(isAttribute = true, localName = "Id")
     private UUID id;
 
     @JacksonXmlProperty(isAttribute = true, localName = "InCache")
