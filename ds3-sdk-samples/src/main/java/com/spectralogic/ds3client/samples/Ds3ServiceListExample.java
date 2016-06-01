@@ -58,7 +58,7 @@ public class Ds3ServiceListExample {
         	// Else unexpected status code.
         	} else {
         		
-        		System.out.println("BlackPearl return an unexpected status code we did not expect");
+        		System.out.println("BlackPearl returned an unexpected status code");
                 // e.getStatusCode() can be used to get the status code BlackPearl returned for more accurate error handling and detection
         		
         	}
