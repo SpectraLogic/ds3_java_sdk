@@ -879,6 +879,12 @@
                         </ResponseTypes>
                     </ResponseCode>
                     <ResponseCode>
+                        <Code>403</Code>
+                        <ResponseTypes>
+                            <ResponseType Type="com.spectralogic.s3.server.domain.HttpErrorResultApiBean"/>
+                        </ResponseTypes>
+                    </ResponseCode>
+                    <ResponseCode>
                         <Code>404</Code>
                         <ResponseTypes>
                             <ResponseType Type="com.spectralogic.s3.server.domain.HttpErrorResultApiBean"/>
@@ -3658,6 +3664,7 @@
                         <Param Name="MaxTapeFragmentationPercent" Type="int"/>
                         <Param Name="MaximumAutoVerificationFrequencyInDays" Type="int"/>
                         <Param Name="MediaEjectionAllowed" Type="boolean"/>
+                        <Param Name="SecureMediaAllocation" Type="boolean"/>
                         <Param Name="VerifyPriorToAutoEject" Type="com.spectralogic.s3.common.dao.domain.ds3.BlobStoreTaskPriority"/>
                         <Param Name="WriteOptimization" Type="com.spectralogic.s3.common.dao.domain.ds3.WriteOptimization"/>
                     </OptionalQueryParams>
@@ -3685,7 +3692,7 @@
                         </ResponseTypes>
                     </ResponseCode>
                 </ResponseCodes>
-                <Version>1.59459DA4FDD7245431B07D7162657412</Version>
+                <Version>1.E83DCFA0F967FFEADD4D7DAE632F97C1</Version>
             </RequestHandler>
             <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.storagedomain.CreateTapeStorageDomainMemberRequestHandler">
                 <Request Action="CREATE" HttpVerb="POST" IncludeIdInPath="false" Resource="STORAGE_DOMAIN_MEMBER" ResourceType="NON_SINGLETON">
@@ -3845,6 +3852,7 @@
                         <Param Name="PageLength" Type="int"/>
                         <Param Name="PageOffset" Type="int"/>
                         <Param Name="PageStartMarker" Type="java.util.UUID"/>
+                        <Param Name="SecureMediaAllocation" Type="boolean"/>
                         <Param Name="WriteOptimization" Type="com.spectralogic.s3.common.dao.domain.ds3.WriteOptimization"/>
                     </OptionalQueryParams>
                     <RequiredQueryParams/>
@@ -3857,7 +3865,7 @@
                         </ResponseTypes>
                     </ResponseCode>
                 </ResponseCodes>
-                <Version>1.6BE5B1401717A4938BB5D1E7B6FC9F50</Version>
+                <Version>1.C7CE8CF71088F3DB585CD3B02AD6C01E</Version>
             </RequestHandler>
             <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.storagedomain.ModifyStorageDomainMemberRequestHandler">
                 <Request Action="MODIFY" HttpVerb="PUT" IncludeIdInPath="true" Resource="STORAGE_DOMAIN_MEMBER" ResourceType="NON_SINGLETON">
@@ -3888,6 +3896,7 @@
                         <Param Name="MaximumAutoVerificationFrequencyInDays" Type="int"/>
                         <Param Name="MediaEjectionAllowed" Type="boolean"/>
                         <Param Name="Name" Type="java.lang.String"/>
+                        <Param Name="SecureMediaAllocation" Type="boolean"/>
                         <Param Name="VerifyPriorToAutoEject" Type="com.spectralogic.s3.common.dao.domain.ds3.BlobStoreTaskPriority"/>
                         <Param Name="WriteOptimization" Type="com.spectralogic.s3.common.dao.domain.ds3.WriteOptimization"/>
                     </OptionalQueryParams>
@@ -3907,7 +3916,7 @@
                         </ResponseTypes>
                     </ResponseCode>
                 </ResponseCodes>
-                <Version>1.9C27499C0381A92980B79968FFC8086D</Version>
+                <Version>1.78AA56942913E83B1CA55CFDAD3910CD</Version>
             </RequestHandler>
             <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.system.GetSystemFailuresRequestHandler">
                 <Request Action="LIST" HttpVerb="GET" IncludeIdInPath="false" Resource="SYSTEM_FAILURE" ResourceType="NON_SINGLETON">
@@ -5903,7 +5912,6 @@
                 <EnumConstants>
                     <EnumConstant Name="STANDARD"/>
                     <EnumConstant Name="BUCKET_ISOLATED"/>
-                    <EnumConstant Name="SECURE_BUCKET_ISOLATED"/>
                 </EnumConstants>
             </Type>
             <Type Name="com.spectralogic.s3.common.dao.domain.ds3.DataPathBackend">
@@ -6659,6 +6667,15 @@
                             <Annotation Name="com.spectralogic.util.db.lang.MustMatchRegularExpression">
                                 <AnnotationElements>
                                     <AnnotationElement Name="Value" Value=".+" ValueType="java.lang.String"/>
+                                </AnnotationElements>
+                            </Annotation>
+                        </Annotations>
+                    </Element>
+                    <Element Name="SecureMediaAllocation" Type="boolean">
+                        <Annotations>
+                            <Annotation Name="com.spectralogic.util.bean.lang.DefaultBooleanValue">
+                                <AnnotationElements>
+                                    <AnnotationElement Name="Value" Value="false" ValueType="java.lang.Boolean"/>
                                 </AnnotationElements>
                             </Annotation>
                         </Annotations>
@@ -8104,6 +8121,11 @@
                             <Annotation Name="com.spectralogic.util.bean.lang.Optional">
                                 <AnnotationElements/>
                             </Annotation>
+                            <Annotation Name="com.spectralogic.util.db.lang.CascadeDelete">
+                                <AnnotationElements>
+                                    <AnnotationElement Name="Value" Value="SET_NULL" ValueType="com.spectralogic.util.db.lang.CascadeDelete$WhenReferenceIsDeleted"/>
+                                </AnnotationElements>
+                            </Annotation>
                             <Annotation Name="com.spectralogic.util.db.lang.References">
                                 <AnnotationElements>
                                     <AnnotationElement Name="Value" Value="com.spectralogic.s3.common.dao.domain.ds3.Bucket" ValueType="java.lang.Class"/>
@@ -8338,8 +8360,6 @@
                 <EnumConstants>
                     <EnumConstant Name="CANCEL"/>
                     <EnumConstant Name="ACCEPT_MOST_RECENT"/>
-                    <EnumConstant Name="ACCEPT_HIGHEST_VERSION"/>
-                    <EnumConstant Name="ACCEPT_IMPORT"/>
                     <EnumConstant Name="ACCEPT_EXISTING"/>
                 </EnumConstants>
             </Type>
@@ -8399,6 +8419,11 @@
                         <Annotations>
                             <Annotation Name="com.spectralogic.util.bean.lang.Optional">
                                 <AnnotationElements/>
+                            </Annotation>
+                            <Annotation Name="com.spectralogic.util.db.lang.CascadeDelete">
+                                <AnnotationElements>
+                                    <AnnotationElement Name="Value" Value="SET_NULL" ValueType="com.spectralogic.util.db.lang.CascadeDelete$WhenReferenceIsDeleted"/>
+                                </AnnotationElements>
                             </Annotation>
                             <Annotation Name="com.spectralogic.util.db.lang.References">
                                 <AnnotationElements>
@@ -9300,7 +9325,7 @@
                         <Annotations>
                             <Annotation Name="com.spectralogic.util.marshal.ExcludeFromMarshaler">
                                 <AnnotationElements>
-                                    <AnnotationElement Name="Value" Value="VALUE_IS_NULL" ValueType="com.spectralogic.util.marshal.ExcludeFromMarshaler$When"/>
+                                    <AnnotationElement Name="Value" Value="ALWAYS" ValueType="com.spectralogic.util.marshal.ExcludeFromMarshaler$When"/>
                                 </AnnotationElements>
                             </Annotation>
                         </Annotations>
@@ -9830,11 +9855,7 @@
                         </Annotations>
                     </Element>
                     <Element Name="CreationDate" Type="java.util.Date">
-                        <Annotations>
-                            <Annotation Name="com.spectralogic.util.bean.lang.Optional">
-                                <AnnotationElements/>
-                            </Annotation>
-                        </Annotations>
+                        <Annotations/>
                     </Element>
                     <Element Name="Delimiter" Type="java.lang.String">
                         <Annotations>
@@ -9995,6 +10016,11 @@
                         <Annotations>
                             <Annotation Name="com.spectralogic.util.bean.lang.Optional">
                                 <AnnotationElements/>
+                            </Annotation>
+                            <Annotation Name="com.spectralogic.util.db.lang.CascadeDelete">
+                                <AnnotationElements>
+                                    <AnnotationElement Name="Value" Value="SET_NULL" ValueType="com.spectralogic.util.db.lang.CascadeDelete$WhenReferenceIsDeleted"/>
+                                </AnnotationElements>
                             </Annotation>
                             <Annotation Name="com.spectralogic.util.db.lang.References">
                                 <AnnotationElements>
@@ -10623,6 +10649,13 @@
                             </Annotation>
                         </Annotations>
                     </Element>
+                    <Element Name="WriteOptimization" Type="com.spectralogic.s3.common.dao.domain.ds3.WriteOptimization">
+                        <Annotations>
+                            <Annotation Name="com.spectralogic.util.marshal.MarshalXmlAsAttribute">
+                                <AnnotationElements/>
+                            </Annotation>
+                        </Annotations>
+                    </Element>
                 </Elements>
             </Type>
             <Type Name="com.spectralogic.s3.server.domain.JobsApiBean" NameToMarshal="">
@@ -10834,11 +10867,7 @@
                         <Annotations/>
                     </Element>
                     <Element Name="LastModified" Type="java.util.Date">
-                        <Annotations>
-                            <Annotation Name="com.spectralogic.util.bean.lang.Optional">
-                                <AnnotationElements/>
-                            </Annotation>
-                        </Annotations>
+                        <Annotations/>
                     </Element>
                     <Element Name="Owner" Type="com.spectralogic.s3.server.domain.UserApiBean">
                         <Annotations/>
@@ -11136,6 +11165,11 @@
                         <Annotations>
                             <Annotation Name="com.spectralogic.util.bean.lang.Optional">
                                 <AnnotationElements/>
+                            </Annotation>
+                            <Annotation Name="com.spectralogic.util.db.lang.CascadeDelete">
+                                <AnnotationElements>
+                                    <AnnotationElement Name="Value" Value="SET_NULL" ValueType="com.spectralogic.util.db.lang.CascadeDelete$WhenReferenceIsDeleted"/>
+                                </AnnotationElements>
                             </Annotation>
                             <Annotation Name="com.spectralogic.util.db.lang.References">
                                 <AnnotationElements>

@@ -45,6 +45,8 @@ public class PutStorageDomainSpectraS3Request extends AbstractRequest {
 
     private boolean mediaEjectionAllowed;
 
+    private boolean secureMediaAllocation;
+
     private Priority verifyPriorToAutoEject;
 
     private WriteOptimization writeOptimization;
@@ -102,6 +104,12 @@ public class PutStorageDomainSpectraS3Request extends AbstractRequest {
     public PutStorageDomainSpectraS3Request withMediaEjectionAllowed(final boolean mediaEjectionAllowed) {
         this.mediaEjectionAllowed = mediaEjectionAllowed;
         this.updateQueryParam("media_ejection_allowed", mediaEjectionAllowed);
+        return this;
+    }
+
+    public PutStorageDomainSpectraS3Request withSecureMediaAllocation(final boolean secureMediaAllocation) {
+        this.secureMediaAllocation = secureMediaAllocation;
+        this.updateQueryParam("secure_media_allocation", secureMediaAllocation);
         return this;
     }
 
@@ -170,6 +178,11 @@ public class PutStorageDomainSpectraS3Request extends AbstractRequest {
 
     public boolean getMediaEjectionAllowed() {
         return this.mediaEjectionAllowed;
+    }
+
+
+    public boolean getSecureMediaAllocation() {
+        return this.secureMediaAllocation;
     }
 
 
