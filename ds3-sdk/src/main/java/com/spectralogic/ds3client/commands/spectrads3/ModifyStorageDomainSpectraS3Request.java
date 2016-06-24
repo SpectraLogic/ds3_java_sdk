@@ -21,6 +21,7 @@ import com.spectralogic.ds3client.commands.interfaces.AbstractRequest;
 import java.lang.Long;
 import com.google.common.net.UrlEscapers;
 import com.spectralogic.ds3client.models.LtfsFileNamingMode;
+import java.lang.Integer;
 import com.spectralogic.ds3client.models.Priority;
 import com.spectralogic.ds3client.models.WriteOptimization;
 
@@ -44,7 +45,7 @@ public class ModifyStorageDomainSpectraS3Request extends AbstractRequest {
 
     private int maxTapeFragmentationPercent;
 
-    private int maximumAutoVerificationFrequencyInDays;
+    private Integer maximumAutoVerificationFrequencyInDays;
 
     private boolean mediaEjectionAllowed;
 
@@ -105,7 +106,7 @@ public class ModifyStorageDomainSpectraS3Request extends AbstractRequest {
         return this;
     }
 
-    public ModifyStorageDomainSpectraS3Request withMaximumAutoVerificationFrequencyInDays(final int maximumAutoVerificationFrequencyInDays) {
+    public ModifyStorageDomainSpectraS3Request withMaximumAutoVerificationFrequencyInDays(final Integer maximumAutoVerificationFrequencyInDays) {
         this.maximumAutoVerificationFrequencyInDays = maximumAutoVerificationFrequencyInDays;
         this.updateQueryParam("maximum_auto_verification_frequency_in_days", maximumAutoVerificationFrequencyInDays);
         return this;
@@ -192,7 +193,7 @@ public class ModifyStorageDomainSpectraS3Request extends AbstractRequest {
     }
 
 
-    public int getMaximumAutoVerificationFrequencyInDays() {
+    public Integer getMaximumAutoVerificationFrequencyInDays() {
         return this.maximumAutoVerificationFrequencyInDays;
     }
 
