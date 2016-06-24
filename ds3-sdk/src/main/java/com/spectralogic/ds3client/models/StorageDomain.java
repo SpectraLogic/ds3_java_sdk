@@ -21,6 +21,7 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import java.lang.Long;
 import java.lang.String;
 import java.util.UUID;
+import java.lang.Integer;
 
 @JacksonXmlRootElement(namespace = "Data")
 public class StorageDomain {
@@ -51,7 +52,7 @@ public class StorageDomain {
     private int maxTapeFragmentationPercent;
 
     @JsonProperty("MaximumAutoVerificationFrequencyInDays")
-    private int maximumAutoVerificationFrequencyInDays;
+    private Integer maximumAutoVerificationFrequencyInDays;
 
     @JsonProperty("MediaEjectionAllowed")
     private boolean mediaEjectionAllowed;
@@ -147,11 +148,11 @@ public class StorageDomain {
     }
 
 
-    public int getMaximumAutoVerificationFrequencyInDays() {
+    public Integer getMaximumAutoVerificationFrequencyInDays() {
         return this.maximumAutoVerificationFrequencyInDays;
     }
 
-    public void setMaximumAutoVerificationFrequencyInDays(final int maximumAutoVerificationFrequencyInDays) {
+    public void setMaximumAutoVerificationFrequencyInDays(final Integer maximumAutoVerificationFrequencyInDays) {
         this.maximumAutoVerificationFrequencyInDays = maximumAutoVerificationFrequencyInDays;
     }
 
