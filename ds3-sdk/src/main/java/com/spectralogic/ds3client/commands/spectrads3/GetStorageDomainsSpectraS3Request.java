@@ -46,8 +46,6 @@ public class GetStorageDomainsSpectraS3Request extends AbstractRequest {
 
     private String pageStartMarker;
 
-    private boolean secureMediaAllocation;
-
     private WriteOptimization writeOptimization;
 
     // Constructor
@@ -126,12 +124,6 @@ public class GetStorageDomainsSpectraS3Request extends AbstractRequest {
         return this;
     }
 
-    public GetStorageDomainsSpectraS3Request withSecureMediaAllocation(final boolean secureMediaAllocation) {
-        this.secureMediaAllocation = secureMediaAllocation;
-        this.updateQueryParam("secure_media_allocation", secureMediaAllocation);
-        return this;
-    }
-
     public GetStorageDomainsSpectraS3Request withWriteOptimization(final WriteOptimization writeOptimization) {
         this.writeOptimization = writeOptimization;
         this.updateQueryParam("write_optimization", writeOptimization);
@@ -196,11 +188,6 @@ public class GetStorageDomainsSpectraS3Request extends AbstractRequest {
 
     public String getPageStartMarker() {
         return this.pageStartMarker;
-    }
-
-
-    public boolean getSecureMediaAllocation() {
-        return this.secureMediaAllocation;
     }
 
 
