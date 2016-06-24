@@ -18,6 +18,7 @@ package com.spectralogic.ds3client.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+import java.util.UUID;
 import java.lang.Boolean;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import java.lang.String;
@@ -26,6 +27,9 @@ import java.lang.String;
 public class BulkObject {
 
     // Variables
+    @JsonProperty("Id")
+    private UUID id;
+
     @JacksonXmlProperty(isAttribute = true, localName = "InCache")
     private Boolean inCache;
 
@@ -54,6 +58,15 @@ public class BulkObject {
 
     // Getters and Setters
     
+    public UUID getId() {
+        return this.id;
+    }
+
+    public void setId(final UUID id) {
+        this.id = id;
+    }
+
+
     public Boolean getInCache() {
         return this.inCache;
     }
@@ -119,7 +132,7 @@ public class BulkObject {
 
     @Override
     public int hashCode() {
-        return java.util.Objects.hash(inCache, latest, length, name, offset, physicalPlacement, version);
+        return java.util.Objects.hash(id, inCache, latest, length, name, offset, physicalPlacement, version);
     }
 
     @Override
@@ -130,7 +143,9 @@ public class BulkObject {
 
         final BulkObject bulkObject = (BulkObject) obj;
 
-        return this.getInCache().equals(bulkObject.getInCache())
+        return (((this.getId() == null) && (bulkObject.getId() == null))
+                || ((this.getId() != null) && (bulkObject.getId() != null) && this.getId().equals(bulkObject.getId())))
+                && this.getInCache().equals(bulkObject.getInCache())
                 && this.getLatest() == bulkObject.getLatest()
                 && this.getLength() == bulkObject.getLength()
                 && this.getName().equals(bulkObject.getName())

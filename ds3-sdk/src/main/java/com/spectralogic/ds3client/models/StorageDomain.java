@@ -55,9 +55,6 @@ public class StorageDomain {
     @JsonProperty("Name")
     private String name;
 
-    @JsonProperty("SecureMediaAllocation")
-    private boolean secureMediaAllocation;
-
     @JsonProperty("VerifyPriorToAutoEject")
     private Priority verifyPriorToAutoEject;
 
@@ -158,15 +155,6 @@ public class StorageDomain {
 
     public void setName(final String name) {
         this.name = name;
-    }
-
-
-    public boolean getSecureMediaAllocation() {
-        return this.secureMediaAllocation;
-    }
-
-    public void setSecureMediaAllocation(final boolean secureMediaAllocation) {
-        this.secureMediaAllocation = secureMediaAllocation;
     }
 
 
