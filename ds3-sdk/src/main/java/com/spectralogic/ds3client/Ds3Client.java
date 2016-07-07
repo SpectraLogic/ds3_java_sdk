@@ -1314,7 +1314,7 @@ public interface Ds3Client extends Closeable {
     @Resource("TARGET_ENVIRONMENT")
     ForceTargetEnvironmentRefreshSpectraS3Response forceTargetEnvironmentRefreshSpectraS3(ForceTargetEnvironmentRefreshSpectraS3Request request)
             throws IOException;
-    @ResponsePayloadModel("TreeSet")
+    @ResponsePayloadModel("DataPolicyList")
     @Action("SHOW")
     @Resource("DS3_TARGET_DATA_POLICIES")
     GetDs3TargetDataPoliciesSpectraS3Response getDs3TargetDataPoliciesSpectraS3(GetDs3TargetDataPoliciesSpectraS3Request request)
