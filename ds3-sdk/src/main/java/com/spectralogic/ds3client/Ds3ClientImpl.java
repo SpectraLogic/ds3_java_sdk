@@ -562,8 +562,8 @@ public class Ds3ClientImpl implements Ds3Client {
         return new DeleteFolderRecursivelySpectraS3Response(this.netClient.getResponse(request));
     }
     @Override
-    public GetObjectSpectraS3Response getObjectSpectraS3(GetObjectSpectraS3Request request) throws IOException {
-        return new GetObjectSpectraS3Response(this.netClient.getResponse(request));
+    public GetObjectDetailsSpectraS3Response getObjectDetailsSpectraS3(GetObjectDetailsSpectraS3Request request) throws IOException {
+        return new GetObjectDetailsSpectraS3Response(this.netClient.getResponse(request));
     }
     @Override
     public GetObjectsSpectraS3Response getObjectsSpectraS3(GetObjectsSpectraS3Request request) throws IOException {
