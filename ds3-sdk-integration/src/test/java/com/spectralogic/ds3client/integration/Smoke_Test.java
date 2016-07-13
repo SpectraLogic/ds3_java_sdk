@@ -1136,4 +1136,22 @@ public class Smoke_Test {
             deleteAllContents(client, bucketName);
         }
     }
+
+    @Test
+    public void testGetObjectDetails() throws IOException, SignatureException, XmlProcessingException, URISyntaxException {
+        final String bucketName = "TestGetObjectDetails";
+        final String objectName = "beowulf.txt";
+        try {
+            client.putBucket(new PutBucketRequest(bucketName));
+            loadBookTestData(client, bucketName);
+
+            final GetObjectDetailsSpectraS3Response response = client.getObjectDetailsSpectraS3(
+                    new GetObjectDetailsSpectraS3Request(objectName, bucketName));
+            final S3Object object = response.getS3ObjectResult();
+            assertThat(object.getName(), is(objectName));
+            assertThat(object.getType(), is(S3ObjectType.DATA));
+        } finally {
+            deleteAllContents(client,bucketName);
+        }
+    }
 }
