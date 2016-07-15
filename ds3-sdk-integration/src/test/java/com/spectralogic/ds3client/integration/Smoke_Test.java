@@ -132,8 +132,8 @@ public class Smoke_Test {
                     is(HeadObjectResponse.Status.EXISTS));
             assertThat(headResponse.getObjectSize(), is(294059L));
 
-            final GetObjectsSpectraS3Response response = client
-                    .getObjectsSpectraS3(new GetObjectsSpectraS3Request().withBucketId("test_get_objs"));
+            final GetObjectsDetailsSpectraS3Response response = client
+                    .getObjectsDetailsSpectraS3(new GetObjectsDetailsSpectraS3Request().withBucketId("test_get_objs"));
 
             assertFalse(response.getS3ObjectListResult().getS3Objects().isEmpty());
             assertThat(response.getS3ObjectListResult().getS3Objects().size(), is(4));

@@ -726,8 +726,8 @@ public class Ds3ClientImpl implements Ds3Client {
         return new GetObjectDetailsSpectraS3Response(this.netClient.getResponse(request));
     }
     @Override
-    public GetObjectsSpectraS3Response getObjectsSpectraS3(GetObjectsSpectraS3Request request) throws IOException {
-        return new GetObjectsSpectraS3Response(this.netClient.getResponse(request));
+    public GetObjectsDetailsSpectraS3Response getObjectsDetailsSpectraS3(GetObjectsDetailsSpectraS3Request request) throws IOException {
+        return new GetObjectsDetailsSpectraS3Response(this.netClient.getResponse(request));
     }
     @Override
     public GetObjectsWithFullDetailsSpectraS3Response getObjectsWithFullDetailsSpectraS3(GetObjectsWithFullDetailsSpectraS3Request request) throws IOException {

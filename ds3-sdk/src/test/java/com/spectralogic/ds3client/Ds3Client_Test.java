@@ -208,7 +208,7 @@ public class Ds3Client_Test {
                 .expecting(HttpVerb.GET, "/_rest_/object", queryParams, null)
                 .returning(200, stringResponse)
                 .asClient()
-                .getObjectsSpectraS3(new GetObjectsSpectraS3Request().withBucketId(bucketId))
+                .getObjectsDetailsSpectraS3(new GetObjectsDetailsSpectraS3Request().withBucketId(bucketId))
                 .getS3ObjectListResult()
                 .getS3Objects();
 
