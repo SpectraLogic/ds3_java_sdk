@@ -33,19 +33,33 @@ response = connection.get("/ds3/keys?user_id=#{spectra_user["id"]}")
 spectra_user_keys = JSON.parse(response.body)["data"][0]
 abort("Spectra User Keys not found.") if spectra_user.keys.nil?
 
-ENV["DOCKER_REPO"] = ENV["DOCKER_REPO"] || "denverm80/ds3_jsdk_docker_test:latest"
 ENV["DS3_ENDPOINT"] = "#{ENV['DS3_ENDPOINT']}.eng.sldomain.com"
 ENV["DS3_SECRET_KEY"] = spectra_user_keys["secret_key"]
 ENV["DS3_ACCESS_KEY"] = spectra_user_keys["auth_id"]
-ENV["GIT_BRANCH"] = ENV["GIT_BRANCH"] || "master"
 puts "DS3_ENDPOINT #{ENV["DS3_ENDPOINT"]}"
 puts "DS3_SECRET_KEY #{ENV["DS3_SECRET_KEY"]}"
 puts "DS3_ACCESS_KEY #{ENV["DS3_ACCESS_KEY"]}"
-puts "DOCKER_REPO #{ENV["DOCKER_REPO"]}"
+
+ENV["GIT_REPO"] = ENV["GIT_REPO"] || "https://github.com/SpectraLogic/ds3_java_sdk.git"
+ENV["GIT_BRANCH"] = ENV["GIT_BRANCH"] || "master"
 puts "GIT_REPO #{ENV["GIT_REPO"] || "default"}"
 puts "GIT_BRANCH #{ENV["GIT_BRANCH"]}"
- 
+
+ENV["DOCKER_REPO"] = ENV["DOCKER_REPO"] || "denverm80/ds3_jsdk_docker_test:latest"
+puts "DOCKER_REPO #{ENV["DOCKER_REPO"]}"
+
+# pull down the git repo
+puts `git clone #{ENV["GIT_REPO"]} --branch #{ENV["GIT_BRANCH"]} --single-branch`
+
+# Build latest docker image
+puts "docker build -t #{ENV['DOCKER_REPO']} ./ds3_java_sdk/docker/"
+docker_build_output = `docker build -t #{ENV["DOCKER_REPO"]} ./ds3_java_sdk/docker/`
+docker_build_status = $?
+puts docker_build_output
+puts "docker build status[#{docker_build_status}][#{docker_build_status.exitstatus}]"
+
 puts "docker run -e DS3_ENDPOINT -e DS3_SECRET_KEY -e DS3_ACCESS_KEY -e GIT_REPO -e GIT_BRANCH -it --dns=10.1.0.9 #{ENV["DOCKER_REPO"]}"
+# remove the -it if not running from an interactive terminal
 output = `docker run -e DS3_ENDPOINT -e DS3_SECRET_KEY -e DS3_ACCESS_KEY -e GIT_REPO -e GIT_BRANCH -it --dns=10.1.0.9 #{ENV["DOCKER_REPO"]}`
 
 docker_status = $?
