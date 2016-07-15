@@ -821,7 +821,7 @@ public interface Ds3Client extends Closeable {
     @ResponsePayloadModel("S3ObjectList")
     @Action("LIST")
     @Resource("OBJECT")
-    GetObjectsSpectraS3Response getObjectsSpectraS3(GetObjectsSpectraS3Request request)
+    GetObjectsDetailsSpectraS3Response getObjectsDetailsSpectraS3(GetObjectsDetailsSpectraS3Request request)
             throws IOException;
     @ResponsePayloadModel("DetailedS3ObjectList")
     @Action("LIST")

@@ -22,7 +22,7 @@ import com.google.common.net.UrlEscapers;
 import java.util.UUID;
 import com.spectralogic.ds3client.models.S3ObjectType;
 
-public class GetObjectsSpectraS3Request extends AbstractRequest {
+public class GetObjectsDetailsSpectraS3Request extends AbstractRequest {
 
     // Variables
     
@@ -48,23 +48,23 @@ public class GetObjectsSpectraS3Request extends AbstractRequest {
 
     // Constructor
     
-    public GetObjectsSpectraS3Request() {
+    public GetObjectsDetailsSpectraS3Request() {
         
     }
 
-    public GetObjectsSpectraS3Request withBucketId(final String bucketId) {
+    public GetObjectsDetailsSpectraS3Request withBucketId(final String bucketId) {
         this.bucketId = bucketId;
         this.updateQueryParam("bucket_id", bucketId);
         return this;
     }
 
-    public GetObjectsSpectraS3Request withFolder(final String folder) {
+    public GetObjectsDetailsSpectraS3Request withFolder(final String folder) {
         this.folder = folder;
         this.updateQueryParam("folder", folder);
         return this;
     }
 
-    public GetObjectsSpectraS3Request withLastPage(final boolean lastPage) {
+    public GetObjectsDetailsSpectraS3Request withLastPage(final boolean lastPage) {
         this.lastPage = lastPage;
         if (this.lastPage) {
             this.getQueryParams().put("last_page", null);
@@ -74,49 +74,49 @@ public class GetObjectsSpectraS3Request extends AbstractRequest {
         return this;
     }
 
-    public GetObjectsSpectraS3Request withLatest(final boolean latest) {
+    public GetObjectsDetailsSpectraS3Request withLatest(final boolean latest) {
         this.latest = latest;
         this.updateQueryParam("latest", latest);
         return this;
     }
 
-    public GetObjectsSpectraS3Request withName(final String name) {
+    public GetObjectsDetailsSpectraS3Request withName(final String name) {
         this.name = name;
         this.updateQueryParam("name", name);
         return this;
     }
 
-    public GetObjectsSpectraS3Request withPageLength(final int pageLength) {
+    public GetObjectsDetailsSpectraS3Request withPageLength(final int pageLength) {
         this.pageLength = pageLength;
         this.updateQueryParam("page_length", pageLength);
         return this;
     }
 
-    public GetObjectsSpectraS3Request withPageOffset(final int pageOffset) {
+    public GetObjectsDetailsSpectraS3Request withPageOffset(final int pageOffset) {
         this.pageOffset = pageOffset;
         this.updateQueryParam("page_offset", pageOffset);
         return this;
     }
 
-    public GetObjectsSpectraS3Request withPageStartMarker(final UUID pageStartMarker) {
+    public GetObjectsDetailsSpectraS3Request withPageStartMarker(final UUID pageStartMarker) {
         this.pageStartMarker = pageStartMarker.toString();
         this.updateQueryParam("page_start_marker", pageStartMarker);
         return this;
     }
 
-    public GetObjectsSpectraS3Request withPageStartMarker(final String pageStartMarker) {
+    public GetObjectsDetailsSpectraS3Request withPageStartMarker(final String pageStartMarker) {
         this.pageStartMarker = pageStartMarker;
         this.updateQueryParam("page_start_marker", pageStartMarker);
         return this;
     }
 
-    public GetObjectsSpectraS3Request withType(final S3ObjectType type) {
+    public GetObjectsDetailsSpectraS3Request withType(final S3ObjectType type) {
         this.type = type;
         this.updateQueryParam("type", type);
         return this;
     }
 
-    public GetObjectsSpectraS3Request withVersion(final long version) {
+    public GetObjectsDetailsSpectraS3Request withVersion(final long version) {
         this.version = version;
         this.updateQueryParam("version", version);
         return this;

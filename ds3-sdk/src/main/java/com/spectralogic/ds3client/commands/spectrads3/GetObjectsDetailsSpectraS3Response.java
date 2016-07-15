@@ -23,11 +23,11 @@ import java.io.InputStream;
 import com.spectralogic.ds3client.serializer.XmlOutput;
 import com.spectralogic.ds3client.commands.interfaces.AbstractResponse;
 
-public class GetObjectsSpectraS3Response extends AbstractResponse {
+public class GetObjectsDetailsSpectraS3Response extends AbstractResponse {
 
     private S3ObjectList s3ObjectListResult;
 
-    public GetObjectsSpectraS3Response(final WebResponse response) throws IOException {
+    public GetObjectsDetailsSpectraS3Response(final WebResponse response) throws IOException {
         super(response);
     }
 
