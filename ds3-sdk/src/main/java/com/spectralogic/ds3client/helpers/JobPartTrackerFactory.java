@@ -31,7 +31,7 @@ class JobPartTrackerFactory {
         for (final BulkObject bulkObject : Preconditions.checkNotNull(objects)) {
             multimap.put(bulkObject.getName(), new ObjectPart(bulkObject.getOffset(), bulkObject.getLength()));
         }
-        return new JobPartTracker(new HashMap<>(Maps.transformEntries(
+        return new JobPartTrackerImpl(new HashMap<>(Maps.transformEntries(
             multimap.asMap(),
             new BuildObjectPartTrackerFromObjectPartGroup()
         )));
