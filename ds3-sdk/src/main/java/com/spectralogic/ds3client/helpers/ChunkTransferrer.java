@@ -15,6 +15,7 @@
 
 package com.spectralogic.ds3client.helpers;
 
+import com.google.common.collect.ImmutableMap;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
@@ -61,7 +62,7 @@ class ChunkTransferrer {
             final Iterable<Objects> chunks)
                 throws SignatureException, IOException, XmlProcessingException {
         LOG.debug("Getting ready to process chunks");
-        final Map<UUID, JobNode> nodeMap = buildNodeMap(nodes);
+        final ImmutableMap<UUID, JobNode> nodeMap = buildNodeMap(nodes);
         LOG.debug("Starting executor service");
         final ListeningExecutorService executor = MoreExecutors.listeningDecorator(Executors.newFixedThreadPool(maxParallelRequests));
         LOG.debug("Executor service started");
@@ -69,7 +70,8 @@ class ChunkTransferrer {
             final List<ListenableFuture<?>> tasks = new ArrayList<>();
             for (final Objects chunk : chunks) {
                 LOG.debug("Processing parts for chunk: " + chunk.getChunkId().toString());
-                final Ds3Client client = mainClient.newForNode(nodeMap.get(chunk.getNodeId()));
+
+                final Ds3Client client = getClient(nodeMap, chunk.getNodeId(), mainClient);
                 for (final BulkObject ds3Object : chunk.getObjects()) {
                     final ObjectPart part = new ObjectPart(ds3Object.getOffset(), ds3Object.getLength());
                     if (this.partTracker.containsPart(ds3Object.getName(), part)) {
@@ -93,12 +95,23 @@ class ChunkTransferrer {
         }
     }
 
-    private static Map<UUID, JobNode> buildNodeMap(final Iterable<JobNode> nodes) {
-        final Map<UUID, JobNode> nodeMap = new HashMap<>();
-        for(final JobNode node: nodes) {
+    private static Ds3Client getClient(final ImmutableMap<UUID, JobNode> nodeMap, final UUID nodeId, final Ds3Client mainClient) {
+        final JobNode jobNode = nodeMap.get(nodeId);
+
+        if (jobNode == null) {
+            LOG.warn("The jobNode was not found, returning the existing client");
+            return mainClient;
+        }
+
+        return mainClient.newForNode(jobNode);
+    }
+
+    private static ImmutableMap<UUID, JobNode> buildNodeMap(final Iterable<JobNode> nodes) {
+        final ImmutableMap.Builder<UUID, JobNode> nodeMap = ImmutableMap.builder();
+        for (final JobNode node: nodes) {
             nodeMap.put(node.getId(), node);
         }
-        return nodeMap;
+        return nodeMap.build();
     }
 
     private static void executeWithExceptionHandling(final List<ListenableFuture<?>> tasks)
