@@ -1,6 +1,6 @@
 /*
  * ******************************************************************************
- *   Copyright 2014-2015 Spectra Logic Corporation. All Rights Reserved.
+ *   Copyright 2014-2016 Spectra Logic Corporation. All Rights Reserved.
  *   Licensed under the Apache License, Version 2.0 (the "License"). You may not use
  *   this file except in compliance with the License. A copy of the License is located at
  *
@@ -15,6 +15,8 @@
 
 package com.spectralogic.ds3client.helpers;
 
+import com.google.common.base.Function;
+import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Lists;
 import com.spectralogic.ds3client.Ds3Client;
@@ -29,9 +31,11 @@ import com.spectralogic.ds3client.models.bulk.RequestType;
 import com.spectralogic.ds3client.models.common.Range;
 import com.spectralogic.ds3client.networking.FailedRequestException;
 import com.spectralogic.ds3client.serializer.XmlProcessingException;
+import com.spectralogic.ds3client.utils.Predicate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.Nullable;
 import java.io.IOException;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
@@ -135,10 +139,7 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
             throws SignatureException, IOException, XmlProcessingException {
         final Iterable<Contents> contentsList = this.listObjects(bucket);
 
-        final List<Ds3Object> ds3Objects = new ArrayList<>();
-        for (final Contents objectApiBean : contentsList) {
-            ds3Objects.add(new Ds3Object(objectApiBean.getKey()));
-        }
+        final Iterable<Ds3Object> ds3Objects = this.toDs3Iterable(contentsList, FolderNameFilter.filter());
 
         return this.startReadJob(bucket, ds3Objects, options);
     }
@@ -282,5 +283,35 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
             newObjectsList.add(new Ds3Object(stripLeadingPath(object.getName(), prefix), object.getSize()));
         }
         return newObjectsList;
+    }
+
+    @Override
+    public Iterable<Ds3Object> toDs3Iterable(final Iterable<Contents> objects) {
+        return toDs3Iterable(objects, null);
+    }
+
+    @Override
+    public Iterable<Ds3Object> toDs3Iterable(final Iterable<Contents> objects, final Predicate<Contents> filter) {
+        return FluentIterable.from(objects).filter(new com.google.common.base.Predicate<Contents>() {
+            @Override
+            public boolean apply(@Nullable final Contents input) {
+                return input == null;
+            }
+        }).filter(new com.google.common.base.Predicate<Contents>() {
+            @Override
+            public boolean apply(@Nullable final Contents input) {
+                if (filter != null) {
+                    return filter.test(input);
+                } else {
+                    return false; // do not filter anything if filter is null
+                }
+            }
+        }).transform(new Function<Contents, Ds3Object>() {
+            @Nullable
+            @Override
+            public Ds3Object apply(@Nullable final Contents input) {
+                return new Ds3Object(input.getKey(), input.getSize());
+            }
+        });
     }
 }
