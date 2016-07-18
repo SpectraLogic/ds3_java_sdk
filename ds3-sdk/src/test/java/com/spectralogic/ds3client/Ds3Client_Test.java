@@ -389,6 +389,39 @@ public class Ds3Client_Test {
     }
 
     @Test
+    public void createObjectWithNullAndEmptyMetadata() throws IOException, SignatureException, URISyntaxException {
+        final String jobIdString = "a4a586a1-cb80-4441-84e2-48974e982d51";
+        final Map<String, String> queryParams = new HashMap<>();
+        queryParams.put("job", jobIdString);
+        queryParams.put("offset", Long.toString(0));
+
+        final Path resourcePath = ResourceUtils.loadFileResource("LoremIpsumTwice.txt");
+        final byte[] fileBytes = Files.readAllBytes(resourcePath);
+        final String output = new String(fileBytes, Charset.forName("UTF-8"));
+        final FileChannel channel = FileChannel.open(resourcePath, StandardOpenOption.READ);
+
+        final PutObjectRequest por = new PutObjectRequest(
+                "bucketName",
+                "objectName",
+                channel,
+                UUID.fromString(jobIdString),
+                0,
+                fileBytes.length);
+
+        final Multimap<String, String> expectedRequestHeaders = TreeMultimap.create();
+        expectedRequestHeaders.put("Naming-Convention", "s3"); //default from AbstractRequest
+
+        por.withMetaData("test1", null);
+        por.withMetaData("test2", "");
+
+        MockNetwork
+                .expecting(HttpVerb.PUT, "/bucketName/objectName", queryParams, expectedRequestHeaders, output)
+                .returning(200, "")
+                .asClient()
+                .putObject(por);
+    }
+
+    @Test
     public void headObjectWithMetadata() throws IOException, SignatureException {
 
         final Map<String, String> responseHeaders = new HashMap<>();

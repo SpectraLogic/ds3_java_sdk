@@ -20,11 +20,16 @@ import com.spectralogic.ds3client.networking.HttpVerb;
 import java.io.InputStream;
 import java.nio.channels.SeekableByteChannel;
 import com.spectralogic.ds3client.utils.SeekableByteChannelInputStream;
+import static com.spectralogic.ds3client.utils.Guard.isStringNullOrEmpty;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import com.spectralogic.ds3client.commands.interfaces.AbstractRequest;
 import java.util.UUID;
 import com.google.common.net.UrlEscapers;
 import com.spectralogic.ds3client.models.ChecksumType;
 public class PutObjectRequest extends AbstractRequest {
+
+    final static private Logger LOG = LoggerFactory.getLogger(PutObjectRequest.class);
 
     // Variables
     public final static String AMZ_META_HEADER = "x-amz-meta-";
@@ -157,6 +162,10 @@ public class PutObjectRequest extends AbstractRequest {
 
 
 	public PutObjectRequest withMetaData(final String key, final String value) {
+        if (isStringNullOrEmpty(value)) {
+            LOG.warn("Key has not been added to metadata because value was null or empty: " + key);
+            return this;
+        }
 		final String modifiedKey;
 		if (!key.toLowerCase().startsWith(AMZ_META_HEADER)){
 			modifiedKey = AMZ_META_HEADER + key;
