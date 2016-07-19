@@ -26,7 +26,7 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 public class NamedDetailedTapePartitionList {
 
     // Variables
-    @JsonProperty("NamedDetailedTapePartition")
+    @JsonProperty("TapePartition")
     @JacksonXmlElementWrapper(useWrapping = false)
     private List<NamedDetailedTapePartition> namedDetailedTapePartitions = new ArrayList<>();
 
