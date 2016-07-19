@@ -1050,7 +1050,7 @@ public class Smoke_Test {
             assertThat(transferredListener.getNumberOfFiles(), is(BOOKS.length));
 
         } finally {
-            deleteAllContents(client,bucketName);
+            deleteAllContents(client, bucketName);
         }
     }
 
@@ -1227,6 +1227,26 @@ public class Smoke_Test {
             assertThat(object.getType(), is(S3ObjectType.DATA));
         } finally {
             deleteAllContents(client,bucketName);
+        }
+    }
+
+    @Test
+    public void testGetObjectsWithFullDetails() throws IOException, SignatureException, URISyntaxException, XmlProcessingException {
+        final String bucketName = "TestGetObjectsWithFullDetails";
+        try {
+            client.putBucket(new PutBucketRequest(bucketName));
+            loadBookTestData(client, bucketName);
+
+            final GetObjectsWithFullDetailsSpectraS3Request request = new GetObjectsWithFullDetailsSpectraS3Request()
+                    .withIncludePhysicalPlacement(true);
+            final GetObjectsWithFullDetailsSpectraS3Response response = client.getObjectsWithFullDetailsSpectraS3(request);
+            assertThat(response.getDetailedS3ObjectListResult().getDetailedS3Objects().size(), is(4));
+            assertThat(response.getDetailedS3ObjectListResult().getDetailedS3Objects().get(0).getName(), is("beowulf.txt"));
+            assertThat(response.getDetailedS3ObjectListResult().getDetailedS3Objects().get(1).getName(), is("sherlock_holmes.txt"));
+            assertThat(response.getDetailedS3ObjectListResult().getDetailedS3Objects().get(2).getName(), is("tale_of_two_cities.txt"));
+            assertThat(response.getDetailedS3ObjectListResult().getDetailedS3Objects().get(3).getName(), is("ulysses.txt"));
+        } finally {
+            deleteAllContents(client, bucketName);
         }
     }
 }
