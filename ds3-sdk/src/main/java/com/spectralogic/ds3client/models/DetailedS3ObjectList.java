@@ -26,7 +26,7 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 public class DetailedS3ObjectList {
 
     // Variables
-    @JsonProperty("DetailedS3Object")
+    @JsonProperty("Object")
     @JacksonXmlElementWrapper(useWrapping = false)
     private List<DetailedS3Object> detailedS3Objects = new ArrayList<>();
 
