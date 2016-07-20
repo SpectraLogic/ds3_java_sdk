@@ -239,8 +239,7 @@ public class Smoke_Test {
                 }
             });
 
-            final JobStatus expectedJobStatus = JobStatus.COMPLETED;
-            assertThat(JobStatusHelper.getJobStatusWithRetries(client, jobId, expectedJobStatus), is(JobStatus.COMPLETED));
+            assertThat(JobStatusHelper.getJobStatusWithRetries(client, jobId, JobStatus.COMPLETED), is(JobStatus.COMPLETED));
 
         } finally {
             deleteAllContents(client, bucketName);
