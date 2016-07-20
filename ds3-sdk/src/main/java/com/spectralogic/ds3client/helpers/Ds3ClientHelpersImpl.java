@@ -280,7 +280,7 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
         return FluentIterable.from(objects).filter(new com.google.common.base.Predicate<Contents>() {
             @Override
             public boolean apply(@Nullable final Contents input) {
-                return input == null;
+                return input != null;
             }
         }).filter(new com.google.common.base.Predicate<Contents>() {
             @Override
@@ -288,7 +288,7 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
                 if (filter != null) {
                     return filter.test(input);
                 } else {
-                    return false; // do not filter anything if filter is null
+                    return true; // do not filter anything if filter is null
                 }
             }
         }).transform(new Function<Contents, Ds3Object>() {

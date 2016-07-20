@@ -26,6 +26,7 @@ import com.spectralogic.ds3client.helpers.Ds3ClientHelpers;
 import com.spectralogic.ds3client.helpers.JobRecoveryException;
 import com.spectralogic.ds3client.helpers.ObjectCompletedListener;
 import com.spectralogic.ds3client.helpers.options.WriteJobOptions;
+import com.spectralogic.ds3client.integration.test.helpers.JobStatusHelper;
 import com.spectralogic.ds3client.integration.test.helpers.TempStorageIds;
 import com.spectralogic.ds3client.integration.test.helpers.TempStorageUtil;
 import com.spectralogic.ds3client.models.*;
@@ -56,7 +57,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -218,7 +218,7 @@ public class Smoke_Test {
     }
 
     @Test
-    public void getContents() throws IOException, SignatureException, URISyntaxException, XmlProcessingException {
+    public void getContents() throws IOException, SignatureException, URISyntaxException, XmlProcessingException, InterruptedException {
         final String bucketName = "test_get_contents";
 
         try {
@@ -239,9 +239,7 @@ public class Smoke_Test {
                 }
             });
 
-            final GetJobSpectraS3Response jobResponse = client
-                    .getJobSpectraS3(new GetJobSpectraS3Request(jobId));
-            assertThat(jobResponse.getMasterObjectListResult().getStatus(), is(JobStatus.COMPLETED));
+            assertThat(JobStatusHelper.getJobStatusWithRetries(client, jobId, JobStatus.COMPLETED), is(JobStatus.COMPLETED));
 
         } finally {
             deleteAllContents(client, bucketName);
