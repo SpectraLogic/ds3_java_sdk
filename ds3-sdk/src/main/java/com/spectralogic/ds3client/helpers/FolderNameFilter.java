@@ -22,7 +22,7 @@ public class FolderNameFilter implements Predicate<Contents> {
 
     @Override
     public boolean test(final Contents contents) {
-        return contents.getKey().endsWith("/");
+        return !contents.getKey().endsWith("/");
     }
 
     public static Predicate<Contents> filter() {

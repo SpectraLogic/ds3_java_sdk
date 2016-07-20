@@ -29,7 +29,7 @@ public class FolderNameFilter_Test {
         final Contents contents = new Contents();
         contents.setKey("name/");
 
-        assertTrue(filter.test(contents));
+        assertFalse(filter.test(contents));
     }
 
     @Test
@@ -39,6 +39,6 @@ public class FolderNameFilter_Test {
         final Contents contents = new Contents();
         contents.setKey("name");
 
-        assertFalse(filter.test(contents));
+        assertTrue(filter.test(contents));
     }
 }
