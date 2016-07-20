@@ -45,7 +45,7 @@ public final class JobStatusHelper {
         final GetJobSpectraS3Request getJobSpectraS3Request = new GetJobSpectraS3Request(jobId);
         for (int retry = 0; retry < MAX_RETRIES; retry++) {
             actualStatus = client.getJobSpectraS3(getJobSpectraS3Request).getMasterObjectListResult().getStatus();
-            if (actualStatus.equals(expectedStatus)) {
+            if (actualStatus == expectedStatus) {
                 LOG.info("Found expected JobStatus " + expectedStatus + " after " + retry*POLLING_PERIOD_MILLIS + " millis.");
                 break;
             }
