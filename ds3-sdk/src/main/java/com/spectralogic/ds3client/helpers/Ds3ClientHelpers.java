@@ -193,6 +193,15 @@ public abstract class Ds3ClientHelpers {
     public abstract void ensureBucketExists(final String bucket) throws IOException, SignatureException;
 
     /**
+     * Ensures that a bucket exists.  The the bucket does not exist, it will be created.
+     * @param bucket The name of the bucket to check that it exists.
+     * @param dataPolicy The data policy for the bucket
+     * @throws IOException
+     * @throws SignatureException
+     */
+    public abstract void ensureBucketExists(final String bucket, final UUID dataPolicy) throws IOException, SignatureException;
+
+    /**
      * Returns information about all of the objects in the bucket, regardless of how many objects the bucket contains.
      *
      * @throws SignatureException

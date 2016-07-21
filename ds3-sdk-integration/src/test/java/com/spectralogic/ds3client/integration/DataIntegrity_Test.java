@@ -57,15 +57,16 @@ import static org.junit.Assert.assertTrue;
 
 public class DataIntegrity_Test {
 
-    private static Ds3Client client;
+    private static final Ds3Client client = Util.fromEnv();
+    private static final Ds3ClientHelpers HELPERS = Ds3ClientHelpers.wrap(client);
     private static final String TEST_ENV_NAME = "data_integrity_test";
     private static TempStorageIds envStorageIds;
+    private static UUID envDataPolicyId;
 
     @BeforeClass
     public static void startup() throws IOException, SignatureException {
-        client = Util.fromEnv();
-        final UUID dataPolicyId = TempStorageUtil.setupDataPolicy(TEST_ENV_NAME, false, ChecksumType.Type.MD5, client);
-        envStorageIds = TempStorageUtil.setup(TEST_ENV_NAME, dataPolicyId, client);
+        envDataPolicyId = TempStorageUtil.setupDataPolicy(TEST_ENV_NAME, false, ChecksumType.Type.MD5, client);
+        envStorageIds = TempStorageUtil.setup(TEST_ENV_NAME, envDataPolicyId, client);
     }
 
     @AfterClass
@@ -79,21 +80,19 @@ public class DataIntegrity_Test {
         final String bucketName = "single_file_put_test";
         final String book = "beowulf.txt";
 
-        final Ds3ClientHelpers helpers = Ds3ClientHelpers.wrap(client);
-
         try {
-            helpers.ensureBucketExists(bucketName);
+            HELPERS.ensureBucketExists(bucketName, envDataPolicyId);
 
             final Path objPath = ResourceUtils.loadFileResource(Util.RESOURCE_BASE_NAME + book);
             final String digest = DigestUtils.sha256Hex(Files.newInputStream(objPath));
             final Ds3Object obj = new Ds3Object(book, Files.size(objPath));
 
-            final Ds3ClientHelpers.Job putJob = helpers.startWriteJob(bucketName, Lists.newArrayList(obj));
+            final Ds3ClientHelpers.Job putJob = HELPERS.startWriteJob(bucketName, Lists.newArrayList(obj));
             putJob.transfer(new ResourceObjectPutter(Util.RESOURCE_BASE_NAME));
 
             final Path tempDir = Files.createTempDirectory("ds3_test_");
 
-            final Ds3ClientHelpers.Job getJob = helpers.startReadAllJob(bucketName);
+            final Ds3ClientHelpers.Job getJob = HELPERS.startReadAllJob(bucketName);
             getJob.transfer(new FileObjectGetter(tempDir));
 
             final String secondDigest = DigestUtils.sha256Hex(Files.newInputStream(tempDir.resolve(book)));
@@ -166,15 +165,13 @@ public class DataIntegrity_Test {
     @Test
     public void autoChecksumming() throws IOException, SignatureException, XmlProcessingException {
         final String bucketName = "auto_checksumming_test";
-        final Ds3ClientHelpers helpers = Ds3ClientHelpers.wrap(client);
-
-        helpers.ensureBucketExists(bucketName);
 
         try {
+            HELPERS.ensureBucketExists(bucketName, envDataPolicyId);
 
             final List<Ds3Object> objs = Lists.newArrayList(new Ds3Object("beowulf.txt", 294059));
 
-            final Ds3ClientHelpers.Job job = helpers.startWriteJob(bucketName, objs, WriteJobOptions.create().withChecksumType(ChecksumType.Type.MD5));
+            final Ds3ClientHelpers.Job job = HELPERS.startWriteJob(bucketName, objs, WriteJobOptions.create().withChecksumType(ChecksumType.Type.MD5));
 
             final SingleChecksumListener listener = new SingleChecksumListener();
 
@@ -195,14 +192,12 @@ public class DataIntegrity_Test {
     @Test
     public void callerSuppliedChecksum() throws IOException, SignatureException, XmlProcessingException {
         final String bucketName = "caller_supplied_checksum_test";
-        final Ds3ClientHelpers helpers = Ds3ClientHelpers.wrap(client);
-
-        helpers.ensureBucketExists(bucketName);
 
         try {
+            HELPERS.ensureBucketExists(bucketName, envDataPolicyId);
 
             final List<Ds3Object> objs = Lists.newArrayList(new Ds3Object("beowulf.txt", 294059));
-            final Ds3ClientHelpers.Job job = helpers.startWriteJob(bucketName, objs, WriteJobOptions.create().withChecksumType(ChecksumType.Type.MD5));
+            final Ds3ClientHelpers.Job job = HELPERS.startWriteJob(bucketName, objs, WriteJobOptions.create().withChecksumType(ChecksumType.Type.MD5));
 
             final AtomicBoolean callbackCalled = new AtomicBoolean(false);
 
@@ -237,14 +232,12 @@ public class DataIntegrity_Test {
     @Test
     public void getChecksum() throws IOException, SignatureException, XmlProcessingException {
         final String bucketName = "get_checksum_test";
-        final Ds3ClientHelpers helpers = Ds3ClientHelpers.wrap(client);
-
-        helpers.ensureBucketExists(bucketName);
 
         try {
+            HELPERS.ensureBucketExists(bucketName, envDataPolicyId);
 
             final List<Ds3Object> objs = Lists.newArrayList(new Ds3Object("beowulf.txt", 294059));
-            final Ds3ClientHelpers.Job job = helpers.startWriteJob(bucketName, objs, WriteJobOptions.create().withChecksumType(ChecksumType.Type.MD5));
+            final Ds3ClientHelpers.Job job = HELPERS.startWriteJob(bucketName, objs, WriteJobOptions.create().withChecksumType(ChecksumType.Type.MD5));
 
             final SingleChecksumListener listener = new SingleChecksumListener();
 
@@ -257,7 +250,7 @@ public class DataIntegrity_Test {
             assertThat(checksum, is(notNullValue()));
             assertThat(checksum, is("rCu751L6xhB5zyL+soa3fg=="));
 
-            final Ds3ClientHelpers.Job getJob = helpers.startReadJob(bucketName, objs);
+            final Ds3ClientHelpers.Job getJob = HELPERS.startReadJob(bucketName, objs);
             final SingleChecksumListener getListener = new SingleChecksumListener();
             getJob.attachChecksumListener(getListener);
 
@@ -280,14 +273,12 @@ public class DataIntegrity_Test {
     public void getChecksumComputedByBp() throws IOException, SignatureException, URISyntaxException, XmlProcessingException {
         final String bucketName = "get_checksum_computed_by_bp_test";
 
-        final Ds3ClientHelpers helpers = Ds3ClientHelpers.wrap(client);
-
-        helpers.ensureBucketExists(bucketName);
         try {
+            HELPERS.ensureBucketExists(bucketName, envDataPolicyId);
             Util.loadBookTestData(client, bucketName);
             final List<Ds3Object> objs = Lists.newArrayList(new Ds3Object("beowulf.txt"));
 
-            final Ds3ClientHelpers.Job getJob = helpers.startReadJob(bucketName, objs);
+            final Ds3ClientHelpers.Job getJob = HELPERS.startReadJob(bucketName, objs);
             final SingleChecksumListener getListener = new SingleChecksumListener();
             getJob.attachChecksumListener(getListener);
 
@@ -311,20 +302,18 @@ public class DataIntegrity_Test {
     public void getMultiFileChecksum() throws IOException, SignatureException, URISyntaxException, XmlProcessingException {
         final String bucketName = "get_multi_file_checksum_test";
 
-        final Ds3ClientHelpers helpers = Ds3ClientHelpers.wrap(client);
-
-        helpers.ensureBucketExists(bucketName);
         try {
+            HELPERS.ensureBucketExists(bucketName, envDataPolicyId);
 
             final List<Ds3Object> objs = Lists.newArrayList(new Ds3Object("beowulf.txt", 294059), new Ds3Object("ulysses.txt", 1540095));
-            final Ds3ClientHelpers.Job job = helpers.startWriteJob(bucketName, objs, WriteJobOptions.create().withChecksumType(ChecksumType.Type.MD5));
+            final Ds3ClientHelpers.Job job = HELPERS.startWriteJob(bucketName, objs, WriteJobOptions.create().withChecksumType(ChecksumType.Type.MD5));
 
             final MultiFileChecksumListener putListener = new MultiFileChecksumListener();
             job.attachChecksumListener(putListener);
 
             job.transfer(new ResourceObjectPutter("books/"));
 
-            final Ds3ClientHelpers.Job getJob = helpers.startReadJob(bucketName, objs);
+            final Ds3ClientHelpers.Job getJob = HELPERS.startReadJob(bucketName, objs);
             final MultiFileChecksumListener getListener = new MultiFileChecksumListener();
             getJob.attachChecksumListener(getListener);
 
@@ -352,14 +341,13 @@ public class DataIntegrity_Test {
     public void setAndGetMultiFileChecksum() throws IOException, SignatureException, URISyntaxException, XmlProcessingException {
         final String bucketName = "set_and_get_multi_file_checksum_test";
 
-        final Ds3ClientHelpers helpers = Ds3ClientHelpers.wrap(client);
-
-        helpers.ensureBucketExists(bucketName);
         try {
+            HELPERS.ensureBucketExists(bucketName, envDataPolicyId);
+
             Util.loadBookTestData(client, bucketName);
             final List<Ds3Object> objs = Lists.newArrayList(new Ds3Object("beowulf.txt"), new Ds3Object("ulysses.txt"));
 
-            final Ds3ClientHelpers.Job getJob = helpers.startReadJob(bucketName, objs);
+            final Ds3ClientHelpers.Job getJob = HELPERS.startReadJob(bucketName, objs);
             final MultiFileChecksumListener getListener = new MultiFileChecksumListener();
             getJob.attachChecksumListener(getListener);
 
@@ -417,13 +405,12 @@ public class DataIntegrity_Test {
 
     public void sendAndVerifySingleFile(final String bucketName, final String fileName, final long seed, final int length) throws IOException, SignatureException, XmlProcessingException {
         try {
-            final Ds3ClientHelpers helpers = Ds3ClientHelpers.wrap(client);
-            helpers.ensureBucketExists(bucketName);
+            HELPERS.ensureBucketExists(bucketName, envDataPolicyId);
 
             final String digest = DigestUtils.sha256Hex(new RandomDataInputStream(seed, length));
             final Ds3Object obj = new Ds3Object(fileName, length);
 
-            final Ds3ClientHelpers.Job putJob = helpers.startWriteJob(bucketName, Lists.newArrayList(obj),
+            final Ds3ClientHelpers.Job putJob = HELPERS.startWriteJob(bucketName, Lists.newArrayList(obj),
                     WriteJobOptions.create().withMaxUploadSize(PutBulkJobSpectraS3Request.MIN_UPLOAD_SIZE_IN_BYTES));
             putJob.transfer(new Ds3ClientHelpers.ObjectChannelBuilder() {
                 @Override
@@ -441,7 +428,7 @@ public class DataIntegrity_Test {
 
             final Path tempDir = Files.createTempDirectory("ds3_test_");
 
-            final Ds3ClientHelpers.Job getJob = helpers.startReadAllJob(bucketName);
+            final Ds3ClientHelpers.Job getJob = HELPERS.startReadAllJob(bucketName);
             getJob.transfer(new FileObjectGetter(tempDir));
 
             final String secondDigest = DigestUtils.sha256Hex(Files.newInputStream(tempDir.resolve(fileName)));
