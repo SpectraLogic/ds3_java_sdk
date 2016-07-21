@@ -1,7 +1,23 @@
+/*
+ * ******************************************************************************
+ *   Copyright 2014-2016 Spectra Logic Corporation. All Rights Reserved.
+ *   Licensed under the Apache License, Version 2.0 (the "License"). You may not use
+ *   this file except in compliance with the License. A copy of the License is located at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *   or in the "license" file accompanying this file.
+ *   This file is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+ *   CONDITIONS OF ANY KIND, either express or implied. See the License for the
+ *   specific language governing permissions and limitations under the License.
+ * ****************************************************************************
+ */
+
 package com.spectralogic.ds3client.integration;
 
 import com.spectralogic.ds3client.Ds3Client;
 import com.spectralogic.ds3client.commands.spectrads3.*;
+import com.spectralogic.ds3client.helpers.Ds3ClientHelpers;
 import com.spectralogic.ds3client.integration.test.helpers.TempStorageIds;
 import com.spectralogic.ds3client.integration.test.helpers.TempStorageUtil;
 import com.spectralogic.ds3client.models.BucketAclPermission;
@@ -22,15 +38,16 @@ import static org.junit.Assert.assertThat;
 
 public class GroupManagement_Test {
 
-    private static Ds3Client client;
+    private static final Ds3Client client = Util.fromEnv();
+    private static final Ds3ClientHelpers HELPERS = Ds3ClientHelpers.wrap(client);
     private static final String TEST_ENV_NAME = "group_management_test";
     private static TempStorageIds envStorageIds;
+    private static UUID envDataPolicyId;
 
     @BeforeClass
     public static void startup() throws IOException, SignatureException {
-        client = Util.fromEnv();
-        final UUID dataPolicyId = TempStorageUtil.setupDataPolicy(TEST_ENV_NAME, false, ChecksumType.Type.MD5, client);
-        envStorageIds = TempStorageUtil.setup(TEST_ENV_NAME, dataPolicyId, client);
+        envDataPolicyId = TempStorageUtil.setupDataPolicy(TEST_ENV_NAME, false, ChecksumType.Type.MD5, client);
+        envStorageIds = TempStorageUtil.setup(TEST_ENV_NAME, envDataPolicyId, client);
     }
 
     @AfterClass
@@ -152,9 +169,7 @@ public class GroupManagement_Test {
 
         try {
             //Create bucket
-            final PutBucketSpectraS3Response createBucket = client
-                    .putBucketSpectraS3(new PutBucketSpectraS3Request(bucketName));
-            assertThat(createBucket.getBucketResult().getName(), is(bucketName));
+            HELPERS.ensureBucketExists(bucketName, envDataPolicyId);
 
             //Create group
             final PutGroupSpectraS3Response createGroup = createGroup(groupName, client);

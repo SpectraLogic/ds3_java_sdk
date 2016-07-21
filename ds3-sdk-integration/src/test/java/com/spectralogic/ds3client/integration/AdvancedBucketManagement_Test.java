@@ -1,3 +1,18 @@
+/*
+ * ******************************************************************************
+ *   Copyright 2014-2016 Spectra Logic Corporation. All Rights Reserved.
+ *   Licensed under the Apache License, Version 2.0 (the "License"). You may not use
+ *   this file except in compliance with the License. A copy of the License is located at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *   or in the "license" file accompanying this file.
+ *   This file is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+ *   CONDITIONS OF ANY KIND, either express or implied. See the License for the
+ *   specific language governing permissions and limitations under the License.
+ * ****************************************************************************
+ */
+
 package com.spectralogic.ds3client.integration;
 
 import com.spectralogic.ds3client.Ds3Client;
@@ -118,6 +133,7 @@ public class AdvancedBucketManagement_Test {
     public void createPoolStorageDomainMember_Test() throws IOException, SignatureException {
         final String storageDomainName = "create_pool_storage_domain_member_sd";
         final String poolPartitionName = "create_pool_storage_domain_member_pp";
+        UUID storageDomainMemberId = null;
         try {
             //Create storage domain
             final PutStorageDomainSpectraS3Response createStorageDomain = createStorageDomain(
@@ -135,6 +151,7 @@ public class AdvancedBucketManagement_Test {
                     createStorageDomain.getStorageDomainResult().getId(),
                     createPoolPartition.getPoolPartitionResult().getId(),
                     client);
+            storageDomainMemberId = createMemberResponse.getStorageDomainMemberResult().getId();
             assertThat(createMemberResponse.getStatusCode(), is(201));
 
             //Verify that the storage domain member exists
@@ -147,10 +164,8 @@ public class AdvancedBucketManagement_Test {
             assertThat(members.size(), is(1));
             assertThat(members.get(0).getPoolPartitionId(), is(createPoolPartition.getPoolPartitionResult().getId()));
             assertThat(members.get(0).getStorageDomainId(), is(createStorageDomain.getStorageDomainResult().getId()));
-
-            //Delete the storage domain member
-            deleteStorageDomainMember(createMemberResponse.getStorageDomainMemberResult().getId(), client);
         } finally {
+            deleteStorageDomainMember(storageDomainMemberId, client);
             deletePoolPartition(poolPartitionName, client);
             deleteStorageDomain(storageDomainName, client);
         }

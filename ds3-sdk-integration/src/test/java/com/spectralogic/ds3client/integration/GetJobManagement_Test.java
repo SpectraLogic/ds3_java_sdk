@@ -17,23 +17,29 @@ package com.spectralogic.ds3client.integration;
 
 import com.google.common.collect.Lists;
 import com.spectralogic.ds3client.Ds3Client;
-import com.spectralogic.ds3client.commands.*;
-import com.spectralogic.ds3client.commands.spectrads3.*;
+import com.spectralogic.ds3client.commands.GetObjectRequest;
+import com.spectralogic.ds3client.commands.GetObjectResponse;
+import com.spectralogic.ds3client.commands.PutObjectRequest;
+import com.spectralogic.ds3client.commands.spectrads3.GetJobSpectraS3Request;
+import com.spectralogic.ds3client.commands.spectrads3.GetJobSpectraS3Response;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers;
 import com.spectralogic.ds3client.helpers.options.ReadJobOptions;
 import com.spectralogic.ds3client.integration.test.helpers.ABMTestHelper;
 import com.spectralogic.ds3client.integration.test.helpers.TempStorageIds;
 import com.spectralogic.ds3client.integration.test.helpers.TempStorageUtil;
-import com.spectralogic.ds3client.models.*;
+import com.spectralogic.ds3client.models.ChecksumType;
+import com.spectralogic.ds3client.models.Priority;
 import com.spectralogic.ds3client.models.bulk.Ds3Object;
 import com.spectralogic.ds3client.serializer.XmlProcessingException;
 import com.spectralogic.ds3client.utils.ResourceUtils;
-import org.junit.*;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
+import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.io.OutputStream;
 import java.net.URISyntaxException;
-import java.nio.channels.Channels;
 import java.nio.channels.SeekableByteChannel;
 import java.nio.channels.WritableByteChannel;
 import java.nio.file.Files;
@@ -43,10 +49,12 @@ import java.util.UUID;
 
 import static com.spectralogic.ds3client.integration.Util.RESOURCE_BASE_NAME;
 import static com.spectralogic.ds3client.integration.Util.deleteAllContents;
-import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.*;
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertThat;
 
 public class GetJobManagement_Test {
+
+    private static final Logger LOG = LoggerFactory.getLogger(GetJobManagement_Test.class);
 
     private static final Ds3Client client = Util.fromEnv();
     private static final Ds3ClientHelpers HELPERS = Ds3ClientHelpers.wrap(client);
@@ -58,15 +66,30 @@ public class GetJobManagement_Test {
     public static void startup() throws Exception {
         final UUID dataPolicyId = TempStorageUtil.setupDataPolicy(TEST_ENV_NAME, false, ChecksumType.Type.MD5, client);
         envStorageIds = TempStorageUtil.setup(TEST_ENV_NAME, dataPolicyId, client);
-        HELPERS.ensureBucketExists(BUCKET_NAME);
-        putBeowulf();
+        setupBucket(dataPolicyId);
     }
 
     @AfterClass
     public static void teardown() throws IOException, SignatureException {
-        deleteAllContents(client, BUCKET_NAME);
-        TempStorageUtil.teardown(TEST_ENV_NAME, envStorageIds, client);
-        client.close();
+        try {
+            deleteAllContents(client, BUCKET_NAME);
+        } finally {
+            TempStorageUtil.teardown(TEST_ENV_NAME, envStorageIds, client);
+            client.close();
+        }
+    }
+
+    /**
+     * Creates the test bucket with the specified data policy to prevent cascading test failure
+     * when there are multiple data policies
+     */
+    private static void setupBucket(final UUID dataPolicy) {
+        try {
+            HELPERS.ensureBucketExists(BUCKET_NAME, dataPolicy);
+            putBeowulf();
+        } catch (final Exception e) {
+            LOG.error("Setting up test environment failed: " + e.getMessage());
+        }
     }
 
     private static void putBeowulf() throws Exception {
