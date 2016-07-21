@@ -15,41 +15,28 @@
 
 package com.spectralogic.ds3client.helpers;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.Map;
-
-import static com.spectralogic.ds3client.utils.Guard.isMapNullOrEmpty;
 
 public class JobPartTrackerImpl implements JobPartTracker {
 
-    static private final Logger LOG = LoggerFactory.getLogger(JobPartTrackerImpl.class);
     private final Map<String, ObjectPartTracker> trackers;
 
     public JobPartTrackerImpl(final Map<String, ObjectPartTracker> trackers) {
+        if (trackers == null) {
+            throw new IllegalArgumentException("The trackers parameter cannot be null");
+        }
         this.trackers = trackers;
     }
 
     public void completePart(final String key, final ObjectPart objectPart) {
-        if (isMapNullOrEmpty(this.trackers) || !this.trackers.containsKey(key)) {
-            throw new IllegalArgumentException("Trackers does not contain specified Object Part Tracker: " + key);
-        }
         trackers.get(key).completePart(objectPart);
     }
 
     public boolean containsPart(final String key, final ObjectPart objectPart) {
-        if (isMapNullOrEmpty(this.trackers) || !this.trackers.containsKey(key)) {
-            throw new IllegalArgumentException("Trackers does not contain specified Object Part Tracker: " + key);
-        }
         return trackers.get(key).containsPart(objectPart);
     }
 
     public JobPartTracker attachDataTransferredListener(final DataTransferredListener listener) {
-        if (this.trackers == null) {
-            LOG.error("Trackers is null: cannot attach Data Transferred Listener");
-            return this;
-        }
         for (final ObjectPartTracker tracker : this.trackers.values()) {
             tracker.attachDataTransferredListener(listener);
         }
@@ -57,10 +44,6 @@ public class JobPartTrackerImpl implements JobPartTracker {
     }
 
     public JobPartTracker attachObjectCompletedListener(final ObjectCompletedListener listener) {
-        if (this.trackers == null) {
-            LOG.error("Trackers is null: cannot attach Object Completed Listener");
-            return this;
-        }
         for (final ObjectPartTracker tracker : this.trackers.values()) {
             tracker.attachObjectCompletedListener(listener);
         }
@@ -68,20 +51,12 @@ public class JobPartTrackerImpl implements JobPartTracker {
     }
 
     public void removeDataTransferredListener(final DataTransferredListener listener) {
-        if (this.trackers == null) {
-            LOG.error("Trackers is null: cannot remove Data Transferred Listener");
-            return;
-        }
         for (final ObjectPartTracker tracker : this.trackers.values()) {
             tracker.removeDataTransferredListener(listener);
         }
     }
 
     public void removeObjectCompletedListener(final ObjectCompletedListener listener) {
-        if (this.trackers == null) {
-            LOG.error("Trackers is null: cannot remove Object Completed Listener");
-            return;
-        }
         for (final ObjectPartTracker tracker : this.trackers.values()) {
             tracker.removeObjectCompletedListener(listener);
         }
