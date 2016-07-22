@@ -153,24 +153,29 @@ public class Ds3ClientHelpers_Test {
 
         final PutObjectResponse response = mock(PutObjectResponse.class);
         Mockito.when(ds3Client.putObject(putRequestHas(MYBUCKET, "foo", jobId, 0, "foo co"))).thenReturn(response);
-        Mockito.when(ds3Client.putObject(putRequestHas(MYBUCKET, "bar", jobId, 0, "bar contents"))).thenReturn(response);
-        Mockito.when(ds3Client.putObject(putRequestHas(MYBUCKET, "baz", jobId, 0, "baz co"))).thenReturn(response);
         Mockito.when(ds3Client.putObject(putRequestHas(MYBUCKET, "foo", jobId, 6, "ntents"))).thenReturn(response);
+
+        Mockito.when(ds3Client.putObject(putRequestHas(MYBUCKET, "bar", jobId, 0, "foo contents"))).thenReturn(response);
+
+        Mockito.when(ds3Client.putObject(putRequestHas(MYBUCKET, "baz", jobId, 0, "foo co"))).thenReturn(response);
         Mockito.when(ds3Client.putObject(putRequestHas(MYBUCKET, "baz", jobId, 6, "ntents"))).thenReturn(response);
-        
+
+        final String fooContents = "foo contents";
+        final String barContents = "bar contents";
+        final String bazContents = "baz contents";
         final Job job = Ds3ClientHelpers.wrap(ds3Client).startWriteJob(MYBUCKET, Lists.newArrayList(
-                new Ds3Object("foo", 12),
-                new Ds3Object("bar", 12),
-                new Ds3Object("baz", 12)
+                new Ds3Object("foo", fooContents.length()),
+                new Ds3Object("bar", barContents.length()),
+                new Ds3Object("baz", bazContents.length())
         ));
         
         assertThat(job.getJobId(), is(jobId));
         assertThat(job.getBucketName(), is(MYBUCKET));
         
         final HashMap<String, SeekableByteChannel> channelMap = new HashMap<>();
-        channelMap.put("foo", channelWithContents("foo contents"));
-        channelMap.put("bar", channelWithContents("bar contents"));
-        channelMap.put("baz", channelWithContents("baz contents"));
+        channelMap.put("foo", channelWithContents(fooContents));
+        channelMap.put("bar", channelWithContents(barContents));
+        channelMap.put("baz", channelWithContents(bazContents));
         
         final Stopwatch stopwatch = Stopwatch.createUnstarted();
         stopwatch.start();
@@ -181,7 +186,12 @@ public class Ds3ClientHelpers_Test {
             }
         });
         stopwatch.stop();
-        assertThat(stopwatch.elapsed(TimeUnit.MILLISECONDS), is(both(greaterThan(1000L)).and(lessThan(1250L))));
+
+        // Assert that the job finishes
+        assertThat(stopwatch.elapsed(TimeUnit.MILLISECONDS), is(lessThan(5000L)));
+        assertEquals(channelMap.get("foo").position(), fooContents.length());
+        assertEquals(channelMap.get("bar").position(), barContents.length());
+        assertEquals(channelMap.get("baz").position(), bazContents.length());
     }
     
     @Test
