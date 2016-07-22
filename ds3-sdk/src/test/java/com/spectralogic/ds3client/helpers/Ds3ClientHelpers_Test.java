@@ -74,7 +74,7 @@ public class Ds3ClientHelpers_Test {
         Mockito.when(ds3Client.getObject(getRequestHas(MYBUCKET, "baz", jobId, 0))).then(getObjectAnswer("baz co"));
         Mockito.when(ds3Client.getObject(getRequestHas(MYBUCKET, "foo", jobId, 6))).then(getObjectAnswer("ntents"));
         Mockito.when(ds3Client.getObject(getRequestHas(MYBUCKET, "baz", jobId, 6))).then(getObjectAnswer("ntents"));
-        
+
         final Job job = Ds3ClientHelpers.wrap(ds3Client).startReadJob(MYBUCKET, Lists.newArrayList(
             new Ds3Object("foo"),
             new Ds3Object("bar"),
@@ -98,8 +98,8 @@ public class Ds3ClientHelpers_Test {
             }
         });
         stopwatch.stop();
-        assertThat(stopwatch.elapsed(TimeUnit.MILLISECONDS), is(both(greaterThan(1000L)).and(lessThan(1250L))));
-        
+        assertThat(stopwatch.elapsed(TimeUnit.MILLISECONDS), is(lessThan(5000L)));
+
         for (final Map.Entry<String, ByteArraySeekableByteChannel> channelEntry : channelMap.entrySet()) {
             assertThat(channelEntry.getValue().toString(), is(channelEntry.getKey() + " contents"));
         }
