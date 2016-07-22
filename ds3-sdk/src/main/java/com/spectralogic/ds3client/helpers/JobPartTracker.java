@@ -26,6 +26,9 @@ public class JobPartTracker {
     private final Map<String, ObjectPartTracker> trackers;
 
     public JobPartTracker(final Map<String, ObjectPartTracker> trackers) {
+        if (trackers == null) {
+            throw new IllegalArgumentException("The trackers parameter cannot be null");
+        }
         this.trackers = trackers;
     }
 
