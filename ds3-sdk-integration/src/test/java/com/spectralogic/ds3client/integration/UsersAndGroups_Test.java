@@ -20,12 +20,14 @@ import com.spectralogic.ds3client.commands.spectrads3.*;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers;
 import com.spectralogic.ds3client.integration.test.helpers.TempStorageIds;
 import com.spectralogic.ds3client.integration.test.helpers.TempStorageUtil;
-import com.spectralogic.ds3client.models.*;
+import com.spectralogic.ds3client.models.BucketAclPermission;
+import com.spectralogic.ds3client.models.ChecksumType;
 import com.spectralogic.ds3client.networking.FailedRequestException;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.security.SignatureException;
@@ -38,10 +40,12 @@ import static org.junit.Assert.fail;
 
 public class UsersAndGroups_Test {
 
+    private static final Logger LOG = LoggerFactory.getLogger(UsersAndGroups_Test.class);
+
     private static final Ds3Client client = Util.fromEnv();
     private static final Ds3ClientHelpers HELPERS = Ds3ClientHelpers.wrap(client);
-    private static final String BUCKET_NAME = "Get_Job_Management_Test";
-    private static final String TEST_ENV_NAME = "GetJobManagement_Test";
+    private static final String BUCKET_NAME = "Users_And_Groups_Test";
+    private static final String TEST_ENV_NAME = "UsersAndGroups_Test";
     private static TempStorageIds envStorageIds;
     private static UUID spectraUUID;
     private static UUID administratorsUUID;
@@ -51,11 +55,8 @@ public class UsersAndGroups_Test {
     public static void startup() throws Exception {
         dataPolicyId = TempStorageUtil.setupDataPolicy(TEST_ENV_NAME, true, ChecksumType.Type.MD5, client);
         envStorageIds = TempStorageUtil.setup(TEST_ENV_NAME, dataPolicyId, client);
-        HELPERS.ensureBucketExists(BUCKET_NAME);
-        spectraUUID = client.getUserSpectraS3(
-                new GetUserSpectraS3Request("spectra")).getSpectraUserResult().getId();
-        administratorsUUID = client.getGroupSpectraS3(
-                new GetGroupSpectraS3Request("Administrators")).getGroupResult().getId();
+        HELPERS.ensureBucketExists(BUCKET_NAME, dataPolicyId);
+        setupBucket(dataPolicyId);
     }
 
     @AfterClass
@@ -63,6 +64,22 @@ public class UsersAndGroups_Test {
         deleteAllContents(client, BUCKET_NAME);
         TempStorageUtil.teardown(TEST_ENV_NAME, envStorageIds, client);
         client.close();
+    }
+
+    /**
+     * Creates the test bucket with the specified data policy to prevent cascading test failure
+     * when there are multiple data policies
+     */
+    private static void setupBucket(final UUID dataPolicy) {
+        try {
+            HELPERS.ensureBucketExists(BUCKET_NAME, dataPolicy);
+            spectraUUID = client.getUserSpectraS3(
+                    new GetUserSpectraS3Request("spectra")).getSpectraUserResult().getId();
+            administratorsUUID = client.getGroupSpectraS3(
+                    new GetGroupSpectraS3Request("Administrators")).getGroupResult().getId();
+        } catch (final Exception e) {
+            LOG.error("Setting up test environment failed: " + e.getMessage());
+        }
     }
 
     @Test

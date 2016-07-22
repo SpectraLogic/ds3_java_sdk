@@ -37,15 +37,16 @@ import static org.junit.Assert.*;
 
 public class Metadata_Test {
 
-    private static Ds3Client client;
+    private static final Ds3Client client = Util.fromEnv();
+    private static final Ds3ClientHelpers HELPERS = Ds3ClientHelpers.wrap(client);
     private static final String TEST_ENV_NAME = "metadata_test";
     private static TempStorageIds envStorageIds;
+    private static UUID envDataPolicyId;
 
     @BeforeClass
     public static void startup() throws IOException, SignatureException {
-        client = Util.fromEnv();
-        final UUID dataPolicyId = TempStorageUtil.setupDataPolicy(TEST_ENV_NAME, false, ChecksumType.Type.MD5, client);
-        envStorageIds = TempStorageUtil.setup(TEST_ENV_NAME, dataPolicyId, client);
+        envDataPolicyId = TempStorageUtil.setupDataPolicy(TEST_ENV_NAME, false, ChecksumType.Type.MD5, client);
+        envStorageIds = TempStorageUtil.setup(TEST_ENV_NAME, envDataPolicyId, client);
     }
 
     @AfterClass
@@ -122,8 +123,7 @@ public class Metadata_Test {
     */
 
     private static Metadata processMetadataRequest(final String bucketName, final ImmutableMultimap<String, String> metadata) throws IOException, SignatureException, XmlProcessingException {
-        final Ds3ClientHelpers wrapper = Ds3ClientHelpers.wrap(client);
-        wrapper.ensureBucketExists(bucketName);
+        HELPERS.ensureBucketExists(bucketName, envDataPolicyId);
 
         try {
             final Ds3Object obj = new Ds3Object("obj.txt", 1024);

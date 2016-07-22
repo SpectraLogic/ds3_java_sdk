@@ -59,16 +59,17 @@ public class PutJobManagement_Test {
 
     private static final String TEST_ENV_NAME = "PutJobManagement_Test";
     private static TempStorageIds envStorageIds;
+    private static UUID envDataPolicyId;
 
     @BeforeClass
     public static void startup() throws IOException, SignatureException {
-        final UUID dataPolicyId = TempStorageUtil.setupDataPolicy(TEST_ENV_NAME, false, ChecksumType.Type.MD5, client);
-        envStorageIds = TempStorageUtil.setup(TEST_ENV_NAME, dataPolicyId, client);
+        envDataPolicyId = TempStorageUtil.setupDataPolicy(TEST_ENV_NAME, false, ChecksumType.Type.MD5, client);
+        envStorageIds = TempStorageUtil.setup(TEST_ENV_NAME, envDataPolicyId, client);
     }
 
     @Before
     public void setupBucket() throws IOException, SignatureException {
-        HELPERS.ensureBucketExists(BUCKET_NAME);
+        HELPERS.ensureBucketExists(BUCKET_NAME, envDataPolicyId);
     }
 
     @AfterClass
