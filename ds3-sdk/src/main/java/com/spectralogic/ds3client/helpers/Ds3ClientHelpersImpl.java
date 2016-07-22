@@ -191,6 +191,21 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
     }
 
     @Override
+    public void ensureBucketExists(final String bucket, final UUID dataPolicy) throws IOException, SignatureException {
+        final HeadBucketResponse response = this.client.headBucket(new HeadBucketRequest(bucket));
+        if (response.getStatus() == HeadBucketResponse.Status.DOESNTEXIST) {
+            try {
+                this.client.putBucketSpectraS3(new PutBucketSpectraS3Request(bucket).withDataPolicyId(dataPolicy));
+            } catch (final FailedRequestException e) {
+                if (e.getStatusCode() != 409) {
+                    throw e;
+                }
+                LOG.warn("Creating " + bucket + " failed because it was created by another thread or process");
+            }
+        }
+    }
+
+    @Override
     public Iterable<Contents> listObjects(final String bucket) throws SignatureException, IOException {
         return this.listObjects(bucket, null);
     }

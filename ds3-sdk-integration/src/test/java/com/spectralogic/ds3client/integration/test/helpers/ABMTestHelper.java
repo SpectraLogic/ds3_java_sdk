@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.security.SignatureException;
 import java.util.UUID;
 
+import static org.apache.http.util.TextUtils.isEmpty;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
@@ -87,20 +88,29 @@ public final class ABMTestHelper {
 
     /**
      * Deletes a data policy with the specified name, and verifies that said policy
-     * was deleted. If the policy was not properly deleted, then an error is thrown.
+     * was deleted. If the policy was not properly deleted, then an error is logged.
      */
     public static void deleteDataPolicy(
             final String dataPolicyName,
-            final Ds3Client client) throws IOException, SignatureException {
+            final Ds3Client client) {
+        if (isEmpty(dataPolicyName)) {
+            //This might not be an error if this function is called as part of cleanup code
+            LOG.debug("Data policy name is null or empty");
+            return;
+        }
         //Delete the data policy
-        final DeleteDataPolicySpectraS3Response deleteDataPolicy = client
-                .deleteDataPolicySpectraS3(new DeleteDataPolicySpectraS3Request(dataPolicyName));
-        assertThat(deleteDataPolicy.getStatusCode(), is(204));
+        try {
+            final DeleteDataPolicySpectraS3Response deleteDataPolicy = client
+                    .deleteDataPolicySpectraS3(new DeleteDataPolicySpectraS3Request(dataPolicyName));
+            assertThat(deleteDataPolicy.getStatusCode(), is(204));
+        } catch (final IOException|AssertionError e) {
+            LOG.error("Data policy was not deleted as expected: " + dataPolicyName);
+        }
 
         //Verify that the data policy was deleted
         try {
             client.getDataPolicySpectraS3(new GetDataPolicySpectraS3Request(dataPolicyName));
-            fail("Data policy was not deleted as expected: " + dataPolicyName);
+            LOG.error("Data policy still exists despite deletion attempt: " + dataPolicyName);
         } catch (final IOException e) {
             //Pass: expected data policy to not exist
         }
@@ -131,20 +141,29 @@ public final class ABMTestHelper {
 
     /**
      * Deletes a data policy with the specified name, and verifies that said policy
-     * was deleted. If the policy was not properly deleted, then an error is thrown.
+     * was deleted. If the policy was not properly deleted, then an error is logged.
      */
     public static void deletePoolPartition(
             final String poolPartitionName,
-            final Ds3Client client) throws IOException, SignatureException {
+            final Ds3Client client) {
+        if (isEmpty(poolPartitionName)) {
+            //This might not be an error if this function is called as part of cleanup code
+            LOG.debug("Pool partition name is null or empty");
+            return;
+        }
         //Delete the pool partition
-        final DeletePoolPartitionSpectraS3Response deletePoolPartition = client
-                .deletePoolPartitionSpectraS3(new DeletePoolPartitionSpectraS3Request(poolPartitionName));
-        assertThat(deletePoolPartition.getStatusCode(), is(204));
+        try {
+            final DeletePoolPartitionSpectraS3Response deletePoolPartition = client
+                    .deletePoolPartitionSpectraS3(new DeletePoolPartitionSpectraS3Request(poolPartitionName));
+            assertThat(deletePoolPartition.getStatusCode(), is(204));
+        } catch (final IOException|AssertionError e) {
+            LOG.error("Pool partition was not deleted as expected: " + poolPartitionName);
+        }
 
         //Verify that the pool partition was deleted
         try {
             client.getPoolPartitionSpectraS3(new GetPoolPartitionSpectraS3Request(poolPartitionName));
-            fail("Pool partition was not deleted as expected: " + poolPartitionName);
+            LOG.error("Pool partition still exists despite deletion attempt: " + poolPartitionName);
         } catch (final IOException e) {
             //Pass: expected pool partition to not exist
         }
@@ -171,20 +190,29 @@ public final class ABMTestHelper {
 
     /**
      * Deletes a storage domain with the specified name, and verifies that said storage
-     * domain was deleted. If the domain was not properly deleted, then an error is thrown.
+     * domain was deleted. If the domain was not properly deleted, then an error is logged.
      */
     public static void deleteStorageDomain(
             final String storageDomainName,
-            final Ds3Client client) throws IOException, SignatureException {
-        //Delete the storage domain
-        final DeleteStorageDomainSpectraS3Response deleteStorageDomain = client
-                .deleteStorageDomainSpectraS3(new DeleteStorageDomainSpectraS3Request(storageDomainName));
-        assertThat(deleteStorageDomain.getStatusCode(), is(204));
+            final Ds3Client client) {
+        if (isEmpty(storageDomainName)) {
+            //This might not be an error if this function is called as part of cleanup code
+            LOG.debug("Storage domain name is null or empty");
+            return;
+        }
+        try {
+            //Delete the storage domain
+            final DeleteStorageDomainSpectraS3Response deleteStorageDomain = client
+                    .deleteStorageDomainSpectraS3(new DeleteStorageDomainSpectraS3Request(storageDomainName));
+            assertThat(deleteStorageDomain.getStatusCode(), is(204));
+        } catch (final IOException|AssertionError e) {
+            LOG.error("Storage domain was not deleted as expected: " + storageDomainName);
+        }
 
         //Verify that the storage domain was deleted
         try {
             client.getStorageDomainSpectraS3(new GetStorageDomainSpectraS3Request(storageDomainName));
-            fail("Storage domain was not deleted as expected: " + storageDomainName);
+            LOG.error("Storage domain still exists despite deletion attempt: " + storageDomainName);
         } catch (final IOException e) {
             //Pass: expected storage domain to not exist
         }
@@ -218,26 +246,31 @@ public final class ABMTestHelper {
 
     /**
      * Deletes a storage domain member with the specified ID, and verifies that said storage
-     * domain member was deleted. If the member was not properly deleted, then an error is thrown.
+     * domain member was deleted. If the member was not properly deleted, then an error is logged.
      */
     public static void deleteStorageDomainMember(
             final UUID memberId,
-            final Ds3Client client) throws IOException, SignatureException {
+            final Ds3Client client){
         if (memberId == null) {
-            LOG.error("Error: member Id was null");
+            //This might not be an error if this function is called as part of cleanup code
+            LOG.debug("Member Id was null");
             return;
         }
         //Delete the storage domain member
-        final DeleteStorageDomainMemberSpectraS3Response deleteMember = client
-                .deleteStorageDomainMemberSpectraS3(
-                        new DeleteStorageDomainMemberSpectraS3Request(memberId.toString()));
-        assertThat(deleteMember.getStatusCode(), is(204));
+        try {
+            final DeleteStorageDomainMemberSpectraS3Response deleteMember = client
+                    .deleteStorageDomainMemberSpectraS3(
+                            new DeleteStorageDomainMemberSpectraS3Request(memberId.toString()));
+            assertThat(deleteMember.getStatusCode(), is(204));
+        } catch (final IOException|AssertionError e) {
+            LOG.error("Storage domain member was not deleted as expected: " + memberId.toString());
+        }
 
         //Verify that the storage domain member was deleted
         try {
             client.getStorageDomainMemberSpectraS3(
                     new GetStorageDomainMemberSpectraS3Request(memberId.toString()));
-            fail("Storage domain member was not deleted as expected: " + memberId.toString());
+            LOG.error("Storage domain member still exists despite deletion attempt: " + memberId.toString());
         } catch (final IOException e) {
             //Pass: expected storage domain member to not exist
         }
@@ -268,26 +301,31 @@ public final class ABMTestHelper {
 
     /**
      * Deletes a data persistence rule with the specified ID, and verifies that said data
-     * persistence rule was deleted. If the rule was not properly deleted, then an error is thrown.
+     * persistence rule was deleted. If the rule was not properly deleted, then an error is logged.
      */
     public static void deleteDataPersistenceRule(
             final UUID dataPersistenceRuleId,
-            final Ds3Client client) throws IOException, SignatureException {
+            final Ds3Client client) {
         if (dataPersistenceRuleId == null) {
-            LOG.error("Error: data persistence Id was null");
+            //This might not be an error if this function is called as part of cleanup code
+            LOG.debug("Data persistence rule Id was null");
             return;
         }
 
         //Delete the data persistence rule
-        final DeleteDataPersistenceRuleSpectraS3Response deleteResponse = client.deleteDataPersistenceRuleSpectraS3(
-                new DeleteDataPersistenceRuleSpectraS3Request(dataPersistenceRuleId.toString()));
-        assertThat(deleteResponse.getStatusCode(), is(204));
+        try {
+            final DeleteDataPersistenceRuleSpectraS3Response deleteResponse = client.deleteDataPersistenceRuleSpectraS3(
+                    new DeleteDataPersistenceRuleSpectraS3Request(dataPersistenceRuleId.toString()));
+            assertThat(deleteResponse.getStatusCode(), is(204));
+        } catch (final IOException|AssertionError e) {
+            LOG.error("Data persistence rule was not deleted as expected: " + dataPersistenceRuleId.toString());
+        }
 
         //Verify that the data persistence rule was deleted
         try {
             client.getDataPersistenceRuleSpectraS3(
                     new GetDataPersistenceRuleSpectraS3Request(dataPersistenceRuleId.toString()));
-            fail("Data persistence rule was not deleted as expected: " + dataPersistenceRuleId.toString());
+            LOG.error("Data persistence rule still exists despite deletion attempt: " + dataPersistenceRuleId.toString());
         } catch (final IOException e) {
             //Pass: expected data persistence rule to not exist
         }
@@ -317,20 +355,29 @@ public final class ABMTestHelper {
     /**
      * Deletes a group with the specified name, and verifies that said
      * group was deleted. If the group was not properly deleted, then
-     * an error is thrown.
+     * an error is logged.
      */
     public static void deleteGroup(
             final String groupName,
-            final Ds3Client client) throws IOException, SignatureException {
+            final Ds3Client client) {
+        if (isEmpty(groupName)) {
+            //This might not be an error if this function is called as part of cleanup code
+            LOG.debug("Group name was null or empty");
+            return;
+        }
         //Delete the group
-        final DeleteGroupSpectraS3Response deleteResponse = client.deleteGroupSpectraS3(
-                new DeleteGroupSpectraS3Request(groupName));
-        assertThat(deleteResponse.getStatusCode(), is(204));
+        try {
+            final DeleteGroupSpectraS3Response deleteResponse = client.deleteGroupSpectraS3(
+                    new DeleteGroupSpectraS3Request(groupName));
+            assertThat(deleteResponse.getStatusCode(), is(204));
+        } catch (final IOException|AssertionError e) {
+            LOG.error("Group was not deleted as expected: " + groupName);
+        }
 
         //Verify that the group was deleted
         try {
             client.getGroupSpectraS3(new GetGroupSpectraS3Request(groupName));
-            fail("Group was not deleted as expected: " + groupName);
+            LOG.error("Group still exists despite deletion attempt: " + groupName);
         } catch (final IOException e) {
             //Pass: expected group to not exist
         }
@@ -359,24 +406,29 @@ public final class ABMTestHelper {
 
     /**
      * Deletes a data policy Acl for group with the specified ID, and verifies that said
-     * acl was deleted. If the acl was not properly deleted, then an error is thrown.
+     * acl was deleted. If the acl was not properly deleted, then an error is logged.
      */
     public static void deleteDataPolicyAclForGroup(
             final UUID aclId,
-            final Ds3Client client) throws IOException, SignatureException {
+            final Ds3Client client){
         if (aclId == null) {
-            LOG.error("Error: data policy Acl Id was null");
+            //This might not be an error if this function is called as part of cleanup code
+            LOG.debug("Data policy Acl was null");
             return;
         }
         //Delete the acl
-        final DeleteDataPolicyAclSpectraS3Response deleteAcl = client
-                .deleteDataPolicyAclSpectraS3(new DeleteDataPolicyAclSpectraS3Request(aclId.toString()));
-        assertThat(deleteAcl.getStatusCode(), is(204));
+        try {
+            final DeleteDataPolicyAclSpectraS3Response deleteAcl = client
+                    .deleteDataPolicyAclSpectraS3(new DeleteDataPolicyAclSpectraS3Request(aclId.toString()));
+            assertThat(deleteAcl.getStatusCode(), is(204));
+        } catch (final IOException|AssertionError e) {
+            LOG.error("Data policy Acl was not deleted as expected: " + aclId.toString());
+        }
 
         //Verify that the Acl was deleted
         try {
             client.getDataPolicyAclSpectraS3(new GetDataPolicyAclSpectraS3Request(aclId.toString()));
-            fail("Data Policy Acl for Group was not deleted as expected: " + aclId.toString());
+            LOG.error("Data policy Acl still exists despite deletion attempt: " + aclId.toString());
         } catch (final IOException e) {
             //Pass: expected data policy acl to not exist
         }
