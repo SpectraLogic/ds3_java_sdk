@@ -155,15 +155,21 @@ public class BulkObject {
 
         final BulkObject bulkObject = (BulkObject) obj;
 
-        return (((this.getId() == null) && (bulkObject.getId() == null))
-                || ((this.getId() != null) && (bulkObject.getId() != null) && this.getId().equals(bulkObject.getId())))
-                && this.getInCache().equals(bulkObject.getInCache())
+        return nullableEquals(this.getId(), bulkObject.getId())
+                && nullableEquals(this.getInCache(), bulkObject.getInCache())
                 && this.getLatest() == bulkObject.getLatest()
                 && this.getLength() == bulkObject.getLength()
-                && this.getName().equals(bulkObject.getName())
+                && nullableEquals(this.getName(), bulkObject.getName())
                 && this.getOffset() == bulkObject.getOffset()
                 && this.getPhysicalPlacement() == bulkObject.getPhysicalPlacement()
                 && this.getVersion() == bulkObject.getVersion();
+    }
+
+    /**
+     * Tests if two objects are equal, and handles the case if either or both objects are null
+     */
+    protected static boolean nullableEquals(final Object obj1, final Object obj2) {
+        return obj1 == null && obj2 == null || obj1 != null && obj2 != null && obj1.equals(obj2);
     }
 
     @Override
