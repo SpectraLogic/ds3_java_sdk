@@ -21,11 +21,13 @@ import com.spectralogic.ds3client.helpers.options.WriteJobOptions;
 import com.spectralogic.ds3client.models.Contents;
 import com.spectralogic.ds3client.models.bulk.Ds3Object;
 import com.spectralogic.ds3client.serializer.XmlProcessingException;
+import com.spectralogic.ds3client.utils.Predicate;
 
 import java.io.IOException;
 import java.nio.channels.SeekableByteChannel;
 import java.nio.file.Path;
 import java.security.SignatureException;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.UUID;
 
@@ -286,6 +288,14 @@ public abstract class Ds3ClientHelpers {
      */
     public abstract Iterable<Ds3Object> removePrefixFromDs3ObjectsList(final Iterable<Ds3Object> objectsList, final String prefix);
 
+    /**
+     *  Filter out folders from the object list.  Use this method when piping the list of objects from listObjects to a bulk job.
+      * @param objects
+     * @return
+     */
+    public abstract Iterable<Ds3Object> toDs3Iterable(final Iterable<Contents> objects);
+
+    public abstract Iterable<Ds3Object> toDs3Iterable(final Iterable<Contents> objects, final Predicate<Contents> filter);
     /**
      * Strip prefix from the beginning of objectName.  If objectName does not start with prefix, return objectName unmodified.
      * @param objectName
