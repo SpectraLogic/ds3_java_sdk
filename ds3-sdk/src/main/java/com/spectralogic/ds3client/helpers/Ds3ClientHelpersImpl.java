@@ -285,33 +285,4 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
         return newObjectsList;
     }
 
-    @Override
-    public Iterable<Ds3Object> toDs3Iterable(final Iterable<Contents> objects) {
-        return toDs3Iterable(objects, null);
-    }
-
-    @Override
-    public Iterable<Ds3Object> toDs3Iterable(final Iterable<Contents> objects, final Predicate<Contents> filter) {
-        return FluentIterable.from(objects).filter(new com.google.common.base.Predicate<Contents>() {
-            @Override
-            public boolean apply(@Nullable final Contents input) {
-                return input != null;
-            }
-        }).filter(new com.google.common.base.Predicate<Contents>() {
-            @Override
-            public boolean apply(@Nullable final Contents input) {
-                if (filter != null) {
-                    return filter.test(input);
-                } else {
-                    return true; // do not filter anything if filter is null
-                }
-            }
-        }).transform(new Function<Contents, Ds3Object>() {
-            @Nullable
-            @Override
-            public Ds3Object apply(@Nullable final Contents input) {
-                return new Ds3Object(input.getKey(), input.getSize());
-            }
-        });
-    }
 }
