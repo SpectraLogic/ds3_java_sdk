@@ -69,17 +69,17 @@ class ChunkTransferrer {
         try {
             final List<ListenableFuture<?>> tasks = new ArrayList<>();
             for (final Objects chunk : chunks) {
-                LOG.debug("Processing parts for chunk: " + chunk.getChunkId().toString());
+                LOG.debug("Processing parts for chunk: {}", chunk.getChunkId().toString());
 
                 final Ds3Client client = getClient(nodeMap, chunk.getNodeId(), mainClient);
                 for (final BulkObject ds3Object : chunk.getObjects()) {
                     final ObjectPart part = new ObjectPart(ds3Object.getOffset(), ds3Object.getLength());
                     if (this.partTracker.containsPart(ds3Object.getName(), part)) {
-                        LOG.debug("Adding " + ds3Object.getName() + " to executor for processing");
+                        LOG.debug("Adding {} to executor for processing", ds3Object.getName());
                         tasks.add(executor.submit(new Callable<Object>() {
                             @Override
                             public Object call() throws Exception {
-                                LOG.debug("Processing " + ds3Object.getName());
+                                LOG.debug("Processing {}", ds3Object.getName());
                                 ChunkTransferrer.this.itemTransferrer.transferItem(client, ds3Object);
                                 ChunkTransferrer.this.partTracker.completePart(ds3Object.getName(), part);
                                 return null;
