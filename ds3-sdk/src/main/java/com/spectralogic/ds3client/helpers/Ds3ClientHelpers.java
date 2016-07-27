@@ -307,15 +307,15 @@ public abstract class Ds3ClientHelpers {
 
         for (final Predicate<Contents> filter : filters) {
             fluentIterable = fluentIterable.filter(new com.google.common.base.Predicate<Contents>() {
-            @Override
-            public boolean apply(@Nullable final Contents input) {
-                if (filter != null) {
-                    return filter.test(input);
-                } else {
-                    return true; // do not filter anything if filter is null
+                @Override
+                public boolean apply(@Nullable final Contents input) {
+                    if (filter != null) {
+                        return filter.test(input);
+                    } else {
+                        return true; // do not filter anything if filter is null
+                    }
                 }
-            }
-        });
+            });
         }
 
         return fluentIterable.transform(new Function<Contents, Ds3Object>() {
