@@ -15,6 +15,8 @@
 
 package com.spectralogic.ds3client.helpers;
 
+import com.google.common.base.Function;
+import com.google.common.collect.FluentIterable;
 import com.spectralogic.ds3client.Ds3Client;
 import com.spectralogic.ds3client.helpers.options.ReadJobOptions;
 import com.spectralogic.ds3client.helpers.options.WriteJobOptions;
@@ -23,6 +25,7 @@ import com.spectralogic.ds3client.models.bulk.Ds3Object;
 import com.spectralogic.ds3client.serializer.XmlProcessingException;
 import com.spectralogic.ds3client.utils.Predicate;
 
+import javax.annotation.Nullable;
 import java.io.IOException;
 import java.nio.channels.SeekableByteChannel;
 import java.nio.file.Path;
@@ -100,8 +103,8 @@ public abstract class Ds3ClientHelpers {
     }
 
     /**
-     * Performs a bulk put job creation request and returns an {@link WriteJob}.
-     * See {@link WriteJob} for information on how to write the objects for the job.
+     * Performs a bulk put job creation request and returns an {@link WriteJobImpl}.
+     * See {@link WriteJobImpl} for information on how to write the objects for the job.
      *
      * @throws SignatureException
      * @throws IOException
@@ -111,8 +114,8 @@ public abstract class Ds3ClientHelpers {
             throws SignatureException, IOException, XmlProcessingException;
 
     /**
-     * Performs a bulk put job creation request and returns an {@link WriteJob}.
-     * See {@link WriteJob} for information on how to write the objects for the job.
+     * Performs a bulk put job creation request and returns an {@link WriteJobImpl}.
+     * See {@link WriteJobImpl} for information on how to write the objects for the job.
      *
      * @throws SignatureException
      * @throws IOException
@@ -122,8 +125,8 @@ public abstract class Ds3ClientHelpers {
             throws SignatureException, IOException, XmlProcessingException;
 
     /**
-     * Performs a bulk get job creation request and returns an {@link ReadJob}.
-     * See {@link ReadJob} for information on how to read the objects for the job.
+     * Performs a bulk get job creation request and returns an {@link ReadJobImpl}.
+     * See {@link ReadJobImpl} for information on how to read the objects for the job.
      *
      * @throws SignatureException
      * @throws IOException
@@ -133,8 +136,8 @@ public abstract class Ds3ClientHelpers {
             throws SignatureException, IOException, XmlProcessingException;
 
     /**
-     * Performs a bulk get job creation request and returns an {@link ReadJob}.
-     * See {@link ReadJob} for information on how to read the objects for the job.
+     * Performs a bulk get job creation request and returns an {@link ReadJobImpl}.
+     * See {@link ReadJobImpl} for information on how to read the objects for the job.
      *
      * @throws SignatureException
      * @throws IOException
@@ -147,7 +150,7 @@ public abstract class Ds3ClientHelpers {
             throws SignatureException, IOException, XmlProcessingException;
 
     /**
-     * Performs a bulk get job creation request for all of the objects in the given bucket and returns an {@link ReadJob}.
+     * Performs a bulk get job creation request for all of the objects in the given bucket and returns an {@link ReadJobImpl}.
      *
      * @throws SignatureException
      * @throws IOException
@@ -157,7 +160,7 @@ public abstract class Ds3ClientHelpers {
             throws SignatureException, IOException, XmlProcessingException;
 
     /**
-     * Performs a bulk get job creation request for all of the objects in the given bucket and returns an {@link ReadJob}.
+     * Performs a bulk get job creation request for all of the objects in the given bucket and returns an {@link ReadJobImpl}.
      *
      * @throws SignatureException
      * @throws IOException
@@ -167,7 +170,7 @@ public abstract class Ds3ClientHelpers {
             throws SignatureException, IOException, XmlProcessingException;
 
     /**
-     * Queries job information based on job id and returns a {@link ReadJob} that can resume the job.
+     * Queries job information based on job id and returns a {@link ReadJobImpl} that can resume the job.
      * @throws SignatureException
      * @throws IOException
      * @throws XmlProcessingException
@@ -177,7 +180,7 @@ public abstract class Ds3ClientHelpers {
             throws SignatureException, IOException, XmlProcessingException, JobRecoveryException;
 
     /**
-     * Queries job information based on job id and returns a {@link WriteJob} that can resume the job.
+     * Queries job information based on job id and returns a {@link WriteJobImpl} that can resume the job.
      * @throws SignatureException
      * @throws IOException
      * @throws XmlProcessingException
@@ -265,7 +268,7 @@ public abstract class Ds3ClientHelpers {
 
 
     /**
-     * Returns an object list with which you can call {@code startWriteJob} based on the files in a {@code directory}.
+     * Returns an object list with which you can call {@code startWriteJobImpl} based on the files in a {@code directory}.
      * This method traverses the {@code directory} recursively.
      *
      * @throws IOException
@@ -288,14 +291,41 @@ public abstract class Ds3ClientHelpers {
      */
     public abstract Iterable<Ds3Object> removePrefixFromDs3ObjectsList(final Iterable<Ds3Object> objectsList, final String prefix);
 
-    /**
-     *  Filter out folders from the object list.  Use this method when piping the list of objects from listObjects to a bulk job.
-      * @param objects
-     * @return
-     */
-    public abstract Iterable<Ds3Object> toDs3Iterable(final Iterable<Contents> objects);
+    public Iterable<Ds3Object> toDs3Iterable(final Iterable<Contents> objects) {
+        return toDs3Iterable(objects, null);
+    }
 
-    public abstract Iterable<Ds3Object> toDs3Iterable(final Iterable<Contents> objects, final Predicate<Contents> filter);
+    @SafeVarargs
+    public final Iterable<Ds3Object> toDs3Iterable(final Iterable<Contents> objects, final Predicate<Contents>... filters) {
+
+        FluentIterable<Contents> fluentIterable = FluentIterable.from(objects).filter(new com.google.common.base.Predicate<Contents>() {
+            @Override
+            public boolean apply(@Nullable final Contents input) {
+                return input != null;
+            }
+        });
+
+        for (final Predicate<Contents> filter : filters) {
+            fluentIterable = fluentIterable.filter(new com.google.common.base.Predicate<Contents>() {
+            @Override
+            public boolean apply(@Nullable final Contents input) {
+                if (filter != null) {
+                    return filter.test(input);
+                } else {
+                    return true; // do not filter anything if filter is null
+                }
+            }
+        });
+        }
+
+        return fluentIterable.transform(new Function<Contents, Ds3Object>() {
+            @Nullable
+            @Override
+            public Ds3Object apply(@Nullable final Contents input) {
+                return new Ds3Object(input.getKey(), input.getSize());
+            }
+        });
+    }
     /**
      * Strip prefix from the beginning of objectName.  If objectName does not start with prefix, return objectName unmodified.
      * @param objectName
