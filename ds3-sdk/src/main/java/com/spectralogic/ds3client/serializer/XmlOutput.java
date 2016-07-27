@@ -70,10 +70,10 @@ public class XmlOutput {
                     return true;
                 }
                 else {
-                    LOG.error("Unknown productionBuild value[" + productionBuild + "].  Defaulting to false for unknown XML elements.");
+                    LOG.error("Unknown productionBuild value[{}].  Defaulting to false for unknown XML elements.", productionBuild);
                 }
             } catch (final IOException e) {
-                LOG.error("Failed to load property file: ", e);
+                LOG.error("Failed to load property file: {}", e);
             }
         }
 

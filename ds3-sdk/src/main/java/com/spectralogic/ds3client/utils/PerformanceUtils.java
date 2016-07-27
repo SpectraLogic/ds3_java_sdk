@@ -33,7 +33,7 @@ public class PerformanceUtils {
 
         final String messagePrefix = getMessagePrefix(isPutCommand);
         
-        LOG.info(String.format("%s %s statistics: Length (%.03f MB), Time (%.03f sec), MBps (%.03f)", messagePrefix, objName, content, time, mbps));
+        LOG.info("{}", String.format("%s %s statistics: Length (%.03f MB), Time (%.03f sec), MBps (%.03f)", messagePrefix, objName, content, time, mbps));
     }
 
     /**
@@ -49,7 +49,7 @@ public class PerformanceUtils {
         final double curMegaBytes = convertBytesToMegaBytes(curBytes);
         final String messagePrefix = getMessagePrefix(isPutCommand);
 
-        LOG.info(String.format("%s %s status: Transferred (%.03f MB), Time (%.03f sec)", messagePrefix, objName, curMegaBytes, time));
+        LOG.info("{}", String.format("%s %s status: Transferred (%.03f MB), Time (%.03f sec)", messagePrefix, objName, curMegaBytes, time));
     }
 
     /**

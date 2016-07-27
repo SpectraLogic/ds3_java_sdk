@@ -64,8 +64,8 @@ class WriteJobImpl extends JobImpl {
             this.filteredChunks = null;
             this.partTracker = null;
         } else {
-            LOG.info("Ready to start transfer for job " + this.masterObjectList.getJobId().toString() + " with "
-                    + this.masterObjectList.getObjects().size() + " chunks");
+            LOG.info("Ready to start transfer for job {} with {} chunks",
+                    this.masterObjectList.getJobId().toString(), this.masterObjectList.getObjects().size());
             this.filteredChunks = filterChunks(this.masterObjectList.getObjects());
             this.partTracker = JobPartTrackerFactory
                     .buildPartTracker(Iterables.concat(ReadJobImpl.getAllBlobApiBeans(filteredChunks)));
@@ -156,7 +156,7 @@ class WriteJobImpl extends JobImpl {
                 this.maxParallelRequests
             );
             for (final Objects chunk : filteredChunks) {
-                LOG.debug("Allocating chunk: " + chunk.getChunkId().toString());
+                LOG.debug("Allocating chunk: {}", chunk.getChunkId().toString());
                 chunkTransferrer.transferChunks(
                         this.masterObjectList.getNodes(),
                         Collections.singletonList(filterChunk(allocateChunk(chunk))));
@@ -180,7 +180,7 @@ class WriteJobImpl extends JobImpl {
         final AllocateJobChunkSpectraS3Response response =
                 this.client.allocateJobChunkSpectraS3(new AllocateJobChunkSpectraS3Request(filtered.getChunkId().toString()));
 
-        LOG.info("AllocatedJobChunkResponse status: " + response.getStatus().toString());
+        LOG.info("AllocatedJobChunkResponse status: {}", response.getStatus().toString());
         switch (response.getStatus()) {
         case ALLOCATED:
             retryAfterLeft = retryAfter; // Reset the number of retries to the initial value
@@ -193,7 +193,7 @@ class WriteJobImpl extends JobImpl {
                 retryAfterLeft--;
 
                 final int retryAfter = response.getRetryAfterSeconds() * 1000;
-                LOG.debug("Will retry allocate chunk call after " + retryAfter + " seconds");
+                LOG.debug("Will retry allocate chunk call after {} seconds", retryAfter);
                 Thread.sleep(retryAfter);
                 return null;
             } catch (final InterruptedException e) {
@@ -286,16 +286,16 @@ class WriteJobImpl extends JobImpl {
         private String calculateChecksum(final BulkObject ds3Object, final SeekableByteChannel channel) throws IOException {
             if (WriteJobImpl.this.checksumType != ChecksumType.Type.NONE) {
                 if (WriteJobImpl.this.checksumFunction == null) {
-                    LOG.info("Calculating " + WriteJobImpl.this.checksumType.toString() + " checksum for blob: " + ds3Object.toString());
+                    LOG.info("Calculating {} checksum for blob: {}", WriteJobImpl.this.checksumType.toString(), ds3Object.toString());
                     final SeekableByteChannelInputStream dataStream = new SeekableByteChannelInputStream(channel);
                     final Hasher hasher = getHasher(WriteJobImpl.this.checksumType);
                     final String checksum = hashInputStream(hasher, dataStream);
-                    LOG.info("Computed checksum for blob: " + checksum);
+                    LOG.info("Computed checksum for blob: {}", checksum);
                     return checksum;
                 } else {
-                    LOG.info("Getting checksum from user supplied callback for blob: " + ds3Object.toString());
+                    LOG.info("Getting checksum from user supplied callback for blob: {}", ds3Object.toString());
                     final String checksum = WriteJobImpl.this.checksumFunction.compute(ds3Object, channel);
-                    LOG.info("User supplied checksum is: " + checksum);
+                    LOG.info("User supplied checksum is: {}", checksum);
                     return checksum;
                 }
             }

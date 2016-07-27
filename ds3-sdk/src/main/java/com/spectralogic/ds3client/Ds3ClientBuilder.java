@@ -193,8 +193,8 @@ public class Ds3ClientBuilder implements Builder<Ds3Client> {
      */
     @Override
     public Ds3Client build() {
-        LOG.info("Making connection details for endpoint: " + this.endpoint
-                + " using authorization id: " + this.credentials.getClientId());
+        LOG.info("Making connection details for endpoint [{}] using this authorization id [{}]",
+                this.endpoint, this.credentials.getClientId());
         final ConnectionDetailsImpl.Builder connBuilder = ConnectionDetailsImpl
                 .builder(this.endpoint, this.credentials)
                 .withProxy(this.proxy)
