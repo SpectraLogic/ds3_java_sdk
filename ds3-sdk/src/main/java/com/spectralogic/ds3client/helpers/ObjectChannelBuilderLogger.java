@@ -17,7 +17,7 @@ public class ObjectChannelBuilderLogger implements Ds3ClientHelpers.ObjectChanne
 
     @Override
     public SeekableByteChannel buildChannel(final String s) throws IOException {
-        LOG.info("Opening channel for" + s);
+        LOG.info("Opening channel for: {}", s);
         return this.channelBuilder.buildChannel(s);
     }
 }

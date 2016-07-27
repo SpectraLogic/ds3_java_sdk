@@ -133,7 +133,7 @@ public abstract class AbstractResponse implements Ds3Response {
             return XmlOutput.fromXml(responseString, Error.class);
         } catch (final IOException e) {
             // It's likely the response string is not in a valid error format.
-            LOG.error("Failed to parse error response", e);
+            LOG.error("Failed to parse error response: {}", e);
             return null;
         }
     }

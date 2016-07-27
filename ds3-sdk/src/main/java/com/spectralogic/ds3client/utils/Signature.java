@@ -45,7 +45,7 @@ public class Signature {
     public static String calculateRFC2104HMAC(final String data, final String key)
             throws java.security.SignatureException
     {
-        LOG.debug("String to sign: " + data.replace("\n", "\\n"));
+        LOG.debug("String to sign: {}", data.replace("\n", "\\n"));
         final String result;
         try {
             // get an hmac_sha1 key from the raw key bytes

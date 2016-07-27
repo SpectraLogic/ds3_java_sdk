@@ -73,7 +73,7 @@ class JobState implements AutoCloseable {
                 @Override
                 public WindowedChannelFactory get(final String key) {
                     try {
-                        LOG.debug("Opening channel for : " + key);
+                        LOG.debug("Opening channel for: {}", key);
                         return new WindowedChannelFactory(RangedSeekableByteChannel.wrap(channelBuilder.buildChannel(key), objectRanges.get(key), key));
                     } catch (final IOException e) {
                         throw new RuntimeException(e);
@@ -97,7 +97,7 @@ class JobState implements AutoCloseable {
         public void objectCompleted(final String name) {
             JobState.this.objectsRemaining.decrementAndGet();
             try {
-                LOG.debug("Closing file: "  + name);
+                LOG.debug("Closing file: {}", name);
                 JobState.this.channelCache.close(name);
             } catch (final Exception e) {
                 throw new RuntimeException(e);
