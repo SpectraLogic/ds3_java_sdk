@@ -291,10 +291,6 @@ public abstract class Ds3ClientHelpers {
      */
     public abstract Iterable<Ds3Object> removePrefixFromDs3ObjectsList(final Iterable<Ds3Object> objectsList, final String prefix);
 
-    public Iterable<Ds3Object> toDs3Iterable(final Iterable<Contents> objects) {
-        return toDs3Iterable(objects, null);
-    }
-
     @SafeVarargs
     public final Iterable<Ds3Object> toDs3Iterable(final Iterable<Contents> objects, final Predicate<Contents>... filters) {
 
@@ -305,17 +301,19 @@ public abstract class Ds3ClientHelpers {
             }
         });
 
-        for (final Predicate<Contents> filter : filters) {
-            fluentIterable = fluentIterable.filter(new com.google.common.base.Predicate<Contents>() {
-                @Override
-                public boolean apply(@Nullable final Contents input) {
-                    if (filter != null) {
-                        return filter.test(input);
-                    } else {
-                        return true; // do not filter anything if filter is null
+        if (filters != null) {
+            for (final Predicate<Contents> filter : filters) {
+                fluentIterable = fluentIterable.filter(new com.google.common.base.Predicate<Contents>() {
+                    @Override
+                    public boolean apply(@Nullable final Contents input) {
+                        if (filter != null) {
+                            return filter.test(input);
+                        } else {
+                            return true; // do not filter anything if filter is null
+                        }
                     }
-                }
-            });
+                });
+            }
         }
 
         return fluentIterable.transform(new Function<Contents, Ds3Object>() {
