@@ -82,6 +82,7 @@ public class NetworkClientImpl implements NetworkClient {
     final static private String CONTENT_CRC32C = "Content-CRC32C";
     final static private int MAX_CONNECTION_PER_ROUTE = 50;
     final static private int MAX_CONNECTION_TOTAL = 100;
+    final static private String REQUEST_ID_HEADER = "x-amz-request-id";
 
     final private ConnectionDetails connectionDetails;
 
@@ -186,13 +187,21 @@ public class NetworkClientImpl implements NetworkClient {
             int redirectCount = 0;
             do {
                 final CloseableHttpResponse response = requestExecutor.execute();
+                String requestId = "Unknown";
+                if (response.containsHeader(REQUEST_ID_HEADER)) {
+                    requestId = response.getFirstHeader(REQUEST_ID_HEADER).getValue();
+                }
                 if (response.getStatusLine().getStatusCode() == HttpStatus.SC_TEMPORARY_REDIRECT) {
                     redirectCount++;
+                    LOG.info("Performing retry - attempt: {} for request #{}",
+                            redirectCount,
+                            requestId);
                     response.close();
-                    LOG.info("Performing retry - attempt: {}", redirectCount);
                 }
                 else {
-                    LOG.info("Got response from server");
+                    LOG.info("Server responded with {} for request #{}",
+                            response.getStatusLine().getStatusCode(),
+                            requestId);
                     return new WebResponseImpl(response);
                 }
             } while (redirectCount < this.connectionDetails.getRetries());
