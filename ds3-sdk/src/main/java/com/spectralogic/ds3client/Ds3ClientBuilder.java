@@ -47,9 +47,9 @@ public class Ds3ClientBuilder implements Builder<Ds3Client> {
     private boolean certificateVerification = true;
     private URI proxy = null;
     private int retries = 5;
-    private int connectionTimeout = 5 * 1000;
-    private int bufferSize = 1024 * 1024;
-    private int socketTimeout = 1000 * 60 * 60;
+    private int connectionTimeoutInMillis = 5 * 1000;
+    private int bufferSizeInBytes = 1024 * 1024;
+    private int socketTimeoutInMillis = 1000 * 60 * 60;
 
     private Ds3ClientBuilder(final String endpoint, final Credentials credentials) throws IllegalArgumentException {
         if (Guard.isStringNullOrEmpty(endpoint)) {
@@ -115,11 +115,11 @@ public class Ds3ClientBuilder implements Builder<Ds3Client> {
     }
 
     /**
-     * @param bufferSize The size of the buffer to be used when writing content out to DS3.
+     * @param bufferSizeInBytes The size of the buffer to be used when writing content out to DS3.
      * @return The current builder.
      */
-    public Ds3ClientBuilder withBufferSize(final int bufferSize) {
-        this.bufferSize = bufferSize;
+    public Ds3ClientBuilder withBufferSize(final int bufferSizeInBytes) {
+        this.bufferSizeInBytes = bufferSizeInBytes;
         return this;
     }
 
@@ -173,8 +173,8 @@ public class Ds3ClientBuilder implements Builder<Ds3Client> {
      *
      * Default: 5 minutes
      */
-    public Ds3ClientBuilder withConnectionTimeout(final int timeout) {
-        this.connectionTimeout = timeout;
+    public Ds3ClientBuilder withConnectionTimeout(final int timeoutInMillis) {
+        this.connectionTimeoutInMillis = timeoutInMillis;
         return this;
     }
 
@@ -183,8 +183,8 @@ public class Ds3ClientBuilder implements Builder<Ds3Client> {
      *
      * Default: 60 minutes
      */
-    public Ds3ClientBuilder withSocketTimeout(final int timeout) {
-        this.socketTimeout = timeout;
+    public Ds3ClientBuilder withSocketTimeout(final int timeoutInMillis) {
+        this.socketTimeoutInMillis = timeoutInMillis;
         return this;
     }
 
@@ -201,9 +201,9 @@ public class Ds3ClientBuilder implements Builder<Ds3Client> {
                 .withHttps(this.https)
                 .withCertificateVerification(this.certificateVerification)
                 .withRedirectRetries(this.retries)
-                .withBufferSize(this.bufferSize)
-                .withConnectionTimeout(this.connectionTimeout)
-                .withSocketTimeout(this.socketTimeout);
+                .withBufferSize(this.bufferSizeInBytes)
+                .withConnectionTimeout(this.connectionTimeoutInMillis)
+                .withSocketTimeout(this.socketTimeoutInMillis);
 
         final NetworkClient netClient = new NetworkClientImpl(connBuilder.build());
         return new Ds3ClientImpl(netClient);

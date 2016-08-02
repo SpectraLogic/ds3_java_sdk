@@ -33,9 +33,9 @@ class ConnectionDetailsImpl implements ConnectionDetails {
         private boolean https = false;
         private URI proxy = null;
         private int retries = 5;
-        private int bufferSize = 1024 * 1024;
-        private int connectionTimeout = 5 * 1000;
-        private int socketTimeout = 60 * 60 * 1000;
+        private int bufferSizeInBytes = 1024 * 1024;
+        private int connectionTimeoutInMillis = 5 * 1000;
+        private int socketTimeoutInMillis = 60 * 60 * 1000;
         private boolean certificateVerification;
 
         private Builder(final String endpoint, final Credentials credentials) {
@@ -58,13 +58,13 @@ class ConnectionDetailsImpl implements ConnectionDetails {
             return this;
         }
 
-        public Builder withBufferSize(final int bufferSize) {
-            this.bufferSize = bufferSize;
+        public Builder withBufferSize(final int bufferSizeInBytes) {
+            this.bufferSizeInBytes = bufferSizeInBytes;
             return this;
         }
 
-        public Builder withConnectionTimeout(final int connectionTimeout) {
-            this.connectionTimeout = connectionTimeout;
+        public Builder withConnectionTimeout(final int connectionTimeoutInMillis) {
+            this.connectionTimeoutInMillis = connectionTimeoutInMillis;
             return this;
         }
 
@@ -73,8 +73,8 @@ class ConnectionDetailsImpl implements ConnectionDetails {
             return this;
         }
 
-        public Builder withSocketTimeout(final int socketTimeout) {
-            this.socketTimeout = socketTimeout;
+        public Builder withSocketTimeout(final int socketTimeoutInMillis) {
+            this.socketTimeoutInMillis = socketTimeoutInMillis;
             return this;
         }
 
@@ -115,9 +115,9 @@ class ConnectionDetailsImpl implements ConnectionDetails {
     private final boolean https;
     private final URI proxy;
     private final int retries;
-    private final int bufferSize;
-    private final int connectionTimeout;
-    private final int socketTimeout;
+    private final int bufferSizeInBytes;
+    private final int connectionTimeoutInMillis;
+    private final int socketTimeoutInMillis;
     private final boolean certificateVerification;
 
     static Builder builder(final String uriEndpoint, final Credentials credentials) {
@@ -130,10 +130,10 @@ class ConnectionDetailsImpl implements ConnectionDetails {
         this.https = builder.https;
         this.proxy = builder.proxy;
         this.retries = builder.retries;
-        this.bufferSize = builder.bufferSize;
-        this.connectionTimeout = builder.connectionTimeout;
+        this.bufferSizeInBytes = builder.bufferSizeInBytes;
+        this.connectionTimeoutInMillis = builder.connectionTimeoutInMillis;
         this.certificateVerification = builder.certificateVerification;
-        this.socketTimeout = builder.socketTimeout;
+        this.socketTimeoutInMillis = builder.socketTimeoutInMillis;
     }
 
     @Override
@@ -163,17 +163,17 @@ class ConnectionDetailsImpl implements ConnectionDetails {
 
     @Override
     public int getBufferSize() {
-        return bufferSize;
+        return bufferSizeInBytes;
     }
 
     @Override
     public int getConnectionTimeout() {
-        return connectionTimeout;
+        return connectionTimeoutInMillis;
     }
 
     @Override
     public int getSocketTimeout() {
-        return socketTimeout;
+        return socketTimeoutInMillis;
     }
 
     @Override
