@@ -232,7 +232,8 @@ public class NetworkClientImpl implements NetworkClient {
                 throw new RequiresMarkSupportedException();
             }
 
-            LOG.info("Sending request: " + this.ds3Request.getVerb() + " " + this.host.toString() + "" + this.ds3Request.getPath());
+            Object[] paramArray = {this.ds3Request.getVerb(), this.host.toString(), this.ds3Request.getPath()};
+            LOG.info("Sending request: {} {} {}", paramArray );
             this.checksumType = ds3Request.getChecksumType();
             this.hash = this.buildHash();
         }

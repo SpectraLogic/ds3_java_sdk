@@ -186,7 +186,7 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
                 if (e.getStatusCode() != 409) {
                     throw e;
                 }
-                LOG.warn("Creating " + bucket + " failed because it was created by another thread or process");
+                LOG.warn("Creating {} failed because it was created by another thread or process", bucket);
             }
         }
     }
@@ -201,7 +201,7 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
                 if (e.getStatusCode() != 409) {
                     throw e;
                 }
-                LOG.warn("Creating " + bucket + " failed because it was created by another thread or process");
+                LOG.warn("Creating {} failed because it was created by another thread or process", bucket);
             }
         }
     }
