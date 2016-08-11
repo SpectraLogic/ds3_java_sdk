@@ -17,17 +17,17 @@ public class NetworkClientRetryDecorator extends NetworkClientDecorator {
 
     @Override
     public WebResponse getResponse(final Ds3Request request) throws IOException {
-        final WebResponse webResponse = super.getResponse(request);
+        WebResponse webResponse = super.getResponse(request);
 
-        if (networkClientRetryBehavior.shouldRetry(webResponse))
-            return getResponse(request);
+        while (networkClientRetryBehavior.shouldRetry(webResponse))
+            webResponse = super.getResponse(request);
 
         return webResponse;
     }
 
     public static class Builder {
-        NetworkClient networkClient;
-        NetworkClientRetryBehavior networkClientRetryBehavior;
+        private NetworkClient networkClient;
+        private NetworkClientRetryBehavior networkClientRetryBehavior;
 
         public Builder networkClient(final NetworkClient networkClient) {
             this.networkClient = networkClient;
@@ -39,7 +39,7 @@ public class NetworkClientRetryDecorator extends NetworkClientDecorator {
             return this;
         }
 
-        public NetworkClientRetryDecorator build() {
+        public NetworkClientRetryDecorator build() throws NullPointerException {
             Preconditions.checkNotNull(networkClient);
             Preconditions.checkNotNull(networkClientRetryBehavior);
 
