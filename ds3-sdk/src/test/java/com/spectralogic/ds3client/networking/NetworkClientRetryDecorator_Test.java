@@ -107,7 +107,7 @@ public class NetworkClientRetryDecorator_Test {
     }
 
     @Test(expected = NullPointerException.class)
-    public void testBuildingNetworkClientRetryDecoratorWithInvalidCalback() throws IOException {
+    public void testBuildingNetworkClientRetryDecoratorWithInvalidCallback() throws IOException {
         final NetworkClient mockNetworkClient = mock(NetworkClientImpl.class);
 
         new NetworkClientRetryDecorator.Builder()
