@@ -32,10 +32,11 @@ public class NetworkClientRetryDecorator extends NetworkClientDecorator {
 
     @Override
     public WebResponse getResponse(final Ds3Request request) throws IOException {
-        WebResponse webResponse = super.getResponse(request);
+        WebResponse webResponse = null;
 
-        while (networkClientRetryBehavior.shouldRetry(webResponse))
+        do {
             webResponse = super.getResponse(request);
+        } while (networkClientRetryBehavior.shouldRetry(webResponse));
 
         return webResponse;
     }

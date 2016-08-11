@@ -17,6 +17,32 @@ package com.spectralogic.ds3client.networking;
 
 import com.spectralogic.ds3client.commands.interfaces.Ds3Request;
 
+/**
+ * This interface is intended to allow defining retry behavior when calling
+ * @see com.spectralogic.ds3client.networking.NetworkClient#getResponse(Ds3Request)
+ * fails.  As an example, the following illustrates a simple client that checks the
+ * HTTP result to determine whether to retry the getResponse call.
+ *  <pre>
+ * {@code
+ * final NetworkClientRetryDecorator networkClientRetryDecorator = new NetworkClientRetryDecorator.Builder()
+ *      .networkClient(mockNetworkClient)
+ *      .networkClientRetryBehavior(new NetworkClientRetryBehavior() {
+ *          @Override
+ *              public boolean shouldRetry(final WebResponse webResponse) {
+ *
+ *                  if(webResponse.getStatusCode() >= 200 && webResponse.getStatusCode() < 300) {
+ *                      return false;
+ *                  }
+ *
+ *                  return true;
+ *              }
+ *          })
+ *          .build();
+ *
+ *      final WebResponse webResponse = networkClientRetryDecorator.getResponse(new PutBucketRequest("Gracie"));
+ * }
+ * </pre>
+ */
 public interface NetworkClientRetryBehavior {
     /**
      * Implement shouldRetry() to determine whether you want to continue trying to call

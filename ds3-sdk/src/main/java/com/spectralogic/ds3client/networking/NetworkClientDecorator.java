@@ -19,6 +19,10 @@ import com.spectralogic.ds3client.commands.interfaces.Ds3Request;
 
 import java.io.IOException;
 
+/**
+ * This class is intended to serve as the base for other network client decorator subclasses, so
+ * that subclasses need only override methods they're interested in.
+ */
 public abstract class NetworkClientDecorator implements NetworkClient {
     private final NetworkClient networkClient;
 
