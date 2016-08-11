@@ -47,8 +47,9 @@ public class NetworkClientRetryDecorator_Test {
 
                     @Override
                     public boolean shouldRetry(final WebResponse webResponse) {
-                        if(++numRetries <= 3)
+                        if(++numRetries <= 3) {
                             return true;
+                        }
 
                         assertEquals(4, numRetries);
                         return false;
@@ -80,8 +81,9 @@ public class NetworkClientRetryDecorator_Test {
                     public boolean shouldRetry(final WebResponse webResponse) {
                         retryCounter.increment();
 
-                        if(webResponse.getStatusCode() >= 200 && webResponse.getStatusCode() < 300)
+                        if(webResponse.getStatusCode() >= 200 && webResponse.getStatusCode() < 300) {
                             return false;
+                        }
 
                         fail("Getting here means that the network client decorator callback returned an incorrect value.");
                         return true;
