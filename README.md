@@ -81,6 +81,14 @@ If you would like to contribute to the source code, sign the [Contributors Agree
 
 All the examples are listed in the [ds3-sdk-samples](ds3-sdk-samples/src/main/java/com/spectralogic/ds3client/samples/) module.
 
+## Logging
+
+The `ds3_java_sdk` uses SLF4J for logging.  Because of this, a consumer of
+the sdk can use many different logging implementations and so long as the
+correct SLF4J bridge is installed, have the sdk logs appear.  For more
+information on SLF4J and how to add different logging
+bridges, please see [SLF4j.org](http://www.slf4j.org/manual.html).
+
 ## Tests
 
 In addition to unit tests in the main `ds3-sdk` module, there are additional integration tests in the `ds3-integration` module.  Please see the integration [README](ds3-sdk-integration/README.md) for details on running the tests.  To just run the SDK's unit tests use:
