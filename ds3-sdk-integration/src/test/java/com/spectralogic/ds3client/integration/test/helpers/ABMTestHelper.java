@@ -18,6 +18,7 @@ package com.spectralogic.ds3client.integration.test.helpers;
 import com.spectralogic.ds3client.Ds3Client;
 import com.spectralogic.ds3client.commands.spectrads3.*;
 import com.spectralogic.ds3client.models.*;
+import com.spectralogic.ds3client.utils.Guard;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -105,6 +106,45 @@ public final class ABMTestHelper {
             assertThat(deleteDataPolicy.getStatusCode(), is(204));
         } catch (final IOException|AssertionError e) {
             LOG.error("Data policy was not deleted as expected: " + dataPolicyName);
+        }
+
+        //Verify that the data policy was deleted
+        try {
+            client.getDataPolicySpectraS3(new GetDataPolicySpectraS3Request(dataPolicyName));
+            LOG.error("Data policy still exists despite deletion attempt: " + dataPolicyName);
+        } catch (final IOException e) {
+            //Pass: expected data policy to not exist
+        }
+    }
+
+    /**
+     * Deletes a data policy with the specified name, and verifies that said policy
+     * was deleted. If the policy was not properly deleted, then an error is logged.
+     */
+    public static void deleteBucketsWithDataPolicy(
+            final String dataPolicyName,
+            final Ds3Client client) {
+        if (isEmpty(dataPolicyName)) {
+            //This might not be an error if this function is called as part of cleanup code
+            LOG.debug("Data policy name is null or empty");
+            return;
+        }
+        //Get all buckets using the data policy
+        try {
+            final GetBucketsSpectraS3Response bucketsResponse = client
+                    .getBucketsSpectraS3(new GetBucketsSpectraS3Request().withDataPolicyId(dataPolicyName));
+
+            final BucketList bucketList = bucketsResponse.getBucketListResult();
+
+            for (final Bucket bucket : bucketList.getBuckets()) {
+                // delete each
+                final DeleteBucketSpectraS3Response deleteBucketSpectraS3Response = client
+                        .deleteBucketSpectraS3(new DeleteBucketSpectraS3Request(bucket.getName()));
+                assertThat(deleteBucketSpectraS3Response.getStatusCode(), is(204));
+            }
+
+        } catch (final IOException|AssertionError e) {
+            LOG.error("Bucket assigned to data policy was not deleted as expected: " + dataPolicyName);
         }
 
         //Verify that the data policy was deleted
