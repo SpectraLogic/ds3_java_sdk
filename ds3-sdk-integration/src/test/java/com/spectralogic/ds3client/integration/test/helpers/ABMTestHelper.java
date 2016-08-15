@@ -118,8 +118,9 @@ public final class ABMTestHelper {
     }
 
     /**
-     * Deletes a data policy with the specified name, and verifies that said policy
-     * was deleted. If the policy was not properly deleted, then an error is logged.
+     * Deletes all buckets associted with a data policy
+     * to ensure that said policy can be deleted
+     * If any buckets using the policy are not properly deleted, an error is logged.
      */
     public static void deleteBucketsWithDataPolicy(
             final String dataPolicyName,
@@ -147,10 +148,15 @@ public final class ABMTestHelper {
             LOG.error("Bucket assigned to data policy was not deleted as expected: " + dataPolicyName);
         }
 
-        //Verify that the data policy was deleted
+        // Verify that no buckets are attached to the data policy
         try {
-            client.getDataPolicySpectraS3(new GetDataPolicySpectraS3Request(dataPolicyName));
-            LOG.error("Data policy still exists despite deletion attempt: " + dataPolicyName);
+            final GetBucketsSpectraS3Response bucketsResponse = client
+                    .getBucketsSpectraS3(new GetBucketsSpectraS3Request().withDataPolicyId(dataPolicyName));
+
+            final BucketList bucketList = bucketsResponse.getBucketListResult();
+            if (!Guard.isNullOrEmpty(bucketList.getBuckets())) {
+                LOG.error("Buckets using data policy still exist despite deletion attempt");
+            }
         } catch (final IOException e) {
             //Pass: expected data policy to not exist
         }
