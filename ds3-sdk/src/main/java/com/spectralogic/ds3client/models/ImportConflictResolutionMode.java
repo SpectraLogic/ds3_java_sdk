@@ -16,32 +16,8 @@
 // This code is auto-generated, do not modify
 package com.spectralogic.ds3client.models;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
-import java.util.List;
-import java.util.ArrayList;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
-
-public class NamedDetailedTapeList {
-
-    // Variables
-    @JsonProperty("Tape")
-    @JacksonXmlElementWrapper(useWrapping = false)
-    private List<NamedDetailedTape> namedDetailedTapes = new ArrayList<>();
-
-    // Constructor
-    public NamedDetailedTapeList() {
-        //pass
-    }
-
-    // Getters and Setters
-    
-    public List<NamedDetailedTape> getNamedDetailedTapes() {
-        return this.namedDetailedTapes;
-    }
-
-    public void setNamedDetailedTapes(final List<NamedDetailedTape> namedDetailedTapes) {
-        this.namedDetailedTapes = namedDetailedTapes;
-    }
-
+public enum ImportConflictResolutionMode {
+    CANCEL,
+    ACCEPT_MOST_RECENT,
+    ACCEPT_EXISTING
 }

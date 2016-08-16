@@ -35,6 +35,9 @@ public class DataPathBackend {
     @JsonProperty("AutoInspect")
     private AutoInspectMode autoInspect;
 
+    @JsonProperty("DefaultImportConflictResolutionMode")
+    private ImportConflictResolutionMode defaultImportConflictResolutionMode;
+
     @JsonProperty("Id")
     private UUID id;
 
@@ -84,6 +87,15 @@ public class DataPathBackend {
 
     public void setAutoInspect(final AutoInspectMode autoInspect) {
         this.autoInspect = autoInspect;
+    }
+
+
+    public ImportConflictResolutionMode getDefaultImportConflictResolutionMode() {
+        return this.defaultImportConflictResolutionMode;
+    }
+
+    public void setDefaultImportConflictResolutionMode(final ImportConflictResolutionMode defaultImportConflictResolutionMode) {
+        this.defaultImportConflictResolutionMode = defaultImportConflictResolutionMode;
     }
 
 
