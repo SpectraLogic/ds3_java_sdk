@@ -50,6 +50,9 @@ public class ActiveJob {
     @JsonProperty("Id")
     private UUID id;
 
+    @JsonProperty("MinimizeSpanningAcrossMedia")
+    private boolean minimizeSpanningAcrossMedia;
+
     @JsonProperty("Naked")
     private boolean naked;
 
@@ -150,6 +153,15 @@ public class ActiveJob {
 
     public void setId(final UUID id) {
         this.id = id;
+    }
+
+
+    public boolean getMinimizeSpanningAcrossMedia() {
+        return this.minimizeSpanningAcrossMedia;
+    }
+
+    public void setMinimizeSpanningAcrossMedia(final boolean minimizeSpanningAcrossMedia) {
+        this.minimizeSpanningAcrossMedia = minimizeSpanningAcrossMedia;
     }
 
 

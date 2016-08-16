@@ -132,7 +132,7 @@ public class Metadata_Test {
                     bucketName,
                     obj.getName(),
                     buildRandomChannel(1024),
-                    putResponse.getResult().getJobId(),
+                    putResponse.getResult().getJobId().toString(),
                     0,
                     1024);
 

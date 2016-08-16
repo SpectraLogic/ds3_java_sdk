@@ -73,7 +73,7 @@ public class RequestMatchers {
 
             @Override
             protected boolean matchesSafely(final GetJobChunksReadyForClientProcessingSpectraS3Request item) {
-                return jobId.toString().equals(item.getJob());
+                return jobId.equals(UUID.fromString(item.getJob()));
             }
             
             @Override
@@ -100,7 +100,7 @@ public class RequestMatchers {
 
             @Override
             protected boolean matchesSafely(final AllocateJobChunkSpectraS3Request item) {
-                return chunkId.toString().equals(item.getJobChunkId());
+                return chunkId.equals(UUID.fromString(item.getJobChunkId()));
             }
             
             @Override
@@ -125,7 +125,7 @@ public class RequestMatchers {
                 return
                         item.getBucketName().equals(bucket)
                         && item.getObjectName().equals(key)
-                        && (item.getJob() == null ? jobId == null : item.getJob().equals(jobId.toString()))
+                        && (item.getJob() == null ? jobId == null : UUID.fromString(item.getJob()).equals(jobId))
                         && item.getOffset() == offset;
             }
 
@@ -159,7 +159,7 @@ public class RequestMatchers {
                 return
                         item.getBucketName().equals(bucket)
                         && item.getObjectName().equals(key)
-                        && (item.getJob() == null ? jobId == null : item.getJob().equals(jobId.toString()))
+                        && (item.getJob() == null ? jobId == null : UUID.fromString(item.getJob()).equals(jobId))
                         && item.getOffset() == offset
                         && channelToString(item.getChannel()).equals(expectedContents);
             }
@@ -179,9 +179,9 @@ public class RequestMatchers {
                         UUID.fromString(item.getJob()),
                         item.getOffset(),
                         mismatchDescription
-                )
-                .appendText(", contents: ")
-                .appendValue(channelToString(item.getChannel()));
+                        )
+                                .appendText(", contents: ")
+                        .appendValue(channelToString(item.getChannel()));
             }
         });
     }

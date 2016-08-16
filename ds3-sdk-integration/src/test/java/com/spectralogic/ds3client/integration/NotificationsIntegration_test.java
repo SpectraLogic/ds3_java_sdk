@@ -169,7 +169,7 @@ public class NotificationsIntegration_test {
             final PutObjectPersistedNotificationRegistrationSpectraS3Response response = client
                     .putObjectPersistedNotificationRegistrationSpectraS3(
                             new PutObjectPersistedNotificationRegistrationSpectraS3Request("192.168.56.101/other")
-                                    .withJobId(job.getJobId()));
+                                    .withJobId(job.getJobId().toString()));
             assertThat(response, is(notNullValue()));
             assertThat(response.getS3ObjectPersistedNotificationRegistrationResult(), is(notNullValue()));
 
@@ -179,13 +179,13 @@ public class NotificationsIntegration_test {
 
             final GetObjectPersistedNotificationRegistrationSpectraS3Response getResponse = client
                     .getObjectPersistedNotificationRegistrationSpectraS3(
-                            new GetObjectPersistedNotificationRegistrationSpectraS3Request(registrationId));
+                            new GetObjectPersistedNotificationRegistrationSpectraS3Request(registrationId.toString()));
             assertThat(getResponse, is(notNullValue()));
             assertThat(getResponse.getS3ObjectPersistedNotificationRegistrationResult(), is(notNullValue()));
             assertThat(getResponse.getS3ObjectPersistedNotificationRegistrationResult().getId(), is(notNullValue()));
 
             assertThat(client.deleteObjectPersistedNotificationRegistrationSpectraS3(
-                    new DeleteObjectPersistedNotificationRegistrationSpectraS3Request(registrationId)), is(notNullValue()));
+                    new DeleteObjectPersistedNotificationRegistrationSpectraS3Request(registrationId.toString())), is(notNullValue()));
         } finally {
             deleteObjectPersistedNotification(registrationId, client);
             Util.deleteAllContents(client, bucketName);

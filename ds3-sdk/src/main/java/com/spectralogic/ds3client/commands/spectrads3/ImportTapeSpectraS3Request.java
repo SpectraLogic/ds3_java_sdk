@@ -18,9 +18,9 @@ package com.spectralogic.ds3client.commands.spectrads3;
 
 import com.spectralogic.ds3client.networking.HttpVerb;
 import com.spectralogic.ds3client.commands.interfaces.AbstractRequest;
-import com.spectralogic.ds3client.models.ImportConflictResolutionMode;
 import java.util.UUID;
 import com.google.common.net.UrlEscapers;
+import com.spectralogic.ds3client.models.Priority;
 
 public class ImportTapeSpectraS3Request extends AbstractRequest {
 
@@ -28,13 +28,17 @@ public class ImportTapeSpectraS3Request extends AbstractRequest {
     
     private final String tapeId;
 
-    private ImportConflictResolutionMode conflictResolutionMode;
-
     private String dataPolicyId;
+
+    private Priority priority;
 
     private String storageDomainId;
 
     private String userId;
+
+    private Priority verifyDataAfterImport;
+
+    private boolean verifyDataPriorToImport;
 
     // Constructor
     
@@ -52,12 +56,6 @@ public class ImportTapeSpectraS3Request extends AbstractRequest {
 
     }
 
-    public ImportTapeSpectraS3Request withConflictResolutionMode(final ImportConflictResolutionMode conflictResolutionMode) {
-        this.conflictResolutionMode = conflictResolutionMode;
-        this.updateQueryParam("conflict_resolution_mode", conflictResolutionMode);
-        return this;
-    }
-
     public ImportTapeSpectraS3Request withDataPolicyId(final UUID dataPolicyId) {
         this.dataPolicyId = dataPolicyId.toString();
         this.updateQueryParam("data_policy_id", dataPolicyId);
@@ -67,6 +65,12 @@ public class ImportTapeSpectraS3Request extends AbstractRequest {
     public ImportTapeSpectraS3Request withDataPolicyId(final String dataPolicyId) {
         this.dataPolicyId = dataPolicyId;
         this.updateQueryParam("data_policy_id", dataPolicyId);
+        return this;
+    }
+
+    public ImportTapeSpectraS3Request withPriority(final Priority priority) {
+        this.priority = priority;
+        this.updateQueryParam("priority", priority);
         return this;
     }
 
@@ -94,6 +98,18 @@ public class ImportTapeSpectraS3Request extends AbstractRequest {
         return this;
     }
 
+    public ImportTapeSpectraS3Request withVerifyDataAfterImport(final Priority verifyDataAfterImport) {
+        this.verifyDataAfterImport = verifyDataAfterImport;
+        this.updateQueryParam("verify_data_after_import", verifyDataAfterImport);
+        return this;
+    }
+
+    public ImportTapeSpectraS3Request withVerifyDataPriorToImport(final boolean verifyDataPriorToImport) {
+        this.verifyDataPriorToImport = verifyDataPriorToImport;
+        this.updateQueryParam("verify_data_prior_to_import", verifyDataPriorToImport);
+        return this;
+    }
+
 
     @Override
     public HttpVerb getVerb() {
@@ -110,13 +126,13 @@ public class ImportTapeSpectraS3Request extends AbstractRequest {
     }
 
 
-    public ImportConflictResolutionMode getConflictResolutionMode() {
-        return this.conflictResolutionMode;
+    public String getDataPolicyId() {
+        return this.dataPolicyId;
     }
 
 
-    public String getDataPolicyId() {
-        return this.dataPolicyId;
+    public Priority getPriority() {
+        return this.priority;
     }
 
 
@@ -127,6 +143,16 @@ public class ImportTapeSpectraS3Request extends AbstractRequest {
 
     public String getUserId() {
         return this.userId;
+    }
+
+
+    public Priority getVerifyDataAfterImport() {
+        return this.verifyDataAfterImport;
+    }
+
+
+    public boolean getVerifyDataPriorToImport() {
+        return this.verifyDataPriorToImport;
     }
 
 }

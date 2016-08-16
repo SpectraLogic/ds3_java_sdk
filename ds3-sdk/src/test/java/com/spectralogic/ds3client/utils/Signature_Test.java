@@ -15,6 +15,9 @@
 
 package com.spectralogic.ds3client.utils;
 
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableMultimap;
+import com.google.common.collect.Multimap;
 import com.spectralogic.ds3client.networking.HttpVerb;
 import com.spectralogic.ds3client.models.common.Credentials;
 import com.spectralogic.ds3client.models.common.SignatureDetails;
@@ -55,5 +58,31 @@ public class Signature_Test {
                         "", "/johnsmith/photos/puppy.jpg", credentials);
 
         assertThat(Signature.signature(details), is("MyyxeRY7whkBe+bq8fHCL/2kKUg="));
+    }
+
+    @Test
+    public void putSignatureWithMeta() throws SignatureException {
+        final Credentials credentials = new Credentials("Yg==", "BYY65vje");
+
+        final ImmutableMultimap.Builder<String, String> headersBuilder = ImmutableMultimap.builder();
+
+        headersBuilder.put("x-amz-meta-etag", "7679088556832fcef734741c031e4020");
+        headersBuilder.put("accept-encoding", "gzip,deflate");
+        headersBuilder.put("connection", "Keep-Alive");
+        headersBuilder.put("content-length", "10240012288");
+        headersBuilder.put("job-chunk-lock-holder", "205ad7dd-3117-4412-9bbe-e05ae5b3fb99");
+
+        final ImmutableMap<String, String> queryParams = ImmutableMap.of("job", "d92f0280-8c9f-40a5-b9d0-0567af375976", "offset", "0");
+
+        final SignatureDetails details =
+                new SignatureDetails(HttpVerb.PUT,
+                        "dnkIhVaDL873NHQcAx5AIA==",
+                        "application/xml; charset=ISO-8859-1",
+                        "Thu, 31 Mar 2016 18:08:30 +0000",
+                        Signature.canonicalizeAmzHeaders(new MultiMapImpl<>(headersBuilder.build())),
+                        Signature.canonicalizeResource("/bucket10240012288/client00obj000019-000010000012", queryParams),
+                        credentials);
+
+        assertThat(Signature.signature(details), is("/FDHtkaFgjSVVgBfNfTAwrhdpCc="));
     }
 }

@@ -27,6 +27,8 @@ public class DeleteObjectRequest extends AbstractRequest {
 
     private final String objectName;
 
+    private boolean replicate;
+
     private boolean rollBack;
 
     // Constructor
@@ -35,6 +37,16 @@ public class DeleteObjectRequest extends AbstractRequest {
         this.bucketName = bucketName;
         this.objectName = objectName;
         
+    }
+
+    public DeleteObjectRequest withReplicate(final boolean replicate) {
+        this.replicate = replicate;
+        if (this.replicate) {
+            this.getQueryParams().put("replicate", null);
+        } else {
+            this.getQueryParams().remove("replicate");
+        }
+        return this;
     }
 
     public DeleteObjectRequest withRollBack(final boolean rollBack) {
@@ -65,6 +77,11 @@ public class DeleteObjectRequest extends AbstractRequest {
 
     public String getObjectName() {
         return this.objectName;
+    }
+
+
+    public boolean getReplicate() {
+        return this.replicate;
     }
 
 

@@ -18,16 +18,19 @@ package com.spectralogic.ds3client.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+import java.lang.String;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import java.util.UUID;
 import java.lang.Boolean;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import java.lang.String;
 
 @JacksonXmlRootElement(namespace = "Data")
 public class BulkObject {
 
     // Variables
-    @JsonProperty("Id")
+    @JacksonXmlProperty(isAttribute = true, localName = "Bucket")
+    private String bucket;
+
+    @JacksonXmlProperty(isAttribute = true, localName = "Id")
     private UUID id;
 
     @JacksonXmlProperty(isAttribute = true, localName = "InCache")
@@ -58,6 +61,15 @@ public class BulkObject {
 
     // Getters and Setters
     
+    public String getBucket() {
+        return this.bucket;
+    }
+
+    public void setBucket(final String bucket) {
+        this.bucket = bucket;
+    }
+
+
     public UUID getId() {
         return this.id;
     }

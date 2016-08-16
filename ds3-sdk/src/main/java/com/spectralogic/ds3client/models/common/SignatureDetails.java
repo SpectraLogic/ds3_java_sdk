@@ -15,7 +15,6 @@
 
 package com.spectralogic.ds3client.models.common;
 
-import com.spectralogic.ds3client.models.common.Credentials;
 import com.spectralogic.ds3client.networking.HttpVerb;
 
 public class SignatureDetails {

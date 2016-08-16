@@ -15,7 +15,7 @@
 
 allprojects {
     group = 'com.spectralogic.ds3'
-    version = '3.0.7'
+    version = '3.2.2-SNAPSHOT'
 }
 
 subprojects {
@@ -30,14 +30,13 @@ subprojects {
     }
 
     dependencies {
-        compile     'org.slf4j:slf4j-api:1.7.16'
-        compile     'org.slf4j:jcl-over-slf4j:1.7.16'
+        compile     'org.slf4j:slf4j-api:1.7.20'
         testCompile ('org.mockito:mockito-core:1.10.19') {
             exclude group: 'org.hamcrest'
         }
 
         testCompile 'junit:junit:4.12'
-        testCompile 'org.slf4j:slf4j-simple:1.7.16'
+        testCompile 'org.slf4j:slf4j-simple:1.7.20'
     }
 }
 

@@ -14,12 +14,31 @@
  */
 
 // This code is auto-generated, do not modify
-package com.spectralogic.ds3client.models;
+package com.spectralogic.ds3client.commands.spectrads3;
 
-public enum ImportConflictResolutionMode {
-    CANCEL,
-    ACCEPT_MOST_RECENT,
-    ACCEPT_HIGHEST_VERSION,
-    ACCEPT_IMPORT,
-    ACCEPT_EXISTING
-}
+import com.spectralogic.ds3client.networking.HttpVerb;
+import com.spectralogic.ds3client.commands.interfaces.AbstractRequest;
+
+public class CancelVerifyOnAllTapesSpectraS3Request extends AbstractRequest {
+
+    // Variables
+    
+    // Constructor
+    
+    public CancelVerifyOnAllTapesSpectraS3Request() {
+        
+        this.getQueryParams().put("operation", "cancel_verify");
+
+    }
+
+
+    @Override
+    public HttpVerb getVerb() {
+        return HttpVerb.PUT;
+    }
+
+    @Override
+    public String getPath() {
+        return "/_rest_/tape";
+    }
+    }

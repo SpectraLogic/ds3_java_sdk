@@ -18,6 +18,7 @@ package com.spectralogic.ds3client.integration.test.helpers;
 import com.spectralogic.ds3client.Ds3Client;
 import com.spectralogic.ds3client.commands.spectrads3.*;
 import com.spectralogic.ds3client.models.*;
+import com.spectralogic.ds3client.utils.Guard;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -75,13 +76,15 @@ public final class ABMTestHelper {
         if (checksumType == null) {
             //Create the data policy with versioning
             return client.putDataPolicySpectraS3(new PutDataPolicySpectraS3Request(dataPolicyName)
-                    .withVersioning(versioningLevel));
+                    .withVersioning(versioningLevel)
+                    .withAlwaysForcePutJobCreation(true));
         }
         //Create the data policy with versioning and checksum
         return client.putDataPolicySpectraS3(new PutDataPolicySpectraS3Request(dataPolicyName)
                 .withVersioning(versioningLevel)
                 .withEndToEndCrcRequired(true)
-                .withChecksumType(checksumType));
+                .withChecksumType(checksumType)
+                .withAlwaysForcePutJobCreation(true));
     }
 
     /**
@@ -111,6 +114,51 @@ public final class ABMTestHelper {
             LOG.error("Data policy still exists despite deletion attempt: " + dataPolicyName);
         } catch (final IOException e) {
             //Pass: expected data policy to not exist
+        }
+    }
+
+    /**
+     * Deletes all buckets associted with a data policy
+     * to ensure that said policy can be deleted
+     * If any buckets using the policy are not properly deleted, an error is logged.
+     */
+    public static void deleteBucketsWithDataPolicy(
+            final String dataPolicyName,
+            final Ds3Client client) {
+        if (isEmpty(dataPolicyName)) {
+            //This might not be an error if this function is called as part of cleanup code
+            LOG.debug("Data policy name is null or empty");
+            return;
+        }
+        //Get all buckets using the data policy
+        try {
+            final GetBucketsSpectraS3Response bucketsResponse = client
+                    .getBucketsSpectraS3(new GetBucketsSpectraS3Request().withDataPolicyId(dataPolicyName));
+
+            final BucketList bucketList = bucketsResponse.getBucketListResult();
+
+            for (final Bucket bucket : bucketList.getBuckets()) {
+                // delete each
+                final DeleteBucketSpectraS3Response deleteBucketSpectraS3Response = client
+                        .deleteBucketSpectraS3(new DeleteBucketSpectraS3Request(bucket.getName()));
+                assertThat(deleteBucketSpectraS3Response.getStatusCode(), is(204));
+            }
+
+        } catch (final IOException|AssertionError e) {
+            LOG.error("Bucket assigned to data policy was not deleted as expected: " + dataPolicyName, e);
+        }
+
+        // Verify that no buckets are attached to the data policy
+        try {
+            final GetBucketsSpectraS3Response bucketsResponse = client
+                    .getBucketsSpectraS3(new GetBucketsSpectraS3Request().withDataPolicyId(dataPolicyName));
+
+            final BucketList bucketList = bucketsResponse.getBucketListResult();
+            if (!Guard.isNullOrEmpty(bucketList.getBuckets())) {
+                LOG.error("Buckets using data policy still exist despite deletion attempt");
+            }
+        } catch (final IOException e) {
+            LOG.error("Failed getting buckets to verify none use data policy " + dataPolicyName, e);
         }
     }
 
@@ -229,8 +277,8 @@ public final class ABMTestHelper {
         try {
             final GetStorageDomainMembersSpectraS3Response getMembers = client.getStorageDomainMembersSpectraS3(
                     new GetStorageDomainMembersSpectraS3Request()
-                            .withPoolPartitionId(poolPartitionId)
-                            .withStorageDomainId(storageDomainId));
+                            .withPoolPartitionId(poolPartitionId.toString())
+                            .withStorageDomainId(storageDomainId.toString()));
             assertThat(getMembers.getStorageDomainMemberListResult().getStorageDomainMembers().size(), is(0));
         } catch (final IOException e) {
             //Pass: expected storage domain member to not exist
@@ -238,8 +286,8 @@ public final class ABMTestHelper {
 
         //Create the storage domain
         return client.putPoolStorageDomainMemberSpectraS3(new PutPoolStorageDomainMemberSpectraS3Request(
-                poolPartitionId,
-                storageDomainId));
+                poolPartitionId.toString(),
+                storageDomainId.toString()));
     }
 
     /**
@@ -285,15 +333,15 @@ public final class ABMTestHelper {
         //Check if data persistence rule already exists
         final GetDataPersistenceRulesSpectraS3Response response = client.getDataPersistenceRulesSpectraS3(
                 new GetDataPersistenceRulesSpectraS3Request()
-                        .withDataPolicyId(dataPolicyId)
-                        .withStorageDomainId(storageDomainId));
+                        .withDataPolicyId(dataPolicyId.toString())
+                        .withStorageDomainId(storageDomainId.toString()));
         assertThat(response.getDataPersistenceRuleListResult().getDataPersistenceRules().size(), is(0));
 
         //Create the data persistence rule
         return client.putDataPersistenceRuleSpectraS3(new PutDataPersistenceRuleSpectraS3Request(
-                dataPolicyId,
+                dataPolicyId.toString(),
                 DataIsolationLevel.STANDARD,
-                storageDomainId,
+                storageDomainId.toString(),
                 DataPersistenceRuleType.PERMANENT));
     }
 
@@ -392,14 +440,14 @@ public final class ABMTestHelper {
         //Check if data policy Acl for group already exists
         final GetDataPolicyAclsSpectraS3Response response = client.getDataPolicyAclsSpectraS3(
                 new GetDataPolicyAclsSpectraS3Request()
-                        .withDataPolicyId(dataPolicyId)
-                        .withGroupId(groupId));
+                        .withDataPolicyId(dataPolicyId.toString())
+                        .withGroupId(groupId.toString()));
         assertThat(response.getDataPolicyAclListResult().getDataPolicyAcls().size(), is(0));
 
         //Create the data policy Acl
         return client.putDataPolicyAclForGroupSpectraS3(new PutDataPolicyAclForGroupSpectraS3Request(
-                dataPolicyId,
-                groupId));
+                dataPolicyId.toString(),
+                groupId.toString()));
     }
 
     /**
