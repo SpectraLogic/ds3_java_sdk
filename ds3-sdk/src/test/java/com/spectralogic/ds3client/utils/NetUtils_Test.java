@@ -78,6 +78,24 @@ public class NetUtils_Test {
     }
 
     @Test
+    public void pathEscapeQuestion() throws MalformedURLException {
+        final URL result = NetUtils.buildUrl(ConnectionFixture.getConnection(), "bucket/One?Two.xml");
+        assertThat(result.getPath(), is("/bucket/One%3FTwo.xml"));
+    }
+
+    @Test
+    public void pathEscapeSemicolon() throws MalformedURLException {
+        final URL result = NetUtils.buildUrl(ConnectionFixture.getConnection(), "bucket/One;Two.xml");
+        assertThat(result.getPath(), is("/bucket/One%3BTwo.xml"));
+    }
+
+    @Test
+    public void pathEscapePercent() throws MalformedURLException {
+        final URL result = NetUtils.buildUrl(ConnectionFixture.getConnection(), "bucket/One%Two.xml");
+        assertThat(result.getPath(), is("/bucket/One%25Two.xml"));
+    }
+
+    @Test
     public void buildPathWithoutSlash() throws MalformedURLException {
         final URL result = NetUtils.buildUrl(ConnectionFixture.getConnection(), "path");
         assertThat(result.getPath(), is("/path"));

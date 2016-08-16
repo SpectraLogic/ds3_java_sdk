@@ -16,8 +16,6 @@
 package com.spectralogic.ds3client.utils;
 
 import com.google.common.base.Joiner;
-import com.google.common.collect.Multimap;
-import com.google.common.net.UrlEscapers;
 import com.spectralogic.ds3client.commands.PutObjectRequest;
 import com.spectralogic.ds3client.models.common.SignatureDetails;
 
@@ -89,7 +87,7 @@ public class Signature {
 
     public static String canonicalizeResource(final String path, final Map<String, String> queryParams) {
         final StringBuilder canonicalizedResource = new StringBuilder();
-        canonicalizedResource.append(UrlEscapers.urlFragmentEscaper().escape(path));
+        canonicalizedResource.append(path);
 
         if (queryParams != null) {
             if (queryParams.containsKey("delete")) {
