@@ -145,7 +145,7 @@ public final class ABMTestHelper {
             }
 
         } catch (final IOException|AssertionError e) {
-            LOG.error("Bucket assigned to data policy was not deleted as expected: " + dataPolicyName);
+            LOG.error("Bucket assigned to data policy was not deleted as expected: " + dataPolicyName, e);
         }
 
         // Verify that no buckets are attached to the data policy
@@ -158,7 +158,7 @@ public final class ABMTestHelper {
                 LOG.error("Buckets using data policy still exist despite deletion attempt");
             }
         } catch (final IOException e) {
-            //Pass: expected data policy to not exist
+            LOG.error("Failed getting buckets to verify none use data policy " + dataPolicyName, e);
         }
     }
 
