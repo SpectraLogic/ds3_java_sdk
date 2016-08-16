@@ -145,7 +145,7 @@ public final class ABMTestHelper {
             }
 
         } catch (final IOException|AssertionError e) {
-            LOG.error("Bucket assigned to data policy was not deleted as expected: " + dataPolicyName, e);
+            LOG.error("Bucket assigned to data policy {} was not deleted as expected.", dataPolicyName, e);
         }
 
         // Verify that no buckets are attached to the data policy
