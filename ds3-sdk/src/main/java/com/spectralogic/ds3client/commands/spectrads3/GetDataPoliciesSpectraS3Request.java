@@ -26,6 +26,12 @@ public class GetDataPoliciesSpectraS3Request extends AbstractRequest {
 
     // Variables
     
+    private boolean alwaysForcePutJobCreation;
+
+    private boolean alwaysMinimizeSpanningAcrossMedia;
+
+    private boolean alwaysReplicateDeletes;
+
     private ChecksumType.Type checksumType;
 
     private boolean endToEndCrcRequired;
@@ -44,6 +50,24 @@ public class GetDataPoliciesSpectraS3Request extends AbstractRequest {
     
     public GetDataPoliciesSpectraS3Request() {
         
+    }
+
+    public GetDataPoliciesSpectraS3Request withAlwaysForcePutJobCreation(final boolean alwaysForcePutJobCreation) {
+        this.alwaysForcePutJobCreation = alwaysForcePutJobCreation;
+        this.updateQueryParam("always_force_put_job_creation", alwaysForcePutJobCreation);
+        return this;
+    }
+
+    public GetDataPoliciesSpectraS3Request withAlwaysMinimizeSpanningAcrossMedia(final boolean alwaysMinimizeSpanningAcrossMedia) {
+        this.alwaysMinimizeSpanningAcrossMedia = alwaysMinimizeSpanningAcrossMedia;
+        this.updateQueryParam("always_minimize_spanning_across_media", alwaysMinimizeSpanningAcrossMedia);
+        return this;
+    }
+
+    public GetDataPoliciesSpectraS3Request withAlwaysReplicateDeletes(final boolean alwaysReplicateDeletes) {
+        this.alwaysReplicateDeletes = alwaysReplicateDeletes;
+        this.updateQueryParam("always_replicate_deletes", alwaysReplicateDeletes);
+        return this;
     }
 
     public GetDataPoliciesSpectraS3Request withChecksumType(final ChecksumType.Type checksumType) {
@@ -109,6 +133,21 @@ public class GetDataPoliciesSpectraS3Request extends AbstractRequest {
         return "/_rest_/data_policy";
     }
     
+    public boolean getAlwaysForcePutJobCreation() {
+        return this.alwaysForcePutJobCreation;
+    }
+
+
+    public boolean getAlwaysMinimizeSpanningAcrossMedia() {
+        return this.alwaysMinimizeSpanningAcrossMedia;
+    }
+
+
+    public boolean getAlwaysReplicateDeletes() {
+        return this.alwaysReplicateDeletes;
+    }
+
+
     public ChecksumType.Type getChecksumType() {
         return this.checksumType;
     }

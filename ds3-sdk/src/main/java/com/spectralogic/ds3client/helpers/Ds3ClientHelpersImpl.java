@@ -1,6 +1,6 @@
 /*
  * ******************************************************************************
- *   Copyright 2014-2016 Spectra Logic Corporation. All Rights Reserved.
+ *   Copyright 2014-2015 Spectra Logic Corporation. All Rights Reserved.
  *   Licensed under the Apache License, Version 2.0 (the "License"). You may not use
  *   this file except in compliance with the License. A copy of the License is located at
  *
@@ -15,8 +15,6 @@
 
 package com.spectralogic.ds3client.helpers;
 
-import com.google.common.base.Function;
-import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Lists;
 import com.spectralogic.ds3client.Ds3Client;
@@ -26,16 +24,14 @@ import com.spectralogic.ds3client.helpers.options.ReadJobOptions;
 import com.spectralogic.ds3client.helpers.options.WriteJobOptions;
 import com.spectralogic.ds3client.helpers.util.PartialObjectHelpers;
 import com.spectralogic.ds3client.models.*;
-import com.spectralogic.ds3client.models.bulk.Ds3Object;
 import com.spectralogic.ds3client.models.bulk.RequestType;
 import com.spectralogic.ds3client.models.common.Range;
+import com.spectralogic.ds3client.models.bulk.*;
 import com.spectralogic.ds3client.networking.FailedRequestException;
 import com.spectralogic.ds3client.serializer.XmlProcessingException;
-import com.spectralogic.ds3client.utils.Predicate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.Nullable;
 import java.io.IOException;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
@@ -146,7 +142,7 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
 
     @Override
     public Ds3ClientHelpers.Job recoverWriteJob(final UUID jobId) throws SignatureException, IOException, XmlProcessingException, JobRecoveryException {
-        final ModifyJobSpectraS3Response jobResponse = this.client.modifyJobSpectraS3(new ModifyJobSpectraS3Request(jobId));
+        final ModifyJobSpectraS3Response jobResponse = this.client.modifyJobSpectraS3(new ModifyJobSpectraS3Request(jobId.toString()));
         if (JobRequestType.PUT != jobResponse.getMasterObjectListResult().getRequestType()) {
             throw new JobRecoveryException(
                     RequestType.PUT.toString(),
@@ -163,7 +159,7 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
     @Override
     //TODO add a partial object read recovery method.  That method will require the list of partial objects.
     public Ds3ClientHelpers.Job recoverReadJob(final UUID jobId) throws SignatureException, IOException, XmlProcessingException, JobRecoveryException {
-        final ModifyJobSpectraS3Response jobResponse = this.client.modifyJobSpectraS3(new ModifyJobSpectraS3Request(jobId));
+        final ModifyJobSpectraS3Response jobResponse = this.client.modifyJobSpectraS3(new ModifyJobSpectraS3Request(jobId.toString()));
         if (JobRequestType.GET != jobResponse.getMasterObjectListResult().getRequestType()){
             throw new JobRecoveryException(
                     RequestType.GET.toString(),

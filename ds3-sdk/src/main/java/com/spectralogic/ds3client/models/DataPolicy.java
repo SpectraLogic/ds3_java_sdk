@@ -27,6 +27,15 @@ import java.lang.String;
 public class DataPolicy {
 
     // Variables
+    @JsonProperty("AlwaysForcePutJobCreation")
+    private boolean alwaysForcePutJobCreation;
+
+    @JsonProperty("AlwaysMinimizeSpanningAcrossMedia")
+    private boolean alwaysMinimizeSpanningAcrossMedia;
+
+    @JsonProperty("AlwaysReplicateDeletes")
+    private boolean alwaysReplicateDeletes;
+
     @JsonProperty("BlobbingEnabled")
     private boolean blobbingEnabled;
 
@@ -73,6 +82,33 @@ public class DataPolicy {
 
     // Getters and Setters
     
+    public boolean getAlwaysForcePutJobCreation() {
+        return this.alwaysForcePutJobCreation;
+    }
+
+    public void setAlwaysForcePutJobCreation(final boolean alwaysForcePutJobCreation) {
+        this.alwaysForcePutJobCreation = alwaysForcePutJobCreation;
+    }
+
+
+    public boolean getAlwaysMinimizeSpanningAcrossMedia() {
+        return this.alwaysMinimizeSpanningAcrossMedia;
+    }
+
+    public void setAlwaysMinimizeSpanningAcrossMedia(final boolean alwaysMinimizeSpanningAcrossMedia) {
+        this.alwaysMinimizeSpanningAcrossMedia = alwaysMinimizeSpanningAcrossMedia;
+    }
+
+
+    public boolean getAlwaysReplicateDeletes() {
+        return this.alwaysReplicateDeletes;
+    }
+
+    public void setAlwaysReplicateDeletes(final boolean alwaysReplicateDeletes) {
+        this.alwaysReplicateDeletes = alwaysReplicateDeletes;
+    }
+
+
     public boolean getBlobbingEnabled() {
         return this.blobbingEnabled;
     }

@@ -18,13 +18,18 @@ package com.spectralogic.ds3client.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+import java.lang.Long;
 import java.lang.String;
 import java.util.UUID;
+import java.lang.Integer;
 
 @JacksonXmlRootElement(namespace = "Data")
 public class StorageDomain {
 
     // Variables
+    @JsonProperty("AutoEjectMediaFullThreshold")
+    private Long autoEjectMediaFullThreshold;
+
     @JsonProperty("AutoEjectUponCron")
     private String autoEjectUponCron;
 
@@ -47,13 +52,16 @@ public class StorageDomain {
     private int maxTapeFragmentationPercent;
 
     @JsonProperty("MaximumAutoVerificationFrequencyInDays")
-    private int maximumAutoVerificationFrequencyInDays;
+    private Integer maximumAutoVerificationFrequencyInDays;
 
     @JsonProperty("MediaEjectionAllowed")
     private boolean mediaEjectionAllowed;
 
     @JsonProperty("Name")
     private String name;
+
+    @JsonProperty("SecureMediaAllocation")
+    private boolean secureMediaAllocation;
 
     @JsonProperty("VerifyPriorToAutoEject")
     private Priority verifyPriorToAutoEject;
@@ -68,6 +76,15 @@ public class StorageDomain {
 
     // Getters and Setters
     
+    public Long getAutoEjectMediaFullThreshold() {
+        return this.autoEjectMediaFullThreshold;
+    }
+
+    public void setAutoEjectMediaFullThreshold(final Long autoEjectMediaFullThreshold) {
+        this.autoEjectMediaFullThreshold = autoEjectMediaFullThreshold;
+    }
+
+
     public String getAutoEjectUponCron() {
         return this.autoEjectUponCron;
     }
@@ -131,11 +148,11 @@ public class StorageDomain {
     }
 
 
-    public int getMaximumAutoVerificationFrequencyInDays() {
+    public Integer getMaximumAutoVerificationFrequencyInDays() {
         return this.maximumAutoVerificationFrequencyInDays;
     }
 
-    public void setMaximumAutoVerificationFrequencyInDays(final int maximumAutoVerificationFrequencyInDays) {
+    public void setMaximumAutoVerificationFrequencyInDays(final Integer maximumAutoVerificationFrequencyInDays) {
         this.maximumAutoVerificationFrequencyInDays = maximumAutoVerificationFrequencyInDays;
     }
 
@@ -155,6 +172,15 @@ public class StorageDomain {
 
     public void setName(final String name) {
         this.name = name;
+    }
+
+
+    public boolean getSecureMediaAllocation() {
+        return this.secureMediaAllocation;
+    }
+
+    public void setSecureMediaAllocation(final boolean secureMediaAllocation) {
+        this.secureMediaAllocation = secureMediaAllocation;
     }
 
 

@@ -45,6 +45,9 @@ public class MasterObjectList {
     @JacksonXmlProperty(isAttribute = true, localName = "CompletedSizeInBytes")
     private long completedSizeInBytes;
 
+    @JacksonXmlProperty(isAttribute = true, localName = "EntirelyInCache")
+    private boolean entirelyInCache;
+
     @JacksonXmlProperty(isAttribute = true, localName = "JobId")
     private UUID jobId;
 
@@ -132,6 +135,15 @@ public class MasterObjectList {
 
     public void setCompletedSizeInBytes(final long completedSizeInBytes) {
         this.completedSizeInBytes = completedSizeInBytes;
+    }
+
+
+    public boolean getEntirelyInCache() {
+        return this.entirelyInCache;
+    }
+
+    public void setEntirelyInCache(final boolean entirelyInCache) {
+        this.entirelyInCache = entirelyInCache;
     }
 
 

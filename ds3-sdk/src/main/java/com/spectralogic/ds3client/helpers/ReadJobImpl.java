@@ -160,7 +160,7 @@ class ReadJobImpl extends JobImpl {
     private void transferNextChunks(final ChunkTransferrer chunkTransferrer)
             throws IOException, SignatureException, XmlProcessingException, InterruptedException {
         final GetJobChunksReadyForClientProcessingSpectraS3Response availableJobChunks =
-            this.client.getJobChunksReadyForClientProcessingSpectraS3(new GetJobChunksReadyForClientProcessingSpectraS3Request(this.masterObjectList.getJobId()));
+            this.client.getJobChunksReadyForClientProcessingSpectraS3(new GetJobChunksReadyForClientProcessingSpectraS3Request(this.masterObjectList.getJobId().toString()));
         switch(availableJobChunks.getStatus()) {
         case AVAILABLE: {
             final MasterObjectList availableMol = availableJobChunks.getMasterObjectListResult();
@@ -199,7 +199,7 @@ class ReadJobImpl extends JobImpl {
                     ReadJobImpl.this.masterObjectList.getBucketName(),
                     ds3Object.getName(),
                     jobState.getChannel(ds3Object.getName(), ds3Object.getOffset(), ds3Object.getLength()),
-                    ReadJobImpl.this.getJobId(),
+                    ReadJobImpl.this.getJobId().toString(),
                     ds3Object.getOffset()
             );
 

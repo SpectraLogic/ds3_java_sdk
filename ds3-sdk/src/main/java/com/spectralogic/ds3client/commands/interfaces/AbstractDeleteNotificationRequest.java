@@ -16,6 +16,7 @@
 package com.spectralogic.ds3client.commands.interfaces;
 
 import com.spectralogic.ds3client.networking.HttpVerb;
+import com.spectralogic.ds3client.commands.interfaces.AbstractRequest;
 
 import java.util.UUID;
 
@@ -23,14 +24,14 @@ public abstract class AbstractDeleteNotificationRequest extends AbstractRequest 
 
     private final String notificationId;
 
-    public AbstractDeleteNotificationRequest(final UUID notificationId) {
-        super();
-        this.notificationId = notificationId.toString();
-    }
-
     public AbstractDeleteNotificationRequest(final String notificationId) {
         super();
         this.notificationId = notificationId;
+    }
+
+    public AbstractDeleteNotificationRequest(final UUID notificationId) {
+        super();
+        this.notificationId = notificationId.toString();
     }
 
     public String getNotificationId() {

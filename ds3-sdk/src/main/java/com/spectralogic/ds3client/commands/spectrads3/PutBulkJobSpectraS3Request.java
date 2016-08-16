@@ -32,7 +32,11 @@ public class PutBulkJobSpectraS3Request extends BulkRequest {
     
     private boolean aggregating;
 
+    private boolean force;
+
     private boolean ignoreNamingConflicts;
+
+    private boolean minimizeSpanningAcrossMedia;
 
     private String name;
 
@@ -47,6 +51,16 @@ public class PutBulkJobSpectraS3Request extends BulkRequest {
     public PutBulkJobSpectraS3Request withAggregating(final boolean aggregating) {
         this.aggregating = aggregating;
         this.updateQueryParam("aggregating", aggregating);
+        return this;
+    }
+
+    public PutBulkJobSpectraS3Request withForce(final boolean force) {
+        this.force = force;
+        if (this.force) {
+            this.getQueryParams().put("force", null);
+        } else {
+            this.getQueryParams().remove("force");
+        }
         return this;
     }
 
@@ -69,6 +83,12 @@ public class PutBulkJobSpectraS3Request extends BulkRequest {
         return this;
     }
 
+    public PutBulkJobSpectraS3Request withMinimizeSpanningAcrossMedia(final boolean minimizeSpanningAcrossMedia) {
+        this.minimizeSpanningAcrossMedia = minimizeSpanningAcrossMedia;
+        this.updateQueryParam("minimize_spanning_across_media", minimizeSpanningAcrossMedia);
+        return this;
+    }
+
     public PutBulkJobSpectraS3Request withName(final String name) {
         this.name = name;
         this.updateQueryParam("name", name);
@@ -88,8 +108,18 @@ public class PutBulkJobSpectraS3Request extends BulkRequest {
     }
 
 
+    public boolean getForce() {
+        return this.force;
+    }
+
+
     public boolean getIgnoreNamingConflicts() {
         return this.ignoreNamingConflicts;
+    }
+
+
+    public boolean getMinimizeSpanningAcrossMedia() {
+        return this.minimizeSpanningAcrossMedia;
     }
 
 

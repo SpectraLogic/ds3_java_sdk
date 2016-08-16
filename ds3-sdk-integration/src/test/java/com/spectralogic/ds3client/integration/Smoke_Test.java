@@ -134,8 +134,8 @@ public class Smoke_Test {
                     is(HeadObjectResponse.Status.EXISTS));
             assertThat(headResponse.getObjectSize(), is(294059L));
 
-            final GetObjectsSpectraS3Response response = client
-                    .getObjectsSpectraS3(new GetObjectsSpectraS3Request().withBucketId("test_get_objs"));
+            final GetObjectsDetailsSpectraS3Response response = client
+                    .getObjectsDetailsSpectraS3(new GetObjectsDetailsSpectraS3Request().withBucketId("test_get_objs"));
 
             assertFalse(response.getS3ObjectListResult().getS3Objects().isEmpty());
             assertThat(response.getS3ObjectListResult().getS3Objects().size(), is(4));
@@ -434,7 +434,7 @@ public class Smoke_Test {
                     job.getBucketName(),
                     book1,
                     new ResourceObjectPutter(RESOURCE_BASE_NAME).buildChannel(book1),
-                    job.getJobId(),
+                    job.getJobId().toString(),
                     0,
                     Files.size(objPath1)));
             assertThat(putResponse1, is(notNullValue()));
@@ -447,7 +447,7 @@ public class Smoke_Test {
                     recoverJob.getBucketName(),
                     book2,
                     new ResourceObjectPutter(RESOURCE_BASE_NAME).buildChannel(book2),
-                    recoverJob.getJobId(),
+                    recoverJob.getJobId().toString(),
                     0,
                     Files.size(objPath2)));
             assertThat(putResponse2, is(notNullValue()));
@@ -501,7 +501,7 @@ public class Smoke_Test {
 
             //Create bucket with data policy
             client.putBucketSpectraS3(new PutBucketSpectraS3Request(bucketName)
-                    .withDataPolicyId(dataPolicyResponse.getDataPolicyResult().getId()));
+                    .withDataPolicyId(dataPolicyResponse.getDataPolicyResult().getId().toString()));
 
             //Verify send CRC 32c checksum
             final Ds3ClientHelpers helpers = Ds3ClientHelpers.wrap(client);
@@ -520,7 +520,7 @@ public class Smoke_Test {
                     bucketName,
                     "beowulf.txt",
                     channel,
-                    mol.getJobId(),
+                    mol.getJobId().toString(),
                     0,
                     294059)
                     .withChecksum(ChecksumType.compute(), ChecksumType.Type.CRC_32C));
@@ -562,7 +562,7 @@ public class Smoke_Test {
         assumeThat(tapes.getTapes().size(), is(not(0)));
 
         final GetTapeSpectraS3Response tapeResponse = client
-                .getTapeSpectraS3(new GetTapeSpectraS3Request(tapes.getTapes().get(0).getId()));
+                .getTapeSpectraS3(new GetTapeSpectraS3Request(tapes.getTapes().get(0).getId().toString()));
 
         final Tape tape = tapeResponse.getTapeResult();
 
@@ -605,7 +605,7 @@ public class Smoke_Test {
                             bucketName,
                             book1,
                             channel1,
-                            readJob.getJobId(),
+                            readJob.getJobId().toString(),
                             0));
 
             assertThat(readResponse1, is(notNullValue()));
@@ -625,7 +625,7 @@ public class Smoke_Test {
                             bucketName,
                             book2,
                             channel2,
-                            recoverJob.getJobId(),
+                            recoverJob.getJobId().toString(),
                             0));
             assertThat(readResponse2, is(notNullValue()));
             assertThat(readResponse2.getStatusCode(), is(equalTo(200)));
@@ -962,7 +962,7 @@ public class Smoke_Test {
                             bucketName,
                             "beowulf.txt",
                             new NullChannel(),
-                            jobId,
+                            jobId.toString(),
                             0));
 
             assertThat(getObjectResponse.getObjectSize(), is(294059L));
@@ -1129,8 +1129,8 @@ public class Smoke_Test {
                 }
             });
 
-            final GetObjectsSpectraS3Response getObjectsSpectraS3Response = client
-                    .getObjectsSpectraS3(new GetObjectsSpectraS3Request().withName(objectName));
+            final GetObjectsDetailsSpectraS3Response getObjectsSpectraS3Response = client
+                    .getObjectsDetailsSpectraS3(new GetObjectsDetailsSpectraS3Request().withName(objectName));
 
             assertThat(getObjectsSpectraS3Response.getS3ObjectListResult().getS3Objects().size(), is(1));
 
@@ -1164,8 +1164,8 @@ public class Smoke_Test {
                 }
             });
 
-            final GetObjectsSpectraS3Response getObjectsSpectraS3Response = client
-                    .getObjectsSpectraS3(new GetObjectsSpectraS3Request().withName(objectName));
+            final GetObjectsDetailsSpectraS3Response getObjectsSpectraS3Response = client
+                    .getObjectsDetailsSpectraS3(new GetObjectsDetailsSpectraS3Request().withName(objectName));
 
             assertThat(getObjectsSpectraS3Response.getS3ObjectListResult().getS3Objects().size(), is(1));
 

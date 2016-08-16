@@ -79,7 +79,7 @@ public class Regression_Test {
             assertTrue(foundObj4);
 
             final CancelJobSpectraS3Response cancelJobResponse = client
-                    .cancelJobSpectraS3(new CancelJobSpectraS3Request(putJob.getJobId()));
+                    .cancelJobSpectraS3(new CancelJobSpectraS3Request(putJob.getJobId().toString()));
             assertEquals(204, cancelJobResponse.getStatusCode());
         } finally {
             Util.deleteAllContents(client, bucketName);
@@ -115,7 +115,7 @@ public class Regression_Test {
             assertTrue(foundObj4);
 
             final CancelJobSpectraS3Response cancelJobResponse = client
-                    .cancelJobSpectraS3(new CancelJobSpectraS3Request(putJob.getJobId()));
+                    .cancelJobSpectraS3(new CancelJobSpectraS3Request(putJob.getJobId().toString()));
             assertEquals(204, cancelJobResponse.getStatusCode());
         } finally {
             Util.deleteAllContents(client, bucketName);
@@ -164,7 +164,7 @@ public class Regression_Test {
             assertTrue(foundObj4);
 
             final CancelJobSpectraS3Response cancelJobResponse = client
-                    .cancelJobSpectraS3(new CancelJobSpectraS3Request(putJob.getJobId()));
+                    .cancelJobSpectraS3(new CancelJobSpectraS3Request(putJob.getJobId().toString()));
             assertEquals(204, cancelJobResponse.getStatusCode());
         } finally {
             Util.deleteAllContents(client, bucketName);
@@ -212,7 +212,7 @@ public class Regression_Test {
             assertTrue(foundObj4);
 
             final CancelJobSpectraS3Response cancelJobResponse = client
-                    .cancelJobSpectraS3(new CancelJobSpectraS3Request(putJob.getJobId()));
+                    .cancelJobSpectraS3(new CancelJobSpectraS3Request(putJob.getJobId().toString()));
             assertEquals(204, cancelJobResponse.getStatusCode());
         } finally {
             Util.deleteAllContents(client, bucketName);
@@ -234,7 +234,7 @@ public class Regression_Test {
 
             try {
                 client.getJobChunksReadyForClientProcessingSpectraS3(
-                        new GetJobChunksReadyForClientProcessingSpectraS3Request(job.getJobId()));
+                        new GetJobChunksReadyForClientProcessingSpectraS3Request(job.getJobId().toString()));
                 fail();
             } catch(final FailedRequestException e) {
                 assertThat(e.getStatusCode(), is(404)); // this returns 410 in bp 3.0

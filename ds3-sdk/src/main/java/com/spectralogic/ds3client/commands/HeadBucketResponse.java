@@ -58,7 +58,7 @@ public class HeadBucketResponse extends AbstractResponse {
             case 403: this.status = Status.NOTAUTHORIZED; break;
             case 404: this.status = Status.DOESNTEXIST; break;
             default: {
-                LOG.error("Unexpected status code: " + Integer.toString(statusCode));
+                LOG.error("Unexpected status code: {}", Integer.toString(statusCode));
                 this.status = Status.UNKNOWN;
                 break;
             }

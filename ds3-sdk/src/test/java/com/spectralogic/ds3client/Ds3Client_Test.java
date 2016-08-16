@@ -26,6 +26,7 @@ import com.spectralogic.ds3client.models.Objects;
 import com.spectralogic.ds3client.models.bulk.Ds3Object;
 import com.spectralogic.ds3client.models.common.Credentials;
 import com.spectralogic.ds3client.networking.FailedRequestException;
+import com.spectralogic.ds3client.networking.FailedRequestUsingMgmtPortException;
 import com.spectralogic.ds3client.networking.HttpVerb;
 import com.spectralogic.ds3client.serializer.XmlProcessingException;
 import com.spectralogic.ds3client.utils.ByteArraySeekableByteChannel;
@@ -111,13 +112,24 @@ public class Ds3Client_Test {
         assertThat(bucketNames, is(expectedBucketNames));
     }
 
+    @Test(expected = FailedRequestUsingMgmtPortException.class)
+    public void getSystemInfoOffMgmtPort() throws IOException, SignatureException {
+        final Map<String, String> responseHeaders = new HashMap<>();
+        responseHeaders.put(FailedRequestUsingMgmtPortException.MGMT_PORT_HEADER, "true");
+        MockNetwork
+                .expecting(HttpVerb.GET, "/_rest_/system_information", null, null)
+                .returning(FailedRequestUsingMgmtPortException.MGMT_PORT_STATUS_CODE, "", responseHeaders)
+                .asClient()
+                .getSystemInformationSpectraS3(new GetSystemInformationSpectraS3Request());
+    }
+
     @Test(expected = FailedRequestException.class)
     public void getBadBuckets() throws IOException, SignatureException {
         MockNetwork
-            .expecting(HttpVerb.GET, "/", null, null)
-            .returning(400, "")
-            .asClient()
-            .getService(new GetServiceRequest());
+                .expecting(HttpVerb.GET, "/", null, null)
+                .returning(400, "")
+                .asClient()
+                .getService(new GetServiceRequest());
     }
 
     @Test
@@ -196,7 +208,7 @@ public class Ds3Client_Test {
                 .expecting(HttpVerb.GET, "/_rest_/object", queryParams, null)
                 .returning(200, stringResponse)
                 .asClient()
-                .getObjectsSpectraS3(new GetObjectsSpectraS3Request().withBucketId(bucketId))
+                .getObjectsDetailsSpectraS3(new GetObjectsDetailsSpectraS3Request().withBucketId(bucketId))
                 .getS3ObjectListResult()
                 .getS3Objects();
 
@@ -323,7 +335,7 @@ public class Ds3Client_Test {
                     "bucketName",
                     "object",
                     resultChannel,
-                    UUID.fromString(jobIdString),
+                    jobIdString,
                     0));
         assertThat(resultChannel.toString(), is(stringResponse));
     }
@@ -347,7 +359,7 @@ public class Ds3Client_Test {
                     "bucketName",
                     "objectName",
                     channel,
-                    UUID.fromString(jobIdString),
+                    jobIdString,
                     0,
                     fileBytes.length));
     }
@@ -368,7 +380,7 @@ public class Ds3Client_Test {
                 "bucketName",
                 "objectName",
                 channel,
-                UUID.fromString(jobIdString),
+                jobIdString,
                 0,
                 fileBytes.length);
         
@@ -448,7 +460,7 @@ public class Ds3Client_Test {
                 "bucket",
                 "obj",
                 resultChannel,
-                UUID.randomUUID(),
+                UUID.randomUUID().toString(),
                 0);
 
         MockNetwork
@@ -547,7 +559,7 @@ public class Ds3Client_Test {
             .expecting(HttpVerb.PUT, "/_rest_/job_chunk/203f6886-b058-4f7c-a012-8779176453b1", queryParams, null)
             .returning(200, responseString)
             .asClient()
-            .allocateJobChunkSpectraS3(new AllocateJobChunkSpectraS3Request(chunkId));
+            .allocateJobChunkSpectraS3(new AllocateJobChunkSpectraS3Request(chunkId.toString()));
         
         assertThat(response.getStatus(), is(AllocateJobChunkSpectraS3Response.Status.ALLOCATED));
         final Objects chunk = response.getObjectsResult();
@@ -594,7 +606,7 @@ public class Ds3Client_Test {
             .expecting(HttpVerb.PUT, "/_rest_/job_chunk/203f6886-b058-4f7c-a012-8779176453b1", queryParams, null)
             .returning(307, "", headers)
             .asClient()
-            .allocateJobChunkSpectraS3(new AllocateJobChunkSpectraS3Request(UUID.fromString("203f6886-b058-4f7c-a012-8779176453b1")));
+            .allocateJobChunkSpectraS3(new AllocateJobChunkSpectraS3Request("203f6886-b058-4f7c-a012-8779176453b1"));
         
         assertThat(response.getStatus(), is(AllocateJobChunkSpectraS3Response.Status.RETRYLATER));
         assertThat(response.getRetryAfterSeconds(), is(300));
@@ -609,7 +621,7 @@ public class Ds3Client_Test {
             .expecting(HttpVerb.GET, "/_rest_/job_chunk", queryParams, null)
             .returning(200, MASTER_OBJECT_LIST_XML)
             .asClient()
-            .getJobChunksReadyForClientProcessingSpectraS3(new GetJobChunksReadyForClientProcessingSpectraS3Request(MASTER_OBJECT_LIST_JOB_ID));
+            .getJobChunksReadyForClientProcessingSpectraS3(new GetJobChunksReadyForClientProcessingSpectraS3Request(MASTER_OBJECT_LIST_JOB_ID.toString()));
         
         assertThat(response.getStatus(), is(GetJobChunksReadyForClientProcessingSpectraS3Response.Status.AVAILABLE));
 
@@ -635,7 +647,7 @@ public class Ds3Client_Test {
             .expecting(HttpVerb.GET, "/_rest_/job_chunk", queryParams, null)
             .returning(200, responseString, headers)
             .asClient()
-            .getJobChunksReadyForClientProcessingSpectraS3(new GetJobChunksReadyForClientProcessingSpectraS3Request(jobId));
+            .getJobChunksReadyForClientProcessingSpectraS3(new GetJobChunksReadyForClientProcessingSpectraS3Request(jobId.toString()));
         
         assertThat(response.getStatus(), is(GetJobChunksReadyForClientProcessingSpectraS3Response.Status.RETRYLATER));
         assertThat(response.getRetryAfterSeconds(), is(300));
@@ -645,12 +657,12 @@ public class Ds3Client_Test {
     public void getJobsSpectraS3() throws SignatureException, IOException, ParseException {
         final String responseString =
             "<Jobs>"
-            + "  <Job BucketName=\"bucket_1\" CachedSizeInBytes=\"69880\" ChunkClientProcessingOrderGuarantee=\"IN_ORDER\" CompletedSizeInBytes=\"0\" JobId=\"0807ff11-a9f6-4d55-bb92-b452c1bb00c7\" OriginalSizeInBytes=\"69880\" Priority=\"NORMAL\" RequestType=\"PUT\" StartDate=\"2014-09-04T17:23:45.000Z\" UserId=\"a7d3eff9-e6d2-4e37-8a0b-84e76211a18a\" UserName=\"spectra\" WriteOptimization=\"PERFORMANCE\">"
+            + "  <Job BucketName=\"bucket_1\" CachedSizeInBytes=\"69880\" ChunkClientProcessingOrderGuarantee=\"IN_ORDER\" CompletedSizeInBytes=\"0\" JobId=\"0807ff11-a9f6-4d55-bb92-b452c1bb00c7\" OriginalSizeInBytes=\"69880\" Priority=\"NORMAL\" RequestType=\"PUT\" StartDate=\"2014-09-04T17:23:45.000Z\" UserId=\"a7d3eff9-e6d2-4e37-8a0b-84e76211a18a\" UserName=\"spectra\">"
             + "    <Nodes>"
             + "      <Node EndPoint=\"10.10.10.10\" HttpPort=\"80\" HttpsPort=\"443\" Id=\"edb8cc38-32f2-11e4-bce1-080027ecf0d4\"/>"
             + "    </Nodes>"
             + "  </Job>"
-            + "  <Job BucketName=\"bucket_2\" CachedSizeInBytes=\"0\" ChunkClientProcessingOrderGuarantee=\"IN_ORDER\" CompletedSizeInBytes=\"0\" JobId=\"c18554ba-e3a8-4905-91fd-3e6eec71bf45\" OriginalSizeInBytes=\"69880\" Priority=\"HIGH\" RequestType=\"GET\" StartDate=\"2014-09-04T17:24:04.000Z\" UserId=\"a7d3eff9-e6d2-4e37-8a0b-84e76211a18a\" UserName=\"spectra\" WriteOptimization=\"CAPACITY\">"
+            + "  <Job BucketName=\"bucket_2\" CachedSizeInBytes=\"0\" ChunkClientProcessingOrderGuarantee=\"IN_ORDER\" CompletedSizeInBytes=\"0\" JobId=\"c18554ba-e3a8-4905-91fd-3e6eec71bf45\" OriginalSizeInBytes=\"69880\" Priority=\"HIGH\" RequestType=\"GET\" StartDate=\"2014-09-04T17:24:04.000Z\" UserId=\"a7d3eff9-e6d2-4e37-8a0b-84e76211a18a\" UserName=\"spectra\">"
             + "    <Nodes>"
             + "      <Node EndPoint=\"10.10.10.10\" HttpPort=\"80\" HttpsPort=\"443\" Id=\"edb8cc38-32f2-11e4-bce1-080027ecf0d4\"/>"
             + "    </Nodes>"
@@ -678,8 +690,7 @@ public class Ds3Client_Test {
                 //date,
                 DATE_FORMAT.parse("2014-09-04T17:23:45.000Z"),
                 UUID.fromString("a7d3eff9-e6d2-4e37-8a0b-84e76211a18a"),
-                "spectra",
-                WriteOptimization.PERFORMANCE
+                "spectra"
         );
         checkJob(
                 jobs.get(1),
@@ -693,8 +704,7 @@ public class Ds3Client_Test {
                 JobRequestType.GET,
                 DATE_FORMAT.parse("2014-09-04T17:24:04.000Z"),
                 UUID.fromString("a7d3eff9-e6d2-4e37-8a0b-84e76211a18a"),
-                "spectra",
-                WriteOptimization.CAPACITY
+                "spectra"
         );
     }
 
@@ -706,8 +716,7 @@ public class Ds3Client_Test {
             final long completedSizeInBytes, final UUID jobId,
             final long originalSizeInBytes, final Priority priority,
             final JobRequestType requestType, final Date startDate,
-            final UUID userId, final String userName,
-            final WriteOptimization writeOptimization) {
+            final UUID userId, final String userName) {
         assertThat(job.getBucketName(), is(bucketName));
         assertThat(job.getCachedSizeInBytes(), is(cachedSizeInBytes));
         assertThat(job.getChunkClientProcessingOrderGuarantee(), is(chunkProcessingOrderGuarantee));
@@ -719,7 +728,6 @@ public class Ds3Client_Test {
         assertThat(job.getStartDate(), is(startDate));
         assertThat(job.getUserId(), is(userId));
         assertThat(job.getUserName(), is(userName));
-        assertThat(job.getWriteOptimization(), is(writeOptimization));
         final JobNode node = job.getNodes().get(0);
         assertThat(node.getEndPoint(), is("10.10.10.10"));
         assertThat(node.getHttpPort(), is(80));
@@ -733,7 +741,7 @@ public class Ds3Client_Test {
                         .expecting(HttpVerb.GET, "/_rest_/job/1a85e743-ec8f-4789-afec-97e587a26936", null, null)
                         .returning(200, MASTER_OBJECT_LIST_XML)
                         .asClient()
-                        .getJobSpectraS3(new GetJobSpectraS3Request(UUID.fromString("1a85e743-ec8f-4789-afec-97e587a26936")))
+                        .getJobSpectraS3(new GetJobSpectraS3Request("1a85e743-ec8f-4789-afec-97e587a26936"))
                         .getMasterObjectListResult()
         );
     }
@@ -800,7 +808,7 @@ public class Ds3Client_Test {
             .expecting(HttpVerb.DELETE, "/_rest_/job/1a85e743-ec8f-4789-afec-97e587a26936", null, null)
             .returning(204, "")
             .asClient()
-            .cancelJobSpectraS3(new CancelJobSpectraS3Request(UUID.fromString("1a85e743-ec8f-4789-afec-97e587a26936")));
+            .cancelJobSpectraS3(new CancelJobSpectraS3Request("1a85e743-ec8f-4789-afec-97e587a26936"));
         assertThat(response, notNullValue());
     }
     
@@ -811,7 +819,7 @@ public class Ds3Client_Test {
                         .expecting(HttpVerb.PUT, "/_rest_/job/1a85e743-ec8f-4789-afec-97e587a26936", null, null)
                         .returning(200, MASTER_OBJECT_LIST_XML)
                         .asClient()
-                        .modifyJobSpectraS3(new ModifyJobSpectraS3Request(MASTER_OBJECT_LIST_JOB_ID))
+                        .modifyJobSpectraS3(new ModifyJobSpectraS3Request(MASTER_OBJECT_LIST_JOB_ID.toString()))
                         .getMasterObjectListResult()
         );
     }
@@ -822,8 +830,7 @@ public class Ds3Client_Test {
             .expecting(HttpVerb.DELETE, "/_rest_/tape_drive/30a8dbf8-12e1-49dd-bede-0b4a7e1dd773", null, null)
             .returning(204, "")
             .asClient()
-            .deleteTapeDriveSpectraS3(new DeleteTapeDriveSpectraS3Request(
-                    UUID.fromString("30a8dbf8-12e1-49dd-bede-0b4a7e1dd773")));
+            .deleteTapeDriveSpectraS3(new DeleteTapeDriveSpectraS3Request("30a8dbf8-12e1-49dd-bede-0b4a7e1dd773"));
         assertThat(response, notNullValue());
     }
 
@@ -902,7 +909,7 @@ public class Ds3Client_Test {
                 .expecting(HttpVerb.GET, "/_rest_/tape_library/e23030e5-9b8d-4594-bdd1-15d3c45abb9f", null, null)
                 .returning(200, responsePayload)
                 .asClient()
-                .getTapeLibrarySpectraS3(new GetTapeLibrarySpectraS3Request(UUID.fromString("e23030e5-9b8d-4594-bdd1-15d3c45abb9f")));
+                .getTapeLibrarySpectraS3(new GetTapeLibrarySpectraS3Request("e23030e5-9b8d-4594-bdd1-15d3c45abb9f"));
 
         assertThat(response.getTapeLibraryResult(), is(notNullValue()));
         assertThat(response.getTapeLibraryResult().getId().toString(), is("e23030e5-9b8d-4594-bdd1-15d3c45abb9f"));
@@ -950,7 +957,7 @@ public class Ds3Client_Test {
                 .expecting(HttpVerb.GET, "/_rest_/tape_drive/ff5df6c8-7e24-4e4f-815d-a8a1a4cddc98", null, null)
                 .returning(200, responsePayload)
                 .asClient()
-                .getTapeDriveSpectraS3(new GetTapeDriveSpectraS3Request(UUID.fromString("ff5df6c8-7e24-4e4f-815d-a8a1a4cddc98")));
+                .getTapeDriveSpectraS3(new GetTapeDriveSpectraS3Request("ff5df6c8-7e24-4e4f-815d-a8a1a4cddc98"));
 
         final TapeDrive tapeDrive = response.getTapeDriveResult();
 
@@ -983,7 +990,7 @@ public class Ds3Client_Test {
                 .expecting(HttpVerb.DELETE, "/_rest_/tape/" + id.toString(), null, null)
                 .returning(204, "")
                 .asClient()
-                .deletePermanentlyLostTapeSpectraS3(new DeletePermanentlyLostTapeSpectraS3Request(id));
+                .deletePermanentlyLostTapeSpectraS3(new DeletePermanentlyLostTapeSpectraS3Request(id.toString()));
 
         assertThat(response, is(notNullValue()));
     }
@@ -996,7 +1003,7 @@ public class Ds3Client_Test {
                 .expecting(HttpVerb.GET, "/_rest_/tape/c7c431df-f95d-4533-b350-ffd7a8a5caac", null, null)
                 .returning(200, responsePayload)
                 .asClient()
-                .getTapeSpectraS3(new GetTapeSpectraS3Request(UUID.fromString("c7c431df-f95d-4533-b350-ffd7a8a5caac")));
+                .getTapeSpectraS3(new GetTapeSpectraS3Request("c7c431df-f95d-4533-b350-ffd7a8a5caac"));
 
         final Tape tape = response.getTapeResult();
 
@@ -1025,7 +1032,7 @@ public class Ds3Client_Test {
                         "bucketName",
                         "object",
                         resultChannel,
-                        UUID.fromString(jobIdString),
+                        jobIdString,
                         0));
     }
 }

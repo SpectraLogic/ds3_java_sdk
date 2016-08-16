@@ -45,7 +45,7 @@ class ChunkTransferrer {
     public interface ItemTransferrer {
         void transferItem(Ds3Client client, BulkObject ds3Object) throws SignatureException, IOException;
     }
-    
+
     public ChunkTransferrer(
             final ItemTransferrer transferrer,
             final Ds3Client mainClient,
@@ -56,7 +56,7 @@ class ChunkTransferrer {
         this.partTracker = partTracker;
         this.maxParallelRequests = maxParallelRequests;
     }
-    
+
     public void transferChunks(
             final Iterable<JobNode> nodes,
             final Iterable<Objects> chunks)
@@ -70,7 +70,6 @@ class ChunkTransferrer {
             final List<ListenableFuture<?>> tasks = new ArrayList<>();
             for (final Objects chunk : chunks) {
                 LOG.debug("Processing parts for chunk: {}", chunk.getChunkId().toString());
-
                 final Ds3Client client = getClient(nodeMap, chunk.getNodeId(), mainClient);
                 for (final BulkObject ds3Object : chunk.getObjects()) {
                     final ObjectPart part = new ObjectPart(ds3Object.getOffset(), ds3Object.getLength());
@@ -125,7 +124,7 @@ class ChunkTransferrer {
         } catch (final ExecutionException e) {
             // The future throws a wrapper exception, but we want don't want to expose that this was implemented with futures.
             final Throwable cause = e.getCause();
-            
+
             // Throw each of the advertised thrown exceptions.
             if (cause instanceof IOException) {
                 throw (IOException)cause;
@@ -134,7 +133,7 @@ class ChunkTransferrer {
             } else if (cause instanceof XmlProcessingException) {
                 throw (XmlProcessingException)cause;
             }
-            
+
             // The rest we don't know about, so we'll just forward them.
             if (cause instanceof RuntimeException) {
                 throw (RuntimeException)cause;

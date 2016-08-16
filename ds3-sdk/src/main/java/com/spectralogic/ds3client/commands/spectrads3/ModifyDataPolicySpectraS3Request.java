@@ -31,6 +31,12 @@ public class ModifyDataPolicySpectraS3Request extends AbstractRequest {
     
     private final String dataPolicyId;
 
+    private boolean alwaysForcePutJobCreation;
+
+    private boolean alwaysMinimizeSpanningAcrossMedia;
+
+    private boolean alwaysReplicateDeletes;
+
     private boolean blobbingEnabled;
 
     private ChecksumType.Type checksumType;
@@ -61,6 +67,24 @@ public class ModifyDataPolicySpectraS3Request extends AbstractRequest {
     public ModifyDataPolicySpectraS3Request(final String dataPolicyId) {
         this.dataPolicyId = dataPolicyId;
         
+    }
+
+    public ModifyDataPolicySpectraS3Request withAlwaysForcePutJobCreation(final boolean alwaysForcePutJobCreation) {
+        this.alwaysForcePutJobCreation = alwaysForcePutJobCreation;
+        this.updateQueryParam("always_force_put_job_creation", alwaysForcePutJobCreation);
+        return this;
+    }
+
+    public ModifyDataPolicySpectraS3Request withAlwaysMinimizeSpanningAcrossMedia(final boolean alwaysMinimizeSpanningAcrossMedia) {
+        this.alwaysMinimizeSpanningAcrossMedia = alwaysMinimizeSpanningAcrossMedia;
+        this.updateQueryParam("always_minimize_spanning_across_media", alwaysMinimizeSpanningAcrossMedia);
+        return this;
+    }
+
+    public ModifyDataPolicySpectraS3Request withAlwaysReplicateDeletes(final boolean alwaysReplicateDeletes) {
+        this.alwaysReplicateDeletes = alwaysReplicateDeletes;
+        this.updateQueryParam("always_replicate_deletes", alwaysReplicateDeletes);
+        return this;
     }
 
     public ModifyDataPolicySpectraS3Request withBlobbingEnabled(final boolean blobbingEnabled) {
@@ -136,6 +160,21 @@ public class ModifyDataPolicySpectraS3Request extends AbstractRequest {
     
     public String getDataPolicyId() {
         return this.dataPolicyId;
+    }
+
+
+    public boolean getAlwaysForcePutJobCreation() {
+        return this.alwaysForcePutJobCreation;
+    }
+
+
+    public boolean getAlwaysMinimizeSpanningAcrossMedia() {
+        return this.alwaysMinimizeSpanningAcrossMedia;
+    }
+
+
+    public boolean getAlwaysReplicateDeletes() {
+        return this.alwaysReplicateDeletes;
     }
 
 

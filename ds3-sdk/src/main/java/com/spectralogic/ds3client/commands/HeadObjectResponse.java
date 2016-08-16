@@ -72,7 +72,7 @@ public class HeadObjectResponse extends AbstractResponse {
             case 200: this.status = Status.EXISTS; break;
             case 404: this.status = Status.DOESNTEXIST; break;
             default: {
-                LOG.error("Unexpected status code: " + Integer.toString(statusCode));
+                LOG.error("Unexpected status code: {}", Integer.toString(statusCode));
                 this.status = Status.UNKNOWN;
                 break;
             }

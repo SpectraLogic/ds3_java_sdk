@@ -18,8 +18,10 @@ package com.spectralogic.ds3client.commands.spectrads3;
 
 import com.spectralogic.ds3client.networking.HttpVerb;
 import com.spectralogic.ds3client.commands.interfaces.AbstractRequest;
+import java.lang.Long;
 import com.google.common.net.UrlEscapers;
 import com.spectralogic.ds3client.models.LtfsFileNamingMode;
+import java.lang.Integer;
 import com.spectralogic.ds3client.models.Priority;
 import com.spectralogic.ds3client.models.WriteOptimization;
 
@@ -28,6 +30,8 @@ public class ModifyStorageDomainSpectraS3Request extends AbstractRequest {
     // Variables
     
     private final String storageDomain;
+
+    private Long autoEjectMediaFullThreshold;
 
     private String autoEjectUponCron;
 
@@ -41,11 +45,13 @@ public class ModifyStorageDomainSpectraS3Request extends AbstractRequest {
 
     private int maxTapeFragmentationPercent;
 
-    private int maximumAutoVerificationFrequencyInDays;
+    private Integer maximumAutoVerificationFrequencyInDays;
 
     private boolean mediaEjectionAllowed;
 
     private String name;
+
+    private boolean secureMediaAllocation;
 
     private Priority verifyPriorToAutoEject;
 
@@ -56,6 +62,12 @@ public class ModifyStorageDomainSpectraS3Request extends AbstractRequest {
     public ModifyStorageDomainSpectraS3Request(final String storageDomain) {
         this.storageDomain = storageDomain;
         
+    }
+
+    public ModifyStorageDomainSpectraS3Request withAutoEjectMediaFullThreshold(final Long autoEjectMediaFullThreshold) {
+        this.autoEjectMediaFullThreshold = autoEjectMediaFullThreshold;
+        this.updateQueryParam("auto_eject_media_full_threshold", autoEjectMediaFullThreshold);
+        return this;
     }
 
     public ModifyStorageDomainSpectraS3Request withAutoEjectUponCron(final String autoEjectUponCron) {
@@ -94,7 +106,7 @@ public class ModifyStorageDomainSpectraS3Request extends AbstractRequest {
         return this;
     }
 
-    public ModifyStorageDomainSpectraS3Request withMaximumAutoVerificationFrequencyInDays(final int maximumAutoVerificationFrequencyInDays) {
+    public ModifyStorageDomainSpectraS3Request withMaximumAutoVerificationFrequencyInDays(final Integer maximumAutoVerificationFrequencyInDays) {
         this.maximumAutoVerificationFrequencyInDays = maximumAutoVerificationFrequencyInDays;
         this.updateQueryParam("maximum_auto_verification_frequency_in_days", maximumAutoVerificationFrequencyInDays);
         return this;
@@ -109,6 +121,12 @@ public class ModifyStorageDomainSpectraS3Request extends AbstractRequest {
     public ModifyStorageDomainSpectraS3Request withName(final String name) {
         this.name = name;
         this.updateQueryParam("name", name);
+        return this;
+    }
+
+    public ModifyStorageDomainSpectraS3Request withSecureMediaAllocation(final boolean secureMediaAllocation) {
+        this.secureMediaAllocation = secureMediaAllocation;
+        this.updateQueryParam("secure_media_allocation", secureMediaAllocation);
         return this;
     }
 
@@ -137,6 +155,11 @@ public class ModifyStorageDomainSpectraS3Request extends AbstractRequest {
     
     public String getStorageDomain() {
         return this.storageDomain;
+    }
+
+
+    public Long getAutoEjectMediaFullThreshold() {
+        return this.autoEjectMediaFullThreshold;
     }
 
 
@@ -170,7 +193,7 @@ public class ModifyStorageDomainSpectraS3Request extends AbstractRequest {
     }
 
 
-    public int getMaximumAutoVerificationFrequencyInDays() {
+    public Integer getMaximumAutoVerificationFrequencyInDays() {
         return this.maximumAutoVerificationFrequencyInDays;
     }
 
@@ -182,6 +205,11 @@ public class ModifyStorageDomainSpectraS3Request extends AbstractRequest {
 
     public String getName() {
         return this.name;
+    }
+
+
+    public boolean getSecureMediaAllocation() {
+        return this.secureMediaAllocation;
     }
 
 

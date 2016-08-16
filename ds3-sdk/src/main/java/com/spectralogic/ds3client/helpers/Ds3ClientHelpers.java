@@ -324,6 +324,7 @@ public abstract class Ds3ClientHelpers {
             }
         });
     }
+
     /**
      * Strip prefix from the beginning of objectName.  If objectName does not start with prefix, return objectName unmodified.
      * @param objectName

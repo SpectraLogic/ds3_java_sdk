@@ -15,10 +15,14 @@
 
 package com.spectralogic.ds3client.models;
 
+import com.google.common.collect.ImmutableList;
+import com.spectralogic.ds3client.models.multipart.CompleteMultipartUpload;
+import com.spectralogic.ds3client.models.multipart.Part;
 import com.spectralogic.ds3client.serializer.XmlOutput;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
@@ -65,28 +69,44 @@ public class ModelParsing_Test {
     }
 
     @Test
-    public void namedDetailedTapeList_Test() throws IOException {
-        final String input = "<Data><Tape><AssignedToStorageDomain>false</AssignedToStorageDomain>" +
-                "<AvailableRawCapacity>10000</AvailableRawCapacity><BarCode>c3f74180-630f-48fa-bc5a-a2a61fa149a8</BarCode>" +
-                "<BucketId/><DescriptionForIdentification/><EjectDate/><EjectLabel/><EjectLocation/><EjectPending/>" +
-                "<FullOfData>false</FullOfData><Id>5d426192-9490-4f56-95cb-347bedaef948</Id><LastAccessed/>" +
-                "<LastCheckpoint>new</LastCheckpoint><LastModified/><LastVerified/><MostRecentFailure>" +
-                "<Date>2016-01-27T00:29:48.000Z</Date><ErrorMessage>OOPSIES</ErrorMessage>" +
-                "<Id>21f873ec-dd18-479e-b463-e727954767a0</Id><TapeDriveId>0dc4da03-9d18-47fe-ba5f-73f7384b21b9</TapeDriveId>" +
-                "<TapeId>5d426192-9490-4f56-95cb-347bedaef948</TapeId><Type>BAR_CODE_CHANGED</Type></MostRecentFailure>" +
-                "<PartitionId>18984f3d-29b4-436f-86d4-d159743b9e61</PartitionId><PreviousState/><SerialNumber/>" +
-                "<State>NORMAL</State><StorageDomainId/><TakeOwnershipPending>false</TakeOwnershipPending>" +
-                "<TotalRawCapacity>20000</TotalRawCapacity><Type>LTO5</Type><VerifyPending/>" +
-                "<WriteProtected>false</WriteProtected></Tape><Tape><AssignedToStorageDomain>false</AssignedToStorageDomain>" +
-                "<AvailableRawCapacity>10000</AvailableRawCapacity><BarCode>fcf21335-53a6-4ec2-84fe-0708b36f358c</BarCode>" +
-                "<BucketId/><DescriptionForIdentification/><EjectDate/><EjectLabel/><EjectLocation/><EjectPending/>" +
-                "<FullOfData>false</FullOfData><Id>1edb0b0f-ff7c-43d2-aebd-8b520a4a4854</Id><LastAccessed/><LastCheckpoint/>" +
-                "<LastModified/><LastVerified/><MostRecentFailure/><PartitionId>18984f3d-29b4-436f-86d4-d159743b9e61</PartitionId>" +
-                "<PreviousState/><SerialNumber/><State>FOREIGN</State><StorageDomainId/><TakeOwnershipPending>false</TakeOwnershipPending>" +
-                "<TotalRawCapacity>20000</TotalRawCapacity><Type>LTO5</Type><VerifyPending/><WriteProtected>false</WriteProtected></Tape>" +
-                "</Data>";
+    public void completeMultipartUpload_Parse_Test() throws IOException {
+        final String input = "<CompleteMultipartUpload>" +
+                "<Part><PartNumber>1</PartNumber><ETag>a54357aff0632cce46d942af68356b38</ETag></Part>" +
+                "<Part><PartNumber>2</PartNumber><ETag>0c78aef83f66abc1fa1e8477f296d394</ETag></Part>" +
+                "<Part><PartNumber>3</PartNumber><ETag>8e86fe4f25cc4ddca48cc5fdcb4adb1c</ETag></Part>" +
+                "</CompleteMultipartUpload>";
 
-        final NamedDetailedTapeList result = XmlOutput.fromXml(input, NamedDetailedTapeList.class);
-        assertThat(result.getNamedDetailedTapes().size(), is(2));
+        final CompleteMultipartUpload result = XmlOutput.fromXml(input, CompleteMultipartUpload.class);
+        assertThat(result.getParts().size(), is(3));
+        assertThat(result.getParts().get(0).getPartNumber(), is(1));
+        assertThat(result.getParts().get(0).geteTag(), is("a54357aff0632cce46d942af68356b38"));
+        assertThat(result.getParts().get(1).getPartNumber(), is(2));
+        assertThat(result.getParts().get(1).geteTag(), is("0c78aef83f66abc1fa1e8477f296d394"));
+        assertThat(result.getParts().get(2).getPartNumber(), is(3));
+        assertThat(result.getParts().get(2).geteTag(), is("8e86fe4f25cc4ddca48cc5fdcb4adb1c"));
+    }
+
+    @Test
+    public void completeMultipartUpload_ToString_Test() {
+        final String expected = "<CompleteMultipartUpload>" +
+                "<Part><PartNumber>1</PartNumber><ETag>a54357aff0632cce46d942af68356b38</ETag></Part>" +
+                "<Part><PartNumber>2</PartNumber><ETag>0c78aef83f66abc1fa1e8477f296d394</ETag></Part>" +
+                "</CompleteMultipartUpload>";
+
+        final Part part1 = new Part();
+        part1.setPartNumber(1);
+        part1.seteTag("a54357aff0632cce46d942af68356b38");
+
+        final Part part2 = new Part();
+        part2.setPartNumber(2);
+        part2.seteTag("0c78aef83f66abc1fa1e8477f296d394");
+
+        final ImmutableList parts = ImmutableList.of(part1, part2);
+        final CompleteMultipartUpload input = new CompleteMultipartUpload();
+        input.setParts(parts.asList());
+
+        final String result = XmlOutput.toXml(input);
+
+        assertThat(result, is(expected));
     }
 }

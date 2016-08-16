@@ -4,15 +4,15 @@ require "json"
 ENV["DS3_ENDPOINT"] = ENV["DS3_ENDPOINT"] || "sm2u-11"
 
 # Has to be to https and not http.
-connection = Faraday.new(:url =>  "https://#{ENV["DS3_ENDPOINT"]}-mgmt.eng.sldomain.com",
-                                            # Don't worry about verifying the SSL certificate.
-                                            :ssl => { :verify => false }) do |conn|
-  conn.request(:basic_auth, "spectra", "spectra")
-  # User Ruby's net/http library
-  conn.adapter(:net_http)
-  # Setup for JSON requests and responses.
-  conn.headers = { "Accept" => "application/json",
-                   "Content-Type" => "application/json" }
+connection = Faraday.new(:url =>  "https://#{ENV["DS3_ENDPOINT"]}-mgmt.eng.sldomain.com",
+                                            # Don't worry about verifying the SSL certificate.
+                                            :ssl => { :verify => false }) do |conn|
+  conn.request(:basic_auth, "spectra", "spectra")
+  # User Ruby's net/http library
+  conn.adapter(:net_http)
+  # Setup for JSON requests and responses.
+  conn.headers = { "Accept" => "application/json",
+                   "Content-Type" => "application/json" }
 end
 
 # List all users
@@ -22,10 +22,10 @@ users = JSON.parse(response.body)["data"]
 
 spectra_user = {}
 users.each do | user_entry |
-  spectra_user = user_entry if user_entry["name"].eql?("Spectra")
+  spectra_user = user_entry if user_entry["name"].eql?("Spectra")
 end
 
-# None of the "/users" responses include the S3 keys.  For that, you have to
+# None of the "/users" responses include the S3 keys.  For that, you have to
 # make a separate "/ds3/keys" request which is setup to return an array
 # of DS3 authid/secretkey pairs in case we ever allow more than one pair per
 # user.

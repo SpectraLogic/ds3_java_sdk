@@ -45,6 +45,9 @@ public class Job {
     @JacksonXmlProperty(isAttribute = true, localName = "CompletedSizeInBytes")
     private long completedSizeInBytes;
 
+    @JacksonXmlProperty(isAttribute = true, localName = "EntirelyInCache")
+    private boolean entirelyInCache;
+
     @JacksonXmlProperty(isAttribute = true, localName = "JobId")
     private UUID jobId;
 
@@ -78,9 +81,6 @@ public class Job {
 
     @JacksonXmlProperty(isAttribute = true, localName = "UserName")
     private String userName;
-
-    @JacksonXmlProperty(isAttribute = true, localName = "WriteOptimization")
-    private WriteOptimization writeOptimization;
 
     // Constructor
     public Job() {
@@ -131,6 +131,15 @@ public class Job {
 
     public void setCompletedSizeInBytes(final long completedSizeInBytes) {
         this.completedSizeInBytes = completedSizeInBytes;
+    }
+
+
+    public boolean getEntirelyInCache() {
+        return this.entirelyInCache;
+    }
+
+    public void setEntirelyInCache(final boolean entirelyInCache) {
+        this.entirelyInCache = entirelyInCache;
     }
 
 
@@ -230,15 +239,6 @@ public class Job {
 
     public void setUserName(final String userName) {
         this.userName = userName;
-    }
-
-
-    public WriteOptimization getWriteOptimization() {
-        return this.writeOptimization;
-    }
-
-    public void setWriteOptimization(final WriteOptimization writeOptimization) {
-        this.writeOptimization = writeOptimization;
     }
 
 }

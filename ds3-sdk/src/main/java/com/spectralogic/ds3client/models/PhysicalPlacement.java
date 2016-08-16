@@ -26,6 +26,10 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 public class PhysicalPlacement {
 
     // Variables
+    @JsonProperty("Ds3Targets")
+    @JacksonXmlElementWrapper(useWrapping = true)
+    private List<Ds3Target> ds3Targets = new ArrayList<>();
+
     @JsonProperty("Pools")
     @JacksonXmlElementWrapper(useWrapping = true)
     private List<Pool> pools = new ArrayList<>();
@@ -41,6 +45,15 @@ public class PhysicalPlacement {
 
     // Getters and Setters
     
+    public List<Ds3Target> getDs3Targets() {
+        return this.ds3Targets;
+    }
+
+    public void setDs3Targets(final List<Ds3Target> ds3Targets) {
+        this.ds3Targets = ds3Targets;
+    }
+
+
     public List<Pool> getPools() {
         return this.pools;
     }

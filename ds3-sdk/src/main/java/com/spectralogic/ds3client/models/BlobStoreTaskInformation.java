@@ -38,6 +38,9 @@ public class BlobStoreTaskInformation {
     @JsonProperty("DriveId")
     private UUID driveId;
 
+    @JsonProperty("Ds3TargetId")
+    private UUID ds3TargetId;
+
     @JsonProperty("Id")
     private long id;
 
@@ -96,6 +99,15 @@ public class BlobStoreTaskInformation {
 
     public void setDriveId(final UUID driveId) {
         this.driveId = driveId;
+    }
+
+
+    public UUID getDs3TargetId() {
+        return this.ds3TargetId;
+    }
+
+    public void setDs3TargetId(final UUID ds3TargetId) {
+        this.ds3TargetId = ds3TargetId;
     }
 
 

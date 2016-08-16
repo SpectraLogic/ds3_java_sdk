@@ -35,11 +35,11 @@ public class DataPathBackend {
     @JsonProperty("AutoInspect")
     private AutoInspectMode autoInspect;
 
-    @JsonProperty("DefaultImportConflictResolutionMode")
-    private ImportConflictResolutionMode defaultImportConflictResolutionMode;
-
     @JsonProperty("Id")
     private UUID id;
+
+    @JsonProperty("InstanceId")
+    private UUID instanceId;
 
     @JsonProperty("LastHeartbeat")
     private Date lastHeartbeat;
@@ -87,21 +87,21 @@ public class DataPathBackend {
     }
 
 
-    public ImportConflictResolutionMode getDefaultImportConflictResolutionMode() {
-        return this.defaultImportConflictResolutionMode;
-    }
-
-    public void setDefaultImportConflictResolutionMode(final ImportConflictResolutionMode defaultImportConflictResolutionMode) {
-        this.defaultImportConflictResolutionMode = defaultImportConflictResolutionMode;
-    }
-
-
     public UUID getId() {
         return this.id;
     }
 
     public void setId(final UUID id) {
         this.id = id;
+    }
+
+
+    public UUID getInstanceId() {
+        return this.instanceId;
+    }
+
+    public void setInstanceId(final UUID instanceId) {
+        this.instanceId = instanceId;
     }
 
 

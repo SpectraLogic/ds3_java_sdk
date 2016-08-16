@@ -20,7 +20,6 @@ import com.spectralogic.ds3client.networking.HttpVerb;
 import com.spectralogic.ds3client.commands.interfaces.AbstractRequest;
 import java.lang.Integer;
 import com.spectralogic.ds3client.models.AutoInspectMode;
-import com.spectralogic.ds3client.models.ImportConflictResolutionMode;
 import com.spectralogic.ds3client.models.UnavailableMediaUsagePolicy;
 
 public class ModifyDataPathBackendSpectraS3Request extends AbstractRequest {
@@ -32,8 +31,6 @@ public class ModifyDataPathBackendSpectraS3Request extends AbstractRequest {
     private Integer autoActivateTimeoutInMins;
 
     private AutoInspectMode autoInspect;
-
-    private ImportConflictResolutionMode defaultImportConflictResolutionMode;
 
     private UnavailableMediaUsagePolicy unavailableMediaPolicy;
 
@@ -62,12 +59,6 @@ public class ModifyDataPathBackendSpectraS3Request extends AbstractRequest {
     public ModifyDataPathBackendSpectraS3Request withAutoInspect(final AutoInspectMode autoInspect) {
         this.autoInspect = autoInspect;
         this.updateQueryParam("auto_inspect", autoInspect);
-        return this;
-    }
-
-    public ModifyDataPathBackendSpectraS3Request withDefaultImportConflictResolutionMode(final ImportConflictResolutionMode defaultImportConflictResolutionMode) {
-        this.defaultImportConflictResolutionMode = defaultImportConflictResolutionMode;
-        this.updateQueryParam("default_import_conflict_resolution_mode", defaultImportConflictResolutionMode);
         return this;
     }
 
@@ -112,11 +103,6 @@ public class ModifyDataPathBackendSpectraS3Request extends AbstractRequest {
 
     public AutoInspectMode getAutoInspect() {
         return this.autoInspect;
-    }
-
-
-    public ImportConflictResolutionMode getDefaultImportConflictResolutionMode() {
-        return this.defaultImportConflictResolutionMode;
     }
 
 
