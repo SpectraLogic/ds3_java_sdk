@@ -22,10 +22,13 @@ import com.spectralogic.ds3client.models.S3ObjectList;
 import java.io.InputStream;
 import com.spectralogic.ds3client.serializer.XmlOutput;
 import com.spectralogic.ds3client.commands.interfaces.AbstractResponse;
+import java.util.List;
 
 public class GetObjectsDetailsSpectraS3Response extends AbstractResponse {
 
     private S3ObjectList s3ObjectListResult;
+    private Integer pagingTruncated;
+    private Integer pagingTotalResultCount;
 
     public GetObjectsDetailsSpectraS3Response(final WebResponse response) throws IOException {
         super(response);
@@ -40,6 +43,8 @@ public class GetObjectsDetailsSpectraS3Response extends AbstractResponse {
             case 200:
                 try (final InputStream content = getResponse().getResponseStream()) {
                     this.s3ObjectListResult = XmlOutput.fromXml(content, S3ObjectList.class);
+                    this.pagingTruncated = parseIntHeader("page-truncated");
+                    this.pagingTotalResultCount = parseIntHeader("total-result-count");
                 }
                 break;
             default:
@@ -48,6 +53,26 @@ public class GetObjectsDetailsSpectraS3Response extends AbstractResponse {
         } finally {
             this.getResponse().close();
         }
+    }
+
+    private Integer parseIntHeader(final String key) {
+        final List<String> list = getResponse().getHeaders().get(key);
+        switch (list.size()) {
+            case 0:
+                return null;
+            case 1:
+                return Integer.parseInt(list.get(0));
+            default:
+                throw new IllegalArgumentException("Response has more than one header value for " + key);
+        }
+    }
+
+    public Integer getPagingTruncated() {
+        return pagingTruncated;
+    }
+
+    public Integer getPagingTotalResultCount() {
+        return pagingTotalResultCount;
     }
 
     public S3ObjectList getS3ObjectListResult() {
