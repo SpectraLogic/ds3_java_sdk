@@ -17,13 +17,9 @@ package com.spectralogic.ds3client.integration;
 
 import com.google.common.collect.Lists;
 import com.spectralogic.ds3client.Ds3Client;
-import com.spectralogic.ds3client.commands.PutObjectRequest;
-import com.spectralogic.ds3client.commands.PutObjectResponse;
+import com.spectralogic.ds3client.commands.*;
 import com.spectralogic.ds3client.commands.spectrads3.*;
-import com.spectralogic.ds3client.commands.spectrads3.notifications.GetObjectCachedNotificationRegistrationSpectraS3Request;
-import com.spectralogic.ds3client.commands.spectrads3.notifications.GetObjectCachedNotificationRegistrationSpectraS3Response;
-import com.spectralogic.ds3client.commands.spectrads3.notifications.PutObjectCachedNotificationRegistrationSpectraS3Request;
-import com.spectralogic.ds3client.commands.spectrads3.notifications.PutObjectCachedNotificationRegistrationSpectraS3Response;
+import com.spectralogic.ds3client.commands.spectrads3.notifications.*;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers;
 import com.spectralogic.ds3client.helpers.options.WriteJobOptions;
 import com.spectralogic.ds3client.integration.test.helpers.ABMTestHelper;
@@ -31,12 +27,16 @@ import com.spectralogic.ds3client.integration.test.helpers.TempStorageIds;
 import com.spectralogic.ds3client.integration.test.helpers.TempStorageUtil;
 import com.spectralogic.ds3client.models.*;
 import com.spectralogic.ds3client.models.bulk.Ds3Object;
+import com.spectralogic.ds3client.networking.FailedRequestException;
 import com.spectralogic.ds3client.serializer.XmlProcessingException;
+import com.spectralogic.ds3client.utils.ByteArraySeekableByteChannel;
 import com.spectralogic.ds3client.utils.ResourceUtils;
+import org.apache.commons.io.IOUtils;
 import org.junit.*;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.nio.ByteBuffer;
 import java.nio.channels.SeekableByteChannel;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -78,6 +78,18 @@ public class PutJobManagement_Test {
         client.close();
     }
 
+    private long getCacheBytesAvailable() throws IOException, SignatureException {
+        long cacheAvailableBytes = 0;
+        final List<CacheFilesystemInformation> cacheFilesystemInformationList = client.getCacheStateSpectraS3(
+                new GetCacheStateSpectraS3Request()).getCacheInformationResult().getFilesystems();
+        for (final CacheFilesystemInformation filesystemInformation : cacheFilesystemInformationList) {
+            if (filesystemInformation.getAvailableCapacityInBytes() > cacheAvailableBytes) {
+                cacheAvailableBytes = filesystemInformation.getAvailableCapacityInBytes();
+            }
+        }
+        return cacheAvailableBytes;
+    }
+
     @SuppressWarnings("deprecation")
     @Test
     public void nakedS3Put() throws IOException, SignatureException, XmlProcessingException, URISyntaxException {
@@ -96,11 +108,11 @@ public class PutJobManagement_Test {
     public void getActiveJobs() throws IOException, SignatureException, XmlProcessingException, URISyntaxException {
         try {
             final UUID jobID = HELPERS
-                    .startWriteJob(BUCKET_NAME, Lists.newArrayList( new Ds3Object("test", 2))).getJobId();
+                    .startWriteJob(BUCKET_NAME, Lists.newArrayList(new Ds3Object("test", 2))).getJobId();
             final GetActiveJobsSpectraS3Response activeJobsResponse = client.
                     getActiveJobsSpectraS3(new GetActiveJobsSpectraS3Request());
             final ArrayList<UUID> activeJobsUUIDs = new ArrayList<>();
-            for (final ActiveJob job : activeJobsResponse.getActiveJobListResult().getActiveJobs()){
+            for (final ActiveJob job : activeJobsResponse.getActiveJobListResult().getActiveJobs()) {
                 activeJobsUUIDs.add(job.getId());
             }
             assertThat(activeJobsUUIDs, contains(jobID));
@@ -113,11 +125,11 @@ public class PutJobManagement_Test {
     public void getJobs() throws IOException, SignatureException, XmlProcessingException {
         try {
             final UUID jobID = HELPERS
-                    .startWriteJob(BUCKET_NAME, Lists.newArrayList( new Ds3Object("test", 2))).getJobId();
+                    .startWriteJob(BUCKET_NAME, Lists.newArrayList(new Ds3Object("test", 2))).getJobId();
             final GetJobsSpectraS3Response getJobsResponse = client.
                     getJobsSpectraS3(new GetJobsSpectraS3Request());
             final ArrayList<UUID> jobUUIDs = new ArrayList<>();
-            for (final Job job : getJobsResponse.getJobListResult().getJobs()){
+            for (final Job job : getJobsResponse.getJobListResult().getJobs()) {
                 jobUUIDs.add(job.getJobId());
             }
             assertThat(jobUUIDs, contains(jobID));
@@ -131,7 +143,7 @@ public class PutJobManagement_Test {
     public void modifyJobPriority() throws IOException, SignatureException, XmlProcessingException {
         try {
             final Ds3ClientHelpers.Job job =
-                    HELPERS.startWriteJob(BUCKET_NAME, Lists.newArrayList( new Ds3Object("test", 2)),
+                    HELPERS.startWriteJob(BUCKET_NAME, Lists.newArrayList(new Ds3Object("test", 2)),
                             WriteJobOptions.create().withPriority(Priority.LOW));
 
             client.modifyJobSpectraS3(new ModifyJobSpectraS3Request(job.getJobId().toString())
@@ -201,7 +213,7 @@ public class PutJobManagement_Test {
 
             final CancelJobSpectraS3Response response = client
                     .cancelJobSpectraS3(new CancelJobSpectraS3Request(job.getJobId().toString()));
-            assertEquals(response.getStatusCode(),204);
+            assertEquals(response.getStatusCode(), 204);
 
             assertTrue(client.getActiveJobsSpectraS3(new GetActiveJobsSpectraS3Request())
                     .getActiveJobListResult().getActiveJobs().isEmpty());
@@ -249,7 +261,7 @@ public class PutJobManagement_Test {
 
             final TruncateJobSpectraS3Response truncateJobSpectraS3Response = client.truncateJobSpectraS3(
                     new TruncateJobSpectraS3Request(jobId.toString()));
-            assertThat(truncateJobSpectraS3Response.getStatusCode(),is(204));
+            assertThat(truncateJobSpectraS3Response.getStatusCode(), is(204));
 
             final GetJobSpectraS3Response truncatedJob = client.getJobSpectraS3(new GetJobSpectraS3Request(jobId.toString()));
             assertEquals(truncatedJob.getMasterObjectListResult().getOriginalSizeInBytes(), Files.size(objPath1));
@@ -287,12 +299,12 @@ public class PutJobManagement_Test {
             while (!jobCanceled) {
                 Thread.sleep(500);
                 final GetCanceledJobsSpectraS3Response canceledJobs = client.getCanceledJobsSpectraS3(new GetCanceledJobsSpectraS3Request());
-                for (final CanceledJob canceledJob : canceledJobs.getCanceledJobListResult().getCanceledJobs()){
-                    if (canceledJob.getId().equals(jobId)){
+                for (final CanceledJob canceledJob : canceledJobs.getCanceledJobListResult().getCanceledJobs()) {
+                    if (canceledJob.getId().equals(jobId)) {
                         jobCanceled = true;
                     }
                 }
-                assertThat((System.nanoTime() - startTimeCanceledUpdate)/1000000000, lessThan((long) testTimeOutSeconds));
+                assertThat((System.nanoTime() - startTimeCanceledUpdate) / 1000000000, lessThan((long) testTimeOutSeconds));
             }
 
         } finally {
@@ -368,7 +380,7 @@ public class PutJobManagement_Test {
     }
 
     @Test
-    public void cancelAllJobsWithForce () throws Exception {
+    public void cancelAllJobsWithForce() throws Exception {
 
         final int testTimeOutSeconds = 5;
         final String book1 = "beowulf.txt";
@@ -448,12 +460,37 @@ public class PutJobManagement_Test {
 
             final List<String> chunkNames = new ArrayList<>();
             for (final Objects objectList : response.getMasterObjectListResult().getObjects()) {
-                for (final BulkObject bulkObject : objectList.getObjects()){
+                for (final BulkObject bulkObject : objectList.getObjects()) {
                     chunkNames.add(bulkObject.getName());
                 }
             }
 
             assertThat(chunkNames, contains(ds3Object.getName()));
+
+        } finally {
+            deleteAllContents(client, BUCKET_NAME);
+        }
+    }
+
+    @Test
+    public void getJobChunk() throws IOException, SignatureException, XmlProcessingException {
+
+        try {
+            final Ds3Object ds3Object = new Ds3Object("test", 2);
+            final Ds3ClientHelpers.Job jobOne =
+                    HELPERS.startWriteJob(BUCKET_NAME, Lists.newArrayList(ds3Object));
+            final UUID jobOneId = jobOne.getJobId();
+
+            final GetJobChunksReadyForClientProcessingSpectraS3Response response = client
+                    .getJobChunksReadyForClientProcessingSpectraS3
+                            (new GetJobChunksReadyForClientProcessingSpectraS3Request(jobOneId));
+
+            final UUID aJobChunkID = response.getMasterObjectListResult().getObjects().get(0).getChunkId();
+
+            final GetJobChunkSpectraS3Response getJobChunkSpectraS3Response = client.getJobChunkSpectraS3(
+                    new GetJobChunkSpectraS3Request(aJobChunkID));
+
+            assertThat(getJobChunkSpectraS3Response.getStatusCode(), is(200));
 
         } finally {
             deleteAllContents(client, BUCKET_NAME);
@@ -500,11 +537,11 @@ public class PutJobManagement_Test {
 
     @Test
     public void putObjectCachedNotification() throws IOException, SignatureException, XmlProcessingException {
-            final PutObjectCachedNotificationRegistrationSpectraS3Response putNotificationResponse = client
-                    .putObjectCachedNotificationRegistrationSpectraS3
-                            (new PutObjectCachedNotificationRegistrationSpectraS3Request("test@test.test"));
+        final PutObjectCachedNotificationRegistrationSpectraS3Response putNotificationResponse = client
+                .putObjectCachedNotificationRegistrationSpectraS3
+                        (new PutObjectCachedNotificationRegistrationSpectraS3Request("test@test.test"));
 
-            assertThat(putNotificationResponse.getStatusCode(), is(201));
+        assertThat(putNotificationResponse.getStatusCode(), is(201));
     }
 
     @Test
@@ -527,5 +564,238 @@ public class PutJobManagement_Test {
                 getCompletedJobsSpectraS3(new GetCompletedJobsSpectraS3Request());
 
         assertThat(getCompletedJobsResponse.getStatusCode(), is(200));
+    }
+
+    @Test
+    public void clearCompletedJobs() throws IOException, SignatureException, XmlProcessingException {
+        final ClearAllCompletedJobsSpectraS3Response clearAllCompletedJobsResponse = client
+                .clearAllCompletedJobsSpectraS3(new ClearAllCompletedJobsSpectraS3Request());
+
+        assertThat(clearAllCompletedJobsResponse.getStatusCode(), is(204));
+    }
+
+    @Test
+    public void putJobCreatedNotification() throws IOException, SignatureException {
+        UUID notificationUUID = null;
+        try {
+            final PutJobCreatedNotificationRegistrationSpectraS3Response response = client
+                    .putJobCreatedNotificationRegistrationSpectraS3(new PutJobCreatedNotificationRegistrationSpectraS3Request("test@test.test"));
+            notificationUUID = response.getJobCreatedNotificationRegistrationResult().getId();
+            assertThat(response.getStatusCode(), is(201));
+
+        } finally {
+            if (notificationUUID != null) {
+                client.deleteJobCreatedNotificationRegistrationSpectraS3(
+                        new DeleteJobCreatedNotificationRegistrationSpectraS3Request(notificationUUID));
+            }
+        }
+    }
+
+    @Test
+    public void getJobCreatedNotification() throws IOException, SignatureException {
+        UUID notificationUUID = null;
+        try {
+            notificationUUID = client.putJobCreatedNotificationRegistrationSpectraS3(
+                    new PutJobCreatedNotificationRegistrationSpectraS3Request("test@test.test"))
+                    .getJobCreatedNotificationRegistrationResult().getId();
+
+            final GetJobCreatedNotificationRegistrationSpectraS3Response response = client
+                    .getJobCreatedNotificationRegistrationSpectraS3(new
+                            GetJobCreatedNotificationRegistrationSpectraS3Request(notificationUUID));
+
+            assertThat(response.getStatusCode(), is(200));
+
+        } finally {
+            if (notificationUUID != null) {
+                client.deleteJobCreatedNotificationRegistrationSpectraS3(
+                        new DeleteJobCreatedNotificationRegistrationSpectraS3Request(notificationUUID));
+            }
+        }
+    }
+
+    @Test
+    public void deleteJobCreatedNotification() throws IOException, SignatureException {
+        final UUID notificationUUID = client.putJobCreatedNotificationRegistrationSpectraS3(
+                new PutJobCreatedNotificationRegistrationSpectraS3Request("test@test.test"))
+                .getJobCreatedNotificationRegistrationResult().getId();
+
+        final DeleteJobCreatedNotificationRegistrationSpectraS3Response response = client
+                .deleteJobCreatedNotificationRegistrationSpectraS3(new DeleteJobCreatedNotificationRegistrationSpectraS3Request(notificationUUID));
+
+        assertThat(response.getStatusCode(), is(204));
+    }
+
+    @Test
+    public void putJobCompletedNotification() throws IOException, SignatureException {
+        UUID notificationUUID = null;
+        try {
+            final PutJobCompletedNotificationRegistrationSpectraS3Response response = client
+                    .putJobCompletedNotificationRegistrationSpectraS3(
+                            new PutJobCompletedNotificationRegistrationSpectraS3Request("test@test.test"));
+            notificationUUID = response.getJobCompletedNotificationRegistrationResult().getId();
+            assertThat(response.getStatusCode(), is(201));
+        } finally {
+            if (notificationUUID != null) {
+                client.deleteJobCompletedNotificationRegistrationSpectraS3(
+                        new DeleteJobCompletedNotificationRegistrationSpectraS3Request(notificationUUID));
+            }
+        }
+    }
+
+    @Test
+    public void getJobCompletedNotification() throws IOException, SignatureException {
+        UUID notificationUUID = null;
+        try {
+            notificationUUID = client.putJobCompletedNotificationRegistrationSpectraS3(
+                    new PutJobCompletedNotificationRegistrationSpectraS3Request("test@test.test"))
+                    .getJobCompletedNotificationRegistrationResult().getId();
+
+            final GetJobCompletedNotificationRegistrationSpectraS3Response response = client
+                    .getJobCompletedNotificationRegistrationSpectraS3(
+                            new GetJobCompletedNotificationRegistrationSpectraS3Request(notificationUUID));
+
+            assertThat(response.getStatusCode(), is(200));
+
+        } finally {
+            if (notificationUUID != null) {
+                client.deleteJobCompletedNotificationRegistrationSpectraS3(
+                        new DeleteJobCompletedNotificationRegistrationSpectraS3Request(notificationUUID));
+            }
+        }
+    }
+
+    @Test
+    public void deleteJobCompletedNotification() throws IOException, SignatureException {
+        final UUID notificationUUID = client.putJobCompletedNotificationRegistrationSpectraS3(
+                new PutJobCompletedNotificationRegistrationSpectraS3Request("test@test.test"))
+                .getJobCompletedNotificationRegistrationResult().getId();
+
+        final DeleteJobCompletedNotificationRegistrationSpectraS3Response response = client
+                .deleteJobCompletedNotificationRegistrationSpectraS3(
+                        new DeleteJobCompletedNotificationRegistrationSpectraS3Request(notificationUUID));
+
+        assertThat(response.getStatusCode(), is(204));
+    }
+
+    @Test
+    public void initiateMultipartUpload() throws IOException, SignatureException {
+        try {
+            final InitiateMultiPartUploadResponse multiPartUploadResponse = client.initiateMultiPartUpload(
+                    new InitiateMultiPartUploadRequest(BUCKET_NAME, "beowulf"));
+
+            assertThat(multiPartUploadResponse.getStatusCode(), is(200));
+        } catch (final FailedRequestException e) {
+
+            assertThat(getCacheBytesAvailable(), lessThan(5000000000000L));
+            assertThat(e.getStatusCode(), is(400));
+
+        } finally {
+            deleteAllContents(client, BUCKET_NAME);
+        }
+    }
+
+    @Test
+    public void abortMultipartUpload() throws IOException, SignatureException {
+        String uploadID = null;
+        try {
+            try {
+                final InitiateMultiPartUploadResponse multiPartUploadResponse = client.initiateMultiPartUpload(
+                        new InitiateMultiPartUploadRequest(BUCKET_NAME, "beowulf"));
+                uploadID = multiPartUploadResponse.getInitiateMultipartUploadResult().getUploadId();
+            } catch (final FailedRequestException e) {
+                assertThat(getCacheBytesAvailable(), lessThan(5000000000000L));
+                assertThat(e.getStatusCode(), is(400));
+            }
+
+            final UUID uuid;
+            if (uploadID != null) {
+                uuid = UUID.fromString(uploadID);
+            } else {
+                uuid = UUID.randomUUID();
+            }
+
+            final AbortMultiPartUploadResponse abortResponse = client.abortMultiPartUpload(
+                    new AbortMultiPartUploadRequest(BUCKET_NAME, "beowulf", uuid));
+
+            assertThat(abortResponse.getStatusCode(), is(204));
+
+        } catch (final FailedRequestException e) {
+
+            assertThat(e.getStatusCode(), is(404));
+
+        } finally {
+            deleteAllContents(client, BUCKET_NAME);
+        }
+    }
+
+    @Test //TODO expand positive test if test target >5 TB cache is available
+    public void listMultiPartUploadParts() throws IOException, SignatureException {
+        try {
+            final ListMultiPartUploadPartsResponse response = client.listMultiPartUploadParts(
+                    new ListMultiPartUploadPartsRequest(BUCKET_NAME, "beowulf", UUID.randomUUID()));
+
+            assertThat(response.getStatusCode(), is(200));
+            assertTrue(response.getListPartsResult().getParts().isEmpty());
+
+        } finally {
+            deleteAllContents(client, BUCKET_NAME);
+        }
+    }
+
+    @Test //TODO expand positive test if test target >5 TB cache is available
+    public void completeMultiPartUpload() throws IOException, SignatureException {
+        try {
+            client.completeMultiPartUpload(
+                    //Passing in a null request payload, which is sufficient for checking error code
+                    new CompleteMultiPartUploadRequest(BUCKET_NAME, "beowulf", null, UUID.randomUUID()));
+
+            fail("Response should have failed because upload part does not exist");
+
+        } catch (final FailedRequestException e) {
+
+            assertThat(e.getStatusCode(), is(404));
+
+        } finally {
+            deleteAllContents(client, BUCKET_NAME);
+        }
+    }
+
+    @Test //TODO expand positive test if test target >5 TB cache is available
+    public void listMultiPartUploads() throws IOException, SignatureException {
+        try {
+            final ListMultiPartUploadsResponse response = client.listMultiPartUploads(
+                    new ListMultiPartUploadsRequest(BUCKET_NAME));
+
+            assertThat(response.getStatusCode(), is(200));
+            assertTrue(response.getListMultiPartUploadsResult().getUploads().isEmpty());
+
+        } finally {
+            deleteAllContents(client, BUCKET_NAME);
+        }
+    }
+
+    @Test //TODO expand positive test if test target >5 TB cache is available
+    public void putMultiPartUploadPart() throws IOException, SignatureException {
+        try {
+            final int length = 1024;
+            final Ds3Object obj = new Ds3Object("obj.txt", length);
+            final byte[] randomData = IOUtils.toByteArray(new RandomDataInputStream(System.currentTimeMillis(), obj.getSize()));
+            final ByteBuffer randomBuffer = ByteBuffer.wrap(randomData);
+
+            final ByteArraySeekableByteChannel channel = new ByteArraySeekableByteChannel(length);
+            channel.write(randomBuffer);
+
+            client.putMultiPartUploadPart(
+                    new PutMultiPartUploadPartRequest(BUCKET_NAME, obj.getName(), channel, 5, length, UUID.randomUUID()));
+
+            fail("Response should have failed because part does not exist");
+
+        } catch (final FailedRequestException e) {
+
+            assertThat(e.getStatusCode(), is(404));
+
+        } finally {
+            deleteAllContents(client, BUCKET_NAME);
+        }
     }
 }
