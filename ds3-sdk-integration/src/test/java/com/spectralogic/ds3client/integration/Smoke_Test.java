@@ -141,6 +141,38 @@ public class Smoke_Test {
             assertThat(response.getS3ObjectListResult().getS3Objects().size(), is(4));
             assertTrue(s3ObjectExists(response.getS3ObjectListResult().getS3Objects(), "beowulf.txt"));
 
+            assertThat(response.getPagingTruncated(), is(nullValue()));
+            assertThat(response.getPagingTotalResultCount(), is(nullValue()));
+        } finally {
+            deleteAllContents(client,bucketName);
+        }
+
+    }
+
+    @Test
+    public void getObjectsWithPagination() throws IOException, SignatureException, URISyntaxException, XmlProcessingException {
+        final String bucketName = "test_get_objs";
+        try {
+            HELPERS.ensureBucketExists(bucketName, envDataPolicyId);
+            loadBookTestData(client, bucketName);
+
+            final HeadObjectResponse headResponse = client.headObject(new HeadObjectRequest(
+                    bucketName, "beowulf.txt"));
+            assertThat(headResponse.getStatus(),
+                    is(HeadObjectResponse.Status.EXISTS));
+            assertThat(headResponse.getObjectSize(), is(294059L));
+
+            final GetObjectsDetailsSpectraS3Response response = client
+                    .getObjectsDetailsSpectraS3(new GetObjectsDetailsSpectraS3Request()
+                            .withBucketId("test_get_objs")
+                            .withPageOffset(0));
+
+            assertFalse(response.getS3ObjectListResult().getS3Objects().isEmpty());
+            assertThat(response.getS3ObjectListResult().getS3Objects().size(), is(4));
+            assertTrue(s3ObjectExists(response.getS3ObjectListResult().getS3Objects(), "beowulf.txt"));
+
+            assertThat(response.getPagingTruncated(), is(0));
+            assertThat(response.getPagingTotalResultCount(), is(4));
         } finally {
             deleteAllContents(client,bucketName);
         }

@@ -26,6 +26,8 @@ import com.spectralogic.ds3client.commands.interfaces.AbstractResponse;
 public class GetUsersSpectraS3Response extends AbstractResponse {
 
     private SpectraUserList spectraUserListResult;
+    private Integer pagingTruncated;
+    private Integer pagingTotalResultCount;
 
     public GetUsersSpectraS3Response(final WebResponse response) throws IOException {
         super(response);
@@ -38,6 +40,8 @@ public class GetUsersSpectraS3Response extends AbstractResponse {
 
             switch (this.getStatusCode()) {
             case 200:
+                this.pagingTruncated = parseIntHeader("page-truncated");
+                this.pagingTotalResultCount = parseIntHeader("total-result-count");
                 try (final InputStream content = getResponse().getResponseStream()) {
                     this.spectraUserListResult = XmlOutput.fromXml(content, SpectraUserList.class);
                 }
@@ -48,6 +52,14 @@ public class GetUsersSpectraS3Response extends AbstractResponse {
         } finally {
             this.getResponse().close();
         }
+    }
+
+    public Integer getPagingTruncated() {
+        return pagingTruncated;
+    }
+
+    public Integer getPagingTotalResultCount() {
+        return pagingTotalResultCount;
     }
 
     public SpectraUserList getSpectraUserListResult() {

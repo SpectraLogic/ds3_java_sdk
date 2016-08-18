@@ -154,6 +154,18 @@ public abstract class AbstractResponse implements Ds3Response {
         }
     }
 
+    protected Integer parseIntHeader(final String key) {
+        final List<String> list = getResponse().getHeaders().get(key);
+        switch (list.size()) {
+            case 0:
+                return null;
+            case 1:
+                return Integer.parseInt(list.get(0));
+            default:
+                throw new IllegalArgumentException("Response has more than one header value for " + key);
+        }
+    }
+
     public String getChecksum() {
         return checksum;
     }
