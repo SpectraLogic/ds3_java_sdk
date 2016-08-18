@@ -1172,9 +1172,79 @@ public class Smoke_Test {
     }
 
     @Test
+    public void TestQuestionMarkInQueryParam() throws IOException, SignatureException, XmlProcessingException {
+        final String bucketName = "TestQuestionMarkInQueryParam";
+        final String objectName = "Test?Question?Mark";
+        try {
+            HELPERS.ensureBucketExists(bucketName, envDataPolicyId);
+
+            final List<Ds3Object> objs = Lists.newArrayList(new Ds3Object(objectName, 10));
+
+            final Ds3ClientHelpers.Job job = HELPERS.startWriteJob(bucketName, objs);
+
+            job.transfer(new Ds3ClientHelpers.ObjectChannelBuilder() {
+                @Override
+                public SeekableByteChannel buildChannel(final String key) throws IOException {
+
+                    final byte[] randomData = IOUtils.toByteArray(new RandomDataInputStream(124345, 10));
+                    final ByteBuffer randomBuffer = ByteBuffer.wrap(randomData);
+
+                    final ByteArraySeekableByteChannel channel = new ByteArraySeekableByteChannel(10);
+                    channel.write(randomBuffer);
+
+                    return channel;
+                }
+            });
+
+            final GetObjectsDetailsSpectraS3Response getObjectsSpectraS3Response = client
+                    .getObjectsDetailsSpectraS3(new GetObjectsDetailsSpectraS3Request().withName(objectName));
+
+            assertThat(getObjectsSpectraS3Response.getS3ObjectListResult().getS3Objects().size(), is(1));
+
+        } finally {
+            deleteAllContents(client, bucketName);
+        }
+    }
+
+    @Test
+    public void TestPercentInQueryParam() throws IOException, SignatureException, XmlProcessingException {
+        final String bucketName = "TestPercentInQueryParam";
+        final String objectName = "Test%Percent";
+        try {
+            HELPERS.ensureBucketExists(bucketName, envDataPolicyId);
+
+            final List<Ds3Object> objs = Lists.newArrayList(new Ds3Object(objectName, 10));
+
+            final Ds3ClientHelpers.Job job = HELPERS.startWriteJob(bucketName, objs);
+
+            job.transfer(new Ds3ClientHelpers.ObjectChannelBuilder() {
+                @Override
+                public SeekableByteChannel buildChannel(final String key) throws IOException {
+
+                    final byte[] randomData = IOUtils.toByteArray(new RandomDataInputStream(124345, 10));
+                    final ByteBuffer randomBuffer = ByteBuffer.wrap(randomData);
+
+                    final ByteArraySeekableByteChannel channel = new ByteArraySeekableByteChannel(10);
+                    channel.write(randomBuffer);
+
+                    return channel;
+                }
+            });
+
+            final GetObjectsDetailsSpectraS3Response getObjectsSpectraS3Response = client
+                    .getObjectsDetailsSpectraS3(new GetObjectsDetailsSpectraS3Request().withName(objectName));
+
+            assertThat(getObjectsSpectraS3Response.getS3ObjectListResult().getS3Objects().size(), is(1));
+
+        } finally {
+            deleteAllContents(client, bucketName);
+        }
+    }
+
+    @Test
     public void TestSpecialCharacterInObjectName() throws IOException, SignatureException, XmlProcessingException {
         final String bucketName = "TestSpecialCharacterInObjectName";
-        final String objectName = "varsity1314/_projects/VARSITY 13-14/_versions/Varsity 13-14 (2015-10-05 1827)/_project/Trash/PC\uF022MAC HD.avb";
+        final String objectName = "varsity1314/_projects/VARSITY 13-14/_versions/Varsity 13-14 (2015-10-05 1827)/_project/%Trash?/PC\uF022MAC HD.avb";
         try {
             HELPERS.ensureBucketExists(bucketName, envDataPolicyId);
 

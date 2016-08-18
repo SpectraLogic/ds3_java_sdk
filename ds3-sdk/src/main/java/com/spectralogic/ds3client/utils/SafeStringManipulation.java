@@ -15,7 +15,10 @@
 
 package com.spectralogic.ds3client.utils;
 
+import com.google.common.escape.Escaper;
+import com.google.common.net.PercentEscaper;
 import com.google.common.net.UrlEscapers;
+import com.spectralogic.ds3client.commands.interfaces.Ds3Request;
 
 import java.util.Date;
 
@@ -25,6 +28,14 @@ import java.util.Date;
  */
 public final class SafeStringManipulation {
 
+    static final String DS3_URL_PATH_FRAGMENT_SAFE_CHARS =
+            "-._~" +        // Google escaper URL_PATH_OTHER_SAFE_CHARS_LACKING_PLUS
+            "!$'()*,&=" +   // removed ; (so it will be escaped) and added / (so it will not)
+            "@:/";          // Their urlFragmentEscaper uses URL_PATH_OTHER_SAFE_CHARS_LACKING_PLUS + "+/?"+
+
+    private static final Escaper DS3_URL_FRAGMENT_ESCAPER =
+            new PercentEscaper(DS3_URL_PATH_FRAGMENT_SAFE_CHARS, false);
+
     private SafeStringManipulation() {
         //pass
     }
@@ -33,7 +44,7 @@ public final class SafeStringManipulation {
         if (obj == null) {
             return null;
         }
-        return UrlEscapers.urlFragmentEscaper().escape(safeToString(obj)).replace("+", "%2B");
+        return getDs3Escaper().escape(safeToString(obj));
     }
 
     public static <T> String safeToString(final T obj) {
@@ -48,4 +59,16 @@ public final class SafeStringManipulation {
         }
         return obj.toString();
     }
+    public static Escaper getDs3Escaper() {
+        // escaped characters in DS3 path and query parameter value segments
+        return DS3_URL_FRAGMENT_ESCAPER;
+    }
+
+    public static String getEscapedRequestPath(Ds3Request request) {
+        if ((request == null) || (request.getPath() == null)){
+            return "";
+        }
+        return getDs3Escaper().escape(request.getPath());
+    }
+
 }
