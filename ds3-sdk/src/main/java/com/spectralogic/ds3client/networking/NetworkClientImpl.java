@@ -232,7 +232,7 @@ public class NetworkClientImpl implements NetworkClient {
                 throw new RequiresMarkSupportedException();
             }
 
-            Object[] paramArray = {this.ds3Request.getVerb(), this.host.toString(), getEscapedRequestPath(this.ds3Request)};
+            final Object[] paramArray = {this.ds3Request.getVerb(), this.host.toString(), getEscapedRequestPath(this.ds3Request)};
             LOG.info("Sending request: {} {} {}", paramArray );
             this.checksumType = ds3Request.getChecksumType();
             this.hash = this.buildHash();
