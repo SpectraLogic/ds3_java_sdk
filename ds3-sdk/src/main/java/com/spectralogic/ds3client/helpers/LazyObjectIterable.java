@@ -40,7 +40,6 @@ public class LazyObjectIterable implements Iterable<Contents> {
         this.prefix = keyPrefix;
         this.nextMarker = nextMarker;
         this.maxKeys = maxKeys;
-
     }
 
     @Override
@@ -59,37 +58,6 @@ public class LazyObjectIterable implements Iterable<Contents> {
         private List<Contents> cache = null;
         private int cachePointer;
         private boolean truncated;
-
-        /*
-        int remainingKeys = maxKeys;
-        boolean isTruncated = false;
-        String marker = nextMarker;
-        if (nextMarker != null) isTruncated = true;
-
-        do {
-            final GetBucketRequest request = new GetBucketRequest(bucket);
-            request.withMaxKeys(Math.min(remainingKeys, DEFAULT_MAX_KEYS));
-            if (keyPrefix != null) {
-                request.withPrefix(keyPrefix);
-            }
-            if (isTruncated) {
-                request.withMarker(marker);
-            }
-
-            final GetBucketResponse response = this.client.getBucket(request);
-            final ListBucketResult result = response.getListBucketResult();
-
-            isTruncated = result.getTruncated();
-            marker = result.getNextMarker();
-            remainingKeys -= result.getObjects().size();
-
-            for (final Contents objectApiBean : result.getObjects()) {
-                objectApiBeans.add(objectApiBean);
-            }
-        } while (isTruncated && remainingKeys > 0);
-
-
-         */
 
         protected LazyObjectIterator(final Ds3Client client, final String bucket, final String prefix, final String nextMarker, final int maxKeys) {
             this.client = client;
@@ -145,7 +113,7 @@ public class LazyObjectIterable implements Iterable<Contents> {
                 this.cache = result.getObjects();
                 this.cachePointer = 0;
 
-            } catch (final IOException e) {
+            } catch (final IOException e) { // TODO add try
                 throw new RuntimeException("Failed to get the next set of objects from the getBucket request", e);
             }
         }
