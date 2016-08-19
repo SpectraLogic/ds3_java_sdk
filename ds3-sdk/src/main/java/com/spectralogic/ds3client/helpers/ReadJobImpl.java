@@ -34,7 +34,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.security.SignatureException;
 import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
@@ -135,7 +134,7 @@ class ReadJobImpl extends JobImpl {
 
     @Override
     public void transfer(final ObjectChannelBuilder channelBuilder)
-            throws SignatureException, IOException, XmlProcessingException {
+            throws IOException, XmlProcessingException {
                 running = true;
         try (final JobState jobState = new JobState(
                 channelBuilder,
@@ -150,7 +149,7 @@ class ReadJobImpl extends JobImpl {
             while (jobState.hasObjects()) {
                 transferNextChunks(chunkTransferrer);
             }
-        } catch (final RuntimeException | SignatureException | IOException | XmlProcessingException e) {
+        } catch (final RuntimeException | IOException | XmlProcessingException e) {
             throw e;
         } catch (final Exception e) {
             throw new RuntimeException(e);
@@ -158,7 +157,7 @@ class ReadJobImpl extends JobImpl {
     }
 
     private void transferNextChunks(final ChunkTransferrer chunkTransferrer)
-            throws IOException, SignatureException, XmlProcessingException, InterruptedException {
+            throws IOException, XmlProcessingException, InterruptedException {
         final GetJobChunksReadyForClientProcessingSpectraS3Response availableJobChunks =
             this.client.getJobChunksReadyForClientProcessingSpectraS3(new GetJobChunksReadyForClientProcessingSpectraS3Request(this.masterObjectList.getJobId().toString()));
         switch(availableJobChunks.getStatus()) {
@@ -191,7 +190,7 @@ class ReadJobImpl extends JobImpl {
 
         @Override
         public void transferItem(final Ds3Client client, final BulkObject ds3Object)
-                throws SignatureException, IOException {
+                throws IOException {
 
             final ImmutableCollection<Range> ranges = getRangesForBlob(blobToRanges, ds3Object);
 

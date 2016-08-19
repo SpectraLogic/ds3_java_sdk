@@ -21,7 +21,6 @@ import com.spectralogic.ds3client.models.ChecksumType;
 import com.spectralogic.ds3client.models.PoolType;
 
 import java.io.IOException;
-import java.security.SignatureException;
 import java.util.UUID;
 
 import static com.spectralogic.ds3client.integration.test.helpers.ABMTestHelper.*;
@@ -47,7 +46,7 @@ public class TempStorageUtil {
     public static TempStorageIds setup(
             final String testSetName,
             final UUID dataPolicyId,
-            final Ds3Client client) throws IOException, SignatureException {
+            final Ds3Client client) throws IOException {
         //Create storage domain
         final PutStorageDomainSpectraS3Response storageDomainResponse = createStorageDomain(
                 testSetName + STORAGE_DOMAIN_NAME,
@@ -82,7 +81,7 @@ public class TempStorageUtil {
     public static void teardown(
             final String testSetName,
             final TempStorageIds ids,
-            final Ds3Client client) throws IOException, SignatureException {
+            final Ds3Client client) throws IOException {
         deleteBucketsWithDataPolicy(testSetName + DATA_POLICY_NAME, client);
         deleteDataPersistenceRule(ids.getDataPersistenceRuleId(), client);
         deleteDataPolicy(testSetName + DATA_POLICY_NAME, client);
@@ -98,7 +97,7 @@ public class TempStorageUtil {
             final String testSetName,
             final boolean withEndToEndCrcRequired,
             final ChecksumType.Type checksumType,
-            final Ds3Client client) throws IOException, SignatureException {
+            final Ds3Client client) throws IOException {
         final PutDataPolicySpectraS3Response dataPolicyResponse = client.putDataPolicySpectraS3(
                 new PutDataPolicySpectraS3Request(testSetName + DATA_POLICY_NAME)
                         .withEndToEndCrcRequired(withEndToEndCrcRequired)

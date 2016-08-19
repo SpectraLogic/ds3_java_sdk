@@ -29,7 +29,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.security.SignatureException;
 import java.util.*;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
@@ -43,7 +42,7 @@ class ChunkTransferrer {
     private final int maxParallelRequests;
 
     public interface ItemTransferrer {
-        void transferItem(Ds3Client client, BulkObject ds3Object) throws SignatureException, IOException;
+        void transferItem(Ds3Client client, BulkObject ds3Object) throws IOException;
     }
 
     public ChunkTransferrer(
@@ -60,7 +59,7 @@ class ChunkTransferrer {
     public void transferChunks(
             final Iterable<JobNode> nodes,
             final Iterable<Objects> chunks)
-                throws SignatureException, IOException, XmlProcessingException {
+                throws IOException, XmlProcessingException {
         LOG.debug("Getting ready to process chunks");
         final ImmutableMap<UUID, JobNode> nodeMap = buildNodeMap(nodes);
         LOG.debug("Starting executor service");
@@ -114,7 +113,7 @@ class ChunkTransferrer {
     }
 
     private static void executeWithExceptionHandling(final List<ListenableFuture<?>> tasks)
-            throws IOException, SignatureException, XmlProcessingException {
+            throws IOException, XmlProcessingException {
         try {
             // Block on the asynchronous result.
             Futures.allAsList(tasks).get();
@@ -128,8 +127,6 @@ class ChunkTransferrer {
             // Throw each of the advertised thrown exceptions.
             if (cause instanceof IOException) {
                 throw (IOException)cause;
-            } else if (cause instanceof SignatureException) {
-                throw (SignatureException)cause;
             } else if (cause instanceof XmlProcessingException) {
                 throw (XmlProcessingException)cause;
             }

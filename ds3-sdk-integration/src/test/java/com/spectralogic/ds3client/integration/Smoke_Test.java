@@ -52,7 +52,6 @@ import java.nio.channels.FileChannel;
 import java.nio.channels.SeekableByteChannel;
 import java.nio.charset.Charset;
 import java.nio.file.*;
-import java.security.SignatureException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -77,19 +76,19 @@ public class Smoke_Test {
     private static UUID envDataPolicyId;
 
     @BeforeClass
-    public static void startup() throws IOException, SignatureException {
+    public static void startup() throws IOException {
         envDataPolicyId = TempStorageUtil.setupDataPolicy(TEST_ENV_NAME, false, ChecksumType.Type.MD5, client);
         envStorageIds = TempStorageUtil.setup(TEST_ENV_NAME, envDataPolicyId, client);
     }
 
     @AfterClass
-    public static void teardown() throws IOException, SignatureException {
+    public static void teardown() throws IOException {
         TempStorageUtil.teardown(TEST_ENV_NAME, envStorageIds, client);
         client.close();
     }
 
     @Test
-    public void createBucket() throws IOException, SignatureException {
+    public void createBucket() throws IOException {
         final String bucketName = "test_create_bucket";
         HELPERS.ensureBucketExists(bucketName, envDataPolicyId);
 
@@ -106,7 +105,7 @@ public class Smoke_Test {
     }
 
     @Test
-    public void deleteBucket() throws IOException, SignatureException {
+    public void deleteBucket() throws IOException {
         final String bucketName = "test_delete_bucket";
         HELPERS.ensureBucketExists(bucketName, envDataPolicyId);
 
@@ -122,7 +121,7 @@ public class Smoke_Test {
     }
 
     @Test
-    public void getObjects() throws IOException, SignatureException, URISyntaxException, XmlProcessingException {
+    public void getObjects() throws IOException, URISyntaxException, XmlProcessingException {
         final String bucketName = "test_get_objs";
         try {
             HELPERS.ensureBucketExists(bucketName, envDataPolicyId);
@@ -150,7 +149,7 @@ public class Smoke_Test {
     }
 
     @Test
-    public void getObjectsWithPagination() throws IOException, SignatureException, URISyntaxException, XmlProcessingException {
+    public void getObjectsWithPagination() throws IOException, URISyntaxException, XmlProcessingException {
         final String bucketName = "test_get_objs";
         try {
             HELPERS.ensureBucketExists(bucketName, envDataPolicyId);
@@ -189,7 +188,7 @@ public class Smoke_Test {
     }
 
     @Test
-    public void deleteFolder() throws IOException, SignatureException, URISyntaxException, XmlProcessingException {
+    public void deleteFolder() throws IOException, URISyntaxException, XmlProcessingException {
         final String bucketName = "test_delete_folder";
         try {
             HELPERS.ensureBucketExists(bucketName, envDataPolicyId);
@@ -213,7 +212,7 @@ public class Smoke_Test {
     }
 
     @Test
-    public void emptyBucket() throws IOException, SignatureException {
+    public void emptyBucket() throws IOException {
         final String bucketName = "test_empty_bucket";
 
         try {
@@ -230,7 +229,7 @@ public class Smoke_Test {
     }
 
     @Test
-    public void listContents() throws IOException, SignatureException,
+    public void listContents() throws IOException,
             XmlProcessingException, URISyntaxException {
         final String bucketName = "test_contents_bucket";
 
@@ -251,7 +250,7 @@ public class Smoke_Test {
     }
 
     @Test
-    public void getContents() throws IOException, SignatureException, URISyntaxException, XmlProcessingException, InterruptedException {
+    public void getContents() throws IOException, URISyntaxException, XmlProcessingException, InterruptedException {
         final String bucketName = "test_get_contents";
 
         try {
@@ -278,8 +277,7 @@ public class Smoke_Test {
     }
 
     @Test
-    public void negativeDeleteNonEmptyBucket() throws IOException,
-            SignatureException, XmlProcessingException, URISyntaxException {
+    public void negativeDeleteNonEmptyBucket() throws IOException, XmlProcessingException, URISyntaxException {
         final String bucketName = "negative_test_delete_non_empty_bucket";
 
         try {
@@ -307,8 +305,7 @@ public class Smoke_Test {
     }
 
     @Test
-    public void negativeCreateBucketNameConflict() throws SignatureException,
-            IOException {
+    public void negativeCreateBucketNameConflict() throws IOException {
         final String bucketName = "negative_test_create_bucket_duplicate_name";
 
         HELPERS.ensureBucketExists(bucketName, envDataPolicyId);
@@ -326,8 +323,7 @@ public class Smoke_Test {
     }
 
     @Test
-    public void negativeDeleteNonExistentBucket() throws IOException,
-            SignatureException {
+    public void negativeDeleteNonExistentBucket() throws IOException {
         final String bucketName = "negative_test_delete_non_existent_bucket";
 
         // Attempt to delete bucket and catch expected FailedRequestException
@@ -340,7 +336,7 @@ public class Smoke_Test {
     }
 
     @Test
-    public void deleteDirectory() throws IOException, SignatureException, XmlProcessingException {
+    public void deleteDirectory() throws IOException, XmlProcessingException {
         final String bucketName = "delete_directory";
 
         try {
@@ -382,7 +378,7 @@ public class Smoke_Test {
     }
 
     @Test
-    public void multiObjectDeleteNotQuiet() throws IOException, SignatureException, URISyntaxException, XmlProcessingException {
+    public void multiObjectDeleteNotQuiet() throws IOException, URISyntaxException, XmlProcessingException {
         final String bucketName = "multi_object_delete";
 
         try {
@@ -404,7 +400,7 @@ public class Smoke_Test {
     }
 
     @Test
-    public void multiObjectDeleteQuiet() throws IOException, SignatureException, URISyntaxException, XmlProcessingException {
+    public void multiObjectDeleteQuiet() throws IOException, URISyntaxException, XmlProcessingException {
         final String bucketName = "multi_object_delete";
 
         try {
@@ -426,7 +422,7 @@ public class Smoke_Test {
     }
 
     @Test
-    public void multiObjectDeleteOfUnknownObjects() throws IOException, SignatureException {
+    public void multiObjectDeleteOfUnknownObjects() throws IOException {
         final String bucketName = "unknown_objects_delete";
 
         try {
@@ -447,7 +443,7 @@ public class Smoke_Test {
     }
 
     @Test
-    public void testRecoverWriteJob() throws SignatureException, IOException, XmlProcessingException, JobRecoveryException, URISyntaxException {
+    public void testRecoverWriteJob() throws IOException, XmlProcessingException, JobRecoveryException, URISyntaxException {
         final String bucketName = "test_recover_write_job_bucket";
         final String book1 = "beowulf.txt";
         final String book2 = "ulysses.txt";
@@ -490,7 +486,7 @@ public class Smoke_Test {
     }
 
     @Test
-    public void verifySendCrc32cChecksum() throws IOException, SignatureException, XmlProcessingException, URISyntaxException {
+    public void verifySendCrc32cChecksum() throws IOException, XmlProcessingException, URISyntaxException {
         final String bucketName = "crc_32_bucket";
         final String dataPolicyName = "crc_32_dp";
         final String storageDomainName = "crc_32_sd";
@@ -571,7 +567,7 @@ public class Smoke_Test {
     }
 
     @Test
-    public void getTapes() throws IOException, SignatureException {
+    public void getTapes() throws IOException {
         final GetTapesSpectraS3Response response = client
                 .getTapesSpectraS3(new GetTapesSpectraS3Request());
         final TapeList tapes = response.getTapeListResult();
@@ -584,7 +580,7 @@ public class Smoke_Test {
     }
 
     @Test
-    public void getTape() throws IOException, SignatureException {
+    public void getTape() throws IOException {
         final GetTapesSpectraS3Response tapesResponse = client
                 .getTapesSpectraS3(new GetTapesSpectraS3Request());
         final TapeList tapes = tapesResponse.getTapeListResult();
@@ -604,7 +600,7 @@ public class Smoke_Test {
     }
 
     @Test
-    public void testRecoverReadJob() throws SignatureException, IOException, XmlProcessingException, JobRecoveryException, URISyntaxException {
+    public void testRecoverReadJob() throws IOException, XmlProcessingException, JobRecoveryException, URISyntaxException {
         final String bucketName = "test_recover_read_job_bucket";
         final String book1 = "beowulf.txt";
         final String book2 = "ulysses.txt";
@@ -672,7 +668,7 @@ public class Smoke_Test {
     }
 
     @Test
-    public void putDirectory() throws IOException, SignatureException, XmlProcessingException {
+    public void putDirectory() throws IOException, XmlProcessingException {
         assumeVersion1_2(client);
 
         final String bucketName = "putDir";
@@ -704,7 +700,7 @@ public class Smoke_Test {
     }
 
     @Test
-    public void putDirectoryWithOtherObjects() throws IOException, SignatureException, XmlProcessingException {
+    public void putDirectoryWithOtherObjects() throws IOException, XmlProcessingException {
         assumeVersion1_2(client);
 
         final String bucketName = "mixedPutDir";
@@ -740,7 +736,7 @@ public class Smoke_Test {
     }
 
     @Test
-    public void eventHandlerTriggers() throws IOException, SignatureException, URISyntaxException, XmlProcessingException {
+    public void eventHandlerTriggers() throws IOException, URISyntaxException, XmlProcessingException {
         final String bucketName = "eventBucket";
 
         try {
@@ -777,7 +773,7 @@ public class Smoke_Test {
     }
 
     @Test
-    public void eventHandlerRegistrationAndDeregistration() throws IOException, SignatureException, URISyntaxException, XmlProcessingException {
+    public void eventHandlerRegistrationAndDeregistration() throws IOException, URISyntaxException, XmlProcessingException {
         final String bucketName = "eventBucket";
 
         try {
@@ -817,7 +813,7 @@ public class Smoke_Test {
     }
 
     @Test
-    public void partialObjectGet() throws IOException, SignatureException, URISyntaxException, XmlProcessingException {
+    public void partialObjectGet() throws IOException, URISyntaxException, XmlProcessingException {
         final String bucketName = "partialObjectGet";
 
         try {
@@ -847,7 +843,7 @@ public class Smoke_Test {
     }
 
     @Test
-    public void partialObjectMultiRangeGet() throws IOException, SignatureException, URISyntaxException, XmlProcessingException {
+    public void partialObjectMultiRangeGet() throws IOException, URISyntaxException, XmlProcessingException {
         final String bucketName = "partialObjectGet";
 
         try {
@@ -878,7 +874,7 @@ public class Smoke_Test {
     }
 
     @Test
-    public void partialObjectGetOverChunkBoundry() throws IOException, SignatureException, XmlProcessingException {
+    public void partialObjectGetOverChunkBoundry() throws IOException, XmlProcessingException {
         final String bucketName = "partialGetOverBoundry";
         final String testFile = "testObject.txt";
         final Path filePath = Files.createTempFile("ds3", testFile);
@@ -932,7 +928,7 @@ public class Smoke_Test {
     }
 
     @Test
-    public void partialGetWithBookOverChunkBoundry() throws IOException, SignatureException, XmlProcessingException, URISyntaxException {
+    public void partialGetWithBookOverChunkBoundry() throws IOException, XmlProcessingException, URISyntaxException {
         final String bucketName = "partialGetOnBook";
         final Path filePath = Files.createTempFile("ds3", "lesmis-copies.txt");
         LOG.info("TempFile for partial get of book: " + filePath.toAbsolutePath().toString());
@@ -974,7 +970,7 @@ public class Smoke_Test {
     }
 
     @Test
-    public void getObjectSize() throws IOException, SignatureException, URISyntaxException, XmlProcessingException {
+    public void getObjectSize() throws IOException, URISyntaxException, XmlProcessingException {
         final String bucketName = "getObjectSize";
 
         try {
@@ -1005,7 +1001,7 @@ public class Smoke_Test {
     }
 
     @Test
-    public void headObjectSize() throws IOException, SignatureException, URISyntaxException, XmlProcessingException {
+    public void headObjectSize() throws IOException, URISyntaxException, XmlProcessingException {
         final String bucketName = "headObjectSize";
 
         try {
@@ -1023,7 +1019,7 @@ public class Smoke_Test {
     }
 
     @Test
-    public void attachDataTransferredListenerTest() throws IOException, SignatureException, URISyntaxException, XmlProcessingException {
+    public void attachDataTransferredListenerTest() throws IOException, URISyntaxException, XmlProcessingException {
         final String bucketName = "test_attachDataTransferredListener";
         try {
             HELPERS.ensureBucketExists(bucketName, envDataPolicyId);
@@ -1056,7 +1052,7 @@ public class Smoke_Test {
     }
 
     @Test
-    public void testHelperMetadata() throws IOException, SignatureException, URISyntaxException, XmlProcessingException {
+    public void testHelperMetadata() throws IOException, URISyntaxException, XmlProcessingException {
         final String bucketName = "helper_metadata";
         try {
             HELPERS.ensureBucketExists(bucketName, envDataPolicyId);
@@ -1102,7 +1098,7 @@ public class Smoke_Test {
     }
 
     @Test
-    public void nameWithSpace() throws IOException, SignatureException, XmlProcessingException {
+    public void nameWithSpace() throws IOException, XmlProcessingException {
         final String bucketName = "test_space_bucket";
 
         try {
@@ -1137,7 +1133,7 @@ public class Smoke_Test {
     }
 
     @Test
-    public void TestPlusCharacterInQueryParam() throws IOException, SignatureException, XmlProcessingException {
+    public void TestPlusCharacterInQueryParam() throws IOException, XmlProcessingException {
         final String bucketName = "TestPlusCharacterInQueryParam";
         final String objectName = "Test+Plus+Character";
         try {
@@ -1172,7 +1168,7 @@ public class Smoke_Test {
     }
 
     @Test
-    public void TestSpecialCharacterInObjectName() throws IOException, SignatureException, XmlProcessingException {
+    public void TestSpecialCharacterInObjectName() throws IOException, XmlProcessingException {
         final String bucketName = "TestSpecialCharacterInObjectName";
         final String objectName = "varsity1314/_projects/VARSITY 13-14/_versions/Varsity 13-14 (2015-10-05 1827)/_project/Trash/PC\uF022MAC HD.avb";
         try {
@@ -1207,7 +1203,7 @@ public class Smoke_Test {
     }
 
     @Test
-    public void testGetObjectDetails() throws IOException, SignatureException, XmlProcessingException, URISyntaxException {
+    public void testGetObjectDetails() throws IOException, XmlProcessingException, URISyntaxException {
         final String bucketName = "TestGetObjectDetails";
         final String objectName = "beowulf.txt";
         try {
@@ -1225,7 +1221,7 @@ public class Smoke_Test {
     }
 
     @Test
-    public void testGetObjectsWithFullDetails() throws IOException, SignatureException, URISyntaxException, XmlProcessingException {
+    public void testGetObjectsWithFullDetails() throws IOException, URISyntaxException, XmlProcessingException {
         final String bucketName = "TestGetObjectsWithFullDetails";
         try {
             HELPERS.ensureBucketExists(bucketName, envDataPolicyId);

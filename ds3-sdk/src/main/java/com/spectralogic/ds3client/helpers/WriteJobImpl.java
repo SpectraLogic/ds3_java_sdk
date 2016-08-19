@@ -38,7 +38,6 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.channels.SeekableByteChannel;
-import java.security.SignatureException;
 import java.util.*;
 
 class WriteJobImpl extends JobImpl {
@@ -136,7 +135,7 @@ class WriteJobImpl extends JobImpl {
 
     @Override
     public void transfer(final ObjectChannelBuilder channelBuilder)
-            throws SignatureException, IOException, XmlProcessingException {
+            throws IOException, XmlProcessingException {
         running = true;
         LOG.debug("Starting job transfer");
         if (this.masterObjectList == null || this.masterObjectList.getObjects() == null) {
@@ -161,14 +160,14 @@ class WriteJobImpl extends JobImpl {
                         this.masterObjectList.getNodes(),
                         Collections.singletonList(filterChunk(allocateChunk(chunk))));
             }
-        } catch (final SignatureException | IOException | XmlProcessingException | RuntimeException e) {
+        } catch (final IOException | XmlProcessingException | RuntimeException e) {
             throw e;
         } catch (final Exception e) {
             throw new RuntimeException(e);
         }
     }
 
-    private Objects allocateChunk(final Objects filtered) throws IOException, SignatureException {
+    private Objects allocateChunk(final Objects filtered) throws IOException {
         Objects chunk = null;
         while (chunk == null) {
             chunk = tryAllocateChunk(filtered);
@@ -176,7 +175,7 @@ class WriteJobImpl extends JobImpl {
         return chunk;
     }
 
-    private Objects tryAllocateChunk(final Objects filtered) throws IOException, SignatureException {
+    private Objects tryAllocateChunk(final Objects filtered) throws IOException {
         final AllocateJobChunkSpectraS3Response response =
                 this.client.allocateJobChunkSpectraS3(new AllocateJobChunkSpectraS3Request(filtered.getChunkId().toString()));
 
@@ -249,7 +248,7 @@ class WriteJobImpl extends JobImpl {
 
         @Override
         public void transferItem(final Ds3Client client, final BulkObject ds3Object)
-                throws SignatureException, IOException {
+                throws IOException {
             client.putObject(createRequest(ds3Object));
         }
 

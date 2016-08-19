@@ -38,7 +38,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
-import java.security.SignatureException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -47,7 +46,6 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
 
     private final static Logger LOG = LoggerFactory.getLogger(Ds3ClientHelpersImpl.class);
 
-    private static final int DEFAULT_MAX_KEYS = 1000;
     private final Ds3Client client;
     private final int retryAfter;
 
@@ -62,7 +60,7 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
 
     @Override
     public Ds3ClientHelpers.Job startWriteJob(final String bucket, final Iterable<Ds3Object> objectsToWrite)
-            throws SignatureException, IOException, XmlProcessingException {
+            throws IOException, XmlProcessingException {
         return innerStartWriteJob(bucket, objectsToWrite, WriteJobOptions.create());
     }
 
@@ -70,7 +68,7 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
     public Ds3ClientHelpers.Job startWriteJob(final String bucket,
                                                    final Iterable<Ds3Object> objectsToWrite,
                                                    final WriteJobOptions options)
-            throws SignatureException, IOException, XmlProcessingException {
+            throws IOException, XmlProcessingException {
         if (options == null) {
             return innerStartWriteJob(bucket, objectsToWrite, WriteJobOptions.create());
         }
@@ -80,7 +78,7 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
     private Ds3ClientHelpers.Job innerStartWriteJob(final String bucket,
                                                          final Iterable<Ds3Object> objectsToWrite,
                                                          final WriteJobOptions options)
-            throws SignatureException, IOException, XmlProcessingException {
+            throws IOException, XmlProcessingException {
         final PutBulkJobSpectraS3Response prime = this.client.putBulkJobSpectraS3(
                 new PutBulkJobSpectraS3Request(bucket, Lists.newArrayList(objectsToWrite))
                 .withPriority(options.getPriority())
@@ -91,13 +89,13 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
 
     @Override
     public Ds3ClientHelpers.Job startReadJob(final String bucket, final Iterable<Ds3Object> objectsToRead)
-            throws SignatureException, IOException, XmlProcessingException {
+            throws IOException, XmlProcessingException {
         return innerStartReadJob(bucket, objectsToRead, ReadJobOptions.create());
     }
 
     @Override
     public Ds3ClientHelpers.Job startReadJob(final String bucket, final Iterable<Ds3Object> objectsToRead, final ReadJobOptions options)
-            throws SignatureException, IOException, XmlProcessingException {
+            throws IOException, XmlProcessingException {
         if (options == null) {
             return innerStartReadJob(bucket, objectsToRead, ReadJobOptions.create());
         }
@@ -105,7 +103,7 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
     }
 
     private Ds3ClientHelpers.Job innerStartReadJob(final String bucket, final Iterable<Ds3Object> objectsToRead, final ReadJobOptions options)
-            throws SignatureException, IOException, XmlProcessingException {
+            throws IOException, XmlProcessingException {
         final List<Ds3Object> objects = Lists.newArrayList(objectsToRead);
         final GetBulkJobSpectraS3Response prime = this.client.getBulkJobSpectraS3(new GetBulkJobSpectraS3Request(bucket, objects)
                 .withChunkClientProcessingOrderGuarantee(JobChunkClientProcessingOrderGuarantee.NONE)
@@ -118,13 +116,13 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
 
     @Override
     public Ds3ClientHelpers.Job startReadAllJob(final String bucket)
-            throws SignatureException, IOException, XmlProcessingException {
+            throws IOException, XmlProcessingException {
         return innerStartReadAllJob(bucket, ReadJobOptions.create());
     }
 
     @Override
     public Ds3ClientHelpers.Job startReadAllJob(final String bucket, final ReadJobOptions options)
-            throws SignatureException, IOException, XmlProcessingException {
+            throws IOException, XmlProcessingException {
         if (options == null) {
             return innerStartReadAllJob(bucket, ReadJobOptions.create());
         }
@@ -132,7 +130,7 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
     }
 
     private Ds3ClientHelpers.Job innerStartReadAllJob(final String bucket, final ReadJobOptions options)
-            throws SignatureException, IOException, XmlProcessingException {
+            throws IOException, XmlProcessingException {
         final Iterable<Contents> contentsList = this.listObjects(bucket);
 
         final Iterable<Ds3Object> ds3Objects = this.toDs3Iterable(contentsList, FolderNameFilter.filter());
@@ -141,7 +139,7 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
     }
 
     @Override
-    public Ds3ClientHelpers.Job recoverWriteJob(final UUID jobId) throws SignatureException, IOException, XmlProcessingException, JobRecoveryException {
+    public Ds3ClientHelpers.Job recoverWriteJob(final UUID jobId) throws IOException, XmlProcessingException, JobRecoveryException {
         final ModifyJobSpectraS3Response jobResponse = this.client.modifyJobSpectraS3(new ModifyJobSpectraS3Request(jobId.toString()));
         if (JobRequestType.PUT != jobResponse.getMasterObjectListResult().getRequestType()) {
             throw new JobRecoveryException(
@@ -158,7 +156,7 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
 
     @Override
     //TODO add a partial object read recovery method.  That method will require the list of partial objects.
-    public Ds3ClientHelpers.Job recoverReadJob(final UUID jobId) throws SignatureException, IOException, XmlProcessingException, JobRecoveryException {
+    public Ds3ClientHelpers.Job recoverReadJob(final UUID jobId) throws IOException, XmlProcessingException, JobRecoveryException {
         final ModifyJobSpectraS3Response jobResponse = this.client.modifyJobSpectraS3(new ModifyJobSpectraS3Request(jobId.toString()));
         if (JobRequestType.GET != jobResponse.getMasterObjectListResult().getRequestType()){
             throw new JobRecoveryException(
@@ -173,7 +171,7 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
     }
 
     @Override
-    public void ensureBucketExists(final String bucket) throws IOException, SignatureException {
+    public void ensureBucketExists(final String bucket) throws IOException {
         final HeadBucketResponse response = this.client.headBucket(new HeadBucketRequest(bucket));
         if (response.getStatus() == HeadBucketResponse.Status.DOESNTEXIST) {
             try {
@@ -188,7 +186,7 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
     }
 
     @Override
-    public void ensureBucketExists(final String bucket, final UUID dataPolicy) throws IOException, SignatureException {
+    public void ensureBucketExists(final String bucket, final UUID dataPolicy) throws IOException {
         final HeadBucketResponse response = this.client.headBucket(new HeadBucketRequest(bucket));
         if (response.getStatus() == HeadBucketResponse.Status.DOESNTEXIST) {
             try {
@@ -203,52 +201,23 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
     }
 
     @Override
-    public Iterable<Contents> listObjects(final String bucket) throws SignatureException, IOException {
+    public Iterable<Contents> listObjects(final String bucket) throws IOException {
         return this.listObjects(bucket, null);
     }
 
     @Override
-    public Iterable<Contents> listObjects(final String bucket, final String keyPrefix) throws SignatureException, IOException {
+    public Iterable<Contents> listObjects(final String bucket, final String keyPrefix) throws IOException {
         return this.listObjects(bucket, keyPrefix, null, Integer.MAX_VALUE);
     }
 
     @Override
-    public Iterable<Contents> listObjects(final String bucket, final String keyPrefix, final String nextMarker) throws SignatureException, IOException {
+    public Iterable<Contents> listObjects(final String bucket, final String keyPrefix, final String nextMarker) throws IOException {
         return this.listObjects(bucket, keyPrefix, nextMarker, Integer.MAX_VALUE);
     }
 
     @Override
-    public Iterable<Contents> listObjects(final String bucket, final String keyPrefix, final String nextMarker, final int maxKeys) throws SignatureException, IOException {
-        final List<Contents> objectApiBeans = new ArrayList<>();
-
-        int remainingKeys = maxKeys;
-        boolean isTruncated = false;
-        String marker = nextMarker;
-        if (nextMarker != null) isTruncated = true;
-
-        do {
-            final GetBucketRequest request = new GetBucketRequest(bucket);
-            request.withMaxKeys(Math.min(remainingKeys, DEFAULT_MAX_KEYS));
-            if (keyPrefix != null) {
-                request.withPrefix(keyPrefix);
-            }
-            if (isTruncated) {
-                request.withMarker(marker);
-            }
-
-            final GetBucketResponse response = this.client.getBucket(request);
-            final ListBucketResult result = response.getListBucketResult();
-
-            isTruncated = result.getTruncated();
-            marker = result.getNextMarker();
-            remainingKeys -= result.getObjects().size();
-
-            for (final Contents objectApiBean : result.getObjects()) {
-                objectApiBeans.add(objectApiBean);
-            }
-        } while (isTruncated && remainingKeys > 0);
-
-        return objectApiBeans;
+    public Iterable<Contents> listObjects(final String bucket, final String keyPrefix, final String nextMarker, final int maxKeys) throws IOException {
+        return new LazyObjectIterable(client, bucket, keyPrefix, nextMarker, maxKeys);
     }
 
     @Override
