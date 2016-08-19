@@ -51,6 +51,7 @@ public class LazyIterator_Test {
     private static final String TEST_ENV_NAME = "lazy_iterator_test";
     private static TempStorageIds envStorageIds;
     private static UUID envDataPolicyId;
+    private static final int retries = 5;
 
     @BeforeClass
     public static void startup() throws IOException, SignatureException {
@@ -77,7 +78,7 @@ public class LazyIterator_Test {
             final int maxKeys = 100;
 
 
-            final LazyObjectIterable iterable = new LazyObjectIterable(CLIENT, TEST_ENV_NAME, prefix, nextMarker, maxKeys);
+            final LazyObjectIterable iterable = new LazyObjectIterable(CLIENT, TEST_ENV_NAME, prefix, nextMarker, maxKeys, retries);
             final Iterator<Contents> iterator = iterable.iterator();
 
             assertFalse(iterator.hasNext());
@@ -96,7 +97,7 @@ public class LazyIterator_Test {
             final String nextMarker = null;
             final int maxKeys = 100;
 
-            final LazyObjectIterable iterable = new LazyObjectIterable(CLIENT, TEST_ENV_NAME, prefix, nextMarker, maxKeys);
+            final LazyObjectIterable iterable = new LazyObjectIterable(CLIENT, TEST_ENV_NAME, prefix, nextMarker, maxKeys, retries);
             final Iterator<Contents> iterator = iterable.iterator();
 
             assertTrue(iterator.hasNext());
@@ -122,7 +123,7 @@ public class LazyIterator_Test {
             final String nextMarker = null;
             final int maxKeys = 2;
 
-            final LazyObjectIterable iterable = new LazyObjectIterable(CLIENT, TEST_ENV_NAME, prefix, nextMarker, maxKeys);
+            final LazyObjectIterable iterable = new LazyObjectIterable(CLIENT, TEST_ENV_NAME, prefix, nextMarker, maxKeys, retries);
             final Iterator<Contents> iterator = iterable.iterator();
 
             assertTrue(iterator.hasNext());
