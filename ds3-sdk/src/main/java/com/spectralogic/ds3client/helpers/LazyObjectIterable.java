@@ -25,6 +25,11 @@ import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
 
+/**
+ * Produces an Iterator that will list contents from the get bucket call lazily.
+ * Our definition of lazy for this class, is that the Iterator is returned right
+ * away with no data.  Data is only then loaded, as needed, in pieces.
+ */
 public class LazyObjectIterable implements Iterable<Contents> {
 
     private static final int DEFAULT_MAX_KEYS = 1000;
