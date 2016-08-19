@@ -126,7 +126,7 @@ public class LazyObjectIterable implements Iterable<Contents> {
                     return;
                 } catch (final IOException e) {
                     if (retryAttempt >= retryCount) {
-                        throw new RuntimeException("Failed to get the next set of objects from the getBucket request", e);
+                        throw new RuntimeException("Failed to get the next set of objects from the getBucket request after " + retryCount + " retries", e);
                     }
                     retryAttempt++;
                 }
