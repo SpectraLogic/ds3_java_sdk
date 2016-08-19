@@ -249,6 +249,26 @@ public abstract class Ds3ClientHelpers {
     public abstract Iterable<Contents> listObjects(final String bucket, final String keyPrefix, final String nextMarker, final int maxKeys)
             throws IOException;
 
+    /**
+     * Returns information about objects in the bucket in alphabetical order, starting with key after the next_marker in order,
+     * regardless of how many objects the bucket contains.
+     *
+     * @param keyPrefix Limits the response to keys that begin with the specified prefix. You can use prefixes to separate a
+     *                  bucket into different groupings of keys. (You can think of using prefix to make groups in the same
+     *                  way you'd use a folder in a file system.)
+     *                  Set to null if unused but need to specify nextMarker or maxKeys.
+     * @param nextMarker Specifies the key to start with when listing objects in a bucket. Returns object keys in
+     *                   alphabetical order, starting with key after the nextMarker in order.
+     *                   Set to null if unused but need to specify maxKeys.
+     * @param maxKeys    Sets the maximum number of keys returned in the response body. You can add this to your request
+     *                   if you want to retrieve fewer than the default 1000 keys.
+     *                   The response might contain fewer keys but will never contain more. If there are additional keys
+     *                   that satisfy the search criteria but were not returned because max-keys was exceeded, the
+     *                   response.isTruncated() is true. To return the additional keys, see nextMarker.
+     * @param retries    Specifies how many times the helper function will attempt to retry a request for failing. Default - 5
+     * @throws IOException
+     */
+    public abstract Iterable<Contents> listObjects(String bucket, String keyPrefix, String nextMarker, int maxKeys, int retries) throws IOException;
 
     /**
      * Returns an object list with which you can call {@code startWriteJobImpl} based on the files in a {@code directory}.

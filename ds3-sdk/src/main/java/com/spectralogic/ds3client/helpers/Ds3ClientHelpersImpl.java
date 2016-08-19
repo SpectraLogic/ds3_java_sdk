@@ -220,7 +220,14 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
 
     @Override
     public Iterable<Contents> listObjects(final String bucket, final String keyPrefix, final String nextMarker, final int maxKeys) throws IOException {
-        return new LazyObjectIterable(client, bucket, keyPrefix, nextMarker, maxKeys);
+
+        return new LazyObjectIterable(client, bucket, keyPrefix, nextMarker, maxKeys, 5);
+    }
+
+    @Override
+    public Iterable<Contents> listObjects(final String bucket, final String keyPrefix, final String nextMarker, final int maxKeys, final int retries) throws IOException {
+
+        return new LazyObjectIterable(client, bucket, keyPrefix, nextMarker, maxKeys, retries);
     }
 
     @Override

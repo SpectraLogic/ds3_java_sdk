@@ -33,18 +33,20 @@ public class LazyObjectIterable implements Iterable<Contents> {
     private final String prefix;
     private final String nextMarker;
     private final int maxKeys;
+    private final int retryCount;
 
-    public LazyObjectIterable(final Ds3Client client, final String bucket, final String keyPrefix, final String nextMarker, final int maxKeys) {
+    public LazyObjectIterable(final Ds3Client client, final String bucket, final String keyPrefix, final String nextMarker, final int maxKeys, final int retryCount) {
         this.client = client;
         this.bucket = bucket;
         this.prefix = keyPrefix;
         this.nextMarker = nextMarker;
         this.maxKeys = maxKeys;
+        this.retryCount = retryCount;
     }
 
     @Override
     public Iterator<Contents> iterator() {
-        return new LazyObjectIterator(client, bucket, prefix, nextMarker, maxKeys);
+        return new LazyObjectIterator(client, bucket, prefix, nextMarker, maxKeys, retryCount);
     }
 
     private class LazyObjectIterator implements Iterator<Contents> {
@@ -53,17 +55,19 @@ public class LazyObjectIterable implements Iterable<Contents> {
         private final String bucket;
         private final String prefix;
         private final int maxKeys;
+        private final int retryCount;
 
         private String nextMarker;
         private List<Contents> cache = null;
         private int cachePointer;
         private boolean truncated;
 
-        protected LazyObjectIterator(final Ds3Client client, final String bucket, final String prefix, final String nextMarker, final int maxKeys) {
+        protected LazyObjectIterator(final Ds3Client client, final String bucket, final String prefix, final String nextMarker, final int maxKeys, final int retryCount) {
             this.client = client;
             this.bucket = bucket;
             this.prefix = prefix;
             this.maxKeys = maxKeys;
+            this.retryCount = retryCount;
 
             this.nextMarker = nextMarker;
             this.truncated = nextMarker != null;
@@ -93,29 +97,36 @@ public class LazyObjectIterable implements Iterable<Contents> {
         }
 
         private void loadCache() {
-            final GetBucketRequest request = new GetBucketRequest(bucket);
-            request.withMaxKeys(Math.min(maxKeys, DEFAULT_MAX_KEYS));
-            if (prefix!= null) {
-                request.withPrefix(prefix);
+            int retryAttempt = 0;
+            while(true) {
+                final GetBucketRequest request = new GetBucketRequest(bucket);
+                request.withMaxKeys(Math.min(maxKeys, DEFAULT_MAX_KEYS));
+                if (prefix != null) {
+                    request.withPrefix(prefix);
+                }
+                if (truncated) {
+                    request.withMarker(nextMarker);
+                }
+
+                final GetBucketResponse response;
+                try {
+                    response = this.client.getBucket(request);
+                    final ListBucketResult result = response.getListBucketResult();
+
+                    truncated = result.getTruncated();
+                    nextMarker = result.getNextMarker();
+
+                    this.cache = result.getObjects();
+                    this.cachePointer = 0;
+                    return;
+                } catch (final IOException e) {
+                    if (retryAttempt >= retryCount) {
+                        throw new RuntimeException("Failed to get the next set of objects from the getBucket request", e);
+                    }
+                    retryAttempt++;
+                }
             }
-            if (truncated) {
-                request.withMarker(nextMarker);
-            }
 
-            final GetBucketResponse response;
-            try {
-                response = this.client.getBucket(request);
-                final ListBucketResult result = response.getListBucketResult();
-
-                truncated = result.getTruncated();
-                nextMarker= result.getNextMarker();
-
-                this.cache = result.getObjects();
-                this.cachePointer = 0;
-
-            } catch (final IOException e) { // TODO add try
-                throw new RuntimeException("Failed to get the next set of objects from the getBucket request", e);
-            }
         }
     }
 }
