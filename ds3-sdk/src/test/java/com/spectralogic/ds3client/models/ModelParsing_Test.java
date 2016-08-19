@@ -22,7 +22,6 @@ import com.spectralogic.ds3client.serializer.XmlOutput;
 import org.junit.Test;
 
 import java.io.IOException;
-import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
@@ -101,7 +100,7 @@ public class ModelParsing_Test {
         part2.setPartNumber(2);
         part2.seteTag("0c78aef83f66abc1fa1e8477f296d394");
 
-        final ImmutableList parts = ImmutableList.of(part1, part2);
+        final ImmutableList<Part> parts = ImmutableList.of(part1, part2);
         final CompleteMultipartUpload input = new CompleteMultipartUpload();
         input.setParts(parts.asList());
 
