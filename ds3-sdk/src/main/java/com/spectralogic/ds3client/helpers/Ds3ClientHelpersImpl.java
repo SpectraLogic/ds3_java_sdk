@@ -15,6 +15,8 @@
 
 package com.spectralogic.ds3client.helpers;
 
+import com.google.common.base.Function;
+import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Lists;
@@ -33,13 +35,13 @@ import com.spectralogic.ds3client.serializer.XmlProcessingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.Nullable;
 import java.io.IOException;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -235,20 +237,27 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
     }
 
     public Iterable<Ds3Object> addPrefixToDs3ObjectsList(final Iterable<Ds3Object> objectsList, final String prefix) {
-        final ImmutableList.Builder<Ds3Object> newObjectsList = ImmutableList.builder();
-        for (final Ds3Object object: objectsList) {
-            final Ds3Object tmpObj = new Ds3Object( prefix + object.getName(), object.getSize());
-            newObjectsList.add(tmpObj);
-        }
-        return newObjectsList.build();
+        final FluentIterable<Ds3Object> objectIterable = FluentIterable.from(objectsList);
+
+        return objectIterable.transform(new Function<Ds3Object, Ds3Object>() {
+            @Nullable
+            @Override
+            public Ds3Object apply(@Nullable final Ds3Object object) {
+                return new Ds3Object( prefix + object.getName(), object.getSize());
+            }
+        });
     }
 
     public Iterable<Ds3Object> removePrefixFromDs3ObjectsList(final Iterable<Ds3Object> objectsList, final String prefix) {
-        final ImmutableList.Builder<Ds3Object> newObjectsList = ImmutableList.builder();
-        for (final Ds3Object object: objectsList) {
-            newObjectsList.add(new Ds3Object(stripLeadingPath(object.getName(), prefix), object.getSize()));
-        }
-        return newObjectsList.build();
+        final FluentIterable<Ds3Object> objectIterable = FluentIterable.from(objectsList);
+
+        return objectIterable.transform(new Function<Ds3Object, Ds3Object>() {
+            @Nullable
+            @Override
+            public Ds3Object apply(@Nullable final Ds3Object object) {
+                return new Ds3Object(stripLeadingPath(object.getName(), prefix), object.getSize());
+            }
+        });
     }
 
 }
