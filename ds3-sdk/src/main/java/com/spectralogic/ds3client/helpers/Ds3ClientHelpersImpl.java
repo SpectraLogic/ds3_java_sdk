@@ -15,6 +15,7 @@
 
 package com.spectralogic.ds3client.helpers;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Lists;
 import com.spectralogic.ds3client.Ds3Client;
@@ -222,7 +223,7 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
 
     @Override
     public Iterable<Ds3Object> listObjectsForDirectory(final Path directory) throws IOException {
-        final List<Ds3Object> objects = new ArrayList<>();
+        final ImmutableList.Builder<Ds3Object> objects = ImmutableList.builder();
         Files.walkFileTree(directory, new SimpleFileVisitor<Path>() {
             @Override
             public FileVisitResult visitFile(final Path file, final BasicFileAttributes attrs) throws IOException {
@@ -230,24 +231,24 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
                 return FileVisitResult.CONTINUE;
             }
         });
-        return objects;
+        return objects.build();
     }
 
     public Iterable<Ds3Object> addPrefixToDs3ObjectsList(final Iterable<Ds3Object> objectsList, final String prefix) {
-        final List<Ds3Object> newObjectsList = new ArrayList<>();
+        final ImmutableList.Builder<Ds3Object> newObjectsList = ImmutableList.builder();
         for (final Ds3Object object: objectsList) {
             final Ds3Object tmpObj = new Ds3Object( prefix + object.getName(), object.getSize());
             newObjectsList.add(tmpObj);
         }
-        return newObjectsList;
+        return newObjectsList.build();
     }
 
     public Iterable<Ds3Object> removePrefixFromDs3ObjectsList(final Iterable<Ds3Object> objectsList, final String prefix) {
-        final List<Ds3Object> newObjectsList = new ArrayList<>();
+        final ImmutableList.Builder<Ds3Object> newObjectsList = ImmutableList.builder();
         for (final Ds3Object object: objectsList) {
             newObjectsList.add(new Ds3Object(stripLeadingPath(object.getName(), prefix), object.getSize()));
         }
-        return newObjectsList;
+        return newObjectsList.build();
     }
 
 }
