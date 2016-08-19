@@ -48,6 +48,7 @@ import java.util.UUID;
 class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
 
     private final static Logger LOG = LoggerFactory.getLogger(Ds3ClientHelpersImpl.class);
+    private final static int DEFAULT_LIST_OBJECTS_RETRIES = 5;
 
     private final Ds3Client client;
     private final int retryAfter;
@@ -221,7 +222,7 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
     @Override
     public Iterable<Contents> listObjects(final String bucket, final String keyPrefix, final String nextMarker, final int maxKeys) throws IOException {
 
-        return new LazyObjectIterable(client, bucket, keyPrefix, nextMarker, maxKeys, 5);
+        return new LazyObjectIterable(client, bucket, keyPrefix, nextMarker, maxKeys, DEFAULT_LIST_OBJECTS_RETRIES);
     }
 
     @Override
