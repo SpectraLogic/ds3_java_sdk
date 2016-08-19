@@ -29,8 +29,6 @@ import javax.annotation.Nullable;
 import java.io.IOException;
 import java.nio.channels.SeekableByteChannel;
 import java.nio.file.Path;
-import java.security.SignatureException;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.UUID;
 
@@ -79,12 +77,11 @@ public abstract class Ds3ClientHelpers {
 
         /**
          * Transfers the files in this job using the given seekable channel creator.  The is a blocking call.
-         * @throws SignatureException
          * @throws IOException
          * @throws XmlProcessingException
          */
         void transfer(final ObjectChannelBuilder channelBuilder)
-            throws SignatureException, IOException, XmlProcessingException;
+            throws IOException, XmlProcessingException;
     }
 
     public interface MetadataAccess {
@@ -106,40 +103,36 @@ public abstract class Ds3ClientHelpers {
      * Performs a bulk put job creation request and returns an {@link WriteJobImpl}.
      * See {@link WriteJobImpl} for information on how to write the objects for the job.
      *
-     * @throws SignatureException
      * @throws IOException
      * @throws XmlProcessingException
      */
     public abstract Ds3ClientHelpers.Job startWriteJob(final String bucket, final Iterable<Ds3Object> objectsToWrite)
-            throws SignatureException, IOException, XmlProcessingException;
+            throws IOException, XmlProcessingException;
 
     /**
      * Performs a bulk put job creation request and returns an {@link WriteJobImpl}.
      * See {@link WriteJobImpl} for information on how to write the objects for the job.
      *
-     * @throws SignatureException
      * @throws IOException
      * @throws XmlProcessingException
      */
     public abstract Ds3ClientHelpers.Job startWriteJob(final String bucket, final Iterable<Ds3Object> objectsToWrite, final WriteJobOptions options)
-            throws SignatureException, IOException, XmlProcessingException;
+            throws IOException, XmlProcessingException;
 
     /**
      * Performs a bulk get job creation request and returns an {@link ReadJobImpl}.
      * See {@link ReadJobImpl} for information on how to read the objects for the job.
      *
-     * @throws SignatureException
      * @throws IOException
      * @throws XmlProcessingException
      */
     public abstract Ds3ClientHelpers.Job startReadJob(final String bucket, final Iterable<Ds3Object> objectsToRead)
-            throws SignatureException, IOException, XmlProcessingException;
+            throws IOException, XmlProcessingException;
 
     /**
      * Performs a bulk get job creation request and returns an {@link ReadJobImpl}.
      * See {@link ReadJobImpl} for information on how to read the objects for the job.
      *
-     * @throws SignatureException
      * @throws IOException
      * @throws XmlProcessingException
      */
@@ -147,72 +140,65 @@ public abstract class Ds3ClientHelpers {
             final String bucket,
             final Iterable<Ds3Object> objectsToRead,
             final ReadJobOptions options)
-            throws SignatureException, IOException, XmlProcessingException;
+            throws IOException, XmlProcessingException;
 
     /**
      * Performs a bulk get job creation request for all of the objects in the given bucket and returns an {@link ReadJobImpl}.
      *
-     * @throws SignatureException
      * @throws IOException
      * @throws XmlProcessingException
      */
     public abstract Ds3ClientHelpers.Job startReadAllJob(final String bucket)
-            throws SignatureException, IOException, XmlProcessingException;
+            throws IOException, XmlProcessingException;
 
     /**
      * Performs a bulk get job creation request for all of the objects in the given bucket and returns an {@link ReadJobImpl}.
      *
-     * @throws SignatureException
      * @throws IOException
      * @throws XmlProcessingException
      */
     public abstract Ds3ClientHelpers.Job startReadAllJob(final String bucket, final ReadJobOptions options)
-            throws SignatureException, IOException, XmlProcessingException;
+            throws IOException, XmlProcessingException;
 
     /**
      * Queries job information based on job id and returns a {@link ReadJobImpl} that can resume the job.
-     * @throws SignatureException
      * @throws IOException
      * @throws XmlProcessingException
      * @throws JobRecoveryException
      */
     public abstract Ds3ClientHelpers.Job recoverWriteJob(final UUID jobId)
-            throws SignatureException, IOException, XmlProcessingException, JobRecoveryException;
+            throws IOException, XmlProcessingException, JobRecoveryException;
 
     /**
      * Queries job information based on job id and returns a {@link WriteJobImpl} that can resume the job.
-     * @throws SignatureException
      * @throws IOException
      * @throws XmlProcessingException
      * @throws JobRecoveryException
      */
     public abstract Ds3ClientHelpers.Job recoverReadJob(final UUID jobId)
-            throws SignatureException, IOException, XmlProcessingException, JobRecoveryException;
+            throws IOException, XmlProcessingException, JobRecoveryException;
 
     /**
      * Ensures that a bucket exists.  The the bucket does not exist, it will be created.
      * @param bucket The name of the bucket to check that it exists.
      * @throws IOException
-     * @throws SignatureException
      */
-    public abstract void ensureBucketExists(final String bucket) throws IOException, SignatureException;
+    public abstract void ensureBucketExists(final String bucket) throws IOException;
 
     /**
      * Ensures that a bucket exists.  The the bucket does not exist, it will be created.
      * @param bucket The name of the bucket to check that it exists.
      * @param dataPolicy The data policy for the bucket
      * @throws IOException
-     * @throws SignatureException
      */
-    public abstract void ensureBucketExists(final String bucket, final UUID dataPolicy) throws IOException, SignatureException;
+    public abstract void ensureBucketExists(final String bucket, final UUID dataPolicy) throws IOException;
 
     /**
      * Returns information about all of the objects in the bucket, regardless of how many objects the bucket contains.
      *
-     * @throws SignatureException
      * @throws IOException
      */
-    public abstract Iterable<Contents> listObjects(final String bucket) throws SignatureException, IOException;
+    public abstract Iterable<Contents> listObjects(final String bucket) throws IOException;
 
     /**
      * Returns information about objects in the bucket, filtered by names that start with keyPrefix.
@@ -221,11 +207,10 @@ public abstract class Ds3ClientHelpers {
      *                  bucket into different groupings of keys. (You can think of using prefix to make groups in the same
      *                  way you'd use a folder in a file system.)
      *
-     * @throws SignatureException
      * @throws IOException
      */
     public abstract Iterable<Contents> listObjects(final String bucket, final String keyPrefix)
-            throws SignatureException, IOException;
+            throws IOException;
 
     /**
      * Returns information about objects in the bucket in alphabetical order, starting with key after the next_marker in order,
@@ -238,11 +223,10 @@ public abstract class Ds3ClientHelpers {
      * @param nextMarker Specifies the key to start with when listing objects in a bucket. Returns object keys in alphabetical
      *                   order, starting with key after the nextMarker in order.
      *
-     * @throws SignatureException
      * @throws IOException
      */
     public abstract Iterable<Contents> listObjects(final String bucket, final String keyPrefix, final String nextMarker)
-            throws SignatureException, IOException;
+            throws IOException;
 
     /**
      * Returns information about objects in the bucket in alphabetical order, starting with key after the next_marker in order,
@@ -260,12 +244,31 @@ public abstract class Ds3ClientHelpers {
      *                   The response might contain fewer keys but will never contain more. If there are additional keys
      *                   that satisfy the search criteria but were not returned because max-keys was exceeded, the
      *                   response.isTruncated() is true. To return the additional keys, see nextMarker.
-     * @throws SignatureException
      * @throws IOException
      */
     public abstract Iterable<Contents> listObjects(final String bucket, final String keyPrefix, final String nextMarker, final int maxKeys)
-            throws SignatureException, IOException;
+            throws IOException;
 
+    /**
+     * Returns information about objects in the bucket in alphabetical order, starting with key after the next_marker in order,
+     * regardless of how many objects the bucket contains.
+     *
+     * @param keyPrefix Limits the response to keys that begin with the specified prefix. You can use prefixes to separate a
+     *                  bucket into different groupings of keys. (You can think of using prefix to make groups in the same
+     *                  way you'd use a folder in a file system.)
+     *                  Set to null if unused but need to specify nextMarker or maxKeys.
+     * @param nextMarker Specifies the key to start with when listing objects in a bucket. Returns object keys in
+     *                   alphabetical order, starting with key after the nextMarker in order.
+     *                   Set to null if unused but need to specify maxKeys.
+     * @param maxKeys    Sets the maximum number of keys returned in the response body. You can add this to your request
+     *                   if you want to retrieve fewer than the default 1000 keys.
+     *                   The response might contain fewer keys but will never contain more. If there are additional keys
+     *                   that satisfy the search criteria but were not returned because max-keys was exceeded, the
+     *                   response.isTruncated() is true. To return the additional keys, see nextMarker.
+     * @param retries    Specifies how many times the helper function will attempt to retry a request for failing. Default - 5
+     * @throws IOException
+     */
+    public abstract Iterable<Contents> listObjects(String bucket, String keyPrefix, String nextMarker, int maxKeys, int retries) throws IOException;
 
     /**
      * Returns an object list with which you can call {@code startWriteJobImpl} based on the files in a {@code directory}.

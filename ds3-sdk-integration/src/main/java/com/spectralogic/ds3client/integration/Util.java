@@ -26,12 +26,13 @@ import com.spectralogic.ds3client.models.Contents;
 import com.spectralogic.ds3client.models.bulk.Ds3Object;
 import com.spectralogic.ds3client.serializer.XmlProcessingException;
 import com.spectralogic.ds3client.utils.ResourceUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.security.SignatureException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,6 +41,7 @@ import static org.junit.Assume.assumeThat;
 
 
 public class Util {
+    private static final Logger LOG = LoggerFactory.getLogger(Util.class);
     public static final String RESOURCE_BASE_NAME = "books/";
     public static final String[] BOOKS = {"beowulf.txt", "sherlock_holmes.txt", "tale_of_two_cities.txt", "ulysses.txt"};
 
@@ -57,19 +59,20 @@ public class Util {
         return builder.build();
     }
 
-    public static void assumeVersion1_2(final Ds3Client client) throws IOException, SignatureException {
+    public static void assumeVersion1_2(final Ds3Client client) throws IOException {
         final int majorVersion = Integer.parseInt(client.getSystemInformationSpectraS3(
                 new GetSystemInformationSpectraS3Request()).getSystemInformationResult().getBuildInformation().getVersion().split("\\.")[0]);
         assumeThat(majorVersion, is(1));
     }
 
-    public static void loadBookTestData(final Ds3Client client, final String bucketName) throws IOException, SignatureException, XmlProcessingException, URISyntaxException {
-
+    public static void loadBookTestData(final Ds3Client client, final String bucketName) throws IOException, XmlProcessingException, URISyntaxException {
+        LOG.info("Loading test data...");
         getLoadJob(client, bucketName, RESOURCE_BASE_NAME)
             .transfer(new ResourceObjectPutter(RESOURCE_BASE_NAME));
+        LOG.info("Finished loading test data...");
     }
 
-    public static Ds3ClientHelpers.Job getLoadJob(final Ds3Client client, final String bucketName, final String resourceBaseName) throws IOException, SignatureException, XmlProcessingException, URISyntaxException {
+    public static Ds3ClientHelpers.Job getLoadJob(final Ds3Client client, final String bucketName, final String resourceBaseName) throws IOException, XmlProcessingException, URISyntaxException {
         final Ds3ClientHelpers helpers = Ds3ClientHelpers.wrap(client);
 
         final List<Ds3Object> objects = new ArrayList<>();
@@ -85,7 +88,7 @@ public class Util {
                 .startWriteJob(bucketName, objects);
     }
 
-    public static void loadBookTestDataWithPrefix(final Ds3Client client, final String bucketName, final String prefix) throws XmlProcessingException, SignatureException, IOException, URISyntaxException {
+    public static void loadBookTestDataWithPrefix(final Ds3Client client, final String bucketName, final String prefix) throws XmlProcessingException, IOException, URISyntaxException {
         final Ds3ClientHelpers helpers = Ds3ClientHelpers.wrap(client);
 
         final List<Ds3Object> objects = new ArrayList<>();
@@ -100,7 +103,7 @@ public class Util {
         helpers.startWriteJob(bucketName, objects).transfer(new PrefixAdderObjectChannelBuilder(new ResourceObjectPutter(RESOURCE_BASE_NAME), prefix));
     }
 
-    public static void deleteAllContents(final Ds3Client client, final String bucketName) throws IOException, SignatureException {
+    public static void deleteAllContents(final Ds3Client client, final String bucketName) throws IOException {
         final Ds3ClientHelpers helpers = Ds3ClientHelpers.wrap(client);
 
         final Iterable<Contents> objects = helpers.listObjects(bucketName);
