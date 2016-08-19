@@ -19,9 +19,9 @@ import com.google.common.base.Function;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Iterators;
 import com.google.common.escape.Escaper;
-import com.google.common.net.UrlEscapers;
 import com.spectralogic.ds3client.BulkCommand;
 import com.spectralogic.ds3client.utils.Guard;
+import com.spectralogic.ds3client.utils.SafeStringManipulation;
 
 import javax.annotation.Nonnull;
 import java.net.MalformedURLException;
@@ -48,7 +48,7 @@ public class NetUtils {
             builder.append('/');
         }
 
-        final Escaper urlEscaper = UrlEscapers.urlFragmentEscaper();
+        final Escaper urlEscaper = SafeStringManipulation.getDs3Escaper();
 
         builder.append(urlEscaper.escape(path));
 

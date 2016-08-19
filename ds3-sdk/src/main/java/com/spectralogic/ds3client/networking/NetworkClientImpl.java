@@ -15,7 +15,6 @@
 
 package com.spectralogic.ds3client.networking;
 
-import com.google.common.net.UrlEscapers;
 import com.spectralogic.ds3client.Ds3InputStreamEntity;
 import com.spectralogic.ds3client.commands.interfaces.Ds3Request;
 import com.spectralogic.ds3client.exceptions.InvalidCertificate;
@@ -66,6 +65,7 @@ import java.util.Map;
 
 import static com.spectralogic.ds3client.utils.Signature.canonicalizeAmzHeaders;
 import static com.spectralogic.ds3client.utils.Signature.canonicalizeResource;
+import static com.spectralogic.ds3client.utils.SafeStringManipulation.getEscapedRequestPath;
 
 public class NetworkClientImpl implements NetworkClient {
     final static private Logger LOG = LoggerFactory.getLogger(NetworkClientImpl.class);
@@ -232,7 +232,7 @@ public class NetworkClientImpl implements NetworkClient {
                 throw new RequiresMarkSupportedException();
             }
 
-            Object[] paramArray = {this.ds3Request.getVerb(), this.host.toString(), this.ds3Request.getPath()};
+            final Object[] paramArray = {this.ds3Request.getVerb(), this.host.toString(), getEscapedRequestPath(this.ds3Request)};
             LOG.info("Sending request: {} {} {}", paramArray );
             this.checksumType = ds3Request.getChecksumType();
             this.hash = this.buildHash();
@@ -258,7 +258,8 @@ public class NetworkClientImpl implements NetworkClient {
             if (this.content != null) {
                 final BasicHttpEntityEnclosingRequest httpRequest = new BasicHttpEntityEnclosingRequest(verb, path);
 
-                final Ds3InputStreamEntity entityStream = new Ds3InputStreamEntity(this.content, this.ds3Request.getSize(), ContentType.create(this.ds3Request.getContentType()), this.ds3Request.getPath());
+                final Ds3InputStreamEntity entityStream = new Ds3InputStreamEntity(this.content, this.ds3Request.getSize(),
+                        ContentType.create(this.ds3Request.getContentType()), getEscapedRequestPath(this.ds3Request));
                 entityStream.setBufferSize(NetworkClientImpl.this.connectionDetails.getBufferSize());
                 httpRequest.setEntity(entityStream);
                 return httpRequest;
@@ -268,7 +269,7 @@ public class NetworkClientImpl implements NetworkClient {
         }
 
         private String buildPath() {
-            String path = UrlEscapers.urlFragmentEscaper().escape(this.ds3Request.getPath());
+            String path = getEscapedRequestPath(this.ds3Request);
             final Map<String, String> queryParams = this.ds3Request.getQueryParams();
             if (!queryParams.isEmpty()) {
                 path += "?" + NetUtils.buildQueryString(queryParams);
@@ -301,7 +302,7 @@ public class NetworkClientImpl implements NetworkClient {
                         this.ds3Request.getContentType(),
                         date,
                         canonicalizeAmzHeaders(new MultiMapImpl<>(this.ds3Request.getHeaders())),
-                        canonicalizeResource(this.ds3Request.getPath(), this.ds3Request.getQueryParams()),
+                        canonicalizeResource(getEscapedRequestPath(this.ds3Request), this.ds3Request.getQueryParams()),
                         NetworkClientImpl.this.connectionDetails.getCredentials()
                 )));
             } catch (final SignatureException e) {
