@@ -74,6 +74,9 @@ public class ActiveJob {
     @JsonProperty("Truncated")
     private boolean truncated;
 
+    @JsonProperty("TruncatedDueToTimeout")
+    private boolean truncatedDueToTimeout;
+
     @JsonProperty("UserId")
     private UUID userId;
 
@@ -225,6 +228,15 @@ public class ActiveJob {
 
     public void setTruncated(final boolean truncated) {
         this.truncated = truncated;
+    }
+
+
+    public boolean getTruncatedDueToTimeout() {
+        return this.truncatedDueToTimeout;
+    }
+
+    public void setTruncatedDueToTimeout(final boolean truncatedDueToTimeout) {
+        this.truncatedDueToTimeout = truncatedDueToTimeout;
     }
 
 

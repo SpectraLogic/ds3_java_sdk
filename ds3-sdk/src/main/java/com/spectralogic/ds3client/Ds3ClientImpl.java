@@ -1146,6 +1146,10 @@ public class Ds3ClientImpl implements Ds3Client {
         return new ForceTargetEnvironmentRefreshSpectraS3Response(this.netClient.getResponse(request));
     }
     @Override
+    public GetBlobsOnDs3TargetSpectraS3Response getBlobsOnDs3TargetSpectraS3(final GetBlobsOnDs3TargetSpectraS3Request request) throws IOException {
+        return new GetBlobsOnDs3TargetSpectraS3Response(this.netClient.getResponse(request));
+    }
+    @Override
     public GetDs3TargetDataPoliciesSpectraS3Response getDs3TargetDataPoliciesSpectraS3(final GetDs3TargetDataPoliciesSpectraS3Request request) throws IOException {
         return new GetDs3TargetDataPoliciesSpectraS3Response(this.netClient.getResponse(request));
     }

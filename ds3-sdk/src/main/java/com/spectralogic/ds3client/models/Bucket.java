@@ -20,6 +20,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import java.util.Date;
 import java.util.UUID;
+import java.lang.Boolean;
 import java.lang.Long;
 import java.lang.String;
 
@@ -32,6 +33,9 @@ public class Bucket {
 
     @JsonProperty("DataPolicyId")
     private UUID dataPolicyId;
+
+    @JsonProperty("Empty")
+    private Boolean empty;
 
     @JsonProperty("Id")
     private UUID id;
@@ -70,6 +74,15 @@ public class Bucket {
 
     public void setDataPolicyId(final UUID dataPolicyId) {
         this.dataPolicyId = dataPolicyId;
+    }
+
+
+    public Boolean getEmpty() {
+        return this.empty;
+    }
+
+    public void setEmpty(final Boolean empty) {
+        this.empty = empty;
     }
 
 

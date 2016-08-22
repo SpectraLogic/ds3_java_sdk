@@ -38,6 +38,12 @@ public class DataPathBackend {
     @JsonProperty("DefaultImportConflictResolutionMode")
     private ImportConflictResolutionMode defaultImportConflictResolutionMode;
 
+    @JsonProperty("DefaultVerifyDataAfterImport")
+    private Priority defaultVerifyDataAfterImport;
+
+    @JsonProperty("DefaultVerifyDataPriorToImport")
+    private boolean defaultVerifyDataPriorToImport;
+
     @JsonProperty("Id")
     private UUID id;
 
@@ -96,6 +102,24 @@ public class DataPathBackend {
 
     public void setDefaultImportConflictResolutionMode(final ImportConflictResolutionMode defaultImportConflictResolutionMode) {
         this.defaultImportConflictResolutionMode = defaultImportConflictResolutionMode;
+    }
+
+
+    public Priority getDefaultVerifyDataAfterImport() {
+        return this.defaultVerifyDataAfterImport;
+    }
+
+    public void setDefaultVerifyDataAfterImport(final Priority defaultVerifyDataAfterImport) {
+        this.defaultVerifyDataAfterImport = defaultVerifyDataAfterImport;
+    }
+
+
+    public boolean getDefaultVerifyDataPriorToImport() {
+        return this.defaultVerifyDataPriorToImport;
+    }
+
+    public void setDefaultVerifyDataPriorToImport(final boolean defaultVerifyDataPriorToImport) {
+        this.defaultVerifyDataPriorToImport = defaultVerifyDataPriorToImport;
     }
 
 

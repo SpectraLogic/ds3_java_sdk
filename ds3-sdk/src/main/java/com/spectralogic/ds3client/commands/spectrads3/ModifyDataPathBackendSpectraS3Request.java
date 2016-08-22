@@ -21,6 +21,7 @@ import com.spectralogic.ds3client.commands.interfaces.AbstractRequest;
 import java.lang.Integer;
 import com.spectralogic.ds3client.models.AutoInspectMode;
 import com.spectralogic.ds3client.models.ImportConflictResolutionMode;
+import com.spectralogic.ds3client.models.Priority;
 import com.spectralogic.ds3client.models.UnavailableMediaUsagePolicy;
 
 public class ModifyDataPathBackendSpectraS3Request extends AbstractRequest {
@@ -34,6 +35,10 @@ public class ModifyDataPathBackendSpectraS3Request extends AbstractRequest {
     private AutoInspectMode autoInspect;
 
     private ImportConflictResolutionMode defaultImportConflictResolutionMode;
+
+    private Priority defaultVerifyDataAfterImport;
+
+    private boolean defaultVerifyDataPriorToImport;
 
     private UnavailableMediaUsagePolicy unavailableMediaPolicy;
 
@@ -68,6 +73,18 @@ public class ModifyDataPathBackendSpectraS3Request extends AbstractRequest {
     public ModifyDataPathBackendSpectraS3Request withDefaultImportConflictResolutionMode(final ImportConflictResolutionMode defaultImportConflictResolutionMode) {
         this.defaultImportConflictResolutionMode = defaultImportConflictResolutionMode;
         this.updateQueryParam("default_import_conflict_resolution_mode", defaultImportConflictResolutionMode);
+        return this;
+    }
+
+    public ModifyDataPathBackendSpectraS3Request withDefaultVerifyDataAfterImport(final Priority defaultVerifyDataAfterImport) {
+        this.defaultVerifyDataAfterImport = defaultVerifyDataAfterImport;
+        this.updateQueryParam("default_verify_data_after_import", defaultVerifyDataAfterImport);
+        return this;
+    }
+
+    public ModifyDataPathBackendSpectraS3Request withDefaultVerifyDataPriorToImport(final boolean defaultVerifyDataPriorToImport) {
+        this.defaultVerifyDataPriorToImport = defaultVerifyDataPriorToImport;
+        this.updateQueryParam("default_verify_data_prior_to_import", defaultVerifyDataPriorToImport);
         return this;
     }
 
@@ -117,6 +134,16 @@ public class ModifyDataPathBackendSpectraS3Request extends AbstractRequest {
 
     public ImportConflictResolutionMode getDefaultImportConflictResolutionMode() {
         return this.defaultImportConflictResolutionMode;
+    }
+
+
+    public Priority getDefaultVerifyDataAfterImport() {
+        return this.defaultVerifyDataAfterImport;
+    }
+
+
+    public boolean getDefaultVerifyDataPriorToImport() {
+        return this.defaultVerifyDataPriorToImport;
     }
 
 
