@@ -109,8 +109,8 @@ public class WriteJobOptions {
         return ignoreNamingConflicts;
     }
 
-    public WriteJobOptions withIgnoreNamingConflicts() {
-        this.ignoreNamingConflicts = true;
+    public WriteJobOptions withIgnoreNamingConflicts(final boolean ignore) {
+        this.ignoreNamingConflicts = ignore;
         return this;
     }
 }
