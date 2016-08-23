@@ -25,6 +25,7 @@ public class WriteJobOptions {
     private int maxUploadSize;
     private ChecksumType.Type checksumType;
     private boolean aggregating;
+    private boolean ignoreNamingConflicts;
 
     private WriteJobOptions() {
         this.priority = null;
@@ -32,6 +33,7 @@ public class WriteJobOptions {
         this.maxUploadSize = 0;
         this.checksumType = ChecksumType.Type.NONE;
         this.aggregating = false;
+        this.ignoreNamingConflicts = false;
     }
 
     public static WriteJobOptions create() {
@@ -97,5 +99,18 @@ public class WriteJobOptions {
 
     public void setAggregating(final boolean aggregating) {
         this.aggregating = aggregating;
+    }
+
+    public void setIgnoreNamingConflicts(final boolean ignore) {
+        this.ignoreNamingConflicts = ignore;
+    }
+
+    public boolean doIgnoreNamingConflicts() {
+        return ignoreNamingConflicts;
+    }
+
+    public WriteJobOptions withIgnoreNamingConflicts(final boolean ignore) {
+        this.ignoreNamingConflicts = ignore;
+        return this;
     }
 }
