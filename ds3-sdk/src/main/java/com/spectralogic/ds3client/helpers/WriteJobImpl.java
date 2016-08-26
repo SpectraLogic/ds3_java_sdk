@@ -148,7 +148,7 @@ class WriteJobImpl extends JobImpl {
                 partTracker,
                 ImmutableMap.<String, ImmutableMultimap<BulkObject,Range>>of())) {
             final ChunkTransferrer chunkTransferrer = new ChunkTransferrer(
-                new PutObjectTransferrer(jobState),
+                new PutObjectTransferrerRetryDecorator(jobState),
                 this.client,
                 jobState.getPartTracker(),
                 this.maxParallelRequests
@@ -236,6 +236,32 @@ class WriteJobImpl extends JobImpl {
             }
         }
         return filtered;
+    }
+
+    private final class PutObjectTransferrerRetryDecorator implements ItemTransferrer {
+        private static final int NUM_TIMES_TO_RETRY = 3;
+
+        private final PutObjectTransferrer putObjectTransferrer;
+
+        private PutObjectTransferrerRetryDecorator(final JobState jobState) {
+            putObjectTransferrer = new PutObjectTransferrer(jobState);
+        }
+
+        @Override
+        public void transferItem(final Ds3Client client, final BulkObject ds3Object) throws IOException {
+            int numRetries = 0;
+
+            for ( ; ; ) {
+                try {
+                    putObjectTransferrer.transferItem(client, ds3Object);
+                    break;
+                } catch (final Throwable t) {
+                    if(ExceptionClassifier.isUnrecoverableException(t) || ++numRetries >= NUM_TIMES_TO_RETRY) {
+                        throw t;
+                    }
+                }
+            }
+        }
     }
 
     private final class PutObjectTransferrer implements ItemTransferrer {

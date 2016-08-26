@@ -17,28 +17,50 @@ package com.spectralogic.ds3client.integration;
 
 import com.google.common.collect.Lists;
 import com.spectralogic.ds3client.Ds3Client;
+import com.spectralogic.ds3client.Ds3ClientImpl;
 import com.spectralogic.ds3client.commands.*;
 import com.spectralogic.ds3client.commands.spectrads3.*;
 import com.spectralogic.ds3client.commands.spectrads3.notifications.*;
+import com.spectralogic.ds3client.exceptions.Ds3NoMoreRetriesException;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers;
+import com.spectralogic.ds3client.helpers.FileObjectGetter;
+import com.spectralogic.ds3client.helpers.FileObjectPutter;
+import com.spectralogic.ds3client.helpers.ObjectCompletedListener;
+import com.spectralogic.ds3client.helpers.channels.RangedSeekableByteChannel;
 import com.spectralogic.ds3client.helpers.options.WriteJobOptions;
 import com.spectralogic.ds3client.integration.test.helpers.ABMTestHelper;
 import com.spectralogic.ds3client.integration.test.helpers.TempStorageIds;
 import com.spectralogic.ds3client.integration.test.helpers.TempStorageUtil;
 import com.spectralogic.ds3client.models.*;
 import com.spectralogic.ds3client.models.bulk.Ds3Object;
+import com.spectralogic.ds3client.networking.ConnectionDetails;
 import com.spectralogic.ds3client.networking.FailedRequestException;
+import com.spectralogic.ds3client.networking.NetworkClient;
+import com.spectralogic.ds3client.networking.NetworkClientImpl;
+import com.spectralogic.ds3client.serializer.XmlProcessingException;
 import com.spectralogic.ds3client.utils.ByteArraySeekableByteChannel;
 import com.spectralogic.ds3client.utils.ResourceUtils;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.hamcrest.Matchers;
 import org.junit.*;
+import org.junit.rules.TemporaryFolder;
+import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.nio.ByteBuffer;
 import java.nio.channels.SeekableByteChannel;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.security.SignatureException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -48,6 +70,11 @@ import static com.spectralogic.ds3client.integration.Util.RESOURCE_BASE_NAME;
 import static com.spectralogic.ds3client.integration.Util.deleteAllContents;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
+
+import org.junit.Test;
 
 public class PutJobManagement_Test {
 
@@ -794,6 +821,122 @@ public class PutJobManagement_Test {
 
         } finally {
             deleteAllContents(client, BUCKET_NAME);
+        }
+    }
+
+    @Test
+    public void testWriteJobWithRetries() throws Exception
+    {
+        final Ds3ClientShim ds3ClientShim = new Ds3ClientShim((Ds3ClientImpl)client);
+
+        final Path tempDirectory = Files.createTempDirectory(Paths.get("."), null /* prefix */);
+
+        try {
+            final String DIR_NAME = "largeFiles/";
+            final String[] FILE_NAMES = new String[] { "lesmis-copies.txt" };
+
+            final Path dirPath = ResourceUtils.loadFileResource(DIR_NAME);
+
+            final List<String> bookTitles = new ArrayList<>();
+            final List<Ds3Object> objects = new ArrayList<>();
+            for(final String book : FILE_NAMES) {
+                final Path objPath = ResourceUtils.loadFileResource(DIR_NAME + book);
+                final long bookSize = Files.size(objPath);
+                final Ds3Object obj = new Ds3Object(book, bookSize);
+
+                bookTitles.add(book);
+                objects.add(obj);
+            }
+
+            final Ds3ClientHelpers ds3ClientHelpers = Ds3ClientHelpers.wrap(ds3ClientShim, 1 /* num retries for http response 503 */);
+
+            final Ds3ClientHelpers.Job writeJob = ds3ClientHelpers.startWriteJob(BUCKET_NAME, objects);
+            writeJob.attachObjectCompletedListener(new ObjectCompletedListener() {
+                @Override
+                public void objectCompleted(final String name) {
+                    assertTrue(bookTitles.contains(name));
+                }
+            });
+
+            writeJob.transfer(new FileObjectPutter(dirPath));
+
+            final GetBucketResponse request = ds3ClientShim.getBucket(new GetBucketRequest(BUCKET_NAME));
+            final ListBucketResult result = request.getListBucketResult();
+
+            assertEquals(bookTitles.size(), result.getObjects().size());
+
+            for(final Contents contents : result.getObjects()) {
+                assertTrue(bookTitles.contains(contents.getKey()));
+            }
+
+            final Ds3ClientHelpers.Job readJob = Ds3ClientHelpers.wrap(ds3ClientShim, 1)
+                    .startReadAllJob(BUCKET_NAME);
+            readJob.attachObjectCompletedListener(new ObjectCompletedListener() {
+                @Override
+                public void objectCompleted(final String name) {
+                    assertTrue(bookTitles.contains(name));
+
+                    try {
+                        final File originalFile = ResourceUtils.loadFileResource(DIR_NAME + FILE_NAMES[0]).toFile();
+                        final File fileCopiedFromBP = Paths.get(tempDirectory.toString(), FILE_NAMES[0]).toFile();
+                        assertTrue(FileUtils.contentEquals(originalFile, fileCopiedFromBP));
+                    } catch (URISyntaxException | IOException e) {
+                        fail("Failure trying to compare file we wrote to file we read.");
+                    }
+                }
+            });
+
+            readJob.transfer(new FileObjectGetter(tempDirectory));
+        } finally {
+            FileUtils.deleteDirectory(tempDirectory.toFile());
+            deleteAllContents(ds3ClientShim, BUCKET_NAME);
+        }
+    }
+
+    private static class Ds3ClientShim extends Ds3ClientImpl {
+        private static Method getNetClientMethod = null;
+
+        int numRetries = 0;
+
+        static {
+            try {
+                getNetClientMethod = Ds3ClientImpl.class.getDeclaredMethod("getNetClient");
+            } catch (final NoSuchMethodException e) {
+                fail("Could not find Ds3ClientImpl method getNetClient.");
+            }
+
+            getNetClientMethod.setAccessible(true);
+        }
+
+        public Ds3ClientShim(final NetworkClient netClient) {
+            super(netClient);
+        }
+
+        public Ds3ClientShim(final Ds3ClientImpl ds3ClientImpl) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
+            this((NetworkClient)getNetClientMethod.invoke(ds3ClientImpl));
+        }
+
+        @Override
+        public PutObjectResponse putObject(final PutObjectRequest request) throws IOException {
+            if(numRetries++ >= 1) {
+                return super.putObject(request);
+            }
+
+            throw new Ds3NoMoreRetriesException(1);
+        }
+
+        @Override
+        public Ds3Client newForNode(final JobNode node) {
+            final ConnectionDetails newConnectionDetails;
+            try {
+                newConnectionDetails = ((NetworkClient)getNetClientMethod.invoke(this)).getConnectionDetails();
+                final NetworkClient newNetClient = new NetworkClientImpl(newConnectionDetails);
+                return new Ds3ClientShim(newNetClient);
+            } catch (IllegalAccessException | InvocationTargetException e) {
+                fail("Failure trying to create Ds3Client used in verifying putObject retries: " + e.getMessage());
+            }
+
+            return null;
         }
     }
 }
