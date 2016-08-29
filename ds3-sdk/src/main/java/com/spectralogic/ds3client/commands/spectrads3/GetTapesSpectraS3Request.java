@@ -20,6 +20,7 @@ import com.spectralogic.ds3client.networking.HttpVerb;
 import com.spectralogic.ds3client.commands.interfaces.AbstractRequest;
 import com.google.common.net.UrlEscapers;
 import java.util.UUID;
+import java.util.Date;
 import com.spectralogic.ds3client.models.TapeState;
 import com.spectralogic.ds3client.models.TapeType;
 
@@ -46,6 +47,8 @@ public class GetTapesSpectraS3Request extends AbstractRequest {
     private int pageOffset;
 
     private String pageStartMarker;
+
+    private Date partiallyVerifiedEndOfTape;
 
     private String partitionId;
 
@@ -134,6 +137,12 @@ public class GetTapesSpectraS3Request extends AbstractRequest {
     public GetTapesSpectraS3Request withPageStartMarker(final String pageStartMarker) {
         this.pageStartMarker = pageStartMarker;
         this.updateQueryParam("page_start_marker", pageStartMarker);
+        return this;
+    }
+
+    public GetTapesSpectraS3Request withPartiallyVerifiedEndOfTape(final Date partiallyVerifiedEndOfTape) {
+        this.partiallyVerifiedEndOfTape = partiallyVerifiedEndOfTape;
+        this.updateQueryParam("partially_verified_end_of_tape", partiallyVerifiedEndOfTape);
         return this;
     }
 
@@ -249,6 +258,11 @@ public class GetTapesSpectraS3Request extends AbstractRequest {
 
     public String getPageStartMarker() {
         return this.pageStartMarker;
+    }
+
+
+    public Date getPartiallyVerifiedEndOfTape() {
+        return this.partiallyVerifiedEndOfTape;
     }
 
 

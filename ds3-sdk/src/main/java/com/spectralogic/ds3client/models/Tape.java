@@ -72,6 +72,9 @@ public class Tape {
     @JsonProperty("LastVerified")
     private Date lastVerified;
 
+    @JsonProperty("PartiallyVerifiedEndOfTape")
+    private Date partiallyVerifiedEndOfTape;
+
     @JsonProperty("PartitionId")
     private UUID partitionId;
 
@@ -241,6 +244,15 @@ public class Tape {
 
     public void setLastVerified(final Date lastVerified) {
         this.lastVerified = lastVerified;
+    }
+
+
+    public Date getPartiallyVerifiedEndOfTape() {
+        return this.partiallyVerifiedEndOfTape;
+    }
+
+    public void setPartiallyVerifiedEndOfTape(final Date partiallyVerifiedEndOfTape) {
+        this.partiallyVerifiedEndOfTape = partiallyVerifiedEndOfTape;
     }
 
 

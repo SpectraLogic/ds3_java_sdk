@@ -47,6 +47,9 @@ public class DataPathBackend {
     @JsonProperty("LastHeartbeat")
     private Date lastHeartbeat;
 
+    @JsonProperty("PartiallyVerifyLastPercentOfTapes")
+    private Integer partiallyVerifyLastPercentOfTapes;
+
     @JsonProperty("UnavailableMediaPolicy")
     private UnavailableMediaUsagePolicy unavailableMediaPolicy;
 
@@ -123,6 +126,15 @@ public class DataPathBackend {
 
     public void setLastHeartbeat(final Date lastHeartbeat) {
         this.lastHeartbeat = lastHeartbeat;
+    }
+
+
+    public Integer getPartiallyVerifyLastPercentOfTapes() {
+        return this.partiallyVerifyLastPercentOfTapes;
+    }
+
+    public void setPartiallyVerifyLastPercentOfTapes(final Integer partiallyVerifyLastPercentOfTapes) {
+        this.partiallyVerifyLastPercentOfTapes = partiallyVerifyLastPercentOfTapes;
     }
 
 
