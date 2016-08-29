@@ -35,6 +35,8 @@ public class ModifyDataPathBackendSpectraS3Request extends AbstractRequest {
 
     private ImportConflictResolutionMode defaultImportConflictResolutionMode;
 
+    private Integer partiallyVerifyLastPercentOfTapes;
+
     private UnavailableMediaUsagePolicy unavailableMediaPolicy;
 
     private int unavailablePoolMaxJobRetryInMins;
@@ -68,6 +70,12 @@ public class ModifyDataPathBackendSpectraS3Request extends AbstractRequest {
     public ModifyDataPathBackendSpectraS3Request withDefaultImportConflictResolutionMode(final ImportConflictResolutionMode defaultImportConflictResolutionMode) {
         this.defaultImportConflictResolutionMode = defaultImportConflictResolutionMode;
         this.updateQueryParam("default_import_conflict_resolution_mode", defaultImportConflictResolutionMode);
+        return this;
+    }
+
+    public ModifyDataPathBackendSpectraS3Request withPartiallyVerifyLastPercentOfTapes(final Integer partiallyVerifyLastPercentOfTapes) {
+        this.partiallyVerifyLastPercentOfTapes = partiallyVerifyLastPercentOfTapes;
+        this.updateQueryParam("partially_verify_last_percent_of_tapes", partiallyVerifyLastPercentOfTapes);
         return this;
     }
 
@@ -117,6 +125,11 @@ public class ModifyDataPathBackendSpectraS3Request extends AbstractRequest {
 
     public ImportConflictResolutionMode getDefaultImportConflictResolutionMode() {
         return this.defaultImportConflictResolutionMode;
+    }
+
+
+    public Integer getPartiallyVerifyLastPercentOfTapes() {
+        return this.partiallyVerifyLastPercentOfTapes;
     }
 
 
