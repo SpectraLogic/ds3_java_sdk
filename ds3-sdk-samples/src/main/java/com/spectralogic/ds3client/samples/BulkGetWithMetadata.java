@@ -22,16 +22,14 @@ import com.spectralogic.ds3client.helpers.Ds3ClientHelpers;
 import com.spectralogic.ds3client.helpers.FileObjectGetter;
 import com.spectralogic.ds3client.helpers.MetadataReceivedListener;
 import com.spectralogic.ds3client.networking.Metadata;
-import com.spectralogic.ds3client.serializer.XmlProcessingException;
 
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.security.SignatureException;
 import java.util.List;
 
 public class BulkGetWithMetadata {
-    public static void main(final String[] args) throws XmlProcessingException, SignatureException, IOException {
+    public static void main(final String[] args) throws IOException {
         try (final Ds3Client client = Ds3ClientBuilder.fromEnv().withHttps(false).build()) {
 
             // Wrap the Ds3Client with the helper functions

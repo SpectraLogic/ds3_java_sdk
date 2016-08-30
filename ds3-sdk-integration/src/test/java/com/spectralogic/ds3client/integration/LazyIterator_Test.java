@@ -22,7 +22,6 @@ import com.spectralogic.ds3client.integration.test.helpers.TempStorageIds;
 import com.spectralogic.ds3client.integration.test.helpers.TempStorageUtil;
 import com.spectralogic.ds3client.models.ChecksumType;
 import com.spectralogic.ds3client.models.Contents;
-import com.spectralogic.ds3client.serializer.XmlProcessingException;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -31,7 +30,6 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.security.SignatureException;
 import java.util.Iterator;
 import java.util.UUID;
 
@@ -54,7 +52,7 @@ public class LazyIterator_Test {
     private static final int retries = 5;
 
     @BeforeClass
-    public static void startup() throws IOException, SignatureException {
+    public static void startup() throws IOException {
         LOG.info("Starting test Setup...");
         envDataPolicyId = TempStorageUtil.setupDataPolicy(TEST_ENV_NAME, false, ChecksumType.Type.MD5, CLIENT);
         envStorageIds = TempStorageUtil.setup(TEST_ENV_NAME, envDataPolicyId, CLIENT);
@@ -62,7 +60,7 @@ public class LazyIterator_Test {
     }
 
     @AfterClass
-    public static void teardown() throws IOException, SignatureException {
+    public static void teardown() throws IOException {
         LOG.info("Starting test teardown...");
         TempStorageUtil.teardown(TEST_ENV_NAME, envStorageIds, CLIENT);
         CLIENT.close();
@@ -70,7 +68,7 @@ public class LazyIterator_Test {
     }
 
     @Test
-    public void emptyTest() throws IOException, SignatureException {
+    public void emptyTest() throws IOException {
         HELPERS.ensureBucketExists(TEST_ENV_NAME, envDataPolicyId);
         try {
             final String prefix = "";
@@ -89,7 +87,7 @@ public class LazyIterator_Test {
     }
 
     @Test
-    public void singlePageTest() throws IOException, XmlProcessingException, SignatureException, URISyntaxException {
+    public void singlePageTest() throws IOException, URISyntaxException {
         HELPERS.ensureBucketExists(TEST_ENV_NAME, envDataPolicyId);
         loadBookTestData(CLIENT, TEST_ENV_NAME);
         try {
@@ -115,7 +113,7 @@ public class LazyIterator_Test {
     }
 
     @Test
-    public void multiPageTest() throws IOException, URISyntaxException, XmlProcessingException {
+    public void multiPageTest() throws IOException, URISyntaxException {
             HELPERS.ensureBucketExists(TEST_ENV_NAME, envDataPolicyId);
         loadBookTestData(CLIENT, TEST_ENV_NAME);
         try {

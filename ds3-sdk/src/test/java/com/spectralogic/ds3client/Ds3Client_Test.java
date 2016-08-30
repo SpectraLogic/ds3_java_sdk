@@ -29,7 +29,6 @@ import com.spectralogic.ds3client.models.common.Credentials;
 import com.spectralogic.ds3client.networking.FailedRequestException;
 import com.spectralogic.ds3client.networking.FailedRequestUsingMgmtPortException;
 import com.spectralogic.ds3client.networking.HttpVerb;
-import com.spectralogic.ds3client.serializer.XmlProcessingException;
 import com.spectralogic.ds3client.utils.ByteArraySeekableByteChannel;
 import com.spectralogic.ds3client.utils.ResourceUtils;
 import org.junit.Before;
@@ -42,7 +41,6 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
-import java.security.SignatureException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -76,7 +74,7 @@ public class Ds3Client_Test {
     }
 
     @Test
-    public void getBuckets() throws IOException, SignatureException, ParseException {
+    public void getBuckets() throws IOException, ParseException {
         final UUID id = UUID.randomUUID();
         final String stringResponse = "<ListAllMyBucketsResult xmlns=\"http://doc.s3.amazonaws.com/2006-03-01\">\n" +
                 "<Owner><ID>" + id.toString() + "</ID><DisplayName>ryan</DisplayName></Owner><Buckets><Bucket><Name>testBucket2</Name><CreationDate>2013-12-11T23:20:09</CreationDate></Bucket><Bucket><Name>bulkTest</Name><CreationDate>2013-12-11T23:20:09</CreationDate></Bucket><Bucket><Name>bulkTest1</Name><CreationDate>2013-12-11T23:20:09</CreationDate></Bucket><Bucket><Name>bulkTest2</Name><CreationDate>2013-12-11T23:20:09</CreationDate></Bucket><Bucket><Name>bulkTest3</Name><CreationDate>2013-12-11T23:20:09</CreationDate></Bucket><Bucket><Name>bulkTest4</Name><CreationDate>2013-12-11T23:20:09</CreationDate></Bucket><Bucket><Name>bulkTest5</Name><CreationDate>2013-12-11T23:20:09</CreationDate></Bucket><Bucket><Name>bulkTest6</Name><CreationDate>2013-12-11T23:20:09</CreationDate></Bucket><Bucket><Name>testBucket3</Name><CreationDate>2013-12-11T23:20:09</CreationDate></Bucket><Bucket><Name>testBucket1</Name><CreationDate>2013-12-11T23:20:09</CreationDate></Bucket><Bucket><Name>testbucket</Name><CreationDate>2013-12-11T23:20:09</CreationDate></Bucket></Buckets></ListAllMyBucketsResult>";
@@ -114,7 +112,7 @@ public class Ds3Client_Test {
     }
 
     @Test(expected = FailedRequestUsingMgmtPortException.class)
-    public void getSystemInfoOffMgmtPort() throws IOException, SignatureException {
+    public void getSystemInfoOffMgmtPort() throws IOException {
         final Map<String, String> responseHeaders = new HashMap<>();
         responseHeaders.put(FailedRequestUsingMgmtPortException.MGMT_PORT_HEADER, "true");
         MockNetwork
@@ -125,7 +123,7 @@ public class Ds3Client_Test {
     }
 
     @Test(expected = FailedRequestException.class)
-    public void getBadBuckets() throws IOException, SignatureException {
+    public void getBadBuckets() throws IOException {
         MockNetwork
                 .expecting(HttpVerb.GET, "/", null, null)
                 .returning(400, "")
@@ -134,7 +132,7 @@ public class Ds3Client_Test {
     }
 
     @Test
-    public void getBucket() throws IOException, SignatureException, ParseException {
+    public void getBucket() throws IOException, ParseException {
         final UUID id = UUID.randomUUID();
         final String xmlResponse = "<ListBucketResult xmlns=\"http://s3.amazonaws.com/doc/2006-03-01/\"><Name>remoteTest16</Name><Prefix/><Marker/><MaxKeys>1000</MaxKeys><IsTruncated>false</IsTruncated><Contents><Key>user/hduser/gutenberg/20417.txt.utf-8</Key><LastModified>2014-01-03T13:26:47.000Z</LastModified><ETag>8B19F3F41868106382A677C3435BDCE5</ETag><Size>674570</Size><StorageClass>STANDARD</StorageClass>" +
                 "<Owner><ID>" + id.toString() + "</ID><DisplayName>ryan</DisplayName></Owner></Contents><Contents><Key>user/hduser/gutenberg/5000.txt.utf-8</Key><LastModified>2014-01-03T13:26:47.000Z</LastModified><ETag>9DE344878423E44B129730CE22B4B137</ETag><Size>1423803</Size><StorageClass>STANDARD</StorageClass>" +
@@ -197,7 +195,7 @@ public class Ds3Client_Test {
     }
 
     @Test
-    public void getObjectsSpectraS3() throws IOException, SignatureException, ParseException {
+    public void getObjectsSpectraS3() throws IOException, ParseException {
         final Map<String, String> queryParams = new HashMap<>();
         final String bucketId = "a24d14f3-e2f0-4bfb-ab71-f99d5ef43745";
         queryParams.put("bucket_id", bucketId);
@@ -239,7 +237,7 @@ public class Ds3Client_Test {
     }
 
     @Test (expected = IllegalArgumentException.class)
-    public void getObjectsSpectraS3ParseHeaderException() throws IOException, SignatureException, ParseException {
+    public void getObjectsSpectraS3ParseHeaderException() throws IOException, ParseException {
         final Map<String, String> queryParams = new HashMap<>();
         final String bucketId = "a24d14f3-e2f0-4bfb-ab71-f99d5ef43745";
         queryParams.put("bucket_id", bucketId);
@@ -272,7 +270,7 @@ public class Ds3Client_Test {
     }
 
     @Test
-    public void putBucket() throws IOException, SignatureException {
+    public void putBucket() throws IOException {
         MockNetwork
             .expecting(HttpVerb.PUT, "/bucketName", null, null)
             .returning(200, "")
@@ -281,7 +279,7 @@ public class Ds3Client_Test {
     }
     
     @Test
-    public void deleteBucket() throws IOException, SignatureException {
+    public void deleteBucket() throws IOException {
         MockNetwork
             .expecting(HttpVerb.DELETE, "/bucketName", null, null)
             .returning(204, "")
@@ -290,7 +288,7 @@ public class Ds3Client_Test {
     }
 
     @Test
-    public void deleteFolderRecursivelySpectraS3() throws IOException, SignatureException {
+    public void deleteFolderRecursivelySpectraS3() throws IOException {
         final UUID bucketId = UUID.randomUUID();
         final Map<String, String> queryParams = new HashMap<>();
         queryParams.put("bucket_id", bucketId.toString());
@@ -305,7 +303,7 @@ public class Ds3Client_Test {
     }
 
     @Test
-    public void deleteObject() throws IOException, SignatureException {
+    public void deleteObject() throws IOException {
         MockNetwork
             .expecting(HttpVerb.DELETE, "/bucketName/my/file.txt", null, null)
             .returning(204, "")
@@ -314,7 +312,7 @@ public class Ds3Client_Test {
     }
 
     @Test
-    public void multiObjectDelete() throws IOException, SignatureException {
+    public void multiObjectDelete() throws IOException {
         final List<String> objsToDelete = Lists.newArrayList("sample1.txt", "sample2.txt");
         final Map<String, String> queryParams = new HashMap<>();
         queryParams.put("delete", null);
@@ -339,7 +337,7 @@ public class Ds3Client_Test {
     }
 
     @Test(expected = FailedRequestException.class)
-    public void getBadBucket() throws IOException, SignatureException {
+    public void getBadBucket() throws IOException {
         MockNetwork
             .expecting(HttpVerb.GET, "/remoteTest16", null, null)
             .returning(400, "")
@@ -348,7 +346,7 @@ public class Ds3Client_Test {
     }
 
     @Test
-    public void getObject() throws IOException, SignatureException {
+    public void getObject() throws IOException {
         final String jobIdString = "a4a586a1-cb80-4441-84e2-48974e982d51";
         final Map<String, String> queryParams = new HashMap<>();
         queryParams.put("job", jobIdString);
@@ -370,7 +368,7 @@ public class Ds3Client_Test {
     }
     
     @Test
-    public void createObject() throws IOException, SignatureException, URISyntaxException {
+    public void createObject() throws IOException, URISyntaxException {
         final String jobIdString = "a4a586a1-cb80-4441-84e2-48974e982d51";
         final Map<String, String> queryParams = new HashMap<>();
         queryParams.put("job", jobIdString);
@@ -394,7 +392,7 @@ public class Ds3Client_Test {
     }
     
     @Test
-    public void createObjectWithMetadata() throws IOException, SignatureException, URISyntaxException {
+    public void createObjectWithMetadata() throws IOException, URISyntaxException {
         final String jobIdString = "a4a586a1-cb80-4441-84e2-48974e982d51";
         final Map<String, String> queryParams = new HashMap<>();
         queryParams.put("job", jobIdString);
@@ -430,7 +428,7 @@ public class Ds3Client_Test {
     }
 
     @Test
-    public void createObjectWithNullAndEmptyMetadata() throws IOException, SignatureException, URISyntaxException {
+    public void createObjectWithNullAndEmptyMetadata() throws IOException, URISyntaxException {
         final String jobIdString = "a4a586a1-cb80-4441-84e2-48974e982d51";
         final Map<String, String> queryParams = new HashMap<>();
         queryParams.put("job", jobIdString);
@@ -463,7 +461,7 @@ public class Ds3Client_Test {
     }
 
     @Test
-    public void headObjectWithMetadata() throws IOException, SignatureException {
+    public void headObjectWithMetadata() throws IOException {
 
         final Map<String, String> responseHeaders = new HashMap<>();
         responseHeaders.put("x-amz-meta-key", "value");
@@ -479,7 +477,7 @@ public class Ds3Client_Test {
     }
 
     @Test
-    public void getObjectWithMetaData() throws IOException, SignatureException {
+    public void getObjectWithMetaData() throws IOException {
 
         final Map<String, String> responseHeaders = new HashMap<>();
         responseHeaders.put("x-amz-meta-key", "value");
@@ -502,22 +500,22 @@ public class Ds3Client_Test {
     }
 
     @Test
-    public void createPutJobSpectraS3() throws IOException, SignatureException, XmlProcessingException {
+    public void createPutJobSpectraS3() throws IOException {
         this.runBulkTest(BulkCommand.PUT, new BulkTestDriver() {
             @Override
             public MasterObjectList performRestCall(final Ds3Client client, final String bucket, final List<Ds3Object> objects)
-                    throws SignatureException, IOException, XmlProcessingException {
+                    throws IOException {
                 return client.putBulkJobSpectraS3(new PutBulkJobSpectraS3Request(bucket, objects)).getResult();
             }
         });
     }
 
     @Test
-    public void createGetJobSpectraS3() throws IOException, SignatureException, XmlProcessingException {
+    public void createGetJobSpectraS3() throws IOException {
         this.runBulkTest(BulkCommand.GET, new BulkTestDriver() {
             @Override
             public MasterObjectList performRestCall(final Ds3Client client, final String bucket, final List<Ds3Object> objects)
-                    throws SignatureException, IOException, XmlProcessingException {
+                    throws IOException {
                 return client.getBulkJobSpectraS3(new GetBulkJobSpectraS3Request(bucket, objects)).getResult();
             }
         });
@@ -525,10 +523,10 @@ public class Ds3Client_Test {
     
     private interface BulkTestDriver {
         MasterObjectList performRestCall(final Ds3Client client, final String bucket, final List<Ds3Object> objects)
-                throws SignatureException, IOException, XmlProcessingException;
+                throws IOException;
     }
     
-    public void runBulkTest(final BulkCommand command, final BulkTestDriver driver) throws IOException, SignatureException, XmlProcessingException {
+    public void runBulkTest(final BulkCommand command, final BulkTestDriver driver) throws IOException {
         final List<Ds3Object> objects = Arrays.asList(
             new Ds3Object("file1", 256),
             new Ds3Object("file2", 1202),
@@ -571,7 +569,7 @@ public class Ds3Client_Test {
     }
     
     @Test
-    public void allocateJobChunkSpectraS3() throws SignatureException, IOException {
+    public void allocateJobChunkSpectraS3() throws IOException {
         final String responseString =
             "<Objects ChunkId=\"203f6886-b058-4f7c-a012-8779176453b1\" ChunkNumber=\"3\" NodeId=\"a02053b9-0147-11e4-8d6a-002590c1177c\">"
             + "  <Object Name=\"client00obj000004-8000000\" InCache=\"true\" Length=\"5368709120\" Offset=\"0\"/>"
@@ -626,7 +624,7 @@ public class Ds3Client_Test {
     }
     
     @Test
-    public void allocateJobChunkSpectraS3ReturnsRetryAfter() throws SignatureException, IOException {
+    public void allocateJobChunkSpectraS3ReturnsRetryAfter() throws IOException {
         final Map<String, String> queryParams = new HashMap<>();
         queryParams.put("operation", "allocate");
         final Map<String, String> headers = new HashMap<>();
@@ -642,7 +640,7 @@ public class Ds3Client_Test {
     }
     
     @Test
-    public void getJobChunksReadyForClientProcessingSpectraS3() throws SignatureException, IOException, ParseException {
+    public void getJobChunksReadyForClientProcessingSpectraS3() throws IOException, ParseException {
 
         final Map<String, String> queryParams = new HashMap<>();
         queryParams.put("job", MASTER_OBJECT_LIST_JOB_ID.toString());
@@ -658,7 +656,7 @@ public class Ds3Client_Test {
     }
 
     @Test
-    public void getJobChunksReadyForClientProcessingSpectraS3ReturnsRetryLater() throws SignatureException, IOException {
+    public void getJobChunksReadyForClientProcessingSpectraS3ReturnsRetryLater() throws IOException {
         final String responseString =
             "<MasterObjectList BucketName=\"bucket8192000000\" JobId=\"1a85e743-ec8f-4789-afec-97e587a26936\" Priority=\"NORMAL\" RequestType=\"GET\" StartDate=\"2014-07-01T20:12:52.000Z\">"
             + "  <Nodes>"
@@ -683,7 +681,7 @@ public class Ds3Client_Test {
     }
     
     @Test
-    public void getJobsSpectraS3() throws SignatureException, IOException, ParseException {
+    public void getJobsSpectraS3() throws IOException, ParseException {
         final String responseString =
             "<Jobs>"
             + "  <Job BucketName=\"bucket_1\" CachedSizeInBytes=\"69880\" ChunkClientProcessingOrderGuarantee=\"IN_ORDER\" CompletedSizeInBytes=\"0\" JobId=\"0807ff11-a9f6-4d55-bb92-b452c1bb00c7\" OriginalSizeInBytes=\"69880\" Priority=\"NORMAL\" RequestType=\"PUT\" StartDate=\"2014-09-04T17:23:45.000Z\" UserId=\"a7d3eff9-e6d2-4e37-8a0b-84e76211a18a\" UserName=\"spectra\">"
@@ -764,7 +762,7 @@ public class Ds3Client_Test {
     }
     
     @Test
-    public void getJobSpectraS3() throws SignatureException, IOException, ParseException {
+    public void getJobSpectraS3() throws IOException, ParseException {
         checkJobWithChunksApiBean(
                 MockNetwork
                         .expecting(HttpVerb.GET, "/_rest_/job/1a85e743-ec8f-4789-afec-97e587a26936", null, null)
@@ -832,7 +830,7 @@ public class Ds3Client_Test {
     }
     
     @Test
-    public void cancelJobSpectraS3() throws SignatureException, IOException {
+    public void cancelJobSpectraS3() throws IOException {
         final CancelJobSpectraS3Response response = MockNetwork
             .expecting(HttpVerb.DELETE, "/_rest_/job/1a85e743-ec8f-4789-afec-97e587a26936", null, null)
             .returning(204, "")
@@ -842,7 +840,7 @@ public class Ds3Client_Test {
     }
     
     @Test
-    public void modifyJobSpectraS3() throws SignatureException, IOException, ParseException {
+    public void modifyJobSpectraS3() throws IOException, ParseException {
         checkJobWithChunksApiBean(
                 MockNetwork
                         .expecting(HttpVerb.PUT, "/_rest_/job/1a85e743-ec8f-4789-afec-97e587a26936", null, null)
@@ -854,7 +852,7 @@ public class Ds3Client_Test {
     }
 
     @Test
-    public void deleteTapeDriveSpectraS3() throws IOException, SignatureException {
+    public void deleteTapeDriveSpectraS3() throws IOException {
         final DeleteTapeDriveSpectraS3Response response = MockNetwork
             .expecting(HttpVerb.DELETE, "/_rest_/tape_drive/30a8dbf8-12e1-49dd-bede-0b4a7e1dd773", null, null)
             .returning(204, "")
@@ -864,7 +862,7 @@ public class Ds3Client_Test {
     }
 
     @Test
-    public void deleteTapePartitionSpectraS3() throws IOException, SignatureException {
+    public void deleteTapePartitionSpectraS3() throws IOException {
         final DeleteTapePartitionSpectraS3Response response = MockNetwork
             .expecting(HttpVerb.DELETE, "/_rest_/tape_partition/30a8dbf8-12e1-49dd-bede-0b4a7e1dd773", null, null)
             .returning(204, "")
@@ -888,7 +886,7 @@ public class Ds3Client_Test {
     }
 
     @Test
-    public void VerifySystemHealthSpectraS3() throws IOException, SignatureException {
+    public void VerifySystemHealthSpectraS3() throws IOException {
         final String responsePayload = "<Data><MsRequiredToVerifyDataPlannerHealth>0</MsRequiredToVerifyDataPlannerHealth></Data>";
 
         final VerifySystemHealthSpectraS3Response response = MockNetwork
@@ -902,7 +900,7 @@ public class Ds3Client_Test {
     }
 
     @Test
-    public void systemInformationSpectraS3() throws IOException, SignatureException {
+    public void systemInformationSpectraS3() throws IOException {
         final String responsePayload = "<Data><ApiVersion>518B3F2A95B71AC7325EFB12B2937376.15F3CC0489CBCD4648ECFF0FBF371B8A</ApiVersion><BuildInformation><Branch/><Revision/><Version/></BuildInformation><SerialNumber>UNKNOWN</SerialNumber></Data>";
 
         final GetSystemInformationSpectraS3Response response = MockNetwork
@@ -915,7 +913,7 @@ public class Ds3Client_Test {
     }
 
     @Test
-    public void getTapeLibrariesSpectraS3() throws IOException, SignatureException {
+    public void getTapeLibrariesSpectraS3() throws IOException {
         final String responsePayload = "<Data><TapeLibrary><Id>f4dae25d-e52a-4430-82bd-525e4f15493c</Id><ManagementUrl>a</ManagementUrl><Name>test library</Name><SerialNumber>test library</SerialNumber></TapeLibrary><TapeLibrary><Id>82bdab72-d79a-4b43-95d7-f2c16cd9aa45</Id><ManagementUrl>a</ManagementUrl><Name>test library 2</Name><SerialNumber>test library 2</SerialNumber></TapeLibrary></Data>";
 
         final GetTapeLibrariesSpectraS3Response response = MockNetwork
@@ -931,7 +929,7 @@ public class Ds3Client_Test {
     }
 
     @Test
-    public void getTapeLibrarySpectraS3() throws IOException, SignatureException {
+    public void getTapeLibrarySpectraS3() throws IOException {
         final String responsePayload = "<Data><Id>e23030e5-9b8d-4594-bdd1-15d3c45abb9f</Id><ManagementUrl>a</ManagementUrl><Name>125ca16e-60e3-43b2-a26f-0bc81843745f</Name><SerialNumber>test library</SerialNumber></Data>";
 
         final GetTapeLibrarySpectraS3Response response = MockNetwork
@@ -945,7 +943,7 @@ public class Ds3Client_Test {
     }
 
     @Test
-    public void getTapeFailures() throws IOException, SignatureException {
+    public void getTapeFailures() throws IOException {
         final String responsePayload = "<Data><TapeFailure><Date>2015-03-11T16:23:29.741</Date><ErrorMessage>AAA</ErrorMessage><Id>375ae624-d39f-47d8-95c0-0aaec4494ad2</Id><TapeDriveId>b06c8900-6d88-4a29-9a03-d0c4494b29ff</TapeDriveId><TapeId>badbb1e7-8654-4b38-8d3b-112c9fd68d58</TapeId><Type>BLOB_READ_FAILED</Type></TapeFailure></Data>";
 
         final GetTapeFailuresSpectraS3Response response = MockNetwork
@@ -962,7 +960,7 @@ public class Ds3Client_Test {
     }
 
     @Test
-    public void getTapeDrivesSpectraS3() throws IOException, SignatureException {
+    public void getTapeDrivesSpectraS3() throws IOException {
         final String responsePayload = "<Data><TapeDrive><ErrorMessage/><ForceTapeRemoval>false</ForceTapeRemoval><Id>ebeb0ec7-7912-4870-a0da-bbeb270ac049</Id><PartitionId>aa947aaa-23bf-4301-8173-2553bb1a3f1c</PartitionId><SerialNumber>test tape drive</SerialNumber><State>NORMAL</State><TapeId>b9085cd3-f1fd-4193-8763-c013d25cd135</TapeId><Type>UNKNOWN</Type></TapeDrive><TapeDrive><ErrorMessage/><ForceTapeRemoval>false</ForceTapeRemoval><Id>5dc2add1-b6e7-42a9-b551-a46339176c4b</Id><PartitionId>aa947aaa-23bf-4301-8173-2553bb1a3f1c</PartitionId><SerialNumber>test tape drive 2</SerialNumber><State>NORMAL</State><TapeId/><Type>UNKNOWN</Type></TapeDrive></Data>";
 
         final GetTapeDrivesSpectraS3Response response = MockNetwork
@@ -979,7 +977,7 @@ public class Ds3Client_Test {
     }
 
     @Test
-    public void getTapeDriveSpectraS3() throws IOException, SignatureException {
+    public void getTapeDriveSpectraS3() throws IOException {
         final String responsePayload = "<Data><ErrorMessage/><ForceTapeRemoval>false</ForceTapeRemoval><Id>ff5df6c8-7e24-4e4f-815d-a8a1a4cddc98</Id><PartitionId>ca69b187-47cf-425e-b92f-c09bacc7d3b3</PartitionId><SerialNumber>test tape drive</SerialNumber><State>NORMAL</State><TapeId>0ea07c32-8ff6-443f-b7c8-420667b0df84</TapeId><Type>UNKNOWN</Type></Data>";
 
         final GetTapeDriveSpectraS3Response response = MockNetwork
@@ -995,7 +993,7 @@ public class Ds3Client_Test {
     }
 
     @Test
-    public void getTapesSpectraS3() throws IOException, SignatureException {
+    public void getTapesSpectraS3() throws IOException {
         final String responsePayload = "<Data><Tape><AssignedToStorageDomain>false</AssignedToStorageDomain><AvailableRawCapacity>2408082046976</AvailableRawCapacity><BarCode>101000L6</BarCode><BucketId/><DescriptionForIdentification/><EjectDate/><EjectLabel/><EjectLocation/><EjectPending/><FullOfData>false</FullOfData><Id>c7c431df-f95d-4533-b350-ffd7a8a5caac</Id><LastAccessed>2015-09-04T06:53:08.236</LastAccessed><LastCheckpoint>eb77ea67-3c83-47ec-8714-cd46a97dc392:2</LastCheckpoint><LastModified>2015-08-21T16:14:30.714</LastModified><LastVerified/><PartitionId>4f8a5cbb-9837-41d9-afd1-cebed41f18f7</PartitionId><PreviousState/><SerialNumber>HP-W130501213</SerialNumber><State>NORMAL</State><TotalRawCapacity>2408088338432</TotalRawCapacity><Type>LTO6</Type><WriteProtected>false</WriteProtected></Tape></Data>";
 
         final GetTapesSpectraS3Response response = MockNetwork
@@ -1011,7 +1009,7 @@ public class Ds3Client_Test {
     }
 
     @Test
-    public void deletePermanentlyLostTapeSpectraS3() throws IOException, SignatureException {
+    public void deletePermanentlyLostTapeSpectraS3() throws IOException {
 
         final UUID id = UUID.randomUUID();
 
@@ -1025,7 +1023,7 @@ public class Ds3Client_Test {
     }
 
     @Test
-    public void getTapeSpectraS3() throws IOException, SignatureException {
+    public void getTapeSpectraS3() throws IOException {
         final String responsePayload = "<Data><AssignedToStorageDomain>false</AssignedToStorageDomain><AvailableRawCapacity>2408082046976</AvailableRawCapacity><BarCode>101000L6</BarCode><BucketId/><DescriptionForIdentification/><EjectDate/><EjectLabel/><EjectLocation/><EjectPending/><FullOfData>false</FullOfData><Id>c7c431df-f95d-4533-b350-ffd7a8a5caac</Id><LastAccessed>2015-09-04T06:53:08.236</LastAccessed><LastCheckpoint>eb77ea67-3c83-47ec-8714-cd46a97dc392:2</LastCheckpoint><LastModified>2015-08-21T16:14:30.714</LastModified><LastVerified/><PartitionId>4f8a5cbb-9837-41d9-afd1-cebed41f18f7</PartitionId><PreviousState/><SerialNumber>HP-W130501213</SerialNumber><State>NORMAL</State><TotalRawCapacity>2408088338432</TotalRawCapacity><Type>LTO6</Type><WriteProtected>false</WriteProtected></Data>";
 
         final GetTapeSpectraS3Response response = MockNetwork
@@ -1041,7 +1039,7 @@ public class Ds3Client_Test {
     }
 
     @Test(expected = ContentLengthNotMatchException.class)
-    public void getObjectVerifyFullPayload() throws IOException, SignatureException {
+    public void getObjectVerifyFullPayload() throws IOException {
         final String jobIdString = "a4a586a1-cb80-4441-84e2-48974e982d51";
         final Map<String, String> queryParams = new HashMap<>();
         queryParams.put("job", jobIdString);

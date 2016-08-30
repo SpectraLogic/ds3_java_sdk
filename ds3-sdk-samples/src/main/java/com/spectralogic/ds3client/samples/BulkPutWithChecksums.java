@@ -24,15 +24,13 @@ import com.spectralogic.ds3client.helpers.options.WriteJobOptions;
 import com.spectralogic.ds3client.models.BulkObject;
 import com.spectralogic.ds3client.models.ChecksumType;
 import com.spectralogic.ds3client.models.bulk.Ds3Object;
-import com.spectralogic.ds3client.serializer.XmlProcessingException;
 
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.security.SignatureException;
 
 public class BulkPutWithChecksums {
-    public static void main(final String[] args) throws IOException, SignatureException, XmlProcessingException {
+    public static void main(final String[] args) throws IOException {
         try (final Ds3Client client = Ds3ClientBuilder.fromEnv().withHttps(false).build()) {
 
             // Wrap the Ds3Client with the helper functions

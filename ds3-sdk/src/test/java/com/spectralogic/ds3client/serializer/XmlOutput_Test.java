@@ -73,7 +73,7 @@ public class XmlOutput_Test {
     }
 
     @Test
-    public void toXmlWithNoFilter() throws XmlProcessingException {
+    public void toXmlWithNoFilter() {
         final String expectedString = "<Objects><Object Name=\"file1\" Size=\"12\"/><Object Name=\"file2\" Size=\"5022\"/></Objects>";
         final List<Ds3Object> objectList = ImmutableList.of(new Ds3Object("file1", 12), new Ds3Object("file2", 5022)).asList();
         final Ds3ObjectList ds3ObjectList = new Ds3ObjectList(objectList);
@@ -83,7 +83,7 @@ public class XmlOutput_Test {
     }
 
     @Test
-    public void toXmlWithFilter() throws XmlProcessingException {
+    public void toXmlWithFilter() {
         final String expectedString = "<Objects><Object Name=\"file1\"/><Object Name=\"file2\"/></Objects>";
         final List<Ds3Object> objectList = ImmutableList.of(new Ds3Object("file1", 12), new Ds3Object("file2", 5022)).asList();
         final Ds3ObjectList ds3ObjectList = new Ds3ObjectList(objectList);
@@ -93,7 +93,7 @@ public class XmlOutput_Test {
     }
 
     @Test
-    public void toXmlWithPriority() throws XmlProcessingException {
+    public void toXmlWithPriority() {
         final String expectedString = "<Objects Priority=\"HIGH\"><Object Name=\"file1\" Size=\"12\"/><Object Name=\"file2\" Size=\"5022\"/></Objects>";
         final List<Ds3Object> objectList = ImmutableList.of(new Ds3Object("file1", 12), new Ds3Object("file2", 5022)).asList();
         final Ds3ObjectList ds3ObjectList = new Ds3ObjectList(objectList);

@@ -27,7 +27,6 @@ import com.spectralogic.ds3client.models.Contents;
 import com.spectralogic.ds3client.models.Objects;
 import com.spectralogic.ds3client.models.MasterObjectList;
 import com.spectralogic.ds3client.models.bulk.Ds3Object;
-import com.spectralogic.ds3client.serializer.XmlProcessingException;
 
 import java.io.IOException;
 import java.nio.channels.FileChannel;
@@ -35,13 +34,12 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
-import java.security.SignatureException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Ds3BulkGetExample {
 
-    public static void main(final String args[]) throws IOException, SignatureException, XmlProcessingException {
+    public static void main(final String args[]) throws IOException {
 
         // Get a client builder and then build a client instance.  This is the main entry point to the SDK.
         try (final Ds3Client client = Ds3ClientBuilder.fromEnv().withHttps(false).build()) {

@@ -28,7 +28,6 @@ import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.ObjectChannelBuilder;
 import com.spectralogic.ds3client.models.*;
 import com.spectralogic.ds3client.models.Objects;
 import com.spectralogic.ds3client.models.common.Range;
-import com.spectralogic.ds3client.serializer.XmlProcessingException;
 import com.spectralogic.ds3client.utils.Guard;
 import com.spectralogic.ds3client.utils.SeekableByteChannelInputStream;
 import com.spectralogic.ds3client.utils.hashing.*;
@@ -135,7 +134,7 @@ class WriteJobImpl extends JobImpl {
 
     @Override
     public void transfer(final ObjectChannelBuilder channelBuilder)
-            throws IOException, XmlProcessingException {
+            throws IOException {
         running = true;
         LOG.debug("Starting job transfer");
         if (this.masterObjectList == null || this.masterObjectList.getObjects() == null) {
@@ -160,7 +159,7 @@ class WriteJobImpl extends JobImpl {
                         this.masterObjectList.getNodes(),
                         Collections.singletonList(filterChunk(allocateChunk(chunk))));
             }
-        } catch (final IOException | XmlProcessingException | RuntimeException e) {
+        } catch (final IOException | RuntimeException e) {
             throw e;
         } catch (final Exception e) {
             throw new RuntimeException(e);

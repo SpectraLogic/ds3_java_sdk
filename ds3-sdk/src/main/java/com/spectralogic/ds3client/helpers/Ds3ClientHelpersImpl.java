@@ -31,7 +31,6 @@ import com.spectralogic.ds3client.models.bulk.RequestType;
 import com.spectralogic.ds3client.models.common.Range;
 import com.spectralogic.ds3client.models.bulk.*;
 import com.spectralogic.ds3client.networking.FailedRequestException;
-import com.spectralogic.ds3client.serializer.XmlProcessingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -64,7 +63,7 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
 
     @Override
     public Ds3ClientHelpers.Job startWriteJob(final String bucket, final Iterable<Ds3Object> objectsToWrite)
-            throws IOException, XmlProcessingException {
+            throws IOException {
         return innerStartWriteJob(bucket, objectsToWrite, WriteJobOptions.create());
     }
 
@@ -72,7 +71,7 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
     public Ds3ClientHelpers.Job startWriteJob(final String bucket,
                                                    final Iterable<Ds3Object> objectsToWrite,
                                                    final WriteJobOptions options)
-            throws IOException, XmlProcessingException {
+            throws IOException {
         if (options == null) {
             return innerStartWriteJob(bucket, objectsToWrite, WriteJobOptions.create());
         }
@@ -82,7 +81,7 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
     private Ds3ClientHelpers.Job innerStartWriteJob(final String bucket,
                                                          final Iterable<Ds3Object> objectsToWrite,
                                                          final WriteJobOptions options)
-            throws IOException, XmlProcessingException {
+            throws IOException {
         final PutBulkJobSpectraS3Response prime = this.client.putBulkJobSpectraS3(
                 new PutBulkJobSpectraS3Request(bucket, Lists.newArrayList(objectsToWrite))
                 .withPriority(options.getPriority())
@@ -94,13 +93,13 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
 
     @Override
     public Ds3ClientHelpers.Job startReadJob(final String bucket, final Iterable<Ds3Object> objectsToRead)
-            throws IOException, XmlProcessingException {
+            throws IOException {
         return innerStartReadJob(bucket, objectsToRead, ReadJobOptions.create());
     }
 
     @Override
     public Ds3ClientHelpers.Job startReadJob(final String bucket, final Iterable<Ds3Object> objectsToRead, final ReadJobOptions options)
-            throws IOException, XmlProcessingException {
+            throws IOException {
         if (options == null) {
             return innerStartReadJob(bucket, objectsToRead, ReadJobOptions.create());
         }
@@ -108,7 +107,7 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
     }
 
     private Ds3ClientHelpers.Job innerStartReadJob(final String bucket, final Iterable<Ds3Object> objectsToRead, final ReadJobOptions options)
-            throws IOException, XmlProcessingException {
+            throws IOException {
         final List<Ds3Object> objects = Lists.newArrayList(objectsToRead);
         final GetBulkJobSpectraS3Response prime = this.client.getBulkJobSpectraS3(new GetBulkJobSpectraS3Request(bucket, objects)
                 .withChunkClientProcessingOrderGuarantee(JobChunkClientProcessingOrderGuarantee.NONE)
@@ -121,13 +120,13 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
 
     @Override
     public Ds3ClientHelpers.Job startReadAllJob(final String bucket)
-            throws IOException, XmlProcessingException {
+            throws IOException {
         return innerStartReadAllJob(bucket, ReadJobOptions.create());
     }
 
     @Override
     public Ds3ClientHelpers.Job startReadAllJob(final String bucket, final ReadJobOptions options)
-            throws IOException, XmlProcessingException {
+            throws IOException {
         if (options == null) {
             return innerStartReadAllJob(bucket, ReadJobOptions.create());
         }
@@ -135,7 +134,7 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
     }
 
     private Ds3ClientHelpers.Job innerStartReadAllJob(final String bucket, final ReadJobOptions options)
-            throws IOException, XmlProcessingException {
+            throws IOException {
         final Iterable<Contents> contentsList = this.listObjects(bucket);
 
         final Iterable<Ds3Object> ds3Objects = this.toDs3Iterable(contentsList, FolderNameFilter.filter());
@@ -144,7 +143,7 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
     }
 
     @Override
-    public Ds3ClientHelpers.Job recoverWriteJob(final UUID jobId) throws IOException, XmlProcessingException, JobRecoveryException {
+    public Ds3ClientHelpers.Job recoverWriteJob(final UUID jobId) throws IOException, JobRecoveryException {
         final ModifyJobSpectraS3Response jobResponse = this.client.modifyJobSpectraS3(new ModifyJobSpectraS3Request(jobId.toString()));
         if (JobRequestType.PUT != jobResponse.getMasterObjectListResult().getRequestType()) {
             throw new JobRecoveryException(
@@ -161,7 +160,7 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
 
     @Override
     //TODO add a partial object read recovery method.  That method will require the list of partial objects.
-    public Ds3ClientHelpers.Job recoverReadJob(final UUID jobId) throws IOException, XmlProcessingException, JobRecoveryException {
+    public Ds3ClientHelpers.Job recoverReadJob(final UUID jobId) throws IOException, JobRecoveryException {
         final ModifyJobSpectraS3Response jobResponse = this.client.modifyJobSpectraS3(new ModifyJobSpectraS3Request(jobId.toString()));
         if (JobRequestType.GET != jobResponse.getMasterObjectListResult().getRequestType()){
             throw new JobRecoveryException(

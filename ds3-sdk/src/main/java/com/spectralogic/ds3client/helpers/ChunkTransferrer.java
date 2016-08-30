@@ -24,7 +24,6 @@ import com.spectralogic.ds3client.Ds3Client;
 import com.spectralogic.ds3client.models.BulkObject;
 import com.spectralogic.ds3client.models.Objects;
 import com.spectralogic.ds3client.models.JobNode;
-import com.spectralogic.ds3client.serializer.XmlProcessingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -59,7 +58,7 @@ class ChunkTransferrer {
     public void transferChunks(
             final Iterable<JobNode> nodes,
             final Iterable<Objects> chunks)
-                throws IOException, XmlProcessingException {
+                throws IOException {
         LOG.debug("Getting ready to process chunks");
         final ImmutableMap<UUID, JobNode> nodeMap = buildNodeMap(nodes);
         LOG.debug("Starting executor service");
@@ -113,7 +112,7 @@ class ChunkTransferrer {
     }
 
     private static void executeWithExceptionHandling(final List<ListenableFuture<?>> tasks)
-            throws IOException, XmlProcessingException {
+            throws IOException {
         try {
             // Block on the asynchronous result.
             Futures.allAsList(tasks).get();
@@ -127,8 +126,6 @@ class ChunkTransferrer {
             // Throw each of the advertised thrown exceptions.
             if (cause instanceof IOException) {
                 throw (IOException)cause;
-            } else if (cause instanceof XmlProcessingException) {
-                throw (XmlProcessingException)cause;
             }
 
             // The rest we don't know about, so we'll just forward them.

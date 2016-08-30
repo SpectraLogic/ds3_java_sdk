@@ -23,7 +23,6 @@ import com.spectralogic.ds3client.integration.test.helpers.TempStorageIds;
 import com.spectralogic.ds3client.integration.test.helpers.TempStorageUtil;
 import com.spectralogic.ds3client.models.*;
 import com.spectralogic.ds3client.networking.FailedRequestException;
-import com.spectralogic.ds3client.serializer.XmlProcessingException;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -245,7 +244,7 @@ public class AdvancedBucketManagement_Test {
 
     @Test
     public void putDuplicateObjects_VersioningKeepLatest_Test() throws IOException,
-            SignatureException, URISyntaxException, XmlProcessingException {
+            SignatureException, URISyntaxException {
         final String bucketName = "duplicate_object_versioning_keep_latest";
         final String dataPolicyName = "duplicate_object_versioning_keep_latest_dp";
         final String storageDomainName = "duplicate_object_versioning_keep_latest_sd";
@@ -317,7 +316,7 @@ public class AdvancedBucketManagement_Test {
 
     @Test
     public void putDuplicateObjects_VersioningNone_Test() throws IOException,
-            SignatureException, URISyntaxException, XmlProcessingException {
+            SignatureException, URISyntaxException {
         final String bucketName = "duplicate_object_versioning_none";
         final String dataPolicyName = "duplicate_object_versioning_none_dp";
         final String storageDomainName = "duplicate_object_versioning_none_sd";

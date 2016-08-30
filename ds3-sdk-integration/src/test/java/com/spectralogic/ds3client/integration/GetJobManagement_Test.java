@@ -30,7 +30,6 @@ import com.spectralogic.ds3client.integration.test.helpers.TempStorageUtil;
 import com.spectralogic.ds3client.models.ChecksumType;
 import com.spectralogic.ds3client.models.Priority;
 import com.spectralogic.ds3client.models.bulk.Ds3Object;
-import com.spectralogic.ds3client.serializer.XmlProcessingException;
 import com.spectralogic.ds3client.utils.ResourceUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -44,7 +43,6 @@ import java.nio.channels.SeekableByteChannel;
 import java.nio.channels.WritableByteChannel;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.security.SignatureException;
 import java.util.UUID;
 
 import static com.spectralogic.ds3client.integration.Util.RESOURCE_BASE_NAME;
@@ -71,7 +69,7 @@ public class GetJobManagement_Test {
     }
 
     @AfterClass
-    public static void teardown() throws IOException, SignatureException {
+    public static void teardown() throws IOException {
         try {
             deleteAllContents(client, BUCKET_NAME);
         } finally {
@@ -107,7 +105,7 @@ public class GetJobManagement_Test {
 
     @SuppressWarnings("deprecation")
     @Test
-    public void nakedS3Get() throws IOException, SignatureException, XmlProcessingException,
+    public void nakedS3Get() throws IOException,
             URISyntaxException, InterruptedException {
 
         final WritableByteChannel writeChannel = new NullChannel();
@@ -119,7 +117,7 @@ public class GetJobManagement_Test {
     }
 
     @Test
-    public void createReadJob() throws IOException, SignatureException, InterruptedException, XmlProcessingException, URISyntaxException {
+    public void createReadJob() throws IOException, InterruptedException, URISyntaxException {
 
         final Ds3ClientHelpers.Job readJob = HELPERS.startReadJob(BUCKET_NAME, Lists.newArrayList(
                 new Ds3Object("beowulf.txt", 10)));
@@ -131,8 +129,8 @@ public class GetJobManagement_Test {
     }
 
     @Test
-    public void createReadJobWithPriorityOption() throws IOException, SignatureException,
-            InterruptedException, XmlProcessingException, URISyntaxException {
+    public void createReadJobWithPriorityOption() throws IOException,
+            InterruptedException, URISyntaxException {
 
         final Ds3ClientHelpers.Job readJob = HELPERS.startReadJob(BUCKET_NAME, Lists.newArrayList(
                 new Ds3Object("beowulf.txt", 10)), ReadJobOptions.create().withPriority(Priority.LOW));
@@ -143,7 +141,7 @@ public class GetJobManagement_Test {
     }
 
     @Test
-    public void createReadJobWithNameOption() throws IOException, SignatureException, XmlProcessingException,
+    public void createReadJobWithNameOption() throws IOException,
             URISyntaxException, InterruptedException {
 
         final Ds3ClientHelpers.Job readJob = HELPERS.startReadJob(BUCKET_NAME, Lists.newArrayList(
@@ -155,7 +153,7 @@ public class GetJobManagement_Test {
     }
 
     @Test
-    public void createReadJobWithNameAndPriorityOptions() throws IOException, SignatureException, XmlProcessingException,
+    public void createReadJobWithNameAndPriorityOptions() throws IOException,
             URISyntaxException, InterruptedException {
 
         final Ds3ClientHelpers.Job readJob = HELPERS.startReadJob(BUCKET_NAME, Lists.newArrayList(

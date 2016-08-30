@@ -30,7 +30,6 @@ import com.spectralogic.ds3client.models.Objects;
 import com.spectralogic.ds3client.models.bulk.Ds3Object;
 import com.spectralogic.ds3client.networking.ConnectionDetails;
 import com.spectralogic.ds3client.networking.FailedRequestException;
-import com.spectralogic.ds3client.serializer.XmlProcessingException;
 import com.spectralogic.ds3client.utils.ByteArraySeekableByteChannel;
 import org.junit.Assert;
 import org.junit.Before;
@@ -39,7 +38,6 @@ import org.mockito.Mockito;
 
 import java.io.IOException;
 import java.nio.channels.SeekableByteChannel;
-import java.security.SignatureException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -62,7 +60,7 @@ public class Ds3ClientHelpers_Test {
     }
     
     @Test
-    public void testReadObjects() throws SignatureException, IOException, XmlProcessingException, ParseException {
+    public void testReadObjects() throws IOException, ParseException {
         final Ds3Client ds3Client = buildDs3ClientForBulk();
 
 
@@ -106,7 +104,7 @@ public class Ds3ClientHelpers_Test {
     }
 
     @Test(expected = StubException.class)
-    public void testReadObjectsWithFailedGet() throws SignatureException, IOException, XmlProcessingException, ParseException {
+    public void testReadObjectsWithFailedGet() throws IOException, ParseException {
         final Ds3Client ds3Client = mock(Ds3Client.class);
 
         Mockito.when(ds3Client.newForNode(Mockito.<JobNode>any())).thenReturn(ds3Client);
@@ -136,7 +134,7 @@ public class Ds3ClientHelpers_Test {
     }
     
     @Test
-    public void testWriteObjects() throws SignatureException, IOException, XmlProcessingException, ParseException {
+    public void testWriteObjects() throws IOException, ParseException {
         final Ds3Client ds3Client = buildDs3ClientForBulk();
 
         final PutBulkJobSpectraS3Response bulkPutResponse = buildBulkPutResponse();
@@ -195,7 +193,7 @@ public class Ds3ClientHelpers_Test {
     }
     
     @Test
-    public void testWriteObjectsWithFailedPut() throws SignatureException, IOException, XmlProcessingException, ParseException {
+    public void testWriteObjectsWithFailedPut() throws IOException, ParseException {
         final Ds3Client ds3Client = mock(Ds3Client.class);
         final ConnectionDetails details = mock(ConnectionDetails.class);
         Mockito.when(details.getEndpoint()).thenReturn("localhost");
@@ -241,7 +239,7 @@ public class Ds3ClientHelpers_Test {
     }
 
     @Test
-    public void testListObjects() throws SignatureException, IOException, XmlProcessingException, ParseException {
+    public void testListObjects() throws IOException, ParseException {
         final Ds3Client ds3Client = mock(Ds3Client.class);
         Mockito.when(ds3Client.getBucket(getBucketHas(MYBUCKET, null))).thenReturn(new StubGetBucketResponse(0));
         Mockito.when(ds3Client.getBucket(getBucketHas(MYBUCKET, "baz"))).thenReturn(new StubGetBucketResponse(1));
@@ -270,7 +268,7 @@ public class Ds3ClientHelpers_Test {
 
 
     @Test
-    public void testRecoverWriteJob() throws SignatureException, IOException, XmlProcessingException, JobRecoveryException, ParseException {
+    public void testRecoverWriteJob() throws IOException, JobRecoveryException, ParseException {
         final Ds3Client ds3Client = buildDs3ClientForBulk();
 
         final ModifyJobSpectraS3Response modifyWriteJobResponse = buildModifyWriteJobResponse();
@@ -282,7 +280,7 @@ public class Ds3ClientHelpers_Test {
     }
 
     @Test(expected = com.spectralogic.ds3client.helpers.JobRecoveryException.class)
-    public void testRecoverWriteJobThrowsJobRecoveryExceptionForWrongRequestType() throws SignatureException, IOException, XmlProcessingException, JobRecoveryException, ParseException {
+    public void testRecoverWriteJobThrowsJobRecoveryExceptionForWrongRequestType() throws IOException, JobRecoveryException, ParseException {
         final Ds3Client ds3Client = buildDs3ClientForBulk();
 
         final ModifyJobSpectraS3Response modifyReadJobResponse = buildModifyReadJobResponse();
@@ -292,7 +290,7 @@ public class Ds3ClientHelpers_Test {
     }
 
     @Test
-    public void testRecoverReadJob() throws SignatureException, IOException, XmlProcessingException, JobRecoveryException, ParseException {
+    public void testRecoverReadJob() throws IOException, JobRecoveryException, ParseException {
         final Ds3Client ds3Client = buildDs3ClientForBulk();
 
         final ModifyJobSpectraS3Response modifyReadJobResponse = buildModifyReadJobResponse();
@@ -304,7 +302,7 @@ public class Ds3ClientHelpers_Test {
     }
 
     @Test(expected = com.spectralogic.ds3client.helpers.JobRecoveryException.class)
-    public void testRecoverReadJobThrowsJobRecoveryExceptionForWrongRequestType() throws SignatureException, IOException, XmlProcessingException, JobRecoveryException, ParseException {
+    public void testRecoverReadJobThrowsJobRecoveryExceptionForWrongRequestType() throws IOException, JobRecoveryException, ParseException {
         final Ds3Client ds3Client = buildDs3ClientForBulk();
 
         final ModifyJobSpectraS3Response modifyWriteJobResponse = buildModifyWriteJobResponse();
@@ -394,7 +392,7 @@ public class Ds3ClientHelpers_Test {
     private static final UUID nodeId = UUID.fromString("29bf5a53-d891-407f-8f3f-749ee7e636f3");
 
     private static Ds3Client buildDs3ClientForBulk() throws IOException,
-            SignatureException, ParseException {
+            ParseException {
         final Ds3Client ds3Client = mock(Ds3Client.class);
         final ConnectionDetails details = mock(ConnectionDetails.class);
         Mockito.when(details.getEndpoint()).thenReturn("localhost");
@@ -542,7 +540,7 @@ public class Ds3ClientHelpers_Test {
     }
 
     @Test
-    public void testAddPrefixToDs3ObjectsList() throws IOException, SignatureException, ParseException {
+    public void testAddPrefixToDs3ObjectsList() throws IOException, ParseException {
         final List<Ds3Object> ds3ObjectList = Lists.newArrayList(new Ds3Object("foo"), new Ds3Object("bar"));
         final Ds3ClientHelpers helper = Ds3ClientHelpers.wrap(buildDs3ClientForBulk());
         final Iterable<Ds3Object> modifiedDs3ObjectList = helper.addPrefixToDs3ObjectsList(ds3ObjectList, "baz/");
@@ -563,7 +561,7 @@ public class Ds3ClientHelpers_Test {
     }
 
     @Test
-    public void testRemovePrefixToDs3ObjectsList() throws IOException, SignatureException, ParseException {
+    public void testRemovePrefixToDs3ObjectsList() throws IOException, ParseException {
         final List<Ds3Object> ds3ObjectList = Lists.newArrayList(new Ds3Object("foo/bar"), new Ds3Object("foo/baz"));
         final Ds3ClientHelpers helper = Ds3ClientHelpers.wrap(buildDs3ClientForBulk());
         final Iterable<Ds3Object> modifiedDs3ObjectList = helper.removePrefixFromDs3ObjectsList(ds3ObjectList, "foo/");
@@ -590,7 +588,7 @@ public class Ds3ClientHelpers_Test {
     }
 
     @Test(expected = Ds3NoMoreRetriesException.class)
-    public void testWriteObjectsWithRetryAfter() throws SignatureException, IOException, XmlProcessingException, ParseException {
+    public void testWriteObjectsWithRetryAfter() throws IOException, ParseException {
         final Ds3Client ds3Client = buildDs3ClientForBulk();
 
         final PutBulkJobSpectraS3Response bulkPutResponse = buildBulkPutResponse();
@@ -619,7 +617,7 @@ public class Ds3ClientHelpers_Test {
     }
 
     @Test(expected = Ds3NoMoreRetriesException.class)
-    public void testReadObjectsWithRetryAfter() throws SignatureException, IOException, XmlProcessingException, ParseException {
+    public void testReadObjectsWithRetryAfter() throws IOException, ParseException {
         final Ds3Client ds3Client = mock(Ds3Client.class);
 
         final GetBulkJobSpectraS3Response buildBulkGetResponse = buildBulkGetResponse();
@@ -650,7 +648,7 @@ public class Ds3ClientHelpers_Test {
     }
 
     @Test
-    public void testEnsureBucketExistsRace() throws IOException, SignatureException {
+    public void testEnsureBucketExistsRace() throws IOException {
         final Ds3Client ds3Client = mock(Ds3Client.class);
         final HeadBucketResponse response = buildHeadBucketResponse(HeadBucketResponse.Status.DOESNTEXIST);
         Mockito.when(ds3Client.headBucket(Mockito.any(HeadBucketRequest.class))).thenReturn(response);
@@ -664,7 +662,7 @@ public class Ds3ClientHelpers_Test {
     }
 
     @Test(expected = FailedRequestException.class)
-    public void testEnsureBucketExistsReturnsError() throws IOException, SignatureException {
+    public void testEnsureBucketExistsReturnsError() throws IOException {
         final Ds3Client ds3Client = mock(Ds3Client.class);
         final HeadBucketResponse response = buildHeadBucketResponse(HeadBucketResponse.Status.DOESNTEXIST);
         Mockito.when(ds3Client.headBucket(Mockito.any(HeadBucketRequest.class))).thenReturn(response);
