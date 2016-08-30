@@ -15,7 +15,6 @@ import com.spectralogic.ds3client.integration.test.helpers.TempStorageUtil;
 import com.spectralogic.ds3client.models.ChecksumType;
 import com.spectralogic.ds3client.models.bulk.Ds3Object;
 import com.spectralogic.ds3client.networking.Metadata;
-import com.spectralogic.ds3client.serializer.XmlProcessingException;
 import com.spectralogic.ds3client.utils.ByteArraySeekableByteChannel;
 import org.apache.commons.io.IOUtils;
 import org.junit.AfterClass;
@@ -25,7 +24,6 @@ import org.junit.Test;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.SeekableByteChannel;
-import java.security.SignatureException;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -44,19 +42,19 @@ public class Metadata_Test {
     private static UUID envDataPolicyId;
 
     @BeforeClass
-    public static void startup() throws IOException, SignatureException {
+    public static void startup() throws IOException {
         envDataPolicyId = TempStorageUtil.setupDataPolicy(TEST_ENV_NAME, false, ChecksumType.Type.MD5, client);
         envStorageIds = TempStorageUtil.setup(TEST_ENV_NAME, envDataPolicyId, client);
     }
 
     @AfterClass
-    public static void teardown() throws IOException, SignatureException {
+    public static void teardown() throws IOException {
         TempStorageUtil.teardown(TEST_ENV_NAME, envStorageIds, client);
         client.close();
     }
 
     @Test
-    public void singleMetadataField() throws IOException, SignatureException, XmlProcessingException {
+    public void singleMetadataField() throws IOException {
 
         final Metadata metadata = processMetadataRequest("metadataBucket", ImmutableMultimap.of("name", "value"));
 
@@ -69,7 +67,7 @@ public class Metadata_Test {
     }
 
     @Test
-    public void multipleMetadataFields() throws IOException, SignatureException, XmlProcessingException {
+    public void multipleMetadataFields() throws IOException {
 
         final Metadata metadata = processMetadataRequest("metadataBucket", ImmutableMultimap.of("name", "value", "key2", "value2"));
 
@@ -90,7 +88,7 @@ public class Metadata_Test {
     /*
     //TODO There is currently a limitation in BP where it does not handle metadata values that have the same key.
     @Test
-    public void multipleMetadataFieldsForSameKey() throws XmlProcessingException, SignatureException, IOException {
+    public void multipleMetadataFieldsForSameKey() throws IOException {
 
         final Metadata metadata = processMetadataRequest("metadataBucket", ImmutableMultimap.of("name", "value", "name", "value2"));
 
@@ -106,7 +104,7 @@ public class Metadata_Test {
     }
 
     @Test
-    public void multipleMetadataFieldsForSameKeyDifferentCase() throws XmlProcessingException, SignatureException, IOException {
+    public void multipleMetadataFieldsForSameKeyDifferentCase() throws IOException {
 
         final Metadata metadata = processMetadataRequest("metadataBucket", ImmutableMultimap.of("name", "value", "Name", "value2"));
 
@@ -122,7 +120,7 @@ public class Metadata_Test {
     }
     */
 
-    private static Metadata processMetadataRequest(final String bucketName, final ImmutableMultimap<String, String> metadata) throws IOException, SignatureException, XmlProcessingException {
+    private static Metadata processMetadataRequest(final String bucketName, final ImmutableMultimap<String, String> metadata) throws IOException {
         HELPERS.ensureBucketExists(bucketName, envDataPolicyId);
 
         try {

@@ -95,7 +95,7 @@ public class XmlOutput {
             }
         }
         catch(final JsonProcessingException e) {
-            throw new RuntimeException(new XmlProcessingException(e));
+            throw new XmlProcessingException(e);
         }
     }
 

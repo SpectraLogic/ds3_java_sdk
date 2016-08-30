@@ -22,7 +22,6 @@ import com.spectralogic.ds3client.helpers.FileObjectGetter;
 import com.spectralogic.ds3client.models.common.Range;
 import com.spectralogic.ds3client.models.bulk.Ds3Object;
 import com.spectralogic.ds3client.models.bulk.PartialDs3Object;
-import com.spectralogic.ds3client.serializer.XmlProcessingException;
 import com.spectralogic.ds3client.utils.ResourceUtils;
 
 import java.io.IOException;
@@ -33,14 +32,13 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
-import java.security.SignatureException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class PartialObjectGetExample {
-    public static void main(final String args[]) throws IOException, SignatureException, XmlProcessingException, URISyntaxException {
+    public static void main(final String args[]) throws IOException, URISyntaxException {
         // The bucket that we will be writing to
         final String bucketName = "my_bucket";
 
@@ -78,7 +76,7 @@ public class PartialObjectGetExample {
 
     private static final String[] BOOKS = new String[]{"beowulf.txt", "sherlock_holmes.txt", "tale_of_two_cities.txt", "ulysses.txt"};
 
-    private static void putBookData(final Ds3ClientHelpers helper, final String bucketName) throws IOException, SignatureException, XmlProcessingException, URISyntaxException {
+    private static void putBookData(final Ds3ClientHelpers helper, final String bucketName) throws IOException, URISyntaxException {
         helper.ensureBucketExists(bucketName);
 
         final List<Ds3Object> ds3Objects = new ArrayList<>();

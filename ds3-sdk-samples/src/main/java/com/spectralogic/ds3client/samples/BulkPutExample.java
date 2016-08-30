@@ -20,16 +20,14 @@ import com.spectralogic.ds3client.Ds3ClientBuilder;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers;
 import com.spectralogic.ds3client.helpers.FileObjectPutter;
 import com.spectralogic.ds3client.models.bulk.Ds3Object;
-import com.spectralogic.ds3client.serializer.XmlProcessingException;
 
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.security.SignatureException;
 
 public class BulkPutExample {
 
-    public static void main(final String args[]) throws IOException, SignatureException, XmlProcessingException {
+    public static void main(final String args[]) throws IOException {
 
         try (final Ds3Client client = Ds3ClientBuilder.fromEnv().withHttps(false).build()) {
 

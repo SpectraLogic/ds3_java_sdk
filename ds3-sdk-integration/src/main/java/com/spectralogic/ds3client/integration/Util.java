@@ -24,7 +24,6 @@ import com.spectralogic.ds3client.helpers.Ds3ClientHelpers;
 import com.spectralogic.ds3client.helpers.channelbuilders.PrefixAdderObjectChannelBuilder;
 import com.spectralogic.ds3client.models.Contents;
 import com.spectralogic.ds3client.models.bulk.Ds3Object;
-import com.spectralogic.ds3client.serializer.XmlProcessingException;
 import com.spectralogic.ds3client.utils.ResourceUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -65,14 +64,14 @@ public class Util {
         assumeThat(majorVersion, is(1));
     }
 
-    public static void loadBookTestData(final Ds3Client client, final String bucketName) throws IOException, XmlProcessingException, URISyntaxException {
+    public static void loadBookTestData(final Ds3Client client, final String bucketName) throws IOException, URISyntaxException {
         LOG.info("Loading test data...");
         getLoadJob(client, bucketName, RESOURCE_BASE_NAME)
             .transfer(new ResourceObjectPutter(RESOURCE_BASE_NAME));
         LOG.info("Finished loading test data...");
     }
 
-    public static Ds3ClientHelpers.Job getLoadJob(final Ds3Client client, final String bucketName, final String resourceBaseName) throws IOException, XmlProcessingException, URISyntaxException {
+    public static Ds3ClientHelpers.Job getLoadJob(final Ds3Client client, final String bucketName, final String resourceBaseName) throws IOException, URISyntaxException {
         final Ds3ClientHelpers helpers = Ds3ClientHelpers.wrap(client);
 
         final List<Ds3Object> objects = new ArrayList<>();
@@ -88,7 +87,7 @@ public class Util {
                 .startWriteJob(bucketName, objects);
     }
 
-    public static void loadBookTestDataWithPrefix(final Ds3Client client, final String bucketName, final String prefix) throws XmlProcessingException, IOException, URISyntaxException {
+    public static void loadBookTestDataWithPrefix(final Ds3Client client, final String bucketName, final String prefix) throws IOException, URISyntaxException {
         final Ds3ClientHelpers helpers = Ds3ClientHelpers.wrap(client);
 
         final List<Ds3Object> objects = new ArrayList<>();

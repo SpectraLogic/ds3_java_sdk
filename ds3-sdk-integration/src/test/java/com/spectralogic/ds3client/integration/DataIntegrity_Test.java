@@ -28,7 +28,6 @@ import com.spectralogic.ds3client.integration.test.helpers.TempStorageUtil;
 import com.spectralogic.ds3client.models.BulkObject;
 import com.spectralogic.ds3client.models.ChecksumType;
 import com.spectralogic.ds3client.models.bulk.Ds3Object;
-import com.spectralogic.ds3client.serializer.XmlProcessingException;
 import com.spectralogic.ds3client.utils.ByteArraySeekableByteChannel;
 import com.spectralogic.ds3client.utils.ResourceUtils;
 import org.apache.commons.codec.digest.DigestUtils;
@@ -44,7 +43,6 @@ import java.nio.channels.ByteChannel;
 import java.nio.channels.SeekableByteChannel;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.security.SignatureException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -64,19 +62,19 @@ public class DataIntegrity_Test {
     private static UUID envDataPolicyId;
 
     @BeforeClass
-    public static void startup() throws IOException, SignatureException {
+    public static void startup() throws IOException {
         envDataPolicyId = TempStorageUtil.setupDataPolicy(TEST_ENV_NAME, false, ChecksumType.Type.MD5, client);
         envStorageIds = TempStorageUtil.setup(TEST_ENV_NAME, envDataPolicyId, client);
     }
 
     @AfterClass
-    public static void teardown() throws IOException, SignatureException {
+    public static void teardown() throws IOException {
         TempStorageUtil.teardown(TEST_ENV_NAME, envStorageIds, client);
         client.close();
     }
 
     @Test
-    public void singleFilePut() throws IOException, URISyntaxException, XmlProcessingException, SignatureException {
+    public void singleFilePut() throws IOException, URISyntaxException {
         final String bucketName = "single_file_put_test";
         final String book = "beowulf.txt";
 
@@ -103,7 +101,7 @@ public class DataIntegrity_Test {
     }
 
     @Test
-    public void randomDataFile() throws IOException, SignatureException, URISyntaxException, XmlProcessingException {
+    public void randomDataFile() throws IOException, URISyntaxException {
         final String bucketName = "random_data_file_test";
         final String randomFileName = "random.txt";
         final long seed = 12345689;
@@ -113,7 +111,7 @@ public class DataIntegrity_Test {
     }
 
     @Test
-    public void randomSingleByte() throws XmlProcessingException, SignatureException, IOException {
+    public void randomSingleByte() throws IOException {
         final String bucketName = "random_single_byte_test";
         final String randomFileName = "random.txt";
         final long seed = 12345689;
@@ -123,7 +121,7 @@ public class DataIntegrity_Test {
     }
 
     @Test
-    public void multiBlob() throws IOException, SignatureException, XmlProcessingException {
+    public void multiBlob() throws IOException {
         final String bucketName = "multi_blob_test";
         final String randomFileName = "random.txt";
         final long seed = 12345689;
@@ -133,7 +131,7 @@ public class DataIntegrity_Test {
     }
 
     @Test
-    public void fullBlobPlusOneByte() throws XmlProcessingException, SignatureException, IOException {
+    public void fullBlobPlusOneByte() throws IOException {
         final String bucketName = "full_blob_plus_one_byte_test";
         final String randomFileName = "random.txt";
         final long seed = 12345;
@@ -143,7 +141,7 @@ public class DataIntegrity_Test {
     }
 
     @Test
-    public void threeFullBlobs() throws XmlProcessingException, SignatureException, IOException {
+    public void threeFullBlobs() throws IOException {
         final String bucketName = "three_full_blobs_test";
         final String randomFileName = "random.txt";
         final long seed = 12345;
@@ -153,7 +151,7 @@ public class DataIntegrity_Test {
     }
 
     @Test
-    public void twoFullBlobsPlusOneByte() throws XmlProcessingException, SignatureException, IOException {
+    public void twoFullBlobsPlusOneByte() throws IOException {
         final String bucketName = "two_full_blobs_plus_one_byte_test";
         final String randomFileName = "random.txt";
         final long seed = 12345;
@@ -163,7 +161,7 @@ public class DataIntegrity_Test {
     }
 
     @Test
-    public void autoChecksumming() throws IOException, SignatureException, XmlProcessingException {
+    public void autoChecksumming() throws IOException {
         final String bucketName = "auto_checksumming_test";
 
         try {
@@ -190,7 +188,7 @@ public class DataIntegrity_Test {
     }
 
     @Test
-    public void callerSuppliedChecksum() throws IOException, SignatureException, XmlProcessingException {
+    public void callerSuppliedChecksum() throws IOException {
         final String bucketName = "caller_supplied_checksum_test";
 
         try {
@@ -230,7 +228,7 @@ public class DataIntegrity_Test {
     }
 
     @Test
-    public void getChecksum() throws IOException, SignatureException, XmlProcessingException {
+    public void getChecksum() throws IOException {
         final String bucketName = "get_checksum_test";
 
         try {
@@ -270,7 +268,7 @@ public class DataIntegrity_Test {
     }
 
     @Test
-    public void getChecksumComputedByBp() throws IOException, SignatureException, URISyntaxException, XmlProcessingException {
+    public void getChecksumComputedByBp() throws IOException, URISyntaxException {
         final String bucketName = "get_checksum_computed_by_bp_test";
 
         try {
@@ -299,7 +297,7 @@ public class DataIntegrity_Test {
     }
 
     @Test
-    public void getMultiFileChecksum() throws IOException, SignatureException, URISyntaxException, XmlProcessingException {
+    public void getMultiFileChecksum() throws IOException, URISyntaxException {
         final String bucketName = "get_multi_file_checksum_test";
 
         try {
@@ -338,7 +336,7 @@ public class DataIntegrity_Test {
     }
 
     @Test
-    public void setAndGetMultiFileChecksum() throws IOException, SignatureException, URISyntaxException, XmlProcessingException {
+    public void setAndGetMultiFileChecksum() throws IOException, URISyntaxException {
         final String bucketName = "set_and_get_multi_file_checksum_test";
 
         try {
@@ -403,7 +401,7 @@ public class DataIntegrity_Test {
         }
     }
 
-    public void sendAndVerifySingleFile(final String bucketName, final String fileName, final long seed, final int length) throws IOException, SignatureException, XmlProcessingException {
+    public void sendAndVerifySingleFile(final String bucketName, final String fileName, final long seed, final int length) throws IOException {
         try {
             HELPERS.ensureBucketExists(bucketName, envDataPolicyId);
 

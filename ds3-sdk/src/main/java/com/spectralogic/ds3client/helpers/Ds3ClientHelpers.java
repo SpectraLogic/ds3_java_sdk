@@ -22,7 +22,6 @@ import com.spectralogic.ds3client.helpers.options.ReadJobOptions;
 import com.spectralogic.ds3client.helpers.options.WriteJobOptions;
 import com.spectralogic.ds3client.models.Contents;
 import com.spectralogic.ds3client.models.bulk.Ds3Object;
-import com.spectralogic.ds3client.serializer.XmlProcessingException;
 import com.spectralogic.ds3client.utils.Predicate;
 
 import javax.annotation.Nullable;
@@ -78,10 +77,9 @@ public abstract class Ds3ClientHelpers {
         /**
          * Transfers the files in this job using the given seekable channel creator.  The is a blocking call.
          * @throws IOException
-         * @throws XmlProcessingException
          */
         void transfer(final ObjectChannelBuilder channelBuilder)
-            throws IOException, XmlProcessingException;
+            throws IOException;
     }
 
     public interface MetadataAccess {
@@ -104,79 +102,71 @@ public abstract class Ds3ClientHelpers {
      * See {@link WriteJobImpl} for information on how to write the objects for the job.
      *
      * @throws IOException
-     * @throws XmlProcessingException
      */
     public abstract Ds3ClientHelpers.Job startWriteJob(final String bucket, final Iterable<Ds3Object> objectsToWrite)
-            throws IOException, XmlProcessingException;
+            throws IOException;
 
     /**
      * Performs a bulk put job creation request and returns an {@link WriteJobImpl}.
      * See {@link WriteJobImpl} for information on how to write the objects for the job.
      *
      * @throws IOException
-     * @throws XmlProcessingException
      */
     public abstract Ds3ClientHelpers.Job startWriteJob(final String bucket, final Iterable<Ds3Object> objectsToWrite, final WriteJobOptions options)
-            throws IOException, XmlProcessingException;
+            throws IOException;
 
     /**
      * Performs a bulk get job creation request and returns an {@link ReadJobImpl}.
      * See {@link ReadJobImpl} for information on how to read the objects for the job.
      *
      * @throws IOException
-     * @throws XmlProcessingException
      */
     public abstract Ds3ClientHelpers.Job startReadJob(final String bucket, final Iterable<Ds3Object> objectsToRead)
-            throws IOException, XmlProcessingException;
+            throws IOException;
 
     /**
      * Performs a bulk get job creation request and returns an {@link ReadJobImpl}.
      * See {@link ReadJobImpl} for information on how to read the objects for the job.
      *
      * @throws IOException
-     * @throws XmlProcessingException
      */
     public abstract Ds3ClientHelpers.Job startReadJob(
             final String bucket,
             final Iterable<Ds3Object> objectsToRead,
             final ReadJobOptions options)
-            throws IOException, XmlProcessingException;
+            throws IOException;
 
     /**
      * Performs a bulk get job creation request for all of the objects in the given bucket and returns an {@link ReadJobImpl}.
      *
      * @throws IOException
-     * @throws XmlProcessingException
      */
     public abstract Ds3ClientHelpers.Job startReadAllJob(final String bucket)
-            throws IOException, XmlProcessingException;
+            throws IOException;
 
     /**
      * Performs a bulk get job creation request for all of the objects in the given bucket and returns an {@link ReadJobImpl}.
      *
      * @throws IOException
-     * @throws XmlProcessingException
      */
     public abstract Ds3ClientHelpers.Job startReadAllJob(final String bucket, final ReadJobOptions options)
-            throws IOException, XmlProcessingException;
+            throws IOException;
 
     /**
      * Queries job information based on job id and returns a {@link ReadJobImpl} that can resume the job.
      * @throws IOException
-     * @throws XmlProcessingException
      * @throws JobRecoveryException
      */
     public abstract Ds3ClientHelpers.Job recoverWriteJob(final UUID jobId)
-            throws IOException, XmlProcessingException, JobRecoveryException;
+            throws IOException, JobRecoveryException;
 
     /**
      * Queries job information based on job id and returns a {@link WriteJobImpl} that can resume the job.
      * @throws IOException
-     * @throws XmlProcessingException
      * @throws JobRecoveryException
      */
     public abstract Ds3ClientHelpers.Job recoverReadJob(final UUID jobId)
-            throws IOException, XmlProcessingException, JobRecoveryException;
+            throws IOException, JobRecoveryException;
 
     /**
      * Ensures that a bucket exists.  The the bucket does not exist, it will be created.

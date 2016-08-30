@@ -28,7 +28,6 @@ import com.spectralogic.ds3client.integration.test.helpers.TempStorageUtil;
 import com.spectralogic.ds3client.models.*;
 import com.spectralogic.ds3client.models.bulk.Ds3Object;
 import com.spectralogic.ds3client.networking.FailedRequestException;
-import com.spectralogic.ds3client.serializer.XmlProcessingException;
 import com.spectralogic.ds3client.utils.ByteArraySeekableByteChannel;
 import com.spectralogic.ds3client.utils.ResourceUtils;
 import org.apache.commons.io.IOUtils;
@@ -40,7 +39,6 @@ import java.nio.ByteBuffer;
 import java.nio.channels.SeekableByteChannel;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.security.SignatureException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -62,23 +60,23 @@ public class PutJobManagement_Test {
     private static UUID envDataPolicyId;
 
     @BeforeClass
-    public static void startup() throws IOException, SignatureException {
+    public static void startup() throws IOException {
         envDataPolicyId = TempStorageUtil.setupDataPolicy(TEST_ENV_NAME, false, ChecksumType.Type.MD5, client);
         envStorageIds = TempStorageUtil.setup(TEST_ENV_NAME, envDataPolicyId, client);
     }
 
     @Before
-    public void setupBucket() throws IOException, SignatureException {
+    public void setupBucket() throws IOException {
         HELPERS.ensureBucketExists(BUCKET_NAME, envDataPolicyId);
     }
 
     @AfterClass
-    public static void teardown() throws IOException, SignatureException {
+    public static void teardown() throws IOException {
         TempStorageUtil.teardown(TEST_ENV_NAME, envStorageIds, client);
         client.close();
     }
 
-    private long getCacheBytesAvailable() throws IOException, SignatureException {
+    private long getCacheBytesAvailable() throws IOException {
         long cacheAvailableBytes = 0;
         final List<CacheFilesystemInformation> cacheFilesystemInformationList = client.getCacheStateSpectraS3(
                 new GetCacheStateSpectraS3Request()).getCacheInformationResult().getFilesystems();
@@ -92,7 +90,7 @@ public class PutJobManagement_Test {
 
     @SuppressWarnings("deprecation")
     @Test
-    public void nakedS3Put() throws IOException, SignatureException, XmlProcessingException, URISyntaxException {
+    public void nakedS3Put() throws IOException, URISyntaxException {
         try {
             final Path beowulfPath = ResourceUtils.loadFileResource(RESOURCE_BASE_NAME + "beowulf.txt");
             final SeekableByteChannel beowulfChannel = new ResourceObjectPutter(RESOURCE_BASE_NAME).buildChannel("beowulf.txt");
@@ -105,7 +103,7 @@ public class PutJobManagement_Test {
     }
 
     @Test
-    public void getActiveJobs() throws IOException, SignatureException, XmlProcessingException, URISyntaxException {
+    public void getActiveJobs() throws IOException, URISyntaxException {
         try {
             final UUID jobID = HELPERS
                     .startWriteJob(BUCKET_NAME, Lists.newArrayList(new Ds3Object("test", 2))).getJobId();
@@ -122,7 +120,7 @@ public class PutJobManagement_Test {
     }
 
     @Test
-    public void getJobs() throws IOException, SignatureException, XmlProcessingException {
+    public void getJobs() throws IOException {
         try {
             final UUID jobID = HELPERS
                     .startWriteJob(BUCKET_NAME, Lists.newArrayList(new Ds3Object("test", 2))).getJobId();
@@ -140,7 +138,7 @@ public class PutJobManagement_Test {
     }
 
     @Test
-    public void modifyJobPriority() throws IOException, SignatureException, XmlProcessingException {
+    public void modifyJobPriority() throws IOException {
         try {
             final Ds3ClientHelpers.Job job =
                     HELPERS.startWriteJob(BUCKET_NAME, Lists.newArrayList(new Ds3Object("test", 2)),
@@ -160,7 +158,7 @@ public class PutJobManagement_Test {
     }
 
     @Test
-    public void modifyJobName() throws IOException, SignatureException, XmlProcessingException {
+    public void modifyJobName() throws IOException {
 
         try {
             final Ds3ClientHelpers.Job job =
@@ -180,7 +178,7 @@ public class PutJobManagement_Test {
     }
 
     @Test
-    public void modifyJobCreationDate() throws IOException, SignatureException, XmlProcessingException {
+    public void modifyJobCreationDate() throws IOException {
 
         try {
             final Ds3ClientHelpers.Job job =
@@ -205,7 +203,7 @@ public class PutJobManagement_Test {
     }
 
     @Test
-    public void cancelJob() throws IOException, SignatureException, XmlProcessingException {
+    public void cancelJob() throws IOException {
 
         try {
             final Ds3ClientHelpers.Job job =
@@ -224,7 +222,7 @@ public class PutJobManagement_Test {
     }
 
     @Test
-    public void clearAllCanceledJobs() throws IOException, SignatureException, XmlProcessingException {
+    public void clearAllCanceledJobs() throws IOException {
 
         try {
             final Ds3ClientHelpers.Job job =
@@ -313,7 +311,7 @@ public class PutJobManagement_Test {
     }
 
     @Test
-    public void cancelAllJobs() throws IOException, SignatureException, XmlProcessingException {
+    public void cancelAllJobs() throws IOException {
 
         try {
             HELPERS.startWriteJob(BUCKET_NAME, Lists.newArrayList(new Ds3Object("testOne", 2)));
@@ -422,7 +420,7 @@ public class PutJobManagement_Test {
     }
 
     @Test
-    public void getCanceledJobs() throws IOException, SignatureException, XmlProcessingException {
+    public void getCanceledJobs() throws IOException {
 
         try {
             final Ds3ClientHelpers.Job jobOne =
@@ -446,7 +444,7 @@ public class PutJobManagement_Test {
     }
 
     @Test
-    public void getJobChunksReady() throws IOException, SignatureException, XmlProcessingException {
+    public void getJobChunksReady() throws IOException {
 
         try {
             final Ds3Object ds3Object = new Ds3Object("test", 2);
@@ -473,7 +471,7 @@ public class PutJobManagement_Test {
     }
 
     @Test
-    public void getJobChunk() throws IOException, SignatureException, XmlProcessingException {
+    public void getJobChunk() throws IOException {
 
         try {
             final Ds3Object ds3Object = new Ds3Object("test", 2);
@@ -498,7 +496,7 @@ public class PutJobManagement_Test {
     }
 
     @Test
-    public void aggregateTwoJobs() throws IOException, SignatureException, XmlProcessingException {
+    public void aggregateTwoJobs() throws IOException {
 
         try {
             final WriteJobOptions writeJobOptions = WriteJobOptions.create().withAggregating();
@@ -519,7 +517,7 @@ public class PutJobManagement_Test {
     }
 
     @Test
-    public void allocateJobChunk() throws IOException, SignatureException, XmlProcessingException {
+    public void allocateJobChunk() throws IOException {
 
         try {
             final PutBulkJobSpectraS3Response putBulkResponse = client.
@@ -536,7 +534,7 @@ public class PutJobManagement_Test {
     }
 
     @Test
-    public void putObjectCachedNotification() throws IOException, SignatureException, XmlProcessingException {
+    public void putObjectCachedNotification() throws IOException {
         final PutObjectCachedNotificationRegistrationSpectraS3Response putNotificationResponse = client
                 .putObjectCachedNotificationRegistrationSpectraS3
                         (new PutObjectCachedNotificationRegistrationSpectraS3Request("test@test.test"));
@@ -545,7 +543,7 @@ public class PutJobManagement_Test {
     }
 
     @Test
-    public void getObjectCachedNotification() throws IOException, SignatureException, XmlProcessingException {
+    public void getObjectCachedNotification() throws IOException {
 
         final PutObjectCachedNotificationRegistrationSpectraS3Response putNotificationResponse = client
                 .putObjectCachedNotificationRegistrationSpectraS3
@@ -559,7 +557,7 @@ public class PutJobManagement_Test {
     }
 
     @Test
-    public void getCompletedJobs() throws IOException, SignatureException, XmlProcessingException {
+    public void getCompletedJobs() throws IOException {
         final GetCompletedJobsSpectraS3Response getCompletedJobsResponse = client.
                 getCompletedJobsSpectraS3(new GetCompletedJobsSpectraS3Request());
 
@@ -567,7 +565,7 @@ public class PutJobManagement_Test {
     }
 
     @Test
-    public void clearCompletedJobs() throws IOException, SignatureException, XmlProcessingException {
+    public void clearCompletedJobs() throws IOException {
         final ClearAllCompletedJobsSpectraS3Response clearAllCompletedJobsResponse = client
                 .clearAllCompletedJobsSpectraS3(new ClearAllCompletedJobsSpectraS3Request());
 
@@ -575,7 +573,7 @@ public class PutJobManagement_Test {
     }
 
     @Test
-    public void putJobCreatedNotification() throws IOException, SignatureException {
+    public void putJobCreatedNotification() throws IOException {
         UUID notificationUUID = null;
         try {
             final PutJobCreatedNotificationRegistrationSpectraS3Response response = client
@@ -592,7 +590,7 @@ public class PutJobManagement_Test {
     }
 
     @Test
-    public void getJobCreatedNotification() throws IOException, SignatureException {
+    public void getJobCreatedNotification() throws IOException {
         UUID notificationUUID = null;
         try {
             notificationUUID = client.putJobCreatedNotificationRegistrationSpectraS3(
@@ -614,7 +612,7 @@ public class PutJobManagement_Test {
     }
 
     @Test
-    public void deleteJobCreatedNotification() throws IOException, SignatureException {
+    public void deleteJobCreatedNotification() throws IOException {
         final UUID notificationUUID = client.putJobCreatedNotificationRegistrationSpectraS3(
                 new PutJobCreatedNotificationRegistrationSpectraS3Request("test@test.test"))
                 .getJobCreatedNotificationRegistrationResult().getId();
@@ -626,7 +624,7 @@ public class PutJobManagement_Test {
     }
 
     @Test
-    public void putJobCompletedNotification() throws IOException, SignatureException {
+    public void putJobCompletedNotification() throws IOException {
         UUID notificationUUID = null;
         try {
             final PutJobCompletedNotificationRegistrationSpectraS3Response response = client
@@ -643,7 +641,7 @@ public class PutJobManagement_Test {
     }
 
     @Test
-    public void getJobCompletedNotification() throws IOException, SignatureException {
+    public void getJobCompletedNotification() throws IOException {
         UUID notificationUUID = null;
         try {
             notificationUUID = client.putJobCompletedNotificationRegistrationSpectraS3(
@@ -665,7 +663,7 @@ public class PutJobManagement_Test {
     }
 
     @Test
-    public void deleteJobCompletedNotification() throws IOException, SignatureException {
+    public void deleteJobCompletedNotification() throws IOException {
         final UUID notificationUUID = client.putJobCompletedNotificationRegistrationSpectraS3(
                 new PutJobCompletedNotificationRegistrationSpectraS3Request("test@test.test"))
                 .getJobCompletedNotificationRegistrationResult().getId();
@@ -678,7 +676,7 @@ public class PutJobManagement_Test {
     }
 
     @Test
-    public void initiateMultipartUpload() throws IOException, SignatureException {
+    public void initiateMultipartUpload() throws IOException {
         try {
             final InitiateMultiPartUploadResponse multiPartUploadResponse = client.initiateMultiPartUpload(
                     new InitiateMultiPartUploadRequest(BUCKET_NAME, "beowulf"));
@@ -695,7 +693,7 @@ public class PutJobManagement_Test {
     }
 
     @Test
-    public void abortMultipartUpload() throws IOException, SignatureException {
+    public void abortMultipartUpload() throws IOException {
         String uploadID = null;
         try {
             try {
@@ -729,7 +727,7 @@ public class PutJobManagement_Test {
     }
 
     @Test //TODO expand positive test if test target >5 TB cache is available
-    public void listMultiPartUploadParts() throws IOException, SignatureException {
+    public void listMultiPartUploadParts() throws IOException {
         try {
             final ListMultiPartUploadPartsResponse response = client.listMultiPartUploadParts(
                     new ListMultiPartUploadPartsRequest(BUCKET_NAME, "beowulf", UUID.randomUUID()));
@@ -743,7 +741,7 @@ public class PutJobManagement_Test {
     }
 
     @Test //TODO expand positive test if test target >5 TB cache is available
-    public void completeMultiPartUpload() throws IOException, SignatureException {
+    public void completeMultiPartUpload() throws IOException {
         try {
             client.completeMultiPartUpload(
                     //Passing in a null request payload, which is sufficient for checking error code
@@ -761,7 +759,7 @@ public class PutJobManagement_Test {
     }
 
     @Test //TODO expand positive test if test target >5 TB cache is available
-    public void listMultiPartUploads() throws IOException, SignatureException {
+    public void listMultiPartUploads() throws IOException {
         try {
             final ListMultiPartUploadsResponse response = client.listMultiPartUploads(
                     new ListMultiPartUploadsRequest(BUCKET_NAME));
@@ -775,7 +773,7 @@ public class PutJobManagement_Test {
     }
 
     @Test //TODO expand positive test if test target >5 TB cache is available
-    public void putMultiPartUploadPart() throws IOException, SignatureException {
+    public void putMultiPartUploadPart() throws IOException {
         try {
             final int length = 1024;
             final Ds3Object obj = new Ds3Object("obj.txt", length);

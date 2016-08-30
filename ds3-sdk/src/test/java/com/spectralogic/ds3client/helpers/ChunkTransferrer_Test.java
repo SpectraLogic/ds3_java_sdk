@@ -18,11 +18,9 @@ import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3client.Ds3Client;
 import com.spectralogic.ds3client.models.JobNode;
 import com.spectralogic.ds3client.models.Objects;
-import com.spectralogic.ds3client.serializer.XmlProcessingException;
 import org.junit.Test;
 
 import java.io.IOException;
-import java.security.SignatureException;
 import java.util.ArrayList;
 import java.util.UUID;
 
@@ -34,7 +32,7 @@ import static org.mockito.Mockito.verify;
 public class ChunkTransferrer_Test {
 
     @Test
-    public void nullJobNode() throws XmlProcessingException, SignatureException, IOException {
+    public void nullJobNode() throws IOException {
         final Ds3Client client = mock(Ds3Client.class);
 
         final ChunkTransferrer chunkTransferrer = new ChunkTransferrer(null, client, null, 1);

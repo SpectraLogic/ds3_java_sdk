@@ -21,14 +21,12 @@ import com.spectralogic.ds3client.helpers.Ds3ClientHelpers;
 import com.spectralogic.ds3client.integration.test.helpers.TempStorageIds;
 import com.spectralogic.ds3client.integration.test.helpers.TempStorageUtil;
 import com.spectralogic.ds3client.models.ChecksumType;
-import com.spectralogic.ds3client.serializer.XmlProcessingException;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.security.SignatureException;
 import java.util.UUID;
 
 import static com.spectralogic.ds3client.integration.test.helpers.NotificationCleanupTestHelper.*;
@@ -45,19 +43,19 @@ public class NotificationsIntegration_test {
     private static UUID envDataPolicyId;
 
     @BeforeClass
-    public static void startup() throws IOException, SignatureException {
+    public static void startup() throws IOException {
         envDataPolicyId = TempStorageUtil.setupDataPolicy(TEST_ENV_NAME, false, ChecksumType.Type.MD5, client);
         envStorageIds = TempStorageUtil.setup(TEST_ENV_NAME, envDataPolicyId, client);
     }
 
     @AfterClass
-    public static void teardown() throws IOException, SignatureException {
+    public static void teardown() throws IOException {
         TempStorageUtil.teardown(TEST_ENV_NAME, envStorageIds, client);
         client.close();
     }
 
     @Test
-    public void objectCompletionRegistration() throws IOException, SignatureException {
+    public void objectCompletionRegistration() throws IOException {
         UUID registrationId = null;
         try {
             final PutObjectCachedNotificationRegistrationSpectraS3Response response = client.putObjectCachedNotificationRegistrationSpectraS3(
@@ -82,7 +80,7 @@ public class NotificationsIntegration_test {
     }
 
     @Test
-    public void jobCompletionRegistration() throws IOException, SignatureException {
+    public void jobCompletionRegistration() throws IOException {
         UUID registrationId = null;
         try {
             final PutJobCompletedNotificationRegistrationSpectraS3Response response = client.putJobCompletedNotificationRegistrationSpectraS3(
@@ -107,7 +105,7 @@ public class NotificationsIntegration_test {
     }
 
     @Test
-    public void jobCreateRegistration() throws IOException, SignatureException {
+    public void jobCreateRegistration() throws IOException {
         UUID registrationId = null;
         try {
             final PutJobCreatedNotificationRegistrationSpectraS3Response response = client
@@ -133,7 +131,7 @@ public class NotificationsIntegration_test {
     }
 
     @Test
-    public void objectLostRegistration() throws IOException, SignatureException {
+    public void objectLostRegistration() throws IOException {
         UUID registrationId = null;
         try {
             final PutObjectLostNotificationRegistrationSpectraS3Response response = client
@@ -159,7 +157,7 @@ public class NotificationsIntegration_test {
     }
 
     @Test
-    public void objectPersistedRegistration() throws IOException, SignatureException, URISyntaxException, XmlProcessingException {
+    public void objectPersistedRegistration() throws IOException, URISyntaxException {
         final String bucketName = "test_bucket";
         UUID registrationId = null;
         try {
@@ -193,7 +191,7 @@ public class NotificationsIntegration_test {
     }
 
     @Test
-    public void partitionFailureRegistration() throws IOException, SignatureException {
+    public void partitionFailureRegistration() throws IOException {
         UUID registrationId = null;
         try {
             final PutTapePartitionFailureNotificationRegistrationSpectraS3Response response = client
@@ -219,7 +217,7 @@ public class NotificationsIntegration_test {
     }
 
     @Test
-    public void tapeFailureRegistration() throws IOException, SignatureException {
+    public void tapeFailureRegistration() throws IOException {
         UUID registrationId = null;
         try {
             final PutTapeFailureNotificationRegistrationSpectraS3Response response = client

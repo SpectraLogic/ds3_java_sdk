@@ -24,17 +24,15 @@ import com.spectralogic.ds3client.helpers.channelbuilders.PrefixAdderObjectChann
 import com.spectralogic.ds3client.helpers.channelbuilders.PrefixRemoverObjectChannelBuilder;
 import com.spectralogic.ds3client.models.Contents;
 import com.spectralogic.ds3client.models.bulk.Ds3Object;
-import com.spectralogic.ds3client.serializer.XmlProcessingException;
 
 import java.io.IOException;
 import java.nio.file.*;
-import java.security.SignatureException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Ds3PutObjectRelativePathExample {
 
-    public static void main(final String args[]) throws IOException, SignatureException, XmlProcessingException {
+    public static void main(final String args[]) throws IOException {
         // Get a client builder and then build a client instance.  This is the main entry point to the SDK.
         try (final Ds3Client client = Ds3ClientBuilder.fromEnv().withHttps(false).build()) {
             /*************************************************************************************************

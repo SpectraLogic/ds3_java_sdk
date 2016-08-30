@@ -28,7 +28,6 @@ import com.spectralogic.ds3client.helpers.util.PartialObjectHelpers;
 import com.spectralogic.ds3client.models.*;
 import com.spectralogic.ds3client.models.common.Range;
 import com.spectralogic.ds3client.networking.Metadata;
-import com.spectralogic.ds3client.serializer.XmlProcessingException;
 import com.spectralogic.ds3client.utils.Guard;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -134,7 +133,7 @@ class ReadJobImpl extends JobImpl {
 
     @Override
     public void transfer(final ObjectChannelBuilder channelBuilder)
-            throws IOException, XmlProcessingException {
+            throws IOException {
                 running = true;
         try (final JobState jobState = new JobState(
                 channelBuilder,
@@ -149,7 +148,7 @@ class ReadJobImpl extends JobImpl {
             while (jobState.hasObjects()) {
                 transferNextChunks(chunkTransferrer);
             }
-        } catch (final RuntimeException | IOException | XmlProcessingException e) {
+        } catch (final RuntimeException | IOException e) {
             throw e;
         } catch (final Exception e) {
             throw new RuntimeException(e);
@@ -157,7 +156,7 @@ class ReadJobImpl extends JobImpl {
     }
 
     private void transferNextChunks(final ChunkTransferrer chunkTransferrer)
-            throws IOException, XmlProcessingException, InterruptedException {
+            throws IOException, InterruptedException {
         final GetJobChunksReadyForClientProcessingSpectraS3Response availableJobChunks =
             this.client.getJobChunksReadyForClientProcessingSpectraS3(new GetJobChunksReadyForClientProcessingSpectraS3Request(this.masterObjectList.getJobId().toString()));
         switch(availableJobChunks.getStatus()) {

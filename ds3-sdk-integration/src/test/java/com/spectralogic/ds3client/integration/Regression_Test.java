@@ -13,7 +13,6 @@ import com.spectralogic.ds3client.models.ChecksumType;
 import com.spectralogic.ds3client.models.Contents;
 import com.spectralogic.ds3client.models.bulk.Ds3Object;
 import com.spectralogic.ds3client.networking.FailedRequestException;
-import com.spectralogic.ds3client.serializer.XmlProcessingException;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -22,7 +21,6 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.nio.channels.SeekableByteChannel;
-import java.security.SignatureException;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
@@ -42,19 +40,19 @@ public class Regression_Test {
     private static UUID envDataPolicyId;
 
     @BeforeClass
-    public static void startup() throws IOException, SignatureException {
+    public static void startup() throws IOException {
         envDataPolicyId = TempStorageUtil.setupDataPolicy(TEST_ENV_NAME, false, ChecksumType.Type.MD5, client);
         envStorageIds = TempStorageUtil.setup(TEST_ENV_NAME, envDataPolicyId, client);
     }
 
     @AfterClass
-    public static void teardown() throws IOException, SignatureException {
+    public static void teardown() throws IOException {
         TempStorageUtil.teardown(TEST_ENV_NAME, envStorageIds, client);
         client.close();
     }
 
     @Test
-    public void testMarkerWithSpaces() throws IOException, SignatureException, XmlProcessingException {
+    public void testMarkerWithSpaces() throws IOException {
         final String bucketName = "marker_with_spaces";
 
         try {
@@ -87,7 +85,7 @@ public class Regression_Test {
     }
 
     @Test
-    public void testPrefixWithSpaces() throws IOException, SignatureException, XmlProcessingException {
+    public void testPrefixWithSpaces() throws IOException {
         final String bucketName = "prefix_with_spaces";
 
         try {
@@ -123,7 +121,7 @@ public class Regression_Test {
     }
 
     @Test
-    public void testPrefixForDirectoriesWithSpaces() throws IOException, SignatureException, XmlProcessingException {
+    public void testPrefixForDirectoriesWithSpaces() throws IOException {
         final String bucketName = "prefix_directory_with_spaces";
 
         try {
@@ -172,7 +170,7 @@ public class Regression_Test {
     }
 
     @Test
-    public void testPrefixForNestedDirectories() throws IOException, SignatureException, XmlProcessingException {
+    public void testPrefixForNestedDirectories() throws IOException {
         final String bucketName = "prefix__nested_directory";
 
         try {
@@ -220,7 +218,7 @@ public class Regression_Test {
     }
 
     @Test
-    public void emptyObjectTest() throws IOException, SignatureException, XmlProcessingException {
+    public void emptyObjectTest() throws IOException {
         Util.assumeVersion1_2(client);
         final String bucketName = "emptyObject";
         final List<Ds3Object> objects = Collections.singletonList(new Ds3Object("obj1.txt", 0));

@@ -24,18 +24,16 @@ import com.spectralogic.ds3client.helpers.FileObjectGetter;
 import com.spectralogic.ds3client.helpers.FileObjectPutter;
 import com.spectralogic.ds3client.helpers.JobRecoveryException;
 import com.spectralogic.ds3client.models.bulk.Ds3Object;
-import com.spectralogic.ds3client.serializer.XmlProcessingException;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.channels.FileChannel;
 import java.nio.file.*;
-import java.security.SignatureException;
 import java.util.List;
 
 public class RecoverJobExample {
 
-    public static void main(final String args[]) throws IOException, URISyntaxException, SignatureException, XmlProcessingException {
+    public static void main(final String args[]) throws IOException, URISyntaxException {
 
         // Get a client builder and then build a client instance.  This is the main entry point to the SDK.
         try (final Ds3Client client = Ds3ClientBuilder.fromEnv().withHttps(false).build()) {
