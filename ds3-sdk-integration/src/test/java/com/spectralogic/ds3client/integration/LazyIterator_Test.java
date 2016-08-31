@@ -22,6 +22,7 @@ import com.spectralogic.ds3client.integration.test.helpers.TempStorageIds;
 import com.spectralogic.ds3client.integration.test.helpers.TempStorageUtil;
 import com.spectralogic.ds3client.models.ChecksumType;
 import com.spectralogic.ds3client.models.Contents;
+import com.spectralogic.ds3client.networking.FailedRequestException;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -35,11 +36,10 @@ import java.util.UUID;
 
 import static com.spectralogic.ds3client.integration.Util.deleteAllContents;
 import static com.spectralogic.ds3client.integration.Util.loadBookTestData;
+import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class LazyIterator_Test {
     private static final Logger LOG = LoggerFactory.getLogger(LazyIterator_Test.class);
@@ -136,5 +136,25 @@ public class LazyIterator_Test {
         } finally {
             deleteAllContents(CLIENT, TEST_ENV_NAME);
         }
+    }
+
+    @Test
+    public void testFailedRequest() {
+        final LazyObjectIterable iterable = new LazyObjectIterable(CLIENT, "Unknown_Bucket",null, null, 1000, 5);
+        final Iterator<Contents> iterator = iterable.iterator();
+
+        boolean threwException = false;
+
+        try {
+            iterator.next();
+            fail("Request should fail");
+        } catch (final RuntimeException e) {
+            threwException = true;
+            assertThat(e.getCause(), is(notNullValue()));
+            assertThat(e.getCause(), is(instanceOf(FailedRequestException.class)));
+            final FailedRequestException fre = (FailedRequestException) e.getCause();
+            assertThat(fre.getStatusCode(), is(404));
+        }
+        assertTrue(threwException);
     }
 }
