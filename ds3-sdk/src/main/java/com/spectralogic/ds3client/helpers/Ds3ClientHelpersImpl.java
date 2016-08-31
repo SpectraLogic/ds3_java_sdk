@@ -21,6 +21,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Lists;
 import com.spectralogic.ds3client.Ds3Client;
+import com.spectralogic.ds3client.GetObjectsLoader;
 import com.spectralogic.ds3client.commands.*;
 import com.spectralogic.ds3client.commands.spectrads3.*;
 import com.spectralogic.ds3client.helpers.options.ReadJobOptions;
@@ -31,6 +32,7 @@ import com.spectralogic.ds3client.models.bulk.RequestType;
 import com.spectralogic.ds3client.models.common.Range;
 import com.spectralogic.ds3client.models.bulk.*;
 import com.spectralogic.ds3client.networking.FailedRequestException;
+import com.spectralogic.ds3client.utils.collections.LazyIterable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -222,13 +224,13 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
     @Override
     public Iterable<Contents> listObjects(final String bucket, final String keyPrefix, final String nextMarker, final int maxKeys) throws IOException {
 
-        return new LazyObjectIterable(client, bucket, keyPrefix, nextMarker, maxKeys, DEFAULT_LIST_OBJECTS_RETRIES);
+        return new LazyIterable<>(new GetObjectsLoader(client, bucket, keyPrefix, nextMarker, maxKeys, DEFAULT_LIST_OBJECTS_RETRIES));
     }
 
     @Override
     public Iterable<Contents> listObjects(final String bucket, final String keyPrefix, final String nextMarker, final int maxKeys, final int retries) throws IOException {
 
-        return new LazyObjectIterable(client, bucket, keyPrefix, nextMarker, maxKeys, retries);
+        return new LazyIterable<>(new GetObjectsLoader(client, bucket, keyPrefix, nextMarker, maxKeys, retries));
     }
 
     @Override
