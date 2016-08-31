@@ -19,7 +19,6 @@ package com.spectralogic.ds3client.commands.spectrads3;
 import java.util.List;
 import com.spectralogic.ds3client.BulkCommand;
 import com.spectralogic.ds3client.models.bulk.Ds3Object;
-import com.spectralogic.ds3client.serializer.XmlProcessingException;
 import com.spectralogic.ds3client.commands.interfaces.BulkRequest;
 import com.spectralogic.ds3client.models.JobChunkClientProcessingOrderGuarantee;
 import com.google.common.net.UrlEscapers;
@@ -36,7 +35,7 @@ public class GetBulkJobSpectraS3Request extends BulkRequest {
     private String name;
 
     // Constructor
-    public GetBulkJobSpectraS3Request(final String bucketName, final List<Ds3Object> objects) throws XmlProcessingException {
+    public GetBulkJobSpectraS3Request(final String bucketName, final List<Ds3Object> objects) {
         super(bucketName, objects);
         
         this.getQueryParams().put("operation", "start_bulk_get");
