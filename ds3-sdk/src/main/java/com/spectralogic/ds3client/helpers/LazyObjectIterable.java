@@ -20,6 +20,8 @@ import com.spectralogic.ds3client.commands.GetBucketRequest;
 import com.spectralogic.ds3client.commands.GetBucketResponse;
 import com.spectralogic.ds3client.models.Contents;
 import com.spectralogic.ds3client.models.ListBucketResult;
+import com.spectralogic.ds3client.networking.FailedRequestException;
+import com.spectralogic.ds3client.networking.TooManyRetriesException;
 
 import java.io.IOException;
 import java.util.Iterator;
@@ -124,9 +126,12 @@ public class LazyObjectIterable implements Iterable<Contents> {
                     this.cache = result.getObjects();
                     this.cachePointer = 0;
                     return;
+                } catch (final FailedRequestException e) {
+                  throw new RuntimeException("Failed to get the list of objects due to a failed request", e);
                 } catch (final IOException e) {
                     if (retryAttempt >= retryCount) {
-                        throw new RuntimeException("Failed to get the next set of objects from the getBucket request after " + retryCount + " retries", e);
+                        //TODO need a proxied test to validate this retry logic
+                        throw new TooManyRetriesException("Failed to get the next set of objects from the getBucket request after " + retryCount + " retries", e);
                     }
                     retryAttempt++;
                 }
