@@ -1,6 +1,5 @@
 package com.spectralogic.ds3client.integration;
 
-import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.spectralogic.ds3client.Ds3Client;
 import com.spectralogic.ds3client.commands.spectrads3.CancelJobSpectraS3Request;
@@ -22,7 +21,6 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.nio.channels.SeekableByteChannel;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 

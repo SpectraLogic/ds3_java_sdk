@@ -15,7 +15,6 @@
 
 package com.spectralogic.ds3client.integration;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
