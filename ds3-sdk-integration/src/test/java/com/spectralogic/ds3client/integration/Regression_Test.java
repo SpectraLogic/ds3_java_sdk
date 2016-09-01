@@ -22,6 +22,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.nio.channels.SeekableByteChannel;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 
@@ -67,13 +68,16 @@ public class Regression_Test {
             final Ds3ClientHelpers.Job putJob = HELPERS.startWriteJob(bucketName, objects);
 
             final Iterable<Contents> objs = HELPERS.listObjects(bucketName, null, "obj3 has spaces.txt");
+
             boolean foundObj4 = false;
+            int objectCount = 0;
             for (final Contents obj : objs) {
                 LOG.info("marker with spaces name: " + obj.getKey());
                 if (obj.getKey().equals("obj4 also has spaces.txt")) foundObj4 = true;
                 LOG.info("marker with spaces size: " + obj.getSize());
+                objectCount++;
             }
-            assertTrue(Iterables.size(objs) == 1);
+            assertThat(objectCount, is(1));
             assertTrue(foundObj4);
 
             final CancelJobSpectraS3Response cancelJobResponse = client
@@ -102,13 +106,15 @@ public class Regression_Test {
             final Iterable<Contents> objs = HELPERS.listObjects(bucketName, "has spaces");
             boolean foundObj2 = false;
             boolean foundObj4 = false;
+            int objCount = 0;
             for (final Contents obj : objs) {
                 LOG.info("prefix with spaces name: " + obj.getKey());
                 LOG.info("prefix with spaces size: " + obj.getSize());
                 if (obj.getKey().equals("has spaces obj2.txt")) foundObj2 = true;
                 if (obj.getKey().equals("has spaces obj4.txt")) foundObj4 = true;
+                objCount++;
             }
-            assertTrue(Iterables.size(objs) == 2);
+            assertThat(objCount, is(2));
             assertTrue(foundObj2);
             assertTrue(foundObj4);
 
@@ -138,26 +144,30 @@ public class Regression_Test {
             final Iterable<Contents> dir1Objs = HELPERS.listObjects(bucketName, "dir1/");
             boolean foundObj1 = false;
             boolean foundObj2 = false;
+            int objCount1 = 0;
             for (final Contents obj : dir1Objs) {
                 LOG.info("prefix with spaces name: " + obj.getKey());
                 LOG.info("prefix with spaces size: " + obj.getSize());
                 if (obj.getKey().equals("dir1/obj1_no_spaces.txt")) foundObj1 = true;
                 if (obj.getKey().equals("dir1/has spaces obj2.txt")) foundObj2 = true;
+                objCount1++;
             }
-            assertTrue(Iterables.size(dir1Objs) == 2);
+            assertThat(objCount1, is(2));
             assertTrue(foundObj1);
             assertTrue(foundObj2);
 
             final Iterable<Contents> objsDir2 = HELPERS.listObjects(bucketName, "dir 2/");
             boolean foundObj3 = false;
             boolean foundObj4 = false;
+            int objCount2 = 0;
             for (final Contents obj : objsDir2) {
                 LOG.info("prefix with spaces name: " + obj.getKey());
                 LOG.info("prefix with spaces size: " + obj.getSize());
                 if (obj.getKey().equals("dir 2/obj3_no_spaces.txt")) foundObj3 = true;
                 if (obj.getKey().equals("dir 2/has spaces obj4.txt")) foundObj4 = true;
+                objCount2++;
             }
-            assertTrue(Iterables.size(objsDir2) == 2);
+            assertThat(objCount2, is(2));
             assertTrue(foundObj3);
             assertTrue(foundObj4);
 
@@ -186,26 +196,30 @@ public class Regression_Test {
             final Iterable<Contents> dir1Objs = HELPERS.listObjects(bucketName, "dir1/");
             boolean foundObj1 = false;
             boolean foundObj2 = false;
+            int objCount1 = 0;
             for (final Contents obj : dir1Objs) {
                 LOG.info("prefix with spaces name: " + obj.getKey());
                 LOG.info("prefix with spaces size: " + obj.getSize());
                 if (obj.getKey().equals("dir1/obj1_no_spaces.txt")) foundObj1 = true;
                 if (obj.getKey().equals("dir1/has spaces obj2.txt")) foundObj2 = true;
+                objCount1++;
             }
-            assertTrue(Iterables.size(dir1Objs) == 4);
+            assertThat(objCount1, is(4));
             assertTrue(foundObj1);
             assertTrue(foundObj2);
 
             final Iterable<Contents> objsDir2 = HELPERS.listObjects(bucketName, "dir1/dir 2/");
             boolean foundObj3 = false;
             boolean foundObj4 = false;
+            int objCount2 = 0;
             for (final Contents obj : objsDir2) {
                 LOG.info("prefix with spaces name: " + obj.getKey());
                 LOG.info("prefix with spaces size: " + obj.getSize());
                 if (obj.getKey().equals("dir1/dir 2/obj3_no_spaces.txt")) foundObj3 = true;
                 if (obj.getKey().equals("dir1/dir 2/has spaces obj4.txt")) foundObj4 = true;
+                objCount2++;
             }
-            assertTrue(Iterables.size(objsDir2) == 2);
+            assertThat(objCount2, is(2));
             assertTrue(foundObj3);
             assertTrue(foundObj4);
 
