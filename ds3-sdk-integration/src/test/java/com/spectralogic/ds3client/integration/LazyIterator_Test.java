@@ -16,7 +16,7 @@
 package com.spectralogic.ds3client.integration;
 
 import com.spectralogic.ds3client.Ds3Client;
-import com.spectralogic.ds3client.GetObjectsLoader;
+import com.spectralogic.ds3client.helpers.pagination.GetBucketLoader;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers;
 import com.spectralogic.ds3client.utils.collections.LazyIterable;
 import com.spectralogic.ds3client.integration.test.helpers.TempStorageIds;
@@ -77,7 +77,7 @@ public class LazyIterator_Test {
             final int maxKeys = 100;
 
 
-            final LazyIterable<Contents> iterable = new LazyIterable<>(new GetObjectsLoader(CLIENT, TEST_ENV_NAME, prefix, nextMarker, maxKeys, retries));
+            final LazyIterable<Contents> iterable = new LazyIterable<>(new GetBucketLoader(CLIENT, TEST_ENV_NAME, prefix, nextMarker, maxKeys, retries));
             final Iterator<Contents> iterator = iterable.iterator();
 
             assertFalse(iterator.hasNext());
@@ -96,7 +96,7 @@ public class LazyIterator_Test {
             final String nextMarker = null;
             final int maxKeys = 100;
 
-            final LazyIterable<Contents> iterable = new LazyIterable<>(new GetObjectsLoader(CLIENT, TEST_ENV_NAME, prefix, nextMarker, maxKeys, retries));
+            final LazyIterable<Contents> iterable = new LazyIterable<>(new GetBucketLoader(CLIENT, TEST_ENV_NAME, prefix, nextMarker, maxKeys, retries));
             final Iterator<Contents> iterator = iterable.iterator();
 
             assertTrue(iterator.hasNext());
@@ -122,7 +122,7 @@ public class LazyIterator_Test {
             final String nextMarker = null;
             final int maxKeys = 2;
 
-            final LazyIterable<Contents> iterable = new LazyIterable<>(new GetObjectsLoader(CLIENT, TEST_ENV_NAME, prefix, nextMarker, maxKeys, retries));
+            final LazyIterable<Contents> iterable = new LazyIterable<>(new GetBucketLoader(CLIENT, TEST_ENV_NAME, prefix, nextMarker, maxKeys, retries));
             final Iterator<Contents> iterator = iterable.iterator();
 
             assertTrue(iterator.hasNext());
@@ -141,7 +141,7 @@ public class LazyIterator_Test {
 
     @Test
     public void testFailedRequest() {
-        final LazyIterable<Contents> iterable = new LazyIterable<>(new GetObjectsLoader(CLIENT, "Unknown_Bucket",null, null, 1000, 5));
+        final LazyIterable<Contents> iterable = new LazyIterable<>(new GetBucketLoader(CLIENT, "Unknown_Bucket",null, null, 1000, 5));
         final Iterator<Contents> iterator = iterable.iterator();
 
         boolean threwException = false;

@@ -13,8 +13,9 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3client;
+package com.spectralogic.ds3client.helpers.pagination;
 
+import com.spectralogic.ds3client.Ds3Client;
 import com.spectralogic.ds3client.commands.GetBucketRequest;
 import com.spectralogic.ds3client.commands.GetBucketResponse;
 import com.spectralogic.ds3client.models.Contents;
@@ -28,7 +29,7 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 
-public class GetObjectsLoader implements LazyIterable.LazyIterableLoader<Contents> {
+public class GetBucketLoader implements LazyIterable.LazyIterableLoader<Contents> {
     private static final int DEFAULT_MAX_KEYS = 1000;
 
     private final Ds3Client client;
@@ -41,7 +42,7 @@ public class GetObjectsLoader implements LazyIterable.LazyIterableLoader<Content
     private boolean truncated;
     private boolean endOfInput = false;
 
-    public GetObjectsLoader(final Ds3Client client, final String bucket, final String prefix, final String nextMarker, final int maxKeys, final int retryCount) {
+    public GetBucketLoader(final Ds3Client client, final String bucket, final String prefix, final String nextMarker, final int maxKeys, final int retryCount) {
         this.client = client;
         this.bucket = bucket;
         this.prefix = prefix;

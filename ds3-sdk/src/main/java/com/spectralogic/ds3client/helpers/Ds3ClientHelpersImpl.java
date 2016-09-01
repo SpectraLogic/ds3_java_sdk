@@ -21,7 +21,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Lists;
 import com.spectralogic.ds3client.Ds3Client;
-import com.spectralogic.ds3client.GetObjectsLoader;
+import com.spectralogic.ds3client.helpers.pagination.GetBucketLoader;
 import com.spectralogic.ds3client.commands.*;
 import com.spectralogic.ds3client.commands.spectrads3.*;
 import com.spectralogic.ds3client.helpers.options.ReadJobOptions;
@@ -224,13 +224,13 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
     @Override
     public Iterable<Contents> listObjects(final String bucket, final String keyPrefix, final String nextMarker, final int maxKeys) throws IOException {
 
-        return new LazyIterable<>(new GetObjectsLoader(client, bucket, keyPrefix, nextMarker, maxKeys, DEFAULT_LIST_OBJECTS_RETRIES));
+        return new LazyIterable<>(new GetBucketLoader(client, bucket, keyPrefix, nextMarker, maxKeys, DEFAULT_LIST_OBJECTS_RETRIES));
     }
 
     @Override
     public Iterable<Contents> listObjects(final String bucket, final String keyPrefix, final String nextMarker, final int maxKeys, final int retries) throws IOException {
 
-        return new LazyIterable<>(new GetObjectsLoader(client, bucket, keyPrefix, nextMarker, maxKeys, retries));
+        return new LazyIterable<>(new GetBucketLoader(client, bucket, keyPrefix, nextMarker, maxKeys, retries));
     }
 
     @Override
