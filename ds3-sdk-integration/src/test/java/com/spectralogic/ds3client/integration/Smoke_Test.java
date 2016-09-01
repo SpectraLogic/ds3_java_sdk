@@ -51,10 +51,7 @@ import java.nio.channels.FileChannel;
 import java.nio.channels.SeekableByteChannel;
 import java.nio.charset.Charset;
 import java.nio.file.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -1123,8 +1120,15 @@ public class Smoke_Test {
 
             final Iterable<Contents> contents = HELPERS.listObjects(bucketName);
 
-            assertThat(Iterables.size(contents), is(1));
-            assertThat(Iterables.get(contents, 0).getKey(), is("space object.txt"));
+            final Iterator itr = contents.iterator();
+            final List<Contents> objects = new ArrayList<>();
+            while (itr.hasNext()) {
+                final Object obj = itr.next();
+                final Contents content = (Contents) obj;
+                objects.add(content);
+            }
+            assertThat(objects.size(), is(1));
+            assertThat(objects.get(0).getKey(), is("space object.txt"));
 
         } finally {
             deleteAllContents(client, bucketName);
