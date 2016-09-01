@@ -28,30 +28,34 @@ import java.util.NoSuchElementException;
  */
 public class LazyIterable<T> implements Iterable<T> {
 
-    private LazyIterableLoader<T> iterableLoader;
+    private LazyLoaderFactory<T> lazyLoaderFactory;
 
-    public LazyIterable(final LazyIterableLoader<T> iterableLoader) {
-        this.iterableLoader = iterableLoader;
+    public LazyIterable(final LazyLoaderFactory<T> lazyLoaderFactory) {
+        this.lazyLoaderFactory = lazyLoaderFactory;
     }
 
     @Override
     public Iterator<T> iterator() {
-        return new LazyObjectIterator<>(iterableLoader);
+        return new LazyObjectIterator<>(lazyLoaderFactory.create());
     }
 
-    public interface LazyIterableLoader<T> {
+    public interface LazyLoaderFactory<T> {
+        LazyLoader<T> create();
+    }
+
+    public interface LazyLoader<T> {
         List<T> getNextValues();
     }
 
     private class LazyObjectIterator<T> implements Iterator<T> {
 
-        private final LazyIterableLoader<T> iterableLoader;
+        private final LazyLoader<T> iterableLoader;
 
         private List<T> cache = null;
         private int cachePointer;
         private boolean endOfContent = false;
 
-        private LazyObjectIterator(final LazyIterableLoader<T> iterableLoader) {
+        private LazyObjectIterator(final LazyLoader<T> iterableLoader) {
             this.iterableLoader = iterableLoader;
         }
 
