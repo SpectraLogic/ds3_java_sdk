@@ -16,8 +16,10 @@
 package com.spectralogic.ds3client.integration;
 
 import com.spectralogic.ds3client.Ds3Client;
-import com.spectralogic.ds3client.helpers.pagination.GetBucketLoader;
+import com.spectralogic.ds3client.helpers.pagination.GetBucketLoaderFactory;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers;
+import com.spectralogic.ds3client.helpers.pagination.GetObjectsFullDetailsLoaderFactory;
+import com.spectralogic.ds3client.models.DetailedS3Object;
 import com.spectralogic.ds3client.utils.collections.LazyIterable;
 import com.spectralogic.ds3client.integration.test.helpers.TempStorageIds;
 import com.spectralogic.ds3client.integration.test.helpers.TempStorageUtil;
@@ -42,8 +44,8 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.*;
 
-public class LazyIterator_Test {
-    private static final Logger LOG = LoggerFactory.getLogger(LazyIterator_Test.class);
+public class Iterators_Test {
+    private static final Logger LOG = LoggerFactory.getLogger(Iterators_Test.class);
 
     private static final Ds3Client CLIENT = Util.fromEnv();
     private static final Ds3ClientHelpers HELPERS = Ds3ClientHelpers.wrap(CLIENT);
@@ -77,7 +79,7 @@ public class LazyIterator_Test {
             final int maxKeys = 100;
 
 
-            final LazyIterable<Contents> iterable = new LazyIterable<>(new GetBucketLoader(CLIENT, TEST_ENV_NAME, prefix, nextMarker, maxKeys, retries));
+            final LazyIterable<Contents> iterable = new LazyIterable<>(new GetBucketLoaderFactory(CLIENT, TEST_ENV_NAME, prefix, nextMarker, maxKeys, retries));
             final Iterator<Contents> iterator = iterable.iterator();
 
             assertFalse(iterator.hasNext());
@@ -96,7 +98,7 @@ public class LazyIterator_Test {
             final String nextMarker = null;
             final int maxKeys = 100;
 
-            final LazyIterable<Contents> iterable = new LazyIterable<>(new GetBucketLoader(CLIENT, TEST_ENV_NAME, prefix, nextMarker, maxKeys, retries));
+            final LazyIterable<Contents> iterable = new LazyIterable<>(new GetBucketLoaderFactory(CLIENT, TEST_ENV_NAME, prefix, nextMarker, maxKeys, retries));
             final Iterator<Contents> iterator = iterable.iterator();
 
             assertTrue(iterator.hasNext());
@@ -122,7 +124,7 @@ public class LazyIterator_Test {
             final String nextMarker = null;
             final int maxKeys = 2;
 
-            final LazyIterable<Contents> iterable = new LazyIterable<>(new GetBucketLoader(CLIENT, TEST_ENV_NAME, prefix, nextMarker, maxKeys, retries));
+            final LazyIterable<Contents> iterable = new LazyIterable<>(new GetBucketLoaderFactory(CLIENT, TEST_ENV_NAME, prefix, nextMarker, maxKeys, retries));
             final Iterator<Contents> iterator = iterable.iterator();
 
             assertTrue(iterator.hasNext());
@@ -141,7 +143,7 @@ public class LazyIterator_Test {
 
     @Test
     public void testFailedRequest() {
-        final LazyIterable<Contents> iterable = new LazyIterable<>(new GetBucketLoader(CLIENT, "Unknown_Bucket",null, null, 1000, 5));
+        final LazyIterable<Contents> iterable = new LazyIterable<>(new GetBucketLoaderFactory(CLIENT, "Unknown_Bucket",null, null, 1000, 5));
         final Iterator<Contents> iterator = iterable.iterator();
 
         boolean threwException = false;
@@ -156,5 +158,30 @@ public class LazyIterator_Test {
             assertThat(fre.getStatusCode(), is(404));
         }
         assertTrue("The exception should be thrown", threwException);
+    }
+
+    @Test
+    public void testGetObjectsIterator() throws IOException, URISyntaxException {
+        HELPERS.ensureBucketExists(TEST_ENV_NAME, envDataPolicyId);
+        loadBookTestData(CLIENT, TEST_ENV_NAME);
+        try {
+            final String prefix = "";
+
+            final LazyIterable<DetailedS3Object> iterable = new LazyIterable<>(new GetObjectsFullDetailsLoaderFactory(CLIENT, TEST_ENV_NAME, prefix, 10, retries, true));
+            final Iterator<DetailedS3Object> iterator = iterable.iterator();
+
+            assertTrue(iterator.hasNext());
+            assertThat(iterator.next(), is(notNullValue()));
+            assertTrue(iterator.hasNext());
+            assertThat(iterator.next(), is(notNullValue()));
+            assertTrue(iterator.hasNext());
+            assertThat(iterator.next(), is(notNullValue()));
+            assertTrue(iterator.hasNext());
+            assertThat(iterator.next(), is(notNullValue()));
+            assertFalse(iterator.hasNext());
+        } finally {
+            deleteAllContents(CLIENT, TEST_ENV_NAME);
+        }
+
     }
 }

@@ -29,7 +29,7 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 
-public class GetBucketLoader implements LazyIterable.LazyIterableLoader<Contents> {
+public class GetBucketLoader implements LazyIterable.LazyLoader<Contents> {
     private static final int DEFAULT_MAX_KEYS = 1000;
 
     private final Ds3Client client;

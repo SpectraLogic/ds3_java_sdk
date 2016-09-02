@@ -10,9 +10,10 @@ import com.spectralogic.ds3client.utils.Guard;
 import com.spectralogic.ds3client.utils.collections.LazyIterable;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 
-public class GetObjectsFullDetailsLoader implements LazyIterable.LazyIterableLoader<DetailedS3Object> {
+public class GetObjectsFullDetailsLoader implements LazyIterable.LazyLoader<DetailedS3Object> {
 
     private final Ds3Client client;
     private final String bucket;
@@ -21,6 +22,9 @@ public class GetObjectsFullDetailsLoader implements LazyIterable.LazyIterableLoa
     private final int pageLength;
     private final int retryCount;
 
+    private int pageOffset = 0;
+    private int pagingTotalResultCount;
+    private int totalItems = 0;
 
     public GetObjectsFullDetailsLoader(final Ds3Client client, final String bucket, final String folder, final boolean includePhysicalDetails, final int pageLength, final int retryCount) {
         this.client = client;
@@ -37,17 +41,27 @@ public class GetObjectsFullDetailsLoader implements LazyIterable.LazyIterableLoa
         int retryAttempt = 0;
 
         while(true) {
+            if (totalItems > 0 && totalItems >= pagingTotalResultCount) {
+                return Collections.emptyList();
+            }
             final GetObjectsWithFullDetailsSpectraS3Request request = new GetObjectsWithFullDetailsSpectraS3Request()
                     .withIncludePhysicalPlacement(includePhysicalDetails)
                     .withBucketId(bucket)
-                    .withPageLength(pageLength);
+                    .withPageLength(pageLength)
+                    .withPageOffset(pageOffset);
             if (!Guard.isStringNullOrEmpty(folder)) {
                 request.withFolder(folder);
             }
             try {
                 final GetObjectsWithFullDetailsSpectraS3Response response = client.getObjectsWithFullDetailsSpectraS3(request);
-                final Integer pagingTotalResultCount = response.getPagingTotalResultCount();
-                final Integer pagingTruncated = response.getPagingTruncated();
+                pagingTotalResultCount = response.getPagingTotalResultCount();
+
+                final List<DetailedS3Object> detailedS3Objects = response.getDetailedS3ObjectListResult().getDetailedS3Objects();
+                totalItems += detailedS3Objects.size();
+
+                pageOffset++;
+
+                return detailedS3Objects;
             } catch (final FailedRequestException e) {
                 // failure
                 throw new RuntimeException("Encountered a failure when attempting to get object list", e);
