@@ -17,14 +17,14 @@
 package com.spectralogic.ds3client.commands.spectrads3;
 
 import com.spectralogic.ds3client.networking.HttpVerb;
-import com.spectralogic.ds3client.commands.interfaces.AbstractRequest;
+import com.spectralogic.ds3client.commands.interfaces.AbstractPaginationRequest;
 import com.spectralogic.ds3client.models.ImportExportConfiguration;
 import java.util.UUID;
 import com.google.common.net.UrlEscapers;
 import com.spectralogic.ds3client.models.Quiesced;
 import com.spectralogic.ds3client.models.TapePartitionState;
 
-public class GetTapePartitionsWithFullDetailsSpectraS3Request extends AbstractRequest {
+public class GetTapePartitionsWithFullDetailsSpectraS3Request extends AbstractPaginationRequest {
 
     // Variables
     

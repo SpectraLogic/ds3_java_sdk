@@ -21,9 +21,9 @@ import java.io.IOException;
 import com.spectralogic.ds3client.models.Ds3TargetFailureNotificationRegistrationList;
 import java.io.InputStream;
 import com.spectralogic.ds3client.serializer.XmlOutput;
-import com.spectralogic.ds3client.commands.interfaces.AbstractResponse;
+import com.spectralogic.ds3client.commands.interfaces.AbstractPaginationResponse;
 
-public class GetDs3TargetFailureNotificationRegistrationsSpectraS3Response extends AbstractResponse {
+public class GetDs3TargetFailureNotificationRegistrationsSpectraS3Response extends AbstractPaginationResponse {
 
     private Ds3TargetFailureNotificationRegistrationList ds3TargetFailureNotificationRegistrationListResult;
 

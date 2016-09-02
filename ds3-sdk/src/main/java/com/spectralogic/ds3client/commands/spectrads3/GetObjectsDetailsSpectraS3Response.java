@@ -21,13 +21,11 @@ import java.io.IOException;
 import com.spectralogic.ds3client.models.S3ObjectList;
 import java.io.InputStream;
 import com.spectralogic.ds3client.serializer.XmlOutput;
-import com.spectralogic.ds3client.commands.interfaces.AbstractResponse;
+import com.spectralogic.ds3client.commands.interfaces.AbstractPaginationResponse;
 
-public class GetObjectsDetailsSpectraS3Response extends AbstractResponse {
+public class GetObjectsDetailsSpectraS3Response extends AbstractPaginationResponse {
 
     private S3ObjectList s3ObjectListResult;
-    private Integer pagingTruncated;
-    private Integer pagingTotalResultCount;
 
     public GetObjectsDetailsSpectraS3Response(final WebResponse response) throws IOException {
         super(response);
@@ -40,8 +38,6 @@ public class GetObjectsDetailsSpectraS3Response extends AbstractResponse {
 
             switch (this.getStatusCode()) {
             case 200:
-                this.pagingTruncated = parseIntHeader("page-truncated");
-                this.pagingTotalResultCount = parseIntHeader("total-result-count");
                 try (final InputStream content = getResponse().getResponseStream()) {
                     this.s3ObjectListResult = XmlOutput.fromXml(content, S3ObjectList.class);
                 }
@@ -52,14 +48,6 @@ public class GetObjectsDetailsSpectraS3Response extends AbstractResponse {
         } finally {
             this.getResponse().close();
         }
-    }
-
-    public Integer getPagingTruncated() {
-        return pagingTruncated;
-    }
-
-    public Integer getPagingTotalResultCount() {
-        return pagingTotalResultCount;
     }
 
     public S3ObjectList getS3ObjectListResult() {

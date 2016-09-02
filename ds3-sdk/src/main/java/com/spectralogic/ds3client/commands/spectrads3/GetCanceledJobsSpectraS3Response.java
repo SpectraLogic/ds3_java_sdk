@@ -21,9 +21,9 @@ import java.io.IOException;
 import com.spectralogic.ds3client.models.CanceledJobList;
 import java.io.InputStream;
 import com.spectralogic.ds3client.serializer.XmlOutput;
-import com.spectralogic.ds3client.commands.interfaces.AbstractResponse;
+import com.spectralogic.ds3client.commands.interfaces.AbstractPaginationResponse;
 
-public class GetCanceledJobsSpectraS3Response extends AbstractResponse {
+public class GetCanceledJobsSpectraS3Response extends AbstractPaginationResponse {
 
     private CanceledJobList canceledJobListResult;
 

@@ -916,11 +916,17 @@ public class Ds3Client_Test {
     public void getTapeLibrariesSpectraS3() throws IOException {
         final String responsePayload = "<Data><TapeLibrary><Id>f4dae25d-e52a-4430-82bd-525e4f15493c</Id><ManagementUrl>a</ManagementUrl><Name>test library</Name><SerialNumber>test library</SerialNumber></TapeLibrary><TapeLibrary><Id>82bdab72-d79a-4b43-95d7-f2c16cd9aa45</Id><ManagementUrl>a</ManagementUrl><Name>test library 2</Name><SerialNumber>test library 2</SerialNumber></TapeLibrary></Data>";
 
+        final Map<String, String> headers = new HashMap<>();
+        headers.put("page-truncated", "2");
+        headers.put("total-result-count", "3");
         final GetTapeLibrariesSpectraS3Response response = MockNetwork
                 .expecting(HttpVerb.GET, "/_rest_/tape_library", null, null)
-                .returning(200, responsePayload)
+                .returning(200, responsePayload, headers)
                 .asClient()
                 .getTapeLibrariesSpectraS3(new GetTapeLibrariesSpectraS3Request());
+
+        assertThat(response.getPagingTotalResultCount(), is(3));
+        assertThat(response.getPagingTruncated(), is(2));
 
         final List<TapeLibrary> libraries = response.getTapeLibraryListResult().getTapeLibraries();
 
@@ -946,11 +952,17 @@ public class Ds3Client_Test {
     public void getTapeFailures() throws IOException {
         final String responsePayload = "<Data><TapeFailure><Date>2015-03-11T16:23:29.741</Date><ErrorMessage>AAA</ErrorMessage><Id>375ae624-d39f-47d8-95c0-0aaec4494ad2</Id><TapeDriveId>b06c8900-6d88-4a29-9a03-d0c4494b29ff</TapeDriveId><TapeId>badbb1e7-8654-4b38-8d3b-112c9fd68d58</TapeId><Type>BLOB_READ_FAILED</Type></TapeFailure></Data>";
 
+        final Map<String, String> headers = new HashMap<>();
+        headers.put("page-truncated", "2");
+        headers.put("total-result-count", "3");
         final GetTapeFailuresSpectraS3Response response = MockNetwork
                 .expecting(HttpVerb.GET, "/_rest_/tape_failure", null, null)
-                .returning(200, responsePayload)
+                .returning(200, responsePayload, headers)
                 .asClient()
                 .getTapeFailuresSpectraS3(new GetTapeFailuresSpectraS3Request());
+
+        assertThat(response.getPagingTruncated(), is(2));
+        assertThat(response.getPagingTotalResultCount(), is(3));
 
         final List<DetailedTapeFailure> tapeFailures = response.getDetailedTapeFailureListResult().getDetailedTapeFailures();
 
@@ -963,11 +975,17 @@ public class Ds3Client_Test {
     public void getTapeDrivesSpectraS3() throws IOException {
         final String responsePayload = "<Data><TapeDrive><ErrorMessage/><ForceTapeRemoval>false</ForceTapeRemoval><Id>ebeb0ec7-7912-4870-a0da-bbeb270ac049</Id><PartitionId>aa947aaa-23bf-4301-8173-2553bb1a3f1c</PartitionId><SerialNumber>test tape drive</SerialNumber><State>NORMAL</State><TapeId>b9085cd3-f1fd-4193-8763-c013d25cd135</TapeId><Type>UNKNOWN</Type></TapeDrive><TapeDrive><ErrorMessage/><ForceTapeRemoval>false</ForceTapeRemoval><Id>5dc2add1-b6e7-42a9-b551-a46339176c4b</Id><PartitionId>aa947aaa-23bf-4301-8173-2553bb1a3f1c</PartitionId><SerialNumber>test tape drive 2</SerialNumber><State>NORMAL</State><TapeId/><Type>UNKNOWN</Type></TapeDrive></Data>";
 
+        final Map<String, String> headers = new HashMap<>();
+        headers.put("page-truncated", "2");
+        headers.put("total-result-count", "3");
         final GetTapeDrivesSpectraS3Response response = MockNetwork
                 .expecting(HttpVerb.GET, "/_rest_/tape_drive", null, null)
-                .returning(200, responsePayload)
+                .returning(200, responsePayload, headers)
                 .asClient()
                 .getTapeDrivesSpectraS3(new GetTapeDrivesSpectraS3Request());
+
+        assertThat(response.getPagingTotalResultCount(), is(3));
+        assertThat(response.getPagingTruncated(), is(2));
 
         final List<TapeDrive> tapeDrives = response.getTapeDriveListResult().getTapeDrives();
 
@@ -996,11 +1014,17 @@ public class Ds3Client_Test {
     public void getTapesSpectraS3() throws IOException {
         final String responsePayload = "<Data><Tape><AssignedToStorageDomain>false</AssignedToStorageDomain><AvailableRawCapacity>2408082046976</AvailableRawCapacity><BarCode>101000L6</BarCode><BucketId/><DescriptionForIdentification/><EjectDate/><EjectLabel/><EjectLocation/><EjectPending/><FullOfData>false</FullOfData><Id>c7c431df-f95d-4533-b350-ffd7a8a5caac</Id><LastAccessed>2015-09-04T06:53:08.236</LastAccessed><LastCheckpoint>eb77ea67-3c83-47ec-8714-cd46a97dc392:2</LastCheckpoint><LastModified>2015-08-21T16:14:30.714</LastModified><LastVerified/><PartitionId>4f8a5cbb-9837-41d9-afd1-cebed41f18f7</PartitionId><PreviousState/><SerialNumber>HP-W130501213</SerialNumber><State>NORMAL</State><TotalRawCapacity>2408088338432</TotalRawCapacity><Type>LTO6</Type><WriteProtected>false</WriteProtected></Tape></Data>";
 
+        final Map<String, String> headers = new HashMap<>();
+        headers.put("page-truncated", "2");
+        headers.put("total-result-count", "3");
         final GetTapesSpectraS3Response response = MockNetwork
                 .expecting(HttpVerb.GET, "/_rest_/tape", null, null)
-                .returning(200, responsePayload)
+                .returning(200, responsePayload, headers)
                 .asClient()
                 .getTapesSpectraS3(new GetTapesSpectraS3Request());
+
+        assertThat(response.getPagingTotalResultCount(), is(3));
+        assertThat(response.getPagingTruncated(), is(2));
 
         final List<Tape> tapes = response.getTapeListResult().getTapes();
 

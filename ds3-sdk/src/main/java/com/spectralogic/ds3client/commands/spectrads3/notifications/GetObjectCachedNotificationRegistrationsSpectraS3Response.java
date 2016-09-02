@@ -21,9 +21,9 @@ import java.io.IOException;
 import com.spectralogic.ds3client.models.S3ObjectCachedNotificationRegistrationList;
 import java.io.InputStream;
 import com.spectralogic.ds3client.serializer.XmlOutput;
-import com.spectralogic.ds3client.commands.interfaces.AbstractResponse;
+import com.spectralogic.ds3client.commands.interfaces.AbstractPaginationResponse;
 
-public class GetObjectCachedNotificationRegistrationsSpectraS3Response extends AbstractResponse {
+public class GetObjectCachedNotificationRegistrationsSpectraS3Response extends AbstractPaginationResponse {
 
     private S3ObjectCachedNotificationRegistrationList s3ObjectCachedNotificationRegistrationListResult;
 

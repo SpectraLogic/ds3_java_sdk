@@ -17,14 +17,14 @@
 package com.spectralogic.ds3client.commands.spectrads3;
 
 import com.spectralogic.ds3client.networking.HttpVerb;
-import com.spectralogic.ds3client.commands.interfaces.AbstractRequest;
+import com.spectralogic.ds3client.commands.interfaces.AbstractPaginationRequest;
 import java.util.UUID;
 import com.google.common.net.UrlEscapers;
 import com.spectralogic.ds3client.models.DataIsolationLevel;
 import com.spectralogic.ds3client.models.DataPersistenceRuleState;
 import com.spectralogic.ds3client.models.DataPersistenceRuleType;
 
-public class GetDegradedDataPersistenceRulesSpectraS3Request extends AbstractRequest {
+public class GetDegradedDataPersistenceRulesSpectraS3Request extends AbstractPaginationRequest {
 
     // Variables
     
