@@ -17,7 +17,7 @@
 package com.spectralogic.ds3client.commands.spectrads3;
 
 import com.spectralogic.ds3client.networking.HttpVerb;
-import com.spectralogic.ds3client.commands.interfaces.AbstractRequest;
+import com.spectralogic.ds3client.commands.interfaces.AbstractPaginationRequest;
 import com.google.common.net.UrlEscapers;
 import com.spectralogic.ds3client.models.JobChunkClientProcessingOrderGuarantee;
 import java.util.UUID;
@@ -25,7 +25,7 @@ import com.spectralogic.ds3client.models.Priority;
 import java.util.Date;
 import com.spectralogic.ds3client.models.JobRequestType;
 
-public class GetCanceledJobsSpectraS3Request extends AbstractRequest {
+public class GetCanceledJobsSpectraS3Request extends AbstractPaginationRequest {
 
     // Variables
     

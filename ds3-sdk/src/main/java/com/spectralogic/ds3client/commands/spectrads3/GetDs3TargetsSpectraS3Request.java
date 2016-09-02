@@ -17,7 +17,7 @@
 package com.spectralogic.ds3client.commands.spectrads3;
 
 import com.spectralogic.ds3client.networking.HttpVerb;
-import com.spectralogic.ds3client.commands.interfaces.AbstractRequest;
+import com.spectralogic.ds3client.commands.interfaces.AbstractPaginationRequest;
 import com.google.common.net.UrlEscapers;
 import java.lang.Integer;
 import com.spectralogic.ds3client.models.TargetReadPreference;
@@ -25,7 +25,7 @@ import java.util.UUID;
 import com.spectralogic.ds3client.models.Quiesced;
 import com.spectralogic.ds3client.models.TargetState;
 
-public class GetDs3TargetsSpectraS3Request extends AbstractRequest {
+public class GetDs3TargetsSpectraS3Request extends AbstractPaginationRequest {
 
     // Variables
     
