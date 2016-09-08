@@ -827,7 +827,7 @@ public class PutJobManagement_Test {
 
             final List<String> bookTitles = new ArrayList<>();
             final List<Ds3Object> objects = new ArrayList<>();
-            for(final String book : FILE_NAMES) {
+            for (final String book : FILE_NAMES) {
                 final Path objPath = ResourceUtils.loadFileResource(DIR_NAME + book);
                 final long bookSize = Files.size(objPath);
                 final Ds3Object obj = new Ds3Object(book, bookSize);
@@ -836,7 +836,8 @@ public class PutJobManagement_Test {
                 objects.add(obj);
             }
 
-            final Ds3ClientHelpers ds3ClientHelpers = Ds3ClientHelpers.wrap(ds3ClientShim, 1 /* num retries for http response 503 */);
+            final int maxNumRetriesForHttp503 = 1;
+            final Ds3ClientHelpers ds3ClientHelpers = Ds3ClientHelpers.wrap(ds3ClientShim, maxNumRetriesForHttp503);
 
             final Ds3ClientHelpers.Job writeJob = ds3ClientHelpers.startWriteJob(BUCKET_NAME, objects);
             writeJob.attachObjectCompletedListener(new ObjectCompletedListener() {
@@ -853,7 +854,7 @@ public class PutJobManagement_Test {
 
             assertEquals(bookTitles.size(), result.getObjects().size());
 
-            for(final Contents contents : result.getObjects()) {
+            for (final Contents contents : result.getObjects()) {
                 assertTrue(bookTitles.contains(contents.getKey()));
             }
 

@@ -251,12 +251,12 @@ class WriteJobImpl extends JobImpl {
         public void transferItem(final Ds3Client client, final BulkObject ds3Object) throws IOException {
             int numRetries = 0;
 
-            for ( ; ; ) {
+            while(true) {
                 try {
                     putObjectTransferrer.transferItem(client, ds3Object);
                     break;
                 } catch (final Throwable t) {
-                    if(ExceptionClassifier.isUnrecoverableException(t) || ++numRetries >= NUM_TIMES_TO_RETRY) {
+                    if (ExceptionClassifier.isUnrecoverableException(t) || ++numRetries >= NUM_TIMES_TO_RETRY) {
                         throw t;
                     }
                 }
