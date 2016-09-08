@@ -869,7 +869,7 @@ public class PutJobManagement_Test {
                         final File originalFile = ResourceUtils.loadFileResource(DIR_NAME + FILE_NAMES[0]).toFile();
                         final File fileCopiedFromBP = Paths.get(tempDirectory.toString(), FILE_NAMES[0]).toFile();
                         assertTrue(FileUtils.contentEquals(originalFile, fileCopiedFromBP));
-                    } catch (URISyntaxException | IOException e) {
+                    } catch (final URISyntaxException | IOException e) {
                         fail("Failure trying to compare file we wrote to file we read.");
                     }
                 }
@@ -921,7 +921,7 @@ public class PutJobManagement_Test {
                 newConnectionDetails = ((NetworkClient)getNetClientMethod.invoke(this)).getConnectionDetails();
                 final NetworkClient newNetClient = new NetworkClientImpl(newConnectionDetails);
                 return new Ds3ClientShim(newNetClient);
-            } catch (IllegalAccessException | InvocationTargetException e) {
+            } catch (final IllegalAccessException | InvocationTargetException e) {
                 fail("Failure trying to create Ds3Client used in verifying putObject retries: " + e.getMessage());
             }
 
