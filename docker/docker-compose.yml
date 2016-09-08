@@ -1,0 +1,7 @@
+version: '2'
+services:
+    sdk_proxy:
+        image: spectralogic/sdk_proxy:latest
+    ds3_jsdk_docker_test:
+        image: denverm80/ds3_jsdk_docker_test:latest
+
