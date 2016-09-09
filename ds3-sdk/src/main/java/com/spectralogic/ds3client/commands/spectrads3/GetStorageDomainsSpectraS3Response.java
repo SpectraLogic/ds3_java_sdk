@@ -21,9 +21,9 @@ import java.io.IOException;
 import com.spectralogic.ds3client.models.StorageDomainList;
 import java.io.InputStream;
 import com.spectralogic.ds3client.serializer.XmlOutput;
-import com.spectralogic.ds3client.commands.interfaces.AbstractResponse;
+import com.spectralogic.ds3client.commands.interfaces.AbstractPaginationResponse;
 
-public class GetStorageDomainsSpectraS3Response extends AbstractResponse {
+public class GetStorageDomainsSpectraS3Response extends AbstractPaginationResponse {
 
     private StorageDomainList storageDomainListResult;
 

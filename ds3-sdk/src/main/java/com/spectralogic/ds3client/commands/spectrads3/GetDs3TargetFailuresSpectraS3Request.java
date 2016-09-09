@@ -17,12 +17,12 @@
 package com.spectralogic.ds3client.commands.spectrads3;
 
 import com.spectralogic.ds3client.networking.HttpVerb;
-import com.spectralogic.ds3client.commands.interfaces.AbstractRequest;
+import com.spectralogic.ds3client.commands.interfaces.AbstractPaginationRequest;
 import com.google.common.net.UrlEscapers;
 import java.util.UUID;
 import com.spectralogic.ds3client.models.Ds3TargetFailureType;
 
-public class GetDs3TargetFailuresSpectraS3Request extends AbstractRequest {
+public class GetDs3TargetFailuresSpectraS3Request extends AbstractPaginationRequest {
 
     // Variables
     

@@ -21,9 +21,9 @@ import java.io.IOException;
 import com.spectralogic.ds3client.models.PoolFailureList;
 import java.io.InputStream;
 import com.spectralogic.ds3client.serializer.XmlOutput;
-import com.spectralogic.ds3client.commands.interfaces.AbstractResponse;
+import com.spectralogic.ds3client.commands.interfaces.AbstractPaginationResponse;
 
-public class GetPoolFailuresSpectraS3Response extends AbstractResponse {
+public class GetPoolFailuresSpectraS3Response extends AbstractPaginationResponse {
 
     private PoolFailureList poolFailureListResult;
 
