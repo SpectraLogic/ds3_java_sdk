@@ -13,12 +13,13 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3client;
+package com.spectralogic.ds3client.helpers.pagination;
 
+import com.spectralogic.ds3client.Ds3Client;
 import com.spectralogic.ds3client.models.Contents;
 import com.spectralogic.ds3client.utils.collections.LazyIterable;
 
-public class GetObjectsLoaderFactory implements LazyIterable.LazyLoaderFactory<Contents> {
+public class GetBucketLoaderFactory implements LazyIterable.LazyLoaderFactory<Contents> {
 
     private final Ds3Client client;
     private final String bucket;
@@ -27,7 +28,7 @@ public class GetObjectsLoaderFactory implements LazyIterable.LazyLoaderFactory<C
     private final int maxKeys;
     private final int defaultListObjectsRetries;
 
-    public GetObjectsLoaderFactory(final Ds3Client client, final String bucket, final String keyPrefix, final String nextMarker, final int maxKeys, final int defaultListObjectsRetries) {
+    public GetBucketLoaderFactory(final Ds3Client client, final String bucket, final String keyPrefix, final String nextMarker, final int maxKeys, final int defaultListObjectsRetries) {
 
         this.client = client;
         this.bucket = bucket;
@@ -39,6 +40,6 @@ public class GetObjectsLoaderFactory implements LazyIterable.LazyLoaderFactory<C
 
     @Override
     public LazyIterable.LazyLoader<Contents> create() {
-        return new GetObjectsLoader(client, bucket, keyPrefix, nextMarker, maxKeys, defaultListObjectsRetries);
+        return new GetBucketLoader(client, bucket, keyPrefix, nextMarker, maxKeys, defaultListObjectsRetries);
     }
 }
