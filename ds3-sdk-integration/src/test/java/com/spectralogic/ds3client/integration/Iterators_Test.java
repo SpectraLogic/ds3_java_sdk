@@ -68,7 +68,7 @@ public class Iterators_Test {
     }
 
     @Test
-    public void emptyTest() throws IOException {
+    public void emptyGetBucket() throws IOException {
         final String prefix = "";
         final String nextMarker = null;
         final int maxKeys = 100;
@@ -77,7 +77,7 @@ public class Iterators_Test {
     }
 
     @Test
-    public void singlePageTest() throws IOException, URISyntaxException {
+    public void singlePageGetBucket() throws IOException, URISyntaxException {
         final String prefix = "";
         final String nextMarker = null;
         final int maxKeys = 100;
@@ -86,7 +86,7 @@ public class Iterators_Test {
 
 
     @Test
-    public void multiPageTest() throws IOException, URISyntaxException {
+    public void multiPageGetBucket() throws IOException, URISyntaxException {
         final String prefix = "";
         final String nextMarker = null;
         final int maxKeys = 2;
@@ -95,17 +95,17 @@ public class Iterators_Test {
     }
 
     @Test
-    public void failedRequest() {
+    public void failedRequestGetBucket() {
         testFailedRequest(new GetBucketLoaderFactory(CLIENT, "Unknown_Bucket",null, null, 1000, 5));
     }
 
    @Test
-    public void testEmptyGetObjects() throws IOException {
+    public void emptyGetObjects() throws IOException {
         emptyTest(new GetObjectsFullDetailsLoaderFactory(CLIENT, TEST_ENV_NAME, "", 10, RETRIES, true));
     }
 
     @Test
-    public void testSinglePageGetObjectsIterator() throws IOException, URISyntaxException {
+    public void singlePageGetObjectsIterator() throws IOException, URISyntaxException {
         paginate(new GetObjectsFullDetailsLoaderFactory(CLIENT, TEST_ENV_NAME, "", 10, RETRIES, true));
     }
 
