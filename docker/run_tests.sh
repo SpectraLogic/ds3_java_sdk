@@ -21,3 +21,6 @@ echo "cd ds3_java_sdk"
 cd ds3_java_sdk
 
 ./gradlew test
+
+curl -X PUT http://localhost:${HTTP_PROXY_ADMIN_PORT}/close
+
