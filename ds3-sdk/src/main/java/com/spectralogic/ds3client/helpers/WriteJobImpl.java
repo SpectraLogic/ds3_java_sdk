@@ -142,13 +142,16 @@ class WriteJobImpl extends JobImpl {
                     + ((this.getJobId() == null) ? "" : " " + this.getJobId().toString()));
             return;
         }
+
+        final int numTimesToRetry = 3;
+
         try (final JobState jobState = new JobState(
                 channelBuilder,
                 filteredChunks,
                 partTracker,
                 ImmutableMap.<String, ImmutableMultimap<BulkObject,Range>>of())) {
             final ChunkTransferrer chunkTransferrer = new ChunkTransferrer(
-                new PutObjectTransferrerRetryDecorator(jobState),
+                new PutObjectTransferrerRetryDecorator(jobState, numTimesToRetry),
                 this.client,
                 jobState.getPartTracker(),
                 this.maxParallelRequests
