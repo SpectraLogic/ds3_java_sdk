@@ -242,12 +242,12 @@ class WriteJobImpl extends JobImpl {
     }
 
     private final class PutObjectTransferrerRetryDecorator implements ItemTransferrer {
-        private static final int NUM_TIMES_TO_RETRY = 3;
-
         private final PutObjectTransferrer putObjectTransferrer;
+        private final int numTimesToRetry;
 
-        private PutObjectTransferrerRetryDecorator(final JobState jobState) {
+        private PutObjectTransferrerRetryDecorator(final JobState jobState, final int numTimesToRetry) {
             putObjectTransferrer = new PutObjectTransferrer(jobState);
+            this.numTimesToRetry = numTimesToRetry;
         }
 
         @Override
@@ -259,7 +259,7 @@ class WriteJobImpl extends JobImpl {
                     putObjectTransferrer.transferItem(client, ds3Object);
                     break;
                 } catch (final Throwable t) {
-                    if (ExceptionClassifier.isUnrecoverableException(t) || ++numRetries >= NUM_TIMES_TO_RETRY) {
+                    if (ExceptionClassifier.isUnrecoverableException(t) || ++numRetries >= numTimesToRetry) {
                         throw t;
                     }
                 }
