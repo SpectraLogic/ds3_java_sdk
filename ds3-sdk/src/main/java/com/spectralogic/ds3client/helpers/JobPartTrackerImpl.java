@@ -61,4 +61,11 @@ public class JobPartTrackerImpl implements JobPartTracker {
             tracker.removeObjectCompletedListener(listener);
         }
     }
+
+    @Override
+    public String toString() {
+        return "JobPartTrackerImpl{" +
+                "trackers=" + trackers.keySet() +
+                '}';
+    }
 }
