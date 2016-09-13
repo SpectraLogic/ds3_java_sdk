@@ -143,13 +143,12 @@ class WriteJobImpl extends JobImpl {
             return;
         }
 
-        final int numTimesToRetry = 3;
-
         try (final JobState jobState = new JobState(
                 channelBuilder,
                 filteredChunks,
                 partTracker,
                 ImmutableMap.<String, ImmutableMultimap<BulkObject,Range>>of())) {
+            final int numTimesToRetry = 3;
             final ChunkTransferrer chunkTransferrer = new ChunkTransferrer(
                 new PutObjectTransferrerRetryDecorator(jobState, numTimesToRetry),
                 this.client,
