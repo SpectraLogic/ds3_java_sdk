@@ -21,6 +21,7 @@ import com.spectralogic.ds3client.models.multipart.CompleteMultipartUpload;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import com.spectralogic.ds3client.serializer.XmlOutput;
+import java.nio.charset.Charset;
 import com.spectralogic.ds3client.commands.interfaces.AbstractRequest;
 import java.util.UUID;
 import com.google.common.net.UrlEscapers;
@@ -81,7 +82,7 @@ public class CompleteMultiPartUploadRequest extends AbstractRequest {
 
         final String xmlOutput = XmlOutput.toXml(requestPayload);
 
-        final byte[] stringBytes = xmlOutput.getBytes();
+        final byte[] stringBytes = xmlOutput.getBytes(Charset.forName("UTF-8"));
         this.size = stringBytes.length;
         return new ByteArrayInputStream(stringBytes);
     }
