@@ -50,17 +50,24 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
 
     private final static Logger LOG = LoggerFactory.getLogger(Ds3ClientHelpersImpl.class);
     private final static int DEFAULT_LIST_OBJECTS_RETRIES = 5;
+    private final static int DEFAULT_OBJECT_TRANSFER_ATTEMPTS = 5;
 
     private final Ds3Client client;
     private final int retryAfter;
+    private final int objectTransferAttempts;
 
     public Ds3ClientHelpersImpl(final Ds3Client client) {
         this(client, -1);
     }
 
     public Ds3ClientHelpersImpl(final Ds3Client client, final int retryAfter) {
+        this(client, retryAfter, DEFAULT_OBJECT_TRANSFER_ATTEMPTS);
+    }
+
+    public Ds3ClientHelpersImpl(final Ds3Client client, final int retryAfter, final int objectTransferAttempts) {
         this.client = client;
         this.retryAfter = retryAfter;
+        this.objectTransferAttempts = objectTransferAttempts;
     }
 
     @Override
@@ -90,7 +97,12 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
                 .withMaxUploadSize(options.getMaxUploadSize())
                 .withAggregating(options.isAggregating())
                 .withIgnoreNamingConflicts(options.doIgnoreNamingConflicts()));
-        return new WriteJobImpl(this.client, prime.getResult(), this.retryAfter, options.getChecksumType());
+        return new WriteJobImpl(
+                this.client,
+                prime.getResult(),
+                this.retryAfter,
+                options.getChecksumType(),
+                this.objectTransferAttempts);
     }
 
     @Override
@@ -157,7 +169,8 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
                 this.client,
                 jobResponse.getMasterObjectListResult(),
                 this.retryAfter,
-                ChecksumType.Type.NONE);
+                ChecksumType.Type.NONE,
+                this.objectTransferAttempts);
     }
 
     @Override

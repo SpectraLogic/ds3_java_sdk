@@ -1,0 +1,24 @@
+version: '2'
+services:
+    sdk_proxy:
+        image: spectralogic/sdk_proxy:latest
+        environment:
+            - DS3_TARGET_SYSTEM_DNS_NAME
+            - HTTP_PROXY_PORT
+            - HTTP_PROXY_ADMIN_PORT
+        ports:
+            - "9080:9080"
+            - "9090:9090"
+    ds3_jsdk_docker_test:
+        image: denverm80/ds3_jsdk_docker_test:latest
+        environment:
+            - DS3_ENDPOINT
+            - DS3_SECRET_KEY
+            - DS3_ACCESS_KEY
+            - GIT_REPO
+            - GIT_BRANCH
+        dns: 
+            - 10.1.0.9
+
+
+
