@@ -93,8 +93,27 @@ public abstract class Ds3ClientHelpers {
         return new Ds3ClientHelpersImpl(client);
     }
 
+    /**
+     * Wraps the given {@link com.spectralogic.ds3client.Ds3ClientImpl} with helper methods.
+     * @param client An instance of {@link com.spectralogic.ds3client.Ds3Client}, usually gotten from a callto
+     *               {@link com.spectralogic.ds3client.Ds3ClientBuilder}
+     * @param retryAfter The number of times to attempt to allocate a chunk before giving up.
+     * @return An instance of {@link com.spectralogic.ds3client.Ds3Client} wrapped with helper methods.
+     */
     public static Ds3ClientHelpers wrap(final Ds3Client client, final int retryAfter) {
         return new Ds3ClientHelpersImpl(client, retryAfter);
+    }
+
+    /**
+     * Wraps the given {@link com.spectralogic.ds3client.Ds3ClientImpl} with helper methods.
+     * @param client An instance of {@link com.spectralogic.ds3client.Ds3Client}, usually gotten from a callto
+     *               {@link com.spectralogic.ds3client.Ds3ClientBuilder}
+     * @param retryAfter The number of times to attempt to allocate a chunk before giving up.
+     * @param objectTransferAttempts The number of times to attempt to transfer an object before giving up.
+     * @return An instance of {@link com.spectralogic.ds3client.Ds3Client} wrapped with helper methods.
+     */
+    public static Ds3ClientHelpers wrap(final Ds3Client client, final int retryAfter, final int objectTransferAttempts) {
+        return new Ds3ClientHelpersImpl(client, retryAfter, objectTransferAttempts);
     }
 
     /**

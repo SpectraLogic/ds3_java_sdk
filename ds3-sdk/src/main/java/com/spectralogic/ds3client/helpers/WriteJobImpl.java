@@ -50,12 +50,14 @@ class WriteJobImpl extends JobImpl {
     private int retryAfterLeft; // The number of retries left
     private Ds3ClientHelpers.MetadataAccess metadataAccess = null;
     private ChecksumFunction checksumFunction = null;
+    private final int objectTransferAttempts;
 
     public WriteJobImpl(
             final Ds3Client client,
             final MasterObjectList masterObjectList,
             final int retryAfter,
-            final ChecksumType.Type type) {
+            final ChecksumType.Type type,
+            final int objectTransferAttempts) {
         super(client, masterObjectList);
         if (this.masterObjectList == null || this.masterObjectList.getObjects() == null) {
             LOG.info("Job has no data to transfer");
@@ -71,6 +73,7 @@ class WriteJobImpl extends JobImpl {
         this.retryAfter = this.retryAfterLeft = retryAfter;
         this.checksumListeners = new IdentityHashMap<>();
         this.checksumType = type;
+        this.objectTransferAttempts = objectTransferAttempts;
     }
 
     @Override
@@ -142,13 +145,14 @@ class WriteJobImpl extends JobImpl {
                     + ((this.getJobId() == null) ? "" : " " + this.getJobId().toString()));
             return;
         }
+
         try (final JobState jobState = new JobState(
                 channelBuilder,
                 filteredChunks,
                 partTracker,
                 ImmutableMap.<String, ImmutableMultimap<BulkObject,Range>>of())) {
             final ChunkTransferrer chunkTransferrer = new ChunkTransferrer(
-                new PutObjectTransferrer(jobState),
+                new PutObjectTransferrerRetryDecorator(jobState),
                 this.client,
                 jobState.getPartTracker(),
                 this.maxParallelRequests
@@ -236,6 +240,29 @@ class WriteJobImpl extends JobImpl {
             }
         }
         return filtered;
+    }
+
+    private final class PutObjectTransferrerRetryDecorator implements ItemTransferrer {
+        private final PutObjectTransferrer putObjectTransferrer;
+        private PutObjectTransferrerRetryDecorator(final JobState jobState) {
+            putObjectTransferrer = new PutObjectTransferrer(jobState);
+        }
+
+        @Override
+        public void transferItem(final Ds3Client client, final BulkObject ds3Object) throws IOException {
+            int objectTransfersAttempted = 0;
+
+            while(true) {
+                try {
+                    putObjectTransferrer.transferItem(client, ds3Object);
+                    break;
+                } catch (final Throwable t) {
+                    if (ExceptionClassifier.isUnrecoverableException(t) || ++objectTransfersAttempted >= objectTransferAttempts) {
+                        throw t;
+                    }
+                }
+            }
+        }
     }
 
     private final class PutObjectTransferrer implements ItemTransferrer {

@@ -108,4 +108,12 @@ class JobState implements AutoCloseable {
     public SeekableByteChannel getChannel(final String name, final long offset, final long length) {
         return this.channelCache.get(name).get(offset, length);
     }
+
+    @Override
+    public String toString() {
+        return "JobState{" +
+                "objectsRemaining=" + objectsRemaining +
+                ", partTracker=" + partTracker +
+                '}';
+    }
 }
