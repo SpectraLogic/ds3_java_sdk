@@ -22,5 +22,3 @@ cd ds3_java_sdk
 
 ./gradlew test
 
-curl -X PUT http://localhost:${HTTP_PROXY_ADMIN_PORT}/close >/dev/null 2>&1
-
