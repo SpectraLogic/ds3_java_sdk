@@ -15,7 +15,11 @@
 
 package com.spectralogic.ds3client.helpers;
 
+import com.spectralogic.ds3client.SingleThreadedEventRunner;
+import com.spectralogic.ds3client.helpers.events.Events;
+import org.junit.AfterClass;
 import org.junit.Assert;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -78,7 +82,17 @@ public class ObjectPartTrackerImpl_CompletePart_Test {
             new Object[] { "completely after", false, Arrays.asList(new ObjectPart(201L, 99L)) }
         );
     }
-    
+
+    @BeforeClass
+    public static void setup() {
+        Events.setEventRunner(new SingleThreadedEventRunner());
+    }
+
+    @AfterClass
+    public static void teardown() {
+        Events.setEventRunner(Events.DEFAULT_EVENT_RUNNER);
+    }
+
     @Test
     public void completePartFiresExpectedEvents() {
         if (this.shouldSucceed) {

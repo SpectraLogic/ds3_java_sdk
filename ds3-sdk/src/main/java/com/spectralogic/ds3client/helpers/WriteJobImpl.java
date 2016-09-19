@@ -25,6 +25,7 @@ import com.spectralogic.ds3client.commands.spectrads3.AllocateJobChunkSpectraS3R
 import com.spectralogic.ds3client.exceptions.Ds3NoMoreRetriesException;
 import com.spectralogic.ds3client.helpers.ChunkTransferrer.ItemTransferrer;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.ObjectChannelBuilder;
+import com.spectralogic.ds3client.helpers.events.Events;
 import com.spectralogic.ds3client.models.*;
 import com.spectralogic.ds3client.models.Objects;
 import com.spectralogic.ds3client.models.common.Range;
@@ -42,22 +43,27 @@ import java.util.*;
 class WriteJobImpl extends JobImpl {
 
     static private final Logger LOG = LoggerFactory.getLogger(WriteJobImpl.class);
+
     private final JobPartTracker partTracker;
     private final List<Objects> filteredChunks;
-    private final int retryAfter; // Negative retryAfter value represent infinity retries
     private final ChecksumType.Type checksumType;
     private final Map<ChecksumListener, ChecksumListener> checksumListeners;
+    private final Map<WaitingForChunksListener, WaitingForChunksListener> waitingForChunksListeners;
+    private final int objectTransferAttempts;
+    private final int retryAfter; // Negative retryAfter value represent infinity retries
+    private final int retryDelay; //Negative value means use default
+
     private int retryAfterLeft; // The number of retries left
     private Ds3ClientHelpers.MetadataAccess metadataAccess = null;
     private ChecksumFunction checksumFunction = null;
-    private final int objectTransferAttempts;
 
     public WriteJobImpl(
             final Ds3Client client,
             final MasterObjectList masterObjectList,
             final int retryAfter,
             final ChecksumType.Type type,
-            final int objectTransferAttempts) {
+            final int objectTransferAttempts,
+            final int retryDelay) {
         super(client, masterObjectList);
         if (this.masterObjectList == null || this.masterObjectList.getObjects() == null) {
             LOG.info("Job has no data to transfer");
@@ -71,7 +77,10 @@ class WriteJobImpl extends JobImpl {
                     .buildPartTracker(Iterables.concat(ReadJobImpl.getAllBlobApiBeans(filteredChunks)));
         }
         this.retryAfter = this.retryAfterLeft = retryAfter;
+        this.retryDelay = retryDelay;
         this.checksumListeners = new IdentityHashMap<>();
+        this.waitingForChunksListeners = new IdentityHashMap<>();
+
         this.checksumType = type;
         this.objectTransferAttempts = objectTransferAttempts;
     }
@@ -120,6 +129,18 @@ class WriteJobImpl extends JobImpl {
     public void removeChecksumListener(final ChecksumListener listener) {
         checkRunning();
         this.checksumListeners.remove(listener);
+    }
+
+    @Override
+    public void attachWaitingForChunksListener(final WaitingForChunksListener listener) {
+        checkRunning();
+        this.waitingForChunksListeners.put(listener, listener);
+    }
+
+    @Override
+    public void removeWaitingForChunksListener(final WaitingForChunksListener listener) {
+        checkRunning();
+        this.waitingForChunksListeners.remove(listener);
     }
 
     @Override
@@ -194,15 +215,36 @@ class WriteJobImpl extends JobImpl {
                 }
                 retryAfterLeft--;
 
-                final int retryAfter = response.getRetryAfterSeconds() * 1000;
+                final int retryAfter = computeRetryAfter(response.getRetryAfterSeconds());
+                emitWaitingForChunksEvents(retryAfter);
+
                 LOG.debug("Will retry allocate chunk call after {} seconds", retryAfter);
-                Thread.sleep(retryAfter);
+                Thread.sleep(retryAfter * 1000);
                 return null;
             } catch (final InterruptedException e) {
                 throw new RuntimeException(e);
             }
         default:
             assert false : "This line of code should be impossible to hit."; return null;
+        }
+    }
+
+    private void emitWaitingForChunksEvents(final int retryAfter) {
+        for (final WaitingForChunksListener waitingForChunksListener : waitingForChunksListeners.values()) {
+            Events.emitEvent(new Runnable() {
+                @Override
+                public void run() {
+                    waitingForChunksListener.waiting(retryAfter);
+                }
+            });
+        }
+    }
+
+    private int computeRetryAfter(final int retryAfterSeconds) {
+        if (retryDelay == -1) {
+            return retryAfterSeconds;
+        } else {
+            return retryDelay;
         }
     }
 
@@ -359,7 +401,12 @@ class WriteJobImpl extends JobImpl {
 
     private void emitChecksumEvents(final BulkObject bulkObject, final ChecksumType.Type type, final String checksum) {
         for (final ChecksumListener listener : checksumListeners.values()) {
-            listener.value(bulkObject, type, checksum);
+            Events.emitEvent(new Runnable() {
+                @Override
+                public void run() {
+                    listener.value(bulkObject, type, checksum);
+                }
+            });
         }
     }
 }

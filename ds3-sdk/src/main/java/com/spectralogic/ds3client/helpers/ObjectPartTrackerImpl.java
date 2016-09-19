@@ -16,6 +16,7 @@
 package com.spectralogic.ds3client.helpers;
 
 import com.google.common.collect.Sets;
+import com.spectralogic.ds3client.helpers.events.Events;
 
 import java.security.InvalidParameterException;
 import java.util.Collection;
@@ -97,13 +98,23 @@ class ObjectPartTrackerImpl implements ObjectPartTracker {
     
     private void onDataTransferred(final long size) {
         for (final DataTransferredListener listener : this.dataTransferredListeners) {
-            listener.dataTransferred(size);
+            Events.emitEvent(new Runnable() {
+                @Override
+                public void run() {
+                    listener.dataTransferred(size);
+                }
+            });
         }
     }
     
     private void onObjectCompleted() {
         for (final ObjectCompletedListener listener : this.objectCompletedListeners) {
-            listener.objectCompleted(this.name);
+            Events.emitEvent(new Runnable() {
+                @Override
+                public void run() {
+                    listener.objectCompleted(name);
+                }
+            });
         }
     }
 }
