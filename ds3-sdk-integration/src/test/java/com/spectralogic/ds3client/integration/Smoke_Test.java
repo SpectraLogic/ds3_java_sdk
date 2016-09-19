@@ -55,6 +55,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -735,12 +737,10 @@ public class Smoke_Test {
     }
 
     @Test
-    public void eventHandlerTriggers() throws IOException, URISyntaxException {
+    public void eventHandlerTriggers() throws IOException, URISyntaxException, InterruptedException {
         final String bucketName = "eventBucket";
 
         try {
-
-            final AtomicInteger counter = new AtomicInteger(0);
 
             HELPERS.ensureBucketExists(bucketName, envDataPolicyId);
 
@@ -750,11 +750,13 @@ public class Smoke_Test {
 
             final Ds3ClientHelpers.Job job = HELPERS.startReadJob(bucketName, objs);
 
+            final CountDownLatch eventLatch = new CountDownLatch(1);
+
             job.attachObjectCompletedListener(new ObjectCompletedListener() {
                 @Override
                 public void objectCompleted(final String name) {
                     LOG.info("finished getting: " + name);
-                    counter.incrementAndGet();
+                    eventLatch.countDown();
                 }
             });
 
@@ -765,7 +767,8 @@ public class Smoke_Test {
                 }
             });
 
-            assertThat(counter.get(), is(1));
+            assertTrue(eventLatch.await(10, TimeUnit.SECONDS));
+
         } finally {
             deleteAllContents(client, bucketName);
         }
