@@ -20,7 +20,9 @@ import java.util.concurrent.Executors;
 
 public class ConcurrentEventRunner implements EventRunner {
 
-    private final static Executor EVENTS_EXECUTOR = Executors.newFixedThreadPool(4);
+    private final static int DEFAULT_EXECUTOR_SIZE = 4;
+
+    private final static Executor EVENTS_EXECUTOR = Executors.newFixedThreadPool(DEFAULT_EXECUTOR_SIZE);
     @Override
     public void emitEvent(final Runnable runnable) {
         EVENTS_EXECUTOR.execute(runnable);
