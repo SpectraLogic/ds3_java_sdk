@@ -65,6 +65,8 @@ public abstract class Ds3ClientHelpers {
         void removeMetadataReceivedListener(final MetadataReceivedListener listener);
         void attachChecksumListener(final ChecksumListener listener);
         void removeChecksumListener(final ChecksumListener listener);
+        void attachWaitingForChunksListener(final WaitingForChunksListener listener);
+        void removeWaitingForChunksListener(final WaitingForChunksListener listener);
         /**
          * Sets the maximum number of requests to execute at a time when fulfilling the job.
          */

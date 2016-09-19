@@ -48,16 +48,20 @@ import java.util.UUID;
 
 class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
 
+    public final static int DEFAULT_RETRY_DELAY = -1;
+    public final static int DEFAULT_RETRY_AFTER = -1;
+    public final static int DEFAULT_OBJECT_TRANSFER_ATTEMPTS = 5;
+
     private final static Logger LOG = LoggerFactory.getLogger(Ds3ClientHelpersImpl.class);
     private final static int DEFAULT_LIST_OBJECTS_RETRIES = 5;
-    private final static int DEFAULT_OBJECT_TRANSFER_ATTEMPTS = 5;
 
     private final Ds3Client client;
     private final int retryAfter;
+    private final int retryDelay;
     private final int objectTransferAttempts;
 
     public Ds3ClientHelpersImpl(final Ds3Client client) {
-        this(client, -1);
+        this(client, DEFAULT_RETRY_AFTER);
     }
 
     public Ds3ClientHelpersImpl(final Ds3Client client, final int retryAfter) {
@@ -65,9 +69,13 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
     }
 
     public Ds3ClientHelpersImpl(final Ds3Client client, final int retryAfter, final int objectTransferAttempts) {
+        this(client, retryAfter, objectTransferAttempts, DEFAULT_RETRY_DELAY);
+    }
+    public Ds3ClientHelpersImpl(final Ds3Client client, final int retryAfter, final int objectTransferAttempts, final int retryDelay) {
         this.client = client;
         this.retryAfter = retryAfter;
         this.objectTransferAttempts = objectTransferAttempts;
+        this.retryDelay = retryDelay;
     }
 
     @Override
@@ -102,7 +110,8 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
                 prime.getResult(),
                 this.retryAfter,
                 options.getChecksumType(),
-                this.objectTransferAttempts);
+                this.objectTransferAttempts,
+                this.retryDelay);
     }
 
     @Override
@@ -129,7 +138,7 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
 
         final ImmutableMultimap<String, Range> partialRanges = PartialObjectHelpers.getPartialObjectsRanges(objects);
 
-        return new ReadJobImpl(this.client, prime.getResult(), partialRanges, this.retryAfter);
+        return new ReadJobImpl(this.client, prime.getResult(), partialRanges, this.retryAfter, this.retryDelay);
     }
 
     @Override
@@ -170,7 +179,8 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
                 jobResponse.getMasterObjectListResult(),
                 this.retryAfter,
                 ChecksumType.Type.NONE,
-                this.objectTransferAttempts);
+                this.objectTransferAttempts,
+                this.retryDelay);
     }
 
     @Override
@@ -186,7 +196,8 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
                 this.client,
                 jobResponse.getMasterObjectListResult(),
                 ImmutableMultimap.<String, Range>of(),
-                this.retryAfter);
+                this.retryAfter,
+                this.retryDelay);
     }
 
     @Override
@@ -282,5 +293,4 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
             }
         });
     }
-
 }
