@@ -15,7 +15,11 @@
 
 package com.spectralogic.ds3client.helpers;
 
+import com.spectralogic.ds3client.SingleThreadedEventRunner;
+import com.spectralogic.ds3client.helpers.events.Events;
 import com.spectralogic.ds3client.models.BulkObject;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -26,6 +30,17 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
 public class JobPartTrackerFactory_Test {
+
+    @BeforeClass
+    public static void setup() {
+        Events.setEventRunner(new SingleThreadedEventRunner());
+    }
+
+    @AfterClass
+    public static void teardown() {
+        Events.setEventRunner(Events.DEFAULT_EVENT_RUNNER);
+    }
+
     @Test
     public void createdTrackerTracksParts() {
         final BulkObject part1 = new BulkObject();
