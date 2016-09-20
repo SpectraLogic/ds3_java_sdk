@@ -5,7 +5,6 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.nio.channels.SeekableByteChannel;
-import java.nio.file.Path;
 
 public class ObjectChannelBuilderLogger implements Ds3ClientHelpers.ObjectChannelBuilder {
     final private static Logger LOG = LoggerFactory.getLogger(ObjectChannelBuilderLogger.class);

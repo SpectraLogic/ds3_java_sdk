@@ -18,6 +18,12 @@ package com.spectralogic.ds3client.helpers.events;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
+/**
+ *
+ *  A asynchronous event runner that will execute events in order, but does not
+ * guarantee events complete in order.
+ *
+ */
 public class ConcurrentEventRunner implements EventRunner {
 
     private final static int DEFAULT_EXECUTOR_SIZE = 4;

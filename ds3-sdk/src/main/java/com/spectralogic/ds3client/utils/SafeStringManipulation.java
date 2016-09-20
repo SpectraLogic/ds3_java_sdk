@@ -17,7 +17,6 @@ package com.spectralogic.ds3client.utils;
 
 import com.google.common.escape.Escaper;
 import com.google.common.net.PercentEscaper;
-import com.google.common.net.UrlEscapers;
 import com.spectralogic.ds3client.commands.interfaces.Ds3Request;
 
 import java.util.Date;
@@ -28,7 +27,7 @@ import java.util.Date;
  */
 public final class SafeStringManipulation {
 
-    static final String DS3_URL_PATH_FRAGMENT_SAFE_CHARS =
+    private static final String DS3_URL_PATH_FRAGMENT_SAFE_CHARS =
             "-._~" +        // Google escaper URL_PATH_OTHER_SAFE_CHARS_LACKING_PLUS
             "!$'()*,&=" +   // removed ; (so it will be escaped) and added / (so it will not)
             "@:/";          // Their urlFragmentEscaper uses URL_PATH_OTHER_SAFE_CHARS_LACKING_PLUS + "+/?"+
@@ -64,7 +63,7 @@ public final class SafeStringManipulation {
         return DS3_URL_FRAGMENT_ESCAPER;
     }
 
-    public static String getEscapedRequestPath(Ds3Request request) {
+    public static String getEscapedRequestPath(final Ds3Request request) {
         if ((request == null) || (request.getPath() == null)){
             return "";
         }

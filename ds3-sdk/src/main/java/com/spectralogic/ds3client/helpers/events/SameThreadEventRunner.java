@@ -15,6 +15,14 @@
 
 package com.spectralogic.ds3client.helpers.events;
 
+/**
+ *
+ * An event runner that will execute the events in the same thread
+ * as the caller.  This means that if this event runner is used inside
+ * of an io thread, the io thread will be blocked until the events finish
+ * executing.
+ *
+ */
 public class SameThreadEventRunner implements EventRunner {
     @Override
     public void emitEvent(final Runnable runnable) {
