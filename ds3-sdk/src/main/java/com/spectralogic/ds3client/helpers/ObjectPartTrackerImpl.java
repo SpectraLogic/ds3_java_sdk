@@ -16,7 +16,7 @@
 package com.spectralogic.ds3client.helpers;
 
 import com.google.common.collect.Sets;
-import com.spectralogic.ds3client.helpers.events.Events;
+import com.spectralogic.ds3client.helpers.events.EventRunner;
 
 import java.security.InvalidParameterException;
 import java.util.Collection;
@@ -28,11 +28,13 @@ class ObjectPartTrackerImpl implements ObjectPartTracker {
     private final TreeSet<ObjectPart> parts;
     private final Set<DataTransferredListener> dataTransferredListeners = Sets.newIdentityHashSet();
     private final Set<ObjectCompletedListener> objectCompletedListeners = Sets.newIdentityHashSet();
+    private final EventRunner eventRunner;
 
-    public ObjectPartTrackerImpl(final String name, final Collection<ObjectPart> parts) {
+    public ObjectPartTrackerImpl(final String name, final Collection<ObjectPart> parts, final EventRunner eventRunner) {
         this.name = name;
         this.parts = new TreeSet<>(ObjectPartComparator.instance());
         this.parts.addAll(parts);
+        this.eventRunner = eventRunner;
         validateParts();
     }
 
@@ -98,7 +100,7 @@ class ObjectPartTrackerImpl implements ObjectPartTracker {
     
     private void onDataTransferred(final long size) {
         for (final DataTransferredListener listener : this.dataTransferredListeners) {
-            Events.emitEvent(new Runnable() {
+            eventRunner.emitEvent(new Runnable() {
                 @Override
                 public void run() {
                     listener.dataTransferred(size);
@@ -109,7 +111,7 @@ class ObjectPartTrackerImpl implements ObjectPartTracker {
     
     private void onObjectCompleted() {
         for (final ObjectCompletedListener listener : this.objectCompletedListeners) {
-            Events.emitEvent(new Runnable() {
+            eventRunner.emitEvent(new Runnable() {
                 @Override
                 public void run() {
                     listener.objectCompleted(name);

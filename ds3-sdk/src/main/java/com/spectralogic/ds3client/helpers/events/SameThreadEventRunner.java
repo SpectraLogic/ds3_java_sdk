@@ -13,11 +13,9 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3client;
+package com.spectralogic.ds3client.helpers.events;
 
-import com.spectralogic.ds3client.helpers.events.EventRunner;
-
-public class SingleThreadedEventRunner implements EventRunner {
+public class SameThreadEventRunner implements EventRunner {
     @Override
     public void emitEvent(final Runnable runnable) {
         runnable.run();

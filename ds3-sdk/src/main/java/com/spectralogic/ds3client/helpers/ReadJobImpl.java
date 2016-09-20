@@ -24,32 +24,29 @@ import com.spectralogic.ds3client.commands.spectrads3.GetJobChunksReadyForClient
 import com.spectralogic.ds3client.exceptions.Ds3NoMoreRetriesException;
 import com.spectralogic.ds3client.helpers.ChunkTransferrer.ItemTransferrer;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.ObjectChannelBuilder;
-import com.spectralogic.ds3client.helpers.events.Events;
+import com.spectralogic.ds3client.helpers.events.EventRunner;
 import com.spectralogic.ds3client.helpers.util.PartialObjectHelpers;
 import com.spectralogic.ds3client.models.*;
 import com.spectralogic.ds3client.models.common.Range;
 import com.spectralogic.ds3client.networking.Metadata;
 import com.spectralogic.ds3client.utils.Guard;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.IdentityHashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.Set;
 
 class ReadJobImpl extends JobImpl {
-
-    private static final Logger LOG = LoggerFactory.getLogger(ReadJobImpl.class);
 
     private final JobPartTracker partTracker;
     private final List<Objects> chunks;
     private final ImmutableMap<String, ImmutableMultimap<BulkObject, Range>> blobToRanges;
-    private final Map<MetadataReceivedListener, MetadataReceivedListener> metadataListeners;
-    private final Map<ChecksumListener, ChecksumListener> checksumListeners;
-    private final Map<WaitingForChunksListener, WaitingForChunksListener> waitingForChunksListeners;
+    private final Set<MetadataReceivedListener> metadataListeners;
+    private final Set<ChecksumListener> checksumListeners;
+    private final Set<WaitingForChunksListener> waitingForChunksListeners;
     private final int retryAfter; // Negative retryAfter value represent infinity retries
     private final int retryDelay; // Negative value represents default
+    private final EventRunner eventRunner;
 
     private int retryAfterLeft; // The number of retries left
 
@@ -58,17 +55,19 @@ class ReadJobImpl extends JobImpl {
             final MasterObjectList masterObjectList,
             final ImmutableMultimap<String, Range> objectRanges,
             final int retryAfter,
-            final int retryDelay
+            final int retryDelay,
+            final EventRunner eventRunner
             ) {
         super(client, masterObjectList);
 
         this.chunks = this.masterObjectList.getObjects();
         this.partTracker = JobPartTrackerFactory
-                .buildPartTracker(Iterables.concat(getAllBlobApiBeans(chunks)));
+                .buildPartTracker(Iterables.concat(getAllBlobApiBeans(chunks)), eventRunner);
         this.blobToRanges = PartialObjectHelpers.mapRangesToBlob(masterObjectList.getObjects(), objectRanges);
-        this.metadataListeners = new IdentityHashMap<>();
-        this.checksumListeners = new IdentityHashMap<>();
-        this.waitingForChunksListeners = new IdentityHashMap<>();
+        this.metadataListeners = Sets.newIdentityHashSet();
+        this.checksumListeners = Sets.newIdentityHashSet();
+        this.waitingForChunksListeners = Sets.newIdentityHashSet();
+        this.eventRunner = eventRunner;
 
         this.retryAfter = this.retryAfterLeft = retryAfter;
         this.retryDelay = retryDelay;
@@ -109,7 +108,7 @@ class ReadJobImpl extends JobImpl {
     @Override
     public void attachMetadataReceivedListener(final MetadataReceivedListener listener) {
         checkRunning();
-        this.metadataListeners.put(listener, listener);
+        this.metadataListeners.add(listener);
     }
 
     @Override
@@ -121,7 +120,7 @@ class ReadJobImpl extends JobImpl {
     @Override
     public void attachChecksumListener(final ChecksumListener listener) {
         checkRunning();
-        this.checksumListeners.put(listener, listener);
+        this.checksumListeners.add(listener);
     }
 
     @Override
@@ -133,7 +132,7 @@ class ReadJobImpl extends JobImpl {
     @Override
     public void attachWaitingForChunksListener(final WaitingForChunksListener listener) {
         checkRunning();
-        this.waitingForChunksListeners.put(listener, listener);
+        this.waitingForChunksListeners.add(listener);
     }
 
     @Override
@@ -211,8 +210,8 @@ class ReadJobImpl extends JobImpl {
     }
 
     private void emitWaitingForChunksEvents(final int secondsToRetry) {
-        for (final WaitingForChunksListener waitingForChunksListener : waitingForChunksListeners.values()) {
-            Events.emitEvent(new Runnable() {
+        for (final WaitingForChunksListener waitingForChunksListener : waitingForChunksListeners) {
+            eventRunner.emitEvent(new Runnable() {
                 @Override
                 public void run() {
                     waitingForChunksListener.waiting(secondsToRetry);
@@ -255,8 +254,8 @@ class ReadJobImpl extends JobImpl {
     }
 
     private void sendChecksumEvents(final BulkObject ds3Object, final ChecksumType.Type type, final String checksum) {
-        for (final ChecksumListener listener : this.checksumListeners.values()) {
-            Events.emitEvent(new Runnable() {
+        for (final ChecksumListener listener : this.checksumListeners) {
+            eventRunner.emitEvent(new Runnable() {
                 @Override
                 public void run() {
                     listener.value(ds3Object, type, checksum);
@@ -266,8 +265,8 @@ class ReadJobImpl extends JobImpl {
     }
 
     private void sendMetadataEvents(final String objName , final Metadata metadata) {
-        for (final MetadataReceivedListener listener : this.metadataListeners.values()) {
-            Events.emitEvent(new Runnable() {
+        for (final MetadataReceivedListener listener : this.metadataListeners) {
+            eventRunner.emitEvent(new Runnable() {
                 @Override
                 public void run() {
                     listener.metadataReceived(objName, metadata);

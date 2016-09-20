@@ -378,7 +378,7 @@ public class DataIntegrity_Test {
         }
 
         @Override
-        public void value(final BulkObject obj, final ChecksumType.Type type, final String checksum) {
+        public synchronized void value(final BulkObject obj, final ChecksumType.Type type, final String checksum) {
             checksumMap.put(obj.getName(), checksum);
         }
 
