@@ -32,7 +32,6 @@ import com.spectralogic.ds3client.networking.Metadata;
 import com.spectralogic.ds3client.utils.Guard;
 
 import java.io.IOException;
-import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Set;
 

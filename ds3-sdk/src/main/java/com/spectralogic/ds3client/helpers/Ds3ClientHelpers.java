@@ -57,23 +57,53 @@ public abstract class Ds3ClientHelpers {
         UUID getJobId();
         String getBucketName();
 
+        /**
+         * Attaches an event handler that is invoked when a blob is successfully
+         * transferred to Spectra S3.
+         */
         void attachDataTransferredListener(final DataTransferredListener listener);
-        void attachObjectCompletedListener(final ObjectCompletedListener listener);
         void removeDataTransferredListener(final DataTransferredListener listener);
+
+        /**
+         * Attaches an event handler that is invoked when a full object is
+         * successfully transferred to Spectra S3.
+         */
+        void attachObjectCompletedListener(final ObjectCompletedListener listener);
         void removeObjectCompletedListener(final ObjectCompletedListener listener);
+
+        /**
+         * Attaches an event handler that is invoked when metadata is received for
+         * an object.
+         */
         void attachMetadataReceivedListener(final MetadataReceivedListener listener);
         void removeMetadataReceivedListener(final MetadataReceivedListener listener);
+
+        /**
+         * Attaches an event handler that is invoked when an object checksum is received.
+         */
         void attachChecksumListener(final ChecksumListener listener);
         void removeChecksumListener(final ChecksumListener listener);
+
+        /**
+         * Attaches an event handler that will be invoked only when there are no chunks available
+         * for processing.
+         */
         void attachWaitingForChunksListener(final WaitingForChunksListener listener);
         void removeWaitingForChunksListener(final WaitingForChunksListener listener);
+
         /**
          * Sets the maximum number of requests to execute at a time when fulfilling the job.
          */
         Job withMaxParallelRequests(final int maxParallelRequests);
-        
+
+        /**
+         * Register a handler that is invoked when metadata is requested for an object
+         */
         Job withMetadata(final MetadataAccess access);
 
+        /**
+         * Register a handler that is invoked when an object checksum is requested for a blob
+         */
         Job withChecksum(final ChecksumFunction checksumFunction);
 
         /**
@@ -90,6 +120,9 @@ public abstract class Ds3ClientHelpers {
 
     /**
      * Wraps the given {@link com.spectralogic.ds3client.Ds3ClientImpl} with helper methods.
+     * @param client An instance of {@link com.spectralogic.ds3client.Ds3Client}, usually gotten from a call to
+     *               {@link com.spectralogic.ds3client.Ds3ClientBuilder}
+     * @return An instance of {@link com.spectralogic.ds3client.Ds3Client} wrapped with helper methods.
      */
     public static Ds3ClientHelpers wrap(final Ds3Client client) {
         return new Ds3ClientHelpersImpl(client);
@@ -97,7 +130,7 @@ public abstract class Ds3ClientHelpers {
 
     /**
      * Wraps the given {@link com.spectralogic.ds3client.Ds3ClientImpl} with helper methods.
-     * @param client An instance of {@link com.spectralogic.ds3client.Ds3Client}, usually gotten from a callto
+     * @param client An instance of {@link com.spectralogic.ds3client.Ds3Client}, usually gotten from a call to
      *               {@link com.spectralogic.ds3client.Ds3ClientBuilder}
      * @param retryAfter The number of times to attempt to allocate a chunk before giving up.
      * @return An instance of {@link com.spectralogic.ds3client.Ds3Client} wrapped with helper methods.
@@ -108,7 +141,7 @@ public abstract class Ds3ClientHelpers {
 
     /**
      * Wraps the given {@link com.spectralogic.ds3client.Ds3ClientImpl} with helper methods.
-     * @param client An instance of {@link com.spectralogic.ds3client.Ds3Client}, usually gotten from a callto
+     * @param client An instance of {@link com.spectralogic.ds3client.Ds3Client}, usually gotten from a call to
      *               {@link com.spectralogic.ds3client.Ds3ClientBuilder}
      * @param retryAfter The number of times to attempt to allocate a chunk before giving up.
      * @param objectTransferAttempts The number of times to attempt to transfer an object before giving up.
@@ -279,7 +312,7 @@ public abstract class Ds3ClientHelpers {
      * @param retries    Specifies how many times the helper function will attempt to retry a request for failing. Default - 5
      * @throws IOException
      */
-    public abstract Iterable<Contents> listObjects(String bucket, String keyPrefix, String nextMarker, int maxKeys, int retries) throws IOException;
+    public abstract Iterable<Contents> listObjects(final String bucket, final String keyPrefix, final String nextMarker, final int maxKeys, final int retries) throws IOException;
 
     /**
      * Returns an object list with which you can call {@code startWriteJobImpl} based on the files in a {@code directory}.
@@ -290,22 +323,20 @@ public abstract class Ds3ClientHelpers {
     public abstract Iterable<Ds3Object> listObjectsForDirectory(final Path directory) throws IOException;
 
     /**
-     *
-     * @param objectsList
-     * @param prefix
-     * @return
+     * Returns an Iterable of {@link Ds3Object} that have a prefix added.
      */
     public abstract Iterable<Ds3Object> addPrefixToDs3ObjectsList(final Iterable<Ds3Object> objectsList, final String prefix);
 
     /**
-     *
-     * @param objectsList
-     * @param prefix
-     * @return
+     * Returns an Iterable of {@link Ds3Object} that have a prefix removed.
      */
     public abstract Iterable<Ds3Object> removePrefixFromDs3ObjectsList(final Iterable<Ds3Object> objectsList, final String prefix);
 
     @SafeVarargs
+    /**
+     * Converts an {@link Contents} to a {@link Ds3Object}.  Optionally a caller can supply many filters
+     * that will be applied before converting.
+     */
     public final Iterable<Ds3Object> toDs3Iterable(final Iterable<Contents> objects, final Predicate<Contents>... filters) {
 
         FluentIterable<Contents> fluentIterable = FluentIterable.from(objects).filter(new com.google.common.base.Predicate<Contents>() {
