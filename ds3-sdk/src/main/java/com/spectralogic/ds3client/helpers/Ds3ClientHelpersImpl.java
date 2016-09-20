@@ -23,6 +23,7 @@ import com.google.common.collect.Lists;
 import com.spectralogic.ds3client.Ds3Client;
 import com.spectralogic.ds3client.helpers.events.ConcurrentEventRunner;
 import com.spectralogic.ds3client.helpers.events.EventRunner;
+import com.spectralogic.ds3client.helpers.events.SameThreadEventRunner;
 import com.spectralogic.ds3client.helpers.pagination.GetBucketLoaderFactory;
 import com.spectralogic.ds3client.commands.*;
 import com.spectralogic.ds3client.commands.spectrads3.*;
@@ -76,7 +77,7 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
     }
 
     public Ds3ClientHelpersImpl(final Ds3Client client, final int retryAfter, final int objectTransferAttempts, final int retryDelay) {
-        this(client, retryAfter, objectTransferAttempts, retryDelay, new ConcurrentEventRunner());
+        this(client, retryAfter, objectTransferAttempts, retryDelay, new SameThreadEventRunner());
     }
     public Ds3ClientHelpersImpl(final Ds3Client client, final int retryAfter, final int objectTransferAttempts, final int retryDelay, final EventRunner eventRunner) {
         this.client = client;

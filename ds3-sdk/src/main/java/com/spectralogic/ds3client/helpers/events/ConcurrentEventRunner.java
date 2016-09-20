@@ -20,7 +20,7 @@ import java.util.concurrent.Executors;
 
 /**
  *
- *  A asynchronous event runner that will execute events in order, but does not
+ * A asynchronous event runner that will execute events in order, but does not
  * guarantee events complete in order.
  *
  */
