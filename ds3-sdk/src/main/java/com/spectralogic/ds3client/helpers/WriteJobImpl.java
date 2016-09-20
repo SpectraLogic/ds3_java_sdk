@@ -18,6 +18,7 @@ package com.spectralogic.ds3client.helpers;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Iterables;
+import com.google.common.collect.Sets;
 import com.spectralogic.ds3client.Ds3Client;
 import com.spectralogic.ds3client.commands.PutObjectRequest;
 import com.spectralogic.ds3client.commands.spectrads3.AllocateJobChunkSpectraS3Request;
@@ -25,7 +26,7 @@ import com.spectralogic.ds3client.commands.spectrads3.AllocateJobChunkSpectraS3R
 import com.spectralogic.ds3client.exceptions.Ds3NoMoreRetriesException;
 import com.spectralogic.ds3client.helpers.ChunkTransferrer.ItemTransferrer;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.ObjectChannelBuilder;
-import com.spectralogic.ds3client.helpers.events.Events;
+import com.spectralogic.ds3client.helpers.events.EventRunner;
 import com.spectralogic.ds3client.models.*;
 import com.spectralogic.ds3client.models.Objects;
 import com.spectralogic.ds3client.models.common.Range;
@@ -47,9 +48,10 @@ class WriteJobImpl extends JobImpl {
     private final JobPartTracker partTracker;
     private final List<Objects> filteredChunks;
     private final ChecksumType.Type checksumType;
-    private final Map<ChecksumListener, ChecksumListener> checksumListeners;
-    private final Map<WaitingForChunksListener, WaitingForChunksListener> waitingForChunksListeners;
+    private final Set<ChecksumListener> checksumListeners;
+    private final Set<WaitingForChunksListener> waitingForChunksListeners;
     private final int objectTransferAttempts;
+    private final EventRunner eventRunner;
     private final int retryAfter; // Negative retryAfter value represent infinity retries
     private final int retryDelay; //Negative value means use default
 
@@ -63,7 +65,8 @@ class WriteJobImpl extends JobImpl {
             final int retryAfter,
             final ChecksumType.Type type,
             final int objectTransferAttempts,
-            final int retryDelay) {
+            final int retryDelay,
+            final EventRunner eventRunner) {
         super(client, masterObjectList);
         if (this.masterObjectList == null || this.masterObjectList.getObjects() == null) {
             LOG.info("Job has no data to transfer");
@@ -74,12 +77,13 @@ class WriteJobImpl extends JobImpl {
                     this.masterObjectList.getJobId().toString(), this.masterObjectList.getObjects().size());
             this.filteredChunks = filterChunks(this.masterObjectList.getObjects());
             this.partTracker = JobPartTrackerFactory
-                    .buildPartTracker(Iterables.concat(ReadJobImpl.getAllBlobApiBeans(filteredChunks)));
+                    .buildPartTracker(Iterables.concat(ReadJobImpl.getAllBlobApiBeans(filteredChunks)), eventRunner);
         }
         this.retryAfter = this.retryAfterLeft = retryAfter;
         this.retryDelay = retryDelay;
-        this.checksumListeners = new IdentityHashMap<>();
-        this.waitingForChunksListeners = new IdentityHashMap<>();
+        this.checksumListeners = Sets.newIdentityHashSet();
+        this.waitingForChunksListeners = Sets.newIdentityHashSet();
+        this.eventRunner = eventRunner;
 
         this.checksumType = type;
         this.objectTransferAttempts = objectTransferAttempts;
@@ -122,7 +126,7 @@ class WriteJobImpl extends JobImpl {
     @Override
     public void attachChecksumListener(final ChecksumListener listener) {
         checkRunning();
-        this.checksumListeners.put(listener, listener);
+        this.checksumListeners.add(listener);
     }
 
     @Override
@@ -134,7 +138,7 @@ class WriteJobImpl extends JobImpl {
     @Override
     public void attachWaitingForChunksListener(final WaitingForChunksListener listener) {
         checkRunning();
-        this.waitingForChunksListeners.put(listener, listener);
+        this.waitingForChunksListeners.add(listener);
     }
 
     @Override
@@ -230,8 +234,8 @@ class WriteJobImpl extends JobImpl {
     }
 
     private void emitWaitingForChunksEvents(final int retryAfter) {
-        for (final WaitingForChunksListener waitingForChunksListener : waitingForChunksListeners.values()) {
-            Events.emitEvent(new Runnable() {
+        for (final WaitingForChunksListener waitingForChunksListener : waitingForChunksListeners) {
+            eventRunner.emitEvent(new Runnable() {
                 @Override
                 public void run() {
                     waitingForChunksListener.waiting(retryAfter);
@@ -400,8 +404,8 @@ class WriteJobImpl extends JobImpl {
     }
 
     private void emitChecksumEvents(final BulkObject bulkObject, final ChecksumType.Type type, final String checksum) {
-        for (final ChecksumListener listener : checksumListeners.values()) {
-            Events.emitEvent(new Runnable() {
+        for (final ChecksumListener listener : checksumListeners) {
+            eventRunner.emitEvent(new Runnable() {
                 @Override
                 public void run() {
                     listener.value(bulkObject, type, checksum);

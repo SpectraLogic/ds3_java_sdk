@@ -21,6 +21,8 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Lists;
 import com.spectralogic.ds3client.Ds3Client;
+import com.spectralogic.ds3client.helpers.events.ConcurrentEventRunner;
+import com.spectralogic.ds3client.helpers.events.EventRunner;
 import com.spectralogic.ds3client.helpers.pagination.GetBucketLoaderFactory;
 import com.spectralogic.ds3client.commands.*;
 import com.spectralogic.ds3client.commands.spectrads3.*;
@@ -59,6 +61,7 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
     private final int retryAfter;
     private final int retryDelay;
     private final int objectTransferAttempts;
+    private final EventRunner eventRunner;
 
     public Ds3ClientHelpersImpl(final Ds3Client client) {
         this(client, DEFAULT_RETRY_AFTER);
@@ -71,11 +74,16 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
     public Ds3ClientHelpersImpl(final Ds3Client client, final int retryAfter, final int objectTransferAttempts) {
         this(client, retryAfter, objectTransferAttempts, DEFAULT_RETRY_DELAY);
     }
+
     public Ds3ClientHelpersImpl(final Ds3Client client, final int retryAfter, final int objectTransferAttempts, final int retryDelay) {
+        this(client, retryAfter, objectTransferAttempts, retryDelay, new ConcurrentEventRunner());
+    }
+    public Ds3ClientHelpersImpl(final Ds3Client client, final int retryAfter, final int objectTransferAttempts, final int retryDelay, final EventRunner eventRunner) {
         this.client = client;
         this.retryAfter = retryAfter;
         this.objectTransferAttempts = objectTransferAttempts;
         this.retryDelay = retryDelay;
+        this.eventRunner = eventRunner;
     }
 
     @Override
@@ -111,7 +119,8 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
                 this.retryAfter,
                 options.getChecksumType(),
                 this.objectTransferAttempts,
-                this.retryDelay);
+                this.retryDelay,
+                this.eventRunner);
     }
 
     @Override
@@ -138,7 +147,7 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
 
         final ImmutableMultimap<String, Range> partialRanges = PartialObjectHelpers.getPartialObjectsRanges(objects);
 
-        return new ReadJobImpl(this.client, prime.getResult(), partialRanges, this.retryAfter, this.retryDelay);
+        return new ReadJobImpl(this.client, prime.getResult(), partialRanges, this.retryAfter, this.retryDelay, this.eventRunner);
     }
 
     @Override
@@ -180,7 +189,8 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
                 this.retryAfter,
                 ChecksumType.Type.NONE,
                 this.objectTransferAttempts,
-                this.retryDelay);
+                this.retryDelay,
+                this.eventRunner);
     }
 
     @Override
@@ -197,7 +207,8 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
                 jobResponse.getMasterObjectListResult(),
                 ImmutableMultimap.<String, Range>of(),
                 this.retryAfter,
-                this.retryDelay);
+                this.retryDelay,
+                this.eventRunner);
     }
 
     @Override

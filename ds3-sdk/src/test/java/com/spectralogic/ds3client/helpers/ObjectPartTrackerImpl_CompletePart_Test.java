@@ -15,11 +15,8 @@
 
 package com.spectralogic.ds3client.helpers;
 
-import com.spectralogic.ds3client.SingleThreadedEventRunner;
-import com.spectralogic.ds3client.helpers.events.Events;
-import org.junit.AfterClass;
+import com.spectralogic.ds3client.helpers.events.SameThreadEventRunner;
 import org.junit.Assert;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -83,16 +80,6 @@ public class ObjectPartTrackerImpl_CompletePart_Test {
         );
     }
 
-    @BeforeClass
-    public static void setup() {
-        Events.setEventRunner(new SingleThreadedEventRunner());
-    }
-
-    @AfterClass
-    public static void teardown() {
-        Events.setEventRunner(Events.DEFAULT_EVENT_RUNNER);
-    }
-
     @Test
     public void completePartFiresExpectedEvents() {
         if (this.shouldSucceed) {
@@ -107,7 +94,7 @@ public class ObjectPartTrackerImpl_CompletePart_Test {
             new ObjectPart(0L, 100L),
             new ObjectPart(100L, 100L),
             new ObjectPart(200L, 100L)
-        ));
+        ), new SameThreadEventRunner());
         final List<Object> events = new ArrayList<>();
         tracker.attachDataTransferredListener(new DataTransferredListener() {
             @Override
@@ -137,7 +124,7 @@ public class ObjectPartTrackerImpl_CompletePart_Test {
     }
 
     private void checkFailure() {
-        final ObjectPartTracker tracker = new ObjectPartTrackerImpl(this.name, Arrays.asList(new ObjectPart(100L, 100L)));
+        final ObjectPartTracker tracker = new ObjectPartTrackerImpl(this.name, Arrays.asList(new ObjectPart(100L, 100L)), new SameThreadEventRunner());
         try {
             tracker.completePart(this.parts.iterator().next());
             Assert.fail();

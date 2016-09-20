@@ -15,6 +15,7 @@
 
 package com.spectralogic.ds3client.helpers;
 
+import com.spectralogic.ds3client.helpers.events.SameThreadEventRunner;
 import org.junit.Test;
 
 import java.security.InvalidParameterException;
@@ -31,7 +32,7 @@ public class ObjectPartTrackerImpl_Test {
             new ObjectPartTrackerImpl("foo", Arrays.asList(
                 new ObjectPart(0L, 100L),
                 new ObjectPart(99L, 100L)
-            ));
+            ), new SameThreadEventRunner());
             fail();
         } catch (final InvalidParameterException e) {
         }
@@ -39,7 +40,7 @@ public class ObjectPartTrackerImpl_Test {
 
     @Test
     public void containsPartWorks() {
-        final ObjectPartTracker tracker = new ObjectPartTrackerImpl("foo", Arrays.asList(new ObjectPart(0L, 100L), new ObjectPart(100L, 100L)));
+        final ObjectPartTracker tracker = new ObjectPartTrackerImpl("foo", Arrays.asList(new ObjectPart(0L, 100L), new ObjectPart(100L, 100L)), new SameThreadEventRunner());
         assertThat(tracker.containsPart(new ObjectPart(100L, 100L)), is(true));
         assertThat(tracker.containsPart(new ObjectPart(100L, 50L)), is(false));
         assertThat(tracker.containsPart(new ObjectPart(150L, 50L)), is(false));
