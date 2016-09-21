@@ -25,6 +25,13 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * This class is used as the base implementation for all Spectra S3 paginating calls.  It requires a {@link PaginatingCommand} which implements the
+ * call specific logic for each paginated request.
+ * @param <T> The type returned by the iterator
+ * @param <E> The {@link com.spectralogic.ds3client.commands.interfaces.AbstractPaginationRequest} this loader will invoke
+ * @param <F> The {@link com.spectralogic.ds3client.commands.interfaces.AbstractPaginationResponse} that the {@link com.spectralogic.ds3client.commands.interfaces.AbstractPaginationRequest} will return.
+ */
 public class SpectraS3PaginationLoader<T, E extends AbstractPaginationRequest, F extends AbstractPaginationResponse> implements LazyIterable.LazyLoader<T> {
 
     private final PaginatingCommand<T, E, F> paginatingCommand;

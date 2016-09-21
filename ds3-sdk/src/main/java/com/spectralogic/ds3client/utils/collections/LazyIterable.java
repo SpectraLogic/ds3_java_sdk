@@ -25,6 +25,8 @@ import java.util.NoSuchElementException;
  * Produces an Iterator that will lazily load content.
  * Our definition of lazy for this class, is that the Iterator is returned right
  * away with no data.  Data is only then loaded, as needed, in pieces as defined by the LazyIterableLoader.
+ *
+ * To use, supply a {@link LazyLoaderFactory} which is used to fetch data as it is needed.
  */
 public class LazyIterable<T> implements Iterable<T> {
 
@@ -39,10 +41,23 @@ public class LazyIterable<T> implements Iterable<T> {
         return new LazyObjectIterator<>(lazyLoaderFactory.create());
     }
 
+    /**
+     * A factory that creates instances of LazyLoaders.  It's important that this factory
+     * does not return the same loader, otherwise every iterator created with this factory
+     * will share the same state and can lead to undefined behavior.
+     * @param <T> The model that is returned by the iterator
+     */
     public interface LazyLoaderFactory<T> {
         LazyLoader<T> create();
     }
 
+    /**
+     * A loader is responsible for returning new data on each call to {@link LazyLoader#getNextValues()}.
+     *
+     * If using a Spectra S3 API call see {@link com.spectralogic.ds3client.helpers.pagination.SpectraS3PaginationLoader}
+     * as the base implementation to handle most of the details of creating a new LazyLoader
+     * @param <T> The model that is returned by the iterator
+     */
     public interface LazyLoader<T> {
         List<T> getNextValues();
     }
@@ -97,6 +112,5 @@ public class LazyIterable<T> implements Iterable<T> {
         public void remove() {
             throw new UnsupportedOperationException("The remove method on the LazyObjectIterator is not supported");
         }
-
     }
 }
