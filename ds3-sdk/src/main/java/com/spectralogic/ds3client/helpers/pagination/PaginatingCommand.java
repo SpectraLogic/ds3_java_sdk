@@ -21,8 +21,25 @@ import com.spectralogic.ds3client.commands.interfaces.AbstractPaginationResponse
 import java.io.IOException;
 import java.util.List;
 
+/**
+ * This interface is used to implement the call specific logic for any Spectra S3 paginated request.
+ * @param <E> The type the iterator will return.
+ * @param <T> The {@link AbstractPaginationRequest} that the command will invoke
+ * @param <F> The {@link AbstractPaginationResponse} that will be returned by the {@link AbstractPaginationRequest}
+ */
 public interface PaginatingCommand<E, T extends AbstractPaginationRequest, F extends AbstractPaginationResponse> {
+    /**
+     * Creates an initial request.  This should not modify any of the pagination values for the request
+     */
     T createRequest();
+
+    /**
+     * Invokes the request and returns the response
+     */
     F invokeCommand(final T paginationRequest) throws IOException;
+
+    /**
+     * Parses the response into the correct payload to be consumed by the iterator
+     */
     List<E> getResponseContents(F response);
 }
