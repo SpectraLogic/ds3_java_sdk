@@ -19,6 +19,3 @@ services:
             - GIT_BRANCH
         dns:
             - 10.1.0.9
-
-
-
