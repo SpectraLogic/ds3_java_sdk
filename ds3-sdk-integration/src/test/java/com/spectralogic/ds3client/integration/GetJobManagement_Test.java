@@ -257,9 +257,12 @@ public class GetJobManagement_Test {
         try {
             final List<Ds3Object> filesToGet = new ArrayList<>();
 
-            filesToGet.add(new PartialDs3Object("lesmis-copies.txt", Range.byLength(0, 100)));
+            final String DIR_NAME = "largeFiles/";
+            final String FILE_NAME = "lesmis-copies.txt";
 
-            filesToGet.add(new PartialDs3Object("lesmis-copies.txt", Range.byLength(100, 100)));
+            filesToGet.add(new PartialDs3Object(FILE_NAME, Range.byLength(0, 100)));
+
+            filesToGet.add(new PartialDs3Object(FILE_NAME, Range.byLength(100, 100)));
 
             final Ds3ClientShim ds3ClientShim = new Ds3ClientShim((Ds3ClientImpl) client);
 
@@ -273,16 +276,13 @@ public class GetJobManagement_Test {
 
             job.transfer(new FileObjectGetter(tempDirectory));
 
-            final String DIR_NAME = "largeFiles/";
-            final String FILE_NAME = "lesmis-copies.txt";
-
             try (final InputStream originalFileStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(DIR_NAME + FILE_NAME)) {
                 final byte[] first200Bytes = new byte[200];
                 int numBytesRead = originalFileStream.read(first200Bytes, 0, 200);
 
                 assertThat(numBytesRead, is(200));
 
-                try (final InputStream fileReadFromBP = Files.newInputStream(Paths.get(tempDirectory.toString(), "lesmis-copies.txt"))) {
+                try (final InputStream fileReadFromBP = Files.newInputStream(Paths.get(tempDirectory.toString(), FILE_NAME))) {
                     final byte[] first200BytesFromBP = new byte[200];
 
                     numBytesRead = fileReadFromBP.read(first200BytesFromBP, 0, 200);
