@@ -17,38 +17,50 @@ package com.spectralogic.ds3client.integration;
 
 import com.google.common.collect.Lists;
 import com.spectralogic.ds3client.Ds3Client;
+import com.spectralogic.ds3client.Ds3ClientImpl;
 import com.spectralogic.ds3client.commands.GetObjectRequest;
 import com.spectralogic.ds3client.commands.GetObjectResponse;
 import com.spectralogic.ds3client.commands.PutObjectRequest;
 import com.spectralogic.ds3client.commands.spectrads3.GetJobSpectraS3Request;
 import com.spectralogic.ds3client.commands.spectrads3.GetJobSpectraS3Response;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers;
+import com.spectralogic.ds3client.helpers.FileObjectGetter;
+import com.spectralogic.ds3client.helpers.FileObjectPutter;
 import com.spectralogic.ds3client.helpers.options.ReadJobOptions;
 import com.spectralogic.ds3client.integration.test.helpers.ABMTestHelper;
+import com.spectralogic.ds3client.integration.test.helpers.Ds3ClientShim;
 import com.spectralogic.ds3client.integration.test.helpers.TempStorageIds;
 import com.spectralogic.ds3client.integration.test.helpers.TempStorageUtil;
 import com.spectralogic.ds3client.models.ChecksumType;
 import com.spectralogic.ds3client.models.Priority;
 import com.spectralogic.ds3client.models.bulk.Ds3Object;
 import com.spectralogic.ds3client.utils.ResourceUtils;
+import org.apache.commons.io.FileUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.net.URISyntaxException;
 import java.nio.channels.SeekableByteChannel;
 import java.nio.channels.WritableByteChannel;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
 
 import static com.spectralogic.ds3client.integration.Util.RESOURCE_BASE_NAME;
 import static com.spectralogic.ds3client.integration.Util.deleteAllContents;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 public class GetJobManagement_Test {
 
@@ -126,6 +138,74 @@ public class GetJobManagement_Test {
                 .getJobSpectraS3(new GetJobSpectraS3Request(readJob.getJobId()));
 
         assertThat(jobSpectraS3Response.getStatusCode(), is(200));
+    }
+
+    private void putBigFile() throws IOException, URISyntaxException {
+        final String DIR_NAME = "largeFiles/";
+        final String[] FILE_NAMES = new String[] { "lesmis-copies.txt" };
+
+        final Path dirPath = ResourceUtils.loadFileResource(DIR_NAME);
+
+        final List<String> bookTitles = new ArrayList<>();
+        final List<Ds3Object> objects = new ArrayList<>();
+        for (final String book : FILE_NAMES) {
+            final Path objPath = ResourceUtils.loadFileResource(DIR_NAME + book);
+            final long bookSize = Files.size(objPath);
+            final Ds3Object obj = new Ds3Object(book, bookSize);
+
+            bookTitles.add(book);
+            objects.add(obj);
+        }
+
+        final int maxNumBlockAllocationRetries = 1;
+        final int maxNumObjectTransferAttempts = 3;
+        final Ds3ClientHelpers ds3ClientHelpers = Ds3ClientHelpers.wrap(client,
+                maxNumBlockAllocationRetries,
+                maxNumObjectTransferAttempts);
+
+        final Ds3ClientHelpers.Job writeJob = ds3ClientHelpers.startWriteJob(BUCKET_NAME, objects);
+        writeJob.transfer(new FileObjectPutter(dirPath));
+    }
+
+    @Test
+    public void createReadJobWithBigFile() throws IOException, URISyntaxException, NoSuchMethodException, IllegalAccessException, InvocationTargetException {
+        putBigFile();
+
+        final String tempPathPrefix = null;
+        final Path tempDirectory = Files.createTempDirectory(Paths.get("."), tempPathPrefix);
+
+        try {
+            final String DIR_NAME = "largeFiles/";
+            final String FILE_NAME = "lesmis-copies.txt";
+
+            final Path objPath = ResourceUtils.loadFileResource(DIR_NAME + FILE_NAME);
+            final long bookSize = Files.size(objPath);
+            final Ds3Object obj = new Ds3Object(FILE_NAME, bookSize);
+
+            final Ds3ClientShim ds3ClientShim = new Ds3ClientShim((Ds3ClientImpl)client);
+
+            final int maxNumBlockAllocationRetries = 1;
+            final int maxNumObjectTransferAttempts = 3;
+            final Ds3ClientHelpers ds3ClientHelpers = Ds3ClientHelpers.wrap(ds3ClientShim,
+                    maxNumBlockAllocationRetries,
+                    maxNumObjectTransferAttempts);
+
+            final Ds3ClientHelpers.Job readJob = ds3ClientHelpers.startReadJob(BUCKET_NAME, Arrays.asList(obj));
+
+            final GetJobSpectraS3Response jobSpectraS3Response = ds3ClientShim
+                    .getJobSpectraS3(new GetJobSpectraS3Request(readJob.getJobId()));
+
+            assertThat(jobSpectraS3Response.getStatusCode(), is(200));
+
+            readJob.transfer(new FileObjectGetter(tempDirectory));
+
+            final File originalFile = ResourceUtils.loadFileResource(DIR_NAME + FILE_NAME).toFile();
+            final File fileCopiedFromBP = Paths.get(tempDirectory.toString(), FILE_NAME).toFile();
+            assertTrue(FileUtils.contentEquals(originalFile, fileCopiedFromBP));
+
+        } finally {
+            FileUtils.deleteDirectory(tempDirectory.toFile());
+        }
     }
 
     @Test

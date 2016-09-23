@@ -32,10 +32,7 @@ import com.spectralogic.ds3client.integration.test.helpers.TempStorageIds;
 import com.spectralogic.ds3client.integration.test.helpers.TempStorageUtil;
 import com.spectralogic.ds3client.models.*;
 import com.spectralogic.ds3client.models.bulk.Ds3Object;
-import com.spectralogic.ds3client.networking.ConnectionDetails;
 import com.spectralogic.ds3client.networking.FailedRequestException;
-import com.spectralogic.ds3client.networking.NetworkClient;
-import com.spectralogic.ds3client.networking.NetworkClientImpl;
 import com.spectralogic.ds3client.utils.ByteArraySeekableByteChannel;
 import com.spectralogic.ds3client.utils.ResourceUtils;
 import org.apache.commons.io.FileUtils;
@@ -45,7 +42,6 @@ import org.junit.*;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.net.URISyntaxException;
 import java.nio.ByteBuffer;
 import java.nio.channels.SeekableByteChannel;
@@ -56,6 +52,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
+import com.spectralogic.ds3client.integration.test.helpers.Ds3ClientShim;
 
 import static com.spectralogic.ds3client.integration.Util.RESOURCE_BASE_NAME;
 import static com.spectralogic.ds3client.integration.Util.deleteAllContents;
@@ -904,53 +901,6 @@ public class PutJobManagement_Test {
         } finally {
             FileUtils.deleteDirectory(tempDirectory.toFile());
             deleteAllContents(ds3ClientShim, BUCKET_NAME);
-        }
-    }
-
-    private static class Ds3ClientShim extends Ds3ClientImpl {
-        private static Method getNetClientMethod = null;
-
-        int numRetries = 0;
-
-        static {
-            try {
-                getNetClientMethod = Ds3ClientImpl.class.getDeclaredMethod("getNetClient");
-            } catch (final NoSuchMethodException e) {
-                fail("Could not find Ds3ClientImpl method getNetClient.");
-            }
-
-            getNetClientMethod.setAccessible(true);
-        }
-
-        public Ds3ClientShim(final NetworkClient netClient) {
-            super(netClient);
-        }
-
-        public Ds3ClientShim(final Ds3ClientImpl ds3ClientImpl) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
-            this((NetworkClient)getNetClientMethod.invoke(ds3ClientImpl));
-        }
-
-        @Override
-        public PutObjectResponse putObject(final PutObjectRequest request) throws IOException {
-            if(numRetries++ >= 1) {
-                return super.putObject(request);
-            }
-
-            throw new Ds3NoMoreRetriesException(1);
-        }
-
-        @Override
-        public Ds3Client newForNode(final JobNode node) {
-            final ConnectionDetails newConnectionDetails;
-            try {
-                newConnectionDetails = ((NetworkClient)getNetClientMethod.invoke(this)).getConnectionDetails();
-                final NetworkClient newNetClient = new NetworkClientImpl(newConnectionDetails);
-                return new Ds3ClientShim(newNetClient);
-            } catch (final IllegalAccessException | InvocationTargetException e) {
-                fail("Failure trying to create Ds3Client used in verifying putObject retries: " + e.getMessage());
-            }
-
-            return null;
         }
     }
 
