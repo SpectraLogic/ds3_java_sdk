@@ -50,7 +50,6 @@ class WriteJobImpl extends JobImpl {
     private final ChecksumType.Type checksumType;
     private final Set<ChecksumListener> checksumListeners;
     private final Set<WaitingForChunksListener> waitingForChunksListeners;
-    private final int objectTransferAttempts;
     private final EventRunner eventRunner;
     private final int retryAfter; // Negative retryAfter value represent infinity retries
     private final int retryDelay; //Negative value means use default
@@ -67,7 +66,7 @@ class WriteJobImpl extends JobImpl {
             final int objectTransferAttempts,
             final int retryDelay,
             final EventRunner eventRunner) {
-        super(client, masterObjectList);
+        super(client, masterObjectList, objectTransferAttempts);
         if (this.masterObjectList == null || this.masterObjectList.getObjects() == null) {
             LOG.info("Job has no data to transfer");
             this.filteredChunks = null;
@@ -86,7 +85,6 @@ class WriteJobImpl extends JobImpl {
         this.eventRunner = eventRunner;
 
         this.checksumType = type;
-        this.objectTransferAttempts = objectTransferAttempts;
     }
 
     @Override
@@ -290,24 +288,14 @@ class WriteJobImpl extends JobImpl {
 
     private final class PutObjectTransferrerRetryDecorator implements ItemTransferrer {
         private final PutObjectTransferrer putObjectTransferrer;
+
         private PutObjectTransferrerRetryDecorator(final JobState jobState) {
             putObjectTransferrer = new PutObjectTransferrer(jobState);
         }
 
         @Override
         public void transferItem(final Ds3Client client, final BulkObject ds3Object) throws IOException {
-            int objectTransfersAttempted = 0;
-
-            while(true) {
-                try {
-                    putObjectTransferrer.transferItem(client, ds3Object);
-                    break;
-                } catch (final Throwable t) {
-                    if (ExceptionClassifier.isUnrecoverableException(t) || ++objectTransfersAttempted >= objectTransferAttempts) {
-                        throw t;
-                    }
-                }
-            }
+            WriteJobImpl.this.transferItem(client, ds3Object, putObjectTransferrer);
         }
     }
 

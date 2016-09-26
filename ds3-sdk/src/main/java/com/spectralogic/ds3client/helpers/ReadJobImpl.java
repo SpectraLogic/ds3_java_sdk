@@ -53,11 +53,12 @@ class ReadJobImpl extends JobImpl {
             final Ds3Client client,
             final MasterObjectList masterObjectList,
             final ImmutableMultimap<String, Range> objectRanges,
+            final int objectTransferAttempts,
             final int retryAfter,
             final int retryDelay,
             final EventRunner eventRunner
             ) {
-        super(client, masterObjectList);
+        super(client, masterObjectList, objectTransferAttempts);
 
         this.chunks = this.masterObjectList.getObjects();
         this.partTracker = JobPartTrackerFactory
@@ -159,7 +160,7 @@ class ReadJobImpl extends JobImpl {
                 this.masterObjectList.getObjects(),
                 partTracker, blobToRanges)) {
             final ChunkTransferrer chunkTransferrer = new ChunkTransferrer(
-                new GetObjectTransferrer(jobState),
+                new GetObjectTransferrerRetryDecorator(jobState),
                 this.client,
                 jobState.getPartTracker(),
                 this.maxParallelRequests
@@ -216,6 +217,19 @@ class ReadJobImpl extends JobImpl {
                     waitingForChunksListener.waiting(secondsToRetry);
                 }
             });
+        }
+    }
+
+    private final class GetObjectTransferrerRetryDecorator implements ItemTransferrer {
+        private final GetObjectTransferrer getObjectTransferrer;
+
+        private GetObjectTransferrerRetryDecorator(final JobState jobState) {
+            getObjectTransferrer = new GetObjectTransferrer(jobState);
+        }
+
+        @Override
+        public void transferItem(final Ds3Client client, final BulkObject ds3Object) throws IOException {
+            ReadJobImpl.this.transferItem(client, ds3Object, getObjectTransferrer);
         }
     }
 

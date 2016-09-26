@@ -79,6 +79,7 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
     public Ds3ClientHelpersImpl(final Ds3Client client, final int retryAfter, final int objectTransferAttempts, final int retryDelay) {
         this(client, retryAfter, objectTransferAttempts, retryDelay, new SameThreadEventRunner());
     }
+
     public Ds3ClientHelpersImpl(final Ds3Client client, final int retryAfter, final int objectTransferAttempts, final int retryDelay, final EventRunner eventRunner) {
         this.client = client;
         this.retryAfter = retryAfter;
@@ -148,7 +149,14 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
 
         final ImmutableMultimap<String, Range> partialRanges = PartialObjectHelpers.getPartialObjectsRanges(objects);
 
-        return new ReadJobImpl(this.client, prime.getResult(), partialRanges, this.retryAfter, this.retryDelay, this.eventRunner);
+        return new ReadJobImpl(
+                this.client,
+                prime.getResult(),
+                partialRanges,
+                this.objectTransferAttempts,
+                this.retryAfter,
+                this.retryDelay,
+                this.eventRunner);
     }
 
     @Override
@@ -207,6 +215,7 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
                 this.client,
                 jobResponse.getMasterObjectListResult(),
                 ImmutableMultimap.<String, Range>of(),
+                this.objectTransferAttempts,
                 this.retryAfter,
                 this.retryDelay,
                 this.eventRunner);
