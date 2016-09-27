@@ -18,6 +18,7 @@ package com.spectralogic.ds3client.integration;
 import com.google.common.collect.Lists;
 import com.spectralogic.ds3client.Ds3Client;
 import com.spectralogic.ds3client.Ds3ClientImpl;
+import com.spectralogic.ds3client.commands.DeleteObjectRequest;
 import com.spectralogic.ds3client.commands.GetObjectRequest;
 import com.spectralogic.ds3client.commands.GetObjectResponse;
 import com.spectralogic.ds3client.commands.PutObjectRequest;
@@ -32,6 +33,7 @@ import com.spectralogic.ds3client.integration.test.helpers.Ds3ClientShim;
 import com.spectralogic.ds3client.integration.test.helpers.TempStorageIds;
 import com.spectralogic.ds3client.integration.test.helpers.TempStorageUtil;
 import com.spectralogic.ds3client.models.ChecksumType;
+import com.spectralogic.ds3client.models.Contents;
 import com.spectralogic.ds3client.models.Priority;
 import com.spectralogic.ds3client.models.bulk.Ds3Object;
 import com.spectralogic.ds3client.models.bulk.PartialDs3Object;
@@ -178,6 +180,7 @@ public class GetJobManagement_Test {
 
         } finally {
             FileUtils.deleteDirectory(tempDirectory.toFile());
+            deleteBigFile();
         }
     }
 
@@ -208,6 +211,16 @@ public class GetJobManagement_Test {
         writeJob.transfer(new FileObjectPutter(dirPath));
     }
 
+    private void deleteBigFile() throws IOException {
+        final Ds3ClientHelpers helpers = Ds3ClientHelpers.wrap(client);
+
+        final Iterable<Contents> objects = helpers.listObjects(BUCKET_NAME);
+        for (final Contents contents : objects) {
+            if (contents.getKey().equals("lesmis-copies.txt")) {
+                client.deleteObject(new DeleteObjectRequest(BUCKET_NAME, contents.getKey()));
+            }
+        }
+    }
 
     @Test
     public void createReadJobWithPriorityOption() throws IOException,
@@ -293,6 +306,7 @@ public class GetJobManagement_Test {
             }
         } finally {
             FileUtils.deleteDirectory(tempDirectory.toFile());
+            deleteBigFile();
         }
     }
 }

@@ -931,24 +931,30 @@ public class Smoke_Test {
 
     @Test
     public void partialGetWithBookOverChunkBoundry() throws IOException, URISyntaxException {
+        final String DIR_NAME = "largeFiles/";
+        final String FILE_NAME = "lesmis-copies.txt";
+
+        final Path objPath = ResourceUtils.loadFileResource(DIR_NAME + FILE_NAME);
+        final long bookSize = Files.size(objPath);
+
         final String bucketName = "partialGetOnBook";
-        final Path filePath = Files.createTempFile("ds3", "lesmis-copies.txt");
+        final Path filePath = Files.createTempFile("ds3", FILE_NAME);
         LOG.info("TempFile for partial get of book: " + filePath.toAbsolutePath().toString());
 
         try {
 
             HELPERS.ensureBucketExists(bucketName, envDataPolicyId);
 
-            final List<Ds3Object> putObjects = Lists.newArrayList(new Ds3Object("lesmis-copies.txt", 13290604));
+            final List<Ds3Object> putObjects = Lists.newArrayList(new Ds3Object(FILE_NAME, bookSize));
 
             final Ds3ClientHelpers.Job putJob = HELPERS
                     .startWriteJob(bucketName, putObjects, WriteJobOptions.create()
                             .withMaxUploadSize(PutBulkJobSpectraS3Request.MIN_UPLOAD_SIZE_IN_BYTES));
 
-            putJob.transfer(new ResourceObjectPutter("largeFiles/"));
+            putJob.transfer(new ResourceObjectPutter(DIR_NAME));
 
             final List<Ds3Object> getObjects = Lists.newArrayList();
-            getObjects.add(new PartialDs3Object("lesmis-copies.txt", Range.byLength(1048476, 200)));
+            getObjects.add(new PartialDs3Object(FILE_NAME, Range.byLength(1048476, 200)));
 
             final Ds3ClientHelpers.Job getJob = HELPERS.startReadJob(bucketName, getObjects);
 
@@ -964,7 +970,7 @@ public class Smoke_Test {
             assertThat(Files.size(filePath), is(200L));
             final String partialFile = new String(Files.readAllBytes(filePath), Charset.forName("UTF-8"));
             final String expectedResult = new String(Files.readAllBytes(expectedResultPath), Charset.forName("UTF-8"));
-            assertThat(partialFile, is(expectedResult.substring(0, expectedResult.length() - 1))); // need the trim to remove a newline that is added by the os
+            assertThat(partialFile, is(expectedResult.substring(0, expectedResult.length())));
         } finally {
             deleteAllContents(client, bucketName);
             Files.delete(filePath);
