@@ -180,7 +180,7 @@ public class GetJobManagement_Test {
 
         } finally {
             FileUtils.deleteDirectory(tempDirectory.toFile());
-            deleteBigFile();
+            deleteBigFileFromBlackPearlBucket();
         }
     }
 
@@ -211,7 +211,7 @@ public class GetJobManagement_Test {
         writeJob.transfer(new FileObjectPutter(dirPath));
     }
 
-    private void deleteBigFile() throws IOException {
+    private void deleteBigFileFromBlackPearlBucket() throws IOException {
         final Ds3ClientHelpers helpers = Ds3ClientHelpers.wrap(client);
 
         final Iterable<Contents> objects = helpers.listObjects(BUCKET_NAME);
@@ -306,7 +306,7 @@ public class GetJobManagement_Test {
             }
         } finally {
             FileUtils.deleteDirectory(tempDirectory.toFile());
-            deleteBigFile();
+            deleteBigFileFromBlackPearlBucket();
         }
     }
 }
