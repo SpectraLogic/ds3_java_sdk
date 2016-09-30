@@ -1,6 +1,6 @@
 /*
  * ******************************************************************************
- *   Copyright 2014-2015 Spectra Logic Corporation. All Rights Reserved.
+ *   Copyright 2014-2016 Spectra Logic Corporation. All Rights Reserved.
  *   Licensed under the Apache License, Version 2.0 (the "License"). You may not use
  *   this file except in compliance with the License. A copy of the License is located at
  *
@@ -57,6 +57,7 @@ public class PutStorageDomainSpectraS3Request extends AbstractRequest {
 
     // Constructor
     
+    
     public PutStorageDomainSpectraS3Request(final String name) {
         this.name = name;
         
@@ -69,11 +70,13 @@ public class PutStorageDomainSpectraS3Request extends AbstractRequest {
         return this;
     }
 
+
     public PutStorageDomainSpectraS3Request withAutoEjectUponCron(final String autoEjectUponCron) {
         this.autoEjectUponCron = autoEjectUponCron;
         this.updateQueryParam("auto_eject_upon_cron", autoEjectUponCron);
         return this;
     }
+
 
     public PutStorageDomainSpectraS3Request withAutoEjectUponJobCancellation(final boolean autoEjectUponJobCancellation) {
         this.autoEjectUponJobCancellation = autoEjectUponJobCancellation;
@@ -81,11 +84,13 @@ public class PutStorageDomainSpectraS3Request extends AbstractRequest {
         return this;
     }
 
+
     public PutStorageDomainSpectraS3Request withAutoEjectUponJobCompletion(final boolean autoEjectUponJobCompletion) {
         this.autoEjectUponJobCompletion = autoEjectUponJobCompletion;
         this.updateQueryParam("auto_eject_upon_job_completion", autoEjectUponJobCompletion);
         return this;
     }
+
 
     public PutStorageDomainSpectraS3Request withAutoEjectUponMediaFull(final boolean autoEjectUponMediaFull) {
         this.autoEjectUponMediaFull = autoEjectUponMediaFull;
@@ -93,11 +98,13 @@ public class PutStorageDomainSpectraS3Request extends AbstractRequest {
         return this;
     }
 
+
     public PutStorageDomainSpectraS3Request withLtfsFileNaming(final LtfsFileNamingMode ltfsFileNaming) {
         this.ltfsFileNaming = ltfsFileNaming;
         this.updateQueryParam("ltfs_file_naming", ltfsFileNaming);
         return this;
     }
+
 
     public PutStorageDomainSpectraS3Request withMaxTapeFragmentationPercent(final int maxTapeFragmentationPercent) {
         this.maxTapeFragmentationPercent = maxTapeFragmentationPercent;
@@ -105,11 +112,13 @@ public class PutStorageDomainSpectraS3Request extends AbstractRequest {
         return this;
     }
 
+
     public PutStorageDomainSpectraS3Request withMaximumAutoVerificationFrequencyInDays(final Integer maximumAutoVerificationFrequencyInDays) {
         this.maximumAutoVerificationFrequencyInDays = maximumAutoVerificationFrequencyInDays;
         this.updateQueryParam("maximum_auto_verification_frequency_in_days", maximumAutoVerificationFrequencyInDays);
         return this;
     }
+
 
     public PutStorageDomainSpectraS3Request withMediaEjectionAllowed(final boolean mediaEjectionAllowed) {
         this.mediaEjectionAllowed = mediaEjectionAllowed;
@@ -117,11 +126,13 @@ public class PutStorageDomainSpectraS3Request extends AbstractRequest {
         return this;
     }
 
+
     public PutStorageDomainSpectraS3Request withSecureMediaAllocation(final boolean secureMediaAllocation) {
         this.secureMediaAllocation = secureMediaAllocation;
         this.updateQueryParam("secure_media_allocation", secureMediaAllocation);
         return this;
     }
+
 
     public PutStorageDomainSpectraS3Request withVerifyPriorToAutoEject(final Priority verifyPriorToAutoEject) {
         this.verifyPriorToAutoEject = verifyPriorToAutoEject;
@@ -129,11 +140,13 @@ public class PutStorageDomainSpectraS3Request extends AbstractRequest {
         return this;
     }
 
+
     public PutStorageDomainSpectraS3Request withWriteOptimization(final WriteOptimization writeOptimization) {
         this.writeOptimization = writeOptimization;
         this.updateQueryParam("write_optimization", writeOptimization);
         return this;
     }
+
 
 
     @Override

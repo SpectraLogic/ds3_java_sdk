@@ -68,7 +68,7 @@ public class Ds3BulkGetExample {
                     .getBulkJobSpectraS3(new GetBulkJobSpectraS3Request(bucket, objectList));
 
             // The bulk response returns a list of lists which is designed to optimize data transmission from DS3.
-            final MasterObjectList list = bulkResponse.getResult();
+            final MasterObjectList list = bulkResponse.getMasterObjectList();
             for (final Objects objects : list.getObjects()) {
                 for (final BulkObject obj : objects.getObjects()) {
                     final FileChannel channel = FileChannel.open(

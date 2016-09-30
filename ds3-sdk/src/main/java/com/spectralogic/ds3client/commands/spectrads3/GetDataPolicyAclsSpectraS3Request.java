@@ -1,6 +1,6 @@
 /*
  * ******************************************************************************
- *   Copyright 2014-2015 Spectra Logic Corporation. All Rights Reserved.
+ *   Copyright 2014-2016 Spectra Logic Corporation. All Rights Reserved.
  *   Licensed under the Apache License, Version 2.0 (the "License"). You may not use
  *   this file except in compliance with the License. A copy of the License is located at
  *
@@ -41,6 +41,7 @@ public class GetDataPolicyAclsSpectraS3Request extends AbstractPaginationRequest
 
     // Constructor
     
+    
     public GetDataPolicyAclsSpectraS3Request() {
         
     }
@@ -51,11 +52,13 @@ public class GetDataPolicyAclsSpectraS3Request extends AbstractPaginationRequest
         return this;
     }
 
+
     public GetDataPolicyAclsSpectraS3Request withDataPolicyId(final String dataPolicyId) {
         this.dataPolicyId = dataPolicyId;
         this.updateQueryParam("data_policy_id", dataPolicyId);
         return this;
     }
+
 
     public GetDataPolicyAclsSpectraS3Request withGroupId(final UUID groupId) {
         this.groupId = groupId.toString();
@@ -63,11 +66,13 @@ public class GetDataPolicyAclsSpectraS3Request extends AbstractPaginationRequest
         return this;
     }
 
+
     public GetDataPolicyAclsSpectraS3Request withGroupId(final String groupId) {
         this.groupId = groupId;
         this.updateQueryParam("group_id", groupId);
         return this;
     }
+
 
     public GetDataPolicyAclsSpectraS3Request withLastPage(final boolean lastPage) {
         this.lastPage = lastPage;
@@ -79,11 +84,13 @@ public class GetDataPolicyAclsSpectraS3Request extends AbstractPaginationRequest
         return this;
     }
 
+
     public GetDataPolicyAclsSpectraS3Request withPageLength(final int pageLength) {
         this.pageLength = pageLength;
         this.updateQueryParam("page_length", pageLength);
         return this;
     }
+
 
     public GetDataPolicyAclsSpectraS3Request withPageOffset(final int pageOffset) {
         this.pageOffset = pageOffset;
@@ -91,11 +98,13 @@ public class GetDataPolicyAclsSpectraS3Request extends AbstractPaginationRequest
         return this;
     }
 
+
     public GetDataPolicyAclsSpectraS3Request withPageStartMarker(final UUID pageStartMarker) {
         this.pageStartMarker = pageStartMarker.toString();
         this.updateQueryParam("page_start_marker", pageStartMarker);
         return this;
     }
+
 
     public GetDataPolicyAclsSpectraS3Request withPageStartMarker(final String pageStartMarker) {
         this.pageStartMarker = pageStartMarker;
@@ -103,17 +112,20 @@ public class GetDataPolicyAclsSpectraS3Request extends AbstractPaginationRequest
         return this;
     }
 
+
     public GetDataPolicyAclsSpectraS3Request withUserId(final UUID userId) {
         this.userId = userId.toString();
         this.updateQueryParam("user_id", userId);
         return this;
     }
 
+
     public GetDataPolicyAclsSpectraS3Request withUserId(final String userId) {
         this.userId = userId;
         this.updateQueryParam("user_id", userId);
         return this;
     }
+
 
 
     @Override

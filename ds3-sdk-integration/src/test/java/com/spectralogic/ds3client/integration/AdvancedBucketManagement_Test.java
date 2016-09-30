@@ -37,6 +37,7 @@ import static com.spectralogic.ds3client.integration.Util.deleteAllContents;
 import static com.spectralogic.ds3client.integration.Util.loadBookTestData;
 import static com.spectralogic.ds3client.integration.test.helpers.ABMTestHelper.*;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.*;
 
 public class AdvancedBucketManagement_Test {
@@ -94,7 +95,7 @@ public class AdvancedBucketManagement_Test {
                     storageDomainName,
                     client);
 
-            assertThat(storageDomainResponse.getStatusCode(), is(201));
+            assertThat(storageDomainResponse.getStorageDomainResult(), is(notNullValue()));
             assertThat(storageDomainResponse.getStorageDomainResult().getName(), is(storageDomainName));
         } finally {
             //Delete the test storage domain
@@ -113,14 +114,14 @@ public class AdvancedBucketManagement_Test {
                     PoolType.ONLINE,
                     client);
 
-            assertThat(createPoolResponse.getStatusCode(), is(201));
+            assertThat(createPoolResponse.getPoolPartitionResult(), is(notNullValue()));
             assertThat(createPoolResponse.getPoolPartitionResult().getName(), is(poolPartitionName));
 
             //Get the pool partition to verify that was created on the BP
             final GetPoolPartitionSpectraS3Response getPoolResponse = client
                     .getPoolPartitionSpectraS3(new GetPoolPartitionSpectraS3Request(poolPartitionName));
 
-            assertThat(getPoolResponse.getStatusCode(), is(200));
+            assertThat(getPoolResponse.getPoolPartitionResult(), is(notNullValue()));
             assertThat(getPoolResponse.getPoolPartitionResult().getName(), is(poolPartitionName));
         } finally {
             //Delete the pool partition
@@ -151,7 +152,7 @@ public class AdvancedBucketManagement_Test {
                     createPoolPartition.getPoolPartitionResult().getId(),
                     client);
             storageDomainMemberId = createMemberResponse.getStorageDomainMemberResult().getId();
-            assertThat(createMemberResponse.getStatusCode(), is(201));
+            assertThat(createMemberResponse.getStorageDomainMemberResult(), is(notNullValue()));
 
             //Verify that the storage domain member exists
             final GetStorageDomainMembersSpectraS3Response getMembers = client.getStorageDomainMembersSpectraS3(
@@ -177,7 +178,7 @@ public class AdvancedBucketManagement_Test {
             final PutBucketSpectraS3Response response = client
                     .putBucketSpectraS3(new PutBucketSpectraS3Request(bucketName));
 
-            assertThat(response.getStatusCode(), is(201));
+            assertThat(response.getBucketResult(), is(notNullValue()));
             assertThat(response.getBucketResult().getName(), is(bucketName));
         } finally {
             deleteAllContents(client, bucketName);
@@ -230,7 +231,7 @@ public class AdvancedBucketManagement_Test {
                             .withDataPolicyId(dataPolicyResponse.getDataPolicyResult().getId().toString()));
 
 
-            assertThat(bucketResponse.getStatusCode(), is(201));
+            assertThat(bucketResponse.getBucketResult(), is(notNullValue()));
             assertThat(bucketResponse.getBucketResult().getName(), is(bucketName));
         } finally {
             deleteAllContents(client, bucketName);

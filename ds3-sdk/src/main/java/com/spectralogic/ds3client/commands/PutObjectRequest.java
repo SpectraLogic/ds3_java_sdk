@@ -1,6 +1,6 @@
 /*
  * ******************************************************************************
- *   Copyright 2014-2015 Spectra Logic Corporation. All Rights Reserved.
+ *   Copyright 2014-2016 Spectra Logic Corporation. All Rights Reserved.
  *   Licensed under the Apache License, Version 2.0 (the "License"). You may not use
  *   this file except in compliance with the License. A copy of the License is located at
  *
@@ -50,6 +50,7 @@ public class PutObjectRequest extends AbstractRequest {
     private ChecksumType.Type checksumType = ChecksumType.Type.NONE;
 
     // Constructor
+    
     /** @deprecated use {@link #PutObjectRequest(String, String, SeekableByteChannel, UUID, long, long)} instead */
     @Deprecated
     public PutObjectRequest(final String bucketName, final String objectName, final SeekableByteChannel channel, final long size) {
@@ -62,6 +63,7 @@ public class PutObjectRequest extends AbstractRequest {
 
     }
 
+    
     public PutObjectRequest(final String bucketName, final String objectName, final SeekableByteChannel channel, final UUID job, final long offset, final long size) {
         this.bucketName = bucketName;
         this.objectName = objectName;
@@ -76,6 +78,7 @@ public class PutObjectRequest extends AbstractRequest {
 
     }
 
+    
     public PutObjectRequest(final String bucketName, final String objectName, final SeekableByteChannel channel, final String job, final long offset, final long size) {
         this.bucketName = bucketName;
         this.objectName = objectName;
@@ -90,6 +93,7 @@ public class PutObjectRequest extends AbstractRequest {
 
     }
 
+    
     public PutObjectRequest(final String bucketName, final String objectName, final UUID job, final long offset, final long size, final InputStream stream) {
         this.bucketName = bucketName;
         this.objectName = objectName;
@@ -103,6 +107,7 @@ public class PutObjectRequest extends AbstractRequest {
 
     }
 
+    
     public PutObjectRequest(final String bucketName, final String objectName, final String job, final long offset, final long size, final InputStream stream) {
         this.bucketName = bucketName;
         this.objectName = objectName;
@@ -123,17 +128,20 @@ public class PutObjectRequest extends AbstractRequest {
         return this;
     }
 
+
     public PutObjectRequest withJob(final String job) {
         this.job = job;
         this.updateQueryParam("job", job);
         return this;
     }
 
+
     public PutObjectRequest withOffset(final long offset) {
         this.offset = offset;
         this.updateQueryParam("offset", offset);
         return this;
     }
+
 
 
     /**

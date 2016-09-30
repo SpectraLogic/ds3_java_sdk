@@ -1,6 +1,6 @@
 /*
  * ******************************************************************************
- *   Copyright 2014-2015 Spectra Logic Corporation. All Rights Reserved.
+ *   Copyright 2014-2016 Spectra Logic Corporation. All Rights Reserved.
  *   Licensed under the Apache License, Version 2.0 (the "License"). You may not use
  *   this file except in compliance with the License. A copy of the License is located at
  *
@@ -30,6 +30,7 @@ public class GetJobsSpectraS3Request extends AbstractRequest {
 
     // Constructor
     
+    
     public GetJobsSpectraS3Request() {
         
     }
@@ -40,6 +41,7 @@ public class GetJobsSpectraS3Request extends AbstractRequest {
         return this;
     }
 
+
     public GetJobsSpectraS3Request withFullDetails(final boolean fullDetails) {
         this.fullDetails = fullDetails;
         if (this.fullDetails) {
@@ -49,6 +51,7 @@ public class GetJobsSpectraS3Request extends AbstractRequest {
         }
         return this;
     }
+
 
 
     @Override

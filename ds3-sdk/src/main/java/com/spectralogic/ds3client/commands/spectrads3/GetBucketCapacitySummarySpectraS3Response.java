@@ -1,6 +1,6 @@
 /*
  * ******************************************************************************
- *   Copyright 2014-2015 Spectra Logic Corporation. All Rights Reserved.
+ *   Copyright 2014-2016 Spectra Logic Corporation. All Rights Reserved.
  *   Licensed under the Apache License, Version 2.0 (the "License"). You may not use
  *   this file except in compliance with the License. A copy of the License is located at
  *
@@ -16,38 +16,17 @@
 // This code is auto-generated, do not modify
 package com.spectralogic.ds3client.commands.spectrads3;
 
-import com.spectralogic.ds3client.networking.WebResponse;
-import java.io.IOException;
 import com.spectralogic.ds3client.models.CapacitySummaryContainer;
-import java.io.InputStream;
-import com.spectralogic.ds3client.serializer.XmlOutput;
+import com.spectralogic.ds3client.models.ChecksumType;
 import com.spectralogic.ds3client.commands.interfaces.AbstractResponse;
 
 public class GetBucketCapacitySummarySpectraS3Response extends AbstractResponse {
+    
+    private final CapacitySummaryContainer capacitySummaryContainerResult;
 
-    private CapacitySummaryContainer capacitySummaryContainerResult;
-
-    public GetBucketCapacitySummarySpectraS3Response(final WebResponse response) throws IOException {
-        super(response);
-    }
-
-    @Override
-    protected void processResponse() throws IOException {
-        try {
-            this.checkStatusCode(200);
-
-            switch (this.getStatusCode()) {
-            case 200:
-                try (final InputStream content = getResponse().getResponseStream()) {
-                    this.capacitySummaryContainerResult = XmlOutput.fromXml(content, CapacitySummaryContainer.class);
-                }
-                break;
-            default:
-                assert false : "checkStatusCode should have made it impossible to reach this line.";
-            }
-        } finally {
-            this.getResponse().close();
-        }
+    public GetBucketCapacitySummarySpectraS3Response(final CapacitySummaryContainer capacitySummaryContainerResult, final String checksum, final ChecksumType.Type checksumType) {
+        super(checksum, checksumType);
+        this.capacitySummaryContainerResult = capacitySummaryContainerResult;
     }
 
     public CapacitySummaryContainer getCapacitySummaryContainerResult() {

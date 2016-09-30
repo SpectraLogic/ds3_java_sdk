@@ -1,6 +1,6 @@
 /*
  * ******************************************************************************
- *   Copyright 2014-2015 Spectra Logic Corporation. All Rights Reserved.
+ *   Copyright 2014-2016 Spectra Logic Corporation. All Rights Reserved.
  *   Licensed under the Apache License, Version 2.0 (the "License"). You may not use
  *   this file except in compliance with the License. A copy of the License is located at
  *
@@ -31,6 +31,7 @@ public class ConvertStorageDomainToDs3TargetSpectraS3Request extends AbstractReq
 
     // Constructor
     
+    
     public ConvertStorageDomainToDs3TargetSpectraS3Request(final UUID convertToDs3Target, final String storageDomain) {
         this.storageDomain = storageDomain;
         this.convertToDs3Target = convertToDs3Target.toString();
@@ -38,6 +39,7 @@ public class ConvertStorageDomainToDs3TargetSpectraS3Request extends AbstractReq
         this.getQueryParams().put("convert_to_ds3_target", convertToDs3Target.toString());
     }
 
+    
     public ConvertStorageDomainToDs3TargetSpectraS3Request(final String convertToDs3Target, final String storageDomain) {
         this.storageDomain = storageDomain;
         this.convertToDs3Target = convertToDs3Target;

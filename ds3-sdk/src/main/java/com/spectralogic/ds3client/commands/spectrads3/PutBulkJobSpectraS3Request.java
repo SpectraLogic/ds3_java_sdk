@@ -1,6 +1,6 @@
 /*
  * ******************************************************************************
- *   Copyright 2014-2015 Spectra Logic Corporation. All Rights Reserved.
+ *   Copyright 2014-2016 Spectra Logic Corporation. All Rights Reserved.
  *   Licensed under the Apache License, Version 2.0 (the "License"). You may not use
  *   this file except in compliance with the License. A copy of the License is located at
  *
@@ -40,6 +40,7 @@ public class PutBulkJobSpectraS3Request extends BulkRequest {
     private String name;
 
     // Constructor
+    
     public PutBulkJobSpectraS3Request(final String bucketName, final List<Ds3Object> objects) {
         super(bucketName, objects);
         
@@ -53,6 +54,7 @@ public class PutBulkJobSpectraS3Request extends BulkRequest {
         return this;
     }
 
+
     public PutBulkJobSpectraS3Request withForce(final boolean force) {
         this.force = force;
         if (this.force) {
@@ -62,6 +64,7 @@ public class PutBulkJobSpectraS3Request extends BulkRequest {
         }
         return this;
     }
+
 
     public PutBulkJobSpectraS3Request withIgnoreNamingConflicts(final boolean ignoreNamingConflicts) {
         this.ignoreNamingConflicts = ignoreNamingConflicts;
@@ -73,6 +76,7 @@ public class PutBulkJobSpectraS3Request extends BulkRequest {
         return this;
     }
 
+
     public PutBulkJobSpectraS3Request withMaxUploadSize(final long maxUploadSize) {
         if (maxUploadSize > MIN_UPLOAD_SIZE_IN_BYTES) {
             this.getQueryParams().put("max_upload_size", Long.toString(maxUploadSize));
@@ -82,11 +86,13 @@ public class PutBulkJobSpectraS3Request extends BulkRequest {
         return this;
     }
 
+
     public PutBulkJobSpectraS3Request withMinimizeSpanningAcrossMedia(final boolean minimizeSpanningAcrossMedia) {
         this.minimizeSpanningAcrossMedia = minimizeSpanningAcrossMedia;
         this.updateQueryParam("minimize_spanning_across_media", minimizeSpanningAcrossMedia);
         return this;
     }
+
 
     public PutBulkJobSpectraS3Request withName(final String name) {
         this.name = name;
@@ -94,11 +100,13 @@ public class PutBulkJobSpectraS3Request extends BulkRequest {
         return this;
     }
 
+
     @Override
     public PutBulkJobSpectraS3Request withPriority(final Priority priority) {
         super.withPriority(priority);
         return this;
     }
+
 
 
     

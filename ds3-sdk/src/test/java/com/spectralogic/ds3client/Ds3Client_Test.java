@@ -505,7 +505,7 @@ public class Ds3Client_Test {
             @Override
             public MasterObjectList performRestCall(final Ds3Client client, final String bucket, final List<Ds3Object> objects)
                     throws IOException {
-                return client.putBulkJobSpectraS3(new PutBulkJobSpectraS3Request(bucket, objects)).getResult();
+                return client.putBulkJobSpectraS3(new PutBulkJobSpectraS3Request(bucket, objects)).getMasterObjectList();
             }
         });
     }
@@ -516,7 +516,7 @@ public class Ds3Client_Test {
             @Override
             public MasterObjectList performRestCall(final Ds3Client client, final String bucket, final List<Ds3Object> objects)
                     throws IOException {
-                return client.getBulkJobSpectraS3(new GetBulkJobSpectraS3Request(bucket, objects)).getResult();
+                return client.getBulkJobSpectraS3(new GetBulkJobSpectraS3Request(bucket, objects)).getMasterObjectList();
             }
         });
     }
@@ -788,7 +788,7 @@ public class Ds3Client_Test {
         assertThat(node0.getHttpsPort(), is(443));
         final JobNode node1 = nodes.get(1);
         assertThat(node1.getEndPoint(), is("10.1.18.13"));
-        assertThat(node1.getHttpPort(), is(nullValue())); //TODO verify this is correct change from is(0)
+        assertThat(node1.getHttpPort(), is(nullValue()));
         assertThat(node1.getHttpsPort(), is(443)); 
         
         final List<Objects> chunkList = masterObjectList.getObjects();

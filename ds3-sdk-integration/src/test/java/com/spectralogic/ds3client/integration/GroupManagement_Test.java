@@ -34,6 +34,7 @@ import java.util.UUID;
 import static com.spectralogic.ds3client.integration.Util.deleteAllContents;
 import static com.spectralogic.ds3client.integration.test.helpers.ABMTestHelper.*;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 
 public class GroupManagement_Test {
@@ -63,7 +64,6 @@ public class GroupManagement_Test {
         try {
             //Create the group
             final PutGroupSpectraS3Response groupResponse = createGroup(groupName, client);
-            assertThat(groupResponse.getStatusCode(), is(201));
             assertThat(groupResponse.getGroupResult().getName(), is(groupName));
 
             //Verify that the group exists on the BP
@@ -99,7 +99,7 @@ public class GroupManagement_Test {
                     createDataPolicy.getDataPolicyResult().getId(),
                     createGroup.getGroupResult().getId(),
                     client);
-            assertThat(createAcl.getStatusCode(), is(201));
+            assertThat(createAcl.getDataPolicyAclResult(), is(notNullValue()));
 
             //Verify that Acl was created
             final GetDataPolicyAclsSpectraS3Response verifyAcl = client.getDataPolicyAclsSpectraS3(
@@ -125,12 +125,10 @@ public class GroupManagement_Test {
         try {
             //Create the parent group
             final PutGroupSpectraS3Response createParent = createGroup(parentGroupName, client);
-            assertThat(createParent.getStatusCode(), is(201));
             assertThat(createParent.getGroupResult().getName(), is(parentGroupName));
 
             //Create the child group
             final PutGroupSpectraS3Response createChild = createGroup(childGroupName, client);
-            assertThat(createChild.getStatusCode(), is(201));
             assertThat(createChild.getGroupResult().getName(), is(childGroupName));
 
             //Create group-group member
@@ -141,14 +139,12 @@ public class GroupManagement_Test {
                     .putGroupGroupMemberSpectraS3(new PutGroupGroupMemberSpectraS3Request(
                             parentId.toString(),
                             childId.toString()));
-            assertThat(groupGroup.getStatusCode(), is(201));
             assertThat(groupGroup.getGroupMemberResult().getGroupId(), is(parentId));
             assertThat(groupGroup.getGroupMemberResult().getMemberGroupId(), is(childId));
 
             //Delete group-group member
-            final DeleteGroupMemberSpectraS3Response deleteGroupGroup = client.deleteGroupMemberSpectraS3(
+            client.deleteGroupMemberSpectraS3(
                     new DeleteGroupMemberSpectraS3Request(groupGroup.getGroupMemberResult().getId().toString()));
-            assertThat(deleteGroupGroup.getStatusCode(), is(204));
 
             //Verify that group-group member was deleted
             final GetGroupMembersSpectraS3Response groupMembers = client
@@ -192,9 +188,8 @@ public class GroupManagement_Test {
                     is(BucketAclPermission.READ));
 
             //Delete acl
-            final DeleteBucketAclSpectraS3Response deleteAcl = client.deleteBucketAclSpectraS3(
+            client.deleteBucketAclSpectraS3(
                     new DeleteBucketAclSpectraS3Request(createAcl.getBucketAclResult().getId().toString()));
-            assertThat(deleteAcl.getStatusCode(), is(204));
 
             //Verify the acl was deleted
             final GetBucketAclsSpectraS3Response verifyDelete = client

@@ -117,7 +117,7 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
                 .withIgnoreNamingConflicts(options.doIgnoreNamingConflicts()));
         return new WriteJobImpl(
                 this.client,
-                prime.getResult(),
+                prime.getMasterObjectList(),
                 this.retryAfter,
                 options.getChecksumType(),
                 this.objectTransferAttempts,
@@ -151,7 +151,7 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
 
         return new ReadJobImpl(
                 this.client,
-                prime.getResult(),
+                prime.getMasterObjectList(),
                 partialRanges,
                 this.objectTransferAttempts,
                 this.retryAfter,

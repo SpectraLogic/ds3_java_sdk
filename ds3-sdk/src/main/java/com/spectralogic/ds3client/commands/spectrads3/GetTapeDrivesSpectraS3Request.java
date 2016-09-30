@@ -1,6 +1,6 @@
 /*
  * ******************************************************************************
- *   Copyright 2014-2015 Spectra Logic Corporation. All Rights Reserved.
+ *   Copyright 2014-2016 Spectra Logic Corporation. All Rights Reserved.
  *   Licensed under the Apache License, Version 2.0 (the "License"). You may not use
  *   this file except in compliance with the License. A copy of the License is located at
  *
@@ -45,6 +45,7 @@ public class GetTapeDrivesSpectraS3Request extends AbstractPaginationRequest {
 
     // Constructor
     
+    
     public GetTapeDrivesSpectraS3Request() {
         
     }
@@ -59,11 +60,13 @@ public class GetTapeDrivesSpectraS3Request extends AbstractPaginationRequest {
         return this;
     }
 
+
     public GetTapeDrivesSpectraS3Request withPageLength(final int pageLength) {
         this.pageLength = pageLength;
         this.updateQueryParam("page_length", pageLength);
         return this;
     }
+
 
     public GetTapeDrivesSpectraS3Request withPageOffset(final int pageOffset) {
         this.pageOffset = pageOffset;
@@ -71,11 +74,13 @@ public class GetTapeDrivesSpectraS3Request extends AbstractPaginationRequest {
         return this;
     }
 
+
     public GetTapeDrivesSpectraS3Request withPageStartMarker(final UUID pageStartMarker) {
         this.pageStartMarker = pageStartMarker.toString();
         this.updateQueryParam("page_start_marker", pageStartMarker);
         return this;
     }
+
 
     public GetTapeDrivesSpectraS3Request withPageStartMarker(final String pageStartMarker) {
         this.pageStartMarker = pageStartMarker;
@@ -83,11 +88,13 @@ public class GetTapeDrivesSpectraS3Request extends AbstractPaginationRequest {
         return this;
     }
 
+
     public GetTapeDrivesSpectraS3Request withPartitionId(final UUID partitionId) {
         this.partitionId = partitionId.toString();
         this.updateQueryParam("partition_id", partitionId);
         return this;
     }
+
 
     public GetTapeDrivesSpectraS3Request withPartitionId(final String partitionId) {
         this.partitionId = partitionId;
@@ -95,11 +102,13 @@ public class GetTapeDrivesSpectraS3Request extends AbstractPaginationRequest {
         return this;
     }
 
+
     public GetTapeDrivesSpectraS3Request withSerialNumber(final String serialNumber) {
         this.serialNumber = serialNumber;
         this.updateQueryParam("serial_number", serialNumber);
         return this;
     }
+
 
     public GetTapeDrivesSpectraS3Request withState(final TapeDriveState state) {
         this.state = state;
@@ -107,11 +116,13 @@ public class GetTapeDrivesSpectraS3Request extends AbstractPaginationRequest {
         return this;
     }
 
+
     public GetTapeDrivesSpectraS3Request withType(final TapeDriveType type) {
         this.type = type;
         this.updateQueryParam("type", type);
         return this;
     }
+
 
 
     @Override

@@ -1,6 +1,6 @@
 /*
  * ******************************************************************************
- *   Copyright 2014-2015 Spectra Logic Corporation. All Rights Reserved.
+ *   Copyright 2014-2016 Spectra Logic Corporation. All Rights Reserved.
  *   Licensed under the Apache License, Version 2.0 (the "License"). You may not use
  *   this file except in compliance with the License. A copy of the License is located at
  *
@@ -34,6 +34,7 @@ public class PutPoolStorageDomainMemberSpectraS3Request extends AbstractRequest 
 
     // Constructor
     
+    
     public PutPoolStorageDomainMemberSpectraS3Request(final UUID poolPartitionId, final UUID storageDomainId) {
         this.poolPartitionId = poolPartitionId.toString();
         this.storageDomainId = storageDomainId.toString();
@@ -42,6 +43,7 @@ public class PutPoolStorageDomainMemberSpectraS3Request extends AbstractRequest 
         this.getQueryParams().put("storage_domain_id", storageDomainId.toString());
     }
 
+    
     public PutPoolStorageDomainMemberSpectraS3Request(final String poolPartitionId, final String storageDomainId) {
         this.poolPartitionId = poolPartitionId;
         this.storageDomainId = storageDomainId;
@@ -55,6 +57,7 @@ public class PutPoolStorageDomainMemberSpectraS3Request extends AbstractRequest 
         this.updateQueryParam("write_preference", writePreference);
         return this;
     }
+
 
 
     @Override

@@ -1,6 +1,6 @@
 /*
  * ******************************************************************************
- *   Copyright 2014-2015 Spectra Logic Corporation. All Rights Reserved.
+ *   Copyright 2014-2016 Spectra Logic Corporation. All Rights Reserved.
  *   Licensed under the Apache License, Version 2.0 (the "License"). You may not use
  *   this file except in compliance with the License. A copy of the License is located at
  *
@@ -39,6 +39,7 @@ public class GetSuspectBlobPoolsSpectraS3Request extends AbstractPaginationReque
 
     // Constructor
     
+    
     public GetSuspectBlobPoolsSpectraS3Request() {
         
     }
@@ -49,11 +50,13 @@ public class GetSuspectBlobPoolsSpectraS3Request extends AbstractPaginationReque
         return this;
     }
 
+
     public GetSuspectBlobPoolsSpectraS3Request withBlobId(final String blobId) {
         this.blobId = blobId;
         this.updateQueryParam("blob_id", blobId);
         return this;
     }
+
 
     public GetSuspectBlobPoolsSpectraS3Request withLastPage(final boolean lastPage) {
         this.lastPage = lastPage;
@@ -65,11 +68,13 @@ public class GetSuspectBlobPoolsSpectraS3Request extends AbstractPaginationReque
         return this;
     }
 
+
     public GetSuspectBlobPoolsSpectraS3Request withPageLength(final int pageLength) {
         this.pageLength = pageLength;
         this.updateQueryParam("page_length", pageLength);
         return this;
     }
+
 
     public GetSuspectBlobPoolsSpectraS3Request withPageOffset(final int pageOffset) {
         this.pageOffset = pageOffset;
@@ -77,11 +82,13 @@ public class GetSuspectBlobPoolsSpectraS3Request extends AbstractPaginationReque
         return this;
     }
 
+
     public GetSuspectBlobPoolsSpectraS3Request withPageStartMarker(final UUID pageStartMarker) {
         this.pageStartMarker = pageStartMarker.toString();
         this.updateQueryParam("page_start_marker", pageStartMarker);
         return this;
     }
+
 
     public GetSuspectBlobPoolsSpectraS3Request withPageStartMarker(final String pageStartMarker) {
         this.pageStartMarker = pageStartMarker;
@@ -89,17 +96,20 @@ public class GetSuspectBlobPoolsSpectraS3Request extends AbstractPaginationReque
         return this;
     }
 
+
     public GetSuspectBlobPoolsSpectraS3Request withPoolId(final UUID poolId) {
         this.poolId = poolId.toString();
         this.updateQueryParam("pool_id", poolId);
         return this;
     }
 
+
     public GetSuspectBlobPoolsSpectraS3Request withPoolId(final String poolId) {
         this.poolId = poolId;
         this.updateQueryParam("pool_id", poolId);
         return this;
     }
+
 
 
     @Override

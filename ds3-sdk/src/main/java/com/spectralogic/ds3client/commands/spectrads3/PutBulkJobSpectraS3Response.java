@@ -1,6 +1,6 @@
 /*
  * ******************************************************************************
- *   Copyright 2014-2015 Spectra Logic Corporation. All Rights Reserved.
+ *   Copyright 2014-2016 Spectra Logic Corporation. All Rights Reserved.
  *   Licensed under the Apache License, Version 2.0 (the "License"). You may not use
  *   this file except in compliance with the License. A copy of the License is located at
  *
@@ -16,12 +16,12 @@
 // This code is auto-generated, do not modify
 package com.spectralogic.ds3client.commands.spectrads3;
 
-import com.spectralogic.ds3client.networking.WebResponse;
-import java.io.IOException;
+import com.spectralogic.ds3client.models.MasterObjectList;
+import com.spectralogic.ds3client.models.ChecksumType;
 import com.spectralogic.ds3client.commands.interfaces.BulkResponse;
 
 public class PutBulkJobSpectraS3Response extends BulkResponse {
-    public PutBulkJobSpectraS3Response(final WebResponse response) throws IOException {
-        super(response);
+    public PutBulkJobSpectraS3Response(final MasterObjectList masterObjectListResult, final String checksum, final ChecksumType.Type checksumType) {
+        super(masterObjectListResult, checksum, checksumType);
     }
 }

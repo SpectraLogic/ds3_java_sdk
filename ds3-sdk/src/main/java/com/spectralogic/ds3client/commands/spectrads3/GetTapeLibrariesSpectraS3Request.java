@@ -1,6 +1,6 @@
 /*
  * ******************************************************************************
- *   Copyright 2014-2015 Spectra Logic Corporation. All Rights Reserved.
+ *   Copyright 2014-2016 Spectra Logic Corporation. All Rights Reserved.
  *   Licensed under the Apache License, Version 2.0 (the "License"). You may not use
  *   this file except in compliance with the License. A copy of the License is located at
  *
@@ -41,6 +41,7 @@ public class GetTapeLibrariesSpectraS3Request extends AbstractPaginationRequest 
 
     // Constructor
     
+    
     public GetTapeLibrariesSpectraS3Request() {
         
     }
@@ -55,11 +56,13 @@ public class GetTapeLibrariesSpectraS3Request extends AbstractPaginationRequest 
         return this;
     }
 
+
     public GetTapeLibrariesSpectraS3Request withManagementUrl(final String managementUrl) {
         this.managementUrl = managementUrl;
         this.updateQueryParam("management_url", managementUrl);
         return this;
     }
+
 
     public GetTapeLibrariesSpectraS3Request withName(final String name) {
         this.name = name;
@@ -67,11 +70,13 @@ public class GetTapeLibrariesSpectraS3Request extends AbstractPaginationRequest 
         return this;
     }
 
+
     public GetTapeLibrariesSpectraS3Request withPageLength(final int pageLength) {
         this.pageLength = pageLength;
         this.updateQueryParam("page_length", pageLength);
         return this;
     }
+
 
     public GetTapeLibrariesSpectraS3Request withPageOffset(final int pageOffset) {
         this.pageOffset = pageOffset;
@@ -79,11 +84,13 @@ public class GetTapeLibrariesSpectraS3Request extends AbstractPaginationRequest 
         return this;
     }
 
+
     public GetTapeLibrariesSpectraS3Request withPageStartMarker(final UUID pageStartMarker) {
         this.pageStartMarker = pageStartMarker.toString();
         this.updateQueryParam("page_start_marker", pageStartMarker);
         return this;
     }
+
 
     public GetTapeLibrariesSpectraS3Request withPageStartMarker(final String pageStartMarker) {
         this.pageStartMarker = pageStartMarker;
@@ -91,11 +98,13 @@ public class GetTapeLibrariesSpectraS3Request extends AbstractPaginationRequest 
         return this;
     }
 
+
     public GetTapeLibrariesSpectraS3Request withSerialNumber(final String serialNumber) {
         this.serialNumber = serialNumber;
         this.updateQueryParam("serial_number", serialNumber);
         return this;
     }
+
 
 
     @Override

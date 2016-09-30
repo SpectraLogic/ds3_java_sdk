@@ -1,6 +1,6 @@
 /*
  * ******************************************************************************
- *   Copyright 2014-2015 Spectra Logic Corporation. All Rights Reserved.
+ *   Copyright 2014-2016 Spectra Logic Corporation. All Rights Reserved.
  *   Licensed under the Apache License, Version 2.0 (the "License"). You may not use
  *   this file except in compliance with the License. A copy of the License is located at
  *
@@ -29,11 +29,13 @@ public class GetActiveJobSpectraS3Request extends AbstractRequest {
 
     // Constructor
     
+    
     public GetActiveJobSpectraS3Request(final UUID activeJobId) {
         this.activeJobId = activeJobId.toString();
         
     }
 
+    
     public GetActiveJobSpectraS3Request(final String activeJobId) {
         this.activeJobId = activeJobId;
         

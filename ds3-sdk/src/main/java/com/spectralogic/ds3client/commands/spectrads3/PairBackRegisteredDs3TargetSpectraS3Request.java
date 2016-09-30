@@ -1,6 +1,6 @@
 /*
  * ******************************************************************************
- *   Copyright 2014-2015 Spectra Logic Corporation. All Rights Reserved.
+ *   Copyright 2014-2016 Spectra Logic Corporation. All Rights Reserved.
  *   Licensed under the Apache License, Version 2.0 (the "License"). You may not use
  *   this file except in compliance with the License. A copy of the License is located at
  *
@@ -55,6 +55,7 @@ public class PairBackRegisteredDs3TargetSpectraS3Request extends AbstractRequest
 
     // Constructor
     
+    
     public PairBackRegisteredDs3TargetSpectraS3Request(final String ds3Target) {
         this.ds3Target = ds3Target;
         
@@ -68,11 +69,13 @@ public class PairBackRegisteredDs3TargetSpectraS3Request extends AbstractRequest
         return this;
     }
 
+
     public PairBackRegisteredDs3TargetSpectraS3Request withAdminAuthId(final String adminAuthId) {
         this.adminAuthId = adminAuthId;
         this.updateQueryParam("admin_auth_id", adminAuthId);
         return this;
     }
+
 
     public PairBackRegisteredDs3TargetSpectraS3Request withAdminSecretKey(final String adminSecretKey) {
         this.adminSecretKey = adminSecretKey;
@@ -80,11 +83,13 @@ public class PairBackRegisteredDs3TargetSpectraS3Request extends AbstractRequest
         return this;
     }
 
+
     public PairBackRegisteredDs3TargetSpectraS3Request withDataPathEndPoint(final String dataPathEndPoint) {
         this.dataPathEndPoint = dataPathEndPoint;
         this.updateQueryParam("data_path_end_point", dataPathEndPoint);
         return this;
     }
+
 
     public PairBackRegisteredDs3TargetSpectraS3Request withDataPathHttps(final boolean dataPathHttps) {
         this.dataPathHttps = dataPathHttps;
@@ -92,11 +97,13 @@ public class PairBackRegisteredDs3TargetSpectraS3Request extends AbstractRequest
         return this;
     }
 
+
     public PairBackRegisteredDs3TargetSpectraS3Request withDataPathPort(final Integer dataPathPort) {
         this.dataPathPort = dataPathPort;
         this.updateQueryParam("data_path_port", dataPathPort);
         return this;
     }
+
 
     public PairBackRegisteredDs3TargetSpectraS3Request withDataPathProxy(final String dataPathProxy) {
         this.dataPathProxy = dataPathProxy;
@@ -104,11 +111,13 @@ public class PairBackRegisteredDs3TargetSpectraS3Request extends AbstractRequest
         return this;
     }
 
+
     public PairBackRegisteredDs3TargetSpectraS3Request withDataPathVerifyCertificate(final boolean dataPathVerifyCertificate) {
         this.dataPathVerifyCertificate = dataPathVerifyCertificate;
         this.updateQueryParam("data_path_verify_certificate", dataPathVerifyCertificate);
         return this;
     }
+
 
     public PairBackRegisteredDs3TargetSpectraS3Request withDefaultReadPreference(final TargetReadPreference defaultReadPreference) {
         this.defaultReadPreference = defaultReadPreference;
@@ -116,11 +125,13 @@ public class PairBackRegisteredDs3TargetSpectraS3Request extends AbstractRequest
         return this;
     }
 
+
     public PairBackRegisteredDs3TargetSpectraS3Request withName(final String name) {
         this.name = name;
         this.updateQueryParam("name", name);
         return this;
     }
+
 
     public PairBackRegisteredDs3TargetSpectraS3Request withPermitGoingOutOfSync(final boolean permitGoingOutOfSync) {
         this.permitGoingOutOfSync = permitGoingOutOfSync;
@@ -128,11 +139,13 @@ public class PairBackRegisteredDs3TargetSpectraS3Request extends AbstractRequest
         return this;
     }
 
+
     public PairBackRegisteredDs3TargetSpectraS3Request withReplicatedUserDefaultDataPolicy(final String replicatedUserDefaultDataPolicy) {
         this.replicatedUserDefaultDataPolicy = replicatedUserDefaultDataPolicy;
         this.updateQueryParam("replicated_user_default_data_policy", replicatedUserDefaultDataPolicy);
         return this;
     }
+
 
 
     @Override

@@ -1,6 +1,6 @@
 /*
  * ******************************************************************************
- *   Copyright 2014-2015 Spectra Logic Corporation. All Rights Reserved.
+ *   Copyright 2014-2016 Spectra Logic Corporation. All Rights Reserved.
  *   Licensed under the Apache License, Version 2.0 (the "License"). You may not use
  *   this file except in compliance with the License. A copy of the License is located at
  *
@@ -56,6 +56,7 @@ public class GetPoolsSpectraS3Request extends AbstractPaginationRequest {
 
     // Constructor
     
+    
     public GetPoolsSpectraS3Request() {
         
     }
@@ -66,17 +67,20 @@ public class GetPoolsSpectraS3Request extends AbstractPaginationRequest {
         return this;
     }
 
+
     public GetPoolsSpectraS3Request withBucketId(final String bucketId) {
         this.bucketId = bucketId;
         this.updateQueryParam("bucket_id", bucketId);
         return this;
     }
 
+
     public GetPoolsSpectraS3Request withHealth(final PoolHealth health) {
         this.health = health;
         this.updateQueryParam("health", health);
         return this;
     }
+
 
     public GetPoolsSpectraS3Request withLastPage(final boolean lastPage) {
         this.lastPage = lastPage;
@@ -88,11 +92,13 @@ public class GetPoolsSpectraS3Request extends AbstractPaginationRequest {
         return this;
     }
 
+
     public GetPoolsSpectraS3Request withName(final String name) {
         this.name = name;
         this.updateQueryParam("name", name);
         return this;
     }
+
 
     public GetPoolsSpectraS3Request withPageLength(final int pageLength) {
         this.pageLength = pageLength;
@@ -100,11 +106,13 @@ public class GetPoolsSpectraS3Request extends AbstractPaginationRequest {
         return this;
     }
 
+
     public GetPoolsSpectraS3Request withPageOffset(final int pageOffset) {
         this.pageOffset = pageOffset;
         this.updateQueryParam("page_offset", pageOffset);
         return this;
     }
+
 
     public GetPoolsSpectraS3Request withPageStartMarker(final UUID pageStartMarker) {
         this.pageStartMarker = pageStartMarker.toString();
@@ -112,11 +120,13 @@ public class GetPoolsSpectraS3Request extends AbstractPaginationRequest {
         return this;
     }
 
+
     public GetPoolsSpectraS3Request withPageStartMarker(final String pageStartMarker) {
         this.pageStartMarker = pageStartMarker;
         this.updateQueryParam("page_start_marker", pageStartMarker);
         return this;
     }
+
 
     public GetPoolsSpectraS3Request withPartitionId(final UUID partitionId) {
         this.partitionId = partitionId.toString();
@@ -124,11 +134,13 @@ public class GetPoolsSpectraS3Request extends AbstractPaginationRequest {
         return this;
     }
 
+
     public GetPoolsSpectraS3Request withPartitionId(final String partitionId) {
         this.partitionId = partitionId;
         this.updateQueryParam("partition_id", partitionId);
         return this;
     }
+
 
     public GetPoolsSpectraS3Request withPoweredOn(final boolean poweredOn) {
         this.poweredOn = poweredOn;
@@ -136,11 +148,13 @@ public class GetPoolsSpectraS3Request extends AbstractPaginationRequest {
         return this;
     }
 
+
     public GetPoolsSpectraS3Request withState(final PoolState state) {
         this.state = state;
         this.updateQueryParam("state", state);
         return this;
     }
+
 
     public GetPoolsSpectraS3Request withStorageDomainId(final UUID storageDomainId) {
         this.storageDomainId = storageDomainId.toString();
@@ -148,17 +162,20 @@ public class GetPoolsSpectraS3Request extends AbstractPaginationRequest {
         return this;
     }
 
+
     public GetPoolsSpectraS3Request withStorageDomainId(final String storageDomainId) {
         this.storageDomainId = storageDomainId;
         this.updateQueryParam("storage_domain_id", storageDomainId);
         return this;
     }
 
+
     public GetPoolsSpectraS3Request withType(final PoolType type) {
         this.type = type;
         this.updateQueryParam("type", type);
         return this;
     }
+
 
 
     @Override
