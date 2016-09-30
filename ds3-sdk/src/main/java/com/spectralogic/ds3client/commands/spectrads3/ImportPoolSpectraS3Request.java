@@ -1,6 +1,6 @@
 /*
  * ******************************************************************************
- *   Copyright 2014-2015 Spectra Logic Corporation. All Rights Reserved.
+ *   Copyright 2014-2016 Spectra Logic Corporation. All Rights Reserved.
  *   Licensed under the Apache License, Version 2.0 (the "License"). You may not use
  *   this file except in compliance with the License. A copy of the License is located at
  *
@@ -45,6 +45,7 @@ public class ImportPoolSpectraS3Request extends AbstractRequest {
 
     // Constructor
     
+    
     public ImportPoolSpectraS3Request(final String pool) {
         this.pool = pool;
         
@@ -58,11 +59,13 @@ public class ImportPoolSpectraS3Request extends AbstractRequest {
         return this;
     }
 
+
     public ImportPoolSpectraS3Request withDataPolicyId(final UUID dataPolicyId) {
         this.dataPolicyId = dataPolicyId.toString();
         this.updateQueryParam("data_policy_id", dataPolicyId);
         return this;
     }
+
 
     public ImportPoolSpectraS3Request withDataPolicyId(final String dataPolicyId) {
         this.dataPolicyId = dataPolicyId;
@@ -70,11 +73,13 @@ public class ImportPoolSpectraS3Request extends AbstractRequest {
         return this;
     }
 
+
     public ImportPoolSpectraS3Request withPriority(final Priority priority) {
         this.priority = priority;
         this.updateQueryParam("priority", priority);
         return this;
     }
+
 
     public ImportPoolSpectraS3Request withStorageDomainId(final UUID storageDomainId) {
         this.storageDomainId = storageDomainId.toString();
@@ -82,11 +87,13 @@ public class ImportPoolSpectraS3Request extends AbstractRequest {
         return this;
     }
 
+
     public ImportPoolSpectraS3Request withStorageDomainId(final String storageDomainId) {
         this.storageDomainId = storageDomainId;
         this.updateQueryParam("storage_domain_id", storageDomainId);
         return this;
     }
+
 
     public ImportPoolSpectraS3Request withUserId(final UUID userId) {
         this.userId = userId.toString();
@@ -94,11 +101,13 @@ public class ImportPoolSpectraS3Request extends AbstractRequest {
         return this;
     }
 
+
     public ImportPoolSpectraS3Request withUserId(final String userId) {
         this.userId = userId;
         this.updateQueryParam("user_id", userId);
         return this;
     }
+
 
     public ImportPoolSpectraS3Request withVerifyDataAfterImport(final Priority verifyDataAfterImport) {
         this.verifyDataAfterImport = verifyDataAfterImport;
@@ -106,11 +115,13 @@ public class ImportPoolSpectraS3Request extends AbstractRequest {
         return this;
     }
 
+
     public ImportPoolSpectraS3Request withVerifyDataPriorToImport(final boolean verifyDataPriorToImport) {
         this.verifyDataPriorToImport = verifyDataPriorToImport;
         this.updateQueryParam("verify_data_prior_to_import", verifyDataPriorToImport);
         return this;
     }
+
 
 
     @Override

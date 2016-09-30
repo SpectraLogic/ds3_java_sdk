@@ -467,7 +467,6 @@ public class Smoke_Test {
                     0,
                     Files.size(objPath1)));
             assertThat(putResponse1, is(notNullValue()));
-            assertThat(putResponse1.getStatusCode(), is(equalTo(200)));
 
             // Interuption...
             final Ds3ClientHelpers.Job recoverJob = HELPERS.recoverWriteJob(job.getJobId());
@@ -480,7 +479,6 @@ public class Smoke_Test {
                     0,
                     Files.size(objPath2)));
             assertThat(putResponse2, is(notNullValue()));
-            assertThat(putResponse2.getStatusCode(), is(equalTo(200)));
         } finally {
             deleteAllContents(client, bucketName);
         }
@@ -540,7 +538,7 @@ public class Smoke_Test {
             final List<Ds3Object> objs = Lists.newArrayList(new Ds3Object("beowulf.txt", 294059));
 
             final MasterObjectList mol = client
-                    .putBulkJobSpectraS3(new PutBulkJobSpectraS3Request(bucketName, objs)).getResult();
+                    .putBulkJobSpectraS3(new PutBulkJobSpectraS3Request(bucketName, objs)).getMasterObjectList();
 
             final FileChannel channel = FileChannel
                     .open(ResourceUtils.loadFileResource("books/beowulf.txt"), StandardOpenOption.READ);
@@ -638,7 +636,7 @@ public class Smoke_Test {
                             0));
 
             assertThat(readResponse1, is(notNullValue()));
-            assertThat(readResponse1.getStatusCode(), is(equalTo(200)));
+            assertThat(readResponse1.getObjectSize(), is(notNullValue()));
 
             // Interruption...
             final Ds3ClientHelpers.Job recoverJob = HELPERS.recoverReadJob(readJob.getJobId());
@@ -657,7 +655,7 @@ public class Smoke_Test {
                             recoverJob.getJobId().toString(),
                             0));
             assertThat(readResponse2, is(notNullValue()));
-            assertThat(readResponse2.getStatusCode(), is(equalTo(200)));
+            assertThat(readResponse2.getObjectSize(), is(notNullValue()));
 
         } finally {
             deleteAllContents(client, bucketName);
@@ -991,7 +989,7 @@ public class Smoke_Test {
             final BulkResponse bulkResponse = client
                     .getBulkJobSpectraS3(new GetBulkJobSpectraS3Request(bucketName, objects));
 
-            final UUID jobId = bulkResponse.getResult().getJobId();
+            final UUID jobId = bulkResponse.getMasterObjectList().getJobId();
 
             final GetObjectResponse getObjectResponse = client.getObject(
                     new GetObjectRequest(

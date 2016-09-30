@@ -1,6 +1,6 @@
 /*
  * ******************************************************************************
- *   Copyright 2014-2015 Spectra Logic Corporation. All Rights Reserved.
+ *   Copyright 2014-2016 Spectra Logic Corporation. All Rights Reserved.
  *   Licensed under the Apache License, Version 2.0 (the "License"). You may not use
  *   this file except in compliance with the License. A copy of the License is located at
  *
@@ -33,6 +33,7 @@ public class DelegateCreateUserSpectraS3Request extends AbstractRequest {
 
     // Constructor
     
+    
     public DelegateCreateUserSpectraS3Request(final String name) {
         this.name = name;
         
@@ -45,17 +46,20 @@ public class DelegateCreateUserSpectraS3Request extends AbstractRequest {
         return this;
     }
 
+
     public DelegateCreateUserSpectraS3Request withId(final String id) {
         this.id = id;
         this.updateQueryParam("id", id);
         return this;
     }
 
+
     public DelegateCreateUserSpectraS3Request withSecretKey(final String secretKey) {
         this.secretKey = secretKey;
         this.updateQueryParam("secret_key", secretKey);
         return this;
     }
+
 
 
     @Override

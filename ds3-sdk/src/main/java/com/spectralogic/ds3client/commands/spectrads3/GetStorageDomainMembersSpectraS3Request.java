@@ -1,6 +1,6 @@
 /*
  * ******************************************************************************
- *   Copyright 2014-2015 Spectra Logic Corporation. All Rights Reserved.
+ *   Copyright 2014-2016 Spectra Logic Corporation. All Rights Reserved.
  *   Licensed under the Apache License, Version 2.0 (the "License"). You may not use
  *   this file except in compliance with the License. A copy of the License is located at
  *
@@ -50,6 +50,7 @@ public class GetStorageDomainMembersSpectraS3Request extends AbstractPaginationR
 
     // Constructor
     
+    
     public GetStorageDomainMembersSpectraS3Request() {
         
     }
@@ -64,11 +65,13 @@ public class GetStorageDomainMembersSpectraS3Request extends AbstractPaginationR
         return this;
     }
 
+
     public GetStorageDomainMembersSpectraS3Request withPageLength(final int pageLength) {
         this.pageLength = pageLength;
         this.updateQueryParam("page_length", pageLength);
         return this;
     }
+
 
     public GetStorageDomainMembersSpectraS3Request withPageOffset(final int pageOffset) {
         this.pageOffset = pageOffset;
@@ -76,11 +79,13 @@ public class GetStorageDomainMembersSpectraS3Request extends AbstractPaginationR
         return this;
     }
 
+
     public GetStorageDomainMembersSpectraS3Request withPageStartMarker(final UUID pageStartMarker) {
         this.pageStartMarker = pageStartMarker.toString();
         this.updateQueryParam("page_start_marker", pageStartMarker);
         return this;
     }
+
 
     public GetStorageDomainMembersSpectraS3Request withPageStartMarker(final String pageStartMarker) {
         this.pageStartMarker = pageStartMarker;
@@ -88,11 +93,13 @@ public class GetStorageDomainMembersSpectraS3Request extends AbstractPaginationR
         return this;
     }
 
+
     public GetStorageDomainMembersSpectraS3Request withPoolPartitionId(final UUID poolPartitionId) {
         this.poolPartitionId = poolPartitionId.toString();
         this.updateQueryParam("pool_partition_id", poolPartitionId);
         return this;
     }
+
 
     public GetStorageDomainMembersSpectraS3Request withPoolPartitionId(final String poolPartitionId) {
         this.poolPartitionId = poolPartitionId;
@@ -100,11 +107,13 @@ public class GetStorageDomainMembersSpectraS3Request extends AbstractPaginationR
         return this;
     }
 
+
     public GetStorageDomainMembersSpectraS3Request withState(final StorageDomainMemberState state) {
         this.state = state;
         this.updateQueryParam("state", state);
         return this;
     }
+
 
     public GetStorageDomainMembersSpectraS3Request withStorageDomainId(final UUID storageDomainId) {
         this.storageDomainId = storageDomainId.toString();
@@ -112,11 +121,13 @@ public class GetStorageDomainMembersSpectraS3Request extends AbstractPaginationR
         return this;
     }
 
+
     public GetStorageDomainMembersSpectraS3Request withStorageDomainId(final String storageDomainId) {
         this.storageDomainId = storageDomainId;
         this.updateQueryParam("storage_domain_id", storageDomainId);
         return this;
     }
+
 
     public GetStorageDomainMembersSpectraS3Request withTapePartitionId(final UUID tapePartitionId) {
         this.tapePartitionId = tapePartitionId.toString();
@@ -124,11 +135,13 @@ public class GetStorageDomainMembersSpectraS3Request extends AbstractPaginationR
         return this;
     }
 
+
     public GetStorageDomainMembersSpectraS3Request withTapePartitionId(final String tapePartitionId) {
         this.tapePartitionId = tapePartitionId;
         this.updateQueryParam("tape_partition_id", tapePartitionId);
         return this;
     }
+
 
     public GetStorageDomainMembersSpectraS3Request withTapeType(final TapeType tapeType) {
         this.tapeType = tapeType;
@@ -136,11 +149,13 @@ public class GetStorageDomainMembersSpectraS3Request extends AbstractPaginationR
         return this;
     }
 
+
     public GetStorageDomainMembersSpectraS3Request withWritePreference(final WritePreferenceLevel writePreference) {
         this.writePreference = writePreference;
         this.updateQueryParam("write_preference", writePreference);
         return this;
     }
+
 
 
     @Override

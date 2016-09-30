@@ -1,6 +1,6 @@
 /*
  * ******************************************************************************
- *   Copyright 2014-2015 Spectra Logic Corporation. All Rights Reserved.
+ *   Copyright 2014-2016 Spectra Logic Corporation. All Rights Reserved.
  *   Licensed under the Apache License, Version 2.0 (the "License"). You may not use
  *   this file except in compliance with the License. A copy of the License is located at
  *
@@ -47,6 +47,7 @@ public class EjectStorageDomainSpectraS3Request extends AbstractRequest {
 
     // Constructor
     
+    
     public EjectStorageDomainSpectraS3Request(final List<Ds3Object> objects, final UUID storageDomainId) {
         this.storageDomainId = storageDomainId.toString();
         this.objects = objects;
@@ -56,6 +57,7 @@ public class EjectStorageDomainSpectraS3Request extends AbstractRequest {
         this.getQueryParams().put("storage_domain_id", storageDomainId.toString());
     }
 
+    
     public EjectStorageDomainSpectraS3Request(final List<Ds3Object> objects, final String storageDomainId) {
         this.storageDomainId = storageDomainId;
         this.objects = objects;
@@ -71,17 +73,20 @@ public class EjectStorageDomainSpectraS3Request extends AbstractRequest {
         return this;
     }
 
+
     public EjectStorageDomainSpectraS3Request withEjectLabel(final String ejectLabel) {
         this.ejectLabel = ejectLabel;
         this.updateQueryParam("eject_label", ejectLabel);
         return this;
     }
 
+
     public EjectStorageDomainSpectraS3Request withEjectLocation(final String ejectLocation) {
         this.ejectLocation = ejectLocation;
         this.updateQueryParam("eject_location", ejectLocation);
         return this;
     }
+
 
 
     @Override

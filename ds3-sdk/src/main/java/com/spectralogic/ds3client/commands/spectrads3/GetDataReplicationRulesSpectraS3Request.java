@@ -1,6 +1,6 @@
 /*
  * ******************************************************************************
- *   Copyright 2014-2015 Spectra Logic Corporation. All Rights Reserved.
+ *   Copyright 2014-2016 Spectra Logic Corporation. All Rights Reserved.
  *   Licensed under the Apache License, Version 2.0 (the "License"). You may not use
  *   this file except in compliance with the License. A copy of the License is located at
  *
@@ -45,6 +45,7 @@ public class GetDataReplicationRulesSpectraS3Request extends AbstractPaginationR
 
     // Constructor
     
+    
     public GetDataReplicationRulesSpectraS3Request() {
         
     }
@@ -55,11 +56,13 @@ public class GetDataReplicationRulesSpectraS3Request extends AbstractPaginationR
         return this;
     }
 
+
     public GetDataReplicationRulesSpectraS3Request withDataPolicyId(final String dataPolicyId) {
         this.dataPolicyId = dataPolicyId;
         this.updateQueryParam("data_policy_id", dataPolicyId);
         return this;
     }
+
 
     public GetDataReplicationRulesSpectraS3Request withDs3TargetId(final UUID ds3TargetId) {
         this.ds3TargetId = ds3TargetId.toString();
@@ -67,11 +70,13 @@ public class GetDataReplicationRulesSpectraS3Request extends AbstractPaginationR
         return this;
     }
 
+
     public GetDataReplicationRulesSpectraS3Request withDs3TargetId(final String ds3TargetId) {
         this.ds3TargetId = ds3TargetId;
         this.updateQueryParam("ds3_target_id", ds3TargetId);
         return this;
     }
+
 
     public GetDataReplicationRulesSpectraS3Request withLastPage(final boolean lastPage) {
         this.lastPage = lastPage;
@@ -83,11 +88,13 @@ public class GetDataReplicationRulesSpectraS3Request extends AbstractPaginationR
         return this;
     }
 
+
     public GetDataReplicationRulesSpectraS3Request withPageLength(final int pageLength) {
         this.pageLength = pageLength;
         this.updateQueryParam("page_length", pageLength);
         return this;
     }
+
 
     public GetDataReplicationRulesSpectraS3Request withPageOffset(final int pageOffset) {
         this.pageOffset = pageOffset;
@@ -95,11 +102,13 @@ public class GetDataReplicationRulesSpectraS3Request extends AbstractPaginationR
         return this;
     }
 
+
     public GetDataReplicationRulesSpectraS3Request withPageStartMarker(final UUID pageStartMarker) {
         this.pageStartMarker = pageStartMarker.toString();
         this.updateQueryParam("page_start_marker", pageStartMarker);
         return this;
     }
+
 
     public GetDataReplicationRulesSpectraS3Request withPageStartMarker(final String pageStartMarker) {
         this.pageStartMarker = pageStartMarker;
@@ -107,17 +116,20 @@ public class GetDataReplicationRulesSpectraS3Request extends AbstractPaginationR
         return this;
     }
 
+
     public GetDataReplicationRulesSpectraS3Request withState(final DataPersistenceRuleState state) {
         this.state = state;
         this.updateQueryParam("state", state);
         return this;
     }
 
+
     public GetDataReplicationRulesSpectraS3Request withType(final DataReplicationRuleType type) {
         this.type = type;
         this.updateQueryParam("type", type);
         return this;
     }
+
 
 
     @Override

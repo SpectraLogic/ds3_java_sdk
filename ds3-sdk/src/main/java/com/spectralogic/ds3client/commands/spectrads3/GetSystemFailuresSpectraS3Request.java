@@ -1,6 +1,6 @@
 /*
  * ******************************************************************************
- *   Copyright 2014-2015 Spectra Logic Corporation. All Rights Reserved.
+ *   Copyright 2014-2016 Spectra Logic Corporation. All Rights Reserved.
  *   Licensed under the Apache License, Version 2.0 (the "License"). You may not use
  *   this file except in compliance with the License. A copy of the License is located at
  *
@@ -40,6 +40,7 @@ public class GetSystemFailuresSpectraS3Request extends AbstractPaginationRequest
 
     // Constructor
     
+    
     public GetSystemFailuresSpectraS3Request() {
         
     }
@@ -49,6 +50,7 @@ public class GetSystemFailuresSpectraS3Request extends AbstractPaginationRequest
         this.updateQueryParam("error_message", errorMessage);
         return this;
     }
+
 
     public GetSystemFailuresSpectraS3Request withLastPage(final boolean lastPage) {
         this.lastPage = lastPage;
@@ -60,11 +62,13 @@ public class GetSystemFailuresSpectraS3Request extends AbstractPaginationRequest
         return this;
     }
 
+
     public GetSystemFailuresSpectraS3Request withPageLength(final int pageLength) {
         this.pageLength = pageLength;
         this.updateQueryParam("page_length", pageLength);
         return this;
     }
+
 
     public GetSystemFailuresSpectraS3Request withPageOffset(final int pageOffset) {
         this.pageOffset = pageOffset;
@@ -72,11 +76,13 @@ public class GetSystemFailuresSpectraS3Request extends AbstractPaginationRequest
         return this;
     }
 
+
     public GetSystemFailuresSpectraS3Request withPageStartMarker(final UUID pageStartMarker) {
         this.pageStartMarker = pageStartMarker.toString();
         this.updateQueryParam("page_start_marker", pageStartMarker);
         return this;
     }
+
 
     public GetSystemFailuresSpectraS3Request withPageStartMarker(final String pageStartMarker) {
         this.pageStartMarker = pageStartMarker;
@@ -84,11 +90,13 @@ public class GetSystemFailuresSpectraS3Request extends AbstractPaginationRequest
         return this;
     }
 
+
     public GetSystemFailuresSpectraS3Request withType(final SystemFailureType type) {
         this.type = type;
         this.updateQueryParam("type", type);
         return this;
     }
+
 
 
     @Override

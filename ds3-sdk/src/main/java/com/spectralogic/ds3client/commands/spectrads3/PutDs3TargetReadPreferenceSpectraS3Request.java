@@ -1,6 +1,6 @@
 /*
  * ******************************************************************************
- *   Copyright 2014-2015 Spectra Logic Corporation. All Rights Reserved.
+ *   Copyright 2014-2016 Spectra Logic Corporation. All Rights Reserved.
  *   Licensed under the Apache License, Version 2.0 (the "License"). You may not use
  *   this file except in compliance with the License. A copy of the License is located at
  *
@@ -34,6 +34,7 @@ public class PutDs3TargetReadPreferenceSpectraS3Request extends AbstractRequest 
 
     // Constructor
     
+    
     public PutDs3TargetReadPreferenceSpectraS3Request(final String bucketId, final TargetReadPreference readPreference, final UUID targetId) {
         this.bucketId = bucketId;
         this.readPreference = readPreference;
@@ -44,6 +45,7 @@ public class PutDs3TargetReadPreferenceSpectraS3Request extends AbstractRequest 
         this.getQueryParams().put("target_id", targetId.toString());
     }
 
+    
     public PutDs3TargetReadPreferenceSpectraS3Request(final String bucketId, final TargetReadPreference readPreference, final String targetId) {
         this.bucketId = bucketId;
         this.readPreference = readPreference;

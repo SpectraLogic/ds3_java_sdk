@@ -1,6 +1,6 @@
 /*
  * ******************************************************************************
- *   Copyright 2014-2015 Spectra Logic Corporation. All Rights Reserved.
+ *   Copyright 2014-2016 Spectra Logic Corporation. All Rights Reserved.
  *   Licensed under the Apache License, Version 2.0 (the "License"). You may not use
  *   this file except in compliance with the License. A copy of the License is located at
  *
@@ -32,6 +32,7 @@ public class PutTapePartitionFailureNotificationRegistrationSpectraS3Request ext
 
     private RequestType notificationHttpMethod;
 
+    
     public PutTapePartitionFailureNotificationRegistrationSpectraS3Request(final String notificationEndPoint) {
         super(notificationEndPoint);
 
@@ -45,17 +46,20 @@ public class PutTapePartitionFailureNotificationRegistrationSpectraS3Request ext
         return this;
     }
 
+
     public PutTapePartitionFailureNotificationRegistrationSpectraS3Request withNamingConvention(final NamingConventionType namingConvention) {
         this.namingConvention = namingConvention;
         this.updateQueryParam("naming_convention", namingConvention);
         return this;
     }
 
+
     public PutTapePartitionFailureNotificationRegistrationSpectraS3Request withNotificationHttpMethod(final RequestType notificationHttpMethod) {
         this.notificationHttpMethod = notificationHttpMethod;
         this.updateQueryParam("notification_http_method", notificationHttpMethod);
         return this;
     }
+
 
 
     @Override

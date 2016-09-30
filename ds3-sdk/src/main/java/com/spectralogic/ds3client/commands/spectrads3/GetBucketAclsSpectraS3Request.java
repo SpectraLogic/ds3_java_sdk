@@ -1,6 +1,6 @@
 /*
  * ******************************************************************************
- *   Copyright 2014-2015 Spectra Logic Corporation. All Rights Reserved.
+ *   Copyright 2014-2016 Spectra Logic Corporation. All Rights Reserved.
  *   Licensed under the Apache License, Version 2.0 (the "License"). You may not use
  *   this file except in compliance with the License. A copy of the License is located at
  *
@@ -44,6 +44,7 @@ public class GetBucketAclsSpectraS3Request extends AbstractPaginationRequest {
 
     // Constructor
     
+    
     public GetBucketAclsSpectraS3Request() {
         
     }
@@ -54,17 +55,20 @@ public class GetBucketAclsSpectraS3Request extends AbstractPaginationRequest {
         return this;
     }
 
+
     public GetBucketAclsSpectraS3Request withGroupId(final UUID groupId) {
         this.groupId = groupId.toString();
         this.updateQueryParam("group_id", groupId);
         return this;
     }
 
+
     public GetBucketAclsSpectraS3Request withGroupId(final String groupId) {
         this.groupId = groupId;
         this.updateQueryParam("group_id", groupId);
         return this;
     }
+
 
     public GetBucketAclsSpectraS3Request withLastPage(final boolean lastPage) {
         this.lastPage = lastPage;
@@ -76,11 +80,13 @@ public class GetBucketAclsSpectraS3Request extends AbstractPaginationRequest {
         return this;
     }
 
+
     public GetBucketAclsSpectraS3Request withPageLength(final int pageLength) {
         this.pageLength = pageLength;
         this.updateQueryParam("page_length", pageLength);
         return this;
     }
+
 
     public GetBucketAclsSpectraS3Request withPageOffset(final int pageOffset) {
         this.pageOffset = pageOffset;
@@ -88,11 +94,13 @@ public class GetBucketAclsSpectraS3Request extends AbstractPaginationRequest {
         return this;
     }
 
+
     public GetBucketAclsSpectraS3Request withPageStartMarker(final UUID pageStartMarker) {
         this.pageStartMarker = pageStartMarker.toString();
         this.updateQueryParam("page_start_marker", pageStartMarker);
         return this;
     }
+
 
     public GetBucketAclsSpectraS3Request withPageStartMarker(final String pageStartMarker) {
         this.pageStartMarker = pageStartMarker;
@@ -100,11 +108,13 @@ public class GetBucketAclsSpectraS3Request extends AbstractPaginationRequest {
         return this;
     }
 
+
     public GetBucketAclsSpectraS3Request withPermission(final BucketAclPermission permission) {
         this.permission = permission;
         this.updateQueryParam("permission", permission);
         return this;
     }
+
 
     public GetBucketAclsSpectraS3Request withUserId(final UUID userId) {
         this.userId = userId.toString();
@@ -112,11 +122,13 @@ public class GetBucketAclsSpectraS3Request extends AbstractPaginationRequest {
         return this;
     }
 
+
     public GetBucketAclsSpectraS3Request withUserId(final String userId) {
         this.userId = userId;
         this.updateQueryParam("user_id", userId);
         return this;
     }
+
 
 
     @Override

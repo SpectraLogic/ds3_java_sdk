@@ -1,6 +1,6 @@
 /*
  * ******************************************************************************
- *   Copyright 2014-2015 Spectra Logic Corporation. All Rights Reserved.
+ *   Copyright 2014-2016 Spectra Logic Corporation. All Rights Reserved.
  *   Licensed under the Apache License, Version 2.0 (the "License"). You may not use
  *   this file except in compliance with the License. A copy of the License is located at
  *
@@ -33,6 +33,7 @@ public class DeleteObjectRequest extends AbstractRequest {
 
     // Constructor
     
+    
     public DeleteObjectRequest(final String bucketName, final String objectName) {
         this.bucketName = bucketName;
         this.objectName = objectName;
@@ -49,6 +50,7 @@ public class DeleteObjectRequest extends AbstractRequest {
         return this;
     }
 
+
     public DeleteObjectRequest withRollBack(final boolean rollBack) {
         this.rollBack = rollBack;
         if (this.rollBack) {
@@ -58,6 +60,7 @@ public class DeleteObjectRequest extends AbstractRequest {
         }
         return this;
     }
+
 
 
     @Override

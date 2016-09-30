@@ -1,6 +1,6 @@
 /*
  * ******************************************************************************
- *   Copyright 2014-2015 Spectra Logic Corporation. All Rights Reserved.
+ *   Copyright 2014-2016 Spectra Logic Corporation. All Rights Reserved.
  *   Licensed under the Apache License, Version 2.0 (the "License"). You may not use
  *   this file except in compliance with the License. A copy of the License is located at
  *
@@ -66,6 +66,7 @@ public class GetTapesSpectraS3Request extends AbstractPaginationRequest {
 
     // Constructor
     
+    
     public GetTapesSpectraS3Request() {
         
     }
@@ -76,11 +77,13 @@ public class GetTapesSpectraS3Request extends AbstractPaginationRequest {
         return this;
     }
 
+
     public GetTapesSpectraS3Request withBarCode(final String barCode) {
         this.barCode = barCode;
         this.updateQueryParam("bar_code", barCode);
         return this;
     }
+
 
     public GetTapesSpectraS3Request withBucketId(final String bucketId) {
         this.bucketId = bucketId;
@@ -88,11 +91,13 @@ public class GetTapesSpectraS3Request extends AbstractPaginationRequest {
         return this;
     }
 
+
     public GetTapesSpectraS3Request withEjectLabel(final String ejectLabel) {
         this.ejectLabel = ejectLabel;
         this.updateQueryParam("eject_label", ejectLabel);
         return this;
     }
+
 
     public GetTapesSpectraS3Request withEjectLocation(final String ejectLocation) {
         this.ejectLocation = ejectLocation;
@@ -100,11 +105,13 @@ public class GetTapesSpectraS3Request extends AbstractPaginationRequest {
         return this;
     }
 
+
     public GetTapesSpectraS3Request withFullOfData(final boolean fullOfData) {
         this.fullOfData = fullOfData;
         this.updateQueryParam("full_of_data", fullOfData);
         return this;
     }
+
 
     public GetTapesSpectraS3Request withLastPage(final boolean lastPage) {
         this.lastPage = lastPage;
@@ -116,11 +123,13 @@ public class GetTapesSpectraS3Request extends AbstractPaginationRequest {
         return this;
     }
 
+
     public GetTapesSpectraS3Request withPageLength(final int pageLength) {
         this.pageLength = pageLength;
         this.updateQueryParam("page_length", pageLength);
         return this;
     }
+
 
     public GetTapesSpectraS3Request withPageOffset(final int pageOffset) {
         this.pageOffset = pageOffset;
@@ -128,11 +137,13 @@ public class GetTapesSpectraS3Request extends AbstractPaginationRequest {
         return this;
     }
 
+
     public GetTapesSpectraS3Request withPageStartMarker(final UUID pageStartMarker) {
         this.pageStartMarker = pageStartMarker.toString();
         this.updateQueryParam("page_start_marker", pageStartMarker);
         return this;
     }
+
 
     public GetTapesSpectraS3Request withPageStartMarker(final String pageStartMarker) {
         this.pageStartMarker = pageStartMarker;
@@ -140,11 +151,13 @@ public class GetTapesSpectraS3Request extends AbstractPaginationRequest {
         return this;
     }
 
+
     public GetTapesSpectraS3Request withPartiallyVerifiedEndOfTape(final Date partiallyVerifiedEndOfTape) {
         this.partiallyVerifiedEndOfTape = partiallyVerifiedEndOfTape;
         this.updateQueryParam("partially_verified_end_of_tape", partiallyVerifiedEndOfTape);
         return this;
     }
+
 
     public GetTapesSpectraS3Request withPartitionId(final UUID partitionId) {
         this.partitionId = partitionId.toString();
@@ -152,11 +165,13 @@ public class GetTapesSpectraS3Request extends AbstractPaginationRequest {
         return this;
     }
 
+
     public GetTapesSpectraS3Request withPartitionId(final String partitionId) {
         this.partitionId = partitionId;
         this.updateQueryParam("partition_id", partitionId);
         return this;
     }
+
 
     public GetTapesSpectraS3Request withPreviousState(final TapeState previousState) {
         this.previousState = previousState;
@@ -164,11 +179,13 @@ public class GetTapesSpectraS3Request extends AbstractPaginationRequest {
         return this;
     }
 
+
     public GetTapesSpectraS3Request withSerialNumber(final String serialNumber) {
         this.serialNumber = serialNumber;
         this.updateQueryParam("serial_number", serialNumber);
         return this;
     }
+
 
     public GetTapesSpectraS3Request withState(final TapeState state) {
         this.state = state;
@@ -176,11 +193,13 @@ public class GetTapesSpectraS3Request extends AbstractPaginationRequest {
         return this;
     }
 
+
     public GetTapesSpectraS3Request withStorageDomainId(final UUID storageDomainId) {
         this.storageDomainId = storageDomainId.toString();
         this.updateQueryParam("storage_domain_id", storageDomainId);
         return this;
     }
+
 
     public GetTapesSpectraS3Request withStorageDomainId(final String storageDomainId) {
         this.storageDomainId = storageDomainId;
@@ -188,17 +207,20 @@ public class GetTapesSpectraS3Request extends AbstractPaginationRequest {
         return this;
     }
 
+
     public GetTapesSpectraS3Request withType(final TapeType type) {
         this.type = type;
         this.updateQueryParam("type", type);
         return this;
     }
 
+
     public GetTapesSpectraS3Request withWriteProtected(final boolean writeProtected) {
         this.writeProtected = writeProtected;
         this.updateQueryParam("write_protected", writeProtected);
         return this;
     }
+
 
 
     @Override

@@ -1,6 +1,6 @@
 /*
  * ******************************************************************************
- *   Copyright 2014-2015 Spectra Logic Corporation. All Rights Reserved.
+ *   Copyright 2014-2016 Spectra Logic Corporation. All Rights Reserved.
  *   Licensed under the Apache License, Version 2.0 (the "License"). You may not use
  *   this file except in compliance with the License. A copy of the License is located at
  *
@@ -40,6 +40,7 @@ public class GetSystemCapacitySummarySpectraS3Request extends AbstractRequest {
 
     // Constructor
     
+    
     public GetSystemCapacitySummarySpectraS3Request() {
         
     }
@@ -50,11 +51,13 @@ public class GetSystemCapacitySummarySpectraS3Request extends AbstractRequest {
         return this;
     }
 
+
     public GetSystemCapacitySummarySpectraS3Request withPoolState(final PoolState poolState) {
         this.poolState = poolState;
         this.updateQueryParam("pool_state", poolState);
         return this;
     }
+
 
     public GetSystemCapacitySummarySpectraS3Request withPoolType(final PoolType poolType) {
         this.poolType = poolType;
@@ -62,17 +65,20 @@ public class GetSystemCapacitySummarySpectraS3Request extends AbstractRequest {
         return this;
     }
 
+
     public GetSystemCapacitySummarySpectraS3Request withTapeState(final TapeState tapeState) {
         this.tapeState = tapeState;
         this.updateQueryParam("tape_state", tapeState);
         return this;
     }
 
+
     public GetSystemCapacitySummarySpectraS3Request withTapeType(final TapeType tapeType) {
         this.tapeType = tapeType;
         this.updateQueryParam("tape_type", tapeType);
         return this;
     }
+
 
 
     @Override

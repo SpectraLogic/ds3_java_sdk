@@ -61,6 +61,7 @@ import java.util.*;
 import static com.spectralogic.ds3client.integration.Util.RESOURCE_BASE_NAME;
 import static com.spectralogic.ds3client.integration.Util.deleteAllContents;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
@@ -127,7 +128,8 @@ public class GetJobManagement_Test {
         final GetObjectResponse getObjectResponse = client.getObject(
                 new GetObjectRequest(BUCKET_NAME, "beowulf.txt", writeChannel));
 
-        assertThat(getObjectResponse.getStatusCode(), is(200));
+        assertThat(getObjectResponse, is(notNullValue()));
+        assertThat(getObjectResponse.getObjectSize(), is(notNullValue()));
     }
 
     @Test
@@ -139,7 +141,7 @@ public class GetJobManagement_Test {
         final GetJobSpectraS3Response jobSpectraS3Response = client
                 .getJobSpectraS3(new GetJobSpectraS3Request(readJob.getJobId()));
 
-        assertThat(jobSpectraS3Response.getStatusCode(), is(200));
+        assertThat(jobSpectraS3Response.getMasterObjectListResult(), is(notNullValue()));
     }
 
     @Test
@@ -170,7 +172,7 @@ public class GetJobManagement_Test {
             final GetJobSpectraS3Response jobSpectraS3Response = ds3ClientShim
                     .getJobSpectraS3(new GetJobSpectraS3Request(readJob.getJobId()));
 
-            assertThat(jobSpectraS3Response.getStatusCode(), is(200));
+            assertThat(jobSpectraS3Response.getMasterObjectListResult(), is(notNullValue()));
 
             readJob.transfer(new FileObjectGetter(tempDirectory));
 

@@ -93,7 +93,7 @@ public class Regression_Test {
 
             final CancelJobSpectraS3Response cancelJobResponse = client
                     .cancelJobSpectraS3(new CancelJobSpectraS3Request(putJob.getJobId().toString()));
-            assertEquals(204, cancelJobResponse.getStatusCode());
+            assertThat(cancelJobResponse, is(notNullValue()));
         } finally {
             Util.deleteAllContents(client, bucketName);
         }
@@ -129,7 +129,7 @@ public class Regression_Test {
 
             final CancelJobSpectraS3Response cancelJobResponse = client
                     .cancelJobSpectraS3(new CancelJobSpectraS3Request(putJob.getJobId().toString()));
-            assertEquals(204, cancelJobResponse.getStatusCode());
+            assertThat(cancelJobResponse, is(notNullValue()));
         } finally {
             Util.deleteAllContents(client, bucketName);
         }
@@ -178,7 +178,7 @@ public class Regression_Test {
 
             final CancelJobSpectraS3Response cancelJobResponse = client
                     .cancelJobSpectraS3(new CancelJobSpectraS3Request(putJob.getJobId().toString()));
-            assertEquals(204, cancelJobResponse.getStatusCode());
+            assertThat(cancelJobResponse, is(notNullValue()));
         } finally {
             Util.deleteAllContents(client, bucketName);
         }
@@ -226,7 +226,7 @@ public class Regression_Test {
 
             final CancelJobSpectraS3Response cancelJobResponse = client
                     .cancelJobSpectraS3(new CancelJobSpectraS3Request(putJob.getJobId().toString()));
-            assertEquals(204, cancelJobResponse.getStatusCode());
+            assertThat(cancelJobResponse, is(notNullValue()));
         } finally {
             Util.deleteAllContents(client, bucketName);
         }

@@ -1,6 +1,6 @@
 /*
  * ******************************************************************************
- *   Copyright 2014-2015 Spectra Logic Corporation. All Rights Reserved.
+ *   Copyright 2014-2016 Spectra Logic Corporation. All Rights Reserved.
  *   Licensed under the Apache License, Version 2.0 (the "License"). You may not use
  *   this file except in compliance with the License. A copy of the License is located at
  *
@@ -45,6 +45,7 @@ public class ModifyDataPathBackendSpectraS3Request extends AbstractRequest {
 
     // Constructor
     
+    
     public ModifyDataPathBackendSpectraS3Request() {
         
     }
@@ -55,11 +56,13 @@ public class ModifyDataPathBackendSpectraS3Request extends AbstractRequest {
         return this;
     }
 
+
     public ModifyDataPathBackendSpectraS3Request withAutoActivateTimeoutInMins(final Integer autoActivateTimeoutInMins) {
         this.autoActivateTimeoutInMins = autoActivateTimeoutInMins;
         this.updateQueryParam("auto_activate_timeout_in_mins", autoActivateTimeoutInMins);
         return this;
     }
+
 
     public ModifyDataPathBackendSpectraS3Request withAutoInspect(final AutoInspectMode autoInspect) {
         this.autoInspect = autoInspect;
@@ -67,11 +70,13 @@ public class ModifyDataPathBackendSpectraS3Request extends AbstractRequest {
         return this;
     }
 
+
     public ModifyDataPathBackendSpectraS3Request withDefaultImportConflictResolutionMode(final ImportConflictResolutionMode defaultImportConflictResolutionMode) {
         this.defaultImportConflictResolutionMode = defaultImportConflictResolutionMode;
         this.updateQueryParam("default_import_conflict_resolution_mode", defaultImportConflictResolutionMode);
         return this;
     }
+
 
     public ModifyDataPathBackendSpectraS3Request withPartiallyVerifyLastPercentOfTapes(final Integer partiallyVerifyLastPercentOfTapes) {
         this.partiallyVerifyLastPercentOfTapes = partiallyVerifyLastPercentOfTapes;
@@ -79,11 +84,13 @@ public class ModifyDataPathBackendSpectraS3Request extends AbstractRequest {
         return this;
     }
 
+
     public ModifyDataPathBackendSpectraS3Request withUnavailableMediaPolicy(final UnavailableMediaUsagePolicy unavailableMediaPolicy) {
         this.unavailableMediaPolicy = unavailableMediaPolicy;
         this.updateQueryParam("unavailable_media_policy", unavailableMediaPolicy);
         return this;
     }
+
 
     public ModifyDataPathBackendSpectraS3Request withUnavailablePoolMaxJobRetryInMins(final int unavailablePoolMaxJobRetryInMins) {
         this.unavailablePoolMaxJobRetryInMins = unavailablePoolMaxJobRetryInMins;
@@ -91,11 +98,13 @@ public class ModifyDataPathBackendSpectraS3Request extends AbstractRequest {
         return this;
     }
 
+
     public ModifyDataPathBackendSpectraS3Request withUnavailableTapePartitionMaxJobRetryInMins(final int unavailableTapePartitionMaxJobRetryInMins) {
         this.unavailableTapePartitionMaxJobRetryInMins = unavailableTapePartitionMaxJobRetryInMins;
         this.updateQueryParam("unavailable_tape_partition_max_job_retry_in_mins", unavailableTapePartitionMaxJobRetryInMins);
         return this;
     }
+
 
 
     @Override

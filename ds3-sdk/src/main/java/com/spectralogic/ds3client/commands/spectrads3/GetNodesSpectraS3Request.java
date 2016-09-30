@@ -1,6 +1,6 @@
 /*
  * ******************************************************************************
- *   Copyright 2014-2015 Spectra Logic Corporation. All Rights Reserved.
+ *   Copyright 2014-2016 Spectra Logic Corporation. All Rights Reserved.
  *   Licensed under the Apache License, Version 2.0 (the "License"). You may not use
  *   this file except in compliance with the License. A copy of the License is located at
  *
@@ -35,6 +35,7 @@ public class GetNodesSpectraS3Request extends AbstractPaginationRequest {
 
     // Constructor
     
+    
     public GetNodesSpectraS3Request() {
         
     }
@@ -49,11 +50,13 @@ public class GetNodesSpectraS3Request extends AbstractPaginationRequest {
         return this;
     }
 
+
     public GetNodesSpectraS3Request withPageLength(final int pageLength) {
         this.pageLength = pageLength;
         this.updateQueryParam("page_length", pageLength);
         return this;
     }
+
 
     public GetNodesSpectraS3Request withPageOffset(final int pageOffset) {
         this.pageOffset = pageOffset;
@@ -61,17 +64,20 @@ public class GetNodesSpectraS3Request extends AbstractPaginationRequest {
         return this;
     }
 
+
     public GetNodesSpectraS3Request withPageStartMarker(final UUID pageStartMarker) {
         this.pageStartMarker = pageStartMarker.toString();
         this.updateQueryParam("page_start_marker", pageStartMarker);
         return this;
     }
 
+
     public GetNodesSpectraS3Request withPageStartMarker(final String pageStartMarker) {
         this.pageStartMarker = pageStartMarker;
         this.updateQueryParam("page_start_marker", pageStartMarker);
         return this;
     }
+
 
 
     @Override
