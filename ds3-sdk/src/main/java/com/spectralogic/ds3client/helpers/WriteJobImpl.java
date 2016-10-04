@@ -45,7 +45,6 @@ class WriteJobImpl extends JobImpl {
 
     static private final Logger LOG = LoggerFactory.getLogger(WriteJobImpl.class);
 
-    private final JobPartTracker partTracker;
     private final List<Objects> filteredChunks;
     private final ChecksumType.Type checksumType;
     private final Set<ChecksumListener> checksumListeners;
@@ -66,18 +65,8 @@ class WriteJobImpl extends JobImpl {
             final int objectTransferAttempts,
             final int retryDelay,
             final EventRunner eventRunner) {
-        super(client, masterObjectList, objectTransferAttempts);
-        if (this.masterObjectList == null || this.masterObjectList.getObjects() == null) {
-            LOG.info("Job has no data to transfer");
-            this.filteredChunks = null;
-            this.partTracker = null;
-        } else {
-            LOG.info("Ready to start transfer for job {} with {} chunks",
-                    this.masterObjectList.getJobId().toString(), this.masterObjectList.getObjects().size());
-            this.filteredChunks = filterChunks(this.masterObjectList.getObjects());
-            this.partTracker = JobPartTrackerFactory
-                    .buildPartTracker(Iterables.concat(ReadJobImpl.getAllBlobApiBeans(filteredChunks)), eventRunner);
-        }
+        super(client, masterObjectList, objectTransferAttempts, eventRunner);
+        this.filteredChunks = getChunks(masterObjectList);
         this.retryAfter = this.retryAfterLeft = retryAfter;
         this.retryDelay = retryDelay;
         this.checksumListeners = Sets.newIdentityHashSet();
@@ -90,25 +79,25 @@ class WriteJobImpl extends JobImpl {
     @Override
     public void attachDataTransferredListener(final DataTransferredListener listener) {
         checkRunning();
-        this.partTracker.attachDataTransferredListener(listener);
+        getJobPartTracker().attachDataTransferredListener(listener);
     }
 
     @Override
     public void attachObjectCompletedListener(final ObjectCompletedListener listener) {
         checkRunning();
-        this.partTracker.attachObjectCompletedListener(listener);
+        getJobPartTracker().attachObjectCompletedListener(listener);
     }
 
     @Override
     public void removeDataTransferredListener(final DataTransferredListener listener) {
         checkRunning();
-        this.partTracker.removeDataTransferredListener(listener);
+        getJobPartTracker().removeDataTransferredListener(listener);
     }
 
     @Override
     public void removeObjectCompletedListener(final ObjectCompletedListener listener) {
         checkRunning();
-        this.partTracker.removeObjectCompletedListener(listener);
+        getJobPartTracker().removeObjectCompletedListener(listener);
     }
 
     @Override
@@ -172,7 +161,7 @@ class WriteJobImpl extends JobImpl {
         try (final JobState jobState = new JobState(
                 channelBuilder,
                 filteredChunks,
-                partTracker,
+                getJobPartTracker(),
                 ImmutableMap.<String, ImmutableMultimap<BulkObject,Range>>of())) {
             final ChunkTransferrer chunkTransferrer = new ChunkTransferrer(
                 new PutObjectTransferrerRetryDecorator(jobState),
@@ -191,6 +180,25 @@ class WriteJobImpl extends JobImpl {
         } catch (final Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private static Objects filterChunk(final Objects objects) {
+        final Objects newObjects = new Objects();
+        newObjects.setChunkId(objects.getChunkId());
+        newObjects.setChunkNumber(objects.getChunkNumber());
+        newObjects.setNodeId(objects.getNodeId());
+        newObjects.setObjects(filterObjects(objects.getObjects()));
+        return newObjects;
+    }
+
+    private static List<BulkObject> filterObjects(final List<BulkObject> list) {
+        final List<BulkObject> filtered = new ArrayList<>();
+        for (final BulkObject obj : list) {
+            if (!obj.getInCache()) {
+                filtered.add(obj);
+            }
+        }
+        return filtered;
     }
 
     private Objects allocateChunk(final Objects filtered) throws IOException {
@@ -250,6 +258,17 @@ class WriteJobImpl extends JobImpl {
         }
     }
 
+    @Override
+    protected List<Objects> getChunks(final MasterObjectList masterObjectList) {
+        if (masterObjectList == null || masterObjectList.getObjects() == null) {
+            LOG.info("Job has no data to transfer");
+            return null;
+        }
+
+        LOG.info("Ready to start transfer for job {} with {} chunks", masterObjectList.getJobId().toString(), masterObjectList.getObjects().size());
+        return filterChunks(masterObjectList.getObjects());
+    }
+
     /**
      * Filters out chunks that have already been completed.  We will get the same chunk name back from the server, but it
      * will not have any objects in it, so we remove that from the list of objects that are returned.
@@ -267,23 +286,9 @@ class WriteJobImpl extends JobImpl {
         return filteredChunks;
     }
 
-    private static Objects filterChunk(final Objects objects) {
-        final Objects newObjects = new Objects();
-        newObjects.setChunkId(objects.getChunkId());
-        newObjects.setChunkNumber(objects.getChunkNumber());
-        newObjects.setNodeId(objects.getNodeId());
-        newObjects.setObjects(filterObjects(objects.getObjects()));
-        return newObjects;
-    }
-
-    private static List<BulkObject> filterObjects(final List<BulkObject> list) {
-        final List<BulkObject> filtered = new ArrayList<>();
-        for (final BulkObject obj : list) {
-            if (!obj.getInCache()) {
-                filtered.add(obj);
-            }
-        }
-        return filtered;
+    @Override
+    protected JobPartTrackerDecorator makeJobPartTracker(final List<Objects> chunks, final EventRunner eventRunner) {
+        return chunks == null ? null : new JobPartTrackerDecorator(chunks, eventRunner);
     }
 
     private final class PutObjectTransferrerRetryDecorator implements ItemTransferrer {

@@ -37,8 +37,6 @@ import java.util.Set;
 
 class ReadJobImpl extends JobImpl {
 
-    private final JobPartTrackerDecorator partTracker;
-    private final List<Objects> chunks;
     private final ImmutableMap<String, ImmutableMultimap<BulkObject, Range>> blobToRanges;
     private final Set<MetadataReceivedListener> metadataListeners;
     private final Set<ChecksumListener> checksumListeners;
@@ -58,10 +56,8 @@ class ReadJobImpl extends JobImpl {
             final int retryDelay,
             final EventRunner eventRunner
             ) {
-        super(client, masterObjectList, objectTransferAttempts);
+        super(client, masterObjectList, objectTransferAttempts, eventRunner);
 
-        this.chunks = this.masterObjectList.getObjects();
-        this.partTracker = new JobPartTrackerDecorator(chunks, eventRunner);
         this.blobToRanges = PartialObjectHelpers.mapRangesToBlob(masterObjectList.getObjects(), objectRanges);
         this.metadataListeners = Sets.newIdentityHashSet();
         this.checksumListeners = Sets.newIdentityHashSet();
@@ -83,25 +79,25 @@ class ReadJobImpl extends JobImpl {
     @Override
     public void attachDataTransferredListener(final DataTransferredListener listener) {
         checkRunning();
-        this.partTracker.attachDataTransferredListener(listener);
+        getJobPartTracker().attachDataTransferredListener(listener);
     }
 
     @Override
     public void attachObjectCompletedListener(final ObjectCompletedListener listener) {
         checkRunning();
-        this.partTracker.attachClientObjectCompletedListener(listener);
+        getJobPartTracker().attachClientObjectCompletedListener(listener);
     }
 
     @Override
     public void removeDataTransferredListener(final DataTransferredListener listener) {
         checkRunning();
-        this.partTracker.removeDataTransferredListener(listener);
+        getJobPartTracker().removeDataTransferredListener(listener);
     }
 
     @Override
     public void removeObjectCompletedListener(final ObjectCompletedListener listener) {
         checkRunning();
-        this.partTracker.removeClientObjectCompletedListener(listener);
+        getJobPartTracker().removeClientObjectCompletedListener(listener);
     }
 
     @Override
@@ -157,7 +153,7 @@ class ReadJobImpl extends JobImpl {
         try (final JobState jobState = new JobState(
                 channelBuilder,
                 this.masterObjectList.getObjects(),
-                partTracker, blobToRanges)) {
+                getJobPartTracker(), blobToRanges)) {
             final ChunkTransferrer chunkTransferrer = new ChunkTransferrer(
                 new GetObjectTransferrerRetryDecorator(jobState),
                 this.client,
@@ -217,6 +213,16 @@ class ReadJobImpl extends JobImpl {
                 }
             });
         }
+    }
+
+    @Override
+    protected List<Objects> getChunks(final MasterObjectList masterObjectList) {
+        return masterObjectList.getObjects();
+    }
+
+    @Override
+    protected JobPartTrackerDecorator makeJobPartTracker(final List<Objects> chunks, final EventRunner eventRunner) {
+        return new JobPartTrackerDecorator(chunks, eventRunner);
     }
 
     private final class GetObjectTransferrerRetryDecorator implements ItemTransferrer {
@@ -295,53 +301,5 @@ class ReadJobImpl extends JobImpl {
         return ranges.get(ds3Object);
     }
 
-    private static class JobPartTrackerDecorator implements JobPartTracker {
-        private final JobPartTracker clientJobPartTracker;
-        private final JobPartTracker internalJobPartTracker;
 
-        private JobPartTrackerDecorator(final List<Objects> chunks, final EventRunner eventRunner) {
-            clientJobPartTracker = JobPartTrackerFactory.buildPartTracker(Iterables.concat(getAllBlobApiBeans(chunks)), eventRunner);
-            internalJobPartTracker = JobPartTrackerFactory.buildPartTracker(Iterables.concat(getAllBlobApiBeans(chunks)), eventRunner);
-        }
-
-        @Override
-        public void completePart(final String key, final ObjectPart objectPart) {
-            internalJobPartTracker.completePart(key, objectPart);
-            clientJobPartTracker.completePart(key, objectPart);
-        }
-
-        @Override
-        public boolean containsPart(final String key, final ObjectPart objectPart) {
-            return internalJobPartTracker.containsPart(key, objectPart) || clientJobPartTracker.containsPart(key, objectPart);
-        }
-
-        @Override
-        public JobPartTracker attachDataTransferredListener(final DataTransferredListener listener) {
-            return clientJobPartTracker.attachDataTransferredListener(listener);
-        }
-
-        @Override
-        public JobPartTracker attachObjectCompletedListener(final ObjectCompletedListener listener) {
-            internalJobPartTracker.attachObjectCompletedListener(listener);
-            return this;
-        }
-
-        @Override
-        public void removeDataTransferredListener(final DataTransferredListener listener) {
-            clientJobPartTracker.removeDataTransferredListener(listener);
-        }
-
-        @Override
-        public void removeObjectCompletedListener(final ObjectCompletedListener listener) {
-            internalJobPartTracker.removeObjectCompletedListener(listener);
-        }
-
-        private void attachClientObjectCompletedListener(final ObjectCompletedListener listener) {
-            clientJobPartTracker.attachObjectCompletedListener(listener);
-        }
-
-        private void removeClientObjectCompletedListener(final ObjectCompletedListener listener) {
-            clientJobPartTracker.removeObjectCompletedListener(listener);
-        }
-    }
 }

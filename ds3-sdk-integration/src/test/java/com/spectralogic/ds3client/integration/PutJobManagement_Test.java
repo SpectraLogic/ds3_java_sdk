@@ -853,9 +853,12 @@ public class PutJobManagement_Test {
 
             final Ds3ClientHelpers.Job writeJob = ds3ClientHelpers.startWriteJob(BUCKET_NAME, objects);
             writeJob.attachObjectCompletedListener(new ObjectCompletedListener() {
+                private int numCompletedObjects = 0;
+
                 @Override
                 public void objectCompleted(final String name) {
                     assertTrue(bookTitles.contains(name));
+                    assertEquals(1, ++numCompletedObjects);
                 }
             });
 
