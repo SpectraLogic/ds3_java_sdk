@@ -288,6 +288,7 @@ public class GetJobManagement_Test {
                     maxNumObjectTransferAttempts);
 
             final Ds3ClientHelpers.Job job = ds3ClientHelpers.startReadJob(BUCKET_NAME, filesToGet);
+            final Interator interator = new Interator();
 
             job.attachObjectCompletedListener(new ObjectCompletedListener() {
                 int numPartsCompleted = 0;
@@ -296,10 +297,13 @@ public class GetJobManagement_Test {
                 public void objectCompleted(final String name) {
                     ++numPartsCompleted;
                     assertEquals(1, numPartsCompleted);
+                    interator.increment();
                 }
             });
 
             job.transfer(new FileObjectGetter(tempDirectory));
+
+            assertEquals(1, interator.getValue());
 
             try (final InputStream originalFileStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(DIR_NAME + FILE_NAME)) {
                 final byte[] first200Bytes = new byte[200];
@@ -319,6 +323,18 @@ public class GetJobManagement_Test {
         } finally {
             FileUtils.deleteDirectory(tempDirectory.toFile());
             deleteBigFileFromBlackPearlBucket();
+        }
+    }
+
+    private static class Interator {
+        private int intValue = 0;
+
+        private int increment() {
+            return ++intValue;
+        }
+
+        private int getValue() {
+            return intValue;
         }
     }
 }

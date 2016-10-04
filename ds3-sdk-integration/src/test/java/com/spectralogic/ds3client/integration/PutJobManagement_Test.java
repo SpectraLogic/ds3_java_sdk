@@ -851,6 +851,8 @@ public class PutJobManagement_Test {
                     maxNumBlockAllocationRetries,
                     maxNumObjectTransferAttempts);
 
+            final  Interator interator = new Interator();
+
             final Ds3ClientHelpers.Job writeJob = ds3ClientHelpers.startWriteJob(BUCKET_NAME, objects);
             writeJob.attachObjectCompletedListener(new ObjectCompletedListener() {
                 private int numCompletedObjects = 0;
@@ -859,6 +861,7 @@ public class PutJobManagement_Test {
                 public void objectCompleted(final String name) {
                     assertTrue(bookTitles.contains(name));
                     assertEquals(1, ++numCompletedObjects);
+                    interator.increment();
                 }
             });
 
@@ -873,6 +876,8 @@ public class PutJobManagement_Test {
             if ( ! shouldContinueTest) {
                 return;
             }
+
+            assertEquals(1, interator.getValue());
 
             final GetBucketResponse request = ds3ClientShim.getBucket(new GetBucketRequest(BUCKET_NAME));
             final ListBucketResult result = request.getListBucketResult();
@@ -904,6 +909,18 @@ public class PutJobManagement_Test {
         } finally {
             FileUtils.deleteDirectory(tempDirectory.toFile());
             deleteAllContents(ds3ClientShim, BUCKET_NAME);
+        }
+    }
+
+    private static class Interator {
+        private int intValue = 0;
+
+        private int increment() {
+            return ++intValue;
+        }
+
+        private int getValue() {
+            return intValue;
         }
     }
 
