@@ -27,6 +27,7 @@ import com.spectralogic.ds3client.commands.spectrads3.GetJobSpectraS3Response;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers;
 import com.spectralogic.ds3client.helpers.FileObjectGetter;
 import com.spectralogic.ds3client.helpers.FileObjectPutter;
+import com.spectralogic.ds3client.helpers.ObjectCompletedListener;
 import com.spectralogic.ds3client.helpers.options.ReadJobOptions;
 import com.spectralogic.ds3client.integration.test.helpers.ABMTestHelper;
 import com.spectralogic.ds3client.integration.test.helpers.Ds3ClientShim;
@@ -61,6 +62,7 @@ import java.util.*;
 import static com.spectralogic.ds3client.integration.Util.RESOURCE_BASE_NAME;
 import static com.spectralogic.ds3client.integration.Util.deleteAllContents;
 import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
@@ -286,6 +288,16 @@ public class GetJobManagement_Test {
                     maxNumObjectTransferAttempts);
 
             final Ds3ClientHelpers.Job job = ds3ClientHelpers.startReadJob(BUCKET_NAME, filesToGet);
+
+            job.attachObjectCompletedListener(new ObjectCompletedListener() {
+                int numPartsCompleted = 0;
+
+                @Override
+                public void objectCompleted(final String name) {
+                    ++numPartsCompleted;
+                    assertEquals(1, numPartsCompleted);
+                }
+            });
 
             job.transfer(new FileObjectGetter(tempDirectory));
 
