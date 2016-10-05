@@ -17,11 +17,13 @@ package com.spectralogic.ds3client.helpers;
 
 import com.spectralogic.ds3client.Ds3Client;
 import com.spectralogic.ds3client.Ds3ClientImpl;
+import com.spectralogic.ds3client.commands.DeleteObjectRequest;
 import com.spectralogic.ds3client.integration.Util;
 import com.spectralogic.ds3client.integration.test.helpers.Ds3ClientShim;
 import com.spectralogic.ds3client.integration.test.helpers.TempStorageIds;
 import com.spectralogic.ds3client.integration.test.helpers.TempStorageUtil;
 import com.spectralogic.ds3client.models.ChecksumType;
+import com.spectralogic.ds3client.models.Contents;
 import com.spectralogic.ds3client.models.bulk.Ds3Object;
 import com.spectralogic.ds3client.utils.ResourceUtils;
 
@@ -93,14 +95,21 @@ public class JobImpl_Test {
         }
     }
 
-    @Test
     /**
      * This test verifies that object completed callback handler are added to the correct set.
      * There are 2 sets: 1 for events we create to let us know when to close channels we have opened;
      * and 1 for events clients have registered.  It's important that we fire the events that close
      * channels before calling client events, so that clients can rely on the channels having been
      * closed.
+     * @throws IOException
+     * @throws URISyntaxException
+     * @throws NoSuchMethodException
+     * @throws IllegalAccessException
+     * @throws InvocationTargetException
+     * @throws NoSuchFieldException
+     * @throws ClassNotFoundException
      */
+    @Test
     public void testWriteObjectCompletionEventsPopulateCorrectJobPartTracker()
             throws IOException, URISyntaxException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, NoSuchFieldException, ClassNotFoundException
     {
@@ -126,14 +135,18 @@ public class JobImpl_Test {
             }
         };
 
-        final WriteJobJobPartDecoratorPair writeJobJobPartDecoratorPair = createJobPartDecorator(objectCompletedListener,
-                dataTransferredListener, bookTitles);
+        try {
+            final WriteJobJobPartDecoratorPair writeJobJobPartDecoratorPair = createJobPartDecorator(objectCompletedListener,
+                    dataTransferredListener, bookTitles);
 
-        // trigger the callback
+            // trigger the callback
 
-        writeJobJobPartDecoratorPair.getJobPartTrackerDecorator().completePart(FILE_NAMES[0], new ObjectPart(0, bookSize));
+            writeJobJobPartDecoratorPair.getJobPartTrackerDecorator().completePart(FILE_NAMES[0], new ObjectPart(0, bookSize));
 
-        assertEquals(1, interator.getValue());
+            assertEquals(1, interator.getValue());
+        } finally {
+            deleteBigFileFromBlackPearlBucket();
+        }
     }
 
     private WriteJobJobPartDecoratorPair createJobPartDecorator(final ObjectCompletedListener objectCompletedListener,
@@ -167,27 +180,27 @@ public class JobImpl_Test {
         // Check that the client has one callback registered
         final Field partTrackerField = writeJob.getClass().getSuperclass().getDeclaredField("jobPartTracker");
         partTrackerField.setAccessible(true);
-        final JobImpl.JobPartTrackerDecorator jobPartTrackerDecorator = (JobImpl.JobPartTrackerDecorator)partTrackerField.get(writeJob);
+        final JobImpl.JobPartTrackerDecorator jobPartTrackerDecorator = (JobImpl.JobPartTrackerDecorator) partTrackerField.get(writeJob);
 
         final Field clientJobPartTrackerField = jobPartTrackerDecorator.getClass().getDeclaredField("clientJobPartTracker");
         clientJobPartTrackerField.setAccessible(true);
-        final JobPartTrackerImpl clientJobPartTrackerImpl = (JobPartTrackerImpl)clientJobPartTrackerField.get(jobPartTrackerDecorator);
+        final JobPartTrackerImpl clientJobPartTrackerImpl = (JobPartTrackerImpl) clientJobPartTrackerField.get(jobPartTrackerDecorator);
 
         final Field clientTackersField = clientJobPartTrackerImpl.getClass().getDeclaredField("trackers");
         clientTackersField.setAccessible(true);
-        final Map<String, ObjectPartTracker> clientTrackers = (Map<String, ObjectPartTracker>)clientTackersField.get(clientJobPartTrackerImpl);
-        final ObjectPartTrackerImpl clientObjectPartTrackerImpl = (ObjectPartTrackerImpl)clientTrackers.get(FILE_NAMES[0]);
+        final Map<String, ObjectPartTracker> clientTrackers = (Map<String, ObjectPartTracker>) clientTackersField.get(clientJobPartTrackerImpl);
+        final ObjectPartTrackerImpl clientObjectPartTrackerImpl = (ObjectPartTrackerImpl) clientTrackers.get(FILE_NAMES[0]);
 
         final Field clientObjectCompletedListenersField = clientObjectPartTrackerImpl.getClass().getDeclaredField("objectCompletedListeners");
         clientObjectCompletedListenersField.setAccessible(true);
-        final Set<ObjectCompletedListener> clientObjectCompletedListeners = (Set<ObjectCompletedListener>)clientObjectCompletedListenersField.get(clientObjectPartTrackerImpl);
+        final Set<ObjectCompletedListener> clientObjectCompletedListeners = (Set<ObjectCompletedListener>) clientObjectCompletedListenersField.get(clientObjectPartTrackerImpl);
 
         assertEquals(1, clientObjectCompletedListeners.size());
 
         // Data transfer listeners
         final Field clientDataTransferListenersField = clientObjectPartTrackerImpl.getClass().getDeclaredField("dataTransferredListeners");
         clientDataTransferListenersField.setAccessible(true);
-        final Set<DataTransferredListener> clientDataTransferredListeners = (Set<DataTransferredListener>)clientDataTransferListenersField.get(clientObjectPartTrackerImpl);
+        final Set<DataTransferredListener> clientDataTransferredListeners = (Set<DataTransferredListener>) clientDataTransferListenersField.get(clientObjectPartTrackerImpl);
 
         assertEquals(1, clientDataTransferredListeners.size());
 
@@ -196,27 +209,27 @@ public class JobImpl_Test {
 
         final Field internalJobPartTrackerField = jobPartTrackerDecorator.getClass().getDeclaredField("internalJobPartTracker");
         internalJobPartTrackerField.setAccessible(true);
-        final JobPartTrackerImpl internalJobPartTrackerImpl = (JobPartTrackerImpl)internalJobPartTrackerField.get(jobPartTrackerDecorator);
+        final JobPartTrackerImpl internalJobPartTrackerImpl = (JobPartTrackerImpl) internalJobPartTrackerField.get(jobPartTrackerDecorator);
 
         final Field internalTackersField = internalJobPartTrackerImpl.getClass().getDeclaredField("trackers");
         internalTackersField.setAccessible(true);
-        final Map<String, ObjectPartTracker> internalTrackers = (Map<String, ObjectPartTracker>)internalTackersField.get(internalJobPartTrackerImpl);
-        final ObjectPartTrackerImpl internalObjectPartTrackerImpl = (ObjectPartTrackerImpl)internalTrackers.get(FILE_NAMES[0]);
+        final Map<String, ObjectPartTracker> internalTrackers = (Map<String, ObjectPartTracker>) internalTackersField.get(internalJobPartTrackerImpl);
+        final ObjectPartTrackerImpl internalObjectPartTrackerImpl = (ObjectPartTrackerImpl) internalTrackers.get(FILE_NAMES[0]);
 
         final Field internalObjectCompletedListenersField = internalObjectPartTrackerImpl.getClass().getDeclaredField("objectCompletedListeners");
         internalObjectCompletedListenersField.setAccessible(true);
-        final Set<ObjectCompletedListener> internalObjectCompletedListeners = (Set<ObjectCompletedListener>)internalObjectCompletedListenersField.get(internalObjectPartTrackerImpl);
+        final Set<ObjectCompletedListener> internalObjectCompletedListeners = (Set<ObjectCompletedListener>) internalObjectCompletedListenersField.get(internalObjectPartTrackerImpl);
 
         assertEquals(0, internalObjectCompletedListeners.size());
 
         // Data transfer listeners
         final Field internalDataTransferListenersField = internalObjectPartTrackerImpl.getClass().getDeclaredField("dataTransferredListeners");
         internalDataTransferListenersField.setAccessible(true);
-        final Set<DataTransferredListener> internalDataTransferredListeners = (Set<DataTransferredListener>)internalDataTransferListenersField.get(internalObjectPartTrackerImpl);
+        final Set<DataTransferredListener> internalDataTransferredListeners = (Set<DataTransferredListener>) internalDataTransferListenersField.get(internalObjectPartTrackerImpl);
 
         assertEquals(0, internalDataTransferredListeners.size());
 
-        return new WriteJobJobPartDecoratorPair(jobPartTrackerDecorator, (WriteJobImpl)writeJob);
+        return new WriteJobJobPartDecoratorPair(jobPartTrackerDecorator, (WriteJobImpl) writeJob);
     }
 
     private final class WriteJobJobPartDecoratorPair {
@@ -250,8 +263,82 @@ public class JobImpl_Test {
         }
     }
 
-    @Test
-    public void testWriteObjectCompletionPopulatesInternalJobPartTrackers() {
+    private void deleteBigFileFromBlackPearlBucket() throws IOException {
+        final Ds3ClientHelpers helpers = Ds3ClientHelpers.wrap(client);
 
+        final Iterable<Contents> objects = helpers.listObjects(BUCKET_NAME);
+        for (final Contents contents : objects) {
+            if (contents.getKey().equals(FILE_NAMES[0])) {
+                client.deleteObject(new DeleteObjectRequest(BUCKET_NAME, contents.getKey()));
+            }
+        }
+    }
+
+    /**
+     * This test verifies that there id 1 object completed callback handler registered in the internal job part
+     * tracker.  This callback handler does not exist until you call transfer on the write job.
+     * @throws NoSuchMethodException
+     * @throws IOException
+     * @throws ClassNotFoundException
+     * @throws URISyntaxException
+     * @throws IllegalAccessException
+     * @throws InvocationTargetException
+     * @throws NoSuchFieldException
+     */
+    @Test
+    public void testWriteObjectCompletionPopulatesInternalJobPartTrackers()
+            throws NoSuchMethodException, IOException, ClassNotFoundException, URISyntaxException, IllegalAccessException, InvocationTargetException, NoSuchFieldException
+    {
+        final Interator interator = new Interator();
+
+        final List<String> bookTitles = new ArrayList<>();
+
+        final ObjectCompletedListener objectCompletedListener = new ObjectCompletedListener() {
+            private int numCompletedObjects = 0;
+
+            @Override
+            public void objectCompleted(final String name) {
+                interator.increment();
+                assertTrue(bookTitles.contains(name));
+                assertEquals(1, ++numCompletedObjects);
+            }
+        };
+
+        final DataTransferredListener dataTransferredListener = new DataTransferredListener() {
+            @Override
+            public void dataTransferred(final long size) {
+
+            }
+        };
+
+        final WriteJobJobPartDecoratorPair writeJobJobPartDecoratorPair = createJobPartDecorator(objectCompletedListener,
+                dataTransferredListener, bookTitles);
+
+        final Path dirPath = ResourceUtils.loadFileResource(DIR_NAME);
+
+        try {
+            writeJobJobPartDecoratorPair.getWriteJob().transfer(new FileObjectPutter(dirPath));
+
+            final Field partTrackerField = writeJobJobPartDecoratorPair.getWriteJob().getClass().getSuperclass().getDeclaredField("jobPartTracker");
+            partTrackerField.setAccessible(true);
+            final JobImpl.JobPartTrackerDecorator jobPartTrackerDecorator = (JobImpl.JobPartTrackerDecorator)partTrackerField.get(writeJobJobPartDecoratorPair.getWriteJob());
+
+            final Field internalJobPartTrackerField = jobPartTrackerDecorator.getClass().getDeclaredField("internalJobPartTracker");
+            internalJobPartTrackerField.setAccessible(true);
+            final JobPartTrackerImpl internalJobPartTrackerImpl = (JobPartTrackerImpl)internalJobPartTrackerField.get(jobPartTrackerDecorator);
+
+            final Field internalTackersField = internalJobPartTrackerImpl.getClass().getDeclaredField("trackers");
+            internalTackersField.setAccessible(true);
+            final Map<String, ObjectPartTracker> internalTrackers = (Map<String, ObjectPartTracker>)internalTackersField.get(internalJobPartTrackerImpl);
+            final ObjectPartTrackerImpl internalObjectPartTrackerImpl = (ObjectPartTrackerImpl)internalTrackers.get(FILE_NAMES[0]);
+
+            final Field internalObjectCompletedListenersField = internalObjectPartTrackerImpl.getClass().getDeclaredField("objectCompletedListeners");
+            internalObjectCompletedListenersField.setAccessible(true);
+            final Set<ObjectCompletedListener> internalObjectCompletedListeners = (Set<ObjectCompletedListener>)internalObjectCompletedListenersField.get(internalObjectPartTrackerImpl);
+
+            assertEquals(1, internalObjectCompletedListeners.size());
+        } finally {
+            deleteBigFileFromBlackPearlBucket();
+        }
     }
 }
