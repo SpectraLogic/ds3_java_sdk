@@ -95,7 +95,7 @@ public class JobImpl_Test {
      * channels before calling client events, so that clients can rely on the channels having been
      * closed.
      */
-    public void testObjectCompletionEventsFireInternalFirst()
+    public void testObjectCompletionEventsPopulateCorrectJobPartTracker()
             throws IOException, URISyntaxException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, NoSuchFieldException, ClassNotFoundException
     {
         final Ds3ClientShim ds3ClientShim = new Ds3ClientShim((Ds3ClientImpl) client);
