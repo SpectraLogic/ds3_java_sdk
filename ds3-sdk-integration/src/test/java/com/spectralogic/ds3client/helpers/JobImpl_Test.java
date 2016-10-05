@@ -121,29 +121,26 @@ public class JobImpl_Test {
 
         final DataTransferredListener dataTransferredListener = new DataTransferredListener() {
             @Override
-            public void dataTransferred(long size) {
+            public void dataTransferred(final long size) {
 
             }
         };
 
         // trigger the callback
 
-        final JobImpl.JobPartTrackerDecorator jobPartTrackerDecorator = createJobPartDecorator(objectCompletedListener,
-                dataTransferredListener, interator, bookTitles);
+        final WriteJobJobPartDecoratorPair writeJobJobPartDecoratorPair = createJobPartDecorator(objectCompletedListener,
+                dataTransferredListener, bookTitles);
 
-        jobPartTrackerDecorator.completePart(FILE_NAMES[0], new ObjectPart(0, bookSize));
+        writeJobJobPartDecoratorPair.getJobPartTrackerDecorator().completePart(FILE_NAMES[0], new ObjectPart(0, bookSize));
 
         assertEquals(1, interator.getValue());
     }
 
-    private JobImpl.JobPartTrackerDecorator createJobPartDecorator(final ObjectCompletedListener objectCompletedListener,
-                                                                   final DataTransferredListener dataTransferredListener,
-                                                                   final Interator interator,
-                                                                   final List<String> bookTitles)
+    private WriteJobJobPartDecoratorPair createJobPartDecorator(final ObjectCompletedListener objectCompletedListener,
+                                                                final DataTransferredListener dataTransferredListener,
+                                                                final List<String> bookTitles)
             throws IOException, URISyntaxException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, NoSuchFieldException, ClassNotFoundException
     {
-
-
         final List<Ds3Object> objects = new ArrayList<>();
         for (final String book : FILE_NAMES) {
             final Path objPath = ResourceUtils.loadFileResource(DIR_NAME + book);
@@ -163,25 +160,9 @@ public class JobImpl_Test {
 
         final Ds3ClientHelpers.Job writeJob = ds3ClientHelpers.startWriteJob(BUCKET_NAME, objects);
 
+        writeJob.attachObjectCompletedListener(objectCompletedListener);
 
-
-        writeJob.attachObjectCompletedListener(new ObjectCompletedListener() {
-            private int numCompletedObjects = 0;
-
-            @Override
-            public void objectCompleted(final String name) {
-                interator.increment();
-                assertTrue(bookTitles.contains(name));
-                assertEquals(1, ++numCompletedObjects);
-            }
-        });
-
-        writeJob.attachDataTransferredListener(new DataTransferredListener() {
-            @Override
-            public void dataTransferred(final long size) {
-
-            }
-        });
+        writeJob.attachDataTransferredListener(dataTransferredListener);
 
         // Check that the client has one callback registered
         final Field partTrackerField = writeJob.getClass().getSuperclass().getDeclaredField("jobPartTracker");
@@ -235,8 +216,26 @@ public class JobImpl_Test {
 
         assertEquals(0, internalDataTransferredListeners.size());
 
-        return jobPartTrackerDecorator;
+        return new WriteJobJobPartDecoratorPair(jobPartTrackerDecorator, (WriteJobImpl)writeJob);
+    }
 
+    private final class WriteJobJobPartDecoratorPair {
+        private final JobImpl.JobPartTrackerDecorator jobPartTrackerDecorator;
+        private final WriteJobImpl writeJob;
+
+        private WriteJobJobPartDecoratorPair(final JobImpl.JobPartTrackerDecorator jobPartTrackerDecorator,
+                                             final WriteJobImpl writeJob) {
+            this.jobPartTrackerDecorator = jobPartTrackerDecorator;
+            this.writeJob = writeJob;
+        }
+
+        public JobImpl.JobPartTrackerDecorator getJobPartTrackerDecorator() {
+            return jobPartTrackerDecorator;
+        }
+
+        public WriteJobImpl getWriteJob() {
+            return writeJob;
+        }
     }
 
     private static class Interator {
