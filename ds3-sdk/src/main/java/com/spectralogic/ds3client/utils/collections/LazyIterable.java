@@ -30,7 +30,7 @@ import java.util.NoSuchElementException;
  */
 public class LazyIterable<T> implements Iterable<T> {
 
-    private LazyLoaderFactory<T> lazyLoaderFactory;
+    final private LazyLoaderFactory<T> lazyLoaderFactory;
 
     public LazyIterable(final LazyLoaderFactory<T> lazyLoaderFactory) {
         this.lazyLoaderFactory = lazyLoaderFactory;
@@ -62,15 +62,15 @@ public class LazyIterable<T> implements Iterable<T> {
         List<T> getNextValues();
     }
 
-    private class LazyObjectIterator<T> implements Iterator<T> {
+    private class LazyObjectIterator<E> implements Iterator<E> {
 
-        private final LazyLoader<T> iterableLoader;
+        private final LazyLoader<E> iterableLoader;
 
-        private List<T> cache = null;
+        private List<E> cache = null;
         private int cachePointer;
         private boolean endOfContent = false;
 
-        private LazyObjectIterator(final LazyLoader<T> iterableLoader) {
+        private LazyObjectIterator(final LazyLoader<E> iterableLoader) {
             this.iterableLoader = iterableLoader;
         }
 
@@ -87,14 +87,14 @@ public class LazyIterable<T> implements Iterable<T> {
         }
 
         @Override
-        public T next() {
+        public E next() {
             if (endOfContent) {
                 throw new NoSuchElementException("No more content");
             }
             if (cache == null || cachePointer >= cache.size()) {
                 loadCache();
             }
-            final T contents = cache.get(cachePointer);
+            final E contents = cache.get(cachePointer);
             this.cachePointer++;
             return contents;
         }

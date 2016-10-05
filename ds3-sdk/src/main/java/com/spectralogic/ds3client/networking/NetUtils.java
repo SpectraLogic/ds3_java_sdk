@@ -28,7 +28,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.*;
 
-public class NetUtils {
+public final class NetUtils {
 
     private NetUtils() {
         throw new IllegalStateException("This component should never be initialized.");

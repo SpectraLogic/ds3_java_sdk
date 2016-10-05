@@ -106,7 +106,7 @@ final class Crc32c implements Checksum {
    * @param b the new byte.
    */
   @Override
-  public void update(int b) {
+  public void update(final int b) {
     long newCrc = crc ^ LONG_MASK;
     newCrc = updateByte((byte) b, newCrc);
     crc = newCrc ^ LONG_MASK;
@@ -119,7 +119,7 @@ final class Crc32c implements Checksum {
    * @param len the length of data to examine.
    */
   @Override
-  public void update(byte[] bArray, int off, int len) {
+  public void update(final byte[] bArray, final int off, final int len) {
     long newCrc = crc ^ LONG_MASK;
     for (int i = off; i < off + len; i++) {
       newCrc = updateByte(bArray[i], newCrc);
@@ -142,7 +142,7 @@ final class Crc32c implements Checksum {
    */
   public byte[] getValueAsBytes() {
     long value = crc;
-    byte[] result = new byte[4];
+    final byte[] result = new byte[4];
     for (int i = 3; i >= 0; i--) {
       result[i] = (byte) (value & 0xffL);
       value >>= 8;
@@ -158,9 +158,9 @@ final class Crc32c implements Checksum {
     crc = 0;
   }
 
-  private long updateByte(byte newByte, long crc) {
-    byte b = (byte) (newByte & BYTE_MASK);
-    int index = (int) ((crc ^ b) & BYTE_MASK);
+  private long updateByte(final byte newByte, final long crc) {
+    final byte b = (byte) (newByte & BYTE_MASK);
+    final int index = (int) ((crc ^ b) & BYTE_MASK);
     return (CRC_TABLE[index] ^ (crc >> 8)) & LONG_MASK;
   }
 }

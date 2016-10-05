@@ -64,7 +64,7 @@ public final class SafeStringManipulation {
     }
 
     public static String getEscapedRequestPath(final Ds3Request request) {
-        if ((request == null) || (request.getPath() == null)){
+        if (request == null || request.getPath() == null){
             return "";
         }
         return getDs3Escaper().escape(request.getPath());

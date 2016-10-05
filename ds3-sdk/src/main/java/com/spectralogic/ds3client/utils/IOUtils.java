@@ -21,7 +21,7 @@ import java.io.OutputStream;
 import java.nio.ByteBuffer;
 import java.nio.channels.WritableByteChannel;
 
-public class IOUtils {
+public final class IOUtils {
 
     public static long copy(
         final InputStream inputStream,
