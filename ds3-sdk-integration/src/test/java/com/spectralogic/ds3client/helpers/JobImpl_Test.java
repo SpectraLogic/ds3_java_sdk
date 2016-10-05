@@ -40,6 +40,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.sql.DataTruncation;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -57,6 +58,10 @@ public class JobImpl_Test {
     private static final String TEST_ENV_NAME = "GetJobManagement_Test";
     private static TempStorageIds envStorageIds;
     private static UUID dataPolicyId;
+
+    private static final String[] FILE_NAMES = new String[]{"lesmis-copies.txt"};
+
+    private long bookSize = -1;
 
     @BeforeClass
     public static void startup() throws Exception {
@@ -100,10 +105,7 @@ public class JobImpl_Test {
     {
         final Ds3ClientShim ds3ClientShim = new Ds3ClientShim((Ds3ClientImpl) client);
 
-        long bookSize = -1;
-
         final String DIR_NAME = "largeFiles/";
-        final String[] FILE_NAMES = new String[]{"lesmis-copies.txt"};
 
         final List<String> bookTitles = new ArrayList<>();
         final List<Ds3Object> objects = new ArrayList<>();
@@ -137,6 +139,13 @@ public class JobImpl_Test {
             }
         });
 
+        writeJob.attachDataTransferredListener(new DataTransferredListener() {
+            @Override
+            public void dataTransferred(final long size) {
+
+            }
+        });
+
         // Check that the client has one callback registered
         final Field partTrackerField = writeJob.getClass().getSuperclass().getDeclaredField("jobPartTracker");
         partTrackerField.setAccessible(true);
@@ -157,6 +166,13 @@ public class JobImpl_Test {
 
         assertEquals(1, clientObjectCompletedListeners.size());
 
+        // Data transfer listeners
+        final Field clientDataTransferListenersField = clientObjectPartTrackerImpl.getClass().getDeclaredField("dataTransferredListeners");
+        clientDataTransferListenersField.setAccessible(true);
+        final Set<DataTransferredListener> clientDataTransferredListeners = (Set<DataTransferredListener>)clientDataTransferListenersField.get(clientObjectPartTrackerImpl);
+
+        assertEquals(1, clientDataTransferredListeners.size());
+
         // Check that we have no internal callbacks registered.  Registering internal callbacks doesn't happen until you
         // call transfer
 
@@ -174,6 +190,13 @@ public class JobImpl_Test {
         final Set<ObjectCompletedListener> internalObjectCompletedListeners = (Set<ObjectCompletedListener>)internalObjectCompletedListenersField.get(internalObjectPartTrackerImpl);
 
         assertEquals(0, internalObjectCompletedListeners.size());
+
+        // Data transfer listeners
+        final Field internalDataTransferListenersField = internalObjectPartTrackerImpl.getClass().getDeclaredField("dataTransferredListeners");
+        internalDataTransferListenersField.setAccessible(true);
+        final Set<DataTransferredListener> internalDataTransferredListeners = (Set<DataTransferredListener>)internalDataTransferListenersField.get(internalObjectPartTrackerImpl);
+
+        assertEquals(0, internalDataTransferredListeners.size());
 
         // trigger the callback
 
