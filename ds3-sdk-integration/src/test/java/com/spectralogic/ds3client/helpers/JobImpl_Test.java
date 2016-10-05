@@ -59,6 +59,7 @@ public class JobImpl_Test {
     private static TempStorageIds envStorageIds;
     private static UUID dataPolicyId;
 
+    private static final String DIR_NAME = "largeFiles/";
     private static final String[] FILE_NAMES = new String[]{"lesmis-copies.txt"};
 
     private long bookSize = -1;
@@ -103,20 +104,56 @@ public class JobImpl_Test {
     public void testWriteObjectCompletionEventsPopulateCorrectJobPartTracker()
             throws IOException, URISyntaxException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, NoSuchFieldException, ClassNotFoundException
     {
-        final Ds3ClientShim ds3ClientShim = new Ds3ClientShim((Ds3ClientImpl) client);
-
-        final String DIR_NAME = "largeFiles/";
+        final Interator interator = new Interator();
 
         final List<String> bookTitles = new ArrayList<>();
+
+        final ObjectCompletedListener objectCompletedListener = new ObjectCompletedListener() {
+            private int numCompletedObjects = 0;
+
+            @Override
+            public void objectCompleted(final String name) {
+                interator.increment();
+                assertTrue(bookTitles.contains(name));
+                assertEquals(1, ++numCompletedObjects);
+            }
+        };
+
+        final DataTransferredListener dataTransferredListener = new DataTransferredListener() {
+            @Override
+            public void dataTransferred(long size) {
+
+            }
+        };
+
+        // trigger the callback
+
+        final JobImpl.JobPartTrackerDecorator jobPartTrackerDecorator = createJobPartDecorator(objectCompletedListener,
+                dataTransferredListener, interator, bookTitles);
+
+        jobPartTrackerDecorator.completePart(FILE_NAMES[0], new ObjectPart(0, bookSize));
+
+        assertEquals(1, interator.getValue());
+    }
+
+    private JobImpl.JobPartTrackerDecorator createJobPartDecorator(final ObjectCompletedListener objectCompletedListener,
+                                                                   final DataTransferredListener dataTransferredListener,
+                                                                   final Interator interator,
+                                                                   final List<String> bookTitles)
+            throws IOException, URISyntaxException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, NoSuchFieldException, ClassNotFoundException
+    {
+
+
         final List<Ds3Object> objects = new ArrayList<>();
         for (final String book : FILE_NAMES) {
             final Path objPath = ResourceUtils.loadFileResource(DIR_NAME + book);
             bookSize = Files.size(objPath);
             final Ds3Object obj = new Ds3Object(book, bookSize);
-
             bookTitles.add(book);
             objects.add(obj);
         }
+
+        final Ds3ClientShim ds3ClientShim = new Ds3ClientShim((Ds3ClientImpl) client);
 
         final int maxNumBlockAllocationRetries = 1;
         final int maxNumObjectTransferAttempts = 3;
@@ -126,7 +163,7 @@ public class JobImpl_Test {
 
         final Ds3ClientHelpers.Job writeJob = ds3ClientHelpers.startWriteJob(BUCKET_NAME, objects);
 
-        final Interator interator = new Interator();
+
 
         writeJob.attachObjectCompletedListener(new ObjectCompletedListener() {
             private int numCompletedObjects = 0;
@@ -198,11 +235,8 @@ public class JobImpl_Test {
 
         assertEquals(0, internalDataTransferredListeners.size());
 
-        // trigger the callback
+        return jobPartTrackerDecorator;
 
-        jobPartTrackerDecorator.completePart(FILE_NAMES[0], new ObjectPart(0, bookSize));
-
-        assertEquals(1, interator.getValue());
     }
 
     private static class Interator {
