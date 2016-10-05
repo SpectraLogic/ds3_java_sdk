@@ -126,10 +126,10 @@ public class JobImpl_Test {
             }
         };
 
-        // trigger the callback
-
         final WriteJobJobPartDecoratorPair writeJobJobPartDecoratorPair = createJobPartDecorator(objectCompletedListener,
                 dataTransferredListener, bookTitles);
+
+        // trigger the callback
 
         writeJobJobPartDecoratorPair.getJobPartTrackerDecorator().completePart(FILE_NAMES[0], new ObjectPart(0, bookSize));
 
@@ -248,5 +248,10 @@ public class JobImpl_Test {
         private int getValue() {
             return intValue;
         }
+    }
+
+    @Test
+    public void testWriteObjectCompletionPopulatesInternalJobPartTrackers() {
+
     }
 }
