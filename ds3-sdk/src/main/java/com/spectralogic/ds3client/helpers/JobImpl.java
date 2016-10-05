@@ -111,6 +111,9 @@ abstract class JobImpl implements Job {
 
         @Override
         public void completePart(final String key, final ObjectPart objectPart) {
+            // It's important to fire the internal completions -- those we set up to close channels we
+            // have opened -- before firing client-registered events.  The reason is that some clients
+            // rely upon this ordering to know that channels are closed when their event handlers run.
             internalJobPartTracker.completePart(key, objectPart);
             clientJobPartTracker.completePart(key, objectPart);
         }

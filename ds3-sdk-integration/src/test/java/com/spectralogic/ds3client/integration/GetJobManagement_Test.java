@@ -295,8 +295,7 @@ public class GetJobManagement_Test {
 
                 @Override
                 public void objectCompleted(final String name) {
-                    ++numPartsCompleted;
-                    assertEquals(1, numPartsCompleted);
+                    assertEquals(1, ++numPartsCompleted);
                     interator.increment();
                 }
             });

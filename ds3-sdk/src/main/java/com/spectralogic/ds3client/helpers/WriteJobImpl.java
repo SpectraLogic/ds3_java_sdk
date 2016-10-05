@@ -85,7 +85,7 @@ class WriteJobImpl extends JobImpl {
     @Override
     public void attachObjectCompletedListener(final ObjectCompletedListener listener) {
         checkRunning();
-        getJobPartTracker().attachObjectCompletedListener(listener);
+        getJobPartTracker().attachClientObjectCompletedListener(listener);
     }
 
     @Override
@@ -97,7 +97,7 @@ class WriteJobImpl extends JobImpl {
     @Override
     public void removeObjectCompletedListener(final ObjectCompletedListener listener) {
         checkRunning();
-        getJobPartTracker().removeObjectCompletedListener(listener);
+        getJobPartTracker().removeClientObjectCompletedListener(listener);
     }
 
     @Override
