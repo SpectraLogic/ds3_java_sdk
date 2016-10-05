@@ -62,7 +62,7 @@ class ReadJobImpl extends JobImpl {
 
         this.chunks = this.masterObjectList.getObjects();
         this.partTracker = JobPartTrackerFactory
-                .buildPartTracker(Iterables.concat(getAllBlobApiBeans(chunks)), eventRunner);
+                .buildPartTracker(getAllBlobApiBeans(chunks), eventRunner);
         this.blobToRanges = PartialObjectHelpers.mapRangesToBlob(masterObjectList.getObjects(), objectRanges);
         this.metadataListeners = Sets.newIdentityHashSet();
         this.checksumListeners = Sets.newIdentityHashSet();
@@ -74,7 +74,7 @@ class ReadJobImpl extends JobImpl {
     }
 
     protected static ImmutableList<BulkObject> getAllBlobApiBeans(final List<Objects> jobWithChunksApiBeans) {
-        ImmutableList.Builder<BulkObject> builder = ImmutableList.builder();
+        final ImmutableList.Builder<BulkObject> builder = ImmutableList.builder();
         for (final Objects objects : jobWithChunksApiBeans) {
             builder.addAll(objects.getObjects());
         }

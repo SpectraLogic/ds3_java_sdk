@@ -290,8 +290,7 @@ public abstract class Ds3ClientHelpers {
      *                   response.isTruncated() is true. To return the additional keys, see nextMarker.
      * @throws IOException
      */
-    public abstract Iterable<Contents> listObjects(final String bucket, final String keyPrefix, final String nextMarker, final int maxKeys)
-            throws IOException;
+    public abstract Iterable<Contents> listObjects(final String bucket, final String keyPrefix, final String nextMarker, final int maxKeys);
 
     /**
      * Returns information about objects in the bucket in alphabetical order, starting with key after the next_marker in order,
@@ -312,7 +311,7 @@ public abstract class Ds3ClientHelpers {
      * @param retries    Specifies how many times the helper function will attempt to retry a request for failing. Default - 5
      * @throws IOException
      */
-    public abstract Iterable<Contents> listObjects(final String bucket, final String keyPrefix, final String nextMarker, final int maxKeys, final int retries) throws IOException;
+    public abstract Iterable<Contents> listObjects(final String bucket, final String keyPrefix, final String nextMarker, final int maxKeys, final int retries);
 
     /**
      * Returns an object list with which you can call {@code startWriteJobImpl} based on the files in a {@code directory}.
@@ -351,11 +350,7 @@ public abstract class Ds3ClientHelpers {
                 fluentIterable = fluentIterable.filter(new com.google.common.base.Predicate<Contents>() {
                     @Override
                     public boolean apply(@Nullable final Contents input) {
-                        if (filter != null) {
-                            return filter.test(input);
-                        } else {
-                            return true; // do not filter anything if filter is null
-                        }
+                        return filter == null || filter.test(input); // do not filter anything if filter is null
                     }
                 });
             }

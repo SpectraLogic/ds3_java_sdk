@@ -30,7 +30,7 @@ abstract class DigestHasher implements Hasher {
     abstract MessageDigest getDigest();
 
     @Override
-    public void update(final byte[] bytes, int offset, int length) {
+    public void update(final byte[] bytes, final int offset, final int length) {
         digest.update(bytes, offset, length);
     }
 

@@ -58,7 +58,7 @@ public abstract class AbstractResponse implements Ds3Response {
         this.processResponse();
     }
 
-    private static ChecksumType.Type determineChecksumType(final Headers headers) throws ResponseProcessingException {
+    private static ChecksumType.Type determineChecksumType(final Headers headers) {
         for (final ChecksumType.Type type : ChecksumType.Type.values()) {
             if (getFirstHeaderValue(headers, "content-" + type.toString().replace("_", "").toLowerCase()) != null) {
                 return type;
@@ -114,8 +114,8 @@ public abstract class AbstractResponse implements Ds3Response {
     }
 
     private boolean checkForManagementPortException() {
-        return ((this.getStatusCode() == FailedRequestUsingMgmtPortException.MGMT_PORT_STATUS_CODE)
-            && (getFirstHeaderValue(getResponse().getHeaders(), FailedRequestUsingMgmtPortException.MGMT_PORT_HEADER) != null));
+        return this.getStatusCode() == FailedRequestUsingMgmtPortException.MGMT_PORT_STATUS_CODE
+            && getFirstHeaderValue(getResponse().getHeaders(), FailedRequestUsingMgmtPortException.MGMT_PORT_HEADER) != null;
     }
 
     public int getStatusCode() {

@@ -19,7 +19,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
 
-public class DateFormatter {
+public final class DateFormatter {
     final static private String RFC822FORMAT = "EEE, dd MMM yyyy HH:mm:ss Z";
     /**
      * Returns a RFC-882 formatted string with the current time.

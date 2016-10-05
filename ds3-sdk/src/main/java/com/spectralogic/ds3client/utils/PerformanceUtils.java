@@ -18,7 +18,7 @@ package com.spectralogic.ds3client.utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class PerformanceUtils {
+public final class PerformanceUtils {
 
     static private final Logger LOG = LoggerFactory.getLogger(PerformanceUtils.class);
 
