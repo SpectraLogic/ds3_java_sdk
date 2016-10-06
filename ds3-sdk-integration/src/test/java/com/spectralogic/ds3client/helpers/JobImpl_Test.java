@@ -28,6 +28,7 @@ import com.spectralogic.ds3client.models.bulk.Ds3Object;
 import com.spectralogic.ds3client.utils.ResourceUtils;
 import com.spectralogic.ds3client.IntValue;
 
+import org.apache.commons.io.FileUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Before;
@@ -46,6 +47,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -635,7 +637,7 @@ public class JobImpl_Test {
     public void testReadObjectCompletionEventsPopulateCorrectJobPartTracker()
             throws IOException, URISyntaxException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, NoSuchFieldException, ClassNotFoundException
     {
-        putBigFile();
+        putBigFileIntoBlackPearl();
 
         final IntValue intValue = new IntValue();
 
@@ -670,7 +672,7 @@ public class JobImpl_Test {
         assertEquals(1, intValue.getValue());
     }
 
-    private void putBigFile() throws IOException, URISyntaxException {
+    private void putBigFileIntoBlackPearl() throws IOException, URISyntaxException {
         final int maxNumBlockAllocationRetries = 1;
         final int maxNumObjectTransferAttempts = 3;
         final Ds3ClientHelpers ds3ClientHelpers = Ds3ClientHelpers.wrap(client,
@@ -679,5 +681,48 @@ public class JobImpl_Test {
 
         final Ds3ClientHelpers.Job writeJob = ds3ClientHelpers.startWriteJob(BUCKET_NAME, objects);
         writeJob.transfer(new FileObjectPutter(dirPath));
+    }
+
+    @Test
+    public void testReadObjectCompletionFiresInternalHandlersFirst()
+            throws NoSuchMethodException, IOException, ClassNotFoundException, URISyntaxException, IllegalAccessException, InvocationTargetException, NoSuchFieldException
+    {
+        putBigFileIntoBlackPearl();
+
+        final String tempPathPrefix = null;
+        final Path tempDirectory = Files.createTempDirectory(Paths.get("."), tempPathPrefix);
+
+        final IntValue intValue = new IntValue();
+
+        final ObjectCompletedListener objectCompletedListener = new ObjectCompletedListener() {
+            private int numCompletedObjects = 0;
+
+            @Override
+            public void objectCompleted(final String name) {
+                intValue.increment();
+                assertTrue(bookTitles.contains(name));
+                assertEquals(1, ++numCompletedObjects);
+            }
+        };
+
+        final DataTransferredListener dataTransferredListener = new DataTransferredListener() {
+            @Override
+            public void dataTransferred(final long size) {
+
+            }
+        };
+
+        try {
+            final JobImplJobPartDecoratorPair jobImplJobPartDecoratorPair = createJobPartDecoratorAndEnsureObjectPartTrackersPopulated(
+                    objectCompletedListener,
+                    dataTransferredListener,
+                    AccessMode.ForReading);
+
+            final JobPartDecoratorInterceptor jobPartDecoratorInterceptor = new JobPartDecoratorInterceptor(jobImplJobPartDecoratorPair);
+            jobPartDecoratorInterceptor.transfer(new FileObjectGetter(tempDirectory));
+            assertTrue(jobPartDecoratorInterceptor.bothHandlersFired());
+        } finally {
+            FileUtils.deleteDirectory(tempDirectory.toFile());
+        }
     }
 }
