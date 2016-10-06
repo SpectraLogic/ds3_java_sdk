@@ -30,9 +30,12 @@ import com.spectralogic.ds3client.IntValue;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.junit.Before;
+import org.junit.After;
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -65,12 +68,17 @@ public class JobImpl_Test {
     private static final String[] FILE_NAMES = new String[]{"lesmis-copies.txt"};
 
     private long bookSize = -1;
+    private final List<String> bookTitles = new ArrayList<>();
+    private final List<Ds3Object> objects = new ArrayList<>();
+
+    private static Path dirPath;
 
     @BeforeClass
     public static void startup() throws Exception {
         dataPolicyId = TempStorageUtil.setupDataPolicy(TEST_ENV_NAME, false, ChecksumType.Type.MD5, client);
         envStorageIds = TempStorageUtil.setup(TEST_ENV_NAME, dataPolicyId, client);
         setupBucket(dataPolicyId);
+        dirPath = ResourceUtils.loadFileResource(DIR_NAME);
     }
 
     @AfterClass
@@ -80,6 +88,44 @@ public class JobImpl_Test {
         } finally {
             TempStorageUtil.teardown(TEST_ENV_NAME, envStorageIds, client);
             client.close();
+        }
+    }
+
+    @Before
+    public void beforeRunningTestMethod() {
+        try {
+            for (final String book : FILE_NAMES) {
+                final Path objPath = ResourceUtils.loadFileResource(DIR_NAME + book);
+                bookSize = Files.size(objPath);
+                final Ds3Object obj = new Ds3Object(book, bookSize);
+                bookTitles.add(book);
+                objects.add(obj);
+            }
+        } catch (final Throwable t) {
+            fail("Error running beforeRunningTestMethod: " + t.getMessage());
+        }
+    }
+
+    @After
+    public void afterRunningTestMethod() {
+        bookTitles.clear();
+        objects.clear();
+
+        try {
+            deleteBigFileFromBlackPearlBucket();
+        } catch (final Throwable t) {
+            fail("Error deleting file from black pearl: " + t.getMessage());
+        }
+    }
+
+    private void deleteBigFileFromBlackPearlBucket() throws IOException {
+        final Ds3ClientHelpers helpers = Ds3ClientHelpers.wrap(client);
+
+        final Iterable<Contents> objects = helpers.listObjects(BUCKET_NAME);
+        for (final Contents contents : objects) {
+            if (contents.getKey().equals(FILE_NAMES[0])) {
+                client.deleteObject(new DeleteObjectRequest(BUCKET_NAME, contents.getKey()));
+            }
         }
     }
 
@@ -115,7 +161,7 @@ public class JobImpl_Test {
     {
         final IntValue intValue = new IntValue();
 
-        final List<String> bookTitles = new ArrayList<>();
+
 
         final ObjectCompletedListener objectCompletedListener = new ObjectCompletedListener() {
             private int numCompletedObjects = 0;
@@ -136,37 +182,31 @@ public class JobImpl_Test {
             }
         };
 
-        try {
-            final JobImplJobPartDecoratorPair jobImplJobPartDecoratorPair = createJobPartDecoratorAndEnsureObjectPartTrackersPopulated(objectCompletedListener,
-                    dataTransferredListener, bookTitles);
+        final JobImplJobPartDecoratorPair jobImplJobPartDecoratorPair = createJobPartDecoratorAndEnsureObjectPartTrackersPopulated(
+                objectCompletedListener,
+                dataTransferredListener,
+                AccessMode.ForWriting);
 
-            // trigger the callback
+        // trigger the callback
 
-            jobImplJobPartDecoratorPair.getJobPartTrackerDecorator().completePart(FILE_NAMES[0], new ObjectPart(0, bookSize));
+        jobImplJobPartDecoratorPair.getJobPartTrackerDecorator().completePart(FILE_NAMES[0], new ObjectPart(0, bookSize));
 
-            assertEquals(1, intValue.getValue());
-        } finally {
-            deleteBigFileFromBlackPearlBucket();
-        }
+        assertEquals(1, intValue.getValue());
+    }
+
+    private enum AccessMode {
+        ForReading,
+        ForWriting
     }
 
     private JobImplJobPartDecoratorPair createJobPartDecoratorAndEnsureObjectPartTrackersPopulated
             (
                     final ObjectCompletedListener objectCompletedListener,
                     final DataTransferredListener dataTransferredListener,
-                    final List<String> bookTitles
+                    final AccessMode accessMode
             )
             throws IOException, URISyntaxException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, NoSuchFieldException, ClassNotFoundException
     {
-        final List<Ds3Object> objects = new ArrayList<>();
-        for (final String book : FILE_NAMES) {
-            final Path objPath = ResourceUtils.loadFileResource(DIR_NAME + book);
-            bookSize = Files.size(objPath);
-            final Ds3Object obj = new Ds3Object(book, bookSize);
-            bookTitles.add(book);
-            objects.add(obj);
-        }
-
         final Ds3ClientShim ds3ClientShim = new Ds3ClientShim((Ds3ClientImpl) client);
 
         final int maxNumBlockAllocationRetries = 1;
@@ -175,12 +215,18 @@ public class JobImpl_Test {
                 maxNumBlockAllocationRetries,
                 maxNumObjectTransferAttempts);
 
-        final Ds3ClientHelpers.Job writeJob = ds3ClientHelpers.startWriteJob(BUCKET_NAME, objects);
+        final Ds3ClientHelpers.Job job;
 
-        writeJob.attachObjectCompletedListener(objectCompletedListener);
+        if (accessMode == AccessMode.ForWriting) {
+            job = ds3ClientHelpers.startWriteJob(BUCKET_NAME, objects);
+        } else {
+            job = ds3ClientHelpers.startReadJob(BUCKET_NAME, objects);
+        }
 
-        writeJob.attachDataTransferredListener(dataTransferredListener);
-        return getJobImplJobPartDecoratorAndEnsureObjectPartTrackersPopulated(writeJob);
+        job.attachObjectCompletedListener(objectCompletedListener);
+
+        job.attachDataTransferredListener(dataTransferredListener);
+        return getJobImplJobPartDecoratorAndEnsureObjectPartTrackersPopulated(job);
     }
 
     private JobImplJobPartDecoratorPair getJobImplJobPartDecoratorAndEnsureObjectPartTrackersPopulated(final Ds3ClientHelpers.Job job)
@@ -260,16 +306,7 @@ public class JobImpl_Test {
         }
     }
 
-    private void deleteBigFileFromBlackPearlBucket() throws IOException {
-        final Ds3ClientHelpers helpers = Ds3ClientHelpers.wrap(client);
 
-        final Iterable<Contents> objects = helpers.listObjects(BUCKET_NAME);
-        for (final Contents contents : objects) {
-            if (contents.getKey().equals(FILE_NAMES[0])) {
-                client.deleteObject(new DeleteObjectRequest(BUCKET_NAME, contents.getKey()));
-            }
-        }
-    }
 
     /**
      * This test verifies that there is 1 object completed callback handler registered in the internal job part
@@ -288,8 +325,6 @@ public class JobImpl_Test {
     {
         final IntValue intValue = new IntValue();
 
-        final List<String> bookTitles = new ArrayList<>();
-
         final ObjectCompletedListener objectCompletedListener = new ObjectCompletedListener() {
             private int numCompletedObjects = 0;
 
@@ -308,35 +343,31 @@ public class JobImpl_Test {
             }
         };
 
-        final JobImplJobPartDecoratorPair jobImplJobPartDecoratorPair = createJobPartDecoratorAndEnsureObjectPartTrackersPopulated(objectCompletedListener,
-                dataTransferredListener, bookTitles);
+        final JobImplJobPartDecoratorPair jobImplJobPartDecoratorPair = createJobPartDecoratorAndEnsureObjectPartTrackersPopulated(
+                objectCompletedListener,
+                dataTransferredListener,
+                AccessMode.ForWriting);
 
-        final Path dirPath = ResourceUtils.loadFileResource(DIR_NAME);
+        jobImplJobPartDecoratorPair.getJob().transfer(new FileObjectPutter(dirPath));
 
-        try {
-            jobImplJobPartDecoratorPair.getJob().transfer(new FileObjectPutter(dirPath));
+        final Field partTrackerField = jobImplJobPartDecoratorPair.getJob().getClass().getSuperclass().getDeclaredField("jobPartTracker");
+        partTrackerField.setAccessible(true);
+        final JobImpl.JobPartTrackerDecorator jobPartTrackerDecorator = (JobImpl.JobPartTrackerDecorator)partTrackerField.get(jobImplJobPartDecoratorPair.getJob());
 
-            final Field partTrackerField = jobImplJobPartDecoratorPair.getJob().getClass().getSuperclass().getDeclaredField("jobPartTracker");
-            partTrackerField.setAccessible(true);
-            final JobImpl.JobPartTrackerDecorator jobPartTrackerDecorator = (JobImpl.JobPartTrackerDecorator)partTrackerField.get(jobImplJobPartDecoratorPair.getJob());
+        final Field internalJobPartTrackerField = jobPartTrackerDecorator.getClass().getDeclaredField("internalJobPartTracker");
+        internalJobPartTrackerField.setAccessible(true);
+        final JobPartTrackerImpl internalJobPartTrackerImpl = (JobPartTrackerImpl)internalJobPartTrackerField.get(jobPartTrackerDecorator);
 
-            final Field internalJobPartTrackerField = jobPartTrackerDecorator.getClass().getDeclaredField("internalJobPartTracker");
-            internalJobPartTrackerField.setAccessible(true);
-            final JobPartTrackerImpl internalJobPartTrackerImpl = (JobPartTrackerImpl)internalJobPartTrackerField.get(jobPartTrackerDecorator);
+        final Field internalTackersField = internalJobPartTrackerImpl.getClass().getDeclaredField("trackers");
+        internalTackersField.setAccessible(true);
+        final Map<String, ObjectPartTracker> internalTrackers = (Map<String, ObjectPartTracker>)internalTackersField.get(internalJobPartTrackerImpl);
+        final ObjectPartTrackerImpl internalObjectPartTrackerImpl = (ObjectPartTrackerImpl)internalTrackers.get(FILE_NAMES[0]);
 
-            final Field internalTackersField = internalJobPartTrackerImpl.getClass().getDeclaredField("trackers");
-            internalTackersField.setAccessible(true);
-            final Map<String, ObjectPartTracker> internalTrackers = (Map<String, ObjectPartTracker>)internalTackersField.get(internalJobPartTrackerImpl);
-            final ObjectPartTrackerImpl internalObjectPartTrackerImpl = (ObjectPartTrackerImpl)internalTrackers.get(FILE_NAMES[0]);
+        final Field internalObjectCompletedListenersField = internalObjectPartTrackerImpl.getClass().getDeclaredField("objectCompletedListeners");
+        internalObjectCompletedListenersField.setAccessible(true);
+        final Set<ObjectCompletedListener> internalObjectCompletedListeners = (Set<ObjectCompletedListener>)internalObjectCompletedListenersField.get(internalObjectPartTrackerImpl);
 
-            final Field internalObjectCompletedListenersField = internalObjectPartTrackerImpl.getClass().getDeclaredField("objectCompletedListeners");
-            internalObjectCompletedListenersField.setAccessible(true);
-            final Set<ObjectCompletedListener> internalObjectCompletedListeners = (Set<ObjectCompletedListener>)internalObjectCompletedListenersField.get(internalObjectPartTrackerImpl);
-
-            assertEquals(1, internalObjectCompletedListeners.size());
-        } finally {
-            deleteBigFileFromBlackPearlBucket();
-        }
+        assertEquals(1, internalObjectCompletedListeners.size());
     }
 
     @Test
@@ -344,8 +375,6 @@ public class JobImpl_Test {
             throws NoSuchMethodException, IOException, ClassNotFoundException, URISyntaxException, IllegalAccessException, InvocationTargetException, NoSuchFieldException {
         final IntValue intValue = new IntValue();
 
-        final List<String> bookTitles = new ArrayList<>();
-
         final ObjectCompletedListener objectCompletedListener = new ObjectCompletedListener() {
             private int numCompletedObjects = 0;
 
@@ -364,18 +393,16 @@ public class JobImpl_Test {
             }
         };
 
-        final JobImplJobPartDecoratorPair jobImplJobPartDecoratorPair = createJobPartDecoratorAndEnsureObjectPartTrackersPopulated(objectCompletedListener,
-                dataTransferredListener, bookTitles);
+        final JobImplJobPartDecoratorPair jobImplJobPartDecoratorPair = createJobPartDecoratorAndEnsureObjectPartTrackersPopulated(
+                objectCompletedListener,
+                dataTransferredListener,
+                AccessMode.ForWriting);
 
         final Path dirPath = ResourceUtils.loadFileResource(DIR_NAME);
 
-        try {
-            final JobPartDecoratorInterceptor jobPartDecoratorInterceptor = new JobPartDecoratorInterceptor(jobImplJobPartDecoratorPair);
-            jobPartDecoratorInterceptor.transfer(new FileObjectPutter(dirPath));
-            assertTrue(jobPartDecoratorInterceptor.bothHandlersFired());
-        } finally {
-            deleteBigFileFromBlackPearlBucket();
-        }
+        final JobPartDecoratorInterceptor jobPartDecoratorInterceptor = new JobPartDecoratorInterceptor(jobImplJobPartDecoratorPair);
+        jobPartDecoratorInterceptor.transfer(new FileObjectPutter(dirPath));
+        assertTrue(jobPartDecoratorInterceptor.bothHandlersFired());
     }
 
     private static final class JobPartDecoratorInterceptor implements JobPartTracker {
@@ -548,8 +575,6 @@ public class JobImpl_Test {
     {
         final IntValue intValue = new IntValue();
 
-        final List<String> bookTitles = new ArrayList<>();
-
         final ObjectCompletedListener objectCompletedListener = new ObjectCompletedListener() {
             private int numCompletedObjects = 0;
 
@@ -569,43 +594,40 @@ public class JobImpl_Test {
             }
         };
 
-        try {
-            final JobImplJobPartDecoratorPair jobImplJobPartDecoratorPair = createJobPartDecoratorAndEnsureObjectPartTrackersPopulated(objectCompletedListener,
-                    dataTransferredListener, bookTitles);
+        final JobImplJobPartDecoratorPair jobImplJobPartDecoratorPair = createJobPartDecoratorAndEnsureObjectPartTrackersPopulated(
+                objectCompletedListener,
+                dataTransferredListener,
+                AccessMode.ForWriting);
 
-            jobImplJobPartDecoratorPair.getJob().removeObjectCompletedListener(objectCompletedListener);
+        jobImplJobPartDecoratorPair.getJob().removeObjectCompletedListener(objectCompletedListener);
 
-            final JobImpl job = jobImplJobPartDecoratorPair.getJob();
+        final JobImpl job = jobImplJobPartDecoratorPair.getJob();
 
-            final Field partTrackerField = job.getClass().getSuperclass().getDeclaredField("jobPartTracker");
-            partTrackerField.setAccessible(true);
-            final JobImpl.JobPartTrackerDecorator jobPartTrackerDecorator = (JobImpl.JobPartTrackerDecorator) partTrackerField.get(job);
+        final Field partTrackerField = job.getClass().getSuperclass().getDeclaredField("jobPartTracker");
+        partTrackerField.setAccessible(true);
+        final JobImpl.JobPartTrackerDecorator jobPartTrackerDecorator = (JobImpl.JobPartTrackerDecorator) partTrackerField.get(job);
 
-            final Field clientJobPartTrackerField = jobPartTrackerDecorator.getClass().getDeclaredField("clientJobPartTracker");
-            clientJobPartTrackerField.setAccessible(true);
-            final JobPartTrackerImpl clientJobPartTrackerImpl = (JobPartTrackerImpl) clientJobPartTrackerField.get(jobPartTrackerDecorator);
+        final Field clientJobPartTrackerField = jobPartTrackerDecorator.getClass().getDeclaredField("clientJobPartTracker");
+        clientJobPartTrackerField.setAccessible(true);
+        final JobPartTrackerImpl clientJobPartTrackerImpl = (JobPartTrackerImpl) clientJobPartTrackerField.get(jobPartTrackerDecorator);
 
-            final Field clientTackersField = clientJobPartTrackerImpl.getClass().getDeclaredField("trackers");
-            clientTackersField.setAccessible(true);
-            final Map<String, ObjectPartTracker> clientTrackers = (Map<String, ObjectPartTracker>) clientTackersField.get(clientJobPartTrackerImpl);
-            final ObjectPartTrackerImpl clientObjectPartTrackerImpl = (ObjectPartTrackerImpl) clientTrackers.get(FILE_NAMES[0]);
+        final Field clientTackersField = clientJobPartTrackerImpl.getClass().getDeclaredField("trackers");
+        clientTackersField.setAccessible(true);
+        final Map<String, ObjectPartTracker> clientTrackers = (Map<String, ObjectPartTracker>) clientTackersField.get(clientJobPartTrackerImpl);
+        final ObjectPartTrackerImpl clientObjectPartTrackerImpl = (ObjectPartTrackerImpl) clientTrackers.get(FILE_NAMES[0]);
 
-            final Field clientObjectCompletedListenersField = clientObjectPartTrackerImpl.getClass().getDeclaredField("objectCompletedListeners");
-            clientObjectCompletedListenersField.setAccessible(true);
-            final Set<ObjectCompletedListener> clientObjectCompletedListeners = (Set<ObjectCompletedListener>) clientObjectCompletedListenersField.get(clientObjectPartTrackerImpl);
+        final Field clientObjectCompletedListenersField = clientObjectPartTrackerImpl.getClass().getDeclaredField("objectCompletedListeners");
+        clientObjectCompletedListenersField.setAccessible(true);
+        final Set<ObjectCompletedListener> clientObjectCompletedListeners = (Set<ObjectCompletedListener>) clientObjectCompletedListenersField.get(clientObjectPartTrackerImpl);
 
-            assertEquals(0, clientObjectCompletedListeners.size());
+        assertEquals(0, clientObjectCompletedListeners.size());
 
-            // Data transfer listeners
-            job.removeDataTransferredListener(dataTransferredListener);
-            final Field clientDataTransferListenersField = clientObjectPartTrackerImpl.getClass().getDeclaredField("dataTransferredListeners");
-            clientDataTransferListenersField.setAccessible(true);
-            final Set<DataTransferredListener> clientDataTransferredListeners = (Set<DataTransferredListener>) clientDataTransferListenersField.get(clientObjectPartTrackerImpl);
+        // Data transfer listeners
+        job.removeDataTransferredListener(dataTransferredListener);
+        final Field clientDataTransferListenersField = clientObjectPartTrackerImpl.getClass().getDeclaredField("dataTransferredListeners");
+        clientDataTransferListenersField.setAccessible(true);
+        final Set<DataTransferredListener> clientDataTransferredListeners = (Set<DataTransferredListener>) clientDataTransferListenersField.get(clientObjectPartTrackerImpl);
 
-            assertEquals(0, clientDataTransferredListeners.size());
-
-        } finally {
-            deleteBigFileFromBlackPearlBucket();
-        }
+        assertEquals(0, clientDataTransferredListeners.size());
     }
 }
