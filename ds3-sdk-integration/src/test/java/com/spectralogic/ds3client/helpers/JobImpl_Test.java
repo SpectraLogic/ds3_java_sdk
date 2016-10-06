@@ -137,12 +137,12 @@ public class JobImpl_Test {
         };
 
         try {
-            final WriteJobJobPartDecoratorPair writeJobJobPartDecoratorPair = createJobPartDecoratorAndEnsureObjectPartTrackersPopulated(objectCompletedListener,
+            final JobImplJobPartDecoratorPair jobImplJobPartDecoratorPair = createJobPartDecoratorAndEnsureObjectPartTrackersPopulated(objectCompletedListener,
                     dataTransferredListener, bookTitles);
 
             // trigger the callback
 
-            writeJobJobPartDecoratorPair.getJobPartTrackerDecorator().completePart(FILE_NAMES[0], new ObjectPart(0, bookSize));
+            jobImplJobPartDecoratorPair.getJobPartTrackerDecorator().completePart(FILE_NAMES[0], new ObjectPart(0, bookSize));
 
             assertEquals(1, intValue.getValue());
         } finally {
@@ -150,7 +150,7 @@ public class JobImpl_Test {
         }
     }
 
-    private WriteJobJobPartDecoratorPair createJobPartDecoratorAndEnsureObjectPartTrackersPopulated
+    private JobImplJobPartDecoratorPair createJobPartDecoratorAndEnsureObjectPartTrackersPopulated
             (
                     final ObjectCompletedListener objectCompletedListener,
                     final DataTransferredListener dataTransferredListener,
@@ -180,11 +180,16 @@ public class JobImpl_Test {
         writeJob.attachObjectCompletedListener(objectCompletedListener);
 
         writeJob.attachDataTransferredListener(dataTransferredListener);
+        return getJobImplJobPartDecoratorAndEnsureObjectPartTrackersPopulated(writeJob);
+    }
 
+    private JobImplJobPartDecoratorPair getJobImplJobPartDecoratorAndEnsureObjectPartTrackersPopulated(final Ds3ClientHelpers.Job job)
+            throws NoSuchFieldException, IllegalAccessException
+    {
         // Check that the client has one callback registered
-        final Field partTrackerField = writeJob.getClass().getSuperclass().getDeclaredField("jobPartTracker");
+        final Field partTrackerField = job.getClass().getSuperclass().getDeclaredField("jobPartTracker");
         partTrackerField.setAccessible(true);
-        final JobImpl.JobPartTrackerDecorator jobPartTrackerDecorator = (JobImpl.JobPartTrackerDecorator) partTrackerField.get(writeJob);
+        final JobImpl.JobPartTrackerDecorator jobPartTrackerDecorator = (JobImpl.JobPartTrackerDecorator) partTrackerField.get(job);
 
         final Field clientJobPartTrackerField = jobPartTrackerDecorator.getClass().getDeclaredField("clientJobPartTracker");
         clientJobPartTrackerField.setAccessible(true);
@@ -233,25 +238,25 @@ public class JobImpl_Test {
 
         assertEquals(0, internalDataTransferredListeners.size());
 
-        return new WriteJobJobPartDecoratorPair(jobPartTrackerDecorator, (WriteJobImpl) writeJob);
+        return new JobImplJobPartDecoratorPair(jobPartTrackerDecorator, (JobImpl) job);
     }
 
-    private final class WriteJobJobPartDecoratorPair {
+    private final class JobImplJobPartDecoratorPair {
         private final JobImpl.JobPartTrackerDecorator jobPartTrackerDecorator;
-        private final WriteJobImpl writeJob;
+        private final JobImpl job;
 
-        private WriteJobJobPartDecoratorPair(final JobImpl.JobPartTrackerDecorator jobPartTrackerDecorator,
-                                             final WriteJobImpl writeJob) {
+        private JobImplJobPartDecoratorPair(final JobImpl.JobPartTrackerDecorator jobPartTrackerDecorator,
+                                            final JobImpl job) {
             this.jobPartTrackerDecorator = jobPartTrackerDecorator;
-            this.writeJob = writeJob;
+            this.job = job;
         }
 
         public JobImpl.JobPartTrackerDecorator getJobPartTrackerDecorator() {
             return jobPartTrackerDecorator;
         }
 
-        public WriteJobImpl getWriteJob() {
-            return writeJob;
+        public JobImpl getJob() {
+            return job;
         }
     }
 
@@ -303,17 +308,17 @@ public class JobImpl_Test {
             }
         };
 
-        final WriteJobJobPartDecoratorPair writeJobJobPartDecoratorPair = createJobPartDecoratorAndEnsureObjectPartTrackersPopulated(objectCompletedListener,
+        final JobImplJobPartDecoratorPair jobImplJobPartDecoratorPair = createJobPartDecoratorAndEnsureObjectPartTrackersPopulated(objectCompletedListener,
                 dataTransferredListener, bookTitles);
 
         final Path dirPath = ResourceUtils.loadFileResource(DIR_NAME);
 
         try {
-            writeJobJobPartDecoratorPair.getWriteJob().transfer(new FileObjectPutter(dirPath));
+            jobImplJobPartDecoratorPair.getJob().transfer(new FileObjectPutter(dirPath));
 
-            final Field partTrackerField = writeJobJobPartDecoratorPair.getWriteJob().getClass().getSuperclass().getDeclaredField("jobPartTracker");
+            final Field partTrackerField = jobImplJobPartDecoratorPair.getJob().getClass().getSuperclass().getDeclaredField("jobPartTracker");
             partTrackerField.setAccessible(true);
-            final JobImpl.JobPartTrackerDecorator jobPartTrackerDecorator = (JobImpl.JobPartTrackerDecorator)partTrackerField.get(writeJobJobPartDecoratorPair.getWriteJob());
+            final JobImpl.JobPartTrackerDecorator jobPartTrackerDecorator = (JobImpl.JobPartTrackerDecorator)partTrackerField.get(jobImplJobPartDecoratorPair.getJob());
 
             final Field internalJobPartTrackerField = jobPartTrackerDecorator.getClass().getDeclaredField("internalJobPartTracker");
             internalJobPartTrackerField.setAccessible(true);
@@ -359,13 +364,13 @@ public class JobImpl_Test {
             }
         };
 
-        final WriteJobJobPartDecoratorPair writeJobJobPartDecoratorPair = createJobPartDecoratorAndEnsureObjectPartTrackersPopulated(objectCompletedListener,
+        final JobImplJobPartDecoratorPair jobImplJobPartDecoratorPair = createJobPartDecoratorAndEnsureObjectPartTrackersPopulated(objectCompletedListener,
                 dataTransferredListener, bookTitles);
 
         final Path dirPath = ResourceUtils.loadFileResource(DIR_NAME);
 
         try {
-            final JobPartDecoratorInterceptor jobPartDecoratorInterceptor = new JobPartDecoratorInterceptor(writeJobJobPartDecoratorPair);
+            final JobPartDecoratorInterceptor jobPartDecoratorInterceptor = new JobPartDecoratorInterceptor(jobImplJobPartDecoratorPair);
             jobPartDecoratorInterceptor.transfer(new FileObjectPutter(dirPath));
             assertTrue(jobPartDecoratorInterceptor.bothHandlersFired());
         } finally {
@@ -374,17 +379,17 @@ public class JobImpl_Test {
     }
 
     private static final class JobPartDecoratorInterceptor implements JobPartTracker {
-        private final WriteJobJobPartDecoratorPair writeJobJobPartDecoratorPair;
+        private final JobImplJobPartDecoratorPair jobImplJobPartDecoratorPair;
         private final ObjectCompletedCallbackTracker objectCompletedCallbackTracker;
 
-        private JobPartDecoratorInterceptor(final WriteJobJobPartDecoratorPair writeJobJobPartDecoratorPair)
+        private JobPartDecoratorInterceptor(final JobImplJobPartDecoratorPair jobImplJobPartDecoratorPair)
                 throws NoSuchFieldException, IllegalAccessException
         {
-            this.writeJobJobPartDecoratorPair = writeJobJobPartDecoratorPair;
+            this.jobImplJobPartDecoratorPair = jobImplJobPartDecoratorPair;
             this.objectCompletedCallbackTracker = new ObjectCompletedCallbackTracker();
 
             // Replace the job part trackers in JobPartTrackerDecorator with JobPartTrackerInterceptor
-            final JobImpl.JobPartTrackerDecorator jobPartTrackerDecorator = writeJobJobPartDecoratorPair.getJobPartTrackerDecorator();
+            final JobImpl.JobPartTrackerDecorator jobPartTrackerDecorator = jobImplJobPartDecoratorPair.getJobPartTrackerDecorator();
 
             final Field internalJobPartTrackerField = jobPartTrackerDecorator.getClass().getDeclaredField("internalJobPartTracker");
             internalJobPartTrackerField.setAccessible(true);
@@ -403,36 +408,36 @@ public class JobImpl_Test {
 
         @Override
         public void completePart(final String key, final ObjectPart objectPart) {
-            writeJobJobPartDecoratorPair.getJobPartTrackerDecorator().completePart(key, objectPart);
+            jobImplJobPartDecoratorPair.getJobPartTrackerDecorator().completePart(key, objectPart);
         }
 
         @Override
         public boolean containsPart(final String key, final ObjectPart objectPart) {
-            return writeJobJobPartDecoratorPair.getJobPartTrackerDecorator().containsPart(key, objectPart);
+            return jobImplJobPartDecoratorPair.getJobPartTrackerDecorator().containsPart(key, objectPart);
         }
 
         @Override
         public JobPartTracker attachDataTransferredListener(final DataTransferredListener listener) {
-            return writeJobJobPartDecoratorPair.getJobPartTrackerDecorator().attachDataTransferredListener(listener);
+            return jobImplJobPartDecoratorPair.getJobPartTrackerDecorator().attachDataTransferredListener(listener);
         }
 
         @Override
         public JobPartTracker attachObjectCompletedListener(final ObjectCompletedListener listener) {
-            return writeJobJobPartDecoratorPair.getJobPartTrackerDecorator().attachObjectCompletedListener(listener);
+            return jobImplJobPartDecoratorPair.getJobPartTrackerDecorator().attachObjectCompletedListener(listener);
         }
 
         @Override
         public void removeDataTransferredListener(final DataTransferredListener listener) {
-            writeJobJobPartDecoratorPair.getJobPartTrackerDecorator().removeDataTransferredListener(listener);
+            jobImplJobPartDecoratorPair.getJobPartTrackerDecorator().removeDataTransferredListener(listener);
         }
 
         @Override
         public void removeObjectCompletedListener(final ObjectCompletedListener listener) {
-            writeJobJobPartDecoratorPair.getJobPartTrackerDecorator().removeObjectCompletedListener(listener);
+            jobImplJobPartDecoratorPair.getJobPartTrackerDecorator().removeObjectCompletedListener(listener);
         }
 
         private void transfer(final Ds3ClientHelpers.ObjectChannelBuilder channelBuilder) throws IOException {
-            writeJobJobPartDecoratorPair.getWriteJob().transfer(channelBuilder);
+            jobImplJobPartDecoratorPair.getJob().transfer(channelBuilder);
         }
 
         private boolean bothHandlersFired() {
@@ -565,16 +570,16 @@ public class JobImpl_Test {
         };
 
         try {
-            final WriteJobJobPartDecoratorPair writeJobJobPartDecoratorPair = createJobPartDecoratorAndEnsureObjectPartTrackersPopulated(objectCompletedListener,
+            final JobImplJobPartDecoratorPair jobImplJobPartDecoratorPair = createJobPartDecoratorAndEnsureObjectPartTrackersPopulated(objectCompletedListener,
                     dataTransferredListener, bookTitles);
 
-            writeJobJobPartDecoratorPair.getWriteJob().removeObjectCompletedListener(objectCompletedListener);
+            jobImplJobPartDecoratorPair.getJob().removeObjectCompletedListener(objectCompletedListener);
 
-            final WriteJobImpl writeJob = writeJobJobPartDecoratorPair.getWriteJob();
+            final JobImpl job = jobImplJobPartDecoratorPair.getJob();
 
-            final Field partTrackerField = writeJob.getClass().getSuperclass().getDeclaredField("jobPartTracker");
+            final Field partTrackerField = job.getClass().getSuperclass().getDeclaredField("jobPartTracker");
             partTrackerField.setAccessible(true);
-            final JobImpl.JobPartTrackerDecorator jobPartTrackerDecorator = (JobImpl.JobPartTrackerDecorator) partTrackerField.get(writeJob);
+            final JobImpl.JobPartTrackerDecorator jobPartTrackerDecorator = (JobImpl.JobPartTrackerDecorator) partTrackerField.get(job);
 
             final Field clientJobPartTrackerField = jobPartTrackerDecorator.getClass().getDeclaredField("clientJobPartTracker");
             clientJobPartTrackerField.setAccessible(true);
@@ -592,7 +597,7 @@ public class JobImpl_Test {
             assertEquals(0, clientObjectCompletedListeners.size());
 
             // Data transfer listeners
-            writeJob.removeDataTransferredListener(dataTransferredListener);
+            job.removeDataTransferredListener(dataTransferredListener);
             final Field clientDataTransferListenersField = clientObjectPartTrackerImpl.getClass().getDeclaredField("dataTransferredListeners");
             clientDataTransferListenersField.setAccessible(true);
             final Set<DataTransferredListener> clientDataTransferredListeners = (Set<DataTransferredListener>) clientDataTransferListenersField.get(clientObjectPartTrackerImpl);
