@@ -26,6 +26,7 @@ import com.spectralogic.ds3client.models.ChecksumType;
 import com.spectralogic.ds3client.models.Contents;
 import com.spectralogic.ds3client.models.bulk.Ds3Object;
 import com.spectralogic.ds3client.utils.ResourceUtils;
+import com.spectralogic.ds3client.IntValue;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -42,7 +43,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.sql.DataTruncation;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -113,7 +113,7 @@ public class JobImpl_Test {
     public void testWriteObjectCompletionEventsPopulateCorrectJobPartTracker()
             throws IOException, URISyntaxException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, NoSuchFieldException, ClassNotFoundException
     {
-        final Interator interator = new Interator();
+        final IntValue intValue = new IntValue();
 
         final List<String> bookTitles = new ArrayList<>();
 
@@ -122,12 +122,13 @@ public class JobImpl_Test {
 
             @Override
             public void objectCompleted(final String name) {
-                interator.increment();
+                intValue.increment();
                 assertTrue(bookTitles.contains(name));
                 assertEquals(1, ++numCompletedObjects);
             }
         };
 
+        // This is used just to make sure the callback handler ends up in the right place.
         final DataTransferredListener dataTransferredListener = new DataTransferredListener() {
             @Override
             public void dataTransferred(final long size) {
@@ -143,7 +144,7 @@ public class JobImpl_Test {
 
             writeJobJobPartDecoratorPair.getJobPartTrackerDecorator().completePart(FILE_NAMES[0], new ObjectPart(0, bookSize));
 
-            assertEquals(1, interator.getValue());
+            assertEquals(1, intValue.getValue());
         } finally {
             deleteBigFileFromBlackPearlBucket();
         }
@@ -251,18 +252,6 @@ public class JobImpl_Test {
         }
     }
 
-    private static class Interator {
-        private int intValue = 0;
-
-        private int increment() {
-            return ++intValue;
-        }
-
-        private int getValue() {
-            return intValue;
-        }
-    }
-
     private void deleteBigFileFromBlackPearlBucket() throws IOException {
         final Ds3ClientHelpers helpers = Ds3ClientHelpers.wrap(client);
 
@@ -275,7 +264,7 @@ public class JobImpl_Test {
     }
 
     /**
-     * This test verifies that there id 1 object completed callback handler registered in the internal job part
+     * This test verifies that there is 1 object completed callback handler registered in the internal job part
      * tracker.  This callback handler does not exist until you call transfer on the write job.
      * @throws NoSuchMethodException
      * @throws IOException
@@ -289,7 +278,7 @@ public class JobImpl_Test {
     public void testWriteObjectCompletionPopulatesInternalJobPartTrackers()
             throws NoSuchMethodException, IOException, ClassNotFoundException, URISyntaxException, IllegalAccessException, InvocationTargetException, NoSuchFieldException
     {
-        final Interator interator = new Interator();
+        final IntValue intValue = new IntValue();
 
         final List<String> bookTitles = new ArrayList<>();
 
@@ -298,7 +287,7 @@ public class JobImpl_Test {
 
             @Override
             public void objectCompleted(final String name) {
-                interator.increment();
+                intValue.increment();
                 assertTrue(bookTitles.contains(name));
                 assertEquals(1, ++numCompletedObjects);
             }
@@ -339,6 +328,209 @@ public class JobImpl_Test {
             assertEquals(1, internalObjectCompletedListeners.size());
         } finally {
             deleteBigFileFromBlackPearlBucket();
+        }
+    }
+
+    @Test
+    public void testWriteObjectCompletionFiresHandlersInternalFirst()
+            throws NoSuchMethodException, IOException, ClassNotFoundException, URISyntaxException, IllegalAccessException, InvocationTargetException, NoSuchFieldException {
+        final IntValue intValue = new IntValue();
+
+        final List<String> bookTitles = new ArrayList<>();
+
+        final ObjectCompletedListener objectCompletedListener = new ObjectCompletedListener() {
+            private int numCompletedObjects = 0;
+
+            @Override
+            public void objectCompleted(final String name) {
+                intValue.increment();
+                assertTrue(bookTitles.contains(name));
+                assertEquals(1, ++numCompletedObjects);
+            }
+        };
+
+        final DataTransferredListener dataTransferredListener = new DataTransferredListener() {
+            @Override
+            public void dataTransferred(final long size) {
+
+            }
+        };
+
+        final WriteJobJobPartDecoratorPair writeJobJobPartDecoratorPair = createJobPartDecorator(objectCompletedListener,
+                dataTransferredListener, bookTitles);
+
+        final Path dirPath = ResourceUtils.loadFileResource(DIR_NAME);
+
+        try {
+            final JobPartDecoratorInterceptor jobPartDecoratorInterceptor = new JobPartDecoratorInterceptor(writeJobJobPartDecoratorPair);
+            jobPartDecoratorInterceptor.transfer(new FileObjectPutter(dirPath));
+            assertTrue(jobPartDecoratorInterceptor.bothHandlersFired());
+        } finally {
+            deleteBigFileFromBlackPearlBucket();
+        }
+    }
+
+    private static final class JobPartDecoratorInterceptor implements JobPartTracker {
+        private final WriteJobJobPartDecoratorPair writeJobJobPartDecoratorPair;
+        private final ObjectCompletedCallbackTracker objectCompletedCallbackTracker;
+
+        private JobPartDecoratorInterceptor(final WriteJobJobPartDecoratorPair writeJobJobPartDecoratorPair)
+                throws NoSuchFieldException, IllegalAccessException
+        {
+            this.writeJobJobPartDecoratorPair = writeJobJobPartDecoratorPair;
+            this.objectCompletedCallbackTracker = new ObjectCompletedCallbackTracker();
+
+            // Replace the job part trackers in JobPartTrackerDecorator with JobPartTrackerInterceptor
+            final JobImpl.JobPartTrackerDecorator jobPartTrackerDecorator = writeJobJobPartDecoratorPair.getJobPartTrackerDecorator();
+
+            final Field internalJobPartTrackerField = jobPartTrackerDecorator.getClass().getDeclaredField("internalJobPartTracker");
+            internalJobPartTrackerField.setAccessible(true);
+            final JobPartTrackerInterceptor internalJobPartTrackerInterceptor = new JobPartTrackerInterceptor(
+                    (JobPartTracker)internalJobPartTrackerField.get(jobPartTrackerDecorator),
+                    objectCompletedCallbackTracker.getInternalObjectCompletedHandler());
+            internalJobPartTrackerField.set(jobPartTrackerDecorator, internalJobPartTrackerInterceptor);
+
+            final Field clientJobPartTrackerField = jobPartTrackerDecorator.getClass().getDeclaredField("clientJobPartTracker");
+            clientJobPartTrackerField.setAccessible(true);
+            final JobPartTrackerInterceptor clientJobPartTrackerInterceptor = new JobPartTrackerInterceptor(
+                    (JobPartTracker)clientJobPartTrackerField.get(jobPartTrackerDecorator),
+                    objectCompletedCallbackTracker.getClientObjectCompletedHandler());
+            clientJobPartTrackerField.set(jobPartTrackerDecorator, clientJobPartTrackerInterceptor);
+        }
+
+        @Override
+        public void completePart(final String key, final ObjectPart objectPart) {
+            writeJobJobPartDecoratorPair.getJobPartTrackerDecorator().completePart(key, objectPart);
+        }
+
+        @Override
+        public boolean containsPart(final String key, final ObjectPart objectPart) {
+            return writeJobJobPartDecoratorPair.getJobPartTrackerDecorator().containsPart(key, objectPart);
+        }
+
+        @Override
+        public JobPartTracker attachDataTransferredListener(final DataTransferredListener listener) {
+            return writeJobJobPartDecoratorPair.getJobPartTrackerDecorator().attachDataTransferredListener(listener);
+        }
+
+        @Override
+        public JobPartTracker attachObjectCompletedListener(final ObjectCompletedListener listener) {
+            return writeJobJobPartDecoratorPair.getJobPartTrackerDecorator().attachObjectCompletedListener(listener);
+        }
+
+        @Override
+        public void removeDataTransferredListener(final DataTransferredListener listener) {
+            writeJobJobPartDecoratorPair.getJobPartTrackerDecorator().removeDataTransferredListener(listener);
+        }
+
+        @Override
+        public void removeObjectCompletedListener(final ObjectCompletedListener listener) {
+            writeJobJobPartDecoratorPair.getJobPartTrackerDecorator().removeObjectCompletedListener(listener);
+        }
+
+        private void transfer(final Ds3ClientHelpers.ObjectChannelBuilder channelBuilder) throws IOException {
+            writeJobJobPartDecoratorPair.getWriteJob().transfer(channelBuilder);
+        }
+
+        private boolean bothHandlersFired() {
+            return objectCompletedCallbackTracker.bothHandlersFired();
+        }
+    }
+
+    private static class ObjectCompletedCallbackTracker {
+        private final BooleanValue internalObjectCompletedHandlerCalled = new BooleanValue();
+        private final BooleanValue clientObjectCompletedHandlerCalled = new BooleanValue();
+
+        private final ObjectCompletedCallbackRecorder clientObjectCompletedHandler = new ObjectCompletedCallbackRecorder() {
+            @Override
+            public void onObjectCompletedCalled() {
+                clientObjectCompletedHandlerCalled.setValue(true);
+
+                if ( ! internalObjectCompletedHandlerCalled.getValue()) {
+                    throw new IllegalStateException("Client object completed handler called before closing channels.");
+                }
+            }
+        };
+
+        private final ObjectCompletedCallbackRecorder internalObjectCompletedHandler = new ObjectCompletedCallbackRecorder() {
+            @Override
+            public void onObjectCompletedCalled() {
+                internalObjectCompletedHandlerCalled.setValue(true);
+
+                if (clientObjectCompletedHandlerCalled.getValue()) {
+                    throw new IllegalStateException("Client object completed handler called before closing channels.");
+                }
+            }
+        };
+
+        public ObjectCompletedCallbackRecorder getClientObjectCompletedHandler() {
+            return clientObjectCompletedHandler;
+        }
+
+        public ObjectCompletedCallbackRecorder getInternalObjectCompletedHandler() {
+            return internalObjectCompletedHandler;
+        }
+
+        public boolean bothHandlersFired() {
+            return internalObjectCompletedHandlerCalled.getValue() && clientObjectCompletedHandlerCalled.getValue();
+        }
+    }
+
+    private static class BooleanValue {
+        private boolean value = false;
+
+        private boolean getValue() {
+            return this.value;
+        }
+
+        private boolean setValue(final boolean value) {
+            this.value = value;
+            return getValue();
+        }
+    }
+
+    private interface ObjectCompletedCallbackRecorder {
+        void onObjectCompletedCalled();
+    }
+
+    private static final class JobPartTrackerInterceptor implements JobPartTracker {
+        private final JobPartTracker jobPartTracker;
+        private final ObjectCompletedCallbackRecorder objectCompletedCallbackRecorder;
+
+        private JobPartTrackerInterceptor(final JobPartTracker jobPartTracker, final ObjectCompletedCallbackRecorder objectCompletedCallbackRecorder) {
+            this.jobPartTracker = jobPartTracker;
+            this.objectCompletedCallbackRecorder = objectCompletedCallbackRecorder;
+        }
+
+        @Override
+        public void completePart(final String key, final ObjectPart objectPart) {
+            objectCompletedCallbackRecorder.onObjectCompletedCalled();
+            jobPartTracker.completePart(key, objectPart);
+        }
+
+        @Override
+        public boolean containsPart(final String key, final ObjectPart objectPart) {
+            return jobPartTracker.containsPart(key, objectPart);
+        }
+
+        @Override
+        public JobPartTracker attachDataTransferredListener(final DataTransferredListener listener) {
+            return jobPartTracker.attachDataTransferredListener(listener);
+        }
+
+        @Override
+        public JobPartTracker attachObjectCompletedListener(final ObjectCompletedListener listener) {
+            return jobPartTracker.attachObjectCompletedListener(listener);
+        }
+
+        @Override
+        public void removeDataTransferredListener(final DataTransferredListener listener) {
+            jobPartTracker.removeDataTransferredListener(listener);
+        }
+
+        @Override
+        public void removeObjectCompletedListener(final ObjectCompletedListener listener) {
+            jobPartTracker.removeObjectCompletedListener(listener);
         }
     }
 }

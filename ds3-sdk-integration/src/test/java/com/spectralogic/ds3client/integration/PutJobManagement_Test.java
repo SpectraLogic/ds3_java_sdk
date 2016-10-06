@@ -35,6 +35,7 @@ import com.spectralogic.ds3client.models.bulk.Ds3Object;
 import com.spectralogic.ds3client.networking.FailedRequestException;
 import com.spectralogic.ds3client.utils.ByteArraySeekableByteChannel;
 import com.spectralogic.ds3client.utils.ResourceUtils;
+import com.spectralogic.ds3client.IntValue;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.junit.*;
@@ -851,7 +852,7 @@ public class PutJobManagement_Test {
                     maxNumBlockAllocationRetries,
                     maxNumObjectTransferAttempts);
 
-            final  Interator interator = new Interator();
+            final IntValue intValue = new IntValue();
 
             final Ds3ClientHelpers.Job writeJob = ds3ClientHelpers.startWriteJob(BUCKET_NAME, objects);
             writeJob.attachObjectCompletedListener(new ObjectCompletedListener() {
@@ -861,7 +862,7 @@ public class PutJobManagement_Test {
                 public void objectCompleted(final String name) {
                     assertTrue(bookTitles.contains(name));
                     assertEquals(1, ++numCompletedObjects);
-                    interator.increment();
+                    intValue.increment();
                 }
             });
 
@@ -877,7 +878,7 @@ public class PutJobManagement_Test {
                 return;
             }
 
-            assertEquals(1, interator.getValue());
+            assertEquals(1, intValue.getValue());
 
             final GetBucketResponse request = ds3ClientShim.getBucket(new GetBucketRequest(BUCKET_NAME));
             final ListBucketResult result = request.getListBucketResult();
@@ -909,18 +910,6 @@ public class PutJobManagement_Test {
         } finally {
             FileUtils.deleteDirectory(tempDirectory.toFile());
             deleteAllContents(ds3ClientShim, BUCKET_NAME);
-        }
-    }
-
-    private static class Interator {
-        private int intValue = 0;
-
-        private int increment() {
-            return ++intValue;
-        }
-
-        private int getValue() {
-            return intValue;
         }
     }
 

@@ -40,6 +40,7 @@ import com.spectralogic.ds3client.models.bulk.Ds3Object;
 import com.spectralogic.ds3client.models.bulk.PartialDs3Object;
 import com.spectralogic.ds3client.models.common.Range;
 import com.spectralogic.ds3client.utils.ResourceUtils;
+import com.spectralogic.ds3client.IntValue;
 import org.apache.commons.io.FileUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -288,7 +289,7 @@ public class GetJobManagement_Test {
                     maxNumObjectTransferAttempts);
 
             final Ds3ClientHelpers.Job job = ds3ClientHelpers.startReadJob(BUCKET_NAME, filesToGet);
-            final Interator interator = new Interator();
+            final IntValue intValue = new IntValue();
 
             job.attachObjectCompletedListener(new ObjectCompletedListener() {
                 int numPartsCompleted = 0;
@@ -296,13 +297,13 @@ public class GetJobManagement_Test {
                 @Override
                 public void objectCompleted(final String name) {
                     assertEquals(1, ++numPartsCompleted);
-                    interator.increment();
+                    intValue.increment();
                 }
             });
 
             job.transfer(new FileObjectGetter(tempDirectory));
 
-            assertEquals(1, interator.getValue());
+            assertEquals(1, intValue.getValue());
 
             try (final InputStream originalFileStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(DIR_NAME + FILE_NAME)) {
                 final byte[] first200Bytes = new byte[200];
@@ -322,18 +323,6 @@ public class GetJobManagement_Test {
         } finally {
             FileUtils.deleteDirectory(tempDirectory.toFile());
             deleteBigFileFromBlackPearlBucket();
-        }
-    }
-
-    private static class Interator {
-        private int intValue = 0;
-
-        private int increment() {
-            return ++intValue;
-        }
-
-        private int getValue() {
-            return intValue;
         }
     }
 }
