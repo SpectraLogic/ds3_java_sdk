@@ -332,7 +332,7 @@ public class JobImpl_Test {
     }
 
     @Test
-    public void testWriteObjectCompletionFiresHandlersInternalFirst()
+    public void testWriteObjectCompletionFiresInternalHandlersFirst()
             throws NoSuchMethodException, IOException, ClassNotFoundException, URISyntaxException, IllegalAccessException, InvocationTargetException, NoSuchFieldException {
         final IntValue intValue = new IntValue();
 
