@@ -630,4 +630,54 @@ public class JobImpl_Test {
 
         assertEquals(0, clientDataTransferredListeners.size());
     }
+
+    @Test
+    public void testReadObjectCompletionEventsPopulateCorrectJobPartTracker()
+            throws IOException, URISyntaxException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, NoSuchFieldException, ClassNotFoundException
+    {
+        putBigFile();
+
+        final IntValue intValue = new IntValue();
+
+        final ObjectCompletedListener objectCompletedListener = new ObjectCompletedListener() {
+            private int numCompletedObjects = 0;
+
+            @Override
+            public void objectCompleted(final String name) {
+                intValue.increment();
+                assertTrue(bookTitles.contains(name));
+                assertEquals(1, ++numCompletedObjects);
+            }
+        };
+
+        // This is used just to make sure the callback handler ends up in the right place.
+        final DataTransferredListener dataTransferredListener = new DataTransferredListener() {
+            @Override
+            public void dataTransferred(final long size) {
+
+            }
+        };
+
+        final JobImplJobPartDecoratorPair jobImplJobPartDecoratorPair = createJobPartDecoratorAndEnsureObjectPartTrackersPopulated(
+                objectCompletedListener,
+                dataTransferredListener,
+                AccessMode.ForReading);
+
+        // trigger the callback
+
+        jobImplJobPartDecoratorPair.getJobPartTrackerDecorator().completePart(FILE_NAMES[0], new ObjectPart(0, bookSize));
+
+        assertEquals(1, intValue.getValue());
+    }
+
+    private void putBigFile() throws IOException, URISyntaxException {
+        final int maxNumBlockAllocationRetries = 1;
+        final int maxNumObjectTransferAttempts = 3;
+        final Ds3ClientHelpers ds3ClientHelpers = Ds3ClientHelpers.wrap(client,
+                maxNumBlockAllocationRetries,
+                maxNumObjectTransferAttempts);
+
+        final Ds3ClientHelpers.Job writeJob = ds3ClientHelpers.startWriteJob(BUCKET_NAME, objects);
+        writeJob.transfer(new FileObjectPutter(dirPath));
+    }
 }
