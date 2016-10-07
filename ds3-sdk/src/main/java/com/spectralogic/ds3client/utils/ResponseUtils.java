@@ -17,7 +17,7 @@ package com.spectralogic.ds3client.utils;
 
 import com.google.common.collect.ImmutableList;
 
-public class ResponseUtils {
+public final class ResponseUtils {
     public static ImmutableList<Integer> toImmutableIntList(final int[] expectedStatuses) {
         final ImmutableList.Builder<Integer> integerBuilder = ImmutableList.builder();
 

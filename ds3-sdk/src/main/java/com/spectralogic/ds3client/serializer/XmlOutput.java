@@ -32,7 +32,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
-public class XmlOutput {
+public final class XmlOutput {
     private static final JacksonXmlModule module;
     private static final XmlMapper mapper;
     static private final Logger LOG = LoggerFactory.getLogger(XmlOutput.class);
