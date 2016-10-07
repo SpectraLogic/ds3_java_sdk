@@ -153,7 +153,7 @@ class WriteJobImpl extends JobImpl {
         LOG.debug("Starting job transfer");
         if (this.masterObjectList == null || this.masterObjectList.getObjects() == null) {
             LOG.info("There is nothing to transfer for job"
-                    + ((this.getJobId() == null) ? "" : " " + this.getJobId().toString()));
+                    + (this.getJobId() == null ? "" : " " + this.getJobId().toString()));
             return;
         }
 
