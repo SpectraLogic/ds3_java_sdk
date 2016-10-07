@@ -69,7 +69,7 @@ class ReadJobImpl extends JobImpl {
     }
 
     protected static ImmutableList<BulkObject> getAllBlobApiBeans(final List<Objects> jobWithChunksApiBeans) {
-        ImmutableList.Builder<BulkObject> builder = ImmutableList.builder();
+        final ImmutableList.Builder<BulkObject> builder = ImmutableList.builder();
         for (final Objects objects : jobWithChunksApiBeans) {
             builder.addAll(objects.getObjects());
         }
