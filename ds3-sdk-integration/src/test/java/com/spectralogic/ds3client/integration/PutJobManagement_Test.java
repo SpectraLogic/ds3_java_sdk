@@ -19,7 +19,6 @@ import com.google.common.collect.Lists;
 import com.spectralogic.ds3client.Ds3Client;
 import com.spectralogic.ds3client.Ds3ClientImpl;
 import com.spectralogic.ds3client.IntValue;
-import com.spectralogic.ds3client.MockedWebResponse;
 import com.spectralogic.ds3client.commands.*;
 import com.spectralogic.ds3client.commands.spectrads3.*;
 import com.spectralogic.ds3client.commands.spectrads3.notifications.*;
@@ -32,6 +31,7 @@ import com.spectralogic.ds3client.helpers.ObjectCompletedListener;
 import com.spectralogic.ds3client.helpers.events.FailureEvent;
 import com.spectralogic.ds3client.helpers.options.WriteJobOptions;
 import com.spectralogic.ds3client.integration.test.helpers.ABMTestHelper;
+import com.spectralogic.ds3client.integration.test.helpers.Ds3ClientShimFactory;
 import com.spectralogic.ds3client.integration.test.helpers.TempStorageIds;
 import com.spectralogic.ds3client.integration.test.helpers.TempStorageUtil;
 import com.spectralogic.ds3client.models.*;
@@ -39,6 +39,8 @@ import com.spectralogic.ds3client.models.bulk.Ds3Object;
 import com.spectralogic.ds3client.networking.FailedRequestException;
 import com.spectralogic.ds3client.utils.ByteArraySeekableByteChannel;
 import com.spectralogic.ds3client.utils.ResourceUtils;
+import com.spectralogic.ds3client.integration.test.helpers.Ds3ClientShimWithFailedChunkAllocation;
+import com.spectralogic.ds3client.integration.test.helpers.Ds3ClientShimFactory.ClientFailureType;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.junit.*;
@@ -54,9 +56,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 import com.spectralogic.ds3client.integration.test.helpers.Ds3ClientShim;
 
@@ -945,7 +945,7 @@ public class PutJobManagement_Test {
 
             final FailureEventListener failureEventListener = new FailureEventListener() {
                 @Override
-                public void onFailure(FailureEvent failureEvent) {
+                public void onFailure(final FailureEvent failureEvent) {
                     numFailureEventsFired.increment();
                 }
             };
@@ -967,11 +967,6 @@ public class PutJobManagement_Test {
         }
     }
 
-    private enum ClientFailureType {
-        ChunkAllocation,
-        PutObject
-    }
-
     Ds3ClientHelpers.Job createWriteJobWithObjectsReadyToTransfer(final int maxNumObjectTransferAttempts,
                                                                   final ClientFailureType clientFailureType)
             throws IOException, URISyntaxException, NoSuchMethodException, IllegalAccessException, InvocationTargetException {
@@ -989,12 +984,7 @@ public class PutJobManagement_Test {
             objects.add(obj);
         }
 
-        Ds3Client ds3Client;
-        if (clientFailureType == ClientFailureType.ChunkAllocation) {
-            ds3Client = new Ds3ClientShimWithFailedChunkAllocation((Ds3ClientImpl) client);
-        } else {
-            ds3Client = new Ds3ClientShimWithFailedPutObject((Ds3ClientImpl) client);
-        }
+        final Ds3Client ds3Client = Ds3ClientShimFactory.makeWrappedDs3Client(clientFailureType, client);
 
         final int maxNumBlockAllocationRetries = 3;
         final Ds3ClientHelpers ds3ClientHelpers = Ds3ClientHelpers.wrap(ds3Client,
@@ -1004,40 +994,6 @@ public class PutJobManagement_Test {
         final Ds3ClientHelpers.Job writeJob = ds3ClientHelpers.startWriteJob(BUCKET_NAME, objects);
 
         return writeJob;
-    }
-
-    private static class Ds3ClientShimWithFailedChunkAllocation extends Ds3ClientShim {
-        public Ds3ClientShimWithFailedChunkAllocation(Ds3ClientImpl ds3ClientImpl)
-                throws NoSuchMethodException, IllegalAccessException, InvocationTargetException
-        {
-            super(ds3ClientImpl);
-        }
-
-        @Override
-        public AllocateJobChunkSpectraS3Response allocateJobChunkSpectraS3(final AllocateJobChunkSpectraS3Request request)
-                throws IOException {
-            final Map<String, String> headers = new HashMap<>();
-            headers.put("content-NONE", "text/xml");
-            headers.put("Retry-After", "1");
-
-            final AllocateJobChunkSpectraS3Response allocateJobChunkSpectraS3Response =
-                    new AllocateJobChunkSpectraS3Response(new MockedWebResponse("A response", 307, headers));
-
-            return allocateJobChunkSpectraS3Response;
-        }
-    }
-
-    private static class Ds3ClientShimWithFailedPutObject extends Ds3ClientShim {
-        public Ds3ClientShimWithFailedPutObject(Ds3ClientImpl ds3ClientImpl)
-                throws NoSuchMethodException, IllegalAccessException, InvocationTargetException
-        {
-            super(ds3ClientImpl);
-        }
-
-        @Override
-        public PutObjectResponse putObject(final PutObjectRequest request) throws IOException {
-            throw new IOException("A terrible, horrible thing happened!");
-        }
     }
 
     @Test(expected = RuntimeException.class)

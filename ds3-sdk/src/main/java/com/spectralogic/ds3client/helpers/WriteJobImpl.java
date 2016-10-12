@@ -148,13 +148,13 @@ class WriteJobImpl extends JobImpl {
     }
 
     @Override
-    public void attachFailureEventListener(FailureEventListener listener) {
+    public void attachFailureEventListener(final FailureEventListener listener) {
         checkRunning();
         this.failureEventListeners.add(listener);
     }
 
     @Override
-    public void removeFailureEventListener(FailureEventListener listener) {
+    public void removeFailureEventListener(final FailureEventListener listener) {
         checkRunning();
         this.failureEventListeners.remove(listener);
     }
