@@ -94,7 +94,7 @@ public class PutStreamerStrategy extends BlobStrategy {
             return response.getObjectsResult();
         case RETRYLATER:
             try {
-                if (retryAfterLeft == 0) {
+                if (getRetryAfter() != -1 && retryAfterLeft == 0) {
                     throw new Ds3NoMoreRetriesException(getRetryAfter());
                 }
                 retryAfterLeft--;

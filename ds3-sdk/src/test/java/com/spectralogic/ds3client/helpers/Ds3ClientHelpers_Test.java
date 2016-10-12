@@ -63,7 +63,6 @@ public class Ds3ClientHelpers_Test {
     public void testReadObjects() throws IOException, ParseException {
         final Ds3Client ds3Client = buildDs3ClientForBulk();
 
-
         final GetBulkJobSpectraS3Response buildBulkGetResponse = buildBulkGetResponse();
         Mockito.when(ds3Client.getBulkJobSpectraS3(hasChunkOrdering(JobChunkClientProcessingOrderGuarantee.NONE))).thenReturn(buildBulkGetResponse);
 
@@ -82,7 +81,7 @@ public class Ds3ClientHelpers_Test {
         assertThat(job.getJobId(), is(jobId));
         assertThat(job.getBucketName(), is(MYBUCKET));
         
-        final HashMap<String, ByteArraySeekableByteChannel> channelMap = new HashMap<>();
+        final Map<String, ByteArraySeekableByteChannel> channelMap = new HashMap<>();
         channelMap.put("foo", new ByteArraySeekableByteChannel());
         channelMap.put("bar", new ByteArraySeekableByteChannel());
         channelMap.put("baz", new ByteArraySeekableByteChannel());

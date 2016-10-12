@@ -69,11 +69,11 @@ class ChunkTransferrer implements Closeable {
             if (this.partTracker.containsPart(blob.getName(), part)) {
                 LOG.debug("Adding {} to executor for processing", blob.getName());
                 tasks.add(executor.submit(new Callable<Object>() {
-                                      @Override
-                                      public Object call() throws Exception {
+                    @Override
+                    public Object call() throws Exception {
                         LOG.debug("Processing {}", blob.getName());
-                        blobStrategy.blobCompleted(blob);
                         ChunkTransferrer.this.itemTransferrer.transferItem(jobPart.getClient(), blob);
+                        blobStrategy.blobCompleted(blob);
                         ChunkTransferrer.this.partTracker.completePart(blob.getName(), part);
                         return null;
                 }

@@ -93,12 +93,12 @@ public class GetStreamerStrategy extends BlobStrategy {
                 synchronized (lock) {
                     if (activeBlobs.contains(blobName)) {
                         filteredPartsBuilder.add(input);
-                        return true;
+                        return false;
                     } else {
                         activeBlobs.add(blobName);
                     }
                 }
-                return false;
+                return true;
             }
         });
 
@@ -138,6 +138,7 @@ public class GetStreamerStrategy extends BlobStrategy {
                     final int secondsToDelay = computeDelay(availableJobChunks.getRetryAfterSeconds());
                     getChunkEventHandler().emitWaitingForChunksEvents(secondsToDelay);
                     Thread.sleep(secondsToDelay * 1000);
+                    continue;
                 }
                 default:
                     assert false : "This line of code should be impossible to hit.";

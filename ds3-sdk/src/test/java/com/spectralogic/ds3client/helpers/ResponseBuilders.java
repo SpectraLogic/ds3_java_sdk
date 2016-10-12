@@ -39,7 +39,7 @@ import java.util.UUID;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class ResponseBuilders {
+public final class ResponseBuilders {
     public static GetBulkJobSpectraS3Response bulkGetResponse(final MasterObjectList masterObjectList) {
         final GetBulkJobSpectraS3Response response = mock(GetBulkJobSpectraS3Response.class);
         when(response.getResult()).thenReturn(masterObjectList);
