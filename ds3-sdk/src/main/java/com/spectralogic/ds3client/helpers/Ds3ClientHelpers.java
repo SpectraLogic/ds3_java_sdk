@@ -92,6 +92,12 @@ public abstract class Ds3ClientHelpers {
         void removeWaitingForChunksListener(final WaitingForChunksListener listener);
 
         /**
+         * Attaches an event handler when an object transfer fails
+         */
+        void attachFailureEventListener(final FailureEventListener listener);
+        void removeFailureEventListener(final FailureEventListener listener);
+
+        /**
          * Sets the maximum number of requests to execute at a time when fulfilling the job.
          */
         Job withMaxParallelRequests(final int maxParallelRequests);

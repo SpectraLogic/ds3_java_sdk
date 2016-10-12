@@ -18,14 +18,18 @@ package com.spectralogic.ds3client.integration;
 import com.google.common.collect.Lists;
 import com.spectralogic.ds3client.Ds3Client;
 import com.spectralogic.ds3client.Ds3ClientImpl;
+import com.spectralogic.ds3client.IntValue;
+import com.spectralogic.ds3client.MockedWebResponse;
 import com.spectralogic.ds3client.commands.*;
 import com.spectralogic.ds3client.commands.spectrads3.*;
 import com.spectralogic.ds3client.commands.spectrads3.notifications.*;
 import com.spectralogic.ds3client.exceptions.Ds3NoMoreRetriesException;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers;
+import com.spectralogic.ds3client.helpers.FailureEventListener;
 import com.spectralogic.ds3client.helpers.FileObjectGetter;
 import com.spectralogic.ds3client.helpers.FileObjectPutter;
 import com.spectralogic.ds3client.helpers.ObjectCompletedListener;
+import com.spectralogic.ds3client.helpers.events.FailureEvent;
 import com.spectralogic.ds3client.helpers.options.WriteJobOptions;
 import com.spectralogic.ds3client.integration.test.helpers.ABMTestHelper;
 import com.spectralogic.ds3client.integration.test.helpers.TempStorageIds;
@@ -50,7 +54,9 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import com.spectralogic.ds3client.integration.test.helpers.Ds3ClientShim;
 
@@ -808,8 +814,7 @@ public class PutJobManagement_Test {
     }
 
     @Test
-    public void testWriteJobWithRetries() throws Exception
-    {
+    public void testWriteJobWithRetries() throws Exception {
         final int maxNumObjectTransferAttempts = 3;
         transferAndCheckFileContent(maxNumObjectTransferAttempts,
                 new ObjectTransferExceptionHandler() {
@@ -824,14 +829,14 @@ public class PutJobManagement_Test {
     private void transferAndCheckFileContent(final int maxNumObjectTransferAttempts,
                                              final ObjectTransferExceptionHandler objectTransferExceptionHandler)
             throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, IOException, URISyntaxException {
-        final Ds3ClientShim ds3ClientShim = new Ds3ClientShim((Ds3ClientImpl)client);
+        final Ds3ClientShim ds3ClientShim = new Ds3ClientShim((Ds3ClientImpl) client);
 
         final String tempPathPrefix = null;
         final Path tempDirectory = Files.createTempDirectory(Paths.get("."), tempPathPrefix);
 
         try {
             final String DIR_NAME = "largeFiles/";
-            final String[] FILE_NAMES = new String[] { "lesmis-copies.txt" };
+            final String[] FILE_NAMES = new String[]{"lesmis-copies.txt"};
 
             final Path dirPath = ResourceUtils.loadFileResource(DIR_NAME);
 
@@ -867,7 +872,7 @@ public class PutJobManagement_Test {
                 shouldContinueTest = objectTransferExceptionHandler.handleException(t);
             }
 
-            if ( ! shouldContinueTest) {
+            if (!shouldContinueTest) {
                 return;
             }
 
@@ -909,14 +914,13 @@ public class PutJobManagement_Test {
     }
 
     @Test
-    public void testWriteJobWithRetriesThrowsDs3NoMoreRetriesException() throws Exception
-    {
+    public void testWriteJobWithRetriesThrowsDs3NoMoreRetriesException() throws Exception {
         final int maxNumObjectTransferAttempts = 1;
         transferAndCheckFileContent(maxNumObjectTransferAttempts,
                 new ObjectTransferExceptionHandler() {
                     @Override
                     public boolean handleException(final Throwable t) {
-                        if ( ! (t instanceof Ds3NoMoreRetriesException)) {
+                        if (!(t instanceof Ds3NoMoreRetriesException)) {
                             fail("Got exception of unexpected type: " + t.getMessage());
                             return true;
                         }
@@ -924,5 +928,152 @@ public class PutJobManagement_Test {
                         return false;
                     }
                 });
+    }
+
+    @Test(expected = Ds3NoMoreRetriesException.class)
+    public void testFiringOnFailureEventWithFailedChunkAllocation()
+            throws IOException, URISyntaxException, NoSuchMethodException, IllegalAccessException, InvocationTargetException {
+        final String tempPathPrefix = null;
+        final Path tempDirectory = Files.createTempDirectory(Paths.get("."), tempPathPrefix);
+
+        try {
+            final IntValue numFailureEventsFired = new IntValue();
+
+            final int maxNumObjectTransferAttempts = 1;
+            final Ds3ClientHelpers.Job writeJob = createWriteJobWithObjectsReadyToTransfer(maxNumObjectTransferAttempts,
+                    ClientFailureType.ChunkAllocation);
+
+            final FailureEventListener failureEventListener = new FailureEventListener() {
+                @Override
+                public void onFailure(FailureEvent failureEvent) {
+                    numFailureEventsFired.increment();
+                }
+            };
+
+            writeJob.attachFailureEventListener(failureEventListener);
+
+            writeJob.transfer(new FileObjectPutter(tempDirectory));
+
+            assertEquals(1, numFailureEventsFired.getValue());
+
+            writeJob.removeFailureEventListener(failureEventListener);
+
+            writeJob.transfer(new FileObjectPutter(tempDirectory));
+
+            assertEquals(1, numFailureEventsFired.getValue());
+        } finally {
+            FileUtils.deleteDirectory(tempDirectory.toFile());
+            deleteAllContents(client, BUCKET_NAME);
+        }
+    }
+
+    private enum ClientFailureType {
+        ChunkAllocation,
+        PutObject
+    }
+
+    Ds3ClientHelpers.Job createWriteJobWithObjectsReadyToTransfer(final int maxNumObjectTransferAttempts,
+                                                                  final ClientFailureType clientFailureType)
+            throws IOException, URISyntaxException, NoSuchMethodException, IllegalAccessException, InvocationTargetException {
+        final String DIR_NAME = "largeFiles/";
+        final String[] FILE_NAMES = new String[]{"lesmis-copies.txt"};
+
+        final List<String> bookTitles = new ArrayList<>();
+        final List<Ds3Object> objects = new ArrayList<>();
+        for (final String book : FILE_NAMES) {
+            final Path objPath = ResourceUtils.loadFileResource(DIR_NAME + book);
+            final long bookSize = Files.size(objPath);
+            final Ds3Object obj = new Ds3Object(book, bookSize);
+
+            bookTitles.add(book);
+            objects.add(obj);
+        }
+
+        Ds3Client ds3Client;
+        if (clientFailureType == ClientFailureType.ChunkAllocation) {
+            ds3Client = new Ds3ClientShimWithFailedChunkAllocation((Ds3ClientImpl) client);
+        } else {
+            ds3Client = new Ds3ClientShimWithFailedPutObject((Ds3ClientImpl) client);
+        }
+
+        final int maxNumBlockAllocationRetries = 3;
+        final Ds3ClientHelpers ds3ClientHelpers = Ds3ClientHelpers.wrap(ds3Client,
+                maxNumBlockAllocationRetries,
+                maxNumObjectTransferAttempts);
+
+        final Ds3ClientHelpers.Job writeJob = ds3ClientHelpers.startWriteJob(BUCKET_NAME, objects);
+
+        return writeJob;
+    }
+
+    private static class Ds3ClientShimWithFailedChunkAllocation extends Ds3ClientShim {
+        public Ds3ClientShimWithFailedChunkAllocation(Ds3ClientImpl ds3ClientImpl)
+                throws NoSuchMethodException, IllegalAccessException, InvocationTargetException
+        {
+            super(ds3ClientImpl);
+        }
+
+        @Override
+        public AllocateJobChunkSpectraS3Response allocateJobChunkSpectraS3(final AllocateJobChunkSpectraS3Request request)
+                throws IOException {
+            final Map<String, String> headers = new HashMap<>();
+            headers.put("content-NONE", "text/xml");
+            headers.put("Retry-After", "1");
+
+            final AllocateJobChunkSpectraS3Response allocateJobChunkSpectraS3Response =
+                    new AllocateJobChunkSpectraS3Response(new MockedWebResponse("A response", 307, headers));
+
+            return allocateJobChunkSpectraS3Response;
+        }
+    }
+
+    private static class Ds3ClientShimWithFailedPutObject extends Ds3ClientShim {
+        public Ds3ClientShimWithFailedPutObject(Ds3ClientImpl ds3ClientImpl)
+                throws NoSuchMethodException, IllegalAccessException, InvocationTargetException
+        {
+            super(ds3ClientImpl);
+        }
+
+        @Override
+        public PutObjectResponse putObject(final PutObjectRequest request) throws IOException {
+            throw new IOException("A terrible, horrible thing happened!");
+        }
+    }
+
+    @Test(expected = RuntimeException.class)
+    public void testFiringOnFailureEventWithFailedPutObject()
+            throws IOException, URISyntaxException, NoSuchMethodException, IllegalAccessException, InvocationTargetException {
+        final String tempPathPrefix = null;
+        final Path tempDirectory = Files.createTempDirectory(Paths.get("."), tempPathPrefix);
+
+        try {
+            final IntValue numFailureEventsFired = new IntValue();
+
+            final int maxNumObjectTransferAttempts = 1;
+            final Ds3ClientHelpers.Job writeJob = createWriteJobWithObjectsReadyToTransfer(maxNumObjectTransferAttempts,
+                    ClientFailureType.PutObject);
+
+            final FailureEventListener failureEventListener = new FailureEventListener() {
+                @Override
+                public void onFailure(final FailureEvent failureEvent) {
+                    numFailureEventsFired.increment();
+                }
+            };
+
+            writeJob.attachFailureEventListener(failureEventListener);
+
+            writeJob.transfer(new FileObjectPutter(tempDirectory));
+
+            assertEquals(1, numFailureEventsFired.getValue());
+
+            writeJob.removeFailureEventListener(failureEventListener);
+
+            writeJob.transfer(new FileObjectPutter(tempDirectory));
+
+            assertEquals(1, numFailureEventsFired.getValue());
+        } finally {
+            FileUtils.deleteDirectory(tempDirectory.toFile());
+            deleteAllContents(client, BUCKET_NAME);
+        }
     }
 }

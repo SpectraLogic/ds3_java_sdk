@@ -142,6 +142,16 @@ class ReadJobImpl extends JobImpl {
     }
 
     @Override
+    public void attachFailureEventListener(FailureEventListener listener) {
+        // TODO implement this
+    }
+
+    @Override
+    public void removeFailureEventListener(FailureEventListener listener) {
+        // TODO implement this
+    }
+
+    @Override
     public Ds3ClientHelpers.Job withMetadata(final Ds3ClientHelpers.MetadataAccess access) {
         throw new IllegalStateException("withMetadata method is not used with Read Jobs");
     }

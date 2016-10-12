@@ -26,6 +26,7 @@ import com.spectralogic.ds3client.exceptions.Ds3NoMoreRetriesException;
 import com.spectralogic.ds3client.helpers.ChunkTransferrer.ItemTransferrer;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.ObjectChannelBuilder;
 import com.spectralogic.ds3client.helpers.events.EventRunner;
+import com.spectralogic.ds3client.helpers.events.FailureEvent;
 import com.spectralogic.ds3client.models.*;
 import com.spectralogic.ds3client.models.Objects;
 import com.spectralogic.ds3client.models.common.Range;
@@ -49,6 +50,7 @@ class WriteJobImpl extends JobImpl {
     private final ChecksumType.Type checksumType;
     private final Set<ChecksumListener> checksumListeners;
     private final Set<WaitingForChunksListener> waitingForChunksListeners;
+    private final Set<FailureEventListener> failureEventListeners;
     private final EventRunner eventRunner;
     private final int retryAfter; // Negative retryAfter value represent infinity retries
     private final int retryDelay; //Negative value means use default
@@ -81,6 +83,7 @@ class WriteJobImpl extends JobImpl {
         this.retryDelay = retryDelay;
         this.checksumListeners = Sets.newIdentityHashSet();
         this.waitingForChunksListeners = Sets.newIdentityHashSet();
+        this.failureEventListeners = Sets.newIdentityHashSet();
         this.eventRunner = eventRunner;
 
         this.checksumType = type;
@@ -145,6 +148,18 @@ class WriteJobImpl extends JobImpl {
     }
 
     @Override
+    public void attachFailureEventListener(FailureEventListener listener) {
+        checkRunning();
+        this.failureEventListeners.add(listener);
+    }
+
+    @Override
+    public void removeFailureEventListener(FailureEventListener listener) {
+        checkRunning();
+        this.failureEventListeners.remove(listener);
+    }
+
+    @Override
     public Ds3ClientHelpers.Job withMetadata(final Ds3ClientHelpers.MetadataAccess access) {
         checkRunning();
         this.metadataAccess = access;
@@ -160,36 +175,67 @@ class WriteJobImpl extends JobImpl {
     @Override
     public void transfer(final ObjectChannelBuilder channelBuilder)
             throws IOException {
-        running = true;
-        LOG.debug("Starting job transfer");
-        if (this.masterObjectList == null || this.masterObjectList.getObjects() == null) {
-            LOG.info("There is nothing to transfer for job"
-                    + (this.getJobId() == null ? "" : " " + this.getJobId().toString()));
-            return;
+        try {
+            running = true;
+            LOG.debug("Starting job transfer");
+            if (this.masterObjectList == null || this.masterObjectList.getObjects() == null) {
+                LOG.info("There is nothing to transfer for job"
+                        + (this.getJobId() == null ? "" : " " + this.getJobId().toString()));
+                return;
+            }
+
+            try (final JobState jobState = new JobState(
+                    channelBuilder,
+                    filteredChunks,
+                    partTracker,
+                    ImmutableMap.<String, ImmutableMultimap<BulkObject, Range>>of())) {
+                final ChunkTransferrer chunkTransferrer = new ChunkTransferrer(
+                        new PutObjectTransferrerRetryDecorator(jobState),
+                        this.client,
+                        jobState.getPartTracker(),
+                        this.maxParallelRequests
+                );
+                for (final Objects chunk : filteredChunks) {
+                    LOG.debug("Allocating chunk: {}", chunk.getChunkId().toString());
+                    chunkTransferrer.transferChunks(
+                            this.masterObjectList.getNodes(),
+                            Collections.singletonList(filterChunk(allocateChunk(chunk))));
+                }
+            } catch (final IOException | RuntimeException e) {
+                throw e;
+            } catch (final Exception e) {
+                throw new RuntimeException(e);
+            }
+        } catch (final Throwable t) {
+            emitFailureEvent(new FailureEvent.Builder()
+                    .doingWhat("putting object")
+                    .withCausalException(t)
+                    .usingSystemWithEndpoint(client.getConnectionDetails().getEndpoint())
+                    .withObjectNamed(getLabelForChunk(filteredChunks.get(0)))
+                    .build());
+            throw t;
+        }
+    }
+
+    private void emitFailureEvent(final FailureEvent failureEvent) {
+        for (final FailureEventListener failureEventListener : failureEventListeners) {
+            eventRunner.emitEvent(new Runnable() {
+                @Override
+                public void run() {
+                    failureEventListener.onFailure(failureEvent);
+                }
+            });
+        }
+    }
+
+    private String getLabelForChunk(final Objects chunk) {
+        try {
+            return chunk.getObjects().get(0).getName();
+        } catch (final Throwable t) {
+            LOG.error("Failed to get label for chunk.", t);
         }
 
-        try (final JobState jobState = new JobState(
-                channelBuilder,
-                filteredChunks,
-                partTracker,
-                ImmutableMap.<String, ImmutableMultimap<BulkObject,Range>>of())) {
-            final ChunkTransferrer chunkTransferrer = new ChunkTransferrer(
-                new PutObjectTransferrerRetryDecorator(jobState),
-                this.client,
-                jobState.getPartTracker(),
-                this.maxParallelRequests
-            );
-            for (final Objects chunk : filteredChunks) {
-                LOG.debug("Allocating chunk: {}", chunk.getChunkId().toString());
-                chunkTransferrer.transferChunks(
-                        this.masterObjectList.getNodes(),
-                        Collections.singletonList(filterChunk(allocateChunk(chunk))));
-            }
-        } catch (final IOException | RuntimeException e) {
-            throw e;
-        } catch (final Exception e) {
-            throw new RuntimeException(e);
-        }
+        return "unnamed object";
     }
 
     private Objects allocateChunk(final Objects filtered) throws IOException {
@@ -205,28 +251,40 @@ class WriteJobImpl extends JobImpl {
                 this.client.allocateJobChunkSpectraS3(new AllocateJobChunkSpectraS3Request(filtered.getChunkId().toString()));
 
         LOG.info("AllocatedJobChunkResponse status: {}", response.getStatus().toString());
-        switch (response.getStatus()) {
-        case ALLOCATED:
-            retryAfterLeft = retryAfter; // Reset the number of retries to the initial value
-            return response.getObjectsResult();
-        case RETRYLATER:
-            try {
-                if (retryAfterLeft == 0) {
-                    throw new Ds3NoMoreRetriesException(this.retryAfter);
-                }
-                retryAfterLeft--;
 
-                final int retryAfter = computeRetryAfter(response.getRetryAfterSeconds());
-                emitWaitingForChunksEvents(retryAfter);
+        try {
+            switch (response.getStatus()) {
+                case ALLOCATED:
+                    retryAfterLeft = retryAfter; // Reset the number of retries to the initial value
+                    return response.getObjectsResult();
+                case RETRYLATER:
+                    try {
+                        if (retryAfterLeft == 0) {
+                            throw new Ds3NoMoreRetriesException(this.retryAfter);
+                        }
+                        retryAfterLeft--;
 
-                LOG.debug("Will retry allocate chunk call after {} seconds", retryAfter);
-                Thread.sleep(retryAfter * 1000);
-                return null;
-            } catch (final InterruptedException e) {
-                throw new RuntimeException(e);
+                        final int retryAfter = computeRetryAfter(response.getRetryAfterSeconds());
+                        emitWaitingForChunksEvents(retryAfter);
+
+                        LOG.debug("Will retry allocate chunk call after {} seconds", retryAfter);
+                        Thread.sleep(retryAfter * 1000);
+                        return null;
+                    } catch (final InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                default:
+                    assert false : "This line of code should be impossible to hit.";
+                    return null;
             }
-        default:
-            assert false : "This line of code should be impossible to hit."; return null;
+        } catch (final Throwable t) {
+            emitFailureEvent(new FailureEvent.Builder()
+                    .doingWhat("allocating chunk")
+                    .usingSystemWithEndpoint(client.getConnectionDetails().getEndpoint())
+                    .withObjectNamed(getLabelForChunk(filtered))
+                    .withCausalException(t)
+                    .build());
+            throw t;
         }
     }
 
