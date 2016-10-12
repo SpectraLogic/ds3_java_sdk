@@ -29,7 +29,6 @@ import com.spectralogic.ds3client.helpers.events.FailureEvent;
 import com.spectralogic.ds3client.helpers.util.PartialObjectHelpers;
 import com.spectralogic.ds3client.models.*;
 import com.spectralogic.ds3client.models.common.Range;
-import com.spectralogic.ds3client.networking.FailedRequestException;
 import com.spectralogic.ds3client.networking.Metadata;
 import com.spectralogic.ds3client.utils.Guard;
 
@@ -47,12 +46,9 @@ class ReadJobImpl extends JobImpl {
     private final List<Objects> chunks;
     private final ImmutableMap<String, ImmutableMultimap<BulkObject, Range>> blobToRanges;
     private final Set<MetadataReceivedListener> metadataListeners;
-    private final Set<ChecksumListener> checksumListeners;
-    private final Set<WaitingForChunksListener> waitingForChunksListeners;
-    private final Set<FailureEventListener> failureEventListeners;
+
     private final int retryAfter; // Negative retryAfter value represent infinity retries
     private final int retryDelay; // Negative value represents default
-    private final EventRunner eventRunner;
 
     private int retryAfterLeft; // The number of retries left
 
@@ -65,17 +61,13 @@ class ReadJobImpl extends JobImpl {
             final int retryDelay,
             final EventRunner eventRunner
             ) {
-        super(client, masterObjectList, objectTransferAttempts);
+        super(client, masterObjectList, objectTransferAttempts, eventRunner);
 
         this.chunks = this.masterObjectList.getObjects();
         this.partTracker = JobPartTrackerFactory
                 .buildPartTracker(getAllBlobApiBeans(chunks), eventRunner);
         this.blobToRanges = PartialObjectHelpers.mapRangesToBlob(masterObjectList.getObjects(), objectRanges);
         this.metadataListeners = Sets.newIdentityHashSet();
-        this.checksumListeners = Sets.newIdentityHashSet();
-        this.waitingForChunksListeners = Sets.newIdentityHashSet();
-        this.failureEventListeners = Sets.newIdentityHashSet();
-        this.eventRunner = eventRunner;
 
         this.retryAfter = this.retryAfterLeft = retryAfter;
         this.retryDelay = retryDelay;
@@ -123,42 +115,6 @@ class ReadJobImpl extends JobImpl {
     public void removeMetadataReceivedListener(final MetadataReceivedListener listener) {
         checkRunning();
         this.metadataListeners.remove(listener);
-    }
-
-    @Override
-    public void attachChecksumListener(final ChecksumListener listener) {
-        checkRunning();
-        this.checksumListeners.add(listener);
-    }
-
-    @Override
-    public void removeChecksumListener(final ChecksumListener listener) {
-        checkRunning();
-        this.checksumListeners.remove(listener);
-    }
-
-    @Override
-    public void attachWaitingForChunksListener(final WaitingForChunksListener listener) {
-        checkRunning();
-        this.waitingForChunksListeners.add(listener);
-    }
-
-    @Override
-    public void removeWaitingForChunksListener(final WaitingForChunksListener listener) {
-        checkRunning();
-        this.waitingForChunksListeners.remove(listener);
-    }
-
-    @Override
-    public void attachFailureEventListener(final FailureEventListener listener) {
-        checkRunning();
-        failureEventListeners.add(listener);
-    }
-
-    @Override
-    public void removeFailureEventListener(final FailureEventListener listener) {
-        checkRunning();
-        failureEventListeners.remove(listener);
     }
 
     @Override
@@ -229,33 +185,11 @@ class ReadJobImpl extends JobImpl {
         }
     }
 
-    private void emitFailureEvent(final FailureEvent failureEvent) {
-        for (final FailureEventListener failureEventListener : failureEventListeners) {
-            eventRunner.emitEvent(new Runnable() {
-                @Override
-                public void run() {
-                    failureEventListener.onFailure(failureEvent);
-                }
-            });
-        }
-    }
-
     private int computeDelay(final int retryAfterSeconds) {
         if (retryDelay == -1) {
             return retryAfterSeconds;
         } else {
             return retryDelay;
-        }
-    }
-
-    private void emitWaitingForChunksEvents(final int secondsToRetry) {
-        for (final WaitingForChunksListener waitingForChunksListener : waitingForChunksListeners) {
-            eventRunner.emitEvent(new Runnable() {
-                @Override
-                public void run() {
-                    waitingForChunksListener.waiting(secondsToRetry);
-                }
-            });
         }
     }
 
@@ -300,25 +234,14 @@ class ReadJobImpl extends JobImpl {
             final GetObjectResponse response = client.getObject(request);
             final Metadata metadata = response.getMetadata();
 
-            sendChecksumEvents(ds3Object, response.getChecksumType(), response.getChecksum());
+            emitChecksumEvents(ds3Object, response.getChecksumType(), response.getChecksum());
             sendMetadataEvents(ds3Object.getName(), metadata);
-        }
-    }
-
-    private void sendChecksumEvents(final BulkObject ds3Object, final ChecksumType.Type type, final String checksum) {
-        for (final ChecksumListener listener : this.checksumListeners) {
-            eventRunner.emitEvent(new Runnable() {
-                @Override
-                public void run() {
-                    listener.value(ds3Object, type, checksum);
-                }
-            });
         }
     }
 
     private void sendMetadataEvents(final String objName , final Metadata metadata) {
         for (final MetadataReceivedListener listener : this.metadataListeners) {
-            eventRunner.emitEvent(new Runnable() {
+            getEventRunner().emitEvent(new Runnable() {
                 @Override
                 public void run() {
                     listener.metadataReceived(objName, metadata);

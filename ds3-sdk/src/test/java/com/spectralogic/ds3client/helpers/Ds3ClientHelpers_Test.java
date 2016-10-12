@@ -28,6 +28,7 @@ import com.spectralogic.ds3client.models.*;
 import com.spectralogic.ds3client.models.Error;
 import com.spectralogic.ds3client.models.Objects;
 import com.spectralogic.ds3client.models.bulk.Ds3Object;
+import com.spectralogic.ds3client.models.common.Credentials;
 import com.spectralogic.ds3client.networking.ConnectionDetails;
 import com.spectralogic.ds3client.networking.FailedRequestException;
 import com.spectralogic.ds3client.utils.ByteArraySeekableByteChannel;
@@ -37,6 +38,7 @@ import org.junit.Test;
 import org.mockito.Mockito;
 
 import java.io.IOException;
+import java.net.URI;
 import java.nio.channels.SeekableByteChannel;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -117,7 +119,10 @@ public class Ds3ClientHelpers_Test {
 
         Mockito.when(ds3Client.getObject(getRequestHas(MYBUCKET, "foo", jobId, 6))).thenThrow(new StubException());
         Mockito.when(ds3Client.getObject(getRequestHas(MYBUCKET, "baz", jobId, 6))).then(getObjectAnswer("ntents"));
-        
+
+        final ConnectionDetails connectionDetails = makeMockConnectionDetails();
+        Mockito.when(ds3Client.getConnectionDetails()).thenReturn(connectionDetails);
+
         final Job job = Ds3ClientHelpers.wrap(ds3Client).startReadJob(MYBUCKET, Lists.newArrayList(
             new Ds3Object("foo"),
             new Ds3Object("bar"),
@@ -131,6 +136,55 @@ public class Ds3ClientHelpers_Test {
                 return new ByteArraySeekableByteChannel();
             }
         });
+    }
+
+    private ConnectionDetails makeMockConnectionDetails() {
+        return new ConnectionDetails() {
+            @Override
+            public String getEndpoint() {
+                return "endpoint";
+            }
+
+            @Override
+            public Credentials getCredentials() {
+                return null;
+            }
+
+            @Override
+            public boolean isHttps() {
+                return false;
+            }
+
+            @Override
+            public URI getProxy() {
+                return null;
+            }
+
+            @Override
+            public int getRetries() {
+                return 0;
+            }
+
+            @Override
+            public int getBufferSize() {
+                return 0;
+            }
+
+            @Override
+            public int getConnectionTimeout() {
+                return 0;
+            }
+
+            @Override
+            public int getSocketTimeout() {
+                return 0;
+            }
+
+            @Override
+            public boolean isCertificateVerification() {
+                return false;
+            }
+        };
     }
     
     @Test
@@ -632,6 +686,9 @@ public class Ds3ClientHelpers_Test {
         Mockito.when(ds3Client
                 .getJobChunksReadyForClientProcessingSpectraS3(hasJobId(jobId)))
                 .thenReturn(jobChunksResponse);
+
+        final ConnectionDetails connectionDetails = makeMockConnectionDetails();
+        Mockito.when(ds3Client.getConnectionDetails()).thenReturn(connectionDetails);
 
         final Job job = Ds3ClientHelpers.wrap(ds3Client, 1).startReadJob(MYBUCKET, Lists.newArrayList(
                 new Ds3Object("foo")

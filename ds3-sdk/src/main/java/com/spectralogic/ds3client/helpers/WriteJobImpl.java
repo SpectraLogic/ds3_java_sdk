@@ -17,7 +17,6 @@ package com.spectralogic.ds3client.helpers;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMultimap;
-import com.google.common.collect.Sets;
 import com.spectralogic.ds3client.Ds3Client;
 import com.spectralogic.ds3client.commands.PutObjectRequest;
 import com.spectralogic.ds3client.commands.spectrads3.AllocateJobChunkSpectraS3Request;
@@ -48,10 +47,7 @@ class WriteJobImpl extends JobImpl {
     private final JobPartTracker partTracker;
     private final List<Objects> filteredChunks;
     private final ChecksumType.Type checksumType;
-    private final Set<ChecksumListener> checksumListeners;
-    private final Set<WaitingForChunksListener> waitingForChunksListeners;
-    private final Set<FailureEventListener> failureEventListeners;
-    private final EventRunner eventRunner;
+
     private final int retryAfter; // Negative retryAfter value represent infinity retries
     private final int retryDelay; //Negative value means use default
 
@@ -67,7 +63,7 @@ class WriteJobImpl extends JobImpl {
             final int objectTransferAttempts,
             final int retryDelay,
             final EventRunner eventRunner) {
-        super(client, masterObjectList, objectTransferAttempts);
+        super(client, masterObjectList, objectTransferAttempts, eventRunner);
         if (this.masterObjectList == null || this.masterObjectList.getObjects() == null) {
             LOG.info("Job has no data to transfer");
             this.filteredChunks = null;
@@ -81,10 +77,6 @@ class WriteJobImpl extends JobImpl {
         }
         this.retryAfter = this.retryAfterLeft = retryAfter;
         this.retryDelay = retryDelay;
-        this.checksumListeners = Sets.newIdentityHashSet();
-        this.waitingForChunksListeners = Sets.newIdentityHashSet();
-        this.failureEventListeners = Sets.newIdentityHashSet();
-        this.eventRunner = eventRunner;
 
         this.checksumType = type;
     }
@@ -121,42 +113,6 @@ class WriteJobImpl extends JobImpl {
     @Override
     public void removeMetadataReceivedListener(final MetadataReceivedListener listener) {
         throw new IllegalStateException("Metadata listeners are not used with Write jobs");
-    }
-
-    @Override
-    public void attachChecksumListener(final ChecksumListener listener) {
-        checkRunning();
-        this.checksumListeners.add(listener);
-    }
-
-    @Override
-    public void removeChecksumListener(final ChecksumListener listener) {
-        checkRunning();
-        this.checksumListeners.remove(listener);
-    }
-
-    @Override
-    public void attachWaitingForChunksListener(final WaitingForChunksListener listener) {
-        checkRunning();
-        this.waitingForChunksListeners.add(listener);
-    }
-
-    @Override
-    public void removeWaitingForChunksListener(final WaitingForChunksListener listener) {
-        checkRunning();
-        this.waitingForChunksListeners.remove(listener);
-    }
-
-    @Override
-    public void attachFailureEventListener(final FailureEventListener listener) {
-        checkRunning();
-        this.failureEventListeners.add(listener);
-    }
-
-    @Override
-    public void removeFailureEventListener(final FailureEventListener listener) {
-        checkRunning();
-        this.failureEventListeners.remove(listener);
     }
 
     @Override
@@ -213,17 +169,6 @@ class WriteJobImpl extends JobImpl {
         }
     }
 
-    private void emitFailureEvent(final FailureEvent failureEvent) {
-        for (final FailureEventListener failureEventListener : failureEventListeners) {
-            eventRunner.emitEvent(new Runnable() {
-                @Override
-                public void run() {
-                    failureEventListener.onFailure(failureEvent);
-                }
-            });
-        }
-    }
-
     private Objects allocateChunk(final Objects filtered) throws IOException {
         Objects chunk = null;
         while (chunk == null) {
@@ -264,17 +209,6 @@ class WriteJobImpl extends JobImpl {
         }
     }
 
-    private void emitWaitingForChunksEvents(final int retryAfter) {
-        for (final WaitingForChunksListener waitingForChunksListener : waitingForChunksListeners) {
-            eventRunner.emitEvent(new Runnable() {
-                @Override
-                public void run() {
-                    waitingForChunksListener.waiting(retryAfter);
-                }
-            });
-        }
-    }
-
     private int computeRetryAfter(final int retryAfterSeconds) {
         if (retryDelay == -1) {
             return retryAfterSeconds;
@@ -286,6 +220,7 @@ class WriteJobImpl extends JobImpl {
     /**
      * Filters out chunks that have already been completed.  We will get the same chunk name back from the server, but it
      * will not have any objects in it, so we remove that from the list of objects that are returned.
+     *
      * @param objectsList The list to be filtered
      * @return The filtered list
      */
@@ -395,6 +330,7 @@ class WriteJobImpl extends JobImpl {
         }
 
         private static final int READ_BUFFER_SIZE = 10 * 1024 * 1024;
+
         private String hashInputStream(final Hasher digest, final InputStream stream) throws IOException {
             final byte[] buffer = new byte[READ_BUFFER_SIZE];
             int bytesRead;
@@ -414,24 +350,20 @@ class WriteJobImpl extends JobImpl {
 
         private Hasher getHasher(final ChecksumType.Type checksumType) {
             switch (checksumType) {
-                case MD5: return new MD5Hasher();
-                case SHA_256: return new SHA256Hasher();
-                case SHA_512: return new SHA512Hasher();
-                case CRC_32: return new CRC32Hasher();
-                case CRC_32C: return new CRC32CHasher();
-                default: throw new RuntimeException("Unknown checksum type " + checksumType.toString());
+                case MD5:
+                    return new MD5Hasher();
+                case SHA_256:
+                    return new SHA256Hasher();
+                case SHA_512:
+                    return new SHA512Hasher();
+                case CRC_32:
+                    return new CRC32Hasher();
+                case CRC_32C:
+                    return new CRC32CHasher();
+                default:
+                    throw new RuntimeException("Unknown checksum type " + checksumType.toString());
             }
         }
     }
-
-    private void emitChecksumEvents(final BulkObject bulkObject, final ChecksumType.Type type, final String checksum) {
-        for (final ChecksumListener listener : checksumListeners) {
-            eventRunner.emitEvent(new Runnable() {
-                @Override
-                public void run() {
-                    listener.value(bulkObject, type, checksum);
-                }
-            });
-        }
-    }
 }
+
