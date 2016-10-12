@@ -146,13 +146,4 @@ public class GetStreamerStrategy extends BlobStrategy {
         } while(true);
     }
 
-    private int computeDelay(final int retryAfterSeconds) {
-        final int retryDelay = getRetryDelay();
-        if (retryDelay == -1) {
-            return retryAfterSeconds;
-        } else {
-            return retryDelay;
-        }
-    }
-
 }

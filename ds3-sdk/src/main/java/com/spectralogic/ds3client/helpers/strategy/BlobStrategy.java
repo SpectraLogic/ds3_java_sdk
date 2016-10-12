@@ -61,6 +61,15 @@ public abstract class BlobStrategy {
         return masterObjectList;
     }
 
+    protected int computeDelay(final int retryAfterSeconds) {
+        final int retryDelay = getRetryDelay();
+        if (retryDelay == -1) {
+            return retryAfterSeconds;
+        } else {
+            return retryDelay;
+        }
+    }
+
     public interface ChunkEventHandler {
         void emitWaitingForChunksEvents(final int secondsToDelay);
     }

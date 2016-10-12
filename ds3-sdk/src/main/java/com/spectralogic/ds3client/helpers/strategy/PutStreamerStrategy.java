@@ -99,25 +99,17 @@ public class PutStreamerStrategy extends BlobStrategy {
                 }
                 retryAfterLeft--;
 
-                final int retryAfter = computeRetryAfter(response.getRetryAfterSeconds());
-                getChunkEventHandler().emitWaitingForChunksEvents(retryAfter);
+                final int retryDelay = computeDelay(response.getRetryAfterSeconds());
+                getChunkEventHandler().emitWaitingForChunksEvents(retryDelay);
 
-                LOG.debug("Will retry allocate chunk call after {} seconds", retryAfter);
-                Thread.sleep(retryAfter * 1000);
+                LOG.debug("Will retry allocate chunk call after {} seconds", retryDelay);
+                Thread.sleep(retryDelay * 1000);
                 return null;
             } catch (final InterruptedException e) {
                 throw new RuntimeException(e);
             }
         default:
             assert false : "This line of code should be impossible to hit."; return null;
-        }
-    }
-
-    private int computeRetryAfter(final int retryAfterSeconds) {
-        if (getRetryDelay() == -1) {
-            return retryAfterSeconds;
-        } else {
-            return getRetryDelay();
         }
     }
 }
