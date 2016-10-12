@@ -17,13 +17,20 @@ package com.spectralogic.ds3client.helpers;
 
 import com.spectralogic.ds3client.Ds3Client;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.Job;
+import com.spectralogic.ds3client.helpers.events.FailureEvent;
 import com.spectralogic.ds3client.models.BulkObject;
 import com.spectralogic.ds3client.models.MasterObjectList;
+import com.spectralogic.ds3client.models.Objects;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.UUID;
 
 abstract class JobImpl implements Job {
+    private static final Logger LOG = LoggerFactory.getLogger(JobImpl.class);
+
     protected final Ds3Client client;
     protected final MasterObjectList masterObjectList;
     protected boolean running = false;
@@ -80,5 +87,27 @@ abstract class JobImpl implements Job {
                 }
             }
         }
+    }
+
+    protected FailureEvent makeFailureEvent(final FailureEvent.FailureActivity failureActivity,
+                                            final Throwable causalException,
+                                            final Objects chunk)
+    {
+        return new FailureEvent.Builder()
+                .doingWhat(failureActivity)
+                .withCausalException(causalException)
+                .withObjectNamed(getLabelForChunk(chunk))
+                .usingSystemWithEndpoint(client.getConnectionDetails().getEndpoint())
+                .build();
+    }
+
+    protected String getLabelForChunk(final Objects chunk) {
+        try {
+            return chunk.getObjects().get(0).getName();
+        } catch (final Throwable t) {
+            LOG.error("Failed to get label for chunk.", t);
+        }
+
+        return "unnamed object";
     }
 }

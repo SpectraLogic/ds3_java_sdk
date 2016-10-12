@@ -930,7 +930,7 @@ public class PutJobManagement_Test {
                 });
     }
 
-    @Test(expected = Ds3NoMoreRetriesException.class)
+    @Test
     public void testFiringOnFailureEventWithFailedChunkAllocation()
             throws IOException, URISyntaxException, NoSuchMethodException, IllegalAccessException, InvocationTargetException {
         final String tempPathPrefix = null;
@@ -952,15 +952,19 @@ public class PutJobManagement_Test {
 
             writeJob.attachFailureEventListener(failureEventListener);
 
-            writeJob.transfer(new FileObjectPutter(tempDirectory));
+            try {
+                writeJob.transfer(new FileObjectPutter(tempDirectory));
+            } catch (final Ds3NoMoreRetriesException e) {
+                assertEquals(1, numFailureEventsFired.getValue());
 
-            assertEquals(1, numFailureEventsFired.getValue());
+                writeJob.removeFailureEventListener(failureEventListener);
 
-            writeJob.removeFailureEventListener(failureEventListener);
-
-            writeJob.transfer(new FileObjectPutter(tempDirectory));
-
-            assertEquals(1, numFailureEventsFired.getValue());
+                try {
+                    writeJob.transfer(new FileObjectPutter(tempDirectory));
+                } catch (final Ds3NoMoreRetriesException nmre) {
+                    assertEquals(1, numFailureEventsFired.getValue());
+                }
+            }
         } finally {
             FileUtils.deleteDirectory(tempDirectory.toFile());
             deleteAllContents(client, BUCKET_NAME);
@@ -996,7 +1000,7 @@ public class PutJobManagement_Test {
         return writeJob;
     }
 
-    @Test(expected = RuntimeException.class)
+    @Test
     public void testFiringOnFailureEventWithFailedPutObject()
             throws IOException, URISyntaxException, NoSuchMethodException, IllegalAccessException, InvocationTargetException {
         final String tempPathPrefix = null;
@@ -1018,15 +1022,19 @@ public class PutJobManagement_Test {
 
             writeJob.attachFailureEventListener(failureEventListener);
 
-            writeJob.transfer(new FileObjectPutter(tempDirectory));
+            try {
+                writeJob.transfer(new FileObjectPutter(tempDirectory));
+            } catch (final RuntimeException e) {
+                assertEquals(1, numFailureEventsFired.getValue());
 
-            assertEquals(1, numFailureEventsFired.getValue());
+                writeJob.removeFailureEventListener(failureEventListener);
 
-            writeJob.removeFailureEventListener(failureEventListener);
-
-            writeJob.transfer(new FileObjectPutter(tempDirectory));
-
-            assertEquals(1, numFailureEventsFired.getValue());
+                try {
+                    writeJob.transfer(new FileObjectPutter(tempDirectory));
+                } catch (final RuntimeException nmre) {
+                    assertEquals(1, numFailureEventsFired.getValue());
+                }
+            }
         } finally {
             FileUtils.deleteDirectory(tempDirectory.toFile());
             deleteAllContents(client, BUCKET_NAME);

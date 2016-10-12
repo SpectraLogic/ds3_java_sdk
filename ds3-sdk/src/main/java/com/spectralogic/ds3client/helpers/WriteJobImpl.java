@@ -207,12 +207,8 @@ class WriteJobImpl extends JobImpl {
                 throw new RuntimeException(e);
             }
         } catch (final Throwable t) {
-            emitFailureEvent(new FailureEvent.Builder()
-                    .doingWhat("putting object")
-                    .withCausalException(t)
-                    .usingSystemWithEndpoint(client.getConnectionDetails().getEndpoint())
-                    .withObjectNamed(getLabelForChunk(filteredChunks.get(0)))
-                    .build());
+            running = false;
+            emitFailureEvent(makeFailureEvent(FailureEvent.FailureActivity.PuttingObject, t, filteredChunks.get(0)));
             throw t;
         }
     }
@@ -226,16 +222,6 @@ class WriteJobImpl extends JobImpl {
                 }
             });
         }
-    }
-
-    private String getLabelForChunk(final Objects chunk) {
-        try {
-            return chunk.getObjects().get(0).getName();
-        } catch (final Throwable t) {
-            LOG.error("Failed to get label for chunk.", t);
-        }
-
-        return "unnamed object";
     }
 
     private Objects allocateChunk(final Objects filtered) throws IOException {
@@ -252,39 +238,29 @@ class WriteJobImpl extends JobImpl {
 
         LOG.info("AllocatedJobChunkResponse status: {}", response.getStatus().toString());
 
-        try {
-            switch (response.getStatus()) {
-                case ALLOCATED:
-                    retryAfterLeft = retryAfter; // Reset the number of retries to the initial value
-                    return response.getObjectsResult();
-                case RETRYLATER:
-                    try {
-                        if (retryAfterLeft == 0) {
-                            throw new Ds3NoMoreRetriesException(this.retryAfter);
-                        }
-                        retryAfterLeft--;
-
-                        final int retryAfter = computeRetryAfter(response.getRetryAfterSeconds());
-                        emitWaitingForChunksEvents(retryAfter);
-
-                        LOG.debug("Will retry allocate chunk call after {} seconds", retryAfter);
-                        Thread.sleep(retryAfter * 1000);
-                        return null;
-                    } catch (final InterruptedException e) {
-                        throw new RuntimeException(e);
+        switch (response.getStatus()) {
+            case ALLOCATED:
+                retryAfterLeft = retryAfter; // Reset the number of retries to the initial value
+                return response.getObjectsResult();
+            case RETRYLATER:
+                try {
+                    if (retryAfterLeft == 0) {
+                        throw new Ds3NoMoreRetriesException(this.retryAfter);
                     }
-                default:
-                    assert false : "This line of code should be impossible to hit.";
+                    retryAfterLeft--;
+
+                    final int retryAfter = computeRetryAfter(response.getRetryAfterSeconds());
+                    emitWaitingForChunksEvents(retryAfter);
+
+                    LOG.debug("Will retry allocate chunk call after {} seconds", retryAfter);
+                    Thread.sleep(retryAfter * 1000);
                     return null;
-            }
-        } catch (final Throwable t) {
-            emitFailureEvent(new FailureEvent.Builder()
-                    .doingWhat("allocating chunk")
-                    .usingSystemWithEndpoint(client.getConnectionDetails().getEndpoint())
-                    .withObjectNamed(getLabelForChunk(filtered))
-                    .withCausalException(t)
-                    .build());
-            throw t;
+                } catch (final InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+            default:
+                assert false : "This line of code should be impossible to hit.";
+                return null;
         }
     }
 

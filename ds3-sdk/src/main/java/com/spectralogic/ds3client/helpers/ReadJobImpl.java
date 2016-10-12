@@ -151,11 +151,13 @@ class ReadJobImpl extends JobImpl {
 
     @Override
     public void attachFailureEventListener(final FailureEventListener listener) {
+        checkRunning();
         failureEventListeners.add(listener);
     }
 
     @Override
     public void removeFailureEventListener(final FailureEventListener listener) {
+        checkRunning();
         failureEventListeners.remove(listener);
     }
 
@@ -173,72 +175,57 @@ class ReadJobImpl extends JobImpl {
     public void transfer(final ObjectChannelBuilder channelBuilder)
             throws IOException
     {
-        running = true;
-        try (final JobState jobState = new JobState(
-                channelBuilder,
-                this.masterObjectList.getObjects(),
-                partTracker, blobToRanges)) {
-            final ChunkTransferrer chunkTransferrer = new ChunkTransferrer(
-                    new GetObjectTransferrerRetryDecorator(jobState),
-                    this.client,
-                    jobState.getPartTracker(),
-                    this.maxParallelRequests
-            );
-            while (jobState.hasObjects()) {
-                transferNextChunks(chunkTransferrer);
-            }
-        } catch (final RuntimeException | IOException e) {
-            throw e;
-        } catch (final Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private String getLabelForChunk(final Objects chunk) {
         try {
-            return chunk.getObjects().get(0).getName();
+            running = true;
+            try (final JobState jobState = new JobState(
+                    channelBuilder,
+                    this.masterObjectList.getObjects(),
+                    partTracker, blobToRanges)) {
+                final ChunkTransferrer chunkTransferrer = new ChunkTransferrer(
+                        new GetObjectTransferrerRetryDecorator(jobState),
+                        this.client,
+                        jobState.getPartTracker(),
+                        this.maxParallelRequests
+                );
+                while (jobState.hasObjects()) {
+                    transferNextChunks(chunkTransferrer);
+                }
+            } catch (final RuntimeException | IOException e) {
+                throw e;
+            } catch (final Exception e) {
+                throw new RuntimeException(e);
+            }
         } catch (final Throwable t) {
-            LOG.error("Failed to get label for chunk.", t);
+            running = false;
+            emitFailureEvent(makeFailureEvent(FailureEvent.FailureActivity.GettingObject, t, masterObjectList.getObjects().get(0)));
+            throw t;
         }
-
-        return "unnamed object";
     }
 
     private void transferNextChunks(final ChunkTransferrer chunkTransferrer)
             throws IOException, InterruptedException
     {
-        try {
-            final GetJobChunksReadyForClientProcessingSpectraS3Response availableJobChunks =
-                    this.client.getJobChunksReadyForClientProcessingSpectraS3(new GetJobChunksReadyForClientProcessingSpectraS3Request(this.masterObjectList.getJobId().toString()));
-            switch (availableJobChunks.getStatus()) {
-                case AVAILABLE: {
-                    final MasterObjectList availableMol = availableJobChunks.getMasterObjectListResult();
-                    chunkTransferrer.transferChunks(availableMol.getNodes(), availableMol.getObjects());
-                    retryAfterLeft = retryAfter; // Reset the number of retries to the initial value
-                    break;
-                }
-                case RETRYLATER: {
-                    if (retryAfterLeft == 0) {
-                        throw new Ds3NoMoreRetriesException(this.retryAfter);
-                    }
-                    retryAfterLeft--;
-                    final int secondsToDelay = computeDelay(availableJobChunks.getRetryAfterSeconds());
-                    emitWaitingForChunksEvents(secondsToDelay);
-                    Thread.sleep(secondsToDelay * 1000);
-                    break;
-                }
-                default:
-                    assert false : "This line of code should be impossible to hit.";
+        final GetJobChunksReadyForClientProcessingSpectraS3Response availableJobChunks =
+                this.client.getJobChunksReadyForClientProcessingSpectraS3(new GetJobChunksReadyForClientProcessingSpectraS3Request(this.masterObjectList.getJobId().toString()));
+        switch (availableJobChunks.getStatus()) {
+            case AVAILABLE: {
+                final MasterObjectList availableMol = availableJobChunks.getMasterObjectListResult();
+                chunkTransferrer.transferChunks(availableMol.getNodes(), availableMol.getObjects());
+                retryAfterLeft = retryAfter; // Reset the number of retries to the initial value
+                break;
             }
-        } catch (final Throwable t) {
-            emitFailureEvent(new FailureEvent.Builder()
-                    .doingWhat("getting object")
-                    .withObjectNamed(getLabelForChunk(masterObjectList.getObjects().get(0)))
-                    .usingSystemWithEndpoint(client.getConnectionDetails().getEndpoint())
-                    .withCausalException(t)
-                    .build());
-
-            throw t;
+            case RETRYLATER: {
+                if (retryAfterLeft == 0) {
+                    throw new Ds3NoMoreRetriesException(this.retryAfter);
+                }
+                retryAfterLeft--;
+                final int secondsToDelay = computeDelay(availableJobChunks.getRetryAfterSeconds());
+                emitWaitingForChunksEvents(secondsToDelay);
+                Thread.sleep(secondsToDelay * 1000);
+                break;
+            }
+            default:
+                assert false : "This line of code should be impossible to hit.";
         }
     }
 
