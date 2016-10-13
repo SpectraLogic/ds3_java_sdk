@@ -15,30 +15,30 @@
 
 package com.spectralogic.ds3client.helpers;
 
-import com.google.common.collect.ImmutableMap;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;
 import com.spectralogic.ds3client.Ds3Client;
 import com.spectralogic.ds3client.models.BulkObject;
-import com.spectralogic.ds3client.models.Objects;
-import com.spectralogic.ds3client.models.JobNode;
+import com.spectralogic.ds3client.helpers.strategy.BlobStrategy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.Closeable;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 
-class ChunkTransferrer {
+class ChunkTransferrer implements Closeable {
     private final static Logger LOG = LoggerFactory.getLogger(ChunkTransferrer.class);
+
     private final ItemTransferrer itemTransferrer;
-    private final Ds3Client mainClient;
     private final JobPartTracker partTracker;
-    private final int maxParallelRequests;
+    private final ListeningExecutorService executor;
 
     public interface ItemTransferrer {
         void transferItem(Ds3Client client, BulkObject ds3Object) throws IOException;
@@ -46,69 +46,48 @@ class ChunkTransferrer {
 
     public ChunkTransferrer(
             final ItemTransferrer transferrer,
-            final Ds3Client mainClient,
             final JobPartTracker partTracker,
             final int maxParallelRequests) {
         this.itemTransferrer = transferrer;
-        this.mainClient = mainClient;
         this.partTracker = partTracker;
-        this.maxParallelRequests = maxParallelRequests;
+        LOG.debug("Starting executor service");
+        executor = MoreExecutors.listeningDecorator(Executors.newFixedThreadPool(maxParallelRequests));
+        LOG.debug("Executor service started");
     }
 
     public void transferChunks(
-            final Iterable<JobNode> nodes,
-            final Iterable<Objects> chunks)
-                throws IOException {
-        LOG.debug("Getting ready to process chunks");
-        final ImmutableMap<UUID, JobNode> nodeMap = buildNodeMap(nodes);
-        LOG.debug("Starting executor service");
-        final ListeningExecutorService executor = MoreExecutors.listeningDecorator(Executors.newFixedThreadPool(maxParallelRequests));
-        LOG.debug("Executor service started");
-        try {
-            final List<ListenableFuture<?>> tasks = new ArrayList<>();
-            for (final Objects chunk : chunks) {
-                LOG.debug("Processing parts for chunk: {}", chunk.getChunkId().toString());
-                final Ds3Client client = getClient(nodeMap, chunk.getNodeId(), mainClient);
-                for (final BulkObject ds3Object : chunk.getObjects()) {
-                    final ObjectPart part = new ObjectPart(ds3Object.getOffset(), ds3Object.getLength());
-                    if (this.partTracker.containsPart(ds3Object.getName(), part)) {
-                        LOG.debug("Adding {} to executor for processing", ds3Object.getName());
-                        tasks.add(executor.submit(new Callable<Object>() {
-                            @Override
-                            public Object call() throws Exception {
-                                LOG.debug("Processing {}", ds3Object.getName());
-                                ChunkTransferrer.this.itemTransferrer.transferItem(client, ds3Object);
-                                ChunkTransferrer.this.partTracker.completePart(ds3Object.getName(), part);
-                                return null;
-                            }
-                        }));
-                    }
+            final BlobStrategy blobStrategy)
+            throws IOException, InterruptedException {
+        final List<ListenableFuture<?>> tasks = new ArrayList<>();
+
+        final Iterable<JobPart> work = blobStrategy.getWork();
+
+        for (final JobPart jobPart : work) {
+            final BulkObject blob = jobPart.getBulkObject();
+            final ObjectPart part = new ObjectPart(blob.getOffset(), blob.getLength());
+
+            if (this.partTracker.containsPart(blob.getName(), part)) {
+                LOG.debug("Adding {} offset {} to executor for processing", blob.getName(), blob.getOffset());
+                tasks.add(executor.submit(new Callable<Object>() {
+                    @Override
+                    public Object call() throws Exception {
+                        LOG.debug("Processing {} offset {}", blob.getName(), blob.getOffset());
+                        ChunkTransferrer.this.itemTransferrer.transferItem(jobPart.getClient(), blob);
+                        blobStrategy.blobCompleted(blob);
+                        ChunkTransferrer.this.partTracker.completePart(blob.getName(), part);
+                        return null;
                 }
+            }));
             }
-            executeWithExceptionHandling(tasks);
-        } finally {
-            LOG.debug("Shutting down executor");
-            executor.shutdown();
         }
+
+        executeWithExceptionHandling(tasks);
     }
 
-    private static Ds3Client getClient(final ImmutableMap<UUID, JobNode> nodeMap, final UUID nodeId, final Ds3Client mainClient) {
-        final JobNode jobNode = nodeMap.get(nodeId);
-
-        if (jobNode == null) {
-            LOG.warn("The jobNode was not found, returning the existing client");
-            return mainClient;
-        }
-
-        return mainClient.newForNode(jobNode);
-    }
-
-    private static ImmutableMap<UUID, JobNode> buildNodeMap(final Iterable<JobNode> nodes) {
-        final ImmutableMap.Builder<UUID, JobNode> nodeMap = ImmutableMap.builder();
-        for (final JobNode node: nodes) {
-            nodeMap.put(node.getId(), node);
-        }
-        return nodeMap.build();
+    @Override
+    public void close() throws IOException {
+        LOG.debug("Shutting down executor");
+        executor.shutdown();
     }
 
     private static void executeWithExceptionHandling(final List<ListenableFuture<?>> tasks)

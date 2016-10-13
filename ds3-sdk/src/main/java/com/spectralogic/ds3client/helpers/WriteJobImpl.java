@@ -19,12 +19,11 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMultimap;
 import com.spectralogic.ds3client.Ds3Client;
 import com.spectralogic.ds3client.commands.PutObjectRequest;
-import com.spectralogic.ds3client.commands.spectrads3.AllocateJobChunkSpectraS3Request;
-import com.spectralogic.ds3client.commands.spectrads3.AllocateJobChunkSpectraS3Response;
-import com.spectralogic.ds3client.exceptions.Ds3NoMoreRetriesException;
 import com.spectralogic.ds3client.helpers.ChunkTransferrer.ItemTransferrer;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.ObjectChannelBuilder;
 import com.spectralogic.ds3client.helpers.events.EventRunner;
+import com.spectralogic.ds3client.helpers.strategy.BlobStrategy;
+import com.spectralogic.ds3client.helpers.strategy.PutStreamerStrategy;
 import com.spectralogic.ds3client.helpers.events.FailureEvent;
 import com.spectralogic.ds3client.models.*;
 import com.spectralogic.ds3client.models.Objects;
@@ -140,23 +139,32 @@ class WriteJobImpl extends JobImpl {
                 return;
             }
 
+            final BlobStrategy blobStrategy = new PutStreamerStrategy(client,
+                    this.masterObjectList,
+                    retryAfter,
+                    retryDelay,
+                    new BlobStrategy.ChunkEventHandler() {
+                        @Override
+                        public void emitWaitingForChunksEvents(final int secondsToDelay) {
+                            WriteJobImpl.super.emitWaitingForChunksEvents(secondsToDelay);
+                        }
+                    });
+
             try (final JobState jobState = new JobState(
                     channelBuilder,
                     filteredChunks,
                     partTracker,
                     ImmutableMap.<String, ImmutableMultimap<BulkObject, Range>>of())) {
-                final ChunkTransferrer chunkTransferrer = new ChunkTransferrer(
+                try (final ChunkTransferrer chunkTransferrer = new ChunkTransferrer(
                         new PutObjectTransferrerRetryDecorator(jobState),
-                        this.client,
                         jobState.getPartTracker(),
                         this.maxParallelRequests
-                );
-                for (final Objects chunk : filteredChunks) {
-                    LOG.debug("Allocating chunk: {}", chunk.getChunkId().toString());
-                    chunkTransferrer.transferChunks(
-                            this.masterObjectList.getNodes(),
-                            Collections.singletonList(filterChunk(allocateChunk(chunk))));
+                )) {
+                    while (jobState.hasObjects()) {
+                        chunkTransferrer.transferChunks(blobStrategy);
+                    }
                 }
+
             } catch (final IOException | RuntimeException e) {
                 throw e;
             } catch (final Exception e) {
@@ -164,56 +172,8 @@ class WriteJobImpl extends JobImpl {
             }
         } catch (final Throwable t) {
             running = false;
-            emitFailureEvent(makeFailureEvent(FailureEvent.FailureActivity.PuttingObject, t, filteredChunks.get(0)));
+            emitFailureEvent(makeFailureEvent(FailureEvent.FailureActivity.GettingObject, t, masterObjectList.getObjects().get(0)));
             throw t;
-        }
-    }
-
-    private Objects allocateChunk(final Objects filtered) throws IOException {
-        Objects chunk = null;
-        while (chunk == null) {
-            chunk = tryAllocateChunk(filtered);
-        }
-        return chunk;
-    }
-
-    private Objects tryAllocateChunk(final Objects filtered) throws IOException {
-        final AllocateJobChunkSpectraS3Response response =
-                this.client.allocateJobChunkSpectraS3(new AllocateJobChunkSpectraS3Request(filtered.getChunkId().toString()));
-
-        LOG.info("AllocatedJobChunkResponse status: {}", response.getStatus().toString());
-
-        switch (response.getStatus()) {
-            case ALLOCATED:
-                retryAfterLeft = retryAfter; // Reset the number of retries to the initial value
-                return response.getObjectsResult();
-            case RETRYLATER:
-                try {
-                    if (retryAfterLeft == 0) {
-                        throw new Ds3NoMoreRetriesException(this.retryAfter);
-                    }
-                    retryAfterLeft--;
-
-                    final int retryAfter = computeRetryAfter(response.getRetryAfterSeconds());
-                    emitWaitingForChunksEvents(retryAfter);
-
-                    LOG.debug("Will retry allocate chunk call after {} seconds", retryAfter);
-                    Thread.sleep(retryAfter * 1000);
-                    return null;
-                } catch (final InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
-            default:
-                assert false : "This line of code should be impossible to hit.";
-                return null;
-        }
-    }
-
-    private int computeRetryAfter(final int retryAfterSeconds) {
-        if (retryDelay == -1) {
-            return retryAfterSeconds;
-        } else {
-            return retryDelay;
         }
     }
 
