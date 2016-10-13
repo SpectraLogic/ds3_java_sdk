@@ -172,7 +172,7 @@ class WriteJobImpl extends JobImpl {
             }
         } catch (final Throwable t) {
             running = false;
-            emitFailureEvent(makeFailureEvent(FailureEvent.FailureActivity.GettingObject, t, masterObjectList.getObjects().get(0)));
+            emitFailureEvent(makeFailureEvent(FailureEvent.FailureActivity.PuttingObject, t, masterObjectList.getObjects().get(0)));
             throw t;
         }
     }

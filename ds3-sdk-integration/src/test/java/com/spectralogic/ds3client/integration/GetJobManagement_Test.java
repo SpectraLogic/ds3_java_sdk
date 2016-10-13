@@ -332,6 +332,7 @@ public class GetJobManagement_Test {
                 @Override
                 public void onFailure(final FailureEvent failureEvent) {
                     numFailuresRecorded.increment();
+                    assertEquals(FailureEvent.FailureActivity.GettingObject, failureEvent.doingWhat());
                 }
             };
 
@@ -397,6 +398,7 @@ public class GetJobManagement_Test {
                 @Override
                 public void onFailure(final FailureEvent failureEvent) {
                     numFailuresRecorded.increment();
+                    assertEquals(FailureEvent.FailureActivity.GettingObject, failureEvent.doingWhat());
                 }
             };
 

@@ -947,6 +947,7 @@ public class PutJobManagement_Test {
                 @Override
                 public void onFailure(final FailureEvent failureEvent) {
                     numFailureEventsFired.increment();
+                    assertEquals(FailureEvent.FailureActivity.PuttingObject, failureEvent.doingWhat());
                 }
             };
 
@@ -1017,6 +1018,7 @@ public class PutJobManagement_Test {
                 @Override
                 public void onFailure(final FailureEvent failureEvent) {
                     numFailureEventsFired.increment();
+                    assertEquals(FailureEvent.FailureActivity.PuttingObject, failureEvent.doingWhat());
                 }
             };
 

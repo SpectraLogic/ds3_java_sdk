@@ -19,19 +19,19 @@ import com.google.common.base.Preconditions;
 import com.spectralogic.ds3client.utils.Guard;
 
 public class FailureEvent {
-    private final String doingWhat;
+    private final FailureActivity doingWhat;
     private final String objectName;
     private final String endpoint;
     private final Throwable causalException;
 
-    private FailureEvent(final String what, final String objectName, final String endpoint, final Throwable causalException) {
+    private FailureEvent(final FailureActivity what, final String objectName, final String endpoint, final Throwable causalException) {
         this.doingWhat = what;
         this.objectName = objectName;
         this.endpoint = endpoint;
         this.causalException = causalException;
     }
 
-    public String doingWhat() {
+    public FailureActivity doingWhat() {
         return doingWhat;
     }
 
@@ -49,7 +49,7 @@ public class FailureEvent {
 
     @Override
     public String toString() {
-        return "Failure " + doingWhat + " with object named \"" + objectName + "\" using system with endpoint " + endpoint;
+        return "Failure " + doingWhat().getActivityText() + " with object named \"" + withObjectNamed() + "\" using system with endpoint " + usingSystemWithEndpoint();
     }
 
     public enum FailureActivity {
@@ -101,7 +101,7 @@ public class FailureEvent {
             Guard.throwOnNullOrEmptyString(usingSystemWithEndpoint, "The endpoint referenced in the activity may not be null or empty.");
             Preconditions.checkNotNull(causalException, "The exception causing a failure may not be null.");
 
-            return new FailureEvent(doingWhat.getActivityText(), withObjectNamed, usingSystemWithEndpoint, causalException);
+            return new FailureEvent(doingWhat, withObjectNamed, usingSystemWithEndpoint, causalException);
         }
     }
 }
