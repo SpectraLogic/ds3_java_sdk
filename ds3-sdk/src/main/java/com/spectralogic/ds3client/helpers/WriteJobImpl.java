@@ -50,7 +50,6 @@ class WriteJobImpl extends JobImpl {
     private final int retryAfter; // Negative retryAfter value represent infinity retries
     private final int retryDelay; //Negative value means use default
 
-    private int retryAfterLeft; // The number of retries left
     private Ds3ClientHelpers.MetadataAccess metadataAccess = null;
     private ChecksumFunction checksumFunction = null;
 
@@ -74,7 +73,7 @@ class WriteJobImpl extends JobImpl {
             this.partTracker = JobPartTrackerFactory
                     .buildPartTracker(ReadJobImpl.getAllBlobApiBeans(filteredChunks), eventRunner);
         }
-        this.retryAfter = this.retryAfterLeft = retryAfter;
+        this.retryAfter = retryAfter;
         this.retryDelay = retryDelay;
 
         this.checksumType = type;

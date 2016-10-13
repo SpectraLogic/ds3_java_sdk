@@ -344,14 +344,6 @@ public class GetJobManagement_Test {
                 readJob.transfer(new FileObjectGetter(tempDirectory));
             } catch (final IOException e) {
                 assertEquals(1, numFailuresRecorded.getValue());
-
-                readJob.removeFailureEventListener(failureEventListener);
-
-                try {
-                    readJob.transfer(new FileObjectGetter(tempDirectory));
-                } catch (final IOException ioe) {
-                    assertEquals(1, numFailuresRecorded.getValue());
-                }
             }
         } finally {
             FileUtils.deleteDirectory(tempDirectory.toFile());
@@ -410,14 +402,6 @@ public class GetJobManagement_Test {
                 readJob.transfer(new FileObjectGetter(tempDirectory));
             } catch (final IOException e) {
                 assertEquals(1, numFailuresRecorded.getValue());
-
-                readJob.removeFailureEventListener(failureEventListener);
-
-                try {
-                    readJob.transfer(new FileObjectGetter(tempDirectory));
-                } catch (final IOException ioe) {
-                    assertEquals(1, numFailuresRecorded.getValue());
-                }
             }
         } finally {
             FileUtils.deleteDirectory(tempDirectory.toFile());

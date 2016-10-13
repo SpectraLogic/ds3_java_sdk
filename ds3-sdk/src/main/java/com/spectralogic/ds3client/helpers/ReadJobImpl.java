@@ -161,7 +161,6 @@ class ReadJobImpl extends JobImpl {
                 throw new RuntimeException(e);
             }
         } catch (final Throwable t) {
-            running = false;
             emitFailureEvent(makeFailureEvent(FailureEvent.FailureActivity.GettingObject, t, masterObjectList.getObjects().get(0)));
             throw t;
         }

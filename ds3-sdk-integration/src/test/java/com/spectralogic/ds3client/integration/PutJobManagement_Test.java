@@ -957,14 +957,6 @@ public class PutJobManagement_Test {
                 writeJob.transfer(new FileObjectPutter(tempDirectory));
             } catch (final Ds3NoMoreRetriesException e) {
                 assertEquals(1, numFailureEventsFired.getValue());
-
-                writeJob.removeFailureEventListener(failureEventListener);
-
-                try {
-                    writeJob.transfer(new FileObjectPutter(tempDirectory));
-                } catch (final Ds3NoMoreRetriesException nmre) {
-                    assertEquals(1, numFailureEventsFired.getValue());
-                }
             }
         } finally {
             FileUtils.deleteDirectory(tempDirectory.toFile());
@@ -1028,14 +1020,6 @@ public class PutJobManagement_Test {
                 writeJob.transfer(new FileObjectPutter(tempDirectory));
             } catch (final RuntimeException e) {
                 assertEquals(1, numFailureEventsFired.getValue());
-
-                writeJob.removeFailureEventListener(failureEventListener);
-
-                try {
-                    writeJob.transfer(new FileObjectPutter(tempDirectory));
-                } catch (final RuntimeException nmre) {
-                    assertEquals(1, numFailureEventsFired.getValue());
-                }
             }
         } finally {
             FileUtils.deleteDirectory(tempDirectory.toFile());
