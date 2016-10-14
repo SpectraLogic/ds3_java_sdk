@@ -15,7 +15,6 @@
 
 package com.spectralogic.ds3client.helpers;
 
-import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
 import com.spectralogic.ds3client.Ds3Client;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.Job;
