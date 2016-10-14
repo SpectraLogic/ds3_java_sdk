@@ -31,6 +31,7 @@ public class CompactPoolSpectraS3Request extends AbstractRequest {
 
     // Constructor
     
+    
     public CompactPoolSpectraS3Request(final String pool) {
         this.pool = pool;
         
@@ -43,6 +44,7 @@ public class CompactPoolSpectraS3Request extends AbstractRequest {
         this.updateQueryParam("priority", priority);
         return this;
     }
+
 
 
     @Override

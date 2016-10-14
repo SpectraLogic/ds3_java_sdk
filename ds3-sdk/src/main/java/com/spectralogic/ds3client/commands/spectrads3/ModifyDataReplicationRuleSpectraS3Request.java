@@ -33,6 +33,7 @@ public class ModifyDataReplicationRuleSpectraS3Request extends AbstractRequest {
 
     // Constructor
     
+    
     public ModifyDataReplicationRuleSpectraS3Request(final String dataReplicationRule) {
         this.dataReplicationRule = dataReplicationRule;
         
@@ -44,11 +45,13 @@ public class ModifyDataReplicationRuleSpectraS3Request extends AbstractRequest {
         return this;
     }
 
+
     public ModifyDataReplicationRuleSpectraS3Request withType(final DataReplicationRuleType type) {
         this.type = type;
         this.updateQueryParam("type", type);
         return this;
     }
+
 
 
     @Override

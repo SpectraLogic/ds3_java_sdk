@@ -25,6 +25,7 @@ public class ResetInstanceIdentifierSpectraS3Request extends AbstractRequest {
     
     // Constructor
     
+    
     public ResetInstanceIdentifierSpectraS3Request() {
         
     }

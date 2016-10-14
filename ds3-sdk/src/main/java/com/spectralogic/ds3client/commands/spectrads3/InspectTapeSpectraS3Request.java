@@ -32,6 +32,7 @@ public class InspectTapeSpectraS3Request extends AbstractRequest {
 
     // Constructor
     
+    
     public InspectTapeSpectraS3Request(final UUID tapeId) {
         this.tapeId = tapeId.toString();
         
@@ -39,6 +40,7 @@ public class InspectTapeSpectraS3Request extends AbstractRequest {
 
     }
 
+    
     public InspectTapeSpectraS3Request(final String tapeId) {
         this.tapeId = tapeId;
         
@@ -51,6 +53,7 @@ public class InspectTapeSpectraS3Request extends AbstractRequest {
         this.updateQueryParam("task_priority", taskPriority);
         return this;
     }
+
 
 
     @Override

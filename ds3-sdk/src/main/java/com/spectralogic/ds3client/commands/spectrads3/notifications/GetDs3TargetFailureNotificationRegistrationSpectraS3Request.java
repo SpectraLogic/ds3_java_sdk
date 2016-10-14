@@ -25,6 +25,7 @@ public class GetDs3TargetFailureNotificationRegistrationSpectraS3Request extends
     
     // Constructor
     
+    
     public GetDs3TargetFailureNotificationRegistrationSpectraS3Request(final UUID notificationId) {
         super(notificationId);
 
@@ -32,6 +33,7 @@ public class GetDs3TargetFailureNotificationRegistrationSpectraS3Request extends
 
     }
 
+    
     public GetDs3TargetFailureNotificationRegistrationSpectraS3Request(final String notificationId) {
         super(notificationId);
 

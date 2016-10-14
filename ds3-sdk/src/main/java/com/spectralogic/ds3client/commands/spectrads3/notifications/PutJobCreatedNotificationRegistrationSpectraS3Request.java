@@ -32,6 +32,7 @@ public class PutJobCreatedNotificationRegistrationSpectraS3Request extends Abstr
 
     private RequestType notificationHttpMethod;
 
+    
     public PutJobCreatedNotificationRegistrationSpectraS3Request(final String notificationEndPoint) {
         super(notificationEndPoint);
 
@@ -45,17 +46,20 @@ public class PutJobCreatedNotificationRegistrationSpectraS3Request extends Abstr
         return this;
     }
 
+
     public PutJobCreatedNotificationRegistrationSpectraS3Request withNamingConvention(final NamingConventionType namingConvention) {
         this.namingConvention = namingConvention;
         this.updateQueryParam("naming_convention", namingConvention);
         return this;
     }
 
+
     public PutJobCreatedNotificationRegistrationSpectraS3Request withNotificationHttpMethod(final RequestType notificationHttpMethod) {
         this.notificationHttpMethod = notificationHttpMethod;
         this.updateQueryParam("notification_http_method", notificationHttpMethod);
         return this;
     }
+
 
 
     @Override

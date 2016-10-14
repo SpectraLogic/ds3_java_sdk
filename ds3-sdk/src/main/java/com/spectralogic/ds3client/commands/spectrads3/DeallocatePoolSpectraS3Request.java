@@ -28,6 +28,7 @@ public class DeallocatePoolSpectraS3Request extends AbstractRequest {
 
     // Constructor
     
+    
     public DeallocatePoolSpectraS3Request(final String pool) {
         this.pool = pool;
         

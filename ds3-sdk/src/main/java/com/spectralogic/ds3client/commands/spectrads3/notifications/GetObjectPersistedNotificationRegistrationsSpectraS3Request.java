@@ -37,6 +37,7 @@ public class GetObjectPersistedNotificationRegistrationsSpectraS3Request extends
 
     // Constructor
     
+    
     public GetObjectPersistedNotificationRegistrationsSpectraS3Request() {
         
     }
@@ -51,11 +52,13 @@ public class GetObjectPersistedNotificationRegistrationsSpectraS3Request extends
         return this;
     }
 
+
     public GetObjectPersistedNotificationRegistrationsSpectraS3Request withPageLength(final int pageLength) {
         this.pageLength = pageLength;
         this.updateQueryParam("page_length", pageLength);
         return this;
     }
+
 
     public GetObjectPersistedNotificationRegistrationsSpectraS3Request withPageOffset(final int pageOffset) {
         this.pageOffset = pageOffset;
@@ -63,11 +66,13 @@ public class GetObjectPersistedNotificationRegistrationsSpectraS3Request extends
         return this;
     }
 
+
     public GetObjectPersistedNotificationRegistrationsSpectraS3Request withPageStartMarker(final UUID pageStartMarker) {
         this.pageStartMarker = pageStartMarker.toString();
         this.updateQueryParam("page_start_marker", pageStartMarker);
         return this;
     }
+
 
     public GetObjectPersistedNotificationRegistrationsSpectraS3Request withPageStartMarker(final String pageStartMarker) {
         this.pageStartMarker = pageStartMarker;
@@ -75,17 +80,20 @@ public class GetObjectPersistedNotificationRegistrationsSpectraS3Request extends
         return this;
     }
 
+
     public GetObjectPersistedNotificationRegistrationsSpectraS3Request withUserId(final UUID userId) {
         this.userId = userId.toString();
         this.updateQueryParam("user_id", userId);
         return this;
     }
 
+
     public GetObjectPersistedNotificationRegistrationsSpectraS3Request withUserId(final String userId) {
         this.userId = userId;
         this.updateQueryParam("user_id", userId);
         return this;
     }
+
 
 
     @Override

@@ -25,6 +25,7 @@ public class GetStorageDomainFailureNotificationRegistrationSpectraS3Request ext
     
     // Constructor
     
+    
     public GetStorageDomainFailureNotificationRegistrationSpectraS3Request(final UUID notificationId) {
         super(notificationId);
 
@@ -32,6 +33,7 @@ public class GetStorageDomainFailureNotificationRegistrationSpectraS3Request ext
 
     }
 
+    
     public GetStorageDomainFailureNotificationRegistrationSpectraS3Request(final String notificationId) {
         super(notificationId);
 

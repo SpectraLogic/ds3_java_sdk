@@ -27,6 +27,7 @@ public class HeadBucketRequest extends AbstractRequest {
 
     // Constructor
     
+    
     public HeadBucketRequest(final String bucketName) {
         this.bucketName = bucketName;
         

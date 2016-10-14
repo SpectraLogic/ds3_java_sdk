@@ -27,6 +27,7 @@ public class DeleteBucketRequest extends AbstractRequest {
 
     // Constructor
     
+    
     public DeleteBucketRequest(final String bucketName) {
         this.bucketName = bucketName;
         

@@ -25,6 +25,7 @@ public class GetPoolFailureNotificationRegistrationSpectraS3Request extends Abst
     
     // Constructor
     
+    
     public GetPoolFailureNotificationRegistrationSpectraS3Request(final UUID notificationId) {
         super(notificationId);
 
@@ -32,6 +33,7 @@ public class GetPoolFailureNotificationRegistrationSpectraS3Request extends Abst
 
     }
 
+    
     public GetPoolFailureNotificationRegistrationSpectraS3Request(final String notificationId) {
         super(notificationId);
 

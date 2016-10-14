@@ -25,6 +25,7 @@ public class DeleteJobCreationFailedNotificationRegistrationSpectraS3Request ext
     
     //Constructor
     
+    
     public DeleteJobCreationFailedNotificationRegistrationSpectraS3Request(final UUID notificationId) {
         super(notificationId);
 
@@ -32,6 +33,7 @@ public class DeleteJobCreationFailedNotificationRegistrationSpectraS3Request ext
 
     }
 
+    
     public DeleteJobCreationFailedNotificationRegistrationSpectraS3Request(final String notificationId) {
         super(notificationId);
 

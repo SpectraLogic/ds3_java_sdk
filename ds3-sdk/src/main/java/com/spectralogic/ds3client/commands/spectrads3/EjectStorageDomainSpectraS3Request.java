@@ -17,15 +17,6 @@
 package com.spectralogic.ds3client.commands.spectrads3;
 
 import com.spectralogic.ds3client.networking.HttpVerb;
-import com.spectralogic.ds3client.models.bulk.Ds3Object;
-import com.spectralogic.ds3client.models.bulk.Ds3ObjectList;
-import com.spectralogic.ds3client.serializer.XmlOutput;
-import com.spectralogic.ds3client.utils.Guard;
-
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
-import java.util.List;
-import java.nio.charset.Charset;
 import com.spectralogic.ds3client.commands.interfaces.AbstractRequest;
 import java.util.UUID;
 import com.google.common.net.UrlEscapers;
@@ -36,29 +27,26 @@ public class EjectStorageDomainSpectraS3Request extends AbstractRequest {
     
     private final String storageDomainId;
 
-    private final List<Ds3Object> objects;
-
     private String bucketId;
 
     private String ejectLabel;
 
     private String ejectLocation;
-    private long size = 0;
 
     // Constructor
     
-    public EjectStorageDomainSpectraS3Request(final List<Ds3Object> objects, final UUID storageDomainId) {
+    
+    public EjectStorageDomainSpectraS3Request(final UUID storageDomainId) {
         this.storageDomainId = storageDomainId.toString();
-        this.objects = objects;
         
         this.getQueryParams().put("operation", "eject");
 
         this.getQueryParams().put("storage_domain_id", storageDomainId.toString());
     }
 
-    public EjectStorageDomainSpectraS3Request(final List<Ds3Object> objects, final String storageDomainId) {
+    
+    public EjectStorageDomainSpectraS3Request(final String storageDomainId) {
         this.storageDomainId = storageDomainId;
-        this.objects = objects;
         
         this.getQueryParams().put("operation", "eject");
 
@@ -71,11 +59,13 @@ public class EjectStorageDomainSpectraS3Request extends AbstractRequest {
         return this;
     }
 
+
     public EjectStorageDomainSpectraS3Request withEjectLabel(final String ejectLabel) {
         this.ejectLabel = ejectLabel;
         this.updateQueryParam("eject_label", ejectLabel);
         return this;
     }
+
 
     public EjectStorageDomainSpectraS3Request withEjectLocation(final String ejectLocation) {
         this.ejectLocation = ejectLocation;
@@ -84,25 +74,6 @@ public class EjectStorageDomainSpectraS3Request extends AbstractRequest {
     }
 
 
-    @Override
-    public InputStream getStream() {
-        if (Guard.isNullOrEmpty(objects)) {
-            return null;
-        }
-        final Ds3ObjectList objects = new Ds3ObjectList();
-        objects.setObjects(this.objects);
-
-        final String xmlOutput = XmlOutput.toXml(objects, false);
-
-        final byte[] stringBytes = xmlOutput.getBytes(Charset.forName("UTF-8"));
-        this.size = stringBytes.length;
-        return new ByteArrayInputStream(stringBytes);
-    }
-
-    @Override
-    public long getSize() {
-        return this.size;
-    }
 
     @Override
     public HttpVerb getVerb() {
@@ -119,11 +90,6 @@ public class EjectStorageDomainSpectraS3Request extends AbstractRequest {
     }
 
 
-    public List<Ds3Object> getObjects() {
-        return this.objects;
-    }
-
-
     public String getBucketId() {
         return this.bucketId;
     }
@@ -137,6 +103,5 @@ public class EjectStorageDomainSpectraS3Request extends AbstractRequest {
     public String getEjectLocation() {
         return this.ejectLocation;
     }
-
 
 }

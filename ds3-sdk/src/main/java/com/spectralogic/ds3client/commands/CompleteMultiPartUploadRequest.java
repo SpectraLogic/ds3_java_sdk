@@ -41,6 +41,7 @@ public class CompleteMultiPartUploadRequest extends AbstractRequest {
 
     // Constructor
     
+    
     public CompleteMultiPartUploadRequest(final String bucketName, final String objectName, final CompleteMultipartUpload requestPayload, final UUID uploadId) {
         this.bucketName = bucketName;
         this.objectName = objectName;
@@ -50,6 +51,7 @@ public class CompleteMultiPartUploadRequest extends AbstractRequest {
         this.getQueryParams().put("upload_id", uploadId.toString());
     }
 
+    
     public CompleteMultiPartUploadRequest(final String bucketName, final String objectName, final CompleteMultipartUpload requestPayload, final String uploadId) {
         this.bucketName = bucketName;
         this.objectName = objectName;

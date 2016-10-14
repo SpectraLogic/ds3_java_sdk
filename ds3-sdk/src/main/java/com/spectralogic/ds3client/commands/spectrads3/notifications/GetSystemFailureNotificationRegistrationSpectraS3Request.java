@@ -25,6 +25,7 @@ public class GetSystemFailureNotificationRegistrationSpectraS3Request extends Ab
     
     // Constructor
     
+    
     public GetSystemFailureNotificationRegistrationSpectraS3Request(final UUID notificationId) {
         super(notificationId);
 
@@ -32,6 +33,7 @@ public class GetSystemFailureNotificationRegistrationSpectraS3Request extends Ab
 
     }
 
+    
     public GetSystemFailureNotificationRegistrationSpectraS3Request(final String notificationId) {
         super(notificationId);
 

@@ -43,6 +43,7 @@ public class ImportAllPoolsSpectraS3Request extends AbstractRequest {
 
     // Constructor
     
+    
     public ImportAllPoolsSpectraS3Request() {
         
         this.getQueryParams().put("operation", "import");
@@ -55,11 +56,13 @@ public class ImportAllPoolsSpectraS3Request extends AbstractRequest {
         return this;
     }
 
+
     public ImportAllPoolsSpectraS3Request withDataPolicyId(final UUID dataPolicyId) {
         this.dataPolicyId = dataPolicyId.toString();
         this.updateQueryParam("data_policy_id", dataPolicyId);
         return this;
     }
+
 
     public ImportAllPoolsSpectraS3Request withDataPolicyId(final String dataPolicyId) {
         this.dataPolicyId = dataPolicyId;
@@ -67,11 +70,13 @@ public class ImportAllPoolsSpectraS3Request extends AbstractRequest {
         return this;
     }
 
+
     public ImportAllPoolsSpectraS3Request withPriority(final Priority priority) {
         this.priority = priority;
         this.updateQueryParam("priority", priority);
         return this;
     }
+
 
     public ImportAllPoolsSpectraS3Request withStorageDomainId(final UUID storageDomainId) {
         this.storageDomainId = storageDomainId.toString();
@@ -79,11 +84,13 @@ public class ImportAllPoolsSpectraS3Request extends AbstractRequest {
         return this;
     }
 
+
     public ImportAllPoolsSpectraS3Request withStorageDomainId(final String storageDomainId) {
         this.storageDomainId = storageDomainId;
         this.updateQueryParam("storage_domain_id", storageDomainId);
         return this;
     }
+
 
     public ImportAllPoolsSpectraS3Request withUserId(final UUID userId) {
         this.userId = userId.toString();
@@ -91,11 +98,13 @@ public class ImportAllPoolsSpectraS3Request extends AbstractRequest {
         return this;
     }
 
+
     public ImportAllPoolsSpectraS3Request withUserId(final String userId) {
         this.userId = userId;
         this.updateQueryParam("user_id", userId);
         return this;
     }
+
 
     public ImportAllPoolsSpectraS3Request withVerifyDataAfterImport(final Priority verifyDataAfterImport) {
         this.verifyDataAfterImport = verifyDataAfterImport;
@@ -103,11 +112,13 @@ public class ImportAllPoolsSpectraS3Request extends AbstractRequest {
         return this;
     }
 
+
     public ImportAllPoolsSpectraS3Request withVerifyDataPriorToImport(final boolean verifyDataPriorToImport) {
         this.verifyDataPriorToImport = verifyDataPriorToImport;
         this.updateQueryParam("verify_data_prior_to_import", verifyDataPriorToImport);
         return this;
     }
+
 
 
     @Override

@@ -31,6 +31,7 @@ public class TruncateAllJobsSpectraS3Request extends AbstractRequest {
 
     // Constructor
     
+    
     public TruncateAllJobsSpectraS3Request() {
         
     }
@@ -41,11 +42,13 @@ public class TruncateAllJobsSpectraS3Request extends AbstractRequest {
         return this;
     }
 
+
     public TruncateAllJobsSpectraS3Request withRequestType(final JobRequestType requestType) {
         this.requestType = requestType;
         this.updateQueryParam("request_type", requestType);
         return this;
     }
+
 
 
     @Override

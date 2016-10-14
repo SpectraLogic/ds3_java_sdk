@@ -42,6 +42,7 @@ public class GetTapePartitionFailuresSpectraS3Request extends AbstractPagination
 
     // Constructor
     
+    
     public GetTapePartitionFailuresSpectraS3Request() {
         
     }
@@ -51,6 +52,7 @@ public class GetTapePartitionFailuresSpectraS3Request extends AbstractPagination
         this.updateQueryParam("error_message", errorMessage);
         return this;
     }
+
 
     public GetTapePartitionFailuresSpectraS3Request withLastPage(final boolean lastPage) {
         this.lastPage = lastPage;
@@ -62,11 +64,13 @@ public class GetTapePartitionFailuresSpectraS3Request extends AbstractPagination
         return this;
     }
 
+
     public GetTapePartitionFailuresSpectraS3Request withPageLength(final int pageLength) {
         this.pageLength = pageLength;
         this.updateQueryParam("page_length", pageLength);
         return this;
     }
+
 
     public GetTapePartitionFailuresSpectraS3Request withPageOffset(final int pageOffset) {
         this.pageOffset = pageOffset;
@@ -74,11 +78,13 @@ public class GetTapePartitionFailuresSpectraS3Request extends AbstractPagination
         return this;
     }
 
+
     public GetTapePartitionFailuresSpectraS3Request withPageStartMarker(final UUID pageStartMarker) {
         this.pageStartMarker = pageStartMarker.toString();
         this.updateQueryParam("page_start_marker", pageStartMarker);
         return this;
     }
+
 
     public GetTapePartitionFailuresSpectraS3Request withPageStartMarker(final String pageStartMarker) {
         this.pageStartMarker = pageStartMarker;
@@ -86,11 +92,13 @@ public class GetTapePartitionFailuresSpectraS3Request extends AbstractPagination
         return this;
     }
 
+
     public GetTapePartitionFailuresSpectraS3Request withPartitionId(final UUID partitionId) {
         this.partitionId = partitionId.toString();
         this.updateQueryParam("partition_id", partitionId);
         return this;
     }
+
 
     public GetTapePartitionFailuresSpectraS3Request withPartitionId(final String partitionId) {
         this.partitionId = partitionId;
@@ -98,11 +106,13 @@ public class GetTapePartitionFailuresSpectraS3Request extends AbstractPagination
         return this;
     }
 
+
     public GetTapePartitionFailuresSpectraS3Request withType(final TapePartitionFailureType type) {
         this.type = type;
         this.updateQueryParam("type", type);
         return this;
     }
+
 
 
     @Override

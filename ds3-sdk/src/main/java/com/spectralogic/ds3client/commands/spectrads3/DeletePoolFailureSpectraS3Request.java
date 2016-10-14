@@ -28,6 +28,7 @@ public class DeletePoolFailureSpectraS3Request extends AbstractRequest {
 
     // Constructor
     
+    
     public DeletePoolFailureSpectraS3Request(final String poolFailure) {
         this.poolFailure = poolFailure;
         

@@ -21,7 +21,7 @@ import com.spectralogic.ds3client.commands.interfaces.AbstractRequest;
 import com.google.common.net.UrlEscapers;
 import com.spectralogic.ds3client.models.Ds3TargetAccessControlReplication;
 import java.lang.Integer;
-import com.spectralogic.ds3client.models.TargetReadPreference;
+import com.spectralogic.ds3client.models.TargetReadPreferenceType;
 
 public class RegisterDs3TargetSpectraS3Request extends AbstractRequest {
 
@@ -45,13 +45,14 @@ public class RegisterDs3TargetSpectraS3Request extends AbstractRequest {
 
     private boolean dataPathVerifyCertificate;
 
-    private TargetReadPreference defaultReadPreference;
+    private TargetReadPreferenceType defaultReadPreference;
 
     private boolean permitGoingOutOfSync;
 
     private String replicatedUserDefaultDataPolicy;
 
     // Constructor
+    
     
     public RegisterDs3TargetSpectraS3Request(final String adminAuthId, final String adminSecretKey, final String dataPathEndPoint, final String name) {
         this.adminAuthId = adminAuthId;
@@ -71,11 +72,13 @@ public class RegisterDs3TargetSpectraS3Request extends AbstractRequest {
         return this;
     }
 
+
     public RegisterDs3TargetSpectraS3Request withDataPathHttps(final boolean dataPathHttps) {
         this.dataPathHttps = dataPathHttps;
         this.updateQueryParam("data_path_https", dataPathHttps);
         return this;
     }
+
 
     public RegisterDs3TargetSpectraS3Request withDataPathPort(final Integer dataPathPort) {
         this.dataPathPort = dataPathPort;
@@ -83,11 +86,13 @@ public class RegisterDs3TargetSpectraS3Request extends AbstractRequest {
         return this;
     }
 
+
     public RegisterDs3TargetSpectraS3Request withDataPathProxy(final String dataPathProxy) {
         this.dataPathProxy = dataPathProxy;
         this.updateQueryParam("data_path_proxy", dataPathProxy);
         return this;
     }
+
 
     public RegisterDs3TargetSpectraS3Request withDataPathVerifyCertificate(final boolean dataPathVerifyCertificate) {
         this.dataPathVerifyCertificate = dataPathVerifyCertificate;
@@ -95,11 +100,13 @@ public class RegisterDs3TargetSpectraS3Request extends AbstractRequest {
         return this;
     }
 
-    public RegisterDs3TargetSpectraS3Request withDefaultReadPreference(final TargetReadPreference defaultReadPreference) {
+
+    public RegisterDs3TargetSpectraS3Request withDefaultReadPreference(final TargetReadPreferenceType defaultReadPreference) {
         this.defaultReadPreference = defaultReadPreference;
         this.updateQueryParam("default_read_preference", defaultReadPreference);
         return this;
     }
+
 
     public RegisterDs3TargetSpectraS3Request withPermitGoingOutOfSync(final boolean permitGoingOutOfSync) {
         this.permitGoingOutOfSync = permitGoingOutOfSync;
@@ -107,11 +114,13 @@ public class RegisterDs3TargetSpectraS3Request extends AbstractRequest {
         return this;
     }
 
+
     public RegisterDs3TargetSpectraS3Request withReplicatedUserDefaultDataPolicy(final String replicatedUserDefaultDataPolicy) {
         this.replicatedUserDefaultDataPolicy = replicatedUserDefaultDataPolicy;
         this.updateQueryParam("replicated_user_default_data_policy", replicatedUserDefaultDataPolicy);
         return this;
     }
+
 
 
     @Override
@@ -169,7 +178,7 @@ public class RegisterDs3TargetSpectraS3Request extends AbstractRequest {
     }
 
 
-    public TargetReadPreference getDefaultReadPreference() {
+    public TargetReadPreferenceType getDefaultReadPreference() {
         return this.defaultReadPreference;
     }
 

@@ -27,6 +27,7 @@ public class MarkSuspectBlobTargetsAsDegradedSpectraS3Request extends AbstractRe
 
     // Constructor
     
+    
     public MarkSuspectBlobTargetsAsDegradedSpectraS3Request() {
         
     }
@@ -40,6 +41,7 @@ public class MarkSuspectBlobTargetsAsDegradedSpectraS3Request extends AbstractRe
         }
         return this;
     }
+
 
 
     @Override

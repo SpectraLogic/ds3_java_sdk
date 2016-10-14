@@ -31,6 +31,7 @@ public class ModifyTapePartitionSpectraS3Request extends AbstractRequest {
 
     // Constructor
     
+    
     public ModifyTapePartitionSpectraS3Request(final String tapePartition) {
         this.tapePartition = tapePartition;
         
@@ -41,6 +42,7 @@ public class ModifyTapePartitionSpectraS3Request extends AbstractRequest {
         this.updateQueryParam("quiesced", quiesced);
         return this;
     }
+
 
 
     @Override

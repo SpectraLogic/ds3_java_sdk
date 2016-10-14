@@ -32,6 +32,7 @@ public class DeleteBucketSpectraS3Request extends AbstractRequest {
 
     // Constructor
     
+    
     public DeleteBucketSpectraS3Request(final String bucketName) {
         this.bucketName = bucketName;
         
@@ -47,6 +48,7 @@ public class DeleteBucketSpectraS3Request extends AbstractRequest {
         return this;
     }
 
+
     public DeleteBucketSpectraS3Request withReplicate(final boolean replicate) {
         this.replicate = replicate;
         if (this.replicate) {
@@ -56,6 +58,7 @@ public class DeleteBucketSpectraS3Request extends AbstractRequest {
         }
         return this;
     }
+
 
 
     @Override

@@ -25,6 +25,7 @@ public class DeleteStorageDomainFailureNotificationRegistrationSpectraS3Request 
     
     //Constructor
     
+    
     public DeleteStorageDomainFailureNotificationRegistrationSpectraS3Request(final UUID notificationId) {
         super(notificationId);
 
@@ -32,6 +33,7 @@ public class DeleteStorageDomainFailureNotificationRegistrationSpectraS3Request 
 
     }
 
+    
     public DeleteStorageDomainFailureNotificationRegistrationSpectraS3Request(final String notificationId) {
         super(notificationId);
 

@@ -40,6 +40,7 @@ public class GetBlobsOnPoolSpectraS3Request extends AbstractRequest {
 
     // Constructor
     
+    
     public GetBlobsOnPoolSpectraS3Request(final List<Ds3Object> objects, final String pool) {
         this.pool = pool;
         this.objects = objects;

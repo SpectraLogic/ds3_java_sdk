@@ -20,7 +20,7 @@ import com.spectralogic.ds3client.networking.HttpVerb;
 import com.spectralogic.ds3client.commands.interfaces.AbstractPaginationRequest;
 import com.google.common.net.UrlEscapers;
 import java.util.UUID;
-import com.spectralogic.ds3client.models.TargetReadPreference;
+import com.spectralogic.ds3client.models.TargetReadPreferenceType;
 
 public class GetDs3TargetReadPreferencesSpectraS3Request extends AbstractPaginationRequest {
 
@@ -36,11 +36,12 @@ public class GetDs3TargetReadPreferencesSpectraS3Request extends AbstractPaginat
 
     private String pageStartMarker;
 
-    private TargetReadPreference readPreference;
+    private TargetReadPreferenceType readPreference;
 
     private String targetId;
 
     // Constructor
+    
     
     public GetDs3TargetReadPreferencesSpectraS3Request() {
         
@@ -52,6 +53,7 @@ public class GetDs3TargetReadPreferencesSpectraS3Request extends AbstractPaginat
         return this;
     }
 
+
     public GetDs3TargetReadPreferencesSpectraS3Request withLastPage(final boolean lastPage) {
         this.lastPage = lastPage;
         if (this.lastPage) {
@@ -62,11 +64,13 @@ public class GetDs3TargetReadPreferencesSpectraS3Request extends AbstractPaginat
         return this;
     }
 
+
     public GetDs3TargetReadPreferencesSpectraS3Request withPageLength(final int pageLength) {
         this.pageLength = pageLength;
         this.updateQueryParam("page_length", pageLength);
         return this;
     }
+
 
     public GetDs3TargetReadPreferencesSpectraS3Request withPageOffset(final int pageOffset) {
         this.pageOffset = pageOffset;
@@ -74,11 +78,13 @@ public class GetDs3TargetReadPreferencesSpectraS3Request extends AbstractPaginat
         return this;
     }
 
+
     public GetDs3TargetReadPreferencesSpectraS3Request withPageStartMarker(final UUID pageStartMarker) {
         this.pageStartMarker = pageStartMarker.toString();
         this.updateQueryParam("page_start_marker", pageStartMarker);
         return this;
     }
+
 
     public GetDs3TargetReadPreferencesSpectraS3Request withPageStartMarker(final String pageStartMarker) {
         this.pageStartMarker = pageStartMarker;
@@ -86,11 +92,13 @@ public class GetDs3TargetReadPreferencesSpectraS3Request extends AbstractPaginat
         return this;
     }
 
-    public GetDs3TargetReadPreferencesSpectraS3Request withReadPreference(final TargetReadPreference readPreference) {
+
+    public GetDs3TargetReadPreferencesSpectraS3Request withReadPreference(final TargetReadPreferenceType readPreference) {
         this.readPreference = readPreference;
         this.updateQueryParam("read_preference", readPreference);
         return this;
     }
+
 
     public GetDs3TargetReadPreferencesSpectraS3Request withTargetId(final UUID targetId) {
         this.targetId = targetId.toString();
@@ -98,11 +106,13 @@ public class GetDs3TargetReadPreferencesSpectraS3Request extends AbstractPaginat
         return this;
     }
 
+
     public GetDs3TargetReadPreferencesSpectraS3Request withTargetId(final String targetId) {
         this.targetId = targetId;
         this.updateQueryParam("target_id", targetId);
         return this;
     }
+
 
 
     @Override
@@ -140,7 +150,7 @@ public class GetDs3TargetReadPreferencesSpectraS3Request extends AbstractPaginat
     }
 
 
-    public TargetReadPreference getReadPreference() {
+    public TargetReadPreferenceType getReadPreference() {
         return this.readPreference;
     }
 

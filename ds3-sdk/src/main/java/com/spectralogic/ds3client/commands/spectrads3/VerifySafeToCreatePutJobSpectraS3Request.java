@@ -28,6 +28,7 @@ public class VerifySafeToCreatePutJobSpectraS3Request extends AbstractRequest {
 
     // Constructor
     
+    
     public VerifySafeToCreatePutJobSpectraS3Request(final String bucketName) {
         this.bucketName = bucketName;
         

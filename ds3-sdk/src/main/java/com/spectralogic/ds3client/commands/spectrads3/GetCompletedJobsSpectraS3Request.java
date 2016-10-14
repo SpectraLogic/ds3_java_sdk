@@ -55,6 +55,7 @@ public class GetCompletedJobsSpectraS3Request extends AbstractPaginationRequest 
 
     // Constructor
     
+    
     public GetCompletedJobsSpectraS3Request() {
         
     }
@@ -65,11 +66,13 @@ public class GetCompletedJobsSpectraS3Request extends AbstractPaginationRequest 
         return this;
     }
 
+
     public GetCompletedJobsSpectraS3Request withChunkClientProcessingOrderGuarantee(final JobChunkClientProcessingOrderGuarantee chunkClientProcessingOrderGuarantee) {
         this.chunkClientProcessingOrderGuarantee = chunkClientProcessingOrderGuarantee;
         this.updateQueryParam("chunk_client_processing_order_guarantee", chunkClientProcessingOrderGuarantee);
         return this;
     }
+
 
     public GetCompletedJobsSpectraS3Request withLastPage(final boolean lastPage) {
         this.lastPage = lastPage;
@@ -81,11 +84,13 @@ public class GetCompletedJobsSpectraS3Request extends AbstractPaginationRequest 
         return this;
     }
 
+
     public GetCompletedJobsSpectraS3Request withName(final String name) {
         this.name = name;
         this.updateQueryParam("name", name);
         return this;
     }
+
 
     public GetCompletedJobsSpectraS3Request withPageLength(final int pageLength) {
         this.pageLength = pageLength;
@@ -93,11 +98,13 @@ public class GetCompletedJobsSpectraS3Request extends AbstractPaginationRequest 
         return this;
     }
 
+
     public GetCompletedJobsSpectraS3Request withPageOffset(final int pageOffset) {
         this.pageOffset = pageOffset;
         this.updateQueryParam("page_offset", pageOffset);
         return this;
     }
+
 
     public GetCompletedJobsSpectraS3Request withPageStartMarker(final UUID pageStartMarker) {
         this.pageStartMarker = pageStartMarker.toString();
@@ -105,11 +112,13 @@ public class GetCompletedJobsSpectraS3Request extends AbstractPaginationRequest 
         return this;
     }
 
+
     public GetCompletedJobsSpectraS3Request withPageStartMarker(final String pageStartMarker) {
         this.pageStartMarker = pageStartMarker;
         this.updateQueryParam("page_start_marker", pageStartMarker);
         return this;
     }
+
 
     public GetCompletedJobsSpectraS3Request withPriority(final Priority priority) {
         this.priority = priority;
@@ -117,11 +126,13 @@ public class GetCompletedJobsSpectraS3Request extends AbstractPaginationRequest 
         return this;
     }
 
+
     public GetCompletedJobsSpectraS3Request withRechunked(final Date rechunked) {
         this.rechunked = rechunked;
         this.updateQueryParam("rechunked", rechunked);
         return this;
     }
+
 
     public GetCompletedJobsSpectraS3Request withRequestType(final JobRequestType requestType) {
         this.requestType = requestType;
@@ -129,11 +140,13 @@ public class GetCompletedJobsSpectraS3Request extends AbstractPaginationRequest 
         return this;
     }
 
+
     public GetCompletedJobsSpectraS3Request withTruncated(final boolean truncated) {
         this.truncated = truncated;
         this.updateQueryParam("truncated", truncated);
         return this;
     }
+
 
     public GetCompletedJobsSpectraS3Request withUserId(final UUID userId) {
         this.userId = userId.toString();
@@ -141,11 +154,13 @@ public class GetCompletedJobsSpectraS3Request extends AbstractPaginationRequest 
         return this;
     }
 
+
     public GetCompletedJobsSpectraS3Request withUserId(final String userId) {
         this.userId = userId;
         this.updateQueryParam("user_id", userId);
         return this;
     }
+
 
 
     @Override

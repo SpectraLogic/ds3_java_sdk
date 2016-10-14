@@ -31,6 +31,7 @@ public class GetSuspectObjectsSpectraS3Request extends AbstractRequest {
 
     // Constructor
     
+    
     public GetSuspectObjectsSpectraS3Request() {
         
     }
@@ -41,17 +42,20 @@ public class GetSuspectObjectsSpectraS3Request extends AbstractRequest {
         return this;
     }
 
+
     public GetSuspectObjectsSpectraS3Request withStorageDomainId(final UUID storageDomainId) {
         this.storageDomainId = storageDomainId.toString();
         this.updateQueryParam("storage_domain_id", storageDomainId);
         return this;
     }
 
+
     public GetSuspectObjectsSpectraS3Request withStorageDomainId(final String storageDomainId) {
         this.storageDomainId = storageDomainId;
         this.updateQueryParam("storage_domain_id", storageDomainId);
         return this;
     }
+
 
 
     @Override

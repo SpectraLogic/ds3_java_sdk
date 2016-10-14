@@ -31,6 +31,7 @@ public class PutPoolPartitionSpectraS3Request extends AbstractRequest {
 
     // Constructor
     
+    
     public PutPoolPartitionSpectraS3Request(final String name, final PoolType type) {
         this.name = name;
         this.type = type;

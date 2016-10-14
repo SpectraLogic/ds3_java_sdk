@@ -32,6 +32,7 @@ public class PutSystemFailureNotificationRegistrationSpectraS3Request extends Ab
 
     private RequestType notificationHttpMethod;
 
+    
     public PutSystemFailureNotificationRegistrationSpectraS3Request(final String notificationEndPoint) {
         super(notificationEndPoint);
 
@@ -45,17 +46,20 @@ public class PutSystemFailureNotificationRegistrationSpectraS3Request extends Ab
         return this;
     }
 
+
     public PutSystemFailureNotificationRegistrationSpectraS3Request withNamingConvention(final NamingConventionType namingConvention) {
         this.namingConvention = namingConvention;
         this.updateQueryParam("naming_convention", namingConvention);
         return this;
     }
 
+
     public PutSystemFailureNotificationRegistrationSpectraS3Request withNotificationHttpMethod(final RequestType notificationHttpMethod) {
         this.notificationHttpMethod = notificationHttpMethod;
         this.updateQueryParam("notification_http_method", notificationHttpMethod);
         return this;
     }
+
 
 
     @Override

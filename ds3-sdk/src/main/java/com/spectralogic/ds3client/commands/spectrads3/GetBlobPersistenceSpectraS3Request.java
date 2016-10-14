@@ -32,6 +32,7 @@ public class GetBlobPersistenceSpectraS3Request extends AbstractRequest {
 
     // Constructor
     
+    
     public GetBlobPersistenceSpectraS3Request(final String requestPayload) {
         this.requestPayload = requestPayload;
         

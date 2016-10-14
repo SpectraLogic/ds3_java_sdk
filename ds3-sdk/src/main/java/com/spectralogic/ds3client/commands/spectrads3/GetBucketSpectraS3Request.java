@@ -28,6 +28,7 @@ public class GetBucketSpectraS3Request extends AbstractRequest {
 
     // Constructor
     
+    
     public GetBucketSpectraS3Request(final String bucketName) {
         this.bucketName = bucketName;
         

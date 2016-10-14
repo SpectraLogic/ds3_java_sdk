@@ -28,6 +28,7 @@ public class FormatForeignPoolSpectraS3Request extends AbstractRequest {
 
     // Constructor
     
+    
     public FormatForeignPoolSpectraS3Request(final String pool) {
         this.pool = pool;
         

@@ -28,6 +28,7 @@ public class GetNodeSpectraS3Request extends AbstractRequest {
 
     // Constructor
     
+    
     public GetNodeSpectraS3Request(final String node) {
         this.node = node;
         

@@ -29,11 +29,13 @@ public class TruncateActiveJobSpectraS3Request extends AbstractRequest {
 
     // Constructor
     
+    
     public TruncateActiveJobSpectraS3Request(final UUID activeJobId) {
         this.activeJobId = activeJobId.toString();
         
     }
 
+    
     public TruncateActiveJobSpectraS3Request(final String activeJobId) {
         this.activeJobId = activeJobId;
         

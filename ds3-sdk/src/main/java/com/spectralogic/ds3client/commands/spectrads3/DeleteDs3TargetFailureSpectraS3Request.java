@@ -28,6 +28,7 @@ public class DeleteDs3TargetFailureSpectraS3Request extends AbstractRequest {
 
     // Constructor
     
+    
     public DeleteDs3TargetFailureSpectraS3Request(final String ds3TargetFailure) {
         this.ds3TargetFailure = ds3TargetFailure;
         

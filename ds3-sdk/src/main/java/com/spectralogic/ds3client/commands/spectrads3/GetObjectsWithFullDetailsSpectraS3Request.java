@@ -50,6 +50,7 @@ public class GetObjectsWithFullDetailsSpectraS3Request extends AbstractPaginatio
 
     // Constructor
     
+    
     public GetObjectsWithFullDetailsSpectraS3Request() {
         
         this.getQueryParams().put("full_details", null);
@@ -61,11 +62,13 @@ public class GetObjectsWithFullDetailsSpectraS3Request extends AbstractPaginatio
         return this;
     }
 
+
     public GetObjectsWithFullDetailsSpectraS3Request withFolder(final String folder) {
         this.folder = folder;
         this.updateQueryParam("folder", folder);
         return this;
     }
+
 
     public GetObjectsWithFullDetailsSpectraS3Request withIncludePhysicalPlacement(final boolean includePhysicalPlacement) {
         this.includePhysicalPlacement = includePhysicalPlacement;
@@ -77,6 +80,7 @@ public class GetObjectsWithFullDetailsSpectraS3Request extends AbstractPaginatio
         return this;
     }
 
+
     public GetObjectsWithFullDetailsSpectraS3Request withLastPage(final boolean lastPage) {
         this.lastPage = lastPage;
         if (this.lastPage) {
@@ -87,11 +91,13 @@ public class GetObjectsWithFullDetailsSpectraS3Request extends AbstractPaginatio
         return this;
     }
 
+
     public GetObjectsWithFullDetailsSpectraS3Request withLatest(final boolean latest) {
         this.latest = latest;
         this.updateQueryParam("latest", latest);
         return this;
     }
+
 
     public GetObjectsWithFullDetailsSpectraS3Request withName(final String name) {
         this.name = name;
@@ -99,11 +105,13 @@ public class GetObjectsWithFullDetailsSpectraS3Request extends AbstractPaginatio
         return this;
     }
 
+
     public GetObjectsWithFullDetailsSpectraS3Request withPageLength(final int pageLength) {
         this.pageLength = pageLength;
         this.updateQueryParam("page_length", pageLength);
         return this;
     }
+
 
     public GetObjectsWithFullDetailsSpectraS3Request withPageOffset(final int pageOffset) {
         this.pageOffset = pageOffset;
@@ -111,11 +119,13 @@ public class GetObjectsWithFullDetailsSpectraS3Request extends AbstractPaginatio
         return this;
     }
 
+
     public GetObjectsWithFullDetailsSpectraS3Request withPageStartMarker(final UUID pageStartMarker) {
         this.pageStartMarker = pageStartMarker.toString();
         this.updateQueryParam("page_start_marker", pageStartMarker);
         return this;
     }
+
 
     public GetObjectsWithFullDetailsSpectraS3Request withPageStartMarker(final String pageStartMarker) {
         this.pageStartMarker = pageStartMarker;
@@ -123,17 +133,20 @@ public class GetObjectsWithFullDetailsSpectraS3Request extends AbstractPaginatio
         return this;
     }
 
+
     public GetObjectsWithFullDetailsSpectraS3Request withType(final S3ObjectType type) {
         this.type = type;
         this.updateQueryParam("type", type);
         return this;
     }
 
+
     public GetObjectsWithFullDetailsSpectraS3Request withVersion(final long version) {
         this.version = version;
         this.updateQueryParam("version", version);
         return this;
     }
+
 
 
     @Override

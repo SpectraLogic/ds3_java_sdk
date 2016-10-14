@@ -29,11 +29,13 @@ public class GetDataPolicySpectraS3Request extends AbstractRequest {
 
     // Constructor
     
+    
     public GetDataPolicySpectraS3Request(final UUID dataPolicyId) {
         this.dataPolicyId = dataPolicyId.toString();
         
     }
 
+    
     public GetDataPolicySpectraS3Request(final String dataPolicyId) {
         this.dataPolicyId = dataPolicyId;
         

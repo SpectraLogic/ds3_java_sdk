@@ -31,6 +31,7 @@ public class VerifyUserIsMemberOfGroupSpectraS3Request extends AbstractRequest {
 
     // Constructor
     
+    
     public VerifyUserIsMemberOfGroupSpectraS3Request(final String group) {
         this.group = group;
         
@@ -44,11 +45,13 @@ public class VerifyUserIsMemberOfGroupSpectraS3Request extends AbstractRequest {
         return this;
     }
 
+
     public VerifyUserIsMemberOfGroupSpectraS3Request withUserId(final String userId) {
         this.userId = userId;
         this.updateQueryParam("user_id", userId);
         return this;
     }
+
 
 
     @Override

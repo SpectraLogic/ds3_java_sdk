@@ -28,6 +28,7 @@ public class DeleteGroupMemberSpectraS3Request extends AbstractRequest {
 
     // Constructor
     
+    
     public DeleteGroupMemberSpectraS3Request(final String groupMember) {
         this.groupMember = groupMember;
         

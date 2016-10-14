@@ -48,6 +48,7 @@ public class GetDataPoliciesSpectraS3Request extends AbstractPaginationRequest {
 
     // Constructor
     
+    
     public GetDataPoliciesSpectraS3Request() {
         
     }
@@ -58,11 +59,13 @@ public class GetDataPoliciesSpectraS3Request extends AbstractPaginationRequest {
         return this;
     }
 
+
     public GetDataPoliciesSpectraS3Request withAlwaysMinimizeSpanningAcrossMedia(final boolean alwaysMinimizeSpanningAcrossMedia) {
         this.alwaysMinimizeSpanningAcrossMedia = alwaysMinimizeSpanningAcrossMedia;
         this.updateQueryParam("always_minimize_spanning_across_media", alwaysMinimizeSpanningAcrossMedia);
         return this;
     }
+
 
     public GetDataPoliciesSpectraS3Request withAlwaysReplicateDeletes(final boolean alwaysReplicateDeletes) {
         this.alwaysReplicateDeletes = alwaysReplicateDeletes;
@@ -70,17 +73,20 @@ public class GetDataPoliciesSpectraS3Request extends AbstractPaginationRequest {
         return this;
     }
 
+
     public GetDataPoliciesSpectraS3Request withChecksumType(final ChecksumType.Type checksumType) {
         this.checksumType = checksumType;
         this.updateQueryParam("checksum_type", checksumType);
         return this;
     }
 
+
     public GetDataPoliciesSpectraS3Request withEndToEndCrcRequired(final boolean endToEndCrcRequired) {
         this.endToEndCrcRequired = endToEndCrcRequired;
         this.updateQueryParam("end_to_end_crc_required", endToEndCrcRequired);
         return this;
     }
+
 
     public GetDataPoliciesSpectraS3Request withLastPage(final boolean lastPage) {
         this.lastPage = lastPage;
@@ -92,11 +98,13 @@ public class GetDataPoliciesSpectraS3Request extends AbstractPaginationRequest {
         return this;
     }
 
+
     public GetDataPoliciesSpectraS3Request withName(final String name) {
         this.name = name;
         this.updateQueryParam("name", name);
         return this;
     }
+
 
     public GetDataPoliciesSpectraS3Request withPageLength(final int pageLength) {
         this.pageLength = pageLength;
@@ -104,11 +112,13 @@ public class GetDataPoliciesSpectraS3Request extends AbstractPaginationRequest {
         return this;
     }
 
+
     public GetDataPoliciesSpectraS3Request withPageOffset(final int pageOffset) {
         this.pageOffset = pageOffset;
         this.updateQueryParam("page_offset", pageOffset);
         return this;
     }
+
 
     public GetDataPoliciesSpectraS3Request withPageStartMarker(final UUID pageStartMarker) {
         this.pageStartMarker = pageStartMarker.toString();
@@ -116,11 +126,13 @@ public class GetDataPoliciesSpectraS3Request extends AbstractPaginationRequest {
         return this;
     }
 
+
     public GetDataPoliciesSpectraS3Request withPageStartMarker(final String pageStartMarker) {
         this.pageStartMarker = pageStartMarker;
         this.updateQueryParam("page_start_marker", pageStartMarker);
         return this;
     }
+
 
 
     @Override

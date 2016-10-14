@@ -29,6 +29,7 @@ public class AllocateJobChunkSpectraS3Request extends AbstractRequest {
 
     // Constructor
     
+    
     public AllocateJobChunkSpectraS3Request(final UUID jobChunkId) {
         this.jobChunkId = jobChunkId.toString();
         
@@ -36,6 +37,7 @@ public class AllocateJobChunkSpectraS3Request extends AbstractRequest {
 
     }
 
+    
     public AllocateJobChunkSpectraS3Request(final String jobChunkId) {
         this.jobChunkId = jobChunkId;
         

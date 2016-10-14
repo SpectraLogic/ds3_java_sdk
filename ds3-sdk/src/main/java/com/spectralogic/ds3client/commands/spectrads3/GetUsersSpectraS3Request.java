@@ -41,6 +41,7 @@ public class GetUsersSpectraS3Request extends AbstractPaginationRequest {
 
     // Constructor
     
+    
     public GetUsersSpectraS3Request() {
         
     }
@@ -51,17 +52,20 @@ public class GetUsersSpectraS3Request extends AbstractPaginationRequest {
         return this;
     }
 
+
     public GetUsersSpectraS3Request withDefaultDataPolicyId(final UUID defaultDataPolicyId) {
         this.defaultDataPolicyId = defaultDataPolicyId.toString();
         this.updateQueryParam("default_data_policy_id", defaultDataPolicyId);
         return this;
     }
 
+
     public GetUsersSpectraS3Request withDefaultDataPolicyId(final String defaultDataPolicyId) {
         this.defaultDataPolicyId = defaultDataPolicyId;
         this.updateQueryParam("default_data_policy_id", defaultDataPolicyId);
         return this;
     }
+
 
     public GetUsersSpectraS3Request withLastPage(final boolean lastPage) {
         this.lastPage = lastPage;
@@ -73,11 +77,13 @@ public class GetUsersSpectraS3Request extends AbstractPaginationRequest {
         return this;
     }
 
+
     public GetUsersSpectraS3Request withName(final String name) {
         this.name = name;
         this.updateQueryParam("name", name);
         return this;
     }
+
 
     public GetUsersSpectraS3Request withPageLength(final int pageLength) {
         this.pageLength = pageLength;
@@ -85,11 +91,13 @@ public class GetUsersSpectraS3Request extends AbstractPaginationRequest {
         return this;
     }
 
+
     public GetUsersSpectraS3Request withPageOffset(final int pageOffset) {
         this.pageOffset = pageOffset;
         this.updateQueryParam("page_offset", pageOffset);
         return this;
     }
+
 
     public GetUsersSpectraS3Request withPageStartMarker(final UUID pageStartMarker) {
         this.pageStartMarker = pageStartMarker.toString();
@@ -97,11 +105,13 @@ public class GetUsersSpectraS3Request extends AbstractPaginationRequest {
         return this;
     }
 
+
     public GetUsersSpectraS3Request withPageStartMarker(final String pageStartMarker) {
         this.pageStartMarker = pageStartMarker;
         this.updateQueryParam("page_start_marker", pageStartMarker);
         return this;
     }
+
 
 
     @Override

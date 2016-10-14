@@ -47,6 +47,7 @@ public class VerifyBulkJobSpectraS3Request extends AbstractRequest {
 
     // Constructor
     
+    
     public VerifyBulkJobSpectraS3Request(final String bucketName, final List<Ds3Object> objects) {
         this.bucketName = bucketName;
         this.objects = objects;
@@ -61,17 +62,20 @@ public class VerifyBulkJobSpectraS3Request extends AbstractRequest {
         return this;
     }
 
+
     public VerifyBulkJobSpectraS3Request withName(final String name) {
         this.name = name;
         this.updateQueryParam("name", name);
         return this;
     }
 
+
     public VerifyBulkJobSpectraS3Request withPriority(final Priority priority) {
         this.priority = priority;
         this.updateQueryParam("priority", priority);
         return this;
     }
+
 
 
     @Override

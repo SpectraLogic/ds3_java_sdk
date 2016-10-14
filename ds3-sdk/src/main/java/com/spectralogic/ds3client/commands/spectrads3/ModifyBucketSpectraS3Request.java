@@ -33,6 +33,7 @@ public class ModifyBucketSpectraS3Request extends AbstractRequest {
 
     // Constructor
     
+    
     public ModifyBucketSpectraS3Request(final String bucketName) {
         this.bucketName = bucketName;
         
@@ -44,11 +45,13 @@ public class ModifyBucketSpectraS3Request extends AbstractRequest {
         return this;
     }
 
+
     public ModifyBucketSpectraS3Request withDataPolicyId(final String dataPolicyId) {
         this.dataPolicyId = dataPolicyId;
         this.updateQueryParam("data_policy_id", dataPolicyId);
         return this;
     }
+
 
     public ModifyBucketSpectraS3Request withUserId(final UUID userId) {
         this.userId = userId.toString();
@@ -56,11 +59,13 @@ public class ModifyBucketSpectraS3Request extends AbstractRequest {
         return this;
     }
 
+
     public ModifyBucketSpectraS3Request withUserId(final String userId) {
         this.userId = userId;
         this.updateQueryParam("user_id", userId);
         return this;
     }
+
 
 
     @Override

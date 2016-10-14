@@ -38,6 +38,7 @@ public class ListMultiPartUploadsRequest extends AbstractRequest {
 
     // Constructor
     
+    
     public ListMultiPartUploadsRequest(final String bucketName) {
         this.bucketName = bucketName;
         
@@ -50,11 +51,13 @@ public class ListMultiPartUploadsRequest extends AbstractRequest {
         return this;
     }
 
+
     public ListMultiPartUploadsRequest withKeyMarker(final String keyMarker) {
         this.keyMarker = keyMarker;
         this.updateQueryParam("key_marker", keyMarker);
         return this;
     }
+
 
     public ListMultiPartUploadsRequest withMaxUploads(final int maxUploads) {
         this.maxUploads = maxUploads;
@@ -62,17 +65,20 @@ public class ListMultiPartUploadsRequest extends AbstractRequest {
         return this;
     }
 
+
     public ListMultiPartUploadsRequest withPrefix(final String prefix) {
         this.prefix = prefix;
         this.updateQueryParam("prefix", prefix);
         return this;
     }
 
+
     public ListMultiPartUploadsRequest withUploadIdMarker(final String uploadIdMarker) {
         this.uploadIdMarker = uploadIdMarker;
         this.updateQueryParam("upload_id_marker", uploadIdMarker);
         return this;
     }
+
 
 
     @Override
