@@ -61,8 +61,8 @@ public class JobImpl_Test {
 
     private static final Ds3Client client = Util.fromEnv();
     private static final Ds3ClientHelpers HELPERS = Ds3ClientHelpers.wrap(client);
-    private static final String BUCKET_NAME = "Get_Job_Management_Test";
-    private static final String TEST_ENV_NAME = "GetJobManagement_Test";
+    private static final String BUCKET_NAME = "JobImpl_Test";
+    private static final String TEST_ENV_NAME = "JobImpl_Test";
     private static TempStorageIds envStorageIds;
     private static UUID dataPolicyId;
 
