@@ -108,12 +108,19 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
                                                          final Iterable<Ds3Object> objectsToWrite,
                                                          final WriteJobOptions options)
             throws IOException {
-        final PutBulkJobSpectraS3Response prime = this.client.putBulkJobSpectraS3(
-                new PutBulkJobSpectraS3Request(bucket, Lists.newArrayList(objectsToWrite))
+        final PutBulkJobSpectraS3Request request = new PutBulkJobSpectraS3Request(bucket, Lists.newArrayList(objectsToWrite))
                 .withPriority(options.getPriority())
-                .withMaxUploadSize(options.getMaxUploadSize())
                 .withAggregating(options.isAggregating())
-                .withIgnoreNamingConflicts(options.doIgnoreNamingConflicts()));
+                .withIgnoreNamingConflicts(options.doIgnoreNamingConflicts());
+
+        if (options.getMaxUploadSize() > 0) {
+            request.withMaxUploadSize(options.getMaxUploadSize());
+        }
+
+        final PutBulkJobSpectraS3Response prime = this.client.putBulkJobSpectraS3(
+                request);
+
+
         return new WriteJobImpl(
                 this.client,
                 prime.getResult(),
