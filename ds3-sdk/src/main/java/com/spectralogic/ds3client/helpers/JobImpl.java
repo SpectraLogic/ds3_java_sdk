@@ -241,8 +241,8 @@ abstract class JobImpl implements Job {
         private final JobPartTracker internalJobPartTracker;
 
         protected JobPartTrackerDecorator(final List<Objects> chunks, final EventRunner eventRunner) {
-            clientJobPartTracker = JobPartTrackerFactory.buildPartTracker(Iterables.concat(getAllBlobApiBeans(chunks)), eventRunner);
-            internalJobPartTracker = JobPartTrackerFactory.buildPartTracker(Iterables.concat(getAllBlobApiBeans(chunks)), eventRunner);
+            clientJobPartTracker = JobPartTrackerFactory.buildPartTracker(getAllBlobApiBeans(chunks), eventRunner);
+            internalJobPartTracker = JobPartTrackerFactory.buildPartTracker(getAllBlobApiBeans(chunks), eventRunner);
         }
 
         @Override
