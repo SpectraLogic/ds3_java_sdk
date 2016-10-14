@@ -30,6 +30,7 @@ public class ModifyGroupSpectraS3Request extends AbstractRequest {
 
     // Constructor
     
+    
     public ModifyGroupSpectraS3Request(final String group) {
         this.group = group;
         
@@ -40,6 +41,7 @@ public class ModifyGroupSpectraS3Request extends AbstractRequest {
         this.updateQueryParam("name", name);
         return this;
     }
+
 
 
     @Override

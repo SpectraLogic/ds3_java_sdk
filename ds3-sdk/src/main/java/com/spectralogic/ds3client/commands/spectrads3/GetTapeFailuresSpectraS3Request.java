@@ -44,6 +44,7 @@ public class GetTapeFailuresSpectraS3Request extends AbstractPaginationRequest {
 
     // Constructor
     
+    
     public GetTapeFailuresSpectraS3Request() {
         
     }
@@ -53,6 +54,7 @@ public class GetTapeFailuresSpectraS3Request extends AbstractPaginationRequest {
         this.updateQueryParam("error_message", errorMessage);
         return this;
     }
+
 
     public GetTapeFailuresSpectraS3Request withLastPage(final boolean lastPage) {
         this.lastPage = lastPage;
@@ -64,11 +66,13 @@ public class GetTapeFailuresSpectraS3Request extends AbstractPaginationRequest {
         return this;
     }
 
+
     public GetTapeFailuresSpectraS3Request withPageLength(final int pageLength) {
         this.pageLength = pageLength;
         this.updateQueryParam("page_length", pageLength);
         return this;
     }
+
 
     public GetTapeFailuresSpectraS3Request withPageOffset(final int pageOffset) {
         this.pageOffset = pageOffset;
@@ -76,11 +80,13 @@ public class GetTapeFailuresSpectraS3Request extends AbstractPaginationRequest {
         return this;
     }
 
+
     public GetTapeFailuresSpectraS3Request withPageStartMarker(final UUID pageStartMarker) {
         this.pageStartMarker = pageStartMarker.toString();
         this.updateQueryParam("page_start_marker", pageStartMarker);
         return this;
     }
+
 
     public GetTapeFailuresSpectraS3Request withPageStartMarker(final String pageStartMarker) {
         this.pageStartMarker = pageStartMarker;
@@ -88,11 +94,13 @@ public class GetTapeFailuresSpectraS3Request extends AbstractPaginationRequest {
         return this;
     }
 
+
     public GetTapeFailuresSpectraS3Request withTapeDriveId(final UUID tapeDriveId) {
         this.tapeDriveId = tapeDriveId.toString();
         this.updateQueryParam("tape_drive_id", tapeDriveId);
         return this;
     }
+
 
     public GetTapeFailuresSpectraS3Request withTapeDriveId(final String tapeDriveId) {
         this.tapeDriveId = tapeDriveId;
@@ -100,11 +108,13 @@ public class GetTapeFailuresSpectraS3Request extends AbstractPaginationRequest {
         return this;
     }
 
+
     public GetTapeFailuresSpectraS3Request withTapeId(final UUID tapeId) {
         this.tapeId = tapeId.toString();
         this.updateQueryParam("tape_id", tapeId);
         return this;
     }
+
 
     public GetTapeFailuresSpectraS3Request withTapeId(final String tapeId) {
         this.tapeId = tapeId;
@@ -112,11 +122,13 @@ public class GetTapeFailuresSpectraS3Request extends AbstractPaginationRequest {
         return this;
     }
 
+
     public GetTapeFailuresSpectraS3Request withType(final TapeFailureType type) {
         this.type = type;
         this.updateQueryParam("type", type);
         return this;
     }
+
 
 
     @Override

@@ -27,6 +27,7 @@ public class PutBucketRequest extends AbstractRequest {
 
     // Constructor
     
+    
     public PutBucketRequest(final String bucketName) {
         this.bucketName = bucketName;
         

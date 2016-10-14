@@ -30,6 +30,7 @@ public class EjectAllTapesSpectraS3Request extends AbstractRequest {
 
     // Constructor
     
+    
     public EjectAllTapesSpectraS3Request() {
         
         this.getQueryParams().put("operation", "eject");
@@ -42,11 +43,13 @@ public class EjectAllTapesSpectraS3Request extends AbstractRequest {
         return this;
     }
 
+
     public EjectAllTapesSpectraS3Request withEjectLocation(final String ejectLocation) {
         this.ejectLocation = ejectLocation;
         this.updateQueryParam("eject_location", ejectLocation);
         return this;
     }
+
 
 
     @Override

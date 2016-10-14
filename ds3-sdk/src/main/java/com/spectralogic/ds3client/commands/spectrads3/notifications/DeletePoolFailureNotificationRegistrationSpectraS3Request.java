@@ -25,6 +25,7 @@ public class DeletePoolFailureNotificationRegistrationSpectraS3Request extends A
     
     //Constructor
     
+    
     public DeletePoolFailureNotificationRegistrationSpectraS3Request(final UUID notificationId) {
         super(notificationId);
 
@@ -32,6 +33,7 @@ public class DeletePoolFailureNotificationRegistrationSpectraS3Request extends A
 
     }
 
+    
     public DeletePoolFailureNotificationRegistrationSpectraS3Request(final String notificationId) {
         super(notificationId);
 

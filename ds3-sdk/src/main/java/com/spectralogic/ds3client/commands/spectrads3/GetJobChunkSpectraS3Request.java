@@ -29,11 +29,13 @@ public class GetJobChunkSpectraS3Request extends AbstractRequest {
 
     // Constructor
     
+    
     public GetJobChunkSpectraS3Request(final UUID jobChunkId) {
         this.jobChunkId = jobChunkId.toString();
         
     }
 
+    
     public GetJobChunkSpectraS3Request(final String jobChunkId) {
         this.jobChunkId = jobChunkId;
         

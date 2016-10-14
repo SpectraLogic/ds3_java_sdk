@@ -40,6 +40,7 @@ public class PutDataPersistenceRuleSpectraS3Request extends AbstractRequest {
 
     // Constructor
     
+    
     public PutDataPersistenceRuleSpectraS3Request(final UUID dataPolicyId, final DataIsolationLevel isolationLevel, final UUID storageDomainId, final DataPersistenceRuleType type) {
         this.dataPolicyId = dataPolicyId.toString();
         this.isolationLevel = isolationLevel;
@@ -52,6 +53,7 @@ public class PutDataPersistenceRuleSpectraS3Request extends AbstractRequest {
         this.getQueryParams().put("type", type.toString());
     }
 
+    
     public PutDataPersistenceRuleSpectraS3Request(final String dataPolicyId, final DataIsolationLevel isolationLevel, final String storageDomainId, final DataPersistenceRuleType type) {
         this.dataPolicyId = dataPolicyId;
         this.isolationLevel = isolationLevel;
@@ -69,6 +71,7 @@ public class PutDataPersistenceRuleSpectraS3Request extends AbstractRequest {
         this.updateQueryParam("minimum_days_to_retain", minimumDaysToRetain);
         return this;
     }
+
 
 
     @Override

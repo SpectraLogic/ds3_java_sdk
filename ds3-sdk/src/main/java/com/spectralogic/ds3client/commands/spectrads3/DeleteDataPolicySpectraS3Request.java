@@ -29,11 +29,13 @@ public class DeleteDataPolicySpectraS3Request extends AbstractRequest {
 
     // Constructor
     
+    
     public DeleteDataPolicySpectraS3Request(final UUID dataPolicyId) {
         this.dataPolicyId = dataPolicyId.toString();
         
     }
 
+    
     public DeleteDataPolicySpectraS3Request(final String dataPolicyId) {
         this.dataPolicyId = dataPolicyId;
         

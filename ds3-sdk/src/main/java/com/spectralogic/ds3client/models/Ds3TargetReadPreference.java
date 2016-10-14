@@ -31,7 +31,7 @@ public class Ds3TargetReadPreference {
     private UUID id;
 
     @JsonProperty("ReadPreference")
-    private TargetReadPreference readPreference;
+    private TargetReadPreferenceType readPreference;
 
     @JsonProperty("TargetId")
     private UUID targetId;
@@ -61,11 +61,11 @@ public class Ds3TargetReadPreference {
     }
 
 
-    public TargetReadPreference getReadPreference() {
+    public TargetReadPreferenceType getReadPreference() {
         return this.readPreference;
     }
 
-    public void setReadPreference(final TargetReadPreference readPreference) {
+    public void setReadPreference(final TargetReadPreferenceType readPreference) {
         this.readPreference = readPreference;
     }
 

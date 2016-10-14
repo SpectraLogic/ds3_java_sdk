@@ -21,7 +21,7 @@ import com.spectralogic.ds3client.commands.interfaces.AbstractRequest;
 import com.spectralogic.ds3client.models.Ds3TargetAccessControlReplication;
 import com.google.common.net.UrlEscapers;
 import java.lang.Integer;
-import com.spectralogic.ds3client.models.TargetReadPreference;
+import com.spectralogic.ds3client.models.TargetReadPreferenceType;
 
 public class PairBackRegisteredDs3TargetSpectraS3Request extends AbstractRequest {
 
@@ -45,7 +45,7 @@ public class PairBackRegisteredDs3TargetSpectraS3Request extends AbstractRequest
 
     private boolean dataPathVerifyCertificate;
 
-    private TargetReadPreference defaultReadPreference;
+    private TargetReadPreferenceType defaultReadPreference;
 
     private String name;
 
@@ -54,6 +54,7 @@ public class PairBackRegisteredDs3TargetSpectraS3Request extends AbstractRequest
     private String replicatedUserDefaultDataPolicy;
 
     // Constructor
+    
     
     public PairBackRegisteredDs3TargetSpectraS3Request(final String ds3Target) {
         this.ds3Target = ds3Target;
@@ -68,11 +69,13 @@ public class PairBackRegisteredDs3TargetSpectraS3Request extends AbstractRequest
         return this;
     }
 
+
     public PairBackRegisteredDs3TargetSpectraS3Request withAdminAuthId(final String adminAuthId) {
         this.adminAuthId = adminAuthId;
         this.updateQueryParam("admin_auth_id", adminAuthId);
         return this;
     }
+
 
     public PairBackRegisteredDs3TargetSpectraS3Request withAdminSecretKey(final String adminSecretKey) {
         this.adminSecretKey = adminSecretKey;
@@ -80,11 +83,13 @@ public class PairBackRegisteredDs3TargetSpectraS3Request extends AbstractRequest
         return this;
     }
 
+
     public PairBackRegisteredDs3TargetSpectraS3Request withDataPathEndPoint(final String dataPathEndPoint) {
         this.dataPathEndPoint = dataPathEndPoint;
         this.updateQueryParam("data_path_end_point", dataPathEndPoint);
         return this;
     }
+
 
     public PairBackRegisteredDs3TargetSpectraS3Request withDataPathHttps(final boolean dataPathHttps) {
         this.dataPathHttps = dataPathHttps;
@@ -92,11 +97,13 @@ public class PairBackRegisteredDs3TargetSpectraS3Request extends AbstractRequest
         return this;
     }
 
+
     public PairBackRegisteredDs3TargetSpectraS3Request withDataPathPort(final Integer dataPathPort) {
         this.dataPathPort = dataPathPort;
         this.updateQueryParam("data_path_port", dataPathPort);
         return this;
     }
+
 
     public PairBackRegisteredDs3TargetSpectraS3Request withDataPathProxy(final String dataPathProxy) {
         this.dataPathProxy = dataPathProxy;
@@ -104,17 +111,20 @@ public class PairBackRegisteredDs3TargetSpectraS3Request extends AbstractRequest
         return this;
     }
 
+
     public PairBackRegisteredDs3TargetSpectraS3Request withDataPathVerifyCertificate(final boolean dataPathVerifyCertificate) {
         this.dataPathVerifyCertificate = dataPathVerifyCertificate;
         this.updateQueryParam("data_path_verify_certificate", dataPathVerifyCertificate);
         return this;
     }
 
-    public PairBackRegisteredDs3TargetSpectraS3Request withDefaultReadPreference(final TargetReadPreference defaultReadPreference) {
+
+    public PairBackRegisteredDs3TargetSpectraS3Request withDefaultReadPreference(final TargetReadPreferenceType defaultReadPreference) {
         this.defaultReadPreference = defaultReadPreference;
         this.updateQueryParam("default_read_preference", defaultReadPreference);
         return this;
     }
+
 
     public PairBackRegisteredDs3TargetSpectraS3Request withName(final String name) {
         this.name = name;
@@ -122,17 +132,20 @@ public class PairBackRegisteredDs3TargetSpectraS3Request extends AbstractRequest
         return this;
     }
 
+
     public PairBackRegisteredDs3TargetSpectraS3Request withPermitGoingOutOfSync(final boolean permitGoingOutOfSync) {
         this.permitGoingOutOfSync = permitGoingOutOfSync;
         this.updateQueryParam("permit_going_out_of_sync", permitGoingOutOfSync);
         return this;
     }
 
+
     public PairBackRegisteredDs3TargetSpectraS3Request withReplicatedUserDefaultDataPolicy(final String replicatedUserDefaultDataPolicy) {
         this.replicatedUserDefaultDataPolicy = replicatedUserDefaultDataPolicy;
         this.updateQueryParam("replicated_user_default_data_policy", replicatedUserDefaultDataPolicy);
         return this;
     }
+
 
 
     @Override
@@ -190,7 +203,7 @@ public class PairBackRegisteredDs3TargetSpectraS3Request extends AbstractRequest
     }
 
 
-    public TargetReadPreference getDefaultReadPreference() {
+    public TargetReadPreferenceType getDefaultReadPreference() {
         return this.defaultReadPreference;
     }
 

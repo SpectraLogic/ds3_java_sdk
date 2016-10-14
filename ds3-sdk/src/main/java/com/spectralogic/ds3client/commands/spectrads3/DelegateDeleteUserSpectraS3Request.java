@@ -29,11 +29,13 @@ public class DelegateDeleteUserSpectraS3Request extends AbstractRequest {
 
     // Constructor
     
+    
     public DelegateDeleteUserSpectraS3Request(final UUID userId) {
         this.userId = userId.toString();
         
     }
 
+    
     public DelegateDeleteUserSpectraS3Request(final String userId) {
         this.userId = userId;
         

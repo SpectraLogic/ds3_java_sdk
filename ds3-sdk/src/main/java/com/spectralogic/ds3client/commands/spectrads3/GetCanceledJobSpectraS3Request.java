@@ -28,6 +28,7 @@ public class GetCanceledJobSpectraS3Request extends AbstractRequest {
 
     // Constructor
     
+    
     public GetCanceledJobSpectraS3Request(final String canceledJob) {
         this.canceledJob = canceledJob;
         

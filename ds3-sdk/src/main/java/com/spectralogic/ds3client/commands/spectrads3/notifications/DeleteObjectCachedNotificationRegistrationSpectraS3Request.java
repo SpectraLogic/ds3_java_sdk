@@ -25,6 +25,7 @@ public class DeleteObjectCachedNotificationRegistrationSpectraS3Request extends 
     
     //Constructor
     
+    
     public DeleteObjectCachedNotificationRegistrationSpectraS3Request(final UUID notificationId) {
         super(notificationId);
 
@@ -32,6 +33,7 @@ public class DeleteObjectCachedNotificationRegistrationSpectraS3Request extends 
 
     }
 
+    
     public DeleteObjectCachedNotificationRegistrationSpectraS3Request(final String notificationId) {
         super(notificationId);
 

@@ -27,6 +27,7 @@ public class GetDataPlannerBlobStoreTasksSpectraS3Request extends AbstractReques
 
     // Constructor
     
+    
     public GetDataPlannerBlobStoreTasksSpectraS3Request() {
         
     }
@@ -40,6 +41,7 @@ public class GetDataPlannerBlobStoreTasksSpectraS3Request extends AbstractReques
         }
         return this;
     }
+
 
 
     @Override

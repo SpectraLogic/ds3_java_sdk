@@ -42,6 +42,7 @@ public class GetStorageDomainFailuresSpectraS3Request extends AbstractPagination
 
     // Constructor
     
+    
     public GetStorageDomainFailuresSpectraS3Request() {
         
     }
@@ -51,6 +52,7 @@ public class GetStorageDomainFailuresSpectraS3Request extends AbstractPagination
         this.updateQueryParam("error_message", errorMessage);
         return this;
     }
+
 
     public GetStorageDomainFailuresSpectraS3Request withLastPage(final boolean lastPage) {
         this.lastPage = lastPage;
@@ -62,11 +64,13 @@ public class GetStorageDomainFailuresSpectraS3Request extends AbstractPagination
         return this;
     }
 
+
     public GetStorageDomainFailuresSpectraS3Request withPageLength(final int pageLength) {
         this.pageLength = pageLength;
         this.updateQueryParam("page_length", pageLength);
         return this;
     }
+
 
     public GetStorageDomainFailuresSpectraS3Request withPageOffset(final int pageOffset) {
         this.pageOffset = pageOffset;
@@ -74,11 +78,13 @@ public class GetStorageDomainFailuresSpectraS3Request extends AbstractPagination
         return this;
     }
 
+
     public GetStorageDomainFailuresSpectraS3Request withPageStartMarker(final UUID pageStartMarker) {
         this.pageStartMarker = pageStartMarker.toString();
         this.updateQueryParam("page_start_marker", pageStartMarker);
         return this;
     }
+
 
     public GetStorageDomainFailuresSpectraS3Request withPageStartMarker(final String pageStartMarker) {
         this.pageStartMarker = pageStartMarker;
@@ -86,11 +92,13 @@ public class GetStorageDomainFailuresSpectraS3Request extends AbstractPagination
         return this;
     }
 
+
     public GetStorageDomainFailuresSpectraS3Request withStorageDomainId(final UUID storageDomainId) {
         this.storageDomainId = storageDomainId.toString();
         this.updateQueryParam("storage_domain_id", storageDomainId);
         return this;
     }
+
 
     public GetStorageDomainFailuresSpectraS3Request withStorageDomainId(final String storageDomainId) {
         this.storageDomainId = storageDomainId;
@@ -98,11 +106,13 @@ public class GetStorageDomainFailuresSpectraS3Request extends AbstractPagination
         return this;
     }
 
+
     public GetStorageDomainFailuresSpectraS3Request withType(final StorageDomainFailureType type) {
         this.type = type;
         this.updateQueryParam("type", type);
         return this;
     }
+
 
 
     @Override

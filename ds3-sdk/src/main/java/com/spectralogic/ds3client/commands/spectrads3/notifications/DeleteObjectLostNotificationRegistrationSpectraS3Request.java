@@ -25,6 +25,7 @@ public class DeleteObjectLostNotificationRegistrationSpectraS3Request extends Ab
     
     //Constructor
     
+    
     public DeleteObjectLostNotificationRegistrationSpectraS3Request(final UUID notificationId) {
         super(notificationId);
 
@@ -32,6 +33,7 @@ public class DeleteObjectLostNotificationRegistrationSpectraS3Request extends Ab
 
     }
 
+    
     public DeleteObjectLostNotificationRegistrationSpectraS3Request(final String notificationId) {
         super(notificationId);
 

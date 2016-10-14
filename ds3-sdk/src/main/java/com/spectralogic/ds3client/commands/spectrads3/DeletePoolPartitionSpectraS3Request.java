@@ -28,6 +28,7 @@ public class DeletePoolPartitionSpectraS3Request extends AbstractRequest {
 
     // Constructor
     
+    
     public DeletePoolPartitionSpectraS3Request(final String poolPartition) {
         this.poolPartition = poolPartition;
         

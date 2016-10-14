@@ -35,6 +35,7 @@ public class PutTapeDensityDirectiveSpectraS3Request extends AbstractRequest {
 
     // Constructor
     
+    
     public PutTapeDensityDirectiveSpectraS3Request(final TapeDriveType density, final UUID partitionId, final TapeType tapeType) {
         this.density = density;
         this.partitionId = partitionId.toString();
@@ -45,6 +46,7 @@ public class PutTapeDensityDirectiveSpectraS3Request extends AbstractRequest {
         this.getQueryParams().put("tape_type", tapeType.toString());
     }
 
+    
     public PutTapeDensityDirectiveSpectraS3Request(final TapeDriveType density, final String partitionId, final TapeType tapeType) {
         this.density = density;
         this.partitionId = partitionId;

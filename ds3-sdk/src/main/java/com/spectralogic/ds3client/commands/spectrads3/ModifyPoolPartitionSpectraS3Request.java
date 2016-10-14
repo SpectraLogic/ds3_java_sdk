@@ -30,6 +30,7 @@ public class ModifyPoolPartitionSpectraS3Request extends AbstractRequest {
 
     // Constructor
     
+    
     public ModifyPoolPartitionSpectraS3Request(final String poolPartition) {
         this.poolPartition = poolPartition;
         
@@ -40,6 +41,7 @@ public class ModifyPoolPartitionSpectraS3Request extends AbstractRequest {
         this.updateQueryParam("name", name);
         return this;
     }
+
 
 
     @Override

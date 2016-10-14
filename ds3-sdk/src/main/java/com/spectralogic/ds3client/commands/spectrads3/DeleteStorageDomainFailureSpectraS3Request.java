@@ -28,6 +28,7 @@ public class DeleteStorageDomainFailureSpectraS3Request extends AbstractRequest 
 
     // Constructor
     
+    
     public DeleteStorageDomainFailureSpectraS3Request(final String storageDomainFailure) {
         this.storageDomainFailure = storageDomainFailure;
         

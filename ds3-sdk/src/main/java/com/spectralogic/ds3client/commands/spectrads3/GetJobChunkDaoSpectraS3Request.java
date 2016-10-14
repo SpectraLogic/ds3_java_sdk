@@ -28,6 +28,7 @@ public class GetJobChunkDaoSpectraS3Request extends AbstractRequest {
 
     // Constructor
     
+    
     public GetJobChunkDaoSpectraS3Request(final String jobChunkDao) {
         this.jobChunkDao = jobChunkDao;
         

@@ -28,6 +28,7 @@ public class InspectAllTapesSpectraS3Request extends AbstractRequest {
 
     // Constructor
     
+    
     public InspectAllTapesSpectraS3Request() {
         
         this.getQueryParams().put("operation", "inspect");
@@ -39,6 +40,7 @@ public class InspectAllTapesSpectraS3Request extends AbstractRequest {
         this.updateQueryParam("task_priority", taskPriority);
         return this;
     }
+
 
 
     @Override

@@ -43,6 +43,7 @@ public class VerifyPhysicalPlacementForObjectsWithFullDetailsSpectraS3Request ex
 
     // Constructor
     
+    
     public VerifyPhysicalPlacementForObjectsWithFullDetailsSpectraS3Request(final String bucketName, final List<Ds3Object> objects) {
         this.bucketName = bucketName;
         this.objects = objects;
@@ -58,11 +59,13 @@ public class VerifyPhysicalPlacementForObjectsWithFullDetailsSpectraS3Request ex
         return this;
     }
 
+
     public VerifyPhysicalPlacementForObjectsWithFullDetailsSpectraS3Request withStorageDomainId(final String storageDomainId) {
         this.storageDomainId = storageDomainId;
         this.updateQueryParam("storage_domain_id", storageDomainId);
         return this;
     }
+
 
 
     @Override

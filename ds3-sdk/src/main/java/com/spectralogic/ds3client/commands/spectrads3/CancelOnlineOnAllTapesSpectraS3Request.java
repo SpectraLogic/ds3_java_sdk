@@ -25,6 +25,7 @@ public class CancelOnlineOnAllTapesSpectraS3Request extends AbstractRequest {
     
     // Constructor
     
+    
     public CancelOnlineOnAllTapesSpectraS3Request() {
         
         this.getQueryParams().put("operation", "cancel_online");

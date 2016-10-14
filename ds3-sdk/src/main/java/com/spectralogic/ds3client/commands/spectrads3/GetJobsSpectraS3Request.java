@@ -30,6 +30,7 @@ public class GetJobsSpectraS3Request extends AbstractRequest {
 
     // Constructor
     
+    
     public GetJobsSpectraS3Request() {
         
     }
@@ -40,6 +41,7 @@ public class GetJobsSpectraS3Request extends AbstractRequest {
         return this;
     }
 
+
     public GetJobsSpectraS3Request withFullDetails(final boolean fullDetails) {
         this.fullDetails = fullDetails;
         if (this.fullDetails) {
@@ -49,6 +51,7 @@ public class GetJobsSpectraS3Request extends AbstractRequest {
         }
         return this;
     }
+
 
 
     @Override

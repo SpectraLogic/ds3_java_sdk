@@ -28,6 +28,7 @@ public class GetStorageDomainSpectraS3Request extends AbstractRequest {
 
     // Constructor
     
+    
     public GetStorageDomainSpectraS3Request(final String storageDomain) {
         this.storageDomain = storageDomain;
         

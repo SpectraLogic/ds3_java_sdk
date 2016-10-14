@@ -33,6 +33,7 @@ public class DeleteObjectRequest extends AbstractRequest {
 
     // Constructor
     
+    
     public DeleteObjectRequest(final String bucketName, final String objectName) {
         this.bucketName = bucketName;
         this.objectName = objectName;
@@ -49,6 +50,7 @@ public class DeleteObjectRequest extends AbstractRequest {
         return this;
     }
 
+
     public DeleteObjectRequest withRollBack(final boolean rollBack) {
         this.rollBack = rollBack;
         if (this.rollBack) {
@@ -58,6 +60,7 @@ public class DeleteObjectRequest extends AbstractRequest {
         }
         return this;
     }
+
 
 
     @Override

@@ -37,6 +37,7 @@ public class PutTapeStorageDomainMemberSpectraS3Request extends AbstractRequest 
 
     // Constructor
     
+    
     public PutTapeStorageDomainMemberSpectraS3Request(final UUID storageDomainId, final UUID tapePartitionId, final TapeType tapeType) {
         this.storageDomainId = storageDomainId.toString();
         this.tapePartitionId = tapePartitionId.toString();
@@ -47,6 +48,7 @@ public class PutTapeStorageDomainMemberSpectraS3Request extends AbstractRequest 
         this.getQueryParams().put("tape_type", tapeType.toString());
     }
 
+    
     public PutTapeStorageDomainMemberSpectraS3Request(final String storageDomainId, final String tapePartitionId, final TapeType tapeType) {
         this.storageDomainId = storageDomainId;
         this.tapePartitionId = tapePartitionId;
@@ -62,6 +64,7 @@ public class PutTapeStorageDomainMemberSpectraS3Request extends AbstractRequest 
         this.updateQueryParam("write_preference", writePreference);
         return this;
     }
+
 
 
     @Override

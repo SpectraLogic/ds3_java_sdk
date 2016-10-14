@@ -35,11 +35,13 @@ public class ModifyUserSpectraS3Request extends AbstractRequest {
 
     // Constructor
     
+    
     public ModifyUserSpectraS3Request(final UUID userId) {
         this.userId = userId.toString();
         
     }
 
+    
     public ModifyUserSpectraS3Request(final String userId) {
         this.userId = userId;
         
@@ -51,11 +53,13 @@ public class ModifyUserSpectraS3Request extends AbstractRequest {
         return this;
     }
 
+
     public ModifyUserSpectraS3Request withDefaultDataPolicyId(final String defaultDataPolicyId) {
         this.defaultDataPolicyId = defaultDataPolicyId;
         this.updateQueryParam("default_data_policy_id", defaultDataPolicyId);
         return this;
     }
+
 
     public ModifyUserSpectraS3Request withName(final String name) {
         this.name = name;
@@ -63,11 +67,13 @@ public class ModifyUserSpectraS3Request extends AbstractRequest {
         return this;
     }
 
+
     public ModifyUserSpectraS3Request withSecretKey(final String secretKey) {
         this.secretKey = secretKey;
         this.updateQueryParam("secret_key", secretKey);
         return this;
     }
+
 
 
     @Override

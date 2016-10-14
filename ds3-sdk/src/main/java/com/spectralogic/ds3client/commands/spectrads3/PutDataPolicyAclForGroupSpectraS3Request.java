@@ -31,6 +31,7 @@ public class PutDataPolicyAclForGroupSpectraS3Request extends AbstractRequest {
 
     // Constructor
     
+    
     public PutDataPolicyAclForGroupSpectraS3Request(final UUID dataPolicyId, final UUID groupId) {
         this.dataPolicyId = dataPolicyId.toString();
         this.groupId = groupId.toString();
@@ -39,6 +40,7 @@ public class PutDataPolicyAclForGroupSpectraS3Request extends AbstractRequest {
         this.getQueryParams().put("group_id", groupId.toString());
     }
 
+    
     public PutDataPolicyAclForGroupSpectraS3Request(final String dataPolicyId, final String groupId) {
         this.dataPolicyId = dataPolicyId;
         this.groupId = groupId;

@@ -28,6 +28,7 @@ public class GetPoolSpectraS3Request extends AbstractRequest {
 
     // Constructor
     
+    
     public GetPoolSpectraS3Request(final String pool) {
         this.pool = pool;
         

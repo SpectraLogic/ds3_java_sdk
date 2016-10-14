@@ -32,6 +32,7 @@ public class PutStorageDomainFailureNotificationRegistrationSpectraS3Request ext
 
     private RequestType notificationHttpMethod;
 
+    
     public PutStorageDomainFailureNotificationRegistrationSpectraS3Request(final String notificationEndPoint) {
         super(notificationEndPoint);
 
@@ -45,17 +46,20 @@ public class PutStorageDomainFailureNotificationRegistrationSpectraS3Request ext
         return this;
     }
 
+
     public PutStorageDomainFailureNotificationRegistrationSpectraS3Request withNamingConvention(final NamingConventionType namingConvention) {
         this.namingConvention = namingConvention;
         this.updateQueryParam("naming_convention", namingConvention);
         return this;
     }
 
+
     public PutStorageDomainFailureNotificationRegistrationSpectraS3Request withNotificationHttpMethod(final RequestType notificationHttpMethod) {
         this.notificationHttpMethod = notificationHttpMethod;
         this.updateQueryParam("notification_http_method", notificationHttpMethod);
         return this;
     }
+
 
 
     @Override

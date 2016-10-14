@@ -28,6 +28,7 @@ public class DeleteBucketAclSpectraS3Request extends AbstractRequest {
 
     // Constructor
     
+    
     public DeleteBucketAclSpectraS3Request(final String bucketAcl) {
         this.bucketAcl = bucketAcl;
         

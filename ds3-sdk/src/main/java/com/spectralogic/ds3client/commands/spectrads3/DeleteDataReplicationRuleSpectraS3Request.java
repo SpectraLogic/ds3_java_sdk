@@ -28,6 +28,7 @@ public class DeleteDataReplicationRuleSpectraS3Request extends AbstractRequest {
 
     // Constructor
     
+    
     public DeleteDataReplicationRuleSpectraS3Request(final String dataReplicationRule) {
         this.dataReplicationRule = dataReplicationRule;
         

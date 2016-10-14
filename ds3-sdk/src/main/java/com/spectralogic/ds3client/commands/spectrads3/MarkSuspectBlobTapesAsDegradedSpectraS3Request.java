@@ -27,6 +27,7 @@ public class MarkSuspectBlobTapesAsDegradedSpectraS3Request extends AbstractRequ
 
     // Constructor
     
+    
     public MarkSuspectBlobTapesAsDegradedSpectraS3Request() {
         
     }
@@ -40,6 +41,7 @@ public class MarkSuspectBlobTapesAsDegradedSpectraS3Request extends AbstractRequ
         }
         return this;
     }
+
 
 
     @Override

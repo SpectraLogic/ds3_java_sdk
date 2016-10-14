@@ -25,6 +25,7 @@ public class GetObjectPersistedNotificationRegistrationSpectraS3Request extends 
     
     // Constructor
     
+    
     public GetObjectPersistedNotificationRegistrationSpectraS3Request(final UUID notificationId) {
         super(notificationId);
 
@@ -32,6 +33,7 @@ public class GetObjectPersistedNotificationRegistrationSpectraS3Request extends 
 
     }
 
+    
     public GetObjectPersistedNotificationRegistrationSpectraS3Request(final String notificationId) {
         super(notificationId);
 

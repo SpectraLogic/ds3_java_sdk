@@ -32,6 +32,7 @@ public class PutGlobalBucketAclForGroupSpectraS3Request extends AbstractRequest 
 
     // Constructor
     
+    
     public PutGlobalBucketAclForGroupSpectraS3Request(final UUID groupId, final BucketAclPermission permission) {
         this.groupId = groupId.toString();
         this.permission = permission;
@@ -40,6 +41,7 @@ public class PutGlobalBucketAclForGroupSpectraS3Request extends AbstractRequest 
         this.getQueryParams().put("permission", permission.toString());
     }
 
+    
     public PutGlobalBucketAclForGroupSpectraS3Request(final String groupId, final BucketAclPermission permission) {
         this.groupId = groupId;
         this.permission = permission;

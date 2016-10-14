@@ -41,6 +41,7 @@ public class GetDegradedBucketsSpectraS3Request extends AbstractPaginationReques
 
     // Constructor
     
+    
     public GetDegradedBucketsSpectraS3Request() {
         
     }
@@ -51,11 +52,13 @@ public class GetDegradedBucketsSpectraS3Request extends AbstractPaginationReques
         return this;
     }
 
+
     public GetDegradedBucketsSpectraS3Request withDataPolicyId(final String dataPolicyId) {
         this.dataPolicyId = dataPolicyId;
         this.updateQueryParam("data_policy_id", dataPolicyId);
         return this;
     }
+
 
     public GetDegradedBucketsSpectraS3Request withLastPage(final boolean lastPage) {
         this.lastPage = lastPage;
@@ -67,11 +70,13 @@ public class GetDegradedBucketsSpectraS3Request extends AbstractPaginationReques
         return this;
     }
 
+
     public GetDegradedBucketsSpectraS3Request withName(final String name) {
         this.name = name;
         this.updateQueryParam("name", name);
         return this;
     }
+
 
     public GetDegradedBucketsSpectraS3Request withPageLength(final int pageLength) {
         this.pageLength = pageLength;
@@ -79,11 +84,13 @@ public class GetDegradedBucketsSpectraS3Request extends AbstractPaginationReques
         return this;
     }
 
+
     public GetDegradedBucketsSpectraS3Request withPageOffset(final int pageOffset) {
         this.pageOffset = pageOffset;
         this.updateQueryParam("page_offset", pageOffset);
         return this;
     }
+
 
     public GetDegradedBucketsSpectraS3Request withPageStartMarker(final UUID pageStartMarker) {
         this.pageStartMarker = pageStartMarker.toString();
@@ -91,11 +98,13 @@ public class GetDegradedBucketsSpectraS3Request extends AbstractPaginationReques
         return this;
     }
 
+
     public GetDegradedBucketsSpectraS3Request withPageStartMarker(final String pageStartMarker) {
         this.pageStartMarker = pageStartMarker;
         this.updateQueryParam("page_start_marker", pageStartMarker);
         return this;
     }
+
 
     public GetDegradedBucketsSpectraS3Request withUserId(final UUID userId) {
         this.userId = userId.toString();
@@ -103,11 +112,13 @@ public class GetDegradedBucketsSpectraS3Request extends AbstractPaginationReques
         return this;
     }
 
+
     public GetDegradedBucketsSpectraS3Request withUserId(final String userId) {
         this.userId = userId;
         this.updateQueryParam("user_id", userId);
         return this;
     }
+
 
 
     @Override

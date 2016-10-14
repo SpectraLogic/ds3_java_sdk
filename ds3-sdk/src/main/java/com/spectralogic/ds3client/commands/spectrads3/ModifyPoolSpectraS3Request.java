@@ -34,6 +34,7 @@ public class ModifyPoolSpectraS3Request extends AbstractRequest {
 
     // Constructor
     
+    
     public ModifyPoolSpectraS3Request(final String pool) {
         this.pool = pool;
         
@@ -45,17 +46,20 @@ public class ModifyPoolSpectraS3Request extends AbstractRequest {
         return this;
     }
 
+
     public ModifyPoolSpectraS3Request withPartitionId(final String partitionId) {
         this.partitionId = partitionId;
         this.updateQueryParam("partition_id", partitionId);
         return this;
     }
 
+
     public ModifyPoolSpectraS3Request withQuiesced(final Quiesced quiesced) {
         this.quiesced = quiesced;
         this.updateQueryParam("quiesced", quiesced);
         return this;
     }
+
 
 
     @Override

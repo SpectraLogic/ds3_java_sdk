@@ -33,6 +33,7 @@ public class EjectTapeSpectraS3Request extends AbstractRequest {
 
     // Constructor
     
+    
     public EjectTapeSpectraS3Request(final UUID tapeId) {
         this.tapeId = tapeId.toString();
         
@@ -40,6 +41,7 @@ public class EjectTapeSpectraS3Request extends AbstractRequest {
 
     }
 
+    
     public EjectTapeSpectraS3Request(final String tapeId) {
         this.tapeId = tapeId;
         
@@ -53,11 +55,13 @@ public class EjectTapeSpectraS3Request extends AbstractRequest {
         return this;
     }
 
+
     public EjectTapeSpectraS3Request withEjectLocation(final String ejectLocation) {
         this.ejectLocation = ejectLocation;
         this.updateQueryParam("eject_location", ejectLocation);
         return this;
     }
+
 
 
     @Override

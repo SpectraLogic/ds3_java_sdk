@@ -28,6 +28,7 @@ public class GetCompletedJobSpectraS3Request extends AbstractRequest {
 
     // Constructor
     
+    
     public GetCompletedJobSpectraS3Request(final String completedJob) {
         this.completedJob = completedJob;
         

@@ -28,6 +28,7 @@ public class CompactAllPoolsSpectraS3Request extends AbstractRequest {
 
     // Constructor
     
+    
     public CompactAllPoolsSpectraS3Request() {
         
         this.getQueryParams().put("operation", "compact");
@@ -39,6 +40,7 @@ public class CompactAllPoolsSpectraS3Request extends AbstractRequest {
         this.updateQueryParam("priority", priority);
         return this;
     }
+
 
 
     @Override

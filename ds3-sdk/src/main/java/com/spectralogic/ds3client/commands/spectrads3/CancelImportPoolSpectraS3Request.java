@@ -28,6 +28,7 @@ public class CancelImportPoolSpectraS3Request extends AbstractRequest {
 
     // Constructor
     
+    
     public CancelImportPoolSpectraS3Request(final String pool) {
         this.pool = pool;
         
