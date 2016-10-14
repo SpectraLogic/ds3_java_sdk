@@ -28,6 +28,7 @@ import com.spectralogic.ds3client.models.*;
 import com.spectralogic.ds3client.models.Error;
 import com.spectralogic.ds3client.models.Objects;
 import com.spectralogic.ds3client.models.bulk.Ds3Object;
+import com.spectralogic.ds3client.models.common.Credentials;
 import com.spectralogic.ds3client.networking.ConnectionDetails;
 import com.spectralogic.ds3client.networking.FailedRequestException;
 import com.spectralogic.ds3client.utils.ByteArraySeekableByteChannel;
@@ -37,6 +38,7 @@ import org.junit.Test;
 import org.mockito.Mockito;
 
 import java.io.IOException;
+import java.net.URI;
 import java.nio.channels.SeekableByteChannel;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -116,7 +118,11 @@ public class Ds3ClientHelpers_Test {
 
         Mockito.when(ds3Client.getObject(getRequestHas(MYBUCKET, "foo", jobId, 6))).thenThrow(new StubException());
         Mockito.when(ds3Client.getObject(getRequestHas(MYBUCKET, "baz", jobId, 6))).then(getObjectAnswer("ntents"));
-        
+
+        final ConnectionDetails connectionDetails = Mockito.mock(ConnectionDetails.class);
+        Mockito.when(connectionDetails.getEndpoint()).thenReturn("endpoint");
+        Mockito.when(ds3Client.getConnectionDetails()).thenReturn(connectionDetails);
+
         final Job job = Ds3ClientHelpers.wrap(ds3Client).startReadJob(MYBUCKET, Lists.newArrayList(
             new Ds3Object("foo"),
             new Ds3Object("bar"),
@@ -131,7 +137,7 @@ public class Ds3ClientHelpers_Test {
             }
         });
     }
-    
+
     @Test
     public void testWriteObjects() throws IOException, ParseException {
         final Ds3Client ds3Client = buildDs3ClientForBulk();
@@ -631,6 +637,10 @@ public class Ds3ClientHelpers_Test {
         Mockito.when(ds3Client
                 .getJobChunksReadyForClientProcessingSpectraS3(hasJobId(jobId)))
                 .thenReturn(jobChunksResponse);
+
+        final ConnectionDetails connectionDetails = Mockito.mock(ConnectionDetails.class);
+        Mockito.when(connectionDetails.getEndpoint()).thenReturn("endpoint");
+        Mockito.when(ds3Client.getConnectionDetails()).thenReturn(connectionDetails);
 
         final Job job = Ds3ClientHelpers.wrap(ds3Client, 1).startReadJob(MYBUCKET, Lists.newArrayList(
                 new Ds3Object("foo")

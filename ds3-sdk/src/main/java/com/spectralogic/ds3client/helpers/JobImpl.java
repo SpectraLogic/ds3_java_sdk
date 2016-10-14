@@ -15,25 +15,47 @@
 
 package com.spectralogic.ds3client.helpers;
 
+import com.google.common.collect.Sets;
 import com.spectralogic.ds3client.Ds3Client;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.Job;
+import com.spectralogic.ds3client.helpers.events.EventRunner;
+import com.spectralogic.ds3client.helpers.events.FailureEvent;
 import com.spectralogic.ds3client.models.BulkObject;
+import com.spectralogic.ds3client.models.ChecksumType;
 import com.spectralogic.ds3client.models.MasterObjectList;
+import com.spectralogic.ds3client.models.Objects;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.Set;
 import java.util.UUID;
 
 abstract class JobImpl implements Job {
+    private static final Logger LOG = LoggerFactory.getLogger(JobImpl.class);
+
     protected final Ds3Client client;
     protected final MasterObjectList masterObjectList;
     protected boolean running = false;
     protected int maxParallelRequests = 10;
     private final int objectTransferAttempts;
+    private final EventRunner eventRunner;
+    private final Set<FailureEventListener> failureEventListeners;
+    private final Set<WaitingForChunksListener> waitingForChunksListeners;
+    private final Set<ChecksumListener> checksumListeners;
 
-    public JobImpl(final Ds3Client client, final MasterObjectList masterObjectList, final int objectTransferAttempts) {
+    public JobImpl(final Ds3Client client,
+                   final MasterObjectList masterObjectList,
+                   final int objectTransferAttempts,
+                   final EventRunner eventRunner) {
         this.client = client;
         this.masterObjectList = masterObjectList;
         this.objectTransferAttempts = objectTransferAttempts;
+        this.eventRunner = eventRunner;
+        this.failureEventListeners = Sets.newIdentityHashSet();
+        this.waitingForChunksListeners = Sets.newIdentityHashSet();
+        this.checksumListeners = Sets.newIdentityHashSet();
     }
     
     @Override
@@ -79,6 +101,101 @@ abstract class JobImpl implements Job {
                     throw t;
                 }
             }
+        }
+    }
+
+    protected EventRunner getEventRunner() {
+        return eventRunner;
+    }
+
+    @Override
+    public void attachChecksumListener(final ChecksumListener listener) {
+        checkRunning();
+        this.checksumListeners.add(listener);
+    }
+
+    @Override
+    public void removeChecksumListener(final ChecksumListener listener) {
+        checkRunning();
+        this.checksumListeners.remove(listener);
+    }
+
+    @Override
+    public void attachWaitingForChunksListener(final WaitingForChunksListener listener) {
+        checkRunning();
+        this.waitingForChunksListeners.add(listener);
+    }
+
+    @Override
+    public void removeWaitingForChunksListener(final WaitingForChunksListener listener) {
+        checkRunning();
+        this.waitingForChunksListeners.remove(listener);
+    }
+
+    @Override
+    public void attachFailureEventListener(final FailureEventListener listener) {
+        checkRunning();
+        this.failureEventListeners.add(listener);
+    }
+
+    @Override
+    public void removeFailureEventListener(final FailureEventListener listener) {
+        checkRunning();
+        this.failureEventListeners.remove(listener);
+    }
+
+    protected void emitFailureEvent(final FailureEvent failureEvent) {
+        for (final FailureEventListener failureEventListener : failureEventListeners) {
+            eventRunner.emitEvent(new Runnable() {
+                @Override
+                public void run() {
+                    failureEventListener.onFailure(failureEvent);
+                }
+            });
+        }
+    }
+
+    protected FailureEvent makeFailureEvent(final FailureEvent.FailureActivity failureActivity,
+                                            final Throwable causalException,
+                                            final Objects chunk)
+    {
+        return new FailureEvent.Builder()
+                .doingWhat(failureActivity)
+                .withCausalException(causalException)
+                .withObjectNamed(getLabelForChunk(chunk))
+                .usingSystemWithEndpoint(client.getConnectionDetails().getEndpoint())
+                .build();
+    }
+
+    protected String getLabelForChunk(final Objects chunk) {
+        try {
+            return chunk.getObjects().get(0).getName();
+        } catch (final Throwable t) {
+            LOG.error("Failed to get label for chunk.", t);
+        }
+
+        return "unnamed object";
+    }
+
+    protected void emitWaitingForChunksEvents(final int retryAfter) {
+        for (final WaitingForChunksListener waitingForChunksListener : waitingForChunksListeners) {
+            eventRunner.emitEvent(new Runnable() {
+                @Override
+                public void run() {
+                    waitingForChunksListener.waiting(retryAfter);
+                }
+            });
+        }
+    }
+
+    protected void emitChecksumEvents(final BulkObject bulkObject, final ChecksumType.Type type, final String checksum) {
+        for (final ChecksumListener listener : checksumListeners) {
+            getEventRunner().emitEvent(new Runnable() {
+                @Override
+                public void run() {
+                    listener.value(bulkObject, type, checksum);
+                }
+            });
         }
     }
 }

@@ -22,6 +22,7 @@ import com.spectralogic.ds3client.commands.GetObjectResponse;
 import com.spectralogic.ds3client.helpers.ChunkTransferrer.ItemTransferrer;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.ObjectChannelBuilder;
 import com.spectralogic.ds3client.helpers.events.EventRunner;
+import com.spectralogic.ds3client.helpers.events.FailureEvent;
 import com.spectralogic.ds3client.helpers.strategy.BlobStrategy;
 import com.spectralogic.ds3client.helpers.strategy.GetStreamerStrategy;
 import com.spectralogic.ds3client.helpers.util.PartialObjectHelpers;
@@ -34,17 +35,19 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 class ReadJobImpl extends JobImpl {
+    private static final Logger LOG = LoggerFactory.getLogger(ReadJobImpl.class);
 
     private final JobPartTracker partTracker;
     private final List<Objects> chunks;
     private final ImmutableMap<String, ImmutableMultimap<BulkObject, Range>> blobToRanges;
     private final Set<MetadataReceivedListener> metadataListeners;
-    private final Set<ChecksumListener> checksumListeners;
-    private final Set<WaitingForChunksListener> waitingForChunksListeners;
+
     private final int retryAfter; // Negative retryAfter value represent infinity retries
     private final int retryDelay; // Negative value represents default
-    private final EventRunner eventRunner;
 
     public ReadJobImpl(
             final Ds3Client client,
@@ -55,16 +58,13 @@ class ReadJobImpl extends JobImpl {
             final int retryDelay,
             final EventRunner eventRunner
             ) {
-        super(client, masterObjectList, objectTransferAttempts);
+        super(client, masterObjectList, objectTransferAttempts, eventRunner);
 
         this.chunks = this.masterObjectList.getObjects();
         this.partTracker = JobPartTrackerFactory
                 .buildPartTracker(getAllBlobApiBeans(chunks), eventRunner);
         this.blobToRanges = PartialObjectHelpers.mapRangesToBlob(masterObjectList.getObjects(), objectRanges);
         this.metadataListeners = Sets.newIdentityHashSet();
-        this.checksumListeners = Sets.newIdentityHashSet();
-        this.waitingForChunksListeners = Sets.newIdentityHashSet();
-        this.eventRunner = eventRunner;
 
         this.retryAfter = retryAfter;
         this.retryDelay = retryDelay;
@@ -115,30 +115,6 @@ class ReadJobImpl extends JobImpl {
     }
 
     @Override
-    public void attachChecksumListener(final ChecksumListener listener) {
-        checkRunning();
-        this.checksumListeners.add(listener);
-    }
-
-    @Override
-    public void removeChecksumListener(final ChecksumListener listener) {
-        checkRunning();
-        this.checksumListeners.remove(listener);
-    }
-
-    @Override
-    public void attachWaitingForChunksListener(final WaitingForChunksListener listener) {
-        checkRunning();
-        this.waitingForChunksListeners.add(listener);
-    }
-
-    @Override
-    public void removeWaitingForChunksListener(final WaitingForChunksListener listener) {
-        checkRunning();
-        this.waitingForChunksListeners.remove(listener);
-    }
-
-    @Override
     public Ds3ClientHelpers.Job withMetadata(final Ds3ClientHelpers.MetadataAccess access) {
         throw new IllegalStateException("withMetadata method is not used with Read Jobs");
     }
@@ -151,44 +127,42 @@ class ReadJobImpl extends JobImpl {
     @Override
     public void transfer(final ObjectChannelBuilder channelBuilder)
             throws IOException {
-                running = true;
+        try {
+            running = true;
 
-        final BlobStrategy strategy = new GetStreamerStrategy(
-                client,
-                this.masterObjectList,
-                retryAfter,
-                retryDelay,
-                new GetStreamerStrategy.ChunkEventHandler() {
-            @Override
-            public void emitWaitingForChunksEvents(final int secondsToDelay) {
-                for (final WaitingForChunksListener waitingForChunksListener : waitingForChunksListeners) {
-                    eventRunner.emitEvent(new Runnable() {
+            final BlobStrategy strategy = new GetStreamerStrategy(
+                    client,
+                    this.masterObjectList,
+                    retryAfter,
+                    retryDelay,
+                    new GetStreamerStrategy.ChunkEventHandler() {
                         @Override
-                        public void run() {
-                            waitingForChunksListener.waiting(secondsToDelay);
+                        public void emitWaitingForChunksEvents(final int secondsToDelay) {
+                            ReadJobImpl.super.emitWaitingForChunksEvents(secondsToDelay);
                         }
                     });
-                }
-            }
-        });
 
-        try (final JobState jobState = new JobState(
-                channelBuilder,
-                this.masterObjectList.getObjects(),
-                partTracker, blobToRanges)) {
-            try (final ChunkTransferrer chunkTransferrer = new ChunkTransferrer(
-                new GetObjectTransferrerRetryDecorator(jobState),
-                jobState.getPartTracker(),
-                this.maxParallelRequests
-            )) {
-                while (jobState.hasObjects()) {
-                    chunkTransferrer.transferChunks(strategy);
+            try (final JobState jobState = new JobState(
+                    channelBuilder,
+                    this.masterObjectList.getObjects(),
+                    partTracker, blobToRanges)) {
+                try (final ChunkTransferrer chunkTransferrer = new ChunkTransferrer(
+                        new GetObjectTransferrerRetryDecorator(jobState),
+                        jobState.getPartTracker(),
+                        this.maxParallelRequests
+                )) {
+                    while (jobState.hasObjects()) {
+                        chunkTransferrer.transferChunks(strategy);
+                    }
                 }
+            } catch (final RuntimeException | IOException e) {
+                throw e;
+            } catch (final Exception e) {
+                throw new RuntimeException(e);
             }
-        } catch (final RuntimeException | IOException e) {
-            throw e;
-        } catch (final Exception e) {
-            throw new RuntimeException(e);
+        } catch (final Throwable t) {
+            emitFailureEvent(makeFailureEvent(FailureEvent.FailureActivity.GettingObject, t, masterObjectList.getObjects().get(0)));
+            throw t;
         }
     }
 
@@ -233,25 +207,14 @@ class ReadJobImpl extends JobImpl {
             final GetObjectResponse response = client.getObject(request);
             final Metadata metadata = response.getMetadata();
 
-            sendChecksumEvents(ds3Object, response.getChecksumType(), response.getChecksum());
+            emitChecksumEvents(ds3Object, response.getChecksumType(), response.getChecksum());
             sendMetadataEvents(ds3Object.getName(), metadata);
-        }
-    }
-
-    private void sendChecksumEvents(final BulkObject ds3Object, final ChecksumType.Type type, final String checksum) {
-        for (final ChecksumListener listener : this.checksumListeners) {
-            eventRunner.emitEvent(new Runnable() {
-                @Override
-                public void run() {
-                    listener.value(ds3Object, type, checksum);
-                }
-            });
         }
     }
 
     private void sendMetadataEvents(final String objName , final Metadata metadata) {
         for (final MetadataReceivedListener listener : this.metadataListeners) {
-            eventRunner.emitEvent(new Runnable() {
+            getEventRunner().emitEvent(new Runnable() {
                 @Override
                 public void run() {
                     listener.metadataReceived(objName, metadata);
