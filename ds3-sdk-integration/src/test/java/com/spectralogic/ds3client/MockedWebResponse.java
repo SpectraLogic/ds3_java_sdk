@@ -15,36 +15,42 @@
 
 package com.spectralogic.ds3client;
 
-import com.google.common.collect.Lists;
 import com.spectralogic.ds3client.networking.Headers;
+import com.spectralogic.ds3client.networking.WebResponse;
 
-import java.util.HashMap;
-import java.util.List;
+import org.apache.commons.io.IOUtils;
+
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Map;
-import java.util.Set;
 
-public class MockedHeaders implements Headers {
-    private final Map<String, String> headerValues;
+public class MockedWebResponse implements WebResponse {
+    private final InputStream responseStream;
+    private final int statusCode;
+    private final Headers headers;
 
-    public MockedHeaders(final Map<String, String> headerValues) {
-        this.headerValues = normalizeHeaderValues(headerValues);
+    public MockedWebResponse(final String responseString, final int statusCode, final Map<String, String> headers) {
+        this.responseStream = IOUtils.toInputStream(responseString);
+        this.statusCode = statusCode;
+        this.headers = new MockedHeaders(headers);
+    }
+    
+    @Override
+    public InputStream getResponseStream() throws IOException {
+        return this.responseStream;
     }
 
-    private static Map<String, String> normalizeHeaderValues(final Map<String, String> headerValues) {
-        final Map<String, String> headers = new HashMap<>();
-        for (final Map.Entry<String, String> entry : headerValues.entrySet()) {
-            headers.put(entry.getKey().toLowerCase(), entry.getValue());
-        }
+    @Override
+    public int getStatusCode() {
+        return this.statusCode;
+    }
+
+    @Override
+    public Headers getHeaders() {
         return headers;
     }
 
     @Override
-    public List<String> get(final String key) {
-        return Lists.newArrayList(this.headerValues.get(key.toLowerCase()));
-    }
-
-    @Override
-    public Set<String> keys() {
-        return null;
+    public void close() throws IOException {
     }
 }

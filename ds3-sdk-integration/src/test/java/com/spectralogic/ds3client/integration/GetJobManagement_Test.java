@@ -18,6 +18,7 @@ package com.spectralogic.ds3client.integration;
 import com.google.common.collect.Lists;
 import com.spectralogic.ds3client.Ds3Client;
 import com.spectralogic.ds3client.Ds3ClientImpl;
+import com.spectralogic.ds3client.IntValue;
 import com.spectralogic.ds3client.commands.DeleteObjectRequest;
 import com.spectralogic.ds3client.commands.GetObjectRequest;
 import com.spectralogic.ds3client.commands.GetObjectResponse;
@@ -25,12 +26,19 @@ import com.spectralogic.ds3client.commands.PutObjectRequest;
 import com.spectralogic.ds3client.commands.spectrads3.GetJobSpectraS3Request;
 import com.spectralogic.ds3client.commands.spectrads3.GetJobSpectraS3Response;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers;
+import com.spectralogic.ds3client.helpers.FailureEventListener;
 import com.spectralogic.ds3client.helpers.FileObjectGetter;
 import com.spectralogic.ds3client.helpers.FileObjectPutter;
+
 import com.spectralogic.ds3client.helpers.ObjectCompletedListener;
+
+import com.spectralogic.ds3client.helpers.events.FailureEvent;
+
 import com.spectralogic.ds3client.helpers.options.ReadJobOptions;
 import com.spectralogic.ds3client.integration.test.helpers.ABMTestHelper;
 import com.spectralogic.ds3client.integration.test.helpers.Ds3ClientShim;
+import com.spectralogic.ds3client.integration.test.helpers.Ds3ClientShimFactory;
+import com.spectralogic.ds3client.integration.test.helpers.Ds3ClientShimWithFailedChunkAllocation;
 import com.spectralogic.ds3client.integration.test.helpers.TempStorageIds;
 import com.spectralogic.ds3client.integration.test.helpers.TempStorageUtil;
 import com.spectralogic.ds3client.models.ChecksumType;
@@ -319,6 +327,99 @@ public class GetJobManagement_Test {
 
                     assertTrue(Arrays.equals(first200Bytes, first200BytesFromBP));
                 }
+            }
+        } finally {
+            FileUtils.deleteDirectory(tempDirectory.toFile());
+            deleteBigFileFromBlackPearlBucket();
+        }
+    }
+
+    @Test
+    public void testFiringFailureHandlerWhenGettingChunks()
+            throws URISyntaxException, NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException
+    {
+        putBigFile();
+
+        final String tempPathPrefix = null;
+        final Path tempDirectory = Files.createTempDirectory(Paths.get("."), tempPathPrefix);
+
+        try {
+            final IntValue numFailuresRecorded = new IntValue();
+
+            final FailureEventListener failureEventListener = new FailureEventListener() {
+                @Override
+                public void onFailure(final FailureEvent failureEvent) {
+                    numFailuresRecorded.increment();
+                    assertEquals(FailureEvent.FailureActivity.GettingObject, failureEvent.doingWhat());
+                }
+            };
+
+            final Ds3ClientHelpers.Job readJob = createReadJobWithObjectsReadyToTransfer(Ds3ClientShimFactory.ClientFailureType.ChunkAllocation);
+
+            readJob.attachFailureEventListener(failureEventListener);
+
+            try {
+                readJob.transfer(new FileObjectGetter(tempDirectory));
+            } catch (final IOException e) {
+                assertEquals(1, numFailuresRecorded.getValue());
+            }
+        } finally {
+            FileUtils.deleteDirectory(tempDirectory.toFile());
+            deleteBigFileFromBlackPearlBucket();
+        }
+    }
+
+    private Ds3ClientHelpers.Job createReadJobWithObjectsReadyToTransfer(final Ds3ClientShimFactory.ClientFailureType clientFailureType)
+            throws IOException, URISyntaxException, NoSuchMethodException, IllegalAccessException, InvocationTargetException
+    {
+        final String DIR_NAME = "largeFiles/";
+        final String FILE_NAME = "lesmis-copies.txt";
+
+        final Path objPath = ResourceUtils.loadFileResource(DIR_NAME + FILE_NAME);
+        final long bookSize = Files.size(objPath);
+        final Ds3Object obj = new Ds3Object(FILE_NAME, bookSize);
+
+        final Ds3Client ds3Client = Ds3ClientShimFactory.makeWrappedDs3Client(clientFailureType, client);
+
+        final int maxNumBlockAllocationRetries = 3;
+        final int maxNumObjectTransferAttempts = 3;
+        final Ds3ClientHelpers ds3ClientHelpers = Ds3ClientHelpers.wrap(ds3Client,
+                maxNumBlockAllocationRetries,
+                maxNumObjectTransferAttempts);
+
+        final Ds3ClientHelpers.Job readJob = ds3ClientHelpers.startReadJob(BUCKET_NAME, Arrays.asList(obj));
+
+        return readJob;
+    }
+
+    @Test
+    public void testFiringFailureHandlerWhenGettingObject()
+            throws URISyntaxException, NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException
+    {
+        putBigFile();
+
+        final String tempPathPrefix = null;
+        final Path tempDirectory = Files.createTempDirectory(Paths.get("."), tempPathPrefix);
+
+        try {
+            final IntValue numFailuresRecorded = new IntValue();
+
+            final FailureEventListener failureEventListener = new FailureEventListener() {
+                @Override
+                public void onFailure(final FailureEvent failureEvent) {
+                    numFailuresRecorded.increment();
+                    assertEquals(FailureEvent.FailureActivity.GettingObject, failureEvent.doingWhat());
+                }
+            };
+
+            final Ds3ClientHelpers.Job readJob = createReadJobWithObjectsReadyToTransfer(Ds3ClientShimFactory.ClientFailureType.GetObject);
+
+            readJob.attachFailureEventListener(failureEventListener);
+
+            try {
+                readJob.transfer(new FileObjectGetter(tempDirectory));
+            } catch (final IOException e) {
+                assertEquals(1, numFailuresRecorded.getValue());
             }
         } finally {
             FileUtils.deleteDirectory(tempDirectory.toFile());
