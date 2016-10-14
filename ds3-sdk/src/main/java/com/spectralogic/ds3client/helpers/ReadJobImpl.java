@@ -35,14 +35,8 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Set;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 class ReadJobImpl extends JobImpl {
-    private static final Logger LOG = LoggerFactory.getLogger(ReadJobImpl.class);
 
-    private final JobPartTracker partTracker;
-    private final List<Objects> chunks;
     private final ImmutableMap<String, ImmutableMultimap<BulkObject, Range>> blobToRanges;
     private final Set<MetadataReceivedListener> metadataListeners;
 
@@ -60,9 +54,6 @@ class ReadJobImpl extends JobImpl {
             ) {
         super(client, masterObjectList, objectTransferAttempts, eventRunner);
 
-        this.chunks = this.masterObjectList.getObjects();
-        this.partTracker = JobPartTrackerFactory
-                .buildPartTracker(getAllBlobApiBeans(chunks), eventRunner);
         this.blobToRanges = PartialObjectHelpers.mapRangesToBlob(masterObjectList.getObjects(), objectRanges);
         this.metadataListeners = Sets.newIdentityHashSet();
 
@@ -76,30 +67,6 @@ class ReadJobImpl extends JobImpl {
             builder.addAll(objects.getObjects());
         }
         return builder.build();
-    }
-
-    @Override
-    public void attachDataTransferredListener(final DataTransferredListener listener) {
-        checkRunning();
-        this.partTracker.attachDataTransferredListener(listener);
-    }
-
-    @Override
-    public void attachObjectCompletedListener(final ObjectCompletedListener listener) {
-        checkRunning();
-        this.partTracker.attachObjectCompletedListener(listener);
-    }
-
-    @Override
-    public void removeDataTransferredListener(final DataTransferredListener listener) {
-        checkRunning();
-        this.partTracker.removeDataTransferredListener(listener);
-    }
-
-    @Override
-    public void removeObjectCompletedListener(final ObjectCompletedListener listener) {
-        checkRunning();
-        this.partTracker.removeObjectCompletedListener(listener);
     }
 
     @Override
@@ -145,7 +112,7 @@ class ReadJobImpl extends JobImpl {
             try (final JobState jobState = new JobState(
                     channelBuilder,
                     this.masterObjectList.getObjects(),
-                    partTracker, blobToRanges)) {
+                    getJobPartTracker(), blobToRanges)) {
                 try (final ChunkTransferrer chunkTransferrer = new ChunkTransferrer(
                         new GetObjectTransferrerRetryDecorator(jobState),
                         jobState.getPartTracker(),
@@ -164,6 +131,16 @@ class ReadJobImpl extends JobImpl {
             emitFailureEvent(makeFailureEvent(FailureEvent.FailureActivity.GettingObject, t, masterObjectList.getObjects().get(0)));
             throw t;
         }
+    }
+
+    @Override
+    protected List<Objects> getChunks(final MasterObjectList masterObjectList) {
+        return masterObjectList.getObjects();
+    }
+
+    @Override
+    protected JobPartTrackerDecorator makeJobPartTracker(final List<Objects> chunks, final EventRunner eventRunner) {
+        return new JobPartTrackerDecorator(chunks, eventRunner);
     }
 
     private final class GetObjectTransferrerRetryDecorator implements ItemTransferrer {

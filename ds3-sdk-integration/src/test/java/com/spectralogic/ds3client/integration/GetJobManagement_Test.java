@@ -29,7 +29,11 @@ import com.spectralogic.ds3client.helpers.Ds3ClientHelpers;
 import com.spectralogic.ds3client.helpers.FailureEventListener;
 import com.spectralogic.ds3client.helpers.FileObjectGetter;
 import com.spectralogic.ds3client.helpers.FileObjectPutter;
+
+import com.spectralogic.ds3client.helpers.ObjectCompletedListener;
+
 import com.spectralogic.ds3client.helpers.events.FailureEvent;
+
 import com.spectralogic.ds3client.helpers.options.ReadJobOptions;
 import com.spectralogic.ds3client.integration.test.helpers.ABMTestHelper;
 import com.spectralogic.ds3client.integration.test.helpers.Ds3ClientShim;
@@ -44,6 +48,7 @@ import com.spectralogic.ds3client.models.bulk.Ds3Object;
 import com.spectralogic.ds3client.models.bulk.PartialDs3Object;
 import com.spectralogic.ds3client.models.common.Range;
 import com.spectralogic.ds3client.utils.ResourceUtils;
+import com.spectralogic.ds3client.IntValue;
 import org.apache.commons.io.FileUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -292,8 +297,21 @@ public class GetJobManagement_Test {
                     maxNumObjectTransferAttempts);
 
             final Ds3ClientHelpers.Job job = ds3ClientHelpers.startReadJob(BUCKET_NAME, filesToGet);
+            final IntValue intValue = new IntValue();
+
+            job.attachObjectCompletedListener(new ObjectCompletedListener() {
+                int numPartsCompleted = 0;
+
+                @Override
+                public void objectCompleted(final String name) {
+                    assertEquals(1, ++numPartsCompleted);
+                    intValue.increment();
+                }
+            });
 
             job.transfer(new FileObjectGetter(tempDirectory));
+
+            assertEquals(1, intValue.getValue());
 
             try (final InputStream originalFileStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(DIR_NAME + FILE_NAME)) {
                 final byte[] first200Bytes = new byte[200];
