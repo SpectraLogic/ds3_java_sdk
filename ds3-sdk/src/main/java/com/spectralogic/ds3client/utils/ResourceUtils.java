@@ -21,7 +21,7 @@ import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-public class ResourceUtils {
+public final class ResourceUtils {
 
     public static Path loadFileResource(final Path filePath) throws FileNotFoundException, URISyntaxException {
         return loadFileResource(filePath.toString());

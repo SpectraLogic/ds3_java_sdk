@@ -17,16 +17,14 @@ package com.spectralogic.ds3client.helpers;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMultimap;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Sets;
 import com.spectralogic.ds3client.Ds3Client;
 import com.spectralogic.ds3client.commands.PutObjectRequest;
-import com.spectralogic.ds3client.commands.spectrads3.AllocateJobChunkSpectraS3Request;
-import com.spectralogic.ds3client.commands.spectrads3.AllocateJobChunkSpectraS3Response;
-import com.spectralogic.ds3client.exceptions.Ds3NoMoreRetriesException;
 import com.spectralogic.ds3client.helpers.ChunkTransferrer.ItemTransferrer;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.ObjectChannelBuilder;
 import com.spectralogic.ds3client.helpers.events.EventRunner;
+import com.spectralogic.ds3client.helpers.strategy.BlobStrategy;
+import com.spectralogic.ds3client.helpers.strategy.PutStreamerStrategy;
+import com.spectralogic.ds3client.helpers.events.FailureEvent;
 import com.spectralogic.ds3client.models.*;
 import com.spectralogic.ds3client.models.Objects;
 import com.spectralogic.ds3client.models.common.Range;
@@ -48,13 +46,10 @@ class WriteJobImpl extends JobImpl {
     private final JobPartTracker partTracker;
     private final List<Objects> filteredChunks;
     private final ChecksumType.Type checksumType;
-    private final Set<ChecksumListener> checksumListeners;
-    private final Set<WaitingForChunksListener> waitingForChunksListeners;
-    private final EventRunner eventRunner;
+
     private final int retryAfter; // Negative retryAfter value represent infinity retries
     private final int retryDelay; //Negative value means use default
 
-    private int retryAfterLeft; // The number of retries left
     private Ds3ClientHelpers.MetadataAccess metadataAccess = null;
     private ChecksumFunction checksumFunction = null;
 
@@ -66,7 +61,7 @@ class WriteJobImpl extends JobImpl {
             final int objectTransferAttempts,
             final int retryDelay,
             final EventRunner eventRunner) {
-        super(client, masterObjectList, objectTransferAttempts);
+        super(client, masterObjectList, objectTransferAttempts, eventRunner);
         if (this.masterObjectList == null || this.masterObjectList.getObjects() == null) {
             LOG.info("Job has no data to transfer");
             this.filteredChunks = null;
@@ -76,13 +71,10 @@ class WriteJobImpl extends JobImpl {
                     this.masterObjectList.getJobId().toString(), this.masterObjectList.getObjects().size());
             this.filteredChunks = filterChunks(this.masterObjectList.getObjects());
             this.partTracker = JobPartTrackerFactory
-                    .buildPartTracker(Iterables.concat(ReadJobImpl.getAllBlobApiBeans(filteredChunks)), eventRunner);
+                    .buildPartTracker(ReadJobImpl.getAllBlobApiBeans(filteredChunks), eventRunner);
         }
-        this.retryAfter = this.retryAfterLeft = retryAfter;
+        this.retryAfter = retryAfter;
         this.retryDelay = retryDelay;
-        this.checksumListeners = Sets.newIdentityHashSet();
-        this.waitingForChunksListeners = Sets.newIdentityHashSet();
-        this.eventRunner = eventRunner;
 
         this.checksumType = type;
     }
@@ -122,30 +114,6 @@ class WriteJobImpl extends JobImpl {
     }
 
     @Override
-    public void attachChecksumListener(final ChecksumListener listener) {
-        checkRunning();
-        this.checksumListeners.add(listener);
-    }
-
-    @Override
-    public void removeChecksumListener(final ChecksumListener listener) {
-        checkRunning();
-        this.checksumListeners.remove(listener);
-    }
-
-    @Override
-    public void attachWaitingForChunksListener(final WaitingForChunksListener listener) {
-        checkRunning();
-        this.waitingForChunksListeners.add(listener);
-    }
-
-    @Override
-    public void removeWaitingForChunksListener(final WaitingForChunksListener listener) {
-        checkRunning();
-        this.waitingForChunksListeners.remove(listener);
-    }
-
-    @Override
     public Ds3ClientHelpers.Job withMetadata(final Ds3ClientHelpers.MetadataAccess access) {
         checkRunning();
         this.metadataAccess = access;
@@ -161,98 +129,57 @@ class WriteJobImpl extends JobImpl {
     @Override
     public void transfer(final ObjectChannelBuilder channelBuilder)
             throws IOException {
-        running = true;
-        LOG.debug("Starting job transfer");
-        if (this.masterObjectList == null || this.masterObjectList.getObjects() == null) {
-            LOG.info("There is nothing to transfer for job"
-                    + ((this.getJobId() == null) ? "" : " " + this.getJobId().toString()));
-            return;
-        }
-
-        try (final JobState jobState = new JobState(
-                channelBuilder,
-                filteredChunks,
-                partTracker,
-                ImmutableMap.<String, ImmutableMultimap<BulkObject,Range>>of())) {
-            final ChunkTransferrer chunkTransferrer = new ChunkTransferrer(
-                new PutObjectTransferrerRetryDecorator(jobState),
-                this.client,
-                jobState.getPartTracker(),
-                this.maxParallelRequests
-            );
-            for (final Objects chunk : filteredChunks) {
-                LOG.debug("Allocating chunk: {}", chunk.getChunkId().toString());
-                chunkTransferrer.transferChunks(
-                        this.masterObjectList.getNodes(),
-                        Collections.singletonList(filterChunk(allocateChunk(chunk))));
+        try {
+            running = true;
+            LOG.debug("Starting job transfer");
+            if (this.masterObjectList == null || this.masterObjectList.getObjects() == null) {
+                LOG.info("There is nothing to transfer for job"
+                        + (this.getJobId() == null ? "" : " " + this.getJobId().toString()));
+                return;
             }
-        } catch (final IOException | RuntimeException e) {
-            throw e;
-        } catch (final Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
 
-    private Objects allocateChunk(final Objects filtered) throws IOException {
-        Objects chunk = null;
-        while (chunk == null) {
-            chunk = tryAllocateChunk(filtered);
-        }
-        return chunk;
-    }
+            final BlobStrategy blobStrategy = new PutStreamerStrategy(client,
+                    this.masterObjectList,
+                    retryAfter,
+                    retryDelay,
+                    new BlobStrategy.ChunkEventHandler() {
+                        @Override
+                        public void emitWaitingForChunksEvents(final int secondsToDelay) {
+                            WriteJobImpl.super.emitWaitingForChunksEvents(secondsToDelay);
+                        }
+                    });
 
-    private Objects tryAllocateChunk(final Objects filtered) throws IOException {
-        final AllocateJobChunkSpectraS3Response response =
-                this.client.allocateJobChunkSpectraS3(new AllocateJobChunkSpectraS3Request(filtered.getChunkId().toString()));
-
-        LOG.info("AllocatedJobChunkResponse status: {}", response.getStatus().toString());
-        switch (response.getStatus()) {
-        case ALLOCATED:
-            retryAfterLeft = retryAfter; // Reset the number of retries to the initial value
-            return response.getObjectsResult();
-        case RETRYLATER:
-            try {
-                if (retryAfterLeft == 0) {
-                    throw new Ds3NoMoreRetriesException(this.retryAfter);
+            try (final JobState jobState = new JobState(
+                    channelBuilder,
+                    filteredChunks,
+                    partTracker,
+                    ImmutableMap.<String, ImmutableMultimap<BulkObject, Range>>of())) {
+                try (final ChunkTransferrer chunkTransferrer = new ChunkTransferrer(
+                        new PutObjectTransferrerRetryDecorator(jobState),
+                        jobState.getPartTracker(),
+                        this.maxParallelRequests
+                )) {
+                    while (jobState.hasObjects()) {
+                        chunkTransferrer.transferChunks(blobStrategy);
+                    }
                 }
-                retryAfterLeft--;
 
-                final int retryAfter = computeRetryAfter(response.getRetryAfterSeconds());
-                emitWaitingForChunksEvents(retryAfter);
-
-                LOG.debug("Will retry allocate chunk call after {} seconds", retryAfter);
-                Thread.sleep(retryAfter * 1000);
-                return null;
-            } catch (final InterruptedException e) {
+            } catch (final IOException | RuntimeException e) {
+                throw e;
+            } catch (final Exception e) {
                 throw new RuntimeException(e);
             }
-        default:
-            assert false : "This line of code should be impossible to hit."; return null;
-        }
-    }
-
-    private void emitWaitingForChunksEvents(final int retryAfter) {
-        for (final WaitingForChunksListener waitingForChunksListener : waitingForChunksListeners) {
-            eventRunner.emitEvent(new Runnable() {
-                @Override
-                public void run() {
-                    waitingForChunksListener.waiting(retryAfter);
-                }
-            });
-        }
-    }
-
-    private int computeRetryAfter(final int retryAfterSeconds) {
-        if (retryDelay == -1) {
-            return retryAfterSeconds;
-        } else {
-            return retryDelay;
+        } catch (final Throwable t) {
+            running = false;
+            emitFailureEvent(makeFailureEvent(FailureEvent.FailureActivity.PuttingObject, t, masterObjectList.getObjects().get(0)));
+            throw t;
         }
     }
 
     /**
      * Filters out chunks that have already been completed.  We will get the same chunk name back from the server, but it
      * will not have any objects in it, so we remove that from the list of objects that are returned.
+     *
      * @param objectsList The list to be filtered
      * @return The filtered list
      */
@@ -362,6 +289,7 @@ class WriteJobImpl extends JobImpl {
         }
 
         private static final int READ_BUFFER_SIZE = 10 * 1024 * 1024;
+
         private String hashInputStream(final Hasher digest, final InputStream stream) throws IOException {
             final byte[] buffer = new byte[READ_BUFFER_SIZE];
             int bytesRead;
@@ -381,24 +309,20 @@ class WriteJobImpl extends JobImpl {
 
         private Hasher getHasher(final ChecksumType.Type checksumType) {
             switch (checksumType) {
-                case MD5: return new MD5Hasher();
-                case SHA_256: return new SHA256Hasher();
-                case SHA_512: return new SHA512Hasher();
-                case CRC_32: return new CRC32Hasher();
-                case CRC_32C: return new CRC32CHasher();
-                default: throw new RuntimeException("Unknown checksum type " + checksumType.toString());
+                case MD5:
+                    return new MD5Hasher();
+                case SHA_256:
+                    return new SHA256Hasher();
+                case SHA_512:
+                    return new SHA512Hasher();
+                case CRC_32:
+                    return new CRC32Hasher();
+                case CRC_32C:
+                    return new CRC32CHasher();
+                default:
+                    throw new RuntimeException("Unknown checksum type " + checksumType.toString());
             }
         }
     }
-
-    private void emitChecksumEvents(final BulkObject bulkObject, final ChecksumType.Type type, final String checksum) {
-        for (final ChecksumListener listener : checksumListeners) {
-            eventRunner.emitEvent(new Runnable() {
-                @Override
-                public void run() {
-                    listener.value(bulkObject, type, checksum);
-                }
-            });
-        }
-    }
 }
+

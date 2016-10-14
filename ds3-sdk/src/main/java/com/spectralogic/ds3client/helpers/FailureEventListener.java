@@ -13,30 +13,10 @@
  *  ****************************************************************************
  */
 
-package com.spectralogic.ds3client.utils.hashing;
+package com.spectralogic.ds3client.helpers;
 
-import org.apache.commons.codec.binary.Base64;
+import com.spectralogic.ds3client.helpers.events.FailureEvent;
 
-import java.security.MessageDigest;
-
-abstract class DigestHasher implements Hasher {
-
-    private final MessageDigest digest;
-
-    DigestHasher() {
-        this.digest = getDigest();
-    }
-
-    abstract MessageDigest getDigest();
-
-    @Override
-    public void update(final byte[] bytes, final int offset, final int length) {
-        digest.update(bytes, offset, length);
-    }
-
-
-    @Override
-    public String digest() {
-        return Base64.encodeBase64String(digest.digest());
-    }
+public interface FailureEventListener {
+    void onFailure(final FailureEvent failureEvent);
 }
