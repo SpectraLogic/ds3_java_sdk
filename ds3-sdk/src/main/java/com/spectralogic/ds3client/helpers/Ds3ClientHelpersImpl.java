@@ -117,13 +117,13 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
             request.withMaxUploadSize(options.getMaxUploadSize());
         }
 
-        final PutBulkJobSpectraS3Response prime = this.client.putBulkJobSpectraS3(
+        final PutBulkJobSpectraS3Response putBulkJobSpectraS3Response = this.client.putBulkJobSpectraS3(
                 request);
 
 
         return new WriteJobImpl(
                 this.client,
-                prime.getResult(),
+                putBulkJobSpectraS3Response.getResult(),
                 this.retryAfter,
                 options.getChecksumType(),
                 this.objectTransferAttempts,
@@ -149,7 +149,7 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
     private Ds3ClientHelpers.Job innerStartReadJob(final String bucket, final Iterable<Ds3Object> objectsToRead, final ReadJobOptions options)
             throws IOException {
         final List<Ds3Object> objects = Lists.newArrayList(objectsToRead);
-        final GetBulkJobSpectraS3Response prime = this.client.getBulkJobSpectraS3(new GetBulkJobSpectraS3Request(bucket, objects)
+        final GetBulkJobSpectraS3Response getBulkJobSpectraS3Response = this.client.getBulkJobSpectraS3(new GetBulkJobSpectraS3Request(bucket, objects)
                 .withChunkClientProcessingOrderGuarantee(JobChunkClientProcessingOrderGuarantee.NONE)
                 .withPriority(options.getPriority()).withName(options.getName()));
 
@@ -157,7 +157,7 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
 
         return new ReadJobImpl(
                 this.client,
-                prime.getResult(),
+                getBulkJobSpectraS3Response.getResult(),
                 partialRanges,
                 this.objectTransferAttempts,
                 this.retryAfter,
