@@ -25,6 +25,7 @@ public class GetJobCreationFailedNotificationRegistrationSpectraS3Request extend
     
     // Constructor
     
+    
     public GetJobCreationFailedNotificationRegistrationSpectraS3Request(final UUID notificationId) {
         super(notificationId);
 
@@ -32,6 +33,7 @@ public class GetJobCreationFailedNotificationRegistrationSpectraS3Request extend
 
     }
 
+    
     public GetJobCreationFailedNotificationRegistrationSpectraS3Request(final String notificationId) {
         super(notificationId);
 

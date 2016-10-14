@@ -28,6 +28,7 @@ public class GetBucketAclSpectraS3Request extends AbstractRequest {
 
     // Constructor
     
+    
     public GetBucketAclSpectraS3Request(final String bucketAcl) {
         this.bucketAcl = bucketAcl;
         

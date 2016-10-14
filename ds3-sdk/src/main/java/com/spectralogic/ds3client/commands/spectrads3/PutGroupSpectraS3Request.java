@@ -28,6 +28,7 @@ public class PutGroupSpectraS3Request extends AbstractRequest {
 
     // Constructor
     
+    
     public PutGroupSpectraS3Request(final String name) {
         this.name = name;
         

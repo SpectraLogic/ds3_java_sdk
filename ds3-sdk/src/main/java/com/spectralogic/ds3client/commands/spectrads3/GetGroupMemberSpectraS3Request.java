@@ -28,6 +28,7 @@ public class GetGroupMemberSpectraS3Request extends AbstractRequest {
 
     // Constructor
     
+    
     public GetGroupMemberSpectraS3Request(final String groupMember) {
         this.groupMember = groupMember;
         

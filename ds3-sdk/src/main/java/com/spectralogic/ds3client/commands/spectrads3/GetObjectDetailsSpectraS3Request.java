@@ -30,6 +30,7 @@ public class GetObjectDetailsSpectraS3Request extends AbstractRequest {
 
     // Constructor
     
+    
     public GetObjectDetailsSpectraS3Request(final String objectName, final String bucketId) {
         this.objectName = objectName;
         this.bucketId = bucketId;

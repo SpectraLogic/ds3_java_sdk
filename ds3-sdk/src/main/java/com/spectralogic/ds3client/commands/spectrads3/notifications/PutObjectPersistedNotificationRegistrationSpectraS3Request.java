@@ -35,6 +35,7 @@ public class PutObjectPersistedNotificationRegistrationSpectraS3Request extends 
 
     private RequestType notificationHttpMethod;
 
+    
     public PutObjectPersistedNotificationRegistrationSpectraS3Request(final String notificationEndPoint) {
         super(notificationEndPoint);
 
@@ -48,11 +49,13 @@ public class PutObjectPersistedNotificationRegistrationSpectraS3Request extends 
         return this;
     }
 
+
     public PutObjectPersistedNotificationRegistrationSpectraS3Request withJobId(final UUID jobId) {
         this.jobId = jobId.toString();
         this.updateQueryParam("job_id", jobId);
         return this;
     }
+
 
     public PutObjectPersistedNotificationRegistrationSpectraS3Request withJobId(final String jobId) {
         this.jobId = jobId;
@@ -60,17 +63,20 @@ public class PutObjectPersistedNotificationRegistrationSpectraS3Request extends 
         return this;
     }
 
+
     public PutObjectPersistedNotificationRegistrationSpectraS3Request withNamingConvention(final NamingConventionType namingConvention) {
         this.namingConvention = namingConvention;
         this.updateQueryParam("naming_convention", namingConvention);
         return this;
     }
 
+
     public PutObjectPersistedNotificationRegistrationSpectraS3Request withNotificationHttpMethod(final RequestType notificationHttpMethod) {
         this.notificationHttpMethod = notificationHttpMethod;
         this.updateQueryParam("notification_http_method", notificationHttpMethod);
         return this;
     }
+
 
 
     @Override

@@ -28,6 +28,7 @@ public class GetPoolPartitionSpectraS3Request extends AbstractRequest {
 
     // Constructor
     
+    
     public GetPoolPartitionSpectraS3Request(final String poolPartition) {
         this.poolPartition = poolPartition;
         

@@ -28,6 +28,7 @@ public class GetDs3TargetDataPoliciesSpectraS3Request extends AbstractRequest {
 
     // Constructor
     
+    
     public GetDs3TargetDataPoliciesSpectraS3Request(final String ds3TargetDataPolicies) {
         this.ds3TargetDataPolicies = ds3TargetDataPolicies;
         

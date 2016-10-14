@@ -25,6 +25,7 @@ public class GetServiceRequest extends AbstractRequest {
     
     // Constructor
     
+    
     public GetServiceRequest() {
         
     }

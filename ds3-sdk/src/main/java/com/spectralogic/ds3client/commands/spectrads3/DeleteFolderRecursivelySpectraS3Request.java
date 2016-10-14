@@ -34,6 +34,7 @@ public class DeleteFolderRecursivelySpectraS3Request extends AbstractRequest {
 
     // Constructor
     
+    
     public DeleteFolderRecursivelySpectraS3Request(final String bucketId, final String folder) {
         this.folder = folder;
         this.bucketId = bucketId;
@@ -52,6 +53,7 @@ public class DeleteFolderRecursivelySpectraS3Request extends AbstractRequest {
         return this;
     }
 
+
     public DeleteFolderRecursivelySpectraS3Request withRollBack(final boolean rollBack) {
         this.rollBack = rollBack;
         if (this.rollBack) {
@@ -61,6 +63,7 @@ public class DeleteFolderRecursivelySpectraS3Request extends AbstractRequest {
         }
         return this;
     }
+
 
 
     @Override

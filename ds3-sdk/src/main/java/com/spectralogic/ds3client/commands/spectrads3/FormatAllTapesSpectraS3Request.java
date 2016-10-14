@@ -27,6 +27,7 @@ public class FormatAllTapesSpectraS3Request extends AbstractRequest {
 
     // Constructor
     
+    
     public FormatAllTapesSpectraS3Request() {
         
         this.getQueryParams().put("operation", "format");
@@ -42,6 +43,7 @@ public class FormatAllTapesSpectraS3Request extends AbstractRequest {
         }
         return this;
     }
+
 
 
     @Override

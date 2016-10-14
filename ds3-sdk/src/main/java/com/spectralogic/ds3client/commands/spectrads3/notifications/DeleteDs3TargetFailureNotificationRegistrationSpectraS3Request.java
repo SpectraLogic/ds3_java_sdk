@@ -25,6 +25,7 @@ public class DeleteDs3TargetFailureNotificationRegistrationSpectraS3Request exte
     
     //Constructor
     
+    
     public DeleteDs3TargetFailureNotificationRegistrationSpectraS3Request(final UUID notificationId) {
         super(notificationId);
 
@@ -32,6 +33,7 @@ public class DeleteDs3TargetFailureNotificationRegistrationSpectraS3Request exte
 
     }
 
+    
     public DeleteDs3TargetFailureNotificationRegistrationSpectraS3Request(final String notificationId) {
         super(notificationId);
 

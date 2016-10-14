@@ -25,6 +25,7 @@ public class GetJobCompletedNotificationRegistrationSpectraS3Request extends Abs
     
     // Constructor
     
+    
     public GetJobCompletedNotificationRegistrationSpectraS3Request(final UUID notificationId) {
         super(notificationId);
 
@@ -32,6 +33,7 @@ public class GetJobCompletedNotificationRegistrationSpectraS3Request extends Abs
 
     }
 
+    
     public GetJobCompletedNotificationRegistrationSpectraS3Request(final String notificationId) {
         super(notificationId);
 

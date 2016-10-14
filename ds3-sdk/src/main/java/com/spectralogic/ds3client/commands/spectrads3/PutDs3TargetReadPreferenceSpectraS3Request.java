@@ -19,7 +19,7 @@ package com.spectralogic.ds3client.commands.spectrads3;
 import com.spectralogic.ds3client.networking.HttpVerb;
 import com.spectralogic.ds3client.commands.interfaces.AbstractRequest;
 import com.google.common.net.UrlEscapers;
-import com.spectralogic.ds3client.models.TargetReadPreference;
+import com.spectralogic.ds3client.models.TargetReadPreferenceType;
 import java.util.UUID;
 
 public class PutDs3TargetReadPreferenceSpectraS3Request extends AbstractRequest {
@@ -28,13 +28,14 @@ public class PutDs3TargetReadPreferenceSpectraS3Request extends AbstractRequest 
     
     private final String bucketId;
 
-    private final TargetReadPreference readPreference;
+    private final TargetReadPreferenceType readPreference;
 
     private final String targetId;
 
     // Constructor
     
-    public PutDs3TargetReadPreferenceSpectraS3Request(final String bucketId, final TargetReadPreference readPreference, final UUID targetId) {
+    
+    public PutDs3TargetReadPreferenceSpectraS3Request(final String bucketId, final TargetReadPreferenceType readPreference, final UUID targetId) {
         this.bucketId = bucketId;
         this.readPreference = readPreference;
         this.targetId = targetId.toString();
@@ -44,7 +45,8 @@ public class PutDs3TargetReadPreferenceSpectraS3Request extends AbstractRequest 
         this.getQueryParams().put("target_id", targetId.toString());
     }
 
-    public PutDs3TargetReadPreferenceSpectraS3Request(final String bucketId, final TargetReadPreference readPreference, final String targetId) {
+    
+    public PutDs3TargetReadPreferenceSpectraS3Request(final String bucketId, final TargetReadPreferenceType readPreference, final String targetId) {
         this.bucketId = bucketId;
         this.readPreference = readPreference;
         this.targetId = targetId;
@@ -70,7 +72,7 @@ public class PutDs3TargetReadPreferenceSpectraS3Request extends AbstractRequest 
     }
 
 
-    public TargetReadPreference getReadPreference() {
+    public TargetReadPreferenceType getReadPreference() {
         return this.readPreference;
     }
 

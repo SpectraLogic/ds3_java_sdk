@@ -41,6 +41,7 @@ public class GetBlobsOnTapeSpectraS3Request extends AbstractRequest {
 
     // Constructor
     
+    
     public GetBlobsOnTapeSpectraS3Request(final List<Ds3Object> objects, final UUID tapeId) {
         this.tapeId = tapeId.toString();
         this.objects = objects;
@@ -49,6 +50,7 @@ public class GetBlobsOnTapeSpectraS3Request extends AbstractRequest {
 
     }
 
+    
     public GetBlobsOnTapeSpectraS3Request(final List<Ds3Object> objects, final String tapeId) {
         this.tapeId = tapeId;
         this.objects = objects;

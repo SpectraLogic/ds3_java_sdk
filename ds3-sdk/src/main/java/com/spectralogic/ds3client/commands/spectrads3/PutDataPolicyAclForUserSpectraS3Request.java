@@ -31,6 +31,7 @@ public class PutDataPolicyAclForUserSpectraS3Request extends AbstractRequest {
 
     // Constructor
     
+    
     public PutDataPolicyAclForUserSpectraS3Request(final UUID dataPolicyId, final UUID userId) {
         this.dataPolicyId = dataPolicyId.toString();
         this.userId = userId.toString();
@@ -39,6 +40,7 @@ public class PutDataPolicyAclForUserSpectraS3Request extends AbstractRequest {
         this.getQueryParams().put("user_id", userId.toString());
     }
 
+    
     public PutDataPolicyAclForUserSpectraS3Request(final String dataPolicyId, final String userId) {
         this.dataPolicyId = dataPolicyId;
         this.userId = userId;

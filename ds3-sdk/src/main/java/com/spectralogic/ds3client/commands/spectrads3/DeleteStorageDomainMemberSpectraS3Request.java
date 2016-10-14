@@ -28,6 +28,7 @@ public class DeleteStorageDomainMemberSpectraS3Request extends AbstractRequest {
 
     // Constructor
     
+    
     public DeleteStorageDomainMemberSpectraS3Request(final String storageDomainMember) {
         this.storageDomainMember = storageDomainMember;
         

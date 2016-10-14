@@ -29,6 +29,7 @@ public class RegenerateUserSecretKeySpectraS3Request extends AbstractRequest {
 
     // Constructor
     
+    
     public RegenerateUserSecretKeySpectraS3Request(final UUID userId) {
         this.userId = userId.toString();
         
@@ -36,6 +37,7 @@ public class RegenerateUserSecretKeySpectraS3Request extends AbstractRequest {
 
     }
 
+    
     public RegenerateUserSecretKeySpectraS3Request(final String userId) {
         this.userId = userId;
         

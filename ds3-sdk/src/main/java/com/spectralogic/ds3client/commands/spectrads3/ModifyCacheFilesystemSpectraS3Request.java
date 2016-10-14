@@ -37,6 +37,7 @@ public class ModifyCacheFilesystemSpectraS3Request extends AbstractRequest {
 
     // Constructor
     
+    
     public ModifyCacheFilesystemSpectraS3Request(final String cacheFilesystem) {
         this.cacheFilesystem = cacheFilesystem;
         
@@ -48,11 +49,13 @@ public class ModifyCacheFilesystemSpectraS3Request extends AbstractRequest {
         return this;
     }
 
+
     public ModifyCacheFilesystemSpectraS3Request withAutoReclaimTerminateThreshold(final double autoReclaimTerminateThreshold) {
         this.autoReclaimTerminateThreshold = autoReclaimTerminateThreshold;
         this.updateQueryParam("auto_reclaim_terminate_threshold", autoReclaimTerminateThreshold);
         return this;
     }
+
 
     public ModifyCacheFilesystemSpectraS3Request withBurstThreshold(final double burstThreshold) {
         this.burstThreshold = burstThreshold;
@@ -60,11 +63,13 @@ public class ModifyCacheFilesystemSpectraS3Request extends AbstractRequest {
         return this;
     }
 
+
     public ModifyCacheFilesystemSpectraS3Request withMaxCapacityInBytes(final Long maxCapacityInBytes) {
         this.maxCapacityInBytes = maxCapacityInBytes;
         this.updateQueryParam("max_capacity_in_bytes", maxCapacityInBytes);
         return this;
     }
+
 
 
     @Override

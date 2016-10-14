@@ -29,11 +29,13 @@ public class GetTapeSpectraS3Request extends AbstractRequest {
 
     // Constructor
     
+    
     public GetTapeSpectraS3Request(final UUID tapeId) {
         this.tapeId = tapeId.toString();
         
     }
 
+    
     public GetTapeSpectraS3Request(final String tapeId) {
         this.tapeId = tapeId;
         

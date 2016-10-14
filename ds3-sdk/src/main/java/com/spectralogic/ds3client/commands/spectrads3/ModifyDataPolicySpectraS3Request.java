@@ -59,11 +59,13 @@ public class ModifyDataPolicySpectraS3Request extends AbstractRequest {
 
     // Constructor
     
+    
     public ModifyDataPolicySpectraS3Request(final UUID dataPolicyId) {
         this.dataPolicyId = dataPolicyId.toString();
         
     }
 
+    
     public ModifyDataPolicySpectraS3Request(final String dataPolicyId) {
         this.dataPolicyId = dataPolicyId;
         
@@ -75,11 +77,13 @@ public class ModifyDataPolicySpectraS3Request extends AbstractRequest {
         return this;
     }
 
+
     public ModifyDataPolicySpectraS3Request withAlwaysMinimizeSpanningAcrossMedia(final boolean alwaysMinimizeSpanningAcrossMedia) {
         this.alwaysMinimizeSpanningAcrossMedia = alwaysMinimizeSpanningAcrossMedia;
         this.updateQueryParam("always_minimize_spanning_across_media", alwaysMinimizeSpanningAcrossMedia);
         return this;
     }
+
 
     public ModifyDataPolicySpectraS3Request withAlwaysReplicateDeletes(final boolean alwaysReplicateDeletes) {
         this.alwaysReplicateDeletes = alwaysReplicateDeletes;
@@ -87,11 +91,13 @@ public class ModifyDataPolicySpectraS3Request extends AbstractRequest {
         return this;
     }
 
+
     public ModifyDataPolicySpectraS3Request withBlobbingEnabled(final boolean blobbingEnabled) {
         this.blobbingEnabled = blobbingEnabled;
         this.updateQueryParam("blobbing_enabled", blobbingEnabled);
         return this;
     }
+
 
     public ModifyDataPolicySpectraS3Request withChecksumType(final ChecksumType.Type checksumType) {
         this.checksumType = checksumType;
@@ -99,11 +105,13 @@ public class ModifyDataPolicySpectraS3Request extends AbstractRequest {
         return this;
     }
 
+
     public ModifyDataPolicySpectraS3Request withDefaultBlobSize(final Long defaultBlobSize) {
         this.defaultBlobSize = defaultBlobSize;
         this.updateQueryParam("default_blob_size", defaultBlobSize);
         return this;
     }
+
 
     public ModifyDataPolicySpectraS3Request withDefaultGetJobPriority(final Priority defaultGetJobPriority) {
         this.defaultGetJobPriority = defaultGetJobPriority;
@@ -111,11 +119,13 @@ public class ModifyDataPolicySpectraS3Request extends AbstractRequest {
         return this;
     }
 
+
     public ModifyDataPolicySpectraS3Request withDefaultPutJobPriority(final Priority defaultPutJobPriority) {
         this.defaultPutJobPriority = defaultPutJobPriority;
         this.updateQueryParam("default_put_job_priority", defaultPutJobPriority);
         return this;
     }
+
 
     public ModifyDataPolicySpectraS3Request withDefaultVerifyJobPriority(final Priority defaultVerifyJobPriority) {
         this.defaultVerifyJobPriority = defaultVerifyJobPriority;
@@ -123,11 +133,13 @@ public class ModifyDataPolicySpectraS3Request extends AbstractRequest {
         return this;
     }
 
+
     public ModifyDataPolicySpectraS3Request withEndToEndCrcRequired(final boolean endToEndCrcRequired) {
         this.endToEndCrcRequired = endToEndCrcRequired;
         this.updateQueryParam("end_to_end_crc_required", endToEndCrcRequired);
         return this;
     }
+
 
     public ModifyDataPolicySpectraS3Request withName(final String name) {
         this.name = name;
@@ -135,17 +147,20 @@ public class ModifyDataPolicySpectraS3Request extends AbstractRequest {
         return this;
     }
 
+
     public ModifyDataPolicySpectraS3Request withRebuildPriority(final Priority rebuildPriority) {
         this.rebuildPriority = rebuildPriority;
         this.updateQueryParam("rebuild_priority", rebuildPriority);
         return this;
     }
 
+
     public ModifyDataPolicySpectraS3Request withVersioning(final VersioningLevel versioning) {
         this.versioning = versioning;
         this.updateQueryParam("versioning", versioning);
         return this;
     }
+
 
 
     @Override

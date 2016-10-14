@@ -28,6 +28,7 @@ public class ModifyAllDs3TargetsSpectraS3Request extends AbstractRequest {
 
     // Constructor
     
+    
     public ModifyAllDs3TargetsSpectraS3Request(final Quiesced quiesced) {
         this.quiesced = quiesced;
         

@@ -28,6 +28,7 @@ public class GetStorageDomainMemberSpectraS3Request extends AbstractRequest {
 
     // Constructor
     
+    
     public GetStorageDomainMemberSpectraS3Request(final String storageDomainMember) {
         this.storageDomainMember = storageDomainMember;
         

@@ -28,6 +28,7 @@ public class GetDataPersistenceRuleSpectraS3Request extends AbstractRequest {
 
     // Constructor
     
+    
     public GetDataPersistenceRuleSpectraS3Request(final String dataPersistenceRule) {
         this.dataPersistenceRule = dataPersistenceRule;
         

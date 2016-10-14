@@ -28,6 +28,7 @@ public class GetDataReplicationRuleSpectraS3Request extends AbstractRequest {
 
     // Constructor
     
+    
     public GetDataReplicationRuleSpectraS3Request(final String dataReplicationRule) {
         this.dataReplicationRule = dataReplicationRule;
         

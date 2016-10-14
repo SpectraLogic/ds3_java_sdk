@@ -31,6 +31,7 @@ public class GetSuspectObjectsWithFullDetailsSpectraS3Request extends AbstractRe
 
     // Constructor
     
+    
     public GetSuspectObjectsWithFullDetailsSpectraS3Request() {
         
         this.getQueryParams().put("full_details", null);
@@ -42,17 +43,20 @@ public class GetSuspectObjectsWithFullDetailsSpectraS3Request extends AbstractRe
         return this;
     }
 
+
     public GetSuspectObjectsWithFullDetailsSpectraS3Request withStorageDomainId(final UUID storageDomainId) {
         this.storageDomainId = storageDomainId.toString();
         this.updateQueryParam("storage_domain_id", storageDomainId);
         return this;
     }
 
+
     public GetSuspectObjectsWithFullDetailsSpectraS3Request withStorageDomainId(final String storageDomainId) {
         this.storageDomainId = storageDomainId;
         this.updateQueryParam("storage_domain_id", storageDomainId);
         return this;
     }
+
 
 
     @Override

@@ -44,6 +44,7 @@ public class PutMultiPartUploadPartRequest extends AbstractRequest {
 
     // Constructor
     
+    
     public PutMultiPartUploadPartRequest(final String bucketName, final String objectName, final SeekableByteChannel channel, final int partNumber, final long size, final UUID uploadId) {
         this.bucketName = bucketName;
         this.objectName = objectName;
@@ -57,6 +58,7 @@ public class PutMultiPartUploadPartRequest extends AbstractRequest {
         this.stream = new SeekableByteChannelInputStream(channel);
     }
 
+    
     public PutMultiPartUploadPartRequest(final String bucketName, final String objectName, final SeekableByteChannel channel, final int partNumber, final long size, final String uploadId) {
         this.bucketName = bucketName;
         this.objectName = objectName;
@@ -70,6 +72,7 @@ public class PutMultiPartUploadPartRequest extends AbstractRequest {
         this.stream = new SeekableByteChannelInputStream(channel);
     }
 
+    
     public PutMultiPartUploadPartRequest(final String bucketName, final String objectName, final int partNumber, final long size, final InputStream stream, final UUID uploadId) {
         this.bucketName = bucketName;
         this.objectName = objectName;
@@ -82,6 +85,7 @@ public class PutMultiPartUploadPartRequest extends AbstractRequest {
         this.getQueryParams().put("upload_id", uploadId.toString());
     }
 
+    
     public PutMultiPartUploadPartRequest(final String bucketName, final String objectName, final int partNumber, final long size, final InputStream stream, final String uploadId) {
         this.bucketName = bucketName;
         this.objectName = objectName;

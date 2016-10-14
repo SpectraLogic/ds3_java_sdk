@@ -20,7 +20,7 @@ import com.spectralogic.ds3client.networking.HttpVerb;
 import com.spectralogic.ds3client.commands.interfaces.AbstractPaginationRequest;
 import com.google.common.net.UrlEscapers;
 import java.lang.Integer;
-import com.spectralogic.ds3client.models.TargetReadPreference;
+import com.spectralogic.ds3client.models.TargetReadPreferenceType;
 import java.util.UUID;
 import com.spectralogic.ds3client.models.Quiesced;
 import com.spectralogic.ds3client.models.TargetState;
@@ -41,7 +41,7 @@ public class GetDs3TargetsSpectraS3Request extends AbstractPaginationRequest {
 
     private boolean dataPathVerifyCertificate;
 
-    private TargetReadPreference defaultReadPreference;
+    private TargetReadPreferenceType defaultReadPreference;
 
     private boolean lastPage;
 
@@ -61,6 +61,7 @@ public class GetDs3TargetsSpectraS3Request extends AbstractPaginationRequest {
 
     // Constructor
     
+    
     public GetDs3TargetsSpectraS3Request() {
         
     }
@@ -71,11 +72,13 @@ public class GetDs3TargetsSpectraS3Request extends AbstractPaginationRequest {
         return this;
     }
 
+
     public GetDs3TargetsSpectraS3Request withDataPathEndPoint(final String dataPathEndPoint) {
         this.dataPathEndPoint = dataPathEndPoint;
         this.updateQueryParam("data_path_end_point", dataPathEndPoint);
         return this;
     }
+
 
     public GetDs3TargetsSpectraS3Request withDataPathHttps(final boolean dataPathHttps) {
         this.dataPathHttps = dataPathHttps;
@@ -83,11 +86,13 @@ public class GetDs3TargetsSpectraS3Request extends AbstractPaginationRequest {
         return this;
     }
 
+
     public GetDs3TargetsSpectraS3Request withDataPathPort(final Integer dataPathPort) {
         this.dataPathPort = dataPathPort;
         this.updateQueryParam("data_path_port", dataPathPort);
         return this;
     }
+
 
     public GetDs3TargetsSpectraS3Request withDataPathProxy(final String dataPathProxy) {
         this.dataPathProxy = dataPathProxy;
@@ -95,17 +100,20 @@ public class GetDs3TargetsSpectraS3Request extends AbstractPaginationRequest {
         return this;
     }
 
+
     public GetDs3TargetsSpectraS3Request withDataPathVerifyCertificate(final boolean dataPathVerifyCertificate) {
         this.dataPathVerifyCertificate = dataPathVerifyCertificate;
         this.updateQueryParam("data_path_verify_certificate", dataPathVerifyCertificate);
         return this;
     }
 
-    public GetDs3TargetsSpectraS3Request withDefaultReadPreference(final TargetReadPreference defaultReadPreference) {
+
+    public GetDs3TargetsSpectraS3Request withDefaultReadPreference(final TargetReadPreferenceType defaultReadPreference) {
         this.defaultReadPreference = defaultReadPreference;
         this.updateQueryParam("default_read_preference", defaultReadPreference);
         return this;
     }
+
 
     public GetDs3TargetsSpectraS3Request withLastPage(final boolean lastPage) {
         this.lastPage = lastPage;
@@ -117,11 +125,13 @@ public class GetDs3TargetsSpectraS3Request extends AbstractPaginationRequest {
         return this;
     }
 
+
     public GetDs3TargetsSpectraS3Request withName(final String name) {
         this.name = name;
         this.updateQueryParam("name", name);
         return this;
     }
+
 
     public GetDs3TargetsSpectraS3Request withPageLength(final int pageLength) {
         this.pageLength = pageLength;
@@ -129,11 +139,13 @@ public class GetDs3TargetsSpectraS3Request extends AbstractPaginationRequest {
         return this;
     }
 
+
     public GetDs3TargetsSpectraS3Request withPageOffset(final int pageOffset) {
         this.pageOffset = pageOffset;
         this.updateQueryParam("page_offset", pageOffset);
         return this;
     }
+
 
     public GetDs3TargetsSpectraS3Request withPageStartMarker(final UUID pageStartMarker) {
         this.pageStartMarker = pageStartMarker.toString();
@@ -141,11 +153,13 @@ public class GetDs3TargetsSpectraS3Request extends AbstractPaginationRequest {
         return this;
     }
 
+
     public GetDs3TargetsSpectraS3Request withPageStartMarker(final String pageStartMarker) {
         this.pageStartMarker = pageStartMarker;
         this.updateQueryParam("page_start_marker", pageStartMarker);
         return this;
     }
+
 
     public GetDs3TargetsSpectraS3Request withPermitGoingOutOfSync(final boolean permitGoingOutOfSync) {
         this.permitGoingOutOfSync = permitGoingOutOfSync;
@@ -153,17 +167,20 @@ public class GetDs3TargetsSpectraS3Request extends AbstractPaginationRequest {
         return this;
     }
 
+
     public GetDs3TargetsSpectraS3Request withQuiesced(final Quiesced quiesced) {
         this.quiesced = quiesced;
         this.updateQueryParam("quiesced", quiesced);
         return this;
     }
 
+
     public GetDs3TargetsSpectraS3Request withState(final TargetState state) {
         this.state = state;
         this.updateQueryParam("state", state);
         return this;
     }
+
 
 
     @Override
@@ -206,7 +223,7 @@ public class GetDs3TargetsSpectraS3Request extends AbstractPaginationRequest {
     }
 
 
-    public TargetReadPreference getDefaultReadPreference() {
+    public TargetReadPreferenceType getDefaultReadPreference() {
         return this.defaultReadPreference;
     }
 

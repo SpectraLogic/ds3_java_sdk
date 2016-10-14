@@ -29,6 +29,7 @@ public class InitiateMultiPartUploadRequest extends AbstractRequest {
 
     // Constructor
     
+    
     public InitiateMultiPartUploadRequest(final String bucketName, final String objectName) {
         this.bucketName = bucketName;
         this.objectName = objectName;

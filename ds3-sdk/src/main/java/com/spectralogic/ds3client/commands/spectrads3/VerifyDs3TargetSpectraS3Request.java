@@ -30,6 +30,7 @@ public class VerifyDs3TargetSpectraS3Request extends AbstractRequest {
 
     // Constructor
     
+    
     public VerifyDs3TargetSpectraS3Request(final String ds3Target) {
         this.ds3Target = ds3Target;
         
@@ -46,6 +47,7 @@ public class VerifyDs3TargetSpectraS3Request extends AbstractRequest {
         }
         return this;
     }
+
 
 
     @Override

@@ -25,6 +25,7 @@ public class FormatAllForeignPoolsSpectraS3Request extends AbstractRequest {
     
     // Constructor
     
+    
     public FormatAllForeignPoolsSpectraS3Request() {
         
         this.getQueryParams().put("operation", "format");

@@ -31,6 +31,7 @@ public class ModifyStorageDomainMemberSpectraS3Request extends AbstractRequest {
 
     // Constructor
     
+    
     public ModifyStorageDomainMemberSpectraS3Request(final String storageDomainMember) {
         this.storageDomainMember = storageDomainMember;
         
@@ -41,6 +42,7 @@ public class ModifyStorageDomainMemberSpectraS3Request extends AbstractRequest {
         this.updateQueryParam("write_preference", writePreference);
         return this;
     }
+
 
 
     @Override

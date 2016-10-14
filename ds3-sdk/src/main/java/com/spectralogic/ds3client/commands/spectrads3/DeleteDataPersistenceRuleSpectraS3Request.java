@@ -28,6 +28,7 @@ public class DeleteDataPersistenceRuleSpectraS3Request extends AbstractRequest {
 
     // Constructor
     
+    
     public DeleteDataPersistenceRuleSpectraS3Request(final String dataPersistenceRule) {
         this.dataPersistenceRule = dataPersistenceRule;
         

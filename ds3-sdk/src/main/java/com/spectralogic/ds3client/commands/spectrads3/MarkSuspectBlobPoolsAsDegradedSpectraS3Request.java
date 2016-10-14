@@ -27,6 +27,7 @@ public class MarkSuspectBlobPoolsAsDegradedSpectraS3Request extends AbstractRequ
 
     // Constructor
     
+    
     public MarkSuspectBlobPoolsAsDegradedSpectraS3Request() {
         
     }
@@ -40,6 +41,7 @@ public class MarkSuspectBlobPoolsAsDegradedSpectraS3Request extends AbstractRequ
         }
         return this;
     }
+
 
 
     @Override

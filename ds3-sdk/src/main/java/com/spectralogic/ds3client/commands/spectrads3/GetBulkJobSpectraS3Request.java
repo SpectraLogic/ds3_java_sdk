@@ -35,6 +35,7 @@ public class GetBulkJobSpectraS3Request extends BulkRequest {
     private String name;
 
     // Constructor
+    
     public GetBulkJobSpectraS3Request(final String bucketName, final List<Ds3Object> objects) {
         super(bucketName, objects);
         
@@ -48,11 +49,13 @@ public class GetBulkJobSpectraS3Request extends BulkRequest {
         return this;
     }
 
+
     public GetBulkJobSpectraS3Request withChunkClientProcessingOrderGuarantee(final JobChunkClientProcessingOrderGuarantee chunkClientProcessingOrderGuarantee) {
         this.chunkClientProcessingOrderGuarantee = chunkClientProcessingOrderGuarantee;
         this.updateQueryParam("chunk_client_processing_order_guarantee", chunkClientProcessingOrderGuarantee);
         return this;
     }
+
 
     public GetBulkJobSpectraS3Request withName(final String name) {
         this.name = name;
@@ -60,11 +63,13 @@ public class GetBulkJobSpectraS3Request extends BulkRequest {
         return this;
     }
 
+
     @Override
     public GetBulkJobSpectraS3Request withPriority(final Priority priority) {
         super.withPriority(priority);
         return this;
     }
+
 
 
     

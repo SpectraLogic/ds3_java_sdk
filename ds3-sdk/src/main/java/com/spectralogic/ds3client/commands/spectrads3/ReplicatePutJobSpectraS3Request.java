@@ -38,6 +38,7 @@ public class ReplicatePutJobSpectraS3Request extends AbstractRequest {
 
     // Constructor
     
+    
     public ReplicatePutJobSpectraS3Request(final String bucketName, final String requestPayload) {
         this.bucketName = bucketName;
         this.requestPayload = requestPayload;
@@ -52,6 +53,7 @@ public class ReplicatePutJobSpectraS3Request extends AbstractRequest {
         this.updateQueryParam("priority", priority);
         return this;
     }
+
 
 
     @Override

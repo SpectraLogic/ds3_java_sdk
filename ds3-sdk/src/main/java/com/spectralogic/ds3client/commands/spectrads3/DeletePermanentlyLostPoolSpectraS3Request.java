@@ -28,6 +28,7 @@ public class DeletePermanentlyLostPoolSpectraS3Request extends AbstractRequest {
 
     // Constructor
     
+    
     public DeletePermanentlyLostPoolSpectraS3Request(final String pool) {
         this.pool = pool;
         

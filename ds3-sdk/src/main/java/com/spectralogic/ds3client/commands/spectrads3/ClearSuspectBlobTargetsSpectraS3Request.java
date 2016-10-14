@@ -27,6 +27,7 @@ public class ClearSuspectBlobTargetsSpectraS3Request extends AbstractRequest {
 
     // Constructor
     
+    
     public ClearSuspectBlobTargetsSpectraS3Request() {
         
     }
@@ -40,6 +41,7 @@ public class ClearSuspectBlobTargetsSpectraS3Request extends AbstractRequest {
         }
         return this;
     }
+
 
 
     @Override

@@ -31,6 +31,7 @@ public class FormatTapeSpectraS3Request extends AbstractRequest {
 
     // Constructor
     
+    
     public FormatTapeSpectraS3Request(final UUID tapeId) {
         this.tapeId = tapeId.toString();
         
@@ -38,6 +39,7 @@ public class FormatTapeSpectraS3Request extends AbstractRequest {
 
     }
 
+    
     public FormatTapeSpectraS3Request(final String tapeId) {
         this.tapeId = tapeId;
         
@@ -54,6 +56,7 @@ public class FormatTapeSpectraS3Request extends AbstractRequest {
         }
         return this;
     }
+
 
 
     @Override

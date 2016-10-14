@@ -32,6 +32,7 @@ public class PutObjectLostNotificationRegistrationSpectraS3Request extends Abstr
 
     private RequestType notificationHttpMethod;
 
+    
     public PutObjectLostNotificationRegistrationSpectraS3Request(final String notificationEndPoint) {
         super(notificationEndPoint);
 
@@ -45,17 +46,20 @@ public class PutObjectLostNotificationRegistrationSpectraS3Request extends Abstr
         return this;
     }
 
+
     public PutObjectLostNotificationRegistrationSpectraS3Request withNamingConvention(final NamingConventionType namingConvention) {
         this.namingConvention = namingConvention;
         this.updateQueryParam("naming_convention", namingConvention);
         return this;
     }
 
+
     public PutObjectLostNotificationRegistrationSpectraS3Request withNotificationHttpMethod(final RequestType notificationHttpMethod) {
         this.notificationHttpMethod = notificationHttpMethod;
         this.updateQueryParam("notification_http_method", notificationHttpMethod);
         return this;
     }
+
 
 
     @Override

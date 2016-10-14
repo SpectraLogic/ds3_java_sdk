@@ -29,6 +29,7 @@ public class HeadObjectRequest extends AbstractRequest {
 
     // Constructor
     
+    
     public HeadObjectRequest(final String bucketName, final String objectName) {
         this.bucketName = bucketName;
         this.objectName = objectName;

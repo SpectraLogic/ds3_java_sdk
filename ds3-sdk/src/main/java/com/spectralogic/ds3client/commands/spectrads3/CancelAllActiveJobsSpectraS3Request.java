@@ -31,6 +31,7 @@ public class CancelAllActiveJobsSpectraS3Request extends AbstractRequest {
 
     // Constructor
     
+    
     public CancelAllActiveJobsSpectraS3Request() {
         
         this.getQueryParams().put("force", null);
@@ -42,11 +43,13 @@ public class CancelAllActiveJobsSpectraS3Request extends AbstractRequest {
         return this;
     }
 
+
     public CancelAllActiveJobsSpectraS3Request withRequestType(final JobRequestType requestType) {
         this.requestType = requestType;
         this.updateQueryParam("request_type", requestType);
         return this;
     }
+
 
 
     @Override

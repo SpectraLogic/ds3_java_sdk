@@ -37,11 +37,13 @@ public class ModifyActiveJobSpectraS3Request extends AbstractRequest {
 
     // Constructor
     
+    
     public ModifyActiveJobSpectraS3Request(final UUID activeJobId) {
         this.activeJobId = activeJobId.toString();
         
     }
 
+    
     public ModifyActiveJobSpectraS3Request(final String activeJobId) {
         this.activeJobId = activeJobId;
         
@@ -53,17 +55,20 @@ public class ModifyActiveJobSpectraS3Request extends AbstractRequest {
         return this;
     }
 
+
     public ModifyActiveJobSpectraS3Request withName(final String name) {
         this.name = name;
         this.updateQueryParam("name", name);
         return this;
     }
 
+
     public ModifyActiveJobSpectraS3Request withPriority(final Priority priority) {
         this.priority = priority;
         this.updateQueryParam("priority", priority);
         return this;
     }
+
 
 
     @Override

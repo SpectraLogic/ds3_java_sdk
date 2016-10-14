@@ -42,6 +42,7 @@ public class GetDs3TargetFailuresSpectraS3Request extends AbstractPaginationRequ
 
     // Constructor
     
+    
     public GetDs3TargetFailuresSpectraS3Request() {
         
     }
@@ -51,6 +52,7 @@ public class GetDs3TargetFailuresSpectraS3Request extends AbstractPaginationRequ
         this.updateQueryParam("error_message", errorMessage);
         return this;
     }
+
 
     public GetDs3TargetFailuresSpectraS3Request withLastPage(final boolean lastPage) {
         this.lastPage = lastPage;
@@ -62,11 +64,13 @@ public class GetDs3TargetFailuresSpectraS3Request extends AbstractPaginationRequ
         return this;
     }
 
+
     public GetDs3TargetFailuresSpectraS3Request withPageLength(final int pageLength) {
         this.pageLength = pageLength;
         this.updateQueryParam("page_length", pageLength);
         return this;
     }
+
 
     public GetDs3TargetFailuresSpectraS3Request withPageOffset(final int pageOffset) {
         this.pageOffset = pageOffset;
@@ -74,11 +78,13 @@ public class GetDs3TargetFailuresSpectraS3Request extends AbstractPaginationRequ
         return this;
     }
 
+
     public GetDs3TargetFailuresSpectraS3Request withPageStartMarker(final UUID pageStartMarker) {
         this.pageStartMarker = pageStartMarker.toString();
         this.updateQueryParam("page_start_marker", pageStartMarker);
         return this;
     }
+
 
     public GetDs3TargetFailuresSpectraS3Request withPageStartMarker(final String pageStartMarker) {
         this.pageStartMarker = pageStartMarker;
@@ -86,11 +92,13 @@ public class GetDs3TargetFailuresSpectraS3Request extends AbstractPaginationRequ
         return this;
     }
 
+
     public GetDs3TargetFailuresSpectraS3Request withTargetId(final UUID targetId) {
         this.targetId = targetId.toString();
         this.updateQueryParam("target_id", targetId);
         return this;
     }
+
 
     public GetDs3TargetFailuresSpectraS3Request withTargetId(final String targetId) {
         this.targetId = targetId;
@@ -98,11 +106,13 @@ public class GetDs3TargetFailuresSpectraS3Request extends AbstractPaginationRequ
         return this;
     }
 
+
     public GetDs3TargetFailuresSpectraS3Request withType(final Ds3TargetFailureType type) {
         this.type = type;
         this.updateQueryParam("type", type);
         return this;
     }
+
 
 
     @Override

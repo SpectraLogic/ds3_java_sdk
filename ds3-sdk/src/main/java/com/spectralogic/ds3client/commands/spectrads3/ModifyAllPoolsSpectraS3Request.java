@@ -28,6 +28,7 @@ public class ModifyAllPoolsSpectraS3Request extends AbstractRequest {
 
     // Constructor
     
+    
     public ModifyAllPoolsSpectraS3Request(final Quiesced quiesced) {
         this.quiesced = quiesced;
         
