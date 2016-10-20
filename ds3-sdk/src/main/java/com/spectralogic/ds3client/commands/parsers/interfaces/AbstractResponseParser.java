@@ -33,7 +33,7 @@ public abstract class AbstractResponseParser<T extends Ds3Response> {
     private String checksum;
     private ChecksumType.Type checksumType;
 
-    public T startResponse(final WebResponse response) throws IOException {
+    public T response(final WebResponse response) throws IOException {
         this.response = response;
         if (response != null) {
             this.checksumType = determineChecksumType(this.response.getHeaders());

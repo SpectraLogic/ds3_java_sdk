@@ -33,7 +33,7 @@ public class GetPutJobToReplicate_Test {
         final ImmutableMap<String, String> emptyMap = ImmutableMap.of();
         final WebResponse webResponse = new MockedWebResponse(responsePayload, 200, emptyMap);
         final GetJobToReplicateSpectraS3Response response = new GetJobToReplicateSpectraS3ResponseParser()
-                .startResponse(webResponse);
+                .response(webResponse);
         response.getStringResult();
     }
 }
