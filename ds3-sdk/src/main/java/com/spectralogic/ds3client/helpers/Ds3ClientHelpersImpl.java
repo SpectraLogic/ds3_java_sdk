@@ -111,6 +111,7 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
         final PutBulkJobSpectraS3Request request = new PutBulkJobSpectraS3Request(bucket, Lists.newArrayList(objectsToWrite))
                 .withPriority(options.getPriority())
                 .withAggregating(options.isAggregating())
+                .withForce(options.isForce())
                 .withIgnoreNamingConflicts(options.doIgnoreNamingConflicts());
 
         if (options.getMaxUploadSize() > 0) {
