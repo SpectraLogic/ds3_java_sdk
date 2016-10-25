@@ -1,6 +1,6 @@
 /*
  * ******************************************************************************
- *   Copyright 2014-2015 Spectra Logic Corporation. All Rights Reserved.
+ *   Copyright 2014-2016 Spectra Logic Corporation. All Rights Reserved.
  *   Licensed under the Apache License, Version 2.0 (the "License"). You may not use
  *   this file except in compliance with the License. A copy of the License is located at
  *
@@ -48,6 +48,7 @@ public class GetDegradedDataPersistenceRulesSpectraS3Request extends AbstractPag
 
     // Constructor
     
+    
     public GetDegradedDataPersistenceRulesSpectraS3Request() {
         
     }
@@ -58,17 +59,20 @@ public class GetDegradedDataPersistenceRulesSpectraS3Request extends AbstractPag
         return this;
     }
 
+
     public GetDegradedDataPersistenceRulesSpectraS3Request withDataPolicyId(final String dataPolicyId) {
         this.dataPolicyId = dataPolicyId;
         this.updateQueryParam("data_policy_id", dataPolicyId);
         return this;
     }
 
+
     public GetDegradedDataPersistenceRulesSpectraS3Request withIsolationLevel(final DataIsolationLevel isolationLevel) {
         this.isolationLevel = isolationLevel;
         this.updateQueryParam("isolation_level", isolationLevel);
         return this;
     }
+
 
     public GetDegradedDataPersistenceRulesSpectraS3Request withLastPage(final boolean lastPage) {
         this.lastPage = lastPage;
@@ -80,11 +84,13 @@ public class GetDegradedDataPersistenceRulesSpectraS3Request extends AbstractPag
         return this;
     }
 
+
     public GetDegradedDataPersistenceRulesSpectraS3Request withPageLength(final int pageLength) {
         this.pageLength = pageLength;
         this.updateQueryParam("page_length", pageLength);
         return this;
     }
+
 
     public GetDegradedDataPersistenceRulesSpectraS3Request withPageOffset(final int pageOffset) {
         this.pageOffset = pageOffset;
@@ -92,11 +98,13 @@ public class GetDegradedDataPersistenceRulesSpectraS3Request extends AbstractPag
         return this;
     }
 
+
     public GetDegradedDataPersistenceRulesSpectraS3Request withPageStartMarker(final UUID pageStartMarker) {
         this.pageStartMarker = pageStartMarker.toString();
         this.updateQueryParam("page_start_marker", pageStartMarker);
         return this;
     }
+
 
     public GetDegradedDataPersistenceRulesSpectraS3Request withPageStartMarker(final String pageStartMarker) {
         this.pageStartMarker = pageStartMarker;
@@ -104,11 +112,13 @@ public class GetDegradedDataPersistenceRulesSpectraS3Request extends AbstractPag
         return this;
     }
 
+
     public GetDegradedDataPersistenceRulesSpectraS3Request withState(final DataPersistenceRuleState state) {
         this.state = state;
         this.updateQueryParam("state", state);
         return this;
     }
+
 
     public GetDegradedDataPersistenceRulesSpectraS3Request withStorageDomainId(final UUID storageDomainId) {
         this.storageDomainId = storageDomainId.toString();
@@ -116,17 +126,20 @@ public class GetDegradedDataPersistenceRulesSpectraS3Request extends AbstractPag
         return this;
     }
 
+
     public GetDegradedDataPersistenceRulesSpectraS3Request withStorageDomainId(final String storageDomainId) {
         this.storageDomainId = storageDomainId;
         this.updateQueryParam("storage_domain_id", storageDomainId);
         return this;
     }
 
+
     public GetDegradedDataPersistenceRulesSpectraS3Request withType(final DataPersistenceRuleType type) {
         this.type = type;
         this.updateQueryParam("type", type);
         return this;
     }
+
 
 
     @Override

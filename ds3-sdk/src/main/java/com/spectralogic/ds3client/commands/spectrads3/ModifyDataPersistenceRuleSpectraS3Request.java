@@ -1,6 +1,6 @@
 /*
  * ******************************************************************************
- *   Copyright 2014-2015 Spectra Logic Corporation. All Rights Reserved.
+ *   Copyright 2014-2016 Spectra Logic Corporation. All Rights Reserved.
  *   Licensed under the Apache License, Version 2.0 (the "License"). You may not use
  *   this file except in compliance with the License. A copy of the License is located at
  *
@@ -37,6 +37,7 @@ public class ModifyDataPersistenceRuleSpectraS3Request extends AbstractRequest {
 
     // Constructor
     
+    
     public ModifyDataPersistenceRuleSpectraS3Request(final String dataPersistenceRule) {
         this.dataPersistenceRule = dataPersistenceRule;
         
@@ -48,17 +49,20 @@ public class ModifyDataPersistenceRuleSpectraS3Request extends AbstractRequest {
         return this;
     }
 
+
     public ModifyDataPersistenceRuleSpectraS3Request withMinimumDaysToRetain(final Integer minimumDaysToRetain) {
         this.minimumDaysToRetain = minimumDaysToRetain;
         this.updateQueryParam("minimum_days_to_retain", minimumDaysToRetain);
         return this;
     }
 
+
     public ModifyDataPersistenceRuleSpectraS3Request withType(final DataPersistenceRuleType type) {
         this.type = type;
         this.updateQueryParam("type", type);
         return this;
     }
+
 
 
     @Override

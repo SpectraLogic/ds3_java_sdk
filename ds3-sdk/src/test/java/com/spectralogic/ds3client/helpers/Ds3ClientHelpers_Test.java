@@ -20,6 +20,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.spectralogic.ds3client.Ds3Client;
 import com.spectralogic.ds3client.commands.*;
+import com.spectralogic.ds3client.commands.parsers.GetBucketResponseParser;
 import com.spectralogic.ds3client.commands.spectrads3.*;
 import com.spectralogic.ds3client.exceptions.Ds3NoMoreRetriesException;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.Job;
@@ -30,6 +31,7 @@ import com.spectralogic.ds3client.models.Objects;
 import com.spectralogic.ds3client.models.bulk.Ds3Object;
 import com.spectralogic.ds3client.networking.ConnectionDetails;
 import com.spectralogic.ds3client.networking.FailedRequestException;
+import com.spectralogic.ds3client.networking.WebResponse;
 import com.spectralogic.ds3client.utils.ByteArraySeekableByteChannel;
 import org.junit.Assert;
 import org.junit.Before;
@@ -37,6 +39,7 @@ import org.junit.Test;
 import org.mockito.Mockito;
 
 import java.io.IOException;
+import java.nio.channels.ReadableByteChannel;
 import java.nio.channels.SeekableByteChannel;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -315,12 +318,8 @@ public class Ds3ClientHelpers_Test {
         private final int invocationIndex;
 
         public StubGetBucketResponse(final int invocationIndex) throws IOException {
-            super(null);
+            super(null, null, ChecksumType.Type.NONE);
             this.invocationIndex = invocationIndex;
-        }
-        
-        @Override
-        protected void processResponse() throws IOException {
         }
 
         @Override

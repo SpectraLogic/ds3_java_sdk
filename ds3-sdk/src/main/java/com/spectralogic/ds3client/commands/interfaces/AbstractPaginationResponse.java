@@ -15,23 +15,17 @@
 
 package com.spectralogic.ds3client.commands.interfaces;
 
-import com.spectralogic.ds3client.networking.WebResponse;
-
-import java.io.IOException;
+import com.spectralogic.ds3client.models.ChecksumType;
 
 public abstract class AbstractPaginationResponse extends AbstractResponse implements PaginationResponse {
 
     private Integer pagingTruncated;
     private Integer pagingTotalResultCount;
 
-    public AbstractPaginationResponse(final WebResponse response) throws IOException {
-        super(response);
-        processPaginationHeaders();
-    }
-
-    protected void processPaginationHeaders() {
-        this.pagingTruncated = parseIntHeader("page-truncated");
-        this.pagingTotalResultCount = parseIntHeader("total-result-count");
+    public AbstractPaginationResponse(final Integer pagingTotalResultCount, final Integer pagingTruncated, final String checksum, final ChecksumType.Type checksumType) {
+        super(checksum, checksumType);
+        this.pagingTotalResultCount = pagingTotalResultCount;
+        this.pagingTruncated = pagingTruncated;
     }
 
     @Override

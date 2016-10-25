@@ -1,6 +1,6 @@
 /*
  * ******************************************************************************
- *   Copyright 2014-2015 Spectra Logic Corporation. All Rights Reserved.
+ *   Copyright 2014-2016 Spectra Logic Corporation. All Rights Reserved.
  *   Licensed under the Apache License, Version 2.0 (the "License"). You may not use
  *   this file except in compliance with the License. A copy of the License is located at
  *
@@ -53,6 +53,7 @@ public class RegisterDs3TargetSpectraS3Request extends AbstractRequest {
 
     // Constructor
     
+    
     public RegisterDs3TargetSpectraS3Request(final String adminAuthId, final String adminSecretKey, final String dataPathEndPoint, final String name) {
         this.adminAuthId = adminAuthId;
         this.adminSecretKey = adminSecretKey;
@@ -71,11 +72,13 @@ public class RegisterDs3TargetSpectraS3Request extends AbstractRequest {
         return this;
     }
 
+
     public RegisterDs3TargetSpectraS3Request withDataPathHttps(final boolean dataPathHttps) {
         this.dataPathHttps = dataPathHttps;
         this.updateQueryParam("data_path_https", dataPathHttps);
         return this;
     }
+
 
     public RegisterDs3TargetSpectraS3Request withDataPathPort(final Integer dataPathPort) {
         this.dataPathPort = dataPathPort;
@@ -83,11 +86,13 @@ public class RegisterDs3TargetSpectraS3Request extends AbstractRequest {
         return this;
     }
 
+
     public RegisterDs3TargetSpectraS3Request withDataPathProxy(final String dataPathProxy) {
         this.dataPathProxy = dataPathProxy;
         this.updateQueryParam("data_path_proxy", dataPathProxy);
         return this;
     }
+
 
     public RegisterDs3TargetSpectraS3Request withDataPathVerifyCertificate(final boolean dataPathVerifyCertificate) {
         this.dataPathVerifyCertificate = dataPathVerifyCertificate;
@@ -95,11 +100,13 @@ public class RegisterDs3TargetSpectraS3Request extends AbstractRequest {
         return this;
     }
 
+
     public RegisterDs3TargetSpectraS3Request withDefaultReadPreference(final TargetReadPreference defaultReadPreference) {
         this.defaultReadPreference = defaultReadPreference;
         this.updateQueryParam("default_read_preference", defaultReadPreference);
         return this;
     }
+
 
     public RegisterDs3TargetSpectraS3Request withPermitGoingOutOfSync(final boolean permitGoingOutOfSync) {
         this.permitGoingOutOfSync = permitGoingOutOfSync;
@@ -107,11 +114,13 @@ public class RegisterDs3TargetSpectraS3Request extends AbstractRequest {
         return this;
     }
 
+
     public RegisterDs3TargetSpectraS3Request withReplicatedUserDefaultDataPolicy(final String replicatedUserDefaultDataPolicy) {
         this.replicatedUserDefaultDataPolicy = replicatedUserDefaultDataPolicy;
         this.updateQueryParam("replicated_user_default_data_policy", replicatedUserDefaultDataPolicy);
         return this;
     }
+
 
 
     @Override

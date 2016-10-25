@@ -1,6 +1,6 @@
 /*
  * ******************************************************************************
- *   Copyright 2014-2015 Spectra Logic Corporation. All Rights Reserved.
+ *   Copyright 2014-2016 Spectra Logic Corporation. All Rights Reserved.
  *   Licensed under the Apache License, Version 2.0 (the "License"). You may not use
  *   this file except in compliance with the License. A copy of the License is located at
  *
@@ -46,6 +46,7 @@ public class GetBucketCapacitySummarySpectraS3Request extends AbstractRequest {
 
     // Constructor
     
+    
     public GetBucketCapacitySummarySpectraS3Request(final String bucketId, final UUID storageDomainId) {
         this.bucketId = bucketId;
         this.storageDomainId = storageDomainId.toString();
@@ -54,6 +55,7 @@ public class GetBucketCapacitySummarySpectraS3Request extends AbstractRequest {
         this.getQueryParams().put("storage_domain_id", storageDomainId.toString());
     }
 
+    
     public GetBucketCapacitySummarySpectraS3Request(final String bucketId, final String storageDomainId) {
         this.bucketId = bucketId;
         this.storageDomainId = storageDomainId;
@@ -68,11 +70,13 @@ public class GetBucketCapacitySummarySpectraS3Request extends AbstractRequest {
         return this;
     }
 
+
     public GetBucketCapacitySummarySpectraS3Request withPoolState(final PoolState poolState) {
         this.poolState = poolState;
         this.updateQueryParam("pool_state", poolState);
         return this;
     }
+
 
     public GetBucketCapacitySummarySpectraS3Request withPoolType(final PoolType poolType) {
         this.poolType = poolType;
@@ -80,17 +84,20 @@ public class GetBucketCapacitySummarySpectraS3Request extends AbstractRequest {
         return this;
     }
 
+
     public GetBucketCapacitySummarySpectraS3Request withTapeState(final TapeState tapeState) {
         this.tapeState = tapeState;
         this.updateQueryParam("tape_state", tapeState);
         return this;
     }
 
+
     public GetBucketCapacitySummarySpectraS3Request withTapeType(final TapeType tapeType) {
         this.tapeType = tapeType;
         this.updateQueryParam("tape_type", tapeType);
         return this;
     }
+
 
 
     @Override

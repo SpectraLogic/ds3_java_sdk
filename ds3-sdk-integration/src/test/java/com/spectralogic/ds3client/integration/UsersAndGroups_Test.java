@@ -35,6 +35,7 @@ import java.util.UUID;
 
 import static com.spectralogic.ds3client.integration.Util.deleteAllContents;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 
@@ -106,7 +107,7 @@ public class UsersAndGroups_Test {
         final GetUsersSpectraS3Response getUsersResponse = client.getUsersSpectraS3(
                 new GetUsersSpectraS3Request());
 
-        assertThat(getUsersResponse.getStatusCode(), is(200));
+        assertThat(getUsersResponse.getSpectraUserListResult(), is(notNullValue()));
     }
 
     @Test
@@ -115,7 +116,7 @@ public class UsersAndGroups_Test {
         final GetUsersSpectraS3Response getUsersResponse = client.getUsersSpectraS3(
                 new GetUsersSpectraS3Request().withName("spectra"));
 
-        assertThat(getUsersResponse.getStatusCode(), is(200));
+        assertThat(getUsersResponse.getSpectraUserListResult(), is(notNullValue()));
     }
 
     @Test
@@ -124,7 +125,7 @@ public class UsersAndGroups_Test {
         final GetUsersSpectraS3Response getUsersResponse = client.getUsersSpectraS3(
                 new GetUsersSpectraS3Request().withAuthId("123456789"));
 
-        assertThat(getUsersResponse.getStatusCode(), is(200));
+        assertThat(getUsersResponse.getSpectraUserListResult(), is(notNullValue()));
     }
 
     @Test
@@ -133,7 +134,7 @@ public class UsersAndGroups_Test {
         final GetUsersSpectraS3Response getUsersResponse = client.getUsersSpectraS3(
                 new GetUsersSpectraS3Request().withDefaultDataPolicyId(UUID.randomUUID()));
 
-        assertThat(getUsersResponse.getStatusCode(), is(200));
+        assertThat(getUsersResponse.getSpectraUserListResult(), is(notNullValue()));
     }
 
     @Test
@@ -142,7 +143,7 @@ public class UsersAndGroups_Test {
         final GetUsersSpectraS3Response getUsersResponse = client.getUsersSpectraS3(
                 new GetUsersSpectraS3Request().withLastPage(false));
 
-        assertThat(getUsersResponse.getStatusCode(), is(200));
+        assertThat(getUsersResponse.getSpectraUserListResult(), is(notNullValue()));
     }
 
     @Test
@@ -151,7 +152,7 @@ public class UsersAndGroups_Test {
         final GetUsersSpectraS3Response getUsersResponse = client.getUsersSpectraS3(
                 new GetUsersSpectraS3Request().withPageLength(1));
 
-        assertThat(getUsersResponse.getStatusCode(), is(200));
+        assertThat(getUsersResponse.getSpectraUserListResult(), is(notNullValue()));
     }
 
     @Test
@@ -160,7 +161,7 @@ public class UsersAndGroups_Test {
         final GetUsersSpectraS3Response getUsersResponse = client.getUsersSpectraS3(
                 new GetUsersSpectraS3Request().withPageOffset(1));
 
-        assertThat(getUsersResponse.getStatusCode(), is(200));
+        assertThat(getUsersResponse.getSpectraUserListResult(), is(notNullValue()));
     }
 
     @Test
@@ -170,7 +171,7 @@ public class UsersAndGroups_Test {
                 new GetUsersSpectraS3Request().withAuthId("123").withDefaultDataPolicyId(UUID.randomUUID())
                         .withName("charles").withLastPage(true));
 
-        assertThat(getUsersResponse.getStatusCode(), is(200));
+        assertThat(getUsersResponse.getSpectraUserListResult(), is(notNullValue()));
     }
 
     @Test
@@ -182,7 +183,7 @@ public class UsersAndGroups_Test {
                 .modifyUserSpectraS3(new ModifyUserSpectraS3Request(spectraUUID)
                         .withDefaultDataPolicyId(dataPolicyId));
 
-        assertThat(modifyUserSpectraS3Response.getStatusCode(), is(200));
+        assertThat(modifyUserSpectraS3Response.getSpectraUserResult(), is(notNullValue()));
     }
 
     @Test
@@ -196,7 +197,7 @@ public class UsersAndGroups_Test {
                 .modifyUserSpectraS3(new ModifyUserSpectraS3Request(spectraUUID)
                         .withName(spectraName));
 
-        assertThat(modifyUserSpectraS3Response.getStatusCode(), is(200));
+        assertThat(modifyUserSpectraS3Response.getSpectraUserResult(), is(notNullValue()));
     }
 
 
@@ -211,7 +212,7 @@ public class UsersAndGroups_Test {
                 .modifyUserSpectraS3(new ModifyUserSpectraS3Request(spectraUUID)
                         .withName(spectraName).withDefaultDataPolicyId(dataPolicyId));
 
-        assertThat(modifyUserSpectraS3Response.getStatusCode(), is(200));
+        assertThat(modifyUserSpectraS3Response.getSpectraUserResult(), is(notNullValue()));
     }
 
     @Test
@@ -232,7 +233,7 @@ public class UsersAndGroups_Test {
             putGroupSpectraS3Response = client
                     .putGroupSpectraS3(new PutGroupSpectraS3Request("test_group"));
 
-            assertThat(putGroupSpectraS3Response.getStatusCode(), is(201));
+            assertThat(putGroupSpectraS3Response.getGroupResult(), is(notNullValue()));
 
         } finally {
             if (putGroupSpectraS3Response != null) {
@@ -244,9 +245,8 @@ public class UsersAndGroups_Test {
     @Test
     public void deleteGroup() throws IOException, SignatureException {
         client.putGroupSpectraS3(new PutGroupSpectraS3Request("test_group"));
-        final DeleteGroupSpectraS3Response deleteGroupSpectraS3Response = client.deleteGroupSpectraS3(new DeleteGroupSpectraS3Request("test_group"));
-
-        assertThat(deleteGroupSpectraS3Response.getStatusCode(), is(204));
+        client.deleteGroupSpectraS3(new DeleteGroupSpectraS3Request("test_group"));
+        //An error is thrown if the status code is not 204
     }
 
     @Test
@@ -259,7 +259,7 @@ public class UsersAndGroups_Test {
             final ModifyGroupSpectraS3Response modifyGroupSpectraS3Response = client
                     .modifyGroupSpectraS3(new ModifyGroupSpectraS3Request("test_group").withName("new_name"));
 
-            assertThat(modifyGroupSpectraS3Response.getStatusCode(), is(200));
+            assertThat(modifyGroupSpectraS3Response.getGroupResult(), is(notNullValue()));
 
         } finally {
             if (groupUUID != null) {
@@ -273,7 +273,7 @@ public class UsersAndGroups_Test {
         final GetGroupSpectraS3Response getGroupSpectraS3Response = client
                 .getGroupSpectraS3(new GetGroupSpectraS3Request("Everyone"));
 
-        assertThat(getGroupSpectraS3Response.getStatusCode(), is(200));
+        assertThat(getGroupSpectraS3Response.getGroupResult(), is(notNullValue()));
     }
 
     @Test
@@ -281,7 +281,7 @@ public class UsersAndGroups_Test {
         final GetGroupsSpectraS3Response getGroupsSpectraS3Response = client
                 .getGroupsSpectraS3(new GetGroupsSpectraS3Request());
 
-        assertThat(getGroupsSpectraS3Response.getStatusCode(), is(200));
+        assertThat(getGroupsSpectraS3Response.getGroupListResult(), is(notNullValue()));
     }
 
     @Test
@@ -289,7 +289,7 @@ public class UsersAndGroups_Test {
         final GetGroupsSpectraS3Response getGroupsSpectraS3Response = client
                 .getGroupsSpectraS3(new GetGroupsSpectraS3Request().withName("Everyone"));
 
-        assertThat(getGroupsSpectraS3Response.getStatusCode(), is(200));
+        assertThat(getGroupsSpectraS3Response.getGroupListResult(), is(notNullValue()));
     }
 
     @Test
@@ -297,7 +297,7 @@ public class UsersAndGroups_Test {
         final GetGroupsSpectraS3Response getGroupsSpectraS3Response = client
                 .getGroupsSpectraS3(new GetGroupsSpectraS3Request().withBuiltIn(true));
 
-        assertThat(getGroupsSpectraS3Response.getStatusCode(), is(200));
+        assertThat(getGroupsSpectraS3Response.getGroupListResult(), is(notNullValue()));
     }
 
     @Test
@@ -306,7 +306,7 @@ public class UsersAndGroups_Test {
                 .getGroupsSpectraS3(new GetGroupsSpectraS3Request()
                         .withBuiltIn(true).withName("Everyone"));
 
-        assertThat(getGroupsSpectraS3Response.getStatusCode(), is(200));
+        assertThat(getGroupsSpectraS3Response.getGroupListResult(), is(notNullValue()));
     }
 
     @Test
@@ -314,7 +314,7 @@ public class UsersAndGroups_Test {
         final GetGroupsSpectraS3Response getGroupsSpectraS3Response = client
                 .getGroupsSpectraS3(new GetGroupsSpectraS3Request().withLastPage(true));
 
-        assertThat(getGroupsSpectraS3Response.getStatusCode(), is(200));
+        assertThat(getGroupsSpectraS3Response.getGroupListResult(), is(notNullValue()));
     }
 
     @Test
@@ -322,14 +322,14 @@ public class UsersAndGroups_Test {
         final GetGroupsSpectraS3Response getGroupsSpectraS3Response = client
                 .getGroupsSpectraS3(new GetGroupsSpectraS3Request().withPageLength(1));
 
-        assertThat(getGroupsSpectraS3Response.getStatusCode(), is(200));
+        assertThat(getGroupsSpectraS3Response.getGroupListResult(), is(notNullValue()));
     }
 
     @Test
     public void getGroupsPageOffset() throws IOException, SignatureException {
         final GetGroupsSpectraS3Response getGroupsSpectraS3Response = client
                 .getGroupsSpectraS3(new GetGroupsSpectraS3Request().withPageOffset(1));
-        assertThat(getGroupsSpectraS3Response.getStatusCode(), is(200));
+        assertThat(getGroupsSpectraS3Response.getGroupListResult(), is(notNullValue()));
     }
 
     @Test
@@ -353,7 +353,7 @@ public class UsersAndGroups_Test {
             putGroupGroupMemberSpectraS3Response  = client
                     .putGroupGroupMemberSpectraS3(new PutGroupGroupMemberSpectraS3Request("test_group", "Administrators"));
 
-            assertThat(putGroupGroupMemberSpectraS3Response.getStatusCode(), is(201));
+            assertThat(putGroupGroupMemberSpectraS3Response.getGroupMemberResult(), is(notNullValue()));
 
         } finally {
             if (putGroupGroupMemberSpectraS3Response != null) {
@@ -383,14 +383,16 @@ public class UsersAndGroups_Test {
             final DeleteGroupMemberSpectraS3Response deleteGroupMemberSpectraS3Response = client
                     .deleteGroupMemberSpectraS3(new DeleteGroupMemberSpectraS3Request(
                             putGroupGroupMemberSpectraS3Response.getGroupMemberResult().getId().toString()));
-
-            assertThat(deleteGroupMemberSpectraS3Response.getStatusCode(), is(204));
+            //Will throw error if response code is not 204
+            assertThat(deleteGroupMemberSpectraS3Response, is(notNullValue()));
 
         } catch (final Exception e) {
             if (putGroupGroupMemberSpectraS3Response != null) {
                 client.deleteGroupMemberSpectraS3(
                         new DeleteGroupMemberSpectraS3Request(putGroupGroupMemberSpectraS3Response
                                 .getGroupMemberResult().getId().toString()));
+            } else {
+                assert false;
             }
             throw e;
         } finally {
@@ -416,7 +418,7 @@ public class UsersAndGroups_Test {
                     .getGroupMemberSpectraS3(new GetGroupMemberSpectraS3Request(
                             putGroupGroupMemberSpectraS3Response.getGroupMemberResult().getId().toString()));
 
-            assertThat(getGroupMemberSpectraS3Response.getStatusCode(), is(200));
+            assertThat(getGroupMemberSpectraS3Response.getGroupMemberResult(), is(notNullValue()));
 
         } finally {
             if (putGroupGroupMemberSpectraS3Response != null) {
@@ -437,7 +439,7 @@ public class UsersAndGroups_Test {
         final GetGroupMembersSpectraS3Response getGroupMembersSpectraS3Response = client
                     .getGroupMembersSpectraS3(new GetGroupMembersSpectraS3Request());
 
-        assertThat(getGroupMembersSpectraS3Response.getStatusCode(), is(200));
+        assertThat(getGroupMembersSpectraS3Response.getGroupMemberListResult(), is(notNullValue()));
     }
 
     @Test
@@ -447,7 +449,7 @@ public class UsersAndGroups_Test {
                 .getGroupMembersSpectraS3(new GetGroupMembersSpectraS3Request()
                         .withGroupId(administratorsUUID));
 
-        assertThat(getGroupMembersSpectraS3Response.getStatusCode(), is(200));
+        assertThat(getGroupMembersSpectraS3Response.getGroupMemberListResult(), is(notNullValue()));
     }
 
     @Test
@@ -457,7 +459,7 @@ public class UsersAndGroups_Test {
                 .getGroupMembersSpectraS3(new GetGroupMembersSpectraS3Request()
                         .withGroupId("Administrators"));
 
-        assertThat(getGroupMembersSpectraS3Response.getStatusCode(), is(200));
+        assertThat(getGroupMembersSpectraS3Response.getGroupMemberListResult(), is(notNullValue()));
     }
 
     @Test
@@ -467,7 +469,7 @@ public class UsersAndGroups_Test {
                 .getGroupMembersSpectraS3(new GetGroupMembersSpectraS3Request()
                         .withMemberUserId("spectra"));
 
-        assertThat(getGroupMembersSpectraS3Response.getStatusCode(), is(200));
+        assertThat(getGroupMembersSpectraS3Response.getGroupMemberListResult(), is(notNullValue()));
     }
 
     @Test
@@ -477,7 +479,7 @@ public class UsersAndGroups_Test {
                 .getGroupMembersSpectraS3(new GetGroupMembersSpectraS3Request()
                         .withMemberUserId(spectraUUID));
 
-        assertThat(getGroupMembersSpectraS3Response.getStatusCode(), is(200));
+        assertThat(getGroupMembersSpectraS3Response.getGroupMemberListResult(), is(notNullValue()));
     }
 
     @Test
@@ -496,7 +498,7 @@ public class UsersAndGroups_Test {
                     .getGroupMembersSpectraS3(new GetGroupMembersSpectraS3Request()
                             .withMemberGroupId("test_group"));
 
-            assertThat(getGroupMembersSpectraS3Response.getStatusCode(), is(200));
+            assertThat(getGroupMembersSpectraS3Response.getGroupMemberListResult(), is(notNullValue()));
 
         } finally {
             if (putGroupGroupMemberSpectraS3Response != null) {
@@ -518,7 +520,7 @@ public class UsersAndGroups_Test {
                 .getGroupMembersSpectraS3(new GetGroupMembersSpectraS3Request()
                         .withPageLength(1));
 
-        assertThat(getGroupMembersSpectraS3Response.getStatusCode(), is(200));
+        assertThat(getGroupMembersSpectraS3Response.getGroupMemberListResult(), is(notNullValue()));
     }
 
     @Test
@@ -528,7 +530,7 @@ public class UsersAndGroups_Test {
                 .getGroupMembersSpectraS3(new GetGroupMembersSpectraS3Request()
                         .withPageOffset(1));
 
-        assertThat(getGroupMembersSpectraS3Response.getStatusCode(), is(200));
+        assertThat(getGroupMembersSpectraS3Response.getGroupMemberListResult(), is(notNullValue()));
     }
 
     @Test
@@ -538,7 +540,7 @@ public class UsersAndGroups_Test {
                 .getGroupMembersSpectraS3(new GetGroupMembersSpectraS3Request()
                         .withLastPage(true));
 
-        assertThat(getGroupMembersSpectraS3Response.getStatusCode(), is(200));
+        assertThat(getGroupMembersSpectraS3Response.getGroupMemberListResult(), is(notNullValue()));
     }
 
     @Test
@@ -548,7 +550,7 @@ public class UsersAndGroups_Test {
                 .getGroupMembersSpectraS3(new GetGroupMembersSpectraS3Request()
                         .withPageStartMarker(UUID.randomUUID()));
 
-        assertThat(getGroupMembersSpectraS3Response.getStatusCode(), is(200));
+        assertThat(getGroupMembersSpectraS3Response.getGroupMemberListResult(), is(notNullValue()));
     }
 
     @Test
@@ -558,7 +560,7 @@ public class UsersAndGroups_Test {
                 .getGroupMembersSpectraS3(new GetGroupMembersSpectraS3Request()
                         .withPageStartMarker(UUID.randomUUID().toString()));
 
-        assertThat(getGroupMembersSpectraS3Response.getStatusCode(), is(200));
+        assertThat(getGroupMembersSpectraS3Response.getGroupMemberListResult(), is(notNullValue()));
     }
 
     @Test
@@ -568,7 +570,7 @@ public class UsersAndGroups_Test {
                 .getGroupMembersSpectraS3(new GetGroupMembersSpectraS3Request()
                         .withMemberUserId(spectraUUID).withGroupId("Administrators"));
 
-        assertThat(getGroupMembersSpectraS3Response.getStatusCode(), is(200));
+        assertThat(getGroupMembersSpectraS3Response.getGroupMemberListResult(), is(notNullValue()));
     }
 
     @Test
@@ -587,7 +589,7 @@ public class UsersAndGroups_Test {
                     .getGroupMembersSpectraS3(new GetGroupMembersSpectraS3Request()
                             .withMemberGroupId(putGroupSpectraS3Response.getGroupResult().getId()));
 
-            assertThat(getGroupMembersSpectraS3Response.getStatusCode(), is(200));
+            assertThat(getGroupMembersSpectraS3Response.getGroupMemberListResult(), is(notNullValue()));
 
         } finally {
             if (putGroupGroupMemberSpectraS3Response != null) {
@@ -612,7 +614,7 @@ public class UsersAndGroups_Test {
             putUserGroupMemberSpectraS3Response = client
                     .putUserGroupMemberSpectraS3(new PutUserGroupMemberSpectraS3Request("test_group", "spectra"));
 
-            assertThat(putUserGroupMemberSpectraS3Response.getStatusCode(), is(201));
+            assertThat(putUserGroupMemberSpectraS3Response.getGroupMemberResult(), is(notNullValue()));
 
         } finally {
             if (putUserGroupMemberSpectraS3Response != null) {
@@ -634,7 +636,7 @@ public class UsersAndGroups_Test {
                     new PutBucketAclForUserSpectraS3Request(BUCKET_NAME, BucketAclPermission.DELETE,
                             spectraUUID));
 
-            assertThat(putBucketAclForUserSpectraS3Response.getStatusCode(), is(201));
+            assertThat(putBucketAclForUserSpectraS3Response.getBucketAclResult(), is(notNullValue()));
         } finally {
             if (putBucketAclForUserSpectraS3Response != null) {
                 client.deleteBucketAclSpectraS3(new DeleteBucketAclSpectraS3Request(
@@ -651,7 +653,7 @@ public class UsersAndGroups_Test {
                     new PutBucketAclForGroupSpectraS3Request(BUCKET_NAME, "Administrators",
                             BucketAclPermission.DELETE));
 
-            assertThat(putBucketAclForGroupSpectraS3Response.getStatusCode(), is(201));
+            assertThat(putBucketAclForGroupSpectraS3Response.getBucketAclResult(), is(notNullValue()));
 
         } finally {
             if (putBucketAclForGroupSpectraS3Response != null) {
@@ -669,7 +671,7 @@ public class UsersAndGroups_Test {
                     new PutGlobalBucketAclForUserSpectraS3Request(BucketAclPermission.DELETE,
                             spectraUUID));
 
-            assertThat(putGlobalBucketAclForUserSpectraS3Response.getStatusCode(), is(201));
+            assertThat(putGlobalBucketAclForUserSpectraS3Response.getBucketAclResult(), is(notNullValue()));
 
         } finally {
             if (putGlobalBucketAclForUserSpectraS3Response != null) {
@@ -688,7 +690,7 @@ public class UsersAndGroups_Test {
                     new PutGlobalBucketAclForUserSpectraS3Request(BucketAclPermission.DELETE,
                             "spectra"));
 
-            assertThat(putGlobalBucketAclForUserSpectraS3Response.getStatusCode(), is(201));
+            assertThat(putGlobalBucketAclForUserSpectraS3Response.getBucketAclResult(), is(notNullValue()));
 
         } finally {
             if (putGlobalBucketAclForUserSpectraS3Response != null) {
@@ -707,7 +709,7 @@ public class UsersAndGroups_Test {
                     new PutGlobalBucketAclForGroupSpectraS3Request("Administrators",
                             BucketAclPermission.DELETE));
 
-            assertThat(putGlobalBucketAclForGroupSpectraS3Response.getStatusCode(), is(201));
+            assertThat(putGlobalBucketAclForGroupSpectraS3Response.getBucketAclResult(), is(notNullValue()));
 
         } finally {
             if (putGlobalBucketAclForGroupSpectraS3Response != null) {
@@ -726,7 +728,7 @@ public class UsersAndGroups_Test {
                     new PutGlobalBucketAclForGroupSpectraS3Request(administratorsUUID,
                             BucketAclPermission.DELETE));
 
-            assertThat(putGlobalBucketAclForGroupSpectraS3Response.getStatusCode(), is(201));
+            assertThat(putGlobalBucketAclForGroupSpectraS3Response.getBucketAclResult(), is(notNullValue()));
 
         } finally {
             if (putGlobalBucketAclForGroupSpectraS3Response != null) {
@@ -741,11 +743,10 @@ public class UsersAndGroups_Test {
     public void deleteBucketAcl() throws IOException, SignatureException {
         final PutBucketAclForUserSpectraS3Response putBucketAclForUserSpectraS3Response = client.putBucketAclForUserSpectraS3(
                 new PutBucketAclForUserSpectraS3Request(BUCKET_NAME, BucketAclPermission.DELETE, spectraUUID));
-        final DeleteBucketAclSpectraS3Response deleteBucketAclSpectraS3Response = client
-                .deleteBucketAclSpectraS3(new DeleteBucketAclSpectraS3Request(
-                        putBucketAclForUserSpectraS3Response.getBucketAclResult().getId().toString()));
 
-        assertThat(deleteBucketAclSpectraS3Response.getStatusCode(), is(204));
+        client.deleteBucketAclSpectraS3(new DeleteBucketAclSpectraS3Request(
+                putBucketAclForUserSpectraS3Response.getBucketAclResult().getId().toString()));
+        //An error is thrown if response code is not 204
     }
 
     @Test
@@ -759,7 +760,7 @@ public class UsersAndGroups_Test {
                     .getBucketAclSpectraS3(new GetBucketAclSpectraS3Request(
                             putBucketAclForUserSpectraS3Response.getBucketAclResult().getId().toString()));
 
-            assertThat(getBucketAclSpectraS3Response.getStatusCode(), is(200));
+            assertThat(getBucketAclSpectraS3Response.getBucketAclResult(), is(notNullValue()));
 
         } finally {
             if (putBucketAclForUserSpectraS3Response != null) {
@@ -774,7 +775,7 @@ public class UsersAndGroups_Test {
         final GetBucketAclsSpectraS3Response getBucketAclsSpectraS3Response = client
                 .getBucketAclsSpectraS3(new GetBucketAclsSpectraS3Request());
 
-        assertThat(getBucketAclsSpectraS3Response.getStatusCode(), is(200));
+        assertThat(getBucketAclsSpectraS3Response.getBucketAclListResult(), is(notNullValue()));
     }
 
     @Test
@@ -782,7 +783,7 @@ public class UsersAndGroups_Test {
         final GetBucketAclsSpectraS3Response getBucketAclsSpectraS3Response = client
                 .getBucketAclsSpectraS3(new GetBucketAclsSpectraS3Request().withUserId(spectraUUID));
 
-        assertThat(getBucketAclsSpectraS3Response.getStatusCode(), is(200));
+        assertThat(getBucketAclsSpectraS3Response.getBucketAclListResult(), is(notNullValue()));
     }
 
     @Test
@@ -790,7 +791,7 @@ public class UsersAndGroups_Test {
         final GetBucketAclsSpectraS3Response getBucketAclsSpectraS3Response = client
                 .getBucketAclsSpectraS3(new GetBucketAclsSpectraS3Request().withUserId("spectra"));
 
-        assertThat(getBucketAclsSpectraS3Response.getStatusCode(), is(200));
+        assertThat(getBucketAclsSpectraS3Response.getBucketAclListResult(), is(notNullValue()));
     }
 
     @Test
@@ -799,7 +800,7 @@ public class UsersAndGroups_Test {
                 .getBucketAclsSpectraS3(new GetBucketAclsSpectraS3Request()
                         .withGroupId(administratorsUUID));
 
-        assertThat(getBucketAclsSpectraS3Response.getStatusCode(), is(200));
+        assertThat(getBucketAclsSpectraS3Response.getBucketAclListResult(), is(notNullValue()));
     }
 
     @Test
@@ -808,7 +809,7 @@ public class UsersAndGroups_Test {
                 .getBucketAclsSpectraS3(new GetBucketAclsSpectraS3Request()
                         .withGroupId("Administrators"));
 
-        assertThat(getBucketAclsSpectraS3Response.getStatusCode(), is(200));
+        assertThat(getBucketAclsSpectraS3Response.getBucketAclListResult(), is(notNullValue()));
     }
 
     @Test
@@ -817,7 +818,7 @@ public class UsersAndGroups_Test {
                 .getBucketAclsSpectraS3(new GetBucketAclsSpectraS3Request()
                         .withPermission(BucketAclPermission.OWNER));
 
-        assertThat(getBucketAclsSpectraS3Response.getStatusCode(), is(200));
+        assertThat(getBucketAclsSpectraS3Response.getBucketAclListResult(), is(notNullValue()));
     }
 
     @Test
@@ -826,7 +827,7 @@ public class UsersAndGroups_Test {
                 .getBucketAclsSpectraS3(new GetBucketAclsSpectraS3Request()
                         .withPageOffset(1));
 
-        assertThat(getBucketAclsSpectraS3Response.getStatusCode(), is(200));
+        assertThat(getBucketAclsSpectraS3Response.getBucketAclListResult(), is(notNullValue()));
     }
 
     @Test
@@ -835,7 +836,7 @@ public class UsersAndGroups_Test {
                 .getBucketAclsSpectraS3(new GetBucketAclsSpectraS3Request()
                         .withPageLength(1));
 
-        assertThat(getBucketAclsSpectraS3Response.getStatusCode(), is(200));
+        assertThat(getBucketAclsSpectraS3Response.getBucketAclListResult(), is(notNullValue()));
     }
 
     @Test
@@ -844,7 +845,7 @@ public class UsersAndGroups_Test {
                 .getBucketAclsSpectraS3(new GetBucketAclsSpectraS3Request()
                         .withLastPage(true));
 
-        assertThat(getBucketAclsSpectraS3Response.getStatusCode(), is(200));
+        assertThat(getBucketAclsSpectraS3Response.getBucketAclListResult(), is(notNullValue()));
     }
 
     @Test
@@ -853,7 +854,7 @@ public class UsersAndGroups_Test {
                 .getBucketAclsSpectraS3(new GetBucketAclsSpectraS3Request()
                         .withPageStartMarker(UUID.randomUUID()));
 
-        assertThat(getBucketAclsSpectraS3Response.getStatusCode(), is(200));
+        assertThat(getBucketAclsSpectraS3Response.getBucketAclListResult(), is(notNullValue()));
     }
 
     @Test
@@ -862,7 +863,7 @@ public class UsersAndGroups_Test {
                 .getBucketAclsSpectraS3(new GetBucketAclsSpectraS3Request()
                         .withPageStartMarker(UUID.randomUUID().toString()));
 
-        assertThat(getBucketAclsSpectraS3Response.getStatusCode(), is(200));
+        assertThat(getBucketAclsSpectraS3Response.getBucketAclListResult(), is(notNullValue()));
     }
 
     @Test
@@ -871,7 +872,7 @@ public class UsersAndGroups_Test {
                 .getBucketAclsSpectraS3(new GetBucketAclsSpectraS3Request()
                         .withBucketId(BUCKET_NAME));
 
-        assertThat(getBucketAclsSpectraS3Response.getStatusCode(), is(200));
+        assertThat(getBucketAclsSpectraS3Response.getBucketAclListResult(), is(notNullValue()));
     }
 
     @Test
@@ -883,7 +884,7 @@ public class UsersAndGroups_Test {
                 .getBucketAclsSpectraS3(new GetBucketAclsSpectraS3Request()
                         .withBucketId(bucketUUID.toString()).withUserId(spectraUUID));
 
-        assertThat(getBucketAclsSpectraS3Response.getStatusCode(), is(200));
+        assertThat(getBucketAclsSpectraS3Response.getBucketAclListResult(), is(notNullValue()));
     }
 
     @Test
@@ -895,7 +896,7 @@ public class UsersAndGroups_Test {
                     .putGlobalDataPolicyAclForUserSpectraS3(
                     new PutGlobalDataPolicyAclForUserSpectraS3Request(spectraUUID));
 
-            assertThat(putGlobalDataPolicyAclForUserSpectraS3Response.getStatusCode(), is(201));
+            assertThat(putGlobalDataPolicyAclForUserSpectraS3Response.getDataPolicyAclResult(), is(notNullValue()));
 
         } finally {
             if (putGlobalDataPolicyAclForUserSpectraS3Response != null) {
@@ -913,7 +914,7 @@ public class UsersAndGroups_Test {
             putGlobalDataPolicyAclForUserSpectraS3Response = client.putGlobalDataPolicyAclForUserSpectraS3(
                     new PutGlobalDataPolicyAclForUserSpectraS3Request("spectra"));
 
-            assertThat(putGlobalDataPolicyAclForUserSpectraS3Response.getStatusCode(), is(201));
+            assertThat(putGlobalDataPolicyAclForUserSpectraS3Response.getDataPolicyAclResult(), is(notNullValue()));
 
         } finally {
             if (putGlobalDataPolicyAclForUserSpectraS3Response != null) {
@@ -933,7 +934,7 @@ public class UsersAndGroups_Test {
                     .putGlobalDataPolicyAclForGroupSpectraS3(
                     new PutGlobalDataPolicyAclForGroupSpectraS3Request(administratorsUUID));
 
-            assertThat(putGlobalDataPolicyAclForGroupSpectraS3Response.getStatusCode(), is(201));
+            assertThat(putGlobalDataPolicyAclForGroupSpectraS3Response.getDataPolicyAclResult(), is(notNullValue()));
 
         } finally {
             if (putGlobalDataPolicyAclForGroupSpectraS3Response != null) {
@@ -953,7 +954,7 @@ public class UsersAndGroups_Test {
                     .putGlobalDataPolicyAclForGroupSpectraS3(
                     new PutGlobalDataPolicyAclForGroupSpectraS3Request("Administrators"));
 
-            assertThat(putGlobalDataPolicyAclForGroupSpectraS3Response.getStatusCode(), is(201));
+            assertThat(putGlobalDataPolicyAclForGroupSpectraS3Response.getDataPolicyAclResult(), is(notNullValue()));
 
         } finally {
             if (putGlobalDataPolicyAclForGroupSpectraS3Response != null) {
@@ -977,7 +978,8 @@ public class UsersAndGroups_Test {
                     putGlobalDataPolicyAclForUserSpectraS3Response.getDataPolicyAclResult()
                             .getId().toString()));
 
-            assertThat(deleteDataPolicyAclSpectraS3Response.getStatusCode(), is(204));
+            //An error will be thrown if response code is not 204
+            assertThat(deleteDataPolicyAclSpectraS3Response, is(notNullValue()));
 
         } catch (final Exception e) {
             if (putGlobalDataPolicyAclForUserSpectraS3Response != null) {
@@ -1003,7 +1005,7 @@ public class UsersAndGroups_Test {
                             putGlobalDataPolicyAclForUserSpectraS3Response.getDataPolicyAclResult()
                                     .getId().toString()));
 
-            assertThat(getDataPolicyAclSpectraS3Response.getStatusCode(), is(200));
+            assertThat(getDataPolicyAclSpectraS3Response.getDataPolicyAclResult(), is(notNullValue()));
 
         } finally {
             if (putGlobalDataPolicyAclForUserSpectraS3Response != null) {
@@ -1021,7 +1023,7 @@ public class UsersAndGroups_Test {
             putDataPolicyAclForUserSpectraS3Response = client.putDataPolicyAclForUserSpectraS3(
                     new PutDataPolicyAclForUserSpectraS3Request(dataPolicyId, spectraUUID));
 
-              assertThat(putDataPolicyAclForUserSpectraS3Response.getStatusCode(), is(201));
+              assertThat(putDataPolicyAclForUserSpectraS3Response.getDataPolicyAclResult(), is(notNullValue()));
 
         } finally {
             if (putDataPolicyAclForUserSpectraS3Response != null) {
@@ -1040,7 +1042,7 @@ public class UsersAndGroups_Test {
                     new PutDataPolicyAclForUserSpectraS3Request(dataPolicyId.toString(),
                             spectraUUID.toString()));
 
-            assertThat(putDataPolicyAclForUserSpectraS3Response.getStatusCode(), is(201));
+            assertThat(putDataPolicyAclForUserSpectraS3Response.getDataPolicyAclResult(), is(notNullValue()));
 
         } finally {
             if (putDataPolicyAclForUserSpectraS3Response != null) {
@@ -1058,7 +1060,7 @@ public class UsersAndGroups_Test {
             putDataPolicyAclForGroupSpectraS3Response = client.putDataPolicyAclForGroupSpectraS3(
                     new PutDataPolicyAclForGroupSpectraS3Request(dataPolicyId, administratorsUUID));
 
-            assertThat(putDataPolicyAclForGroupSpectraS3Response.getStatusCode(), is(201));
+            assertThat(putDataPolicyAclForGroupSpectraS3Response.getDataPolicyAclResult(), is(notNullValue()));
 
         } finally {
             if (putDataPolicyAclForGroupSpectraS3Response != null) {
@@ -1077,7 +1079,7 @@ public class UsersAndGroups_Test {
                     new PutDataPolicyAclForGroupSpectraS3Request(dataPolicyId.toString(),
                             administratorsUUID.toString()));
 
-            assertThat(putDataPolicyAclForGroupSpectraS3Response.getStatusCode(), is(201));
+            assertThat(putDataPolicyAclForGroupSpectraS3Response.getDataPolicyAclResult(), is(notNullValue()));
 
         } finally {
             if (putDataPolicyAclForGroupSpectraS3Response != null) {
@@ -1094,7 +1096,7 @@ public class UsersAndGroups_Test {
         final GetDataPolicyAclsSpectraS3Response getDataPolicyAclsSpectraS3Response = client
                 .getDataPolicyAclsSpectraS3(new GetDataPolicyAclsSpectraS3Request());
 
-        assertThat(getDataPolicyAclsSpectraS3Response.getStatusCode(), is(200));
+        assertThat(getDataPolicyAclsSpectraS3Response.getDataPolicyAclListResult(), is(notNullValue()));
     }
 
     @Test
@@ -1104,7 +1106,7 @@ public class UsersAndGroups_Test {
                 .getDataPolicyAclsSpectraS3(new GetDataPolicyAclsSpectraS3Request()
                         .withUserId(spectraUUID));
 
-        assertThat(getDataPolicyAclsSpectraS3Response.getStatusCode(), is(200));
+        assertThat(getDataPolicyAclsSpectraS3Response.getDataPolicyAclListResult(), is(notNullValue()));
     }
 
     @Test
@@ -1114,7 +1116,7 @@ public class UsersAndGroups_Test {
                 .getDataPolicyAclsSpectraS3(new GetDataPolicyAclsSpectraS3Request()
                         .withUserId("spectra"));
 
-        assertThat(getDataPolicyAclsSpectraS3Response.getStatusCode(), is(200));
+        assertThat(getDataPolicyAclsSpectraS3Response.getDataPolicyAclListResult(), is(notNullValue()));
     }
 
     @Test
@@ -1124,7 +1126,7 @@ public class UsersAndGroups_Test {
                 .getDataPolicyAclsSpectraS3(new GetDataPolicyAclsSpectraS3Request()
                         .withGroupId(administratorsUUID));
 
-        assertThat(getDataPolicyAclsSpectraS3Response.getStatusCode(), is(200));
+        assertThat(getDataPolicyAclsSpectraS3Response.getDataPolicyAclListResult(), is(notNullValue()));
     }
 
     @Test
@@ -1134,7 +1136,7 @@ public class UsersAndGroups_Test {
                 .getDataPolicyAclsSpectraS3(new GetDataPolicyAclsSpectraS3Request()
                         .withGroupId("Administrators"));
 
-        assertThat(getDataPolicyAclsSpectraS3Response.getStatusCode(), is(200));
+        assertThat(getDataPolicyAclsSpectraS3Response.getDataPolicyAclListResult(), is(notNullValue()));
     }
 
     @Test
@@ -1144,7 +1146,7 @@ public class UsersAndGroups_Test {
                 .getDataPolicyAclsSpectraS3(new GetDataPolicyAclsSpectraS3Request()
                         .withDataPolicyId(dataPolicyId));
 
-        assertThat(getDataPolicyAclsSpectraS3Response.getStatusCode(), is(200));
+        assertThat(getDataPolicyAclsSpectraS3Response.getDataPolicyAclListResult(), is(notNullValue()));
     }
 
     @Test
@@ -1154,7 +1156,7 @@ public class UsersAndGroups_Test {
                 .getDataPolicyAclsSpectraS3(new GetDataPolicyAclsSpectraS3Request()
                         .withDataPolicyId(dataPolicyId.toString()));
 
-        assertThat(getDataPolicyAclsSpectraS3Response.getStatusCode(), is(200));
+        assertThat(getDataPolicyAclsSpectraS3Response.getDataPolicyAclListResult(), is(notNullValue()));
     }
 
     @Test
@@ -1164,7 +1166,7 @@ public class UsersAndGroups_Test {
                 .getDataPolicyAclsSpectraS3(new GetDataPolicyAclsSpectraS3Request()
                         .withPageOffset(1));
 
-        assertThat(getDataPolicyAclsSpectraS3Response.getStatusCode(), is(200));
+        assertThat(getDataPolicyAclsSpectraS3Response.getDataPolicyAclListResult(), is(notNullValue()));
     }
 
     @Test
@@ -1174,7 +1176,7 @@ public class UsersAndGroups_Test {
                 .getDataPolicyAclsSpectraS3(new GetDataPolicyAclsSpectraS3Request()
                         .withPageLength(1));
 
-        assertThat(getDataPolicyAclsSpectraS3Response.getStatusCode(), is(200));
+        assertThat(getDataPolicyAclsSpectraS3Response.getDataPolicyAclListResult(), is(notNullValue()));
     }
 
     @Test
@@ -1184,7 +1186,7 @@ public class UsersAndGroups_Test {
                 .getDataPolicyAclsSpectraS3(new GetDataPolicyAclsSpectraS3Request()
                         .withPageStartMarker(UUID.randomUUID().toString()));
 
-        assertThat(getDataPolicyAclsSpectraS3Response.getStatusCode(), is(200));
+        assertThat(getDataPolicyAclsSpectraS3Response.getDataPolicyAclListResult(), is(notNullValue()));
     }
 
     @Test
@@ -1194,7 +1196,7 @@ public class UsersAndGroups_Test {
                 .getDataPolicyAclsSpectraS3(new GetDataPolicyAclsSpectraS3Request()
                         .withPageStartMarker(UUID.randomUUID()));
 
-        assertThat(getDataPolicyAclsSpectraS3Response.getStatusCode(), is(200));
+        assertThat(getDataPolicyAclsSpectraS3Response.getDataPolicyAclListResult(), is(notNullValue()));
     }
 
     @Test
@@ -1204,7 +1206,7 @@ public class UsersAndGroups_Test {
                 .getDataPolicyAclsSpectraS3(new GetDataPolicyAclsSpectraS3Request()
                         .withLastPage(true));
 
-        assertThat(getDataPolicyAclsSpectraS3Response.getStatusCode(), is(200));
+        assertThat(getDataPolicyAclsSpectraS3Response.getDataPolicyAclListResult(), is(notNullValue()));
     }
 
     @Test
@@ -1214,6 +1216,6 @@ public class UsersAndGroups_Test {
                 .getDataPolicyAclsSpectraS3(new GetDataPolicyAclsSpectraS3Request()
                         .withUserId(spectraUUID).withDataPolicyId(dataPolicyId));
 
-        assertThat(getDataPolicyAclsSpectraS3Response.getStatusCode(), is(200));
+        assertThat(getDataPolicyAclsSpectraS3Response.getDataPolicyAclListResult(), is(notNullValue()));
     }
 }

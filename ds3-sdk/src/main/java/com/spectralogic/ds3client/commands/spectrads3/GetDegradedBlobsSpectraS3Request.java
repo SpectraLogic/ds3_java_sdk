@@ -1,6 +1,6 @@
 /*
  * ******************************************************************************
- *   Copyright 2014-2015 Spectra Logic Corporation. All Rights Reserved.
+ *   Copyright 2014-2016 Spectra Logic Corporation. All Rights Reserved.
  *   Licensed under the Apache License, Version 2.0 (the "License"). You may not use
  *   this file except in compliance with the License. A copy of the License is located at
  *
@@ -43,6 +43,7 @@ public class GetDegradedBlobsSpectraS3Request extends AbstractPaginationRequest 
 
     // Constructor
     
+    
     public GetDegradedBlobsSpectraS3Request() {
         
     }
@@ -53,17 +54,20 @@ public class GetDegradedBlobsSpectraS3Request extends AbstractPaginationRequest 
         return this;
     }
 
+
     public GetDegradedBlobsSpectraS3Request withBlobId(final String blobId) {
         this.blobId = blobId;
         this.updateQueryParam("blob_id", blobId);
         return this;
     }
 
+
     public GetDegradedBlobsSpectraS3Request withBucketId(final String bucketId) {
         this.bucketId = bucketId;
         this.updateQueryParam("bucket_id", bucketId);
         return this;
     }
+
 
     public GetDegradedBlobsSpectraS3Request withLastPage(final boolean lastPage) {
         this.lastPage = lastPage;
@@ -75,11 +79,13 @@ public class GetDegradedBlobsSpectraS3Request extends AbstractPaginationRequest 
         return this;
     }
 
+
     public GetDegradedBlobsSpectraS3Request withPageLength(final int pageLength) {
         this.pageLength = pageLength;
         this.updateQueryParam("page_length", pageLength);
         return this;
     }
+
 
     public GetDegradedBlobsSpectraS3Request withPageOffset(final int pageOffset) {
         this.pageOffset = pageOffset;
@@ -87,11 +93,13 @@ public class GetDegradedBlobsSpectraS3Request extends AbstractPaginationRequest 
         return this;
     }
 
+
     public GetDegradedBlobsSpectraS3Request withPageStartMarker(final UUID pageStartMarker) {
         this.pageStartMarker = pageStartMarker.toString();
         this.updateQueryParam("page_start_marker", pageStartMarker);
         return this;
     }
+
 
     public GetDegradedBlobsSpectraS3Request withPageStartMarker(final String pageStartMarker) {
         this.pageStartMarker = pageStartMarker;
@@ -99,11 +107,13 @@ public class GetDegradedBlobsSpectraS3Request extends AbstractPaginationRequest 
         return this;
     }
 
+
     public GetDegradedBlobsSpectraS3Request withPersistenceRuleId(final UUID persistenceRuleId) {
         this.persistenceRuleId = persistenceRuleId.toString();
         this.updateQueryParam("persistence_rule_id", persistenceRuleId);
         return this;
     }
+
 
     public GetDegradedBlobsSpectraS3Request withPersistenceRuleId(final String persistenceRuleId) {
         this.persistenceRuleId = persistenceRuleId;
@@ -111,17 +121,20 @@ public class GetDegradedBlobsSpectraS3Request extends AbstractPaginationRequest 
         return this;
     }
 
+
     public GetDegradedBlobsSpectraS3Request withReplicationRuleId(final UUID replicationRuleId) {
         this.replicationRuleId = replicationRuleId.toString();
         this.updateQueryParam("replication_rule_id", replicationRuleId);
         return this;
     }
 
+
     public GetDegradedBlobsSpectraS3Request withReplicationRuleId(final String replicationRuleId) {
         this.replicationRuleId = replicationRuleId;
         this.updateQueryParam("replication_rule_id", replicationRuleId);
         return this;
     }
+
 
 
     @Override

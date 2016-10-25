@@ -1,6 +1,6 @@
 /*
  * ******************************************************************************
- *   Copyright 2014-2015 Spectra Logic Corporation. All Rights Reserved.
+ *   Copyright 2014-2016 Spectra Logic Corporation. All Rights Reserved.
  *   Licensed under the Apache License, Version 2.0 (the "License"). You may not use
  *   this file except in compliance with the License. A copy of the License is located at
  *
@@ -16,38 +16,17 @@
 // This code is auto-generated, do not modify
 package com.spectralogic.ds3client.commands.spectrads3;
 
-import com.spectralogic.ds3client.networking.WebResponse;
-import java.io.IOException;
 import com.spectralogic.ds3client.models.StorageDomain;
-import java.io.InputStream;
-import com.spectralogic.ds3client.serializer.XmlOutput;
+import com.spectralogic.ds3client.models.ChecksumType;
 import com.spectralogic.ds3client.commands.interfaces.AbstractResponse;
 
 public class PutStorageDomainSpectraS3Response extends AbstractResponse {
+    
+    private final StorageDomain storageDomainResult;
 
-    private StorageDomain storageDomainResult;
-
-    public PutStorageDomainSpectraS3Response(final WebResponse response) throws IOException {
-        super(response);
-    }
-
-    @Override
-    protected void processResponse() throws IOException {
-        try {
-            this.checkStatusCode(201);
-
-            switch (this.getStatusCode()) {
-            case 201:
-                try (final InputStream content = getResponse().getResponseStream()) {
-                    this.storageDomainResult = XmlOutput.fromXml(content, StorageDomain.class);
-                }
-                break;
-            default:
-                assert false : "checkStatusCode should have made it impossible to reach this line.";
-            }
-        } finally {
-            this.getResponse().close();
-        }
+    public PutStorageDomainSpectraS3Response(final StorageDomain storageDomainResult, final String checksum, final ChecksumType.Type checksumType) {
+        super(checksum, checksumType);
+        this.storageDomainResult = storageDomainResult;
     }
 
     public StorageDomain getStorageDomainResult() {

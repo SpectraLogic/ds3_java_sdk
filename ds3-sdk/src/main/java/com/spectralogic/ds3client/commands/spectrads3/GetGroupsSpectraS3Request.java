@@ -1,6 +1,6 @@
 /*
  * ******************************************************************************
- *   Copyright 2014-2015 Spectra Logic Corporation. All Rights Reserved.
+ *   Copyright 2014-2016 Spectra Logic Corporation. All Rights Reserved.
  *   Licensed under the Apache License, Version 2.0 (the "License"). You may not use
  *   this file except in compliance with the License. A copy of the License is located at
  *
@@ -39,6 +39,7 @@ public class GetGroupsSpectraS3Request extends AbstractPaginationRequest {
 
     // Constructor
     
+    
     public GetGroupsSpectraS3Request() {
         
     }
@@ -48,6 +49,7 @@ public class GetGroupsSpectraS3Request extends AbstractPaginationRequest {
         this.updateQueryParam("built_in", builtIn);
         return this;
     }
+
 
     public GetGroupsSpectraS3Request withLastPage(final boolean lastPage) {
         this.lastPage = lastPage;
@@ -59,11 +61,13 @@ public class GetGroupsSpectraS3Request extends AbstractPaginationRequest {
         return this;
     }
 
+
     public GetGroupsSpectraS3Request withName(final String name) {
         this.name = name;
         this.updateQueryParam("name", name);
         return this;
     }
+
 
     public GetGroupsSpectraS3Request withPageLength(final int pageLength) {
         this.pageLength = pageLength;
@@ -71,11 +75,13 @@ public class GetGroupsSpectraS3Request extends AbstractPaginationRequest {
         return this;
     }
 
+
     public GetGroupsSpectraS3Request withPageOffset(final int pageOffset) {
         this.pageOffset = pageOffset;
         this.updateQueryParam("page_offset", pageOffset);
         return this;
     }
+
 
     public GetGroupsSpectraS3Request withPageStartMarker(final UUID pageStartMarker) {
         this.pageStartMarker = pageStartMarker.toString();
@@ -83,11 +89,13 @@ public class GetGroupsSpectraS3Request extends AbstractPaginationRequest {
         return this;
     }
 
+
     public GetGroupsSpectraS3Request withPageStartMarker(final String pageStartMarker) {
         this.pageStartMarker = pageStartMarker;
         this.updateQueryParam("page_start_marker", pageStartMarker);
         return this;
     }
+
 
 
     @Override

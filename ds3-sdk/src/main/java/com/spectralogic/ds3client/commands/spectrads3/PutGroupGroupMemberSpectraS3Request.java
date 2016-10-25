@@ -1,6 +1,6 @@
 /*
  * ******************************************************************************
- *   Copyright 2014-2015 Spectra Logic Corporation. All Rights Reserved.
+ *   Copyright 2014-2016 Spectra Logic Corporation. All Rights Reserved.
  *   Licensed under the Apache License, Version 2.0 (the "License"). You may not use
  *   this file except in compliance with the License. A copy of the License is located at
  *
@@ -31,6 +31,7 @@ public class PutGroupGroupMemberSpectraS3Request extends AbstractRequest {
 
     // Constructor
     
+    
     public PutGroupGroupMemberSpectraS3Request(final UUID groupId, final UUID memberGroupId) {
         this.groupId = groupId.toString();
         this.memberGroupId = memberGroupId.toString();
@@ -39,6 +40,7 @@ public class PutGroupGroupMemberSpectraS3Request extends AbstractRequest {
         this.getQueryParams().put("member_group_id", memberGroupId.toString());
     }
 
+    
     public PutGroupGroupMemberSpectraS3Request(final String groupId, final String memberGroupId) {
         this.groupId = groupId;
         this.memberGroupId = memberGroupId;

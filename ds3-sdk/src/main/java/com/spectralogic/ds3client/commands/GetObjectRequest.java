@@ -1,6 +1,6 @@
 /*
  * ******************************************************************************
- *   Copyright 2014-2015 Spectra Logic Corporation. All Rights Reserved.
+ *   Copyright 2014-2016 Spectra Logic Corporation. All Rights Reserved.
  *   Licensed under the Apache License, Version 2.0 (the "License"). You may not use
  *   this file except in compliance with the License. A copy of the License is located at
  *
@@ -46,6 +46,7 @@ public class GetObjectRequest extends AbstractRequest {
     private ChecksumType.Type checksumType = ChecksumType.Type.NONE;
 
     // Constructor
+    
     /** @deprecated use {@link #GetObjectRequest(String, String, WritableByteChannel, UUID, long)} instead */
     @Deprecated
     public GetObjectRequest(final String bucketName, final String objectName, final WritableByteChannel channel) {
@@ -56,6 +57,7 @@ public class GetObjectRequest extends AbstractRequest {
 
     }
 
+    
     public GetObjectRequest(final String bucketName, final String objectName, final WritableByteChannel channel, final UUID job, final long offset) {
         this.bucketName = bucketName;
         this.objectName = objectName;
@@ -68,6 +70,7 @@ public class GetObjectRequest extends AbstractRequest {
 
     }
 
+    
     public GetObjectRequest(final String bucketName, final String objectName, final WritableByteChannel channel, final String job, final long offset) {
         this.bucketName = bucketName;
         this.objectName = objectName;
@@ -87,17 +90,20 @@ public class GetObjectRequest extends AbstractRequest {
         return this;
     }
 
+
     public GetObjectRequest withJob(final String job) {
         this.job = job;
         this.updateQueryParam("job", job);
         return this;
     }
 
+
     public GetObjectRequest withOffset(final long offset) {
         this.offset = offset;
         this.updateQueryParam("offset", offset);
         return this;
     }
+
 
 
     /**

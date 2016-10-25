@@ -1,6 +1,6 @@
 /*
  * ******************************************************************************
- *   Copyright 2014-2015 Spectra Logic Corporation. All Rights Reserved.
+ *   Copyright 2014-2016 Spectra Logic Corporation. All Rights Reserved.
  *   Licensed under the Apache License, Version 2.0 (the "License"). You may not use
  *   this file except in compliance with the License. A copy of the License is located at
  *
@@ -43,6 +43,7 @@ public class GetPhysicalPlacementForObjectsWithFullDetailsSpectraS3Request exten
 
     // Constructor
     
+    
     public GetPhysicalPlacementForObjectsWithFullDetailsSpectraS3Request(final String bucketName, final List<Ds3Object> objects) {
         this.bucketName = bucketName;
         this.objects = objects;
@@ -58,11 +59,13 @@ public class GetPhysicalPlacementForObjectsWithFullDetailsSpectraS3Request exten
         return this;
     }
 
+
     public GetPhysicalPlacementForObjectsWithFullDetailsSpectraS3Request withStorageDomainId(final String storageDomainId) {
         this.storageDomainId = storageDomainId;
         this.updateQueryParam("storage_domain_id", storageDomainId);
         return this;
     }
+
 
 
     @Override

@@ -1,6 +1,6 @@
 /*
  * ******************************************************************************
- *   Copyright 2014-2015 Spectra Logic Corporation. All Rights Reserved.
+ *   Copyright 2014-2016 Spectra Logic Corporation. All Rights Reserved.
  *   Licensed under the Apache License, Version 2.0 (the "License"). You may not use
  *   this file except in compliance with the License. A copy of the License is located at
  *
@@ -31,6 +31,7 @@ public class PutDataPolicyAclForUserSpectraS3Request extends AbstractRequest {
 
     // Constructor
     
+    
     public PutDataPolicyAclForUserSpectraS3Request(final UUID dataPolicyId, final UUID userId) {
         this.dataPolicyId = dataPolicyId.toString();
         this.userId = userId.toString();
@@ -39,6 +40,7 @@ public class PutDataPolicyAclForUserSpectraS3Request extends AbstractRequest {
         this.getQueryParams().put("user_id", userId.toString());
     }
 
+    
     public PutDataPolicyAclForUserSpectraS3Request(final String dataPolicyId, final String userId) {
         this.dataPolicyId = dataPolicyId;
         this.userId = userId;

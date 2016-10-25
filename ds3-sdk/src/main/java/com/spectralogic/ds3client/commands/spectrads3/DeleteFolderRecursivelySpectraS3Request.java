@@ -1,6 +1,6 @@
 /*
  * ******************************************************************************
- *   Copyright 2014-2015 Spectra Logic Corporation. All Rights Reserved.
+ *   Copyright 2014-2016 Spectra Logic Corporation. All Rights Reserved.
  *   Licensed under the Apache License, Version 2.0 (the "License"). You may not use
  *   this file except in compliance with the License. A copy of the License is located at
  *
@@ -34,6 +34,7 @@ public class DeleteFolderRecursivelySpectraS3Request extends AbstractRequest {
 
     // Constructor
     
+    
     public DeleteFolderRecursivelySpectraS3Request(final String bucketId, final String folder) {
         this.folder = folder;
         this.bucketId = bucketId;
@@ -52,6 +53,7 @@ public class DeleteFolderRecursivelySpectraS3Request extends AbstractRequest {
         return this;
     }
 
+
     public DeleteFolderRecursivelySpectraS3Request withRollBack(final boolean rollBack) {
         this.rollBack = rollBack;
         if (this.rollBack) {
@@ -61,6 +63,7 @@ public class DeleteFolderRecursivelySpectraS3Request extends AbstractRequest {
         }
         return this;
     }
+
 
 
     @Override

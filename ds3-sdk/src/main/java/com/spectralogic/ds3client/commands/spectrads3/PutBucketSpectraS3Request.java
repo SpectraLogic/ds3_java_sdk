@@ -1,6 +1,6 @@
 /*
  * ******************************************************************************
- *   Copyright 2014-2015 Spectra Logic Corporation. All Rights Reserved.
+ *   Copyright 2014-2016 Spectra Logic Corporation. All Rights Reserved.
  *   Licensed under the Apache License, Version 2.0 (the "License"). You may not use
  *   this file except in compliance with the License. A copy of the License is located at
  *
@@ -35,6 +35,7 @@ public class PutBucketSpectraS3Request extends AbstractRequest {
 
     // Constructor
     
+    
     public PutBucketSpectraS3Request(final String name) {
         this.name = name;
         
@@ -47,11 +48,13 @@ public class PutBucketSpectraS3Request extends AbstractRequest {
         return this;
     }
 
+
     public PutBucketSpectraS3Request withDataPolicyId(final String dataPolicyId) {
         this.dataPolicyId = dataPolicyId;
         this.updateQueryParam("data_policy_id", dataPolicyId);
         return this;
     }
+
 
     public PutBucketSpectraS3Request withId(final UUID id) {
         this.id = id.toString();
@@ -59,11 +62,13 @@ public class PutBucketSpectraS3Request extends AbstractRequest {
         return this;
     }
 
+
     public PutBucketSpectraS3Request withId(final String id) {
         this.id = id;
         this.updateQueryParam("id", id);
         return this;
     }
+
 
     public PutBucketSpectraS3Request withUserId(final UUID userId) {
         this.userId = userId.toString();
@@ -71,11 +76,13 @@ public class PutBucketSpectraS3Request extends AbstractRequest {
         return this;
     }
 
+
     public PutBucketSpectraS3Request withUserId(final String userId) {
         this.userId = userId;
         this.updateQueryParam("user_id", userId);
         return this;
     }
+
 
 
     @Override

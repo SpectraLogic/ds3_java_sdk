@@ -1,6 +1,6 @@
 /*
  * ******************************************************************************
- *   Copyright 2014-2015 Spectra Logic Corporation. All Rights Reserved.
+ *   Copyright 2014-2016 Spectra Logic Corporation. All Rights Reserved.
  *   Licensed under the Apache License, Version 2.0 (the "License"). You may not use
  *   this file except in compliance with the License. A copy of the License is located at
  *
@@ -36,6 +36,7 @@ public class GetBucketRequest extends AbstractRequest {
 
     // Constructor
     
+    
     public GetBucketRequest(final String bucketName) {
         this.bucketName = bucketName;
         
@@ -47,11 +48,13 @@ public class GetBucketRequest extends AbstractRequest {
         return this;
     }
 
+
     public GetBucketRequest withMarker(final String marker) {
         this.marker = marker;
         this.updateQueryParam("marker", marker);
         return this;
     }
+
 
     public GetBucketRequest withMaxKeys(final int maxKeys) {
         this.maxKeys = maxKeys;
@@ -59,11 +62,13 @@ public class GetBucketRequest extends AbstractRequest {
         return this;
     }
 
+
     public GetBucketRequest withPrefix(final String prefix) {
         this.prefix = prefix;
         this.updateQueryParam("prefix", prefix);
         return this;
     }
+
 
 
     @Override

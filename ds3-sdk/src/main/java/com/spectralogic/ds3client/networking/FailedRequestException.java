@@ -30,6 +30,22 @@ public class FailedRequestException extends IOException {
     private final Error error;
     private final String responseString;
 
+    public FailedRequestException(final int[] expectedStatusCodes,
+                                  final int statusCode,
+                                  final Error error,
+                                  final String responseString) {
+        this(toList(expectedStatusCodes), statusCode, error, responseString);
+    }
+
+    private static ImmutableList<Integer> toList(final int[] expectedStatusCodes) {
+        final ImmutableList.Builder<Integer> builder = ImmutableList.builder();
+
+        for (final int expectedStatusCode : expectedStatusCodes) {
+            builder.add(expectedStatusCode);
+        }
+        return builder.build();
+    }
+
     public FailedRequestException(final ImmutableList<Integer> expectedStatusCodes,
                                   final int statusCode,
                                   final Error error,

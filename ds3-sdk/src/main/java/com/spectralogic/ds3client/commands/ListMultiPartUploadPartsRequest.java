@@ -1,6 +1,6 @@
 /*
  * ******************************************************************************
- *   Copyright 2014-2015 Spectra Logic Corporation. All Rights Reserved.
+ *   Copyright 2014-2016 Spectra Logic Corporation. All Rights Reserved.
  *   Licensed under the Apache License, Version 2.0 (the "License"). You may not use
  *   this file except in compliance with the License. A copy of the License is located at
  *
@@ -38,6 +38,7 @@ public class ListMultiPartUploadPartsRequest extends AbstractRequest {
 
     // Constructor
     
+    
     public ListMultiPartUploadPartsRequest(final String bucketName, final String objectName, final UUID uploadId) {
         this.bucketName = bucketName;
         this.objectName = objectName;
@@ -46,6 +47,7 @@ public class ListMultiPartUploadPartsRequest extends AbstractRequest {
         this.getQueryParams().put("upload_id", uploadId.toString());
     }
 
+    
     public ListMultiPartUploadPartsRequest(final String bucketName, final String objectName, final String uploadId) {
         this.bucketName = bucketName;
         this.objectName = objectName;
@@ -60,11 +62,13 @@ public class ListMultiPartUploadPartsRequest extends AbstractRequest {
         return this;
     }
 
+
     public ListMultiPartUploadPartsRequest withPartNumberMarker(final Integer partNumberMarker) {
         this.partNumberMarker = partNumberMarker;
         this.updateQueryParam("part_number_marker", partNumberMarker);
         return this;
     }
+
 
 
     @Override

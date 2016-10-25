@@ -1,6 +1,6 @@
 /*
  * ******************************************************************************
- *   Copyright 2014-2015 Spectra Logic Corporation. All Rights Reserved.
+ *   Copyright 2014-2016 Spectra Logic Corporation. All Rights Reserved.
  *   Licensed under the Apache License, Version 2.0 (the "License"). You may not use
  *   this file except in compliance with the License. A copy of the License is located at
  *
@@ -44,12 +44,14 @@ public class GetStorageDomainCapacitySummarySpectraS3Request extends AbstractReq
 
     // Constructor
     
+    
     public GetStorageDomainCapacitySummarySpectraS3Request(final UUID storageDomainId) {
         this.storageDomainId = storageDomainId.toString();
         
         this.getQueryParams().put("storage_domain_id", storageDomainId.toString());
     }
 
+    
     public GetStorageDomainCapacitySummarySpectraS3Request(final String storageDomainId) {
         this.storageDomainId = storageDomainId;
         
@@ -62,11 +64,13 @@ public class GetStorageDomainCapacitySummarySpectraS3Request extends AbstractReq
         return this;
     }
 
+
     public GetStorageDomainCapacitySummarySpectraS3Request withPoolState(final PoolState poolState) {
         this.poolState = poolState;
         this.updateQueryParam("pool_state", poolState);
         return this;
     }
+
 
     public GetStorageDomainCapacitySummarySpectraS3Request withPoolType(final PoolType poolType) {
         this.poolType = poolType;
@@ -74,17 +78,20 @@ public class GetStorageDomainCapacitySummarySpectraS3Request extends AbstractReq
         return this;
     }
 
+
     public GetStorageDomainCapacitySummarySpectraS3Request withTapeState(final TapeState tapeState) {
         this.tapeState = tapeState;
         this.updateQueryParam("tape_state", tapeState);
         return this;
     }
 
+
     public GetStorageDomainCapacitySummarySpectraS3Request withTapeType(final TapeType tapeType) {
         this.tapeType = tapeType;
         this.updateQueryParam("tape_type", tapeType);
         return this;
     }
+
 
 
     @Override
