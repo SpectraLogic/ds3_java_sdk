@@ -34,7 +34,7 @@ public class ObjectPartComparator implements Comparator<ObjectPart> {
     }
     
     private static long signum(final long value) {
-        return value < 0 ? -1 : (value == 0 ? 0 : 1);
+        return value < 0 ? -1 : value == 0 ? 0 : 1;
     }
     
     private static int intOf(final long value) {

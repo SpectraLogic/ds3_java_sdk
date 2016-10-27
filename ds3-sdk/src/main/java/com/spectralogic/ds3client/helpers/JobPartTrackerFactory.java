@@ -26,7 +26,7 @@ import javax.annotation.Nonnull;
 import java.util.Collection;
 import java.util.HashMap;
 
-class JobPartTrackerFactory {
+final class JobPartTrackerFactory {
     public static JobPartTracker buildPartTracker(final Iterable<BulkObject> objects, final EventRunner eventRunner) {
         final ArrayListMultimap<String, ObjectPart> multimap = ArrayListMultimap.create();
         for (final BulkObject bulkObject : Preconditions.checkNotNull(objects)) {

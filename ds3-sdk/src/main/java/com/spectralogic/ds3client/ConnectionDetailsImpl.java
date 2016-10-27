@@ -107,7 +107,7 @@ class ConnectionDetailsImpl implements ConnectionDetails {
 
     private static String buildAuthority(final JobNode node, final ConnectionDetails connectionDetails) {
         return node.getEndPoint() + ":" + Integer.toString(
-                (connectionDetails.isHttps() ? node.getHttpsPort() : node.getHttpPort()));
+                connectionDetails.isHttps() ? node.getHttpsPort() : node.getHttpPort());
     }
 
     private final String endpoint;

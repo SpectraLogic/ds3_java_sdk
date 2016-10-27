@@ -21,7 +21,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Lists;
 import com.spectralogic.ds3client.Ds3Client;
-import com.spectralogic.ds3client.helpers.events.ConcurrentEventRunner;
 import com.spectralogic.ds3client.helpers.events.EventRunner;
 import com.spectralogic.ds3client.helpers.events.SameThreadEventRunner;
 import com.spectralogic.ds3client.helpers.pagination.GetBucketLoaderFactory;
@@ -109,15 +108,23 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
                                                          final Iterable<Ds3Object> objectsToWrite,
                                                          final WriteJobOptions options)
             throws IOException {
-        final PutBulkJobSpectraS3Response prime = this.client.putBulkJobSpectraS3(
-                new PutBulkJobSpectraS3Request(bucket, Lists.newArrayList(objectsToWrite))
+        final PutBulkJobSpectraS3Request request = new PutBulkJobSpectraS3Request(bucket, Lists.newArrayList(objectsToWrite))
                 .withPriority(options.getPriority())
-                .withMaxUploadSize(options.getMaxUploadSize())
                 .withAggregating(options.isAggregating())
-                .withIgnoreNamingConflicts(options.doIgnoreNamingConflicts()));
+                .withForce(options.isForce())
+                .withIgnoreNamingConflicts(options.doIgnoreNamingConflicts());
+
+        if (options.getMaxUploadSize() > 0) {
+            request.withMaxUploadSize(options.getMaxUploadSize());
+        }
+
+        final PutBulkJobSpectraS3Response putBulkJobSpectraS3Response = this.client.putBulkJobSpectraS3(
+                request);
+
+
         return new WriteJobImpl(
                 this.client,
-                prime.getMasterObjectList(),
+                putBulkJobSpectraS3Response.getMasterObjectList(),
                 this.retryAfter,
                 options.getChecksumType(),
                 this.objectTransferAttempts,
@@ -143,7 +150,7 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
     private Ds3ClientHelpers.Job innerStartReadJob(final String bucket, final Iterable<Ds3Object> objectsToRead, final ReadJobOptions options)
             throws IOException {
         final List<Ds3Object> objects = Lists.newArrayList(objectsToRead);
-        final GetBulkJobSpectraS3Response prime = this.client.getBulkJobSpectraS3(new GetBulkJobSpectraS3Request(bucket, objects)
+        final GetBulkJobSpectraS3Response getBulkJobSpectraS3Response = this.client.getBulkJobSpectraS3(new GetBulkJobSpectraS3Request(bucket, objects)
                 .withChunkClientProcessingOrderGuarantee(JobChunkClientProcessingOrderGuarantee.NONE)
                 .withPriority(options.getPriority()).withName(options.getName()));
 
@@ -151,7 +158,7 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
 
         return new ReadJobImpl(
                 this.client,
-                prime.getMasterObjectList(),
+                getBulkJobSpectraS3Response.getMasterObjectList(),
                 partialRanges,
                 this.objectTransferAttempts,
                 this.retryAfter,
@@ -267,13 +274,13 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
     }
 
     @Override
-    public Iterable<Contents> listObjects(final String bucket, final String keyPrefix, final String nextMarker, final int maxKeys) throws IOException {
+    public Iterable<Contents> listObjects(final String bucket, final String keyPrefix, final String nextMarker, final int maxKeys) {
 
         return new LazyIterable<>(new GetBucketLoaderFactory(client, bucket, keyPrefix, nextMarker, maxKeys, DEFAULT_LIST_OBJECTS_RETRIES));
     }
 
     @Override
-    public Iterable<Contents> listObjects(final String bucket, final String keyPrefix, final String nextMarker, final int maxKeys, final int retries) throws IOException {
+    public Iterable<Contents> listObjects(final String bucket, final String keyPrefix, final String nextMarker, final int maxKeys, final int retries) {
 
         return new LazyIterable<>(new GetBucketLoaderFactory(client, bucket, keyPrefix, nextMarker, maxKeys, retries));
     }

@@ -13,30 +13,24 @@
  *  ****************************************************************************
  */
 
-package com.spectralogic.ds3client.utils.hashing;
+package com.spectralogic.ds3client.integration.test.helpers;
 
-import org.apache.commons.codec.binary.Base64;
+import com.spectralogic.ds3client.Ds3ClientImpl;
+import com.spectralogic.ds3client.commands.PutObjectRequest;
+import com.spectralogic.ds3client.commands.PutObjectResponse;
 
-import java.security.MessageDigest;
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 
-abstract class DigestHasher implements Hasher {
-
-    private final MessageDigest digest;
-
-    DigestHasher() {
-        this.digest = getDigest();
+public class Ds3ClientShimWithFailedPutObject extends Ds3ClientShim {
+    public Ds3ClientShimWithFailedPutObject(final Ds3ClientImpl ds3ClientImpl)
+            throws NoSuchMethodException, IllegalAccessException, InvocationTargetException
+    {
+        super(ds3ClientImpl);
     }
 
-    abstract MessageDigest getDigest();
-
     @Override
-    public void update(final byte[] bytes, final int offset, final int length) {
-        digest.update(bytes, offset, length);
-    }
-
-
-    @Override
-    public String digest() {
-        return Base64.encodeBase64String(digest.digest());
+    public PutObjectResponse putObject(final PutObjectRequest request) throws IOException {
+        throw new IOException("A terrible, horrible thing happened!");
     }
 }

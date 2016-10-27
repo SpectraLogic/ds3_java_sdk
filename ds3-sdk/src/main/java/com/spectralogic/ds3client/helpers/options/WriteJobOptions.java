@@ -26,6 +26,7 @@ public class WriteJobOptions {
     private ChecksumType.Type checksumType;
     private boolean aggregating;
     private boolean ignoreNamingConflicts;
+    private boolean force;
 
     private WriteJobOptions() {
         this.priority = null;
@@ -34,6 +35,7 @@ public class WriteJobOptions {
         this.checksumType = ChecksumType.Type.NONE;
         this.aggregating = false;
         this.ignoreNamingConflicts = false;
+        this.force = false;
     }
 
     public static WriteJobOptions create() {
@@ -112,5 +114,13 @@ public class WriteJobOptions {
     public WriteJobOptions withIgnoreNamingConflicts(final boolean ignore) {
         this.ignoreNamingConflicts = ignore;
         return this;
+    }
+
+    public boolean isForce() {
+        return force;
+    }
+
+    public void setForce(final boolean force) {
+        this.force = force;
     }
 }

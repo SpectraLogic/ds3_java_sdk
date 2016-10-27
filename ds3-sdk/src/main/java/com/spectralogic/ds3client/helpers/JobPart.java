@@ -13,30 +13,26 @@
  *  ****************************************************************************
  */
 
-package com.spectralogic.ds3client.utils.hashing;
+package com.spectralogic.ds3client.helpers;
 
-import org.apache.commons.codec.binary.Base64;
+import com.spectralogic.ds3client.Ds3Client;
+import com.spectralogic.ds3client.models.BulkObject;
 
-import java.security.MessageDigest;
+public class JobPart {
+    private final Ds3Client client;
+    private final BulkObject bulkObject;
 
-abstract class DigestHasher implements Hasher {
-
-    private final MessageDigest digest;
-
-    DigestHasher() {
-        this.digest = getDigest();
+    public JobPart(final Ds3Client client, final BulkObject bulkObject) {
+        this.client = client;
+        this.bulkObject = bulkObject;
     }
 
-    abstract MessageDigest getDigest();
-
-    @Override
-    public void update(final byte[] bytes, final int offset, final int length) {
-        digest.update(bytes, offset, length);
+    public Ds3Client getClient() {
+        return client;
     }
 
-
-    @Override
-    public String digest() {
-        return Base64.encodeBase64String(digest.digest());
+    public BulkObject getBulkObject() {
+        return bulkObject;
     }
+
 }
