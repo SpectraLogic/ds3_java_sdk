@@ -34,6 +34,12 @@ public final class Guard {
         return str == null || str.isEmpty();
     }
 
+    public static void throwOnNullOrEmptyString(final String str, final String message) {
+        if (isStringNullOrEmpty(str)) {
+            throw new IllegalArgumentException(message);
+        }
+    }
+
     public static boolean isNotNullAndNotEmpty(final Collection<?> collection) {
         return !isNullOrEmpty(collection);
     }

@@ -31,7 +31,7 @@ import java.util.Map;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 
-public class Signature {
+public final class Signature {
     private final static Logger LOG = LoggerFactory.getLogger(Signature.class);
     private final static String HMAC_SHA1_ALGORITHM = "HmacSHA1";
 

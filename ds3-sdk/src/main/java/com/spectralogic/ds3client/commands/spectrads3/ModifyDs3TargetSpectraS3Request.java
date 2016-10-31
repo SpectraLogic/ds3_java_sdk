@@ -21,7 +21,7 @@ import com.spectralogic.ds3client.commands.interfaces.AbstractRequest;
 import com.spectralogic.ds3client.models.Ds3TargetAccessControlReplication;
 import com.google.common.net.UrlEscapers;
 import java.lang.Integer;
-import com.spectralogic.ds3client.models.TargetReadPreference;
+import com.spectralogic.ds3client.models.TargetReadPreferenceType;
 import com.spectralogic.ds3client.models.Quiesced;
 
 public class ModifyDs3TargetSpectraS3Request extends AbstractRequest {
@@ -46,7 +46,7 @@ public class ModifyDs3TargetSpectraS3Request extends AbstractRequest {
 
     private boolean dataPathVerifyCertificate;
 
-    private TargetReadPreference defaultReadPreference;
+    private TargetReadPreferenceType defaultReadPreference;
 
     private String name;
 
@@ -120,7 +120,7 @@ public class ModifyDs3TargetSpectraS3Request extends AbstractRequest {
     }
 
 
-    public ModifyDs3TargetSpectraS3Request withDefaultReadPreference(final TargetReadPreference defaultReadPreference) {
+    public ModifyDs3TargetSpectraS3Request withDefaultReadPreference(final TargetReadPreferenceType defaultReadPreference) {
         this.defaultReadPreference = defaultReadPreference;
         this.updateQueryParam("default_read_preference", defaultReadPreference);
         return this;
@@ -211,7 +211,7 @@ public class ModifyDs3TargetSpectraS3Request extends AbstractRequest {
     }
 
 
-    public TargetReadPreference getDefaultReadPreference() {
+    public TargetReadPreferenceType getDefaultReadPreference() {
         return this.defaultReadPreference;
     }
 

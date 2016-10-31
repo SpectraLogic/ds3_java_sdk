@@ -16,7 +16,7 @@
 // This code is auto-generated, do not modify
 package com.spectralogic.ds3client.models;
 
-public enum TargetReadPreference {
+public enum TargetReadPreferenceType {
     MINIMUM_LATENCY,
     AFTER_ONLINE_POOL,
     AFTER_NEARLINE_POOL,

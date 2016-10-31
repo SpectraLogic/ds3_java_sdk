@@ -252,7 +252,7 @@ public class NetworkClientImpl implements NetworkClient {
             }
         }
 
-        private HttpRequest buildHttpRequest() throws IOException {
+        private HttpRequest buildHttpRequest() {
             final String verb = this.ds3Request.getVerb().toString();
             final String path = this.buildPath();
             if (this.content != null) {
@@ -277,7 +277,7 @@ public class NetworkClientImpl implements NetworkClient {
             return path;
         }
 
-        private void addHeaders(final HttpRequest httpRequest) throws IOException {
+        private void addHeaders(final HttpRequest httpRequest) {
             // Add common headers.
             final String date = DateFormatter.dateToRfc882();
             httpRequest.addHeader(HOST, NetUtils.buildHostField(NetworkClientImpl.this.connectionDetails));

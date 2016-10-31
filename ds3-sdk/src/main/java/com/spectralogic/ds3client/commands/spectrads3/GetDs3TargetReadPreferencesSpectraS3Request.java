@@ -20,7 +20,7 @@ import com.spectralogic.ds3client.networking.HttpVerb;
 import com.spectralogic.ds3client.commands.interfaces.AbstractPaginationRequest;
 import com.google.common.net.UrlEscapers;
 import java.util.UUID;
-import com.spectralogic.ds3client.models.TargetReadPreference;
+import com.spectralogic.ds3client.models.TargetReadPreferenceType;
 
 public class GetDs3TargetReadPreferencesSpectraS3Request extends AbstractPaginationRequest {
 
@@ -36,7 +36,7 @@ public class GetDs3TargetReadPreferencesSpectraS3Request extends AbstractPaginat
 
     private String pageStartMarker;
 
-    private TargetReadPreference readPreference;
+    private TargetReadPreferenceType readPreference;
 
     private String targetId;
 
@@ -93,7 +93,7 @@ public class GetDs3TargetReadPreferencesSpectraS3Request extends AbstractPaginat
     }
 
 
-    public GetDs3TargetReadPreferencesSpectraS3Request withReadPreference(final TargetReadPreference readPreference) {
+    public GetDs3TargetReadPreferencesSpectraS3Request withReadPreference(final TargetReadPreferenceType readPreference) {
         this.readPreference = readPreference;
         this.updateQueryParam("read_preference", readPreference);
         return this;
@@ -150,7 +150,7 @@ public class GetDs3TargetReadPreferencesSpectraS3Request extends AbstractPaginat
     }
 
 
-    public TargetReadPreference getReadPreference() {
+    public TargetReadPreferenceType getReadPreference() {
         return this.readPreference;
     }
 

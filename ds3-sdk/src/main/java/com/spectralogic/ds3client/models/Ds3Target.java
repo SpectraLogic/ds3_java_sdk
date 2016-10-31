@@ -51,7 +51,7 @@ public class Ds3Target {
     private boolean dataPathVerifyCertificate;
 
     @JsonProperty("DefaultReadPreference")
-    private TargetReadPreference defaultReadPreference;
+    private TargetReadPreferenceType defaultReadPreference;
 
     @JsonProperty("Id")
     private UUID id;
@@ -150,11 +150,11 @@ public class Ds3Target {
     }
 
 
-    public TargetReadPreference getDefaultReadPreference() {
+    public TargetReadPreferenceType getDefaultReadPreference() {
         return this.defaultReadPreference;
     }
 
-    public void setDefaultReadPreference(final TargetReadPreference defaultReadPreference) {
+    public void setDefaultReadPreference(final TargetReadPreferenceType defaultReadPreference) {
         this.defaultReadPreference = defaultReadPreference;
     }
 

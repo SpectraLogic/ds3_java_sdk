@@ -18,16 +18,20 @@ package com.spectralogic.ds3client.integration;
 import com.google.common.collect.Lists;
 import com.spectralogic.ds3client.Ds3Client;
 import com.spectralogic.ds3client.Ds3ClientImpl;
+import com.spectralogic.ds3client.IntValue;
 import com.spectralogic.ds3client.commands.*;
 import com.spectralogic.ds3client.commands.spectrads3.*;
 import com.spectralogic.ds3client.commands.spectrads3.notifications.*;
 import com.spectralogic.ds3client.exceptions.Ds3NoMoreRetriesException;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers;
+import com.spectralogic.ds3client.helpers.FailureEventListener;
 import com.spectralogic.ds3client.helpers.FileObjectGetter;
 import com.spectralogic.ds3client.helpers.FileObjectPutter;
 import com.spectralogic.ds3client.helpers.ObjectCompletedListener;
+import com.spectralogic.ds3client.helpers.events.FailureEvent;
 import com.spectralogic.ds3client.helpers.options.WriteJobOptions;
 import com.spectralogic.ds3client.integration.test.helpers.ABMTestHelper;
+import com.spectralogic.ds3client.integration.test.helpers.Ds3ClientShimFactory;
 import com.spectralogic.ds3client.integration.test.helpers.TempStorageIds;
 import com.spectralogic.ds3client.integration.test.helpers.TempStorageUtil;
 import com.spectralogic.ds3client.models.*;
@@ -35,6 +39,12 @@ import com.spectralogic.ds3client.models.bulk.Ds3Object;
 import com.spectralogic.ds3client.networking.FailedRequestException;
 import com.spectralogic.ds3client.utils.ByteArraySeekableByteChannel;
 import com.spectralogic.ds3client.utils.ResourceUtils;
+
+import com.spectralogic.ds3client.IntValue;
+
+import com.spectralogic.ds3client.integration.test.helpers.Ds3ClientShimWithFailedChunkAllocation;
+import com.spectralogic.ds3client.integration.test.helpers.Ds3ClientShimFactory.ClientFailureType;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.junit.*;
@@ -808,8 +818,7 @@ public class PutJobManagement_Test {
     }
 
     @Test
-    public void testWriteJobWithRetries() throws Exception
-    {
+    public void testWriteJobWithRetries() throws Exception {
         final int maxNumObjectTransferAttempts = 3;
         transferAndCheckFileContent(maxNumObjectTransferAttempts,
                 new ObjectTransferExceptionHandler() {
@@ -824,14 +833,14 @@ public class PutJobManagement_Test {
     private void transferAndCheckFileContent(final int maxNumObjectTransferAttempts,
                                              final ObjectTransferExceptionHandler objectTransferExceptionHandler)
             throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, IOException, URISyntaxException {
-        final Ds3ClientShim ds3ClientShim = new Ds3ClientShim((Ds3ClientImpl)client);
+        final Ds3ClientShim ds3ClientShim = new Ds3ClientShim((Ds3ClientImpl) client);
 
         final String tempPathPrefix = null;
         final Path tempDirectory = Files.createTempDirectory(Paths.get("."), tempPathPrefix);
 
         try {
             final String DIR_NAME = "largeFiles/";
-            final String[] FILE_NAMES = new String[] { "lesmis-copies.txt" };
+            final String[] FILE_NAMES = new String[]{"lesmis-copies.txt"};
 
             final Path dirPath = ResourceUtils.loadFileResource(DIR_NAME);
 
@@ -851,11 +860,17 @@ public class PutJobManagement_Test {
                     maxNumBlockAllocationRetries,
                     maxNumObjectTransferAttempts);
 
+            final IntValue intValue = new IntValue();
+
             final Ds3ClientHelpers.Job writeJob = ds3ClientHelpers.startWriteJob(BUCKET_NAME, objects);
             writeJob.attachObjectCompletedListener(new ObjectCompletedListener() {
+                private int numCompletedObjects = 0;
+
                 @Override
                 public void objectCompleted(final String name) {
                     assertTrue(bookTitles.contains(name));
+                    assertEquals(1, ++numCompletedObjects);
+                    intValue.increment();
                 }
             });
 
@@ -867,9 +882,11 @@ public class PutJobManagement_Test {
                 shouldContinueTest = objectTransferExceptionHandler.handleException(t);
             }
 
-            if ( ! shouldContinueTest) {
+            if (!shouldContinueTest) {
                 return;
             }
+
+            assertEquals(1, intValue.getValue());
 
             final GetBucketResponse request = ds3ClientShim.getBucket(new GetBucketRequest(BUCKET_NAME));
             final ListBucketResult result = request.getListBucketResult();
@@ -909,14 +926,13 @@ public class PutJobManagement_Test {
     }
 
     @Test
-    public void testWriteJobWithRetriesThrowsDs3NoMoreRetriesException() throws Exception
-    {
+    public void testWriteJobWithRetriesThrowsDs3NoMoreRetriesException() throws Exception {
         final int maxNumObjectTransferAttempts = 1;
         transferAndCheckFileContent(maxNumObjectTransferAttempts,
                 new ObjectTransferExceptionHandler() {
                     @Override
                     public boolean handleException(final Throwable t) {
-                        if ( ! (t instanceof Ds3NoMoreRetriesException)) {
+                        if (!(t instanceof Ds3NoMoreRetriesException)) {
                             fail("Got exception of unexpected type: " + t.getMessage());
                             return true;
                         }
@@ -924,5 +940,102 @@ public class PutJobManagement_Test {
                         return false;
                     }
                 });
+    }
+
+    @Test
+    public void testFiringOnFailureEventWithFailedChunkAllocation()
+            throws IOException, URISyntaxException, NoSuchMethodException, IllegalAccessException, InvocationTargetException {
+        final String tempPathPrefix = null;
+        final Path tempDirectory = Files.createTempDirectory(Paths.get("."), tempPathPrefix);
+
+        try {
+            final IntValue numFailureEventsFired = new IntValue();
+
+            final int maxNumObjectTransferAttempts = 1;
+            final Ds3ClientHelpers.Job writeJob = createWriteJobWithObjectsReadyToTransfer(maxNumObjectTransferAttempts,
+                    ClientFailureType.ChunkAllocation);
+
+            final FailureEventListener failureEventListener = new FailureEventListener() {
+                @Override
+                public void onFailure(final FailureEvent failureEvent) {
+                    numFailureEventsFired.increment();
+                    assertEquals(FailureEvent.FailureActivity.PuttingObject, failureEvent.doingWhat());
+                }
+            };
+
+            writeJob.attachFailureEventListener(failureEventListener);
+
+            try {
+                writeJob.transfer(new FileObjectPutter(tempDirectory));
+            } catch (final Ds3NoMoreRetriesException e) {
+                assertEquals(1, numFailureEventsFired.getValue());
+            }
+        } finally {
+            FileUtils.deleteDirectory(tempDirectory.toFile());
+            deleteAllContents(client, BUCKET_NAME);
+        }
+    }
+
+    Ds3ClientHelpers.Job createWriteJobWithObjectsReadyToTransfer(final int maxNumObjectTransferAttempts,
+                                                                  final ClientFailureType clientFailureType)
+            throws IOException, URISyntaxException, NoSuchMethodException, IllegalAccessException, InvocationTargetException {
+        final String DIR_NAME = "largeFiles/";
+        final String[] FILE_NAMES = new String[]{"lesmis-copies.txt"};
+
+        final List<String> bookTitles = new ArrayList<>();
+        final List<Ds3Object> objects = new ArrayList<>();
+        for (final String book : FILE_NAMES) {
+            final Path objPath = ResourceUtils.loadFileResource(DIR_NAME + book);
+            final long bookSize = Files.size(objPath);
+            final Ds3Object obj = new Ds3Object(book, bookSize);
+
+            bookTitles.add(book);
+            objects.add(obj);
+        }
+
+        final Ds3Client ds3Client = Ds3ClientShimFactory.makeWrappedDs3Client(clientFailureType, client);
+
+        final int maxNumBlockAllocationRetries = 3;
+        final Ds3ClientHelpers ds3ClientHelpers = Ds3ClientHelpers.wrap(ds3Client,
+                maxNumBlockAllocationRetries,
+                maxNumObjectTransferAttempts);
+
+        final Ds3ClientHelpers.Job writeJob = ds3ClientHelpers.startWriteJob(BUCKET_NAME, objects);
+
+        return writeJob;
+    }
+
+    @Test
+    public void testFiringOnFailureEventWithFailedPutObject()
+            throws IOException, URISyntaxException, NoSuchMethodException, IllegalAccessException, InvocationTargetException {
+        final String tempPathPrefix = null;
+        final Path tempDirectory = Files.createTempDirectory(Paths.get("."), tempPathPrefix);
+
+        try {
+            final IntValue numFailureEventsFired = new IntValue();
+
+            final int maxNumObjectTransferAttempts = 1;
+            final Ds3ClientHelpers.Job writeJob = createWriteJobWithObjectsReadyToTransfer(maxNumObjectTransferAttempts,
+                    ClientFailureType.PutObject);
+
+            final FailureEventListener failureEventListener = new FailureEventListener() {
+                @Override
+                public void onFailure(final FailureEvent failureEvent) {
+                    numFailureEventsFired.increment();
+                    assertEquals(FailureEvent.FailureActivity.PuttingObject, failureEvent.doingWhat());
+                }
+            };
+
+            writeJob.attachFailureEventListener(failureEventListener);
+
+            try {
+                writeJob.transfer(new FileObjectPutter(tempDirectory));
+            } catch (final RuntimeException e) {
+                assertEquals(1, numFailureEventsFired.getValue());
+            }
+        } finally {
+            FileUtils.deleteDirectory(tempDirectory.toFile());
+            deleteAllContents(client, BUCKET_NAME);
+        }
     }
 }

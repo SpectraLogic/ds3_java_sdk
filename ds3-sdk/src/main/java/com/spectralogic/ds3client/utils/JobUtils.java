@@ -30,7 +30,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
-public class JobUtils {
+public final class JobUtils {
 
     private JobUtils() {}
 
@@ -39,7 +39,7 @@ public class JobUtils {
      * only one job ID should be returned.  It is possible that when {@param type} is GET that there could be multiple
      * job IDs returned.
      */
-    public static List<UUID> findJob(final Ds3Client client, final JobRequestType type, final String bucketName, final Set<String> fileNames) throws IOException, SignatureException {
+    public static List<UUID> findJob(final Ds3Client client, final JobRequestType type, final String bucketName, final Set<String> fileNames) throws IOException {
         final ImmutableSet<String> files = ImmutableSet.copyOf(fileNames);
         final GetJobsSpectraS3Response response = client.getJobsSpectraS3(new GetJobsSpectraS3Request());
         final List<UUID> jobIds = new ArrayList<>();

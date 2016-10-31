@@ -20,7 +20,7 @@ import com.spectralogic.ds3client.networking.HttpVerb;
 import com.spectralogic.ds3client.commands.interfaces.AbstractPaginationRequest;
 import com.google.common.net.UrlEscapers;
 import java.lang.Integer;
-import com.spectralogic.ds3client.models.TargetReadPreference;
+import com.spectralogic.ds3client.models.TargetReadPreferenceType;
 import java.util.UUID;
 import com.spectralogic.ds3client.models.Quiesced;
 import com.spectralogic.ds3client.models.TargetState;
@@ -41,7 +41,7 @@ public class GetDs3TargetsSpectraS3Request extends AbstractPaginationRequest {
 
     private boolean dataPathVerifyCertificate;
 
-    private TargetReadPreference defaultReadPreference;
+    private TargetReadPreferenceType defaultReadPreference;
 
     private boolean lastPage;
 
@@ -108,7 +108,7 @@ public class GetDs3TargetsSpectraS3Request extends AbstractPaginationRequest {
     }
 
 
-    public GetDs3TargetsSpectraS3Request withDefaultReadPreference(final TargetReadPreference defaultReadPreference) {
+    public GetDs3TargetsSpectraS3Request withDefaultReadPreference(final TargetReadPreferenceType defaultReadPreference) {
         this.defaultReadPreference = defaultReadPreference;
         this.updateQueryParam("default_read_preference", defaultReadPreference);
         return this;
@@ -223,7 +223,7 @@ public class GetDs3TargetsSpectraS3Request extends AbstractPaginationRequest {
     }
 
 
-    public TargetReadPreference getDefaultReadPreference() {
+    public TargetReadPreferenceType getDefaultReadPreference() {
         return this.defaultReadPreference;
     }
 

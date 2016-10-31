@@ -20,7 +20,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.spectralogic.ds3client.Ds3Client;
 import com.spectralogic.ds3client.commands.*;
-import com.spectralogic.ds3client.commands.parsers.GetBucketResponseParser;
 import com.spectralogic.ds3client.commands.spectrads3.*;
 import com.spectralogic.ds3client.exceptions.Ds3NoMoreRetriesException;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.Job;
@@ -31,7 +30,6 @@ import com.spectralogic.ds3client.models.Objects;
 import com.spectralogic.ds3client.models.bulk.Ds3Object;
 import com.spectralogic.ds3client.networking.ConnectionDetails;
 import com.spectralogic.ds3client.networking.FailedRequestException;
-import com.spectralogic.ds3client.networking.WebResponse;
 import com.spectralogic.ds3client.utils.ByteArraySeekableByteChannel;
 import org.junit.Assert;
 import org.junit.Before;
@@ -39,7 +37,6 @@ import org.junit.Test;
 import org.mockito.Mockito;
 
 import java.io.IOException;
-import java.nio.channels.ReadableByteChannel;
 import java.nio.channels.SeekableByteChannel;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -48,7 +45,8 @@ import java.util.concurrent.TimeUnit;
 
 import static com.spectralogic.ds3client.helpers.RequestMatchers.*;
 import static com.spectralogic.ds3client.helpers.ResponseBuilders.*;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.lessThan;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
@@ -65,7 +63,6 @@ public class Ds3ClientHelpers_Test {
     @Test
     public void testReadObjects() throws IOException, ParseException {
         final Ds3Client ds3Client = buildDs3ClientForBulk();
-
 
         final GetBulkJobSpectraS3Response buildBulkGetResponse = buildBulkGetResponse();
         Mockito.when(ds3Client.getBulkJobSpectraS3(hasChunkOrdering(JobChunkClientProcessingOrderGuarantee.NONE))).thenReturn(buildBulkGetResponse);
@@ -85,7 +82,7 @@ public class Ds3ClientHelpers_Test {
         assertThat(job.getJobId(), is(jobId));
         assertThat(job.getBucketName(), is(MYBUCKET));
         
-        final HashMap<String, ByteArraySeekableByteChannel> channelMap = new HashMap<>();
+        final Map<String, ByteArraySeekableByteChannel> channelMap = new HashMap<>();
         channelMap.put("foo", new ByteArraySeekableByteChannel());
         channelMap.put("bar", new ByteArraySeekableByteChannel());
         channelMap.put("baz", new ByteArraySeekableByteChannel());
@@ -120,7 +117,11 @@ public class Ds3ClientHelpers_Test {
 
         Mockito.when(ds3Client.getObject(getRequestHas(MYBUCKET, "foo", jobId, 6))).thenThrow(new StubException());
         Mockito.when(ds3Client.getObject(getRequestHas(MYBUCKET, "baz", jobId, 6))).then(getObjectAnswer("ntents"));
-        
+
+        final ConnectionDetails connectionDetails = Mockito.mock(ConnectionDetails.class);
+        Mockito.when(connectionDetails.getEndpoint()).thenReturn("endpoint");
+        Mockito.when(ds3Client.getConnectionDetails()).thenReturn(connectionDetails);
+
         final Job job = Ds3ClientHelpers.wrap(ds3Client).startReadJob(MYBUCKET, Lists.newArrayList(
             new Ds3Object("foo"),
             new Ds3Object("bar"),
@@ -135,7 +136,7 @@ public class Ds3ClientHelpers_Test {
             }
         });
     }
-    
+
     @Test
     public void testWriteObjects() throws IOException, ParseException {
         final Ds3Client ds3Client = buildDs3ClientForBulk();
@@ -631,6 +632,10 @@ public class Ds3ClientHelpers_Test {
         Mockito.when(ds3Client
                 .getJobChunksReadyForClientProcessingSpectraS3(hasJobId(jobId)))
                 .thenReturn(jobChunksResponse);
+
+        final ConnectionDetails connectionDetails = Mockito.mock(ConnectionDetails.class);
+        Mockito.when(connectionDetails.getEndpoint()).thenReturn("endpoint");
+        Mockito.when(ds3Client.getConnectionDetails()).thenReturn(connectionDetails);
 
         final Job job = Ds3ClientHelpers.wrap(ds3Client, 1).startReadJob(MYBUCKET, Lists.newArrayList(
                 new Ds3Object("foo")
