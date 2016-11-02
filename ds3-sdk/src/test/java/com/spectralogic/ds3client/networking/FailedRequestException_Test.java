@@ -16,15 +16,12 @@
 package com.spectralogic.ds3client.networking;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
-import com.spectralogic.ds3client.MockedHeaders;
-import com.spectralogic.ds3client.models.*;
 import com.spectralogic.ds3client.models.Error;
 import org.junit.Test;
 
-import static com.spectralogic.ds3client.networking.FailedRequestException.*;
+import static com.spectralogic.ds3client.networking.FailedRequestException.buildExceptionMessage;
+import static com.spectralogic.ds3client.networking.FailedRequestException.buildRequestIdMessage;
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 public class FailedRequestException_Test {
