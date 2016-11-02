@@ -18,16 +18,20 @@ package com.spectralogic.ds3client.integration;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.spectralogic.ds3client.Ds3Client;
+import com.spectralogic.ds3client.commands.PutObjectRequest;
+import com.spectralogic.ds3client.commands.PutObjectResponse;
 import com.spectralogic.ds3client.commands.spectrads3.CancelJobSpectraS3Request;
 import com.spectralogic.ds3client.commands.spectrads3.CancelJobSpectraS3Response;
 import com.spectralogic.ds3client.commands.spectrads3.GetJobChunksReadyForClientProcessingSpectraS3Request;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers;
+import com.spectralogic.ds3client.helpers.JobRecoveryException;
 import com.spectralogic.ds3client.integration.test.helpers.TempStorageIds;
 import com.spectralogic.ds3client.integration.test.helpers.TempStorageUtil;
 import com.spectralogic.ds3client.models.ChecksumType;
 import com.spectralogic.ds3client.models.Contents;
 import com.spectralogic.ds3client.models.bulk.Ds3Object;
 import com.spectralogic.ds3client.networking.FailedRequestException;
+import com.spectralogic.ds3client.utils.ResourceUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -35,11 +39,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.nio.channels.SeekableByteChannel;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
+import static com.spectralogic.ds3client.integration.Util.RESOURCE_BASE_NAME;
+import static com.spectralogic.ds3client.integration.Util.deleteAllContents;
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.*;
@@ -95,7 +106,7 @@ public class Regression_Test {
                     .cancelJobSpectraS3(new CancelJobSpectraS3Request(putJob.getJobId().toString()));
             assertEquals(204, cancelJobResponse.getStatusCode());
         } finally {
-            Util.deleteAllContents(client, bucketName);
+            deleteAllContents(client, bucketName);
         }
     }
 
@@ -131,7 +142,7 @@ public class Regression_Test {
                     .cancelJobSpectraS3(new CancelJobSpectraS3Request(putJob.getJobId().toString()));
             assertEquals(204, cancelJobResponse.getStatusCode());
         } finally {
-            Util.deleteAllContents(client, bucketName);
+            deleteAllContents(client, bucketName);
         }
     }
 
@@ -180,7 +191,7 @@ public class Regression_Test {
                     .cancelJobSpectraS3(new CancelJobSpectraS3Request(putJob.getJobId().toString()));
             assertEquals(204, cancelJobResponse.getStatusCode());
         } finally {
-            Util.deleteAllContents(client, bucketName);
+            deleteAllContents(client, bucketName);
         }
     }
 
@@ -228,7 +239,7 @@ public class Regression_Test {
                     .cancelJobSpectraS3(new CancelJobSpectraS3Request(putJob.getJobId().toString()));
             assertEquals(204, cancelJobResponse.getStatusCode());
         } finally {
-            Util.deleteAllContents(client, bucketName);
+            deleteAllContents(client, bucketName);
         }
     }
 
@@ -261,8 +272,48 @@ public class Regression_Test {
                 }
             });
         } finally {
-            Util.deleteAllContents(client, bucketName);
+            deleteAllContents(client, bucketName);
         }
+    }
 
+    @Test
+    public void testRecoverWriteJobWithHelper() throws IOException, JobRecoveryException, URISyntaxException {
+        final String bucketName = "test_recover_write_job_bucket";
+        final String book1 = "beowulf.txt";
+        final String book2 = "ulysses.txt";
+
+        try {
+            HELPERS.ensureBucketExists(bucketName, envDataPolicyId);
+
+            final Path objPath1 = ResourceUtils.loadFileResource(RESOURCE_BASE_NAME + book1);
+            final Path objPath2 = ResourceUtils.loadFileResource(RESOURCE_BASE_NAME + book2);
+            final Ds3Object obj1 = new Ds3Object(book1, Files.size(objPath1));
+            final Ds3Object obj2 = new Ds3Object(book2, Files.size(objPath2));
+
+            final Ds3ClientHelpers.Job job = Ds3ClientHelpers.wrap(client).startWriteJob(bucketName, Lists.newArrayList(obj1, obj2));
+
+            final PutObjectResponse putResponse1 = client.putObject(new PutObjectRequest(
+                    job.getBucketName(),
+                    book1,
+                    new ResourceObjectPutter(RESOURCE_BASE_NAME).buildChannel(book1),
+                    job.getJobId().toString(),
+                    0,
+                    Files.size(objPath1)));
+            assertThat(putResponse1, is(notNullValue()));
+            assertThat(putResponse1.getStatusCode(), is(equalTo(200)));
+
+            // Interuption...
+            final Ds3ClientHelpers.Job recoverJob = HELPERS.recoverWriteJob(job.getJobId());
+
+            recoverJob.transfer(new Ds3ClientHelpers.ObjectChannelBuilder() {
+                @Override
+                public SeekableByteChannel buildChannel(final String key) throws IOException {
+                    return Files.newByteChannel(objPath2, StandardOpenOption.READ);
+                }
+            });
+
+        } finally {
+            deleteAllContents(client, bucketName);
+        }
     }
 }
