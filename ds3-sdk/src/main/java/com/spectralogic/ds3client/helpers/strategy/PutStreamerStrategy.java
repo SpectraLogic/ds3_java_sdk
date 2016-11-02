@@ -16,6 +16,7 @@
 package com.spectralogic.ds3client.helpers.strategy;
 
 import com.google.common.base.Function;
+import com.google.common.base.Predicate;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableMap;
 import com.spectralogic.ds3client.Ds3Client;
@@ -60,7 +61,12 @@ public class PutStreamerStrategy extends BlobStrategy {
         final Objects nextChunk = allocateChunk(filteredChunkIterator.next());
 
         LOG.debug("Allocating chunk: {}", nextChunk.getChunkId().toString());
-        return FluentIterable.from(nextChunk.getObjects()).transform(new Function<BulkObject, JobPart>() {
+        return FluentIterable.from(nextChunk.getObjects()).filter(new Predicate<BulkObject>() {
+            @Override
+            public boolean apply(@Nullable final BulkObject input) {
+                return !input.getInCache();
+            }
+        }).transform(new Function<BulkObject, JobPart>() {
             @Nullable
             @Override
             public JobPart apply(@Nullable final BulkObject input) {
