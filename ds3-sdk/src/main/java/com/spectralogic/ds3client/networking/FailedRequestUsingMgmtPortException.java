@@ -15,12 +15,8 @@
 
 package com.spectralogic.ds3client.networking;
 
-import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3client.models.Error;
-
-import java.io.IOException;
-import java.util.List;
 
 public class  FailedRequestUsingMgmtPortException extends  FailedRequestException {
 
@@ -28,8 +24,8 @@ public class  FailedRequestUsingMgmtPortException extends  FailedRequestExceptio
     public final static String MGMT_PORT_HEADER = "Spectra-Data-Path-Request-Made-On-Management-Path";
     public final static String MGMT_PORT_RESPONSE = "REST (data) request made on management port";
 
-    public FailedRequestUsingMgmtPortException(final ImmutableList<Integer> expectedStatusCodes) {
-        super(expectedStatusCodes, MGMT_PORT_STATUS_CODE, new Error(), MGMT_PORT_RESPONSE);
+    public FailedRequestUsingMgmtPortException(final ImmutableList<Integer> expectedStatusCodes, final String requestId) {
+        super(expectedStatusCodes, MGMT_PORT_STATUS_CODE, new Error(), MGMT_PORT_RESPONSE, requestId);
     }
 
 }
