@@ -87,7 +87,7 @@ public class FailedRequestException extends IOException {
         return requestId;
     }
     
-    private static String buildExceptionMessage(final Error error,
+    protected static String buildExceptionMessage(final Error error,
                                                 final ImmutableList<Integer> expectedStatusCodes,
                                                 final int statusCode,
                                                 final String requestId) {
@@ -104,8 +104,8 @@ public class FailedRequestException extends IOException {
                 "Expected a status code of %s but got %d %s. Error message: \"%s\"",
                 joiner.join(expectedStatusCodes),
                 statusCode,
-                error.getMessage(),
-                buildRequestIdMessage(requestId)
+                buildRequestIdMessage(requestId),
+                error.getMessage()
             );
     }
 
@@ -113,7 +113,7 @@ public class FailedRequestException extends IOException {
      * Creates the request-ID portion of the exception message. The message specifies the
      * request-ID if requestId is non-null, else it specifies an unknown request.
      */
-    private static String buildRequestIdMessage(final String requestId) {
+    protected static String buildRequestIdMessage(final String requestId) {
         if (Guard.isStringNullOrEmpty(requestId)) {
             return "for unknown request";
         }
