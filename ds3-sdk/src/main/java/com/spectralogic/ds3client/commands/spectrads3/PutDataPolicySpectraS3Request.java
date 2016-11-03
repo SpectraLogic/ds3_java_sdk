@@ -46,6 +46,8 @@ public class PutDataPolicySpectraS3Request extends AbstractRequest {
 
     private Priority defaultPutJobPriority;
 
+    private boolean defaultVerifyAfterWrite;
+
     private Priority defaultVerifyJobPriority;
 
     private boolean endToEndCrcRequired;
@@ -115,6 +117,13 @@ public class PutDataPolicySpectraS3Request extends AbstractRequest {
     public PutDataPolicySpectraS3Request withDefaultPutJobPriority(final Priority defaultPutJobPriority) {
         this.defaultPutJobPriority = defaultPutJobPriority;
         this.updateQueryParam("default_put_job_priority", defaultPutJobPriority);
+        return this;
+    }
+
+
+    public PutDataPolicySpectraS3Request withDefaultVerifyAfterWrite(final boolean defaultVerifyAfterWrite) {
+        this.defaultVerifyAfterWrite = defaultVerifyAfterWrite;
+        this.updateQueryParam("default_verify_after_write", defaultVerifyAfterWrite);
         return this;
     }
 
@@ -200,6 +209,11 @@ public class PutDataPolicySpectraS3Request extends AbstractRequest {
 
     public Priority getDefaultPutJobPriority() {
         return this.defaultPutJobPriority;
+    }
+
+
+    public boolean getDefaultVerifyAfterWrite() {
+        return this.defaultVerifyAfterWrite;
     }
 
 
