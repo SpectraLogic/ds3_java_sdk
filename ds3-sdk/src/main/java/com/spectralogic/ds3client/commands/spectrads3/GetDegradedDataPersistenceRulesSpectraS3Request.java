@@ -21,7 +21,7 @@ import com.spectralogic.ds3client.commands.interfaces.AbstractPaginationRequest;
 import java.util.UUID;
 import com.google.common.net.UrlEscapers;
 import com.spectralogic.ds3client.models.DataIsolationLevel;
-import com.spectralogic.ds3client.models.DataPersistenceRuleState;
+import com.spectralogic.ds3client.models.DataPlacementRuleState;
 import com.spectralogic.ds3client.models.DataPersistenceRuleType;
 
 public class GetDegradedDataPersistenceRulesSpectraS3Request extends AbstractPaginationRequest {
@@ -40,7 +40,7 @@ public class GetDegradedDataPersistenceRulesSpectraS3Request extends AbstractPag
 
     private String pageStartMarker;
 
-    private DataPersistenceRuleState state;
+    private DataPlacementRuleState state;
 
     private String storageDomainId;
 
@@ -113,7 +113,7 @@ public class GetDegradedDataPersistenceRulesSpectraS3Request extends AbstractPag
     }
 
 
-    public GetDegradedDataPersistenceRulesSpectraS3Request withState(final DataPersistenceRuleState state) {
+    public GetDegradedDataPersistenceRulesSpectraS3Request withState(final DataPlacementRuleState state) {
         this.state = state;
         this.updateQueryParam("state", state);
         return this;
@@ -182,7 +182,7 @@ public class GetDegradedDataPersistenceRulesSpectraS3Request extends AbstractPag
     }
 
 
-    public DataPersistenceRuleState getState() {
+    public DataPlacementRuleState getState() {
         return this.state;
     }
 

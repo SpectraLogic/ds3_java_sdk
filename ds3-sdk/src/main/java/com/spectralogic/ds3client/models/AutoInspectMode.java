@@ -19,5 +19,5 @@ package com.spectralogic.ds3client.models;
 public enum AutoInspectMode {
     NEVER,
     MINIMAL,
-    DEFAULT
+    FULL
 }
