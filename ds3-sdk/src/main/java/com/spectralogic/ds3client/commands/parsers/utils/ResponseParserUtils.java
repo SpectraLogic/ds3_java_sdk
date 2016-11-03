@@ -61,6 +61,15 @@ public final class ResponseParserUtils {
         return null;
     }
 
+    protected static String getRequestId(final Headers headers) {
+        final String requestId = getFirstHeaderValue(headers, "x-amz-request-id");
+        if (Guard.isStringNullOrEmpty(requestId)) {
+            LOG.error("Response headers does not contain x-amz-request-id");
+            return null;
+        }
+        return requestId;
+    }
+
     public static String getFirstHeaderValue(final Headers headers, final String key) {
         final List<String> valueList = headers.get(key);
         if (Guard.isNullOrEmpty(valueList)) {
@@ -113,14 +122,17 @@ public final class ResponseParserUtils {
             final WebResponse response,
             final int[] expectedStatusCodes) throws IOException {
         if (checkForManagementPortException(response.getStatusCode(), response.getHeaders())) {
-            return new FailedRequestUsingMgmtPortException(ResponseUtils.toImmutableIntList(expectedStatusCodes));
+            return new FailedRequestUsingMgmtPortException(
+                    ResponseUtils.toImmutableIntList(expectedStatusCodes),
+                    getRequestId(response.getHeaders()));
         }
         final String responseString = readResponseString(response);
         return new FailedRequestException(
                 ResponseUtils.toImmutableIntList(expectedStatusCodes),
                 response.getStatusCode(),
                 parseErrorResponse(responseString),
-                responseString);
+                responseString,
+                getRequestId(response.getHeaders()));
     }
 
     private static String readResponseString(final WebResponse response) throws IOException {
