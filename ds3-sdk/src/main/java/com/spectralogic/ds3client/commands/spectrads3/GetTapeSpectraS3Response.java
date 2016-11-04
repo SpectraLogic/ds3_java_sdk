@@ -16,38 +16,17 @@
 // This code is auto-generated, do not modify
 package com.spectralogic.ds3client.commands.spectrads3;
 
-import com.spectralogic.ds3client.networking.WebResponse;
-import java.io.IOException;
 import com.spectralogic.ds3client.models.Tape;
-import java.io.InputStream;
-import com.spectralogic.ds3client.serializer.XmlOutput;
+import com.spectralogic.ds3client.models.ChecksumType;
 import com.spectralogic.ds3client.commands.interfaces.AbstractResponse;
 
 public class GetTapeSpectraS3Response extends AbstractResponse {
+    
+    private final Tape tapeResult;
 
-    private Tape tapeResult;
-
-    public GetTapeSpectraS3Response(final WebResponse response) throws IOException {
-        super(response);
-    }
-
-    @Override
-    protected void processResponse() throws IOException {
-        try {
-            this.checkStatusCode(200);
-
-            switch (this.getStatusCode()) {
-            case 200:
-                try (final InputStream content = getResponse().getResponseStream()) {
-                    this.tapeResult = XmlOutput.fromXml(content, Tape.class);
-                }
-                break;
-            default:
-                assert false : "checkStatusCode should have made it impossible to reach this line.";
-            }
-        } finally {
-            this.getResponse().close();
-        }
+    public GetTapeSpectraS3Response(final Tape tapeResult, final String checksum, final ChecksumType.Type checksumType) {
+        super(checksum, checksumType);
+        this.tapeResult = tapeResult;
     }
 
     public Tape getTapeResult() {

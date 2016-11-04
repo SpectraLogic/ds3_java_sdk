@@ -16,12 +16,12 @@
 // This code is auto-generated, do not modify
 package com.spectralogic.ds3client.commands.spectrads3;
 
-import com.spectralogic.ds3client.networking.WebResponse;
-import java.io.IOException;
+import com.spectralogic.ds3client.models.MasterObjectList;
+import com.spectralogic.ds3client.models.ChecksumType;
 import com.spectralogic.ds3client.commands.interfaces.BulkResponse;
 
 public class PutBulkJobSpectraS3Response extends BulkResponse {
-    public PutBulkJobSpectraS3Response(final WebResponse response) throws IOException {
-        super(response);
+    public PutBulkJobSpectraS3Response(final MasterObjectList masterObjectListResult, final String checksum, final ChecksumType.Type checksumType) {
+        super(masterObjectListResult, checksum, checksumType);
     }
 }

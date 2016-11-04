@@ -16,41 +16,17 @@
 // This code is auto-generated, do not modify
 package com.spectralogic.ds3client.commands.spectrads3;
 
-import com.spectralogic.ds3client.networking.WebResponse;
-import java.io.IOException;
 import com.spectralogic.ds3client.models.TapeFailureList;
-import java.io.InputStream;
-import com.spectralogic.ds3client.serializer.XmlOutput;
+import com.spectralogic.ds3client.models.ChecksumType;
 import com.spectralogic.ds3client.commands.interfaces.AbstractResponse;
 
 public class FormatAllTapesSpectraS3Response extends AbstractResponse {
+    
+    private final TapeFailureList tapeFailureListResult;
 
-    private TapeFailureList tapeFailureListResult;
-
-    public FormatAllTapesSpectraS3Response(final WebResponse response) throws IOException {
-        super(response);
-    }
-
-    @Override
-    protected void processResponse() throws IOException {
-        try {
-            this.checkStatusCode(204, 207);
-
-            switch (this.getStatusCode()) {
-            case 204:
-                //Do nothing, payload is null
-                break;
-            case 207:
-                try (final InputStream content = getResponse().getResponseStream()) {
-                    this.tapeFailureListResult = XmlOutput.fromXml(content, TapeFailureList.class);
-                }
-                break;
-            default:
-                assert false : "checkStatusCode should have made it impossible to reach this line.";
-            }
-        } finally {
-            this.getResponse().close();
-        }
+    public FormatAllTapesSpectraS3Response(final TapeFailureList tapeFailureListResult, final String checksum, final ChecksumType.Type checksumType) {
+        super(checksum, checksumType);
+        this.tapeFailureListResult = tapeFailureListResult;
     }
 
     public TapeFailureList getTapeFailureListResult() {

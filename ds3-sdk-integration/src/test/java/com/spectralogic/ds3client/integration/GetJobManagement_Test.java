@@ -25,22 +25,10 @@ import com.spectralogic.ds3client.commands.GetObjectResponse;
 import com.spectralogic.ds3client.commands.PutObjectRequest;
 import com.spectralogic.ds3client.commands.spectrads3.GetJobSpectraS3Request;
 import com.spectralogic.ds3client.commands.spectrads3.GetJobSpectraS3Response;
-import com.spectralogic.ds3client.helpers.Ds3ClientHelpers;
-import com.spectralogic.ds3client.helpers.FailureEventListener;
-import com.spectralogic.ds3client.helpers.FileObjectGetter;
-import com.spectralogic.ds3client.helpers.FileObjectPutter;
-
-import com.spectralogic.ds3client.helpers.ObjectCompletedListener;
-
+import com.spectralogic.ds3client.helpers.*;
 import com.spectralogic.ds3client.helpers.events.FailureEvent;
-
 import com.spectralogic.ds3client.helpers.options.ReadJobOptions;
-import com.spectralogic.ds3client.integration.test.helpers.ABMTestHelper;
-import com.spectralogic.ds3client.integration.test.helpers.Ds3ClientShim;
-import com.spectralogic.ds3client.integration.test.helpers.Ds3ClientShimFactory;
-import com.spectralogic.ds3client.integration.test.helpers.Ds3ClientShimWithFailedChunkAllocation;
-import com.spectralogic.ds3client.integration.test.helpers.TempStorageIds;
-import com.spectralogic.ds3client.integration.test.helpers.TempStorageUtil;
+import com.spectralogic.ds3client.integration.test.helpers.*;
 import com.spectralogic.ds3client.models.ChecksumType;
 import com.spectralogic.ds3client.models.Contents;
 import com.spectralogic.ds3client.models.Priority;
@@ -48,7 +36,6 @@ import com.spectralogic.ds3client.models.bulk.Ds3Object;
 import com.spectralogic.ds3client.models.bulk.PartialDs3Object;
 import com.spectralogic.ds3client.models.common.Range;
 import com.spectralogic.ds3client.utils.ResourceUtils;
-import com.spectralogic.ds3client.IntValue;
 import org.apache.commons.io.FileUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -66,14 +53,16 @@ import java.nio.channels.WritableByteChannel;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.UUID;
 
 import static com.spectralogic.ds3client.integration.Util.RESOURCE_BASE_NAME;
 import static com.spectralogic.ds3client.integration.Util.deleteAllContents;
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.hamcrest.Matchers.notNullValue;
+import static org.junit.Assert.*;
 
 public class GetJobManagement_Test {
 
@@ -138,7 +127,8 @@ public class GetJobManagement_Test {
         final GetObjectResponse getObjectResponse = client.getObject(
                 new GetObjectRequest(BUCKET_NAME, "beowulf.txt", writeChannel));
 
-        assertThat(getObjectResponse.getStatusCode(), is(200));
+        assertThat(getObjectResponse, is(notNullValue()));
+        assertThat(getObjectResponse.getObjectSize(), is(notNullValue()));
     }
 
     @Test
@@ -150,7 +140,7 @@ public class GetJobManagement_Test {
         final GetJobSpectraS3Response jobSpectraS3Response = client
                 .getJobSpectraS3(new GetJobSpectraS3Request(readJob.getJobId()));
 
-        assertThat(jobSpectraS3Response.getStatusCode(), is(200));
+        assertThat(jobSpectraS3Response.getMasterObjectListResult(), is(notNullValue()));
     }
 
     @Test
@@ -181,7 +171,7 @@ public class GetJobManagement_Test {
             final GetJobSpectraS3Response jobSpectraS3Response = ds3ClientShim
                     .getJobSpectraS3(new GetJobSpectraS3Request(readJob.getJobId()));
 
-            assertThat(jobSpectraS3Response.getStatusCode(), is(200));
+            assertThat(jobSpectraS3Response.getMasterObjectListResult(), is(notNullValue()));
 
             readJob.transfer(new FileObjectGetter(tempDirectory));
 

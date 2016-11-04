@@ -16,38 +16,17 @@
 // This code is auto-generated, do not modify
 package com.spectralogic.ds3client.commands.spectrads3;
 
-import com.spectralogic.ds3client.networking.WebResponse;
-import java.io.IOException;
 import com.spectralogic.ds3client.models.TapeList;
-import java.io.InputStream;
-import com.spectralogic.ds3client.serializer.XmlOutput;
+import com.spectralogic.ds3client.models.ChecksumType;
 import com.spectralogic.ds3client.commands.interfaces.AbstractPaginationResponse;
 
 public class GetTapesSpectraS3Response extends AbstractPaginationResponse {
 
-    private TapeList tapeListResult;
+    private final TapeList tapeListResult;
 
-    public GetTapesSpectraS3Response(final WebResponse response) throws IOException {
-        super(response);
-    }
-
-    @Override
-    protected void processResponse() throws IOException {
-        try {
-            this.checkStatusCode(200);
-
-            switch (this.getStatusCode()) {
-            case 200:
-                try (final InputStream content = getResponse().getResponseStream()) {
-                    this.tapeListResult = XmlOutput.fromXml(content, TapeList.class);
-                }
-                break;
-            default:
-                assert false : "checkStatusCode should have made it impossible to reach this line.";
-            }
-        } finally {
-            this.getResponse().close();
-        }
+    public GetTapesSpectraS3Response(final TapeList tapeListResult, final Integer pagingTotalResultCount, final Integer pagingTruncated, final String checksum, final ChecksumType.Type checksumType) {
+        super(pagingTotalResultCount, pagingTruncated, checksum, checksumType);
+        this.tapeListResult = tapeListResult;
     }
 
     public TapeList getTapeListResult() {

@@ -16,38 +16,17 @@
 // This code is auto-generated, do not modify
 package com.spectralogic.ds3client.commands.spectrads3.notifications;
 
-import com.spectralogic.ds3client.networking.WebResponse;
-import java.io.IOException;
 import com.spectralogic.ds3client.models.PoolFailureNotificationRegistrationList;
-import java.io.InputStream;
-import com.spectralogic.ds3client.serializer.XmlOutput;
+import com.spectralogic.ds3client.models.ChecksumType;
 import com.spectralogic.ds3client.commands.interfaces.AbstractPaginationResponse;
 
 public class GetPoolFailureNotificationRegistrationsSpectraS3Response extends AbstractPaginationResponse {
 
-    private PoolFailureNotificationRegistrationList poolFailureNotificationRegistrationListResult;
+    private final PoolFailureNotificationRegistrationList poolFailureNotificationRegistrationListResult;
 
-    public GetPoolFailureNotificationRegistrationsSpectraS3Response(final WebResponse response) throws IOException {
-        super(response);
-    }
-
-    @Override
-    protected void processResponse() throws IOException {
-        try {
-            this.checkStatusCode(200);
-
-            switch (this.getStatusCode()) {
-            case 200:
-                try (final InputStream content = getResponse().getResponseStream()) {
-                    this.poolFailureNotificationRegistrationListResult = XmlOutput.fromXml(content, PoolFailureNotificationRegistrationList.class);
-                }
-                break;
-            default:
-                assert false : "checkStatusCode should have made it impossible to reach this line.";
-            }
-        } finally {
-            this.getResponse().close();
-        }
+    public GetPoolFailureNotificationRegistrationsSpectraS3Response(final PoolFailureNotificationRegistrationList poolFailureNotificationRegistrationListResult, final Integer pagingTotalResultCount, final Integer pagingTruncated, final String checksum, final ChecksumType.Type checksumType) {
+        super(pagingTotalResultCount, pagingTruncated, checksum, checksumType);
+        this.poolFailureNotificationRegistrationListResult = poolFailureNotificationRegistrationListResult;
     }
 
     public PoolFailureNotificationRegistrationList getPoolFailureNotificationRegistrationListResult() {

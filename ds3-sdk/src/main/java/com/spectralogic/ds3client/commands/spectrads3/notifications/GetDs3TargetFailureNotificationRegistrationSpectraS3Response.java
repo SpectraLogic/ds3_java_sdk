@@ -16,38 +16,17 @@
 // This code is auto-generated, do not modify
 package com.spectralogic.ds3client.commands.spectrads3.notifications;
 
-import com.spectralogic.ds3client.networking.WebResponse;
-import java.io.IOException;
 import com.spectralogic.ds3client.models.Ds3TargetFailureNotificationRegistration;
-import java.io.InputStream;
-import com.spectralogic.ds3client.serializer.XmlOutput;
+import com.spectralogic.ds3client.models.ChecksumType;
 import com.spectralogic.ds3client.commands.interfaces.AbstractResponse;
 
 public class GetDs3TargetFailureNotificationRegistrationSpectraS3Response extends AbstractResponse {
+    
+    private final Ds3TargetFailureNotificationRegistration ds3TargetFailureNotificationRegistrationResult;
 
-    private Ds3TargetFailureNotificationRegistration ds3TargetFailureNotificationRegistrationResult;
-
-    public GetDs3TargetFailureNotificationRegistrationSpectraS3Response(final WebResponse response) throws IOException {
-        super(response);
-    }
-
-    @Override
-    protected void processResponse() throws IOException {
-        try {
-            this.checkStatusCode(200);
-
-            switch (this.getStatusCode()) {
-            case 200:
-                try (final InputStream content = getResponse().getResponseStream()) {
-                    this.ds3TargetFailureNotificationRegistrationResult = XmlOutput.fromXml(content, Ds3TargetFailureNotificationRegistration.class);
-                }
-                break;
-            default:
-                assert false : "checkStatusCode should have made it impossible to reach this line.";
-            }
-        } finally {
-            this.getResponse().close();
-        }
+    public GetDs3TargetFailureNotificationRegistrationSpectraS3Response(final Ds3TargetFailureNotificationRegistration ds3TargetFailureNotificationRegistrationResult, final String checksum, final ChecksumType.Type checksumType) {
+        super(checksum, checksumType);
+        this.ds3TargetFailureNotificationRegistrationResult = ds3TargetFailureNotificationRegistrationResult;
     }
 
     public Ds3TargetFailureNotificationRegistration getDs3TargetFailureNotificationRegistrationResult() {

@@ -116,7 +116,7 @@ public class PutJobManagement_Test {
             final SeekableByteChannel beowulfChannel = new ResourceObjectPutter(RESOURCE_BASE_NAME).buildChannel("beowulf.txt");
             final PutObjectResponse putObjectResponse = client.putObject(new PutObjectRequest(BUCKET_NAME, "beowulf.txt",
                     beowulfChannel, Files.size(beowulfPath)));
-            assertThat(putObjectResponse.getStatusCode(), is(200));
+            assertThat(putObjectResponse, is(notNullValue()));
         } finally {
             deleteAllContents(client, BUCKET_NAME);
         }
@@ -231,7 +231,7 @@ public class PutJobManagement_Test {
 
             final CancelJobSpectraS3Response response = client
                     .cancelJobSpectraS3(new CancelJobSpectraS3Request(job.getJobId().toString()));
-            assertEquals(response.getStatusCode(), 204);
+            assertThat(response, is(notNullValue()));
 
             assertTrue(client.getActiveJobsSpectraS3(new GetActiveJobsSpectraS3Request())
                     .getActiveJobListResult().getActiveJobs().isEmpty());
@@ -279,7 +279,7 @@ public class PutJobManagement_Test {
 
             final TruncateJobSpectraS3Response truncateJobSpectraS3Response = client.truncateJobSpectraS3(
                     new TruncateJobSpectraS3Request(jobId.toString()));
-            assertThat(truncateJobSpectraS3Response.getStatusCode(), is(204));
+            assertThat(truncateJobSpectraS3Response, is(notNullValue()));
 
             final GetJobSpectraS3Response truncatedJob = client.getJobSpectraS3(new GetJobSpectraS3Request(jobId.toString()));
             assertEquals(truncatedJob.getMasterObjectListResult().getOriginalSizeInBytes(), Files.size(objPath1));
@@ -309,7 +309,7 @@ public class PutJobManagement_Test {
 
             final CancelJobSpectraS3Response responseWithForce = client
                     .cancelJobSpectraS3(new CancelJobSpectraS3Request(jobId.toString()));
-            assertEquals(responseWithForce.getStatusCode(), 204);
+            assertThat(responseWithForce, is(notNullValue()));
 
             //Allow for lag time before canceled job appears~1.5 seconds in unloaded system
             final long startTimeCanceledUpdate = System.nanoTime();
@@ -381,7 +381,7 @@ public class PutJobManagement_Test {
             final TruncateAllJobsSpectraS3Response truncateAllJobsSpectraS3Response = client
                     .truncateAllJobsSpectraS3(new TruncateAllJobsSpectraS3Request());
 
-            assertThat(truncateAllJobsSpectraS3Response.getStatusCode(), is(204));
+            assertThat(truncateAllJobsSpectraS3Response, is(notNullValue()));
 
             final GetJobSpectraS3Response truncatedJob1 = client.getJobSpectraS3(new GetJobSpectraS3Request(jobId1.toString()));
             assertEquals(truncatedJob1.getMasterObjectListResult().getOriginalSizeInBytes(), Files.size(objPath1));
@@ -508,7 +508,7 @@ public class PutJobManagement_Test {
             final GetJobChunkSpectraS3Response getJobChunkSpectraS3Response = client.getJobChunkSpectraS3(
                     new GetJobChunkSpectraS3Request(aJobChunkID));
 
-            assertThat(getJobChunkSpectraS3Response.getStatusCode(), is(200));
+            assertThat(getJobChunkSpectraS3Response.getObjectsResult(), is(notNullValue()));
 
         } finally {
             deleteAllContents(client, BUCKET_NAME);
@@ -542,11 +542,11 @@ public class PutJobManagement_Test {
         try {
             final PutBulkJobSpectraS3Response putBulkResponse = client.
                     putBulkJobSpectraS3(new PutBulkJobSpectraS3Request(BUCKET_NAME, Lists.newArrayList(new Ds3Object("test", 2))));
-            final UUID chunkUUID = putBulkResponse.getResult().getObjects().get(0).getChunkId();
+            final UUID chunkUUID = putBulkResponse.getMasterObjectList().getObjects().get(0).getChunkId();
             final AllocateJobChunkSpectraS3Response allocateResponse = client
                     .allocateJobChunkSpectraS3(new AllocateJobChunkSpectraS3Request(chunkUUID.toString()));
 
-            assertThat(allocateResponse.getStatusCode(), is(200));
+            assertThat(allocateResponse.getStatus(), is(AllocateJobChunkSpectraS3Response.Status.ALLOCATED));
 
         } finally {
             deleteAllContents(client, BUCKET_NAME);
@@ -559,7 +559,7 @@ public class PutJobManagement_Test {
                 .putObjectCachedNotificationRegistrationSpectraS3
                         (new PutObjectCachedNotificationRegistrationSpectraS3Request("test@test.test"));
 
-        assertThat(putNotificationResponse.getStatusCode(), is(201));
+        assertThat(putNotificationResponse.getS3ObjectCachedNotificationRegistrationResult(), is(notNullValue()));
     }
 
     @Test
@@ -573,7 +573,7 @@ public class PutJobManagement_Test {
                         (new GetObjectCachedNotificationRegistrationSpectraS3Request
                                 (putNotificationResponse.getS3ObjectCachedNotificationRegistrationResult().getId().toString())));
 
-        assertThat(getNotificationResponse.getStatusCode(), is(200));
+        assertThat(getNotificationResponse.getS3ObjectCachedNotificationRegistrationResult(), is(notNullValue()));
     }
 
     @Test
@@ -581,7 +581,7 @@ public class PutJobManagement_Test {
         final GetCompletedJobsSpectraS3Response getCompletedJobsResponse = client.
                 getCompletedJobsSpectraS3(new GetCompletedJobsSpectraS3Request());
 
-        assertThat(getCompletedJobsResponse.getStatusCode(), is(200));
+        assertThat(getCompletedJobsResponse.getCompletedJobListResult(), is(notNullValue()));
     }
 
     @Test
@@ -589,7 +589,7 @@ public class PutJobManagement_Test {
         final ClearAllCompletedJobsSpectraS3Response clearAllCompletedJobsResponse = client
                 .clearAllCompletedJobsSpectraS3(new ClearAllCompletedJobsSpectraS3Request());
 
-        assertThat(clearAllCompletedJobsResponse.getStatusCode(), is(204));
+        assertThat(clearAllCompletedJobsResponse, is(notNullValue()));
     }
 
     @Test
@@ -599,7 +599,7 @@ public class PutJobManagement_Test {
             final PutJobCreatedNotificationRegistrationSpectraS3Response response = client
                     .putJobCreatedNotificationRegistrationSpectraS3(new PutJobCreatedNotificationRegistrationSpectraS3Request("test@test.test"));
             notificationUUID = response.getJobCreatedNotificationRegistrationResult().getId();
-            assertThat(response.getStatusCode(), is(201));
+            assertThat(response.getJobCreatedNotificationRegistrationResult(), is(notNullValue()));
 
         } finally {
             if (notificationUUID != null) {
@@ -621,7 +621,7 @@ public class PutJobManagement_Test {
                     .getJobCreatedNotificationRegistrationSpectraS3(new
                             GetJobCreatedNotificationRegistrationSpectraS3Request(notificationUUID));
 
-            assertThat(response.getStatusCode(), is(200));
+            assertThat(response.getJobCreatedNotificationRegistrationResult(), is(notNullValue()));
 
         } finally {
             if (notificationUUID != null) {
@@ -640,7 +640,7 @@ public class PutJobManagement_Test {
         final DeleteJobCreatedNotificationRegistrationSpectraS3Response response = client
                 .deleteJobCreatedNotificationRegistrationSpectraS3(new DeleteJobCreatedNotificationRegistrationSpectraS3Request(notificationUUID));
 
-        assertThat(response.getStatusCode(), is(204));
+        assertThat(response, is(notNullValue()));
     }
 
     @Test
@@ -651,7 +651,7 @@ public class PutJobManagement_Test {
                     .putJobCompletedNotificationRegistrationSpectraS3(
                             new PutJobCompletedNotificationRegistrationSpectraS3Request("test@test.test"));
             notificationUUID = response.getJobCompletedNotificationRegistrationResult().getId();
-            assertThat(response.getStatusCode(), is(201));
+            assertThat(response.getJobCompletedNotificationRegistrationResult(), is(notNullValue()));
         } finally {
             if (notificationUUID != null) {
                 client.deleteJobCompletedNotificationRegistrationSpectraS3(
@@ -672,7 +672,7 @@ public class PutJobManagement_Test {
                     .getJobCompletedNotificationRegistrationSpectraS3(
                             new GetJobCompletedNotificationRegistrationSpectraS3Request(notificationUUID));
 
-            assertThat(response.getStatusCode(), is(200));
+            assertThat(response.getJobCompletedNotificationRegistrationResult(), is(notNullValue()));
 
         } finally {
             if (notificationUUID != null) {
@@ -692,7 +692,7 @@ public class PutJobManagement_Test {
                 .deleteJobCompletedNotificationRegistrationSpectraS3(
                         new DeleteJobCompletedNotificationRegistrationSpectraS3Request(notificationUUID));
 
-        assertThat(response.getStatusCode(), is(204));
+        assertThat(response, is(notNullValue()));
     }
 
     @Test
@@ -701,7 +701,7 @@ public class PutJobManagement_Test {
             final InitiateMultiPartUploadResponse multiPartUploadResponse = client.initiateMultiPartUpload(
                     new InitiateMultiPartUploadRequest(BUCKET_NAME, "beowulf"));
 
-            assertThat(multiPartUploadResponse.getStatusCode(), is(200));
+            assertThat(multiPartUploadResponse.getInitiateMultipartUploadResult(), is(notNullValue()));
         } catch (final FailedRequestException e) {
 
             assertThat(getCacheBytesAvailable(), lessThan(5000000000000L));
@@ -735,7 +735,7 @@ public class PutJobManagement_Test {
             final AbortMultiPartUploadResponse abortResponse = client.abortMultiPartUpload(
                     new AbortMultiPartUploadRequest(BUCKET_NAME, "beowulf", uuid));
 
-            assertThat(abortResponse.getStatusCode(), is(204));
+            assertThat(abortResponse, is(notNullValue()));
 
         } catch (final FailedRequestException e) {
 
@@ -752,7 +752,7 @@ public class PutJobManagement_Test {
             final ListMultiPartUploadPartsResponse response = client.listMultiPartUploadParts(
                     new ListMultiPartUploadPartsRequest(BUCKET_NAME, "beowulf", UUID.randomUUID()));
 
-            assertThat(response.getStatusCode(), is(200));
+            assertThat(response.getListPartsResult(), is(notNullValue()));
             assertTrue(response.getListPartsResult().getParts().isEmpty());
 
         } finally {
@@ -784,7 +784,7 @@ public class PutJobManagement_Test {
             final ListMultiPartUploadsResponse response = client.listMultiPartUploads(
                     new ListMultiPartUploadsRequest(BUCKET_NAME));
 
-            assertThat(response.getStatusCode(), is(200));
+            assertThat(response.getListMultiPartUploadsResult(), is(notNullValue()));
             assertTrue(response.getListMultiPartUploadsResult().getUploads().isEmpty());
 
         } finally {

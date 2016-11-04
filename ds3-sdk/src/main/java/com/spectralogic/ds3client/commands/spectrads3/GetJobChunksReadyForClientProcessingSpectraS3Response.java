@@ -16,75 +16,37 @@
 // This code is auto-generated, do not modify
 package com.spectralogic.ds3client.commands.spectrads3;
 
-import com.spectralogic.ds3client.networking.WebResponse;
-import java.io.IOException;
 import com.spectralogic.ds3client.models.MasterObjectList;
-import java.io.InputStream;
-import com.spectralogic.ds3client.serializer.XmlOutput;
+import com.spectralogic.ds3client.models.ChecksumType;
 import com.spectralogic.ds3client.commands.interfaces.AbstractResponse;
-import com.spectralogic.ds3client.exceptions.RetryAfterExpectedException;
-
-import static com.spectralogic.ds3client.utils.Guard.isNullOrEmpty;
 
 public class GetJobChunksReadyForClientProcessingSpectraS3Response extends AbstractResponse {
 
-    private MasterObjectList masterObjectListResult;
+    public enum Status { AVAILABLE, RETRYLATER }
+    
+    private final MasterObjectList masterObjectListResult;
 
-    public enum Status {
-        AVAILABLE, RETRYLATER
-    }
+    private final int retryAfterSeconds;
 
-    private Status status;
-    private int retryAfterSeconds;
+    private final Status status;
 
-    public Status getStatus() {
-        return this.status;
-    }
-
-    public int getRetryAfterSeconds() {
-        return this.retryAfterSeconds;
-    }
-
-    public GetJobChunksReadyForClientProcessingSpectraS3Response(final WebResponse response) throws IOException {
-        super(response);
-    }
-
-    @Override
-    protected void processResponse() throws IOException {
-        try (final WebResponse webResponse = this.getResponse()) {
-            this.checkStatusCode(200);
-
-            switch (this.getStatusCode()) {
-            case 200:
-                try (final InputStream content = webResponse.getResponseStream()) {
-                    this.masterObjectListResult = XmlOutput.fromXml(content, MasterObjectList.class);
-                    if (isNullOrEmpty(this.masterObjectListResult.getObjects())) {
-                        this.status = Status.RETRYLATER;
-                        this.retryAfterSeconds = parseRetryAfter(webResponse);
-                    } else {
-                        this.status = Status.AVAILABLE;
-                    }
-                }
-                break;
-            default:
-                assert false : "checkStatusCode should have made it impossible to reach this line.";
-            }
-        } finally {
-            this.getResponse().close();
-        }
-    }
-
-    private static int parseRetryAfter(final WebResponse webResponse) {
-        final String retryAfter = webResponse.getHeaders().get("Retry-After").get(0);
-        if (retryAfter == null) {
-            throw new RetryAfterExpectedException();
-        }
-        return Integer.parseInt(retryAfter);
+    public GetJobChunksReadyForClientProcessingSpectraS3Response(final MasterObjectList masterObjectListResult, final int retryAfterSeconds, final Status status, final String checksum, final ChecksumType.Type checksumType) {
+        super(checksum, checksumType);
+        this.masterObjectListResult = masterObjectListResult;
+        this.retryAfterSeconds = retryAfterSeconds;
+        this.status = status;
     }
 
     public MasterObjectList getMasterObjectListResult() {
         return this.masterObjectListResult;
     }
 
+    public int getRetryAfterSeconds() {
+        return this.retryAfterSeconds;
+    }
+
+    public Status getStatus() {
+        return this.status;
+    }
 
 }

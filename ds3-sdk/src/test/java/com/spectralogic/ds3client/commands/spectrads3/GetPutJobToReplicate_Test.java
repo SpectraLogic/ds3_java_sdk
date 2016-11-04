@@ -19,6 +19,7 @@ package com.spectralogic.ds3client.commands.spectrads3;
 
 import com.google.common.collect.ImmutableMap;
 import com.spectralogic.ds3client.MockedWebResponse;
+import com.spectralogic.ds3client.commands.parsers.GetJobToReplicateSpectraS3ResponseParser;
 import com.spectralogic.ds3client.networking.WebResponse;
 import org.junit.Test;
 
@@ -31,7 +32,8 @@ public class GetPutJobToReplicate_Test {
         final String responsePayload = "Some response payload";
         final ImmutableMap<String, String> emptyMap = ImmutableMap.of();
         final WebResponse webResponse = new MockedWebResponse(responsePayload, 200, emptyMap);
-        final GetJobToReplicateSpectraS3Response response = new GetJobToReplicateSpectraS3Response(webResponse);
-        response.processResponse();
+        final GetJobToReplicateSpectraS3Response response = new GetJobToReplicateSpectraS3ResponseParser()
+                .response(webResponse);
+        response.getStringResult();
     }
 }

@@ -16,38 +16,17 @@
 // This code is auto-generated, do not modify
 package com.spectralogic.ds3client.commands.spectrads3.notifications;
 
-import com.spectralogic.ds3client.networking.WebResponse;
-import java.io.IOException;
 import com.spectralogic.ds3client.models.S3ObjectCachedNotificationRegistrationList;
-import java.io.InputStream;
-import com.spectralogic.ds3client.serializer.XmlOutput;
+import com.spectralogic.ds3client.models.ChecksumType;
 import com.spectralogic.ds3client.commands.interfaces.AbstractPaginationResponse;
 
 public class GetObjectCachedNotificationRegistrationsSpectraS3Response extends AbstractPaginationResponse {
 
-    private S3ObjectCachedNotificationRegistrationList s3ObjectCachedNotificationRegistrationListResult;
+    private final S3ObjectCachedNotificationRegistrationList s3ObjectCachedNotificationRegistrationListResult;
 
-    public GetObjectCachedNotificationRegistrationsSpectraS3Response(final WebResponse response) throws IOException {
-        super(response);
-    }
-
-    @Override
-    protected void processResponse() throws IOException {
-        try {
-            this.checkStatusCode(200);
-
-            switch (this.getStatusCode()) {
-            case 200:
-                try (final InputStream content = getResponse().getResponseStream()) {
-                    this.s3ObjectCachedNotificationRegistrationListResult = XmlOutput.fromXml(content, S3ObjectCachedNotificationRegistrationList.class);
-                }
-                break;
-            default:
-                assert false : "checkStatusCode should have made it impossible to reach this line.";
-            }
-        } finally {
-            this.getResponse().close();
-        }
+    public GetObjectCachedNotificationRegistrationsSpectraS3Response(final S3ObjectCachedNotificationRegistrationList s3ObjectCachedNotificationRegistrationListResult, final Integer pagingTotalResultCount, final Integer pagingTruncated, final String checksum, final ChecksumType.Type checksumType) {
+        super(pagingTotalResultCount, pagingTruncated, checksum, checksumType);
+        this.s3ObjectCachedNotificationRegistrationListResult = s3ObjectCachedNotificationRegistrationListResult;
     }
 
     public S3ObjectCachedNotificationRegistrationList getS3ObjectCachedNotificationRegistrationListResult() {

@@ -124,7 +124,7 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
 
         return new WriteJobImpl(
                 this.client,
-                putBulkJobSpectraS3Response.getResult(),
+                putBulkJobSpectraS3Response.getMasterObjectList(),
                 this.retryAfter,
                 options.getChecksumType(),
                 this.objectTransferAttempts,
@@ -158,7 +158,7 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
 
         return new ReadJobImpl(
                 this.client,
-                getBulkJobSpectraS3Response.getResult(),
+                getBulkJobSpectraS3Response.getMasterObjectList(),
                 partialRanges,
                 this.objectTransferAttempts,
                 this.retryAfter,

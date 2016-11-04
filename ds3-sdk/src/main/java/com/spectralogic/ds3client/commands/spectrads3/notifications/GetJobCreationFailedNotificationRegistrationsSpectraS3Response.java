@@ -16,38 +16,17 @@
 // This code is auto-generated, do not modify
 package com.spectralogic.ds3client.commands.spectrads3.notifications;
 
-import com.spectralogic.ds3client.networking.WebResponse;
-import java.io.IOException;
 import com.spectralogic.ds3client.models.JobCreationFailedNotificationRegistrationList;
-import java.io.InputStream;
-import com.spectralogic.ds3client.serializer.XmlOutput;
+import com.spectralogic.ds3client.models.ChecksumType;
 import com.spectralogic.ds3client.commands.interfaces.AbstractPaginationResponse;
 
 public class GetJobCreationFailedNotificationRegistrationsSpectraS3Response extends AbstractPaginationResponse {
 
-    private JobCreationFailedNotificationRegistrationList jobCreationFailedNotificationRegistrationListResult;
+    private final JobCreationFailedNotificationRegistrationList jobCreationFailedNotificationRegistrationListResult;
 
-    public GetJobCreationFailedNotificationRegistrationsSpectraS3Response(final WebResponse response) throws IOException {
-        super(response);
-    }
-
-    @Override
-    protected void processResponse() throws IOException {
-        try {
-            this.checkStatusCode(200);
-
-            switch (this.getStatusCode()) {
-            case 200:
-                try (final InputStream content = getResponse().getResponseStream()) {
-                    this.jobCreationFailedNotificationRegistrationListResult = XmlOutput.fromXml(content, JobCreationFailedNotificationRegistrationList.class);
-                }
-                break;
-            default:
-                assert false : "checkStatusCode should have made it impossible to reach this line.";
-            }
-        } finally {
-            this.getResponse().close();
-        }
+    public GetJobCreationFailedNotificationRegistrationsSpectraS3Response(final JobCreationFailedNotificationRegistrationList jobCreationFailedNotificationRegistrationListResult, final Integer pagingTotalResultCount, final Integer pagingTruncated, final String checksum, final ChecksumType.Type checksumType) {
+        super(pagingTotalResultCount, pagingTruncated, checksum, checksumType);
+        this.jobCreationFailedNotificationRegistrationListResult = jobCreationFailedNotificationRegistrationListResult;
     }
 
     public JobCreationFailedNotificationRegistrationList getJobCreationFailedNotificationRegistrationListResult() {
