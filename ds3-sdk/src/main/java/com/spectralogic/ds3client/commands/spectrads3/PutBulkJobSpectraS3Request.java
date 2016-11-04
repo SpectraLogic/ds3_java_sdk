@@ -35,9 +35,13 @@ public class PutBulkJobSpectraS3Request extends BulkRequest {
 
     private boolean ignoreNamingConflicts;
 
+    private boolean implicitJobIdResolution;
+
     private boolean minimizeSpanningAcrossMedia;
 
     private String name;
+
+    private boolean verifyAfterWrite;
 
     // Constructor
     
@@ -77,6 +81,13 @@ public class PutBulkJobSpectraS3Request extends BulkRequest {
     }
 
 
+    public PutBulkJobSpectraS3Request withImplicitJobIdResolution(final boolean implicitJobIdResolution) {
+        this.implicitJobIdResolution = implicitJobIdResolution;
+        this.updateQueryParam("implicit_job_id_resolution", implicitJobIdResolution);
+        return this;
+    }
+
+
     public PutBulkJobSpectraS3Request withMaxUploadSize(final long maxUploadSize) {
         if (maxUploadSize > MIN_UPLOAD_SIZE_IN_BYTES) {
             this.getQueryParams().put("max_upload_size", Long.toString(maxUploadSize));
@@ -108,6 +119,13 @@ public class PutBulkJobSpectraS3Request extends BulkRequest {
     }
 
 
+    public PutBulkJobSpectraS3Request withVerifyAfterWrite(final boolean verifyAfterWrite) {
+        this.verifyAfterWrite = verifyAfterWrite;
+        this.updateQueryParam("verify_after_write", verifyAfterWrite);
+        return this;
+    }
+
+
 
     
     public boolean getAggregating() {
@@ -125,6 +143,11 @@ public class PutBulkJobSpectraS3Request extends BulkRequest {
     }
 
 
+    public boolean getImplicitJobIdResolution() {
+        return this.implicitJobIdResolution;
+    }
+
+
     public boolean getMinimizeSpanningAcrossMedia() {
         return this.minimizeSpanningAcrossMedia;
     }
@@ -132,6 +155,11 @@ public class PutBulkJobSpectraS3Request extends BulkRequest {
 
     public String getName() {
         return this.name;
+    }
+
+
+    public boolean getVerifyAfterWrite() {
+        return this.verifyAfterWrite;
     }
 
 

@@ -16,21 +16,21 @@
 // This code is auto-generated, do not modify
 package com.spectralogic.ds3client.commands.spectrads3;
 
-import com.spectralogic.ds3client.models.PhysicalPlacement;
+import com.spectralogic.ds3client.models.S3ObjectList;
 import com.spectralogic.ds3client.models.ChecksumType;
-import com.spectralogic.ds3client.commands.interfaces.AbstractResponse;
+import com.spectralogic.ds3client.commands.interfaces.AbstractPaginationResponse;
 
-public class GetSuspectObjectsSpectraS3Response extends AbstractResponse {
-    
-    private final PhysicalPlacement physicalPlacementResult;
+public class GetSuspectObjectsSpectraS3Response extends AbstractPaginationResponse {
 
-    public GetSuspectObjectsSpectraS3Response(final PhysicalPlacement physicalPlacementResult, final String checksum, final ChecksumType.Type checksumType) {
-        super(checksum, checksumType);
-        this.physicalPlacementResult = physicalPlacementResult;
+    private final S3ObjectList s3ObjectListResult;
+
+    public GetSuspectObjectsSpectraS3Response(final S3ObjectList s3ObjectListResult, final Integer pagingTotalResultCount, final Integer pagingTruncated, final String checksum, final ChecksumType.Type checksumType) {
+        super(pagingTotalResultCount, pagingTruncated, checksum, checksumType);
+        this.s3ObjectListResult = s3ObjectListResult;
     }
 
-    public PhysicalPlacement getPhysicalPlacementResult() {
-        return this.physicalPlacementResult;
+    public S3ObjectList getS3ObjectListResult() {
+        return this.s3ObjectListResult;
     }
 
 }
