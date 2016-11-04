@@ -68,11 +68,17 @@ public class ActiveJob {
     @JsonProperty("Rechunked")
     private Date rechunked;
 
+    @JsonProperty("Replicating")
+    private boolean replicating;
+
     @JsonProperty("RequestType")
     private JobRequestType requestType;
 
     @JsonProperty("Truncated")
     private boolean truncated;
+
+    @JsonProperty("TruncatedDueToTimeout")
+    private boolean truncatedDueToTimeout;
 
     @JsonProperty("UserId")
     private UUID userId;
@@ -210,6 +216,15 @@ public class ActiveJob {
     }
 
 
+    public boolean getReplicating() {
+        return this.replicating;
+    }
+
+    public void setReplicating(final boolean replicating) {
+        this.replicating = replicating;
+    }
+
+
     public JobRequestType getRequestType() {
         return this.requestType;
     }
@@ -225,6 +240,15 @@ public class ActiveJob {
 
     public void setTruncated(final boolean truncated) {
         this.truncated = truncated;
+    }
+
+
+    public boolean getTruncatedDueToTimeout() {
+        return this.truncatedDueToTimeout;
+    }
+
+    public void setTruncatedDueToTimeout(final boolean truncatedDueToTimeout) {
+        this.truncatedDueToTimeout = truncatedDueToTimeout;
     }
 
 
