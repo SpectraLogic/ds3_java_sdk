@@ -1116,6 +1116,8 @@
                         <Param Name="AutoActivateTimeoutInMins" Type="java.lang.Integer"/>
                         <Param Name="AutoInspect" Type="com.spectralogic.s3.common.dao.domain.ds3.AutoInspectMode"/>
                         <Param Name="DefaultImportConflictResolutionMode" Type="com.spectralogic.s3.common.dao.domain.shared.ImportConflictResolutionMode"/>
+                        <Param Name="DefaultVerifyDataAfterImport" Type="com.spectralogic.s3.common.dao.domain.ds3.BlobStoreTaskPriority"/>
+                        <Param Name="DefaultVerifyDataPriorToImport" Type="boolean"/>
                         <Param Name="PartiallyVerifyLastPercentOfTapes" Type="java.lang.Integer"/>
                         <Param Name="UnavailableMediaPolicy" Type="com.spectralogic.s3.common.dao.domain.ds3.UnavailableMediaUsagePolicy"/>
                         <Param Name="UnavailablePoolMaxJobRetryInMins" Type="int"/>
@@ -1143,7 +1145,7 @@
                         </ResponseTypes>
                     </ResponseCode>
                 </ResponseCodes>
-                <Version>1.2C808ED0F8C0028BC8FB44CE3589E21F</Version>
+                <Version>1.C554C793C965F9B60414FF9092DD6907</Version>
             </RequestHandler>
             <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.datapolicy.CreateDataPersistenceRuleRequestHandler">
                 <Request Action="CREATE" HttpVerb="POST" IncludeIdInPath="false" Resource="DATA_PERSISTENCE_RULE" ResourceType="NON_SINGLETON">
@@ -1493,6 +1495,12 @@
                             <ResponseType Type="com.spectralogic.s3.server.domain.HttpErrorResultApiBean"/>
                         </ResponseTypes>
                     </ResponseCode>
+                    <ResponseCode>
+                        <Code>409</Code>
+                        <ResponseTypes>
+                            <ResponseType Type="com.spectralogic.s3.server.domain.HttpErrorResultApiBean"/>
+                        </ResponseTypes>
+                    </ResponseCode>
                 </ResponseCodes>
                 <Version>1.B030FA7F19336B7B8C64BAF6E6F6346B</Version>
             </RequestHandler>
@@ -1516,6 +1524,12 @@
                             <ResponseType Type="com.spectralogic.s3.server.domain.HttpErrorResultApiBean"/>
                         </ResponseTypes>
                     </ResponseCode>
+                    <ResponseCode>
+                        <Code>409</Code>
+                        <ResponseTypes>
+                            <ResponseType Type="com.spectralogic.s3.server.domain.HttpErrorResultApiBean"/>
+                        </ResponseTypes>
+                    </ResponseCode>
                 </ResponseCodes>
                 <Version>1.3970B4F7B6EEDF3D16C14B1FE8D74EA5</Version>
             </RequestHandler>
@@ -1535,6 +1549,12 @@
                     </ResponseCode>
                     <ResponseCode>
                         <Code>400</Code>
+                        <ResponseTypes>
+                            <ResponseType Type="com.spectralogic.s3.server.domain.HttpErrorResultApiBean"/>
+                        </ResponseTypes>
+                    </ResponseCode>
+                    <ResponseCode>
+                        <Code>409</Code>
                         <ResponseTypes>
                             <ResponseType Type="com.spectralogic.s3.server.domain.HttpErrorResultApiBean"/>
                         </ResponseTypes>
@@ -2629,12 +2649,6 @@
                         <Code>200</Code>
                         <ResponseTypes>
                             <ResponseType Type="java.lang.String"/>
-                        </ResponseTypes>
-                    </ResponseCode>
-                    <ResponseCode>
-                        <Code>409</Code>
-                        <ResponseTypes>
-                            <ResponseType Type="com.spectralogic.s3.server.domain.HttpErrorResultApiBean"/>
                         </ResponseTypes>
                     </ResponseCode>
                 </ResponseCodes>
@@ -6048,6 +6062,23 @@
                 </ResponseCodes>
                 <Version>1.38E575DC2AF4B7D7CF3203E6B7BDA74D</Version>
             </RequestHandler>
+            <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.target.GetBlobsOnDs3TargetRequestHandler">
+                <Request Action="SHOW" HttpVerb="GET" IncludeIdInPath="true" Operation="GET_PHYSICAL_PLACEMENT" Resource="DS3_TARGET" ResourceType="NON_SINGLETON">
+                    <OptionalQueryParams/>
+                    <RequiredQueryParams>
+                        <Param Name="Operation" Type="com.spectralogic.s3.server.request.rest.RestOperationType"/>
+                    </RequiredQueryParams>
+                </Request>
+                <ResponseCodes>
+                    <ResponseCode>
+                        <Code>200</Code>
+                        <ResponseTypes>
+                            <ResponseType Type="com.spectralogic.s3.common.platform.domain.BlobApiBeansContainer"/>
+                        </ResponseTypes>
+                    </ResponseCode>
+                </ResponseCodes>
+                <Version>1.680A6E46ADDF391752A3A89F95D73448</Version>
+            </RequestHandler>
             <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.target.GetDs3TargetDataPoliciesRequestHandler">
                 <Request Action="SHOW" HttpVerb="GET" IncludeIdInPath="true" Resource="DS3_TARGET_DATA_POLICIES" ResourceType="NON_SINGLETON">
                     <OptionalQueryParams/>
@@ -6839,6 +6870,21 @@
                             </Annotation>
                         </Annotations>
                     </Element>
+                    <Element Name="Empty" Type="java.lang.Boolean">
+                        <Annotations>
+                            <Annotation Name="com.spectralogic.util.bean.lang.Optional">
+                                <AnnotationElements/>
+                            </Annotation>
+                            <Annotation Name="com.spectralogic.util.db.lang.shared.ExcludeFromDatabasePersistence">
+                                <AnnotationElements/>
+                            </Annotation>
+                            <Annotation Name="com.spectralogic.util.marshal.ExcludeFromMarshaler">
+                                <AnnotationElements>
+                                    <AnnotationElement Name="Value" Value="VALUE_IS_NULL" ValueType="com.spectralogic.util.marshal.ExcludeFromMarshaler$When"/>
+                                </AnnotationElements>
+                            </Annotation>
+                        </Annotations>
+                    </Element>
                     <Element Name="Id" Type="java.util.UUID">
                         <Annotations/>
                     </Element>
@@ -7266,6 +7312,22 @@
                             <Annotation Name="com.spectralogic.util.bean.lang.DefaultEnumValue">
                                 <AnnotationElements>
                                     <AnnotationElement Name="Value" Value="CANCEL" ValueType="java.lang.String"/>
+                                </AnnotationElements>
+                            </Annotation>
+                        </Annotations>
+                    </Element>
+                    <Element Name="DefaultVerifyDataAfterImport" Type="com.spectralogic.s3.common.dao.domain.ds3.BlobStoreTaskPriority">
+                        <Annotations>
+                            <Annotation Name="com.spectralogic.util.bean.lang.Optional">
+                                <AnnotationElements/>
+                            </Annotation>
+                        </Annotations>
+                    </Element>
+                    <Element Name="DefaultVerifyDataPriorToImport" Type="boolean">
+                        <Annotations>
+                            <Annotation Name="com.spectralogic.util.bean.lang.DefaultBooleanValue">
+                                <AnnotationElements>
+                                    <AnnotationElement Name="Value" Value="true" ValueType="java.lang.Boolean"/>
                                 </AnnotationElements>
                             </Annotation>
                         </Annotations>
@@ -7886,10 +7948,28 @@
                             </Annotation>
                         </Annotations>
                     </Element>
+                    <Element Name="Replicating" Type="boolean">
+                        <Annotations>
+                            <Annotation Name="com.spectralogic.util.bean.lang.DefaultBooleanValue">
+                                <AnnotationElements>
+                                    <AnnotationElement Name="Value" Value="false" ValueType="java.lang.Boolean"/>
+                                </AnnotationElements>
+                            </Annotation>
+                        </Annotations>
+                    </Element>
                     <Element Name="RequestType" Type="com.spectralogic.s3.common.dao.domain.ds3.JobRequestType">
                         <Annotations/>
                     </Element>
                     <Element Name="Truncated" Type="boolean">
+                        <Annotations>
+                            <Annotation Name="com.spectralogic.util.bean.lang.DefaultBooleanValue">
+                                <AnnotationElements>
+                                    <AnnotationElement Name="Value" Value="false" ValueType="java.lang.Boolean"/>
+                                </AnnotationElements>
+                            </Annotation>
+                        </Annotations>
+                    </Element>
+                    <Element Name="TruncatedDueToTimeout" Type="boolean">
                         <Annotations>
                             <Annotation Name="com.spectralogic.util.bean.lang.DefaultBooleanValue">
                                 <AnnotationElements>
@@ -8551,7 +8631,7 @@
                             <Property Name="Severity" Value="CRITICAL" ValueType="com.spectralogic.s3.common.dao.domain.shared.Severity"/>
                         </Properties>
                     </EnumConstant>
-                    <EnumConstant Name="SUSPECTED_DATA_LOSS_REQUIRES_USER_CONFIRMATION">
+                    <EnumConstant Name="CRITICAL_DATA_VERIFICATION_ERROR_REQUIRES_USER_CONFIRMATION">
                         <Properties>
                             <Property Name="Severity" Value="ALERT" ValueType="com.spectralogic.s3.common.dao.domain.shared.Severity"/>
                         </Properties>
@@ -11390,6 +11470,16 @@
                             <Property Name="TapeCommandAllowed" Value="false" ValueType="boolean"/>
                         </Properties>
                     </EnumConstant>
+                    <EnumConstant Name="CANNOT_FORMAT_DUE_TO_WRITE_PROTECTION">
+                        <Properties>
+                            <Property Name="CancellableToPreviousState" Value="false" ValueType="boolean"/>
+                            <Property Name="InspectionAllowed" Value="false" ValueType="boolean"/>
+                            <Property Name="LoadIntoDriveAllowed" Value="false" ValueType="boolean"/>
+                            <Property Name="PhysicallyPresent" Value="true" ValueType="boolean"/>
+                            <Property Name="PreviousStateTracked" Value="false" ValueType="boolean"/>
+                            <Property Name="TapeCommandAllowed" Value="false" ValueType="boolean"/>
+                        </Properties>
+                    </EnumConstant>
                     <EnumConstant Name="SERIAL_NUMBER_MISMATCH">
                         <Properties>
                             <Property Name="CancellableToPreviousState" Value="true" ValueType="boolean"/>
@@ -12697,8 +12787,13 @@
                             </Annotation>
                         </Annotations>
                     </Element>
-                    <Element Name="EntirelyInCache" Type="boolean">
+                    <Element Name="EntirelyInCache" Type="java.lang.Boolean">
                         <Annotations>
+                            <Annotation Name="com.spectralogic.util.marshal.ExcludeFromMarshaler">
+                                <AnnotationElements>
+                                    <AnnotationElement Name="Value" Value="VALUE_IS_NULL" ValueType="com.spectralogic.util.marshal.ExcludeFromMarshaler$When"/>
+                                </AnnotationElements>
+                            </Annotation>
                             <Annotation Name="com.spectralogic.util.marshal.MarshalXmlAsAttribute">
                                 <AnnotationElements/>
                             </Annotation>
@@ -12886,8 +12981,13 @@
                             </Annotation>
                         </Annotations>
                     </Element>
-                    <Element Name="EntirelyInCache" Type="boolean">
+                    <Element Name="EntirelyInCache" Type="java.lang.Boolean">
                         <Annotations>
+                            <Annotation Name="com.spectralogic.util.marshal.ExcludeFromMarshaler">
+                                <AnnotationElements>
+                                    <AnnotationElement Name="Value" Value="VALUE_IS_NULL" ValueType="com.spectralogic.util.marshal.ExcludeFromMarshaler$When"/>
+                                </AnnotationElements>
+                            </Annotation>
                             <Annotation Name="com.spectralogic.util.marshal.MarshalXmlAsAttribute">
                                 <AnnotationElements/>
                             </Annotation>

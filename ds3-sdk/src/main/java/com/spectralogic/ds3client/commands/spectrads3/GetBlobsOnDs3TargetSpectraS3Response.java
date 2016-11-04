@@ -14,10 +14,23 @@
  */
 
 // This code is auto-generated, do not modify
-package com.spectralogic.ds3client.models;
+package com.spectralogic.ds3client.commands.spectrads3;
 
-public enum SystemFailureType {
-    RECONCILE_TAPE_ENVIRONMENT_FAILED,
-    RECONCILE_POOL_ENVIRONMENT_FAILED,
-    CRITICAL_DATA_VERIFICATION_ERROR_REQUIRES_USER_CONFIRMATION
+import com.spectralogic.ds3client.models.BulkObjectList;
+import com.spectralogic.ds3client.models.ChecksumType;
+import com.spectralogic.ds3client.commands.interfaces.AbstractResponse;
+
+public class GetBlobsOnDs3TargetSpectraS3Response extends AbstractResponse {
+    
+    private final BulkObjectList bulkObjectListResult;
+
+    public GetBlobsOnDs3TargetSpectraS3Response(final BulkObjectList bulkObjectListResult, final String checksum, final ChecksumType.Type checksumType) {
+        super(checksum, checksumType);
+        this.bulkObjectListResult = bulkObjectListResult;
+    }
+
+    public BulkObjectList getBulkObjectListResult() {
+        return this.bulkObjectListResult;
+    }
+
 }

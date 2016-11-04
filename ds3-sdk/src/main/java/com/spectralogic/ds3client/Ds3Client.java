@@ -1866,6 +1866,13 @@ public interface Ds3Client extends Closeable {
     ForceTargetEnvironmentRefreshSpectraS3Response forceTargetEnvironmentRefreshSpectraS3(final ForceTargetEnvironmentRefreshSpectraS3Request request)
             throws IOException;
 
+    @ResponsePayloadModel("BulkObjectList")
+    @Action("SHOW")
+    @Resource("DS3_TARGET")
+    
+    GetBlobsOnDs3TargetSpectraS3Response getBlobsOnDs3TargetSpectraS3(final GetBlobsOnDs3TargetSpectraS3Request request)
+            throws IOException;
+
     @ResponsePayloadModel("DataPolicyList")
     @Action("SHOW")
     @Resource("DS3_TARGET_DATA_POLICIES")
