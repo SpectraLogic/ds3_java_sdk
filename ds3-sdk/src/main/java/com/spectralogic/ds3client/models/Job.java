@@ -20,6 +20,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import java.lang.String;
+import java.lang.Boolean;
 import java.util.UUID;
 import java.util.List;
 import java.util.ArrayList;
@@ -46,7 +47,7 @@ public class Job {
     private long completedSizeInBytes;
 
     @JacksonXmlProperty(isAttribute = true, localName = "EntirelyInCache")
-    private boolean entirelyInCache;
+    private Boolean entirelyInCache;
 
     @JacksonXmlProperty(isAttribute = true, localName = "JobId")
     private UUID jobId;
@@ -134,11 +135,11 @@ public class Job {
     }
 
 
-    public boolean getEntirelyInCache() {
+    public Boolean getEntirelyInCache() {
         return this.entirelyInCache;
     }
 
-    public void setEntirelyInCache(final boolean entirelyInCache) {
+    public void setEntirelyInCache(final Boolean entirelyInCache) {
         this.entirelyInCache = entirelyInCache;
     }
 

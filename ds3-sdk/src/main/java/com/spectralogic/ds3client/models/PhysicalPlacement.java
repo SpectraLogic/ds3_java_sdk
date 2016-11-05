@@ -26,6 +26,10 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 public class PhysicalPlacement {
 
     // Variables
+    @JsonProperty("AzureTargets")
+    @JacksonXmlElementWrapper(useWrapping = true)
+    private List<AzureTarget> azureTargets = new ArrayList<>();
+
     @JsonProperty("Ds3Targets")
     @JacksonXmlElementWrapper(useWrapping = true)
     private List<Ds3Target> ds3Targets = new ArrayList<>();
@@ -33,6 +37,10 @@ public class PhysicalPlacement {
     @JsonProperty("Pools")
     @JacksonXmlElementWrapper(useWrapping = true)
     private List<Pool> pools = new ArrayList<>();
+
+    @JsonProperty("S3Targets")
+    @JacksonXmlElementWrapper(useWrapping = true)
+    private List<S3Target> s3Targets = new ArrayList<>();
 
     @JsonProperty("Tapes")
     @JacksonXmlElementWrapper(useWrapping = true)
@@ -45,6 +53,15 @@ public class PhysicalPlacement {
 
     // Getters and Setters
     
+    public List<AzureTarget> getAzureTargets() {
+        return this.azureTargets;
+    }
+
+    public void setAzureTargets(final List<AzureTarget> azureTargets) {
+        this.azureTargets = azureTargets;
+    }
+
+
     public List<Ds3Target> getDs3Targets() {
         return this.ds3Targets;
     }
@@ -60,6 +77,15 @@ public class PhysicalPlacement {
 
     public void setPools(final List<Pool> pools) {
         this.pools = pools;
+    }
+
+
+    public List<S3Target> getS3Targets() {
+        return this.s3Targets;
+    }
+
+    public void setS3Targets(final List<S3Target> s3Targets) {
+        this.s3Targets = s3Targets;
     }
 
 
