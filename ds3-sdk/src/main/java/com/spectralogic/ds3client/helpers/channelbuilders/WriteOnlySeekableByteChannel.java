@@ -25,6 +25,8 @@ import java.nio.channels.WritableByteChannel;
 public class WriteOnlySeekableByteChannel implements SeekableByteChannel {
 
     private final WritableByteChannel channel;
+    private int size = 0;
+    private int position = 0;
 
     public WriteOnlySeekableByteChannel(final WritableByteChannel channel) {
         this.channel = channel;
@@ -41,22 +43,27 @@ public class WriteOnlySeekableByteChannel implements SeekableByteChannel {
 
     @Override
     public int write(ByteBuffer src) throws IOException {
-        return channel.write(src);
+        size = channel.write(src);
+        position += size;
+        return size;
     }
 
     @Override
     public long position() throws IOException {
-        throw new NotImplementedException();
+        return position;
     }
 
     @Override
     public SeekableByteChannel position(long newPosition) throws IOException {
+        if (newPosition == this.position) {
+            return this;
+        }
         throw new NotImplementedException();
     }
 
     @Override
     public long size() throws IOException {
-        throw new NotImplementedException();
+        return size;
     }
 
     @Override
