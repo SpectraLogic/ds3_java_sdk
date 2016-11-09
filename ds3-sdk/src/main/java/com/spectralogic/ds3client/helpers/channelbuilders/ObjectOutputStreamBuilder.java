@@ -23,6 +23,11 @@ import java.nio.channels.Channels;
 import java.nio.channels.SeekableByteChannel;
 import java.nio.channels.WritableByteChannel;
 
+/**
+ * Writes a file to an output stream to be used when performing a read job with
+ * {@link Ds3ClientHelpers#startReadJob(String, Iterable)} and performing the
+ * transfer with {@link Ds3ClientHelpers.Job#transfer(Ds3ClientHelpers.ObjectChannelBuilder)}
+ */
 public abstract class ObjectOutputStreamBuilder implements Ds3ClientHelpers.ObjectChannelBuilder {
 
     public abstract OutputStream buildOutputStream(final String key) throws IOException;
