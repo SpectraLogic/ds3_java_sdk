@@ -25,8 +25,8 @@ import static org.junit.Assert.assertThat;
 
 public class ObjectOutputStreamBuilder_Test {
 
-    private final String content = "some text";
-    private final byte[] contentBytes = content.getBytes();
+    private static final String content = "some text";
+    private static final byte[] contentBytes = content.getBytes();
 
     @Test
     public void testConversion() throws IOException {
