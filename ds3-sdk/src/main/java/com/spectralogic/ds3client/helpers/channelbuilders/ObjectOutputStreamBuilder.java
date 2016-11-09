@@ -25,10 +25,10 @@ import java.nio.channels.WritableByteChannel;
 
 public abstract class ObjectOutputStreamBuilder implements Ds3ClientHelpers.ObjectChannelBuilder {
 
-    public abstract OutputStream buildOutputStream(String key) throws IOException;
+    public abstract OutputStream buildOutputStream(final String key) throws IOException;
 
     @Override
-    public SeekableByteChannel buildChannel(String key) throws IOException {
+    public SeekableByteChannel buildChannel(final String key) throws IOException {
         final OutputStream outputStream = buildOutputStream(key);
         final WritableByteChannel channel = Channels.newChannel(outputStream); 
         return new WriteOnlySeekableByteChannel(channel);
