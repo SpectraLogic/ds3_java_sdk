@@ -23,6 +23,11 @@ import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 import java.nio.channels.SeekableByteChannel;
 
+/**
+ * Writes a file to an input stream to be used when performing a write job with
+ * {@link Ds3ClientHelpers#startWriteJob(String, Iterable)} and performing the
+ * transfer with {@link Ds3ClientHelpers.Job#transfer(Ds3ClientHelpers.ObjectChannelBuilder)}
+ */
 public abstract class ObjectInputStreamBuilder implements Ds3ClientHelpers.ObjectChannelBuilder {
 
     public abstract InputStream buildInputStream(final String key);
