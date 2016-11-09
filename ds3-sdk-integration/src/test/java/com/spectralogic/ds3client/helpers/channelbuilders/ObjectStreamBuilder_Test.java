@@ -70,7 +70,7 @@ public class ObjectStreamBuilder_Test {
         job.transfer(new ObjectInputStreamBuilder() {
 
             @Override
-            public InputStream buildInputStream(String key) {
+            public InputStream buildInputStream(final String key) {
                 return new ByteArrayInputStream(OBJ_BYTES);
             }
         });
@@ -102,7 +102,7 @@ public class ObjectStreamBuilder_Test {
         job.transfer(new ObjectOutputStreamBuilder() {
 
             @Override
-            public OutputStream buildOutputStream(String key) throws IOException {
+            public OutputStream buildOutputStream(final String key) throws IOException {
                 return stream;
             }
         });

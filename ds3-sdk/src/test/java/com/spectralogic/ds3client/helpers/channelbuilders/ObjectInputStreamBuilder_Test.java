@@ -25,15 +25,15 @@ import static org.junit.Assert.assertThat;
 
 public class ObjectInputStreamBuilder_Test {
 
-    private final String content = "some text";
-    private final byte[] contentBytes = content.getBytes();
+    private static final String content = "some text";
+    private static final byte[] contentBytes = content.getBytes();
 
     @Test
     public void testConversion() throws IOException {
         final StreamObjectPutter putter = new StreamObjectPutter(contentBytes);
         final InputStream result = putter.buildInputStream("key");
         assertThat(result.available(), is(contentBytes.length));
-        for (byte contentByte : contentBytes) {
+        for (final byte contentByte : contentBytes) {
             assertThat(result.read(), is((int) contentByte));
         }
     }

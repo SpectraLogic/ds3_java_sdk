@@ -37,12 +37,12 @@ public class WriteOnlySeekableByteChannel implements SeekableByteChannel {
     }
 
     @Override
-    public int read(ByteBuffer dst) throws IOException {
+    public int read(final ByteBuffer dst) throws IOException {
         throw new NotImplementedException();
     }
 
     @Override
-    public int write(ByteBuffer src) throws IOException {
+    public int write(final ByteBuffer src) throws IOException {
         size = channel.write(src);
         position += size;
         return size;
@@ -54,7 +54,7 @@ public class WriteOnlySeekableByteChannel implements SeekableByteChannel {
     }
 
     @Override
-    public SeekableByteChannel position(long newPosition) throws IOException {
+    public SeekableByteChannel position(final long newPosition) throws IOException {
         if (newPosition == this.position) {
             return this;
         }
@@ -67,7 +67,7 @@ public class WriteOnlySeekableByteChannel implements SeekableByteChannel {
     }
 
     @Override
-    public SeekableByteChannel truncate(long size) throws IOException {
+    public SeekableByteChannel truncate(final long size) throws IOException {
         throw new NotImplementedException();
     }
 
