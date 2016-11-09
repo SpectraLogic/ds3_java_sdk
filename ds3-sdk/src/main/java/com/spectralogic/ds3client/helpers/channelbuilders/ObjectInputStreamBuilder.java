@@ -25,10 +25,10 @@ import java.nio.channels.SeekableByteChannel;
 
 public abstract class ObjectInputStreamBuilder implements Ds3ClientHelpers.ObjectChannelBuilder {
 
-    public abstract InputStream buildInputStream(String key);
+    public abstract InputStream buildInputStream(final String key);
 
     @Override
-    public SeekableByteChannel buildChannel(String key) throws IOException {
+    public SeekableByteChannel buildChannel(final String key) throws IOException {
         final InputStream inputStream = buildInputStream(key);
         final ReadableByteChannel channel = Channels.newChannel(inputStream);
         return new ReadOnlySeekableByteChannel(channel);
