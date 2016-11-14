@@ -15,26 +15,23 @@
 
 package com.spectralogic.ds3client.diagnostics;
 
+import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3client.Ds3Client;
-import com.spectralogic.ds3client.commands.spectrads3.*;
+import com.spectralogic.ds3client.commands.spectrads3.GetCacheStateSpectraS3Request;
+import com.spectralogic.ds3client.commands.spectrads3.GetCacheStateSpectraS3Response;
+import com.spectralogic.ds3client.commands.spectrads3.GetTapesSpectraS3Request;
+import com.spectralogic.ds3client.commands.spectrads3.GetTapesSpectraS3Response;
+import com.spectralogic.ds3client.exceptions.NoCacheFileSystemException;
 import com.spectralogic.ds3client.models.CacheFilesystemInformation;
 import com.spectralogic.ds3client.models.Tape;
 import com.spectralogic.ds3client.models.TapeState;
 import com.spectralogic.ds3client.utils.Guard;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import javax.annotation.Nullable;
 import java.io.IOException;
 import java.util.List;
-import java.util.UUID;
+import java.util.Optional;
 
 public class Ds3DiagnosticsImpl extends Ds3Diagnostics {
-
-    private static final Logger LOG = LoggerFactory.getLogger(Ds3DiagnosticsImpl.class);
-
-    /** The amount of file cache utilization that triggers a warning */
-    private static final double CACHE_UTILIZATION_WARNING_LEVEL = 0.95;
 
     private final Ds3Client client;
 
@@ -42,46 +39,57 @@ public class Ds3DiagnosticsImpl extends Ds3Diagnostics {
         this.client = client;
     }
 
-
     @Override
-    public void checkCacheAvailability() throws IOException {
+    public Optional<ImmutableList<CacheFilesystemInformation>> getCacheNearCapacity() throws IOException {
         final GetCacheStateSpectraS3Response response = client
                 .getCacheStateSpectraS3(new GetCacheStateSpectraS3Request());
         final List<CacheFilesystemInformation> fileSystemsInfo = response.getCacheInformationResult().getFilesystems();
         if (Guard.isNullOrEmpty(fileSystemsInfo)) {
-            LOG.error("There are no cache file systems");
-            return;
+            throw new NoCacheFileSystemException();
         }
+        final ImmutableList.Builder<CacheFilesystemInformation> builder = ImmutableList.builder();
         for (final CacheFilesystemInformation fileSystemInfo : fileSystemsInfo) {
-            final UUID fileSystemId = fileSystemInfo.getCacheFilesystem().getId();
-            final long availableCapacity = fileSystemInfo.getAvailableCapacityInBytes();
-            final long usedCapacity = fileSystemInfo.getUsedCapacityInBytes();
-            final double percentUtilization = usedCapacity / availableCapacity;
-            LOG.info("Cache file system {}: {} bytes available capacity, {} bytes used capacity, {}% currently utilized",
-                    fileSystemId.toString(),
-                    availableCapacity,
-                    usedCapacity,
-                    percentUtilization);
-
-            if (percentUtilization >= CACHE_UTILIZATION_WARNING_LEVEL) {
-                LOG.warn("Cache file system {} is near full with {}% currently utilized",
-                        fileSystemId,
-                        percentUtilization);
+            final double percentUtilization = fileSystemInfo.getUsedCapacityInBytes() / fileSystemInfo.getAvailableCapacityInBytes();
+            if (percentUtilization >= CACHE_UTILIZATION_NEAR_CAPACITY_LEVEL) {
+                builder.add(fileSystemInfo);
             }
         }
+        final ImmutableList<CacheFilesystemInformation> fileSystemsNearCapacity = builder.build();
+        if (Guard.isNullOrEmpty(fileSystemsNearCapacity)) {
+            return Optional.empty();
+        }
+        return Optional.of(fileSystemsNearCapacity);
     }
 
     @Override
-    @Nullable
-    public List<Tape> getOfflineTapes() throws IOException {
+    public Optional<ImmutableList<Tape>> getOfflineTapes() throws IOException {
         final GetTapesSpectraS3Request getTapesRequest = new GetTapesSpectraS3Request().withState(TapeState.OFFLINE);
         final GetTapesSpectraS3Response getTapesResponse = client.getTapesSpectraS3(getTapesRequest);
         final List<Tape> offlineTapes = getTapesResponse.getTapeListResult().getTapes();
         if (Guard.isNullOrEmpty(offlineTapes)) {
-            LOG.info("There are no tapes with status = OFFLINE");
-        } else {
-            LOG.warn("There are {} tapes with status = OFFLINE", offlineTapes.size());
+            return Optional.empty();
         }
-        return offlineTapes;
+        return Optional.of(ImmutableList.copyOf(offlineTapes));
+    }
+
+    @Override
+    public Ds3DiagnosticsResult runDiagnostics() throws IOException {
+        final ImmutableList.Builder<Ds3DiagnosticSummary> builderSummary = ImmutableList.builder();
+
+        final Optional<ImmutableList<CacheFilesystemInformation>> cacheNearCapacity = getCacheNearCapacity();
+        if (cacheNearCapacity.isPresent()) {
+            builderSummary.add(Ds3DiagnosticSummary.CACHE_NEAR_CAPACITY);
+        }
+
+        final Optional<ImmutableList<Tape>> offlineTapes = getOfflineTapes();
+        if (offlineTapes.isPresent()) {
+            builderSummary.add(Ds3DiagnosticSummary.OFFLINE_TAPES);
+        }
+
+        final ImmutableList<Ds3DiagnosticSummary> summary = builderSummary.build();
+        if (Guard.isNullOrEmpty(summary)) {
+            return new Ds3DiagnosticsEmptyResult();
+        }
+        return new Ds3DiagnosticsFullResult(cacheNearCapacity, offlineTapes, Optional.of(summary));
     }
 }

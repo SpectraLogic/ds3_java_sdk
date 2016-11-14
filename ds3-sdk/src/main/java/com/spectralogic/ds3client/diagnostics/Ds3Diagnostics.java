@@ -15,16 +15,21 @@
 
 package com.spectralogic.ds3client.diagnostics;
 
+import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3client.Ds3Client;
+import com.spectralogic.ds3client.models.CacheFilesystemInformation;
 import com.spectralogic.ds3client.models.Tape;
 
 import java.io.IOException;
-import java.util.List;
+import java.util.Optional;
 
 /**
  * A wrapper around the {@link com.spectralogic.ds3client.Ds3Client} which performs diagnostics.
  */
 public abstract class Ds3Diagnostics {
+
+    /** The amount of file cache utilization that is considered near capacity */
+    protected static final double CACHE_UTILIZATION_NEAR_CAPACITY_LEVEL = 0.95;
 
     /**
      * Wraps the given {@link com.spectralogic.ds3client.Ds3ClientImpl} with diagnostics methods.
@@ -36,9 +41,28 @@ public abstract class Ds3Diagnostics {
         return new Ds3DiagnosticsImpl(client);
     }
 
-    //TODO test and comment
-    public abstract void checkCacheAvailability() throws IOException;
+    /**
+     * Retrieves the {@link CacheFilesystemInformation} for all cache that are near capacity.
+     * A cache is determined near capacity if the current utilization is at or exceeds
+     * {@link #CACHE_UTILIZATION_NEAR_CAPACITY_LEVEL}. If no file systems are near capacity,
+     * than an empty {@link Optional} is returned.
+     * @throws com.spectralogic.ds3client.exceptions.NoCacheFileSystemException If no cache file systems are found
+     * @throws IOException
+     */
+    public abstract Optional<ImmutableList<CacheFilesystemInformation>> getCacheNearCapacity() throws IOException;
 
-    //TODO test and comment
-    public abstract List<Tape> getOfflineTapes() throws IOException;
+    /**
+     * Retrieves the {@link Tape} for all tapes with status of OFFLINE. If no tapes are offline,
+     * than an empty {@link Optional} is returned.
+     * @throws IOException
+     */
+    public abstract Optional<ImmutableList<Tape>> getOfflineTapes() throws IOException;
+
+    /**
+     * Runs all diagnostics and returns the combined result of:
+     *   {@link #getCacheNearCapacity()},
+     *   {@link #getOfflineTapes()}
+     * @throws IOException
+     */
+    public abstract Ds3DiagnosticsResult runDiagnostics() throws IOException;
 }
