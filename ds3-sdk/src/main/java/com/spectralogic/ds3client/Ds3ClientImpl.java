@@ -27,8 +27,8 @@ import com.spectralogic.ds3client.networking.NetworkClient;
 import com.spectralogic.ds3client.networking.NetworkClientImpl;
 
 import com.spectralogic.ds3client.commands.parsers.interfaces.GetObjectCustomParser;
-import com.spectralogic.ds3client.commands.parsers.interfaces.GetObjectParserConfiguration;
-import com.spectralogic.ds3client.commands.parsers.interfaces.Function;
+import com.spectralogic.ds3client.commands.parsers.interfaces.GetObjectCustomParserParameters;
+import com.spectralogic.ds3client.commands.parsers.utils.Function;
 
 public class Ds3ClientImpl implements Ds3Client {
     private final NetworkClient netClient;
@@ -1229,7 +1229,9 @@ public class Ds3ClientImpl implements Ds3Client {
     }
 
     @Override
-    public GetObjectResponse getObject(final GetObjectRequest request, Function<GetObjectParserConfiguration, GetObjectResponse> parsingFunction) throws IOException {
+    public GetObjectResponse getObject(
+            final GetObjectRequest request,
+            final Function<GetObjectCustomParserParameters, GetObjectResponse> parsingFunction) throws IOException {
         return new GetObjectCustomParser(
                 request.getChannel(),
                 this.netClient.getConnectionDetails().getBufferSize(),

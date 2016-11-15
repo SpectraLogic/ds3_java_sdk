@@ -19,8 +19,8 @@ import com.google.common.collect.Lists;
 import com.spectralogic.ds3client.Ds3Client;
 import com.spectralogic.ds3client.commands.GetObjectRequest;
 import com.spectralogic.ds3client.commands.GetObjectResponse;
-import com.spectralogic.ds3client.commands.parsers.interfaces.Function;
-import com.spectralogic.ds3client.commands.parsers.interfaces.GetObjectParserConfiguration;
+import com.spectralogic.ds3client.commands.parsers.utils.Function;
+import com.spectralogic.ds3client.commands.parsers.interfaces.GetObjectCustomParserParameters;
 import com.spectralogic.ds3client.commands.parsers.utils.ResponseParserUtils;
 import com.spectralogic.ds3client.commands.spectrads3.GetBulkJobSpectraS3Request;
 import com.spectralogic.ds3client.commands.spectrads3.GetBulkJobSpectraS3Response;
@@ -108,9 +108,9 @@ public class CustomParser_Test {
                 0,
                 stream);
 
-        client.getObject(request, new Function<GetObjectParserConfiguration, GetObjectResponse>() {
+        client.getObject(request, new Function<GetObjectCustomParserParameters, GetObjectResponse>() {
             @Override
-            public GetObjectResponse apply(GetObjectParserConfiguration getObjectParserConfiguration) {
+            public GetObjectResponse apply(GetObjectCustomParserParameters getObjectParserConfiguration) {
                 final WebResponse webResponse = getObjectParserConfiguration.getWebResponse();
                 if (ResponseParserUtils.validateStatusCode(webResponse.getStatusCode(), 200, 206)) {
                     final  long objectSize = getSizeFromHeaders(webResponse.getHeaders());
