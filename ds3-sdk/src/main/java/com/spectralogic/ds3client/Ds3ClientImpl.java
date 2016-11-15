@@ -28,7 +28,7 @@ import com.spectralogic.ds3client.networking.NetworkClientImpl;
 
 import com.spectralogic.ds3client.commands.parsers.interfaces.GetObjectCustomParser;
 import com.spectralogic.ds3client.commands.parsers.interfaces.GetObjectParserConfiguration;
-import java.util.function.Function;
+import com.spectralogic.ds3client.commands.parsers.interfaces.Function;
 
 public class Ds3ClientImpl implements Ds3Client {
     private final NetworkClient netClient;
