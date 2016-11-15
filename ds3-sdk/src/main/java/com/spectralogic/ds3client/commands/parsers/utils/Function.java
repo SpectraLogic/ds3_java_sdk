@@ -13,7 +13,7 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3client.commands.parsers.interfaces;
+package com.spectralogic.ds3client.commands.parsers.utils;
 
 /**
  * Defines the interface for a function that takes in specified input,

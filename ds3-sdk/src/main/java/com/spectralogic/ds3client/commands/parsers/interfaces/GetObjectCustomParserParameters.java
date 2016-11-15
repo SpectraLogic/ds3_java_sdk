@@ -19,14 +19,14 @@ import com.spectralogic.ds3client.networking.WebResponse;
 
 import java.nio.channels.WritableByteChannel;
 
-public class GetObjectParserConfiguration {
+public class GetObjectCustomParserParameters {
 
     private final WebResponse webResponse;
     private final WritableByteChannel destinationChannel;
     private final int bufferSize;
     private final String objectName;
 
-    public GetObjectParserConfiguration(
+    public GetObjectCustomParserParameters(
             final WebResponse webResponse,
             final WritableByteChannel destinationChannel,
             final int bufferSize,

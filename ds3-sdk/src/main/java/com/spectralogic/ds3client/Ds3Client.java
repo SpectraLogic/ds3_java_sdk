@@ -25,8 +25,8 @@ import com.spectralogic.ds3client.commands.spectrads3.notifications.*;
 import com.spectralogic.ds3client.models.JobNode;
 import com.spectralogic.ds3client.networking.ConnectionDetails;
 
-import com.spectralogic.ds3client.commands.parsers.interfaces.GetObjectParserConfiguration;
-import com.spectralogic.ds3client.commands.parsers.interfaces.Function;
+import com.spectralogic.ds3client.commands.parsers.interfaces.GetObjectCustomParserParameters;
+import com.spectralogic.ds3client.commands.parsers.utils.Function;
 
 import java.io.Closeable;
 import java.io.IOException;
@@ -1999,7 +1999,7 @@ public interface Ds3Client extends Closeable {
 
 
     GetObjectResponse getObject(final GetObjectRequest request,
-                                final Function<GetObjectParserConfiguration, GetObjectResponse> responseParser) throws IOException;
+                                final Function<GetObjectCustomParserParameters, GetObjectResponse> responseParser) throws IOException;
 
     Ds3Client newForNode(final JobNode node);
 }
