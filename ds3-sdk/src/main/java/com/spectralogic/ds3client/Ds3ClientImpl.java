@@ -19,12 +19,16 @@ package com.spectralogic.ds3client;
 import java.io.IOException;
 import com.spectralogic.ds3client.commands.*;
 import com.spectralogic.ds3client.commands.parsers.*;
+import com.spectralogic.ds3client.commands.parsers.interfaces.GetObjectCustomParser;
+import com.spectralogic.ds3client.commands.parsers.interfaces.GetObjectParserConfiguration;
 import com.spectralogic.ds3client.commands.spectrads3.*;
 import com.spectralogic.ds3client.commands.spectrads3.notifications.*;
 import com.spectralogic.ds3client.models.JobNode;
 import com.spectralogic.ds3client.networking.ConnectionDetails;
 import com.spectralogic.ds3client.networking.NetworkClient;
 import com.spectralogic.ds3client.networking.NetworkClientImpl;
+
+import java.util.function.Function;
 
 public class Ds3ClientImpl implements Ds3Client {
     private final NetworkClient netClient;
@@ -1221,6 +1225,18 @@ public class Ds3ClientImpl implements Ds3Client {
                 request.getChannel(),
                 this.netClient.getConnectionDetails().getBufferSize(),
                 request.getObjectName())
+                .response(this.netClient.getResponse(request));
+    }
+
+    //TODO auto-gen (don't forget import)
+    //TODO write test
+    @Override
+    public GetObjectResponse getObject(final GetObjectRequest request, Function<GetObjectParserConfiguration, GetObjectResponse> parsingFunction) throws IOException {
+        return new GetObjectCustomParser(
+                request.getChannel(),
+                this.netClient.getConnectionDetails().getBufferSize(),
+                request.getObjectName(),
+                parsingFunction)
                 .response(this.netClient.getResponse(request));
     }
 
