@@ -19,6 +19,7 @@ import com.google.common.collect.Lists;
 import com.spectralogic.ds3client.Ds3Client;
 import com.spectralogic.ds3client.commands.GetObjectRequest;
 import com.spectralogic.ds3client.commands.GetObjectResponse;
+import com.spectralogic.ds3client.commands.parsers.interfaces.Function;
 import com.spectralogic.ds3client.commands.parsers.interfaces.GetObjectParserConfiguration;
 import com.spectralogic.ds3client.commands.parsers.utils.ResponseParserUtils;
 import com.spectralogic.ds3client.commands.spectrads3.GetBulkJobSpectraS3Request;
@@ -40,7 +41,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.util.UUID;
-import java.util.function.Function;
 
 import static com.spectralogic.ds3client.commands.parsers.utils.ResponseParserUtils.getSizeFromHeaders;
 import static com.spectralogic.ds3client.integration.Util.deleteAllContents;
