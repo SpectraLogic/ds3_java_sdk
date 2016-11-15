@@ -19,14 +19,15 @@ import com.google.common.collect.Lists;
 import com.spectralogic.ds3client.Ds3Client;
 import com.spectralogic.ds3client.commands.GetObjectRequest;
 import com.spectralogic.ds3client.commands.GetObjectResponse;
-import com.spectralogic.ds3client.commands.parsers.utils.Function;
 import com.spectralogic.ds3client.commands.parsers.interfaces.GetObjectCustomParserParameters;
+import com.spectralogic.ds3client.commands.parsers.utils.Function;
 import com.spectralogic.ds3client.commands.parsers.utils.ResponseParserUtils;
 import com.spectralogic.ds3client.commands.spectrads3.GetBulkJobSpectraS3Request;
 import com.spectralogic.ds3client.commands.spectrads3.GetBulkJobSpectraS3Response;
 import com.spectralogic.ds3client.exceptions.ContentLengthNotMatchException;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers;
 import com.spectralogic.ds3client.helpers.channelbuilders.ObjectInputStreamBuilder;
+import com.spectralogic.ds3client.helpers.channelbuilders.ObjectOutputStreamBuilder;
 import com.spectralogic.ds3client.integration.test.helpers.TempStorageIds;
 import com.spectralogic.ds3client.integration.test.helpers.TempStorageUtil;
 import com.spectralogic.ds3client.models.ChecksumType;
@@ -35,10 +36,7 @@ import com.spectralogic.ds3client.networking.WebResponse;
 import com.spectralogic.ds3client.utils.IOUtils;
 import org.junit.*;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.net.URISyntaxException;
 import java.util.UUID;
 
@@ -110,21 +108,21 @@ public class CustomParser_Test {
 
         client.getObject(request, new Function<GetObjectCustomParserParameters, GetObjectResponse>() {
             @Override
-            public GetObjectResponse apply(GetObjectCustomParserParameters getObjectParserConfiguration) {
-                final WebResponse webResponse = getObjectParserConfiguration.getWebResponse();
+            public GetObjectResponse apply(GetObjectCustomParserParameters getObjectParserParams) {
+                final WebResponse webResponse = getObjectParserParams.getWebResponse();
                 if (ResponseParserUtils.validateStatusCode(webResponse.getStatusCode(), 200, 206)) {
                     final  long objectSize = getSizeFromHeaders(webResponse.getHeaders());
                     try (final InputStream responseStream = webResponse.getResponseStream()) {
                         final long totalBytes = IOUtils.copy(
                                 responseStream,
-                                getObjectParserConfiguration.getDestinationChannel(),
-                                getObjectParserConfiguration.getBufferSize(),
-                                getObjectParserConfiguration.getObjectName(),
+                                getObjectParserParams.getDestinationChannel(),
+                                getObjectParserParams.getBufferSize(),
+                                getObjectParserParams.getObjectName(),
                                 false);
-                        getObjectParserConfiguration.getDestinationChannel().close();
+                        getObjectParserParams.getDestinationChannel().close();
 
                         if (objectSize != -1 && totalBytes != objectSize) {
-                            throw new ContentLengthNotMatchException(getObjectParserConfiguration.getObjectName(), objectSize, totalBytes);
+                            throw new ContentLengthNotMatchException(getObjectParserParams.getObjectName(), objectSize, totalBytes);
                         }
 
                     } catch (final IOException e) {
@@ -135,5 +133,40 @@ public class CustomParser_Test {
             }
         });
         assertThat(stream.toByteArray(), is(OBJ_BYTES));
+    }
+
+    @SuppressWarnings("deprecation")
+    @Test
+    public void getObjectCustomParserNoObject_Test() throws IOException{
+        final String objectName = "doesNotExistObject";
+
+        final ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        final ObjectOutputStreamBuilder builder = new ObjectOutputStreamBuilder() {
+            @Override
+            public OutputStream buildOutputStream(String key) throws IOException {
+                return stream;
+            }
+        };
+        final GetObjectRequest request = new GetObjectRequest(
+                BUCKET_NAME,
+                objectName,
+                builder.buildChannel(objectName));
+
+        //Get object that does not exist
+        try {
+            client.getObject(request, new Function<GetObjectCustomParserParameters, GetObjectResponse>() {
+                @Override
+                public GetObjectResponse apply(GetObjectCustomParserParameters getObjectParserParams) {
+                    final WebResponse webResponse = getObjectParserParams.getWebResponse();
+                    if (ResponseParserUtils.validateStatusCode(webResponse.getStatusCode(), 200, 206)) {
+                        fail();
+                    }
+                    throw new RuntimeException("Could not download object " + getObjectParserParams.getObjectName());
+                }
+            });
+            fail();
+        } catch (final RuntimeException e) {
+            assertThat(e.getMessage(), is("Could not download object " + objectName));
+        }
     }
 }
