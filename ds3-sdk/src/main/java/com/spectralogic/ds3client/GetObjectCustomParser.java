@@ -13,10 +13,12 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3client.commands.parsers.interfaces;
+package com.spectralogic.ds3client;
 
 import com.spectralogic.ds3client.commands.GetObjectRequest;
 import com.spectralogic.ds3client.commands.GetObjectResponse;
+import com.spectralogic.ds3client.commands.parsers.interfaces.AbstractResponseParser;
+import com.spectralogic.ds3client.commands.parsers.interfaces.GetObjectCustomParserParameters;
 import com.spectralogic.ds3client.commands.parsers.utils.Function;
 import com.spectralogic.ds3client.networking.WebResponse;
 
@@ -26,7 +28,7 @@ import java.nio.channels.WritableByteChannel;
 /**
  * Creates a custom parser which is used in {@link com.spectralogic.ds3client.Ds3Client#getObject(GetObjectRequest, Function)} )}
  */
-public class GetObjectCustomParser extends AbstractResponseParser<GetObjectResponse> {
+class GetObjectCustomParser extends AbstractResponseParser<GetObjectResponse> {
 
     private final WritableByteChannel destinationChannel;
     private final int bufferSize;

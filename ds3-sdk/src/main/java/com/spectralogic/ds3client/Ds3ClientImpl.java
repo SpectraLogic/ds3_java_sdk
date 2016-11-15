@@ -26,7 +26,6 @@ import com.spectralogic.ds3client.networking.ConnectionDetails;
 import com.spectralogic.ds3client.networking.NetworkClient;
 import com.spectralogic.ds3client.networking.NetworkClientImpl;
 
-import com.spectralogic.ds3client.commands.parsers.interfaces.GetObjectCustomParser;
 import com.spectralogic.ds3client.commands.parsers.interfaces.GetObjectCustomParserParameters;
 import com.spectralogic.ds3client.commands.parsers.utils.Function;
 
