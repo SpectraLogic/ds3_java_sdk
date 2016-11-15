@@ -149,10 +149,8 @@ public class CustomParser_Test {
         client.getObject(request, new Function<GetObjectCustomParserParameters, GetObjectResponse>() {
             @Override
             public GetObjectResponse apply(final GetObjectCustomParserParameters getObjectParserParams) {
-                fail();
                 return null;
             }
         });
-        fail();
     }
 }

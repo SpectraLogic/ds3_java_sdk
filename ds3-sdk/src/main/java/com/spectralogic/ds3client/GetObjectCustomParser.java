@@ -63,6 +63,5 @@ class GetObjectCustomParser extends AbstractResponseParser<GetObjectResponse> {
             return parsingFunction.apply(params);
         }
         throw ResponseParserUtils.createFailedRequest(response, expectedStatusCodes);
-
     }
 }
