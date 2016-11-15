@@ -21,10 +21,9 @@ import com.spectralogic.ds3client.networking.WebResponse;
 
 import java.io.IOException;
 import java.nio.channels.WritableByteChannel;
-import java.util.function.Function;
 
 /**
- * Creates a custom parser which is used in {@link com.spectralogic.ds3client.Ds3Client#getObject(GetObjectRequest, Function)}
+ * Creates a custom parser which is used in {@link com.spectralogic.ds3client.Ds3Client#getObject(GetObjectRequest, Function)} )}
  */
 public class GetObjectCustomParser extends AbstractResponseParser<GetObjectResponse> {
 

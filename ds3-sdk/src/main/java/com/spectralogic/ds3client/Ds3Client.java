@@ -26,7 +26,7 @@ import com.spectralogic.ds3client.models.JobNode;
 import com.spectralogic.ds3client.networking.ConnectionDetails;
 
 import com.spectralogic.ds3client.commands.parsers.interfaces.GetObjectParserConfiguration;
-import java.util.function.Function;
+import com.spectralogic.ds3client.commands.parsers.interfaces.Function;
 
 import java.io.Closeable;
 import java.io.IOException;
