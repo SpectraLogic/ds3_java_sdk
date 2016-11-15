@@ -20,6 +20,7 @@ import com.spectralogic.ds3client.commands.GetObjectResponse;
 import com.spectralogic.ds3client.commands.parsers.interfaces.AbstractResponseParser;
 import com.spectralogic.ds3client.commands.parsers.interfaces.GetObjectCustomParserParameters;
 import com.spectralogic.ds3client.commands.parsers.utils.Function;
+import com.spectralogic.ds3client.commands.parsers.utils.ResponseParserUtils;
 import com.spectralogic.ds3client.networking.WebResponse;
 
 import java.io.IOException;
@@ -29,6 +30,8 @@ import java.nio.channels.WritableByteChannel;
  * Creates a custom parser which is used in {@link com.spectralogic.ds3client.Ds3Client#getObject(GetObjectRequest, Function)} )}
  */
 class GetObjectCustomParser extends AbstractResponseParser<GetObjectResponse> {
+
+    private final int[] expectedStatusCodes = new int[]{200, 206};
 
     private final WritableByteChannel destinationChannel;
     private final int bufferSize;
@@ -49,12 +52,17 @@ class GetObjectCustomParser extends AbstractResponseParser<GetObjectResponse> {
 
     @Override
     public GetObjectResponse parseXmlResponse(final WebResponse response) throws IOException {
-        final GetObjectCustomParserParameters config = new GetObjectCustomParserParameters(
-                response,
-                destinationChannel,
-                bufferSize,
-                objectName);
+        final int statusCode = response.getStatusCode();
+        if (ResponseParserUtils.validateStatusCode(statusCode, expectedStatusCodes)) {
+            final GetObjectCustomParserParameters params = new GetObjectCustomParserParameters(
+                    response,
+                    destinationChannel,
+                    bufferSize,
+                    objectName);
 
-        return parsingFunction.apply(config);
+            return parsingFunction.apply(params);
+        }
+        throw ResponseParserUtils.createFailedRequest(response, expectedStatusCodes);
+
     }
 }
