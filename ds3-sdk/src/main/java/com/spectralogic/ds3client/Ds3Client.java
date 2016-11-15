@@ -20,15 +20,16 @@ import com.spectralogic.ds3client.annotations.Action;
 import com.spectralogic.ds3client.annotations.Resource;
 import com.spectralogic.ds3client.annotations.ResponsePayloadModel;
 import com.spectralogic.ds3client.commands.*;
-import com.spectralogic.ds3client.commands.parsers.interfaces.GetObjectParserConfiguration;
 import com.spectralogic.ds3client.commands.spectrads3.*;
 import com.spectralogic.ds3client.commands.spectrads3.notifications.*;
 import com.spectralogic.ds3client.models.JobNode;
 import com.spectralogic.ds3client.networking.ConnectionDetails;
 
+import com.spectralogic.ds3client.commands.parsers.interfaces.GetObjectParserConfiguration;
+import java.util.function.Function;
+
 import java.io.Closeable;
 import java.io.IOException;
-import java.util.function.Function;
 
 public interface Ds3Client extends Closeable {
 
@@ -1989,10 +1990,9 @@ public interface Ds3Client extends Closeable {
     GetObjectResponse getObject(final GetObjectRequest request)
             throws IOException;
 
-    //TODO auto-gen (don't forget imports)
+
     GetObjectResponse getObject(final GetObjectRequest request,
                                 final Function<GetObjectParserConfiguration, GetObjectResponse> responseParser) throws IOException;
-
 
     Ds3Client newForNode(final JobNode node);
 }
