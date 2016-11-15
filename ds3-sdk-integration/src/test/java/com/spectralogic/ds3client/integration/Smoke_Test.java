@@ -1174,8 +1174,8 @@ public class Smoke_Test {
     }
 
     @Test
-    public void testQuestionMarkInQueryParam() throws IOException {
-        final String bucketName = "TestQuestionMarkInQueryParam";
+    public void testQuestionMarkInObjectName() throws IOException {
+        final String bucketName = "TestQuestionMarkInObjectName";
         final String objectName = "Test?Question?Mark";
         try {
             HELPERS.ensureBucketExists(bucketName, envDataPolicyId);
