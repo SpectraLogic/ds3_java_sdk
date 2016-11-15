@@ -17,6 +17,7 @@ package com.spectralogic.ds3client.commands.parsers.interfaces;
 
 import com.spectralogic.ds3client.commands.GetObjectRequest;
 import com.spectralogic.ds3client.commands.GetObjectResponse;
+import com.spectralogic.ds3client.commands.parsers.utils.Function;
 import com.spectralogic.ds3client.networking.WebResponse;
 
 import java.io.IOException;
@@ -30,13 +31,13 @@ public class GetObjectCustomParser extends AbstractResponseParser<GetObjectRespo
     private final WritableByteChannel destinationChannel;
     private final int bufferSize;
     private final String objectName;
-    private final Function<GetObjectParserConfiguration, GetObjectResponse> parsingFunction;
+    private final Function<GetObjectCustomParserParameters, GetObjectResponse> parsingFunction;
 
     public GetObjectCustomParser(
             final WritableByteChannel destinationChannel,
             final int bufferSize,
             final String objectName,
-            final Function<GetObjectParserConfiguration, GetObjectResponse> parsingFunction) {
+            final Function<GetObjectCustomParserParameters, GetObjectResponse> parsingFunction) {
 
         this.destinationChannel = destinationChannel;
         this.bufferSize = bufferSize;
@@ -45,8 +46,8 @@ public class GetObjectCustomParser extends AbstractResponseParser<GetObjectRespo
     }
 
     @Override
-    public GetObjectResponse parseXmlResponse(WebResponse response) throws IOException {
-        final GetObjectParserConfiguration config = new GetObjectParserConfiguration(
+    public GetObjectResponse parseXmlResponse(final WebResponse response) throws IOException {
+        final GetObjectCustomParserParameters config = new GetObjectCustomParserParameters(
                 response,
                 destinationChannel,
                 bufferSize,
