@@ -24,7 +24,7 @@ import java.nio.channels.SeekableByteChannel;
 
 /**
  * This ObjectChannelBuilder is used to wrap an existing ObjectChannelBuilder and wrap all the channels it creates
- * in a logging channel builder to log how many bytes were read or written on each call.  This should only be used
+ * in a logging channel to log how many bytes were read or written on each call.  This should only be used
  * for debugging and should not be used in a production deployment.
  */
 public class IoLoggingChannelBuilder implements Ds3ClientHelpers.ObjectChannelBuilder {
