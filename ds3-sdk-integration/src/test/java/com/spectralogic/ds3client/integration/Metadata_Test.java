@@ -145,7 +145,7 @@ public class Metadata_Test {
                     bucketName,
                     obj.getName(),
                     buildRandomChannel(1024),
-                    putResponse.getMasterObjectList().getJobId().toString(),
+                    putResponse.getResult().getJobId().toString(),
                     0,
                     1024);
 
@@ -155,11 +155,11 @@ public class Metadata_Test {
 
             final PutObjectResponse putObjResponse = client.putObject(request);
 
-            assertThat(putObjResponse, is(notNullValue()));
+            assertThat(putObjResponse.getStatusCode(), is(200));
 
             final HeadObjectResponse response = client.headObject(new HeadObjectRequest(bucketName, obj.getName()));
 
-            assertThat(response.getStatus(), is(HeadObjectResponse.Status.EXISTS));
+            assertThat(response.getStatusCode(), is(200));
 
             return response.getMetadata();
 

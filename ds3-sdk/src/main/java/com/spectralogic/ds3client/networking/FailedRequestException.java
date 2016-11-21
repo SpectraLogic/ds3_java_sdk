@@ -18,7 +18,6 @@ package com.spectralogic.ds3client.networking;
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3client.models.Error;
-import com.spectralogic.ds3client.utils.Guard;
 
 import java.io.IOException;
 import java.util.List;
@@ -30,36 +29,16 @@ public class FailedRequestException extends IOException {
     private final ImmutableList<Integer> expectedStatusCodes;
     private final Error error;
     private final String responseString;
-    private final String requestId;
-
-    public FailedRequestException(final int[] expectedStatusCodes,
-                                  final int statusCode,
-                                  final Error error,
-                                  final String responseString,
-                                  final String requestId) {
-        this(toList(expectedStatusCodes), statusCode, error, responseString, requestId);
-    }
-
-    private static ImmutableList<Integer> toList(final int[] expectedStatusCodes) {
-        final ImmutableList.Builder<Integer> builder = ImmutableList.builder();
-
-        for (final int expectedStatusCode : expectedStatusCodes) {
-            builder.add(expectedStatusCode);
-        }
-        return builder.build();
-    }
 
     public FailedRequestException(final ImmutableList<Integer> expectedStatusCodes,
                                   final int statusCode,
                                   final Error error,
-                                  final String responseString,
-                                  final String requestId) {
-        super(buildExceptionMessage(error, expectedStatusCodes, statusCode, requestId));
+                                  final String responseString) {
+        super(buildExceptionMessage(error, expectedStatusCodes, statusCode));
         this.statusCode = statusCode;
         this.expectedStatusCodes = expectedStatusCodes;
         this.error = error;
         this.responseString = responseString;
-        this.requestId = requestId;
     }
 
     public int getStatusCode() {
@@ -78,46 +57,27 @@ public class FailedRequestException extends IOException {
     public Error getError() {
         return error;
     }
-
     public String getResponseString() {
         return responseString;
     }
-
-    public String getRequestId() {
-        return requestId;
-    }
     
-    protected static String buildExceptionMessage(final Error error,
+    private static String buildExceptionMessage(final Error error,
                                                 final ImmutableList<Integer> expectedStatusCodes,
-                                                final int statusCode,
-                                                final String requestId) {
+                                                final int statusCode) {
 
         final Joiner joiner = Joiner.on(", ");
         return error == null
             ? String.format(
-                "Expected a status code of %s but got %d %s. Could not parse the response for additional information.",
+                "Expected a status code of %s but got %d. Could not parse the response for additional information.",
                 joiner.join(expectedStatusCodes),
-                statusCode,
-                buildRequestIdMessage(requestId)
+                statusCode
             )
             : String.format(
-                "Expected a status code of %s but got %d %s. Error message: \"%s\"",
+                "Expected a status code of %s but got %d. Error message: \"%s\"",
                 joiner.join(expectedStatusCodes),
                 statusCode,
-                buildRequestIdMessage(requestId),
                 error.getMessage()
             );
-    }
-
-    /**
-     * Creates the request-ID portion of the exception message. The message specifies the
-     * request-ID if requestId is non-null, else it specifies an unknown request.
-     */
-    protected static String buildRequestIdMessage(final String requestId) {
-        if (Guard.isStringNullOrEmpty(requestId)) {
-            return "for unknown request";
-        }
-        return "for request #" + requestId;
     }
 
     @Override

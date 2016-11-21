@@ -16,17 +16,38 @@
 // This code is auto-generated, do not modify
 package com.spectralogic.ds3client.commands.spectrads3.notifications;
 
+import com.spectralogic.ds3client.networking.WebResponse;
+import java.io.IOException;
 import com.spectralogic.ds3client.models.SystemFailureNotificationRegistrationList;
-import com.spectralogic.ds3client.models.ChecksumType;
+import java.io.InputStream;
+import com.spectralogic.ds3client.serializer.XmlOutput;
 import com.spectralogic.ds3client.commands.interfaces.AbstractPaginationResponse;
 
 public class GetSystemFailureNotificationRegistrationsSpectraS3Response extends AbstractPaginationResponse {
 
-    private final SystemFailureNotificationRegistrationList systemFailureNotificationRegistrationListResult;
+    private SystemFailureNotificationRegistrationList systemFailureNotificationRegistrationListResult;
 
-    public GetSystemFailureNotificationRegistrationsSpectraS3Response(final SystemFailureNotificationRegistrationList systemFailureNotificationRegistrationListResult, final Integer pagingTotalResultCount, final Integer pagingTruncated, final String checksum, final ChecksumType.Type checksumType) {
-        super(pagingTotalResultCount, pagingTruncated, checksum, checksumType);
-        this.systemFailureNotificationRegistrationListResult = systemFailureNotificationRegistrationListResult;
+    public GetSystemFailureNotificationRegistrationsSpectraS3Response(final WebResponse response) throws IOException {
+        super(response);
+    }
+
+    @Override
+    protected void processResponse() throws IOException {
+        try {
+            this.checkStatusCode(200);
+
+            switch (this.getStatusCode()) {
+            case 200:
+                try (final InputStream content = getResponse().getResponseStream()) {
+                    this.systemFailureNotificationRegistrationListResult = XmlOutput.fromXml(content, SystemFailureNotificationRegistrationList.class);
+                }
+                break;
+            default:
+                assert false : "checkStatusCode should have made it impossible to reach this line.";
+            }
+        } finally {
+            this.getResponse().close();
+        }
     }
 
     public SystemFailureNotificationRegistrationList getSystemFailureNotificationRegistrationListResult() {

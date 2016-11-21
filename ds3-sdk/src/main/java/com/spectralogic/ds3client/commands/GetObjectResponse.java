@@ -16,28 +16,58 @@
 // This code is auto-generated, do not modify
 package com.spectralogic.ds3client.commands;
 
+import com.spectralogic.ds3client.networking.WebResponse;
+import java.io.IOException;
+import com.spectralogic.ds3client.models.Error;
+import java.io.InputStream;
+import com.spectralogic.ds3client.serializer.XmlOutput;
 import com.spectralogic.ds3client.commands.interfaces.AbstractResponse;
-import com.spectralogic.ds3client.models.ChecksumType;
+import com.spectralogic.ds3client.commands.interfaces.MetadataImpl;
 import com.spectralogic.ds3client.networking.Metadata;
+import java.nio.channels.WritableByteChannel;
+import com.spectralogic.ds3client.utils.IOUtils;
+import com.spectralogic.ds3client.utils.PerformanceUtils;
+import com.spectralogic.ds3client.exceptions.ContentLengthNotMatchException;
 
 public class GetObjectResponse extends AbstractResponse {
-    
-    private final Metadata metadata;
 
-    private final long objectSize;
+    private Metadata metadata;
+    private long objectSize;
 
-    public GetObjectResponse(final Metadata metadata, final long objectSize, final String checksum, final ChecksumType.Type checksumType) {
-        super(checksum, checksumType);
-        this.metadata = metadata;
-        this.objectSize = objectSize;
+    public GetObjectResponse(final WebResponse response, final WritableByteChannel destinationChannel, final int bufferSize, final String objName) throws IOException {
+        super(response);
+        download(destinationChannel, bufferSize, objName);
+    }
+
+    @Override
+    protected void processResponse() throws IOException {
+        this.checkStatusCode(200, 206, 307);
+        this.metadata = new MetadataImpl(this.getResponse().getHeaders());
+        this.objectSize = getSizeFromHeaders(this.getResponse().getHeaders());
+    }
+
+    protected void download(final WritableByteChannel destinationChannel, final int bufferSize, final String objName) throws IOException {
+        try (
+                final WebResponse response = this.getResponse();
+                final InputStream responseStream = response.getResponseStream()) {
+            final long startTime = PerformanceUtils.getCurrentTime();
+            final long totalBytes = IOUtils.copy(responseStream, destinationChannel, bufferSize, objName, false);
+            destinationChannel.close();
+            final long endTime = PerformanceUtils.getCurrentTime();
+
+            if (this.objectSize != -1 && totalBytes != this.objectSize) {
+                throw new ContentLengthNotMatchException(objName, objectSize, totalBytes);
+            }
+
+            PerformanceUtils.logMbps(startTime, endTime, totalBytes, objName, false);
+        }
     }
 
     public Metadata getMetadata() {
-        return this.metadata;
+        return metadata;
     }
 
     public long getObjectSize() {
-        return this.objectSize;
+        return objectSize;
     }
-
 }

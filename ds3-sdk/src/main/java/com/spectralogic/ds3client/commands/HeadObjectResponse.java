@@ -16,25 +16,28 @@
 // This code is auto-generated, do not modify
 package com.spectralogic.ds3client.commands;
 
+import com.spectralogic.ds3client.networking.WebResponse;
+import java.io.IOException;
 import com.spectralogic.ds3client.commands.interfaces.AbstractResponse;
+import com.spectralogic.ds3client.commands.interfaces.MetadataImpl;
 import com.spectralogic.ds3client.networking.Metadata;
-import com.spectralogic.ds3client.models.ChecksumType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class HeadObjectResponse extends AbstractResponse {
 
-    public enum Status { EXISTS, DOESNTEXIST, UNKNOWN }
-    
-    private final Metadata metadata;
+    private static final Logger LOG = LoggerFactory.getLogger(HeadObjectResponse.class);
+    private Status status;
 
-    private final long objectSize;
+    private Metadata metadata;
+    private long objectSize;
 
-    private final Status status;
+    public enum Status {
+        EXISTS, DOESNTEXIST, UNKNOWN
+    }
 
-    public HeadObjectResponse(final Metadata metadata, final long objectSize, final Status status, final String checksum, final ChecksumType.Type checksumType) {
-        super(checksum, checksumType);
-        this.metadata = metadata;
-        this.objectSize = objectSize;
-        this.status = status;
+    public Status getStatus() {
+        return this.status;
     }
 
     public Metadata getMetadata() {
@@ -45,8 +48,36 @@ public class HeadObjectResponse extends AbstractResponse {
         return this.objectSize;
     }
 
-    public Status getStatus() {
-        return this.status;
+
+
+
+    public HeadObjectResponse(final WebResponse response) throws IOException {
+        super(response);
     }
+
+    @Override
+    protected void processResponse() throws IOException {
+        try {
+            this.checkStatusCode(200, 404);
+            this.metadata = new MetadataImpl(this.getResponse().getHeaders());
+            this.objectSize = getSizeFromHeaders(this.getResponse().getHeaders());
+            this.setStatus(this.getStatusCode());
+        } finally {
+            this.getResponse().close();
+        }
+    }
+
+    private void setStatus(final int statusCode) {
+        switch(statusCode) {
+            case 200: this.status = Status.EXISTS; break;
+            case 404: this.status = Status.DOESNTEXIST; break;
+            default: {
+                LOG.error("Unexpected status code: {}", Integer.toString(statusCode));
+                this.status = Status.UNKNOWN;
+                break;
+            }
+        }
+    }
+
 
 }

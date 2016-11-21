@@ -22,24 +22,21 @@ import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3client.networking.HttpVerb;
 import com.spectralogic.ds3client.models.common.Range;
 import org.apache.http.entity.ContentType;
-import java.io.OutputStream;
-import java.nio.channels.Channels;
 import java.nio.channels.WritableByteChannel;
 import java.util.Collection;
 import com.spectralogic.ds3client.commands.interfaces.AbstractRequest;
 import java.util.UUID;
 import com.google.common.net.UrlEscapers;
 import com.spectralogic.ds3client.models.ChecksumType;
-
 public class GetObjectRequest extends AbstractRequest {
 
     // Variables
     
-    private final WritableByteChannel channel;
-
     private final String bucketName;
 
     private final String objectName;
+
+    private final WritableByteChannel channel;
 
     private String job;
 
@@ -64,9 +61,9 @@ public class GetObjectRequest extends AbstractRequest {
     public GetObjectRequest(final String bucketName, final String objectName, final WritableByteChannel channel, final UUID job, final long offset) {
         this.bucketName = bucketName;
         this.objectName = objectName;
+        this.channel = channel;
         this.job = job.toString();
         this.offset = offset;
-        this.channel = channel;
         
         this.getQueryParams().put("job", job.toString());
         this.getQueryParams().put("offset", Long.toString(offset));
@@ -77,35 +74,9 @@ public class GetObjectRequest extends AbstractRequest {
     public GetObjectRequest(final String bucketName, final String objectName, final WritableByteChannel channel, final String job, final long offset) {
         this.bucketName = bucketName;
         this.objectName = objectName;
-        this.job = job;
-        this.offset = offset;
         this.channel = channel;
-        
-        this.getQueryParams().put("job", UrlEscapers.urlFragmentEscaper().escape(job).replace("+", "%2B"));
-        this.getQueryParams().put("offset", Long.toString(offset));
-
-    }
-
-    
-    public GetObjectRequest(final String bucketName, final String objectName, final UUID job, final long offset, final OutputStream stream) {
-        this.bucketName = bucketName;
-        this.objectName = objectName;
-        this.job = job.toString();
-        this.offset = offset;
-        this.channel = Channels.newChannel(stream);
-        
-        this.getQueryParams().put("job", job.toString());
-        this.getQueryParams().put("offset", Long.toString(offset));
-
-    }
-
-    
-    public GetObjectRequest(final String bucketName, final String objectName, final String job, final long offset, final OutputStream stream) {
-        this.bucketName = bucketName;
-        this.objectName = objectName;
         this.job = job;
         this.offset = offset;
-        this.channel = Channels.newChannel(stream);
         
         this.getQueryParams().put("job", UrlEscapers.urlFragmentEscaper().escape(job).replace("+", "%2B"));
         this.getQueryParams().put("offset", Long.toString(offset));
@@ -210,11 +181,6 @@ public class GetObjectRequest extends AbstractRequest {
     }
 
     
-    public WritableByteChannel getChannel() {
-        return this.channel;
-    }
-
-
     public String getBucketName() {
         return this.bucketName;
     }
@@ -222,6 +188,11 @@ public class GetObjectRequest extends AbstractRequest {
 
     public String getObjectName() {
         return this.objectName;
+    }
+
+
+    public WritableByteChannel getChannel() {
+        return this.channel;
     }
 
 

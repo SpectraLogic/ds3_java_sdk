@@ -100,7 +100,9 @@ public final class ABMTestHelper {
         }
         //Delete the data policy
         try {
-            client.deleteDataPolicySpectraS3(new DeleteDataPolicySpectraS3Request(dataPolicyName));
+            final DeleteDataPolicySpectraS3Response deleteDataPolicy = client
+                    .deleteDataPolicySpectraS3(new DeleteDataPolicySpectraS3Request(dataPolicyName));
+            assertThat(deleteDataPolicy.getStatusCode(), is(204));
         } catch (final IOException|AssertionError e) {
             LOG.error("Data policy was not deleted as expected: " + dataPolicyName);
         }
@@ -136,7 +138,9 @@ public final class ABMTestHelper {
 
             for (final Bucket bucket : bucketList.getBuckets()) {
                 // delete each
-                client.deleteBucketSpectraS3(new DeleteBucketSpectraS3Request(bucket.getName()));
+                final DeleteBucketSpectraS3Response deleteBucketSpectraS3Response = client
+                        .deleteBucketSpectraS3(new DeleteBucketSpectraS3Request(bucket.getName()));
+                assertThat(deleteBucketSpectraS3Response.getStatusCode(), is(204));
             }
 
         } catch (final IOException|AssertionError e) {
@@ -194,7 +198,9 @@ public final class ABMTestHelper {
         }
         //Delete the pool partition
         try {
-            client.deletePoolPartitionSpectraS3(new DeletePoolPartitionSpectraS3Request(poolPartitionName));
+            final DeletePoolPartitionSpectraS3Response deletePoolPartition = client
+                    .deletePoolPartitionSpectraS3(new DeletePoolPartitionSpectraS3Request(poolPartitionName));
+            assertThat(deletePoolPartition.getStatusCode(), is(204));
         } catch (final IOException|AssertionError e) {
             LOG.error("Pool partition was not deleted as expected: " + poolPartitionName);
         }
@@ -241,7 +247,9 @@ public final class ABMTestHelper {
         }
         try {
             //Delete the storage domain
-            client.deleteStorageDomainSpectraS3(new DeleteStorageDomainSpectraS3Request(storageDomainName));
+            final DeleteStorageDomainSpectraS3Response deleteStorageDomain = client
+                    .deleteStorageDomainSpectraS3(new DeleteStorageDomainSpectraS3Request(storageDomainName));
+            assertThat(deleteStorageDomain.getStatusCode(), is(204));
         } catch (final IOException|AssertionError e) {
             LOG.error("Storage domain was not deleted as expected: " + storageDomainName);
         }
@@ -295,8 +303,10 @@ public final class ABMTestHelper {
         }
         //Delete the storage domain member
         try {
-            client.deleteStorageDomainMemberSpectraS3(
+            final DeleteStorageDomainMemberSpectraS3Response deleteMember = client
+                    .deleteStorageDomainMemberSpectraS3(
                             new DeleteStorageDomainMemberSpectraS3Request(memberId.toString()));
+            assertThat(deleteMember.getStatusCode(), is(204));
         } catch (final IOException|AssertionError e) {
             LOG.error("Storage domain member was not deleted as expected: " + memberId.toString());
         }
@@ -349,8 +359,9 @@ public final class ABMTestHelper {
 
         //Delete the data persistence rule
         try {
-            client.deleteDataPersistenceRuleSpectraS3(
+            final DeleteDataPersistenceRuleSpectraS3Response deleteResponse = client.deleteDataPersistenceRuleSpectraS3(
                     new DeleteDataPersistenceRuleSpectraS3Request(dataPersistenceRuleId.toString()));
+            assertThat(deleteResponse.getStatusCode(), is(204));
         } catch (final IOException|AssertionError e) {
             LOG.error("Data persistence rule was not deleted as expected: " + dataPersistenceRuleId.toString());
         }
@@ -401,7 +412,9 @@ public final class ABMTestHelper {
         }
         //Delete the group
         try {
-            client.deleteGroupSpectraS3(new DeleteGroupSpectraS3Request(groupName));
+            final DeleteGroupSpectraS3Response deleteResponse = client.deleteGroupSpectraS3(
+                    new DeleteGroupSpectraS3Request(groupName));
+            assertThat(deleteResponse.getStatusCode(), is(204));
         } catch (final IOException|AssertionError e) {
             LOG.error("Group was not deleted as expected: " + groupName);
         }
@@ -450,7 +463,9 @@ public final class ABMTestHelper {
         }
         //Delete the acl
         try {
-            client.deleteDataPolicyAclSpectraS3(new DeleteDataPolicyAclSpectraS3Request(aclId.toString()));
+            final DeleteDataPolicyAclSpectraS3Response deleteAcl = client
+                    .deleteDataPolicyAclSpectraS3(new DeleteDataPolicyAclSpectraS3Request(aclId.toString()));
+            assertThat(deleteAcl.getStatusCode(), is(204));
         } catch (final IOException|AssertionError e) {
             LOG.error("Data policy Acl was not deleted as expected: " + aclId.toString());
         }
@@ -468,10 +483,9 @@ public final class ABMTestHelper {
      * Gets the cached size in bytes for the job UUID provided every 500 milliseconds
      * and returns when greater than zero, or fails after timeoutSeconds.
      */
-    public static void waitForJobCachedSizeToBeMoreThanZero(
-            final UUID jobId,
-            final Ds3Client client,
-            final int timeoutSeconds) throws Exception {
+    public static void waitForJobCachedSizeToBeMoreThanZero(final UUID jobId
+            , final Ds3Client client, final int timeoutSeconds) throws Exception {
+
         long cachedSize = 0;
         int cycles = 0;
         while (cachedSize == 0) {

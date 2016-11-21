@@ -28,6 +28,7 @@ import com.spectralogic.ds3client.models.*;
 import com.spectralogic.ds3client.models.Error;
 import com.spectralogic.ds3client.models.Objects;
 import com.spectralogic.ds3client.models.bulk.Ds3Object;
+import com.spectralogic.ds3client.models.common.Credentials;
 import com.spectralogic.ds3client.networking.ConnectionDetails;
 import com.spectralogic.ds3client.networking.FailedRequestException;
 import com.spectralogic.ds3client.utils.ByteArraySeekableByteChannel;
@@ -37,6 +38,7 @@ import org.junit.Test;
 import org.mockito.Mockito;
 
 import java.io.IOException;
+import java.net.URI;
 import java.nio.channels.SeekableByteChannel;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -45,8 +47,7 @@ import java.util.concurrent.TimeUnit;
 
 import static com.spectralogic.ds3client.helpers.RequestMatchers.*;
 import static com.spectralogic.ds3client.helpers.ResponseBuilders.*;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.lessThan;
+import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
@@ -319,8 +320,12 @@ public class Ds3ClientHelpers_Test {
         private final int invocationIndex;
 
         public StubGetBucketResponse(final int invocationIndex) throws IOException {
-            super(null, null, ChecksumType.Type.NONE);
+            super(null);
             this.invocationIndex = invocationIndex;
+        }
+        
+        @Override
+        protected void processResponse() throws IOException {
         }
 
         @Override
@@ -657,7 +662,7 @@ public class Ds3ClientHelpers_Test {
         final HeadBucketResponse response = buildHeadBucketResponse(HeadBucketResponse.Status.DOESNTEXIST);
         Mockito.when(ds3Client.headBucket(Mockito.any(HeadBucketRequest.class))).thenReturn(response);
         Mockito.when(ds3Client.putBucket(Mockito.any(PutBucketRequest.class)))
-                .thenThrow(new FailedRequestException(ImmutableList.of(202, 409), 409, new Error(), "Conflict", "5"));
+                .thenThrow(new FailedRequestException(ImmutableList.of(202, 409), 409, new Error(), "Conflict"));
 
         final Ds3ClientHelpers helpers = Ds3ClientHelpers.wrap(ds3Client);
 
@@ -671,7 +676,7 @@ public class Ds3ClientHelpers_Test {
         final HeadBucketResponse response = buildHeadBucketResponse(HeadBucketResponse.Status.DOESNTEXIST);
         Mockito.when(ds3Client.headBucket(Mockito.any(HeadBucketRequest.class))).thenReturn(response);
         Mockito.when(ds3Client.putBucket(Mockito.any(PutBucketRequest.class)))
-                .thenThrow(new FailedRequestException(ImmutableList.of(202, 409, 500), 500, new Error(), "Error", "5"));
+                .thenThrow(new FailedRequestException(ImmutableList.of(202, 409, 500), 500, new Error(), "Error"));
 
         final Ds3ClientHelpers helpers = Ds3ClientHelpers.wrap(ds3Client);
 

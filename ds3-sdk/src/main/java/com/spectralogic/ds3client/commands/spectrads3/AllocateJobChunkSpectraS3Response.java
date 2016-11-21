@@ -16,37 +16,73 @@
 // This code is auto-generated, do not modify
 package com.spectralogic.ds3client.commands.spectrads3;
 
+import com.spectralogic.ds3client.networking.WebResponse;
+import java.io.IOException;
 import com.spectralogic.ds3client.models.Objects;
-import com.spectralogic.ds3client.models.ChecksumType;
+import java.io.InputStream;
+import com.spectralogic.ds3client.serializer.XmlOutput;
 import com.spectralogic.ds3client.commands.interfaces.AbstractResponse;
+import com.spectralogic.ds3client.exceptions.RetryAfterExpectedException;
 
 public class AllocateJobChunkSpectraS3Response extends AbstractResponse {
 
-    public enum Status { ALLOCATED, RETRYLATER }
-    
-    private final Objects objectsResult;
+    private Objects objectsResult;
 
-    private final int retryAfterSeconds;
-
-    private final Status status;
-
-    public AllocateJobChunkSpectraS3Response(final Objects objectsResult, final int retryAfterSeconds, final Status status, final String checksum, final ChecksumType.Type checksumType) {
-        super(checksum, checksumType);
-        this.objectsResult = objectsResult;
-        this.retryAfterSeconds = retryAfterSeconds;
-        this.status = status;
+    public enum Status {
+        ALLOCATED, RETRYLATER
     }
 
-    public Objects getObjectsResult() {
-        return this.objectsResult;
+    private Status status;
+    private int retryAfterSeconds;
+
+    public Status getStatus() {
+        return this.status;
     }
 
     public int getRetryAfterSeconds() {
         return this.retryAfterSeconds;
     }
 
-    public Status getStatus() {
-        return this.status;
+    public AllocateJobChunkSpectraS3Response(final WebResponse response) throws IOException {
+        super(response);
     }
+
+    @Override
+    protected void processResponse() throws IOException {
+        try (final WebResponse response = this.getResponse()) {
+            this.checkStatusCode(200, 307, 503);
+
+            switch (this.getStatusCode()) {
+            case 200:
+                try (final InputStream content = response.getResponseStream()) {
+                    this.objectsResult = XmlOutput.fromXml(content, Objects.class);
+                    this.status = Status.ALLOCATED;
+                }
+                break;
+            case 307:
+            case 503:
+                this.status = Status.RETRYLATER;
+                this.retryAfterSeconds = parseRetryAfter(response);
+                break;
+            default:
+                assert false : "checkStatusCode should have made it impossible to reach this line.";
+            }
+        } finally {
+            this.getResponse().close();
+        }
+    }
+
+    private static int parseRetryAfter(final WebResponse webResponse) {
+        final String retryAfter = webResponse.getHeaders().get("Retry-After").get(0);
+        if (retryAfter == null) {
+            throw new RetryAfterExpectedException();
+        }
+        return Integer.parseInt(retryAfter);
+    }
+
+    public Objects getObjectsResult() {
+        return this.objectsResult;
+    }
+
 
 }

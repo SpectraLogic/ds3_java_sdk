@@ -16,17 +16,38 @@
 // This code is auto-generated, do not modify
 package com.spectralogic.ds3client.commands.spectrads3;
 
+import com.spectralogic.ds3client.networking.WebResponse;
+import java.io.IOException;
 import com.spectralogic.ds3client.models.Objects;
-import com.spectralogic.ds3client.models.ChecksumType;
+import java.io.InputStream;
+import com.spectralogic.ds3client.serializer.XmlOutput;
 import com.spectralogic.ds3client.commands.interfaces.AbstractResponse;
 
 public class GetJobChunkSpectraS3Response extends AbstractResponse {
-    
-    private final Objects objectsResult;
 
-    public GetJobChunkSpectraS3Response(final Objects objectsResult, final String checksum, final ChecksumType.Type checksumType) {
-        super(checksum, checksumType);
-        this.objectsResult = objectsResult;
+    private Objects objectsResult;
+
+    public GetJobChunkSpectraS3Response(final WebResponse response) throws IOException {
+        super(response);
+    }
+
+    @Override
+    protected void processResponse() throws IOException {
+        try {
+            this.checkStatusCode(200);
+
+            switch (this.getStatusCode()) {
+            case 200:
+                try (final InputStream content = getResponse().getResponseStream()) {
+                    this.objectsResult = XmlOutput.fromXml(content, Objects.class);
+                }
+                break;
+            default:
+                assert false : "checkStatusCode should have made it impossible to reach this line.";
+            }
+        } finally {
+            this.getResponse().close();
+        }
     }
 
     public Objects getObjectsResult() {
