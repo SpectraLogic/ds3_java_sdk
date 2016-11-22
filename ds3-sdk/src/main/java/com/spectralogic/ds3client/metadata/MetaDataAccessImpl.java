@@ -148,7 +148,5 @@ public class MetaDataAccessImpl implements Ds3ClientHelpers.MetadataAccess {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-
     }
 }

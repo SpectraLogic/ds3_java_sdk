@@ -66,7 +66,6 @@ public class MetadataRecievedListenerImpl implements MetadataReceivedListener {
         if (owner != null && groupName != null && !owner.equals("") && !groupName.equals(""))
             setOwnerNGroup(localFilePath + "/" + objectName, owner, groupName);
 
-
         String os = System.getProperty("os.name");
         String storedOS = null;
         if(metadata.get("ds3-os").size()>0)
@@ -85,9 +84,6 @@ public class MetadataRecievedListenerImpl implements MetadataReceivedListener {
             }
             }
         }
-
-
-
 
         for (final String metadataKey : metadata.keys()) {
             final List<String> values = metadata.get(metadataKey);
@@ -119,7 +115,6 @@ public class MetadataRecievedListenerImpl implements MetadataReceivedListener {
             String systemUserPermission = metadata.get("ds3-systemUser").get(0);
             restorePermissionByUser(systemUserPermission, "SYSTEM", path, aclEntries);
         }
-
 
         if(metadata.get("ds3-allUser").size()>0) {
             String allUserPermission = metadata.get("ds3-allUser").get(0);
@@ -195,8 +190,6 @@ public class MetadataRecievedListenerImpl implements MetadataReceivedListener {
             System.out.println("Exception in between");
         }
     }
-
-
     //set the last modified time saved on server
     private void setModifiedTime(String filePath, Long modifiedTime) {
         try {
@@ -250,12 +243,10 @@ public class MetadataRecievedListenerImpl implements MetadataReceivedListener {
             attributes.setTimes(timeModified, timeAccessed, timeCreation);
             File f = new File(filePath);
             f.setLastModified(Long.parseLong(lastModifiedTime)+60000);
-
         }
         catch (Exception e)
         {
             e.printStackTrace();
         }
-
     }
 }
