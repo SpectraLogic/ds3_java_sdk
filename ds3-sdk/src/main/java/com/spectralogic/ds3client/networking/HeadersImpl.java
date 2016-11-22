@@ -16,6 +16,7 @@
 package com.spectralogic.ds3client.networking;
 
 import com.google.common.collect.ImmutableMultimap;
+import com.spectralogic.ds3client.networking.Headers;
 import org.apache.http.Header;
 
 import java.util.List;

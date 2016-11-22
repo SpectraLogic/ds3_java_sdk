@@ -16,17 +16,38 @@
 // This code is auto-generated, do not modify
 package com.spectralogic.ds3client.commands.spectrads3.notifications;
 
+import com.spectralogic.ds3client.networking.WebResponse;
+import java.io.IOException;
 import com.spectralogic.ds3client.models.StorageDomainFailureNotificationRegistration;
-import com.spectralogic.ds3client.models.ChecksumType;
+import java.io.InputStream;
+import com.spectralogic.ds3client.serializer.XmlOutput;
 import com.spectralogic.ds3client.commands.interfaces.AbstractResponse;
 
 public class GetStorageDomainFailureNotificationRegistrationSpectraS3Response extends AbstractResponse {
-    
-    private final StorageDomainFailureNotificationRegistration storageDomainFailureNotificationRegistrationResult;
 
-    public GetStorageDomainFailureNotificationRegistrationSpectraS3Response(final StorageDomainFailureNotificationRegistration storageDomainFailureNotificationRegistrationResult, final String checksum, final ChecksumType.Type checksumType) {
-        super(checksum, checksumType);
-        this.storageDomainFailureNotificationRegistrationResult = storageDomainFailureNotificationRegistrationResult;
+    private StorageDomainFailureNotificationRegistration storageDomainFailureNotificationRegistrationResult;
+
+    public GetStorageDomainFailureNotificationRegistrationSpectraS3Response(final WebResponse response) throws IOException {
+        super(response);
+    }
+
+    @Override
+    protected void processResponse() throws IOException {
+        try {
+            this.checkStatusCode(200);
+
+            switch (this.getStatusCode()) {
+            case 200:
+                try (final InputStream content = getResponse().getResponseStream()) {
+                    this.storageDomainFailureNotificationRegistrationResult = XmlOutput.fromXml(content, StorageDomainFailureNotificationRegistration.class);
+                }
+                break;
+            default:
+                assert false : "checkStatusCode should have made it impossible to reach this line.";
+            }
+        } finally {
+            this.getResponse().close();
+        }
     }
 
     public StorageDomainFailureNotificationRegistration getStorageDomainFailureNotificationRegistrationResult() {

@@ -16,13 +16,34 @@
 // This code is auto-generated, do not modify
 package com.spectralogic.ds3client.commands;
 
-import com.spectralogic.ds3client.models.ChecksumType;
+import com.spectralogic.ds3client.networking.WebResponse;
+import java.io.IOException;
 import com.spectralogic.ds3client.commands.interfaces.AbstractResponse;
 
 public class DeleteObjectResponse extends AbstractResponse {
-    
-    public DeleteObjectResponse(final String checksum, final ChecksumType.Type checksumType) {
-        super(checksum, checksumType);
+
+
+
+    public DeleteObjectResponse(final WebResponse response) throws IOException {
+        super(response);
     }
+
+    @Override
+    protected void processResponse() throws IOException {
+        try {
+            this.checkStatusCode(204);
+
+            switch (this.getStatusCode()) {
+            case 204:
+                //Do nothing, payload is null
+                break;
+            default:
+                assert false : "checkStatusCode should have made it impossible to reach this line.";
+            }
+        } finally {
+            this.getResponse().close();
+        }
+    }
+
 
 }

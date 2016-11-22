@@ -102,7 +102,7 @@ public class Regression_Test {
 
             final CancelJobSpectraS3Response cancelJobResponse = client
                     .cancelJobSpectraS3(new CancelJobSpectraS3Request(putJob.getJobId().toString()));
-            assertThat(cancelJobResponse, is(notNullValue()));
+            assertEquals(204, cancelJobResponse.getStatusCode());
         } finally {
             deleteAllContents(client, bucketName);
         }
@@ -138,7 +138,7 @@ public class Regression_Test {
 
             final CancelJobSpectraS3Response cancelJobResponse = client
                     .cancelJobSpectraS3(new CancelJobSpectraS3Request(putJob.getJobId().toString()));
-            assertThat(cancelJobResponse, is(notNullValue()));
+            assertEquals(204, cancelJobResponse.getStatusCode());
         } finally {
             deleteAllContents(client, bucketName);
         }
@@ -187,7 +187,7 @@ public class Regression_Test {
 
             final CancelJobSpectraS3Response cancelJobResponse = client
                     .cancelJobSpectraS3(new CancelJobSpectraS3Request(putJob.getJobId().toString()));
-            assertThat(cancelJobResponse, is(notNullValue()));
+            assertEquals(204, cancelJobResponse.getStatusCode());
         } finally {
             deleteAllContents(client, bucketName);
         }
@@ -235,7 +235,7 @@ public class Regression_Test {
 
             final CancelJobSpectraS3Response cancelJobResponse = client
                     .cancelJobSpectraS3(new CancelJobSpectraS3Request(putJob.getJobId().toString()));
-            assertThat(cancelJobResponse, is(notNullValue()));
+            assertEquals(204, cancelJobResponse.getStatusCode());
         } finally {
             deleteAllContents(client, bucketName);
         }
@@ -298,6 +298,7 @@ public class Regression_Test {
                     0,
                     Files.size(objPath1)));
             assertThat(putResponse1, is(notNullValue()));
+            assertThat(putResponse1.getStatusCode(), is(equalTo(200)));
 
             // Interuption...
             final Ds3ClientHelpers.Job recoverJob = HELPERS.recoverWriteJob(job.getJobId());

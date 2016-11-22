@@ -16,17 +16,38 @@
 // This code is auto-generated, do not modify
 package com.spectralogic.ds3client.commands.spectrads3;
 
+import com.spectralogic.ds3client.networking.WebResponse;
+import java.io.IOException;
 import com.spectralogic.ds3client.models.SystemFailureList;
-import com.spectralogic.ds3client.models.ChecksumType;
+import java.io.InputStream;
+import com.spectralogic.ds3client.serializer.XmlOutput;
 import com.spectralogic.ds3client.commands.interfaces.AbstractPaginationResponse;
 
 public class GetSystemFailuresSpectraS3Response extends AbstractPaginationResponse {
 
-    private final SystemFailureList systemFailureListResult;
+    private SystemFailureList systemFailureListResult;
 
-    public GetSystemFailuresSpectraS3Response(final SystemFailureList systemFailureListResult, final Integer pagingTotalResultCount, final Integer pagingTruncated, final String checksum, final ChecksumType.Type checksumType) {
-        super(pagingTotalResultCount, pagingTruncated, checksum, checksumType);
-        this.systemFailureListResult = systemFailureListResult;
+    public GetSystemFailuresSpectraS3Response(final WebResponse response) throws IOException {
+        super(response);
+    }
+
+    @Override
+    protected void processResponse() throws IOException {
+        try {
+            this.checkStatusCode(200);
+
+            switch (this.getStatusCode()) {
+            case 200:
+                try (final InputStream content = getResponse().getResponseStream()) {
+                    this.systemFailureListResult = XmlOutput.fromXml(content, SystemFailureList.class);
+                }
+                break;
+            default:
+                assert false : "checkStatusCode should have made it impossible to reach this line.";
+            }
+        } finally {
+            this.getResponse().close();
+        }
     }
 
     public SystemFailureList getSystemFailureListResult() {

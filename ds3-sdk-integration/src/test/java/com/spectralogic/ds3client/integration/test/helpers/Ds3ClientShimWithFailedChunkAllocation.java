@@ -17,8 +17,6 @@ package com.spectralogic.ds3client.integration.test.helpers;
 
 import com.spectralogic.ds3client.Ds3ClientImpl;
 import com.spectralogic.ds3client.MockedWebResponse;
-import com.spectralogic.ds3client.commands.parsers.AllocateJobChunkSpectraS3ResponseParser;
-import com.spectralogic.ds3client.commands.parsers.GetJobChunksReadyForClientProcessingSpectraS3ResponseParser;
 import com.spectralogic.ds3client.commands.spectrads3.AllocateJobChunkSpectraS3Request;
 import com.spectralogic.ds3client.commands.spectrads3.AllocateJobChunkSpectraS3Response;
 import com.spectralogic.ds3client.commands.spectrads3.GetJobChunksReadyForClientProcessingSpectraS3Request;
@@ -41,8 +39,7 @@ public class Ds3ClientShimWithFailedChunkAllocation extends Ds3ClientShim {
             throws IOException
     {
         final AllocateJobChunkSpectraS3Response allocateJobChunkSpectraS3Response =
-                new AllocateJobChunkSpectraS3ResponseParser()
-                        .parseXmlResponse(new MockedWebResponse("A response", 307, makeFailingResponseHeaders()));
+                new AllocateJobChunkSpectraS3Response(new MockedWebResponse("A response", 307, makeFailingResponseHeaders()));
 
         return allocateJobChunkSpectraS3Response;
     }
@@ -60,8 +57,7 @@ public class Ds3ClientShimWithFailedChunkAllocation extends Ds3ClientShim {
             throws IOException
     {
         final GetJobChunksReadyForClientProcessingSpectraS3Response getJobChunksReadyForClientProcessingSpectraS3Response =
-                new GetJobChunksReadyForClientProcessingSpectraS3ResponseParser()
-                        .parseXmlResponse(new MockedWebResponse("A response", 307, makeFailingResponseHeaders()));
+                new GetJobChunksReadyForClientProcessingSpectraS3Response(new MockedWebResponse("A response", 307, makeFailingResponseHeaders()));
 
         return getJobChunksReadyForClientProcessingSpectraS3Response;
     }

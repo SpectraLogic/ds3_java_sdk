@@ -16,17 +16,38 @@
 // This code is auto-generated, do not modify
 package com.spectralogic.ds3client.commands.spectrads3;
 
+import com.spectralogic.ds3client.networking.WebResponse;
+import java.io.IOException;
 import com.spectralogic.ds3client.models.DataPolicyAclList;
-import com.spectralogic.ds3client.models.ChecksumType;
+import java.io.InputStream;
+import com.spectralogic.ds3client.serializer.XmlOutput;
 import com.spectralogic.ds3client.commands.interfaces.AbstractPaginationResponse;
 
 public class GetDataPolicyAclsSpectraS3Response extends AbstractPaginationResponse {
 
-    private final DataPolicyAclList dataPolicyAclListResult;
+    private DataPolicyAclList dataPolicyAclListResult;
 
-    public GetDataPolicyAclsSpectraS3Response(final DataPolicyAclList dataPolicyAclListResult, final Integer pagingTotalResultCount, final Integer pagingTruncated, final String checksum, final ChecksumType.Type checksumType) {
-        super(pagingTotalResultCount, pagingTruncated, checksum, checksumType);
-        this.dataPolicyAclListResult = dataPolicyAclListResult;
+    public GetDataPolicyAclsSpectraS3Response(final WebResponse response) throws IOException {
+        super(response);
+    }
+
+    @Override
+    protected void processResponse() throws IOException {
+        try {
+            this.checkStatusCode(200);
+
+            switch (this.getStatusCode()) {
+            case 200:
+                try (final InputStream content = getResponse().getResponseStream()) {
+                    this.dataPolicyAclListResult = XmlOutput.fromXml(content, DataPolicyAclList.class);
+                }
+                break;
+            default:
+                assert false : "checkStatusCode should have made it impossible to reach this line.";
+            }
+        } finally {
+            this.getResponse().close();
+        }
     }
 
     public DataPolicyAclList getDataPolicyAclListResult() {

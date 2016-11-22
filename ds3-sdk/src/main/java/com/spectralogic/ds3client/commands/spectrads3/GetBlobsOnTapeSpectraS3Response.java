@@ -16,17 +16,38 @@
 // This code is auto-generated, do not modify
 package com.spectralogic.ds3client.commands.spectrads3;
 
+import com.spectralogic.ds3client.networking.WebResponse;
+import java.io.IOException;
 import com.spectralogic.ds3client.models.BulkObjectList;
-import com.spectralogic.ds3client.models.ChecksumType;
+import java.io.InputStream;
+import com.spectralogic.ds3client.serializer.XmlOutput;
 import com.spectralogic.ds3client.commands.interfaces.AbstractResponse;
 
 public class GetBlobsOnTapeSpectraS3Response extends AbstractResponse {
-    
-    private final BulkObjectList bulkObjectListResult;
 
-    public GetBlobsOnTapeSpectraS3Response(final BulkObjectList bulkObjectListResult, final String checksum, final ChecksumType.Type checksumType) {
-        super(checksum, checksumType);
-        this.bulkObjectListResult = bulkObjectListResult;
+    private BulkObjectList bulkObjectListResult;
+
+    public GetBlobsOnTapeSpectraS3Response(final WebResponse response) throws IOException {
+        super(response);
+    }
+
+    @Override
+    protected void processResponse() throws IOException {
+        try {
+            this.checkStatusCode(200);
+
+            switch (this.getStatusCode()) {
+            case 200:
+                try (final InputStream content = getResponse().getResponseStream()) {
+                    this.bulkObjectListResult = XmlOutput.fromXml(content, BulkObjectList.class);
+                }
+                break;
+            default:
+                assert false : "checkStatusCode should have made it impossible to reach this line.";
+            }
+        } finally {
+            this.getResponse().close();
+        }
     }
 
     public BulkObjectList getBulkObjectListResult() {

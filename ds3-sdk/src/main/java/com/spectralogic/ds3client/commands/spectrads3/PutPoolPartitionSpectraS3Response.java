@@ -16,17 +16,38 @@
 // This code is auto-generated, do not modify
 package com.spectralogic.ds3client.commands.spectrads3;
 
+import com.spectralogic.ds3client.networking.WebResponse;
+import java.io.IOException;
 import com.spectralogic.ds3client.models.PoolPartition;
-import com.spectralogic.ds3client.models.ChecksumType;
+import java.io.InputStream;
+import com.spectralogic.ds3client.serializer.XmlOutput;
 import com.spectralogic.ds3client.commands.interfaces.AbstractResponse;
 
 public class PutPoolPartitionSpectraS3Response extends AbstractResponse {
-    
-    private final PoolPartition poolPartitionResult;
 
-    public PutPoolPartitionSpectraS3Response(final PoolPartition poolPartitionResult, final String checksum, final ChecksumType.Type checksumType) {
-        super(checksum, checksumType);
-        this.poolPartitionResult = poolPartitionResult;
+    private PoolPartition poolPartitionResult;
+
+    public PutPoolPartitionSpectraS3Response(final WebResponse response) throws IOException {
+        super(response);
+    }
+
+    @Override
+    protected void processResponse() throws IOException {
+        try {
+            this.checkStatusCode(201);
+
+            switch (this.getStatusCode()) {
+            case 201:
+                try (final InputStream content = getResponse().getResponseStream()) {
+                    this.poolPartitionResult = XmlOutput.fromXml(content, PoolPartition.class);
+                }
+                break;
+            default:
+                assert false : "checkStatusCode should have made it impossible to reach this line.";
+            }
+        } finally {
+            this.getResponse().close();
+        }
     }
 
     public PoolPartition getPoolPartitionResult() {
