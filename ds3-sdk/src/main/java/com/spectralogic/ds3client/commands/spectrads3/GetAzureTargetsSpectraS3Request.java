@@ -48,8 +48,6 @@ public class GetAzureTargetsSpectraS3Request extends AbstractPaginationRequest {
 
     private Quiesced quiesced;
 
-    private boolean replicateDeletes;
-
     private TargetState state;
 
     // Constructor
@@ -140,13 +138,6 @@ public class GetAzureTargetsSpectraS3Request extends AbstractPaginationRequest {
     }
 
 
-    public GetAzureTargetsSpectraS3Request withReplicateDeletes(final boolean replicateDeletes) {
-        this.replicateDeletes = replicateDeletes;
-        this.updateQueryParam("replicate_deletes", replicateDeletes);
-        return this;
-    }
-
-
     public GetAzureTargetsSpectraS3Request withState(final TargetState state) {
         this.state = state;
         this.updateQueryParam("state", state);
@@ -212,11 +203,6 @@ public class GetAzureTargetsSpectraS3Request extends AbstractPaginationRequest {
 
     public Quiesced getQuiesced() {
         return this.quiesced;
-    }
-
-
-    public boolean getReplicateDeletes() {
-        return this.replicateDeletes;
     }
 
 

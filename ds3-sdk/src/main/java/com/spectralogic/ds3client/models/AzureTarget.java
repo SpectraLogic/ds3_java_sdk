@@ -63,9 +63,6 @@ public class AzureTarget {
     @JsonProperty("Quiesced")
     private Quiesced quiesced;
 
-    @JsonProperty("ReplicateDeletes")
-    private boolean replicateDeletes;
-
     @JsonProperty("State")
     private TargetState state;
 
@@ -181,15 +178,6 @@ public class AzureTarget {
 
     public void setQuiesced(final Quiesced quiesced) {
         this.quiesced = quiesced;
-    }
-
-
-    public boolean getReplicateDeletes() {
-        return this.replicateDeletes;
-    }
-
-    public void setReplicateDeletes(final boolean replicateDeletes) {
-        this.replicateDeletes = replicateDeletes;
     }
 
 

@@ -49,8 +49,6 @@ public class ModifyAzureTargetSpectraS3Request extends AbstractRequest {
 
     private Quiesced quiesced;
 
-    private boolean replicateDeletes;
-
     // Constructor
     
     
@@ -129,13 +127,6 @@ public class ModifyAzureTargetSpectraS3Request extends AbstractRequest {
     }
 
 
-    public ModifyAzureTargetSpectraS3Request withReplicateDeletes(final boolean replicateDeletes) {
-        this.replicateDeletes = replicateDeletes;
-        this.updateQueryParam("replicate_deletes", replicateDeletes);
-        return this;
-    }
-
-
 
     @Override
     public HttpVerb getVerb() {
@@ -199,11 +190,6 @@ public class ModifyAzureTargetSpectraS3Request extends AbstractRequest {
 
     public Quiesced getQuiesced() {
         return this.quiesced;
-    }
-
-
-    public boolean getReplicateDeletes() {
-        return this.replicateDeletes;
     }
 
 }

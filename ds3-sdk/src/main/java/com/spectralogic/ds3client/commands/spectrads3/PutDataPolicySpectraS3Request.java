@@ -34,8 +34,6 @@ public class PutDataPolicySpectraS3Request extends AbstractRequest {
 
     private boolean alwaysMinimizeSpanningAcrossMedia;
 
-    private boolean alwaysReplicateDeletes;
-
     private boolean blobbingEnabled;
 
     private ChecksumType.Type checksumType;
@@ -75,13 +73,6 @@ public class PutDataPolicySpectraS3Request extends AbstractRequest {
     public PutDataPolicySpectraS3Request withAlwaysMinimizeSpanningAcrossMedia(final boolean alwaysMinimizeSpanningAcrossMedia) {
         this.alwaysMinimizeSpanningAcrossMedia = alwaysMinimizeSpanningAcrossMedia;
         this.updateQueryParam("always_minimize_spanning_across_media", alwaysMinimizeSpanningAcrossMedia);
-        return this;
-    }
-
-
-    public PutDataPolicySpectraS3Request withAlwaysReplicateDeletes(final boolean alwaysReplicateDeletes) {
-        this.alwaysReplicateDeletes = alwaysReplicateDeletes;
-        this.updateQueryParam("always_replicate_deletes", alwaysReplicateDeletes);
         return this;
     }
 
@@ -179,11 +170,6 @@ public class PutDataPolicySpectraS3Request extends AbstractRequest {
 
     public boolean getAlwaysMinimizeSpanningAcrossMedia() {
         return this.alwaysMinimizeSpanningAcrossMedia;
-    }
-
-
-    public boolean getAlwaysReplicateDeletes() {
-        return this.alwaysReplicateDeletes;
     }
 
 

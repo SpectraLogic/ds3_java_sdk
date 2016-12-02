@@ -32,6 +32,8 @@ public class PutDs3DataReplicationRuleSpectraS3Request extends AbstractRequest {
 
     private final DataReplicationRuleType type;
 
+    private boolean replicateDeletes;
+
     private String targetDataPolicy;
 
     // Constructor
@@ -57,6 +59,13 @@ public class PutDs3DataReplicationRuleSpectraS3Request extends AbstractRequest {
         this.getQueryParams().put("target_id", UrlEscapers.urlFragmentEscaper().escape(targetId).replace("+", "%2B"));
         this.getQueryParams().put("type", type.toString());
     }
+
+    public PutDs3DataReplicationRuleSpectraS3Request withReplicateDeletes(final boolean replicateDeletes) {
+        this.replicateDeletes = replicateDeletes;
+        this.updateQueryParam("replicate_deletes", replicateDeletes);
+        return this;
+    }
+
 
     public PutDs3DataReplicationRuleSpectraS3Request withTargetDataPolicy(final String targetDataPolicy) {
         this.targetDataPolicy = targetDataPolicy;
@@ -88,6 +97,11 @@ public class PutDs3DataReplicationRuleSpectraS3Request extends AbstractRequest {
 
     public DataReplicationRuleType getType() {
         return this.type;
+    }
+
+
+    public boolean getReplicateDeletes() {
+        return this.replicateDeletes;
     }
 
 

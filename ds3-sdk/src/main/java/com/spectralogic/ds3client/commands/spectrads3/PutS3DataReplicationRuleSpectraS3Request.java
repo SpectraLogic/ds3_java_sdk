@@ -37,6 +37,8 @@ public class PutS3DataReplicationRuleSpectraS3Request extends AbstractRequest {
 
     private long maxBlobPartSizeInBytes;
 
+    private boolean replicateDeletes;
+
     // Constructor
     
     
@@ -75,6 +77,13 @@ public class PutS3DataReplicationRuleSpectraS3Request extends AbstractRequest {
     }
 
 
+    public PutS3DataReplicationRuleSpectraS3Request withReplicateDeletes(final boolean replicateDeletes) {
+        this.replicateDeletes = replicateDeletes;
+        this.updateQueryParam("replicate_deletes", replicateDeletes);
+        return this;
+    }
+
+
 
     @Override
     public HttpVerb getVerb() {
@@ -108,6 +117,11 @@ public class PutS3DataReplicationRuleSpectraS3Request extends AbstractRequest {
 
     public long getMaxBlobPartSizeInBytes() {
         return this.maxBlobPartSizeInBytes;
+    }
+
+
+    public boolean getReplicateDeletes() {
+        return this.replicateDeletes;
     }
 
 }

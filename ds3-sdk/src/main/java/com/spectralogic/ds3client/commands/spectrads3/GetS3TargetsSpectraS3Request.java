@@ -53,8 +53,6 @@ public class GetS3TargetsSpectraS3Request extends AbstractPaginationRequest {
 
     private S3Region region;
 
-    private boolean replicateDeletes;
-
     private TargetState state;
 
     // Constructor
@@ -159,13 +157,6 @@ public class GetS3TargetsSpectraS3Request extends AbstractPaginationRequest {
     }
 
 
-    public GetS3TargetsSpectraS3Request withReplicateDeletes(final boolean replicateDeletes) {
-        this.replicateDeletes = replicateDeletes;
-        this.updateQueryParam("replicate_deletes", replicateDeletes);
-        return this;
-    }
-
-
     public GetS3TargetsSpectraS3Request withState(final TargetState state) {
         this.state = state;
         this.updateQueryParam("state", state);
@@ -241,11 +232,6 @@ public class GetS3TargetsSpectraS3Request extends AbstractPaginationRequest {
 
     public S3Region getRegion() {
         return this.region;
-    }
-
-
-    public boolean getReplicateDeletes() {
-        return this.replicateDeletes;
     }
 
 
