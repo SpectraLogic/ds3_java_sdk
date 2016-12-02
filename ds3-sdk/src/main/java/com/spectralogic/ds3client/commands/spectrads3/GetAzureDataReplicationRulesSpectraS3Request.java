@@ -37,6 +37,8 @@ public class GetAzureDataReplicationRulesSpectraS3Request extends AbstractPagina
 
     private String pageStartMarker;
 
+    private boolean replicateDeletes;
+
     private DataPlacementRuleState state;
 
     private String targetId;
@@ -103,6 +105,13 @@ public class GetAzureDataReplicationRulesSpectraS3Request extends AbstractPagina
     }
 
 
+    public GetAzureDataReplicationRulesSpectraS3Request withReplicateDeletes(final boolean replicateDeletes) {
+        this.replicateDeletes = replicateDeletes;
+        this.updateQueryParam("replicate_deletes", replicateDeletes);
+        return this;
+    }
+
+
     public GetAzureDataReplicationRulesSpectraS3Request withState(final DataPlacementRuleState state) {
         this.state = state;
         this.updateQueryParam("state", state);
@@ -164,6 +173,11 @@ public class GetAzureDataReplicationRulesSpectraS3Request extends AbstractPagina
 
     public String getPageStartMarker() {
         return this.pageStartMarker;
+    }
+
+
+    public boolean getReplicateDeletes() {
+        return this.replicateDeletes;
     }
 
 

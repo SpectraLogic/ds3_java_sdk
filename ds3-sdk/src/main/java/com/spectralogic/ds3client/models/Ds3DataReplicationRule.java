@@ -31,6 +31,9 @@ public class Ds3DataReplicationRule {
     @JsonProperty("Id")
     private UUID id;
 
+    @JsonProperty("ReplicateDeletes")
+    private boolean replicateDeletes;
+
     @JsonProperty("State")
     private DataPlacementRuleState state;
 
@@ -65,6 +68,15 @@ public class Ds3DataReplicationRule {
 
     public void setId(final UUID id) {
         this.id = id;
+    }
+
+
+    public boolean getReplicateDeletes() {
+        return this.replicateDeletes;
+    }
+
+    public void setReplicateDeletes(final boolean replicateDeletes) {
+        this.replicateDeletes = replicateDeletes;
     }
 
 

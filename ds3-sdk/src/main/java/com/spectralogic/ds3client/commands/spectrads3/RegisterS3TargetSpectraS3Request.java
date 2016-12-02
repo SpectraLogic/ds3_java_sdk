@@ -61,8 +61,6 @@ public class RegisterS3TargetSpectraS3Request extends AbstractRequest {
 
     private S3Region region;
 
-    private boolean replicateDeletes;
-
     private int stagedDataExpirationInDays;
 
     // Constructor
@@ -176,13 +174,6 @@ public class RegisterS3TargetSpectraS3Request extends AbstractRequest {
     }
 
 
-    public RegisterS3TargetSpectraS3Request withReplicateDeletes(final boolean replicateDeletes) {
-        this.replicateDeletes = replicateDeletes;
-        this.updateQueryParam("replicate_deletes", replicateDeletes);
-        return this;
-    }
-
-
     public RegisterS3TargetSpectraS3Request withStagedDataExpirationInDays(final int stagedDataExpirationInDays) {
         this.stagedDataExpirationInDays = stagedDataExpirationInDays;
         this.updateQueryParam("staged_data_expiration_in_days", stagedDataExpirationInDays);
@@ -283,11 +274,6 @@ public class RegisterS3TargetSpectraS3Request extends AbstractRequest {
 
     public S3Region getRegion() {
         return this.region;
-    }
-
-
-    public boolean getReplicateDeletes() {
-        return this.replicateDeletes;
     }
 
 

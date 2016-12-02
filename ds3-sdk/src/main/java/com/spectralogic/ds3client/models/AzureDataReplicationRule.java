@@ -33,6 +33,9 @@ public class AzureDataReplicationRule {
     @JsonProperty("MaxBlobPartSizeInBytes")
     private long maxBlobPartSizeInBytes;
 
+    @JsonProperty("ReplicateDeletes")
+    private boolean replicateDeletes;
+
     @JsonProperty("State")
     private DataPlacementRuleState state;
 
@@ -73,6 +76,15 @@ public class AzureDataReplicationRule {
 
     public void setMaxBlobPartSizeInBytes(final long maxBlobPartSizeInBytes) {
         this.maxBlobPartSizeInBytes = maxBlobPartSizeInBytes;
+    }
+
+
+    public boolean getReplicateDeletes() {
+        return this.replicateDeletes;
+    }
+
+    public void setReplicateDeletes(final boolean replicateDeletes) {
+        this.replicateDeletes = replicateDeletes;
     }
 
 

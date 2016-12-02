@@ -44,8 +44,6 @@ public class RegisterAzureTargetSpectraS3Request extends AbstractRequest {
 
     private boolean permitGoingOutOfSync;
 
-    private boolean replicateDeletes;
-
     // Constructor
     
     
@@ -97,13 +95,6 @@ public class RegisterAzureTargetSpectraS3Request extends AbstractRequest {
     public RegisterAzureTargetSpectraS3Request withPermitGoingOutOfSync(final boolean permitGoingOutOfSync) {
         this.permitGoingOutOfSync = permitGoingOutOfSync;
         this.updateQueryParam("permit_going_out_of_sync", permitGoingOutOfSync);
-        return this;
-    }
-
-
-    public RegisterAzureTargetSpectraS3Request withReplicateDeletes(final boolean replicateDeletes) {
-        this.replicateDeletes = replicateDeletes;
-        this.updateQueryParam("replicate_deletes", replicateDeletes);
         return this;
     }
 
@@ -161,11 +152,6 @@ public class RegisterAzureTargetSpectraS3Request extends AbstractRequest {
 
     public boolean getPermitGoingOutOfSync() {
         return this.permitGoingOutOfSync;
-    }
-
-
-    public boolean getReplicateDeletes() {
-        return this.replicateDeletes;
     }
 
 }

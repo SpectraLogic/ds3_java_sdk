@@ -84,9 +84,6 @@ public class S3Target {
     @JsonProperty("Region")
     private S3Region region;
 
-    @JsonProperty("ReplicateDeletes")
-    private boolean replicateDeletes;
-
     @JsonProperty("SecretKey")
     private String secretKey;
 
@@ -271,15 +268,6 @@ public class S3Target {
 
     public void setRegion(final S3Region region) {
         this.region = region;
-    }
-
-
-    public boolean getReplicateDeletes() {
-        return this.replicateDeletes;
-    }
-
-    public void setReplicateDeletes(final boolean replicateDeletes) {
-        this.replicateDeletes = replicateDeletes;
     }
 
 
