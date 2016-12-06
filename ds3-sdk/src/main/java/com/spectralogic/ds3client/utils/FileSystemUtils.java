@@ -13,23 +13,20 @@
  *  ****************************************************************************
  */
 
-package com.spectralogic.ds3client.helpers;
+package com.spectralogic.ds3client.utils;
+
+import com.google.common.base.Preconditions;
 
 import java.io.IOException;
-import java.nio.file.FileSystemException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
-public final class ExceptionClassifier {
-    private ExceptionClassifier() { }
+public final class FileSystemUtils {
+    private FileSystemUtils() {}
 
-    public static boolean isRecoverableException(final Throwable t) {
-        if (t.getClass().equals(UnrecoverableIOException.class) || t instanceof FileSystemException || t instanceof SecurityException) {
-            return false;
-        }
+    public static long getAvailableFileSpace(final Path path) throws IOException {
+        Preconditions.checkNotNull(path, "path must not be null.");
 
-        return t instanceof IOException;
-    }
-
-    public static boolean isUnrecoverableException(final Throwable t) {
-        return ! isRecoverableException(t);
+        return Files.getFileStore(path).getUsableSpace();
     }
 }

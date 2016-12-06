@@ -16,20 +16,21 @@
 package com.spectralogic.ds3client.helpers;
 
 import java.io.IOException;
-import java.nio.file.FileSystemException;
 
-public final class ExceptionClassifier {
-    private ExceptionClassifier() { }
-
-    public static boolean isRecoverableException(final Throwable t) {
-        if (t.getClass().equals(UnrecoverableIOException.class) || t instanceof FileSystemException || t instanceof SecurityException) {
-            return false;
-        }
-
-        return t instanceof IOException;
+public class UnrecoverableIOException extends IOException {
+    public UnrecoverableIOException() {
+        super();
     }
 
-    public static boolean isUnrecoverableException(final Throwable t) {
-        return ! isRecoverableException(t);
+    public UnrecoverableIOException(final String message) {
+        super(message);
+    }
+
+    public UnrecoverableIOException(final String message, final Throwable cause) {
+        super(message, cause);
+    }
+
+    public UnrecoverableIOException(final Throwable cause) {
+        super(cause);
     }
 }
