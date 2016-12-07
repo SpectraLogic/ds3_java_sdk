@@ -28,6 +28,7 @@ import javax.annotation.Nullable;
 import java.io.IOException;
 import java.nio.channels.SeekableByteChannel;
 import java.nio.file.Path;
+import java.util.Collection;
 import java.util.Map;
 import java.util.UUID;
 
@@ -382,4 +383,19 @@ public abstract class Ds3ClientHelpers {
         }
         return returnString;
     }
+
+    /**
+     * Determine if the file system directory specified in the destinationDirectory parameter
+     * has enough storage space to contain the objects listed in the parameter objectNames contained in
+     * the bucket specified in the parameter buckName.  You can use this method prior to starting a read
+     * job to ensure that your file system has enough storage space to contain the objects you wish to
+     * retrieve.
+     * @param bucketName The Black Pearl bucket containing the objects you wish to retrieve.
+     * @param objectNames The names of the objects you wish to retrieve.
+     * @param destinationDirectory The file system directory in you intend to store retrieved objects.
+     * @return {@link ObjectStorageSpaceVerificationResult}
+     */
+    public abstract ObjectStorageSpaceVerificationResult objectsFromBucketWillFitInDirectory(final String bucketName,
+                                                                                             final Collection<String> objectNames,
+                                                                                             final Path destinationDirectory);
 }

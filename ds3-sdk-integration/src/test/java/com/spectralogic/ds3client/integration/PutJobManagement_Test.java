@@ -40,9 +40,6 @@ import com.spectralogic.ds3client.networking.FailedRequestException;
 import com.spectralogic.ds3client.utils.ByteArraySeekableByteChannel;
 import com.spectralogic.ds3client.utils.ResourceUtils;
 
-import com.spectralogic.ds3client.IntValue;
-
-import com.spectralogic.ds3client.integration.test.helpers.Ds3ClientShimWithFailedChunkAllocation;
 import com.spectralogic.ds3client.integration.test.helpers.Ds3ClientShimFactory.ClientFailureType;
 
 import org.apache.commons.io.FileUtils;
