@@ -1,7 +1,7 @@
 package com.spectralogic.ds3client.metadata;
 
 import com.google.common.collect.ImmutableMap;
-import com.spectralogic.dsbrowser.gui.jna.Advapi32;
+import com.spectralogic.ds3client.metadata.jna.Advapi32;
 import com.sun.jna.platform.win32.Win32Exception;
 import com.sun.jna.platform.win32.WinNT;
 import com.sun.jna.ptr.PointerByReference;
@@ -586,62 +586,37 @@ public class MetaDataUtil
      */
 
     public String saveFlagMetaData(Path file) {
+        final StringBuilder flagBuilder = new StringBuilder();
+        try {
+            final StringBuilder stringBuilder = new StringBuilder();
+            stringBuilder.append("attrib  ");
+            stringBuilder.append(file);
 
-        String flagWindows = "";
-            try {
-            final DosFileAttributes dosFileAttributes =
-                    Files.readAttributes(file, DosFileAttributes.class);
-            final Object object = dosFileAttributes;
-
-                final Field fields = object.getClass().getDeclaredField("fileAttrs");
-                fields.setAccessible(true);
-                final String flag = fields.get(object).toString();
-                if (flag.equals("1")) {
-                    flagWindows=  "R";
-                } else if (flag.equals("2")) {
-                    flagWindows=  "H";
-                } else if (flag.equals("3")) {
-                    flagWindows=  "RH";
-                } else if (flag.equals("32")) {
-                    flagWindows=  "A";
-                } else if (flag.equals("33")) {
-                    flagWindows=  "RA";
-                } else if (flag.equals("34")) {
-                    flagWindows=  "HA";
-                } else if (flag.equals("35")) {
-                    flagWindows=  "RHA";
-                } else if (flag.equals("128")) {
-                    flagWindows=  "N";
-                } else if (flag.equals("8192")) {
-                    flagWindows=  "I";
-                } else if (flag.equals("8224")) {
-                    flagWindows=  "AI";
-                } else if (flag.equals("8225")) {
-                    flagWindows=  "RAI";
-                } else if (flag.equals("8227")) {
-                    flagWindows=  "RHAI";
-                } else if (flag.equals("8195")) {
-                    flagWindows=  "RHI";
-                } else if (flag.equals("8193")) {
-                    flagWindows=  "RI";
-                } else if (flag.equals("8226")) {
-                    flagWindows=  "HAI";
-                }
-                mMetadataMap.put(metadataPefix + mKeyFlags , flagWindows);
-                setmFlags(flagWindows);
-
-            } catch (final IOException ioe) {
-                LOG.error("Unable to read file",ioe);
-                throw new RuntimeException(ioe);
+            final Process p = Runtime.getRuntime().exec(stringBuilder.toString());
+            p.waitFor();
+            final BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
+            String [] flags = null;
+            String flagWindows = "";
+            while ((flagWindows = reader.readLine())!= null) {
+                flags =  flagWindows.split(" ");
             }
-            catch (Exception e)
-            {
-                LOG.error("Unable to fetch attributes of file",e);
-                throw new RuntimeException(e);
+            for(int i=0;i<flags.length-1;i++) {
+                flagBuilder.append(flags[i].trim());
             }
+            mMetadataMap.put(metadataPefix + mKeyFlags , flagBuilder.toString());
+            setmFlags(flagBuilder.toString());
 
+        } catch (final IOException ioe) {
+            LOG.error("Unable to read file",ioe);
+            throw new RuntimeException(ioe);
+        }
+        catch (Exception e)
+        {
+            LOG.error("Unable to fetch attributes of file",e);
+            throw new RuntimeException(e);
+        }
+        return flagBuilder.toString() ;
 
-            return flagWindows;
     }
 
 
@@ -672,7 +647,7 @@ public class MetaDataUtil
                 daclString = daclString + "AU;";
             }
 
-            daclString = daclString + "0x" + Integer.toHexString(aceStructure.AceFlags)+ ";;";
+            daclString = daclString + "0x" + Integer.toHexString(aceStructure.AceFlags)+ ";";
             daclString = daclString + "0x" + Integer.toHexString(aceStructure.Mask)+ ";;;";
             daclString = daclString + (aceStructure.getSidString())+ ")";
 
@@ -815,15 +790,8 @@ public class MetaDataUtil
      */
     public void restoreFlagsWindows(String filePath , String flag){
 
-
-
-        final char [] chars = flag.toCharArray();
         final StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("attrib");
-//        for (char c : chars){
-//              stringBuilder.append(" +"+c);
-//        }
-
         if(flag.contains("A")) {
             stringBuilder.append(" +A");
         }if(flag.contains("R")) {
@@ -840,31 +808,15 @@ public class MetaDataUtil
             stringBuilder.append(" -I");
             stringBuilder.append(" -H");
         }
-
-
-
         stringBuilder.append(" "+filePath);
-
-
-
-
         try {
-            Process p = Runtime.getRuntime().exec(stringBuilder.toString());
+            final Process p = Runtime.getRuntime().exec(stringBuilder.toString());
             p.waitFor();
-            BufferedReader reader =
-                    new BufferedReader(new InputStreamReader(p.getInputStream()));
-
-            String line = "";
-            while ((line = reader.readLine())!= null) {
-                //output.append(line + "\n");
-            }
 
         } catch (Exception e) {
             LOG.error("Unable to restore flag attributes",e);
             throw  new RuntimeException(e);
         }
-
-
     }
 
     /**
@@ -884,4 +836,34 @@ public class MetaDataUtil
             throw new RuntimeException(e);
         }
     }
+
+
+    /**
+     *
+     * Get the actual file path from the objectName received from BP
+     *
+     * @param localFilePath :path of local directory
+     * @param filename : name of the file with logical folder
+     * @return actualFilePath
+     */
+    public String getRealFilePath(String localFilePath, String filename) {
+
+        final String filePath = localFilePath + "/" + filename;
+        File file = null;
+        String fName = filePath;
+        while(true){
+            file = new File(fName);
+            if(file.exists()){
+                break;
+            }else{
+                File parentFile = new File(file.getParent());
+                fName = parentFile.getParent() + "/" + file.getName();
+
+            }
+        }
+
+        return  fName;
+}
+
+
 }

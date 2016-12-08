@@ -45,6 +45,7 @@ public class MetaDataAccessImpl implements Ds3ClientHelpers.MetadataAccess {
                 final MetaDataUtil metadataUtil = new MetaDataUtil(metadata);
                 final Set<String>sets = metadataUtil.getSupportedFileAttributes(file);
                 final String os = metadataUtil.getOS();
+                metadataUtil.saveOSMetaData();
             for (final String set : sets) {
                 switch (set) {
                     case "basic":

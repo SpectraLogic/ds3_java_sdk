@@ -3,10 +3,13 @@ package com.spectralogic.ds3client.metadata;
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3client.helpers.MetadataReceivedListener;
+import com.spectralogic.ds3client.metadata.MetaDataAccessImpl;
 import com.spectralogic.ds3client.networking.Metadata;
+import com.sun.jna.platform.win32.WinNT;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
@@ -23,7 +26,6 @@ import java.util.regex.Pattern;
 public class MetadataReceivedListenerImpl implements MetadataReceivedListener {
     static private final Logger LOG = LoggerFactory.getLogger(MetaDataAccessImpl.class);
     private String localFilePath = null;
-
     private MetaDataUtil metadataUtil = new MetaDataUtil();
 
     public MetadataReceivedListenerImpl(final String localFilePath) {
@@ -32,8 +34,9 @@ public class MetadataReceivedListenerImpl implements MetadataReceivedListener {
     }
     @Override
     public void metadataReceived(String filename, final Metadata metadata) {
+        final String actualFilePath = metadataUtil.getRealFilePath(localFilePath , filename);
 
-        restoreMetaData(filename, metadata);
+        restoreMetaData(actualFilePath, metadata);
     }
 
     /**
@@ -43,6 +46,8 @@ public class MetadataReceivedListenerImpl implements MetadataReceivedListener {
      * @param metadata   metadata which needs to be set on local file
      */
     private void restoreMetaData(final String objectName, final Metadata metadata) {
+
+
         final StringBuilder builder = new StringBuilder();
         final Joiner joiner = Joiner.on(", ");
         builder.append("Metadata for object ").append(objectName).append(": ");
@@ -58,13 +63,20 @@ public class MetadataReceivedListenerImpl implements MetadataReceivedListener {
         if (metadata.get(MetaDataUtil.mKeyOS).size() > 0) {
             storedOS = metadata.get(MetaDataUtil.mKeyOS).get(0);
         }
+
+
+        if (storedOS != null && storedOS.equals(os) && os.contains("Windows")) {
+            if(metadata.get(MetaDataUtil.mKeyFlags).size()>0) {
+                final String flags = metadata.get(MetaDataUtil.mKeyFlags).get(0);
+                metadataUtil.restoreFlagsWindows(objectName, flags);
+            }
+        }
+
+
+
         if (storedOS != null && storedOS.equals(os) && os.contains("Windows")) {
             setPermissionsForWindows(metadata, objectName);
-            if(metadata.get(MetaDataUtil.mKeyFlags).size()>0){
-                String flags =  metadata.get(MetaDataUtil.mKeyFlags).get(0);
-                metadataUtil.restoreFlagsWindows(localFilePath + "/" + objectName,flags);
 
-            }
         } else {
             if (metadata.get(MetaDataUtil.mKeyPermissions).size() > 0) {
                 String permissions = metadata.get(MetaDataUtil.mKeyPermissions).get(0);
@@ -73,10 +85,11 @@ public class MetadataReceivedListenerImpl implements MetadataReceivedListener {
                     while (m.find()) {
                         permissions = (m.group(1));
                     }
-                    metadataUtil.setPermissionsLnx(localFilePath + "/" + objectName, permissions);
+                    metadataUtil.setPermissionsLnx(objectName, permissions);
                 }
             }
         }
+
 
         for (final String metadataKey : metadata.keys()) {
             final List<String> values = metadata.get(metadataKey);
@@ -108,7 +121,7 @@ public class MetadataReceivedListenerImpl implements MetadataReceivedListener {
                 groupId = metadata.get(MetaDataUtil.mKeyGid).get(0);
             }
             if (ownerId != null && groupId != null && !ownerId.equals("") && !groupId.equals("")) {
-                metadataUtil.setOwnerNGroupLnx(localFilePath + "/" + objectName, ownerId, groupId);
+                metadataUtil.setOwnerNGroupLnx(objectName, ownerId, groupId);
             }
 
         }
@@ -121,13 +134,13 @@ public class MetadataReceivedListenerImpl implements MetadataReceivedListener {
             if (metadata.get(MetaDataUtil.mKeyGroup).size() > 0)
                 groupSid = metadata.get(MetaDataUtil.mKeyGroup).get(0);
             if (ownerSid != null && groupSid != null && !ownerSid.equals("") && !groupSid.equals("")){
-                metadataUtil.setOwnerIdandGroupIdWin(localFilePath + "/" + objectName, ownerSid, groupSid);
+                metadataUtil.setOwnerIdandGroupIdWin(objectName, ownerSid, groupSid);
             }
         }
     }
 
     private void setPermissionsForWindows(final Metadata metadata, final String objectName) {
-        final Path path = Paths.get(localFilePath + "/" + objectName);
+        final Path path = Paths.get(objectName);
         final AclFileAttributeView aclAttributeView = Files.getFileAttributeView(path, AclFileAttributeView.class);
         final ImmutableList.Builder<AclEntry> aclEntryBuilder = new ImmutableList.Builder<>();
 
