@@ -1,7 +1,6 @@
 package com.spectralogic.ds3client.utils;
 
 import com.google.common.collect.ImmutableMap;
-import com.spectralogic.ds3client.exceptions.MetaDataException;
 import com.spectralogic.ds3client.metadata.MetaDataAccessImpl;
 import com.spectralogic.ds3client.metadata.jna.Advapi32;
 import com.sun.jna.platform.win32.Win32Exception;
@@ -33,51 +32,35 @@ public class MetaDataUtil {
     //Every metadata must start from x-amz
     public static final String METADATA_PREFIX = "x-amz-meta-";
     //creation time key
-    public static final String mKeyCreationTime = "ds3-creation-time";
+    public static final String KEY_CREATION_TIME = "ds3-creation-time";
     //access time key
-    public static final String mKeyAccessTime = "ds3-last-access-time";
+    public static final String KEY_ACCESS_TIME = "ds3-last-access-time";
     //modified time key
-    public static final String mKeylastModified = "ds3-last-modified-time";
-    //file is a directory
-    public static final String mKeyDirectory = "ds3-isDirectory";
-    //type of file is regular
-    public static final String mKeyRegularFile = "ds3-isRegularFile";
-    //type is other
-    public static final String mKeyOther = "ds3-isOther";
-    //type of a file
-    public static final String mKeyType = "ds3-type";
-    //whether symbolic link
-    public static final String mKeySymbolicLink = "ds3-isSymbolicLink";
-    //size of file
-    public static final String mKeySize = "ds3-size";
-    //file format
-    public static final String mKeyFileFormat = "ds3-fileFormat";
+    public static final String KEY_LAST_MODIFIED_TIME = "ds3-last-modified-time";
+
     //owner sid for windows
-    public static final String mKeyOwner = "ds3-owner";
+    public static final String KEY_OWNER = "ds3-owner";
     //group sid for windows
-    public static final String mKeyGroup = "ds3-group";
+    public static final String KEY_GROUP = "ds3-group";
     //user id of a file linux
-    public static final String mKeyUid = "ds3-uid";
+    public static final String KEY_UID = "ds3-uid";
     //group id for linux
-    public static final String mKeyGid = "ds3-gid";
+    public static final String KEY_GID = "ds3-gid";
     //mode for linux
-    public static final String mKeyMode = "ds3-mode";
+    public static final String KEY_MODE = "ds3-mode";
     //control flag
-    public static final String mKeyFlags = "ds3-flags";
+    public static final String KEY_FLAGS = "ds3-flags";
     //dacl String for windows
-    public static final String mKeyDacl = "ds3-dacl";
+    public static final String KEY_DACL = "ds3-dacl";
     //os
-    public static final String mKeyOS = "ds3-os";
-    //permissions for each user
-    public static final String mKeyUserList = "ds3-userList";
-    //name of all users/groups
-    public static final String mKeyUserListDisplay = "ds3-userListDisplay";
+    public static final String KEY_OS = "ds3-os";
+
     //permissions
-    public static final String mKeyPermissions = "ds3-permissions";
+    public static final String KEY_PERMISSION = "ds3-permissions";
     //owner name
-    public static final String mKeyOwnerName = "ds3-ownerName";
+    public static final String KEY_OWNER_NAME = "ds3-ownerName";
     //group Name
-    public static final String mKeyGroupName = "ds3-groupName";
+    public static final String KEY_GROUP_NAME = "ds3-groupName";
     //mode for linux
     public static final String mMode = "";
     static private final Logger LOG = LoggerFactory.getLogger(MetaDataAccessImpl.class);
@@ -333,7 +316,7 @@ public class MetaDataUtil {
      */
     public String saveCreationTimeMetaData(final BasicFileAttributes attr) {
         mCreationTime = String.valueOf(attr.creationTime().toMillis());
-        mMetadataMap.put(METADATA_PREFIX + mKeyCreationTime, mCreationTime);
+        mMetadataMap.put(METADATA_PREFIX + KEY_CREATION_TIME, mCreationTime);
         return mCreationTime;
     }
 
@@ -346,7 +329,7 @@ public class MetaDataUtil {
 
     public String saveUserId(final Path file) throws IOException {
         final int uid = (int) Files.getAttribute(file, "unix:uid", NOFOLLOW_LINKS);
-        mMetadataMap.put(METADATA_PREFIX + mKeyUid, String.valueOf(uid));
+        mMetadataMap.put(METADATA_PREFIX + KEY_UID, String.valueOf(uid));
         setmUid(String.valueOf(uid));
         return String.valueOf(uid);
     }
@@ -360,7 +343,7 @@ public class MetaDataUtil {
 
     public String saveGroupId(final Path file) throws IOException {
         final int gid = (int) Files.getAttribute(file, "unix:gid", NOFOLLOW_LINKS);
-        mMetadataMap.put(METADATA_PREFIX + mKeyGid, String.valueOf(gid));
+        mMetadataMap.put(METADATA_PREFIX + KEY_GID, String.valueOf(gid));
         setmGid(String.valueOf(gid));
         return String.valueOf(gid);
     }
@@ -374,7 +357,7 @@ public class MetaDataUtil {
     public String saveModeMetaData(final Path file) throws IOException {
         final int mode = (int) Files.getAttribute(file, "unix:mode", NOFOLLOW_LINKS);
         final String modeOctal = Integer.toOctalString(mode);
-        mMetadataMap.put(METADATA_PREFIX + mKeyMode, modeOctal);
+        mMetadataMap.put(METADATA_PREFIX + KEY_MODE, modeOctal);
         return modeOctal;
     }
 
@@ -385,7 +368,7 @@ public class MetaDataUtil {
      */
     public String saveAccessTimeMetaData(final BasicFileAttributes attr) {
         mAccessTime = String.valueOf(attr.lastAccessTime().toMillis());
-        mMetadataMap.put(METADATA_PREFIX + mKeyAccessTime, mAccessTime);
+        mMetadataMap.put(METADATA_PREFIX + KEY_ACCESS_TIME, mAccessTime);
         return mAccessTime;
     }
 
@@ -396,7 +379,7 @@ public class MetaDataUtil {
      */
     public String saveLastModifiedTime(final BasicFileAttributes attr) {
         mlastModified = String.valueOf(attr.lastAccessTime().toMillis());
-        mMetadataMap.put(METADATA_PREFIX + mKeylastModified, mlastModified);
+        mMetadataMap.put(METADATA_PREFIX + KEY_LAST_MODIFIED_TIME, mlastModified);
         return mlastModified;
 
 
@@ -420,7 +403,7 @@ public class MetaDataUtil {
      */
     public String saveOSMetaData() {
         final String os = getOS();
-        mMetadataMap.put(METADATA_PREFIX + mKeyOS, os);
+        mMetadataMap.put(METADATA_PREFIX + KEY_OS, os);
         return os;
     }
 
@@ -461,19 +444,18 @@ public class MetaDataUtil {
                 final WinNT.PSID psidGroup = new WinNT.PSID(ppsidGroup.getValue().getByteArray(0, 1024 * 10));
                 groupSid = psidGroup.getSidString();
 
-                mMetadataMap.put(METADATA_PREFIX + mKeyGroup, groupSid);
+                mMetadataMap.put(METADATA_PREFIX + KEY_GROUP, groupSid);
                 setmGroup(groupSid);
-                mMetadataMap.put(METADATA_PREFIX + mKeyOwner, ownerSid);
+                mMetadataMap.put(METADATA_PREFIX + KEY_OWNER, ownerSid);
                 setmOwner(ownerSid);
 
                 WinNT.ACL acl = new WinNT.ACL(ppDacl.getValue());
                 String daclString = getDaclString(acl);
                 setmDacl(daclString);
-                mMetadataMap.put(METADATA_PREFIX + mKeyDacl, daclString);
+                mMetadataMap.put(METADATA_PREFIX + KEY_DACL, daclString);
             }
         } catch (final Exception e) {
             LOG.error("Unable to get sid of user and owner", e);
-            throw new MetaDataException("Unable to get sid of user and owner", e);
         }
     }
 
@@ -504,15 +486,13 @@ public class MetaDataUtil {
             for (int i = 0; i < flags.length - 1; i++) {
                 flagBuilder.append(flags[i].trim());
             }
-            mMetadataMap.put(METADATA_PREFIX + mKeyFlags, flagBuilder.toString());
+            mMetadataMap.put(METADATA_PREFIX + KEY_FLAGS, flagBuilder.toString());
             setmFlags(flagBuilder.toString());
 
         } catch (final IOException ioe) {
             LOG.error("Unable to read file", ioe);
-            throw new MetaDataException("Unable to read file", ioe);
         } catch (final Exception e) {
             LOG.error("Unable to fetch attributes of file", e);
-            throw new MetaDataException("Unable to read file", e);
         }
         return flagBuilder.toString();
     }
@@ -556,7 +536,7 @@ public class MetaDataUtil {
     public String saveOwnerNameMetaData(final PosixFileAttributes attr) {
         final UserPrincipal owner = attr.owner();
         final String ownerName = owner.getName();
-        mMetadataMap.put(METADATA_PREFIX + mKeyOwnerName, ownerName);
+        mMetadataMap.put(METADATA_PREFIX + KEY_OWNER_NAME, ownerName);
         setmOwnerName(ownerName);
         return ownerName;
     }
@@ -570,7 +550,7 @@ public class MetaDataUtil {
     public String saveGroupNameMetaData(final PosixFileAttributes attr) {
         final GroupPrincipal group = attr.group();
         final String groupName = group.getName();
-        mMetadataMap.put(METADATA_PREFIX + mKeyGroupName, groupName);
+        mMetadataMap.put(METADATA_PREFIX + KEY_GROUP_NAME, groupName);
         setmGroupName(groupName);
         return groupName;
     }
@@ -583,7 +563,7 @@ public class MetaDataUtil {
 
     public String savePosixPermssionsMeta(final PosixFileAttributes attr) {
         final String permissionsOctal = getPermissionInOctal(PosixFilePermissions.toString(attr.permissions()));
-        mMetadataMap.put(METADATA_PREFIX + mKeyPermissions, permissionsOctal);
+        mMetadataMap.put(METADATA_PREFIX + KEY_PERMISSION, permissionsOctal);
         setmPermissions(permissionsOctal);
         return permissionsOctal;
     }
@@ -626,11 +606,9 @@ public class MetaDataUtil {
 
             if (i != 0) {
                 LOG.error("not able to set owner and group on the file", i);
-                throw new Win32Exception(i);
             }
         } catch (final Exception e) {
             LOG.error("not able to set owner and group on the file ", e);
-            throw new MetaDataException("not able to set owner and group on the file ", e);
         }
 
     }
@@ -650,7 +628,6 @@ public class MetaDataUtil {
                     .setGroup(group);
         } catch (final Exception e) {
             LOG.error("Unable to set owner and group name", e);
-            throw new MetaDataException("Unable to set owner and group name", e);
         }
     }
 
@@ -692,7 +669,6 @@ public class MetaDataUtil {
 
         } catch (final Exception e) {
             LOG.error("Unable to restore flag attributes", e);
-            throw new MetaDataException("Unable to restore flag attributes", e);
         }
     }
 
@@ -710,7 +686,6 @@ public class MetaDataUtil {
             Files.setPosixFilePermissions(file, perms);
         } catch (final Exception e) {
             LOG.error("Unable to restore Permissions", e);
-            throw new MetaDataException("Unable to restore Permissions", e);
         }
     }
 

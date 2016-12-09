@@ -44,7 +44,7 @@ public class MetaDataAccessImpl implements Ds3ClientHelpers.MetadataAccess {
             return  storeMetaData(file).build();
         } catch (final Exception e) {
             LOG.error("failed to store Metadata",e);
-            throw new RuntimeException(e);
+            return null;
         }
     }
 
@@ -55,10 +55,10 @@ public class MetaDataAccessImpl implements Ds3ClientHelpers.MetadataAccess {
     private ImmutableMap.Builder<String, String> storeMetaData(final Path file) {
         final ImmutableMap.Builder<String, String> metadata = new ImmutableMap.Builder<>(); new ImmutableMap.Builder<String, String>();
         try {
-                final MetaDataUtil metadataUtil = new MetaDataUtil(metadata);
-                final Set<String>sets = metadataUtil.getSupportedFileAttributes(file);
-                final String os = metadataUtil.getOS();
-                 metadataUtil.saveOSMetaData();
+            final MetaDataUtil metadataUtil = new MetaDataUtil(metadata);
+            final Set<String>sets = metadataUtil.getSupportedFileAttributes(file);
+            final String os = metadataUtil.getOS();
+            metadataUtil.saveOSMetaData();
             for (final String set : sets) {
                 switch (set) {
                     case "basic":
@@ -75,7 +75,7 @@ public class MetaDataAccessImpl implements Ds3ClientHelpers.MetadataAccess {
                     case "owner":
 //
                         if (os.contains("Windows")) {
-                               metadataUtil.saveWindowsDescriptors(file);
+                            metadataUtil.saveWindowsDescriptors(file);
 
 
                         }
@@ -86,7 +86,7 @@ public class MetaDataAccessImpl implements Ds3ClientHelpers.MetadataAccess {
 
                     case "dos":
                         if(os.contains("Windows")) {
-                           metadataUtil.saveFlagMetaData(file);
+                            metadataUtil.saveFlagMetaData(file);
 
                         }
                         break;
@@ -105,7 +105,6 @@ public class MetaDataAccessImpl implements Ds3ClientHelpers.MetadataAccess {
             }
         } catch (final IOException ioe) {
             LOG.error("unable to get metadata",ioe);
-            throw new RuntimeException(ioe);
         }
         return metadata;
     }
@@ -116,7 +115,7 @@ public class MetaDataAccessImpl implements Ds3ClientHelpers.MetadataAccess {
         try {
             final AclFileAttributeView view = Files.getFileAttributeView(file, AclFileAttributeView.class);
             final List<AclEntry> aclEntries = view.getAcl();
-             Set<AclEntryPermission> aclEntryPermissions;
+            Set<AclEntryPermission> aclEntryPermissions;
             String userType = "";
             String userDisplay = "";
             StringBuilder permission = null;
@@ -165,8 +164,7 @@ public class MetaDataAccessImpl implements Ds3ClientHelpers.MetadataAccess {
             metadata.put("x-amz-meta-ds3-userList", userList.toString());
             metadata.put("x-amz-meta-ds3-userListDisplay", userDisplayList.toString());
         } catch (final Exception e) {
-           LOG.error("Unable to get list of users or their permissions",e);
-            throw  new RuntimeException(e);
+            LOG.error("Unable to get list of users or their permissions",e);
         }
     }
 

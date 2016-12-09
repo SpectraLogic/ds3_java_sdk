@@ -2,7 +2,6 @@ package com.spectralogic.ds3client.metadata;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
-import com.spectralogic.ds3client.exceptions.MetaDataException;
 import com.spectralogic.ds3client.helpers.MetadataReceivedListener;
 import com.spectralogic.ds3client.networking.Metadata;
 import com.spectralogic.ds3client.utils.MetaDataUtil;
@@ -55,13 +54,13 @@ public class MetadataReceivedListenerImpl implements MetadataReceivedListener {
         restoreUserAndOwner(os, objectName, metadata);
         String storedOS = null;
 
-        if (metadata.get(MetaDataUtil.mKeyOS).size() > 0) {
-            storedOS = metadata.get(MetaDataUtil.mKeyOS).get(0);
+        if (metadata.get(MetaDataUtil.KEY_OS).size() > 0) {
+            storedOS = metadata.get(MetaDataUtil.KEY_OS).get(0);
         }
 
         if (storedOS != null && storedOS.equals(os) && os.contains("Windows")) {
-            if (metadata.get(MetaDataUtil.mKeyFlags).size() > 0) {
-                String flags = metadata.get(MetaDataUtil.mKeyFlags).get(0);
+            if (metadata.get(MetaDataUtil.KEY_FLAGS).size() > 0) {
+                String flags = metadata.get(MetaDataUtil.KEY_FLAGS).get(0);
                 metadataUtil.restoreFlagsWindows(objectName, flags);
             }
         }
@@ -70,8 +69,8 @@ public class MetadataReceivedListenerImpl implements MetadataReceivedListener {
             setPermissionsForWindows(metadata, objectName);
 
         } else {
-            if (metadata.get(MetaDataUtil.mKeyPermissions).size() > 0) {
-                String permissions = metadata.get(MetaDataUtil.mKeyPermissions).get(0);
+            if (metadata.get(MetaDataUtil.KEY_PERMISSION).size() > 0) {
+                String permissions = metadata.get(MetaDataUtil.KEY_PERMISSION).get(0);
                 if (permissions != null && !permissions.equals("")) {
                     Matcher m = Pattern.compile("\\(([^)]+)\\)").matcher(permissions);
                     while (m.find()) {
@@ -104,12 +103,12 @@ public class MetadataReceivedListenerImpl implements MetadataReceivedListener {
         //if current os is linux or mac
         String ownerId = null;
         if (!os.contains("windows")) {
-            if (metadata.get(MetaDataUtil.mKeyUid).size() > 0) {
-                ownerId = metadata.get(MetaDataUtil.mKeyUid).get(0);
+            if (metadata.get(MetaDataUtil.KEY_UID).size() > 0) {
+                ownerId = metadata.get(MetaDataUtil.KEY_UID).get(0);
             }
             String groupId = null;
-            if (metadata.get(MetaDataUtil.mKeyGid).size() > 0) {
-                groupId = metadata.get(MetaDataUtil.mKeyGid).get(0);
+            if (metadata.get(MetaDataUtil.KEY_GID).size() > 0) {
+                groupId = metadata.get(MetaDataUtil.KEY_GID).get(0);
             }
             if (ownerId != null && groupId != null && !ownerId.equals("") && !groupId.equals("")) {
                 metadataUtil.setOwnerNGroupLnx(objectName, ownerId, groupId);
@@ -117,11 +116,11 @@ public class MetadataReceivedListenerImpl implements MetadataReceivedListener {
 
         } else {
             String ownerSid = null;
-            if (metadata.get(MetaDataUtil.mKeyOwner).size() > 0)
-                ownerSid = metadata.get(MetaDataUtil.mKeyOwner).get(0);
+            if (metadata.get(MetaDataUtil.KEY_OWNER).size() > 0)
+                ownerSid = metadata.get(MetaDataUtil.KEY_OWNER).get(0);
             String groupSid = null;
-            if (metadata.get(MetaDataUtil.mKeyGroup).size() > 0)
-                groupSid = metadata.get(MetaDataUtil.mKeyGroup).get(0);
+            if (metadata.get(MetaDataUtil.KEY_GROUP).size() > 0)
+                groupSid = metadata.get(MetaDataUtil.KEY_GROUP).get(0);
             if (ownerSid != null && groupSid != null && !ownerSid.equals("") && !groupSid.equals("")) {
                 metadataUtil.setOwnerIdandGroupIdWin(objectName, ownerSid, groupSid);
             }
@@ -155,8 +154,6 @@ public class MetadataReceivedListenerImpl implements MetadataReceivedListener {
             aclAttributeView.setAcl(aclEntryBuilder.build());
         } catch (final IOException e) {
             LOG.error("Unable to restore dacl view", e);
-            throw new MetaDataException("Unable to restore dacl view", e);
-
         }
     }
 
@@ -220,7 +217,6 @@ public class MetadataReceivedListenerImpl implements MetadataReceivedListener {
             aclEntryBuilder.add(aclEntry);
         } catch (final Exception e) {
             LOG.error("Unable to restore Permissions", e);
-            throw new MetaDataException("Unable to restore Permissions", e);
         }
     }
 
