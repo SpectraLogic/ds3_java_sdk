@@ -3,14 +3,27 @@ package com.spectralogic.ds3client.metadata;
 
 import com.google.common.collect.ImmutableMap;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers;
+import com.spectralogic.ds3client.networking.Metadata;
+import com.spectralogic.ds3client.utils.MetaDataUtil;
+import com.sun.jna.platform.win32.WinNT;
+import com.sun.jna.ptr.PointerByReference;
+import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.logging.Log;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.lang.reflect.Field;
+import java.nio.file.FileSystem;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.*;
 import java.util.*;
+
+import static java.nio.file.LinkOption.NOFOLLOW_LINKS;
 
 /**
  * Implementation of MetaDataAcess Interface
@@ -45,7 +58,7 @@ public class MetaDataAccessImpl implements Ds3ClientHelpers.MetadataAccess {
                 final MetaDataUtil metadataUtil = new MetaDataUtil(metadata);
                 final Set<String>sets = metadataUtil.getSupportedFileAttributes(file);
                 final String os = metadataUtil.getOS();
-                metadataUtil.saveOSMetaData();
+                 metadataUtil.saveOSMetaData();
             for (final String set : sets) {
                 switch (set) {
                     case "basic":

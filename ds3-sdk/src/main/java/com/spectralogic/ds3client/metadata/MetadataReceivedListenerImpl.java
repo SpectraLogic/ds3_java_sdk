@@ -2,9 +2,10 @@ package com.spectralogic.ds3client.metadata;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
+import com.spectralogic.ds3client.exceptions.MetaDataException;
 import com.spectralogic.ds3client.helpers.MetadataReceivedListener;
-import com.spectralogic.ds3client.metadata.MetaDataAccessImpl;
 import com.spectralogic.ds3client.networking.Metadata;
+import com.spectralogic.ds3client.utils.MetaDataUtil;
 import com.sun.jna.platform.win32.WinNT;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,21 +22,22 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Created by linchpin on 7/10/16.
+ * Created by Sulabh on 7/10/16.
  */
 public class MetadataReceivedListenerImpl implements MetadataReceivedListener {
-    static private final Logger LOG = LoggerFactory.getLogger(MetaDataAccessImpl.class);
+    static private final Logger LOG = LoggerFactory.getLogger(MetadataReceivedListenerImpl.class);
     private String localFilePath = null;
+    private Map<Path, Path> map;
     private MetaDataUtil metadataUtil = new MetaDataUtil();
 
     public MetadataReceivedListenerImpl(final String localFilePath) {
         this.localFilePath = localFilePath;
 
     }
+
     @Override
     public void metadataReceived(String filename, final Metadata metadata) {
-        final String actualFilePath = metadataUtil.getRealFilePath(localFilePath , filename);
-
+        final String actualFilePath = metadataUtil.getRealFilePath(localFilePath, filename);
         restoreMetaData(actualFilePath, metadata);
     }
 
@@ -46,33 +48,23 @@ public class MetadataReceivedListenerImpl implements MetadataReceivedListener {
      * @param metadata   metadata which needs to be set on local file
      */
     private void restoreMetaData(final String objectName, final Metadata metadata) {
-
-
         final StringBuilder builder = new StringBuilder();
         final Joiner joiner = Joiner.on(", ");
         builder.append("Metadata for object ").append(objectName).append(": ");
-
-
         final String os = System.getProperty("os.name");
-
-        restoreUserAndOwner(os,objectName,metadata);
-
-
-
+        restoreUserAndOwner(os, objectName, metadata);
         String storedOS = null;
+
         if (metadata.get(MetaDataUtil.mKeyOS).size() > 0) {
             storedOS = metadata.get(MetaDataUtil.mKeyOS).get(0);
         }
 
-
         if (storedOS != null && storedOS.equals(os) && os.contains("Windows")) {
-            if(metadata.get(MetaDataUtil.mKeyFlags).size()>0) {
-                final String flags = metadata.get(MetaDataUtil.mKeyFlags).get(0);
+            if (metadata.get(MetaDataUtil.mKeyFlags).size() > 0) {
+                String flags = metadata.get(MetaDataUtil.mKeyFlags).get(0);
                 metadataUtil.restoreFlagsWindows(objectName, flags);
             }
         }
-
-
 
         if (storedOS != null && storedOS.equals(os) && os.contains("Windows")) {
             setPermissionsForWindows(metadata, objectName);
@@ -90,7 +82,6 @@ public class MetadataReceivedListenerImpl implements MetadataReceivedListener {
             }
         }
 
-
         for (final String metadataKey : metadata.keys()) {
             final List<String> values = metadata.get(metadataKey);
             builder.append("<Key: ")
@@ -102,17 +93,17 @@ public class MetadataReceivedListenerImpl implements MetadataReceivedListener {
     }
 
     /**
-     *
      * restore owner and group of file based on OS
-     * @param os : operating system
+     *
+     * @param os         : operating system
      * @param objectName : fileName
-     * @param metadata : metadata retrieved from BlackPerl
+     * @param metadata   : metadata retrieved from BlackPerl
      */
     private void restoreUserAndOwner(String os, String objectName, Metadata metadata) {
 
         //if current os is linux or mac
         String ownerId = null;
-        if(!os.contains("windows")) {
+        if (!os.contains("windows")) {
             if (metadata.get(MetaDataUtil.mKeyUid).size() > 0) {
                 ownerId = metadata.get(MetaDataUtil.mKeyUid).get(0);
             }
@@ -124,16 +115,14 @@ public class MetadataReceivedListenerImpl implements MetadataReceivedListener {
                 metadataUtil.setOwnerNGroupLnx(objectName, ownerId, groupId);
             }
 
-        }
-        else
-        {
+        } else {
             String ownerSid = null;
             if (metadata.get(MetaDataUtil.mKeyOwner).size() > 0)
                 ownerSid = metadata.get(MetaDataUtil.mKeyOwner).get(0);
             String groupSid = null;
             if (metadata.get(MetaDataUtil.mKeyGroup).size() > 0)
                 groupSid = metadata.get(MetaDataUtil.mKeyGroup).get(0);
-            if (ownerSid != null && groupSid != null && !ownerSid.equals("") && !groupSid.equals("")){
+            if (ownerSid != null && groupSid != null && !ownerSid.equals("") && !groupSid.equals("")) {
                 metadataUtil.setOwnerIdandGroupIdWin(objectName, ownerSid, groupSid);
             }
         }
@@ -143,7 +132,6 @@ public class MetadataReceivedListenerImpl implements MetadataReceivedListener {
         final Path path = Paths.get(objectName);
         final AclFileAttributeView aclAttributeView = Files.getFileAttributeView(path, AclFileAttributeView.class);
         final ImmutableList.Builder<AclEntry> aclEntryBuilder = new ImmutableList.Builder<>();
-
 
         String userList = "";
         String userListDisplay = "";
@@ -166,13 +154,13 @@ public class MetadataReceivedListenerImpl implements MetadataReceivedListener {
         try {
             aclAttributeView.setAcl(aclEntryBuilder.build());
         } catch (final IOException e) {
-            LOG.error("Unable to restore dacl view",e);
-            throw new RuntimeException(e);
+            LOG.error("Unable to restore dacl view", e);
+            throw new MetaDataException("Unable to restore dacl view", e);
 
         }
     }
 
-    private void restorePermissionByUser(final String permission, final String user, final ImmutableList.Builder<AclEntry> aclEntryBuilder ) {
+    private void restorePermissionByUser(final String permission, final String user, final ImmutableList.Builder<AclEntry> aclEntryBuilder) {
         try {
             final AclEntry.Builder builderWindow = AclEntry.newBuilder();
             final UserPrincipal userPrinciple = FileSystems.getDefault()
@@ -231,16 +219,10 @@ public class MetadataReceivedListenerImpl implements MetadataReceivedListener {
             final AclEntry aclEntry = builderWindow.build();
             aclEntryBuilder.add(aclEntry);
         } catch (final Exception e) {
-            LOG.error("Unable to restore Permissions",e);
-            throw new RuntimeException(e);
+            LOG.error("Unable to restore Permissions", e);
+            throw new MetaDataException("Unable to restore Permissions", e);
         }
     }
-
-
-
-
-
-
 
 
 }
