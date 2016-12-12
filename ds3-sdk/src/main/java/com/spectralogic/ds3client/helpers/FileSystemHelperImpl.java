@@ -77,19 +77,21 @@ class FileSystemHelperImpl implements FileSystemHelper {
 
         long requiredSpace = 0;
         long availableSpace = 0;
-        final IOException ioException = null;
 
         if ( ! pathObjectExists(destinationDirectory)) {
+            final IOException ioException = null;
             return new ObjectStorageSpaceVerificationResult(ObjectStorageSpaceVerificationResult.VerificationStatus.PathDoesNotExist,
                     requiredSpace, availableSpace, ioException);
         }
 
         if ( ! pathIsDirectory(destinationDirectory)) {
+            final IOException ioException = null;
             return new ObjectStorageSpaceVerificationResult(ObjectStorageSpaceVerificationResult.VerificationStatus.PathIsNotADirectory,
                     requiredSpace, availableSpace, ioException);
         }
 
         if ( ! pathIsWritable(destinationDirectory)) {
+            final IOException ioException = null;
             return new ObjectStorageSpaceVerificationResult(ObjectStorageSpaceVerificationResult.VerificationStatus.PathLacksAccess,
                     requiredSpace, availableSpace, ioException);
         }
@@ -97,12 +99,13 @@ class FileSystemHelperImpl implements FileSystemHelper {
         try {
             helpers.ensureBucketExists(bucketName);
         } catch (final IOException e) {
+            final IOException ioException = null;
             return new ObjectStorageSpaceVerificationResult(ObjectStorageSpaceVerificationResult.VerificationStatus.BucketDoesNotExist,
                     requiredSpace, availableSpace, ioException);
         }
 
         try {
-            requiredSpace = getRequiredSpaceForObjects(getObjectSizes(helpers, bucketName, objectNames));
+            requiredSpace = getRequiredSpaceForObjects(helpers, bucketName, objectNames);
             availableSpace = getAvailableFileSpace(destinationDirectory);
         } catch (final IOException e) {
             return new ObjectStorageSpaceVerificationResult(ObjectStorageSpaceVerificationResult.VerificationStatus.CaughtIOException,
@@ -112,14 +115,17 @@ class FileSystemHelperImpl implements FileSystemHelper {
         final ObjectStorageSpaceVerificationResult.VerificationStatus verificationStatus = availableSpace > requiredSpace ?
                 ObjectStorageSpaceVerificationResult.VerificationStatus.OK : ObjectStorageSpaceVerificationResult.VerificationStatus.PathLacksSufficientStorageSpace;
 
+        final IOException ioException = null;
         return new ObjectStorageSpaceVerificationResult(verificationStatus, requiredSpace, availableSpace, ioException);
     }
 
-    private Map<String, Long> getObjectSizes(final Ds3ClientHelpers helpers,
-                                             final String bucketName,
-                                             final Collection<String> objectNames)
-                                             throws IOException
+    private long getRequiredSpaceForObjects(final Ds3ClientHelpers helpers,
+                                            final String bucketName,
+                                            final Collection<String> objectNames)
+                                            throws IOException
     {
+        long result = 0;
+
         final Map<String, Long> objectSizeMap = new HashMap<>();
 
         final Iterable<Contents> bucketContents = helpers.listObjects(bucketName);
@@ -128,13 +134,8 @@ class FileSystemHelperImpl implements FileSystemHelper {
             objectSizeMap.put(bucketContent.getKey(), bucketContent.getSize());
         }
 
+        // Of the objects in the bucket, keep the information about only those in objectNames
         objectSizeMap.keySet().retainAll(objectNames);
-
-        return objectSizeMap;
-    }
-
-    private long getRequiredSpaceForObjects(final Map<String, Long> objectSizeMap) {
-        long result = 0;
 
         for (final long objectSize : objectSizeMap.values()) {
             result += objectSize;
