@@ -1,3 +1,18 @@
+/*
+ * ****************************************************************************
+ *    Copyright 2014-2016 Spectra Logic Corporation. All Rights Reserved.
+ *    Licensed under the Apache License, Version 2.0 (the "License"). You may not use
+ *    this file except in compliance with the License. A copy of the License is located at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *    or in the "license" file accompanying this file.
+ *    This file is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+ *    CONDITIONS OF ANY KIND, either express or implied. See the License for the
+ *    specific language governing permissions and limitations under the License.
+ *  ****************************************************************************
+ */
+
 package com.spectralogic.ds3client.commands.interfaces;
 
 import com.google.common.collect.ImmutableMultimap;
@@ -8,6 +23,9 @@ import com.spectralogic.ds3client.utils.Guard;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+
+import static com.spectralogic.ds3client.utils.MetadataStringManipulation.toDecodedString;
+import static com.spectralogic.ds3client.utils.MetadataStringManipulation.toEncodedString;
 
 public class MetadataImpl implements Metadata {
 
@@ -28,7 +46,7 @@ public class MetadataImpl implements Metadata {
 
         for (final String key : headers.keys()) {
             if (key.startsWith(X_AMZ_META)) {
-                final String name = key.substring(X_AMZ_META.length());
+                final String name = toDecodedString(key.substring(X_AMZ_META.length()));
 
                 final List<String> values = getValues(headers, key);
                 mapBuilder.putAll(name, values);
@@ -39,8 +57,6 @@ public class MetadataImpl implements Metadata {
     }
 
     private static List<String> getValues(final Headers headers, final String key) {
-
-
         final List<String> valueList = headers.get(key);
         final List<String> returnList = new ArrayList<>(valueList.size());
 
@@ -48,7 +64,7 @@ public class MetadataImpl implements Metadata {
             final String[] splitEntries = valueEntry.split(",");
 
             for (final String splitEntry : splitEntries) {
-                returnList.add(splitEntry.trim());
+                returnList.add(toDecodedString(splitEntry).trim());
             }
         }
 
@@ -57,7 +73,9 @@ public class MetadataImpl implements Metadata {
 
     @Override
     public List<String> get(final String name) {
-        return metadata.get(name.toLowerCase()).asList();
+        //Only ASCII chars are lower cased, do not search for key with non-ASCII symbols lower cased
+        final String lowerCasedName = toDecodedString(toEncodedString(name).toLowerCase());
+        return metadata.get(lowerCasedName).asList();
     }
 
     @Override
