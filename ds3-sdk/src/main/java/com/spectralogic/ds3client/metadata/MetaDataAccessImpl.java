@@ -3,35 +3,23 @@ package com.spectralogic.ds3client.metadata;
 
 import com.google.common.collect.ImmutableMap;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers;
-import com.spectralogic.ds3client.networking.Metadata;
 import com.spectralogic.ds3client.utils.MetaDataUtil;
-import com.sun.jna.platform.win32.WinNT;
-import com.sun.jna.ptr.PointerByReference;
-import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.logging.Log;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.lang.reflect.Field;
-import java.nio.file.FileSystem;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.*;
 import java.util.*;
-
-import static java.nio.file.LinkOption.NOFOLLOW_LINKS;
 
 /**
  * Implementation of MetaDataAcess Interface
  * Used to store meta data on Server
  */
 public class MetaDataAccessImpl implements Ds3ClientHelpers.MetadataAccess {
-    private Map<String, Path> fileMapper = null;
     static private final Logger LOG = LoggerFactory.getLogger(MetaDataAccessImpl.class);
+    private final Map<String, Path> fileMapper;
 
     public MetaDataAccessImpl(final Map<String, Path> fileMapper) {
         this.fileMapper = fileMapper;
@@ -48,21 +36,23 @@ public class MetaDataAccessImpl implements Ds3ClientHelpers.MetadataAccess {
         }
     }
 
-    /*
-    * to store the meta data on server
-    *
-    * */
+    /**
+     *
+     * @param file
+     * @return
+     */
     private ImmutableMap.Builder<String, String> storeMetaData(final Path file) {
         final ImmutableMap.Builder<String, String> metadata = new ImmutableMap.Builder<>(); new ImmutableMap.Builder<String, String>();
+
         try {
             final MetaDataUtil metadataUtil = new MetaDataUtil(metadata);
             final Set<String>sets = metadataUtil.getSupportedFileAttributes(file);
             final String os = metadataUtil.getOS();
             metadataUtil.saveOSMetaData();
+
             for (final String set : sets) {
                 switch (set) {
                     case "basic":
-
                         final BasicFileAttributes attr = Files.readAttributes(file, BasicFileAttributes.class);
                         metadataUtil.saveCreationTimeMetaData(attr);
                         metadataUtil.saveAccessTimeMetaData(attr);
@@ -71,14 +61,14 @@ public class MetaDataAccessImpl implements Ds3ClientHelpers.MetadataAccess {
                         if (os.contains("Windows")) {
                             saveWindowsfilePermissions(file, metadata);
                         }
+
                         break;
+
                     case "owner":
-//
                         if (os.contains("Windows")) {
                             metadataUtil.saveWindowsDescriptors(file);
-
-
                         }
+
                         break;
 
                     case "user":
@@ -87,8 +77,8 @@ public class MetaDataAccessImpl implements Ds3ClientHelpers.MetadataAccess {
                     case "dos":
                         if(os.contains("Windows")) {
                             metadataUtil.saveFlagMetaData(file);
-
                         }
+
                         break;
 
                     case "posix":
@@ -110,7 +100,11 @@ public class MetaDataAccessImpl implements Ds3ClientHelpers.MetadataAccess {
     }
 
 
-    //if os is windows then posix will not be called and we need to find permission in different manner
+    /**
+     * if os is windows then posix will not be called and we need to find permission in different manner
+     * @param file
+     * @param metadata
+     */
     private void saveWindowsfilePermissions(final Path file, final ImmutableMap.Builder<String, String> metadata) {
         try {
             final AclFileAttributeView view = Files.getFileAttributeView(file, AclFileAttributeView.class);
@@ -142,7 +136,7 @@ public class MetaDataAccessImpl implements Ds3ClientHelpers.MetadataAccess {
                 ordinals = stringSetMap.get(key);
                 userType = key.replaceAll(" ", "").toLowerCase();
                 permission = new StringBuilder();
-                for (int ord : ordinals) {
+                for (final int ord : ordinals) {
                     if (ordinals.size() == index) {
                         permission.append(ord);
                     }
@@ -167,10 +161,4 @@ public class MetaDataAccessImpl implements Ds3ClientHelpers.MetadataAccess {
             LOG.error("Unable to get list of users or their permissions",e);
         }
     }
-
-
-
-
-
-
 }

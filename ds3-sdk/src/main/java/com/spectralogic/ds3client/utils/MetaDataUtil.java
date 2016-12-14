@@ -3,7 +3,6 @@ package com.spectralogic.ds3client.utils;
 import com.google.common.collect.ImmutableMap;
 import com.spectralogic.ds3client.metadata.MetaDataAccessImpl;
 import com.spectralogic.ds3client.metadata.jna.Advapi32;
-import com.sun.jna.platform.win32.Win32Exception;
 import com.sun.jna.platform.win32.WinNT;
 import com.sun.jna.ptr.PointerByReference;
 import org.slf4j.Logger;
@@ -18,52 +17,16 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.attribute.*;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Set;
-
+import static com.spectralogic.ds3client.utils.MetadataKeyConstants.*;
 import static java.nio.file.LinkOption.NOFOLLOW_LINKS;
 
-/**
- * Created by Sulabh on 02-12-2016.
- */
 public class MetaDataUtil {
 
-    //Every metadata must start from x-amz
-    public static final String METADATA_PREFIX = "x-amz-meta-";
-    //creation time key
-    public static final String KEY_CREATION_TIME = "ds3-creation-time";
-    //access time key
-    public static final String KEY_ACCESS_TIME = "ds3-last-access-time";
-    //modified time key
-    public static final String KEY_LAST_MODIFIED_TIME = "ds3-last-modified-time";
+    static private final Logger LOG = LoggerFactory.getLogger(MetaDataAccessImpl.class);
 
-    //owner sid for windows
-    public static final String KEY_OWNER = "ds3-owner";
-    //group sid for windows
-    public static final String KEY_GROUP = "ds3-group";
-    //user id of a file linux
-    public static final String KEY_UID = "ds3-uid";
-    //group id for linux
-    public static final String KEY_GID = "ds3-gid";
-    //mode for linux
-    public static final String KEY_MODE = "ds3-mode";
-    //control flag
-    public static final String KEY_FLAGS = "ds3-flags";
-    //dacl String for windows
-    public static final String KEY_DACL = "ds3-dacl";
-    //os
-    public static final String KEY_OS = "ds3-os";
-
-    //permissions
-    public static final String KEY_PERMISSION = "ds3-permissions";
-    //owner name
-    public static final String KEY_OWNER_NAME = "ds3-ownerName";
-    //group Name
-    public static final String KEY_GROUP_NAME = "ds3-groupName";
     //mode for linux
     public static final String mMode = "";
-    static private final Logger LOG = LoggerFactory.getLogger(MetaDataAccessImpl.class);
     //creation time key
     private String mCreationTime = "";
     //access time key
@@ -109,12 +72,9 @@ public class MetaDataUtil {
 
     public MetaDataUtil(final ImmutableMap.Builder<String, String> metadataMap) {
         this.mMetadataMap = metadataMap;
-
     }
 
     public MetaDataUtil() {
-
-
     }
 
     public static String getmMode() {
@@ -229,7 +189,7 @@ public class MetaDataUtil {
         return mGroup;
     }
 
-    public void setmGroup(String mGroup) {
+    public void setmGroup(final String mGroup) {
         this.mGroup = mGroup;
     }
 
@@ -326,7 +286,6 @@ public class MetaDataUtil {
      * @return user id of file Owner inLinux
      * @throws IOException
      */
-
     public String saveUserId(final Path file) throws IOException {
         final int uid = (int) Files.getAttribute(file, "unix:uid", NOFOLLOW_LINKS);
         mMetadataMap.put(METADATA_PREFIX + KEY_UID, String.valueOf(uid));
@@ -340,7 +299,6 @@ public class MetaDataUtil {
      * @return group id of file Owner inLinux
      * @throws IOException
      */
-
     public String saveGroupId(final Path file) throws IOException {
         final int gid = (int) Files.getAttribute(file, "unix:gid", NOFOLLOW_LINKS);
         mMetadataMap.put(METADATA_PREFIX + KEY_GID, String.valueOf(gid));
@@ -381,8 +339,6 @@ public class MetaDataUtil {
         mlastModified = String.valueOf(attr.lastAccessTime().toMillis());
         mMetadataMap.put(METADATA_PREFIX + KEY_LAST_MODIFIED_TIME, mlastModified);
         return mlastModified;
-
-
     }
 
     /**
@@ -394,7 +350,6 @@ public class MetaDataUtil {
             mOS = System.getProperty("os.name");
         return mOS;
     }
-
 
     /**
      * save os meta data and return os name
@@ -412,12 +367,8 @@ public class MetaDataUtil {
      *
      * @param path
      */
-
     public void saveWindowsDescriptors(final Path path) {
-        String groupSid = null;
-        String ownerSid = null;
-
-        int infoType = WinNT.OWNER_SECURITY_INFORMATION
+      final  int infoType = WinNT.OWNER_SECURITY_INFORMATION
                 | WinNT.GROUP_SECURITY_INFORMATION
                 | WinNT.DACL_SECURITY_INFORMATION | 0;
 
@@ -428,7 +379,7 @@ public class MetaDataUtil {
 
         final File file = path.toFile();
         try {
-            int bool = Advapi32.INSTANCE.GetNamedSecurityInfo(
+            final int bool = Advapi32.INSTANCE.GetNamedSecurityInfo(
                     file.getAbsolutePath(),
                     1,
                     infoType,
@@ -439,18 +390,18 @@ public class MetaDataUtil {
                     ppSecurityDescriptor);
             if (bool == 0) {
                 final WinNT.PSID psidOwner = new WinNT.PSID(ppsidOwner.getValue().getByteArray(0, 1024 * 10));
-                ownerSid = psidOwner.getSidString();
+                final String ownerSid = psidOwner.getSidString();
 
                 final WinNT.PSID psidGroup = new WinNT.PSID(ppsidGroup.getValue().getByteArray(0, 1024 * 10));
-                groupSid = psidGroup.getSidString();
+                final String groupSid = psidGroup.getSidString();
 
                 mMetadataMap.put(METADATA_PREFIX + KEY_GROUP, groupSid);
                 setmGroup(groupSid);
                 mMetadataMap.put(METADATA_PREFIX + KEY_OWNER, ownerSid);
                 setmOwner(ownerSid);
 
-                WinNT.ACL acl = new WinNT.ACL(ppDacl.getValue());
-                String daclString = getDaclString(acl);
+                final WinNT.ACL acl = new WinNT.ACL(ppDacl.getValue());
+                final String daclString = getDaclString(acl);
                 setmDacl(daclString);
                 mMetadataMap.put(METADATA_PREFIX + KEY_DACL, daclString);
             }
@@ -466,7 +417,6 @@ public class MetaDataUtil {
      * @param file
      * @return flag of file in String
      */
-
     public String saveFlagMetaData(final Path file) {
         final StringBuilder flagBuilder = new StringBuilder();
         try {
@@ -478,17 +428,15 @@ public class MetaDataUtil {
             p.waitFor();
             final BufferedReader reader =
                     new BufferedReader(new InputStreamReader(p.getInputStream()));
-            String[] flags = null;
-            String flagWindows = "";
-            while ((flagWindows = reader.readLine()) != null) {
-                flags = flagWindows.split(" ");
-            }
+
+            final String flagWindows =  reader.readLine();
+            final String[] flags = flagWindows.split(" ");
+
             for (int i = 0; i < flags.length - 1; i++) {
                 flagBuilder.append(flags[i].trim());
             }
             mMetadataMap.put(METADATA_PREFIX + KEY_FLAGS, flagBuilder.toString());
             setmFlags(flagBuilder.toString());
-
         } catch (final IOException ioe) {
             LOG.error("Unable to read file", ioe);
         } catch (final Exception e) {
@@ -521,18 +469,14 @@ public class MetaDataUtil {
             daclString = daclString + "0x" + Integer.toHexString(aceStructure.AceFlags) + ";";
             daclString = daclString + "0x" + Integer.toHexString(aceStructure.Mask) + ";;;";
             daclString = daclString + (aceStructure.getSidString()) + ")";
-
-
         }
         return daclString;
-
     }
 
     /**
      * @param attr PosixFileAttributes to get posix info
      * @return owner name of the file
      */
-
     public String saveOwnerNameMetaData(final PosixFileAttributes attr) {
         final UserPrincipal owner = attr.owner();
         final String ownerName = owner.getName();
@@ -546,7 +490,6 @@ public class MetaDataUtil {
      * @param attr PosixFileAttributes to get posix info
      * @return group name of the file owner
      */
-
     public String saveGroupNameMetaData(final PosixFileAttributes attr) {
         final GroupPrincipal group = attr.group();
         final String groupName = group.getName();
@@ -555,12 +498,10 @@ public class MetaDataUtil {
         return groupName;
     }
 
-
     /**
      * @param attr PosixFileAttributes to get posix info
      * @return file permissions in octal
      */
-
     public String savePosixPermssionsMeta(final PosixFileAttributes attr) {
         final String permissionsOctal = getPermissionInOctal(PosixFilePermissions.toString(attr.permissions()));
         mMetadataMap.put(METADATA_PREFIX + KEY_PERMISSION, permissionsOctal);
@@ -602,7 +543,7 @@ public class MetaDataUtil {
             Advapi32.INSTANCE.ConvertStringSidToSid(groupSidId, referenceGroup);
             final File file = new File(filePath);
 
-            int i = Advapi32.INSTANCE.SetNamedSecurityInfo(file.getAbsolutePath(), 1, infoType, referenceOwner.getValue().getPointer(), referenceGroup.getValue().getPointer(), null, null);
+            final int i = Advapi32.INSTANCE.SetNamedSecurityInfo(file.getAbsolutePath(), 1, infoType, referenceOwner.getValue().getPointer(), referenceGroup.getValue().getPointer(), null, null);
 
             if (i != 0) {
                 LOG.error("not able to set owner and group on the file", i);
@@ -610,11 +551,14 @@ public class MetaDataUtil {
         } catch (final Exception e) {
             LOG.error("not able to set owner and group on the file ", e);
         }
-
     }
 
-
-    //set owner and group name on local from the black perl server in case of linux
+    /**
+     * set owner and group name on local from the black perl server in case of linux
+     * @param filePath
+     * @param ownerName
+     * @param groupName
+     */
     public void setOwnerNGroupLnx(final String filePath, final String ownerName, final String groupName) {
         try {
             final Path file = Paths.get(filePath);
@@ -630,7 +574,6 @@ public class MetaDataUtil {
             LOG.error("Unable to set owner and group name", e);
         }
     }
-
 
     /**
      * restore  the attributes of windows
@@ -666,7 +609,6 @@ public class MetaDataUtil {
         try {
             final Process p = Runtime.getRuntime().exec(stringBuilder.toString());
             p.waitFor();
-
         } catch (final Exception e) {
             LOG.error("Unable to restore flag attributes", e);
         }
@@ -698,14 +640,13 @@ public class MetaDataUtil {
      */
     public String getRealFilePath(final String localFilePath, final String filename) {
         final String filePath = localFilePath + "/" + filename;
-        File file = null;
         String fName = filePath;
         while (true) {
-            file = new File(fName);
+            final File file = new File(fName);
             if (file.exists()) {
                 break;
             } else {
-                File parentFile = new File(file.getParent());
+                final File parentFile = new File(file.getParent());
                 fName = parentFile.getParent() + "/" + file.getName();
             }
         }
