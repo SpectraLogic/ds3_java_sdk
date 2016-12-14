@@ -17,9 +17,11 @@ package com.spectralogic.ds3client.utils;
 
 import com.google.common.escape.Escaper;
 import com.google.common.net.PercentEscaper;
+import org.apache.commons.codec.CharEncoding;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 
 /**
  * Percent encodes and decodes strings. The encoding conforms to the HTTP header key requirements.
@@ -46,13 +48,15 @@ public final class MetadataStringManipulation {
 
     /**
      * Percent encodes non-alpha-numeric characters within the specified string
-     * excluding the symbols listed in {@link #HTTP_HEADER_SAFE_CHARS}
+     * excluding the symbols listed in {@link #HTTP_HEADER_SAFE_CHARS} using UTF-8
      */
     public static String toEncodedString(final String str) {
         if (str == null) {
             return null;
         }
-        return getMetadataEscaper().escape(str);
+
+        final String strUtf8 = new String(str.getBytes(StandardCharsets.UTF_8), StandardCharsets.UTF_8);
+        return getMetadataEscaper().escape(strUtf8);
     }
 
     /**
@@ -63,7 +67,7 @@ public final class MetadataStringManipulation {
             return null;
         }
         try {
-            return URLDecoder.decode(str, "UTF-8");
+            return URLDecoder.decode(str, CharEncoding.UTF_8);
         } catch (final UnsupportedEncodingException e) {
             //Should not happen
             throw new RuntimeException("Could not decode string: " + str, e);
