@@ -72,6 +72,12 @@ jar {
 
 jar.dependsOn genConfigProperties
 
+test {
+    testLogging {
+        showStandardStreams = true
+    }
+}
+
 dependencies {
     compile     'org.apache.httpcomponents:httpclient:4.5.1'
     compile     'commons-codec:commons-codec:1.10'
