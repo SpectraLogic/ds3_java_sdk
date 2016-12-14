@@ -299,6 +299,13 @@ public class GetJobManagement_Test {
                 }
             });
 
+            job.attachDataTransferredListener(new DataTransferredListener() {
+                @Override
+                public void dataTransferred(final long size) {
+                    LOG.info("Data transferred size: {}", size);
+                }
+            });
+
             job.transfer(new FileObjectGetter(tempDirectory));
 
             assertEquals(1, intValue.getValue());

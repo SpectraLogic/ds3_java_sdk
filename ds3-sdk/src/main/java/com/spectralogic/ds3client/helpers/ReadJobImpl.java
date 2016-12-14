@@ -19,6 +19,7 @@ import com.google.common.collect.*;
 import com.spectralogic.ds3client.Ds3Client;
 import com.spectralogic.ds3client.commands.GetObjectRequest;
 import com.spectralogic.ds3client.commands.GetObjectResponse;
+import com.spectralogic.ds3client.exceptions.ContentLengthNotMatchException;
 import com.spectralogic.ds3client.helpers.ChunkTransferrer.ItemTransferrer;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.ObjectChannelBuilder;
 import com.spectralogic.ds3client.helpers.events.EventRunner;
@@ -29,7 +30,6 @@ import com.spectralogic.ds3client.helpers.util.PartialObjectHelpers;
 import com.spectralogic.ds3client.models.*;
 import com.spectralogic.ds3client.models.common.Range;
 import com.spectralogic.ds3client.networking.Metadata;
-import com.spectralogic.ds3client.utils.Guard;
 
 import java.io.IOException;
 import java.util.List;
@@ -144,10 +144,10 @@ class ReadJobImpl extends JobImpl {
     }
 
     private final class GetObjectTransferrerRetryDecorator implements ItemTransferrer {
-        private final GetObjectTransferrer getObjectTransferrer;
+        private final ItemTransferrer getObjectTransferrer;
 
         private GetObjectTransferrerRetryDecorator(final JobState jobState) {
-            getObjectTransferrer = new GetObjectTransferrer(jobState);
+            getObjectTransferrer = new GetObjectTransferrerNetworkFailureDecorator(jobState);
         }
 
         @Override
@@ -156,20 +156,16 @@ class ReadJobImpl extends JobImpl {
         }
     }
 
-    private final class GetObjectTransferrer implements ItemTransferrer {
+    private final class GetObjectTransferrerNetworkFailureDecorator implements ItemTransferrer {
         private final JobState jobState;
 
-        private GetObjectTransferrer(final JobState jobState) {
+        private GetObjectTransferrerNetworkFailureDecorator(final JobState jobState) {
             this.jobState = jobState;
         }
 
         @Override
-        public void transferItem(final Ds3Client client, final BulkObject ds3Object)
-                throws IOException {
-
-            final ImmutableCollection<Range> ranges = getRangesForBlob(blobToRanges, ds3Object);
-
-            final GetObjectRequest request = new GetObjectRequest(
+        public void transferItem(final Ds3Client client, final BulkObject ds3Object) throws IOException {
+            final GetObjectRequest getObjectRequest = new GetObjectRequest(
                     ReadJobImpl.this.masterObjectList.getBucketName(),
                     ds3Object.getName(),
                     jobState.getChannel(ds3Object.getName(), ds3Object.getOffset(), ds3Object.getLength()),
@@ -177,11 +173,36 @@ class ReadJobImpl extends JobImpl {
                     ds3Object.getOffset()
             );
 
-            if (Guard.isNotNullAndNotEmpty(ranges)) {
-                request.withByteRanges(ranges);
-            }
+            final ImmutableCollection<Range> ranges = getRangesForBlob(blobToRanges, ds3Object);
 
-            final GetObjectResponse response = client.getObject(request);
+            getObjectRequest.withByteRanges(ranges);
+
+            final ItemTransferrer itemTransferrer = new GetObjectTransferrer(getObjectRequest, ranges);
+
+            try {
+                itemTransferrer.transferItem(client, ds3Object);
+            } catch (final ContentLengthNotMatchException e) {
+                final ImmutableCollection<Range> newRanges = ImmutableList.of(Range.byLength(e.getTotalBytes(), e.getContentLength() - e.getTotalBytes()));
+                getObjectRequest.withByteRanges(newRanges);
+                itemTransferrer.transferItem(client, ds3Object);
+            }
+        }
+    }
+
+    private final class GetObjectTransferrer implements ItemTransferrer {
+        private final ImmutableCollection<Range> ranges;
+        private final GetObjectRequest getObjectRequest;
+
+        private GetObjectTransferrer(final GetObjectRequest getObjectRequest, final ImmutableCollection<Range> ranges) {
+            this.getObjectRequest = getObjectRequest;
+            this.ranges = ranges;
+        }
+
+        @Override
+        public void transferItem(final Ds3Client client, final BulkObject ds3Object)
+                throws IOException {
+
+            final GetObjectResponse response = client.getObject(getObjectRequest);
             final Metadata metadata = response.getMetadata();
 
             emitChecksumEvents(ds3Object, response.getChecksumType(), response.getChecksum());
