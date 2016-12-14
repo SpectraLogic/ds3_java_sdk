@@ -840,7 +840,7 @@ public class PutJobManagement_Test {
 
         try {
             final String DIR_NAME = "largeFiles/";
-            final String[] FILE_NAMES = new String[]{"lesmis-copies.txt"};
+            final String[] FILE_NAMES = new String[]{"lesmis.txt"};
 
             final Path dirPath = ResourceUtils.loadFileResource(DIR_NAME);
 
