@@ -43,15 +43,15 @@ public class MetadataStringManipulation_Test {
 
     @Test
     public void toEscapedString_Spaces_Test() {
-        LOG.debug("was: " + toEncodedString(STRING_WITH_SPACES));
-        LOG.debug("expected: " + STRING_WITH_ENCODED_SPACES);
+        LOG.error("was: " + toEncodedString(STRING_WITH_SPACES));
+        LOG.error("expected: " + STRING_WITH_ENCODED_SPACES);
         assertThat(toEncodedString(STRING_WITH_SPACES), is(STRING_WITH_ENCODED_SPACES));
     }
 
     @Test
     public void toEscapedString_Symbols_Test() {
-        LOG.debug("was: " + toEncodedString(STRING_WITH_SYMBOLS));
-        LOG.debug("expected: " + STRING_WITH_ENCODED_SYMBOLS);
+        LOG.error("was: " + toEncodedString(STRING_WITH_SYMBOLS));
+        LOG.error("expected: " + STRING_WITH_ENCODED_SYMBOLS);
         assertThat(toEncodedString(STRING_WITH_SYMBOLS), is(STRING_WITH_ENCODED_SYMBOLS));
     }
 
@@ -63,29 +63,29 @@ public class MetadataStringManipulation_Test {
 
     @Test
     public void toDecodedString_Spaces_Test() {
-        LOG.debug("was: " + toDecodedString(STRING_WITH_ENCODED_SPACES));
-        LOG.debug("expected: " + STRING_WITH_SPACES);
+        LOG.error("was: " + toDecodedString(STRING_WITH_ENCODED_SPACES));
+        LOG.error("expected: " + STRING_WITH_SPACES);
         assertThat(toDecodedString(STRING_WITH_ENCODED_SPACES), is(STRING_WITH_SPACES));
     }
 
     @Test
     public void toDecodedString_Symbols_Test() {
-        LOG.debug("was: " + toDecodedString(STRING_WITH_ENCODED_SYMBOLS));
-        LOG.debug("expected: " + STRING_WITH_SYMBOLS);
+        LOG.error("was: " + toDecodedString(STRING_WITH_ENCODED_SYMBOLS));
+        LOG.error("expected: " + STRING_WITH_SYMBOLS);
         assertThat(toDecodedString(STRING_WITH_ENCODED_SYMBOLS), is(STRING_WITH_SYMBOLS));
     }
 
     @Test
     public void encodeAndDecode_Symbols_Test() {
-        LOG.debug("was: " + toDecodedString(toEncodedString(STRING_WITH_SYMBOLS)));
-        LOG.debug("expected: " + STRING_WITH_SYMBOLS);
+        LOG.error("was: " + toDecodedString(toEncodedString(STRING_WITH_SYMBOLS)));
+        LOG.error("expected: " + STRING_WITH_SYMBOLS);
         assertThat(toDecodedString(toEncodedString(STRING_WITH_SYMBOLS)), is(STRING_WITH_SYMBOLS));
     }
 
     @Test
     public void encodeAndDecode_EncodedSymbols_Test() {
-        LOG.debug("was: " + toDecodedString(toEncodedString(STRING_WITH_ENCODED_SYMBOLS)));
-        LOG.debug("expected: " + STRING_WITH_ENCODED_SYMBOLS);
+        LOG.error("was: " + toDecodedString(toEncodedString(STRING_WITH_ENCODED_SYMBOLS)));
+        LOG.error("expected: " + STRING_WITH_ENCODED_SYMBOLS);
         assertThat(toDecodedString(toEncodedString(STRING_WITH_ENCODED_SYMBOLS)), is(STRING_WITH_ENCODED_SYMBOLS));
     }
 
@@ -106,16 +106,16 @@ public class MetadataStringManipulation_Test {
 
     @Test
     public void toDecodedString_LowerCase_Test() {
-        LOG.debug("was: " + toDecodedString(STRING_WITH_ENCODED_SYMBOLS.toLowerCase()));
-        LOG.debug("expected: " + STRING_WITH_SYMBOLS);
+        LOG.error("was: " + toDecodedString(STRING_WITH_ENCODED_SYMBOLS.toLowerCase()));
+        LOG.error("expected: " + STRING_WITH_SYMBOLS);
         assertThat(toDecodedString(STRING_WITH_ENCODED_SYMBOLS.toLowerCase()), is(STRING_WITH_SYMBOLS));
     }
 
     @Test
     public void encodeAndDecode_DoubleEscaping_Test() {
         final String result = toDecodedString(toEncodedString(STRING_WITH_ENCODED_SYMBOLS));
-        LOG.debug("was: " + result);
-        LOG.debug("expected: " + STRING_WITH_ENCODED_SYMBOLS);
+        LOG.error("was: " + result);
+        LOG.error("expected: " + STRING_WITH_ENCODED_SYMBOLS);
         assertThat(result, is(STRING_WITH_ENCODED_SYMBOLS));
     }
 }
