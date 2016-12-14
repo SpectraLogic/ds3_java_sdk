@@ -64,7 +64,17 @@ public class MetadataStringManipulation_Test {
     }
 
     @Test
-    public void escapeAndDecode_SpaceAndPlus_Test() {
+    public void encodeAndDecode_Symbols_Test() {
+        assertThat(toDecodedString(toEncodedString(STRING_WITH_SYMBOLS)), is(STRING_WITH_SYMBOLS));
+    }
+
+    @Test
+    public void encodeAndDecode_EncodedSymbols_Test() {
+        assertThat(toDecodedString(toEncodedString(STRING_WITH_ENCODED_SYMBOLS)), is(STRING_WITH_ENCODED_SYMBOLS));
+    }
+
+    @Test
+    public void encodeAndDecode_SpaceAndPlus_Test() {
         final String decode = " +";
         final String encoded = "%20%2B";
         assertThat(toEncodedString(decode), is(encoded));
@@ -84,7 +94,7 @@ public class MetadataStringManipulation_Test {
     }
 
     @Test
-    public void escapeAndDecode_DoubleEscaping_Test() {
+    public void encodeAndDecode_DoubleEscaping_Test() {
         final String result = toDecodedString(toEncodedString(STRING_WITH_ENCODED_SYMBOLS));
         assertThat(result, is(STRING_WITH_ENCODED_SYMBOLS));
     }
