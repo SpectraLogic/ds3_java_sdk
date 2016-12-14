@@ -145,7 +145,7 @@ public class GetJobManagement_Test {
 
     @Test
     public void createReadJobWithBigFile() throws IOException, URISyntaxException, NoSuchMethodException, IllegalAccessException, InvocationTargetException {
-        putBigFile();
+        putBigFiles();
 
         final String tempPathPrefix = null;
         final Path tempDirectory = Files.createTempDirectory(Paths.get("."), tempPathPrefix);
@@ -185,9 +185,9 @@ public class GetJobManagement_Test {
         }
     }
 
-    private void putBigFile() throws IOException, URISyntaxException {
+    private void putBigFiles() throws IOException, URISyntaxException {
         final String DIR_NAME = "largeFiles/";
-        final String[] FILE_NAMES = new String[] { "lesmis-copies.txt" };
+        final String[] FILE_NAMES = new String[] { "lesmis-copies.txt", "GreatExpectations.txt" };
 
         final Path dirPath = ResourceUtils.loadFileResource(DIR_NAME);
 
@@ -263,7 +263,7 @@ public class GetJobManagement_Test {
 
     @Test
     public void testPartialRetriesWithInjectedFailures() throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, IOException, URISyntaxException {
-        putBigFile();
+        putBigFiles();
 
         final String tempPathPrefix = null;
         final Path tempDirectory = Files.createTempDirectory(Paths.get("."), tempPathPrefix);
@@ -272,11 +272,13 @@ public class GetJobManagement_Test {
             final List<Ds3Object> filesToGet = new ArrayList<>();
 
             final String DIR_NAME = "largeFiles/";
-            final String FILE_NAME = "lesmis-copies.txt";
+            final String FILE_NAME = "GreatExpectations.txt";
 
             filesToGet.add(new PartialDs3Object(FILE_NAME, Range.byLength(0, 100)));
 
             filesToGet.add(new PartialDs3Object(FILE_NAME, Range.byLength(100, 100)));
+
+            filesToGet.add(new PartialDs3Object(FILE_NAME, Range.byLength(200, 100)));
 
             final Ds3ClientShim ds3ClientShim = new Ds3ClientShim((Ds3ClientImpl) client);
 
@@ -311,18 +313,18 @@ public class GetJobManagement_Test {
             assertEquals(1, intValue.getValue());
 
             try (final InputStream originalFileStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(DIR_NAME + FILE_NAME)) {
-                final byte[] first200Bytes = new byte[200];
-                int numBytesRead = originalFileStream.read(first200Bytes, 0, 200);
+                final byte[] first300Bytes = new byte[300];
+                int numBytesRead = originalFileStream.read(first300Bytes, 0, 300);
 
-                assertThat(numBytesRead, is(200));
+                assertThat(numBytesRead, is(300));
 
                 try (final InputStream fileReadFromBP = Files.newInputStream(Paths.get(tempDirectory.toString(), FILE_NAME))) {
-                    final byte[] first200BytesFromBP = new byte[200];
+                    final byte[] first300BytesFromBP = new byte[300];
 
-                    numBytesRead = fileReadFromBP.read(first200BytesFromBP, 0, 200);
-                    assertThat(numBytesRead, is(200));
+                    numBytesRead = fileReadFromBP.read(first300BytesFromBP, 0, 300);
+                    assertThat(numBytesRead, is(300));
 
-                    assertTrue(Arrays.equals(first200Bytes, first200BytesFromBP));
+                    assertTrue(Arrays.equals(first300Bytes, first300BytesFromBP));
                 }
             }
         } finally {
@@ -335,7 +337,7 @@ public class GetJobManagement_Test {
     public void testFiringFailureHandlerWhenGettingChunks()
             throws URISyntaxException, NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException
     {
-        putBigFile();
+        putBigFiles();
 
         final String tempPathPrefix = null;
         final Path tempDirectory = Files.createTempDirectory(Paths.get("."), tempPathPrefix);
@@ -393,7 +395,7 @@ public class GetJobManagement_Test {
     public void testFiringFailureHandlerWhenGettingObject()
             throws URISyntaxException, NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException
     {
-        putBigFile();
+        putBigFiles();
 
         final String tempPathPrefix = null;
         final Path tempDirectory = Files.createTempDirectory(Paths.get("."), tempPathPrefix);

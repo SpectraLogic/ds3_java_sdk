@@ -177,7 +177,7 @@ class ReadJobImpl extends JobImpl {
 
             getObjectRequest.withByteRanges(ranges);
 
-            final ItemTransferrer itemTransferrer = new GetObjectTransferrer(getObjectRequest, ranges);
+            final ItemTransferrer itemTransferrer = new GetObjectTransferrer(getObjectRequest);
 
             try {
                 itemTransferrer.transferItem(client, ds3Object);
@@ -190,12 +190,10 @@ class ReadJobImpl extends JobImpl {
     }
 
     private final class GetObjectTransferrer implements ItemTransferrer {
-        private final ImmutableCollection<Range> ranges;
         private final GetObjectRequest getObjectRequest;
 
-        private GetObjectTransferrer(final GetObjectRequest getObjectRequest, final ImmutableCollection<Range> ranges) {
+        private GetObjectTransferrer(final GetObjectRequest getObjectRequest) {
             this.getObjectRequest = getObjectRequest;
-            this.ranges = ranges;
         }
 
         @Override
