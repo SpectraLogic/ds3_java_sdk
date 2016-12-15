@@ -56,7 +56,8 @@ public final class MetadataStringManipulation {
         }
 
         final String strUtf8 = toUtf8String(str);
-        return getMetadataEscaper().escape(strUtf8);
+        System.out.println("toEncodedString utf8 string: " + strUtf8); //todo delete
+        return toUtf8String(getMetadataEscaper().escape(strUtf8));
     }
 
     /**
@@ -68,7 +69,7 @@ public final class MetadataStringManipulation {
         }
         try {
             final String strUtf8 = toUtf8String(str);
-            return URLDecoder.decode(strUtf8, CharEncoding.UTF_8);
+            return toUtf8String(URLDecoder.decode(strUtf8, CharEncoding.UTF_8));
         } catch (final UnsupportedEncodingException e) {
             //Should not happen
             throw new RuntimeException("Could not decode string: " + str, e);
