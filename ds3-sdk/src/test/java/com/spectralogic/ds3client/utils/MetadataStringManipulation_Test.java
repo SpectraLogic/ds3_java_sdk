@@ -44,18 +44,20 @@ public class MetadataStringManipulation_Test {
 
     @Test
     public void toEscapedString_Spaces_Test() {
+        final String expected = UTF8_ENCODED_STRING_WITH_SPACES;
         System.out.println("***Test: toEscapedString_Spaces_Test");
         System.out.println("   was:      " + toEncodedString(STRING_WITH_SPACES));
-        System.out.println("   expected: " + ENCODED_STRING_WITH_SPACES);
-        assertThat(toEncodedString(STRING_WITH_SPACES), is(UTF8_ENCODED_STRING_WITH_SPACES));
+        System.out.println("   expected: " + expected);
+        assertThat(toEncodedString(STRING_WITH_SPACES), is(expected));
     }
 
     @Test
     public void toEscapedString_Symbols_Test() {
+        final String expected = UTF8_ENCODED_STRING_WITH_SYMBOLS;
         System.out.println("***Test: toEscapedString_Symbols_Test");
         System.out.println("   was:      " + toEncodedString(STRING_WITH_SYMBOLS));
-        System.out.println("   expected: " + ENCODED_STRING_WITH_SYMBOLS);
-        assertThat(toEncodedString(STRING_WITH_SYMBOLS), is(UTF8_ENCODED_STRING_WITH_SYMBOLS));
+        System.out.println("   expected: " + expected);
+        assertThat(toEncodedString(STRING_WITH_SYMBOLS), is(expected));
     }
 
     @Test
@@ -66,34 +68,38 @@ public class MetadataStringManipulation_Test {
 
     @Test
     public void toDecodedString_Spaces_Test() {
+        final String expected = UTF8_STRING_WITH_SPACES;
         System.out.println("***Test: toDecodedString_Spaces_Test");
         System.out.println("   was:      " + toDecodedString(ENCODED_STRING_WITH_SPACES));
-        System.out.println("   expected: " + STRING_WITH_SPACES);
-        assertThat(toDecodedString(ENCODED_STRING_WITH_SPACES), is(UTF8_STRING_WITH_SPACES));
+        System.out.println("   expected: " + expected);
+        assertThat(toDecodedString(ENCODED_STRING_WITH_SPACES), is(expected));
     }
 
     @Test
     public void toDecodedString_Symbols_Test() {
+        final String expected = UTF8_STRING_WITH_SYMBOLS;
         System.out.println("***Test: toDecodedString_Symbols_Test");
         System.out.println("   was:      " + toDecodedString(ENCODED_STRING_WITH_SYMBOLS));
-        System.out.println("   expected: " + STRING_WITH_SYMBOLS);
-        assertThat(toDecodedString(ENCODED_STRING_WITH_SYMBOLS), is(UTF8_STRING_WITH_SYMBOLS));
+        System.out.println("   expected: " + expected);
+        assertThat(toDecodedString(ENCODED_STRING_WITH_SYMBOLS), is(expected));
     }
 
     @Test
     public void encodeAndDecode_Symbols_Test() {
+        final String expected = UTF8_STRING_WITH_SYMBOLS;
         System.out.println("***Test: encodeAndDecode_Symbols_Test");
         System.out.println("   was:      " + toDecodedString(toEncodedString(STRING_WITH_SYMBOLS)));
-        System.out.println("   expected: " + STRING_WITH_SYMBOLS);
-        assertThat(toDecodedString(toEncodedString(STRING_WITH_SYMBOLS)), is(UTF8_STRING_WITH_SYMBOLS));
+        System.out.println("   expected: " + expected);
+        assertThat(toDecodedString(toEncodedString(STRING_WITH_SYMBOLS)), is(expected));
     }
 
     @Test
     public void encodeAndDecode_EncodedSymbols_Test() {
+        final String expected = UTF8_ENCODED_STRING_WITH_SYMBOLS;
         System.out.println("***Test: encodeAndDecode_EncodedSymbols_Test");
         System.out.println("   was:      " + toDecodedString(toEncodedString(ENCODED_STRING_WITH_SYMBOLS)));
-        System.out.println("   expected: " + ENCODED_STRING_WITH_SYMBOLS);
-        assertThat(toDecodedString(toEncodedString(ENCODED_STRING_WITH_SYMBOLS)), is(UTF8_ENCODED_STRING_WITH_SYMBOLS));
+        System.out.println("   expected: " + expected);
+        assertThat(toDecodedString(toEncodedString(ENCODED_STRING_WITH_SYMBOLS)), is(expected));
     }
 
     @Test
@@ -113,18 +119,20 @@ public class MetadataStringManipulation_Test {
 
     @Test
     public void toDecodedString_LowerCase_Test() {
+        final String expected = UTF8_STRING_WITH_SYMBOLS;
         System.out.println("***Test: toDecodedString_LowerCase_Test");
         System.out.println("   was:      " + toDecodedString(ENCODED_STRING_WITH_SYMBOLS.toLowerCase()));
-        System.out.println("   expected: " + STRING_WITH_SYMBOLS);
-        assertThat(toDecodedString(ENCODED_STRING_WITH_SYMBOLS.toLowerCase()), is(UTF8_STRING_WITH_SYMBOLS));
+        System.out.println("   expected: " + expected);
+        assertThat(toDecodedString(ENCODED_STRING_WITH_SYMBOLS.toLowerCase()), is(expected));
     }
 
     @Test
     public void encodeAndDecode_DoubleEscaping_Test() {
+        final String expected = UTF8_ENCODED_STRING_WITH_SYMBOLS;
         final String result = toDecodedString(toEncodedString(ENCODED_STRING_WITH_SYMBOLS));
         System.out.println("***Test: encodeAndDecode_DoubleEscaping_Test");
         System.out.println("   was:      " + result);
-        System.out.println("   expected: " + ENCODED_STRING_WITH_SYMBOLS);
-        assertThat(result, is(UTF8_ENCODED_STRING_WITH_SYMBOLS));
+        System.out.println("   expected: " + expected);
+        assertThat(result, is(expected));
     }
 }
