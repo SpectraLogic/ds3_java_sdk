@@ -16,31 +16,26 @@
 package com.spectralogic.ds3client.utils;
 
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
-
-import static com.spectralogic.ds3client.utils.MetadataStringManipulation.toDecodedString;
-import static com.spectralogic.ds3client.utils.MetadataStringManipulation.toEncodedString;
+import static com.spectralogic.ds3client.utils.MetadataStringManipulation.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 public class MetadataStringManipulation_Test {
 
-    static final private Logger LOG = LoggerFactory.getLogger(MetadataStringManipulation_Test.class);
+    private static final String STRING_WITH_SPACES = "String With Spaces";
+    private static final String ENCODED_STRING_WITH_SPACES = "String%20With%20Spaces";
 
-    private static final String STRING_WITH_SPACES = toUtf16String("String With Spaces");
-    private static final String STRING_WITH_ENCODED_SPACES = toUtf16String("String%20With%20Spaces");
+    private static final String STRING_WITH_SYMBOLS = "1234567890-!@#$%^&*()_+`~[]\\{}|;':\"./<>?∞πϊφϠ";
+    private static final String ENCODED_STRING_WITH_SYMBOLS = "1234567890-!%40#$%25^&*%28%29_%2B`~%5B%5D%5C%7B%7D|%3B'%3A%22.%2F%3C%3E%3F%C3%A2%CB%86%C5%BE%C3%8F%E2%82%AC%C3%8F%C5%A0%C3%8F%E2%80%A0%C3%8F%C2%A0";
 
-    private static final String STRING_WITH_SYMBOLS = toUtf16String("1234567890-!@#$%^&*()_+`~[]\\{}|;':\"./<>?∞πϊφϠ");
-    private static final String STRING_WITH_ENCODED_SYMBOLS = toUtf16String("1234567890-!%40#$%25^&*%28%29_%2B`~%5B%5D%5C%7B%7D|%3B'%3A%22.%2F%3C%3E%3F%C3%A2%CB%86%C5%BE%C3%8F%E2%82%AC%C3%8F%C5%A0%C3%8F%E2%80%A0%C3%8F%C2%A0");
+    private static final String UTF8_STRING_WITH_SPACES = toUtf8String(STRING_WITH_SPACES);
+    private static final String UTF8_ENCODED_STRING_WITH_SPACES = toUtf8String(ENCODED_STRING_WITH_SPACES);
 
-    protected static String toUtf16String(final String str) {
-        return new String(str.getBytes(StandardCharsets.UTF_16), StandardCharsets.UTF_16);
-    }
+    private static final String UTF8_STRING_WITH_SYMBOLS = toUtf8String(STRING_WITH_SYMBOLS);
+    private static final String UTF8_ENCODED_STRING_WITH_SYMBOLS = toUtf8String(ENCODED_STRING_WITH_SYMBOLS);
+
     @Test
     public void toEscapedString_Null_Test() {
         final String nullString = null;
@@ -49,19 +44,18 @@ public class MetadataStringManipulation_Test {
 
     @Test
     public void toEscapedString_Spaces_Test() {
-
         System.out.println("***Test: toEscapedString_Spaces_Test");
         System.out.println("   was:      " + toEncodedString(STRING_WITH_SPACES));
-        System.out.println("   expected: " + STRING_WITH_ENCODED_SPACES);
-        assertThat(toEncodedString(STRING_WITH_SPACES), is(STRING_WITH_ENCODED_SPACES));
+        System.out.println("   expected: " + ENCODED_STRING_WITH_SPACES);
+        assertThat(toEncodedString(STRING_WITH_SPACES), is(UTF8_ENCODED_STRING_WITH_SPACES));
     }
 
     @Test
     public void toEscapedString_Symbols_Test() {
         System.out.println("***Test: toEscapedString_Symbols_Test");
         System.out.println("   was:      " + toEncodedString(STRING_WITH_SYMBOLS));
-        System.out.println("   expected: " + STRING_WITH_ENCODED_SYMBOLS);
-        assertThat(toEncodedString(STRING_WITH_SYMBOLS), is(STRING_WITH_ENCODED_SYMBOLS));
+        System.out.println("   expected: " + ENCODED_STRING_WITH_SYMBOLS);
+        assertThat(toEncodedString(STRING_WITH_SYMBOLS), is(UTF8_ENCODED_STRING_WITH_SYMBOLS));
     }
 
     @Test
@@ -73,17 +67,17 @@ public class MetadataStringManipulation_Test {
     @Test
     public void toDecodedString_Spaces_Test() {
         System.out.println("***Test: toDecodedString_Spaces_Test");
-        System.out.println("   was:      " + toDecodedString(STRING_WITH_ENCODED_SPACES));
+        System.out.println("   was:      " + toDecodedString(ENCODED_STRING_WITH_SPACES));
         System.out.println("   expected: " + STRING_WITH_SPACES);
-        assertThat(toDecodedString(STRING_WITH_ENCODED_SPACES), is(STRING_WITH_SPACES));
+        assertThat(toDecodedString(ENCODED_STRING_WITH_SPACES), is(UTF8_STRING_WITH_SPACES));
     }
 
     @Test
     public void toDecodedString_Symbols_Test() {
         System.out.println("***Test: toDecodedString_Symbols_Test");
-        System.out.println("   was:      " + toDecodedString(STRING_WITH_ENCODED_SYMBOLS));
+        System.out.println("   was:      " + toDecodedString(ENCODED_STRING_WITH_SYMBOLS));
         System.out.println("   expected: " + STRING_WITH_SYMBOLS);
-        assertThat(toDecodedString(STRING_WITH_ENCODED_SYMBOLS), is(STRING_WITH_SYMBOLS));
+        assertThat(toDecodedString(ENCODED_STRING_WITH_SYMBOLS), is(UTF8_STRING_WITH_SYMBOLS));
     }
 
     @Test
@@ -91,15 +85,15 @@ public class MetadataStringManipulation_Test {
         System.out.println("***Test: encodeAndDecode_Symbols_Test");
         System.out.println("   was:      " + toDecodedString(toEncodedString(STRING_WITH_SYMBOLS)));
         System.out.println("   expected: " + STRING_WITH_SYMBOLS);
-        assertThat(toDecodedString(toEncodedString(STRING_WITH_SYMBOLS)), is(STRING_WITH_SYMBOLS));
+        assertThat(toDecodedString(toEncodedString(STRING_WITH_SYMBOLS)), is(UTF8_STRING_WITH_SYMBOLS));
     }
 
     @Test
     public void encodeAndDecode_EncodedSymbols_Test() {
         System.out.println("***Test: encodeAndDecode_EncodedSymbols_Test");
-        System.out.println("   was:      " + toDecodedString(toEncodedString(STRING_WITH_ENCODED_SYMBOLS)));
-        System.out.println("   expected: " + STRING_WITH_ENCODED_SYMBOLS);
-        assertThat(toDecodedString(toEncodedString(STRING_WITH_ENCODED_SYMBOLS)), is(STRING_WITH_ENCODED_SYMBOLS));
+        System.out.println("   was:      " + toDecodedString(toEncodedString(ENCODED_STRING_WITH_SYMBOLS)));
+        System.out.println("   expected: " + ENCODED_STRING_WITH_SYMBOLS);
+        assertThat(toDecodedString(toEncodedString(ENCODED_STRING_WITH_SYMBOLS)), is(UTF8_ENCODED_STRING_WITH_SYMBOLS));
     }
 
     @Test
@@ -120,17 +114,17 @@ public class MetadataStringManipulation_Test {
     @Test
     public void toDecodedString_LowerCase_Test() {
         System.out.println("***Test: toDecodedString_LowerCase_Test");
-        System.out.println("   was:      " + toDecodedString(STRING_WITH_ENCODED_SYMBOLS.toLowerCase()));
+        System.out.println("   was:      " + toDecodedString(ENCODED_STRING_WITH_SYMBOLS.toLowerCase()));
         System.out.println("   expected: " + STRING_WITH_SYMBOLS);
-        assertThat(toDecodedString(STRING_WITH_ENCODED_SYMBOLS.toLowerCase()), is(STRING_WITH_SYMBOLS));
+        assertThat(toDecodedString(ENCODED_STRING_WITH_SYMBOLS.toLowerCase()), is(UTF8_STRING_WITH_SYMBOLS));
     }
 
     @Test
     public void encodeAndDecode_DoubleEscaping_Test() {
-        final String result = toDecodedString(toEncodedString(STRING_WITH_ENCODED_SYMBOLS));
+        final String result = toDecodedString(toEncodedString(ENCODED_STRING_WITH_SYMBOLS));
         System.out.println("***Test: encodeAndDecode_DoubleEscaping_Test");
         System.out.println("   was:      " + result);
-        System.out.println("   expected: " + STRING_WITH_ENCODED_SYMBOLS);
-        assertThat(result, is(STRING_WITH_ENCODED_SYMBOLS));
+        System.out.println("   expected: " + ENCODED_STRING_WITH_SYMBOLS);
+        assertThat(result, is(UTF8_ENCODED_STRING_WITH_SYMBOLS));
     }
 }

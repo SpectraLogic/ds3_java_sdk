@@ -55,19 +55,20 @@ public final class MetadataStringManipulation {
             return null;
         }
 
-        final String strUtf8 = new String(str.getBytes(StandardCharsets.UTF_8), StandardCharsets.UTF_8);
+        final String strUtf8 = toUtf8String(str);
         return getMetadataEscaper().escape(strUtf8);
     }
 
     /**
-     * Decodes a percent encoded string
+     * Decodes a percent-encoded string using UTF-8
      */
     public static String toDecodedString(final String str) {
         if (str == null) {
             return null;
         }
         try {
-            return URLDecoder.decode(str, CharEncoding.UTF_8);
+            final String strUtf8 = toUtf8String(str);
+            return URLDecoder.decode(strUtf8, CharEncoding.UTF_8);
         } catch (final UnsupportedEncodingException e) {
             //Should not happen
             throw new RuntimeException("Could not decode string: " + str, e);
@@ -76,5 +77,9 @@ public final class MetadataStringManipulation {
 
     private static Escaper getMetadataEscaper() {
         return HTTP_HEADER_ESCAPER;
+    }
+
+    static String toUtf8String(final String str) {
+        return new String(str.getBytes(StandardCharsets.UTF_8), StandardCharsets.UTF_8);
     }
 }
