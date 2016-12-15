@@ -22,6 +22,7 @@ import org.apache.commons.codec.CharEncoding;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
+import java.util.Locale;
 
 /**
  * Percent encodes and decodes strings. The encoding conforms to the HTTP header key requirements.
@@ -56,8 +57,7 @@ public final class MetadataStringManipulation {
         }
 
         final String strUtf8 = toUtf8String(str);
-        System.out.println("toEncodedString utf8 string: " + strUtf8); //todo delete
-        return toUtf8String(getMetadataEscaper().escape(strUtf8));
+        return String.format(Locale.US, "%s", getMetadataEscaper().escape(strUtf8));
     }
 
     /**
@@ -69,7 +69,7 @@ public final class MetadataStringManipulation {
         }
         try {
             final String strUtf8 = toUtf8String(str);
-            return toUtf8String(URLDecoder.decode(strUtf8, CharEncoding.UTF_8));
+            return String.format(Locale.US, "%s", URLDecoder.decode(strUtf8, CharEncoding.UTF_8));
         } catch (final UnsupportedEncodingException e) {
             //Should not happen
             throw new RuntimeException("Could not decode string: " + str, e);
@@ -81,6 +81,7 @@ public final class MetadataStringManipulation {
     }
 
     static String toUtf8String(final String str) {
-        return new String(str.getBytes(StandardCharsets.UTF_8), StandardCharsets.UTF_8);
+        final String utf8Str = new String(str.getBytes(StandardCharsets.UTF_8), StandardCharsets.UTF_8);
+        return String.format(Locale.US, "%s", utf8Str);
     }
 }

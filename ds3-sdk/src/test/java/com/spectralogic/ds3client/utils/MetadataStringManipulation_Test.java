@@ -17,6 +17,9 @@ package com.spectralogic.ds3client.utils;
 
 import org.junit.Test;
 
+import java.nio.charset.StandardCharsets;
+import java.util.Locale;
+
 import static com.spectralogic.ds3client.utils.MetadataStringManipulation.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
