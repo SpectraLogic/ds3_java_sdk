@@ -40,10 +40,16 @@ public class MetadataStringManipulation_Test {
     private static final String UTF8_ENCODED_STRING_WITH_SYMBOLS = toUtf8String(ENCODED_STRING_WITH_SYMBOLS);
 
     @Test
-    public void locale_Test() {
-        final String infinity = "∞";
-        System.out.println("***Test: locale_Test: " + Locale.getDefault());
-        assertThat(infinity, is("âˆž"));
+    public void difficultSymbols_Test() {
+        final String difficultSymbols = "∞πϊφϠ";
+        final String encoded = toEncodedString(difficultSymbols);
+        final String decoded = toDecodedString(encoded);
+
+        System.out.println("***Test: difficultSymbols_Test");
+        System.out.println("   original: " + difficultSymbols);
+        System.out.println("   encoded:  " + encoded);
+        System.out.println("   decoded: " + decoded);
+        assertThat(decoded, is(difficultSymbols));
     }
 
     @Test
