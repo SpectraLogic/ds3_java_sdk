@@ -40,6 +40,13 @@ public class MetadataStringManipulation_Test {
     private static final String UTF8_ENCODED_STRING_WITH_SYMBOLS = toUtf8String(ENCODED_STRING_WITH_SYMBOLS);
 
     @Test
+    public void locale_Test() {
+        final String infinity = "∞";
+        System.out.println("***Test: locale_Test: " + Locale.getDefault());
+        assertThat(infinity, is("âˆž"));
+    }
+
+    @Test
     public void toEscapedString_Null_Test() {
         final String nullString = null;
         assertThat(toEncodedString(nullString), is(nullValue()));
