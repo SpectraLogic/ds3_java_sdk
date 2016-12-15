@@ -18,6 +18,7 @@ package com.spectralogic.ds3client.utils;
 import org.junit.Test;
 
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.Locale;
 
 import static com.spectralogic.ds3client.utils.MetadataStringManipulation.*;
@@ -47,8 +48,11 @@ public class MetadataStringManipulation_Test {
 
         System.out.println("***Test: difficultSymbols_Test");
         System.out.println("   original: " + difficultSymbols);
+        System.out.println("      bytes: " + Arrays.toString(difficultSymbols.getBytes(StandardCharsets.UTF_8)));
         System.out.println("   encoded:  " + encoded);
-        System.out.println("   decoded: " + decoded);
+        System.out.println("      bytes: " + Arrays.toString(encoded.getBytes(StandardCharsets.UTF_8)));
+        System.out.println("   decoded:  " + decoded);
+        System.out.println("      bytes: " + Arrays.toString(decoded.getBytes(StandardCharsets.UTF_8)));
         assertThat(decoded, is(difficultSymbols));
     }
 
