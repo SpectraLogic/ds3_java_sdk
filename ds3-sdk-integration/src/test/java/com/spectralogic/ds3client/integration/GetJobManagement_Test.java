@@ -216,7 +216,7 @@ public class GetJobManagement_Test {
 
         final Iterable<Contents> objects = helpers.listObjects(BUCKET_NAME);
         for (final Contents contents : objects) {
-            if (contents.getKey().equals("lesmis-copies.txt")) {
+            if (contents.getKey().equals("lesmis-copies.txt") || contents.getKey().equals("GreatExpectations.txt")) {
                 client.deleteObject(new DeleteObjectRequest(BUCKET_NAME, contents.getKey()));
             }
         }

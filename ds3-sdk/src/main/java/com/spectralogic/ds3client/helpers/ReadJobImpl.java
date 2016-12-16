@@ -159,7 +159,6 @@ class ReadJobImpl extends JobImpl {
     private final class GetObjectTransferrerNetworkFailureDecorator implements ItemTransferrer {
         private final JobState jobState;
         private Long numBytesToTransfer;
-        private GetObjectRequest getObjectRequest;
         private ImmutableCollection<Range> ranges;
 
         private GetObjectTransferrerNetworkFailureDecorator(final JobState jobState) {
@@ -168,9 +167,18 @@ class ReadJobImpl extends JobImpl {
 
         @Override
         public void transferItem(final Ds3Client client, final BulkObject ds3Object) throws IOException {
-            updateGetObjectRequestIfNull(ds3Object);
-
             updateRangesAndTransferSizeIfNull(ds3Object);
+
+            final long objectOffset = ranges.iterator().next().getStart();
+            final long objectLength = RangeHelper.transferSizeForRanges(ranges);
+
+            final GetObjectRequest getObjectRequest = new GetObjectRequest(
+                    ReadJobImpl.this.masterObjectList.getBucketName(),
+                    ds3Object.getName(),
+                    jobState.getChannel(ds3Object.getName(), objectOffset, objectLength),
+                    ReadJobImpl.this.getJobId().toString(),
+                    ds3Object.getOffset()
+            );
 
             final ItemTransferrer itemTransferrer = new GetObjectTransferrer(getObjectRequest);
 
@@ -181,17 +189,6 @@ class ReadJobImpl extends JobImpl {
                 updateRanges(RangeHelper.replaceRange(ranges, e.getTotalBytes(), numBytesToTransfer));
                 emitContentLengthMismatchFailureEvent(ds3Object, e);
                 throw new RecoverableIOException(e);
-            }
-        }
-
-        private synchronized void updateGetObjectRequestIfNull(final BulkObject ds3Object) {
-            if (getObjectRequest == null) {
-                getObjectRequest = new GetObjectRequest(
-                        ReadJobImpl.this.masterObjectList.getBucketName(),
-                        ds3Object.getName(),
-                        jobState.getChannel(ds3Object.getName(), ds3Object.getOffset(), ds3Object.getLength()),
-                        ReadJobImpl.this.getJobId().toString(),
-                        ds3Object.getOffset());
             }
         }
 
