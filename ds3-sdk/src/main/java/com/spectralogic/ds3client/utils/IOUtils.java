@@ -15,6 +15,8 @@
 
 package com.spectralogic.ds3client.utils;
 
+import com.spectralogic.ds3client.helpers.UnrecoverableIOException;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -66,9 +68,14 @@ public final class IOUtils {
         long statusUpdateTime = startTime;
         while ((len = inputStream.read(buffer)) != -1) {
             totalBytes += len;
-            byteBuffer.position(0);
-            byteBuffer.limit(len);
-            writableByteChannel.write(byteBuffer);
+
+            try {
+                byteBuffer.position(0);
+                byteBuffer.limit(len);
+                writableByteChannel.write(byteBuffer);
+            } catch (final Throwable t) {
+                throw new UnrecoverableIOException(t);
+            }
 
             final long curTime = PerformanceUtils.getCurrentTime();
             if (statusUpdateTime <= curTime) {
