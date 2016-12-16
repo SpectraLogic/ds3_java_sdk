@@ -17,85 +17,115 @@ package com.spectralogic.ds3client.utils;
 
 import org.junit.Test;
 
+import java.util.regex.Pattern;
+
 import static com.spectralogic.ds3client.utils.MetadataStringManipulation.toDecodedString;
 import static com.spectralogic.ds3client.utils.MetadataStringManipulation.toEncodedString;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
-import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 public class MetadataStringManipulation_Test {
 
     private static final String STRING_WITH_SPACES = "String With Spaces";
-    private static final String STRING_WITH_ENCODED_SPACES = "String%20With%20Spaces";
-
     private static final String STRING_WITH_SYMBOLS = "1234567890-!@#$%^&*()_+`~[]\\{}|;':\"./<>?∞πϊφϠ";
-    private static final String STRING_WITH_ENCODED_SYMBOLS = "1234567890-!%40#$%25^&*%28%29_%2B`~%5B%5D%5C%7B%7D|%3B'%3A%22.%2F%3C%3E%3F%C3%A2%CB%86%C5%BE%C3%8F%E2%82%AC%C3%8F%C5%A0%C3%8F%E2%80%A0%C3%8F%C2%A0";
 
-    @Test
-    public void toEscapedString_Null_Test() {
-        final String nullString = null;
-        assertThat(toEncodedString(nullString), is(nullValue()));
+    private static final Pattern ENCODED_PATTERN = Pattern.compile("[a-zA-Z0-9!#$&'*\\-.~\\^_`|,=%]*");
+
+    /*
+     * Verifies that an encoded string only contains header safe characters
+     */
+    private static boolean isEncodedSafeChars(final String str) {
+        return ENCODED_PATTERN.matcher(str).matches();
     }
 
     @Test
-    public void toEscapedString_Spaces_Test() {
-        assertThat(toEncodedString(STRING_WITH_SPACES), is(STRING_WITH_ENCODED_SPACES));
+    public void encodedPattern_Test() {
+        assertTrue(isEncodedSafeChars(""));
+        assertTrue(isEncodedSafeChars("abc123"));
+        assertTrue(isEncodedSafeChars("!#$&'*-.~^_`|,=%"));
+
+        assertFalse(isEncodedSafeChars(" "));
+        assertFalse(isEncodedSafeChars("{"));
+        assertFalse(isEncodedSafeChars("}"));
+        assertFalse(isEncodedSafeChars("["));
+        assertFalse(isEncodedSafeChars("]"));
+        assertFalse(isEncodedSafeChars("<"));
+        assertFalse(isEncodedSafeChars(">"));
+        assertFalse(isEncodedSafeChars("@"));
+        assertFalse(isEncodedSafeChars(";"));
+        assertFalse(isEncodedSafeChars(":"));
+        assertFalse(isEncodedSafeChars("\\"));
+        assertFalse(isEncodedSafeChars("\""));
+        assertFalse(isEncodedSafeChars("/"));
+        assertFalse(isEncodedSafeChars("?"));
+        assertFalse(isEncodedSafeChars("+"));
+
+        assertFalse(isEncodedSafeChars("∞"));
+        assertFalse(isEncodedSafeChars("π"));
+        assertFalse(isEncodedSafeChars("ϊ"));
+        assertFalse(isEncodedSafeChars("φ"));
+        assertFalse(isEncodedSafeChars("Ϡ"));
+
     }
 
     @Test
-    public void toEscapedString_Symbols_Test() {
-        assertThat(toEncodedString(STRING_WITH_SYMBOLS), is(STRING_WITH_ENCODED_SYMBOLS));
+    public void encodeDecode_NullString_Test() {
+        assertThat(toEncodedString(null), is(nullValue()));
+        assertThat(toDecodedString(null), is(nullValue()));
     }
 
     @Test
-    public void toDecodedString_Null_Test() {
-        final String nullString = null;
-        assertThat(toDecodedString(nullString), is(nullValue()));
+    public void encodeDecode_WithSpaces_Test() {
+        final String encoded = toEncodedString(STRING_WITH_SPACES);
+        assertTrue(isEncodedSafeChars(encoded));
+        assertThat(toDecodedString(encoded), is(STRING_WITH_SPACES));
     }
 
     @Test
-    public void toDecodedString_Spaces_Test() {
-        assertThat(toDecodedString(STRING_WITH_ENCODED_SPACES), is(STRING_WITH_SPACES));
+    public void encodeDecode_WithSymbols_Test() {
+        final String encoded = toEncodedString(STRING_WITH_SYMBOLS);
+        assertTrue(isEncodedSafeChars(encoded));
+        assertThat(toDecodedString(encoded), is(STRING_WITH_SYMBOLS));
     }
 
     @Test
-    public void toDecodedString_Symbols_Test() {
-        assertThat(toDecodedString(STRING_WITH_ENCODED_SYMBOLS), is(STRING_WITH_SYMBOLS));
+    public void encodeDecode_SpaceAndPlus_Test() {
+        final String plusSpace = " +";
+        final String encoded = toEncodedString(plusSpace);
+        assertTrue(isEncodedSafeChars(encoded));
+        assertThat(toDecodedString(encoded), is(plusSpace));
     }
 
     @Test
-    public void encodeAndDecode_Symbols_Test() {
-        assertThat(toDecodedString(toEncodedString(STRING_WITH_SYMBOLS)), is(STRING_WITH_SYMBOLS));
-    }
-
-    @Test
-    public void encodeAndDecode_EncodedSymbols_Test() {
-        assertThat(toDecodedString(toEncodedString(STRING_WITH_ENCODED_SYMBOLS)), is(STRING_WITH_ENCODED_SYMBOLS));
-    }
-
-    @Test
-    public void encodeAndDecode_SpaceAndPlus_Test() {
-        final String decode = " +";
-        final String encoded = "%20%2B";
-        assertThat(toEncodedString(decode), is(encoded));
-        assertThat(toDecodedString(encoded), is(decode));
-    }
-
-    @Test
-    public void encodeAndDecode_Range_Test() {
+    public void encodeDecode_Range_Test() {
         final String range = "Range=bytes=0-10,110-120";
-        assertThat(toEncodedString(range), is(range));
+        final String encoded = toEncodedString(range);
+        assertTrue(isEncodedSafeChars(encoded));
+
+        assertThat(encoded, is(range));
         assertThat(toDecodedString(range), is(range));
     }
 
     @Test
-    public void toDecodedString_LowerCase_Test() {
-        assertThat(toDecodedString(STRING_WITH_ENCODED_SYMBOLS.toLowerCase()), is(STRING_WITH_SYMBOLS));
+    public void decodedDecode_LowerCase_Test() {
+        final String encodedToLower = toEncodedString(STRING_WITH_SYMBOLS).toLowerCase();
+        assertTrue(isEncodedSafeChars(encodedToLower));
+        assertThat(toDecodedString(encodedToLower), is(STRING_WITH_SYMBOLS));
     }
 
     @Test
-    public void encodeAndDecode_DoubleEscaping_Test() {
-        final String result = toDecodedString(toEncodedString(STRING_WITH_ENCODED_SYMBOLS));
-        assertThat(result, is(STRING_WITH_ENCODED_SYMBOLS));
+    public void encodeDecode_DoubleEncoding_Test() {
+        final String encoded1 = toEncodedString(STRING_WITH_SYMBOLS);
+        final String encoded2 = toEncodedString(encoded1);
+        assertTrue(isEncodedSafeChars(encoded1));
+        assertTrue(isEncodedSafeChars(encoded2));
+
+        final String decoded1 = toDecodedString(encoded2);
+        final String decoded2 = toDecodedString(decoded1);
+        assertThat(decoded1, is(encoded1));
+        assertThat(decoded2, is(STRING_WITH_SYMBOLS));
     }
 }
