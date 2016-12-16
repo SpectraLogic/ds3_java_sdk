@@ -29,7 +29,6 @@ import java.nio.charset.StandardCharsets;
  */
 public final class MetadataStringManipulation {
 
-
     /**
      * List of printable US-ASCII characters that do not need percent encoding.
      * Includes separators equals "=" and comma ",": not encoded for use in creating Range header
@@ -37,7 +36,7 @@ public final class MetadataStringManipulation {
      * Excludes Percent "%": not considered safe because it is used in percent encoding
      * Excludes Plus "+": not considered safe because its interpreted as space during decoding
      */
-    private static final String HTTP_HEADER_SAFE_CHARS = "!#$&'*-.~^_`!|,=";
+    private static final String HTTP_HEADER_SAFE_CHARS = "!#$&'*-.~^_`|,=";
 
     private static final Escaper HTTP_HEADER_ESCAPER =
             new PercentEscaper(HTTP_HEADER_SAFE_CHARS, false);
