@@ -179,6 +179,7 @@ class ReadJobImpl extends JobImpl {
                 itemTransferrer.transferItem(client, ds3Object);
             } catch (final ContentLengthNotMatchException e) {
                 updateRanges(RangeHelper.replaceRange(ranges, e.getTotalBytes(), numBytesToTransfer));
+                emitContentLengthMismatchFailureEvent(ds3Object, e);
                 throw new RecoverableIOException(e);
             }
         }
@@ -210,6 +211,16 @@ class ReadJobImpl extends JobImpl {
 
         private synchronized void updateRanges(final ImmutableCollection<Range> newRanges) {
             ranges = newRanges;
+        }
+
+        private void emitContentLengthMismatchFailureEvent(final BulkObject ds3Object, final Throwable t) {
+            final FailureEvent failureEvent = new FailureEvent.Builder()
+                    .doingWhat(FailureEvent.FailureActivity.GettingObject)
+                    .usingSystemWithEndpoint(client.getConnectionDetails().getEndpoint())
+                    .withCausalException(t)
+                    .withObjectNamed(ds3Object.getName())
+                    .build();
+            emitFailureEvent(failureEvent);
         }
     }
 
