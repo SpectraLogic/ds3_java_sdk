@@ -158,6 +158,9 @@ class ReadJobImpl extends JobImpl {
 
     private final class GetObjectTransferrerNetworkFailureDecorator implements ItemTransferrer {
         private final JobState jobState;
+        private Long numBytesToTransfer;
+        private GetObjectRequest getObjectRequest;
+        private ImmutableCollection<Range> ranges;
 
         private GetObjectTransferrerNetworkFailureDecorator(final JobState jobState) {
             this.jobState = jobState;
@@ -165,27 +168,48 @@ class ReadJobImpl extends JobImpl {
 
         @Override
         public void transferItem(final Ds3Client client, final BulkObject ds3Object) throws IOException {
-            final GetObjectRequest getObjectRequest = new GetObjectRequest(
-                    ReadJobImpl.this.masterObjectList.getBucketName(),
-                    ds3Object.getName(),
-                    jobState.getChannel(ds3Object.getName(), ds3Object.getOffset(), ds3Object.getLength()),
-                    ReadJobImpl.this.getJobId().toString(),
-                    ds3Object.getOffset()
-            );
+            updateGetObjectRequestIfNull(ds3Object);
 
-            final ImmutableCollection<Range> ranges = getRangesForBlob(blobToRanges, ds3Object);
-
-            getObjectRequest.withByteRanges(ranges);
+            updateRangesAndTransferSizeIfNull(ds3Object);
 
             final ItemTransferrer itemTransferrer = new GetObjectTransferrer(getObjectRequest);
 
             try {
+                getObjectRequest.withByteRanges(ranges);
                 itemTransferrer.transferItem(client, ds3Object);
             } catch (final ContentLengthNotMatchException e) {
-                final ImmutableCollection<Range> newRanges = ImmutableList.of(Range.byLength(e.getTotalBytes(), e.getContentLength() - e.getTotalBytes()));
-                getObjectRequest.withByteRanges(newRanges);
-                itemTransferrer.transferItem(client, ds3Object);
+                updateRanges(RangeHelper.replaceRange(ranges, e.getTotalBytes(), numBytesToTransfer));
+                throw new RecoverableIOException(e);
             }
+        }
+
+        private synchronized void updateGetObjectRequestIfNull(final BulkObject ds3Object) {
+            if (getObjectRequest == null) {
+                getObjectRequest = new GetObjectRequest(
+                        ReadJobImpl.this.masterObjectList.getBucketName(),
+                        ds3Object.getName(),
+                        jobState.getChannel(ds3Object.getName(), ds3Object.getOffset(), ds3Object.getLength()),
+                        ReadJobImpl.this.getJobId().toString(),
+                        ds3Object.getOffset());
+            }
+        }
+
+        private synchronized void updateRangesAndTransferSizeIfNull(final BulkObject ds3Object) {
+            if (ranges == null) {
+                ranges = getRangesForBlob(blobToRanges, ds3Object);
+            }
+
+            if (ranges == null) {
+                ranges = RangeHelper.replaceRange(ranges, 0, ds3Object.getLength());
+            }
+
+            if (numBytesToTransfer == null) {
+                numBytesToTransfer = RangeHelper.transferSizeForRanges(ranges);
+            }
+        }
+
+        private synchronized void updateRanges(final ImmutableCollection<Range> newRanges) {
+            ranges = newRanges;
         }
     }
 

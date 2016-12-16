@@ -178,7 +178,6 @@ public class GetJobManagement_Test {
             final File originalFile = ResourceUtils.loadFileResource(DIR_NAME + FILE_NAME).toFile();
             final File fileCopiedFromBP = Paths.get(tempDirectory.toString(), FILE_NAME).toFile();
             assertTrue(FileUtils.contentEquals(originalFile, fileCopiedFromBP));
-
         } finally {
             FileUtils.deleteDirectory(tempDirectory.toFile());
             deleteBigFileFromBlackPearlBucket();
@@ -274,16 +273,16 @@ public class GetJobManagement_Test {
             final String DIR_NAME = "largeFiles/";
             final String FILE_NAME = "GreatExpectations.txt";
 
-            filesToGet.add(new PartialDs3Object(FILE_NAME, Range.byLength(0, 100)));
+            filesToGet.add(new PartialDs3Object(FILE_NAME, Range.byLength(200000, 100000)));
 
-            filesToGet.add(new PartialDs3Object(FILE_NAME, Range.byLength(100, 100)));
+            filesToGet.add(new PartialDs3Object(FILE_NAME, Range.byLength(100000, 100000)));
 
-            filesToGet.add(new PartialDs3Object(FILE_NAME, Range.byLength(200, 100)));
+            filesToGet.add(new PartialDs3Object(FILE_NAME, Range.byLength(0, 100000)));
 
             final Ds3ClientShim ds3ClientShim = new Ds3ClientShim((Ds3ClientImpl) client);
 
             final int maxNumBlockAllocationRetries = 1;
-            final int maxNumObjectTransferAttempts = 3;
+            final int maxNumObjectTransferAttempts = 5;
             final Ds3ClientHelpers ds3ClientHelpers = Ds3ClientHelpers.wrap(ds3ClientShim,
                     maxNumBlockAllocationRetries,
                     maxNumObjectTransferAttempts);
@@ -313,18 +312,18 @@ public class GetJobManagement_Test {
             assertEquals(1, intValue.getValue());
 
             try (final InputStream originalFileStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(DIR_NAME + FILE_NAME)) {
-                final byte[] first300Bytes = new byte[300];
-                int numBytesRead = originalFileStream.read(first300Bytes, 0, 300);
+                final byte[] first300000Bytes = new byte[300000];
+                int numBytesRead = originalFileStream.read(first300000Bytes, 0, 300000);
 
-                assertThat(numBytesRead, is(300));
+                assertThat(numBytesRead, is(300000));
 
                 try (final InputStream fileReadFromBP = Files.newInputStream(Paths.get(tempDirectory.toString(), FILE_NAME))) {
-                    final byte[] first300BytesFromBP = new byte[300];
+                    final byte[] first300000BytesFromBP = new byte[300000];
 
-                    numBytesRead = fileReadFromBP.read(first300BytesFromBP, 0, 300);
-                    assertThat(numBytesRead, is(300));
+                    numBytesRead = fileReadFromBP.read(first300000BytesFromBP, 0, 300000);
+                    assertThat(numBytesRead, is(300000));
 
-                    assertTrue(Arrays.equals(first300Bytes, first300BytesFromBP));
+                    assertTrue(Arrays.equals(first300000Bytes, first300000BytesFromBP));
                 }
             }
         } finally {
