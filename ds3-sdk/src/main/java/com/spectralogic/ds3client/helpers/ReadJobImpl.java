@@ -34,6 +34,7 @@ import com.spectralogic.ds3client.networking.Metadata;
 import java.io.IOException;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicLong;
 
 class ReadJobImpl extends JobImpl {
 
@@ -51,7 +52,7 @@ class ReadJobImpl extends JobImpl {
             final int retryAfter,
             final int retryDelay,
             final EventRunner eventRunner
-            ) {
+    ) {
         super(client, masterObjectList, objectTransferAttempts, eventRunner);
 
         this.blobToRanges = PartialObjectHelpers.mapRangesToBlob(masterObjectList.getObjects(), objectRanges);
@@ -160,6 +161,7 @@ class ReadJobImpl extends JobImpl {
         private final JobState jobState;
         private Long numBytesToTransfer;
         private ImmutableCollection<Range> ranges;
+        private final AtomicLong destinationChannelOffset = new AtomicLong(0);
 
         private GetObjectTransferrerNetworkFailureDecorator(final JobState jobState) {
             this.jobState = jobState;
@@ -169,13 +171,12 @@ class ReadJobImpl extends JobImpl {
         public void transferItem(final Ds3Client client, final BulkObject ds3Object) throws IOException {
             updateRangesAndTransferSizeIfNull(ds3Object);
 
-            final long objectOffset = ranges.iterator().next().getStart();
             final long objectLength = RangeHelper.transferSizeForRanges(ranges);
 
             final GetObjectRequest getObjectRequest = new GetObjectRequest(
                     ReadJobImpl.this.masterObjectList.getBucketName(),
                     ds3Object.getName(),
-                    jobState.getChannel(ds3Object.getName(), objectOffset, objectLength),
+                    jobState.getChannel(ds3Object.getName(), destinationChannelOffset.get(), objectLength),
                     ReadJobImpl.this.getJobId().toString(),
                     ds3Object.getOffset()
             );
@@ -187,6 +188,7 @@ class ReadJobImpl extends JobImpl {
                 itemTransferrer.transferItem(client, ds3Object);
             } catch (final ContentLengthNotMatchException e) {
                 updateRanges(RangeHelper.replaceRange(ranges, e.getTotalBytes(), numBytesToTransfer));
+                destinationChannelOffset.getAndAdd(e.getTotalBytes());
                 emitContentLengthMismatchFailureEvent(ds3Object, e);
                 throw new RecoverableIOException(e);
             }
