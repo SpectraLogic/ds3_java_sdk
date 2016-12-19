@@ -16,11 +16,16 @@
 package com.spectralogic.ds3client.helpers;
 
 import java.io.IOException;
+import java.nio.file.FileSystemException;
 
 public final class ExceptionClassifier {
     private ExceptionClassifier() { }
 
     public static boolean isRecoverableException(final Throwable t) {
+        if (t instanceof UnrecoverableIOException || t instanceof FileSystemException || t instanceof SecurityException) {
+            return false;
+        }
+
         return t instanceof IOException;
     }
 
