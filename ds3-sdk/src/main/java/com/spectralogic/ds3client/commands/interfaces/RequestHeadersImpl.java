@@ -15,12 +15,11 @@
 
 package com.spectralogic.ds3client.commands.interfaces;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Multimap;
 import com.spectralogic.ds3client.networking.NetworkClientImpl;
 
-import javax.annotation.Nullable;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
@@ -35,7 +34,7 @@ public class RequestHeadersImpl implements RequestHeaders {
 
     private final Multimap<String, String> headers;
 
-    public RequestHeadersImpl(final Multimap<String, String> defaultHeaders) {
+    RequestHeadersImpl(final Multimap<String, String> defaultHeaders) {
         this.headers = defaultHeaders;
     }
 
@@ -52,13 +51,12 @@ public class RequestHeadersImpl implements RequestHeaders {
      * @param key non-percent encoded header key
      */
     @Override
-    public Collection<String> get(@Nullable final String key) {
-        final Collection<String> values = headers.get(key);
-        final Collection<String> decodedValues = new ArrayList<>();
-        for (final String value : values) {
-            decodedValues.add(toDecodedString(value));
+    public Collection<String> get(final String key) {
+        final ImmutableList.Builder<String> builder = ImmutableList.builder();
+        for (final String value : headers.get(toEncodedString(key))) {
+            builder.add(toDecodedString(value));
         }
-        return decodedValues;
+        return builder.build();
     }
 
     /**
@@ -74,7 +72,7 @@ public class RequestHeadersImpl implements RequestHeaders {
      * @param key non-percent encoded header key
      */
     @Override
-    public boolean containsKey(@Nullable final String key) {
+    public boolean containsKey(final String key) {
         return headers.containsKey(toEncodedString(key));
     }
 
@@ -83,7 +81,7 @@ public class RequestHeadersImpl implements RequestHeaders {
      * @param key non-percent encoded header key
      */
     @Override
-    public Collection<String> removeAll(@Nullable final String key) {
+    public Collection<String> removeAll(final String key) {
         return headers.removeAll(toEncodedString(key));
     }
 
@@ -109,8 +107,7 @@ public class RequestHeadersImpl implements RequestHeaders {
     @Override
     public Set<String> keySet() {
         final ImmutableSet.Builder<String> builder = ImmutableSet.builder();
-        final ImmutableSet<String> keySet = ImmutableSet.copyOf(headers.keySet());
-        for (final String key: keySet) {
+        for (final String key: headers.keySet()) {
             builder.add(toDecodedString(key));
         }
         return builder.build();
