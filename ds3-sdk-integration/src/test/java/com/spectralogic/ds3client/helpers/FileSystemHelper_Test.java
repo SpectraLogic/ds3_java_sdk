@@ -75,7 +75,7 @@ public class FileSystemHelper_Test {
     public void testObjectsFitBucketThatHasContent() throws IOException, URISyntaxException {
         putObjectThenRunVerification(new FileSystemHelperImpl(), new ResultVerifier() {
             @Override
-            public void verifyResult(ObjectStorageSpaceVerificationResult result, long totalRequiredSize) {
+            public void verifyResult(final ObjectStorageSpaceVerificationResult result, final long totalRequiredSize) {
                 assertEquals(ObjectStorageSpaceVerificationResult.VerificationStatus.OK, result.getVerificationStatus());
                 assertEquals(result.getRequiredSpace(), totalRequiredSize);
                 assertTrue(result.getAvailableSpace() > 0);
