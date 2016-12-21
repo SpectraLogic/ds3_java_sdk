@@ -175,28 +175,21 @@ class ReadJobImpl extends JobImpl {
         public void transferItem(final Ds3Client client, final BulkObject ds3Object) throws IOException {
             try {
                 itemTransferrer.get().transferItem(client, ds3Object);
-            } catch (final ContentLengthNotMatchException e) {
-                initializeRangesAndTransferSize(ds3Object);
-                updateRanges(e.getTotalBytes());
-                destinationChannelOffset.getAndAdd(e.getTotalBytes());
-                final long objectLength = RangeHelper.transferSizeForRanges(ranges);
+            } catch (final ContentLengthNotMatchException contentLengthNotMatchException) {
+                makeNewItemTransferrer(ds3Object, contentLengthNotMatchException);
 
-                final GetObjectRequest getObjectRequest = new GetObjectRequest(
-                        ReadJobImpl.this.masterObjectList.getBucketName(),
-                        ds3Object.getName(),
-                        jobState.getChannel(ds3Object.getName(), destinationChannelOffset.get(), objectLength),
-                        ReadJobImpl.this.getJobId().toString(),
-                        ds3Object.getOffset()
-                );
+                emitContentLengthMismatchFailureEvent(ds3Object, contentLengthNotMatchException);
 
-                getObjectRequest.withByteRanges(ranges);
-
-                itemTransferrer.set(new GetPartialObjectTransferrer(getObjectRequest));
-
-                emitContentLengthMismatchFailureEvent(ds3Object, e);
-
-                throw new RecoverableIOException(e);
+                throw new RecoverableIOException(contentLengthNotMatchException);
             }
+        }
+
+        private void makeNewItemTransferrer(final BulkObject ds3Object, final ContentLengthNotMatchException e) {
+            initializeRangesAndTransferSize(ds3Object);
+            updateRanges(e.getTotalBytes());
+            destinationChannelOffset.getAndAdd(e.getTotalBytes());
+
+            itemTransferrer.set(new GetPartialObjectTransferrer(jobState, ranges, destinationChannelOffset.get()));
         }
 
         private synchronized void initializeRangesAndTransferSize(final BulkObject ds3Object) {
@@ -229,15 +222,30 @@ class ReadJobImpl extends JobImpl {
     }
 
     private final class GetPartialObjectTransferrer implements ItemTransferrer {
-        private final GetObjectRequest getObjectRequest;
+        private final JobState jobState;
+        private final ImmutableCollection<Range> ranges;
+        private final long destinationChannelOffset;
 
-        private GetPartialObjectTransferrer(final GetObjectRequest getObjectRequest) {
-            this.getObjectRequest = getObjectRequest;
+        private GetPartialObjectTransferrer(final JobState jobState,
+                                            final ImmutableCollection<Range> ranges,
+                                            final long destinationChannelOffset)
+        {
+            this.jobState = jobState;
+            this.ranges = ranges;
+            this.destinationChannelOffset = destinationChannelOffset;
         }
 
         @Override
-        public void transferItem(final Ds3Client client, final BulkObject ds3Object)
-                throws IOException {
+        public void transferItem(final Ds3Client client, final BulkObject ds3Object) throws IOException {
+            final GetObjectRequest getObjectRequest = new GetObjectRequest(
+                    ReadJobImpl.this.masterObjectList.getBucketName(),
+                    ds3Object.getName(),
+                    jobState.getChannel(ds3Object.getName(), destinationChannelOffset, RangeHelper.transferSizeForRanges(ranges)),
+                    ReadJobImpl.this.getJobId().toString(),
+                    ds3Object.getOffset()
+            );
+
+            getObjectRequest.withByteRanges(ranges);
 
             final GetObjectResponse response = client.getObject(getObjectRequest);
             final Metadata metadata = response.getMetadata();
