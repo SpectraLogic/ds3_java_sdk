@@ -30,11 +30,13 @@ import com.spectralogic.ds3client.helpers.util.PartialObjectHelpers;
 import com.spectralogic.ds3client.models.*;
 import com.spectralogic.ds3client.models.common.Range;
 import com.spectralogic.ds3client.networking.Metadata;
+import com.spectralogic.ds3client.utils.Guard;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.concurrent.atomic.AtomicReference;
 
 class ReadJobImpl extends JobImpl {
 
@@ -162,39 +164,42 @@ class ReadJobImpl extends JobImpl {
         private Long numBytesToTransfer;
         private ImmutableCollection<Range> ranges;
         private final AtomicLong destinationChannelOffset = new AtomicLong(0);
+        private final AtomicReference<ItemTransferrer> itemTransferrer = new AtomicReference<>();
 
         private GetObjectTransferrerNetworkFailureDecorator(final JobState jobState) {
             this.jobState = jobState;
+            itemTransferrer.set(new GetObjectTransferrer(jobState));
         }
 
         @Override
         public void transferItem(final Ds3Client client, final BulkObject ds3Object) throws IOException {
-            updateRangesAndTransferSizeIfNull(ds3Object);
-
-            final long objectLength = RangeHelper.transferSizeForRanges(ranges);
-
-            final GetObjectRequest getObjectRequest = new GetObjectRequest(
-                    ReadJobImpl.this.masterObjectList.getBucketName(),
-                    ds3Object.getName(),
-                    jobState.getChannel(ds3Object.getName(), destinationChannelOffset.get(), objectLength),
-                    ReadJobImpl.this.getJobId().toString(),
-                    ds3Object.getOffset()
-            );
-
-            final ItemTransferrer itemTransferrer = new GetObjectTransferrer(getObjectRequest);
-
             try {
-                getObjectRequest.withByteRanges(ranges);
-                itemTransferrer.transferItem(client, ds3Object);
+                itemTransferrer.get().transferItem(client, ds3Object);
             } catch (final ContentLengthNotMatchException e) {
-                updateRanges(RangeHelper.replaceRange(ranges, e.getTotalBytes(), numBytesToTransfer));
+                initializeRangesAndTransferSize(ds3Object);
+                updateRanges(e.getTotalBytes());
                 destinationChannelOffset.getAndAdd(e.getTotalBytes());
+                final long objectLength = RangeHelper.transferSizeForRanges(ranges);
+
+                final GetObjectRequest getObjectRequest = new GetObjectRequest(
+                        ReadJobImpl.this.masterObjectList.getBucketName(),
+                        ds3Object.getName(),
+                        jobState.getChannel(ds3Object.getName(), destinationChannelOffset.get(), objectLength),
+                        ReadJobImpl.this.getJobId().toString(),
+                        ds3Object.getOffset()
+                );
+
+                getObjectRequest.withByteRanges(ranges);
+
+                itemTransferrer.set(new GetPartialObjectTransferrer(getObjectRequest));
+
                 emitContentLengthMismatchFailureEvent(ds3Object, e);
+
                 throw new RecoverableIOException(e);
             }
         }
 
-        private synchronized void updateRangesAndTransferSizeIfNull(final BulkObject ds3Object) {
+        private synchronized void initializeRangesAndTransferSize(final BulkObject ds3Object) {
             if (ranges == null) {
                 ranges = getRangesForBlob(blobToRanges, ds3Object);
             }
@@ -208,8 +213,8 @@ class ReadJobImpl extends JobImpl {
             }
         }
 
-        private synchronized void updateRanges(final ImmutableCollection<Range> newRanges) {
-            ranges = newRanges;
+        private synchronized void updateRanges(final long numBytesTransferred) {
+            ranges = RangeHelper.replaceRange(ranges, numBytesTransferred, numBytesToTransfer);
         }
 
         private void emitContentLengthMismatchFailureEvent(final BulkObject ds3Object, final Throwable t) {
@@ -223,10 +228,10 @@ class ReadJobImpl extends JobImpl {
         }
     }
 
-    private final class GetObjectTransferrer implements ItemTransferrer {
+    private final class GetPartialObjectTransferrer implements ItemTransferrer {
         private final GetObjectRequest getObjectRequest;
 
-        private GetObjectTransferrer(final GetObjectRequest getObjectRequest) {
+        private GetPartialObjectTransferrer(final GetObjectRequest getObjectRequest) {
             this.getObjectRequest = getObjectRequest;
         }
 
@@ -235,6 +240,39 @@ class ReadJobImpl extends JobImpl {
                 throws IOException {
 
             final GetObjectResponse response = client.getObject(getObjectRequest);
+            final Metadata metadata = response.getMetadata();
+
+            emitChecksumEvents(ds3Object, response.getChecksumType(), response.getChecksum());
+            sendMetadataEvents(ds3Object.getName(), metadata);
+        }
+    }
+
+    private final class GetObjectTransferrer implements ItemTransferrer {
+        private final JobState jobState;
+
+        private GetObjectTransferrer(final JobState jobState) {
+            this.jobState = jobState;
+        }
+
+        @Override
+        public void transferItem(final Ds3Client client, final BulkObject ds3Object)
+                throws IOException {
+
+            final ImmutableCollection<Range> ranges = getRangesForBlob(blobToRanges, ds3Object);
+
+            final GetObjectRequest request = new GetObjectRequest(
+                    ReadJobImpl.this.masterObjectList.getBucketName(),
+                    ds3Object.getName(),
+                    jobState.getChannel(ds3Object.getName(), ds3Object.getOffset(), ds3Object.getLength()),
+                    ReadJobImpl.this.getJobId().toString(),
+                    ds3Object.getOffset()
+            );
+
+            if (Guard.isNotNullAndNotEmpty(ranges)) {
+                request.withByteRanges(ranges);
+            }
+
+            final GetObjectResponse response = client.getObject(request);
             final Metadata metadata = response.getMetadata();
 
             emitChecksumEvents(ds3Object, response.getChecksumType(), response.getChecksum());

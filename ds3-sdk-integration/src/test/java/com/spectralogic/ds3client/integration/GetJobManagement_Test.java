@@ -277,7 +277,7 @@ public class GetJobManagement_Test {
 
             filesToGet.add(new PartialDs3Object(FILE_NAME, Range.byLength(100000, 100000)));
 
-            filesToGet.add(new PartialDs3Object(FILE_NAME, Range.byLength(0, 100000)));
+            filesToGet.add(new PartialDs3Object(FILE_NAME, Range.byLength(10, 100000)));
 
             final Ds3ClientShim ds3ClientShim = new Ds3ClientShim((Ds3ClientImpl) client);
 
@@ -312,16 +312,17 @@ public class GetJobManagement_Test {
             assertEquals(1, intValue.getValue());
 
             try (final InputStream originalFileStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(DIR_NAME + FILE_NAME)) {
-                final byte[] first300000Bytes = new byte[300000];
-                int numBytesRead = originalFileStream.read(first300000Bytes, 0, 300000);
+                final byte[] first300000Bytes = new byte[300000 - 10];
+                originalFileStream.skip(10);
+                int numBytesRead = originalFileStream.read(first300000Bytes, 0, 300000 - 10);
 
-                assertThat(numBytesRead, is(300000));
+                assertThat(numBytesRead, is(300000 -10 ));
 
                 try (final InputStream fileReadFromBP = Files.newInputStream(Paths.get(tempDirectory.toString(), FILE_NAME))) {
-                    final byte[] first300000BytesFromBP = new byte[300000];
+                    final byte[] first300000BytesFromBP = new byte[300000 - 10];
 
-                    numBytesRead = fileReadFromBP.read(first300000BytesFromBP, 0, 300000);
-                    assertThat(numBytesRead, is(300000));
+                    numBytesRead = fileReadFromBP.read(first300000BytesFromBP, 0, 300000 - 10);
+                    assertThat(numBytesRead, is(300000 - 10));
 
                     assertTrue(Arrays.equals(first300000Bytes, first300000BytesFromBP));
                 }
