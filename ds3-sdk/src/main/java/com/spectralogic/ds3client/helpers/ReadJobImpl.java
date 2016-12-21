@@ -176,7 +176,7 @@ class ReadJobImpl extends JobImpl {
             try {
                 itemTransferrer.get().transferItem(client, ds3Object);
             } catch (final ContentLengthNotMatchException contentLengthNotMatchException) {
-                makeNewItemTransferrer(ds3Object, contentLengthNotMatchException);
+                makeNewItemTransferrer(ds3Object, contentLengthNotMatchException.getTotalBytes());
 
                 emitContentLengthMismatchFailureEvent(ds3Object, contentLengthNotMatchException);
 
@@ -184,10 +184,10 @@ class ReadJobImpl extends JobImpl {
             }
         }
 
-        private void makeNewItemTransferrer(final BulkObject ds3Object, final ContentLengthNotMatchException e) {
+        private void makeNewItemTransferrer(final BulkObject ds3Object, final long numBytesTransferred) {
             initializeRangesAndTransferSize(ds3Object);
-            updateRanges(e.getTotalBytes());
-            destinationChannelOffset.getAndAdd(e.getTotalBytes());
+            updateRanges(numBytesTransferred);
+            destinationChannelOffset.getAndAdd(numBytesTransferred);
 
             itemTransferrer.set(new GetPartialObjectTransferrer(jobState, ranges, destinationChannelOffset.get()));
         }
