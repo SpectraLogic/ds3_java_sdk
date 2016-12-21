@@ -467,11 +467,13 @@ public class GetJobManagement_Test {
             final String DIR_NAME = "largeFiles/";
             final String FILE_NAME = "GreatExpectations.txt";
 
+            final int offsetIntoFirstRange = 10;
+
             filesToGet.add(new PartialDs3Object(FILE_NAME, Range.byLength(200000, 100000)));
 
             filesToGet.add(new PartialDs3Object(FILE_NAME, Range.byLength(100000, 100000)));
 
-            filesToGet.add(new PartialDs3Object(FILE_NAME, Range.byLength(10, 100000)));
+            filesToGet.add(new PartialDs3Object(FILE_NAME, Range.byLength(offsetIntoFirstRange, 100000)));
 
             final Ds3ClientShim ds3ClientShim = new Ds3ClientShim((Ds3ClientImpl) client);
 
@@ -506,17 +508,17 @@ public class GetJobManagement_Test {
             assertEquals(1, intValue.getValue());
 
             try (final InputStream originalFileStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(DIR_NAME + FILE_NAME)) {
-                final byte[] first300000Bytes = new byte[300000 - 10];
+                final byte[] first300000Bytes = new byte[300000 - offsetIntoFirstRange];
                 originalFileStream.skip(10);
-                int numBytesRead = originalFileStream.read(first300000Bytes, 0, 300000 - 10);
+                int numBytesRead = originalFileStream.read(first300000Bytes, 0, 300000 - offsetIntoFirstRange);
 
-                assertThat(numBytesRead, is(300000 -10 ));
+                assertThat(numBytesRead, is(300000 -offsetIntoFirstRange ));
 
                 try (final InputStream fileReadFromBP = Files.newInputStream(Paths.get(tempDirectory.toString(), FILE_NAME))) {
-                    final byte[] first300000BytesFromBP = new byte[300000 - 10];
+                    final byte[] first300000BytesFromBP = new byte[300000 - offsetIntoFirstRange];
 
-                    numBytesRead = fileReadFromBP.read(first300000BytesFromBP, 0, 300000 - 10);
-                    assertThat(numBytesRead, is(300000 - 10));
+                    numBytesRead = fileReadFromBP.read(first300000BytesFromBP, 0, 300000 - offsetIntoFirstRange);
+                    assertThat(numBytesRead, is(300000 - offsetIntoFirstRange));
 
                     assertTrue(Arrays.equals(first300000Bytes, first300000BytesFromBP));
                 }
