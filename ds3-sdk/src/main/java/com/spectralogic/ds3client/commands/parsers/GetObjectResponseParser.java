@@ -63,6 +63,7 @@ public class GetObjectResponseParser extends AbstractResponseParser<GetObjectRes
         try (final InputStream responseStream = response.getResponseStream()) {
             final long startTime = PerformanceUtils.getCurrentTime();
             final long totalBytes = IOUtils.copy(responseStream, destinationChannel, bufferSize, objName, false);
+            destinationChannel.close();
             final long endTime = PerformanceUtils.getCurrentTime();
 
             if (objectSize != -1 && totalBytes != objectSize) {
