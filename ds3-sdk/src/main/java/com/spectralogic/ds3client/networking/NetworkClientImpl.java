@@ -301,7 +301,7 @@ public class NetworkClientImpl implements NetworkClient {
                         this.hash,
                         this.ds3Request.getContentType(),
                         date,
-                        canonicalizeAmzHeaders(new MultiMapImpl<>(this.ds3Request.getHeaders())),
+                        canonicalizeAmzHeaders(new MultiMapImpl<>(this.ds3Request.getHeaders().getMultimap())),
                         canonicalizeResource(getEscapedRequestPath(this.ds3Request), this.ds3Request.getQueryParams()),
                         NetworkClientImpl.this.connectionDetails.getCredentials()
                 )));
