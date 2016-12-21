@@ -198,7 +198,8 @@ class ReadJobImpl extends JobImpl {
             }
 
             if (ranges == null) {
-                ranges = RangeHelper.replaceRange(ranges, 0, ds3Object.getLength());
+                final long numBytesTransferred = 0;
+                ranges = RangeHelper.replaceRange(ranges, numBytesTransferred, ds3Object.getLength());
             }
 
             if (numBytesToTransfer == null) {
