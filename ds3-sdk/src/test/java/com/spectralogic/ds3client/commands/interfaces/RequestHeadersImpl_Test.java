@@ -16,7 +16,6 @@
 package com.spectralogic.ds3client.commands.interfaces;
 
 import com.google.common.collect.Multimap;
-import com.google.common.collect.TreeMultimap;
 import org.junit.Test;
 
 import java.util.Collection;
@@ -29,7 +28,7 @@ import static org.junit.Assert.*;
 public class RequestHeadersImpl_Test {
 
     private static RequestHeaders getTestRequestHeaders() {
-        final RequestHeaders rh = new RequestHeadersImpl(TreeMultimap.<String, String>create());
+        final RequestHeaders rh = new RequestHeadersImpl();
         rh.put("Key One", "Val+One");
         rh.put("Key One", "Val+Two");
         rh.put("Key Two", "Val+Three");

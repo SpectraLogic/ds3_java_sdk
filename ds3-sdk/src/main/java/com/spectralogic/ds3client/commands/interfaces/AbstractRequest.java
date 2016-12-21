@@ -15,8 +15,6 @@
 
 package com.spectralogic.ds3client.commands.interfaces;
 
-import com.google.common.collect.Multimap;
-import com.google.common.collect.TreeMultimap;
 import com.spectralogic.ds3client.models.ChecksumType;
 import com.spectralogic.ds3client.utils.SafeStringManipulation;
 import org.apache.http.entity.ContentType;
@@ -31,9 +29,9 @@ public abstract class AbstractRequest implements Ds3Request {
     private final Map<String, String> queryParams = new HashMap<>();
     
     private static RequestHeaders buildDefaultHeaders() {
-        final Multimap<String, String> headers = TreeMultimap.create();
-        headers.put("Naming-Convention", "s3");
-        return new RequestHeadersImpl(headers);
+        final RequestHeaders requestHeaders = new RequestHeadersImpl();
+        requestHeaders.put("Naming-Convention", "s3");
+        return requestHeaders;
     }
 
     @Override

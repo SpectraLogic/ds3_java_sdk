@@ -18,6 +18,7 @@ package com.spectralogic.ds3client.commands.interfaces;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Multimap;
+import com.google.common.collect.TreeMultimap;
 import com.spectralogic.ds3client.networking.NetworkClientImpl;
 
 import java.util.Collection;
@@ -32,11 +33,7 @@ import static com.spectralogic.ds3client.utils.MetadataStringManipulation.toEnco
  */
 public class RequestHeadersImpl implements RequestHeaders {
 
-    private final Multimap<String, String> headers;
-
-    RequestHeadersImpl(final Multimap<String, String> defaultHeaders) {
-        this.headers = defaultHeaders;
-    }
+    private final Multimap<String, String> headers = TreeMultimap.create();
 
     /**
      * Puts the percent encoded key/value pair into headers
