@@ -15,7 +15,6 @@
 
 package com.spectralogic.ds3client.utils;
 
-import com.spectralogic.ds3client.helpers.UnrecoverableIOException;
 import org.apache.http.ConnectionClosedException;
 
 import java.io.IOException;
