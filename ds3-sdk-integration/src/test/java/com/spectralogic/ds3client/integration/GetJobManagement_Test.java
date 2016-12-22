@@ -238,9 +238,7 @@ public class GetJobManagement_Test {
 
         if (org.apache.commons.lang3.SystemUtils.IS_OS_WINDOWS) {
             // Deny write data access to everyone, making the directory unwritable.
-            Runtime.getRuntime().exec("icacls " + tempDirectoryName + " /deny Everyone:(WD)");
-            // Exec can return before the command completes.  Delay for long enough to let the command finish.
-            Thread.sleep(5000);
+            Runtime.getRuntime().exec("icacls " + tempDirectoryName + " /deny Everyone:(WD)").waitFor();
         } else {
             tempDirectory.setWritable(false);
         }
@@ -277,8 +275,7 @@ public class GetJobManagement_Test {
         } finally {
             if (org.apache.commons.lang3.SystemUtils.IS_OS_WINDOWS) {
                 // Grant write data access to everyone, so we can delete the directory
-                Runtime.getRuntime().exec("icacls " + tempDirectoryName + " /grant Everyone:(WD)");
-                Thread.sleep(5000);
+                Runtime.getRuntime().exec("icacls " + tempDirectoryName + " /grant Everyone:(WD)").waitFor();
             } else {
                 tempDirectory.setReadable(true);
                 tempDirectory.setWritable(true);
