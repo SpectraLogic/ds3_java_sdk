@@ -228,13 +228,23 @@ public class GetJobManagement_Test {
     }
 
     @Test(expected = RuntimeException.class)
-    public void testReadRetrybugFixWithUnwritableDirectory() throws IOException, URISyntaxException, NoSuchMethodException, IllegalAccessException, InvocationTargetException {
+    public void testReadRetrybugFixWithUnwritableDirectory() throws IOException, URISyntaxException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, InterruptedException {
         putBigFile();
 
         final String tempPathPrefix = null;
         final Path tempDirectoryPath = Files.createTempDirectory(Paths.get("."), tempPathPrefix);
         final File tempDirectory = tempDirectoryPath.toFile();
-        tempDirectory.setWritable(false);
+
+        final String tempDirectoryName = tempDirectoryPath.toString();
+
+        if (org.apache.commons.lang3.SystemUtils.IS_OS_WINDOWS) {
+            // Deny write data access to everyone, making the directory unwritable.
+            Runtime.getRuntime().exec("icacls " + tempDirectoryName + " /deny Everyone:(WD)");
+            // Exec can return before the command completes.  Delay for long enough to let the command finish.
+            Thread.sleep(5000);
+        } else {
+            tempDirectory.setWritable(false);
+        }
 
         try {
             final String DIR_NAME = "largeFiles/";
@@ -266,9 +276,15 @@ public class GetJobManagement_Test {
             assertTrue(FileUtils.contentEquals(originalFile, fileCopiedFromBP));
 
         } finally {
-            tempDirectory.setReadable(true);
-            tempDirectory.setWritable(true);
-            tempDirectory.setExecutable(true);
+            if (org.apache.commons.lang3.SystemUtils.IS_OS_WINDOWS) {
+                // Grant write data access to everyone, so we can delete the directory
+                Runtime.getRuntime().exec("icacls " + tempDirectoryName + " /grant Everyone:(WD)");
+                Thread.sleep(5000);
+            } else {
+                tempDirectory.setReadable(true);
+                tempDirectory.setWritable(true);
+                tempDirectory.setExecutable(true);
+            }
             FileUtils.deleteDirectory(tempDirectoryPath.toFile());
             deleteBigFileFromBlackPearlBucket();
         }
