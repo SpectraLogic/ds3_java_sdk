@@ -1,6 +1,6 @@
 /*
  * ******************************************************************************
- *   Copyright 2014-2015 Spectra Logic Corporation. All Rights Reserved.
+ *   Copyright 2014-2016 Spectra Logic Corporation. All Rights Reserved.
  *   Licensed under the Apache License, Version 2.0 (the "License"). You may not use
  *   this file except in compliance with the License. A copy of the License is located at
  *
@@ -15,28 +15,31 @@
 
 package com.spectralogic.ds3client.commands.interfaces;
 
-import com.spectralogic.ds3client.models.ChecksumType;
-import com.spectralogic.ds3client.networking.HttpVerb;
+import com.google.common.collect.Multimap;
 
-import java.io.InputStream;
+import javax.annotation.Nullable;
+import java.util.Collection;
 import java.util.Map;
+import java.util.Set;
 
-public interface Ds3Request {
+/**
+ * Interface for request headers
+ */
+public interface RequestHeaders {
 
-    String getPath();
-    HttpVerb getVerb();
+    Multimap<String, String> getMultimap();
 
-    String getContentType();
+    void put(final String key, final String value);
 
-    InputStream getStream();
+    Collection<String> get(@Nullable String key);
 
-    long getSize();
+    int size();
 
-    ChecksumType getChecksum();
+    boolean containsKey(@Nullable String key);
 
-    ChecksumType.Type getChecksumType();
+    Collection<String> removeAll(@Nullable String key);
 
-    Map<String, String> getQueryParams();
+    Collection<Map.Entry<String, String>> entries();
 
-    RequestHeaders getHeaders();
+    Set<String> keySet();
 }

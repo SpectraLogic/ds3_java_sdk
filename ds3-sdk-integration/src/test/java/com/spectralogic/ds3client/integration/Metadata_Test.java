@@ -31,6 +31,7 @@ import com.spectralogic.ds3client.models.ChecksumType;
 import com.spectralogic.ds3client.models.bulk.Ds3Object;
 import com.spectralogic.ds3client.networking.Metadata;
 import com.spectralogic.ds3client.utils.ByteArraySeekableByteChannel;
+import com.spectralogic.ds3client.utils.MetadataStringManipulation;
 import org.apache.commons.io.IOUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -55,6 +56,8 @@ public class Metadata_Test {
     private static final String TEST_ENV_NAME = "metadata_test";
     private static TempStorageIds envStorageIds;
     private static UUID envDataPolicyId;
+
+    private static final String STRING_WITH_SYMBOLS = "1234567890-!@#$%^&*()_+`~[]\\{}|;':\"./<>?∞πϊφϠ";
 
     @BeforeClass
     public static void startup() throws IOException {
@@ -98,6 +101,90 @@ public class Metadata_Test {
         assertThat(values.size(), is(1));
         assertThat(values.get(0), is("value"));
 
+    }
+
+    @Test
+    public void escapedMetadataWithSpaces() throws IOException {
+        final String stringWithSpaces = "percent encoded space";
+        final String escapedWithSpaces = MetadataStringManipulation.toEncodedString(stringWithSpaces);
+
+        final Metadata metadata = processMetadataRequest(
+                "metadataBucket",
+                ImmutableMultimap.of(escapedWithSpaces, escapedWithSpaces));
+
+        final Set<String> keys = metadata.keys();
+
+        assertThat(keys.size(), is(1));
+        assertTrue(keys.contains(escapedWithSpaces));
+
+        final List<String> values = metadata.get(escapedWithSpaces);
+        assertThat(values, is(notNullValue()));
+        assertFalse(values.isEmpty());
+        assertThat(values.size(), is(1));
+        assertThat(values.get(0), is(escapedWithSpaces));
+    }
+
+    @Test
+    public void escapedMetadataWithSymbols() throws IOException {
+        final String escapedWithSymbols = MetadataStringManipulation.toEncodedString(STRING_WITH_SYMBOLS);
+
+        final Metadata metadata = processMetadataRequest(
+                "metadataBucket",
+                ImmutableMultimap.of(escapedWithSymbols, escapedWithSymbols));
+
+        final Set<String> keys = metadata.keys();
+
+        assertThat(keys.size(), is(1));
+        //key is returned with all lower case from BP, which can be decoded
+        //but does not match the encoded string which uses uppercase hex for percent encoding
+        assertTrue(keys.contains(escapedWithSymbols.toLowerCase()));
+
+        final List<String> values = metadata.get(escapedWithSymbols.toLowerCase());
+        assertThat(values, is(notNullValue()));
+        assertFalse(values.isEmpty());
+        assertThat(values.size(), is(1));
+        assertThat(values.get(0), is(escapedWithSymbols));
+    }
+
+    @Test
+    public void metadataValueWithSpaces() throws IOException {
+        final String key = "percent encoded space";
+        final String value = "one two three";
+
+        final Metadata metadata = processMetadataRequest(
+                "metadataBucket",
+                ImmutableMultimap.of(key, value));
+
+        final Set<String> keys = metadata.keys();
+
+        assertThat(keys.size(), is(1));
+        assertTrue(keys.contains(key));
+
+        final List<String> values = metadata.get(key);
+        assertThat(values, is(notNullValue()));
+        assertFalse(values.isEmpty());
+        assertThat(values.size(), is(1));
+        assertThat(values.get(0), is(value));
+    }
+
+    @Test
+    public void metadataValueWithSymbols() throws IOException {
+
+        final Metadata metadata = processMetadataRequest(
+                "metadataBucket",
+                ImmutableMultimap.of(STRING_WITH_SYMBOLS, STRING_WITH_SYMBOLS));
+
+        final Set<String> keys = metadata.keys();
+
+        assertThat(keys.size(), is(1));
+        assertTrue(keys.contains(STRING_WITH_SYMBOLS));
+        assertThat(STRING_WITH_SYMBOLS, is(STRING_WITH_SYMBOLS));
+
+        final List<String> values = metadata.get(STRING_WITH_SYMBOLS);
+        assertThat(values, is(notNullValue()));
+        assertFalse(values.isEmpty());
+        assertThat(values.size(), is(1));
+        assertThat(values.get(0), is(STRING_WITH_SYMBOLS));
     }
 
     /*
