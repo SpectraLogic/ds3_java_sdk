@@ -93,9 +93,7 @@ public class RequestHeadersImpl implements RequestHeaders {
     @Override
     public Multimap<String, String> getMultimap() {
         final ImmutableMultimap.Builder<String, String> builder = ImmutableMultimap.builder();
-        for (final String key : headers.keySet()) {
-            builder.putAll(key, headers.get(key));
-        }
+        builder.putAll(headers);
         return builder.build();
     }
 
