@@ -15,10 +15,7 @@
 
 package com.spectralogic.ds3client.commands.interfaces;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Multimap;
-import com.google.common.collect.TreeMultimap;
+import com.google.common.collect.*;
 import com.spectralogic.ds3client.networking.NetworkClientImpl;
 
 import java.util.Collection;
@@ -95,7 +92,9 @@ public class RequestHeadersImpl implements RequestHeaders {
      */
     @Override
     public Multimap<String, String> getMultimap() {
-        return headers;
+        final ImmutableMultimap.Builder<String, String> builder = ImmutableMultimap.builder();
+        builder.putAll(headers);
+        return builder.build();
     }
 
     /**
