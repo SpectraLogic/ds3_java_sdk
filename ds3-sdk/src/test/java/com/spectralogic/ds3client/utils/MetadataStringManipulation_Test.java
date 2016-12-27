@@ -30,7 +30,7 @@ import static org.junit.Assert.assertTrue;
 public class MetadataStringManipulation_Test {
 
     private static final String STRING_WITH_SPACES = "String With Spaces";
-    private static final String STRING_WITH_SYMBOLS = "1234567890-!@#$%^&*()_+`~[]\\{}|;':\"./<>?∞πϊφϠ";
+    private static final String STRING_WITH_SYMBOLS = "1234567890-!@#$%^&*()_+`~[]\\{}|;':\"./<>?\u03C0\u221E\u03CA\u03D5\u03E0";
 
     private static final Pattern ENCODED_PATTERN = Pattern.compile("[a-zA-Z0-9!#$&'*\\-.~\\^_`|,=%]*");
 
@@ -63,11 +63,11 @@ public class MetadataStringManipulation_Test {
         assertFalse(isEncodedSafeChars("?"));
         assertFalse(isEncodedSafeChars("+"));
 
-        assertFalse(isEncodedSafeChars("∞"));
-        assertFalse(isEncodedSafeChars("π"));
-        assertFalse(isEncodedSafeChars("ϊ"));
-        assertFalse(isEncodedSafeChars("φ"));
-        assertFalse(isEncodedSafeChars("Ϡ"));
+        assertFalse(isEncodedSafeChars("\u221E"));
+        assertFalse(isEncodedSafeChars("\u03C0"));
+        assertFalse(isEncodedSafeChars("\u03CA"));
+        assertFalse(isEncodedSafeChars("\u03D5"));
+        assertFalse(isEncodedSafeChars("\u03E0"));
 
     }
 
