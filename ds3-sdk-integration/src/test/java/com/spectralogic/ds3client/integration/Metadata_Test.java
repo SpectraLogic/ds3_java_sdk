@@ -57,7 +57,7 @@ public class Metadata_Test {
     private static TempStorageIds envStorageIds;
     private static UUID envDataPolicyId;
 
-    private static final String STRING_WITH_SYMBOLS = "1234567890-!@#$%^&*()_+`~[]\\{}|;':\"./<>?∞πϊφϠ";
+    private static final String STRING_WITH_SYMBOLS = "1234567890-!@#$%^&*()_+`~[]\\{}|;':\"./<>?\u03C0\u221E\u03CA\u03D5\u03E0";
 
     @BeforeClass
     public static void startup() throws IOException {
