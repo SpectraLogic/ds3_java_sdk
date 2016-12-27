@@ -1,6 +1,6 @@
 /*
  * ******************************************************************************
- *   Copyright 2014-2015 Spectra Logic Corporation. All Rights Reserved.
+ *   Copyright 2014-2016 Spectra Logic Corporation. All Rights Reserved.
  *   Licensed under the Apache License, Version 2.0 (the "License"). You may not use
  *   this file except in compliance with the License. A copy of the License is located at
  *
@@ -15,8 +15,6 @@
 
 package com.spectralogic.ds3client.commands.interfaces;
 
-import com.google.common.collect.Multimap;
-import com.google.common.collect.TreeMultimap;
 import com.spectralogic.ds3client.models.ChecksumType;
 import com.spectralogic.ds3client.utils.SafeStringManipulation;
 import org.apache.http.entity.ContentType;
@@ -27,13 +25,13 @@ import java.util.Map;
 
 public abstract class AbstractRequest implements Ds3Request {
 
-    private final Multimap<String, String> headers = buildDefaultHeaders();
+    private final RequestHeaders headers = buildDefaultHeaders();
     private final Map<String, String> queryParams = new HashMap<>();
     
-    private static Multimap<String, String> buildDefaultHeaders() {
-        final Multimap<String, String> headers = TreeMultimap.create();
-        headers.put("Naming-Convention", "s3");
-        return headers;
+    private static RequestHeaders buildDefaultHeaders() {
+        final RequestHeaders requestHeaders = new RequestHeadersImpl();
+        requestHeaders.put("Naming-Convention", "s3");
+        return requestHeaders;
     }
 
     @Override
@@ -68,7 +66,7 @@ public abstract class AbstractRequest implements Ds3Request {
     }
 
     @Override
-    public final Multimap<String, String> getHeaders() {
+    public final RequestHeaders getHeaders() {
         return this.headers;
     }
 
