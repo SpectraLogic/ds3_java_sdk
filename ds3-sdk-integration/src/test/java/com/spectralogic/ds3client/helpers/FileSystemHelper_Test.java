@@ -28,15 +28,13 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -75,59 +73,16 @@ public class FileSystemHelper_Test {
 
     @Test
     public void testObjectsFitBucketThatHasContent() throws IOException, URISyntaxException {
-        try {
-            final String DIR_NAME = "largeFiles/";
-            final String[] FILE_NAMES = new String[]{"lesmis-copies.txt"};
-
-            final Path dirPath = ResourceUtils.loadFileResource(DIR_NAME);
-
-            final AtomicLong totalBookSizes = new AtomicLong(0);
-
-            final List<String> bookTitles = new ArrayList<>();
-            final List<Ds3Object> objects = new ArrayList<>();
-            for (final String book : FILE_NAMES) {
-                final Path objPath = ResourceUtils.loadFileResource(DIR_NAME + book);
-                final long bookSize = Files.size(objPath);
-                totalBookSizes.getAndAdd(bookSize);
-                final Ds3Object obj = new Ds3Object(book, bookSize);
-
-                bookTitles.add(book);
-                objects.add(obj);
+        putObjectThenRunVerification(new FileSystemHelperImpl(), new ResultVerifier() {
+            @Override
+            public void verifyResult(final ObjectStorageSpaceVerificationResult result, final long totalRequiredSize) {
+                assertEquals(ObjectStorageSpaceVerificationResult.VerificationStatus.OK, result.getVerificationStatus());
+                assertEquals(result.getRequiredSpace(), totalRequiredSize);
+                assertTrue(result.getAvailableSpace() > 0);
+                assertTrue(result.containsSufficientSpace());
+                assertNull(result.getIoException());
             }
-
-            final int maxNumBlockAllocationRetries = 1;
-            final int maxNumObjectTransferAttempts = 1;
-            final Ds3ClientHelpers ds3ClientHelpers = Ds3ClientHelpers.wrap(client,
-                    maxNumBlockAllocationRetries,
-                    maxNumObjectTransferAttempts);
-
-            final AtomicInteger numTimesCallbackCalled = new AtomicInteger(0);
-
-            final Ds3ClientHelpers.Job writeJob = ds3ClientHelpers.startWriteJob(BUCKET_NAME, objects);
-            writeJob.attachObjectCompletedListener(new ObjectCompletedListener() {
-                @Override
-                public void objectCompleted(final String name) {
-                    numTimesCallbackCalled.getAndIncrement();
-
-                    final ObjectStorageSpaceVerificationResult objectStorageSpaceVerificationResult =
-                            ds3ClientHelpers.objectsFromBucketWillFitInDirectory(BUCKET_NAME,
-                                    Arrays.asList(FILE_NAMES),
-                                    Paths.get("."));
-
-                    assertEquals(ObjectStorageSpaceVerificationResult.VerificationStatus.OK, objectStorageSpaceVerificationResult.getVerificationStatus());
-                    assertEquals(objectStorageSpaceVerificationResult.getRequiredSpace(), totalBookSizes.get());
-                    assertTrue(objectStorageSpaceVerificationResult.getAvailableSpace() > 0);
-                    assertTrue(objectStorageSpaceVerificationResult.containsSufficientSpace());
-                    assertNull(objectStorageSpaceVerificationResult.getIoException());
-                }
-            });
-
-            writeJob.transfer(new FileObjectPutter(dirPath));
-
-            assertEquals(1, numTimesCallbackCalled.get());
-        } finally {
-            deleteAllContents(client, BUCKET_NAME);
-        }
+        });
     }
 
     @Test
@@ -194,7 +149,7 @@ public class FileSystemHelper_Test {
     }
 
     @Test
-    public void testObjectsFitBucketPathLacksAccess() throws IOException {
+    public void testObjectsFitBucketPathLacksAccess() throws IOException, InterruptedException {
         final int maxNumBlockAllocationRetries = 1;
         final int maxNumObjectTransferAttempts = 1;
         final Ds3ClientHelpers ds3ClientHelpers = Ds3ClientHelpers.wrap(client,
@@ -202,7 +157,14 @@ public class FileSystemHelper_Test {
                 maxNumObjectTransferAttempts);
 
         final Path directory = Files.createDirectory(Paths.get("dir"));
-        directory.toFile().setWritable(false);
+        if (org.apache.commons.lang3.SystemUtils.IS_OS_WINDOWS) {
+            // Deny write data access to everyone, making the directory unwritable
+            Runtime.getRuntime().exec("icacls dir /deny Everyone:(WD)");
+            // Exec can return before the command completes.  Delay for long enough to let the command finish.
+            Thread.sleep(5000);
+        } else {
+            directory.toFile().setWritable(false);
+        }
 
         try {
             final ObjectStorageSpaceVerificationResult result = ds3ClientHelpers.objectsFromBucketWillFitInDirectory(
@@ -214,7 +176,14 @@ public class FileSystemHelper_Test {
             assertFalse(result.containsSufficientSpace());
             assertNull(result.getIoException());
         } finally {
-            directory.toFile().setWritable(true);
+            if (org.apache.commons.lang3.SystemUtils.IS_OS_WINDOWS) {
+                // Grant write data access to everyone, making the directory writable, so we can delete it.
+                Runtime.getRuntime().exec("icacls dir /grant Everyone:(WD)");
+                Thread.sleep(5000);
+            } else {
+                directory.toFile().setWritable(true);
+            }
+
             FileUtils.deleteDirectory(directory.toFile());
         }
     }
