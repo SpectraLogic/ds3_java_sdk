@@ -57,7 +57,8 @@ public class Metadata_Test {
     private static TempStorageIds envStorageIds;
     private static UUID envDataPolicyId;
 
-    private static final String STRING_WITH_SYMBOLS = "1234567890-!@#$%^&*()_+`~[]\\{}|;':\"./<>?\u03C0\u221E\u03CA\u03D5\u03E0";
+    private static final String STRING_WITH_SYMBOLS = "1234567890-!@#$%^&*()_+`~[]\\{}|;':\"./<>?∞πϊφϠ";
+    private static final String STRING_WITH_SYMBOLS_UNICODE = "1234567890-!@#$%^&*()_+`~[]\\{}|;':\"./<>?\u03C0\u221E\u03CA\u03D5\u03E0";
 
     @BeforeClass
     public static void startup() throws IOException {
@@ -185,6 +186,26 @@ public class Metadata_Test {
         assertFalse(values.isEmpty());
         assertThat(values.size(), is(1));
         assertThat(values.get(0), is(STRING_WITH_SYMBOLS));
+    }
+
+    @Test
+    public void metadataValueWithUnicodeSymbols() throws IOException {
+
+        final Metadata metadata = processMetadataRequest(
+                "metadataBucket",
+                ImmutableMultimap.of(STRING_WITH_SYMBOLS_UNICODE, STRING_WITH_SYMBOLS_UNICODE));
+
+        final Set<String> keys = metadata.keys();
+
+        assertThat(keys.size(), is(1));
+        assertTrue(keys.contains(STRING_WITH_SYMBOLS_UNICODE));
+        assertThat(STRING_WITH_SYMBOLS_UNICODE, is(STRING_WITH_SYMBOLS_UNICODE));
+
+        final List<String> values = metadata.get(STRING_WITH_SYMBOLS_UNICODE);
+        assertThat(values, is(notNullValue()));
+        assertFalse(values.isEmpty());
+        assertThat(values.size(), is(1));
+        assertThat(values.get(0), is(STRING_WITH_SYMBOLS_UNICODE));
     }
 
     /*
