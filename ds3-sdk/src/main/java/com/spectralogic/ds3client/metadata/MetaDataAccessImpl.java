@@ -29,24 +29,24 @@ public class MetaDataAccessImpl implements Ds3ClientHelpers.MetadataAccess {
     public Map<String, String> getMetadataValue(final String filename) {
         try {
             final Path file = fileMapper.get(filename);
-            return  storeMetaData(file).build();
+            return storeMetaData(file).build();
         } catch (final Exception e) {
-            LOG.error("failed to store Metadata",e);
+            LOG.error("failed to store Metadata", e);
             return null;
         }
     }
 
     /**
-     *
      * @param file
      * @return
      */
     private ImmutableMap.Builder<String, String> storeMetaData(final Path file) {
-        final ImmutableMap.Builder<String, String> metadata = new ImmutableMap.Builder<>(); new ImmutableMap.Builder<String, String>();
+        final ImmutableMap.Builder<String, String> metadata = new ImmutableMap.Builder<>();
+        new ImmutableMap.Builder<String, String>();
 
         try {
             final MetaDataUtil metadataUtil = new MetaDataUtil(metadata);
-            final Set<String>sets = metadataUtil.getSupportedFileAttributes(file);
+            final Set<String> sets = metadataUtil.getSupportedFileAttributes(file);
             final String os = metadataUtil.getOS();
             metadataUtil.saveOSMetaData();
 
@@ -75,7 +75,7 @@ public class MetaDataAccessImpl implements Ds3ClientHelpers.MetadataAccess {
                         break;
 
                     case "dos":
-                        if(os.contains("Windows")) {
+                        if (os.contains("Windows")) {
                             metadataUtil.saveFlagMetaData(file);
                         }
 
@@ -94,7 +94,7 @@ public class MetaDataAccessImpl implements Ds3ClientHelpers.MetadataAccess {
                 }
             }
         } catch (final IOException ioe) {
-            LOG.error("unable to get metadata",ioe);
+            LOG.error("unable to get metadata", ioe);
         }
         return metadata;
     }
@@ -102,6 +102,7 @@ public class MetaDataAccessImpl implements Ds3ClientHelpers.MetadataAccess {
 
     /**
      * if os is windows then posix will not be called and we need to find permission in different manner
+     *
      * @param file
      * @param metadata
      */
@@ -121,8 +122,9 @@ public class MetaDataAccessImpl implements Ds3ClientHelpers.MetadataAccess {
                 permission = new StringBuilder();
                 Set<Integer> newSet = stringSetMap.get(userDisplay);
                 aclEntryPermissions = aclEntry.permissions();
-                if (newSet == null)
+                if (newSet == null) {
                     newSet = new HashSet<Integer>();
+                }
                 for (final AclEntryPermission aclEntryPermission : aclEntryPermissions) {
                     newSet.add(aclEntryPermission.ordinal());
                 }
@@ -139,8 +141,7 @@ public class MetaDataAccessImpl implements Ds3ClientHelpers.MetadataAccess {
                 for (final int ord : ordinals) {
                     if (ordinals.size() == index) {
                         permission.append(ord);
-                    }
-                    else {
+                    } else {
                         permission.append(ord + "-");
                     }
                     index++;
@@ -158,7 +159,7 @@ public class MetaDataAccessImpl implements Ds3ClientHelpers.MetadataAccess {
             metadata.put("x-amz-meta-ds3-userList", userList.toString());
             metadata.put("x-amz-meta-ds3-userListDisplay", userDisplayList.toString());
         } catch (final Exception e) {
-            LOG.error("Unable to get list of users or their permissions",e);
+            LOG.error("Unable to get list of users or their permissions", e);
         }
     }
 }

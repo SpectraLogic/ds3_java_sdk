@@ -7,7 +7,6 @@ import com.sun.jna.platform.win32.WinNT;
 import com.sun.jna.ptr.PointerByReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -17,6 +16,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.attribute.*;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Set;
 import static com.spectralogic.ds3client.utils.MetadataKeyConstants.*;
 import static java.nio.file.LinkOption.NOFOLLOW_LINKS;
@@ -336,7 +337,7 @@ public class MetaDataUtil {
      * @return file last modified time in String
      */
     public String saveLastModifiedTime(final BasicFileAttributes attr) {
-        mlastModified = String.valueOf(attr.lastAccessTime().toMillis());
+        mlastModified = String.valueOf(attr.lastModifiedTime().toMillis());
         mMetadataMap.put(METADATA_PREFIX + KEY_LAST_MODIFIED_TIME, mlastModified);
         return mlastModified;
     }
@@ -346,8 +347,9 @@ public class MetaDataUtil {
      */
 
     public String getOS() {
-        if (mOS == null || mOS.equals(""))
+        if (mOS == null || mOS.equals("")) {
             mOS = System.getProperty("os.name");
+        }
         return mOS;
     }
 
@@ -368,7 +370,7 @@ public class MetaDataUtil {
      * @param path
      */
     public void saveWindowsDescriptors(final Path path) {
-      final  int infoType = WinNT.OWNER_SECURITY_INFORMATION
+        final  int infoType = WinNT.OWNER_SECURITY_INFORMATION
                 | WinNT.GROUP_SECURITY_INFORMATION
                 | WinNT.DACL_SECURITY_INFORMATION | 0;
 
@@ -389,10 +391,10 @@ public class MetaDataUtil {
                     null,
                     ppSecurityDescriptor);
             if (bool == 0) {
-                final WinNT.PSID psidOwner = new WinNT.PSID(ppsidOwner.getValue().getByteArray(0, 1024 * 10));
+                final WinNT.PSID psidOwner = new WinNT.PSID(ppsidOwner.getValue().getByteArray(0, 256));
                 final String ownerSid = psidOwner.getSidString();
 
-                final WinNT.PSID psidGroup = new WinNT.PSID(ppsidGroup.getValue().getByteArray(0, 1024 * 10));
+                final WinNT.PSID psidGroup = new WinNT.PSID(ppsidGroup.getValue().getByteArray(0, 256));
                 final String groupSid = psidGroup.getSidString();
 
                 mMetadataMap.put(METADATA_PREFIX + KEY_GROUP, groupSid);
@@ -422,18 +424,27 @@ public class MetaDataUtil {
         try {
             final StringBuilder stringBuilder = new StringBuilder();
             stringBuilder.append("attrib  ");
-            stringBuilder.append(file);
+            stringBuilder.append("\""+file+"\"");
 
-            final Process p = Runtime.getRuntime().exec(stringBuilder.toString());
-            p.waitFor();
+            final ProcessBuilder processBuilder = new ProcessBuilder("attrib",file.toString());
+            final  Process process =  processBuilder.start();
             final BufferedReader reader =
-                    new BufferedReader(new InputStreamReader(p.getInputStream()));
+                    new BufferedReader(new InputStreamReader(process.getInputStream()));
 
             final String flagWindows =  reader.readLine();
             final String[] flags = flagWindows.split(" ");
 
             for (int i = 0; i < flags.length - 1; i++) {
-                flagBuilder.append(flags[i].trim());
+                if(!flags[i].equals("")) {
+                    if (flags[i].contains("\\")) {
+                        break;
+                    } else {
+                        flagBuilder.append(flags[i].trim());
+                    }
+                }
+            }
+            if(flagBuilder.toString().equals("")){
+                flagBuilder.append("N");
             }
             mMetadataMap.put(METADATA_PREFIX + KEY_FLAGS, flagBuilder.toString());
             setmFlags(flagBuilder.toString());
@@ -605,9 +616,9 @@ public class MetaDataUtil {
             stringBuilder.append(" -I");
             stringBuilder.append(" -H");
         }
-        stringBuilder.append(" " + filePath);
+        stringBuilder.append(" " + "\""+filePath+"\"");
         try {
-            final Process p = Runtime.getRuntime().exec(stringBuilder.toString());
+            final Process p = Runtime.getRuntime().exec(stringBuilder.toString().split(" "));
             p.waitFor();
         } catch (final Exception e) {
             LOG.error("Unable to restore flag attributes", e);
@@ -652,4 +663,80 @@ public class MetaDataUtil {
         }
         return fName;
     }
+
+    /**
+     * Restore the creation time , access time and modified time to local
+     *
+     * @param filePath
+     * @param creationTime
+     * @param lastModifiedTime
+     * @param lastAccessedTime
+     */
+    public void setFileTimes(final String filePath,final String creationTime,final String lastModifiedTime ,final String lastAccessedTime) {
+        try {
+            final BasicFileAttributeView attributes = Files.getFileAttributeView(Paths.get(filePath), BasicFileAttributeView.class);
+            final FileTime timeCreation = FileTime.fromMillis(Long.parseLong(creationTime));
+            final FileTime timeModified = FileTime.fromMillis(Long.parseLong(lastModifiedTime));
+            final FileTime timeAccessed = FileTime.fromMillis(Long.parseLong(lastAccessedTime));
+            attributes.setTimes(timeModified, timeAccessed, timeCreation);
+        }
+        catch (final Exception e)
+        {
+            e.printStackTrace();
+        }
+
+    }
+
+    /**
+     *Restore creation time in mac only if target creation is before current creation time
+     * @param objectName
+     * @param creationTime
+     */
+    public void restoreCreationTimeMAC(final String objectName, final String creationTime) {
+        try {
+            final ProcessBuilder processBuilder = new ProcessBuilder("touch","-t", getDate(Long.parseLong(creationTime),"YYYYMMddHHmm"),objectName);
+            processBuilder.start();
+        }
+        catch (final Exception e)
+        {
+            e.printStackTrace();
+        }
+
+    }
+
+    /**
+     *
+     * Restore modified time in case of MAC using touch command
+     * @param objectName
+     * @param modifiedTime
+     */
+    public void restoreModifiedTimeMAC(final String objectName, final String modifiedTime) {
+        try {
+            final ProcessBuilder processBuilder = new ProcessBuilder("touch","-mt", getDate(Long.parseLong(modifiedTime),"YYYYMMddHHmm"),objectName);
+            processBuilder.start();
+        }
+        catch (final Exception e)
+        {
+            e.printStackTrace();
+        }
+
+    }
+
+    /**
+     * Return date in specified format.
+     * @param milliSeconds Date in milliseconds
+     * @param dateFormat Date format
+     * @return String representing date in specified format
+     */
+    public static String getDate(final long milliSeconds, final String dateFormat)
+    {
+        // Create a DateFormatter object for displaying date in specified format.
+        final SimpleDateFormat formatter = new SimpleDateFormat(dateFormat);
+
+        // Create a calendar object that will convert the date and time value in milliseconds to date.
+        final Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(milliSeconds);
+        return formatter.format(calendar.getTime());
+    }
+
 }

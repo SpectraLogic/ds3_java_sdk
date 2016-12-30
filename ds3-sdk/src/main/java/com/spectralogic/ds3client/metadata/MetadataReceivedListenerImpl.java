@@ -17,6 +17,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import static com.spectralogic.ds3client.utils.MetadataKeyConstants.*;
@@ -25,7 +28,6 @@ public class MetadataReceivedListenerImpl implements MetadataReceivedListener {
     static private final Logger LOG = LoggerFactory.getLogger(MetadataReceivedListenerImpl.class);
 
     private String localFilePath = null;
-    private Map<Path, Path> map;
     private final MetaDataUtil metadataUtil = new MetaDataUtil();
 
     public MetadataReceivedListenerImpl(final String localFilePath) {
@@ -51,6 +53,47 @@ public class MetadataReceivedListenerImpl implements MetadataReceivedListener {
         final String os = System.getProperty("os.name");
         restoreUserAndOwner(os, objectName, metadata);
         String storedOS = null;
+
+
+
+        String creationTime = null;
+        if(metadata.get(KEY_CREATION_TIME).size()>0) {
+            creationTime = metadata.get(KEY_CREATION_TIME).get(0);
+        }
+
+        String accessTime = null;
+        if(metadata.get(KEY_ACCESS_TIME).size()>0) {
+            accessTime = metadata.get(KEY_ACCESS_TIME).get(0);
+        }
+
+        String modifiedTime = null;
+        if(metadata.get(KEY_LAST_MODIFIED_TIME).size()>0) {
+            modifiedTime = metadata.get(KEY_LAST_MODIFIED_TIME).get(0);
+        }
+
+        if (modifiedTime != null && creationTime != null && accessTime != null) {
+            final String modifiedTimes = modifiedTime;
+            final String creationTimes = creationTime;
+            final String accessTimes = accessTime;
+
+            if (os.contains("Mac")) {
+                metadataUtil.restoreCreationTimeMAC(objectName,creationTime);
+                metadataUtil.restoreModifiedTimeMAC(objectName,modifiedTime);
+            } else {
+                //Executor service that will change modified time and creation time after 10 seconds
+                final ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
+                executorService.schedule(new Runnable() {
+                    @Override
+                    public void run() {
+                        metadataUtil.setFileTimes(objectName, creationTimes, modifiedTimes, accessTimes);
+                    }
+                }, 10, TimeUnit.SECONDS);
+
+            }
+
+        }
+
+
 
         if (metadata.get(KEY_OS).size() > 0) {
             storedOS = metadata.get(KEY_OS).get(0);
@@ -113,11 +156,13 @@ public class MetadataReceivedListenerImpl implements MetadataReceivedListener {
             }
         } else {
             String ownerSid = null;
-            if (metadata.get(KEY_OWNER).size() > 0)
+            if (metadata.get(KEY_OWNER).size() > 0) {
                 ownerSid = metadata.get(KEY_OWNER).get(0);
+            }
             String groupSid = null;
-            if (metadata.get(KEY_GROUP).size() > 0)
+            if (metadata.get(KEY_GROUP).size() > 0) {
                 groupSid = metadata.get(KEY_GROUP).get(0);
+            }
             if (ownerSid != null && groupSid != null && !ownerSid.equals("") && !groupSid.equals("")) {
                 metadataUtil.setOwnerIdandGroupIdWin(objectName, ownerSid, groupSid);
             }
@@ -221,4 +266,7 @@ public class MetadataReceivedListenerImpl implements MetadataReceivedListener {
             LOG.error("Unable to restore Permissions", e);
         }
     }
+
+
+
 }
