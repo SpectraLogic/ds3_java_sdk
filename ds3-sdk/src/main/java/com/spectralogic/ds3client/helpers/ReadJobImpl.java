@@ -163,18 +163,18 @@ class ReadJobImpl extends JobImpl {
         private final JobState jobState;
         private Long numBytesToTransfer;
         private ImmutableCollection<Range> ranges;
-        private final AtomicLong destinationChannelOffset = new AtomicLong(0);
-        private final AtomicReference<ItemTransferrer> itemTransferrer = new AtomicReference<>();
+        private Long destinationChannelOffset = 0L;
+        private ItemTransferrer itemTransferrer;
 
         private GetObjectTransferrerNetworkFailureDecorator(final JobState jobState) {
             this.jobState = jobState;
-            itemTransferrer.set(new GetObjectTransferrer(jobState));
+            itemTransferrer = new GetObjectTransferrer(jobState);
         }
 
         @Override
         public void transferItem(final Ds3Client client, final BulkObject ds3Object) throws IOException {
             try {
-                itemTransferrer.get().transferItem(client, ds3Object);
+                itemTransferrer.transferItem(client, ds3Object);
             } catch (final ContentLengthNotMatchException contentLengthNotMatchException) {
                 makeNewItemTransferrer(ds3Object, contentLengthNotMatchException.getTotalBytes());
 
@@ -187,12 +187,12 @@ class ReadJobImpl extends JobImpl {
         private void makeNewItemTransferrer(final BulkObject ds3Object, final long numBytesTransferred) {
             initializeRangesAndTransferSize(ds3Object);
             updateRanges(numBytesTransferred);
-            destinationChannelOffset.getAndAdd(numBytesTransferred);
+            destinationChannelOffset += numBytesTransferred;
 
-            itemTransferrer.set(new GetPartialObjectTransferrer(jobState, ranges, destinationChannelOffset.get()));
+            itemTransferrer = new GetPartialObjectTransferrer(jobState, ranges, destinationChannelOffset);
         }
 
-        private synchronized void initializeRangesAndTransferSize(final BulkObject ds3Object) {
+        private void initializeRangesAndTransferSize(final BulkObject ds3Object) {
             if (ranges == null) {
                 ranges = getRangesForBlob(blobToRanges, ds3Object);
             }
@@ -207,12 +207,12 @@ class ReadJobImpl extends JobImpl {
             }
         }
 
-        private synchronized void updateRanges(final long numBytesTransferred) {
+        private void updateRanges(final long numBytesTransferred) {
             ranges = RangeHelper.replaceRange(ranges, numBytesTransferred, numBytesToTransfer);
         }
 
         private void emitContentLengthMismatchFailureEvent(final BulkObject ds3Object, final Throwable t) {
-            final FailureEvent failureEvent = new FailureEvent.Builder()
+            final FailureEvent failureEvent = FailureEvent.builder()
                     .doingWhat(FailureEvent.FailureActivity.GettingObject)
                     .usingSystemWithEndpoint(client.getConnectionDetails().getEndpoint())
                     .withCausalException(t)

@@ -491,7 +491,7 @@ public class GetJobManagement_Test {
             final Ds3ClientShim ds3ClientShim = new Ds3ClientShim((Ds3ClientImpl) client);
 
             final int maxNumBlockAllocationRetries = 1;
-            final int maxNumObjectTransferAttempts = 5;
+            final int maxNumObjectTransferAttempts = 4;
             final Ds3ClientHelpers ds3ClientHelpers = Ds3ClientHelpers.wrap(ds3ClientShim,
                     maxNumBlockAllocationRetries,
                     maxNumObjectTransferAttempts);
