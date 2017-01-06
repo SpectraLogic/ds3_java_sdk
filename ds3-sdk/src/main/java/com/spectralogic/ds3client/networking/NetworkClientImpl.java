@@ -83,6 +83,7 @@ public class NetworkClientImpl implements NetworkClient {
     final static private int MAX_CONNECTION_PER_ROUTE = 50;
     final static private int MAX_CONNECTION_TOTAL = 100;
     final static private String REQUEST_ID_HEADER = "x-amz-request-id";
+    final static private String INSECURE_SSL_PROTOCOL = "TLSv1.2";
 
     final private ConnectionDetails connectionDetails;
 
@@ -132,19 +133,20 @@ public class NetworkClientImpl implements NetworkClient {
     }
 
     private static CloseableHttpClient createInsecureSslHttpClient() throws NoSuchAlgorithmException, KeyManagementException, KeyStoreException {
-        final SSLContext sslContext = new SSLContextBuilder().loadTrustMaterial(null, new TrustStrategy() {
+        final SSLContext sslContext = new SSLContextBuilder()
+                .useProtocol(INSECURE_SSL_PROTOCOL)
+                .loadTrustMaterial(null, new TrustStrategy() {
             @Override
             public boolean isTrusted(final X509Certificate[] chain, final String authType) throws CertificateException {
                 return true;
             }
         }).build();
-
         final SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(sslContext, new NoopHostnameVerifier());
+
         final Registry<ConnectionSocketFactory> socketFactoryRegistry = RegistryBuilder.<ConnectionSocketFactory>create()
                 .register("http", PlainConnectionSocketFactory.getSocketFactory())
                 .register("https", sslsf)
                 .build();
-
         final HttpClientConnectionManager connectionManager = createConnectionManager(socketFactoryRegistry);
 
         return HttpClients.custom()
@@ -205,7 +207,7 @@ public class NetworkClientImpl implements NetworkClient {
                     return new WebResponseImpl(response);
                 }
             } while (redirectCount < this.connectionDetails.getRetries());
-            
+
             throw new TooManyRedirectsException(redirectCount);
         }
     }
@@ -237,12 +239,12 @@ public class NetworkClientImpl implements NetworkClient {
             this.checksumType = ds3Request.getChecksumType();
             this.hash = this.buildHash();
         }
-        
+
         public CloseableHttpResponse execute() throws IOException {
             if (this.content != null) {
                 this.content.reset();
             }
-            
+
             final HttpRequest httpRequest = this.buildHttpRequest();
             this.addHeaders(httpRequest);
             try {
@@ -289,7 +291,7 @@ public class NetworkClientImpl implements NetworkClient {
             for(final Map.Entry<String, String> header: this.ds3Request.getHeaders().entries()) {
                 httpRequest.addHeader(header.getKey(), header.getValue());
             }
-            
+
             // Add the hash header.
             if (!this.hash.isEmpty()) {
                 httpRequest.addHeader(getHashType(ds3Request.getChecksumType()), this.hash);
@@ -331,7 +333,7 @@ public class NetworkClientImpl implements NetworkClient {
         private String getSignature(final SignatureDetails details) throws SignatureException {
             return "AWS " + NetworkClientImpl.this.connectionDetails.getCredentials().getClientId() + ':' + Signature.signature(details);
         }
-        
+
         private HttpClientContext getContext() {
             final HttpClientContext context = new HttpClientContext();
             context.setRequestConfig(

@@ -35,7 +35,6 @@ import static org.junit.Assert.assertThat;
  *
  */
 public class Insecure_Test {
-
     private static Ds3Client client;
 
     @BeforeClass
@@ -51,7 +50,6 @@ public class Insecure_Test {
     @Test
     public void getService() throws SignatureException, IOException{
         final GetServiceResponse response = client.getService(new GetServiceRequest());
-
         assertThat(response, is(notNullValue()));
     }
 }
