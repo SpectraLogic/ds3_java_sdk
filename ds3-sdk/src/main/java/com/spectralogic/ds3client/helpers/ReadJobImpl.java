@@ -35,8 +35,6 @@ import com.spectralogic.ds3client.utils.Guard;
 import java.io.IOException;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.atomic.AtomicLong;
-import java.util.concurrent.atomic.AtomicReference;
 
 class ReadJobImpl extends JobImpl {
 
