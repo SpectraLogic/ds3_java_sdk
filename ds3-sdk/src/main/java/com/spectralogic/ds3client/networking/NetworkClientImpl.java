@@ -83,6 +83,7 @@ public class NetworkClientImpl implements NetworkClient {
     final static private int MAX_CONNECTION_PER_ROUTE = 50;
     final static private int MAX_CONNECTION_TOTAL = 100;
     final static private String REQUEST_ID_HEADER = "x-amz-request-id";
+    final static private String INSECURE_SSL_PROTOCOL = "TLSv1.2";
 
     final private ConnectionDetails connectionDetails;
 
@@ -133,7 +134,7 @@ public class NetworkClientImpl implements NetworkClient {
 
     private static CloseableHttpClient createInsecureSslHttpClient() throws NoSuchAlgorithmException, KeyManagementException, KeyStoreException {
         final SSLContext sslContext = new SSLContextBuilder()
-                .useProtocol("TLSv1.2")
+                .useProtocol(INSECURE_SSL_PROTOCOL)
                 .loadTrustMaterial(null, new TrustStrategy() {
             @Override
             public boolean isTrusted(final X509Certificate[] chain, final String authType) throws CertificateException {
