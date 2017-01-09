@@ -159,9 +159,7 @@ public class FileSystemHelper_Test {
         final Path directory = Files.createDirectory(Paths.get("dir"));
         if (org.apache.commons.lang3.SystemUtils.IS_OS_WINDOWS) {
             // Deny write data access to everyone, making the directory unwritable
-            Runtime.getRuntime().exec("icacls dir /deny Everyone:(WD)");
-            // Exec can return before the command completes.  Delay for long enough to let the command finish.
-            Thread.sleep(5000);
+            Runtime.getRuntime().exec("icacls dir /deny Everyone:(WD)").waitFor();
         } else {
             directory.toFile().setWritable(false);
         }
@@ -178,8 +176,7 @@ public class FileSystemHelper_Test {
         } finally {
             if (org.apache.commons.lang3.SystemUtils.IS_OS_WINDOWS) {
                 // Grant write data access to everyone, making the directory writable, so we can delete it.
-                Runtime.getRuntime().exec("icacls dir /grant Everyone:(WD)");
-                Thread.sleep(5000);
+                Runtime.getRuntime().exec("icacls dir /grant Everyone:(WD)").waitFor();
             } else {
                 directory.toFile().setWritable(true);
             }

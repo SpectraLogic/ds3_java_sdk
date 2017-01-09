@@ -19,13 +19,13 @@ import java.io.IOException;
 
 public class ContentLengthNotMatchException extends IOException {
     private final String fileName;
-    private final long contentLenght;
+    private final long contentLength;
     private final long totalBytes;
-    public ContentLengthNotMatchException(final String fileName, final long contentLenght, final long totalBytes) {
-        super(String.format("The Content length for %s (%d) not match the number of byte read (%d)", fileName, contentLenght, totalBytes));
+    public ContentLengthNotMatchException(final String fileName, final long contentLength, final long totalBytes) {
+        super(String.format("The Content length for %s (%d) not match the number of byte read (%d)", fileName, contentLength, totalBytes));
 
         this.fileName = fileName;
-        this.contentLenght = contentLenght;
+        this.contentLength = contentLength;
         this.totalBytes = totalBytes;
     }
 
@@ -33,8 +33,8 @@ public class ContentLengthNotMatchException extends IOException {
         return this.fileName;
     }
 
-    public long getContentLenght() {
-        return this.contentLenght;
+    public long getContentLength() {
+        return this.contentLength;
     }
 
     public long getTotalBytes() {
