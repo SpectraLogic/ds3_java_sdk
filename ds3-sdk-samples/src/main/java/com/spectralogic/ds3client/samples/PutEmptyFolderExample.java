@@ -19,6 +19,10 @@ import com.spectralogic.ds3client.Ds3Client;
 import com.spectralogic.ds3client.Ds3ClientBuilder;
 import com.spectralogic.ds3client.commands.PutObjectRequest;
 import com.spectralogic.ds3client.commands.PutObjectResponse;
+import com.spectralogic.ds3client.commands.spectrads3.GetBucketSpectraS3Request;
+import com.spectralogic.ds3client.commands.spectrads3.GetBucketSpectraS3Response;
+import com.spectralogic.ds3client.helpers.Ds3ClientHelpers;
+import com.spectralogic.ds3client.models.Contents;
 import com.spectralogic.ds3client.networking.FailedRequestException;
 import com.spectralogic.ds3client.networking.FailedRequestUsingMgmtPortException;
 import com.spectralogic.ds3client.utils.EmptySeekableByteChannel;
@@ -55,6 +59,13 @@ public class PutEmptyFolderExample {
 
             // Put using EmptySeekableByteChannel, zero-length
             final PutObjectResponse putObjectResponse = client.putObject(new PutObjectRequest(bucketname, foldername, new EmptySeekableByteChannel(), 0L));
+
+            // New folder can be accessed by Standard S3 or Spectra calls
+            final Ds3ClientHelpers helper = Ds3ClientHelpers.wrap(client);
+            final Iterable<Contents> objects = helper.listObjects(bucketname, foldername);
+            for (final Contents object : objects) {
+                System.out.println("Created folder: " + object.getKey() );
+            }
 
             // Catch unknown host exceptions.
         } catch (final UnknownHostException e) {
