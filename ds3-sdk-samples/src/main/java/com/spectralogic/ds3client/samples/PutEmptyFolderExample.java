@@ -17,36 +17,45 @@ package com.spectralogic.ds3client.samples;
 
 import com.spectralogic.ds3client.Ds3Client;
 import com.spectralogic.ds3client.Ds3ClientBuilder;
-import com.spectralogic.ds3client.commands.GetServiceRequest;
-import com.spectralogic.ds3client.commands.GetServiceResponse;
-import com.spectralogic.ds3client.commands.spectrads3.GetSystemInformationSpectraS3Request;
-import com.spectralogic.ds3client.commands.spectrads3.GetSystemInformationSpectraS3Response;
-import com.spectralogic.ds3client.models.BucketDetails;
+import com.spectralogic.ds3client.commands.PutObjectRequest;
+import com.spectralogic.ds3client.commands.PutObjectResponse;
 import com.spectralogic.ds3client.networking.FailedRequestException;
 import com.spectralogic.ds3client.networking.FailedRequestUsingMgmtPortException;
+import com.spectralogic.ds3client.utils.EmptySeekableByteChannel;
 
 import java.io.IOException;
 import java.net.UnknownHostException;
 import java.security.SignatureException;
 
+/**
+ * Put a zero-byte object with a trailing slash to serve as an empty folder.
+ * Use the Standard Amazon S3 Put Object (does not require a Job)
+ *
+ * NOTE: This PutObjectRequest construstor is marked deprecated
+ * This is to drive development toward Spectra S3 calls; support for this will not be removed
+ */
 public class PutEmptyFolderExample {
 
     public static void main(final String args[]) throws IOException, SignatureException {
 
+        if (args.length < 2) {
+            System.out.println("Usage: bucketname foldername");
+            return;
+        }
+        final String bucketname = args[0];
+        String foldername = args[1];
+
+        // an object name with trailing / is treated as a folder
+        if (!foldername.endsWith("/")) {
+            foldername += "/";
+        }
+
         // Get a client builder and then build a client instance.  This is the main entry point to the SDK.
         try (final Ds3Client client = Ds3ClientBuilder.fromEnv().withHttps(false).build()) {
 
-            // system info -- check connection
-            final GetSystemInformationSpectraS3Response sysreponse = client.getSystemInformationSpectraS3(new GetSystemInformationSpectraS3Request());
-            System.out.println(sysreponse.getSystemInformationResult().getApiVersion());
+            // Put using EmptySeekableByteChannel, zero-length
+            final PutObjectResponse putObjectResponse = client.putObject(new PutObjectRequest(bucketname, foldername, new EmptySeekableByteChannel(), 0L));
 
-            // Tell the client to get us a list of all buckets, this is called a service list.
-            final GetServiceResponse response = client.getService(new GetServiceRequest());
-
-            // Iterate through all the buckets and print them to the console.
-            for (final BucketDetails bucket : response.getListAllMyBucketsResult().getBuckets()) {
-                System.out.println(bucket.getName());
-            }
             // Catch unknown host exceptions.
         } catch (final UnknownHostException e) {
 
@@ -62,15 +71,14 @@ public class PutEmptyFolderExample {
 
         	// If this is invalid authorization.
         	if (e.getStatusCode() == 403) {
+                System.out.println("ERROR: Invalid Access ID or Secret Key");
 
-        		System.out.println("Invalid Access ID or Secret Key");
+            } else if (e.getStatusCode() == 409) {
+                System.out.println("ERROR: Object Exists");
 
-        	// Else unexpected status code.
-        	} else {
-
-        		System.out.println("BlackPearl return an unexpected status code we did not expect");
-                // e.getStatusCode() can be used to get the status code BlackPearl returned for more accurate error handling and detection
-
+            // Else unexpected status code.
+            } else {
+        		System.out.println("BlackPearl returned an unexpected status code");
         	}
 
         } catch (final IOException e) {
