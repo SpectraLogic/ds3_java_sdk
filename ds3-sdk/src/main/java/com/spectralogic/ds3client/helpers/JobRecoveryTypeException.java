@@ -15,10 +15,13 @@
 
 package com.spectralogic.ds3client.helpers;
 
-public class JobRecoveryException extends Exception {
-    private static final long serialVersionUID = -4418169724222972364L;
-    
-    JobRecoveryException(final String message) {
-        super(message);
+public class JobRecoveryTypeException extends JobRecoveryException {
+
+    JobRecoveryTypeException(final String expectedType, final String actualType) {
+        super(buildMessage(expectedType, actualType));
+    }
+
+    private static String buildMessage(final String expectedType, final String actualType) {
+        return String.format("Expected job type '%s' but the actual job was of type '%s'.", expectedType, actualType);
     }
 }
