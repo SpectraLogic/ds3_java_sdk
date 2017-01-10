@@ -1,8 +1,26 @@
+/*
+ * ******************************************************************************
+ *   Copyright 2014-2016 Spectra Logic Corporation. All Rights Reserved.
+ *   Licensed under the Apache License, Version 2.0 (the "License"). You may not use
+ *   this file except in compliance with the License. A copy of the License is located at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *   or in the "license" file accompanying this file.
+ *   This file is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+ *   CONDITIONS OF ANY KIND, either express or implied. See the License for the
+ *   specific language governing permissions and limitations under the License.
+ * ****************************************************************************
+ */
+
+// This code is auto-generated, do not modify
 package com.spectralogic.ds3client.metadata;
 
 
 import com.google.common.collect.ImmutableMap;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers;
+import com.spectralogic.ds3client.metadata.interfaces.MetaDataStore;
+import com.spectralogic.ds3client.metadata.interfaces.MetaDataStoreListner;
 import com.spectralogic.ds3client.utils.MetaDataUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,8 +28,10 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.attribute.*;
-import java.util.*;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.nio.file.attribute.PosixFileAttributes;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Implementation of MetaDataAcess Interface
@@ -20,9 +40,11 @@ import java.util.*;
 public class MetaDataAccessImpl implements Ds3ClientHelpers.MetadataAccess {
     static private final Logger LOG = LoggerFactory.getLogger(MetaDataAccessImpl.class);
     private final Map<String, Path> fileMapper;
+    private final MetaDataStoreListner metaDataStoreListner;
 
-    public MetaDataAccessImpl(final Map<String, Path> fileMapper) {
+    public MetaDataAccessImpl(final Map<String, Path> fileMapper ,final MetaDataStoreListner metaDataStoreListner) {
         this.fileMapper = fileMapper;
+        this.metaDataStoreListner = metaDataStoreListner;
     }
 
     @Override
@@ -32,134 +54,57 @@ public class MetaDataAccessImpl implements Ds3ClientHelpers.MetadataAccess {
             return storeMetaData(file).build();
         } catch (final Exception e) {
             LOG.error("failed to store Metadata", e);
+            metaDataStoreListner.onMetaDataFailed("Unable to get MetaData"+e.getMessage());
             return null;
         }
     }
 
     /**
-     * @param file
-     * @return
+     * @param file local path of file
+     * @return map builder containing the data to be stored on server
      */
     private ImmutableMap.Builder<String, String> storeMetaData(final Path file) {
         final ImmutableMap.Builder<String, String> metadata = new ImmutableMap.Builder<>();
         new ImmutableMap.Builder<String, String>();
-
         try {
-            final MetaDataUtil metadataUtil = new MetaDataUtil(metadata);
-            final Set<String> sets = metadataUtil.getSupportedFileAttributes(file);
-            final String os = metadataUtil.getOS();
-            metadataUtil.saveOSMetaData();
-
-            for (final String set : sets) {
-                switch (set) {
+            //get local os name
+            final String localOSName = MetaDataUtil.getOS();
+            final Set<String> setFileAttributes = MetaDataUtil.getSupportedFileAttributes(file);
+            //get metadata store based on os type
+            final MetaDataStore metaDataStore = new MetaDataStoreFactory().getOsSpecificMetadataStore(localOSName, metadata);
+            metaDataStore.saveOSMetaData(localOSName);
+            for (final String fileAttributeType : setFileAttributes) {
+                switch (fileAttributeType) {
                     case "basic":
                         final BasicFileAttributes attr = Files.readAttributes(file, BasicFileAttributes.class);
-                        metadataUtil.saveCreationTimeMetaData(attr);
-                        metadataUtil.saveAccessTimeMetaData(attr);
-                        metadataUtil.saveLastModifiedTime(attr);
+                        metaDataStore.saveCreationTimeMetaData(attr);
+                        metaDataStore.saveAccessTimeMetaData(attr);
+                        metaDataStore.saveLastModifiedTime(attr);
+                        if (metaDataStore instanceof WindowsMetaDataStore) {
+                            ((WindowsMetaDataStore) metaDataStore).saveWindowsfilePermissions(file);
+                            ((WindowsMetaDataStore) metaDataStore).saveWindowsDescriptors(file);
+                            ((WindowsMetaDataStore) metaDataStore).saveFlagMetaData(file);
 
-                        if (os.contains("Windows")) {
-                            saveWindowsfilePermissions(file, metadata);
                         }
-
                         break;
-
-                    case "owner":
-                        if (os.contains("Windows")) {
-                            metadataUtil.saveWindowsDescriptors(file);
-                        }
-
-                        break;
-
-                    case "user":
-                        break;
-
-                    case "dos":
-                        if (os.contains("Windows")) {
-                            metadataUtil.saveFlagMetaData(file);
-                        }
-
-                        break;
-
                     case "posix":
                         final PosixFileAttributes attrPosix = Files.readAttributes(file, PosixFileAttributes.class);
-                        metadataUtil.saveUserId(file);
-                        metadataUtil.saveGroupId(file);
-                        metadataUtil.saveModeMetaData(file);
-                        metadataUtil.saveOwnerNameMetaData(attrPosix);
-                        metadataUtil.saveGroupNameMetaData(attrPosix);
-                        metadataUtil.savePosixPermssionsMeta(attrPosix);
-
+                        if (metaDataStore instanceof PosixMetaDataStore) {
+                            ((PosixMetaDataStore) metaDataStore).saveUserId(file);
+                            ((PosixMetaDataStore) metaDataStore).saveGroupId(file);
+                            ((PosixMetaDataStore) metaDataStore).saveModeMetaData(file);
+                            ((PosixMetaDataStore) metaDataStore).saveOwnerNameMetaData(attrPosix);
+                            ((PosixMetaDataStore) metaDataStore).saveGroupNameMetaData(attrPosix);
+                            ((PosixMetaDataStore) metaDataStore).savePosixPermssionsMeta(attrPosix);
+                        }
                         break;
                 }
             }
         } catch (final IOException ioe) {
             LOG.error("unable to get metadata", ioe);
+            metaDataStoreListner.onMetaDataFailed("Unable to get MetaData"+ioe.getMessage());
         }
         return metadata;
     }
 
-
-    /**
-     * if os is windows then posix will not be called and we need to find permission in different manner
-     *
-     * @param file
-     * @param metadata
-     */
-    private void saveWindowsfilePermissions(final Path file, final ImmutableMap.Builder<String, String> metadata) {
-        try {
-            final AclFileAttributeView view = Files.getFileAttributeView(file, AclFileAttributeView.class);
-            final List<AclEntry> aclEntries = view.getAcl();
-            Set<AclEntryPermission> aclEntryPermissions;
-            String userType = "";
-            String userDisplay = "";
-            StringBuilder permission = null;
-            final StringBuilder userList = new StringBuilder();
-            final StringBuilder userDisplayList = new StringBuilder();
-            final Map<String, Set<Integer>> stringSetMap = new HashMap<String, Set<Integer>>();
-            for (final AclEntry aclEntry : aclEntries) {
-                userDisplay = aclEntry.principal().getName().split("\\\\")[1];
-                permission = new StringBuilder();
-                Set<Integer> newSet = stringSetMap.get(userDisplay);
-                aclEntryPermissions = aclEntry.permissions();
-                if (newSet == null) {
-                    newSet = new HashSet<Integer>();
-                }
-                for (final AclEntryPermission aclEntryPermission : aclEntryPermissions) {
-                    newSet.add(aclEntryPermission.ordinal());
-                }
-                stringSetMap.put(userDisplay, newSet);
-            }
-            final Set<String> keys = stringSetMap.keySet();
-            Set<Integer> ordinals;
-            int userCount = 1;
-            for (final String key : keys) {
-                int index = 1;
-                ordinals = stringSetMap.get(key);
-                userType = key.replaceAll(" ", "").toLowerCase();
-                permission = new StringBuilder();
-                for (final int ord : ordinals) {
-                    if (ordinals.size() == index) {
-                        permission.append(ord);
-                    } else {
-                        permission.append(ord + "-");
-                    }
-                    index++;
-                }
-                if (keys.size() == userCount) {
-                    userDisplayList.append(key);
-                    userList.append(userType);
-                } else {
-                    userDisplayList.append(key + "-");
-                    userList.append(userType + "-");
-                }
-                metadata.put("x-amz-meta-ds3-" + userType, permission.toString());
-                userCount++;
-            }
-            metadata.put("x-amz-meta-ds3-userList", userList.toString());
-            metadata.put("x-amz-meta-ds3-userListDisplay", userDisplayList.toString());
-        } catch (final Exception e) {
-            LOG.error("Unable to get list of users or their permissions", e);
-        }
-    }
 }
