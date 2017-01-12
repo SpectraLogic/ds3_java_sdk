@@ -701,7 +701,7 @@ public class Smoke_Test {
 
         } finally {
             deleteAllContents(client, bucketName);
-            for( final Path tempFile : Files.newDirectoryStream(dirPath) ){
+            for (final Path tempFile : Files.newDirectoryStream(dirPath) ){
                 Files.delete(tempFile);
             }
             Files.delete(dirPath);
@@ -756,7 +756,7 @@ public class Smoke_Test {
             assert false;
         } finally {
             deleteAllContents(client, bucketName);
-            for( final Path tempFile : Files.newDirectoryStream(dirPath) ){
+            for (final Path tempFile : Files.newDirectoryStream(dirPath) ){
                 Files.delete(tempFile);
             }
             Files.delete(dirPath);
