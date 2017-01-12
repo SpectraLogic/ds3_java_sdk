@@ -22,9 +22,6 @@ import com.google.common.collect.UnmodifiableIterator;
 import com.spectralogic.ds3client.models.common.Range;
 import com.spectralogic.ds3client.utils.Guard;
 
-import java.util.ArrayList;
-import java.util.List;
-
 final class RangeHelper {
     private RangeHelper() {}
 
@@ -40,7 +37,7 @@ final class RangeHelper {
             return ImmutableList.of(Range.byLength(numBytesTransferred, intendedNumBytesToTransfer - numBytesTransferred));
         }
 
-        final List<Range> newRanges = new ArrayList<>();
+        final ImmutableList.Builder<Range> newRangesbuilder = ImmutableList.builder();
 
         final UnmodifiableIterator<Range> existingRangesIterator = existingRanges.iterator();
 
@@ -52,9 +49,9 @@ final class RangeHelper {
 
             if (numBytesTransferred < currentAccumulatedBytesInRanges) {
                 final Range firstNewRange = Range.byPosition(existingRange.getStart() - previousAccumulatedBytesInRanges  + numBytesTransferred, existingRange.getEnd());
-                newRanges.add(firstNewRange);
+                newRangesbuilder.add(firstNewRange);
 
-                addRemainingRanges(existingRangesIterator, newRanges);
+                addRemainingRanges(existingRangesIterator, newRangesbuilder);
                 break;
             }
 
@@ -62,12 +59,12 @@ final class RangeHelper {
             currentAccumulatedBytesInRanges += existingRange.getLength();
         }
 
-        return ImmutableList.copyOf(newRanges);
+        return newRangesbuilder.build();
     }
 
-    static void addRemainingRanges(final UnmodifiableIterator<Range> existingRangesIterator, final List<Range> newRanges) {
+    static void addRemainingRanges(final UnmodifiableIterator<Range> existingRangesIterator, final ImmutableList.Builder<Range> newRangesbuilder) {
         while (existingRangesIterator.hasNext()) {
-            newRanges.add(existingRangesIterator.next());
+            newRangesbuilder.add(existingRangesIterator.next());
         }
     }
 
