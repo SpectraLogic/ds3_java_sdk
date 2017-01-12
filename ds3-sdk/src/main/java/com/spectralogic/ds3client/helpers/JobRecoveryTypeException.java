@@ -15,7 +15,17 @@
 
 package com.spectralogic.ds3client.helpers;
 
-public class JobRecoveryTypeException extends JobRecoveryException {
+import com.spectralogic.ds3client.models.JobRequestType;
+
+import java.util.UUID;
+
+/**
+ * This exception is thrown when an attempted recover is performed using {@link Ds3ClientHelpers}
+ * and the {@link JobRequestType} of the specified job does not match the type of recovery to be performed.
+ * {@link Ds3ClientHelpers#recoverReadJob(UUID)} requires the specified job to be of type {@link JobRequestType#GET}.
+ * {@link Ds3ClientHelpers#recoverWriteJob(UUID)} requires the specified job to be of type {@link JobRequestType#PUT}.
+ */
+class JobRecoveryTypeException extends JobRecoveryException {
 
     JobRecoveryTypeException(final String expectedType, final String actualType) {
         super(buildMessage(expectedType, actualType));

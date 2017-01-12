@@ -18,7 +18,11 @@ package com.spectralogic.ds3client.helpers;
 public class JobRecoveryException extends Exception {
     private static final long serialVersionUID = -4418169724222972364L;
     
-    JobRecoveryException(final String message) {
+    public JobRecoveryException(final String message) {
         super(message);
+    }
+
+    public JobRecoveryException(final String message, final Throwable cause) {
+        super(message, cause);
     }
 }

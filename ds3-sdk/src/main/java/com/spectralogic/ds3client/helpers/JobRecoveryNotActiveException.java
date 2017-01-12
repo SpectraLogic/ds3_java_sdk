@@ -17,13 +17,19 @@ package com.spectralogic.ds3client.helpers;
 
 import java.util.UUID;
 
+/**
+ * This exception represents a failure of an attempted recovery of a job
+ * performed using {@link Ds3ClientHelpers#recoverReadJob(UUID)} or
+ * {@link Ds3ClientHelpers#recoverWriteJob(UUID)} that is caused by the
+ * specified job not being active.
+ */
 public class JobRecoveryNotActiveException extends JobRecoveryException {
 
-    JobRecoveryNotActiveException(final UUID jobId, final String message) {
-        super(buildMessage(jobId, message));
+    JobRecoveryNotActiveException(final UUID jobId, final Throwable cause) {
+        super(buildMessage(jobId), cause);
     }
 
-    private static String buildMessage(final UUID jobId, final String message) {
-        return String.format("Cannot recover inactive job '%s': %s.", jobId.toString(), message);
+    private static String buildMessage(final UUID jobId) {
+        return String.format("Cannot recover inactive job '%s'", jobId.toString());
     }
 }

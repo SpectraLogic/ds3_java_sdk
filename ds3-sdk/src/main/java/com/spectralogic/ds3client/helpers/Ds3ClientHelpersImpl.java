@@ -258,7 +258,10 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
         try {
             client.getActiveJobSpectraS3(new GetActiveJobSpectraS3Request(jobId));
         } catch (final FailedRequestException e) {
-            throw new JobRecoveryNotActiveException(jobId, e.getMessage());
+            if (e.getStatusCode() == 404) {
+                throw new JobRecoveryNotActiveException(jobId, e);
+            }
+            throw e;
         }
     }
 
