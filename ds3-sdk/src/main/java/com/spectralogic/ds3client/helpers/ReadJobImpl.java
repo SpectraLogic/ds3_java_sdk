@@ -19,6 +19,7 @@ import com.google.common.collect.*;
 import com.spectralogic.ds3client.Ds3Client;
 import com.spectralogic.ds3client.commands.GetObjectRequest;
 import com.spectralogic.ds3client.commands.GetObjectResponse;
+import com.spectralogic.ds3client.exceptions.ContentLengthNotMatchException;
 import com.spectralogic.ds3client.helpers.ChunkTransferrer.ItemTransferrer;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.ObjectChannelBuilder;
 import com.spectralogic.ds3client.helpers.events.EventRunner;
@@ -51,7 +52,7 @@ class ReadJobImpl extends JobImpl {
             final int retryAfter,
             final int retryDelay,
             final EventRunner eventRunner
-            ) {
+    ) {
         super(client, masterObjectList, objectTransferAttempts, eventRunner);
 
         this.blobToRanges = PartialObjectHelpers.mapRangesToBlob(masterObjectList.getObjects(), objectRanges);
@@ -144,15 +145,112 @@ class ReadJobImpl extends JobImpl {
     }
 
     private final class GetObjectTransferrerRetryDecorator implements ItemTransferrer {
-        private final GetObjectTransferrer getObjectTransferrer;
+        private final ItemTransferrer getObjectTransferrer;
 
         private GetObjectTransferrerRetryDecorator(final JobState jobState) {
-            getObjectTransferrer = new GetObjectTransferrer(jobState);
+            getObjectTransferrer = new GetObjectTransferrerNetworkFailureDecorator(jobState);
         }
 
         @Override
         public void transferItem(final Ds3Client client, final BulkObject ds3Object) throws IOException {
             ReadJobImpl.this.transferItem(client, ds3Object, getObjectTransferrer);
+        }
+    }
+
+    private final class GetObjectTransferrerNetworkFailureDecorator implements ItemTransferrer {
+        private final JobState jobState;
+        private Long numBytesToTransfer;
+        private ImmutableCollection<Range> ranges;
+        private Long destinationChannelOffset = 0L;
+        private ItemTransferrer itemTransferrer;
+
+        private GetObjectTransferrerNetworkFailureDecorator(final JobState jobState) {
+            this.jobState = jobState;
+            itemTransferrer = new GetObjectTransferrer(jobState);
+        }
+
+        @Override
+        public void transferItem(final Ds3Client client, final BulkObject ds3Object) throws IOException {
+            try {
+                itemTransferrer.transferItem(client, ds3Object);
+            } catch (final ContentLengthNotMatchException contentLengthNotMatchException) {
+                makeNewItemTransferrer(ds3Object, contentLengthNotMatchException.getTotalBytes());
+
+                emitContentLengthMismatchFailureEvent(ds3Object, contentLengthNotMatchException);
+
+                throw new RecoverableIOException(contentLengthNotMatchException);
+            }
+        }
+
+        private void makeNewItemTransferrer(final BulkObject ds3Object, final long numBytesTransferred) {
+            initializeRangesAndTransferSize(ds3Object);
+            updateRanges(numBytesTransferred);
+            destinationChannelOffset += numBytesTransferred;
+
+            itemTransferrer = new GetPartialObjectTransferrer(jobState, ranges, destinationChannelOffset);
+        }
+
+        private void initializeRangesAndTransferSize(final BulkObject ds3Object) {
+            if (ranges == null) {
+                ranges = getRangesForBlob(blobToRanges, ds3Object);
+            }
+
+            if (ranges == null) {
+                final long numBytesTransferred = 0;
+                ranges = RangeHelper.replaceRange(ranges, numBytesTransferred, ds3Object.getLength());
+            }
+
+            if (numBytesToTransfer == null) {
+                numBytesToTransfer = RangeHelper.transferSizeForRanges(ranges);
+            }
+        }
+
+        private void updateRanges(final long numBytesTransferred) {
+            ranges = RangeHelper.replaceRange(ranges, numBytesTransferred, numBytesToTransfer);
+        }
+
+        private void emitContentLengthMismatchFailureEvent(final BulkObject ds3Object, final Throwable t) {
+            final FailureEvent failureEvent = FailureEvent.builder()
+                    .doingWhat(FailureEvent.FailureActivity.GettingObject)
+                    .usingSystemWithEndpoint(client.getConnectionDetails().getEndpoint())
+                    .withCausalException(t)
+                    .withObjectNamed(ds3Object.getName())
+                    .build();
+            emitFailureEvent(failureEvent);
+        }
+    }
+
+    private final class GetPartialObjectTransferrer implements ItemTransferrer {
+        private final JobState jobState;
+        private final ImmutableCollection<Range> ranges;
+        private final long destinationChannelOffset;
+
+        private GetPartialObjectTransferrer(final JobState jobState,
+                                            final ImmutableCollection<Range> ranges,
+                                            final long destinationChannelOffset)
+        {
+            this.jobState = jobState;
+            this.ranges = ranges;
+            this.destinationChannelOffset = destinationChannelOffset;
+        }
+
+        @Override
+        public void transferItem(final Ds3Client client, final BulkObject ds3Object) throws IOException {
+            final GetObjectRequest getObjectRequest = new GetObjectRequest(
+                    ReadJobImpl.this.masterObjectList.getBucketName(),
+                    ds3Object.getName(),
+                    jobState.getChannel(ds3Object.getName(), destinationChannelOffset, RangeHelper.transferSizeForRanges(ranges)),
+                    ReadJobImpl.this.getJobId().toString(),
+                    ds3Object.getOffset()
+            );
+
+            getObjectRequest.withByteRanges(ranges);
+
+            final GetObjectResponse response = client.getObject(getObjectRequest);
+            final Metadata metadata = response.getMetadata();
+
+            emitChecksumEvents(ds3Object, response.getChecksumType(), response.getChecksum());
+            sendMetadataEvents(ds3Object.getName(), metadata);
         }
     }
 

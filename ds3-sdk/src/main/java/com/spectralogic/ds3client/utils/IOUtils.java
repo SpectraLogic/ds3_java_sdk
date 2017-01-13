@@ -15,13 +15,20 @@
 
 package com.spectralogic.ds3client.utils;
 
+import org.apache.http.ConnectionClosedException;
+import com.spectralogic.ds3client.helpers.UnrecoverableIOException;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.ByteBuffer;
 import java.nio.channels.WritableByteChannel;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public final class IOUtils {
+    private static final Logger LOG = LoggerFactory.getLogger(IOUtils.class);
 
     public static long copy(
         final InputStream inputStream,
@@ -64,18 +71,29 @@ public final class IOUtils {
 
         final long startTime = PerformanceUtils.getCurrentTime();
         long statusUpdateTime = startTime;
-        while ((len = inputStream.read(buffer)) != -1) {
-            totalBytes += len;
-            byteBuffer.position(0);
-            byteBuffer.limit(len);
-            writableByteChannel.write(byteBuffer);
 
-            final long curTime = PerformanceUtils.getCurrentTime();
-            if (statusUpdateTime <= curTime) {
-                PerformanceUtils.logMbpsStatus(startTime, curTime, totalBytes, objName, isPutCommand);
-                statusUpdateTime += 60000D; //Only logs status once a minute
+        try {
+            while ((len = inputStream.read(buffer)) != -1) {
+                totalBytes += len;
+
+                try {
+                    byteBuffer.position(0);
+                    byteBuffer.limit(len);
+                    writableByteChannel.write(byteBuffer);
+                } catch (final Throwable t) {
+                    throw new UnrecoverableIOException(t);
+                }
+
+                final long curTime = PerformanceUtils.getCurrentTime();
+                if (statusUpdateTime <= curTime) {
+                    PerformanceUtils.logMbpsStatus(startTime, curTime, totalBytes, objName, isPutCommand);
+                    statusUpdateTime += 60000D; //Only logs status once a minute
+                }
             }
+        } catch (final ConnectionClosedException e) {
+            LOG.error("Connection closed trying to copy from stream to channel.", e);
         }
+
         return totalBytes;
     }
 }
