@@ -13,12 +13,11 @@
  * ****************************************************************************
  */
 
-// This code is auto-generated, do not modify
 package com.spectralogic.ds3client.metadata;
 
 import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3client.metadata.interfaces.AbstractMetadataRestore;
-import com.spectralogic.ds3client.metadata.interfaces.MetaDataRestoreListener;
+import com.spectralogic.ds3client.metadata.interfaces.MetadataRestoreListener;
 import com.spectralogic.ds3client.metadata.jna.Advapi32;
 import com.spectralogic.ds3client.networking.Metadata;
 import com.sun.jna.platform.win32.WinNT;
@@ -37,13 +36,13 @@ import java.util.Set;
 import static com.spectralogic.ds3client.utils.MetadataKeyConstants.*;
 
 
-public class WindowsMetaDataRestore extends AbstractMetadataRestore {
+public class WindowsMetadataRestore extends AbstractMetadataRestore {
 
-    WindowsMetaDataRestore(final Metadata metadata, final String filePath, final String localOS,final MetaDataRestoreListener metaDataRestoreListener) {
+    WindowsMetadataRestore(final Metadata metadata, final String filePath, final String localOS, final MetadataRestoreListener metadataRestoreListener) {
         this.metadata = metadata;
         this.objectName = filePath;
         this.localOS = localOS;
-        this.metaDataRestoreListener = metaDataRestoreListener;
+        this.metadataRestoreListener = metadataRestoreListener;
     }
 
 
@@ -70,14 +69,10 @@ public class WindowsMetaDataRestore extends AbstractMetadataRestore {
         if (storedOS != null && storedOS.equals(localOS)) {
             setPermissionsForWindows();
         }
+        restoreFlags();
     }
 
 
-    /**
-     *
-     *
-     *
-     */
     private void setPermissionsForWindows() {
         final Path path = Paths.get(objectName);
         final AclFileAttributeView aclAttributeView = Files.getFileAttributeView(path, AclFileAttributeView.class);
@@ -104,7 +99,7 @@ public class WindowsMetaDataRestore extends AbstractMetadataRestore {
             aclAttributeView.setAcl(aclEntryBuilder.build());
         } catch (final IOException e) {
             LOG.error("Unable to restore dacl view", e);
-            metaDataRestoreListener.metadataRestoreFailed("Unable to restore dacl view::"+e.getMessage());
+            metadataRestoreListener.metadataRestoreFailed("Unable to restore dacl view::"+e.getMessage());
         }
     }
 
@@ -115,7 +110,7 @@ public class WindowsMetaDataRestore extends AbstractMetadataRestore {
      * @return map
      */
 
-    public Map<String,AclEntryPermission> defaultOrdinalPermission(){
+    private Map<String,AclEntryPermission> defaultOrdinalPermission(){
         final Map<String,AclEntryPermission> defaultOrdinalMap = new HashMap<>();
         defaultOrdinalMap.put("0",AclEntryPermission.READ_DATA);
         defaultOrdinalMap.put("1",AclEntryPermission.WRITE_DATA);
@@ -153,6 +148,7 @@ public class WindowsMetaDataRestore extends AbstractMetadataRestore {
             aclEntryBuilder.add(aclEntry);
         } catch (final Exception e) {
             LOG.error("Unable to restore Permissions", e);
+            metadataRestoreListener.metadataRestoreFailed("Unable to restore Permissions::"+e.getMessage());
         }
     }
 
@@ -176,12 +172,15 @@ public class WindowsMetaDataRestore extends AbstractMetadataRestore {
             }
         } catch (final Exception e) {
             LOG.error("not able to set owner and group on the file ", e);
-            metaDataRestoreListener.metadataRestoreFailed("not able to set owner and group on the file ::"+e.getMessage());
+            metadataRestoreListener.metadataRestoreFailed("not able to set owner and group on the file ::"+e.getMessage());
 
         }
     }
 
-    public void restoreFlags() {
+
+
+
+    private void restoreFlags() {
         if (storedOS != null && storedOS.equals(localOS)) {
             if (metadata.get(KEY_FLAGS).size() > 0) {
                 final String flags = metadata.get(KEY_FLAGS).get(0);
@@ -225,7 +224,7 @@ public class WindowsMetaDataRestore extends AbstractMetadataRestore {
             p.waitFor();
         } catch (final Exception e) {
             LOG.error("Unable to restore flag attributes", e);
-            metaDataRestoreListener.metadataRestoreFailed("Unable to restore flag attributes ::"+e.getMessage());
+            metadataRestoreListener.metadataRestoreFailed("Unable to restore flag attributes ::"+e.getMessage());
         }
     }
 

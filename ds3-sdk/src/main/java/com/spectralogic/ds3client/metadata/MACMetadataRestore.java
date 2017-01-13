@@ -13,10 +13,9 @@
  * ****************************************************************************
  */
 
-// This code is auto-generated, do not modify
 package com.spectralogic.ds3client.metadata;
 
-import com.spectralogic.ds3client.metadata.interfaces.MetaDataRestoreListener;
+import com.spectralogic.ds3client.metadata.interfaces.MetadataRestoreListener;
 import com.spectralogic.ds3client.networking.Metadata;
 
 import java.text.SimpleDateFormat;
@@ -25,9 +24,9 @@ import java.util.Calendar;
 import static com.spectralogic.ds3client.utils.MetadataKeyConstants.*;
 
 
-public class MACMetaDataRestore extends PosixMetaDataRestore {
-    public MACMetaDataRestore(final Metadata metadata, final String filePath, final String localOS, final MetaDataRestoreListener metaDataRestoreListener) {
-        super(metadata, filePath, localOS,metaDataRestoreListener);
+public class MACMetadataRestore extends PosixMetadataRestore {
+    public MACMetadataRestore(final Metadata metadata, final String filePath, final String localOS, final MetadataRestoreListener metadataRestoreListener) {
+        super(metadata, filePath, localOS, metadataRestoreListener);
     }
 
     /**
@@ -76,10 +75,16 @@ public class MACMetaDataRestore extends PosixMetaDataRestore {
     private void restoreCreationTimeMAC(final String objectName, final String creationTime) {
         try {
             final ProcessBuilder processBuilder = new ProcessBuilder("touch", "-t", getDate(Long.parseLong(creationTime), "YYYYMMddHHmm"), objectName);
-            processBuilder.start();
+            final Process process = processBuilder.start();
+            //Wait to get exit value
+            final int exitValue = process.waitFor();
+            if(exitValue != 0) {
+                LOG.error("Unable to restore creation time::"+exitValue);
+                metadataRestoreListener.metadataRestoreFailed("Unable to restore creation time ::"+exitValue);
+            }
         } catch (final Exception e) {
             LOG.error("Unable to restore creation time", e);
-            metaDataRestoreListener.metadataRestoreFailed("Unable to restore creation time ::"+e.getMessage());
+            metadataRestoreListener.metadataRestoreFailed("Unable to restore creation time ::"+e.getMessage());
         }
 
     }
@@ -93,10 +98,16 @@ public class MACMetaDataRestore extends PosixMetaDataRestore {
     private void restoreModifiedTimeMAC(final String objectName, final String modifiedTime) {
         try {
             final ProcessBuilder processBuilder = new ProcessBuilder("touch", "-mt", getDate(Long.parseLong(modifiedTime), "YYYYMMddHHmm"), objectName);
-            processBuilder.start();
+            final Process process = processBuilder.start();
+            //Wait to get exit value
+            final int exitValue = process.waitFor();
+            if(exitValue != 0) {
+                LOG.error("Unable to restore modified time::"+exitValue);
+                metadataRestoreListener.metadataRestoreFailed("Unable to restore creation time ::"+exitValue);
+            }
         } catch (final Exception e) {
             LOG.error("Unable to restore modified time", e);
-            metaDataRestoreListener.metadataRestoreFailed("Unable to restore modified time ::"+e.getMessage());
+            metadataRestoreListener.metadataRestoreFailed("Unable to restore modified time ::"+e.getMessage());
         }
 
     }

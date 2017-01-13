@@ -13,11 +13,11 @@
  * ****************************************************************************
  */
 
-// This code is auto-generated, do not modify
 package com.spectralogic.ds3client.metadata;
 
 import com.google.common.collect.ImmutableMap;
-import com.spectralogic.ds3client.metadata.interfaces.AbstractMetaDataStore;
+import com.spectralogic.ds3client.metadata.interfaces.AbstractMetadataStore;
+import com.spectralogic.ds3client.metadata.interfaces.MetadataStoreListener;
 import com.spectralogic.ds3client.metadata.jna.Advapi32;
 import com.sun.jna.platform.win32.WinNT;
 import com.sun.jna.ptr.PointerByReference;
@@ -31,16 +31,18 @@ import java.nio.file.Path;
 import java.nio.file.attribute.AclEntry;
 import java.nio.file.attribute.AclEntryPermission;
 import java.nio.file.attribute.AclFileAttributeView;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.*;
 
 import static com.spectralogic.ds3client.utils.MetadataKeyConstants.*;
 
 
-public class WindowsMetaDataStore extends AbstractMetaDataStore {
+public class WindowsMetadataStore extends AbstractMetadataStore {
 
 
-    public WindowsMetaDataStore(final ImmutableMap.Builder<String, String> metadataMap) {
+    public WindowsMetadataStore(final ImmutableMap.Builder<String, String> metadataMap, final MetadataStoreListener metadataStoreListener) {
         this.mMetadataMap = metadataMap;
+        this.metadataStoreListener = metadataStoreListener;
     }
 
     /**
@@ -48,16 +50,14 @@ public class WindowsMetaDataStore extends AbstractMetaDataStore {
      *
      * @param path local path of the file
      */
-    public void saveWindowsDescriptors(final Path path) {
-        final  int infoType = WinNT.OWNER_SECURITY_INFORMATION
+    private void saveWindowsDescriptors(final Path path) {
+        final int infoType = WinNT.OWNER_SECURITY_INFORMATION
                 | WinNT.GROUP_SECURITY_INFORMATION
                 | WinNT.DACL_SECURITY_INFORMATION | 0;
-
         final PointerByReference ppsidOwner = new PointerByReference();
         final PointerByReference ppsidGroup = new PointerByReference();
         final PointerByReference ppDacl = new PointerByReference();
         final PointerByReference ppSecurityDescriptor = new PointerByReference();
-
         final File file = path.toFile();
         try {
             final int bool = Advapi32.INSTANCE.GetNamedSecurityInfo(
@@ -72,19 +72,17 @@ public class WindowsMetaDataStore extends AbstractMetaDataStore {
             if (bool == 0) {
                 final WinNT.PSID psidOwner = new WinNT.PSID(ppsidOwner.getValue().getByteArray(0, 256));
                 final String ownerSid = psidOwner.getSidString();
-
                 final WinNT.PSID psidGroup = new WinNT.PSID(ppsidGroup.getValue().getByteArray(0, 256));
                 final String groupSid = psidGroup.getSidString();
-
                 mMetadataMap.put(METADATA_PREFIX + KEY_GROUP, groupSid);
                 mMetadataMap.put(METADATA_PREFIX + KEY_OWNER, ownerSid);
-
                 final WinNT.ACL acl = new WinNT.ACL(ppDacl.getValue());
                 final String daclString = getDaclString(acl);
                 mMetadataMap.put(METADATA_PREFIX + KEY_DACL, daclString);
             }
         } catch (final Exception e) {
             LOG.error("Unable to get sid of user and owner", e);
+            metadataStoreListener.onMetadataFailed("Unable to get sid of user and owner" + e.getMessage());
         }
     }
 
@@ -107,7 +105,6 @@ public class WindowsMetaDataStore extends AbstractMetaDataStore {
             } else if (aceStructure.AceType == 2) {
                 daclString = daclString + "AU;";
             }
-
             daclString = daclString + "0x" + Integer.toHexString(aceStructure.AceFlags) + ";";
             daclString = daclString + "0x" + Integer.toHexString(aceStructure.Mask) + ";;;";
             daclString = daclString + (aceStructure.getSidString()) + ")";
@@ -121,23 +118,17 @@ public class WindowsMetaDataStore extends AbstractMetaDataStore {
      * @param file local file of the path
      * @return flag of file in String
      */
-    public String saveFlagMetaData(final Path file) {
+    private String saveFlagMetaData(final Path file) {
         final StringBuilder flagBuilder = new StringBuilder();
         try {
-            final StringBuilder stringBuilder = new StringBuilder();
-            stringBuilder.append("attrib  ");
-            stringBuilder.append("\""+file+"\"");
-
-            final ProcessBuilder processBuilder = new ProcessBuilder("attrib",file.toString());
-            final  Process process =  processBuilder.start();
+            final ProcessBuilder processBuilder = new ProcessBuilder("attrib", file.toString());
+            final Process process = processBuilder.start();
             final BufferedReader reader =
                     new BufferedReader(new InputStreamReader(process.getInputStream()));
-
-            final String flagWindows =  reader.readLine();
+            final String flagWindows = reader.readLine();
             final String[] flags = flagWindows.split(" ");
-
             for (int i = 0; i < flags.length - 1; i++) {
-                if(!flags[i].equals("")) {
+                if (!flags[i].equals("")) {
                     if (flags[i].contains("\\")) {
                         break;
                     } else {
@@ -145,14 +136,16 @@ public class WindowsMetaDataStore extends AbstractMetaDataStore {
                     }
                 }
             }
-            if(flagBuilder.toString().equals("")){
+            if (flagBuilder.toString().equals("")) {
                 flagBuilder.append("N");
             }
             mMetadataMap.put(METADATA_PREFIX + KEY_FLAGS, flagBuilder.toString());
         } catch (final IOException ioe) {
             LOG.error("Unable to read file", ioe);
+            metadataStoreListener.onMetadataFailed("Unable to read file" + ioe.getMessage());
         } catch (final Exception e) {
             LOG.error("Unable to fetch attributes of file", e);
+            metadataStoreListener.onMetadataFailed("Unable to fetch attributes of file" + e.getMessage());
         }
         return flagBuilder.toString();
     }
@@ -162,7 +155,7 @@ public class WindowsMetaDataStore extends AbstractMetaDataStore {
      *
      * @param file local file path
      */
-    public void saveWindowsfilePermissions(final Path file) {
+    private void saveWindowsfilePermissions(final Path file) {
         try {
             Set<AclEntryPermission> aclEntryPermissions;
             String userType;
@@ -175,7 +168,6 @@ public class WindowsMetaDataStore extends AbstractMetaDataStore {
             final Map<String, Set<Integer>> stringSetMap = new HashMap<>();
             for (final AclEntry aclEntry : aclEntries) {
                 userDisplay = aclEntry.principal().getName().split("\\\\")[1];
-                // permission = new StringBuilder();
                 Set<Integer> newSet = stringSetMap.get(userDisplay);
                 aclEntryPermissions = aclEntry.permissions();
                 if (newSet == null) {
@@ -216,9 +208,14 @@ public class WindowsMetaDataStore extends AbstractMetaDataStore {
             mMetadataMap.put("x-amz-meta-ds3-userListDisplay", userDisplayList.toString());
         } catch (final Exception e) {
             LOG.error("Unable to get list of users or their permissions", e);
+            metadataStoreListener.onMetadataFailed("Unable to get list of users or their permissions" + e.getMessage());
         }
     }
 
-
-
+    @Override
+    public void saveOSSpecificMetadata(final Path file, final BasicFileAttributes attrs) {
+        saveWindowsfilePermissions(file);
+        saveWindowsDescriptors(file);
+        saveFlagMetaData(file);
+    }
 }

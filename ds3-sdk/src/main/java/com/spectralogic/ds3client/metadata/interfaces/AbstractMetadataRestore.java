@@ -13,13 +13,10 @@
  * ****************************************************************************
  */
 
-// This code is auto-generated, do not modify
 package com.spectralogic.ds3client.metadata.interfaces;
 
 import com.spectralogic.ds3client.networking.Metadata;
 
-import java.io.File;
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.attribute.BasicFileAttributeView;
@@ -32,13 +29,13 @@ import static com.spectralogic.ds3client.utils.MetadataKeyConstants.*;
 import static com.spectralogic.ds3client.utils.MetadataKeyConstants.KEY_LAST_MODIFIED_TIME;
 
 
-public abstract class AbstractMetadataRestore implements MetaDataRestore {
+public abstract class AbstractMetadataRestore implements MetadataRestore {
 
     protected String storedOS;
     protected Metadata metadata;
     protected String objectName;
     protected String localOS;
-    protected MetaDataRestoreListener metaDataRestoreListener;
+    protected MetadataRestoreListener metadataRestoreListener;
     @Override
     public void restoreFileTimes() {
         String creationTime = null;
@@ -94,7 +91,8 @@ public abstract class AbstractMetadataRestore implements MetaDataRestore {
         }
         catch (final Exception e)
         {
-            e.printStackTrace();
+            LOG.error("Unable to restore creation and  modified time", e);
+            metadataRestoreListener.metadataRestoreFailed("Unable to restore creation and modified time ::"+e.getMessage());
         }
 
     }

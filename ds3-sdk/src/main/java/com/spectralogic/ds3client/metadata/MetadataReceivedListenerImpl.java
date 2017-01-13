@@ -13,22 +13,21 @@
  * ****************************************************************************
  */
 
-// This code is auto-generated, do not modify
 package com.spectralogic.ds3client.metadata;
 
 import com.spectralogic.ds3client.helpers.MetadataReceivedListener;
-import com.spectralogic.ds3client.metadata.interfaces.MetaDataRestore;
-import com.spectralogic.ds3client.metadata.interfaces.MetaDataRestoreListener;
+import com.spectralogic.ds3client.metadata.interfaces.MetadataRestore;
+import com.spectralogic.ds3client.metadata.interfaces.MetadataRestoreListener;
 import com.spectralogic.ds3client.networking.Metadata;
 import com.spectralogic.ds3client.utils.MetaDataUtil;
 
 public class MetadataReceivedListenerImpl implements MetadataReceivedListener {
     private String localFilePath = null;
-    private final MetaDataRestoreListener metaDataRestoreListener;
+    private final MetadataRestoreListener metadataRestoreListener;
 
-    public MetadataReceivedListenerImpl(final String localFilePath ,final MetaDataRestoreListener metaDataRestoreListener) {
+    public MetadataReceivedListenerImpl(final String localFilePath ,final MetadataRestoreListener metadataRestoreListener) {
         this.localFilePath = localFilePath;
-        this.metaDataRestoreListener = metaDataRestoreListener;
+        this.metadataRestoreListener = metadataRestoreListener;
     }
 
     @Override
@@ -46,18 +45,16 @@ public class MetadataReceivedListenerImpl implements MetadataReceivedListener {
     private void restoreMetaData(final String objectName, final Metadata metadata) {
         final String osName = System.getProperty("os.name");
         //get metadatarestore on the basis of os
-        final MetaDataRestore metaDataRestore = new MetaDataRestoreFactory().getOSSpecificMetadataRestore(metadata, objectName, osName,metaDataRestoreListener);
+        final MetadataRestore metadataRestore = new MetadataRestoreFactory().getOSSpecificMetadataRestore(metadata, objectName, osName, metadataRestoreListener);
         //restore os name
-        metaDataRestore.restoreOSName();
+        metadataRestore.restoreOSName();
         //restore user and owner based on OS
-        metaDataRestore.restoreUserAndOwner();
+        metadataRestore.restoreUserAndOwner();
         //restore creation and modified time based on OS
-        metaDataRestore.restoreFileTimes();
+        metadataRestore.restoreFileTimes();
         //restore permissions based on OS
-        metaDataRestore.restorePermissions();
-        if (metaDataRestore instanceof WindowsMetaDataRestore) {
-            ((WindowsMetaDataRestore) metaDataRestore).restoreFlags();
-        }
+        metadataRestore.restorePermissions();
+        
 
 
     }

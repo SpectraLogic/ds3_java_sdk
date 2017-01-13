@@ -13,20 +13,9 @@
  * ****************************************************************************
  */
 
-// This code is auto-generated, do not modify
-package com.spectralogic.ds3client.metadata;
-
-import com.google.common.collect.ImmutableMap;
-import com.spectralogic.ds3client.metadata.interfaces.MetaDataStore;
+package com.spectralogic.ds3client.metadata.interfaces;
 
 
-public class MetaDataStoreFactory
-{
-    public MetaDataStore getOsSpecificMetadataStore(final String osName, final ImmutableMap.Builder<String, String> metadataMap)
-    {
-        if(osName.contains("Windows"))
-            return new WindowsMetaDataStore(metadataMap);
-        else
-            return new PosixMetaDataStore(metadataMap);
-    }
+public interface MetadataRestoreListener {
+    void metadataRestoreFailed(final String message);
 }

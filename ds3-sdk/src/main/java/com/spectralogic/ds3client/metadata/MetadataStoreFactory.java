@@ -13,23 +13,22 @@
  * ****************************************************************************
  */
 
-// This code is auto-generated, do not modify
-package com.spectralogic.ds3client.metadata.interfaces;
+package com.spectralogic.ds3client.metadata;
 
-import com.spectralogic.ds3client.metadata.MetadataReceivedListenerImpl;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.google.common.collect.ImmutableMap;
+import com.spectralogic.ds3client.metadata.interfaces.MetadataStore;
+import com.spectralogic.ds3client.metadata.interfaces.MetadataStoreListener;
 
 
-public interface MetaDataRestore {
-    Logger LOG = LoggerFactory.getLogger(MetadataReceivedListenerImpl.class);
-
-    void restoreFileTimes();
-
-    void restoreUserAndOwner();
-
-    void restorePermissions();
-
-    void restoreOSName();
-
+public class MetadataStoreFactory
+{
+    public MetadataStore getOsSpecificMetadataStore(final String osName, final ImmutableMap.Builder<String, String> metadataMap,final MetadataStoreListener metadataStoreListener)
+    {
+        if(osName.contains("Windows")) {
+            return new WindowsMetadataStore(metadataMap,metadataStoreListener);
+        }
+        else {
+            return new PosixMetadataStore(metadataMap,metadataStoreListener);
+        }
+    }
 }

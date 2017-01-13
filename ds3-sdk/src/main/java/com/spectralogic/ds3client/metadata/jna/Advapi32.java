@@ -13,7 +13,6 @@
  * ****************************************************************************
  */
 
-// This code is auto-generated, do not modify
 package com.spectralogic.ds3client.metadata.jna;
 
 import com.sun.jna.Library;

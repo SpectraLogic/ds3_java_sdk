@@ -16,35 +16,33 @@
 // This code is auto-generated, do not modify
 package com.spectralogic.ds3client.metadata.interfaces;
 
-import com.spectralogic.ds3client.metadata.MetaDataAccessImpl;
+import com.spectralogic.ds3client.metadata.MetadataAccessImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
 
 
-public interface MetaDataStore {
+public interface MetadataStore {
 
-    Logger LOG = LoggerFactory.getLogger(MetaDataAccessImpl.class);
-
-    /**
-     * @param attr basic file attributes
-     * @return file creation time in String
-     */
-    String saveCreationTimeMetaData(final BasicFileAttributes attr);
-
+    Logger LOG = LoggerFactory.getLogger(MetadataAccessImpl.class);
 
     /**
      * @param attr basic file attributes
-     * @return file last access time in String
      */
-    String saveAccessTimeMetaData(final BasicFileAttributes attr);
+    void saveCreationTimeMetaData(final BasicFileAttributes attr);
+
 
     /**
      * @param attr basic file attributes
-     * @return file last modified time in String
      */
-    String saveLastModifiedTime(final BasicFileAttributes attr);
+    void saveAccessTimeMetaData(final BasicFileAttributes attr);
+
+    /**
+     * @param attr basic file attributes
+     */
+    void saveLastModifiedTime(final BasicFileAttributes attr);
 
 
     /**
@@ -53,6 +51,14 @@ public interface MetaDataStore {
      * @return os name
      */
      String saveOSMetaData(final String osName);
+
+    /**
+     *Storing metadata based on OS
+     *
+     * @param file  path of local file
+     * @param attrs FileAttributes
+     */
+    void saveOSSpecificMetadata(final Path file , BasicFileAttributes attrs);
 
 
 }

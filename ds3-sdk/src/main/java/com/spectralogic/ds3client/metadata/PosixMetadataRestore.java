@@ -13,11 +13,10 @@
  * ****************************************************************************
  */
 
-// This code is auto-generated, do not modify
 package com.spectralogic.ds3client.metadata;
 
 import com.spectralogic.ds3client.metadata.interfaces.AbstractMetadataRestore;
-import com.spectralogic.ds3client.metadata.interfaces.MetaDataRestoreListener;
+import com.spectralogic.ds3client.metadata.interfaces.MetadataRestoreListener;
 import com.spectralogic.ds3client.networking.Metadata;
 
 import java.nio.file.Files;
@@ -30,13 +29,13 @@ import java.util.regex.Pattern;
 
 import static com.spectralogic.ds3client.utils.MetadataKeyConstants.*;
 
-public class PosixMetaDataRestore extends AbstractMetadataRestore {
+public class PosixMetadataRestore extends AbstractMetadataRestore {
 
-    public PosixMetaDataRestore(final Metadata metadata, final String filePath, final String localOS, final MetaDataRestoreListener metaDataRestoreListener) {
+    public PosixMetadataRestore(final Metadata metadata, final String filePath, final String localOS, final MetadataRestoreListener metadataRestoreListener) {
         this.metadata = metadata;
         this.objectName = filePath;
         this.localOS = localOS;
-        this.metaDataRestoreListener = metaDataRestoreListener;
+        this.metadataRestoreListener = metadataRestoreListener;
     }
 
 
@@ -89,7 +88,7 @@ public class PosixMetaDataRestore extends AbstractMetadataRestore {
                     .setGroup(group);
         } catch (final Exception e) {
             LOG.error("Unable to set owner and group name", e);
-            metaDataRestoreListener.metadataRestoreFailed("Unable to set owner and group name::"+e.getMessage());
+            metadataRestoreListener.metadataRestoreFailed("Unable to set owner and group name::"+e.getMessage());
         }
     }
 
@@ -107,7 +106,7 @@ public class PosixMetaDataRestore extends AbstractMetadataRestore {
             Files.setPosixFilePermissions(file, perms);
         } catch (final Exception e) {
             LOG.error("Unable to restore Permissions", e);
-            metaDataRestoreListener.metadataRestoreFailed("Unable to restore Permissions::"+e.getMessage());
+            metadataRestoreListener.metadataRestoreFailed("Unable to restore Permissions::"+e.getMessage());
         }
     }
 }

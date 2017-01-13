@@ -16,7 +16,7 @@
 // This code is auto-generated, do not modify
 package com.spectralogic.ds3client.metadata.interfaces;
 
+public interface MetadataStoreListener {
 
-public interface MetaDataRestoreListener {
-    void metadataRestoreFailed(String message);
+    void onMetadataFailed(final String message);
 }

@@ -13,10 +13,22 @@
  * ****************************************************************************
  */
 
-// This code is auto-generated, do not modify
 package com.spectralogic.ds3client.metadata.interfaces;
 
-public interface MetaDataStoreListner {
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-    void onMetaDataFailed(String message);
+
+public interface MetadataRestore {
+    Logger LOG = LoggerFactory.getLogger(MetadataRestore.class);
+
+    void restoreFileTimes();
+
+    void restoreUserAndOwner();
+
+    void restorePermissions();
+
+    void restoreOSName();
+
+
 }

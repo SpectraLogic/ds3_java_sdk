@@ -13,22 +13,21 @@
  * ****************************************************************************
  */
 
-// This code is auto-generated, do not modify
 package com.spectralogic.ds3client.metadata;
 
-import com.spectralogic.ds3client.metadata.interfaces.MetaDataRestore;
-import com.spectralogic.ds3client.metadata.interfaces.MetaDataRestoreListener;
+import com.spectralogic.ds3client.metadata.interfaces.MetadataRestore;
+import com.spectralogic.ds3client.metadata.interfaces.MetadataRestoreListener;
 import com.spectralogic.ds3client.networking.Metadata;
 
 
-public class MetaDataRestoreFactory {
-    public MetaDataRestore getOSSpecificMetadataRestore(final Metadata metadata, final String filePath, final String localOS , final MetaDataRestoreListener metaDataRestoreListener) {
+public class MetadataRestoreFactory {
+    public MetadataRestore getOSSpecificMetadataRestore(final Metadata metadata, final String filePath, final String localOS , final MetadataRestoreListener metadataRestoreListener) {
         if (localOS.contains("Windows")) {
-            return new WindowsMetaDataRestore(metadata, filePath, localOS,metaDataRestoreListener);
+            return new WindowsMetadataRestore(metadata, filePath, localOS, metadataRestoreListener);
         } else if (localOS.contains("Mac")) {
-            return new MACMetaDataRestore(metadata, filePath, localOS,metaDataRestoreListener);
+            return new MACMetadataRestore(metadata, filePath, localOS, metadataRestoreListener);
         } else {
-            return new PosixMetaDataRestore(metadata, filePath, localOS,metaDataRestoreListener);
+            return new PosixMetadataRestore(metadata, filePath, localOS, metadataRestoreListener);
         }
     }
 }
