@@ -188,7 +188,7 @@ abstract class JobImpl implements Job {
                                             final Throwable causalException,
                                             final Objects chunk)
     {
-        return new FailureEvent.Builder()
+        return FailureEvent.builder()
                 .doingWhat(failureActivity)
                 .withCausalException(causalException)
                 .withObjectNamed(getLabelForChunk(chunk))

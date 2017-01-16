@@ -1,8 +1,12 @@
-FROM greyrocksoftware/javastandalone
+FROM greyrocksoftware/javastandalone7
 
-RUN apt-get update
+# Set the locale
+RUN locale-gen en_US.UTF-8
+ENV LANG='en_US.UTF-8' LANGUAGE='en_US:en' LC_ALL='en_US.UTF-8'
 
-RUN apt-get install git -y
+RUN apt-get update && apt-get install -y \
+  git
+
 
 ADD run_tests.sh /opt/
 

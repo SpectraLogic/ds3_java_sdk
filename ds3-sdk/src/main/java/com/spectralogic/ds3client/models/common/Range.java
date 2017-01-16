@@ -61,4 +61,13 @@ public final class Range implements Comparable<Range> {
     public int compareTo(final Range o) {
         return Long.compare(this.getStart(), o.getStart());
     }
+
+    @Override
+    public String toString() {
+        return "Range{" +
+                "start=" + start +
+                ", end=" + end +
+                ", length=" + length +
+                '}';
+    }
 }

@@ -45,6 +45,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
@@ -62,6 +63,7 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
     private final int retryDelay;
     private final int objectTransferAttempts;
     private final EventRunner eventRunner;
+    private final FileSystemHelper fileSystemHelper;
 
     public Ds3ClientHelpersImpl(final Ds3Client client) {
         this(client, DEFAULT_RETRY_AFTER);
@@ -79,12 +81,28 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
         this(client, retryAfter, objectTransferAttempts, retryDelay, new SameThreadEventRunner());
     }
 
-    public Ds3ClientHelpersImpl(final Ds3Client client, final int retryAfter, final int objectTransferAttempts, final int retryDelay, final EventRunner eventRunner) {
+    public Ds3ClientHelpersImpl(final Ds3Client client,
+                                final int retryAfter,
+                                final int objectTransferAttempts,
+                                final int retryDelay,
+                                final EventRunner eventRunner)
+    {
+        this(client, retryAfter, objectTransferAttempts, retryDelay, eventRunner, new FileSystemHelperImpl());
+    }
+
+    public Ds3ClientHelpersImpl(final Ds3Client client,
+                                final int retryAfter,
+                                final int objectTransferAttempts,
+                                final int retryDelay,
+                                final EventRunner eventRunner,
+                                final FileSystemHelper fileSystemHelper)
+    {
         this.client = client;
         this.retryAfter = retryAfter;
         this.objectTransferAttempts = objectTransferAttempts;
         this.retryDelay = retryDelay;
         this.eventRunner = eventRunner;
+        this.fileSystemHelper = fileSystemHelper;
     }
 
     @Override
@@ -320,5 +338,26 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
                 return new Ds3Object(stripLeadingPath(object.getName(), prefix), object.getSize());
             }
         });
+    }
+
+    /**
+     * Determine if the file system directory specified in the destinationDirectory parameter
+     * has enough storage space to contain the objects listed in the parameter objectNames contained in
+     * the bucket specified in the parameter buckName.  You can use this method prior to starting a read
+     * job to ensure that your file system has enough storage space to contain the objects you wish to
+     * retrieve.
+     *
+     * @param bucketName           The Black Pearl bucket containing the objects you wish to retrieve.
+     * @param objectNames          The names of the objects you wish to retrieve.
+     * @param destinationDirectory The file system directory in you intend to store retrieved objects.
+     * @return {@link ObjectStorageSpaceVerificationResult}
+     */
+    @Override
+    public ObjectStorageSpaceVerificationResult objectsFromBucketWillFitInDirectory(final String bucketName,
+                                                                                    final Collection<String> objectNames,
+                                                                                    final Path destinationDirectory)
+    {
+        return fileSystemHelper.objectsFromBucketWillFitInDirectory(this,
+                bucketName, objectNames, destinationDirectory);
     }
 }

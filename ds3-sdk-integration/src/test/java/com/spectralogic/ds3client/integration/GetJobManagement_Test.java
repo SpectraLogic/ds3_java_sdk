@@ -48,11 +48,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URISyntaxException;
+import java.nio.ByteBuffer;
 import java.nio.channels.SeekableByteChannel;
 import java.nio.channels.WritableByteChannel;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
+import java.security.AccessControlException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -72,6 +75,7 @@ public class GetJobManagement_Test {
     private static final Ds3ClientHelpers HELPERS = Ds3ClientHelpers.wrap(client);
     private static final String BUCKET_NAME = "Get_Job_Management_Test";
     private static final String TEST_ENV_NAME = "GetJobManagement_Test";
+    private static final String DISK_FULL_MESSAGE = "There is not enough space on the disk";
     private static TempStorageIds envStorageIds;
     private static UUID dataPolicyId;
 
@@ -145,7 +149,7 @@ public class GetJobManagement_Test {
 
     @Test
     public void createReadJobWithBigFile() throws IOException, URISyntaxException, NoSuchMethodException, IllegalAccessException, InvocationTargetException {
-        putBigFile();
+        putBigFiles();
 
         final String tempPathPrefix = null;
         final Path tempDirectory = Files.createTempDirectory(Paths.get("."), tempPathPrefix);
@@ -178,16 +182,15 @@ public class GetJobManagement_Test {
             final File originalFile = ResourceUtils.loadFileResource(DIR_NAME + FILE_NAME).toFile();
             final File fileCopiedFromBP = Paths.get(tempDirectory.toString(), FILE_NAME).toFile();
             assertTrue(FileUtils.contentEquals(originalFile, fileCopiedFromBP));
-
         } finally {
             FileUtils.deleteDirectory(tempDirectory.toFile());
             deleteBigFileFromBlackPearlBucket();
         }
     }
 
-    private void putBigFile() throws IOException, URISyntaxException {
+    private void putBigFiles() throws IOException, URISyntaxException {
         final String DIR_NAME = "largeFiles/";
-        final String[] FILE_NAMES = new String[] { "lesmis-copies.txt" };
+        final String[] FILE_NAMES = new String[] { "lesmis-copies.txt", "GreatExpectations.txt" };
 
         final Path dirPath = ResourceUtils.loadFileResource(DIR_NAME);
 
@@ -217,11 +220,214 @@ public class GetJobManagement_Test {
 
         final Iterable<Contents> objects = helpers.listObjects(BUCKET_NAME);
         for (final Contents contents : objects) {
-            if (contents.getKey().equals("lesmis-copies.txt")) {
+            if (contents.getKey().equals("lesmis-copies.txt") || contents.getKey().equals("GreatExpectations.txt")) {
                 client.deleteObject(new DeleteObjectRequest(BUCKET_NAME, contents.getKey()));
             }
         }
     }
+
+    @Test(expected = RuntimeException.class)
+    public void testReadRetrybugFixWithUnwritableDirectory() throws IOException, URISyntaxException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, InterruptedException {
+        putBigFiles();
+
+        final String tempPathPrefix = null;
+        final Path tempDirectoryPath = Files.createTempDirectory(Paths.get("."), tempPathPrefix);
+        final File tempDirectory = tempDirectoryPath.toFile();
+
+        final String tempDirectoryName = tempDirectoryPath.toString();
+
+        if (org.apache.commons.lang3.SystemUtils.IS_OS_WINDOWS) {
+            // Deny write data access to everyone, making the directory unwritable.
+            Runtime.getRuntime().exec("icacls " + tempDirectoryName + " /deny Everyone:(WD)").waitFor();
+        } else {
+            tempDirectory.setWritable(false);
+        }
+
+        try {
+            final String DIR_NAME = "largeFiles/";
+            final String FILE_NAME = "lesmis-copies.txt";
+
+            final Path objPath = ResourceUtils.loadFileResource(DIR_NAME + FILE_NAME);
+            final long bookSize = Files.size(objPath);
+            final Ds3Object obj = new Ds3Object(FILE_NAME, bookSize);
+
+            final Ds3ClientShim ds3ClientShim = new Ds3ClientShim((Ds3ClientImpl)client);
+
+            final int maxNumBlockAllocationRetries = 1;
+            final int maxNumObjectTransferAttempts = 3;
+            final Ds3ClientHelpers ds3ClientHelpers = Ds3ClientHelpers.wrap(ds3ClientShim,
+                    maxNumBlockAllocationRetries,
+                    maxNumObjectTransferAttempts);
+
+            final Ds3ClientHelpers.Job readJob = ds3ClientHelpers.startReadJob(BUCKET_NAME, Arrays.asList(obj));
+
+            final GetJobSpectraS3Response jobSpectraS3Response = ds3ClientShim
+                    .getJobSpectraS3(new GetJobSpectraS3Request(readJob.getJobId()));
+
+            assertThat(jobSpectraS3Response.getMasterObjectListResult(), is(notNullValue()));
+
+            readJob.transfer(new FileObjectGetter(tempDirectoryPath));
+
+            final File originalFile = ResourceUtils.loadFileResource(DIR_NAME + FILE_NAME).toFile();
+            final File fileCopiedFromBP = Paths.get(tempDirectoryPath.toString(), FILE_NAME).toFile();
+            assertTrue(FileUtils.contentEquals(originalFile, fileCopiedFromBP));
+
+        } finally {
+            if (org.apache.commons.lang3.SystemUtils.IS_OS_WINDOWS) {
+                // Grant write data access to everyone, so we can delete the directory
+                Runtime.getRuntime().exec("icacls " + tempDirectoryName + " /grant Everyone:(WD)").waitFor();
+            } else {
+                tempDirectory.setReadable(true);
+                tempDirectory.setWritable(true);
+                tempDirectory.setExecutable(true);
+            }
+            FileUtils.deleteDirectory(tempDirectoryPath.toFile());
+            deleteBigFileFromBlackPearlBucket();
+        }
+    }
+
+    @Test(expected = AccessControlException.class)
+    public void testReadRetrybugWhenChannelThrowsAccessException() throws IOException, URISyntaxException, NoSuchMethodException, IllegalAccessException, InvocationTargetException {
+        putBigFiles();
+
+        final String tempPathPrefix = null;
+        final Path tempDirectoryPath = Files.createTempDirectory(Paths.get("."), tempPathPrefix);
+
+        try {
+            final String DIR_NAME = "largeFiles/";
+            final String FILE_NAME = "lesmis-copies.txt";
+
+            final Path objPath = ResourceUtils.loadFileResource(DIR_NAME + FILE_NAME);
+            final long bookSize = Files.size(objPath);
+            final Ds3Object obj = new Ds3Object(FILE_NAME, bookSize);
+
+            final Ds3ClientShim ds3ClientShim = new Ds3ClientShim((Ds3ClientImpl)client);
+
+            final int maxNumBlockAllocationRetries = 1;
+            final int maxNumObjectTransferAttempts = 3;
+            final Ds3ClientHelpers ds3ClientHelpers = Ds3ClientHelpers.wrap(ds3ClientShim,
+                    maxNumBlockAllocationRetries,
+                    maxNumObjectTransferAttempts);
+
+            final Ds3ClientHelpers.Job readJob = ds3ClientHelpers.startReadJob(BUCKET_NAME, Arrays.asList(obj));
+
+            final GetJobSpectraS3Response jobSpectraS3Response = ds3ClientShim
+                    .getJobSpectraS3(new GetJobSpectraS3Request(readJob.getJobId()));
+
+            assertThat(jobSpectraS3Response.getMasterObjectListResult(), is(notNullValue()));
+
+            readJob.transfer(new Ds3ClientHelpers.ObjectChannelBuilder() {
+                @Override
+                public SeekableByteChannel buildChannel(final String key) throws IOException {
+                    throw new AccessControlException(key);
+                }
+            });
+        } finally {
+            FileUtils.deleteDirectory(tempDirectoryPath.toFile());
+            deleteBigFileFromBlackPearlBucket();
+        }
+    }
+
+    @Test
+    public void testReadRetryBugWhenDiskIsFull() throws IOException, URISyntaxException, NoSuchMethodException, IllegalAccessException, InvocationTargetException {
+        putBigFiles();
+
+        final String tempPathPrefix = null;
+        final Path tempDirectoryPath = Files.createTempDirectory(Paths.get("."), tempPathPrefix);
+
+        try {
+            final String DIR_NAME = "largeFiles/";
+            final String FILE_NAME = "lesmis-copies.txt";
+
+            final Path objPath = ResourceUtils.loadFileResource(DIR_NAME + FILE_NAME);
+            final long bookSize = Files.size(objPath);
+            final Ds3Object obj = new Ds3Object(FILE_NAME, bookSize);
+
+            final Ds3ClientShim ds3ClientShim = new Ds3ClientShim((Ds3ClientImpl)client);
+
+            final int maxNumBlockAllocationRetries = 1;
+            final int maxNumObjectTransferAttempts = 3;
+            final Ds3ClientHelpers ds3ClientHelpers = Ds3ClientHelpers.wrap(ds3ClientShim,
+                    maxNumBlockAllocationRetries,
+                    maxNumObjectTransferAttempts);
+
+            final Ds3ClientHelpers.Job readJob = ds3ClientHelpers.startReadJob(BUCKET_NAME, Arrays.asList(obj));
+
+            final GetJobSpectraS3Response jobSpectraS3Response = ds3ClientShim
+                    .getJobSpectraS3(new GetJobSpectraS3Request(readJob.getJobId()));
+
+            assertThat(jobSpectraS3Response.getMasterObjectListResult(), is(notNullValue()));
+
+            try {
+                readJob.transfer(new FailingChannelBuilder());
+            } catch (final UnrecoverableIOException e) {
+                assertEquals(DISK_FULL_MESSAGE, e.getCause().getMessage());
+            }
+        } finally {
+            FileUtils.deleteDirectory(tempDirectoryPath.toFile());
+            deleteBigFileFromBlackPearlBucket();
+        }
+    }
+
+    private static class FailingChannelBuilder implements Ds3ClientHelpers.ObjectChannelBuilder {
+        @Override
+        public SeekableByteChannel buildChannel(final String key) throws IOException {
+            final String filePath = key;
+            final SeekableByteChannel seekableByteChannel = Files.newByteChannel(Paths.get(filePath),
+                    StandardOpenOption.WRITE, StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.CREATE,
+                    StandardOpenOption.DELETE_ON_CLOSE);
+            return new SeekableByteChannelWrapper(seekableByteChannel);
+        }
+    }
+
+    private static class SeekableByteChannelWrapper implements SeekableByteChannel {
+        private final SeekableByteChannel seekableByteChannel;
+
+        private SeekableByteChannelWrapper(final SeekableByteChannel seekableByteChannel) {
+            this.seekableByteChannel = seekableByteChannel;
+        }
+
+        @Override
+        public int read(final ByteBuffer dst) throws IOException {
+            return seekableByteChannel.read(dst);
+        }
+
+        @Override
+        public int write(final ByteBuffer src) throws IOException {
+            throw new IOException(DISK_FULL_MESSAGE);
+        }
+
+        @Override
+        public long position() throws IOException {
+            return seekableByteChannel.position();
+        }
+
+        @Override
+        public SeekableByteChannel position(final long newPosition) throws IOException {
+            return seekableByteChannel.position(newPosition);
+        }
+
+        @Override
+        public long size() throws IOException {
+            return seekableByteChannel.size();
+        }
+
+        @Override
+        public SeekableByteChannel truncate(final long size) throws IOException {
+            return seekableByteChannel.truncate(size);
+        }
+
+        @Override
+        public boolean isOpen() {
+            return seekableByteChannel.isOpen();
+        }
+
+        @Override
+        public void close() throws IOException {
+            seekableByteChannel.close();
+        }
+    }
+
 
     @Test
     public void createReadJobWithPriorityOption() throws IOException,
@@ -263,7 +469,7 @@ public class GetJobManagement_Test {
 
     @Test
     public void testPartialRetriesWithInjectedFailures() throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, IOException, URISyntaxException {
-        putBigFile();
+        putBigFiles();
 
         final String tempPathPrefix = null;
         final Path tempDirectory = Files.createTempDirectory(Paths.get("."), tempPathPrefix);
@@ -272,16 +478,20 @@ public class GetJobManagement_Test {
             final List<Ds3Object> filesToGet = new ArrayList<>();
 
             final String DIR_NAME = "largeFiles/";
-            final String FILE_NAME = "lesmis-copies.txt";
+            final String FILE_NAME = "GreatExpectations.txt";
 
-            filesToGet.add(new PartialDs3Object(FILE_NAME, Range.byLength(0, 100)));
+            final int offsetIntoFirstRange = 10;
 
-            filesToGet.add(new PartialDs3Object(FILE_NAME, Range.byLength(100, 100)));
+            filesToGet.add(new PartialDs3Object(FILE_NAME, Range.byLength(200000, 100000)));
+
+            filesToGet.add(new PartialDs3Object(FILE_NAME, Range.byLength(100000, 100000)));
+
+            filesToGet.add(new PartialDs3Object(FILE_NAME, Range.byLength(offsetIntoFirstRange, 100000)));
 
             final Ds3ClientShim ds3ClientShim = new Ds3ClientShim((Ds3ClientImpl) client);
 
             final int maxNumBlockAllocationRetries = 1;
-            final int maxNumObjectTransferAttempts = 3;
+            final int maxNumObjectTransferAttempts = 4;
             final Ds3ClientHelpers ds3ClientHelpers = Ds3ClientHelpers.wrap(ds3ClientShim,
                     maxNumBlockAllocationRetries,
                     maxNumObjectTransferAttempts);
@@ -299,23 +509,31 @@ public class GetJobManagement_Test {
                 }
             });
 
+            job.attachDataTransferredListener(new DataTransferredListener() {
+                @Override
+                public void dataTransferred(final long size) {
+                    LOG.info("Data transferred size: {}", size);
+                }
+            });
+
             job.transfer(new FileObjectGetter(tempDirectory));
 
             assertEquals(1, intValue.getValue());
 
             try (final InputStream originalFileStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(DIR_NAME + FILE_NAME)) {
-                final byte[] first200Bytes = new byte[200];
-                int numBytesRead = originalFileStream.read(first200Bytes, 0, 200);
+                final byte[] first300000Bytes = new byte[300000 - offsetIntoFirstRange];
+                originalFileStream.skip(10);
+                int numBytesRead = originalFileStream.read(first300000Bytes, 0, 300000 - offsetIntoFirstRange);
 
-                assertThat(numBytesRead, is(200));
+                assertThat(numBytesRead, is(300000 -offsetIntoFirstRange ));
 
                 try (final InputStream fileReadFromBP = Files.newInputStream(Paths.get(tempDirectory.toString(), FILE_NAME))) {
-                    final byte[] first200BytesFromBP = new byte[200];
+                    final byte[] first300000BytesFromBP = new byte[300000 - offsetIntoFirstRange];
 
-                    numBytesRead = fileReadFromBP.read(first200BytesFromBP, 0, 200);
-                    assertThat(numBytesRead, is(200));
+                    numBytesRead = fileReadFromBP.read(first300000BytesFromBP, 0, 300000 - offsetIntoFirstRange);
+                    assertThat(numBytesRead, is(300000 - offsetIntoFirstRange));
 
-                    assertTrue(Arrays.equals(first200Bytes, first200BytesFromBP));
+                    assertTrue(Arrays.equals(first300000Bytes, first300000BytesFromBP));
                 }
             }
         } finally {
@@ -324,11 +542,12 @@ public class GetJobManagement_Test {
         }
     }
 
+
     @Test
     public void testFiringFailureHandlerWhenGettingChunks()
             throws URISyntaxException, NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException
     {
-        putBigFile();
+        putBigFiles();
 
         final String tempPathPrefix = null;
         final Path tempDirectory = Files.createTempDirectory(Paths.get("."), tempPathPrefix);
@@ -386,7 +605,7 @@ public class GetJobManagement_Test {
     public void testFiringFailureHandlerWhenGettingObject()
             throws URISyntaxException, NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException
     {
-        putBigFile();
+        putBigFiles();
 
         final String tempPathPrefix = null;
         final Path tempDirectory = Files.createTempDirectory(Paths.get("."), tempPathPrefix);
