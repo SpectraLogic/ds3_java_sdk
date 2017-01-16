@@ -61,7 +61,7 @@ public class SpectraS3PaginationLoader<T, E extends AbstractPaginationRequest, F
             final E request = paginatingCommand.createRequest();
 
             request.withPageLength(pageLength)
-                    .withPageOffset(pageOffset);
+                    .withPageOffset(pageOffset * pageLength);
 
             try {
                 final F response = paginatingCommand.invokeCommand(request);
