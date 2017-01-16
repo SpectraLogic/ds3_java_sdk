@@ -35,9 +35,7 @@ import static java.nio.file.LinkOption.NOFOLLOW_LINKS;
 public class PosixMetadataRestore_Test {
     @Before
     public void checkPreconditions() {
-        if (org.apache.commons.lang3.SystemUtils.IS_OS_WINDOWS) {
-            Assume.assumeFalse(org.apache.commons.lang3.SystemUtils.IS_OS_WINDOWS);
-        }
+        Assume.assumeFalse(org.apache.commons.lang3.SystemUtils.IS_OS_WINDOWS);
     }
 
     private final File file  = new File(getClass().getClassLoader().getResource("LoremIpsum.txt").getFile());
