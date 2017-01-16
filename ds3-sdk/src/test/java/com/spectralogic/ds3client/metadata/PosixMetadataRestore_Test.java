@@ -6,7 +6,6 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.spectralogic.ds3client.commands.interfaces.MetadataImpl;
 import com.spectralogic.ds3client.metadata.interfaces.MetadataRestoreListener;
-import com.spectralogic.ds3client.metadata.interfaces.MetadataStoreListener;
 import com.spectralogic.ds3client.networking.Headers;
 import com.spectralogic.ds3client.networking.Metadata;
 import com.spectralogic.ds3client.utils.MetaDataUtil;
@@ -14,8 +13,8 @@ import com.spectralogic.ds3client.utils.MetadataKeyConstants;
 import org.apache.http.Header;
 import org.apache.http.message.BasicHeader;
 import org.junit.Assert;
+import org.junit.Assume;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -23,7 +22,6 @@ import org.mockito.Mockito;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Method;
 import java.nio.file.Files;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.PosixFileAttributes;
@@ -31,18 +29,18 @@ import java.nio.file.attribute.PosixFilePermissions;
 import java.util.List;
 import java.util.Set;
 
-import static com.spectralogic.ds3client.utils.MetadataKeyConstants.KEY_GID;
-import static com.spectralogic.ds3client.utils.MetadataKeyConstants.KEY_OS;
-import static com.spectralogic.ds3client.utils.MetadataKeyConstants.KEY_UID;
 import static java.nio.file.LinkOption.NOFOLLOW_LINKS;
 
 @RunWith(JUnit4.class)
 public class PosixMetadataRestore_Test {
+    @Before
+    public void checkPreconditions() {
+        if (org.apache.commons.lang3.SystemUtils.IS_OS_WINDOWS) {
+            Assume.assumeFalse(org.apache.commons.lang3.SystemUtils.IS_OS_WINDOWS);
+        }
+    }
+
     private final File file  = new File(getClass().getClassLoader().getResource("LoremIpsum.txt").getFile());
-    private final String localOS = MetaDataUtil.getOS();
-
-
-
 
     @Test
     public  void restoreFileTimes_Test() throws Exception{
