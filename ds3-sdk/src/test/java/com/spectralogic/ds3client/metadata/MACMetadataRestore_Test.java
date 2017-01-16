@@ -34,6 +34,8 @@ import org.mockito.Mockito;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Set;
 
@@ -46,6 +48,7 @@ public class MACMetadataRestore_Test {
     public void restoreFileTimes_Test() throws Exception {
 
         if (MetaDataUtil.getOS().contains("Mac")) {
+            final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yy:HH:mm");
             final BasicFileAttributes attr = Files.readAttributes(file.toPath(), BasicFileAttributes.class);
             final BasicHeader basicHeader[] = new BasicHeader[3];
             basicHeader[0] = new BasicHeader(MetadataKeyConstants.METADATA_PREFIX + MetadataKeyConstants.KEY_CREATION_TIME, String.valueOf(attr.creationTime().toMillis()));
@@ -55,8 +58,8 @@ public class MACMetadataRestore_Test {
             final MACMetadataRestore macMetadataRestore = new MACMetadataRestore(metadata, file.getPath(), MetaDataUtil.getOS(), Mockito.mock(MetadataRestoreListener.class));
             macMetadataRestore.restoreFileTimes();
             final BasicFileAttributes fileAttributes = Files.readAttributes(file.toPath(), BasicFileAttributes.class);
-            Assert.assertEquals(String.valueOf(fileAttributes.creationTime().toMillis()), String.valueOf(basicHeader[0].getValue()));
-            Assert.assertEquals(String.valueOf(fileAttributes.lastModifiedTime().toMillis()), String.valueOf(basicHeader[2].getValue()));
+            Assert.assertEquals(simpleDateFormat.format(fileAttributes.creationTime().toMillis()), simpleDateFormat.format(Long.valueOf(basicHeader[0].getValue())));
+            Assert.assertEquals(simpleDateFormat.format(fileAttributes.lastModifiedTime().toMillis()), simpleDateFormat.format(Long.valueOf(basicHeader[2].getValue())));
 
         }
 
