@@ -13,14 +13,14 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3client.utils;
+package com.spectralogic.ds3client.metadata;
 
 import java.io.File;
 import java.nio.file.FileSystem;
 import java.nio.file.Path;
 import java.util.Set;
 
-public class MetaDataUtil {
+class MetaDataUtil {
 
     public static Set<String> getSupportedFileAttributes(final Path file) {
         final FileSystem store = file.getFileSystem();
@@ -45,18 +45,18 @@ public class MetaDataUtil {
      * @return actualFilePath
      */
     public static String getRealFilePath(final String localFilePath, final String filename) {
-        final String filePath = localFilePath + "/" + filename;
-        String fName = filePath;
+        String filePath = localFilePath + "/" + filename;
+
         while (true) {
-            final File file = new File(fName);
+            final File file = new File(filePath);
             if (file.exists()) {
                 break;
             } else {
                 final File parentFile = new File(file.getParent());
-                fName = parentFile.getParent() + "/" + file.getName();
+                filePath = parentFile.getParent() + "/" + file.getName();
             }
         }
-        return fName;
-    }
 
+        return filePath;
+    }
 }

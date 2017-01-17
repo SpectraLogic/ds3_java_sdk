@@ -13,8 +13,10 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3client.metadata.interfaces;
+package com.spectralogic.ds3client.metadata;
 
+import com.spectralogic.ds3client.metadata.interfaces.MetadataRestore;
+import com.spectralogic.ds3client.metadata.interfaces.MetadataRestoreListener;
 import com.spectralogic.ds3client.networking.Metadata;
 
 import java.nio.file.Files;
@@ -25,11 +27,16 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import static com.spectralogic.ds3client.utils.MetadataKeyConstants.*;
-import static com.spectralogic.ds3client.utils.MetadataKeyConstants.KEY_LAST_MODIFIED_TIME;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import static com.spectralogic.ds3client.metadata.interfaces.MetadataKeyConstants.KEY_ACCESS_TIME;
+import static com.spectralogic.ds3client.metadata.interfaces.MetadataKeyConstants.KEY_CREATION_TIME;
+import static com.spectralogic.ds3client.metadata.interfaces.MetadataKeyConstants.KEY_LAST_MODIFIED_TIME;
+import static com.spectralogic.ds3client.metadata.interfaces.MetadataKeyConstants.KEY_OS;
 
-public abstract class AbstractMetadataRestore implements MetadataRestore {
+abstract class AbstractMetadataRestore implements MetadataRestore {
+    private static final Logger LOG = LoggerFactory.getLogger(AbstractMetadataRestore.class);
 
     protected String storedOS;
     protected Metadata metadata;

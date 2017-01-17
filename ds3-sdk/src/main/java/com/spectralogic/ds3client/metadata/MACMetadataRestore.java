@@ -21,10 +21,16 @@ import com.spectralogic.ds3client.networking.Metadata;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
-import static com.spectralogic.ds3client.utils.MetadataKeyConstants.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import static com.spectralogic.ds3client.metadata.interfaces.MetadataKeyConstants.KEY_ACCESS_TIME;
+import static com.spectralogic.ds3client.metadata.interfaces.MetadataKeyConstants.KEY_CREATION_TIME;
+import static com.spectralogic.ds3client.metadata.interfaces.MetadataKeyConstants.KEY_LAST_MODIFIED_TIME;
 
-public class MACMetadataRestore extends PosixMetadataRestore {
+class MACMetadataRestore extends PosixMetadataRestore {
+    private static final Logger LOG = LoggerFactory.getLogger(MACMetadataRestore.class);
+
     public MACMetadataRestore(final Metadata metadata, final String filePath, final String localOS, final MetadataRestoreListener metadataRestoreListener) {
         super(metadata, filePath, localOS, metadataRestoreListener);
     }

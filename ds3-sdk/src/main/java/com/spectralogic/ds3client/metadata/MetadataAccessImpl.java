@@ -20,7 +20,6 @@ import com.google.common.collect.ImmutableMap;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers;
 import com.spectralogic.ds3client.metadata.interfaces.MetadataStore;
 import com.spectralogic.ds3client.metadata.interfaces.MetadataStoreListener;
-import com.spectralogic.ds3client.utils.MetaDataUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,7 +29,6 @@ import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.PosixFileAttributes;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * Implementation of MetaDataAcess Interface
@@ -66,11 +64,9 @@ public class MetadataAccessImpl implements Ds3ClientHelpers.MetadataAccess {
         final ImmutableMap.Builder<String, String> metadata = new ImmutableMap.Builder<>();
         new ImmutableMap.Builder<String, String>();
         try {
-            //get local os name
-            final String localOSName = MetaDataUtil.getOS();
             //get metadata store based on os type
-            final MetadataStore metadataStore = new MetadataStoreFactory().getOsSpecificMetadataStore(localOSName, metadata,metadataStoreListener);
-            metadataStore.saveOSMetaData(localOSName);
+            final MetadataStore metadataStore = new MetadataStoreFactory().getOsSpecificMetadataStore(metadata,metadataStoreListener);
+            metadataStore.saveOSMetaData(MetaDataUtil.getOS());
 
             final BasicFileAttributes attr = Files.readAttributes(file, BasicFileAttributes.class);
             final PosixFileAttributes attrPosix = Files.readAttributes(file, PosixFileAttributes.class);

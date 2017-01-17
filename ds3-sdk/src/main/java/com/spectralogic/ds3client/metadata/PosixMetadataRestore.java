@@ -15,7 +15,6 @@
 
 package com.spectralogic.ds3client.metadata;
 
-import com.spectralogic.ds3client.metadata.interfaces.AbstractMetadataRestore;
 import com.spectralogic.ds3client.metadata.interfaces.MetadataRestoreListener;
 import com.spectralogic.ds3client.networking.Metadata;
 
@@ -27,9 +26,16 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static com.spectralogic.ds3client.utils.MetadataKeyConstants.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-public class PosixMetadataRestore extends AbstractMetadataRestore {
+import static com.spectralogic.ds3client.metadata.interfaces.MetadataKeyConstants.KEY_GID;
+import static com.spectralogic.ds3client.metadata.interfaces.MetadataKeyConstants.KEY_PERMISSION;
+import static com.spectralogic.ds3client.metadata.interfaces.MetadataKeyConstants.KEY_UID;
+
+class PosixMetadataRestore extends AbstractMetadataRestore {
+    private static final Logger LOG =LoggerFactory.getLogger(PosixMetadataRestore.class);
+
 
     public PosixMetadataRestore(final Metadata metadata, final String filePath, final String localOS, final MetadataRestoreListener metadataRestoreListener) {
         this.metadata = metadata;

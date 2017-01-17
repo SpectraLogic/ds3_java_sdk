@@ -21,7 +21,9 @@ import com.spectralogic.ds3client.networking.Metadata;
 
 
 public class MetadataRestoreFactory {
-    public MetadataRestore getOSSpecificMetadataRestore(final Metadata metadata, final String filePath, final String localOS , final MetadataRestoreListener metadataRestoreListener) {
+    public MetadataRestore getOSSpecificMetadataRestore(final Metadata metadata, final String filePath, final MetadataRestoreListener metadataRestoreListener) {
+        final String localOS = MetaDataUtil.getOS();
+        
         if (localOS.contains("Windows")) {
             return new WindowsMetadataRestore(metadata, filePath, localOS, metadataRestoreListener);
         } else if (localOS.contains("Mac")) {

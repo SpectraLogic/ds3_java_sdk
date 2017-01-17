@@ -16,8 +16,7 @@ package com.spectralogic.ds3client.metadata;
 
 import com.google.common.collect.ImmutableMap;
 import com.spectralogic.ds3client.metadata.interfaces.MetadataStoreListener;
-import com.spectralogic.ds3client.utils.MetaDataUtil;
-import com.spectralogic.ds3client.utils.MetadataKeyConstants;
+import com.spectralogic.ds3client.metadata.interfaces.MetadataKeyConstants;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -31,7 +30,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
 
-import static com.spectralogic.ds3client.utils.MetadataKeyConstants.*;
+import static com.spectralogic.ds3client.metadata.interfaces.MetadataKeyConstants.*;
 
 @RunWith(JUnit4.class)
 public class WindowsMetadataStore_Test {

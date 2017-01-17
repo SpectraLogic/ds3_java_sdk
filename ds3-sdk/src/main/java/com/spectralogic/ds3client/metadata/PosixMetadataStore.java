@@ -16,7 +16,6 @@
 package com.spectralogic.ds3client.metadata;
 
 import com.google.common.collect.ImmutableMap;
-import com.spectralogic.ds3client.metadata.interfaces.AbstractMetadataStore;
 import com.spectralogic.ds3client.metadata.interfaces.MetadataStoreListener;
 
 import java.io.IOException;
@@ -24,12 +23,14 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.*;
 
-import static com.spectralogic.ds3client.utils.MetadataKeyConstants.*;
+import static com.spectralogic.ds3client.metadata.interfaces.MetadataKeyConstants.*;
 import static java.nio.file.LinkOption.NOFOLLOW_LINKS;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-public class PosixMetadataStore extends AbstractMetadataStore {
-
+class PosixMetadataStore extends AbstractMetadataStore {
+    private static final Logger LOG = LoggerFactory.getLogger(PosixMetadataStore.class);
 
     public PosixMetadataStore(final ImmutableMap.Builder<String, String> metadataMap, final MetadataStoreListener metadataStoreListener) {
         this.mMetadataMap = metadataMap;
@@ -105,8 +106,8 @@ public class PosixMetadataStore extends AbstractMetadataStore {
             permissionsOctal = getPermissionInOctal(PosixFilePermissions.toString(attr.permissions()));
             mMetadataMap.put(METADATA_PREFIX + KEY_PERMISSION, permissionsOctal);
         } catch (final Exception e) {
-            LOG.error("Unable to save permissions", e);
-            metadataStoreListener.onMetadataFailed("Unable to save user permissions" + e.getMessage());
+            LOG.error("Unable to save permissions ", e);
+            metadataStoreListener.onMetadataFailed("Unable to save user permissions " + e.getMessage());
         }
         return permissionsOctal;
     }
@@ -137,7 +138,8 @@ public class PosixMetadataStore extends AbstractMetadataStore {
             savePosixPermssionsMeta((PosixFileAttributes)(attrs));
         }
         catch (final Exception e) {
-
+            LOG.error("Unable to save permissions ", e);
+            metadataStoreListener.onMetadataFailed("Unable to save user permissions " + e.getMessage());
         }
     }
 

@@ -13,15 +13,17 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3client.metadata.interfaces;
+package com.spectralogic.ds3client.metadata;
 
 import com.google.common.collect.ImmutableMap;
+import com.spectralogic.ds3client.metadata.interfaces.MetadataStore;
+import com.spectralogic.ds3client.metadata.interfaces.MetadataStoreListener;
 
 import java.nio.file.attribute.BasicFileAttributes;
 
-import static com.spectralogic.ds3client.utils.MetadataKeyConstants.*;
+import static com.spectralogic.ds3client.metadata.interfaces.MetadataKeyConstants.*;
 
-public abstract class AbstractMetadataStore implements MetadataStore {
+abstract class AbstractMetadataStore implements MetadataStore {
 
 
     protected ImmutableMap.Builder<String, String> mMetadataMap;

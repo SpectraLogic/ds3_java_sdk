@@ -23,8 +23,7 @@ import com.spectralogic.ds3client.metadata.interfaces.MetadataRestoreListener;
 import com.spectralogic.ds3client.metadata.interfaces.MetadataStoreListener;
 import com.spectralogic.ds3client.networking.Headers;
 import com.spectralogic.ds3client.networking.Metadata;
-import com.spectralogic.ds3client.utils.MetaDataUtil;
-import com.spectralogic.ds3client.utils.MetadataKeyConstants;
+import com.spectralogic.ds3client.metadata.interfaces.MetadataKeyConstants;
 import org.apache.http.Header;
 import org.apache.http.message.BasicHeader;
 import org.junit.Assert;
@@ -41,7 +40,7 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.util.List;
 import java.util.Set;
 
-import static com.spectralogic.ds3client.utils.MetadataKeyConstants.*;
+import static com.spectralogic.ds3client.metadata.interfaces.MetadataKeyConstants.*;
 
 
 public class WindowsMetadataRestore_Test {

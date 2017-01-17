@@ -19,7 +19,6 @@ import com.spectralogic.ds3client.helpers.MetadataReceivedListener;
 import com.spectralogic.ds3client.metadata.interfaces.MetadataRestore;
 import com.spectralogic.ds3client.metadata.interfaces.MetadataRestoreListener;
 import com.spectralogic.ds3client.networking.Metadata;
-import com.spectralogic.ds3client.utils.MetaDataUtil;
 
 public class MetadataReceivedListenerImpl implements MetadataReceivedListener {
     private String localFilePath = null;
@@ -43,9 +42,8 @@ public class MetadataReceivedListenerImpl implements MetadataReceivedListener {
      * @param metadata   metadata which needs to be set on local file
      */
     private void restoreMetaData(final String objectName, final Metadata metadata) {
-        final String osName = System.getProperty("os.name");
         //get metadatarestore on the basis of os
-        final MetadataRestore metadataRestore = new MetadataRestoreFactory().getOSSpecificMetadataRestore(metadata, objectName, osName, metadataRestoreListener);
+        final MetadataRestore metadataRestore = new MetadataRestoreFactory().getOSSpecificMetadataRestore(metadata, objectName, metadataRestoreListener);
         //restore os name
         metadataRestore.restoreOSName();
         //restore user and owner based on OS

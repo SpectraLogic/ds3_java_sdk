@@ -16,18 +16,10 @@
 // This code is auto-generated, do not modify
 package com.spectralogic.ds3client.metadata.interfaces;
 
-import com.spectralogic.ds3client.metadata.MetadataAccessImpl;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
 
-
 public interface MetadataStore {
-
-    Logger LOG = LoggerFactory.getLogger(MetadataAccessImpl.class);
-
     /**
      * @param attr basic file attributes
      */

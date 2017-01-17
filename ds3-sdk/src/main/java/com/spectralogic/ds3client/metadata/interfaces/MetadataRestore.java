@@ -15,13 +15,7 @@
 
 package com.spectralogic.ds3client.metadata.interfaces;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-
 public interface MetadataRestore {
-    Logger LOG = LoggerFactory.getLogger(MetadataRestore.class);
-
     void restoreFileTimes();
 
     void restoreUserAndOwner();

@@ -16,7 +16,6 @@
 package com.spectralogic.ds3client.metadata;
 
 import com.google.common.collect.ImmutableList;
-import com.spectralogic.ds3client.metadata.interfaces.AbstractMetadataRestore;
 import com.spectralogic.ds3client.metadata.interfaces.MetadataRestoreListener;
 import com.spectralogic.ds3client.metadata.jna.Advapi32;
 import com.spectralogic.ds3client.networking.Metadata;
@@ -33,10 +32,15 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import static com.spectralogic.ds3client.utils.MetadataKeyConstants.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import static com.spectralogic.ds3client.metadata.interfaces.MetadataKeyConstants.KEY_FLAGS;
+import static com.spectralogic.ds3client.metadata.interfaces.MetadataKeyConstants.KEY_GROUP;
+import static com.spectralogic.ds3client.metadata.interfaces.MetadataKeyConstants.KEY_OWNER;
 
-public class WindowsMetadataRestore extends AbstractMetadataRestore {
+class WindowsMetadataRestore extends AbstractMetadataRestore {
+    private static final Logger LOG = LoggerFactory.getLogger(WindowsMetadataRestore.class);
 
     WindowsMetadataRestore(final Metadata metadata, final String filePath, final String localOS, final MetadataRestoreListener metadataRestoreListener) {
         this.metadata = metadata;

@@ -16,7 +16,6 @@
 package com.spectralogic.ds3client.metadata;
 
 import com.google.common.collect.ImmutableMap;
-import com.spectralogic.ds3client.metadata.interfaces.AbstractMetadataStore;
 import com.spectralogic.ds3client.metadata.interfaces.MetadataStoreListener;
 import com.spectralogic.ds3client.metadata.jna.Advapi32;
 import com.sun.jna.platform.win32.WinNT;
@@ -34,11 +33,13 @@ import java.nio.file.attribute.AclFileAttributeView;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.*;
 
-import static com.spectralogic.ds3client.utils.MetadataKeyConstants.*;
+import static com.spectralogic.ds3client.metadata.interfaces.MetadataKeyConstants.*;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-public class WindowsMetadataStore extends AbstractMetadataStore {
-
+class WindowsMetadataStore extends AbstractMetadataStore {
+    private static final Logger LOG = LoggerFactory.getLogger(WindowsMetadataStore.class);
 
     public WindowsMetadataStore(final ImmutableMap.Builder<String, String> metadataMap, final MetadataStoreListener metadataStoreListener) {
         this.mMetadataMap = metadataMap;
@@ -60,7 +61,7 @@ public class WindowsMetadataStore extends AbstractMetadataStore {
         final PointerByReference ppSecurityDescriptor = new PointerByReference();
         final File file = path.toFile();
         try {
-            final int bool = Advapi32.INSTANCE.GetNamedSecurityInfo(
+            final int winApiResult = Advapi32.INSTANCE.GetNamedSecurityInfo(
                     file.getAbsolutePath(),
                     1,
                     infoType,
@@ -69,7 +70,7 @@ public class WindowsMetadataStore extends AbstractMetadataStore {
                     ppDacl,
                     null,
                     ppSecurityDescriptor);
-            if (bool == 0) {
+            if (winApiResult == 0) {
                 final WinNT.PSID psidOwner = new WinNT.PSID(ppsidOwner.getValue().getByteArray(0, 256));
                 final String ownerSid = psidOwner.getSidString();
                 final WinNT.PSID psidGroup = new WinNT.PSID(ppsidGroup.getValue().getByteArray(0, 256));
@@ -79,10 +80,12 @@ public class WindowsMetadataStore extends AbstractMetadataStore {
                 final WinNT.ACL acl = new WinNT.ACL(ppDacl.getValue());
                 final String daclString = getDaclString(acl);
                 mMetadataMap.put(METADATA_PREFIX + KEY_DACL, daclString);
+            } else {
+                throw new Exception("GetNamedSecurityInfo returned error code: " + winApiResult);
             }
         } catch (final Exception e) {
-            LOG.error("Unable to get sid of user and owner", e);
-            metadataStoreListener.onMetadataFailed("Unable to get sid of user and owner" + e.getMessage());
+            LOG.error("Unable to get sid of user and owner ", e);
+            metadataStoreListener.onMetadataFailed("Unable to get sid of user and owner " + e.getMessage());
         }
     }
 
@@ -141,11 +144,11 @@ public class WindowsMetadataStore extends AbstractMetadataStore {
             }
             mMetadataMap.put(METADATA_PREFIX + KEY_FLAGS, flagBuilder.toString());
         } catch (final IOException ioe) {
-            LOG.error("Unable to read file", ioe);
-            metadataStoreListener.onMetadataFailed("Unable to read file" + ioe.getMessage());
+            LOG.error("Unable to read file ", ioe);
+            metadataStoreListener.onMetadataFailed("Unable to read file " + ioe.getMessage());
         } catch (final Exception e) {
-            LOG.error("Unable to fetch attributes of file", e);
-            metadataStoreListener.onMetadataFailed("Unable to fetch attributes of file" + e.getMessage());
+            LOG.error("Unable to fetch attributes of file ", e);
+            metadataStoreListener.onMetadataFailed("Unable to fetch attributes of file " + e.getMessage());
         }
         return flagBuilder.toString();
     }
@@ -207,8 +210,8 @@ public class WindowsMetadataStore extends AbstractMetadataStore {
             mMetadataMap.put("x-amz-meta-ds3-userList", userList.toString());
             mMetadataMap.put("x-amz-meta-ds3-userListDisplay", userDisplayList.toString());
         } catch (final Exception e) {
-            LOG.error("Unable to get list of users or their permissions", e);
-            metadataStoreListener.onMetadataFailed("Unable to get list of users or their permissions" + e.getMessage());
+            LOG.error("Unable to get list of users or their permissions ", e);
+            metadataStoreListener.onMetadataFailed("Unable to get list of users or their permissions " + e.getMessage());
         }
     }
 
