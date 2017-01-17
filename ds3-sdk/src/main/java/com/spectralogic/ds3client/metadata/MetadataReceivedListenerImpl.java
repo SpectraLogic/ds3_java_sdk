@@ -20,7 +20,14 @@ import com.spectralogic.ds3client.metadata.interfaces.MetadataRestore;
 import com.spectralogic.ds3client.metadata.interfaces.MetadataRestoreListener;
 import com.spectralogic.ds3client.networking.Metadata;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+
 public class MetadataReceivedListenerImpl implements MetadataReceivedListener {
+    private static final Logger LOG = LoggerFactory.getLogger(MetadataReceivedListenerImpl.class);
+
     private String localFilePath = null;
     private final MetadataRestoreListener metadataRestoreListener;
 
@@ -31,8 +38,14 @@ public class MetadataReceivedListenerImpl implements MetadataReceivedListener {
 
     @Override
     public void metadataReceived(final String filename, final Metadata metadata) {
-        final String actualFilePath = MetaDataUtil.getRealFilePath(localFilePath, filename);
-        restoreMetaData(actualFilePath, metadata);
+        final String actualFilePath;
+        try {
+            actualFilePath = MetaDataUtil.getRealFilePath(localFilePath, filename);
+            restoreMetaData(actualFilePath, metadata);
+        } catch (final IOException e) {
+            LOG.error("Error getting real file path.", e);
+            metadataRestoreListener.metadataRestoreFailed(e.getMessage());
+        }
     }
 
     /**

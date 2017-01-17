@@ -15,9 +15,13 @@
 
 package com.spectralogic.ds3client.metadata;
 
+import com.spectralogic.ds3client.helpers.strategy.StrategyUtils;
+
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.FileSystem;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Set;
 
 class MetaDataUtil {
@@ -44,7 +48,7 @@ class MetaDataUtil {
      * @param filename      : name of the file with logical folder
      * @return actualFilePath
      */
-    public static String getRealFilePath(final String localFilePath, final String filename) {
+    public static String getRealFilePath(final String localFilePath, final String filename) throws IOException {
         String filePath = localFilePath + "/" + filename;
 
         while (true) {
@@ -57,6 +61,6 @@ class MetaDataUtil {
             }
         }
 
-        return filePath;
+        return StrategyUtils.resolveForSymbolic(Paths.get(filePath)).toString();
     }
 }
