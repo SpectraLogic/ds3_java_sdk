@@ -23,7 +23,6 @@ import com.spectralogic.ds3client.metadata.interfaces.MetadataRestoreListener;
 import com.spectralogic.ds3client.metadata.interfaces.MetadataStoreListener;
 import com.spectralogic.ds3client.networking.Headers;
 import com.spectralogic.ds3client.networking.Metadata;
-import com.spectralogic.ds3client.metadata.interfaces.MetadataKeyConstants;
 import org.apache.http.Header;
 import org.apache.http.message.BasicHeader;
 import org.junit.Assert;
@@ -40,8 +39,9 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.util.List;
 import java.util.Set;
 
-import static com.spectralogic.ds3client.metadata.interfaces.MetadataKeyConstants.*;
-
+import static com.spectralogic.ds3client.metadata.MetadataKeyConstants.KEY_GROUP;
+import static com.spectralogic.ds3client.metadata.MetadataKeyConstants.KEY_OWNER;
+import static com.spectralogic.ds3client.metadata.MetadataKeyConstants.METADATA_PREFIX;
 
 public class WindowsMetadataRestore_Test {
     @Before
@@ -56,9 +56,9 @@ public class WindowsMetadataRestore_Test {
     public void restoreFileTimes_Test() throws Exception {
         final BasicHeader basicHeader[] = new BasicHeader[3];
         final BasicFileAttributes attr = Files.readAttributes(file.toPath(), BasicFileAttributes.class);
-        basicHeader[0] = new BasicHeader(MetadataKeyConstants.METADATA_PREFIX + MetadataKeyConstants.KEY_CREATION_TIME, String.valueOf(attr.creationTime().toMillis()));
-        basicHeader[1] = new BasicHeader(MetadataKeyConstants.METADATA_PREFIX + MetadataKeyConstants.KEY_ACCESS_TIME, String.valueOf(attr.lastAccessTime().toMillis()));
-        basicHeader[2] = new BasicHeader(MetadataKeyConstants.METADATA_PREFIX + MetadataKeyConstants.KEY_LAST_MODIFIED_TIME, String.valueOf(attr.lastModifiedTime().toMillis()));
+        basicHeader[0] = new BasicHeader(METADATA_PREFIX + MetadataKeyConstants.KEY_CREATION_TIME, String.valueOf(attr.creationTime().toMillis()));
+        basicHeader[1] = new BasicHeader(METADATA_PREFIX + MetadataKeyConstants.KEY_ACCESS_TIME, String.valueOf(attr.lastAccessTime().toMillis()));
+        basicHeader[2] = new BasicHeader(METADATA_PREFIX + MetadataKeyConstants.KEY_LAST_MODIFIED_TIME, String.valueOf(attr.lastModifiedTime().toMillis()));
         final Metadata metadata = genMetadata(basicHeader);
         final WindowsMetadataRestore windowsMetadataRestore = new WindowsMetadataRestore(metadata, file.getPath(), MetaDataUtil.getOS(), Mockito.mock(MetadataRestoreListener.class));
         windowsMetadataRestore.restoreFileTimes();
@@ -78,9 +78,9 @@ public class WindowsMetadataRestore_Test {
         method.invoke(windowsMetadataStore, file.toPath());
 
         final BasicHeader basicHeader[] = new BasicHeader[3];
-        basicHeader[0] = new BasicHeader(MetadataKeyConstants.METADATA_PREFIX + MetadataKeyConstants.KEY_OWNER, mMetadataMap.build().get(METADATA_PREFIX + KEY_OWNER));
-        basicHeader[1] = new BasicHeader(MetadataKeyConstants.METADATA_PREFIX + MetadataKeyConstants.KEY_GROUP, mMetadataMap.build().get(METADATA_PREFIX + KEY_GROUP));
-        basicHeader[2] = new BasicHeader(MetadataKeyConstants.METADATA_PREFIX + MetadataKeyConstants.KEY_OS, localOS);
+        basicHeader[0] = new BasicHeader(METADATA_PREFIX + KEY_OWNER, mMetadataMap.build().get(METADATA_PREFIX + KEY_OWNER));
+        basicHeader[1] = new BasicHeader(METADATA_PREFIX + KEY_GROUP, mMetadataMap.build().get(METADATA_PREFIX + KEY_GROUP));
+        basicHeader[2] = new BasicHeader(METADATA_PREFIX + MetadataKeyConstants.KEY_OS, localOS);
         final Metadata metadata = genMetadata(basicHeader);
         final WindowsMetadataRestore windowsMetadataRestore = new WindowsMetadataRestore(metadata, file.getPath(), MetaDataUtil.getOS(), Mockito.mock(MetadataRestoreListener.class));
         windowsMetadataRestore.restoreOSName();
@@ -115,7 +115,7 @@ public class WindowsMetadataRestore_Test {
             final Set<String> mapKeys = mMetadataMap.build().keySet();
             final int keySize = mapKeys.size();
             final BasicHeader basicHeader[] = new BasicHeader[keySize + 1];
-            basicHeader[0] = new BasicHeader(MetadataKeyConstants.METADATA_PREFIX + MetadataKeyConstants.KEY_OS, localOS);
+            basicHeader[0] = new BasicHeader(METADATA_PREFIX + MetadataKeyConstants.KEY_OS, localOS);
             int count = 1;
             for (final String key : mapKeys) {
                 basicHeader[count] = new BasicHeader(key, mMetadataMap.build().get(key));

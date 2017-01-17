@@ -21,7 +21,11 @@ import com.spectralogic.ds3client.metadata.interfaces.MetadataStoreListener;
 
 import java.nio.file.attribute.BasicFileAttributes;
 
-import static com.spectralogic.ds3client.metadata.interfaces.MetadataKeyConstants.*;
+import static com.spectralogic.ds3client.metadata.MetadataKeyConstants.KEY_ACCESS_TIME;
+import static com.spectralogic.ds3client.metadata.MetadataKeyConstants.KEY_CREATION_TIME;
+import static com.spectralogic.ds3client.metadata.MetadataKeyConstants.KEY_LAST_MODIFIED_TIME;
+import static com.spectralogic.ds3client.metadata.MetadataKeyConstants.KEY_OS;
+import static com.spectralogic.ds3client.metadata.MetadataKeyConstants.METADATA_PREFIX;
 
 abstract class AbstractMetadataStore implements MetadataStore {
 

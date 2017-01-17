@@ -24,9 +24,9 @@ import java.util.Calendar;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static com.spectralogic.ds3client.metadata.interfaces.MetadataKeyConstants.KEY_ACCESS_TIME;
-import static com.spectralogic.ds3client.metadata.interfaces.MetadataKeyConstants.KEY_CREATION_TIME;
-import static com.spectralogic.ds3client.metadata.interfaces.MetadataKeyConstants.KEY_LAST_MODIFIED_TIME;
+import static com.spectralogic.ds3client.metadata.MetadataKeyConstants.KEY_ACCESS_TIME;
+import static com.spectralogic.ds3client.metadata.MetadataKeyConstants.KEY_CREATION_TIME;
+import static com.spectralogic.ds3client.metadata.MetadataKeyConstants.KEY_LAST_MODIFIED_TIME;
 
 class MACMetadataRestore extends PosixMetadataRestore {
     private static final Logger LOG = LoggerFactory.getLogger(MACMetadataRestore.class);

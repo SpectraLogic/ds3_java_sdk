@@ -13,9 +13,9 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3client.metadata.interfaces;
+package com.spectralogic.ds3client.metadata;
 
-public final class MetadataKeyConstants {
+final class MetadataKeyConstants {
     private MetadataKeyConstants() {}
 
     //Every metadata must start from x-amz

@@ -35,9 +35,9 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static com.spectralogic.ds3client.metadata.interfaces.MetadataKeyConstants.KEY_FLAGS;
-import static com.spectralogic.ds3client.metadata.interfaces.MetadataKeyConstants.KEY_GROUP;
-import static com.spectralogic.ds3client.metadata.interfaces.MetadataKeyConstants.KEY_OWNER;
+import static com.spectralogic.ds3client.metadata.MetadataKeyConstants.KEY_FLAGS;
+import static com.spectralogic.ds3client.metadata.MetadataKeyConstants.KEY_GROUP;
+import static com.spectralogic.ds3client.metadata.MetadataKeyConstants.KEY_OWNER;
 
 class WindowsMetadataRestore extends AbstractMetadataRestore {
     private static final Logger LOG = LoggerFactory.getLogger(WindowsMetadataRestore.class);

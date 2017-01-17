@@ -23,7 +23,14 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.*;
 
-import static com.spectralogic.ds3client.metadata.interfaces.MetadataKeyConstants.*;
+import static com.spectralogic.ds3client.metadata.MetadataKeyConstants.KEY_GID;
+import static com.spectralogic.ds3client.metadata.MetadataKeyConstants.KEY_GROUP_NAME;
+import static com.spectralogic.ds3client.metadata.MetadataKeyConstants.KEY_MODE;
+import static com.spectralogic.ds3client.metadata.MetadataKeyConstants.KEY_OWNER_NAME;
+import static com.spectralogic.ds3client.metadata.MetadataKeyConstants.KEY_PERMISSION;
+import static com.spectralogic.ds3client.metadata.MetadataKeyConstants.KEY_UID;
+import static com.spectralogic.ds3client.metadata.MetadataKeyConstants.METADATA_PREFIX;
+
 import static java.nio.file.LinkOption.NOFOLLOW_LINKS;
 
 import org.slf4j.Logger;
