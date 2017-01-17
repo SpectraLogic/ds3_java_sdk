@@ -76,7 +76,7 @@ public class SpectraS3PaginationLoader_Test {
         try {
             // test setup
             HELPERS.ensureBucketExists(TEST_ENV_NAME);
-            final int numObjects = 50;
+            final int numObjects = 55;
             CLIENT.putBulkJobSpectraS3(new PutBulkJobSpectraS3Request(TEST_ENV_NAME, createTestList(numObjects)));
 
             final GetObjectsFullDetailsLoaderFactory loaderFactory = new GetObjectsFullDetailsLoaderFactory(CLIENT, TEST_ENV_NAME, "", 10, RETRIES, false);
