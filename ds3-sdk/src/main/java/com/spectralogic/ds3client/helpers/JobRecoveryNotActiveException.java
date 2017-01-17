@@ -15,14 +15,21 @@
 
 package com.spectralogic.ds3client.helpers;
 
-public class JobRecoveryException extends Exception {
-    private static final long serialVersionUID = -4418169724222972364L;
-    
-    public JobRecoveryException(final String message) {
-        super(message);
+import java.util.UUID;
+
+/**
+ * This exception represents a failure of an attempted recovery of a job
+ * performed using {@link Ds3ClientHelpers#recoverReadJob(UUID)} or
+ * {@link Ds3ClientHelpers#recoverWriteJob(UUID)} that is caused by the
+ * specified job not being active.
+ */
+public class JobRecoveryNotActiveException extends JobRecoveryException {
+
+    public JobRecoveryNotActiveException(final UUID jobId, final Throwable cause) {
+        super(buildMessage(jobId), cause);
     }
 
-    public JobRecoveryException(final String message, final Throwable cause) {
-        super(message, cause);
+    private static String buildMessage(final UUID jobId) {
+        return String.format("Cannot recover inactive job '%s'", jobId.toString());
     }
 }

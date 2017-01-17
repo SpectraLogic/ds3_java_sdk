@@ -210,9 +210,10 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
 
     @Override
     public Ds3ClientHelpers.Job recoverWriteJob(final UUID jobId) throws IOException, JobRecoveryException {
+        innerVerifyJobActive(jobId);
         final ModifyJobSpectraS3Response jobResponse = this.client.modifyJobSpectraS3(new ModifyJobSpectraS3Request(jobId.toString()));
         if (JobRequestType.PUT != jobResponse.getMasterObjectListResult().getRequestType()) {
-            throw new JobRecoveryException(
+            throw new JobRecoveryTypeException(
                     RequestType.PUT.toString(),
                     jobResponse.getMasterObjectListResult().getRequestType().toString());
         }
@@ -230,9 +231,10 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
     @Override
     //TODO add a partial object read recovery method.  That method will require the list of partial objects.
     public Ds3ClientHelpers.Job recoverReadJob(final UUID jobId) throws IOException, JobRecoveryException {
+        innerVerifyJobActive(jobId);
         final ModifyJobSpectraS3Response jobResponse = this.client.modifyJobSpectraS3(new ModifyJobSpectraS3Request(jobId.toString()));
         if (JobRequestType.GET != jobResponse.getMasterObjectListResult().getRequestType()){
-            throw new JobRecoveryException(
+            throw new JobRecoveryTypeException(
                     RequestType.GET.toString(),
                     jobResponse.getMasterObjectListResult().getRequestType().toString() );
         }
@@ -244,6 +246,23 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
                 this.retryAfter,
                 this.retryDelay,
                 this.eventRunner);
+    }
+
+    /**
+     * Verifies that the specified job is active. If the job is not active, then a
+     * JobRecoveryNotActiveException is thrown.
+     * @throws IOException
+     * @throws JobRecoveryNotActiveException
+     */
+    private void innerVerifyJobActive(final UUID jobId) throws IOException, JobRecoveryNotActiveException {
+        try {
+            client.getActiveJobSpectraS3(new GetActiveJobSpectraS3Request(jobId));
+        } catch (final FailedRequestException e) {
+            if (e.getStatusCode() == 404) {
+                throw new JobRecoveryNotActiveException(jobId, e);
+            }
+            throw e;
+        }
     }
 
     @Override
