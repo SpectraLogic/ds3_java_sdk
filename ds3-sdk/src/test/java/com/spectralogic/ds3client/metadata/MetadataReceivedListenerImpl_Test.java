@@ -69,7 +69,9 @@ public class MetadataReceivedListenerImpl_Test {
             }).getMetadataValue(filePath.toString());
 
             // change permissions
-            if ( ! Platform.isWindows()) {
+            if (Platform.isWindows()) {
+                Runtime.getRuntime().exec("attrib -A " + filePath.toString()).waitFor();
+            } else {
                 final PosixFileAttributes attributes = Files.readAttributes(filePath, PosixFileAttributes.class);
                 final Set<PosixFilePermission> permissions = attributes.permissions();
                 permissions.clear();
