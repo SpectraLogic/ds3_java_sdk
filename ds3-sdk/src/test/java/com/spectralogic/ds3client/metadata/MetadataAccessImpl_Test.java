@@ -18,6 +18,7 @@ package com.spectralogic.ds3client.metadata;
 import com.spectralogic.ds3client.metadata.interfaces.MetadataStoreListener;
 import com.spectralogic.ds3client.utils.Platform;
 import org.apache.commons.io.FileUtils;
+import org.junit.Assume;
 import org.junit.Test;
 import static org.junit.Assert.fail;
 import static org.junit.Assert.assertTrue;
@@ -45,12 +46,14 @@ public class MetadataAccessImpl_Test {
         try {
             final Path filePath = Files.createFile(Paths.get(tempDirectory.toString(), fileName));
 
-            final PosixFileAttributes attributes = Files.readAttributes(filePath, PosixFileAttributes.class);
-            final Set<PosixFilePermission> permissions = attributes.permissions();
-            permissions.clear();
-            permissions.add(PosixFilePermission.OWNER_READ);
-            permissions.add(PosixFilePermission.OWNER_WRITE);
-            Files.setPosixFilePermissions(filePath, permissions);
+            if ( ! Platform.isWindows()) {
+                final PosixFileAttributes attributes = Files.readAttributes(filePath, PosixFileAttributes.class);
+                final Set<PosixFilePermission> permissions = attributes.permissions();
+                permissions.clear();
+                permissions.add(PosixFilePermission.OWNER_READ);
+                permissions.add(PosixFilePermission.OWNER_WRITE);
+                Files.setPosixFilePermissions(filePath, permissions);
+            }
 
             final Map<String, Path> fileMapper = new HashMap<>(1);
             fileMapper.put(filePath.toString(), filePath);
@@ -61,7 +64,11 @@ public class MetadataAccessImpl_Test {
                 }
             }).getMetadataValue(filePath.toString());
 
-            assertEquals(metadata.size(), 10);
+            if (Platform.isWindows()) {
+                assertEquals(metadata.size(), 13);
+            } else {
+                assertEquals(metadata.size(), 10);
+            }
 
             if (System.getProperty("os.name").toLowerCase().startsWith("mac")) {
                 assertTrue(metadata.get(MetadataKeyConstants.METADATA_PREFIX + MetadataKeyConstants.KEY_OS).toLowerCase().startsWith("mac"));
@@ -71,23 +78,29 @@ public class MetadataAccessImpl_Test {
                 assertTrue(metadata.get(MetadataKeyConstants.METADATA_PREFIX + MetadataKeyConstants.KEY_OS).toLowerCase().startsWith("windows"));
             }
 
-            assertEquals("100600", metadata.get(MetadataKeyConstants.METADATA_PREFIX + MetadataKeyConstants.KEY_MODE));
-            assertEquals("600(rw-------)", metadata.get(MetadataKeyConstants.METADATA_PREFIX + MetadataKeyConstants.KEY_PERMISSION));
+            if (Platform.isWindows()) {
+                assertEquals("A", metadata.get(MetadataKeyConstants.METADATA_PREFIX + MetadataKeyConstants.KEY_FLAGS));
+            } else {
+                assertEquals("100600", metadata.get(MetadataKeyConstants.METADATA_PREFIX + MetadataKeyConstants.KEY_MODE));
+                assertEquals("600(rw-------)", metadata.get(MetadataKeyConstants.METADATA_PREFIX + MetadataKeyConstants.KEY_PERMISSION));
+            }
         } finally {
             FileUtils.deleteDirectory(tempDirectory.toFile());
         }
     }
 
     @Test
-    public void testMetadataAccessFailureHandler() throws IOException {
+    public void testMetadataAccessFailureHandler() throws IOException, InterruptedException {
+        Assume.assumeFalse(Platform.isWindows());
+
         final String tempPathPrefix = null;
         final Path tempDirectory = Files.createTempDirectory(Paths.get("."), tempPathPrefix);
 
         final String fileName = "Gracie.txt";
 
-        try {
-            final Path filePath = Files.createFile(Paths.get(tempDirectory.toString(), fileName));
+        final Path filePath = Files.createFile(Paths.get(tempDirectory.toString(), fileName));
 
+        try {
             tempDirectory.toFile().setExecutable(false);
 
             final Map<String, Path> fileMapper = new HashMap<>(1);
@@ -95,7 +108,7 @@ public class MetadataAccessImpl_Test {
             final AtomicInteger numTimesHandlerCalled = new AtomicInteger(0);
 
             fileMapper.put(filePath.toString(), filePath);
-            final Map<String, String> metadata = new MetadataAccessImpl(fileMapper, new MetadataStoreListener() {
+            new MetadataAccessImpl(fileMapper, new MetadataStoreListener() {
                 @Override
                 public void onMetadataFailed(final String message) {
                     numTimesHandlerCalled.incrementAndGet();
@@ -108,21 +121,23 @@ public class MetadataAccessImpl_Test {
             FileUtils.deleteDirectory(tempDirectory.toFile());
         }
     }
-    /*
-    if (org.apache.commons.lang3.SystemUtils.IS_OS_WINDOWS) {
-            // Deny write data access to everyone, making the directory unwritable
-            Runtime.getRuntime().exec("icacls dir /deny Everyone:(WD)").waitFor();
-        } else {
-            directory.toFile().setWritable(false);
-        }
-     */
 
-    /*
-    if (org.apache.commons.lang3.SystemUtils.IS_OS_WINDOWS) {
-                // Grant write data access to everyone, making the directory writable, so we can delete it.
-                Runtime.getRuntime().exec("icacls dir /grant Everyone:(WD)").waitFor();
-            } else {
-                directory.toFile().setWritable(true);
+    @Test
+    public void testMetadataAccessFailureHandlerWindows() {
+        Assume.assumeTrue(Platform.isWindows());
+
+        final Map<String, Path> fileMapper = new HashMap<>(1);
+
+        final AtomicInteger numTimesHandlerCalled = new AtomicInteger(0);
+
+        fileMapper.put("file", Paths.get("file"));
+        new MetadataAccessImpl(fileMapper, new MetadataStoreListener() {
+            @Override
+            public void onMetadataFailed(final String message) {
+                numTimesHandlerCalled.incrementAndGet();
             }
-     */
+        }).getMetadataValue("file");
+
+        assertEquals(1, numTimesHandlerCalled.get());
+    }
 }

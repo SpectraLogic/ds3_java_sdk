@@ -20,6 +20,7 @@ import com.google.common.collect.ImmutableMap;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers;
 import com.spectralogic.ds3client.metadata.interfaces.MetadataStore;
 import com.spectralogic.ds3client.metadata.interfaces.MetadataStoreListener;
+import com.spectralogic.ds3client.utils.Platform;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -69,7 +70,12 @@ public class MetadataAccessImpl implements Ds3ClientHelpers.MetadataAccess {
             metadataStore.saveOSMetaData(MetaDataUtil.getOS());
 
             final BasicFileAttributes attr = Files.readAttributes(file, BasicFileAttributes.class);
-            final PosixFileAttributes attrPosix = Files.readAttributes(file, PosixFileAttributes.class);
+
+            PosixFileAttributes attrPosix = null;
+
+            if ( !Platform.isWindows()) {
+                attrPosix = Files.readAttributes(file, PosixFileAttributes.class);
+            }
 
             metadataStore.saveCreationTimeMetaData(attr);
             metadataStore.saveAccessTimeMetaData(attr);
