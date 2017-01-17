@@ -27,13 +27,16 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.attribute.PosixFileAttributes;
+import java.nio.file.attribute.PosixFilePermission;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class MetadataAccessImpl_Test {
     @Test
-    public void testGettingMetadate() throws IOException {
+    public void testGettingMetadata() throws IOException, InterruptedException {
         final String tempPathPrefix = null;
         final Path tempDirectory = Files.createTempDirectory(Paths.get("."), tempPathPrefix);
 
@@ -41,6 +44,14 @@ public class MetadataAccessImpl_Test {
 
         try {
             final Path filePath = Files.createFile(Paths.get(tempDirectory.toString(), fileName));
+
+            final PosixFileAttributes attributes = Files.readAttributes(filePath, PosixFileAttributes.class);
+            final Set<PosixFilePermission> permissions = attributes.permissions();
+            permissions.clear();
+            permissions.add(PosixFilePermission.OWNER_READ);
+            permissions.add(PosixFilePermission.OWNER_WRITE);
+            Files.setPosixFilePermissions(filePath, permissions);
+
             final Map<String, Path> fileMapper = new HashMap<>(1);
             fileMapper.put(filePath.toString(), filePath);
             final Map<String, String> metadata = new MetadataAccessImpl(fileMapper, new MetadataStoreListener() {
@@ -60,8 +71,8 @@ public class MetadataAccessImpl_Test {
                 assertTrue(metadata.get(MetadataKeyConstants.METADATA_PREFIX + MetadataKeyConstants.KEY_OS).toLowerCase().startsWith("windows"));
             }
 
-            assertEquals("100644", metadata.get(MetadataKeyConstants.METADATA_PREFIX + MetadataKeyConstants.KEY_MODE));
-            assertEquals("644(rw-r--r--)", metadata.get(MetadataKeyConstants.METADATA_PREFIX + MetadataKeyConstants.KEY_PERMISSION));
+            assertEquals("100600", metadata.get(MetadataKeyConstants.METADATA_PREFIX + MetadataKeyConstants.KEY_MODE));
+            assertEquals("600(rw-------)", metadata.get(MetadataKeyConstants.METADATA_PREFIX + MetadataKeyConstants.KEY_PERMISSION));
         } finally {
             FileUtils.deleteDirectory(tempDirectory.toFile());
         }
