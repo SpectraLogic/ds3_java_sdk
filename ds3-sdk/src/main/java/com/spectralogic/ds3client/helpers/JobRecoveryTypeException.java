@@ -25,9 +25,9 @@ import java.util.UUID;
  * {@link Ds3ClientHelpers#recoverReadJob(UUID)} requires the specified job to be of type {@link JobRequestType#GET}.
  * {@link Ds3ClientHelpers#recoverWriteJob(UUID)} requires the specified job to be of type {@link JobRequestType#PUT}.
  */
-class JobRecoveryTypeException extends JobRecoveryException {
+public class JobRecoveryTypeException extends JobRecoveryException {
 
-    JobRecoveryTypeException(final String expectedType, final String actualType) {
+    public JobRecoveryTypeException(final String expectedType, final String actualType) {
         super(buildMessage(expectedType, actualType));
     }
 

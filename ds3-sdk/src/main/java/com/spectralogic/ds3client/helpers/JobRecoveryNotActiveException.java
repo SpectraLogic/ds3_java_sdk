@@ -25,7 +25,7 @@ import java.util.UUID;
  */
 public class JobRecoveryNotActiveException extends JobRecoveryException {
 
-    JobRecoveryNotActiveException(final UUID jobId, final Throwable cause) {
+    public JobRecoveryNotActiveException(final UUID jobId, final Throwable cause) {
         super(buildMessage(jobId), cause);
     }
 
