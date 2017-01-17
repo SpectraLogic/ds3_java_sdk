@@ -31,16 +31,15 @@ public class MetadataReceivedListenerImpl implements MetadataReceivedListener {
     private String localFilePath = null;
     private final MetadataRestoreListener metadataRestoreListener;
 
-    public MetadataReceivedListenerImpl(final String localFilePath ,final MetadataRestoreListener metadataRestoreListener) {
+    public MetadataReceivedListenerImpl(final String localFilePath, final MetadataRestoreListener metadataRestoreListener) {
         this.localFilePath = localFilePath;
         this.metadataRestoreListener = metadataRestoreListener;
     }
 
     @Override
     public void metadataReceived(final String filename, final Metadata metadata) {
-        final String actualFilePath;
         try {
-            actualFilePath = MetaDataUtil.getRealFilePath(localFilePath, filename);
+            final String actualFilePath = MetaDataUtil.getRealFilePath(localFilePath, filename);
             restoreMetaData(actualFilePath, metadata);
         } catch (final IOException e) {
             LOG.error("Error getting real file path.", e);
