@@ -48,7 +48,7 @@ public class MetadataRestoreFactory_Test {
 
         final MetadataRestore metadataRestorer = new MetadataRestoreFactory().getOSSpecificMetadataRestore(metadata, filePath, metadataRestoreListener);
 
-        assertEquals(WindowsMetadataStore.class, metadataRestorer.getClass());
+        assertEquals(WindowsMetadataRestore.class, metadataRestorer.getClass());
     }
 
     @Test
