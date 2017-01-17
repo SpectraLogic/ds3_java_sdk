@@ -98,8 +98,8 @@ abstract class AbstractMetadataRestore implements MetadataRestore {
         }
         catch (final Exception e)
         {
-            LOG.error("Unable to restore creation and  modified time", e);
-            metadataRestoreListener.metadataRestoreFailed("Unable to restore creation and modified time ::"+e.getMessage());
+            LOG.error("Unable to restore creation and  modified time ", e);
+            metadataRestoreListener.metadataRestoreFailed("Unable to restore creation and modified time "+e.getMessage());
         }
 
     }
