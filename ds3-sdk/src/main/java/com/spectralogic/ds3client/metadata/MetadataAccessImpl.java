@@ -75,10 +75,11 @@ public class MetadataAccessImpl implements Ds3ClientHelpers.MetadataAccess {
             metadataStore.saveAccessTimeMetaData(attr);
             metadataStore.saveLastModifiedTime(attr);
 
-            if(attrPosix != null)
-                metadataStore.saveOSSpecificMetadata(file,attrPosix);
-            else
-                metadataStore.saveOSSpecificMetadata(file,attr);
+            if(attrPosix != null) {
+                metadataStore.saveOSSpecificMetadata(file, attrPosix);
+            } else {
+                metadataStore.saveOSSpecificMetadata(file, attr);
+            }
 
         } catch (final IOException ioe) {
             LOG.error("unable to get metadata", ioe);
