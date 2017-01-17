@@ -50,4 +50,17 @@ public class MetadataRestoreFactory_Test {
 
         assertEquals(WindowsMetadataStore.class, metadataRestorer.getClass());
     }
+
+    @Test
+    public void testThatRunningOnLinuxReturnsLinuxMetaDataRestore() {
+        Assume.assumeTrue(System.getProperty("os.name").startsWith("Linux"));
+
+        final Metadata metadata = null;
+        final String filePath = ".";
+        final MetadataRestoreListener metadataRestoreListener = null;
+
+        final MetadataRestore metadataRestorer = new MetadataRestoreFactory().getOSSpecificMetadataRestore(metadata, filePath, metadataRestoreListener);
+
+        assertEquals(PosixMetadataRestore.class, metadataRestorer.getClass());
+    }
 }
