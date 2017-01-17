@@ -27,7 +27,7 @@ import static org.junit.Assert.assertEquals;
 public class MetadataRestoreFactory_Test {
     @Test
     public void testThatRunningOnMacReturnsMacMetaDataRestore() {
-        Assume.assumeTrue(System.getProperty("os.name").startsWith("Mac"));
+        Assume.assumeTrue(System.getProperty("os.name").toLowerCase().startsWith("mac"));
 
         final Metadata metadata = null;
         final String filePath = ".";
@@ -53,7 +53,7 @@ public class MetadataRestoreFactory_Test {
 
     @Test
     public void testThatRunningOnLinuxReturnsLinuxMetaDataRestore() {
-        Assume.assumeTrue(System.getProperty("os.name").startsWith("Linux"));
+        Assume.assumeTrue(System.getProperty("os.name").toLowerCase().startsWith("linux"));
 
         final Metadata metadata = null;
         final String filePath = ".";
