@@ -19,6 +19,9 @@ import com.spectralogic.ds3client.Ds3Client;
 import com.spectralogic.ds3client.models.DetailedS3Object;
 import com.spectralogic.ds3client.utils.collections.LazyIterable;
 
+/**
+ * A lazy implementation for paginating the Spectra S3 {@link com.spectralogic.ds3client.commands.spectrads3.GetObjectsWithFullDetailsSpectraS3Request} api call
+ */
 public class GetObjectsFullDetailsLoaderFactory implements LazyIterable.LazyLoaderFactory<DetailedS3Object> {
     private final Ds3Client client;
     private final String bucket;
