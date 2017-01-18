@@ -28,17 +28,12 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import static com.spectralogic.ds3client.metadata.MetadataKeyConstants.KEY_ACCESS_TIME;
 import static com.spectralogic.ds3client.metadata.MetadataKeyConstants.KEY_CREATION_TIME;
 import static com.spectralogic.ds3client.metadata.MetadataKeyConstants.KEY_LAST_MODIFIED_TIME;
 import static com.spectralogic.ds3client.metadata.MetadataKeyConstants.KEY_OS;
 
 abstract class AbstractMetadataRestore implements MetadataRestore {
-    private static final Logger LOG = LoggerFactory.getLogger(AbstractMetadataRestore.class);
-
     protected String storedOS;
     protected Metadata metadata;
     protected String objectName;

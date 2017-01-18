@@ -31,16 +31,11 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import static com.spectralogic.ds3client.metadata.MetadataKeyConstants.KEY_FLAGS;
 import static com.spectralogic.ds3client.metadata.MetadataKeyConstants.KEY_GROUP;
 import static com.spectralogic.ds3client.metadata.MetadataKeyConstants.KEY_OWNER;
 
 class WindowsMetadataRestore extends AbstractMetadataRestore {
-    private static final Logger LOG = LoggerFactory.getLogger(WindowsMetadataRestore.class);
-
     WindowsMetadataRestore(final Metadata metadata, final String filePath, final String localOS) {
         this.metadata = metadata;
         this.objectName = filePath;
@@ -48,7 +43,7 @@ class WindowsMetadataRestore extends AbstractMetadataRestore {
     }
 
     @Override
-    public void restoreUserAndOwner() {
+    public void restoreUserAndOwner() throws IOException {
         if (storedOS.equals(localOS)) {
             String ownerSid = null;
             if (metadata.get(KEY_OWNER).size() > 0) {
@@ -153,16 +148,16 @@ class WindowsMetadataRestore extends AbstractMetadataRestore {
      * @param ownerSidId sid of the owner
      * @param groupSidId sid of the group
      */
-    private void setOwnerIdandGroupId(final String ownerSidId, final String groupSidId) {
+    private void setOwnerIdandGroupId(final String ownerSidId, final String groupSidId) throws IOException {
         final int infoType = WinNT.OWNER_SECURITY_INFORMATION | WinNT.GROUP_SECURITY_INFORMATION;
         final WinNT.PSIDByReference referenceOwner = new WinNT.PSIDByReference();
         Advapi32.INSTANCE.ConvertStringSidToSid(ownerSidId, referenceOwner);
         final WinNT.PSIDByReference referenceGroup = new WinNT.PSIDByReference();
         Advapi32.INSTANCE.ConvertStringSidToSid(groupSidId, referenceGroup);
         final File file = new File(objectName);
-        final int i = Advapi32.INSTANCE.SetNamedSecurityInfo(file.getAbsolutePath(), 1, infoType, referenceOwner.getValue().getPointer(), referenceGroup.getValue().getPointer(), null, null);
-        if (i != 0) {
-            LOG.error("not able to set owner and group on the file", i);
+        final int winApiResult = Advapi32.INSTANCE.SetNamedSecurityInfo(file.getAbsolutePath(), 1, infoType, referenceOwner.getValue().getPointer(), referenceGroup.getValue().getPointer(), null, null);
+        if (winApiResult != 0) {
+            throw new IOException("Failure setting owner and group on file: " + objectName + ".  Windows error code: " + winApiResult);
         }
     }
 

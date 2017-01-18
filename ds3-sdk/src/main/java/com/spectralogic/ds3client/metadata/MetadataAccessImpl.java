@@ -20,8 +20,6 @@ import com.google.common.collect.ImmutableMap;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers;
 import com.spectralogic.ds3client.metadata.interfaces.MetadataStore;
 import com.spectralogic.ds3client.utils.Platform;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -35,7 +33,6 @@ import java.util.Map;
  * Used to store meta data on Server
  */
 public class MetadataAccessImpl implements Ds3ClientHelpers.MetadataAccess {
-    static private final Logger LOG = LoggerFactory.getLogger(MetadataAccessImpl.class);
     private final Map<String, Path> fileMapper;
 
     public MetadataAccessImpl(final Map<String, Path> fileMapper) {

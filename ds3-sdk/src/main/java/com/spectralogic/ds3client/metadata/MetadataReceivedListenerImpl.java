@@ -19,14 +19,9 @@ import com.spectralogic.ds3client.helpers.MetadataReceivedListener;
 import com.spectralogic.ds3client.metadata.interfaces.MetadataRestore;
 import com.spectralogic.ds3client.networking.Metadata;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.IOException;
 
 public class MetadataReceivedListenerImpl implements MetadataReceivedListener {
-    private static final Logger LOG = LoggerFactory.getLogger(MetadataReceivedListenerImpl.class);
-
     private String localFilePath = null;
 
     public MetadataReceivedListenerImpl(final String localFilePath) {

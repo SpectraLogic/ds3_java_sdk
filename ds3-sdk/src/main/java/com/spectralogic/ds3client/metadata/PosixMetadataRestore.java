@@ -26,16 +26,11 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import static com.spectralogic.ds3client.metadata.MetadataKeyConstants.KEY_GID;
 import static com.spectralogic.ds3client.metadata.MetadataKeyConstants.KEY_PERMISSION;
 import static com.spectralogic.ds3client.metadata.MetadataKeyConstants.KEY_UID;
 
 class PosixMetadataRestore extends AbstractMetadataRestore {
-    private static final Logger LOG =LoggerFactory.getLogger(PosixMetadataRestore.class);
-
     public PosixMetadataRestore(final Metadata metadata, final String filePath, final String localOS) {
         this.metadata = metadata;
         this.objectName = filePath;

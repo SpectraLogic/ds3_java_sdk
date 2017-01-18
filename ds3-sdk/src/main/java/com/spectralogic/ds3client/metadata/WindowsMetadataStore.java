@@ -32,9 +32,6 @@ import java.nio.file.attribute.AclFileAttributeView;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.*;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import static com.spectralogic.ds3client.metadata.MetadataKeyConstants.KEY_DACL;
 import static com.spectralogic.ds3client.metadata.MetadataKeyConstants.KEY_FLAGS;
 import static com.spectralogic.ds3client.metadata.MetadataKeyConstants.KEY_GROUP;
@@ -42,8 +39,6 @@ import static com.spectralogic.ds3client.metadata.MetadataKeyConstants.KEY_OWNER
 import static com.spectralogic.ds3client.metadata.MetadataKeyConstants.METADATA_PREFIX;
 
 class WindowsMetadataStore extends AbstractMetadataStore {
-    private static final Logger LOG = LoggerFactory.getLogger(WindowsMetadataStore.class);
-
     public WindowsMetadataStore(final ImmutableMap.Builder<String, String> metadataMap) {
         this.metadataMap = metadataMap;
     }

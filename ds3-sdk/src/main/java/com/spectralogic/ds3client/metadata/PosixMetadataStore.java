@@ -32,12 +32,7 @@ import static com.spectralogic.ds3client.metadata.MetadataKeyConstants.METADATA_
 
 import static java.nio.file.LinkOption.NOFOLLOW_LINKS;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 class PosixMetadataStore extends AbstractMetadataStore {
-    private static final Logger LOG = LoggerFactory.getLogger(PosixMetadataStore.class);
-
     public PosixMetadataStore(final ImmutableMap.Builder<String, String> metadataMap) {
         this.metadataMap = metadataMap;
     }

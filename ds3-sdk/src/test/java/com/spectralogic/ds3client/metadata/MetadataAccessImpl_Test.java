@@ -19,7 +19,6 @@ import com.spectralogic.ds3client.utils.Platform;
 import org.apache.commons.io.FileUtils;
 import org.junit.Assume;
 import org.junit.Test;
-import static org.junit.Assert.fail;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertEquals;
 
@@ -32,7 +31,6 @@ import java.nio.file.attribute.PosixFilePermission;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class MetadataAccessImpl_Test {
     @Test

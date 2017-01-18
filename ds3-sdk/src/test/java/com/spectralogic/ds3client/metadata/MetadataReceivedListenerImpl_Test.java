@@ -33,10 +33,8 @@ import java.nio.file.attribute.PosixFilePermission;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 
 public class MetadataReceivedListenerImpl_Test {
     @Test
