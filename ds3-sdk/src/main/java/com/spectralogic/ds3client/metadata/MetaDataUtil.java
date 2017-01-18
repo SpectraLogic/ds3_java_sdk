@@ -49,18 +49,9 @@ class MetaDataUtil {
      * @return actualFilePath
      */
     public static String getRealFilePath(final String localFilePath, final String filename) throws IOException {
-        String filePath = localFilePath + "/" + filename;
+        final Path directory = Paths.get(localFilePath);
+        final Path resolvedPath = directory.resolve(filename);
 
-        while (true) {
-            final File file = new File(filePath);
-            if (file.exists()) {
-                break;
-            } else {
-                final File parentFile = new File(file.getParent());
-                filePath = parentFile.getParent() + "/" + file.getName();
-            }
-        }
-
-        return StrategyUtils.resolveForSymbolic(Paths.get(filePath)).toString();
+        return StrategyUtils.resolveForSymbolic(resolvedPath).toString();
     }
 }

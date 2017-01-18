@@ -22,6 +22,7 @@ import com.spectralogic.ds3client.metadata.interfaces.MetadataStoreListener;
 import com.spectralogic.ds3client.networking.Metadata;
 import com.spectralogic.ds3client.utils.Platform;
 import org.apache.commons.io.FileUtils;
+import org.junit.Assume;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -33,6 +34,7 @@ import java.nio.file.attribute.PosixFilePermission;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
@@ -84,12 +86,12 @@ public class MetadataReceivedListenerImpl_Test {
             // put old permissions back
             final Metadata metadata = new MetadataImpl(new MockedHeadersReturningKeys(metadataFromFile));
 
-            new MetadataReceivedListenerImpl(filePath.toString(), new MetadataRestoreListener() {
+            new MetadataReceivedListenerImpl(tempDirectory.toString(), new MetadataRestoreListener() {
                 @Override
                 public void metadataRestoreFailed(final String message) {
                     fail("Error restoring metadata " + message);
                 }
-            }).metadataReceived(filePath.toString(), metadata);
+            }).metadataReceived(fileName, metadata);
 
             // see that we put back the original metadata
             fileMapper.put(filePath.toString(), filePath);
@@ -107,6 +109,58 @@ public class MetadataReceivedListenerImpl_Test {
                 assertEquals("600(rw-------)", metadataFromUpdatedFile.get(MetadataKeyConstants.METADATA_PREFIX + MetadataKeyConstants.KEY_PERMISSION));
             }
 
+        } finally {
+            FileUtils.deleteDirectory(tempDirectory.toFile());
+        }
+    }
+
+    @Test
+    public void testGettingMetadataFailureHandler() throws IOException {
+        Assume.assumeFalse(Platform.isWindows());
+
+        final String tempPathPrefix = null;
+        final Path tempDirectory = Files.createTempDirectory(Paths.get("."), tempPathPrefix);
+
+        final String fileName = "Gracie.txt";
+
+        final Path filePath = Files.createFile(Paths.get(tempDirectory.toString(), fileName));
+
+        try {
+            // set permissions
+            if ( ! Platform.isWindows()) {
+                final PosixFileAttributes attributes = Files.readAttributes(filePath, PosixFileAttributes.class);
+                final Set<PosixFilePermission> permissions = attributes.permissions();
+                permissions.clear();
+                permissions.add(PosixFilePermission.OWNER_READ);
+                permissions.add(PosixFilePermission.OWNER_WRITE);
+                Files.setPosixFilePermissions(filePath, permissions);
+            }
+
+            // get permissions
+            final Map<String, Path> fileMapper = new HashMap<>(1);
+            fileMapper.put(filePath.toString(), filePath);
+            final Map<String, String> metadataFromFile = new MetadataAccessImpl(fileMapper, new MetadataStoreListener() {
+                @Override
+                public void onMetadataFailed(final String message) {
+                    fail("Error getting file metadata: " + message);
+                }
+            }).getMetadataValue(filePath.toString());
+
+            FileUtils.deleteDirectory(tempDirectory.toFile());
+
+            // put old permissions back
+            final Metadata metadata = new MetadataImpl(new MockedHeadersReturningKeys(metadataFromFile));
+
+            final AtomicInteger numTimesHandlerCalled = new AtomicInteger(0);
+
+            new MetadataReceivedListenerImpl(tempDirectory.toString(), new MetadataRestoreListener() {
+                @Override
+                public void metadataRestoreFailed(final String message) {
+                    numTimesHandlerCalled.incrementAndGet();
+                }
+            }).metadataReceived(fileName, metadata);
+
+            assertEquals(4, numTimesHandlerCalled.get());
         } finally {
             FileUtils.deleteDirectory(tempDirectory.toFile());
         }
