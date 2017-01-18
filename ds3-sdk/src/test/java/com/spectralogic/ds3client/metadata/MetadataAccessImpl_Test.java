@@ -107,17 +107,13 @@ public class MetadataAccessImpl_Test {
         }
     }
 
-    @Test
+    @Test(expected = RuntimeException.class)
     public void testMetadataAccessFailureHandlerWindows() {
         Assume.assumeTrue(Platform.isWindows());
 
         final Map<String, Path> fileMapper = new HashMap<>(1);
 
-        final AtomicInteger numTimesHandlerCalled = new AtomicInteger(0);
-
         fileMapper.put("file", Paths.get("file"));
         new MetadataAccessImpl(fileMapper).getMetadataValue("file");
-
-        assertEquals(1, numTimesHandlerCalled.get());
     }
 }

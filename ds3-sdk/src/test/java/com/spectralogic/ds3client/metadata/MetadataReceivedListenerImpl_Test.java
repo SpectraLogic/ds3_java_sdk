@@ -136,7 +136,7 @@ public class MetadataReceivedListenerImpl_Test {
         }
     }
 
-    @Test
+    @Test(expected = NoSuchFileException.class)
     public void testGettingMetadataFailureHandlerWindows() throws IOException, InterruptedException {
         Assume.assumeTrue(Platform.isWindows());
 
@@ -158,11 +158,7 @@ public class MetadataReceivedListenerImpl_Test {
             // put old permissions back
             final Metadata metadata = new MetadataImpl(new MockedHeadersReturningKeys(metadataFromFile));
 
-            final AtomicInteger numTimesHandlerCalled = new AtomicInteger(0);
-
             new MetadataReceivedListenerImpl(tempDirectory.toString()).metadataReceived(fileName, metadata);
-
-            assertEquals(1, numTimesHandlerCalled.get());
         } finally {
             FileUtils.deleteDirectory(tempDirectory.toFile());
         }
