@@ -58,7 +58,7 @@ class WindowsMetadataStore extends AbstractMetadataStore {
     private void saveWindowsDescriptors(final Path path) {
         final int infoType = WinNT.OWNER_SECURITY_INFORMATION
                 | WinNT.GROUP_SECURITY_INFORMATION
-                | WinNT.DACL_SECURITY_INFORMATION | 0;
+                | WinNT.DACL_SECURITY_INFORMATION;
         final PointerByReference ppsidOwner = new PointerByReference();
         final PointerByReference ppsidGroup = new PointerByReference();
         final PointerByReference ppDacl = new PointerByReference();

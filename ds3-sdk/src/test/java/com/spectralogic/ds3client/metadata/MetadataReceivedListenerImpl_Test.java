@@ -165,4 +165,46 @@ public class MetadataReceivedListenerImpl_Test {
             FileUtils.deleteDirectory(tempDirectory.toFile());
         }
     }
+
+    @Test
+    public void testGettingMetadataFailureHandlerWindows() throws IOException {
+        Assume.assumeTrue(Platform.isWindows());
+
+        final String tempPathPrefix = null;
+        final Path tempDirectory = Files.createTempDirectory(Paths.get("."), tempPathPrefix);
+
+        final String fileName = "Gracie.txt";
+
+        final Path filePath = Files.createFile(Paths.get(tempDirectory.toString(), fileName));
+
+        try {
+            // get permissions
+            final Map<String, Path> fileMapper = new HashMap<>(1);
+            fileMapper.put(filePath.toString(), filePath);
+            final Map<String, String> metadataFromFile = new MetadataAccessImpl(fileMapper, new MetadataStoreListener() {
+                @Override
+                public void onMetadataFailed(final String message) {
+                    fail("Error getting file metadata: " + message);
+                }
+            }).getMetadataValue(filePath.toString());
+
+            FileUtils.deleteDirectory(tempDirectory.toFile());
+
+            // put old permissions back
+            final Metadata metadata = new MetadataImpl(new MockedHeadersReturningKeys(metadataFromFile));
+
+            final AtomicInteger numTimesHandlerCalled = new AtomicInteger(0);
+
+            new MetadataReceivedListenerImpl(tempDirectory.toString(), new MetadataRestoreListener() {
+                @Override
+                public void metadataRestoreFailed(final String message) {
+                    numTimesHandlerCalled.incrementAndGet();
+                }
+            }).metadataReceived(fileName, metadata);
+
+            assertEquals(1, numTimesHandlerCalled.get());
+        } finally {
+            FileUtils.deleteDirectory(tempDirectory.toFile());
+        }
+    }
 }
