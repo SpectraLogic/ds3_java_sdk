@@ -5,25 +5,19 @@ import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.spectralogic.ds3client.commands.interfaces.MetadataImpl;
-import com.spectralogic.ds3client.metadata.interfaces.MetadataRestoreListener;
-import com.spectralogic.ds3client.metadata.interfaces.MetadataStoreListener;
 import com.spectralogic.ds3client.networking.Headers;
 import com.spectralogic.ds3client.networking.Metadata;
-import com.spectralogic.ds3client.utils.MetaDataUtil;
-import com.spectralogic.ds3client.utils.MetadataKeyConstants;
 import org.apache.http.Header;
 import org.apache.http.message.BasicHeader;
 import org.junit.Assert;
+import org.junit.Assume;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-import org.mockito.Mockito;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Method;
 import java.nio.file.Files;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.PosixFileAttributes;
@@ -31,18 +25,16 @@ import java.nio.file.attribute.PosixFilePermissions;
 import java.util.List;
 import java.util.Set;
 
-import static com.spectralogic.ds3client.utils.MetadataKeyConstants.KEY_GID;
-import static com.spectralogic.ds3client.utils.MetadataKeyConstants.KEY_OS;
-import static com.spectralogic.ds3client.utils.MetadataKeyConstants.KEY_UID;
 import static java.nio.file.LinkOption.NOFOLLOW_LINKS;
 
 @RunWith(JUnit4.class)
 public class PosixMetadataRestore_Test {
+    @Before
+    public void checkPreconditions() {
+        Assume.assumeFalse(org.apache.commons.lang3.SystemUtils.IS_OS_WINDOWS);
+    }
+
     private final File file  = new File(getClass().getClassLoader().getResource("LoremIpsum.txt").getFile());
-    private final String localOS = MetaDataUtil.getOS();
-
-
-
 
     @Test
     public  void restoreFileTimes_Test() throws Exception{
@@ -52,7 +44,7 @@ public class PosixMetadataRestore_Test {
         basicHeader[1] = new BasicHeader(MetadataKeyConstants.METADATA_PREFIX + MetadataKeyConstants.KEY_ACCESS_TIME,String.valueOf(attr.lastAccessTime().toMillis()));
         basicHeader[2] = new BasicHeader(MetadataKeyConstants.METADATA_PREFIX + MetadataKeyConstants.KEY_LAST_MODIFIED_TIME,String.valueOf(attr.lastModifiedTime().toMillis()));
         final  Metadata metadata = genMetadata(basicHeader);
-        final PosixMetadataRestore posixMetadataRestore = new PosixMetadataRestore(metadata,file.getPath(),MetaDataUtil.getOS(),Mockito.mock(MetadataRestoreListener.class));
+        final PosixMetadataRestore posixMetadataRestore = new PosixMetadataRestore(metadata,file.getPath(),MetaDataUtil.getOS());
         posixMetadataRestore.restoreFileTimes();
         final BasicFileAttributes fileAttributes = Files.readAttributes(file.toPath(), BasicFileAttributes.class);
         Assert.assertEquals(String.valueOf(fileAttributes.creationTime().toMillis()),String.valueOf(basicHeader[0].getValue()));
@@ -68,7 +60,7 @@ public class PosixMetadataRestore_Test {
           basicHeader[0] = new BasicHeader(MetadataKeyConstants.METADATA_PREFIX + MetadataKeyConstants.KEY_UID,String.valueOf(uid));
           basicHeader[1] = new BasicHeader(MetadataKeyConstants.METADATA_PREFIX + MetadataKeyConstants.KEY_GID,String.valueOf(gid));
           final  Metadata metadata = genMetadata(basicHeader);
-          final PosixMetadataRestore posixMetadataRestore = new PosixMetadataRestore(metadata,file.getPath(),MetaDataUtil.getOS(),Mockito.mock(MetadataRestoreListener.class));
+          final PosixMetadataRestore posixMetadataRestore = new PosixMetadataRestore(metadata,file.getPath(),MetaDataUtil.getOS());
           posixMetadataRestore.restoreUserAndOwner();
           Assert.assertEquals(String.valueOf((int) Files.getAttribute(file.toPath(), "unix:uid", NOFOLLOW_LINKS)),basicHeader[0].getValue());
           Assert.assertEquals(String.valueOf((int) Files.getAttribute(file.toPath(), "unix:gid", NOFOLLOW_LINKS)),basicHeader[1].getValue());
@@ -82,7 +74,7 @@ public class PosixMetadataRestore_Test {
           final BasicHeader basicHeader[] = new BasicHeader[1];
           basicHeader[0] = new BasicHeader(MetadataKeyConstants.METADATA_PREFIX + MetadataKeyConstants.KEY_PERMISSION,permissionsOctal);
           final  Metadata metadata = genMetadata(basicHeader);
-          final PosixMetadataRestore posixMetadataRestore = new PosixMetadataRestore(metadata,file.getPath(),MetaDataUtil.getOS(),Mockito.mock(MetadataRestoreListener.class));
+          final PosixMetadataRestore posixMetadataRestore = new PosixMetadataRestore(metadata,file.getPath(),MetaDataUtil.getOS());
           posixMetadataRestore.restorePermissions();
           final PosixFileAttributes fileAttributesAfterRestore = Files.readAttributes(file.toPath(), PosixFileAttributes.class);
           Assert.assertEquals(getPermissionInOctal(PosixFilePermissions.toString(fileAttributesAfterRestore.permissions())),basicHeader[0].getValue());

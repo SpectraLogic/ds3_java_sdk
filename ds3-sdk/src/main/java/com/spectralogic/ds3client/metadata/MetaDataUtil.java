@@ -13,14 +13,18 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3client.utils;
+package com.spectralogic.ds3client.metadata;
+
+import com.spectralogic.ds3client.helpers.strategy.StrategyUtils;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.FileSystem;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Set;
 
-public class MetaDataUtil {
+class MetaDataUtil {
 
     public static Set<String> getSupportedFileAttributes(final Path file) {
         final FileSystem store = file.getFileSystem();
@@ -44,19 +48,10 @@ public class MetaDataUtil {
      * @param filename      : name of the file with logical folder
      * @return actualFilePath
      */
-    public static String getRealFilePath(final String localFilePath, final String filename) {
-        final String filePath = localFilePath + "/" + filename;
-        String fName = filePath;
-        while (true) {
-            final File file = new File(fName);
-            if (file.exists()) {
-                break;
-            } else {
-                final File parentFile = new File(file.getParent());
-                fName = parentFile.getParent() + "/" + file.getName();
-            }
-        }
-        return fName;
-    }
+    public static String getRealFilePath(final String localFilePath, final String filename) throws IOException {
+        final Path directory = Paths.get(localFilePath);
+        final Path resolvedPath = directory.resolve(filename);
 
+        return StrategyUtils.resolveForSymbolic(resolvedPath).toString();
+    }
 }

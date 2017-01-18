@@ -13,12 +13,18 @@
  *  ****************************************************************************
  */
 
-package com.spectralogic.ds3client.helpers;
+package com.spectralogic.ds3client;
 
-import com.spectralogic.ds3client.networking.Metadata;
+import java.util.Map;
+import java.util.Set;
 
-import java.io.IOException;
+public class MockedHeadersReturningKeys extends MockedHeaders {
+    public MockedHeadersReturningKeys(final Map<String, String> headerValues) {
+        super(headerValues);
+    }
 
-public interface MetadataReceivedListener {
-    void metadataReceived(final String filename, final Metadata metadata) throws IOException, InterruptedException;
+    @Override
+    public Set<String> keys() {
+        return super.getRealKeys();
+    }
 }

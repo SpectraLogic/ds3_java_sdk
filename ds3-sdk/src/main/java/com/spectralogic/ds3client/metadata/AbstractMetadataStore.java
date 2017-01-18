@@ -13,43 +13,42 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3client.metadata.interfaces;
+package com.spectralogic.ds3client.metadata;
 
 import com.google.common.collect.ImmutableMap;
+import com.spectralogic.ds3client.metadata.interfaces.MetadataStore;
 
 import java.nio.file.attribute.BasicFileAttributes;
 
-import static com.spectralogic.ds3client.utils.MetadataKeyConstants.*;
+import static com.spectralogic.ds3client.metadata.MetadataKeyConstants.KEY_ACCESS_TIME;
+import static com.spectralogic.ds3client.metadata.MetadataKeyConstants.KEY_CREATION_TIME;
+import static com.spectralogic.ds3client.metadata.MetadataKeyConstants.KEY_LAST_MODIFIED_TIME;
+import static com.spectralogic.ds3client.metadata.MetadataKeyConstants.KEY_OS;
+import static com.spectralogic.ds3client.metadata.MetadataKeyConstants.METADATA_PREFIX;
 
-public abstract class AbstractMetadataStore implements MetadataStore {
-
-
-    protected ImmutableMap.Builder<String, String> mMetadataMap;
-
-    protected MetadataStoreListener metadataStoreListener;
-
+abstract class AbstractMetadataStore implements MetadataStore {
+    protected ImmutableMap.Builder<String, String> metadataMap;
 
     @Override
     public void saveCreationTimeMetaData(final BasicFileAttributes attr) {
-        mMetadataMap.put(METADATA_PREFIX + KEY_CREATION_TIME, String.valueOf(attr.creationTime().toMillis()));
+        metadataMap.put(METADATA_PREFIX + KEY_CREATION_TIME, String.valueOf(attr.creationTime().toMillis()));
     }
 
     @Override
     public void saveAccessTimeMetaData(final BasicFileAttributes attr) {
-        mMetadataMap.put(METADATA_PREFIX + KEY_ACCESS_TIME, String.valueOf(attr.lastAccessTime().toMillis()));
+        metadataMap.put(METADATA_PREFIX + KEY_ACCESS_TIME, String.valueOf(attr.lastAccessTime().toMillis()));
 
     }
 
     @Override
     public void saveLastModifiedTime(final BasicFileAttributes attr) {
-        mMetadataMap.put(METADATA_PREFIX + KEY_LAST_MODIFIED_TIME, String.valueOf(attr.lastModifiedTime().toMillis()));
+        metadataMap.put(METADATA_PREFIX + KEY_LAST_MODIFIED_TIME, String.valueOf(attr.lastModifiedTime().toMillis()));
 
     }
 
-
     @Override
     public String saveOSMetaData(final String osName) {
-        mMetadataMap.put(METADATA_PREFIX + KEY_OS, osName);
+        metadataMap.put(METADATA_PREFIX + KEY_OS, osName);
         return osName;
     }
 }

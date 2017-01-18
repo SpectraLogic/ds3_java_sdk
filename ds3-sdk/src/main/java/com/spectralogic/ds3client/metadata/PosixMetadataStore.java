@@ -16,24 +16,25 @@
 package com.spectralogic.ds3client.metadata;
 
 import com.google.common.collect.ImmutableMap;
-import com.spectralogic.ds3client.metadata.interfaces.AbstractMetadataStore;
-import com.spectralogic.ds3client.metadata.interfaces.MetadataStoreListener;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.*;
 
-import static com.spectralogic.ds3client.utils.MetadataKeyConstants.*;
+import static com.spectralogic.ds3client.metadata.MetadataKeyConstants.KEY_GID;
+import static com.spectralogic.ds3client.metadata.MetadataKeyConstants.KEY_GROUP_NAME;
+import static com.spectralogic.ds3client.metadata.MetadataKeyConstants.KEY_MODE;
+import static com.spectralogic.ds3client.metadata.MetadataKeyConstants.KEY_OWNER_NAME;
+import static com.spectralogic.ds3client.metadata.MetadataKeyConstants.KEY_PERMISSION;
+import static com.spectralogic.ds3client.metadata.MetadataKeyConstants.KEY_UID;
+import static com.spectralogic.ds3client.metadata.MetadataKeyConstants.METADATA_PREFIX;
+
 import static java.nio.file.LinkOption.NOFOLLOW_LINKS;
 
-
-public class PosixMetadataStore extends AbstractMetadataStore {
-
-
-    public PosixMetadataStore(final ImmutableMap.Builder<String, String> metadataMap, final MetadataStoreListener metadataStoreListener) {
-        this.mMetadataMap = metadataMap;
-        this.metadataStoreListener = metadataStoreListener;
+class PosixMetadataStore extends AbstractMetadataStore {
+    public PosixMetadataStore(final ImmutableMap.Builder<String, String> metadataMap) {
+        this.metadataMap = metadataMap;
     }
 
     /**
@@ -43,7 +44,7 @@ public class PosixMetadataStore extends AbstractMetadataStore {
      */
     private String saveUserId(final Path file) throws IOException {
         final int uid = (int) Files.getAttribute(file, "unix:uid", NOFOLLOW_LINKS);
-        mMetadataMap.put(METADATA_PREFIX + KEY_UID, String.valueOf(uid));
+        metadataMap.put(METADATA_PREFIX + KEY_UID, String.valueOf(uid));
         return String.valueOf(uid);
     }
 
@@ -55,7 +56,7 @@ public class PosixMetadataStore extends AbstractMetadataStore {
      */
     private String saveGroupId(final Path file) throws IOException {
         final int gid = (int) Files.getAttribute(file, "unix:gid", NOFOLLOW_LINKS);
-        mMetadataMap.put(METADATA_PREFIX + KEY_GID, String.valueOf(gid));
+        metadataMap.put(METADATA_PREFIX + KEY_GID, String.valueOf(gid));
         return String.valueOf(gid);
     }
 
@@ -68,7 +69,7 @@ public class PosixMetadataStore extends AbstractMetadataStore {
     private String saveModeMetaData(final Path file) throws IOException {
         final int mode = (int) Files.getAttribute(file, "unix:mode", NOFOLLOW_LINKS);
         final String modeOctal = Integer.toOctalString(mode);
-        mMetadataMap.put(METADATA_PREFIX + KEY_MODE, modeOctal);
+        metadataMap.put(METADATA_PREFIX + KEY_MODE, modeOctal);
         return modeOctal;
     }
 
@@ -79,7 +80,7 @@ public class PosixMetadataStore extends AbstractMetadataStore {
     private String saveOwnerNameMetaData(final PosixFileAttributes attr) {
         final UserPrincipal owner = attr.owner();
         final String ownerName = owner.getName();
-        mMetadataMap.put(METADATA_PREFIX + KEY_OWNER_NAME, ownerName);
+        metadataMap.put(METADATA_PREFIX + KEY_OWNER_NAME, ownerName);
         return ownerName;
     }
 
@@ -91,7 +92,7 @@ public class PosixMetadataStore extends AbstractMetadataStore {
     private String saveGroupNameMetaData(final PosixFileAttributes attr) {
         final GroupPrincipal group = attr.group();
         final String groupName = group.getName();
-        mMetadataMap.put(METADATA_PREFIX + KEY_GROUP_NAME, groupName);
+        metadataMap.put(METADATA_PREFIX + KEY_GROUP_NAME, groupName);
         return groupName;
     }
 
@@ -101,16 +102,12 @@ public class PosixMetadataStore extends AbstractMetadataStore {
      */
     private String savePosixPermssionsMeta(final PosixFileAttributes attr) {
         String permissionsOctal = null;
-        try {
-            permissionsOctal = getPermissionInOctal(PosixFilePermissions.toString(attr.permissions()));
-            mMetadataMap.put(METADATA_PREFIX + KEY_PERMISSION, permissionsOctal);
-        } catch (final Exception e) {
-            LOG.error("Unable to save permissions", e);
-            metadataStoreListener.onMetadataFailed("Unable to save user permissions" + e.getMessage());
-        }
+
+        permissionsOctal = getPermissionInOctal(PosixFilePermissions.toString(attr.permissions()));
+        metadataMap.put(METADATA_PREFIX + KEY_PERMISSION, permissionsOctal);
+
         return permissionsOctal;
     }
-
 
     // get the octal number for the permission
     private String getPermissionInOctal(String permissions) {
@@ -127,19 +124,12 @@ public class PosixMetadataStore extends AbstractMetadataStore {
     }
 
     @Override
-    public void saveOSSpecificMetadata(final Path file,final BasicFileAttributes attrs) {
-        try {
-            saveUserId(file);
-            saveGroupId(file);
-            saveModeMetaData(file);
-            saveOwnerNameMetaData((PosixFileAttributes)(attrs));
-            saveGroupNameMetaData((PosixFileAttributes)(attrs));
-            savePosixPermssionsMeta((PosixFileAttributes)(attrs));
-        }
-        catch (final Exception e) {
-
-        }
+    public void saveOSSpecificMetadata(final Path file,final BasicFileAttributes attrs) throws IOException {
+        saveUserId(file);
+        saveGroupId(file);
+        saveModeMetaData(file);
+        saveOwnerNameMetaData((PosixFileAttributes) (attrs));
+        saveGroupNameMetaData((PosixFileAttributes) (attrs));
+        savePosixPermssionsMeta((PosixFileAttributes) (attrs));
     }
-
-
 }

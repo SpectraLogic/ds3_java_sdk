@@ -17,21 +17,19 @@ package com.spectralogic.ds3client.metadata;
 
 import com.spectralogic.ds3client.helpers.MetadataReceivedListener;
 import com.spectralogic.ds3client.metadata.interfaces.MetadataRestore;
-import com.spectralogic.ds3client.metadata.interfaces.MetadataRestoreListener;
 import com.spectralogic.ds3client.networking.Metadata;
-import com.spectralogic.ds3client.utils.MetaDataUtil;
+
+import java.io.IOException;
 
 public class MetadataReceivedListenerImpl implements MetadataReceivedListener {
     private String localFilePath = null;
-    private final MetadataRestoreListener metadataRestoreListener;
 
-    public MetadataReceivedListenerImpl(final String localFilePath ,final MetadataRestoreListener metadataRestoreListener) {
+    public MetadataReceivedListenerImpl(final String localFilePath) {
         this.localFilePath = localFilePath;
-        this.metadataRestoreListener = metadataRestoreListener;
     }
 
     @Override
-    public void metadataReceived(final String filename, final Metadata metadata) {
+    public void metadataReceived(final String filename, final Metadata metadata) throws IOException, InterruptedException {
         final String actualFilePath = MetaDataUtil.getRealFilePath(localFilePath, filename);
         restoreMetaData(actualFilePath, metadata);
     }
@@ -42,10 +40,9 @@ public class MetadataReceivedListenerImpl implements MetadataReceivedListener {
      * @param objectName name of the file to be restored
      * @param metadata   metadata which needs to be set on local file
      */
-    private void restoreMetaData(final String objectName, final Metadata metadata) {
-        final String osName = System.getProperty("os.name");
+    private void restoreMetaData(final String objectName, final Metadata metadata) throws IOException, InterruptedException {
         //get metadatarestore on the basis of os
-        final MetadataRestore metadataRestore = new MetadataRestoreFactory().getOSSpecificMetadataRestore(metadata, objectName, osName, metadataRestoreListener);
+        final MetadataRestore metadataRestore = new MetadataRestoreFactory().getOSSpecificMetadataRestore(metadata, objectName);
         //restore os name
         metadataRestore.restoreOSName();
         //restore user and owner based on OS
@@ -54,9 +51,6 @@ public class MetadataReceivedListenerImpl implements MetadataReceivedListener {
         metadataRestore.restoreFileTimes();
         //restore permissions based on OS
         metadataRestore.restorePermissions();
-        
-
-
     }
 
 
