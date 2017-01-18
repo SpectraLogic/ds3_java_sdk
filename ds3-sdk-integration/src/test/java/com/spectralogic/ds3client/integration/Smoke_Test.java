@@ -24,6 +24,7 @@ import com.spectralogic.ds3client.commands.interfaces.BulkResponse;
 import com.spectralogic.ds3client.commands.spectrads3.*;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers;
 import com.spectralogic.ds3client.helpers.JobRecoveryException;
+import com.spectralogic.ds3client.helpers.JobRecoveryNotActiveException;
 import com.spectralogic.ds3client.helpers.ObjectCompletedListener;
 import com.spectralogic.ds3client.helpers.options.WriteJobOptions;
 import com.spectralogic.ds3client.integration.test.helpers.JobStatusHelper;
@@ -484,6 +485,47 @@ public class Smoke_Test {
         }
     }
 
+    @Test (expected = JobRecoveryNotActiveException.class)
+    public void testRecoverWriteJobCanceledJob() throws IOException, URISyntaxException, JobRecoveryException {
+        final String bucketName = "test_canceled_recover_write_job_bucket";
+        final String book1 = "beowulf.txt";
+        final String book2 = "ulysses.txt";
+
+        try {
+            HELPERS.ensureBucketExists(bucketName, envDataPolicyId);
+
+            final Path objPath1 = ResourceUtils.loadFileResource(RESOURCE_BASE_NAME + book1);
+            final Path objPath2 = ResourceUtils.loadFileResource(RESOURCE_BASE_NAME + book2);
+            final Ds3Object obj1 = new Ds3Object(book1, Files.size(objPath1));
+            final Ds3Object obj2 = new Ds3Object(book2, Files.size(objPath2));
+
+            final Ds3ClientHelpers.Job job = Ds3ClientHelpers.wrap(client).startWriteJob(bucketName, Lists.newArrayList(obj1, obj2));
+
+            final PutObjectResponse putResponse1 = client.putObject(new PutObjectRequest(
+                    job.getBucketName(),
+                    book1,
+                    new ResourceObjectPutter(RESOURCE_BASE_NAME).buildChannel(book1),
+                    job.getJobId().toString(),
+                    0,
+                    Files.size(objPath1)));
+            assertThat(putResponse1, is(notNullValue()));
+
+            // Cancel write job and attempt recovery
+            client.cancelActiveJobSpectraS3(new CancelActiveJobSpectraS3Request(job.getJobId()));
+
+            // Attempt recovery of canceled job
+            HELPERS.recoverWriteJob(job.getJobId());
+            assert false;
+        } finally {
+            deleteAllContents(client, bucketName);
+        }
+    }
+
+    @Test (expected = JobRecoveryNotActiveException.class)
+    public void testRecoverWriteJobDoesNotExist() throws IOException, JobRecoveryException {
+        HELPERS.recoverWriteJob(UUID.randomUUID());
+    }
+
     @Test
     public void verifySendCrc32cChecksum() throws IOException, URISyntaxException {
         final String bucketName = "crc_32_bucket";
@@ -659,11 +701,71 @@ public class Smoke_Test {
 
         } finally {
             deleteAllContents(client, bucketName);
-            for( final Path tempFile : Files.newDirectoryStream(dirPath) ){
+            for (final Path tempFile : Files.newDirectoryStream(dirPath) ){
                 Files.delete(tempFile);
             }
             Files.delete(dirPath);
         }
+    }
+
+    @Test (expected = JobRecoveryNotActiveException.class)
+    public void testRecoverReadJobCanceledJob() throws IOException, JobRecoveryException, URISyntaxException {
+        final String bucketName = "test_canceled_recover_read_job_bucket";
+        final String book1 = "beowulf.txt";
+        final String book2 = "ulysses.txt";
+        final Path objPath1 = ResourceUtils.loadFileResource(RESOURCE_BASE_NAME + book1);
+        final Path objPath2 = ResourceUtils.loadFileResource(RESOURCE_BASE_NAME + book2);
+        final Ds3Object obj1 = new Ds3Object(book1, Files.size(objPath1));
+        final Ds3Object obj2 = new Ds3Object(book2, Files.size(objPath2));
+
+        final Path dirPath = FileSystems.getDefault().getPath("output_canceled_job");
+        if (!Files.exists(dirPath)) {
+            Files.createDirectory(dirPath);
+        }
+
+        try {
+            HELPERS.ensureBucketExists(bucketName, envDataPolicyId);
+
+            final Ds3ClientHelpers.Job putJob = HELPERS.startWriteJob(bucketName, Lists.newArrayList(obj1, obj2));
+            putJob.transfer(new ResourceObjectPutter(RESOURCE_BASE_NAME));
+
+            final FileChannel channel1 = FileChannel.open(
+                    dirPath.resolve(book1),
+                    StandardOpenOption.WRITE,
+                    StandardOpenOption.CREATE,
+                    StandardOpenOption.TRUNCATE_EXISTING
+            );
+
+            final Ds3ClientHelpers.Job readJob = HELPERS.startReadJob(bucketName, Lists.newArrayList(obj1, obj2));
+            final GetObjectResponse readResponse1 = client.getObject(
+                    new GetObjectRequest(
+                            bucketName,
+                            book1,
+                            channel1,
+                            readJob.getJobId().toString(),
+                            0));
+
+            assertThat(readResponse1, is(notNullValue()));
+            assertThat(readResponse1.getObjectSize(), is(notNullValue()));
+
+            // Cancel active job
+            client.cancelActiveJobSpectraS3(new CancelActiveJobSpectraS3Request(readJob.getJobId()));
+
+            // Attempt recovery of canceled job
+            HELPERS.recoverReadJob(readJob.getJobId());
+            assert false;
+        } finally {
+            deleteAllContents(client, bucketName);
+            for (final Path tempFile : Files.newDirectoryStream(dirPath) ){
+                Files.delete(tempFile);
+            }
+            Files.delete(dirPath);
+        }
+    }
+
+    @Test (expected = JobRecoveryNotActiveException.class)
+    public void testRecoverReadJobDoesNotExist() throws IOException, JobRecoveryException {
+        HELPERS.recoverReadJob(UUID.randomUUID());
     }
 
     @Test
