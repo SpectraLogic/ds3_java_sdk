@@ -15,7 +15,6 @@
 package com.spectralogic.ds3client.metadata;
 
 import com.google.common.collect.ImmutableMap;
-import com.spectralogic.ds3client.metadata.interfaces.MetadataStoreListener;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -37,7 +36,7 @@ import static com.spectralogic.ds3client.metadata.MetadataKeyConstants.METADATA_
 public class WindowsMetadataStore_Test {
     private final File file = new File(getClass().getClassLoader().getResource("LoremIpsum.txt").getFile());
     private final ImmutableMap.Builder<String, String> mMetadataMap = new ImmutableMap.Builder<>();
-    private final WindowsMetadataStore windowsMetadataStore = new WindowsMetadataStore(mMetadataMap, Mockito.mock(MetadataStoreListener.class));
+    private final WindowsMetadataStore windowsMetadataStore = new WindowsMetadataStore(mMetadataMap);
 
     @Test
     public void saveCreationTimeMetaData_Test() throws IOException {

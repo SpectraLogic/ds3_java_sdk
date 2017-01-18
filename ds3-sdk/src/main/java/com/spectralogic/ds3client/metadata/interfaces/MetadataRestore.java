@@ -15,12 +15,14 @@
 
 package com.spectralogic.ds3client.metadata.interfaces;
 
+import java.io.IOException;
+
 public interface MetadataRestore {
-    void restoreFileTimes();
+    void restoreFileTimes() throws IOException, InterruptedException;
 
-    void restoreUserAndOwner();
+    void restoreUserAndOwner() throws IOException;
 
-    void restorePermissions();
+    void restorePermissions() throws IOException, InterruptedException;
 
     void restoreOSName();
 

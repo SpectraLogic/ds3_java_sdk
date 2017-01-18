@@ -15,9 +15,9 @@
 
 package com.spectralogic.ds3client.metadata;
 
-import com.spectralogic.ds3client.metadata.interfaces.MetadataRestoreListener;
 import com.spectralogic.ds3client.networking.Metadata;
 
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -36,16 +36,15 @@ import static com.spectralogic.ds3client.metadata.MetadataKeyConstants.KEY_UID;
 class PosixMetadataRestore extends AbstractMetadataRestore {
     private static final Logger LOG =LoggerFactory.getLogger(PosixMetadataRestore.class);
 
-    public PosixMetadataRestore(final Metadata metadata, final String filePath, final String localOS, final MetadataRestoreListener metadataRestoreListener) {
+    public PosixMetadataRestore(final Metadata metadata, final String filePath, final String localOS) {
         this.metadata = metadata;
         this.objectName = filePath;
         this.localOS = localOS;
-        this.metadataRestoreListener = metadataRestoreListener;
     }
 
 
     @Override
-    public void restoreUserAndOwner() {
+    public void restoreUserAndOwner() throws IOException {
         String ownerId = null;
         if (metadata.get(KEY_UID).size() > 0) {
             ownerId = metadata.get(KEY_UID).get(0);
@@ -60,7 +59,7 @@ class PosixMetadataRestore extends AbstractMetadataRestore {
     }
 
     @Override
-    public void restorePermissions() {
+    public void restorePermissions() throws IOException {
         if (metadata.get(KEY_PERMISSION).size() > 0) {
             String permissions = metadata.get(KEY_PERMISSION).get(0);
             if (permissions != null && !permissions.equals("")) {
@@ -80,21 +79,15 @@ class PosixMetadataRestore extends AbstractMetadataRestore {
      * @param ownerName name of the owner got from server
      * @param groupName name of the group got from server
      */
-    private void setOwnerNGroupLnx(final String ownerName, final String groupName) {
-        try {
-            final Path file = Paths.get(objectName);
-            final UserPrincipal owner = file.getFileSystem().getUserPrincipalLookupService()
-                    .lookupPrincipalByName(ownerName);
-            Files.setOwner(file, owner);
-            final GroupPrincipal group =
-                    file.getFileSystem().getUserPrincipalLookupService()
-                            .lookupPrincipalByGroupName(groupName);
-            Files.getFileAttributeView(file, PosixFileAttributeView.class)
-                    .setGroup(group);
-        } catch (final Exception e) {
-            LOG.error("Unable to set owner and group name", e);
-            metadataRestoreListener.metadataRestoreFailed("Unable to set owner and group name::"+e.getMessage());
-        }
+    private void setOwnerNGroupLnx(final String ownerName, final String groupName) throws IOException {
+        final Path file = Paths.get(objectName);
+        final UserPrincipal owner = file.getFileSystem().getUserPrincipalLookupService()
+                .lookupPrincipalByName(ownerName);
+        Files.setOwner(file, owner);
+        final GroupPrincipal group = file.getFileSystem().getUserPrincipalLookupService()
+                .lookupPrincipalByGroupName(groupName);
+        Files.getFileAttributeView(file, PosixFileAttributeView.class)
+                .setGroup(group);
     }
 
     /**
@@ -103,15 +96,10 @@ class PosixMetadataRestore extends AbstractMetadataRestore {
      * @param filePath    path of the file
      * @param permissions permissions got from the blackperl server
      */
-    private void setPermissionsLnx(final String filePath, final String permissions) {
-        try {
-            final Path file = Paths.get(filePath);
-            final Set<PosixFilePermission> perms =
-                    PosixFilePermissions.fromString(permissions);
-            Files.setPosixFilePermissions(file, perms);
-        } catch (final Exception e) {
-            LOG.error("Unable to restore Permissions", e);
-            metadataRestoreListener.metadataRestoreFailed("Unable to restore Permissions::"+e.getMessage());
-        }
+    private void setPermissionsLnx(final String filePath, final String permissions) throws IOException {
+        final Path file = Paths.get(filePath);
+        final Set<PosixFilePermission> perms =
+                PosixFilePermissions.fromString(permissions);
+        Files.setPosixFilePermissions(file, perms);
     }
 }

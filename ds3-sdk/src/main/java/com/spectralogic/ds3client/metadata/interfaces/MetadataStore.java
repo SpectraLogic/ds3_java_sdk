@@ -16,6 +16,7 @@
 // This code is auto-generated, do not modify
 package com.spectralogic.ds3client.metadata.interfaces;
 
+import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
 
@@ -50,7 +51,7 @@ public interface MetadataStore {
      * @param file  path of local file
      * @param attrs FileAttributes
      */
-    void saveOSSpecificMetadata(final Path file , BasicFileAttributes attrs);
+    void saveOSSpecificMetadata(final Path file , BasicFileAttributes attrs) throws IOException;
 
 
 }

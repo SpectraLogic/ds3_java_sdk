@@ -17,18 +17,16 @@ package com.spectralogic.ds3client.metadata;
 
 import com.google.common.collect.ImmutableMap;
 import com.spectralogic.ds3client.metadata.interfaces.MetadataStore;
-import com.spectralogic.ds3client.metadata.interfaces.MetadataStoreListener;
 
 
 public class MetadataStoreFactory
 {
-    public MetadataStore getOsSpecificMetadataStore(final ImmutableMap.Builder<String, String> metadataMap,final MetadataStoreListener metadataStoreListener)
-    {
+    public MetadataStore getOsSpecificMetadataStore(final ImmutableMap.Builder<String, String> metadataMap) {
         if(MetaDataUtil.getOS().contains("Windows")) {
-            return new WindowsMetadataStore(metadataMap,metadataStoreListener);
+            return new WindowsMetadataStore(metadataMap);
         }
         else {
-            return new PosixMetadataStore(metadataMap,metadataStoreListener);
+            return new PosixMetadataStore(metadataMap);
         }
     }
 }

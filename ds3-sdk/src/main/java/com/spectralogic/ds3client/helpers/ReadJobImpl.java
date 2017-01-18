@@ -292,7 +292,16 @@ class ReadJobImpl extends JobImpl {
             getEventRunner().emitEvent(new Runnable() {
                 @Override
                 public void run() {
-                    listener.metadataReceived(objName, metadata);
+                    try {
+                        listener.metadataReceived(objName, metadata);
+                    } catch (final IOException | InterruptedException e) {
+                        emitFailureEvent(FailureEvent.builder()
+                                .doingWhat(FailureEvent.FailureActivity.GettingObject)
+                                .withCausalException(e)
+                                .withObjectNamed(objName)
+                                .usingSystemWithEndpoint(client.getConnectionDetails().getEndpoint())
+                                .build());
+                    }
                 }
             });
         }

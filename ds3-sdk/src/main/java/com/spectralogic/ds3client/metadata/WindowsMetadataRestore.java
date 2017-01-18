@@ -16,7 +16,6 @@
 package com.spectralogic.ds3client.metadata;
 
 import com.google.common.collect.ImmutableList;
-import com.spectralogic.ds3client.metadata.interfaces.MetadataRestoreListener;
 import com.spectralogic.ds3client.metadata.jna.Advapi32;
 import com.spectralogic.ds3client.networking.Metadata;
 import com.sun.jna.platform.win32.WinNT;
@@ -42,13 +41,11 @@ import static com.spectralogic.ds3client.metadata.MetadataKeyConstants.KEY_OWNER
 class WindowsMetadataRestore extends AbstractMetadataRestore {
     private static final Logger LOG = LoggerFactory.getLogger(WindowsMetadataRestore.class);
 
-    WindowsMetadataRestore(final Metadata metadata, final String filePath, final String localOS, final MetadataRestoreListener metadataRestoreListener) {
+    WindowsMetadataRestore(final Metadata metadata, final String filePath, final String localOS) {
         this.metadata = metadata;
         this.objectName = filePath;
         this.localOS = localOS;
-        this.metadataRestoreListener = metadataRestoreListener;
     }
-
 
     @Override
     public void restoreUserAndOwner() {
@@ -69,15 +66,14 @@ class WindowsMetadataRestore extends AbstractMetadataRestore {
     }
 
     @Override
-    public void restorePermissions() {
+    public void restorePermissions() throws IOException, InterruptedException {
         if (storedOS != null && storedOS.equals(localOS)) {
             setPermissionsForWindows();
         }
         restoreFlags();
     }
 
-
-    private void setPermissionsForWindows() {
+    private void setPermissionsForWindows() throws IOException {
         final Path path = Paths.get(objectName);
         final AclFileAttributeView aclAttributeView = Files.getFileAttributeView(path, AclFileAttributeView.class);
         final ImmutableList.Builder<AclEntry> aclEntryBuilder = new ImmutableList.Builder<>();
@@ -99,12 +95,8 @@ class WindowsMetadataRestore extends AbstractMetadataRestore {
                 }
             }
         }
-        try {
-            aclAttributeView.setAcl(aclEntryBuilder.build());
-        } catch (final IOException e) {
-            LOG.error("Unable to restore dacl view", e);
-            metadataRestoreListener.metadataRestoreFailed("Unable to restore dacl view::"+e.getMessage());
-        }
+
+        aclAttributeView.setAcl(aclEntryBuilder.build());
     }
 
 
@@ -133,27 +125,26 @@ class WindowsMetadataRestore extends AbstractMetadataRestore {
         return  defaultOrdinalMap;
     }
 
-    private void restorePermissionByUser(final String permission, final String user, final ImmutableList.Builder<AclEntry> aclEntryBuilder) {
-        try {
-            final AclEntry.Builder builderWindow = AclEntry.newBuilder();
-            final UserPrincipal userPrinciple = FileSystems.getDefault()
-                    .getUserPrincipalLookupService().lookupPrincipalByName(user);
-            final Set<AclEntryPermission> permissions = new HashSet<>();
-            final String[] ordinalArr = permission.split("-");
-            final Map<String,AclEntryPermission> defaultPermssionMap = defaultOrdinalPermission();
+    private void restorePermissionByUser(final String permission,
+                                         final String user,
+                                         final ImmutableList.Builder<AclEntry> aclEntryBuilder)
+        throws IOException
+    {
+        final AclEntry.Builder builderWindow = AclEntry.newBuilder();
+        final UserPrincipal userPrinciple = FileSystems.getDefault()
+                .getUserPrincipalLookupService().lookupPrincipalByName(user);
+        final Set<AclEntryPermission> permissions = new HashSet<>();
+        final String[] ordinalArr = permission.split("-");
+        final Map<String,AclEntryPermission> defaultPermssionMap = defaultOrdinalPermission();
 
-            for (final String ordinal : ordinalArr) {
-              permissions.add(defaultPermssionMap.get(ordinal));
-            }
-            builderWindow.setPrincipal(userPrinciple);
-            builderWindow.setPermissions(permissions);
-            builderWindow.setType(AclEntryType.ALLOW);
-            final AclEntry aclEntry = builderWindow.build();
-            aclEntryBuilder.add(aclEntry);
-        } catch (final Exception e) {
-            LOG.error("Unable to restore Permissions", e);
-            metadataRestoreListener.metadataRestoreFailed("Unable to restore Permissions::"+e.getMessage());
+        for (final String ordinal : ordinalArr) {
+          permissions.add(defaultPermssionMap.get(ordinal));
         }
+        builderWindow.setPrincipal(userPrinciple);
+        builderWindow.setPermissions(permissions);
+        builderWindow.setType(AclEntryType.ALLOW);
+        final AclEntry aclEntry = builderWindow.build();
+        aclEntryBuilder.add(aclEntry);
     }
 
     /**
@@ -163,28 +154,19 @@ class WindowsMetadataRestore extends AbstractMetadataRestore {
      * @param groupSidId sid of the group
      */
     private void setOwnerIdandGroupId(final String ownerSidId, final String groupSidId) {
-        try {
-            final int infoType = WinNT.OWNER_SECURITY_INFORMATION | WinNT.GROUP_SECURITY_INFORMATION;
-            final WinNT.PSIDByReference referenceOwner = new WinNT.PSIDByReference();
-            Advapi32.INSTANCE.ConvertStringSidToSid(ownerSidId, referenceOwner);
-            final WinNT.PSIDByReference referenceGroup = new WinNT.PSIDByReference();
-            Advapi32.INSTANCE.ConvertStringSidToSid(groupSidId, referenceGroup);
-            final File file = new File(objectName);
-            final int i = Advapi32.INSTANCE.SetNamedSecurityInfo(file.getAbsolutePath(), 1, infoType, referenceOwner.getValue().getPointer(), referenceGroup.getValue().getPointer(), null, null);
-            if (i != 0) {
-                LOG.error("not able to set owner and group on the file", i);
-            }
-        } catch (final Exception e) {
-            LOG.error("not able to set owner and group on the file ", e);
-            metadataRestoreListener.metadataRestoreFailed("not able to set owner and group on the file ::"+e.getMessage());
-
+        final int infoType = WinNT.OWNER_SECURITY_INFORMATION | WinNT.GROUP_SECURITY_INFORMATION;
+        final WinNT.PSIDByReference referenceOwner = new WinNT.PSIDByReference();
+        Advapi32.INSTANCE.ConvertStringSidToSid(ownerSidId, referenceOwner);
+        final WinNT.PSIDByReference referenceGroup = new WinNT.PSIDByReference();
+        Advapi32.INSTANCE.ConvertStringSidToSid(groupSidId, referenceGroup);
+        final File file = new File(objectName);
+        final int i = Advapi32.INSTANCE.SetNamedSecurityInfo(file.getAbsolutePath(), 1, infoType, referenceOwner.getValue().getPointer(), referenceGroup.getValue().getPointer(), null, null);
+        if (i != 0) {
+            LOG.error("not able to set owner and group on the file", i);
         }
     }
 
-
-
-
-    private void restoreFlags() {
+    private void restoreFlags()  throws IOException, InterruptedException {
         if (storedOS != null && storedOS.equals(localOS)) {
             if (metadata.get(KEY_FLAGS).size() > 0) {
                 final String flags = metadata.get(KEY_FLAGS).get(0);
@@ -198,7 +180,7 @@ class WindowsMetadataRestore extends AbstractMetadataRestore {
      *
      * @param flag : flag retrieved from blackperl
      */
-    private void restoreFlagsWindows(final String flag) {
+    private void restoreFlagsWindows(final String flag) throws IOException, InterruptedException {
         final StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("attrib");
         if (flag.contains("A")) {
@@ -223,16 +205,8 @@ class WindowsMetadataRestore extends AbstractMetadataRestore {
             stringBuilder.append(" -H");
         }
         stringBuilder.append(" " + "\"" + objectName + "\"");
-        try {
-            final Process p = Runtime.getRuntime().exec(stringBuilder.toString().split(" "));
-            p.waitFor();
-        } catch (final Exception e) {
-            LOG.error("Unable to restore flag attributes", e);
-            metadataRestoreListener.metadataRestoreFailed("Unable to restore flag attributes ::"+e.getMessage());
-        }
+
+        final Process p = Runtime.getRuntime().exec(stringBuilder.toString().split(" "));
+        p.waitFor();
     }
-
-
-
-
 }

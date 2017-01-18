@@ -16,7 +16,6 @@
 package com.spectralogic.ds3client.metadata;
 
 import com.spectralogic.ds3client.metadata.interfaces.MetadataRestore;
-import com.spectralogic.ds3client.metadata.interfaces.MetadataRestoreListener;
 import com.spectralogic.ds3client.networking.Metadata;
 import com.spectralogic.ds3client.utils.Platform;
 import org.junit.Assume;
@@ -31,9 +30,8 @@ public class MetadataRestoreFactory_Test {
 
         final Metadata metadata = null;
         final String filePath = ".";
-        final MetadataRestoreListener metadataRestoreListener = null;
 
-        final MetadataRestore metadataRestorer = new MetadataRestoreFactory().getOSSpecificMetadataRestore(metadata, filePath, metadataRestoreListener);
+        final MetadataRestore metadataRestorer = new MetadataRestoreFactory().getOSSpecificMetadataRestore(metadata, filePath);
 
         assertEquals(MACMetadataRestore.class, metadataRestorer.getClass());
     }
@@ -44,9 +42,8 @@ public class MetadataRestoreFactory_Test {
 
         final Metadata metadata = null;
         final String filePath = ".";
-        final MetadataRestoreListener metadataRestoreListener = null;
 
-        final MetadataRestore metadataRestorer = new MetadataRestoreFactory().getOSSpecificMetadataRestore(metadata, filePath, metadataRestoreListener);
+        final MetadataRestore metadataRestorer = new MetadataRestoreFactory().getOSSpecificMetadataRestore(metadata, filePath);
 
         assertEquals(WindowsMetadataRestore.class, metadataRestorer.getClass());
     }
@@ -57,9 +54,8 @@ public class MetadataRestoreFactory_Test {
 
         final Metadata metadata = null;
         final String filePath = ".";
-        final MetadataRestoreListener metadataRestoreListener = null;
 
-        final MetadataRestore metadataRestorer = new MetadataRestoreFactory().getOSSpecificMetadataRestore(metadata, filePath, metadataRestoreListener);
+        final MetadataRestore metadataRestorer = new MetadataRestoreFactory().getOSSpecificMetadataRestore(metadata, filePath);
 
         assertEquals(PosixMetadataRestore.class, metadataRestorer.getClass());
     }

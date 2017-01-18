@@ -17,8 +17,6 @@ package com.spectralogic.ds3client.metadata;
 
 import com.spectralogic.ds3client.MockedHeadersReturningKeys;
 import com.spectralogic.ds3client.commands.interfaces.MetadataImpl;
-import com.spectralogic.ds3client.metadata.interfaces.MetadataRestoreListener;
-import com.spectralogic.ds3client.metadata.interfaces.MetadataStoreListener;
 import com.spectralogic.ds3client.networking.Metadata;
 import com.spectralogic.ds3client.utils.Platform;
 import org.apache.commons.io.FileUtils;
@@ -27,6 +25,7 @@ import org.junit.Test;
 
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.attribute.PosixFileAttributes;
@@ -63,12 +62,7 @@ public class MetadataReceivedListenerImpl_Test {
             // get permissions
             final Map<String, Path> fileMapper = new HashMap<>(1);
             fileMapper.put(filePath.toString(), filePath);
-            final Map<String, String> metadataFromFile = new MetadataAccessImpl(fileMapper, new MetadataStoreListener() {
-                @Override
-                public void onMetadataFailed(final String message) {
-                    fail("Error getting file metadata: " + message);
-                }
-            }).getMetadataValue(filePath.toString());
+            final Map<String, String> metadataFromFile = new MetadataAccessImpl(fileMapper).getMetadataValue(filePath.toString());
 
             // change permissions
             if (Platform.isWindows()) {
@@ -86,21 +80,11 @@ public class MetadataReceivedListenerImpl_Test {
             // put old permissions back
             final Metadata metadata = new MetadataImpl(new MockedHeadersReturningKeys(metadataFromFile));
 
-            new MetadataReceivedListenerImpl(tempDirectory.toString(), new MetadataRestoreListener() {
-                @Override
-                public void metadataRestoreFailed(final String message) {
-                    fail("Error restoring metadata " + message);
-                }
-            }).metadataReceived(fileName, metadata);
+            new MetadataReceivedListenerImpl(tempDirectory.toString()).metadataReceived(fileName, metadata);
 
             // see that we put back the original metadata
             fileMapper.put(filePath.toString(), filePath);
-            final Map<String, String> metadataFromUpdatedFile = new MetadataAccessImpl(fileMapper, new MetadataStoreListener() {
-                @Override
-                public void onMetadataFailed(final String message) {
-                    fail("Error getting file metadata: " + message);
-                }
-            }).getMetadataValue(filePath.toString());
+            final Map<String, String> metadataFromUpdatedFile = new MetadataAccessImpl(fileMapper).getMetadataValue(filePath.toString());
 
             if (Platform.isWindows()) {
                 assertEquals("A", metadataFromUpdatedFile.get(MetadataKeyConstants.METADATA_PREFIX + MetadataKeyConstants.KEY_FLAGS));
@@ -114,8 +98,8 @@ public class MetadataReceivedListenerImpl_Test {
         }
     }
 
-    @Test
-    public void testGettingMetadataFailureHandler() throws IOException {
+    @Test(expected = NoSuchFileException.class)
+    public void testGettingMetadataFailureHandler() throws IOException, InterruptedException {
         Assume.assumeFalse(Platform.isWindows());
 
         final String tempPathPrefix = null;
@@ -139,35 +123,21 @@ public class MetadataReceivedListenerImpl_Test {
             // get permissions
             final Map<String, Path> fileMapper = new HashMap<>(1);
             fileMapper.put(filePath.toString(), filePath);
-            final Map<String, String> metadataFromFile = new MetadataAccessImpl(fileMapper, new MetadataStoreListener() {
-                @Override
-                public void onMetadataFailed(final String message) {
-                    fail("Error getting file metadata: " + message);
-                }
-            }).getMetadataValue(filePath.toString());
+            final Map<String, String> metadataFromFile = new MetadataAccessImpl(fileMapper).getMetadataValue(filePath.toString());
 
             FileUtils.deleteDirectory(tempDirectory.toFile());
 
             // put old permissions back
             final Metadata metadata = new MetadataImpl(new MockedHeadersReturningKeys(metadataFromFile));
 
-            final AtomicInteger numTimesHandlerCalled = new AtomicInteger(0);
-
-            new MetadataReceivedListenerImpl(tempDirectory.toString(), new MetadataRestoreListener() {
-                @Override
-                public void metadataRestoreFailed(final String message) {
-                    numTimesHandlerCalled.incrementAndGet();
-                }
-            }).metadataReceived(fileName, metadata);
-
-            assertEquals(4, numTimesHandlerCalled.get());
+            new MetadataReceivedListenerImpl(tempDirectory.toString()).metadataReceived(fileName, metadata);
         } finally {
             FileUtils.deleteDirectory(tempDirectory.toFile());
         }
     }
 
     @Test
-    public void testGettingMetadataFailureHandlerWindows() throws IOException {
+    public void testGettingMetadataFailureHandlerWindows() throws IOException, InterruptedException {
         Assume.assumeTrue(Platform.isWindows());
 
         final String tempPathPrefix = null;
@@ -181,12 +151,7 @@ public class MetadataReceivedListenerImpl_Test {
             // get permissions
             final Map<String, Path> fileMapper = new HashMap<>(1);
             fileMapper.put(filePath.toString(), filePath);
-            final Map<String, String> metadataFromFile = new MetadataAccessImpl(fileMapper, new MetadataStoreListener() {
-                @Override
-                public void onMetadataFailed(final String message) {
-                    fail("Error getting file metadata: " + message);
-                }
-            }).getMetadataValue(filePath.toString());
+            final Map<String, String> metadataFromFile = new MetadataAccessImpl(fileMapper).getMetadataValue(filePath.toString());
 
             FileUtils.deleteDirectory(tempDirectory.toFile());
 
@@ -195,12 +160,7 @@ public class MetadataReceivedListenerImpl_Test {
 
             final AtomicInteger numTimesHandlerCalled = new AtomicInteger(0);
 
-            new MetadataReceivedListenerImpl(tempDirectory.toString(), new MetadataRestoreListener() {
-                @Override
-                public void metadataRestoreFailed(final String message) {
-                    numTimesHandlerCalled.incrementAndGet();
-                }
-            }).metadataReceived(fileName, metadata);
+            new MetadataReceivedListenerImpl(tempDirectory.toString()).metadataReceived(fileName, metadata);
 
             assertEquals(1, numTimesHandlerCalled.get());
         } finally {

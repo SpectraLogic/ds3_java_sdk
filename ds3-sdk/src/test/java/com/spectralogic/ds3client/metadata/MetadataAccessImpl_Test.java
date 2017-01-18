@@ -15,7 +15,6 @@
 
 package com.spectralogic.ds3client.metadata;
 
-import com.spectralogic.ds3client.metadata.interfaces.MetadataStoreListener;
 import com.spectralogic.ds3client.utils.Platform;
 import org.apache.commons.io.FileUtils;
 import org.junit.Assume;
@@ -57,12 +56,7 @@ public class MetadataAccessImpl_Test {
 
             final Map<String, Path> fileMapper = new HashMap<>(1);
             fileMapper.put(filePath.toString(), filePath);
-            final Map<String, String> metadata = new MetadataAccessImpl(fileMapper, new MetadataStoreListener() {
-                @Override
-                public void onMetadataFailed(final String message) {
-                    fail("Error getting file metadata: " + message);
-                }
-            }).getMetadataValue(filePath.toString());
+            final Map<String, String> metadata = new MetadataAccessImpl(fileMapper).getMetadataValue(filePath.toString());
 
             if (Platform.isWindows()) {
                 assertEquals(metadata.size(), 13);
@@ -89,7 +83,7 @@ public class MetadataAccessImpl_Test {
         }
     }
 
-    @Test
+    @Test(expected = RuntimeException.class)
     public void testMetadataAccessFailureHandler() throws IOException, InterruptedException {
         Assume.assumeFalse(Platform.isWindows());
 
@@ -105,17 +99,8 @@ public class MetadataAccessImpl_Test {
 
             final Map<String, Path> fileMapper = new HashMap<>(1);
 
-            final AtomicInteger numTimesHandlerCalled = new AtomicInteger(0);
-
             fileMapper.put(filePath.toString(), filePath);
-            new MetadataAccessImpl(fileMapper, new MetadataStoreListener() {
-                @Override
-                public void onMetadataFailed(final String message) {
-                    numTimesHandlerCalled.incrementAndGet();
-                }
-            }).getMetadataValue(filePath.toString());
-
-            assertEquals(1, numTimesHandlerCalled.get());
+            new MetadataAccessImpl(fileMapper).getMetadataValue(filePath.toString());
         } finally {
             tempDirectory.toFile().setExecutable(true);
             FileUtils.deleteDirectory(tempDirectory.toFile());
@@ -131,12 +116,7 @@ public class MetadataAccessImpl_Test {
         final AtomicInteger numTimesHandlerCalled = new AtomicInteger(0);
 
         fileMapper.put("file", Paths.get("file"));
-        new MetadataAccessImpl(fileMapper, new MetadataStoreListener() {
-            @Override
-            public void onMetadataFailed(final String message) {
-                numTimesHandlerCalled.incrementAndGet();
-            }
-        }).getMetadataValue("file");
+        new MetadataAccessImpl(fileMapper).getMetadataValue("file");
 
         assertEquals(1, numTimesHandlerCalled.get());
     }

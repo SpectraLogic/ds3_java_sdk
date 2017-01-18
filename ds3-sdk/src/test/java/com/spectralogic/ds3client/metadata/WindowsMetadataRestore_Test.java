@@ -19,8 +19,6 @@ import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.spectralogic.ds3client.commands.interfaces.MetadataImpl;
-import com.spectralogic.ds3client.metadata.interfaces.MetadataRestoreListener;
-import com.spectralogic.ds3client.metadata.interfaces.MetadataStoreListener;
 import com.spectralogic.ds3client.networking.Headers;
 import com.spectralogic.ds3client.networking.Metadata;
 import org.apache.http.Header;
@@ -60,7 +58,7 @@ public class WindowsMetadataRestore_Test {
         basicHeader[1] = new BasicHeader(METADATA_PREFIX + MetadataKeyConstants.KEY_ACCESS_TIME, String.valueOf(attr.lastAccessTime().toMillis()));
         basicHeader[2] = new BasicHeader(METADATA_PREFIX + MetadataKeyConstants.KEY_LAST_MODIFIED_TIME, String.valueOf(attr.lastModifiedTime().toMillis()));
         final Metadata metadata = genMetadata(basicHeader);
-        final WindowsMetadataRestore windowsMetadataRestore = new WindowsMetadataRestore(metadata, file.getPath(), MetaDataUtil.getOS(), Mockito.mock(MetadataRestoreListener.class));
+        final WindowsMetadataRestore windowsMetadataRestore = new WindowsMetadataRestore(metadata, file.getPath(), MetaDataUtil.getOS());
         windowsMetadataRestore.restoreFileTimes();
         final BasicFileAttributes fileAttributes = Files.readAttributes(file.toPath(), BasicFileAttributes.class);
         Assert.assertEquals(String.valueOf(fileAttributes.creationTime().toMillis()), String.valueOf(basicHeader[0].getValue()));
@@ -71,7 +69,7 @@ public class WindowsMetadataRestore_Test {
     @Test
     public void restoreUserAndOwner_Test() throws Exception {
         final ImmutableMap.Builder<String, String> mMetadataMap = new ImmutableMap.Builder<>();
-        final WindowsMetadataStore windowsMetadataStore = new WindowsMetadataStore(mMetadataMap, Mockito.mock(MetadataStoreListener.class));
+        final WindowsMetadataStore windowsMetadataStore = new WindowsMetadataStore(mMetadataMap);
         final Class aClass = WindowsMetadataStore.class;
         final Method method = aClass.getDeclaredMethod("saveWindowsDescriptors", new Class[]{Path.class});
         method.setAccessible(true);
@@ -82,12 +80,12 @@ public class WindowsMetadataRestore_Test {
         basicHeader[1] = new BasicHeader(METADATA_PREFIX + KEY_GROUP, mMetadataMap.build().get(METADATA_PREFIX + KEY_GROUP));
         basicHeader[2] = new BasicHeader(METADATA_PREFIX + MetadataKeyConstants.KEY_OS, localOS);
         final Metadata metadata = genMetadata(basicHeader);
-        final WindowsMetadataRestore windowsMetadataRestore = new WindowsMetadataRestore(metadata, file.getPath(), MetaDataUtil.getOS(), Mockito.mock(MetadataRestoreListener.class));
+        final WindowsMetadataRestore windowsMetadataRestore = new WindowsMetadataRestore(metadata, file.getPath(), MetaDataUtil.getOS());
         windowsMetadataRestore.restoreOSName();
         windowsMetadataRestore.restoreUserAndOwner();
 
         final ImmutableMap.Builder<String, String> mMetadataMapAfterRestore = new ImmutableMap.Builder<>();
-        final WindowsMetadataStore windowsMetadataStoreAfterRestore = new WindowsMetadataStore(mMetadataMapAfterRestore, Mockito.mock(MetadataStoreListener.class));
+        final WindowsMetadataStore windowsMetadataStoreAfterRestore = new WindowsMetadataStore(mMetadataMapAfterRestore);
         final Class aClassAfterRestore = WindowsMetadataStore.class;
         final Method methodAfterRestore = aClassAfterRestore.getDeclaredMethod("saveWindowsDescriptors", new Class[]{Path.class});
         methodAfterRestore.setAccessible(true);
@@ -102,7 +100,7 @@ public class WindowsMetadataRestore_Test {
     public void restorePermissions_Test() {
         try {
             final ImmutableMap.Builder<String, String> mMetadataMap = new ImmutableMap.Builder<>();
-            final WindowsMetadataStore windowsMetadataStore = new WindowsMetadataStore(mMetadataMap, Mockito.mock(MetadataStoreListener.class));
+            final WindowsMetadataStore windowsMetadataStore = new WindowsMetadataStore(mMetadataMap);
             final Class aClass = WindowsMetadataStore.class;
             final Method method = aClass.getDeclaredMethod("saveFlagMetaData", new Class[]{Path.class});
             method.setAccessible(true);
@@ -123,7 +121,7 @@ public class WindowsMetadataRestore_Test {
             }
 
             final Metadata metadata = genMetadata(basicHeader);
-            final WindowsMetadataRestore windowsMetadataRestore = new WindowsMetadataRestore(metadata, file.getPath(), MetaDataUtil.getOS(), Mockito.mock(MetadataRestoreListener.class));
+            final WindowsMetadataRestore windowsMetadataRestore = new WindowsMetadataRestore(metadata, file.getPath(), MetaDataUtil.getOS());
             windowsMetadataRestore.restoreOSName();
             windowsMetadataRestore.restorePermissions();
         } catch (final Exception e) {

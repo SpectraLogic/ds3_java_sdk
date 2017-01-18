@@ -19,7 +19,6 @@ package com.spectralogic.ds3client.metadata;
 import com.google.common.collect.ImmutableMap;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers;
 import com.spectralogic.ds3client.metadata.interfaces.MetadataStore;
-import com.spectralogic.ds3client.metadata.interfaces.MetadataStoreListener;
 import com.spectralogic.ds3client.utils.Platform;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,22 +37,18 @@ import java.util.Map;
 public class MetadataAccessImpl implements Ds3ClientHelpers.MetadataAccess {
     static private final Logger LOG = LoggerFactory.getLogger(MetadataAccessImpl.class);
     private final Map<String, Path> fileMapper;
-    private final MetadataStoreListener metadataStoreListener;
 
-    public MetadataAccessImpl(final Map<String, Path> fileMapper , final MetadataStoreListener metadataStoreListener) {
+    public MetadataAccessImpl(final Map<String, Path> fileMapper) {
         this.fileMapper = fileMapper;
-        this.metadataStoreListener = metadataStoreListener;
     }
 
     @Override
     public Map<String, String> getMetadataValue(final String filename) {
+        final Path file = fileMapper.get(filename);
         try {
-            final Path file = fileMapper.get(filename);
             return storeMetaData(file).build();
-        } catch (final Exception e) {
-            LOG.error("failed to store Metadata", e);
-            metadataStoreListener.onMetadataFailed("Unable to get MetaData"+e.getMessage());
-            return null;
+        } catch (final IOException e) {
+            throw new RuntimeException("Error recording metadata.", e);
         }
     }
 
@@ -61,12 +56,12 @@ public class MetadataAccessImpl implements Ds3ClientHelpers.MetadataAccess {
      * @param file local path of file
      * @return map builder containing the data to be stored on server
      */
-    private ImmutableMap.Builder<String, String> storeMetaData(final Path file) {
+    private ImmutableMap.Builder<String, String> storeMetaData(final Path file) throws IOException {
         final ImmutableMap.Builder<String, String> metadata = new ImmutableMap.Builder<>();
         new ImmutableMap.Builder<String, String>();
-        try {
+
             //get metadata store based on os type
-            final MetadataStore metadataStore = new MetadataStoreFactory().getOsSpecificMetadataStore(metadata,metadataStoreListener);
+            final MetadataStore metadataStore = new MetadataStoreFactory().getOsSpecificMetadataStore(metadata);
             metadataStore.saveOSMetaData(MetaDataUtil.getOS());
 
             final BasicFileAttributes attr = Files.readAttributes(file, BasicFileAttributes.class);
@@ -87,10 +82,6 @@ public class MetadataAccessImpl implements Ds3ClientHelpers.MetadataAccess {
                 metadataStore.saveOSSpecificMetadata(file, attr);
             }
 
-        } catch (final IOException ioe) {
-            LOG.error("unable to get metadata", ioe);
-            metadataStoreListener.onMetadataFailed("Unable to get MetaData"+ioe.getMessage());
-        }
         return metadata;
     }
 

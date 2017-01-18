@@ -16,7 +16,6 @@
 package com.spectralogic.ds3client.metadata;
 
 import com.google.common.collect.ImmutableMap;
-import com.spectralogic.ds3client.metadata.interfaces.MetadataStoreListener;
 import com.spectralogic.ds3client.metadata.jna.Advapi32;
 import com.sun.jna.platform.win32.WinNT;
 import com.sun.jna.ptr.PointerByReference;
@@ -45,9 +44,8 @@ import static com.spectralogic.ds3client.metadata.MetadataKeyConstants.METADATA_
 class WindowsMetadataStore extends AbstractMetadataStore {
     private static final Logger LOG = LoggerFactory.getLogger(WindowsMetadataStore.class);
 
-    public WindowsMetadataStore(final ImmutableMap.Builder<String, String> metadataMap, final MetadataStoreListener metadataStoreListener) {
-        this.mMetadataMap = metadataMap;
-        this.metadataStoreListener = metadataStoreListener;
+    public WindowsMetadataStore(final ImmutableMap.Builder<String, String> metadataMap) {
+        this.metadataMap = metadataMap;
     }
 
     /**
@@ -55,7 +53,7 @@ class WindowsMetadataStore extends AbstractMetadataStore {
      *
      * @param path local path of the file
      */
-    private void saveWindowsDescriptors(final Path path) {
+    private void saveWindowsDescriptors(final Path path) throws IOException {
         final int infoType = WinNT.OWNER_SECURITY_INFORMATION
                 | WinNT.GROUP_SECURITY_INFORMATION
                 | WinNT.DACL_SECURITY_INFORMATION;
@@ -64,32 +62,28 @@ class WindowsMetadataStore extends AbstractMetadataStore {
         final PointerByReference ppDacl = new PointerByReference();
         final PointerByReference ppSecurityDescriptor = new PointerByReference();
         final File file = path.toFile();
-        try {
-            final int winApiResult = Advapi32.INSTANCE.GetNamedSecurityInfo(
-                    file.getAbsolutePath(),
-                    1,
-                    infoType,
-                    ppsidOwner,
-                    ppsidGroup,
-                    ppDacl,
-                    null,
-                    ppSecurityDescriptor);
-            if (winApiResult == 0) {
-                final WinNT.PSID psidOwner = new WinNT.PSID(ppsidOwner.getValue());
-                final String ownerSid = psidOwner.getSidString();
-                final WinNT.PSID psidGroup = new WinNT.PSID(ppsidGroup.getValue());
-                final String groupSid = psidGroup.getSidString();
-                mMetadataMap.put(METADATA_PREFIX + KEY_GROUP, groupSid);
-                mMetadataMap.put(METADATA_PREFIX + KEY_OWNER, ownerSid);
-                final WinNT.ACL acl = new WinNT.ACL(ppDacl.getValue());
-                final String daclString = getDaclString(acl);
-                mMetadataMap.put(METADATA_PREFIX + KEY_DACL, daclString);
-            } else {
-                throw new Exception("GetNamedSecurityInfo returned error code: " + winApiResult);
-            }
-        } catch (final Exception e) {
-            LOG.error("Unable to get sid of user and owner ", e);
-            metadataStoreListener.onMetadataFailed("Unable to get sid of user and owner " + e.getMessage());
+
+    final int winApiResult = Advapi32.INSTANCE.GetNamedSecurityInfo(
+                file.getAbsolutePath(),
+                1,
+                infoType,
+                ppsidOwner,
+                ppsidGroup,
+                ppDacl,
+                null,
+                ppSecurityDescriptor);
+        if (winApiResult == 0) {
+            final WinNT.PSID psidOwner = new WinNT.PSID(ppsidOwner.getValue());
+            final String ownerSid = psidOwner.getSidString();
+            final WinNT.PSID psidGroup = new WinNT.PSID(ppsidGroup.getValue());
+            final String groupSid = psidGroup.getSidString();
+            metadataMap.put(METADATA_PREFIX + KEY_GROUP, groupSid);
+            metadataMap.put(METADATA_PREFIX + KEY_OWNER, ownerSid);
+            final WinNT.ACL acl = new WinNT.ACL(ppDacl.getValue());
+            final String daclString = getDaclString(acl);
+            metadataMap.put(METADATA_PREFIX + KEY_DACL, daclString);
+        } else {
+            throw new IOException("GetNamedSecurityInfo returned error code: " + winApiResult);
         }
     }
 
@@ -125,9 +119,9 @@ class WindowsMetadataStore extends AbstractMetadataStore {
      * @param file local file of the path
      * @return flag of file in String
      */
-    private String saveFlagMetaData(final Path file) {
+    private String saveFlagMetaData(final Path file) throws IOException {
         final StringBuilder flagBuilder = new StringBuilder();
-        try {
+
             final ProcessBuilder processBuilder = new ProcessBuilder("attrib", file.toString());
             final Process process = processBuilder.start();
             final BufferedReader reader =
@@ -146,14 +140,8 @@ class WindowsMetadataStore extends AbstractMetadataStore {
             if (flagBuilder.toString().equals("")) {
                 flagBuilder.append("N");
             }
-            mMetadataMap.put(METADATA_PREFIX + KEY_FLAGS, flagBuilder.toString());
-        } catch (final IOException ioe) {
-            LOG.error("Unable to read file ", ioe);
-            metadataStoreListener.onMetadataFailed("Unable to read file " + ioe.getMessage());
-        } catch (final Exception e) {
-            LOG.error("Unable to fetch attributes of file ", e);
-            metadataStoreListener.onMetadataFailed("Unable to fetch attributes of file " + e.getMessage());
-        }
+            metadataMap.put(METADATA_PREFIX + KEY_FLAGS, flagBuilder.toString());
+
         return flagBuilder.toString();
     }
 
@@ -162,8 +150,8 @@ class WindowsMetadataStore extends AbstractMetadataStore {
      *
      * @param file local file path
      */
-    private void saveWindowsfilePermissions(final Path file) {
-        try {
+    private void saveWindowsfilePermissions(final Path file) throws IOException {
+
             Set<AclEntryPermission> aclEntryPermissions;
             String userType;
             String userDisplay;
@@ -208,19 +196,15 @@ class WindowsMetadataStore extends AbstractMetadataStore {
                     userDisplayList.append(key + "-");
                     userList.append(userType + "-");
                 }
-                mMetadataMap.put("x-amz-meta-ds3-" + userType, permission.toString());
+                metadataMap.put("x-amz-meta-ds3-" + userType, permission.toString());
                 userCount++;
             }
-            mMetadataMap.put("x-amz-meta-ds3-userList", userList.toString());
-            mMetadataMap.put("x-amz-meta-ds3-userListDisplay", userDisplayList.toString());
-        } catch (final Exception e) {
-            LOG.error("Unable to get list of users or their permissions ", e);
-            metadataStoreListener.onMetadataFailed("Unable to get list of users or their permissions " + e.getMessage());
-        }
+            metadataMap.put("x-amz-meta-ds3-userList", userList.toString());
+            metadataMap.put("x-amz-meta-ds3-userListDisplay", userDisplayList.toString());
     }
 
     @Override
-    public void saveOSSpecificMetadata(final Path file, final BasicFileAttributes attrs) {
+    public void saveOSSpecificMetadata(final Path file, final BasicFileAttributes attrs) throws IOException {
         saveWindowsfilePermissions(file);
         saveWindowsDescriptors(file);
         saveFlagMetaData(file);
