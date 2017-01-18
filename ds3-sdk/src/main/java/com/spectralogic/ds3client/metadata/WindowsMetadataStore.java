@@ -75,9 +75,9 @@ class WindowsMetadataStore extends AbstractMetadataStore {
                     null,
                     ppSecurityDescriptor);
             if (winApiResult == 0) {
-                final WinNT.PSID psidOwner = new WinNT.PSID(ppsidOwner.getValue().getByteArray(0, 256));
+                final WinNT.PSID psidOwner = new WinNT.PSID(ppsidOwner.getValue());
                 final String ownerSid = psidOwner.getSidString();
-                final WinNT.PSID psidGroup = new WinNT.PSID(ppsidGroup.getValue().getByteArray(0, 256));
+                final WinNT.PSID psidGroup = new WinNT.PSID(ppsidGroup.getValue());
                 final String groupSid = psidGroup.getSidString();
                 mMetadataMap.put(METADATA_PREFIX + KEY_GROUP, groupSid);
                 mMetadataMap.put(METADATA_PREFIX + KEY_OWNER, ownerSid);
