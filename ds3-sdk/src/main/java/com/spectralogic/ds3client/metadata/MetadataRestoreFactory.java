@@ -17,15 +17,16 @@ package com.spectralogic.ds3client.metadata;
 
 import com.spectralogic.ds3client.metadata.interfaces.MetadataRestore;
 import com.spectralogic.ds3client.networking.Metadata;
+import com.spectralogic.ds3client.utils.Platform;
 
 
 public class MetadataRestoreFactory {
     public MetadataRestore getOSSpecificMetadataRestore(final Metadata metadata, final String filePath) {
         final String localOS = MetaDataUtil.getOS();
         
-        if (localOS.contains("Windows")) {
+        if (Platform.isWindows()) {
             return new WindowsMetadataRestore(metadata, filePath, localOS);
-        } else if (localOS.contains("Mac")) {
+        } else if (Platform.isMac()) {
             return new MACMetadataRestore(metadata, filePath, localOS);
         } else {
             return new PosixMetadataRestore(metadata, filePath, localOS);

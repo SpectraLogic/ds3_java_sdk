@@ -15,6 +15,7 @@
 
 package com.spectralogic.ds3client.metadata;
 
+import com.google.common.collect.ImmutableMap;
 import com.spectralogic.ds3client.MockedHeadersReturningKeys;
 import com.spectralogic.ds3client.commands.interfaces.MetadataImpl;
 import com.spectralogic.ds3client.networking.Metadata;
@@ -25,12 +26,10 @@ import org.junit.Test;
 
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.attribute.PosixFileAttributes;
 import java.nio.file.attribute.PosixFilePermission;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -58,9 +57,10 @@ public class MetadataReceivedListenerImpl_Test {
             }
 
             // get permissions
-            final Map<String, Path> fileMapper = new HashMap<>(1);
+            final ImmutableMap.Builder<String, Path> fileMapper = ImmutableMap.builder();
             fileMapper.put(filePath.toString(), filePath);
-            final Map<String, String> metadataFromFile = new MetadataAccessImpl(fileMapper).getMetadataValue(filePath.toString());
+            final ImmutableMap<String, Path> immutableFileMapper = fileMapper.build();
+            final Map<String, String> metadataFromFile = new MetadataAccessImpl(immutableFileMapper).getMetadataValue(filePath.toString());
 
             // change permissions
             if (Platform.isWindows()) {
@@ -82,7 +82,7 @@ public class MetadataReceivedListenerImpl_Test {
 
             // see that we put back the original metadata
             fileMapper.put(filePath.toString(), filePath);
-            final Map<String, String> metadataFromUpdatedFile = new MetadataAccessImpl(fileMapper).getMetadataValue(filePath.toString());
+            final Map<String, String> metadataFromUpdatedFile = new MetadataAccessImpl(immutableFileMapper).getMetadataValue(filePath.toString());
 
             if (Platform.isWindows()) {
                 assertEquals("A", metadataFromUpdatedFile.get(MetadataKeyConstants.METADATA_PREFIX + MetadataKeyConstants.KEY_FLAGS));
@@ -119,9 +119,9 @@ public class MetadataReceivedListenerImpl_Test {
             }
 
             // get permissions
-            final Map<String, Path> fileMapper = new HashMap<>(1);
+            final ImmutableMap.Builder<String, Path> fileMapper = ImmutableMap.builder();
             fileMapper.put(filePath.toString(), filePath);
-            final Map<String, String> metadataFromFile = new MetadataAccessImpl(fileMapper).getMetadataValue(filePath.toString());
+            final Map<String, String> metadataFromFile = new MetadataAccessImpl(fileMapper.build()).getMetadataValue(filePath.toString());
 
             FileUtils.deleteDirectory(tempDirectory.toFile());
 
@@ -147,9 +147,9 @@ public class MetadataReceivedListenerImpl_Test {
 
         try {
             // get permissions
-            final Map<String, Path> fileMapper = new HashMap<>(1);
+            final ImmutableMap.Builder<String, Path> fileMapper = ImmutableMap.builder();
             fileMapper.put(filePath.toString(), filePath);
-            final Map<String, String> metadataFromFile = new MetadataAccessImpl(fileMapper).getMetadataValue(filePath.toString());
+            final Map<String, String> metadataFromFile = new MetadataAccessImpl(fileMapper.build()).getMetadataValue(filePath.toString());
 
             FileUtils.deleteDirectory(tempDirectory.toFile());
 

@@ -16,9 +16,21 @@
 package com.spectralogic.ds3client.utils;
 
 public final class Platform {
+    public static final String WINDOWS_SYSTEM_NAME = "windows";
+    public static final String MAC_SYSTEM_NAME = "mac";
+    public static final String LINUX_SYSTEM_NAME = "linux";
+
     private Platform() {}
 
     public static boolean isWindows() {
-        return System.getProperty("os.name").contains("Windows");
+        return System.getProperty("os.name").toLowerCase().contains(WINDOWS_SYSTEM_NAME);
+    }
+
+    public static boolean isMac() {
+        return System.getProperty("os.name").toLowerCase().contains(MAC_SYSTEM_NAME);
+    }
+
+    public static boolean isLinux() {
+        return System.getProperty("os.name").toLowerCase().contains(LINUX_SYSTEM_NAME);
     }
 }

@@ -26,7 +26,7 @@ import static org.junit.Assert.assertEquals;
 public class MetadataRestoreFactory_Test {
     @Test
     public void testThatRunningOnMacReturnsMacMetaDataRestore() {
-        Assume.assumeTrue(System.getProperty("os.name").toLowerCase().startsWith("mac"));
+        Assume.assumeTrue(Platform.isMac());
 
         final Metadata metadata = null;
         final String filePath = ".";

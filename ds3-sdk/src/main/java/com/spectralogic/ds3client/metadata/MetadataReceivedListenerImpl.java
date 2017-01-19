@@ -22,7 +22,7 @@ import com.spectralogic.ds3client.networking.Metadata;
 import java.io.IOException;
 
 public class MetadataReceivedListenerImpl implements MetadataReceivedListener {
-    private String localFilePath = null;
+    private final String localFilePath;
 
     public MetadataReceivedListenerImpl(final String localFilePath) {
         this.localFilePath = localFilePath;

@@ -20,6 +20,7 @@ import com.google.common.collect.Sets;
 import com.spectralogic.ds3client.commands.interfaces.MetadataImpl;
 import com.spectralogic.ds3client.networking.Headers;
 import com.spectralogic.ds3client.networking.Metadata;
+import com.spectralogic.ds3client.utils.Platform;
 import org.apache.http.Header;
 import org.apache.http.message.BasicHeader;
 import org.junit.Assert;
@@ -42,7 +43,7 @@ public class MACMetadataRestore_Test {
     @Test
     public void restoreFileTimes_Test() throws Exception {
 
-        if (MetaDataUtil.getOS().contains("Mac")) {
+        if (Platform.isMac()) {
             final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yy:HH:mm");
             final BasicFileAttributes attr = Files.readAttributes(file.toPath(), BasicFileAttributes.class);
             final BasicHeader basicHeader[] = new BasicHeader[3];

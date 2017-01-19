@@ -33,9 +33,9 @@ import java.util.Map;
  * Used to store meta data on Server
  */
 public class MetadataAccessImpl implements Ds3ClientHelpers.MetadataAccess {
-    private final Map<String, Path> fileMapper;
+    private final ImmutableMap<String, Path> fileMapper;
 
-    public MetadataAccessImpl(final Map<String, Path> fileMapper) {
+    public MetadataAccessImpl(final ImmutableMap<String, Path> fileMapper) {
         this.fileMapper = fileMapper;
     }
 

@@ -15,6 +15,7 @@
 
 package com.spectralogic.ds3client.metadata;
 
+import com.google.common.collect.ImmutableMap;
 import com.spectralogic.ds3client.utils.Platform;
 import org.apache.commons.io.FileUtils;
 import org.junit.Assume;
@@ -28,7 +29,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.attribute.PosixFileAttributes;
 import java.nio.file.attribute.PosixFilePermission;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -52,9 +52,9 @@ public class MetadataAccessImpl_Test {
                 Files.setPosixFilePermissions(filePath, permissions);
             }
 
-            final Map<String, Path> fileMapper = new HashMap<>(1);
+            final ImmutableMap.Builder<String, Path> fileMapper = ImmutableMap.builder();
             fileMapper.put(filePath.toString(), filePath);
-            final Map<String, String> metadata = new MetadataAccessImpl(fileMapper).getMetadataValue(filePath.toString());
+            final Map<String, String> metadata = new MetadataAccessImpl(fileMapper.build()).getMetadataValue(filePath.toString());
 
             if (Platform.isWindows()) {
                 assertEquals(metadata.size(), 13);
@@ -62,12 +62,12 @@ public class MetadataAccessImpl_Test {
                 assertEquals(metadata.size(), 10);
             }
 
-            if (System.getProperty("os.name").toLowerCase().startsWith("mac")) {
-                assertTrue(metadata.get(MetadataKeyConstants.METADATA_PREFIX + MetadataKeyConstants.KEY_OS).toLowerCase().startsWith("mac"));
-            } else if (System.getProperty("os.name").toLowerCase().startsWith("linux")) {
-                assertTrue(metadata.get(MetadataKeyConstants.METADATA_PREFIX + MetadataKeyConstants.KEY_OS).toLowerCase().startsWith("linux"));
+            if (Platform.isMac()) {
+                assertTrue(metadata.get(MetadataKeyConstants.METADATA_PREFIX + MetadataKeyConstants.KEY_OS).toLowerCase().startsWith(Platform.MAC_SYSTEM_NAME));
+            } else if (Platform.isLinux()) {
+                assertTrue(metadata.get(MetadataKeyConstants.METADATA_PREFIX + MetadataKeyConstants.KEY_OS).toLowerCase().startsWith(Platform.LINUX_SYSTEM_NAME));
             } else if (Platform.isWindows()) {
-                assertTrue(metadata.get(MetadataKeyConstants.METADATA_PREFIX + MetadataKeyConstants.KEY_OS).toLowerCase().startsWith("windows"));
+                assertTrue(metadata.get(MetadataKeyConstants.METADATA_PREFIX + MetadataKeyConstants.KEY_OS).toLowerCase().startsWith(Platform.WINDOWS_SYSTEM_NAME));
             }
 
             if (Platform.isWindows()) {
@@ -95,10 +95,10 @@ public class MetadataAccessImpl_Test {
         try {
             tempDirectory.toFile().setExecutable(false);
 
-            final Map<String, Path> fileMapper = new HashMap<>(1);
+            final ImmutableMap.Builder<String, Path> fileMapper = ImmutableMap.builder();
 
             fileMapper.put(filePath.toString(), filePath);
-            new MetadataAccessImpl(fileMapper).getMetadataValue(filePath.toString());
+            new MetadataAccessImpl(fileMapper.build()).getMetadataValue(filePath.toString());
         } finally {
             tempDirectory.toFile().setExecutable(true);
             FileUtils.deleteDirectory(tempDirectory.toFile());
@@ -109,9 +109,9 @@ public class MetadataAccessImpl_Test {
     public void testMetadataAccessFailureHandlerWindows() {
         Assume.assumeTrue(Platform.isWindows());
 
-        final Map<String, Path> fileMapper = new HashMap<>(1);
+        final ImmutableMap.Builder<String, Path> fileMapper = ImmutableMap.builder();
 
         fileMapper.put("file", Paths.get("file"));
-        new MetadataAccessImpl(fileMapper).getMetadataValue("file");
+        new MetadataAccessImpl(fileMapper.build()).getMetadataValue("file");
     }
 }
