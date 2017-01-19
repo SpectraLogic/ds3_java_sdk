@@ -21,7 +21,7 @@ allprojects {
 subprojects {
     apply plugin: 'maven'
     apply plugin: 'java'
-    apply plugin: 'findbugs'
+    // apply plugin: 'findbugs'
 
     sourceCompatibility = JavaVersion.VERSION_1_7
     repositories {
@@ -31,7 +31,6 @@ subprojects {
 
     dependencies {
         compile     'org.slf4j:slf4j-api:1.7.20'
-        compile project(':ds3-interfaces')
         testCompile ('org.mockito:mockito-core:1.10.19') {
             exclude group: 'org.hamcrest'
         }
@@ -45,11 +44,19 @@ task wrapper(type: Wrapper) {
     gradleVersion = '3.2'
 }
 
+project(':ds3-sdk') {
+    dependencies {
+        compile project(':ds3-interfaces')
+    }
+}
+
+/*
 project(':ds3-sdk-integration') {
     dependencies {
         compile project(':ds3-sdk')
     }
 }
+*/
 
 project(':ds3-sdk-samples') {
     dependencies {
