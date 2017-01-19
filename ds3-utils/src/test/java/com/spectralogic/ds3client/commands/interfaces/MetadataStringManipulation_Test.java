@@ -13,7 +13,7 @@
  *  ****************************************************************************
  */
 
-package com.spectralogic.ds3client.utils;
+package com.spectralogic.ds3client.commands.interfaces;
 
 import org.junit.Test;
 
