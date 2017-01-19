@@ -134,7 +134,7 @@ public class MetadataReceivedListenerImpl_Test {
         }
     }
 
-    @Test(expected = IOException.class)
+    @Test(expected = RuntimeException.class)
     public void testGettingMetadataFailureHandlerWindows() throws IOException, InterruptedException {
         Assume.assumeTrue(Platform.isWindows());
 
