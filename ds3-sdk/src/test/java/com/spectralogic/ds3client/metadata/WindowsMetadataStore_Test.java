@@ -15,14 +15,10 @@
 package com.spectralogic.ds3client.metadata;
 
 import com.google.common.collect.ImmutableMap;
-import com.spectralogic.ds3client.metadata.interfaces.MetadataStoreListener;
-import com.spectralogic.ds3client.utils.MetaDataUtil;
-import com.spectralogic.ds3client.utils.MetadataKeyConstants;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-import org.mockito.Mockito;
 
 import java.io.File;
 import java.io.IOException;
@@ -31,20 +27,22 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
 
-import static com.spectralogic.ds3client.utils.MetadataKeyConstants.*;
+import static com.spectralogic.ds3client.metadata.MetadataKeyConstants.KEY_GROUP;
+import static com.spectralogic.ds3client.metadata.MetadataKeyConstants.KEY_OWNER;
+import static com.spectralogic.ds3client.metadata.MetadataKeyConstants.METADATA_PREFIX;
 
 @RunWith(JUnit4.class)
 public class WindowsMetadataStore_Test {
     private final File file = new File(getClass().getClassLoader().getResource("LoremIpsum.txt").getFile());
     private final ImmutableMap.Builder<String, String> mMetadataMap = new ImmutableMap.Builder<>();
-    private final WindowsMetadataStore windowsMetadataStore = new WindowsMetadataStore(mMetadataMap, Mockito.mock(MetadataStoreListener.class));
+    private final WindowsMetadataStore windowsMetadataStore = new WindowsMetadataStore(mMetadataMap);
 
     @Test
     public void saveCreationTimeMetaData_Test() throws IOException {
         final BasicFileAttributes attr = Files.readAttributes(file.toPath(), BasicFileAttributes.class);
         final long creationTime = attr.creationTime().toMillis();
         windowsMetadataStore.saveCreationTimeMetaData(attr);
-        Assert.assertEquals(mMetadataMap.build().get(MetadataKeyConstants.METADATA_PREFIX + MetadataKeyConstants.KEY_CREATION_TIME), String.valueOf(creationTime));
+        Assert.assertEquals(mMetadataMap.build().get(METADATA_PREFIX + MetadataKeyConstants.KEY_CREATION_TIME), String.valueOf(creationTime));
     }
 
     @Test
@@ -52,7 +50,7 @@ public class WindowsMetadataStore_Test {
         final BasicFileAttributes attr = Files.readAttributes(file.toPath(), BasicFileAttributes.class);
         final long lastAccessTime = attr.lastAccessTime().toMillis();
         windowsMetadataStore.saveAccessTimeMetaData(attr);
-        Assert.assertEquals(mMetadataMap.build().get(MetadataKeyConstants.METADATA_PREFIX + MetadataKeyConstants.KEY_ACCESS_TIME), String.valueOf(lastAccessTime));
+        Assert.assertEquals(mMetadataMap.build().get(METADATA_PREFIX + MetadataKeyConstants.KEY_ACCESS_TIME), String.valueOf(lastAccessTime));
     }
 
 
@@ -61,14 +59,14 @@ public class WindowsMetadataStore_Test {
         final BasicFileAttributes attr = Files.readAttributes(file.toPath(), BasicFileAttributes.class);
         final long lastModifiedTime = attr.lastModifiedTime().toMillis();
         windowsMetadataStore.saveLastModifiedTime(attr);
-        Assert.assertEquals(mMetadataMap.build().get(MetadataKeyConstants.METADATA_PREFIX + MetadataKeyConstants.KEY_LAST_MODIFIED_TIME), String.valueOf(lastModifiedTime));
+        Assert.assertEquals(mMetadataMap.build().get(METADATA_PREFIX + MetadataKeyConstants.KEY_LAST_MODIFIED_TIME), String.valueOf(lastModifiedTime));
     }
 
     @Test
     public void saveOSMetaData_Test() throws IOException {
         final String localOSName = MetaDataUtil.getOS();
         windowsMetadataStore.saveOSMetaData(localOSName);
-        Assert.assertEquals(mMetadataMap.build().get(MetadataKeyConstants.METADATA_PREFIX + MetadataKeyConstants.KEY_OS), String.valueOf(localOSName));
+        Assert.assertEquals(mMetadataMap.build().get(METADATA_PREFIX + MetadataKeyConstants.KEY_OS), String.valueOf(localOSName));
     }
 
     @Test

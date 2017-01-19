@@ -15,18 +15,14 @@
 
 package com.spectralogic.ds3client.metadata.interfaces;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import java.io.IOException;
 
 public interface MetadataRestore {
-    Logger LOG = LoggerFactory.getLogger(MetadataRestore.class);
+    void restoreFileTimes() throws IOException, InterruptedException;
 
-    void restoreFileTimes();
+    void restoreUserAndOwner() throws IOException;
 
-    void restoreUserAndOwner();
-
-    void restorePermissions();
+    void restorePermissions() throws IOException, InterruptedException;
 
     void restoreOSName();
 

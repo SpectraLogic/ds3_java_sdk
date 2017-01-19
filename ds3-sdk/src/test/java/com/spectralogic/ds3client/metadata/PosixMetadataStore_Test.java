@@ -16,14 +16,11 @@
 package com.spectralogic.ds3client.metadata;
 
 import com.google.common.collect.ImmutableMap;
-import com.spectralogic.ds3client.metadata.interfaces.MetadataStoreListener;
-import com.spectralogic.ds3client.utils.MetaDataUtil;
-import com.spectralogic.ds3client.utils.MetadataKeyConstants;
+import com.spectralogic.ds3client.utils.Platform;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-import org.mockito.Mockito;
 
 import java.io.File;
 import java.io.IOException;
@@ -38,7 +35,7 @@ public class PosixMetadataStore_Test {
 
     private final File file = new File(getClass().getClassLoader().getResource("LoremIpsum.txt").getFile());
     private final ImmutableMap.Builder<String, String> mMetadataMap = new ImmutableMap.Builder<>();
-    private final PosixMetadataStore posixMetadataStore = new PosixMetadataStore(mMetadataMap, Mockito.mock(MetadataStoreListener.class));
+    private final PosixMetadataStore posixMetadataStore = new PosixMetadataStore(mMetadataMap);
 
     @Test
     public void saveCreationTimeMetaData_Test() throws IOException {
@@ -149,10 +146,9 @@ public class PosixMetadataStore_Test {
 
     @Test
     public void saveOSSpecificMetadata() throws Exception {
-        if (!MetaDataUtil.getOS().contains("Windows")) {
-            final BasicFileAttributes attr = Files.readAttributes(file.toPath(), BasicFileAttributes.class);
+        if (!Platform.isWindows()) {
+            final PosixFileAttributes attr = Files.readAttributes(file.toPath(), PosixFileAttributes.class);
             posixMetadataStore.saveOSSpecificMetadata(file.toPath(), attr);
         }
     }
-
 }

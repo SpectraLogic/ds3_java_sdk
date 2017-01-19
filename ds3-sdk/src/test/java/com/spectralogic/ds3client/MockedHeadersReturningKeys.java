@@ -13,24 +13,18 @@
  *  ****************************************************************************
  */
 
-package com.spectralogic.ds3client.utils;
+package com.spectralogic.ds3client;
 
-public final class Platform {
-    public static final String WINDOWS_SYSTEM_NAME = "windows";
-    public static final String MAC_SYSTEM_NAME = "mac";
-    public static final String LINUX_SYSTEM_NAME = "linux";
+import java.util.Map;
+import java.util.Set;
 
-    private Platform() {}
-
-    public static boolean isWindows() {
-        return System.getProperty("os.name").toLowerCase().contains(WINDOWS_SYSTEM_NAME);
+public class MockedHeadersReturningKeys extends MockedHeaders {
+    public MockedHeadersReturningKeys(final Map<String, String> headerValues) {
+        super(headerValues);
     }
 
-    public static boolean isMac() {
-        return System.getProperty("os.name").toLowerCase().contains(MAC_SYSTEM_NAME);
-    }
-
-    public static boolean isLinux() {
-        return System.getProperty("os.name").toLowerCase().contains(LINUX_SYSTEM_NAME);
+    @Override
+    public Set<String> keys() {
+        return super.getRealKeys();
     }
 }

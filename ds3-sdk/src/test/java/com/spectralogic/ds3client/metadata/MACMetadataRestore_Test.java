@@ -18,23 +18,19 @@ import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.spectralogic.ds3client.commands.interfaces.MetadataImpl;
-import com.spectralogic.ds3client.metadata.interfaces.MetadataRestoreListener;
 import com.spectralogic.ds3client.networking.Headers;
 import com.spectralogic.ds3client.networking.Metadata;
-import com.spectralogic.ds3client.utils.MetaDataUtil;
-import com.spectralogic.ds3client.utils.MetadataKeyConstants;
+import com.spectralogic.ds3client.utils.Platform;
 import org.apache.http.Header;
 import org.apache.http.message.BasicHeader;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-import org.mockito.Mockito;
 
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.attribute.BasicFileAttributes;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Set;
@@ -47,7 +43,7 @@ public class MACMetadataRestore_Test {
     @Test
     public void restoreFileTimes_Test() throws Exception {
 
-        if (MetaDataUtil.getOS().contains("Mac")) {
+        if (Platform.isMac()) {
             final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yy:HH:mm");
             final BasicFileAttributes attr = Files.readAttributes(file.toPath(), BasicFileAttributes.class);
             final BasicHeader basicHeader[] = new BasicHeader[3];
@@ -55,7 +51,7 @@ public class MACMetadataRestore_Test {
             basicHeader[1] = new BasicHeader(MetadataKeyConstants.METADATA_PREFIX + MetadataKeyConstants.KEY_ACCESS_TIME, String.valueOf(attr.lastAccessTime().toMillis()));
             basicHeader[2] = new BasicHeader(MetadataKeyConstants.METADATA_PREFIX + MetadataKeyConstants.KEY_LAST_MODIFIED_TIME, String.valueOf(attr.lastModifiedTime().toMillis()));
             final Metadata metadata = genMetadata(basicHeader);
-            final MACMetadataRestore macMetadataRestore = new MACMetadataRestore(metadata, file.getPath(), MetaDataUtil.getOS(), Mockito.mock(MetadataRestoreListener.class));
+            final MACMetadataRestore macMetadataRestore = new MACMetadataRestore(metadata, file.getPath(), MetaDataUtil.getOS());
             macMetadataRestore.restoreFileTimes();
             final BasicFileAttributes fileAttributes = Files.readAttributes(file.toPath(), BasicFileAttributes.class);
             Assert.assertEquals(simpleDateFormat.format(fileAttributes.creationTime().toMillis()), simpleDateFormat.format(Long.valueOf(basicHeader[0].getValue())));

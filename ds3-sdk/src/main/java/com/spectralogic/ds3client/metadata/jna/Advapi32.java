@@ -26,7 +26,12 @@ public interface Advapi32 extends Library {
 
     Advapi32 INSTANCE = (Advapi32) Native.loadLibrary("advapi32", Advapi32.class, W32APIOptions.UNICODE_OPTIONS);
 
-    int GetNamedSecurityInfo(String pObjectName, int ObjectType, int SecurityInfo, PointerByReference ppsidOwner, PointerByReference ppsidGroup, PointerByReference ppDacl, PointerByReference ppSacl, PointerByReference ppSecurityDescriptor);
-    boolean ConvertStringSidToSid(String StringSid, WinNT.PSIDByReference Sid);
-    int SetNamedSecurityInfo(String pObjectName, int ObjectType, int SecurityInfo, Pointer ppsidOwner, Pointer ppsidGroup, Pointer ppDacl, Pointer ppSacl);
+    int GetNamedSecurityInfo(final String pObjectName, final int ObjectType, final int SecurityInfo,
+                             final PointerByReference ppsidOwner, final PointerByReference ppsidGroup,
+                             final PointerByReference ppDacl, final PointerByReference ppSacl,
+                             final PointerByReference ppSecurityDescriptor);
+    boolean ConvertStringSidToSid(final String StringSid, final WinNT.PSIDByReference Sid);
+    int SetNamedSecurityInfo(final String pObjectName, final int ObjectType, final int SecurityInfo,
+                             final Pointer ppsidOwner, final Pointer ppsidGroup,
+                             final Pointer ppDacl, final Pointer ppSacl);
 }

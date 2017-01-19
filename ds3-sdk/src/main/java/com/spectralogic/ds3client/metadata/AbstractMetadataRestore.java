@@ -13,31 +13,34 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3client.metadata.interfaces;
+package com.spectralogic.ds3client.metadata;
 
+import com.spectralogic.ds3client.metadata.interfaces.MetadataRestore;
 import com.spectralogic.ds3client.networking.Metadata;
 
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.attribute.BasicFileAttributeView;
 import java.nio.file.attribute.FileTime;
+import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import static com.spectralogic.ds3client.utils.MetadataKeyConstants.*;
-import static com.spectralogic.ds3client.utils.MetadataKeyConstants.KEY_LAST_MODIFIED_TIME;
+import static com.spectralogic.ds3client.metadata.MetadataKeyConstants.KEY_ACCESS_TIME;
+import static com.spectralogic.ds3client.metadata.MetadataKeyConstants.KEY_CREATION_TIME;
+import static com.spectralogic.ds3client.metadata.MetadataKeyConstants.KEY_LAST_MODIFIED_TIME;
+import static com.spectralogic.ds3client.metadata.MetadataKeyConstants.KEY_OS;
 
-
-public abstract class AbstractMetadataRestore implements MetadataRestore {
-
+abstract class AbstractMetadataRestore implements MetadataRestore {
     protected String storedOS;
     protected Metadata metadata;
     protected String objectName;
     protected String localOS;
-    protected MetadataRestoreListener metadataRestoreListener;
+
     @Override
-    public void restoreFileTimes() {
+    public void restoreFileTimes() throws IOException, InterruptedException {
         String creationTime = null;
         if(metadata.get(KEY_CREATION_TIME).size()>0) {
             creationTime = metadata.get(KEY_CREATION_TIME).get(0);
@@ -52,16 +55,18 @@ public abstract class AbstractMetadataRestore implements MetadataRestore {
         if(metadata.get(KEY_LAST_MODIFIED_TIME).size()>0) {
             modifiedTime = metadata.get(KEY_LAST_MODIFIED_TIME).get(0);
         }
+
         if (modifiedTime != null && creationTime != null && accessTime != null) {
             final String modifiedTimes = modifiedTime;
             final String creationTimes = creationTime;
             final String accessTimes = accessTime;
             final ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
 
-            executorService.schedule(new Runnable() {
+            executorService.schedule(new Callable<Void>() {
                 @Override
-                public void run() {
+                public Void call() throws Exception {
                     setFileTimes(objectName, creationTimes, modifiedTimes, accessTimes);
+                    return null;
                 }
             }, 10, TimeUnit.SECONDS);
         }
@@ -81,19 +86,16 @@ public abstract class AbstractMetadataRestore implements MetadataRestore {
      * @param lastModifiedTime modified time got from server
      * @param lastAccessedTime last aceess time got from server
      */
-    private void setFileTimes(final String filePath,final String creationTime,final String lastModifiedTime ,final String lastAccessedTime) {
-        try {
-            final BasicFileAttributeView attributes = Files.getFileAttributeView(Paths.get(filePath), BasicFileAttributeView.class);
-            final FileTime timeCreation = FileTime.fromMillis(Long.parseLong(creationTime));
-            final FileTime timeModified = FileTime.fromMillis(Long.parseLong(lastModifiedTime));
-            final FileTime timeAccessed = FileTime.fromMillis(Long.parseLong(lastAccessedTime));
-            attributes.setTimes(timeModified, timeAccessed, timeCreation);
-        }
-        catch (final Exception e)
-        {
-            LOG.error("Unable to restore creation and  modified time", e);
-            metadataRestoreListener.metadataRestoreFailed("Unable to restore creation and modified time ::"+e.getMessage());
-        }
-
+    private void setFileTimes(final String filePath,
+                              final String creationTime,
+                              final String lastModifiedTime,
+                              final String lastAccessedTime)
+        throws IOException
+    {
+        final BasicFileAttributeView attributes = Files.getFileAttributeView(Paths.get(filePath), BasicFileAttributeView.class);
+        final FileTime timeCreation = FileTime.fromMillis(Long.parseLong(creationTime));
+        final FileTime timeModified = FileTime.fromMillis(Long.parseLong(lastModifiedTime));
+        final FileTime timeAccessed = FileTime.fromMillis(Long.parseLong(lastAccessedTime));
+        attributes.setTimes(timeModified, timeAccessed, timeCreation);
     }
 }

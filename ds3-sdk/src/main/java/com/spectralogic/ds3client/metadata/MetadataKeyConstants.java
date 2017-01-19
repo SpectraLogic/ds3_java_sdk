@@ -13,37 +13,39 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3client.utils;
+package com.spectralogic.ds3client.metadata;
 
-public interface MetadataKeyConstants {
+final class MetadataKeyConstants {
+    private MetadataKeyConstants() {}
+
     //Every metadata must start from x-amz
-    String METADATA_PREFIX = "x-amz-meta-";
+    static final String METADATA_PREFIX = "x-amz-meta-";
     //creation time key
-    String KEY_CREATION_TIME = "ds3-creation-time";
+    static final String KEY_CREATION_TIME = "ds3-creation-time";
     //access time key
-    String KEY_ACCESS_TIME = "ds3-last-access-time";
+    static final String KEY_ACCESS_TIME = "ds3-last-access-time";
     //modified time key
-    String KEY_LAST_MODIFIED_TIME = "ds3-last-modified-time";
+    static final String KEY_LAST_MODIFIED_TIME = "ds3-last-modified-time";
     //owner sid for windows
-    String KEY_OWNER = "ds3-owner";
+    static final String KEY_OWNER = "ds3-owner";
     //group sid for windows
-    String KEY_GROUP = "ds3-group";
+    static final String KEY_GROUP = "ds3-group";
     //user id of a file linux
-    String KEY_UID = "ds3-uid";
+    static final String KEY_UID = "ds3-uid";
     //group id for linux
-    String KEY_GID = "ds3-gid";
+    static final String KEY_GID = "ds3-gid";
     //mode for linux
-    String KEY_MODE = "ds3-mode";
+    static final String KEY_MODE = "ds3-mode";
     //control flag
-    String KEY_FLAGS = "ds3-flags";
+    static final String KEY_FLAGS = "ds3-flags";
     //dacl String for windows
-    String KEY_DACL = "ds3-dacl";
+    static final String KEY_DACL = "ds3-dacl";
     //os
-    String KEY_OS = "ds3-os";
+    static final String KEY_OS = "ds3-os";
     //permissions
-    String KEY_PERMISSION = "ds3-permissions";
+    static final String KEY_PERMISSION = "ds3-permissions";
     //owner name
-    String KEY_OWNER_NAME = "ds3-ownerName";
+    static final String KEY_OWNER_NAME = "ds3-ownerName";
     //group Name
-    String KEY_GROUP_NAME = "ds3-groupName";
+    static final String KEY_GROUP_NAME = "ds3-groupName";
 }
