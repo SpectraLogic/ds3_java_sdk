@@ -13,6 +13,6 @@
  *  ****************************************************************************
  */
 
-include 'ds3-sdk-integration', 'ds3-sdk', 'ds3-sdk-samples'
+include 'ds3-sdk-integration', 'ds3-sdk', 'ds3-sdk-samples', 'ds3-interfaces'
 rootProject.name = 'ds3-java-sdk'
 
