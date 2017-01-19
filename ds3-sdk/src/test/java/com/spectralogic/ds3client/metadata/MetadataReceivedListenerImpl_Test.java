@@ -96,7 +96,7 @@ public class MetadataReceivedListenerImpl_Test {
         }
     }
 
-    @Test(expected = NoSuchFileException.class)
+    @Test(expected = RuntimeException.class)
     public void testGettingMetadataFailureHandler() throws IOException, InterruptedException {
         Assume.assumeFalse(Platform.isWindows());
 
