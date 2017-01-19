@@ -29,9 +29,13 @@ public class MetadataReceivedListenerImpl implements MetadataReceivedListener {
     }
 
     @Override
-    public void metadataReceived(final String filename, final Metadata metadata) throws IOException, InterruptedException {
-        final String actualFilePath = MetaDataUtil.getRealFilePath(localFilePath, filename);
-        restoreMetaData(actualFilePath, metadata);
+    public void metadataReceived(final String filename, final Metadata metadata) {
+        try {
+            final String actualFilePath = MetaDataUtil.getRealFilePath(localFilePath, filename);
+            restoreMetaData(actualFilePath, metadata);
+        } catch (final IOException | InterruptedException e) {
+            throw new RuntimeException("Error restoring metadata.", e);
+        }
     }
 
     /**
