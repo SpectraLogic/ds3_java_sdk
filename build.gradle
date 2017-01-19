@@ -21,7 +21,7 @@ allprojects {
 subprojects {
     apply plugin: 'maven'
     apply plugin: 'java'
-    // apply plugin: 'findbugs'
+    apply plugin: 'findbugs'
 
     sourceCompatibility = JavaVersion.VERSION_1_7
     repositories {
