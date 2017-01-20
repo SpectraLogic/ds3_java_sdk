@@ -16,12 +16,10 @@
 package com.spectralogic.ds3client.helpers;
 
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.ObjectChannelBuilder;
-import com.spectralogic.ds3client.helpers.strategy.StrategyUtils;
-
+import com.spectralogic.ds3client.utils.FileUtils;
 import java.io.IOException;
 import java.nio.channels.FileChannel;
 import java.nio.channels.SeekableByteChannel;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 
@@ -45,6 +43,6 @@ public class FileObjectPutter implements ObjectChannelBuilder {
 
         final Path path = this.root.resolve(key);
 
-        return FileChannel.open(StrategyUtils.resolveForSymbolic(path), StandardOpenOption.READ);
+        return FileChannel.open(FileUtils.resolveForSymbolic(path), StandardOpenOption.READ);
     }
 }

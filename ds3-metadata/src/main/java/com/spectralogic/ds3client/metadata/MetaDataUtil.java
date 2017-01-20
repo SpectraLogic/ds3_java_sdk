@@ -15,9 +15,8 @@
 
 package com.spectralogic.ds3client.metadata;
 
-import com.spectralogic.ds3client.helpers.strategy.StrategyUtils;
+import com.spectralogic.ds3client.utils.FileUtils;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.FileSystem;
 import java.nio.file.Path;
@@ -52,6 +51,6 @@ class MetaDataUtil {
         final Path directory = Paths.get(localFilePath);
         final Path resolvedPath = directory.resolve(filename);
 
-        return StrategyUtils.resolveForSymbolic(resolvedPath).toString();
+        return FileUtils.resolveForSymbolic(resolvedPath).toString();
     }
 }

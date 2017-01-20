@@ -44,6 +44,18 @@ task wrapper(type: Wrapper) {
     gradleVersion = '3.2'
 }
 
+project(':ds3-sdk') {
+    dependencies {
+        compile project(':ds3-utils')
+    }
+}
+
+project(':ds3-metadata') {
+    dependencies {
+        compile project(':ds3-utils')
+    }
+}
+
 project(':ds3-sdk-integration') {
     dependencies {
         compile project(':ds3-sdk')
@@ -53,5 +65,11 @@ project(':ds3-sdk-integration') {
 project(':ds3-sdk-samples') {
     dependencies {
         compile project(':ds3-sdk')
+    }
+}
+
+project(':ds3-utils') {
+    dependencies {
+        compile project(':ds3-interfaces')
     }
 }

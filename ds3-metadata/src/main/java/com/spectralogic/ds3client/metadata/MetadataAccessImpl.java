@@ -17,7 +17,7 @@ package com.spectralogic.ds3client.metadata;
 
 
 import com.google.common.collect.ImmutableMap;
-import com.spectralogic.ds3client.helpers.Ds3ClientHelpers;
+import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.MetadataAccess;
 import com.spectralogic.ds3client.metadata.interfaces.MetadataStore;
 import com.spectralogic.ds3client.utils.Platform;
 
@@ -32,7 +32,7 @@ import java.util.Map;
  * Implementation of MetaDataAcess Interface
  * Used to store meta data on Server
  */
-public class MetadataAccessImpl implements Ds3ClientHelpers.MetadataAccess {
+public class MetadataAccessImpl implements MetadataAccess {
     private final ImmutableMap<String, Path> fileMapper;
 
     public MetadataAccessImpl(final ImmutableMap<String, Path> fileMapper) {

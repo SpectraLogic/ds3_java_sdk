@@ -13,6 +13,10 @@
  *  ****************************************************************************
  */
 
-include 'ds3-sdk-integration', 'ds3-sdk', 'ds3-sdk-samples', 'ds3-interfaces', 'ds3-metadata', 'ds3-utils'
-rootProject.name = 'ds3-java-sdk'
+package com.spectralogic.ds3client.helpers.Ds3ClientHelpers;
 
+import java.util.Map;
+
+public interface MetadataAccess {
+    Map<String, String> getMetadataValue(final String filename);
+}
