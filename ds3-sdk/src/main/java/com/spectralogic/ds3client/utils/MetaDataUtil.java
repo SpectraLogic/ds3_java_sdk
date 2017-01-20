@@ -15,12 +15,20 @@
 
 package com.spectralogic.ds3client.utils;
 
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.File;
 import java.nio.file.FileSystem;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.attribute.PosixFileAttributes;
 import java.util.Set;
 
 public class MetaDataUtil {
+
+    static private final Logger LOG = LoggerFactory.getLogger(MetaDataUtil.class);
 
     public static Set<String> getSupportedFileAttributes(final Path file) {
         final FileSystem store = file.getFileSystem();
@@ -57,6 +65,22 @@ public class MetaDataUtil {
             }
         }
         return fName;
+    }
+
+
+    /**
+     * Read the posix file attributes
+     *
+     * @param file
+     * @return
+     */
+    public static PosixFileAttributes readPosixAttributes(final Path file) {
+        try {
+            return Files.readAttributes(file, PosixFileAttributes.class);
+        } catch (final Exception e) {
+            LOG.error("unsupported file attribute", e);
+            return null;
+        }
     }
 
 }

@@ -74,7 +74,7 @@ public class MetadataAccessImpl implements Ds3ClientHelpers.MetadataAccess {
             metadataStore.saveOSMetaData(localOSName);
 
             final BasicFileAttributes attr = Files.readAttributes(file, BasicFileAttributes.class);
-            final PosixFileAttributes attrPosix = Files.readAttributes(file, PosixFileAttributes.class);
+            final PosixFileAttributes attrPosix = MetaDataUtil.readPosixAttributes(file);
 
             metadataStore.saveCreationTimeMetaData(attr);
             metadataStore.saveAccessTimeMetaData(attr);
