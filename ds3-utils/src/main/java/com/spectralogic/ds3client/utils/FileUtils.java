@@ -14,6 +14,9 @@ public final class FileUtils {
                 // Resolve the path such that the path is relative to the symbolically
                 // linked file's directory
                 final Path symLinkParent = path.toAbsolutePath().getParent();
+                if (symLinkParent == null) {
+                    throw new IOException("Could not resolve real path of symbolic link");
+                }
                 return symLinkParent.resolve(simLink);
             }
 
