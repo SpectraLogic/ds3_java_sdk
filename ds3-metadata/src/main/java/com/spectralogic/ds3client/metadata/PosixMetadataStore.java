@@ -30,6 +30,7 @@ import static com.spectralogic.ds3client.metadata.MetadataKeyConstants.KEY_PERMI
 import static com.spectralogic.ds3client.metadata.MetadataKeyConstants.KEY_UID;
 import static com.spectralogic.ds3client.metadata.MetadataKeyConstants.METADATA_PREFIX;
 
+import static com.spectralogic.ds3client.metadata.PermissionsUtils.getPermissionInOctal;
 import static java.nio.file.LinkOption.NOFOLLOW_LINKS;
 
 class PosixMetadataStore extends AbstractMetadataStore {
@@ -100,36 +101,21 @@ class PosixMetadataStore extends AbstractMetadataStore {
      * @param attr PosixFileAttributes to get posix info
      * @return file permissions in octal
      */
-    private String savePosixPermssionsMeta(final PosixFileAttributes attr) {
-        String permissionsOctal = null;
-
-        permissionsOctal = getPermissionInOctal(PosixFilePermissions.toString(attr.permissions()));
+    private String savePosixPermissionsMeta(final PosixFileAttributes attr) {
+        final String permissionsOctal = getPermissionInOctal(PosixFilePermissions.toString(attr.permissions()));
         metadataMap.put(METADATA_PREFIX + KEY_PERMISSION, permissionsOctal);
 
         return permissionsOctal;
     }
 
-    // get the octal number for the permission
-    private String getPermissionInOctal(String permissions) {
-        final String permString = new String(permissions);
-        permissions = permissions.replaceAll("r", "4");
-        permissions = permissions.replaceAll("w", "2");
-        permissions = permissions.replaceAll("x", "1");
-        permissions = permissions.replaceAll("-", "0");
-        final String ownerPerm = String.valueOf(Integer.parseInt(String.valueOf(permissions.charAt(0))) + Integer.parseInt(String.valueOf(permissions.charAt(1))) + Integer.parseInt(String.valueOf(permissions.charAt(2))));
-        final String groupPerm = String.valueOf(Integer.parseInt(String.valueOf(permissions.charAt(3))) + Integer.parseInt(String.valueOf(permissions.charAt(4))) + Integer.parseInt(String.valueOf(permissions.charAt(5))));
-        final String otherPerm = String.valueOf(Integer.parseInt(String.valueOf(permissions.charAt(6))) + Integer.parseInt(String.valueOf(permissions.charAt(7))) + Integer.parseInt(String.valueOf(permissions.charAt(8))));
-        final String totalPerm = ownerPerm + groupPerm + otherPerm;
-        return totalPerm + "(" + permString + ")";
-    }
 
     @Override
     public void saveOSSpecificMetadata(final Path file,final BasicFileAttributes attrs) throws IOException {
         saveUserId(file);
         saveGroupId(file);
         saveModeMetaData(file);
-        saveOwnerNameMetaData((PosixFileAttributes) (attrs));
-        saveGroupNameMetaData((PosixFileAttributes) (attrs));
-        savePosixPermssionsMeta((PosixFileAttributes) (attrs));
+        saveOwnerNameMetaData((PosixFileAttributes) attrs);
+        saveGroupNameMetaData((PosixFileAttributes) attrs);
+        savePosixPermissionsMeta((PosixFileAttributes) attrs);
     }
 }

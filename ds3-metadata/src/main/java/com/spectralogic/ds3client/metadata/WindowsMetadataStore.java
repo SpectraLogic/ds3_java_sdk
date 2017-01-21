@@ -17,13 +17,17 @@ package com.spectralogic.ds3client.metadata;
 
 import com.google.common.collect.ImmutableMap;
 import com.spectralogic.ds3client.metadata.jna.Advapi32;
+import com.spectralogic.ds3client.utils.Guard;
 import com.sun.jna.platform.win32.WinNT;
 import com.sun.jna.ptr.PointerByReference;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.AclEntry;
@@ -39,6 +43,9 @@ import static com.spectralogic.ds3client.metadata.MetadataKeyConstants.KEY_OWNER
 import static com.spectralogic.ds3client.metadata.MetadataKeyConstants.METADATA_PREFIX;
 
 class WindowsMetadataStore extends AbstractMetadataStore {
+
+    private final static Logger LOG = LoggerFactory.getLogger(WindowsMetadataStore.class);
+
     public WindowsMetadataStore(final ImmutableMap.Builder<String, String> metadataMap) {
         this.metadataMap = metadataMap;
     }
@@ -90,22 +97,21 @@ class WindowsMetadataStore extends AbstractMetadataStore {
      */
     private String getDaclString(final WinNT.ACL acl) {
         final WinNT.ACCESS_ACEStructure[] aceStructures = acl.getACEStructures();
-        String daclString = "";
-        for (int i = 0; i < aceStructures.length; i++) {
-            daclString = daclString + "(";
-            final WinNT.ACCESS_ACEStructure aceStructure = aceStructures[i];
+        final StringBuilder daclStringBuffer = new StringBuilder();
+        for (final WinNT.ACCESS_ACEStructure aceStructure : aceStructures) {
+            daclStringBuffer.append("(");
             if (aceStructure.AceType == 0) {
-                daclString = daclString + "A;";
+                daclStringBuffer.append("A;");
             } else if (aceStructure.AceType == 1) {
-                daclString = daclString + "D;";
+                daclStringBuffer.append("D;");
             } else if (aceStructure.AceType == 2) {
-                daclString = daclString + "AU;";
+                daclStringBuffer.append("AU;");
             }
-            daclString = daclString + "0x" + Integer.toHexString(aceStructure.AceFlags) + ";";
-            daclString = daclString + "0x" + Integer.toHexString(aceStructure.Mask) + ";;;";
-            daclString = daclString + (aceStructure.getSidString()) + ")";
+            daclStringBuffer.append("0x").append(Integer.toHexString(aceStructure.AceFlags)).append(";");
+            daclStringBuffer.append("0x").append(Integer.toHexString(aceStructure.Mask)).append(";;;");
+            daclStringBuffer.append(aceStructure.getSidString()).append(")");
         }
-        return daclString;
+        return daclStringBuffer.toString();
     }
 
     /**
@@ -119,24 +125,29 @@ class WindowsMetadataStore extends AbstractMetadataStore {
 
             final ProcessBuilder processBuilder = new ProcessBuilder("attrib", file.toString());
             final Process process = processBuilder.start();
-            final BufferedReader reader =
-                    new BufferedReader(new InputStreamReader(process.getInputStream()));
-            final String flagWindows = reader.readLine();
-            final String[] flags = flagWindows.split(" ");
-            for (int i = 0; i < flags.length - 1; i++) {
-                if (!flags[i].equals("")) {
-                    if (flags[i].contains("\\")) {
-                        break;
-                    } else {
-                        flagBuilder.append(flags[i].trim());
+            try (final BufferedReader reader =
+                    new BufferedReader(new InputStreamReader(process.getInputStream(), Charset.forName("UTF-8")))) {
+                final String flagWindows = reader.readLine();
+                if (Guard.isStringNullOrEmpty(flagWindows)) {
+                    LOG.error("The flagWindows string was null");
+                } else {
+                    final String[] flags = flagWindows.split(" ");
+                    for (int i = 0; i < flags.length - 1; i++) {
+                        final String flag = flags[i];
+                        if (!flag.equals("")) {
+                            if (flag.contains("\\")) {
+                                break;
+                            } else {
+                                flagBuilder.append(flag.trim());
+                            }
+                        }
                     }
+                    if (flagBuilder.toString().equals("")) {
+                        flagBuilder.append("N");
+                    }
+                    metadataMap.put(METADATA_PREFIX + KEY_FLAGS, flagBuilder.toString());
                 }
             }
-            if (flagBuilder.toString().equals("")) {
-                flagBuilder.append("N");
-            }
-            metadataMap.put(METADATA_PREFIX + KEY_FLAGS, flagBuilder.toString());
-
         return flagBuilder.toString();
     }
 
@@ -168,28 +179,28 @@ class WindowsMetadataStore extends AbstractMetadataStore {
                 }
                 stringSetMap.put(userDisplay, newSet);
             }
-            final Set<String> keys = stringSetMap.keySet();
-            Set<Integer> ordinals;
+            final int setSize = stringSetMap.size();
             int userCount = 1;
-            for (final String key : keys) {
+            for (final Map.Entry<String, Set<Integer>> entry: stringSetMap.entrySet()) {
                 int index = 1;
-                ordinals = stringSetMap.get(key);
+                final Set<Integer> ordinals = entry.getValue();
+                final String key = entry.getKey();
                 userType = key.replaceAll(" ", "").toLowerCase();
                 permission = new StringBuilder();
                 for (final int ord : ordinals) {
                     if (ordinals.size() == index) {
                         permission.append(ord);
                     } else {
-                        permission.append(ord + "-");
+                        permission.append(ord).append("-");
                     }
                     index++;
                 }
-                if (keys.size() == userCount) {
+                if (setSize == userCount) {
                     userDisplayList.append(key);
                     userList.append(userType);
                 } else {
-                    userDisplayList.append(key + "-");
-                    userList.append(userType + "-");
+                    userDisplayList.append(key).append("-");
+                    userList.append(userType).append("-");
                 }
                 metadataMap.put("x-amz-meta-ds3-" + userType, permission.toString());
                 userCount++;
