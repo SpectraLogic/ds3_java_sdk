@@ -134,7 +134,7 @@ class WindowsMetadataStore extends AbstractMetadataStore {
                     final String[] flags = flagWindows.split(" ");
                     for (int i = 0; i < flags.length - 1; i++) {
                         final String flag = flags[i];
-                        if (!flag.equals("")) {
+                        if (!flag.isEmpty()) {
                             if (flag.contains("\\")) {
                                 break;
                             } else {
