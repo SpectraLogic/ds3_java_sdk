@@ -24,8 +24,8 @@ public class Credentials {
     private final String key;
 
     public Credentials(final String clientId, final String key) {
-        this.clientId = clientId;
-        this.key = key;
+        this.clientId = clientId == null ? null : clientId.trim();
+        this.key = key == null ? null :  key.trim();
     }
 
     public String getClientId() {

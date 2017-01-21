@@ -58,7 +58,7 @@ public class Ds3ClientBuilder implements Builder<Ds3Client> {
         if(credentials == null || !credentials.isValid()) {
             throw new IllegalArgumentException("Credentials must be filled out.");
         }
-        this.endpoint = endpoint;
+        this.endpoint = endpoint.trim();
         this.credentials = credentials;
     }
 
