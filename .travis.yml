@@ -3,4 +3,4 @@ jdk:
   - oraclejdk8
   - oraclejdk7
   - openjdk7
-script: ./gradlew -S clean jar ds3-sdk:test
+script: ./gradlew -S clean jar ds3-sdk:test ds3-utils:test ds3-metadata:test
