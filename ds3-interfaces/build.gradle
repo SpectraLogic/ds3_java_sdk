@@ -1,4 +1,3 @@
-
 buildscript {
     repositories { jcenter() }
     dependencies {
@@ -9,9 +8,6 @@ buildscript {
 apply plugin: 'com.github.johnrengelman.shadow'
 
 shadowJar {
-    relocate 'org.apache', 'ds3utilfatjar.org.apache'
-    relocate 'com.google', 'ds3utilfatjar.com.google'
-
     dependencies {
         exclude(dependency('org.hamcrest:hamcrest-library:1.3'))
         exclude(dependency('org.mockito:mockito-core:1.10.19'))
@@ -24,9 +20,3 @@ shadowJar {
 artifacts {
     archives shadowJar
 }
-
-dependencies {
-    compile     'commons-codec:commons-codec:1.10'
-    compile     'com.google.guava:guava:20.0'
-}
-

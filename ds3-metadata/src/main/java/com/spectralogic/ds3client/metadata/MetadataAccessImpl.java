@@ -43,7 +43,7 @@ public class MetadataAccessImpl implements MetadataAccess {
     public Map<String, String> getMetadataValue(final String filename) {
         final Path file = fileMapper.get(filename);
         try {
-            return storeMetaData(file).build();
+            return storeMetaData(file);
         } catch (final IOException e) {
             throw new RuntimeException("Error recording metadata.", e);
         }
@@ -53,33 +53,32 @@ public class MetadataAccessImpl implements MetadataAccess {
      * @param file local path of file
      * @return map builder containing the data to be stored on server
      */
-    private ImmutableMap.Builder<String, String> storeMetaData(final Path file) throws IOException {
-        final ImmutableMap.Builder<String, String> metadata = new ImmutableMap.Builder<>();
-        new ImmutableMap.Builder<String, String>();
+    private ImmutableMap<String, String> storeMetaData(final Path file) throws IOException {
+        final ImmutableMap.Builder<String, String> builder = ImmutableMap.builder();
 
-            //get metadata store based on os type
-            final MetadataStore metadataStore = new MetadataStoreFactory().getOsSpecificMetadataStore(metadata);
-            metadataStore.saveOSMetaData(MetaDataUtil.getOS());
+        //get metadata store based on os type
+        final MetadataStore metadataStore = new MetadataStoreFactory().getOsSpecificMetadataStore(builder);
+        metadataStore.saveOSMetaData(MetaDataUtil.getOS());
 
-            final BasicFileAttributes attr = Files.readAttributes(file, BasicFileAttributes.class);
+        final BasicFileAttributes attr = Files.readAttributes(file, BasicFileAttributes.class);
 
-            PosixFileAttributes attrPosix = null;
+        PosixFileAttributes attrPosix = null;
 
-            if ( !Platform.isWindows()) {
-                attrPosix = Files.readAttributes(file, PosixFileAttributes.class);
-            }
+        if (!Platform.isWindows()) {
+            attrPosix = Files.readAttributes(file, PosixFileAttributes.class);
+        }
 
-            metadataStore.saveCreationTimeMetaData(attr);
-            metadataStore.saveAccessTimeMetaData(attr);
-            metadataStore.saveLastModifiedTime(attr);
+        metadataStore.saveCreationTimeMetaData(attr);
+        metadataStore.saveAccessTimeMetaData(attr);
+        metadataStore.saveLastModifiedTime(attr);
 
-            if(attrPosix != null) {
-                metadataStore.saveOSSpecificMetadata(file, attrPosix);
-            } else {
-                metadataStore.saveOSSpecificMetadata(file, attr);
-            }
+        if (attrPosix != null) {
+            metadataStore.saveOSSpecificMetadata(file, attrPosix);
+        } else {
+            metadataStore.saveOSSpecificMetadata(file, attr);
+        }
 
-        return metadata;
+        return builder.build();
     }
 
 }

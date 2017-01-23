@@ -132,11 +132,11 @@ public class PosixMetadataStore_Test {
 
 
     @Test
-    public void savePosixPermssionsMeta() throws Exception {
+    public void savePosixPermissionsMeta() throws Exception {
         if (!MetaDataUtil.getOS().contains("Windows")) {
             final PosixFileAttributes attrPosix = Files.readAttributes(file.toPath(), PosixFileAttributes.class);
             final Class aClass = PosixMetadataStore.class;
-            final Method method = aClass.getDeclaredMethod("savePosixPermssionsMeta", new Class[]{PosixFileAttributes.class});
+            final Method method = aClass.getDeclaredMethod("savePosixPermissionsMeta", new Class[]{PosixFileAttributes.class});
             method.setAccessible(true);
             final String permission = (String) method.invoke(posixMetadataStore, attrPosix);
             Assert.assertNotNull(permission);

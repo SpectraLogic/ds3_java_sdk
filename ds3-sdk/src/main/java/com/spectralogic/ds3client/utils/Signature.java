@@ -47,7 +47,7 @@ public final class Signature {
      * java.security.SignatureException when signature generation fails
      */
     public static String calculateRFC2104HMAC(final String data, final String key)
-            throws java.security.SignatureException
+            throws SignatureException
     {
         LOG.debug("String to sign: {}", data.replace("\n", "\\n"));
         final String result;
@@ -63,7 +63,7 @@ public final class Signature {
             final byte[] rawHmac = mac.doFinal(data.getBytes(Charset.forName("UTF-8")));
             result = Base64.encodeBase64String(rawHmac);
         } catch (final Exception e) {
-            throw new SignatureException("Failed to generate HMAC : " + e.getMessage());
+            throw new SignatureException("Failed to generate HMAC: " + e.getMessage(), e);
         }
         return result.trim();
     }

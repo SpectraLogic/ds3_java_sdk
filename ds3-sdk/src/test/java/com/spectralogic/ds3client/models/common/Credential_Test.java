@@ -16,15 +16,11 @@
 package com.spectralogic.ds3client.models.common;
 
 
-import com.spectralogic.ds3client.models.common.Credentials;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
-@RunWith(JUnit4.class)
 public class Credential_Test {
 
     @Test

@@ -31,7 +31,10 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -114,41 +117,36 @@ public class WindowsMetadataRestore_Test {
 
 
     @Test
-    public void restorePermissions_Test() {
-        try {
-            final ImmutableMap.Builder<String, String> mMetadataMap = new ImmutableMap.Builder<>();
-            final WindowsMetadataStore windowsMetadataStore = new WindowsMetadataStore(mMetadataMap);
-            final Class aClass = WindowsMetadataStore.class;
-            final Method method = aClass.getDeclaredMethod("saveFlagMetaData", new Class[]{Path.class});
-            method.setAccessible(true);
+    public void restorePermissions_Test() throws NoSuchMethodException, IOException, URISyntaxException, InvocationTargetException, IllegalAccessException, InterruptedException {
+        final ImmutableMap.Builder<String, String> mMetadataMap = new ImmutableMap.Builder<>();
+        final WindowsMetadataStore windowsMetadataStore = new WindowsMetadataStore(mMetadataMap);
+        final Class aClass = WindowsMetadataStore.class;
+        final Method method = aClass.getDeclaredMethod("saveFlagMetaData", new Class[]{Path.class});
+        method.setAccessible(true);
 
-            final File file = ResourceUtils.loadFileResource(FILE_NAME).toFile();
+        final File file = ResourceUtils.loadFileResource(FILE_NAME).toFile();
 
-            method.invoke(windowsMetadataStore, file.toPath());
+        method.invoke(windowsMetadataStore, file.toPath());
 
-            final Method methodWindowsfilePermissions = aClass.getDeclaredMethod("saveWindowsfilePermissions", new Class[]{Path.class});
-            methodWindowsfilePermissions.setAccessible(true);
-            methodWindowsfilePermissions.invoke(windowsMetadataStore, file.toPath());
+        final Method methodWindowsfilePermissions = aClass.getDeclaredMethod("saveWindowsfilePermissions", new Class[]{Path.class});
+        methodWindowsfilePermissions.setAccessible(true);
+        methodWindowsfilePermissions.invoke(windowsMetadataStore, file.toPath());
 
-            final Set<String> mapKeys = mMetadataMap.build().keySet();
-            final int keySize = mapKeys.size();
-            final BasicHeader basicHeader[] = new BasicHeader[keySize + 1];
-            basicHeader[0] = new BasicHeader(METADATA_PREFIX + MetadataKeyConstants.KEY_OS, localOS);
-            int count = 1;
-            for (final String key : mapKeys) {
-                basicHeader[count] = new BasicHeader(key, mMetadataMap.build().get(key));
-                count++;
-            }
-
-            final Metadata metadata = genMetadata(basicHeader);
-            final WindowsMetadataRestore windowsMetadataRestore = new WindowsMetadataRestore(metadata, file.getPath(), MetaDataUtil.getOS());
-            windowsMetadataRestore.restoreOSName();
-            windowsMetadataRestore.restorePermissions();
-        } catch (final Exception e) {
-            Assert.fail();
+        final Set<String> mapKeys = mMetadataMap.build().keySet();
+        final int keySize = mapKeys.size();
+        final BasicHeader basicHeader[] = new BasicHeader[keySize + 1];
+        basicHeader[0] = new BasicHeader(METADATA_PREFIX + MetadataKeyConstants.KEY_OS, localOS);
+        int count = 1;
+        for (final String key : mapKeys) {
+            basicHeader[count] = new BasicHeader(key, mMetadataMap.build().get(key));
+            count++;
         }
-    }
 
+        final Metadata metadata = genMetadata(basicHeader);
+        final WindowsMetadataRestore windowsMetadataRestore = new WindowsMetadataRestore(metadata, file.getPath(), MetaDataUtil.getOS());
+        windowsMetadataRestore.restoreOSName();
+        windowsMetadataRestore.restorePermissions();
+    }
 
     private Metadata genMetadata(final Header... headers) {
         final ImmutableMultimap.Builder<String, String> mapBuilder = ImmutableMultimap.builder();
@@ -170,19 +168,4 @@ public class WindowsMetadataRestore_Test {
             }
         });
     }
-
-    // get the octal number for the permission
-    private String getPermissionInOctal(String permissions) {
-        final String permString = new String(permissions);
-        permissions = permissions.replaceAll("r", "4");
-        permissions = permissions.replaceAll("w", "2");
-        permissions = permissions.replaceAll("x", "1");
-        permissions = permissions.replaceAll("-", "0");
-        final String ownerPerm = String.valueOf(Integer.parseInt(String.valueOf(permissions.charAt(0))) + Integer.parseInt(String.valueOf(permissions.charAt(1))) + Integer.parseInt(String.valueOf(permissions.charAt(2))));
-        final String groupPerm = String.valueOf(Integer.parseInt(String.valueOf(permissions.charAt(3))) + Integer.parseInt(String.valueOf(permissions.charAt(4))) + Integer.parseInt(String.valueOf(permissions.charAt(5))));
-        final String otherPerm = String.valueOf(Integer.parseInt(String.valueOf(permissions.charAt(6))) + Integer.parseInt(String.valueOf(permissions.charAt(7))) + Integer.parseInt(String.valueOf(permissions.charAt(8))));
-        final String totalPerm = ownerPerm + groupPerm + otherPerm;
-        return totalPerm + "(" + permString + ")";
-    }
-
 }
