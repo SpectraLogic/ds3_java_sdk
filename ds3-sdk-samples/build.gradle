@@ -18,5 +18,5 @@ apply plugin: 'application'
 mainClassName = 'com.spectralogic.ds3client.samples.PartialObjectGetExample'
 
 dependencies {
-    compile 'org.slf4j:slf4j-simple:1.7.16'
+    compile 'org.slf4j:slf4j-simple:1.7.22'
 }
