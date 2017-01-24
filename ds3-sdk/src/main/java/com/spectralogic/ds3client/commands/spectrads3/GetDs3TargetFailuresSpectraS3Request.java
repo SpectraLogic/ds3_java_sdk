@@ -20,7 +20,7 @@ import com.spectralogic.ds3client.networking.HttpVerb;
 import com.spectralogic.ds3client.commands.interfaces.AbstractPaginationRequest;
 import com.google.common.net.UrlEscapers;
 import java.util.UUID;
-import com.spectralogic.ds3client.models.Ds3TargetFailureType;
+import com.spectralogic.ds3client.models.TargetFailureType;
 
 public class GetDs3TargetFailuresSpectraS3Request extends AbstractPaginationRequest {
 
@@ -38,7 +38,7 @@ public class GetDs3TargetFailuresSpectraS3Request extends AbstractPaginationRequ
 
     private String targetId;
 
-    private Ds3TargetFailureType type;
+    private TargetFailureType type;
 
     // Constructor
     
@@ -107,7 +107,7 @@ public class GetDs3TargetFailuresSpectraS3Request extends AbstractPaginationRequ
     }
 
 
-    public GetDs3TargetFailuresSpectraS3Request withType(final Ds3TargetFailureType type) {
+    public GetDs3TargetFailuresSpectraS3Request withType(final TargetFailureType type) {
         this.type = type;
         this.updateQueryParam("type", type);
         return this;
@@ -155,7 +155,7 @@ public class GetDs3TargetFailuresSpectraS3Request extends AbstractPaginationRequ
     }
 
 
-    public Ds3TargetFailureType getType() {
+    public TargetFailureType getType() {
         return this.type;
     }
 

@@ -39,7 +39,7 @@ public class Ds3TargetFailure {
     private UUID targetId;
 
     @JsonProperty("Type")
-    private Ds3TargetFailureType type;
+    private TargetFailureType type;
 
     // Constructor
     public Ds3TargetFailure() {
@@ -84,11 +84,11 @@ public class Ds3TargetFailure {
     }
 
 
-    public Ds3TargetFailureType getType() {
+    public TargetFailureType getType() {
         return this.type;
     }
 
-    public void setType(final Ds3TargetFailureType type) {
+    public void setType(final TargetFailureType type) {
         this.type = type;
     }
 

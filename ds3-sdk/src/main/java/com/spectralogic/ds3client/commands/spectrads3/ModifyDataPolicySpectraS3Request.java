@@ -35,8 +35,6 @@ public class ModifyDataPolicySpectraS3Request extends AbstractRequest {
 
     private boolean alwaysMinimizeSpanningAcrossMedia;
 
-    private boolean alwaysReplicateDeletes;
-
     private boolean blobbingEnabled;
 
     private ChecksumType.Type checksumType;
@@ -46,6 +44,8 @@ public class ModifyDataPolicySpectraS3Request extends AbstractRequest {
     private Priority defaultGetJobPriority;
 
     private Priority defaultPutJobPriority;
+
+    private boolean defaultVerifyAfterWrite;
 
     private Priority defaultVerifyJobPriority;
 
@@ -85,13 +85,6 @@ public class ModifyDataPolicySpectraS3Request extends AbstractRequest {
     }
 
 
-    public ModifyDataPolicySpectraS3Request withAlwaysReplicateDeletes(final boolean alwaysReplicateDeletes) {
-        this.alwaysReplicateDeletes = alwaysReplicateDeletes;
-        this.updateQueryParam("always_replicate_deletes", alwaysReplicateDeletes);
-        return this;
-    }
-
-
     public ModifyDataPolicySpectraS3Request withBlobbingEnabled(final boolean blobbingEnabled) {
         this.blobbingEnabled = blobbingEnabled;
         this.updateQueryParam("blobbing_enabled", blobbingEnabled);
@@ -123,6 +116,13 @@ public class ModifyDataPolicySpectraS3Request extends AbstractRequest {
     public ModifyDataPolicySpectraS3Request withDefaultPutJobPriority(final Priority defaultPutJobPriority) {
         this.defaultPutJobPriority = defaultPutJobPriority;
         this.updateQueryParam("default_put_job_priority", defaultPutJobPriority);
+        return this;
+    }
+
+
+    public ModifyDataPolicySpectraS3Request withDefaultVerifyAfterWrite(final boolean defaultVerifyAfterWrite) {
+        this.defaultVerifyAfterWrite = defaultVerifyAfterWrite;
+        this.updateQueryParam("default_verify_after_write", defaultVerifyAfterWrite);
         return this;
     }
 
@@ -188,11 +188,6 @@ public class ModifyDataPolicySpectraS3Request extends AbstractRequest {
     }
 
 
-    public boolean getAlwaysReplicateDeletes() {
-        return this.alwaysReplicateDeletes;
-    }
-
-
     public boolean getBlobbingEnabled() {
         return this.blobbingEnabled;
     }
@@ -215,6 +210,11 @@ public class ModifyDataPolicySpectraS3Request extends AbstractRequest {
 
     public Priority getDefaultPutJobPriority() {
         return this.defaultPutJobPriority;
+    }
+
+
+    public boolean getDefaultVerifyAfterWrite() {
+        return this.defaultVerifyAfterWrite;
     }
 
 

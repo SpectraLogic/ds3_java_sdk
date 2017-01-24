@@ -18,17 +18,21 @@ package com.spectralogic.ds3client.commands.spectrads3;
 
 import com.spectralogic.ds3client.networking.HttpVerb;
 import com.spectralogic.ds3client.commands.interfaces.AbstractPaginationRequest;
+import java.lang.Long;
 import com.google.common.net.UrlEscapers;
-import java.util.UUID;
 import java.util.Date;
+import java.util.UUID;
 import com.spectralogic.ds3client.models.TapeState;
 import com.spectralogic.ds3client.models.TapeType;
+import com.spectralogic.ds3client.models.Priority;
 
 public class GetTapesSpectraS3Request extends AbstractPaginationRequest {
 
     // Variables
     
     private boolean assignedToStorageDomain;
+
+    private Long availableRawCapacity;
 
     private String barCode;
 
@@ -41,6 +45,8 @@ public class GetTapesSpectraS3Request extends AbstractPaginationRequest {
     private boolean fullOfData;
 
     private boolean lastPage;
+
+    private Date lastVerified;
 
     private int pageLength;
 
@@ -62,6 +68,8 @@ public class GetTapesSpectraS3Request extends AbstractPaginationRequest {
 
     private TapeType type;
 
+    private Priority verifyPending;
+
     private boolean writeProtected;
 
     // Constructor
@@ -74,6 +82,13 @@ public class GetTapesSpectraS3Request extends AbstractPaginationRequest {
     public GetTapesSpectraS3Request withAssignedToStorageDomain(final boolean assignedToStorageDomain) {
         this.assignedToStorageDomain = assignedToStorageDomain;
         this.updateQueryParam("assigned_to_storage_domain", assignedToStorageDomain);
+        return this;
+    }
+
+
+    public GetTapesSpectraS3Request withAvailableRawCapacity(final Long availableRawCapacity) {
+        this.availableRawCapacity = availableRawCapacity;
+        this.updateQueryParam("available_raw_capacity", availableRawCapacity);
         return this;
     }
 
@@ -120,6 +135,13 @@ public class GetTapesSpectraS3Request extends AbstractPaginationRequest {
         } else {
             this.getQueryParams().remove("last_page");
         }
+        return this;
+    }
+
+
+    public GetTapesSpectraS3Request withLastVerified(final Date lastVerified) {
+        this.lastVerified = lastVerified;
+        this.updateQueryParam("last_verified", lastVerified);
         return this;
     }
 
@@ -215,6 +237,13 @@ public class GetTapesSpectraS3Request extends AbstractPaginationRequest {
     }
 
 
+    public GetTapesSpectraS3Request withVerifyPending(final Priority verifyPending) {
+        this.verifyPending = verifyPending;
+        this.updateQueryParam("verify_pending", verifyPending);
+        return this;
+    }
+
+
     public GetTapesSpectraS3Request withWriteProtected(final boolean writeProtected) {
         this.writeProtected = writeProtected;
         this.updateQueryParam("write_protected", writeProtected);
@@ -235,6 +264,11 @@ public class GetTapesSpectraS3Request extends AbstractPaginationRequest {
     
     public boolean getAssignedToStorageDomain() {
         return this.assignedToStorageDomain;
+    }
+
+
+    public Long getAvailableRawCapacity() {
+        return this.availableRawCapacity;
     }
 
 
@@ -265,6 +299,11 @@ public class GetTapesSpectraS3Request extends AbstractPaginationRequest {
 
     public boolean getLastPage() {
         return this.lastPage;
+    }
+
+
+    public Date getLastVerified() {
+        return this.lastVerified;
     }
 
 
@@ -315,6 +354,11 @@ public class GetTapesSpectraS3Request extends AbstractPaginationRequest {
 
     public TapeType getType() {
         return this.type;
+    }
+
+
+    public Priority getVerifyPending() {
+        return this.verifyPending;
     }
 
 
