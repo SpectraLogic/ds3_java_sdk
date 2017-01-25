@@ -54,6 +54,9 @@ public class DataPolicy {
     @JsonProperty("DefaultPutJobPriority")
     private Priority defaultPutJobPriority;
 
+    @JsonProperty("DefaultVerifyAfterWrite")
+    private boolean defaultVerifyAfterWrite;
+
     @JsonProperty("DefaultVerifyJobPriority")
     private Priority defaultVerifyJobPriority;
 
@@ -160,6 +163,15 @@ public class DataPolicy {
 
     public void setDefaultPutJobPriority(final Priority defaultPutJobPriority) {
         this.defaultPutJobPriority = defaultPutJobPriority;
+    }
+
+
+    public boolean getDefaultVerifyAfterWrite() {
+        return this.defaultVerifyAfterWrite;
+    }
+
+    public void setDefaultVerifyAfterWrite(final boolean defaultVerifyAfterWrite) {
+        this.defaultVerifyAfterWrite = defaultVerifyAfterWrite;
     }
 
 

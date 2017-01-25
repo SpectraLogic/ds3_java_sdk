@@ -38,7 +38,7 @@ public class DataPersistenceRule {
     private Integer minimumDaysToRetain;
 
     @JsonProperty("State")
-    private DataPersistenceRuleState state;
+    private DataPlacementRuleState state;
 
     @JsonProperty("StorageDomainId")
     private UUID storageDomainId;
@@ -89,11 +89,11 @@ public class DataPersistenceRule {
     }
 
 
-    public DataPersistenceRuleState getState() {
+    public DataPlacementRuleState getState() {
         return this.state;
     }
 
-    public void setState(final DataPersistenceRuleState state) {
+    public void setState(final DataPlacementRuleState state) {
         this.state = state;
     }
 

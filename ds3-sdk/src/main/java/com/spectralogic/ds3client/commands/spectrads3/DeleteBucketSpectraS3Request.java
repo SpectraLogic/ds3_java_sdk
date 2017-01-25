@@ -28,8 +28,6 @@ public class DeleteBucketSpectraS3Request extends AbstractRequest {
 
     private boolean force;
 
-    private boolean replicate;
-
     // Constructor
     
     
@@ -44,17 +42,6 @@ public class DeleteBucketSpectraS3Request extends AbstractRequest {
             this.getQueryParams().put("force", null);
         } else {
             this.getQueryParams().remove("force");
-        }
-        return this;
-    }
-
-
-    public DeleteBucketSpectraS3Request withReplicate(final boolean replicate) {
-        this.replicate = replicate;
-        if (this.replicate) {
-            this.getQueryParams().put("replicate", null);
-        } else {
-            this.getQueryParams().remove("replicate");
         }
         return this;
     }
@@ -78,11 +65,6 @@ public class DeleteBucketSpectraS3Request extends AbstractRequest {
 
     public boolean getForce() {
         return this.force;
-    }
-
-
-    public boolean getReplicate() {
-        return this.replicate;
     }
 
 }

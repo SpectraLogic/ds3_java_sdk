@@ -32,6 +32,8 @@ public class GetBulkJobSpectraS3Request extends BulkRequest {
 
     private JobChunkClientProcessingOrderGuarantee chunkClientProcessingOrderGuarantee;
 
+    private boolean implicitJobIdResolution;
+
     private String name;
 
     // Constructor
@@ -53,6 +55,13 @@ public class GetBulkJobSpectraS3Request extends BulkRequest {
     public GetBulkJobSpectraS3Request withChunkClientProcessingOrderGuarantee(final JobChunkClientProcessingOrderGuarantee chunkClientProcessingOrderGuarantee) {
         this.chunkClientProcessingOrderGuarantee = chunkClientProcessingOrderGuarantee;
         this.updateQueryParam("chunk_client_processing_order_guarantee", chunkClientProcessingOrderGuarantee);
+        return this;
+    }
+
+
+    public GetBulkJobSpectraS3Request withImplicitJobIdResolution(final boolean implicitJobIdResolution) {
+        this.implicitJobIdResolution = implicitJobIdResolution;
+        this.updateQueryParam("implicit_job_id_resolution", implicitJobIdResolution);
         return this;
     }
 
@@ -80,6 +89,11 @@ public class GetBulkJobSpectraS3Request extends BulkRequest {
 
     public JobChunkClientProcessingOrderGuarantee getChunkClientProcessingOrderGuarantee() {
         return this.chunkClientProcessingOrderGuarantee;
+    }
+
+
+    public boolean getImplicitJobIdResolution() {
+        return this.implicitJobIdResolution;
     }
 
 

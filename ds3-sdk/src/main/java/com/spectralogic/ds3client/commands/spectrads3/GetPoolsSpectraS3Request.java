@@ -20,6 +20,7 @@ import com.spectralogic.ds3client.networking.HttpVerb;
 import com.spectralogic.ds3client.commands.interfaces.AbstractPaginationRequest;
 import com.google.common.net.UrlEscapers;
 import com.spectralogic.ds3client.models.PoolHealth;
+import java.util.Date;
 import java.util.UUID;
 import com.spectralogic.ds3client.models.PoolState;
 import com.spectralogic.ds3client.models.PoolType;
@@ -35,6 +36,8 @@ public class GetPoolsSpectraS3Request extends AbstractPaginationRequest {
     private PoolHealth health;
 
     private boolean lastPage;
+
+    private Date lastVerified;
 
     private String name;
 
@@ -89,6 +92,13 @@ public class GetPoolsSpectraS3Request extends AbstractPaginationRequest {
         } else {
             this.getQueryParams().remove("last_page");
         }
+        return this;
+    }
+
+
+    public GetPoolsSpectraS3Request withLastVerified(final Date lastVerified) {
+        this.lastVerified = lastVerified;
+        this.updateQueryParam("last_verified", lastVerified);
         return this;
     }
 
@@ -205,6 +215,11 @@ public class GetPoolsSpectraS3Request extends AbstractPaginationRequest {
 
     public boolean getLastPage() {
         return this.lastPage;
+    }
+
+
+    public Date getLastVerified() {
+        return this.lastVerified;
     }
 
 

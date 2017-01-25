@@ -316,6 +316,13 @@ public interface Ds3Client extends Closeable {
     ModifyDataPathBackendSpectraS3Response modifyDataPathBackendSpectraS3(final ModifyDataPathBackendSpectraS3Request request)
             throws IOException;
 
+    @ResponsePayloadModel("AzureDataReplicationRule")
+    @Action("CREATE")
+    @Resource("AZURE_DATA_REPLICATION_RULE")
+    
+    PutAzureDataReplicationRuleSpectraS3Response putAzureDataReplicationRuleSpectraS3(final PutAzureDataReplicationRuleSpectraS3Request request)
+            throws IOException;
+
     @ResponsePayloadModel("DataPersistenceRule")
     @Action("CREATE")
     @Resource("DATA_PERSISTENCE_RULE")
@@ -330,11 +337,24 @@ public interface Ds3Client extends Closeable {
     PutDataPolicySpectraS3Response putDataPolicySpectraS3(final PutDataPolicySpectraS3Request request)
             throws IOException;
 
-    @ResponsePayloadModel("DataReplicationRule")
+    @ResponsePayloadModel("Ds3DataReplicationRule")
     @Action("CREATE")
-    @Resource("DATA_REPLICATION_RULE")
+    @Resource("DS3_DATA_REPLICATION_RULE")
     
-    PutDataReplicationRuleSpectraS3Response putDataReplicationRuleSpectraS3(final PutDataReplicationRuleSpectraS3Request request)
+    PutDs3DataReplicationRuleSpectraS3Response putDs3DataReplicationRuleSpectraS3(final PutDs3DataReplicationRuleSpectraS3Request request)
+            throws IOException;
+
+    @ResponsePayloadModel("S3DataReplicationRule")
+    @Action("CREATE")
+    @Resource("S3_DATA_REPLICATION_RULE")
+    
+    PutS3DataReplicationRuleSpectraS3Response putS3DataReplicationRuleSpectraS3(final PutS3DataReplicationRuleSpectraS3Request request)
+            throws IOException;
+
+    @Action("DELETE")
+    @Resource("AZURE_DATA_REPLICATION_RULE")
+    
+    DeleteAzureDataReplicationRuleSpectraS3Response deleteAzureDataReplicationRuleSpectraS3(final DeleteAzureDataReplicationRuleSpectraS3Request request)
             throws IOException;
 
     @Action("DELETE")
@@ -350,9 +370,29 @@ public interface Ds3Client extends Closeable {
             throws IOException;
 
     @Action("DELETE")
-    @Resource("DATA_REPLICATION_RULE")
+    @Resource("DS3_DATA_REPLICATION_RULE")
     
-    DeleteDataReplicationRuleSpectraS3Response deleteDataReplicationRuleSpectraS3(final DeleteDataReplicationRuleSpectraS3Request request)
+    DeleteDs3DataReplicationRuleSpectraS3Response deleteDs3DataReplicationRuleSpectraS3(final DeleteDs3DataReplicationRuleSpectraS3Request request)
+            throws IOException;
+
+    @Action("DELETE")
+    @Resource("S3_DATA_REPLICATION_RULE")
+    
+    DeleteS3DataReplicationRuleSpectraS3Response deleteS3DataReplicationRuleSpectraS3(final DeleteS3DataReplicationRuleSpectraS3Request request)
+            throws IOException;
+
+    @ResponsePayloadModel("AzureDataReplicationRule")
+    @Action("SHOW")
+    @Resource("AZURE_DATA_REPLICATION_RULE")
+    
+    GetAzureDataReplicationRuleSpectraS3Response getAzureDataReplicationRuleSpectraS3(final GetAzureDataReplicationRuleSpectraS3Request request)
+            throws IOException;
+
+    @ResponsePayloadModel("AzureDataReplicationRuleList")
+    @Action("LIST")
+    @Resource("AZURE_DATA_REPLICATION_RULE")
+    
+    GetAzureDataReplicationRulesSpectraS3Response getAzureDataReplicationRulesSpectraS3(final GetAzureDataReplicationRulesSpectraS3Request request)
             throws IOException;
 
     @ResponsePayloadModel("DataPersistenceRule")
@@ -383,18 +423,39 @@ public interface Ds3Client extends Closeable {
     GetDataPolicySpectraS3Response getDataPolicySpectraS3(final GetDataPolicySpectraS3Request request)
             throws IOException;
 
-    @ResponsePayloadModel("DataReplicationRule")
+    @ResponsePayloadModel("Ds3DataReplicationRule")
     @Action("SHOW")
-    @Resource("DATA_REPLICATION_RULE")
+    @Resource("DS3_DATA_REPLICATION_RULE")
     
-    GetDataReplicationRuleSpectraS3Response getDataReplicationRuleSpectraS3(final GetDataReplicationRuleSpectraS3Request request)
+    GetDs3DataReplicationRuleSpectraS3Response getDs3DataReplicationRuleSpectraS3(final GetDs3DataReplicationRuleSpectraS3Request request)
             throws IOException;
 
-    @ResponsePayloadModel("DataReplicationRuleList")
+    @ResponsePayloadModel("Ds3DataReplicationRuleList")
     @Action("LIST")
-    @Resource("DATA_REPLICATION_RULE")
+    @Resource("DS3_DATA_REPLICATION_RULE")
     
-    GetDataReplicationRulesSpectraS3Response getDataReplicationRulesSpectraS3(final GetDataReplicationRulesSpectraS3Request request)
+    GetDs3DataReplicationRulesSpectraS3Response getDs3DataReplicationRulesSpectraS3(final GetDs3DataReplicationRulesSpectraS3Request request)
+            throws IOException;
+
+    @ResponsePayloadModel("S3DataReplicationRule")
+    @Action("SHOW")
+    @Resource("S3_DATA_REPLICATION_RULE")
+    
+    GetS3DataReplicationRuleSpectraS3Response getS3DataReplicationRuleSpectraS3(final GetS3DataReplicationRuleSpectraS3Request request)
+            throws IOException;
+
+    @ResponsePayloadModel("S3DataReplicationRuleList")
+    @Action("LIST")
+    @Resource("S3_DATA_REPLICATION_RULE")
+    
+    GetS3DataReplicationRulesSpectraS3Response getS3DataReplicationRulesSpectraS3(final GetS3DataReplicationRulesSpectraS3Request request)
+            throws IOException;
+
+    @ResponsePayloadModel("AzureDataReplicationRule")
+    @Action("MODIFY")
+    @Resource("AZURE_DATA_REPLICATION_RULE")
+    
+    ModifyAzureDataReplicationRuleSpectraS3Response modifyAzureDataReplicationRuleSpectraS3(final ModifyAzureDataReplicationRuleSpectraS3Request request)
             throws IOException;
 
     @ResponsePayloadModel("DataPersistenceRule")
@@ -411,11 +472,30 @@ public interface Ds3Client extends Closeable {
     ModifyDataPolicySpectraS3Response modifyDataPolicySpectraS3(final ModifyDataPolicySpectraS3Request request)
             throws IOException;
 
-    @ResponsePayloadModel("DataReplicationRule")
+    @ResponsePayloadModel("Ds3DataReplicationRule")
     @Action("MODIFY")
-    @Resource("DATA_REPLICATION_RULE")
+    @Resource("DS3_DATA_REPLICATION_RULE")
     
-    ModifyDataReplicationRuleSpectraS3Response modifyDataReplicationRuleSpectraS3(final ModifyDataReplicationRuleSpectraS3Request request)
+    ModifyDs3DataReplicationRuleSpectraS3Response modifyDs3DataReplicationRuleSpectraS3(final ModifyDs3DataReplicationRuleSpectraS3Request request)
+            throws IOException;
+
+    @ResponsePayloadModel("S3DataReplicationRule")
+    @Action("MODIFY")
+    @Resource("S3_DATA_REPLICATION_RULE")
+    
+    ModifyS3DataReplicationRuleSpectraS3Response modifyS3DataReplicationRuleSpectraS3(final ModifyS3DataReplicationRuleSpectraS3Request request)
+            throws IOException;
+
+    @Action("BULK_DELETE")
+    @Resource("SUSPECT_BLOB_AZURE_TARGET")
+    
+    ClearSuspectBlobAzureTargetsSpectraS3Response clearSuspectBlobAzureTargetsSpectraS3(final ClearSuspectBlobAzureTargetsSpectraS3Request request)
+            throws IOException;
+
+    @Action("BULK_DELETE")
+    @Resource("SUSPECT_BLOB_DS3_TARGET")
+    
+    ClearSuspectBlobDs3TargetsSpectraS3Response clearSuspectBlobDs3TargetsSpectraS3(final ClearSuspectBlobDs3TargetsSpectraS3Request request)
             throws IOException;
 
     @Action("BULK_DELETE")
@@ -425,15 +505,22 @@ public interface Ds3Client extends Closeable {
             throws IOException;
 
     @Action("BULK_DELETE")
+    @Resource("SUSPECT_BLOB_S3_TARGET")
+    
+    ClearSuspectBlobS3TargetsSpectraS3Response clearSuspectBlobS3TargetsSpectraS3(final ClearSuspectBlobS3TargetsSpectraS3Request request)
+            throws IOException;
+
+    @Action("BULK_DELETE")
     @Resource("SUSPECT_BLOB_TAPE")
     
     ClearSuspectBlobTapesSpectraS3Response clearSuspectBlobTapesSpectraS3(final ClearSuspectBlobTapesSpectraS3Request request)
             throws IOException;
 
-    @Action("BULK_DELETE")
-    @Resource("SUSPECT_BLOB_TARGET")
+    @ResponsePayloadModel("AzureDataReplicationRuleList")
+    @Action("LIST")
+    @Resource("DEGRADED_AZURE_DATA_REPLICATION_RULE")
     
-    ClearSuspectBlobTargetsSpectraS3Response clearSuspectBlobTargetsSpectraS3(final ClearSuspectBlobTargetsSpectraS3Request request)
+    GetDegradedAzureDataReplicationRulesSpectraS3Response getDegradedAzureDataReplicationRulesSpectraS3(final GetDegradedAzureDataReplicationRulesSpectraS3Request request)
             throws IOException;
 
     @ResponsePayloadModel("DegradedBlobList")
@@ -457,11 +544,32 @@ public interface Ds3Client extends Closeable {
     GetDegradedDataPersistenceRulesSpectraS3Response getDegradedDataPersistenceRulesSpectraS3(final GetDegradedDataPersistenceRulesSpectraS3Request request)
             throws IOException;
 
-    @ResponsePayloadModel("DataReplicationRuleList")
+    @ResponsePayloadModel("Ds3DataReplicationRuleList")
     @Action("LIST")
-    @Resource("DEGRADED_DATA_REPLICATION_RULE")
+    @Resource("DEGRADED_DS3_DATA_REPLICATION_RULE")
     
-    GetDegradedDataReplicationRulesSpectraS3Response getDegradedDataReplicationRulesSpectraS3(final GetDegradedDataReplicationRulesSpectraS3Request request)
+    GetDegradedDs3DataReplicationRulesSpectraS3Response getDegradedDs3DataReplicationRulesSpectraS3(final GetDegradedDs3DataReplicationRulesSpectraS3Request request)
+            throws IOException;
+
+    @ResponsePayloadModel("S3DataReplicationRuleList")
+    @Action("LIST")
+    @Resource("DEGRADED_S3_DATA_REPLICATION_RULE")
+    
+    GetDegradedS3DataReplicationRulesSpectraS3Response getDegradedS3DataReplicationRulesSpectraS3(final GetDegradedS3DataReplicationRulesSpectraS3Request request)
+            throws IOException;
+
+    @ResponsePayloadModel("SuspectBlobAzureTargetList")
+    @Action("LIST")
+    @Resource("SUSPECT_BLOB_AZURE_TARGET")
+    
+    GetSuspectBlobAzureTargetsSpectraS3Response getSuspectBlobAzureTargetsSpectraS3(final GetSuspectBlobAzureTargetsSpectraS3Request request)
+            throws IOException;
+
+    @ResponsePayloadModel("SuspectBlobDs3TargetList")
+    @Action("LIST")
+    @Resource("SUSPECT_BLOB_DS3_TARGET")
+    
+    GetSuspectBlobDs3TargetsSpectraS3Response getSuspectBlobDs3TargetsSpectraS3(final GetSuspectBlobDs3TargetsSpectraS3Request request)
             throws IOException;
 
     @ResponsePayloadModel("SuspectBlobPoolList")
@@ -471,18 +579,18 @@ public interface Ds3Client extends Closeable {
     GetSuspectBlobPoolsSpectraS3Response getSuspectBlobPoolsSpectraS3(final GetSuspectBlobPoolsSpectraS3Request request)
             throws IOException;
 
+    @ResponsePayloadModel("SuspectBlobS3TargetList")
+    @Action("LIST")
+    @Resource("SUSPECT_BLOB_S3_TARGET")
+    
+    GetSuspectBlobS3TargetsSpectraS3Response getSuspectBlobS3TargetsSpectraS3(final GetSuspectBlobS3TargetsSpectraS3Request request)
+            throws IOException;
+
     @ResponsePayloadModel("SuspectBlobTapeList")
     @Action("LIST")
     @Resource("SUSPECT_BLOB_TAPE")
     
     GetSuspectBlobTapesSpectraS3Response getSuspectBlobTapesSpectraS3(final GetSuspectBlobTapesSpectraS3Request request)
-            throws IOException;
-
-    @ResponsePayloadModel("SuspectBlobTargetList")
-    @Action("LIST")
-    @Resource("SUSPECT_BLOB_TARGET")
-    
-    GetSuspectBlobTargetsSpectraS3Response getSuspectBlobTargetsSpectraS3(final GetSuspectBlobTargetsSpectraS3Request request)
             throws IOException;
 
     @ResponsePayloadModel("BucketList")
@@ -492,7 +600,7 @@ public interface Ds3Client extends Closeable {
     GetSuspectBucketsSpectraS3Response getSuspectBucketsSpectraS3(final GetSuspectBucketsSpectraS3Request request)
             throws IOException;
 
-    @ResponsePayloadModel("PhysicalPlacement")
+    @ResponsePayloadModel("S3ObjectList")
     @Action("LIST")
     @Resource("SUSPECT_OBJECT")
     
@@ -507,21 +615,33 @@ public interface Ds3Client extends Closeable {
             throws IOException;
 
     @Action("BULK_MODIFY")
+    @Resource("SUSPECT_BLOB_AZURE_TARGET")
+    
+    MarkSuspectBlobAzureTargetsAsDegradedSpectraS3Response markSuspectBlobAzureTargetsAsDegradedSpectraS3(final MarkSuspectBlobAzureTargetsAsDegradedSpectraS3Request request)
+            throws IOException;
+
+    @Action("BULK_MODIFY")
+    @Resource("SUSPECT_BLOB_DS3_TARGET")
+    
+    MarkSuspectBlobDs3TargetsAsDegradedSpectraS3Response markSuspectBlobDs3TargetsAsDegradedSpectraS3(final MarkSuspectBlobDs3TargetsAsDegradedSpectraS3Request request)
+            throws IOException;
+
+    @Action("BULK_MODIFY")
     @Resource("SUSPECT_BLOB_POOL")
     
     MarkSuspectBlobPoolsAsDegradedSpectraS3Response markSuspectBlobPoolsAsDegradedSpectraS3(final MarkSuspectBlobPoolsAsDegradedSpectraS3Request request)
             throws IOException;
 
     @Action("BULK_MODIFY")
-    @Resource("SUSPECT_BLOB_TAPE")
+    @Resource("SUSPECT_BLOB_S3_TARGET")
     
-    MarkSuspectBlobTapesAsDegradedSpectraS3Response markSuspectBlobTapesAsDegradedSpectraS3(final MarkSuspectBlobTapesAsDegradedSpectraS3Request request)
+    MarkSuspectBlobS3TargetsAsDegradedSpectraS3Response markSuspectBlobS3TargetsAsDegradedSpectraS3(final MarkSuspectBlobS3TargetsAsDegradedSpectraS3Request request)
             throws IOException;
 
     @Action("BULK_MODIFY")
-    @Resource("SUSPECT_BLOB_TARGET")
+    @Resource("SUSPECT_BLOB_TAPE")
     
-    MarkSuspectBlobTargetsAsDegradedSpectraS3Response markSuspectBlobTargetsAsDegradedSpectraS3(final MarkSuspectBlobTargetsAsDegradedSpectraS3Request request)
+    MarkSuspectBlobTapesAsDegradedSpectraS3Response markSuspectBlobTapesAsDegradedSpectraS3(final MarkSuspectBlobTapesAsDegradedSpectraS3Request request)
             throws IOException;
 
     @ResponsePayloadModel("GroupMember")
@@ -819,6 +939,13 @@ public interface Ds3Client extends Closeable {
     ModifyNodeSpectraS3Response modifyNodeSpectraS3(final ModifyNodeSpectraS3Request request)
             throws IOException;
 
+    @ResponsePayloadModel("AzureTargetFailureNotificationRegistration")
+    @Action("CREATE")
+    @Resource("AZURE_TARGET_FAILURE_NOTIFICATION_REGISTRATION")
+    
+    PutAzureTargetFailureNotificationRegistrationSpectraS3Response putAzureTargetFailureNotificationRegistrationSpectraS3(final PutAzureTargetFailureNotificationRegistrationSpectraS3Request request)
+            throws IOException;
+
     @ResponsePayloadModel("Ds3TargetFailureNotificationRegistration")
     @Action("CREATE")
     @Resource("DS3_TARGET_FAILURE_NOTIFICATION_REGISTRATION")
@@ -875,6 +1002,13 @@ public interface Ds3Client extends Closeable {
     PutPoolFailureNotificationRegistrationSpectraS3Response putPoolFailureNotificationRegistrationSpectraS3(final PutPoolFailureNotificationRegistrationSpectraS3Request request)
             throws IOException;
 
+    @ResponsePayloadModel("S3TargetFailureNotificationRegistration")
+    @Action("CREATE")
+    @Resource("S3_TARGET_FAILURE_NOTIFICATION_REGISTRATION")
+    
+    PutS3TargetFailureNotificationRegistrationSpectraS3Response putS3TargetFailureNotificationRegistrationSpectraS3(final PutS3TargetFailureNotificationRegistrationSpectraS3Request request)
+            throws IOException;
+
     @ResponsePayloadModel("StorageDomainFailureNotificationRegistration")
     @Action("CREATE")
     @Resource("STORAGE_DOMAIN_FAILURE_NOTIFICATION_REGISTRATION")
@@ -901,6 +1035,12 @@ public interface Ds3Client extends Closeable {
     @Resource("TAPE_PARTITION_FAILURE_NOTIFICATION_REGISTRATION")
     
     PutTapePartitionFailureNotificationRegistrationSpectraS3Response putTapePartitionFailureNotificationRegistrationSpectraS3(final PutTapePartitionFailureNotificationRegistrationSpectraS3Request request)
+            throws IOException;
+
+    @Action("DELETE")
+    @Resource("AZURE_TARGET_FAILURE_NOTIFICATION_REGISTRATION")
+    
+    DeleteAzureTargetFailureNotificationRegistrationSpectraS3Response deleteAzureTargetFailureNotificationRegistrationSpectraS3(final DeleteAzureTargetFailureNotificationRegistrationSpectraS3Request request)
             throws IOException;
 
     @Action("DELETE")
@@ -952,6 +1092,12 @@ public interface Ds3Client extends Closeable {
             throws IOException;
 
     @Action("DELETE")
+    @Resource("S3_TARGET_FAILURE_NOTIFICATION_REGISTRATION")
+    
+    DeleteS3TargetFailureNotificationRegistrationSpectraS3Response deleteS3TargetFailureNotificationRegistrationSpectraS3(final DeleteS3TargetFailureNotificationRegistrationSpectraS3Request request)
+            throws IOException;
+
+    @Action("DELETE")
     @Resource("STORAGE_DOMAIN_FAILURE_NOTIFICATION_REGISTRATION")
     
     DeleteStorageDomainFailureNotificationRegistrationSpectraS3Response deleteStorageDomainFailureNotificationRegistrationSpectraS3(final DeleteStorageDomainFailureNotificationRegistrationSpectraS3Request request)
@@ -973,6 +1119,20 @@ public interface Ds3Client extends Closeable {
     @Resource("TAPE_PARTITION_FAILURE_NOTIFICATION_REGISTRATION")
     
     DeleteTapePartitionFailureNotificationRegistrationSpectraS3Response deleteTapePartitionFailureNotificationRegistrationSpectraS3(final DeleteTapePartitionFailureNotificationRegistrationSpectraS3Request request)
+            throws IOException;
+
+    @ResponsePayloadModel("AzureTargetFailureNotificationRegistration")
+    @Action("SHOW")
+    @Resource("AZURE_TARGET_FAILURE_NOTIFICATION_REGISTRATION")
+    
+    GetAzureTargetFailureNotificationRegistrationSpectraS3Response getAzureTargetFailureNotificationRegistrationSpectraS3(final GetAzureTargetFailureNotificationRegistrationSpectraS3Request request)
+            throws IOException;
+
+    @ResponsePayloadModel("AzureTargetFailureNotificationRegistrationList")
+    @Action("LIST")
+    @Resource("AZURE_TARGET_FAILURE_NOTIFICATION_REGISTRATION")
+    
+    GetAzureTargetFailureNotificationRegistrationsSpectraS3Response getAzureTargetFailureNotificationRegistrationsSpectraS3(final GetAzureTargetFailureNotificationRegistrationsSpectraS3Request request)
             throws IOException;
 
     @ResponsePayloadModel("Ds3TargetFailureNotificationRegistration")
@@ -1085,6 +1245,20 @@ public interface Ds3Client extends Closeable {
     @Resource("POOL_FAILURE_NOTIFICATION_REGISTRATION")
     
     GetPoolFailureNotificationRegistrationsSpectraS3Response getPoolFailureNotificationRegistrationsSpectraS3(final GetPoolFailureNotificationRegistrationsSpectraS3Request request)
+            throws IOException;
+
+    @ResponsePayloadModel("S3TargetFailureNotificationRegistration")
+    @Action("SHOW")
+    @Resource("S3_TARGET_FAILURE_NOTIFICATION_REGISTRATION")
+    
+    GetS3TargetFailureNotificationRegistrationSpectraS3Response getS3TargetFailureNotificationRegistrationSpectraS3(final GetS3TargetFailureNotificationRegistrationSpectraS3Request request)
+            throws IOException;
+
+    @ResponsePayloadModel("S3TargetFailureNotificationRegistrationList")
+    @Action("LIST")
+    @Resource("S3_TARGET_FAILURE_NOTIFICATION_REGISTRATION")
+    
+    GetS3TargetFailureNotificationRegistrationsSpectraS3Response getS3TargetFailureNotificationRegistrationsSpectraS3(final GetS3TargetFailureNotificationRegistrationsSpectraS3Request request)
             throws IOException;
 
     @ResponsePayloadModel("StorageDomainFailureNotificationRegistration")
@@ -1216,6 +1390,19 @@ public interface Ds3Client extends Closeable {
     @Resource("POOL")
     
     CancelImportPoolSpectraS3Response cancelImportPoolSpectraS3(final CancelImportPoolSpectraS3Request request)
+            throws IOException;
+
+    @Action("BULK_MODIFY")
+    @Resource("POOL")
+    
+    CancelVerifyOnAllPoolsSpectraS3Response cancelVerifyOnAllPoolsSpectraS3(final CancelVerifyOnAllPoolsSpectraS3Request request)
+            throws IOException;
+
+    @ResponsePayloadModel("Pool")
+    @Action("MODIFY")
+    @Resource("POOL")
+    
+    CancelVerifyPoolSpectraS3Response cancelVerifyPoolSpectraS3(final CancelVerifyPoolSpectraS3Request request)
             throws IOException;
 
     @Action("BULK_MODIFY")
@@ -1461,6 +1648,19 @@ public interface Ds3Client extends Closeable {
     @Resource("STORAGE_DOMAIN")
     
     ModifyStorageDomainSpectraS3Response modifyStorageDomainSpectraS3(final ModifyStorageDomainSpectraS3Request request)
+            throws IOException;
+
+    @Action("BULK_MODIFY")
+    @Resource("FEATURE_KEY")
+    
+    ForceFeatureKeyValidationSpectraS3Response forceFeatureKeyValidationSpectraS3(final ForceFeatureKeyValidationSpectraS3Request request)
+            throws IOException;
+
+    @ResponsePayloadModel("FeatureKeyList")
+    @Action("LIST")
+    @Resource("FEATURE_KEY")
+    
+    GetFeatureKeysSpectraS3Response getFeatureKeysSpectraS3(final GetFeatureKeysSpectraS3Request request)
             throws IOException;
 
     @ResponsePayloadModel("SystemFailureList")
@@ -1824,6 +2024,19 @@ public interface Ds3Client extends Closeable {
     OnlineTapeSpectraS3Response onlineTapeSpectraS3(final OnlineTapeSpectraS3Request request)
             throws IOException;
 
+    @Action("BULK_MODIFY")
+    @Resource("TAPE")
+    
+    RawImportAllTapesSpectraS3Response rawImportAllTapesSpectraS3(final RawImportAllTapesSpectraS3Request request)
+            throws IOException;
+
+    @ResponsePayloadModel("Tape")
+    @Action("MODIFY")
+    @Resource("TAPE")
+    
+    RawImportTapeSpectraS3Response rawImportTapeSpectraS3(final RawImportTapeSpectraS3Request request)
+            throws IOException;
+
     @ResponsePayloadModel("TapeFailureList")
     @Action("BULK_MODIFY")
     @Resource("TAPE")
@@ -1836,6 +2049,132 @@ public interface Ds3Client extends Closeable {
     @Resource("TAPE")
     
     VerifyTapeSpectraS3Response verifyTapeSpectraS3(final VerifyTapeSpectraS3Request request)
+            throws IOException;
+
+    @Action("BULK_MODIFY")
+    @Resource("TARGET_ENVIRONMENT")
+    
+    ForceTargetEnvironmentRefreshSpectraS3Response forceTargetEnvironmentRefreshSpectraS3(final ForceTargetEnvironmentRefreshSpectraS3Request request)
+            throws IOException;
+
+    @ResponsePayloadModel("AzureTargetBucketName")
+    @Action("CREATE")
+    @Resource("AZURE_TARGET_BUCKET_NAME")
+    
+    PutAzureTargetBucketNameSpectraS3Response putAzureTargetBucketNameSpectraS3(final PutAzureTargetBucketNameSpectraS3Request request)
+            throws IOException;
+
+    @ResponsePayloadModel("AzureTargetReadPreference")
+    @Action("CREATE")
+    @Resource("AZURE_TARGET_READ_PREFERENCE")
+    
+    PutAzureTargetReadPreferenceSpectraS3Response putAzureTargetReadPreferenceSpectraS3(final PutAzureTargetReadPreferenceSpectraS3Request request)
+            throws IOException;
+
+    @Action("DELETE")
+    @Resource("AZURE_TARGET_BUCKET_NAME")
+    
+    DeleteAzureTargetBucketNameSpectraS3Response deleteAzureTargetBucketNameSpectraS3(final DeleteAzureTargetBucketNameSpectraS3Request request)
+            throws IOException;
+
+    @Action("DELETE")
+    @Resource("AZURE_TARGET_FAILURE")
+    
+    DeleteAzureTargetFailureSpectraS3Response deleteAzureTargetFailureSpectraS3(final DeleteAzureTargetFailureSpectraS3Request request)
+            throws IOException;
+
+    @Action("DELETE")
+    @Resource("AZURE_TARGET_READ_PREFERENCE")
+    
+    DeleteAzureTargetReadPreferenceSpectraS3Response deleteAzureTargetReadPreferenceSpectraS3(final DeleteAzureTargetReadPreferenceSpectraS3Request request)
+            throws IOException;
+
+    @Action("DELETE")
+    @Resource("AZURE_TARGET")
+    
+    DeleteAzureTargetSpectraS3Response deleteAzureTargetSpectraS3(final DeleteAzureTargetSpectraS3Request request)
+            throws IOException;
+
+    @ResponsePayloadModel("AzureTargetBucketNameList")
+    @Action("LIST")
+    @Resource("AZURE_TARGET_BUCKET_NAME")
+    
+    GetAzureTargetBucketNamesSpectraS3Response getAzureTargetBucketNamesSpectraS3(final GetAzureTargetBucketNamesSpectraS3Request request)
+            throws IOException;
+
+    @ResponsePayloadModel("AzureTargetFailureList")
+    @Action("LIST")
+    @Resource("AZURE_TARGET_FAILURE")
+    
+    GetAzureTargetFailuresSpectraS3Response getAzureTargetFailuresSpectraS3(final GetAzureTargetFailuresSpectraS3Request request)
+            throws IOException;
+
+    @ResponsePayloadModel("AzureTargetReadPreference")
+    @Action("SHOW")
+    @Resource("AZURE_TARGET_READ_PREFERENCE")
+    
+    GetAzureTargetReadPreferenceSpectraS3Response getAzureTargetReadPreferenceSpectraS3(final GetAzureTargetReadPreferenceSpectraS3Request request)
+            throws IOException;
+
+    @ResponsePayloadModel("AzureTargetReadPreferenceList")
+    @Action("LIST")
+    @Resource("AZURE_TARGET_READ_PREFERENCE")
+    
+    GetAzureTargetReadPreferencesSpectraS3Response getAzureTargetReadPreferencesSpectraS3(final GetAzureTargetReadPreferencesSpectraS3Request request)
+            throws IOException;
+
+    @ResponsePayloadModel("AzureTarget")
+    @Action("SHOW")
+    @Resource("AZURE_TARGET")
+    
+    GetAzureTargetSpectraS3Response getAzureTargetSpectraS3(final GetAzureTargetSpectraS3Request request)
+            throws IOException;
+
+    @ResponsePayloadModel("AzureTargetList")
+    @Action("LIST")
+    @Resource("AZURE_TARGET")
+    
+    GetAzureTargetsSpectraS3Response getAzureTargetsSpectraS3(final GetAzureTargetsSpectraS3Request request)
+            throws IOException;
+
+    @ResponsePayloadModel("BulkObjectList")
+    @Action("SHOW")
+    @Resource("AZURE_TARGET")
+    
+    GetBlobsOnAzureTargetSpectraS3Response getBlobsOnAzureTargetSpectraS3(final GetBlobsOnAzureTargetSpectraS3Request request)
+            throws IOException;
+
+    @Action("MODIFY")
+    @Resource("AZURE_TARGET")
+    
+    ImportAzureTargetSpectraS3Response importAzureTargetSpectraS3(final ImportAzureTargetSpectraS3Request request)
+            throws IOException;
+
+    @Action("BULK_MODIFY")
+    @Resource("AZURE_TARGET")
+    
+    ModifyAllAzureTargetsSpectraS3Response modifyAllAzureTargetsSpectraS3(final ModifyAllAzureTargetsSpectraS3Request request)
+            throws IOException;
+
+    @ResponsePayloadModel("AzureTarget")
+    @Action("MODIFY")
+    @Resource("AZURE_TARGET")
+    
+    ModifyAzureTargetSpectraS3Response modifyAzureTargetSpectraS3(final ModifyAzureTargetSpectraS3Request request)
+            throws IOException;
+
+    @ResponsePayloadModel("AzureTarget")
+    @Action("CREATE")
+    @Resource("AZURE_TARGET")
+    
+    RegisterAzureTargetSpectraS3Response registerAzureTargetSpectraS3(final RegisterAzureTargetSpectraS3Request request)
+            throws IOException;
+
+    @ResponsePayloadModel("AzureTarget")
+    @Action("MODIFY")
+    @Resource("AZURE_TARGET")
+    
+    VerifyAzureTargetSpectraS3Response verifyAzureTargetSpectraS3(final VerifyAzureTargetSpectraS3Request request)
             throws IOException;
 
     @ResponsePayloadModel("Ds3TargetReadPreference")
@@ -1863,10 +2202,11 @@ public interface Ds3Client extends Closeable {
     DeleteDs3TargetSpectraS3Response deleteDs3TargetSpectraS3(final DeleteDs3TargetSpectraS3Request request)
             throws IOException;
 
-    @Action("BULK_MODIFY")
-    @Resource("TARGET_ENVIRONMENT")
+    @ResponsePayloadModel("BulkObjectList")
+    @Action("SHOW")
+    @Resource("DS3_TARGET")
     
-    ForceTargetEnvironmentRefreshSpectraS3Response forceTargetEnvironmentRefreshSpectraS3(final ForceTargetEnvironmentRefreshSpectraS3Request request)
+    GetBlobsOnDs3TargetSpectraS3Response getBlobsOnDs3TargetSpectraS3(final GetBlobsOnDs3TargetSpectraS3Request request)
             throws IOException;
 
     @ResponsePayloadModel("DataPolicyList")
@@ -1942,6 +2282,126 @@ public interface Ds3Client extends Closeable {
     @Resource("DS3_TARGET")
     
     VerifyDs3TargetSpectraS3Response verifyDs3TargetSpectraS3(final VerifyDs3TargetSpectraS3Request request)
+            throws IOException;
+
+    @ResponsePayloadModel("S3TargetBucketName")
+    @Action("CREATE")
+    @Resource("S3_TARGET_BUCKET_NAME")
+    
+    PutS3TargetBucketNameSpectraS3Response putS3TargetBucketNameSpectraS3(final PutS3TargetBucketNameSpectraS3Request request)
+            throws IOException;
+
+    @ResponsePayloadModel("S3TargetReadPreference")
+    @Action("CREATE")
+    @Resource("S3_TARGET_READ_PREFERENCE")
+    
+    PutS3TargetReadPreferenceSpectraS3Response putS3TargetReadPreferenceSpectraS3(final PutS3TargetReadPreferenceSpectraS3Request request)
+            throws IOException;
+
+    @Action("DELETE")
+    @Resource("S3_TARGET_BUCKET_NAME")
+    
+    DeleteS3TargetBucketNameSpectraS3Response deleteS3TargetBucketNameSpectraS3(final DeleteS3TargetBucketNameSpectraS3Request request)
+            throws IOException;
+
+    @Action("DELETE")
+    @Resource("S3_TARGET_FAILURE")
+    
+    DeleteS3TargetFailureSpectraS3Response deleteS3TargetFailureSpectraS3(final DeleteS3TargetFailureSpectraS3Request request)
+            throws IOException;
+
+    @Action("DELETE")
+    @Resource("S3_TARGET_READ_PREFERENCE")
+    
+    DeleteS3TargetReadPreferenceSpectraS3Response deleteS3TargetReadPreferenceSpectraS3(final DeleteS3TargetReadPreferenceSpectraS3Request request)
+            throws IOException;
+
+    @Action("DELETE")
+    @Resource("S3_TARGET")
+    
+    DeleteS3TargetSpectraS3Response deleteS3TargetSpectraS3(final DeleteS3TargetSpectraS3Request request)
+            throws IOException;
+
+    @ResponsePayloadModel("BulkObjectList")
+    @Action("SHOW")
+    @Resource("S3_TARGET")
+    
+    GetBlobsOnS3TargetSpectraS3Response getBlobsOnS3TargetSpectraS3(final GetBlobsOnS3TargetSpectraS3Request request)
+            throws IOException;
+
+    @ResponsePayloadModel("S3TargetBucketNameList")
+    @Action("LIST")
+    @Resource("S3_TARGET_BUCKET_NAME")
+    
+    GetS3TargetBucketNamesSpectraS3Response getS3TargetBucketNamesSpectraS3(final GetS3TargetBucketNamesSpectraS3Request request)
+            throws IOException;
+
+    @ResponsePayloadModel("S3TargetFailureList")
+    @Action("LIST")
+    @Resource("S3_TARGET_FAILURE")
+    
+    GetS3TargetFailuresSpectraS3Response getS3TargetFailuresSpectraS3(final GetS3TargetFailuresSpectraS3Request request)
+            throws IOException;
+
+    @ResponsePayloadModel("S3TargetReadPreference")
+    @Action("SHOW")
+    @Resource("S3_TARGET_READ_PREFERENCE")
+    
+    GetS3TargetReadPreferenceSpectraS3Response getS3TargetReadPreferenceSpectraS3(final GetS3TargetReadPreferenceSpectraS3Request request)
+            throws IOException;
+
+    @ResponsePayloadModel("S3TargetReadPreferenceList")
+    @Action("LIST")
+    @Resource("S3_TARGET_READ_PREFERENCE")
+    
+    GetS3TargetReadPreferencesSpectraS3Response getS3TargetReadPreferencesSpectraS3(final GetS3TargetReadPreferencesSpectraS3Request request)
+            throws IOException;
+
+    @ResponsePayloadModel("S3Target")
+    @Action("SHOW")
+    @Resource("S3_TARGET")
+    
+    GetS3TargetSpectraS3Response getS3TargetSpectraS3(final GetS3TargetSpectraS3Request request)
+            throws IOException;
+
+    @ResponsePayloadModel("S3TargetList")
+    @Action("LIST")
+    @Resource("S3_TARGET")
+    
+    GetS3TargetsSpectraS3Response getS3TargetsSpectraS3(final GetS3TargetsSpectraS3Request request)
+            throws IOException;
+
+    @Action("MODIFY")
+    @Resource("S3_TARGET")
+    
+    ImportS3TargetSpectraS3Response importS3TargetSpectraS3(final ImportS3TargetSpectraS3Request request)
+            throws IOException;
+
+    @Action("BULK_MODIFY")
+    @Resource("S3_TARGET")
+    
+    ModifyAllS3TargetsSpectraS3Response modifyAllS3TargetsSpectraS3(final ModifyAllS3TargetsSpectraS3Request request)
+            throws IOException;
+
+    @ResponsePayloadModel("S3Target")
+    @Action("MODIFY")
+    @Resource("S3_TARGET")
+    
+    ModifyS3TargetSpectraS3Response modifyS3TargetSpectraS3(final ModifyS3TargetSpectraS3Request request)
+            throws IOException;
+
+    @ResponsePayloadModel("S3Target")
+    @Action("CREATE")
+    @Resource("S3_TARGET")
+    
+    RegisterS3TargetSpectraS3Response registerS3TargetSpectraS3(final RegisterS3TargetSpectraS3Request request)
+            throws IOException;
+
+    @ResponsePayloadModel("S3Target")
+    @Action("MODIFY")
+    @Resource("S3_TARGET")
+    
+    VerifyS3TargetSpectraS3Response verifyS3TargetSpectraS3(final VerifyS3TargetSpectraS3Request request)
             throws IOException;
 
     @ResponsePayloadModel("SpectraUser")
