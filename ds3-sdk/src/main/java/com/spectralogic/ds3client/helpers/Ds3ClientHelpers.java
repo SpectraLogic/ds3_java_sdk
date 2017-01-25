@@ -29,7 +29,6 @@ import java.io.IOException;
 import java.nio.channels.SeekableByteChannel;
 import java.nio.file.Path;
 import java.util.Collection;
-import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -119,10 +118,6 @@ public abstract class Ds3ClientHelpers {
          */
         void transfer(final ObjectChannelBuilder channelBuilder)
             throws IOException;
-    }
-
-    public interface MetadataAccess {
-        Map<String, String> getMetadataValue(final String filename);
     }
 
     /**

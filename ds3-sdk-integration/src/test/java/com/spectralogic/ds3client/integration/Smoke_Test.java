@@ -22,10 +22,7 @@ import com.spectralogic.ds3client.Ds3Client;
 import com.spectralogic.ds3client.commands.*;
 import com.spectralogic.ds3client.commands.interfaces.BulkResponse;
 import com.spectralogic.ds3client.commands.spectrads3.*;
-import com.spectralogic.ds3client.helpers.Ds3ClientHelpers;
-import com.spectralogic.ds3client.helpers.JobRecoveryException;
-import com.spectralogic.ds3client.helpers.JobRecoveryNotActiveException;
-import com.spectralogic.ds3client.helpers.ObjectCompletedListener;
+import com.spectralogic.ds3client.helpers.*;
 import com.spectralogic.ds3client.helpers.options.WriteJobOptions;
 import com.spectralogic.ds3client.integration.test.helpers.JobStatusHelper;
 import com.spectralogic.ds3client.integration.test.helpers.TempStorageIds;
@@ -1178,7 +1175,7 @@ public class Smoke_Test {
 
             final AtomicBoolean calledWithMetadata = new AtomicBoolean(false);
 
-            job.withMetadata(new Ds3ClientHelpers.MetadataAccess() {
+            job.withMetadata(new MetadataAccess() {
                 @Override
                 public Map<String, String> getMetadataValue(final String filename) {
                     if (filename.equals("beowulf.txt")) {
