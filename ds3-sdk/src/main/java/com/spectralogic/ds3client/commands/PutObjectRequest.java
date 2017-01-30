@@ -176,7 +176,7 @@ public class PutObjectRequest extends AbstractRequest {
         }
         final String modifiedKey;
         if (!key.toLowerCase().startsWith(AMZ_META_HEADER)){
-            modifiedKey = AMZ_META_HEADER + key;
+            modifiedKey = AMZ_META_HEADER + key.toLowerCase();
         } else {
             modifiedKey = key;
         }
