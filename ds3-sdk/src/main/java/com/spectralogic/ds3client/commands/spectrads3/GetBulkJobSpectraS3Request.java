@@ -16,7 +16,6 @@
 // This code is auto-generated, do not modify
 package com.spectralogic.ds3client.commands.spectrads3;
 
-import java.util.List;
 import com.spectralogic.ds3client.BulkCommand;
 import com.spectralogic.ds3client.models.bulk.Ds3Object;
 import com.spectralogic.ds3client.commands.interfaces.BulkRequest;
@@ -38,7 +37,7 @@ public class GetBulkJobSpectraS3Request extends BulkRequest {
 
     // Constructor
     
-    public GetBulkJobSpectraS3Request(final String bucketName, final List<Ds3Object> objects) {
+    public GetBulkJobSpectraS3Request(final String bucketName, final Iterable<Ds3Object> objects) {
         super(bucketName, objects);
         
         this.getQueryParams().put("operation", "start_bulk_get");
