@@ -89,7 +89,7 @@ public class MetadataAccessImpl_Test {
 
         final String fileName = "Gracie.txt";
 
-        final Path filePath = Paths.get(directory.toString(), fileName.toString());
+        final Path filePath = Paths.get(directory.toString(), fileName);
 
         final ImmutableMap.Builder<String, Path> fileMapper = ImmutableMap.builder();
 
