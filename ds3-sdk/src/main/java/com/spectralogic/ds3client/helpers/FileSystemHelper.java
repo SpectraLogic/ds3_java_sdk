@@ -24,7 +24,7 @@ public interface FileSystemHelper {
 
     boolean pathObjectExists(final Path path);
 
-    boolean pathIsWritable(final Path path);
+    boolean pathIsWritable(final Path path) throws IOException;
 
     long getAvailableFileSpace(final Path path) throws IOException;
 

@@ -35,6 +35,7 @@ import com.spectralogic.ds3client.models.Priority;
 import com.spectralogic.ds3client.models.bulk.Ds3Object;
 import com.spectralogic.ds3client.models.bulk.PartialDs3Object;
 import com.spectralogic.ds3client.models.common.Range;
+import com.spectralogic.ds3client.utils.Platform;
 import com.spectralogic.ds3client.utils.ResourceUtils;
 import org.apache.commons.io.FileUtils;
 import org.junit.AfterClass;
@@ -43,9 +44,11 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URISyntaxException;
 import java.nio.ByteBuffer;
@@ -232,7 +235,6 @@ public class GetJobManagement_Test {
 
         final String tempPathPrefix = null;
         final Path tempDirectoryPath = Files.createTempDirectory(Paths.get("."), tempPathPrefix);
-        final File tempDirectory = tempDirectoryPath.toFile();
 
         final String tempDirectoryName = tempDirectoryPath.toString();
 
@@ -244,6 +246,8 @@ public class GetJobManagement_Test {
         }
 
         try {
+            disableWritePermissionForRoot(tempDirectoryName);
+
             final String DIR_NAME = "largeFiles/";
             final String FILE_NAME = "lesmis-copies.txt";
 
@@ -272,6 +276,8 @@ public class GetJobManagement_Test {
             final File fileCopiedFromBP = Paths.get(tempDirectoryPath.toString(), FILE_NAME).toFile();
             assertTrue(FileUtils.contentEquals(originalFile, fileCopiedFromBP));
         } finally {
+            enableWritePermissionForRoot(tempDirectoryName);
+
             if (org.apache.commons.lang3.SystemUtils.IS_OS_WINDOWS) {
                 // Grant write data access to everyone, so we can delete the directory
                 Runtime.getRuntime().exec("icacls " + tempDirectoryName + " /grant Everyone:(WD)").waitFor();
@@ -280,6 +286,48 @@ public class GetJobManagement_Test {
             }
             FileUtils.deleteDirectory(tempDirectoryPath.toFile());
             deleteBigFileFromBlackPearlBucket();
+        }
+    }
+
+    private void disableWritePermissionForRoot(final String fileOrDirName) {
+        try {
+            if (iAmRoot()) {
+                Runtime.getRuntime().exec("chattr +i " + fileOrDirName).waitFor();
+            }
+        } catch (final IOException | InterruptedException e) {
+            LOG.error("Error setting file immutable: " + fileOrDirName, e);
+        }
+    }
+
+    private boolean iAmRoot() {
+        if ( ! Platform.isLinux()) {
+            return false;
+        }
+
+        try {
+            final Process whoamiProcess = Runtime.getRuntime().exec("id | cut -d \"(\" -f 1 | cut -d \"=\" -f 2");
+            whoamiProcess.waitFor();
+
+            try (final BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(whoamiProcess.getInputStream()))) {
+
+                final String userId = bufferedReader.readLine();
+
+                return userId.equals("0");
+            }
+        } catch (final IOException | InterruptedException e) {
+            LOG.error("Error getting user id.", e);
+        }
+
+        return false;
+    }
+
+    private void enableWritePermissionForRoot(final String fileOrDirName) {
+        try {
+            if (iAmRoot()) {
+                Runtime.getRuntime().exec("chattr -i " + fileOrDirName).waitFor();
+            }
+        } catch (final IOException | InterruptedException e) {
+            LOG.error("Error setting file immutable: " + fileOrDirName, e);
         }
     }
 

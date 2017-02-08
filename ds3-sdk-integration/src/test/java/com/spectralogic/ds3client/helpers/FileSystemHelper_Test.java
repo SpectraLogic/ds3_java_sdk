@@ -15,6 +15,9 @@
 
 package com.spectralogic.ds3client.helpers;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.spectralogic.ds3client.Ds3Client;
 import com.spectralogic.ds3client.helpers.events.SameThreadEventRunner;
 import com.spectralogic.ds3client.integration.Util;
@@ -29,7 +32,9 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -47,6 +52,8 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertNotNull;
 
 public class FileSystemHelper_Test {
+    private static final Logger LOG = LoggerFactory.getLogger(FileSystemHelper_Test.class);
+
     private static final Ds3Client client = Util.fromEnv();
     private static final Ds3ClientHelpers HELPERS = Ds3ClientHelpers.wrap(client);
     private static final String BUCKET_NAME = "File_System_Helper_Test";
@@ -162,11 +169,23 @@ public class FileSystemHelper_Test {
             Runtime.getRuntime().exec("icacls dir /deny Everyone:(WD)").waitFor();
         } else {
             Runtime.getRuntime().exec("chmod -w " + directory.toString()).waitFor();
+            final Process lsProcess = Runtime.getRuntime().exec("ls -l");
+            lsProcess.waitFor();
+            try (final BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(lsProcess.getInputStream()))) {
+
+                String line;
+
+                while ((line = bufferedReader.readLine()) != null) {
+                    LOG.info(line);
+                }
+            }
         }
 
         try {
             final ObjectStorageSpaceVerificationResult result = ds3ClientHelpers.objectsFromBucketWillFitInDirectory(
                     "bad bucket name", Arrays.asList(new String[]{}), directory);
+
+            LOG.info(result.toString());
 
             assertEquals(ObjectStorageSpaceVerificationResult.VerificationStatus.PathLacksAccess, result.getVerificationStatus());
             assertEquals(0, result.getRequiredSpace());
