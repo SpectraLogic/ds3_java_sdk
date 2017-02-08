@@ -72,7 +72,7 @@ dependencies {
 ```
 ## Javadoc
 
-The latest javadoc is located at [http://spectralogic.github.io/ds3_java_sdkj/javadoc/](http://spectralogic.github.io/ds3_java_sdk/javadoc/)
+The latest javadoc is located at [http://spectralogic.github.io/ds3_java_sdk/javadoc/](http://spectralogic.github.io/ds3_java_sdk/javadoc/)
 
 ## Contributing
 If you would like to contribute to the source code, sign the [Contributors Agreement](https://developer.spectralogic.com/contributors-agreement/) and make sure that your source conforms to our [Java Style Guide](https://github.com/SpectraLogic/spectralogic.github.com/wiki/Java-Style-Guide).  For an overview of how we use Github, please review our [Github Workflow](https://github.com/SpectraLogic/spectralogic.github.com/wiki/Github-Workflow).
