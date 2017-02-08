@@ -232,7 +232,6 @@ public class GetJobManagement_Test {
 
         final String tempPathPrefix = null;
         final Path tempDirectoryPath = Files.createTempDirectory(Paths.get("."), tempPathPrefix);
-        final File tempDirectory = tempDirectoryPath.toFile();
 
         final String tempDirectoryName = tempDirectoryPath.toString();
 

@@ -124,4 +124,15 @@ public class ObjectStorageSpaceVerificationResult {
     public IOException getIoException() {
         return ioException;
     }
+
+    @Override
+    public String toString() {
+        return "ObjectStorageSpaceVerificationResult { " +
+                "verificationStatus = " + verificationStatus +
+                ", requiredSpace = " + requiredSpace +
+                ", availableSpace = " + availableSpace +
+                ", containsSufficientSpace = " + containsSufficientSpace +
+                ", ioException = " + ioException +
+                '}';
+    }
 }
