@@ -161,7 +161,7 @@ public class FileSystemHelper_Test {
             // Deny write data access to everyone, making the directory unwritable
             Runtime.getRuntime().exec("icacls dir /deny Everyone:(WD)").waitFor();
         } else {
-            directory.toFile().setWritable(false);
+            Runtime.getRuntime().exec("chmod -w " + directory.toString()).waitFor();
         }
 
         try {
@@ -178,7 +178,7 @@ public class FileSystemHelper_Test {
                 // Grant write data access to everyone, making the directory writable, so we can delete it.
                 Runtime.getRuntime().exec("icacls dir /grant Everyone:(WD)").waitFor();
             } else {
-                directory.toFile().setWritable(true);
+                Runtime.getRuntime().exec("chmod +w " + directory.toString()).waitFor();
             }
 
             FileUtils.deleteDirectory(directory.toFile());
