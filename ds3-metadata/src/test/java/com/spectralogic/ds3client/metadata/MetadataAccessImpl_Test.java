@@ -85,24 +85,16 @@ public class MetadataAccessImpl_Test {
     public void testMetadataAccessFailureHandler() throws IOException, InterruptedException {
         Assume.assumeFalse(Platform.isWindows());
 
-        final String tempPathPrefix = null;
-        final Path tempDirectory = Files.createTempDirectory(Paths.get("."), tempPathPrefix);
+        final Path directory = Paths.get(".");
 
         final String fileName = "Gracie.txt";
 
-        final Path filePath = Files.createFile(Paths.get(tempDirectory.toString(), fileName));
+        final Path filePath = Paths.get(directory.toString(), fileName);
 
-        try {
-            tempDirectory.toFile().setExecutable(false);
+        final ImmutableMap.Builder<String, Path> fileMapper = ImmutableMap.builder();
 
-            final ImmutableMap.Builder<String, Path> fileMapper = ImmutableMap.builder();
-
-            fileMapper.put(filePath.toString(), filePath);
-            new MetadataAccessImpl(fileMapper.build()).getMetadataValue(filePath.toString());
-        } finally {
-            tempDirectory.toFile().setExecutable(true);
-            FileUtils.deleteDirectory(tempDirectory.toFile());
-        }
+        fileMapper.put(filePath.toString(), filePath);
+        new MetadataAccessImpl(fileMapper.build()).getMetadataValue(filePath.toString());
     }
 
     @Test(expected = RuntimeException.class)
