@@ -240,7 +240,7 @@ public class GetJobManagement_Test {
             // Deny write data access to everyone, making the directory unwritable.
             Runtime.getRuntime().exec("icacls " + tempDirectoryName + " /deny Everyone:(WD)").waitFor();
         } else {
-            Runtime.getRuntime().exec("chmod -w " + tempDirectory.toString()).waitFor();
+            Runtime.getRuntime().exec("chmod -w " + tempDirectoryName).waitFor();
         }
 
         try {
@@ -276,7 +276,7 @@ public class GetJobManagement_Test {
                 // Grant write data access to everyone, so we can delete the directory
                 Runtime.getRuntime().exec("icacls " + tempDirectoryName + " /grant Everyone:(WD)").waitFor();
             } else {
-                Runtime.getRuntime().exec("chmod +w " + tempDirectory.toString()).waitFor();
+                Runtime.getRuntime().exec("chmod +w " + tempDirectoryName).waitFor();
             }
             FileUtils.deleteDirectory(tempDirectoryPath.toFile());
             deleteBigFileFromBlackPearlBucket();
