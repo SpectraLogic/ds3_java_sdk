@@ -53,13 +53,8 @@ class FileSystemHelperImpl implements FileSystemHelper {
             final PosixFileAttributes attributes = Files.getFileAttributeView(path, PosixFileAttributeView.class).readAttributes();
             final Set<PosixFilePermission> permissions = attributes.permissions();
 
-            if (permissions.contains(PosixFilePermission.OWNER_WRITE) || permissions.contains(PosixFilePermission.GROUP_WRITE) ||
-                    permissions.contains(PosixFilePermission.OTHERS_WRITE))
-            {
-                return true;
-            }
-
-            return false;
+            return permissions.contains(PosixFilePermission.OWNER_WRITE) || permissions.contains(PosixFilePermission.GROUP_WRITE) ||
+                    permissions.contains(PosixFilePermission.OTHERS_WRITE);
         }
     }
 
@@ -110,9 +105,9 @@ class FileSystemHelperImpl implements FileSystemHelper {
 
         try {
             if ( ! pathIsWritable(destinationDirectory)) {
-                final IOException ioException = null;
+                final IOException nullIOException = null;
                 return new ObjectStorageSpaceVerificationResult(ObjectStorageSpaceVerificationResult.VerificationStatus.PathLacksAccess,
-                        requiredSpace, availableSpace, ioException);
+                        requiredSpace, availableSpace, nullIOException);
             }
         } catch (final IOException ioException) {
             return new ObjectStorageSpaceVerificationResult(ObjectStorageSpaceVerificationResult.VerificationStatus.PathLacksAccess,

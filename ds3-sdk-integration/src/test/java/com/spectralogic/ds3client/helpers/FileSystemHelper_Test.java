@@ -171,12 +171,13 @@ public class FileSystemHelper_Test {
             Runtime.getRuntime().exec("chmod -w " + directory.toString()).waitFor();
             final Process lsProcess = Runtime.getRuntime().exec("ls -l");
             lsProcess.waitFor();
-            final BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(lsProcess.getInputStream()));
+            try (final BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(lsProcess.getInputStream()))) {
 
-            String line;
+                String line;
 
-            while ((line = bufferedReader.readLine()) != null) {
-                LOG.info(line);
+                while ((line = bufferedReader.readLine()) != null) {
+                    LOG.info(line);
+                }
             }
         }
 
