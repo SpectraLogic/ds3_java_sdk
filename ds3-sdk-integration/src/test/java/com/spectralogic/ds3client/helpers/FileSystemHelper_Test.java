@@ -1,19 +1,22 @@
 /*
+ * ******************************************************************************
+ *   Copyright 2014-2017 Spectra Logic Corporation. All Rights Reserved.
+ *   Licensed under the Apache License, Version 2.0 (the "License"). You may not use
+ *   this file except in compliance with the License. A copy of the License is located at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *   or in the "license" file accompanying this file.
+ *   This file is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+ *   CONDITIONS OF ANY KIND, either express or implied. See the License for the
+ *   specific language governing permissions and limitations under the License.
  * ****************************************************************************
- *    Copyright 2014-2016 Spectra Logic Corporation. All Rights Reserved.
- *    Licensed under the Apache License, Version 2.0 (the "License"). You may not use
- *    this file except in compliance with the License. A copy of the License is located at
- *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
- *    or in the "license" file accompanying this file.
- *    This file is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
- *    CONDITIONS OF ANY KIND, either express or implied. See the License for the
- *    specific language governing permissions and limitations under the License.
- *  ****************************************************************************
  */
 
 package com.spectralogic.ds3client.helpers;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.spectralogic.ds3client.Ds3Client;
 import com.spectralogic.ds3client.helpers.events.SameThreadEventRunner;
@@ -29,7 +32,9 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -47,6 +52,8 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertNotNull;
 
 public class FileSystemHelper_Test {
+    private static final Logger LOG = LoggerFactory.getLogger(FileSystemHelper_Test.class);
+
     private static final Ds3Client client = Util.fromEnv();
     private static final Ds3ClientHelpers HELPERS = Ds3ClientHelpers.wrap(client);
     private static final String BUCKET_NAME = "File_System_Helper_Test";
@@ -161,12 +168,24 @@ public class FileSystemHelper_Test {
             // Deny write data access to everyone, making the directory unwritable
             Runtime.getRuntime().exec("icacls dir /deny Everyone:(WD)").waitFor();
         } else {
-            directory.toFile().setWritable(false);
+            Runtime.getRuntime().exec("chmod -w " + directory.toString()).waitFor();
+            final Process lsProcess = Runtime.getRuntime().exec("ls -l");
+            lsProcess.waitFor();
+            try (final BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(lsProcess.getInputStream()))) {
+
+                String line;
+
+                while ((line = bufferedReader.readLine()) != null) {
+                    LOG.info(line);
+                }
+            }
         }
 
         try {
             final ObjectStorageSpaceVerificationResult result = ds3ClientHelpers.objectsFromBucketWillFitInDirectory(
                     "bad bucket name", Arrays.asList(new String[]{}), directory);
+
+            LOG.info(result.toString());
 
             assertEquals(ObjectStorageSpaceVerificationResult.VerificationStatus.PathLacksAccess, result.getVerificationStatus());
             assertEquals(0, result.getRequiredSpace());
@@ -178,7 +197,7 @@ public class FileSystemHelper_Test {
                 // Grant write data access to everyone, making the directory writable, so we can delete it.
                 Runtime.getRuntime().exec("icacls dir /grant Everyone:(WD)").waitFor();
             } else {
-                directory.toFile().setWritable(true);
+                Runtime.getRuntime().exec("chmod +w " + directory.toString()).waitFor();
             }
 
             FileUtils.deleteDirectory(directory.toFile());

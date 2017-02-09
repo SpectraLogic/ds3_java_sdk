@@ -1,6 +1,6 @@
 /*
  * ******************************************************************************
- *   Copyright 2014-2016 Spectra Logic Corporation. All Rights Reserved.
+ *   Copyright 2014-2017 Spectra Logic Corporation. All Rights Reserved.
  *   Licensed under the Apache License, Version 2.0 (the "License"). You may not use
  *   this file except in compliance with the License. A copy of the License is located at
  *
@@ -226,6 +226,10 @@ public class Ds3ClientImpl implements Ds3Client {
         return new ModifyDataPathBackendSpectraS3ResponseParser().response(this.netClient.getResponse(request));
     }
     @Override
+    public PutAzureDataReplicationRuleSpectraS3Response putAzureDataReplicationRuleSpectraS3(final PutAzureDataReplicationRuleSpectraS3Request request) throws IOException {
+        return new PutAzureDataReplicationRuleSpectraS3ResponseParser().response(this.netClient.getResponse(request));
+    }
+    @Override
     public PutDataPersistenceRuleSpectraS3Response putDataPersistenceRuleSpectraS3(final PutDataPersistenceRuleSpectraS3Request request) throws IOException {
         return new PutDataPersistenceRuleSpectraS3ResponseParser().response(this.netClient.getResponse(request));
     }
@@ -234,8 +238,16 @@ public class Ds3ClientImpl implements Ds3Client {
         return new PutDataPolicySpectraS3ResponseParser().response(this.netClient.getResponse(request));
     }
     @Override
-    public PutDataReplicationRuleSpectraS3Response putDataReplicationRuleSpectraS3(final PutDataReplicationRuleSpectraS3Request request) throws IOException {
-        return new PutDataReplicationRuleSpectraS3ResponseParser().response(this.netClient.getResponse(request));
+    public PutDs3DataReplicationRuleSpectraS3Response putDs3DataReplicationRuleSpectraS3(final PutDs3DataReplicationRuleSpectraS3Request request) throws IOException {
+        return new PutDs3DataReplicationRuleSpectraS3ResponseParser().response(this.netClient.getResponse(request));
+    }
+    @Override
+    public PutS3DataReplicationRuleSpectraS3Response putS3DataReplicationRuleSpectraS3(final PutS3DataReplicationRuleSpectraS3Request request) throws IOException {
+        return new PutS3DataReplicationRuleSpectraS3ResponseParser().response(this.netClient.getResponse(request));
+    }
+    @Override
+    public DeleteAzureDataReplicationRuleSpectraS3Response deleteAzureDataReplicationRuleSpectraS3(final DeleteAzureDataReplicationRuleSpectraS3Request request) throws IOException {
+        return new DeleteAzureDataReplicationRuleSpectraS3ResponseParser().response(this.netClient.getResponse(request));
     }
     @Override
     public DeleteDataPersistenceRuleSpectraS3Response deleteDataPersistenceRuleSpectraS3(final DeleteDataPersistenceRuleSpectraS3Request request) throws IOException {
@@ -246,8 +258,20 @@ public class Ds3ClientImpl implements Ds3Client {
         return new DeleteDataPolicySpectraS3ResponseParser().response(this.netClient.getResponse(request));
     }
     @Override
-    public DeleteDataReplicationRuleSpectraS3Response deleteDataReplicationRuleSpectraS3(final DeleteDataReplicationRuleSpectraS3Request request) throws IOException {
-        return new DeleteDataReplicationRuleSpectraS3ResponseParser().response(this.netClient.getResponse(request));
+    public DeleteDs3DataReplicationRuleSpectraS3Response deleteDs3DataReplicationRuleSpectraS3(final DeleteDs3DataReplicationRuleSpectraS3Request request) throws IOException {
+        return new DeleteDs3DataReplicationRuleSpectraS3ResponseParser().response(this.netClient.getResponse(request));
+    }
+    @Override
+    public DeleteS3DataReplicationRuleSpectraS3Response deleteS3DataReplicationRuleSpectraS3(final DeleteS3DataReplicationRuleSpectraS3Request request) throws IOException {
+        return new DeleteS3DataReplicationRuleSpectraS3ResponseParser().response(this.netClient.getResponse(request));
+    }
+    @Override
+    public GetAzureDataReplicationRuleSpectraS3Response getAzureDataReplicationRuleSpectraS3(final GetAzureDataReplicationRuleSpectraS3Request request) throws IOException {
+        return new GetAzureDataReplicationRuleSpectraS3ResponseParser().response(this.netClient.getResponse(request));
+    }
+    @Override
+    public GetAzureDataReplicationRulesSpectraS3Response getAzureDataReplicationRulesSpectraS3(final GetAzureDataReplicationRulesSpectraS3Request request) throws IOException {
+        return new GetAzureDataReplicationRulesSpectraS3ResponseParser().response(this.netClient.getResponse(request));
     }
     @Override
     public GetDataPersistenceRuleSpectraS3Response getDataPersistenceRuleSpectraS3(final GetDataPersistenceRuleSpectraS3Request request) throws IOException {
@@ -266,12 +290,24 @@ public class Ds3ClientImpl implements Ds3Client {
         return new GetDataPolicySpectraS3ResponseParser().response(this.netClient.getResponse(request));
     }
     @Override
-    public GetDataReplicationRuleSpectraS3Response getDataReplicationRuleSpectraS3(final GetDataReplicationRuleSpectraS3Request request) throws IOException {
-        return new GetDataReplicationRuleSpectraS3ResponseParser().response(this.netClient.getResponse(request));
+    public GetDs3DataReplicationRuleSpectraS3Response getDs3DataReplicationRuleSpectraS3(final GetDs3DataReplicationRuleSpectraS3Request request) throws IOException {
+        return new GetDs3DataReplicationRuleSpectraS3ResponseParser().response(this.netClient.getResponse(request));
     }
     @Override
-    public GetDataReplicationRulesSpectraS3Response getDataReplicationRulesSpectraS3(final GetDataReplicationRulesSpectraS3Request request) throws IOException {
-        return new GetDataReplicationRulesSpectraS3ResponseParser().response(this.netClient.getResponse(request));
+    public GetDs3DataReplicationRulesSpectraS3Response getDs3DataReplicationRulesSpectraS3(final GetDs3DataReplicationRulesSpectraS3Request request) throws IOException {
+        return new GetDs3DataReplicationRulesSpectraS3ResponseParser().response(this.netClient.getResponse(request));
+    }
+    @Override
+    public GetS3DataReplicationRuleSpectraS3Response getS3DataReplicationRuleSpectraS3(final GetS3DataReplicationRuleSpectraS3Request request) throws IOException {
+        return new GetS3DataReplicationRuleSpectraS3ResponseParser().response(this.netClient.getResponse(request));
+    }
+    @Override
+    public GetS3DataReplicationRulesSpectraS3Response getS3DataReplicationRulesSpectraS3(final GetS3DataReplicationRulesSpectraS3Request request) throws IOException {
+        return new GetS3DataReplicationRulesSpectraS3ResponseParser().response(this.netClient.getResponse(request));
+    }
+    @Override
+    public ModifyAzureDataReplicationRuleSpectraS3Response modifyAzureDataReplicationRuleSpectraS3(final ModifyAzureDataReplicationRuleSpectraS3Request request) throws IOException {
+        return new ModifyAzureDataReplicationRuleSpectraS3ResponseParser().response(this.netClient.getResponse(request));
     }
     @Override
     public ModifyDataPersistenceRuleSpectraS3Response modifyDataPersistenceRuleSpectraS3(final ModifyDataPersistenceRuleSpectraS3Request request) throws IOException {
@@ -282,20 +318,36 @@ public class Ds3ClientImpl implements Ds3Client {
         return new ModifyDataPolicySpectraS3ResponseParser().response(this.netClient.getResponse(request));
     }
     @Override
-    public ModifyDataReplicationRuleSpectraS3Response modifyDataReplicationRuleSpectraS3(final ModifyDataReplicationRuleSpectraS3Request request) throws IOException {
-        return new ModifyDataReplicationRuleSpectraS3ResponseParser().response(this.netClient.getResponse(request));
+    public ModifyDs3DataReplicationRuleSpectraS3Response modifyDs3DataReplicationRuleSpectraS3(final ModifyDs3DataReplicationRuleSpectraS3Request request) throws IOException {
+        return new ModifyDs3DataReplicationRuleSpectraS3ResponseParser().response(this.netClient.getResponse(request));
+    }
+    @Override
+    public ModifyS3DataReplicationRuleSpectraS3Response modifyS3DataReplicationRuleSpectraS3(final ModifyS3DataReplicationRuleSpectraS3Request request) throws IOException {
+        return new ModifyS3DataReplicationRuleSpectraS3ResponseParser().response(this.netClient.getResponse(request));
+    }
+    @Override
+    public ClearSuspectBlobAzureTargetsSpectraS3Response clearSuspectBlobAzureTargetsSpectraS3(final ClearSuspectBlobAzureTargetsSpectraS3Request request) throws IOException {
+        return new ClearSuspectBlobAzureTargetsSpectraS3ResponseParser().response(this.netClient.getResponse(request));
+    }
+    @Override
+    public ClearSuspectBlobDs3TargetsSpectraS3Response clearSuspectBlobDs3TargetsSpectraS3(final ClearSuspectBlobDs3TargetsSpectraS3Request request) throws IOException {
+        return new ClearSuspectBlobDs3TargetsSpectraS3ResponseParser().response(this.netClient.getResponse(request));
     }
     @Override
     public ClearSuspectBlobPoolsSpectraS3Response clearSuspectBlobPoolsSpectraS3(final ClearSuspectBlobPoolsSpectraS3Request request) throws IOException {
         return new ClearSuspectBlobPoolsSpectraS3ResponseParser().response(this.netClient.getResponse(request));
     }
     @Override
+    public ClearSuspectBlobS3TargetsSpectraS3Response clearSuspectBlobS3TargetsSpectraS3(final ClearSuspectBlobS3TargetsSpectraS3Request request) throws IOException {
+        return new ClearSuspectBlobS3TargetsSpectraS3ResponseParser().response(this.netClient.getResponse(request));
+    }
+    @Override
     public ClearSuspectBlobTapesSpectraS3Response clearSuspectBlobTapesSpectraS3(final ClearSuspectBlobTapesSpectraS3Request request) throws IOException {
         return new ClearSuspectBlobTapesSpectraS3ResponseParser().response(this.netClient.getResponse(request));
     }
     @Override
-    public ClearSuspectBlobTargetsSpectraS3Response clearSuspectBlobTargetsSpectraS3(final ClearSuspectBlobTargetsSpectraS3Request request) throws IOException {
-        return new ClearSuspectBlobTargetsSpectraS3ResponseParser().response(this.netClient.getResponse(request));
+    public GetDegradedAzureDataReplicationRulesSpectraS3Response getDegradedAzureDataReplicationRulesSpectraS3(final GetDegradedAzureDataReplicationRulesSpectraS3Request request) throws IOException {
+        return new GetDegradedAzureDataReplicationRulesSpectraS3ResponseParser().response(this.netClient.getResponse(request));
     }
     @Override
     public GetDegradedBlobsSpectraS3Response getDegradedBlobsSpectraS3(final GetDegradedBlobsSpectraS3Request request) throws IOException {
@@ -310,20 +362,32 @@ public class Ds3ClientImpl implements Ds3Client {
         return new GetDegradedDataPersistenceRulesSpectraS3ResponseParser().response(this.netClient.getResponse(request));
     }
     @Override
-    public GetDegradedDataReplicationRulesSpectraS3Response getDegradedDataReplicationRulesSpectraS3(final GetDegradedDataReplicationRulesSpectraS3Request request) throws IOException {
-        return new GetDegradedDataReplicationRulesSpectraS3ResponseParser().response(this.netClient.getResponse(request));
+    public GetDegradedDs3DataReplicationRulesSpectraS3Response getDegradedDs3DataReplicationRulesSpectraS3(final GetDegradedDs3DataReplicationRulesSpectraS3Request request) throws IOException {
+        return new GetDegradedDs3DataReplicationRulesSpectraS3ResponseParser().response(this.netClient.getResponse(request));
+    }
+    @Override
+    public GetDegradedS3DataReplicationRulesSpectraS3Response getDegradedS3DataReplicationRulesSpectraS3(final GetDegradedS3DataReplicationRulesSpectraS3Request request) throws IOException {
+        return new GetDegradedS3DataReplicationRulesSpectraS3ResponseParser().response(this.netClient.getResponse(request));
+    }
+    @Override
+    public GetSuspectBlobAzureTargetsSpectraS3Response getSuspectBlobAzureTargetsSpectraS3(final GetSuspectBlobAzureTargetsSpectraS3Request request) throws IOException {
+        return new GetSuspectBlobAzureTargetsSpectraS3ResponseParser().response(this.netClient.getResponse(request));
+    }
+    @Override
+    public GetSuspectBlobDs3TargetsSpectraS3Response getSuspectBlobDs3TargetsSpectraS3(final GetSuspectBlobDs3TargetsSpectraS3Request request) throws IOException {
+        return new GetSuspectBlobDs3TargetsSpectraS3ResponseParser().response(this.netClient.getResponse(request));
     }
     @Override
     public GetSuspectBlobPoolsSpectraS3Response getSuspectBlobPoolsSpectraS3(final GetSuspectBlobPoolsSpectraS3Request request) throws IOException {
         return new GetSuspectBlobPoolsSpectraS3ResponseParser().response(this.netClient.getResponse(request));
     }
     @Override
-    public GetSuspectBlobTapesSpectraS3Response getSuspectBlobTapesSpectraS3(final GetSuspectBlobTapesSpectraS3Request request) throws IOException {
-        return new GetSuspectBlobTapesSpectraS3ResponseParser().response(this.netClient.getResponse(request));
+    public GetSuspectBlobS3TargetsSpectraS3Response getSuspectBlobS3TargetsSpectraS3(final GetSuspectBlobS3TargetsSpectraS3Request request) throws IOException {
+        return new GetSuspectBlobS3TargetsSpectraS3ResponseParser().response(this.netClient.getResponse(request));
     }
     @Override
-    public GetSuspectBlobTargetsSpectraS3Response getSuspectBlobTargetsSpectraS3(final GetSuspectBlobTargetsSpectraS3Request request) throws IOException {
-        return new GetSuspectBlobTargetsSpectraS3ResponseParser().response(this.netClient.getResponse(request));
+    public GetSuspectBlobTapesSpectraS3Response getSuspectBlobTapesSpectraS3(final GetSuspectBlobTapesSpectraS3Request request) throws IOException {
+        return new GetSuspectBlobTapesSpectraS3ResponseParser().response(this.netClient.getResponse(request));
     }
     @Override
     public GetSuspectBucketsSpectraS3Response getSuspectBucketsSpectraS3(final GetSuspectBucketsSpectraS3Request request) throws IOException {
@@ -338,16 +402,24 @@ public class Ds3ClientImpl implements Ds3Client {
         return new GetSuspectObjectsWithFullDetailsSpectraS3ResponseParser().response(this.netClient.getResponse(request));
     }
     @Override
+    public MarkSuspectBlobAzureTargetsAsDegradedSpectraS3Response markSuspectBlobAzureTargetsAsDegradedSpectraS3(final MarkSuspectBlobAzureTargetsAsDegradedSpectraS3Request request) throws IOException {
+        return new MarkSuspectBlobAzureTargetsAsDegradedSpectraS3ResponseParser().response(this.netClient.getResponse(request));
+    }
+    @Override
+    public MarkSuspectBlobDs3TargetsAsDegradedSpectraS3Response markSuspectBlobDs3TargetsAsDegradedSpectraS3(final MarkSuspectBlobDs3TargetsAsDegradedSpectraS3Request request) throws IOException {
+        return new MarkSuspectBlobDs3TargetsAsDegradedSpectraS3ResponseParser().response(this.netClient.getResponse(request));
+    }
+    @Override
     public MarkSuspectBlobPoolsAsDegradedSpectraS3Response markSuspectBlobPoolsAsDegradedSpectraS3(final MarkSuspectBlobPoolsAsDegradedSpectraS3Request request) throws IOException {
         return new MarkSuspectBlobPoolsAsDegradedSpectraS3ResponseParser().response(this.netClient.getResponse(request));
     }
     @Override
-    public MarkSuspectBlobTapesAsDegradedSpectraS3Response markSuspectBlobTapesAsDegradedSpectraS3(final MarkSuspectBlobTapesAsDegradedSpectraS3Request request) throws IOException {
-        return new MarkSuspectBlobTapesAsDegradedSpectraS3ResponseParser().response(this.netClient.getResponse(request));
+    public MarkSuspectBlobS3TargetsAsDegradedSpectraS3Response markSuspectBlobS3TargetsAsDegradedSpectraS3(final MarkSuspectBlobS3TargetsAsDegradedSpectraS3Request request) throws IOException {
+        return new MarkSuspectBlobS3TargetsAsDegradedSpectraS3ResponseParser().response(this.netClient.getResponse(request));
     }
     @Override
-    public MarkSuspectBlobTargetsAsDegradedSpectraS3Response markSuspectBlobTargetsAsDegradedSpectraS3(final MarkSuspectBlobTargetsAsDegradedSpectraS3Request request) throws IOException {
-        return new MarkSuspectBlobTargetsAsDegradedSpectraS3ResponseParser().response(this.netClient.getResponse(request));
+    public MarkSuspectBlobTapesAsDegradedSpectraS3Response markSuspectBlobTapesAsDegradedSpectraS3(final MarkSuspectBlobTapesAsDegradedSpectraS3Request request) throws IOException {
+        return new MarkSuspectBlobTapesAsDegradedSpectraS3ResponseParser().response(this.netClient.getResponse(request));
     }
     @Override
     public PutGroupGroupMemberSpectraS3Response putGroupGroupMemberSpectraS3(final PutGroupGroupMemberSpectraS3Request request) throws IOException {
@@ -526,6 +598,10 @@ public class Ds3ClientImpl implements Ds3Client {
         return new ModifyNodeSpectraS3ResponseParser().response(this.netClient.getResponse(request));
     }
     @Override
+    public PutAzureTargetFailureNotificationRegistrationSpectraS3Response putAzureTargetFailureNotificationRegistrationSpectraS3(final PutAzureTargetFailureNotificationRegistrationSpectraS3Request request) throws IOException {
+        return new PutAzureTargetFailureNotificationRegistrationSpectraS3ResponseParser().response(this.netClient.getResponse(request));
+    }
+    @Override
     public PutDs3TargetFailureNotificationRegistrationSpectraS3Response putDs3TargetFailureNotificationRegistrationSpectraS3(final PutDs3TargetFailureNotificationRegistrationSpectraS3Request request) throws IOException {
         return new PutDs3TargetFailureNotificationRegistrationSpectraS3ResponseParser().response(this.netClient.getResponse(request));
     }
@@ -558,6 +634,10 @@ public class Ds3ClientImpl implements Ds3Client {
         return new PutPoolFailureNotificationRegistrationSpectraS3ResponseParser().response(this.netClient.getResponse(request));
     }
     @Override
+    public PutS3TargetFailureNotificationRegistrationSpectraS3Response putS3TargetFailureNotificationRegistrationSpectraS3(final PutS3TargetFailureNotificationRegistrationSpectraS3Request request) throws IOException {
+        return new PutS3TargetFailureNotificationRegistrationSpectraS3ResponseParser().response(this.netClient.getResponse(request));
+    }
+    @Override
     public PutStorageDomainFailureNotificationRegistrationSpectraS3Response putStorageDomainFailureNotificationRegistrationSpectraS3(final PutStorageDomainFailureNotificationRegistrationSpectraS3Request request) throws IOException {
         return new PutStorageDomainFailureNotificationRegistrationSpectraS3ResponseParser().response(this.netClient.getResponse(request));
     }
@@ -572,6 +652,10 @@ public class Ds3ClientImpl implements Ds3Client {
     @Override
     public PutTapePartitionFailureNotificationRegistrationSpectraS3Response putTapePartitionFailureNotificationRegistrationSpectraS3(final PutTapePartitionFailureNotificationRegistrationSpectraS3Request request) throws IOException {
         return new PutTapePartitionFailureNotificationRegistrationSpectraS3ResponseParser().response(this.netClient.getResponse(request));
+    }
+    @Override
+    public DeleteAzureTargetFailureNotificationRegistrationSpectraS3Response deleteAzureTargetFailureNotificationRegistrationSpectraS3(final DeleteAzureTargetFailureNotificationRegistrationSpectraS3Request request) throws IOException {
+        return new DeleteAzureTargetFailureNotificationRegistrationSpectraS3ResponseParser().response(this.netClient.getResponse(request));
     }
     @Override
     public DeleteDs3TargetFailureNotificationRegistrationSpectraS3Response deleteDs3TargetFailureNotificationRegistrationSpectraS3(final DeleteDs3TargetFailureNotificationRegistrationSpectraS3Request request) throws IOException {
@@ -606,6 +690,10 @@ public class Ds3ClientImpl implements Ds3Client {
         return new DeletePoolFailureNotificationRegistrationSpectraS3ResponseParser().response(this.netClient.getResponse(request));
     }
     @Override
+    public DeleteS3TargetFailureNotificationRegistrationSpectraS3Response deleteS3TargetFailureNotificationRegistrationSpectraS3(final DeleteS3TargetFailureNotificationRegistrationSpectraS3Request request) throws IOException {
+        return new DeleteS3TargetFailureNotificationRegistrationSpectraS3ResponseParser().response(this.netClient.getResponse(request));
+    }
+    @Override
     public DeleteStorageDomainFailureNotificationRegistrationSpectraS3Response deleteStorageDomainFailureNotificationRegistrationSpectraS3(final DeleteStorageDomainFailureNotificationRegistrationSpectraS3Request request) throws IOException {
         return new DeleteStorageDomainFailureNotificationRegistrationSpectraS3ResponseParser().response(this.netClient.getResponse(request));
     }
@@ -620,6 +708,14 @@ public class Ds3ClientImpl implements Ds3Client {
     @Override
     public DeleteTapePartitionFailureNotificationRegistrationSpectraS3Response deleteTapePartitionFailureNotificationRegistrationSpectraS3(final DeleteTapePartitionFailureNotificationRegistrationSpectraS3Request request) throws IOException {
         return new DeleteTapePartitionFailureNotificationRegistrationSpectraS3ResponseParser().response(this.netClient.getResponse(request));
+    }
+    @Override
+    public GetAzureTargetFailureNotificationRegistrationSpectraS3Response getAzureTargetFailureNotificationRegistrationSpectraS3(final GetAzureTargetFailureNotificationRegistrationSpectraS3Request request) throws IOException {
+        return new GetAzureTargetFailureNotificationRegistrationSpectraS3ResponseParser().response(this.netClient.getResponse(request));
+    }
+    @Override
+    public GetAzureTargetFailureNotificationRegistrationsSpectraS3Response getAzureTargetFailureNotificationRegistrationsSpectraS3(final GetAzureTargetFailureNotificationRegistrationsSpectraS3Request request) throws IOException {
+        return new GetAzureTargetFailureNotificationRegistrationsSpectraS3ResponseParser().response(this.netClient.getResponse(request));
     }
     @Override
     public GetDs3TargetFailureNotificationRegistrationSpectraS3Response getDs3TargetFailureNotificationRegistrationSpectraS3(final GetDs3TargetFailureNotificationRegistrationSpectraS3Request request) throws IOException {
@@ -684,6 +780,14 @@ public class Ds3ClientImpl implements Ds3Client {
     @Override
     public GetPoolFailureNotificationRegistrationsSpectraS3Response getPoolFailureNotificationRegistrationsSpectraS3(final GetPoolFailureNotificationRegistrationsSpectraS3Request request) throws IOException {
         return new GetPoolFailureNotificationRegistrationsSpectraS3ResponseParser().response(this.netClient.getResponse(request));
+    }
+    @Override
+    public GetS3TargetFailureNotificationRegistrationSpectraS3Response getS3TargetFailureNotificationRegistrationSpectraS3(final GetS3TargetFailureNotificationRegistrationSpectraS3Request request) throws IOException {
+        return new GetS3TargetFailureNotificationRegistrationSpectraS3ResponseParser().response(this.netClient.getResponse(request));
+    }
+    @Override
+    public GetS3TargetFailureNotificationRegistrationsSpectraS3Response getS3TargetFailureNotificationRegistrationsSpectraS3(final GetS3TargetFailureNotificationRegistrationsSpectraS3Request request) throws IOException {
+        return new GetS3TargetFailureNotificationRegistrationsSpectraS3ResponseParser().response(this.netClient.getResponse(request));
     }
     @Override
     public GetStorageDomainFailureNotificationRegistrationSpectraS3Response getStorageDomainFailureNotificationRegistrationSpectraS3(final GetStorageDomainFailureNotificationRegistrationSpectraS3Request request) throws IOException {
@@ -760,6 +864,14 @@ public class Ds3ClientImpl implements Ds3Client {
     @Override
     public CancelImportPoolSpectraS3Response cancelImportPoolSpectraS3(final CancelImportPoolSpectraS3Request request) throws IOException {
         return new CancelImportPoolSpectraS3ResponseParser().response(this.netClient.getResponse(request));
+    }
+    @Override
+    public CancelVerifyOnAllPoolsSpectraS3Response cancelVerifyOnAllPoolsSpectraS3(final CancelVerifyOnAllPoolsSpectraS3Request request) throws IOException {
+        return new CancelVerifyOnAllPoolsSpectraS3ResponseParser().response(this.netClient.getResponse(request));
+    }
+    @Override
+    public CancelVerifyPoolSpectraS3Response cancelVerifyPoolSpectraS3(final CancelVerifyPoolSpectraS3Request request) throws IOException {
+        return new CancelVerifyPoolSpectraS3ResponseParser().response(this.netClient.getResponse(request));
     }
     @Override
     public CompactAllPoolsSpectraS3Response compactAllPoolsSpectraS3(final CompactAllPoolsSpectraS3Request request) throws IOException {
@@ -908,6 +1020,14 @@ public class Ds3ClientImpl implements Ds3Client {
     @Override
     public ModifyStorageDomainSpectraS3Response modifyStorageDomainSpectraS3(final ModifyStorageDomainSpectraS3Request request) throws IOException {
         return new ModifyStorageDomainSpectraS3ResponseParser().response(this.netClient.getResponse(request));
+    }
+    @Override
+    public ForceFeatureKeyValidationSpectraS3Response forceFeatureKeyValidationSpectraS3(final ForceFeatureKeyValidationSpectraS3Request request) throws IOException {
+        return new ForceFeatureKeyValidationSpectraS3ResponseParser().response(this.netClient.getResponse(request));
+    }
+    @Override
+    public GetFeatureKeysSpectraS3Response getFeatureKeysSpectraS3(final GetFeatureKeysSpectraS3Request request) throws IOException {
+        return new GetFeatureKeysSpectraS3ResponseParser().response(this.netClient.getResponse(request));
     }
     @Override
     public GetSystemFailuresSpectraS3Response getSystemFailuresSpectraS3(final GetSystemFailuresSpectraS3Request request) throws IOException {
@@ -1122,12 +1242,96 @@ public class Ds3ClientImpl implements Ds3Client {
         return new OnlineTapeSpectraS3ResponseParser().response(this.netClient.getResponse(request));
     }
     @Override
+    public RawImportAllTapesSpectraS3Response rawImportAllTapesSpectraS3(final RawImportAllTapesSpectraS3Request request) throws IOException {
+        return new RawImportAllTapesSpectraS3ResponseParser().response(this.netClient.getResponse(request));
+    }
+    @Override
+    public RawImportTapeSpectraS3Response rawImportTapeSpectraS3(final RawImportTapeSpectraS3Request request) throws IOException {
+        return new RawImportTapeSpectraS3ResponseParser().response(this.netClient.getResponse(request));
+    }
+    @Override
     public VerifyAllTapesSpectraS3Response verifyAllTapesSpectraS3(final VerifyAllTapesSpectraS3Request request) throws IOException {
         return new VerifyAllTapesSpectraS3ResponseParser().response(this.netClient.getResponse(request));
     }
     @Override
     public VerifyTapeSpectraS3Response verifyTapeSpectraS3(final VerifyTapeSpectraS3Request request) throws IOException {
         return new VerifyTapeSpectraS3ResponseParser().response(this.netClient.getResponse(request));
+    }
+    @Override
+    public ForceTargetEnvironmentRefreshSpectraS3Response forceTargetEnvironmentRefreshSpectraS3(final ForceTargetEnvironmentRefreshSpectraS3Request request) throws IOException {
+        return new ForceTargetEnvironmentRefreshSpectraS3ResponseParser().response(this.netClient.getResponse(request));
+    }
+    @Override
+    public PutAzureTargetBucketNameSpectraS3Response putAzureTargetBucketNameSpectraS3(final PutAzureTargetBucketNameSpectraS3Request request) throws IOException {
+        return new PutAzureTargetBucketNameSpectraS3ResponseParser().response(this.netClient.getResponse(request));
+    }
+    @Override
+    public PutAzureTargetReadPreferenceSpectraS3Response putAzureTargetReadPreferenceSpectraS3(final PutAzureTargetReadPreferenceSpectraS3Request request) throws IOException {
+        return new PutAzureTargetReadPreferenceSpectraS3ResponseParser().response(this.netClient.getResponse(request));
+    }
+    @Override
+    public DeleteAzureTargetBucketNameSpectraS3Response deleteAzureTargetBucketNameSpectraS3(final DeleteAzureTargetBucketNameSpectraS3Request request) throws IOException {
+        return new DeleteAzureTargetBucketNameSpectraS3ResponseParser().response(this.netClient.getResponse(request));
+    }
+    @Override
+    public DeleteAzureTargetFailureSpectraS3Response deleteAzureTargetFailureSpectraS3(final DeleteAzureTargetFailureSpectraS3Request request) throws IOException {
+        return new DeleteAzureTargetFailureSpectraS3ResponseParser().response(this.netClient.getResponse(request));
+    }
+    @Override
+    public DeleteAzureTargetReadPreferenceSpectraS3Response deleteAzureTargetReadPreferenceSpectraS3(final DeleteAzureTargetReadPreferenceSpectraS3Request request) throws IOException {
+        return new DeleteAzureTargetReadPreferenceSpectraS3ResponseParser().response(this.netClient.getResponse(request));
+    }
+    @Override
+    public DeleteAzureTargetSpectraS3Response deleteAzureTargetSpectraS3(final DeleteAzureTargetSpectraS3Request request) throws IOException {
+        return new DeleteAzureTargetSpectraS3ResponseParser().response(this.netClient.getResponse(request));
+    }
+    @Override
+    public GetAzureTargetBucketNamesSpectraS3Response getAzureTargetBucketNamesSpectraS3(final GetAzureTargetBucketNamesSpectraS3Request request) throws IOException {
+        return new GetAzureTargetBucketNamesSpectraS3ResponseParser().response(this.netClient.getResponse(request));
+    }
+    @Override
+    public GetAzureTargetFailuresSpectraS3Response getAzureTargetFailuresSpectraS3(final GetAzureTargetFailuresSpectraS3Request request) throws IOException {
+        return new GetAzureTargetFailuresSpectraS3ResponseParser().response(this.netClient.getResponse(request));
+    }
+    @Override
+    public GetAzureTargetReadPreferenceSpectraS3Response getAzureTargetReadPreferenceSpectraS3(final GetAzureTargetReadPreferenceSpectraS3Request request) throws IOException {
+        return new GetAzureTargetReadPreferenceSpectraS3ResponseParser().response(this.netClient.getResponse(request));
+    }
+    @Override
+    public GetAzureTargetReadPreferencesSpectraS3Response getAzureTargetReadPreferencesSpectraS3(final GetAzureTargetReadPreferencesSpectraS3Request request) throws IOException {
+        return new GetAzureTargetReadPreferencesSpectraS3ResponseParser().response(this.netClient.getResponse(request));
+    }
+    @Override
+    public GetAzureTargetSpectraS3Response getAzureTargetSpectraS3(final GetAzureTargetSpectraS3Request request) throws IOException {
+        return new GetAzureTargetSpectraS3ResponseParser().response(this.netClient.getResponse(request));
+    }
+    @Override
+    public GetAzureTargetsSpectraS3Response getAzureTargetsSpectraS3(final GetAzureTargetsSpectraS3Request request) throws IOException {
+        return new GetAzureTargetsSpectraS3ResponseParser().response(this.netClient.getResponse(request));
+    }
+    @Override
+    public GetBlobsOnAzureTargetSpectraS3Response getBlobsOnAzureTargetSpectraS3(final GetBlobsOnAzureTargetSpectraS3Request request) throws IOException {
+        return new GetBlobsOnAzureTargetSpectraS3ResponseParser().response(this.netClient.getResponse(request));
+    }
+    @Override
+    public ImportAzureTargetSpectraS3Response importAzureTargetSpectraS3(final ImportAzureTargetSpectraS3Request request) throws IOException {
+        return new ImportAzureTargetSpectraS3ResponseParser().response(this.netClient.getResponse(request));
+    }
+    @Override
+    public ModifyAllAzureTargetsSpectraS3Response modifyAllAzureTargetsSpectraS3(final ModifyAllAzureTargetsSpectraS3Request request) throws IOException {
+        return new ModifyAllAzureTargetsSpectraS3ResponseParser().response(this.netClient.getResponse(request));
+    }
+    @Override
+    public ModifyAzureTargetSpectraS3Response modifyAzureTargetSpectraS3(final ModifyAzureTargetSpectraS3Request request) throws IOException {
+        return new ModifyAzureTargetSpectraS3ResponseParser().response(this.netClient.getResponse(request));
+    }
+    @Override
+    public RegisterAzureTargetSpectraS3Response registerAzureTargetSpectraS3(final RegisterAzureTargetSpectraS3Request request) throws IOException {
+        return new RegisterAzureTargetSpectraS3ResponseParser().response(this.netClient.getResponse(request));
+    }
+    @Override
+    public VerifyAzureTargetSpectraS3Response verifyAzureTargetSpectraS3(final VerifyAzureTargetSpectraS3Request request) throws IOException {
+        return new VerifyAzureTargetSpectraS3ResponseParser().response(this.netClient.getResponse(request));
     }
     @Override
     public PutDs3TargetReadPreferenceSpectraS3Response putDs3TargetReadPreferenceSpectraS3(final PutDs3TargetReadPreferenceSpectraS3Request request) throws IOException {
@@ -1146,8 +1350,8 @@ public class Ds3ClientImpl implements Ds3Client {
         return new DeleteDs3TargetSpectraS3ResponseParser().response(this.netClient.getResponse(request));
     }
     @Override
-    public ForceTargetEnvironmentRefreshSpectraS3Response forceTargetEnvironmentRefreshSpectraS3(final ForceTargetEnvironmentRefreshSpectraS3Request request) throws IOException {
-        return new ForceTargetEnvironmentRefreshSpectraS3ResponseParser().response(this.netClient.getResponse(request));
+    public GetBlobsOnDs3TargetSpectraS3Response getBlobsOnDs3TargetSpectraS3(final GetBlobsOnDs3TargetSpectraS3Request request) throws IOException {
+        return new GetBlobsOnDs3TargetSpectraS3ResponseParser().response(this.netClient.getResponse(request));
     }
     @Override
     public GetDs3TargetDataPoliciesSpectraS3Response getDs3TargetDataPoliciesSpectraS3(final GetDs3TargetDataPoliciesSpectraS3Request request) throws IOException {
@@ -1192,6 +1396,78 @@ public class Ds3ClientImpl implements Ds3Client {
     @Override
     public VerifyDs3TargetSpectraS3Response verifyDs3TargetSpectraS3(final VerifyDs3TargetSpectraS3Request request) throws IOException {
         return new VerifyDs3TargetSpectraS3ResponseParser().response(this.netClient.getResponse(request));
+    }
+    @Override
+    public PutS3TargetBucketNameSpectraS3Response putS3TargetBucketNameSpectraS3(final PutS3TargetBucketNameSpectraS3Request request) throws IOException {
+        return new PutS3TargetBucketNameSpectraS3ResponseParser().response(this.netClient.getResponse(request));
+    }
+    @Override
+    public PutS3TargetReadPreferenceSpectraS3Response putS3TargetReadPreferenceSpectraS3(final PutS3TargetReadPreferenceSpectraS3Request request) throws IOException {
+        return new PutS3TargetReadPreferenceSpectraS3ResponseParser().response(this.netClient.getResponse(request));
+    }
+    @Override
+    public DeleteS3TargetBucketNameSpectraS3Response deleteS3TargetBucketNameSpectraS3(final DeleteS3TargetBucketNameSpectraS3Request request) throws IOException {
+        return new DeleteS3TargetBucketNameSpectraS3ResponseParser().response(this.netClient.getResponse(request));
+    }
+    @Override
+    public DeleteS3TargetFailureSpectraS3Response deleteS3TargetFailureSpectraS3(final DeleteS3TargetFailureSpectraS3Request request) throws IOException {
+        return new DeleteS3TargetFailureSpectraS3ResponseParser().response(this.netClient.getResponse(request));
+    }
+    @Override
+    public DeleteS3TargetReadPreferenceSpectraS3Response deleteS3TargetReadPreferenceSpectraS3(final DeleteS3TargetReadPreferenceSpectraS3Request request) throws IOException {
+        return new DeleteS3TargetReadPreferenceSpectraS3ResponseParser().response(this.netClient.getResponse(request));
+    }
+    @Override
+    public DeleteS3TargetSpectraS3Response deleteS3TargetSpectraS3(final DeleteS3TargetSpectraS3Request request) throws IOException {
+        return new DeleteS3TargetSpectraS3ResponseParser().response(this.netClient.getResponse(request));
+    }
+    @Override
+    public GetBlobsOnS3TargetSpectraS3Response getBlobsOnS3TargetSpectraS3(final GetBlobsOnS3TargetSpectraS3Request request) throws IOException {
+        return new GetBlobsOnS3TargetSpectraS3ResponseParser().response(this.netClient.getResponse(request));
+    }
+    @Override
+    public GetS3TargetBucketNamesSpectraS3Response getS3TargetBucketNamesSpectraS3(final GetS3TargetBucketNamesSpectraS3Request request) throws IOException {
+        return new GetS3TargetBucketNamesSpectraS3ResponseParser().response(this.netClient.getResponse(request));
+    }
+    @Override
+    public GetS3TargetFailuresSpectraS3Response getS3TargetFailuresSpectraS3(final GetS3TargetFailuresSpectraS3Request request) throws IOException {
+        return new GetS3TargetFailuresSpectraS3ResponseParser().response(this.netClient.getResponse(request));
+    }
+    @Override
+    public GetS3TargetReadPreferenceSpectraS3Response getS3TargetReadPreferenceSpectraS3(final GetS3TargetReadPreferenceSpectraS3Request request) throws IOException {
+        return new GetS3TargetReadPreferenceSpectraS3ResponseParser().response(this.netClient.getResponse(request));
+    }
+    @Override
+    public GetS3TargetReadPreferencesSpectraS3Response getS3TargetReadPreferencesSpectraS3(final GetS3TargetReadPreferencesSpectraS3Request request) throws IOException {
+        return new GetS3TargetReadPreferencesSpectraS3ResponseParser().response(this.netClient.getResponse(request));
+    }
+    @Override
+    public GetS3TargetSpectraS3Response getS3TargetSpectraS3(final GetS3TargetSpectraS3Request request) throws IOException {
+        return new GetS3TargetSpectraS3ResponseParser().response(this.netClient.getResponse(request));
+    }
+    @Override
+    public GetS3TargetsSpectraS3Response getS3TargetsSpectraS3(final GetS3TargetsSpectraS3Request request) throws IOException {
+        return new GetS3TargetsSpectraS3ResponseParser().response(this.netClient.getResponse(request));
+    }
+    @Override
+    public ImportS3TargetSpectraS3Response importS3TargetSpectraS3(final ImportS3TargetSpectraS3Request request) throws IOException {
+        return new ImportS3TargetSpectraS3ResponseParser().response(this.netClient.getResponse(request));
+    }
+    @Override
+    public ModifyAllS3TargetsSpectraS3Response modifyAllS3TargetsSpectraS3(final ModifyAllS3TargetsSpectraS3Request request) throws IOException {
+        return new ModifyAllS3TargetsSpectraS3ResponseParser().response(this.netClient.getResponse(request));
+    }
+    @Override
+    public ModifyS3TargetSpectraS3Response modifyS3TargetSpectraS3(final ModifyS3TargetSpectraS3Request request) throws IOException {
+        return new ModifyS3TargetSpectraS3ResponseParser().response(this.netClient.getResponse(request));
+    }
+    @Override
+    public RegisterS3TargetSpectraS3Response registerS3TargetSpectraS3(final RegisterS3TargetSpectraS3Request request) throws IOException {
+        return new RegisterS3TargetSpectraS3ResponseParser().response(this.netClient.getResponse(request));
+    }
+    @Override
+    public VerifyS3TargetSpectraS3Response verifyS3TargetSpectraS3(final VerifyS3TargetSpectraS3Request request) throws IOException {
+        return new VerifyS3TargetSpectraS3ResponseParser().response(this.netClient.getResponse(request));
     }
     @Override
     public DelegateCreateUserSpectraS3Response delegateCreateUserSpectraS3(final DelegateCreateUserSpectraS3Request request) throws IOException {

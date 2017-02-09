@@ -1,6 +1,6 @@
 /*
  * ******************************************************************************
- *   Copyright 2014-2016 Spectra Logic Corporation. All Rights Reserved.
+ *   Copyright 2014-2017 Spectra Logic Corporation. All Rights Reserved.
  *   Licensed under the Apache License, Version 2.0 (the "License"). You may not use
  *   this file except in compliance with the License. A copy of the License is located at
  *
@@ -16,7 +16,6 @@
 // This code is auto-generated, do not modify
 package com.spectralogic.ds3client.commands.spectrads3;
 
-import java.util.List;
 import com.spectralogic.ds3client.BulkCommand;
 import com.spectralogic.ds3client.models.bulk.Ds3Object;
 import com.spectralogic.ds3client.commands.interfaces.BulkRequest;
@@ -32,11 +31,13 @@ public class GetBulkJobSpectraS3Request extends BulkRequest {
 
     private JobChunkClientProcessingOrderGuarantee chunkClientProcessingOrderGuarantee;
 
+    private boolean implicitJobIdResolution;
+
     private String name;
 
     // Constructor
     
-    public GetBulkJobSpectraS3Request(final String bucketName, final List<Ds3Object> objects) {
+    public GetBulkJobSpectraS3Request(final String bucketName, final Iterable<Ds3Object> objects) {
         super(bucketName, objects);
         
         this.getQueryParams().put("operation", "start_bulk_get");
@@ -53,6 +54,13 @@ public class GetBulkJobSpectraS3Request extends BulkRequest {
     public GetBulkJobSpectraS3Request withChunkClientProcessingOrderGuarantee(final JobChunkClientProcessingOrderGuarantee chunkClientProcessingOrderGuarantee) {
         this.chunkClientProcessingOrderGuarantee = chunkClientProcessingOrderGuarantee;
         this.updateQueryParam("chunk_client_processing_order_guarantee", chunkClientProcessingOrderGuarantee);
+        return this;
+    }
+
+
+    public GetBulkJobSpectraS3Request withImplicitJobIdResolution(final boolean implicitJobIdResolution) {
+        this.implicitJobIdResolution = implicitJobIdResolution;
+        this.updateQueryParam("implicit_job_id_resolution", implicitJobIdResolution);
         return this;
     }
 
@@ -80,6 +88,11 @@ public class GetBulkJobSpectraS3Request extends BulkRequest {
 
     public JobChunkClientProcessingOrderGuarantee getChunkClientProcessingOrderGuarantee() {
         return this.chunkClientProcessingOrderGuarantee;
+    }
+
+
+    public boolean getImplicitJobIdResolution() {
+        return this.implicitJobIdResolution;
     }
 
 

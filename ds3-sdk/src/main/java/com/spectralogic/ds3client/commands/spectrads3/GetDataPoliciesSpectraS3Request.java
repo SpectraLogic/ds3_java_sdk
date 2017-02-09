@@ -1,6 +1,6 @@
 /*
  * ******************************************************************************
- *   Copyright 2014-2016 Spectra Logic Corporation. All Rights Reserved.
+ *   Copyright 2014-2017 Spectra Logic Corporation. All Rights Reserved.
  *   Licensed under the Apache License, Version 2.0 (the "License"). You may not use
  *   this file except in compliance with the License. A copy of the License is located at
  *
@@ -29,8 +29,6 @@ public class GetDataPoliciesSpectraS3Request extends AbstractPaginationRequest {
     private boolean alwaysForcePutJobCreation;
 
     private boolean alwaysMinimizeSpanningAcrossMedia;
-
-    private boolean alwaysReplicateDeletes;
 
     private ChecksumType.Type checksumType;
 
@@ -63,13 +61,6 @@ public class GetDataPoliciesSpectraS3Request extends AbstractPaginationRequest {
     public GetDataPoliciesSpectraS3Request withAlwaysMinimizeSpanningAcrossMedia(final boolean alwaysMinimizeSpanningAcrossMedia) {
         this.alwaysMinimizeSpanningAcrossMedia = alwaysMinimizeSpanningAcrossMedia;
         this.updateQueryParam("always_minimize_spanning_across_media", alwaysMinimizeSpanningAcrossMedia);
-        return this;
-    }
-
-
-    public GetDataPoliciesSpectraS3Request withAlwaysReplicateDeletes(final boolean alwaysReplicateDeletes) {
-        this.alwaysReplicateDeletes = alwaysReplicateDeletes;
-        this.updateQueryParam("always_replicate_deletes", alwaysReplicateDeletes);
         return this;
     }
 
@@ -152,11 +143,6 @@ public class GetDataPoliciesSpectraS3Request extends AbstractPaginationRequest {
 
     public boolean getAlwaysMinimizeSpanningAcrossMedia() {
         return this.alwaysMinimizeSpanningAcrossMedia;
-    }
-
-
-    public boolean getAlwaysReplicateDeletes() {
-        return this.alwaysReplicateDeletes;
     }
 
 

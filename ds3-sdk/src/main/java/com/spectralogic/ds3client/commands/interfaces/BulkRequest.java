@@ -1,6 +1,6 @@
 /*
  * ******************************************************************************
- *   Copyright 2014-2015 Spectra Logic Corporation. All Rights Reserved.
+ *   Copyright 2014-2017 Spectra Logic Corporation. All Rights Reserved.
  *   Licensed under the Apache License, Version 2.0 (the "License"). You may not use
  *   this file except in compliance with the License. A copy of the License is located at
  *
@@ -26,19 +26,18 @@ import com.spectralogic.ds3client.serializer.XmlOutput;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.nio.charset.Charset;
-import java.util.List;
 
 public abstract class BulkRequest extends AbstractRequest {
 
     private final String bucket;
-    private final List<Ds3Object> ds3Objects;
+    private final Iterable<Ds3Object> ds3Objects;
     private InputStream stream;
     private long size;
     private Priority priority;
     private WriteOptimization writeOptimization;
     protected JobChunkClientProcessingOrderGuarantee chunkOrdering;
 
-    public BulkRequest(final String bucket, final List<Ds3Object> objects) {
+    public BulkRequest(final String bucket, final Iterable<Ds3Object> objects) {
         this.bucket = bucket;
         this.ds3Objects = objects;
     }
@@ -77,7 +76,7 @@ public abstract class BulkRequest extends AbstractRequest {
         return this.bucket;
     }
 
-    public List<Ds3Object> getObjects() {
+    public Iterable<Ds3Object> getObjects() {
         return this.ds3Objects;
     }
 

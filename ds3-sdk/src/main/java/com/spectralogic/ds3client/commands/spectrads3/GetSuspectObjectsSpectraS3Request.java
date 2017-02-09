@@ -1,6 +1,6 @@
 /*
  * ******************************************************************************
- *   Copyright 2014-2016 Spectra Logic Corporation. All Rights Reserved.
+ *   Copyright 2014-2017 Spectra Logic Corporation. All Rights Reserved.
  *   Licensed under the Apache License, Version 2.0 (the "License"). You may not use
  *   this file except in compliance with the License. A copy of the License is located at
  *
@@ -17,17 +17,23 @@
 package com.spectralogic.ds3client.commands.spectrads3;
 
 import com.spectralogic.ds3client.networking.HttpVerb;
-import com.spectralogic.ds3client.commands.interfaces.AbstractRequest;
+import com.spectralogic.ds3client.commands.interfaces.AbstractPaginationRequest;
 import com.google.common.net.UrlEscapers;
 import java.util.UUID;
 
-public class GetSuspectObjectsSpectraS3Request extends AbstractRequest {
+public class GetSuspectObjectsSpectraS3Request extends AbstractPaginationRequest {
 
     // Variables
     
     private String bucketId;
 
-    private String storageDomainId;
+    private boolean lastPage;
+
+    private int pageLength;
+
+    private int pageOffset;
+
+    private String pageStartMarker;
 
     // Constructor
     
@@ -43,16 +49,41 @@ public class GetSuspectObjectsSpectraS3Request extends AbstractRequest {
     }
 
 
-    public GetSuspectObjectsSpectraS3Request withStorageDomainId(final UUID storageDomainId) {
-        this.storageDomainId = storageDomainId.toString();
-        this.updateQueryParam("storage_domain_id", storageDomainId);
+    public GetSuspectObjectsSpectraS3Request withLastPage(final boolean lastPage) {
+        this.lastPage = lastPage;
+        if (this.lastPage) {
+            this.getQueryParams().put("last_page", null);
+        } else {
+            this.getQueryParams().remove("last_page");
+        }
         return this;
     }
 
 
-    public GetSuspectObjectsSpectraS3Request withStorageDomainId(final String storageDomainId) {
-        this.storageDomainId = storageDomainId;
-        this.updateQueryParam("storage_domain_id", storageDomainId);
+    public GetSuspectObjectsSpectraS3Request withPageLength(final int pageLength) {
+        this.pageLength = pageLength;
+        this.updateQueryParam("page_length", pageLength);
+        return this;
+    }
+
+
+    public GetSuspectObjectsSpectraS3Request withPageOffset(final int pageOffset) {
+        this.pageOffset = pageOffset;
+        this.updateQueryParam("page_offset", pageOffset);
+        return this;
+    }
+
+
+    public GetSuspectObjectsSpectraS3Request withPageStartMarker(final UUID pageStartMarker) {
+        this.pageStartMarker = pageStartMarker.toString();
+        this.updateQueryParam("page_start_marker", pageStartMarker);
+        return this;
+    }
+
+
+    public GetSuspectObjectsSpectraS3Request withPageStartMarker(final String pageStartMarker) {
+        this.pageStartMarker = pageStartMarker;
+        this.updateQueryParam("page_start_marker", pageStartMarker);
         return this;
     }
 
@@ -73,8 +104,23 @@ public class GetSuspectObjectsSpectraS3Request extends AbstractRequest {
     }
 
 
-    public String getStorageDomainId() {
-        return this.storageDomainId;
+    public boolean getLastPage() {
+        return this.lastPage;
+    }
+
+
+    public int getPageLength() {
+        return this.pageLength;
+    }
+
+
+    public int getPageOffset() {
+        return this.pageOffset;
+    }
+
+
+    public String getPageStartMarker() {
+        return this.pageStartMarker;
     }
 
 }

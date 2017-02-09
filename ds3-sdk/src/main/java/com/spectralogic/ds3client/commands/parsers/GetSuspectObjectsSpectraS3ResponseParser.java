@@ -1,6 +1,6 @@
 /*
  * ******************************************************************************
- *   Copyright 2014-2016 Spectra Logic Corporation. All Rights Reserved.
+ *   Copyright 2014-2017 Spectra Logic Corporation. All Rights Reserved.
  *   Licensed under the Apache License, Version 2.0 (the "License"). You may not use
  *   this file except in compliance with the License. A copy of the License is located at
  *
@@ -19,7 +19,7 @@ package com.spectralogic.ds3client.commands.parsers;
 import com.spectralogic.ds3client.commands.parsers.interfaces.AbstractResponseParser;
 import com.spectralogic.ds3client.commands.parsers.utils.ResponseParserUtils;
 import com.spectralogic.ds3client.commands.spectrads3.GetSuspectObjectsSpectraS3Response;
-import com.spectralogic.ds3client.models.PhysicalPlacement;
+import com.spectralogic.ds3client.models.S3ObjectList;
 import com.spectralogic.ds3client.networking.WebResponse;
 import com.spectralogic.ds3client.serializer.XmlOutput;
 import java.io.IOException;
@@ -31,12 +31,14 @@ public class GetSuspectObjectsSpectraS3ResponseParser extends AbstractResponsePa
     @Override
     public GetSuspectObjectsSpectraS3Response parseXmlResponse(final WebResponse response) throws IOException {
         final int statusCode = response.getStatusCode();
+        final Integer pagingTruncated = parseIntHeader("page-truncated");
+        final Integer pagingTotalResultCount = parseIntHeader("total-result-count");
         if (ResponseParserUtils.validateStatusCode(statusCode, expectedStatusCodes)) {
             switch (statusCode) {
             case 200:
                 try (final InputStream inputStream = response.getResponseStream()) {
-                    final PhysicalPlacement result = XmlOutput.fromXml(inputStream, PhysicalPlacement.class);
-                    return new GetSuspectObjectsSpectraS3Response(result, this.getChecksum(), this.getChecksumType());
+                    final S3ObjectList result = XmlOutput.fromXml(inputStream, S3ObjectList.class);
+                    return new GetSuspectObjectsSpectraS3Response(result, pagingTotalResultCount, pagingTruncated, this.getChecksum(), this.getChecksumType());
                 }
 
             default:

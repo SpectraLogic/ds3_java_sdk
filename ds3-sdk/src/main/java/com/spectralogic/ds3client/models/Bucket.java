@@ -1,6 +1,6 @@
 /*
  * ******************************************************************************
- *   Copyright 2014-2016 Spectra Logic Corporation. All Rights Reserved.
+ *   Copyright 2014-2017 Spectra Logic Corporation. All Rights Reserved.
  *   Licensed under the Apache License, Version 2.0 (the "License"). You may not use
  *   this file except in compliance with the License. A copy of the License is located at
  *
@@ -20,6 +20,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import java.util.Date;
 import java.util.UUID;
+import java.lang.Boolean;
 import java.lang.Long;
 import java.lang.String;
 
@@ -32,6 +33,9 @@ public class Bucket {
 
     @JsonProperty("DataPolicyId")
     private UUID dataPolicyId;
+
+    @JsonProperty("Empty")
+    private Boolean empty;
 
     @JsonProperty("Id")
     private UUID id;
@@ -70,6 +74,15 @@ public class Bucket {
 
     public void setDataPolicyId(final UUID dataPolicyId) {
         this.dataPolicyId = dataPolicyId;
+    }
+
+
+    public Boolean getEmpty() {
+        return this.empty;
+    }
+
+    public void setEmpty(final Boolean empty) {
+        this.empty = empty;
     }
 
 

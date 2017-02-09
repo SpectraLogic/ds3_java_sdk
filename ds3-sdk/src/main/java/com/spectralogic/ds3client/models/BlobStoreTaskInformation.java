@@ -1,6 +1,6 @@
 /*
  * ******************************************************************************
- *   Copyright 2014-2016 Spectra Logic Corporation. All Rights Reserved.
+ *   Copyright 2014-2017 Spectra Logic Corporation. All Rights Reserved.
  *   Licensed under the Apache License, Version 2.0 (the "License"). You may not use
  *   this file except in compliance with the License. A copy of the License is located at
  *
@@ -38,9 +38,6 @@ public class BlobStoreTaskInformation {
     @JsonProperty("DriveId")
     private UUID driveId;
 
-    @JsonProperty("Ds3TargetId")
-    private UUID ds3TargetId;
-
     @JsonProperty("Id")
     private long id;
 
@@ -58,6 +55,12 @@ public class BlobStoreTaskInformation {
 
     @JsonProperty("TapeId")
     private UUID tapeId;
+
+    @JsonProperty("TargetId")
+    private UUID targetId;
+
+    @JsonProperty("TargetType")
+    private String targetType;
 
     // Constructor
     public BlobStoreTaskInformation() {
@@ -99,15 +102,6 @@ public class BlobStoreTaskInformation {
 
     public void setDriveId(final UUID driveId) {
         this.driveId = driveId;
-    }
-
-
-    public UUID getDs3TargetId() {
-        return this.ds3TargetId;
-    }
-
-    public void setDs3TargetId(final UUID ds3TargetId) {
-        this.ds3TargetId = ds3TargetId;
     }
 
 
@@ -162,6 +156,24 @@ public class BlobStoreTaskInformation {
 
     public void setTapeId(final UUID tapeId) {
         this.tapeId = tapeId;
+    }
+
+
+    public UUID getTargetId() {
+        return this.targetId;
+    }
+
+    public void setTargetId(final UUID targetId) {
+        this.targetId = targetId;
+    }
+
+
+    public String getTargetType() {
+        return this.targetType;
+    }
+
+    public void setTargetType(final String targetType) {
+        this.targetType = targetType;
     }
 
 }

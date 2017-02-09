@@ -1,16 +1,16 @@
 /*
+ * ******************************************************************************
+ *   Copyright 2014-2017 Spectra Logic Corporation. All Rights Reserved.
+ *   Licensed under the Apache License, Version 2.0 (the "License"). You may not use
+ *   this file except in compliance with the License. A copy of the License is located at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *   or in the "license" file accompanying this file.
+ *   This file is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+ *   CONDITIONS OF ANY KIND, either express or implied. See the License for the
+ *   specific language governing permissions and limitations under the License.
  * ****************************************************************************
- *    Copyright 2014-2016 Spectra Logic Corporation. All Rights Reserved.
- *    Licensed under the Apache License, Version 2.0 (the "License"). You may not use
- *    this file except in compliance with the License. A copy of the License is located at
- *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
- *    or in the "license" file accompanying this file.
- *    This file is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
- *    CONDITIONS OF ANY KIND, either express or implied. See the License for the
- *    specific language governing permissions and limitations under the License.
- *  ****************************************************************************
  */
 
 package com.spectralogic.ds3client.helpers;
@@ -18,13 +18,18 @@ package com.spectralogic.ds3client.helpers;
 import com.google.common.base.Preconditions;
 import com.spectralogic.ds3client.models.Contents;
 import com.spectralogic.ds3client.utils.Guard;
+import com.spectralogic.ds3client.utils.Platform;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.attribute.PosixFileAttributeView;
+import java.nio.file.attribute.PosixFileAttributes;
+import java.nio.file.attribute.PosixFilePermission;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 class FileSystemHelperImpl implements FileSystemHelper {
     public boolean pathIsDirectory(final Path path) {
@@ -39,10 +44,18 @@ class FileSystemHelperImpl implements FileSystemHelper {
         return Files.exists(path);
     }
 
-    public boolean pathIsWritable(final Path path) {
+    public boolean pathIsWritable(final Path path) throws IOException {
         Preconditions.checkNotNull(path, "path must not be null.");
 
-        return Files.isWritable(path);
+        if (Platform.isWindows()) {
+            return Files.isWritable(path);
+        } else {
+            final PosixFileAttributes attributes = Files.getFileAttributeView(path, PosixFileAttributeView.class).readAttributes();
+            final Set<PosixFilePermission> permissions = attributes.permissions();
+
+            return permissions.contains(PosixFilePermission.OWNER_WRITE) || permissions.contains(PosixFilePermission.GROUP_WRITE) ||
+                    permissions.contains(PosixFilePermission.OTHERS_WRITE);
+        }
     }
 
     public long getAvailableFileSpace(final Path path) throws IOException {
@@ -90,8 +103,13 @@ class FileSystemHelperImpl implements FileSystemHelper {
                     requiredSpace, availableSpace, ioException);
         }
 
-        if ( ! pathIsWritable(destinationDirectory)) {
-            final IOException ioException = null;
+        try {
+            if ( ! pathIsWritable(destinationDirectory)) {
+                final IOException nullIOException = null;
+                return new ObjectStorageSpaceVerificationResult(ObjectStorageSpaceVerificationResult.VerificationStatus.PathLacksAccess,
+                        requiredSpace, availableSpace, nullIOException);
+            }
+        } catch (final IOException ioException) {
             return new ObjectStorageSpaceVerificationResult(ObjectStorageSpaceVerificationResult.VerificationStatus.PathLacksAccess,
                     requiredSpace, availableSpace, ioException);
         }

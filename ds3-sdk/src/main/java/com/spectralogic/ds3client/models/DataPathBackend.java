@@ -1,6 +1,6 @@
 /*
  * ******************************************************************************
- *   Copyright 2014-2016 Spectra Logic Corporation. All Rights Reserved.
+ *   Copyright 2014-2017 Spectra Logic Corporation. All Rights Reserved.
  *   Licensed under the Apache License, Version 2.0 (the "License"). You may not use
  *   this file except in compliance with the License. A copy of the License is located at
  *
@@ -37,6 +37,12 @@ public class DataPathBackend {
 
     @JsonProperty("DefaultImportConflictResolutionMode")
     private ImportConflictResolutionMode defaultImportConflictResolutionMode;
+
+    @JsonProperty("DefaultVerifyDataAfterImport")
+    private Priority defaultVerifyDataAfterImport;
+
+    @JsonProperty("DefaultVerifyDataPriorToImport")
+    private boolean defaultVerifyDataPriorToImport;
 
     @JsonProperty("Id")
     private UUID id;
@@ -99,6 +105,24 @@ public class DataPathBackend {
 
     public void setDefaultImportConflictResolutionMode(final ImportConflictResolutionMode defaultImportConflictResolutionMode) {
         this.defaultImportConflictResolutionMode = defaultImportConflictResolutionMode;
+    }
+
+
+    public Priority getDefaultVerifyDataAfterImport() {
+        return this.defaultVerifyDataAfterImport;
+    }
+
+    public void setDefaultVerifyDataAfterImport(final Priority defaultVerifyDataAfterImport) {
+        this.defaultVerifyDataAfterImport = defaultVerifyDataAfterImport;
+    }
+
+
+    public boolean getDefaultVerifyDataPriorToImport() {
+        return this.defaultVerifyDataPriorToImport;
+    }
+
+    public void setDefaultVerifyDataPriorToImport(final boolean defaultVerifyDataPriorToImport) {
+        this.defaultVerifyDataPriorToImport = defaultVerifyDataPriorToImport;
     }
 
 

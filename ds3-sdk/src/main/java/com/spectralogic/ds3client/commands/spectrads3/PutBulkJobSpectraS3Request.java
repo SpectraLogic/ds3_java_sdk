@@ -1,6 +1,6 @@
 /*
  * ******************************************************************************
- *   Copyright 2014-2016 Spectra Logic Corporation. All Rights Reserved.
+ *   Copyright 2014-2017 Spectra Logic Corporation. All Rights Reserved.
  *   Licensed under the Apache License, Version 2.0 (the "License"). You may not use
  *   this file except in compliance with the License. A copy of the License is located at
  *
@@ -16,7 +16,6 @@
 // This code is auto-generated, do not modify
 package com.spectralogic.ds3client.commands.spectrads3;
 
-import java.util.List;
 import com.spectralogic.ds3client.BulkCommand;
 import com.spectralogic.ds3client.models.bulk.Ds3Object;
 import com.spectralogic.ds3client.commands.interfaces.BulkRequest;
@@ -35,13 +34,17 @@ public class PutBulkJobSpectraS3Request extends BulkRequest {
 
     private boolean ignoreNamingConflicts;
 
+    private boolean implicitJobIdResolution;
+
     private boolean minimizeSpanningAcrossMedia;
 
     private String name;
 
+    private boolean verifyAfterWrite;
+
     // Constructor
     
-    public PutBulkJobSpectraS3Request(final String bucketName, final List<Ds3Object> objects) {
+    public PutBulkJobSpectraS3Request(final String bucketName, final Iterable<Ds3Object> objects) {
         super(bucketName, objects);
         
         this.getQueryParams().put("operation", "start_bulk_put");
@@ -77,6 +80,13 @@ public class PutBulkJobSpectraS3Request extends BulkRequest {
     }
 
 
+    public PutBulkJobSpectraS3Request withImplicitJobIdResolution(final boolean implicitJobIdResolution) {
+        this.implicitJobIdResolution = implicitJobIdResolution;
+        this.updateQueryParam("implicit_job_id_resolution", implicitJobIdResolution);
+        return this;
+    }
+
+
     public PutBulkJobSpectraS3Request withMaxUploadSize(final long maxUploadSize) {
         if (maxUploadSize > MIN_UPLOAD_SIZE_IN_BYTES) {
             this.getQueryParams().put("max_upload_size", Long.toString(maxUploadSize));
@@ -108,6 +118,13 @@ public class PutBulkJobSpectraS3Request extends BulkRequest {
     }
 
 
+    public PutBulkJobSpectraS3Request withVerifyAfterWrite(final boolean verifyAfterWrite) {
+        this.verifyAfterWrite = verifyAfterWrite;
+        this.updateQueryParam("verify_after_write", verifyAfterWrite);
+        return this;
+    }
+
+
 
     
     public boolean getAggregating() {
@@ -125,6 +142,11 @@ public class PutBulkJobSpectraS3Request extends BulkRequest {
     }
 
 
+    public boolean getImplicitJobIdResolution() {
+        return this.implicitJobIdResolution;
+    }
+
+
     public boolean getMinimizeSpanningAcrossMedia() {
         return this.minimizeSpanningAcrossMedia;
     }
@@ -132,6 +154,11 @@ public class PutBulkJobSpectraS3Request extends BulkRequest {
 
     public String getName() {
         return this.name;
+    }
+
+
+    public boolean getVerifyAfterWrite() {
+        return this.verifyAfterWrite;
     }
 
 

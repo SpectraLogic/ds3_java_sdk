@@ -1,16 +1,16 @@
 /*
+ * ******************************************************************************
+ *   Copyright 2014-2017 Spectra Logic Corporation. All Rights Reserved.
+ *   Licensed under the Apache License, Version 2.0 (the "License"). You may not use
+ *   this file except in compliance with the License. A copy of the License is located at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *   or in the "license" file accompanying this file.
+ *   This file is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+ *   CONDITIONS OF ANY KIND, either express or implied. See the License for the
+ *   specific language governing permissions and limitations under the License.
  * ****************************************************************************
- *    Copyright 2014-2016 Spectra Logic Corporation. All Rights Reserved.
- *    Licensed under the Apache License, Version 2.0 (the "License"). You may not use
- *    this file except in compliance with the License. A copy of the License is located at
- *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
- *    or in the "license" file accompanying this file.
- *    This file is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
- *    CONDITIONS OF ANY KIND, either express or implied. See the License for the
- *    specific language governing permissions and limitations under the License.
- *  ****************************************************************************
  */
 
 package com.spectralogic.ds3client.integration;
@@ -35,6 +35,7 @@ import com.spectralogic.ds3client.models.Priority;
 import com.spectralogic.ds3client.models.bulk.Ds3Object;
 import com.spectralogic.ds3client.models.bulk.PartialDs3Object;
 import com.spectralogic.ds3client.models.common.Range;
+import com.spectralogic.ds3client.utils.Platform;
 import com.spectralogic.ds3client.utils.ResourceUtils;
 import org.apache.commons.io.FileUtils;
 import org.junit.AfterClass;
@@ -43,9 +44,11 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URISyntaxException;
 import java.nio.ByteBuffer;
@@ -232,7 +235,6 @@ public class GetJobManagement_Test {
 
         final String tempPathPrefix = null;
         final Path tempDirectoryPath = Files.createTempDirectory(Paths.get("."), tempPathPrefix);
-        final File tempDirectory = tempDirectoryPath.toFile();
 
         final String tempDirectoryName = tempDirectoryPath.toString();
 
@@ -240,10 +242,12 @@ public class GetJobManagement_Test {
             // Deny write data access to everyone, making the directory unwritable.
             Runtime.getRuntime().exec("icacls " + tempDirectoryName + " /deny Everyone:(WD)").waitFor();
         } else {
-            tempDirectory.setWritable(false);
+            Runtime.getRuntime().exec("chmod -w " + tempDirectoryName).waitFor();
         }
 
         try {
+            disableWritePermissionForRoot(tempDirectoryName);
+
             final String DIR_NAME = "largeFiles/";
             final String FILE_NAME = "lesmis-copies.txt";
 
@@ -271,18 +275,59 @@ public class GetJobManagement_Test {
             final File originalFile = ResourceUtils.loadFileResource(DIR_NAME + FILE_NAME).toFile();
             final File fileCopiedFromBP = Paths.get(tempDirectoryPath.toString(), FILE_NAME).toFile();
             assertTrue(FileUtils.contentEquals(originalFile, fileCopiedFromBP));
-
         } finally {
+            enableWritePermissionForRoot(tempDirectoryName);
+
             if (org.apache.commons.lang3.SystemUtils.IS_OS_WINDOWS) {
                 // Grant write data access to everyone, so we can delete the directory
                 Runtime.getRuntime().exec("icacls " + tempDirectoryName + " /grant Everyone:(WD)").waitFor();
             } else {
-                tempDirectory.setReadable(true);
-                tempDirectory.setWritable(true);
-                tempDirectory.setExecutable(true);
+                Runtime.getRuntime().exec("chmod +w " + tempDirectoryName).waitFor();
             }
             FileUtils.deleteDirectory(tempDirectoryPath.toFile());
             deleteBigFileFromBlackPearlBucket();
+        }
+    }
+
+    private void disableWritePermissionForRoot(final String fileOrDirName) {
+        try {
+            if (iAmRoot()) {
+                Runtime.getRuntime().exec("chattr +i " + fileOrDirName).waitFor();
+            }
+        } catch (final IOException | InterruptedException e) {
+            LOG.error("Error setting file immutable: " + fileOrDirName, e);
+        }
+    }
+
+    private boolean iAmRoot() {
+        if ( ! Platform.isLinux()) {
+            return false;
+        }
+
+        try {
+            final Process whoamiProcess = Runtime.getRuntime().exec("id | cut -d \"(\" -f 1 | cut -d \"=\" -f 2");
+            whoamiProcess.waitFor();
+
+            try (final BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(whoamiProcess.getInputStream()))) {
+
+                final String userId = bufferedReader.readLine();
+
+                return userId.equals("0");
+            }
+        } catch (final IOException | InterruptedException e) {
+            LOG.error("Error getting user id.", e);
+        }
+
+        return false;
+    }
+
+    private void enableWritePermissionForRoot(final String fileOrDirName) {
+        try {
+            if (iAmRoot()) {
+                Runtime.getRuntime().exec("chattr -i " + fileOrDirName).waitFor();
+            }
+        } catch (final IOException | InterruptedException e) {
+            LOG.error("Error setting file immutable: " + fileOrDirName, e);
         }
     }
 

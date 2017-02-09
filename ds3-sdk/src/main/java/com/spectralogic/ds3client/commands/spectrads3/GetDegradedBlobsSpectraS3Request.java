@@ -1,6 +1,6 @@
 /*
  * ******************************************************************************
- *   Copyright 2014-2016 Spectra Logic Corporation. All Rights Reserved.
+ *   Copyright 2014-2017 Spectra Logic Corporation. All Rights Reserved.
  *   Licensed under the Apache License, Version 2.0 (the "License"). You may not use
  *   this file except in compliance with the License. A copy of the License is located at
  *
@@ -29,6 +29,8 @@ public class GetDegradedBlobsSpectraS3Request extends AbstractPaginationRequest 
 
     private String bucketId;
 
+    private String ds3ReplicationRuleId;
+
     private boolean lastPage;
 
     private int pageLength;
@@ -38,8 +40,6 @@ public class GetDegradedBlobsSpectraS3Request extends AbstractPaginationRequest 
     private String pageStartMarker;
 
     private String persistenceRuleId;
-
-    private String replicationRuleId;
 
     // Constructor
     
@@ -65,6 +65,20 @@ public class GetDegradedBlobsSpectraS3Request extends AbstractPaginationRequest 
     public GetDegradedBlobsSpectraS3Request withBucketId(final String bucketId) {
         this.bucketId = bucketId;
         this.updateQueryParam("bucket_id", bucketId);
+        return this;
+    }
+
+
+    public GetDegradedBlobsSpectraS3Request withDs3ReplicationRuleId(final UUID ds3ReplicationRuleId) {
+        this.ds3ReplicationRuleId = ds3ReplicationRuleId.toString();
+        this.updateQueryParam("ds3_replication_rule_id", ds3ReplicationRuleId);
+        return this;
+    }
+
+
+    public GetDegradedBlobsSpectraS3Request withDs3ReplicationRuleId(final String ds3ReplicationRuleId) {
+        this.ds3ReplicationRuleId = ds3ReplicationRuleId;
+        this.updateQueryParam("ds3_replication_rule_id", ds3ReplicationRuleId);
         return this;
     }
 
@@ -122,20 +136,6 @@ public class GetDegradedBlobsSpectraS3Request extends AbstractPaginationRequest 
     }
 
 
-    public GetDegradedBlobsSpectraS3Request withReplicationRuleId(final UUID replicationRuleId) {
-        this.replicationRuleId = replicationRuleId.toString();
-        this.updateQueryParam("replication_rule_id", replicationRuleId);
-        return this;
-    }
-
-
-    public GetDegradedBlobsSpectraS3Request withReplicationRuleId(final String replicationRuleId) {
-        this.replicationRuleId = replicationRuleId;
-        this.updateQueryParam("replication_rule_id", replicationRuleId);
-        return this;
-    }
-
-
 
     @Override
     public HttpVerb getVerb() {
@@ -154,6 +154,11 @@ public class GetDegradedBlobsSpectraS3Request extends AbstractPaginationRequest 
 
     public String getBucketId() {
         return this.bucketId;
+    }
+
+
+    public String getDs3ReplicationRuleId() {
+        return this.ds3ReplicationRuleId;
     }
 
 
@@ -179,11 +184,6 @@ public class GetDegradedBlobsSpectraS3Request extends AbstractPaginationRequest 
 
     public String getPersistenceRuleId() {
         return this.persistenceRuleId;
-    }
-
-
-    public String getReplicationRuleId() {
-        return this.replicationRuleId;
     }
 
 }

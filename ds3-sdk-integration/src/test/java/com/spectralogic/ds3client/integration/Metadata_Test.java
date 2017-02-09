@@ -1,16 +1,16 @@
 /*
+ * ******************************************************************************
+ *   Copyright 2014-2017 Spectra Logic Corporation. All Rights Reserved.
+ *   Licensed under the Apache License, Version 2.0 (the "License"). You may not use
+ *   this file except in compliance with the License. A copy of the License is located at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *   or in the "license" file accompanying this file.
+ *   This file is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+ *   CONDITIONS OF ANY KIND, either express or implied. See the License for the
+ *   specific language governing permissions and limitations under the License.
  * ****************************************************************************
- *    Copyright 2014-2016 Spectra Logic Corporation. All Rights Reserved.
- *    Licensed under the Apache License, Version 2.0 (the "License"). You may not use
- *    this file except in compliance with the License. A copy of the License is located at
- *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
- *    or in the "license" file accompanying this file.
- *    This file is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
- *    CONDITIONS OF ANY KIND, either express or implied. See the License for the
- *    specific language governing permissions and limitations under the License.
- *  ****************************************************************************
  */
 
 package com.spectralogic.ds3client.integration;
@@ -33,6 +33,7 @@ import com.spectralogic.ds3client.networking.Metadata;
 import com.spectralogic.ds3client.utils.ByteArraySeekableByteChannel;
 import com.spectralogic.ds3client.utils.MetadataStringManipulation;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -57,8 +58,10 @@ public class Metadata_Test {
     private static TempStorageIds envStorageIds;
     private static UUID envDataPolicyId;
 
-    private static final String STRING_WITH_SYMBOLS = "1234567890-!@#$%^&*()_+`~[]\\{}|;':\"./<>?∞πϊφϠ";
-    private static final String STRING_WITH_SYMBOLS_UNICODE = "1234567890-!@#$%^&*()_+`~[]\\{}|;':\"./<>?\u03C0\u221E\u03CA\u03D5\u03E0";
+    private static final String STRING_WITH_SYMBOLS = "1234567890-!@#$%^&*()_+`~[]\\{}|;':\"./<>?∞πϊφξ";
+    private static final String STRING_WITH_SYMBOLS_UNICODE = "1234567890-!@#$%^&*()_+`~[]\\{}|;':\"./<>?\u221E\u03C0\u03CA\u03D5\u03BE";
+    private static final String STRING_WITH_UPPERCASE_SYMBOLS = "A1234567890-!@#$%^&*()_+`~[]\\{}|;':\"./<>?∞πϊφξ";
+    private static final String STRING_WITH_UPPERCASE_SYMBOLS_UNICODE = "\u00411234567890-!@#$%^&*()_+`~[]\\{}|;':\"./<>?∞πϊφξ";
 
     @BeforeClass
     public static void startup() throws IOException {
@@ -82,6 +85,21 @@ public class Metadata_Test {
         assertFalse(values.isEmpty());
         assertThat(values.size(), is(1));
         assertThat(values.get(0), is("value"));
+
+    }
+
+    @Test
+    public void singleUppercaseMetadataField() throws IOException {
+        final String metadataKey = "Name";
+        final String metadataValue = "Value";
+
+        final Metadata metadata = processMetadataRequest("metadataBucket", ImmutableMultimap.of(metadataKey, metadataValue));
+
+        final List<String> values = metadata.get(metadataKey.toLowerCase());
+        assertThat(values, is(notNullValue()));
+        assertFalse(values.isEmpty());
+        assertThat(values.size(), is(1));
+        assertThat(values.get(0), is(metadataValue));
 
     }
 
@@ -206,6 +224,40 @@ public class Metadata_Test {
         assertFalse(values.isEmpty());
         assertThat(values.size(), is(1));
         assertThat(values.get(0), is(STRING_WITH_SYMBOLS_UNICODE));
+    }
+
+    @Test
+    public void metadataValueWithUppercaseSymbols() throws IOException {
+
+        final Metadata metadata = processMetadataRequest(
+                "metadataBucket",
+                ImmutableMultimap.of(STRING_WITH_UPPERCASE_SYMBOLS, STRING_WITH_UPPERCASE_SYMBOLS));
+
+        final Set<String> keys = metadata.keys();
+
+        assertThat(keys.size(), is(1));
+
+        for (final String key : keys) {
+            assertEquals(key.length(), STRING_WITH_UPPERCASE_SYMBOLS.length());
+            assertEquals(0, StringUtils.indexOfDifference(key, STRING_WITH_UPPERCASE_SYMBOLS));
+        }
+    }
+
+    @Test
+    public void metadataValueWithUppercaseUnicodeSymbols() throws IOException {
+
+        final Metadata metadata = processMetadataRequest(
+                "metadataBucket",
+                ImmutableMultimap.of(STRING_WITH_UPPERCASE_SYMBOLS_UNICODE, STRING_WITH_UPPERCASE_SYMBOLS_UNICODE));
+
+        final Set<String> keys = metadata.keys();
+
+        assertThat(keys.size(), is(1));
+
+        for (final String key : keys) {
+            assertEquals(key.length(), STRING_WITH_UPPERCASE_SYMBOLS_UNICODE.length());
+            assertEquals(0, StringUtils.indexOfDifference(key, STRING_WITH_UPPERCASE_SYMBOLS_UNICODE));
+        }
     }
 
     /*

@@ -1,6 +1,6 @@
 /*
  * ******************************************************************************
- *   Copyright 2014-2016 Spectra Logic Corporation. All Rights Reserved.
+ *   Copyright 2014-2017 Spectra Logic Corporation. All Rights Reserved.
  *   Licensed under the Apache License, Version 2.0 (the "License"). You may not use
  *   this file except in compliance with the License. A copy of the License is located at
  *
@@ -46,11 +46,17 @@ public class JobChunk {
     @JsonProperty("PendingTargetCommit")
     private boolean pendingTargetCommit;
 
+    @JsonProperty("ReadFromAzureTargetId")
+    private UUID readFromAzureTargetId;
+
     @JsonProperty("ReadFromDs3TargetId")
     private UUID readFromDs3TargetId;
 
     @JsonProperty("ReadFromPoolId")
     private UUID readFromPoolId;
+
+    @JsonProperty("ReadFromS3TargetId")
+    private UUID readFromS3TargetId;
 
     @JsonProperty("ReadFromTapeId")
     private UUID readFromTapeId;
@@ -125,6 +131,15 @@ public class JobChunk {
     }
 
 
+    public UUID getReadFromAzureTargetId() {
+        return this.readFromAzureTargetId;
+    }
+
+    public void setReadFromAzureTargetId(final UUID readFromAzureTargetId) {
+        this.readFromAzureTargetId = readFromAzureTargetId;
+    }
+
+
     public UUID getReadFromDs3TargetId() {
         return this.readFromDs3TargetId;
     }
@@ -140,6 +155,15 @@ public class JobChunk {
 
     public void setReadFromPoolId(final UUID readFromPoolId) {
         this.readFromPoolId = readFromPoolId;
+    }
+
+
+    public UUID getReadFromS3TargetId() {
+        return this.readFromS3TargetId;
+    }
+
+    public void setReadFromS3TargetId(final UUID readFromS3TargetId) {
+        this.readFromS3TargetId = readFromS3TargetId;
     }
 
 

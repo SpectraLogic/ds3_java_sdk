@@ -1,16 +1,16 @@
 /*
+ * ******************************************************************************
+ *   Copyright 2014-2017 Spectra Logic Corporation. All Rights Reserved.
+ *   Licensed under the Apache License, Version 2.0 (the "License"). You may not use
+ *   this file except in compliance with the License. A copy of the License is located at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *   or in the "license" file accompanying this file.
+ *   This file is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+ *   CONDITIONS OF ANY KIND, either express or implied. See the License for the
+ *   specific language governing permissions and limitations under the License.
  * ****************************************************************************
- *    Copyright 2014-2016 Spectra Logic Corporation. All Rights Reserved.
- *    Licensed under the Apache License, Version 2.0 (the "License"). You may not use
- *    this file except in compliance with the License. A copy of the License is located at
- *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
- *    or in the "license" file accompanying this file.
- *    This file is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
- *    CONDITIONS OF ANY KIND, either express or implied. See the License for the
- *    specific language governing permissions and limitations under the License.
- *  ****************************************************************************
  */
 
 package com.spectralogic.ds3client.metadata;
@@ -85,24 +85,16 @@ public class MetadataAccessImpl_Test {
     public void testMetadataAccessFailureHandler() throws IOException, InterruptedException {
         Assume.assumeFalse(Platform.isWindows());
 
-        final String tempPathPrefix = null;
-        final Path tempDirectory = Files.createTempDirectory(Paths.get("."), tempPathPrefix);
+        final Path directory = Paths.get(".");
 
         final String fileName = "Gracie.txt";
 
-        final Path filePath = Files.createFile(Paths.get(tempDirectory.toString(), fileName));
+        final Path filePath = Paths.get(directory.toString(), fileName);
 
-        try {
-            tempDirectory.toFile().setExecutable(false);
+        final ImmutableMap.Builder<String, Path> fileMapper = ImmutableMap.builder();
 
-            final ImmutableMap.Builder<String, Path> fileMapper = ImmutableMap.builder();
-
-            fileMapper.put(filePath.toString(), filePath);
-            new MetadataAccessImpl(fileMapper.build()).getMetadataValue(filePath.toString());
-        } finally {
-            tempDirectory.toFile().setExecutable(true);
-            FileUtils.deleteDirectory(tempDirectory.toFile());
-        }
+        fileMapper.put(filePath.toString(), filePath);
+        new MetadataAccessImpl(fileMapper.build()).getMetadataValue(filePath.toString());
     }
 
     @Test(expected = RuntimeException.class)

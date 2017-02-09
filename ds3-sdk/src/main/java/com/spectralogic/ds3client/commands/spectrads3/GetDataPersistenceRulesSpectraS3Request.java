@@ -1,6 +1,6 @@
 /*
  * ******************************************************************************
- *   Copyright 2014-2016 Spectra Logic Corporation. All Rights Reserved.
+ *   Copyright 2014-2017 Spectra Logic Corporation. All Rights Reserved.
  *   Licensed under the Apache License, Version 2.0 (the "License"). You may not use
  *   this file except in compliance with the License. A copy of the License is located at
  *
@@ -21,7 +21,7 @@ import com.spectralogic.ds3client.commands.interfaces.AbstractPaginationRequest;
 import java.util.UUID;
 import com.google.common.net.UrlEscapers;
 import com.spectralogic.ds3client.models.DataIsolationLevel;
-import com.spectralogic.ds3client.models.DataPersistenceRuleState;
+import com.spectralogic.ds3client.models.DataPlacementRuleState;
 import com.spectralogic.ds3client.models.DataPersistenceRuleType;
 
 public class GetDataPersistenceRulesSpectraS3Request extends AbstractPaginationRequest {
@@ -40,7 +40,7 @@ public class GetDataPersistenceRulesSpectraS3Request extends AbstractPaginationR
 
     private String pageStartMarker;
 
-    private DataPersistenceRuleState state;
+    private DataPlacementRuleState state;
 
     private String storageDomainId;
 
@@ -113,7 +113,7 @@ public class GetDataPersistenceRulesSpectraS3Request extends AbstractPaginationR
     }
 
 
-    public GetDataPersistenceRulesSpectraS3Request withState(final DataPersistenceRuleState state) {
+    public GetDataPersistenceRulesSpectraS3Request withState(final DataPlacementRuleState state) {
         this.state = state;
         this.updateQueryParam("state", state);
         return this;
@@ -182,7 +182,7 @@ public class GetDataPersistenceRulesSpectraS3Request extends AbstractPaginationR
     }
 
 
-    public DataPersistenceRuleState getState() {
+    public DataPlacementRuleState getState() {
         return this.state;
     }
 

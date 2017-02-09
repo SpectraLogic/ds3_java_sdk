@@ -1,6 +1,6 @@
 /*
  * ******************************************************************************
- *   Copyright 2014-2016 Spectra Logic Corporation. All Rights Reserved.
+ *   Copyright 2014-2017 Spectra Logic Corporation. All Rights Reserved.
  *   Licensed under the Apache License, Version 2.0 (the "License"). You may not use
  *   this file except in compliance with the License. A copy of the License is located at
  *
@@ -27,12 +27,15 @@ public enum TapeState {
     DATA_CHECKPOINT_FAILURE_DUE_TO_READ_ONLY,
     DATA_CHECKPOINT_MISSING,
     LTFS_WITH_FOREIGN_DATA,
+    RAW_IMPORT_PENDING,
+    RAW_IMPORT_IN_PROGRESS,
     FOREIGN,
     IMPORT_PENDING,
     IMPORT_IN_PROGRESS,
     INCOMPATIBLE,
     LOST,
     BAD,
+    CANNOT_FORMAT_DUE_TO_WRITE_PROTECTION,
     SERIAL_NUMBER_MISMATCH,
     BAR_CODE_MISSING,
     FORMAT_PENDING,

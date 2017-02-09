@@ -1,6 +1,6 @@
 /*
  * ******************************************************************************
- *   Copyright 2014-2016 Spectra Logic Corporation. All Rights Reserved.
+ *   Copyright 2014-2017 Spectra Logic Corporation. All Rights Reserved.
  *   Licensed under the Apache License, Version 2.0 (the "License"). You may not use
  *   this file except in compliance with the License. A copy of the License is located at
  *
@@ -50,6 +50,9 @@ public class ActiveJob {
     @JsonProperty("Id")
     private UUID id;
 
+    @JsonProperty("ImplicitJobIdResolution")
+    private boolean implicitJobIdResolution;
+
     @JsonProperty("MinimizeSpanningAcrossMedia")
     private boolean minimizeSpanningAcrossMedia;
 
@@ -68,14 +71,23 @@ public class ActiveJob {
     @JsonProperty("Rechunked")
     private Date rechunked;
 
+    @JsonProperty("Replicating")
+    private boolean replicating;
+
     @JsonProperty("RequestType")
     private JobRequestType requestType;
 
     @JsonProperty("Truncated")
     private boolean truncated;
 
+    @JsonProperty("TruncatedDueToTimeout")
+    private boolean truncatedDueToTimeout;
+
     @JsonProperty("UserId")
     private UUID userId;
+
+    @JsonProperty("VerifyAfterWrite")
+    private boolean verifyAfterWrite;
 
     // Constructor
     public ActiveJob() {
@@ -156,6 +168,15 @@ public class ActiveJob {
     }
 
 
+    public boolean getImplicitJobIdResolution() {
+        return this.implicitJobIdResolution;
+    }
+
+    public void setImplicitJobIdResolution(final boolean implicitJobIdResolution) {
+        this.implicitJobIdResolution = implicitJobIdResolution;
+    }
+
+
     public boolean getMinimizeSpanningAcrossMedia() {
         return this.minimizeSpanningAcrossMedia;
     }
@@ -210,6 +231,15 @@ public class ActiveJob {
     }
 
 
+    public boolean getReplicating() {
+        return this.replicating;
+    }
+
+    public void setReplicating(final boolean replicating) {
+        this.replicating = replicating;
+    }
+
+
     public JobRequestType getRequestType() {
         return this.requestType;
     }
@@ -228,12 +258,30 @@ public class ActiveJob {
     }
 
 
+    public boolean getTruncatedDueToTimeout() {
+        return this.truncatedDueToTimeout;
+    }
+
+    public void setTruncatedDueToTimeout(final boolean truncatedDueToTimeout) {
+        this.truncatedDueToTimeout = truncatedDueToTimeout;
+    }
+
+
     public UUID getUserId() {
         return this.userId;
     }
 
     public void setUserId(final UUID userId) {
         this.userId = userId;
+    }
+
+
+    public boolean getVerifyAfterWrite() {
+        return this.verifyAfterWrite;
+    }
+
+    public void setVerifyAfterWrite(final boolean verifyAfterWrite) {
+        this.verifyAfterWrite = verifyAfterWrite;
     }
 
 }

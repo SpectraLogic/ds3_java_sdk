@@ -41,7 +41,7 @@ The SDK can also be included directly into a Maven or Gradle build. There is als
       <dependency>
         <groupId>com.spectralogic.ds3</groupId>
         <artifactId>ds3-sdk</artifactId>
-        <version>3.2.8</version>
+        <version>3.2.9</version>
         <!-- <classifier>all</classifier> -->
       </dependency>
     ...
@@ -64,15 +64,15 @@ repositories {
 
 dependencies {
     ...
-    compile 'com.spectralogic.ds3:ds3-sdk:3.2.8'
-    // compile 'com.spectralogic.ds3:ds3-sdk:3.2.8:all'
+    compile 'com.spectralogic.ds3:ds3-sdk:3.2.9'
+    // compile 'com.spectralogic.ds3:ds3-sdk:3.2.9:all'
     ...
 }
 
 ```
 ## Javadoc
 
-The latest javadoc is located at [http://spectralogic.github.io/ds3_java_sdkj/javadoc/](http://spectralogic.github.io/ds3_java_sdk/javadoc/)
+The latest javadoc is located at [http://spectralogic.github.io/ds3_java_sdk/javadoc/](http://spectralogic.github.io/ds3_java_sdk/javadoc/)
 
 ## Contributing
 If you would like to contribute to the source code, sign the [Contributors Agreement](https://developer.spectralogic.com/contributors-agreement/) and make sure that your source conforms to our [Java Style Guide](https://github.com/SpectraLogic/spectralogic.github.com/wiki/Java-Style-Guide).  For an overview of how we use Github, please review our [Github Workflow](https://github.com/SpectraLogic/spectralogic.github.com/wiki/Github-Workflow).
