@@ -15,7 +15,7 @@
 
 allprojects {
     group = 'com.spectralogic.ds3'
-    version = '3.4.0-RC2'
+    version = '3.4.0'
 }
 
 subprojects {
