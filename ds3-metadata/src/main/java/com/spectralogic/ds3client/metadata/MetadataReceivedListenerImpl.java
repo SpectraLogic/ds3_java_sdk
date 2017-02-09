@@ -15,14 +15,23 @@
 
 package com.spectralogic.ds3client.metadata;
 
+import com.google.common.collect.ImmutableList;
+import com.spectralogic.ds3client.exceptions.AggregateException;
 import com.spectralogic.ds3client.helpers.MetadataReceivedListener;
 import com.spectralogic.ds3client.metadata.interfaces.MetadataRestore;
 import com.spectralogic.ds3client.networking.Metadata;
+import com.spectralogic.ds3client.utils.Guard;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
 public class MetadataReceivedListenerImpl implements MetadataReceivedListener {
+
+    private final static Logger LOG = LoggerFactory.getLogger(MetadataReceivedListenerImpl.class);
+
     private final String localFilePath;
+
 
     public MetadataReceivedListenerImpl(final String localFilePath) {
         this.localFilePath = localFilePath;
@@ -45,17 +54,41 @@ public class MetadataReceivedListenerImpl implements MetadataReceivedListener {
      * @param metadata   metadata which needs to be set on local file
      */
     private void restoreMetaData(final String objectName, final Metadata metadata) throws IOException, InterruptedException {
+
+        final ImmutableList.Builder<Throwable> exceptionBuilder = ImmutableList.builder();
+
         //get metadatarestore on the basis of os
         final MetadataRestore metadataRestore = new MetadataRestoreFactory().getOSSpecificMetadataRestore(metadata, objectName);
         //restore os name
         metadataRestore.restoreOSName();
+
         //restore user and owner based on OS
-        metadataRestore.restoreUserAndOwner();
+        try {
+            metadataRestore.restoreUserAndOwner();
+        } catch (final Throwable t) {
+             LOG.error("Could not restore owner and owner information", t);
+             exceptionBuilder.add(t);
+        }
+
         //restore creation and modified time based on OS
-        metadataRestore.restoreFileTimes();
+        try {
+            metadataRestore.restoreFileTimes();
+        } catch (final Throwable t) {
+            LOG.error("Could not restore the file times", t);
+            exceptionBuilder.add(t);
+        }
+
         //restore permissions based on OS
-        metadataRestore.restorePermissions();
+        try {
+            metadataRestore.restorePermissions();
+        } catch (final Throwable t) {
+            LOG.error("Could not restore the file permissions", t);
+            exceptionBuilder.add(t);
+        }
+
+        final ImmutableList<Throwable> exceptions = exceptionBuilder.build();
+        if (!Guard.isNullOrEmpty(exceptions)) {
+            throw new AggregateException(exceptions);
+        }
     }
-
-
 }

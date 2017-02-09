@@ -13,7 +13,7 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3client.helpers.Ds3ClientHelpers;
+package com.spectralogic.ds3client.helpers;
 
 import java.util.Map;
 

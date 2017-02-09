@@ -19,6 +19,7 @@ import com.spectralogic.ds3client.Ds3Client;
 import com.spectralogic.ds3client.Ds3ClientBuilder;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers;
 import com.spectralogic.ds3client.helpers.FileObjectPutter;
+import com.spectralogic.ds3client.helpers.MetadataAccess;
 import com.spectralogic.ds3client.models.bulk.Ds3Object;
 
 import java.io.IOException;
@@ -51,7 +52,7 @@ public class BulkPutWithMetadata {
             final Ds3ClientHelpers.Job job = helper.startWriteJob(bucketName, objects);
 
             // To put metadata with each file we need to attach the metadata with a callback
-            job.withMetadata(new Ds3ClientHelpers.MetadataAccess() {
+            job.withMetadata(new MetadataAccess() {
                 @Override
                 public Map<String, String> getMetadataValue(final String objectName) {
                     // Return a map of the metadata that you want assigned to the request object

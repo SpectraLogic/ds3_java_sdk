@@ -50,7 +50,7 @@ class WriteJobImpl extends JobImpl {
     private final int retryAfter; // Negative retryAfter value represent infinity retries
     private final int retryDelay; //Negative value means use default
 
-    private Ds3ClientHelpers.MetadataAccess metadataAccess = null;
+    private MetadataAccess metadataAccess = null;
     private ChecksumFunction checksumFunction = null;
 
     public WriteJobImpl(
@@ -80,7 +80,7 @@ class WriteJobImpl extends JobImpl {
     }
 
     @Override
-    public Ds3ClientHelpers.Job withMetadata(final Ds3ClientHelpers.MetadataAccess access) {
+    public Ds3ClientHelpers.Job withMetadata(final MetadataAccess access) {
         checkRunning();
         this.metadataAccess = access;
         return this;

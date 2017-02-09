@@ -17,7 +17,7 @@ package com.spectralogic.ds3client.metadata;
 
 
 import com.google.common.collect.ImmutableMap;
-import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.MetadataAccess;
+import com.spectralogic.ds3client.helpers.MetadataAccess;
 import com.spectralogic.ds3client.metadata.interfaces.MetadataStore;
 import com.spectralogic.ds3client.utils.Platform;
 

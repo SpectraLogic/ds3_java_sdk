@@ -83,7 +83,7 @@ class ReadJobImpl extends JobImpl {
     }
 
     @Override
-    public Ds3ClientHelpers.Job withMetadata(final Ds3ClientHelpers.MetadataAccess access) {
+    public Ds3ClientHelpers.Job withMetadata(final MetadataAccess access) {
         throw new IllegalStateException("withMetadata method is not used with Read Jobs");
     }
 
