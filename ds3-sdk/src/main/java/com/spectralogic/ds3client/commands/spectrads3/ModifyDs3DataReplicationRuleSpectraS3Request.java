@@ -27,8 +27,6 @@ public class ModifyDs3DataReplicationRuleSpectraS3Request extends AbstractReques
     
     private final String ds3DataReplicationRule;
 
-    private boolean replicateDeletes;
-
     private String targetDataPolicy;
 
     private DataReplicationRuleType type;
@@ -40,13 +38,6 @@ public class ModifyDs3DataReplicationRuleSpectraS3Request extends AbstractReques
         this.ds3DataReplicationRule = ds3DataReplicationRule;
         
     }
-
-    public ModifyDs3DataReplicationRuleSpectraS3Request withReplicateDeletes(final boolean replicateDeletes) {
-        this.replicateDeletes = replicateDeletes;
-        this.updateQueryParam("replicate_deletes", replicateDeletes);
-        return this;
-    }
-
 
     public ModifyDs3DataReplicationRuleSpectraS3Request withTargetDataPolicy(final String targetDataPolicy) {
         this.targetDataPolicy = targetDataPolicy;
@@ -75,11 +66,6 @@ public class ModifyDs3DataReplicationRuleSpectraS3Request extends AbstractReques
     
     public String getDs3DataReplicationRule() {
         return this.ds3DataReplicationRule;
-    }
-
-
-    public boolean getReplicateDeletes() {
-        return this.replicateDeletes;
     }
 
 

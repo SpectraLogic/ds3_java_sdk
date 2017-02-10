@@ -1555,7 +1555,6 @@
                 <Request Action="MODIFY" HttpVerb="PUT" IncludeIdInPath="true" Resource="AZURE_DATA_REPLICATION_RULE" ResourceType="NON_SINGLETON">
                     <OptionalQueryParams>
                         <Param Name="MaxBlobPartSizeInBytes" Type="long"/>
-                        <Param Name="ReplicateDeletes" Type="boolean"/>
                         <Param Name="Type" Type="com.spectralogic.s3.common.dao.domain.ds3.DataReplicationRuleType"/>
                     </OptionalQueryParams>
                     <RequiredQueryParams/>
@@ -1568,7 +1567,7 @@
                         </ResponseTypes>
                     </ResponseCode>
                 </ResponseCodes>
-                <Version>1.D90C5C1EF5D3968AE776DED4DD4B41CA</Version>
+                <Version>1.A86356560A59FC40759606264E67B56E</Version>
             </RequestHandler>
             <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.datapolicy.ModifyDataPersistenceRuleRequestHandler">
                 <Request Action="MODIFY" HttpVerb="PUT" IncludeIdInPath="true" Resource="DATA_PERSISTENCE_RULE" ResourceType="NON_SINGLETON">
@@ -1633,7 +1632,6 @@
             <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.datapolicy.ModifyDs3DataReplicationRuleRequestHandler">
                 <Request Action="MODIFY" HttpVerb="PUT" IncludeIdInPath="true" Resource="DS3_DATA_REPLICATION_RULE" ResourceType="NON_SINGLETON">
                     <OptionalQueryParams>
-                        <Param Name="ReplicateDeletes" Type="boolean"/>
                         <Param Name="TargetDataPolicy" Type="java.lang.String"/>
                         <Param Name="Type" Type="com.spectralogic.s3.common.dao.domain.ds3.DataReplicationRuleType"/>
                     </OptionalQueryParams>
@@ -1647,14 +1645,13 @@
                         </ResponseTypes>
                     </ResponseCode>
                 </ResponseCodes>
-                <Version>1.B024C098E863E2B1C9275B0EBFBA3BF6</Version>
+                <Version>1.3067D999E65E1992F3A9130549AD8806</Version>
             </RequestHandler>
             <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.datapolicy.ModifyS3DataReplicationRuleRequestHandler">
                 <Request Action="MODIFY" HttpVerb="PUT" IncludeIdInPath="true" Resource="S3_DATA_REPLICATION_RULE" ResourceType="NON_SINGLETON">
                     <OptionalQueryParams>
                         <Param Name="InitialDataPlacement" Type="com.spectralogic.s3.common.dao.domain.ds3.S3InitialDataPlacementPolicy"/>
                         <Param Name="MaxBlobPartSizeInBytes" Type="long"/>
-                        <Param Name="ReplicateDeletes" Type="boolean"/>
                         <Param Name="Type" Type="com.spectralogic.s3.common.dao.domain.ds3.DataReplicationRuleType"/>
                     </OptionalQueryParams>
                     <RequiredQueryParams/>
@@ -1667,7 +1664,7 @@
                         </ResponseTypes>
                     </ResponseCode>
                 </ResponseCodes>
-                <Version>1.E7A5FD996704C81CD95CC171BA42549E</Version>
+                <Version>1.F82365DFBAF7EFF2EDEB5C4503A5003C</Version>
             </RequestHandler>
             <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.degradation.ClearSuspectBlobAzureTargetsRequestHandler">
                 <Request Action="BULK_DELETE" HttpVerb="DELETE" IncludeIdInPath="false" Resource="SUSPECT_BLOB_AZURE_TARGET" ResourceType="NON_SINGLETON">
@@ -9015,18 +9012,6 @@
                             </Annotation>
                         </Annotations>
                     </Element>
-                    <Element Name="AlwaysReplicateDeletes" Type="boolean">
-                        <Annotations>
-                            <Annotation Name="com.spectralogic.util.bean.lang.DefaultBooleanValue">
-                                <AnnotationElements>
-                                    <AnnotationElement Name="Value" Value="true" ValueType="java.lang.Boolean"/>
-                                </AnnotationElements>
-                            </Annotation>
-                            <Annotation Name="com.spectralogic.util.db.lang.shared.ExcludeFromDatabasePersistence">
-                                <AnnotationElements/>
-                            </Annotation>
-                        </Annotations>
-                    </Element>
                     <Element Name="BlobbingEnabled" Type="boolean">
                         <Annotations>
                             <Annotation Name="com.spectralogic.util.bean.lang.DefaultBooleanValue">
@@ -9106,18 +9091,6 @@
                     </Element>
                     <Element Name="Id" Type="java.util.UUID">
                         <Annotations/>
-                    </Element>
-                    <Element Name="LtfsObjectNamingAllowed" Type="boolean">
-                        <Annotations>
-                            <Annotation Name="com.spectralogic.util.bean.lang.DefaultBooleanValue">
-                                <AnnotationElements>
-                                    <AnnotationElement Name="Value" Value="true" ValueType="java.lang.Boolean"/>
-                                </AnnotationElements>
-                            </Annotation>
-                            <Annotation Name="com.spectralogic.util.db.lang.shared.ExcludeFromDatabasePersistence">
-                                <AnnotationElements/>
-                            </Annotation>
-                        </Annotations>
                     </Element>
                     <Element Name="Name" Type="java.lang.String">
                         <Annotations>

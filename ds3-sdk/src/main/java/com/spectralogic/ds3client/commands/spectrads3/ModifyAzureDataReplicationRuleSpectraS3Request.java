@@ -29,8 +29,6 @@ public class ModifyAzureDataReplicationRuleSpectraS3Request extends AbstractRequ
 
     private long maxBlobPartSizeInBytes;
 
-    private boolean replicateDeletes;
-
     private DataReplicationRuleType type;
 
     // Constructor
@@ -44,13 +42,6 @@ public class ModifyAzureDataReplicationRuleSpectraS3Request extends AbstractRequ
     public ModifyAzureDataReplicationRuleSpectraS3Request withMaxBlobPartSizeInBytes(final long maxBlobPartSizeInBytes) {
         this.maxBlobPartSizeInBytes = maxBlobPartSizeInBytes;
         this.updateQueryParam("max_blob_part_size_in_bytes", maxBlobPartSizeInBytes);
-        return this;
-    }
-
-
-    public ModifyAzureDataReplicationRuleSpectraS3Request withReplicateDeletes(final boolean replicateDeletes) {
-        this.replicateDeletes = replicateDeletes;
-        this.updateQueryParam("replicate_deletes", replicateDeletes);
         return this;
     }
 
@@ -80,11 +71,6 @@ public class ModifyAzureDataReplicationRuleSpectraS3Request extends AbstractRequ
 
     public long getMaxBlobPartSizeInBytes() {
         return this.maxBlobPartSizeInBytes;
-    }
-
-
-    public boolean getReplicateDeletes() {
-        return this.replicateDeletes;
     }
 
 
