@@ -34,6 +34,7 @@ import com.spectralogic.ds3client.models.bulk.RequestType;
 import com.spectralogic.ds3client.models.common.Range;
 import com.spectralogic.ds3client.models.bulk.*;
 import com.spectralogic.ds3client.networking.FailedRequestException;
+import com.spectralogic.ds3client.utils.Guard;
 import com.spectralogic.ds3client.utils.collections.LazyIterable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -168,9 +169,14 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
     private Ds3ClientHelpers.Job innerStartReadJob(final String bucket, final Iterable<Ds3Object> objectsToRead, final ReadJobOptions options)
             throws IOException {
         final List<Ds3Object> objects = Lists.newArrayList(objectsToRead);
-        final GetBulkJobSpectraS3Response getBulkJobSpectraS3Response = this.client.getBulkJobSpectraS3(new GetBulkJobSpectraS3Request(bucket, objects)
+        final GetBulkJobSpectraS3Request getBulkJobSpectraS3Request = new GetBulkJobSpectraS3Request(bucket, objects)
                 .withChunkClientProcessingOrderGuarantee(JobChunkClientProcessingOrderGuarantee.NONE)
-                .withPriority(options.getPriority()).withName(options.getName()));
+                .withPriority(options.getPriority());
+        if (!Guard.isStringNullOrEmpty(options.getName())) {
+            getBulkJobSpectraS3Request.withName(options.getName());
+        }
+
+        final GetBulkJobSpectraS3Response getBulkJobSpectraS3Response = this.client.getBulkJobSpectraS3(getBulkJobSpectraS3Request);
 
         final ImmutableMultimap<String, Range> partialRanges = PartialObjectHelpers.getPartialObjectsRanges(objects);
 
