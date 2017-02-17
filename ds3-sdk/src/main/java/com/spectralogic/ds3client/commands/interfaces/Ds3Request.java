@@ -39,4 +39,6 @@ public interface Ds3Request {
     Map<String, String> getQueryParams();
 
     RequestHeaders getHeaders();
+
+    void removeQueryParam(final String name);
 }
