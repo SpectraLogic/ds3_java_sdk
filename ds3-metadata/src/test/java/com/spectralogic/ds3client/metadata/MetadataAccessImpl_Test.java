@@ -87,9 +87,9 @@ public class MetadataAccessImpl_Test {
 
     @Test
     public void testMetadataAccessFailureHandler() throws IOException, InterruptedException {
-        try {
-            Assume.assumeFalse(Platform.isWindows());
+        Assume.assumeFalse(Platform.isWindows());
 
+        try {
             final String tempPathPrefix = null;
             final Path tempDirectory = Files.createTempDirectory(Paths.get("."), tempPathPrefix);
 
@@ -151,13 +151,33 @@ public class MetadataAccessImpl_Test {
         }
     }
 
-    @Test(expected = RuntimeException.class)
+    @Test
     public void testMetadataAccessFailureHandlerWindows() {
         Assume.assumeTrue(Platform.isWindows());
 
-        final ImmutableMap.Builder<String, Path> fileMapper = ImmutableMap.builder();
+        try {
+            final ImmutableMap.Builder<String, Path> fileMapper = ImmutableMap.builder();
 
-        fileMapper.put("file", Paths.get("file"));
-        new MetadataAccessImpl(fileMapper.build()).getMetadataValue("file");
+            final String fileName = "file";
+
+            fileMapper.put(fileName, Paths.get(fileName));
+
+            final AtomicInteger numTimesFailureHandlerCalled = new AtomicInteger(0);
+
+            new MetadataAccessImpl(fileMapper.build(),
+                    new FailureEventListener() {
+                        @Override
+                        public void onFailure(final FailureEvent failureEvent) {
+                            numTimesFailureHandlerCalled.incrementAndGet();
+                            assertEquals(FailureEvent.FailureActivity.RecordingMetadata, failureEvent.doingWhat());
+                        }
+                    },
+                    "localhost")
+                    .getMetadataValue(fileName);
+
+            assertEquals(1, numTimesFailureHandlerCalled.get());
+        } catch (final Throwable t) {
+            fail("Throwing exceptions from metadata est verbotten.");
+        }
     }
 }
