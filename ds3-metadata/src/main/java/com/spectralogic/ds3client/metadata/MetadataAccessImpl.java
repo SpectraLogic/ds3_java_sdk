@@ -31,6 +31,7 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.PosixFileAttributes;
 import java.util.Map;
 
+import com.spectralogic.ds3client.utils.StringExtensions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -63,27 +64,19 @@ public class MetadataAccessImpl implements MetadataAccess {
         final Path file = fileMapper.get(filename);
         try {
             return storeMetaData(file);
-        } catch (final IOException e) {
-            LOG.error("Error recording metadata.", e);
+        } catch (final Throwable t) {
+            LOG.error("Error recording metadata.", t);
             if (failureEventListener != null) {
                 failureEventListener.onFailure(FailureEvent.builder()
                         .withObjectNamed(filename)
-                        .withCausalException(e)
+                        .withCausalException(t)
                         .doingWhat(FailureEvent.FailureActivity.RecordingMetadata)
-                        .usingSystemWithEndpoint(getHttpEndpointOrEmptyName())
+                        .usingSystemWithEndpoint(StringExtensions.getStringOrDefault(httpEndpoint, " "))
                         .build());
             }
         }
 
         return ImmutableMap.of();
-    }
-
-    private String getHttpEndpointOrEmptyName() {
-        if (Guard.isStringNullOrEmpty(httpEndpoint)) {
-            return " ";
-        }
-
-        return httpEndpoint;
     }
 
     /**

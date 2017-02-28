@@ -16,12 +16,15 @@
 package com.spectralogic.ds3client.metadata;
 
 import com.google.common.collect.ImmutableMap;
+import com.spectralogic.ds3client.helpers.FailureEventListener;
+import com.spectralogic.ds3client.helpers.events.FailureEvent;
 import com.spectralogic.ds3client.utils.Platform;
 import org.apache.commons.io.FileUtils;
 import org.junit.Assume;
 import org.junit.Test;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -31,6 +34,7 @@ import java.nio.file.attribute.PosixFileAttributes;
 import java.nio.file.attribute.PosixFilePermission;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class MetadataAccessImpl_Test {
     @Test
@@ -81,8 +85,36 @@ public class MetadataAccessImpl_Test {
         }
     }
 
-    @Test(expected = RuntimeException.class)
+    @Test
     public void testMetadataAccessFailureHandler() throws IOException, InterruptedException {
+        try {
+            Assume.assumeFalse(Platform.isWindows());
+
+            final String tempPathPrefix = null;
+            final Path tempDirectory = Files.createTempDirectory(Paths.get("."), tempPathPrefix);
+
+            final String fileName = "Gracie.txt";
+
+            final Path filePath = Files.createFile(Paths.get(tempDirectory.toString(), fileName));
+
+            try {
+                tempDirectory.toFile().setExecutable(false);
+
+                final ImmutableMap.Builder<String, Path> fileMapper = ImmutableMap.builder();
+
+                fileMapper.put(filePath.toString(), filePath);
+                new MetadataAccessImpl(fileMapper.build()).getMetadataValue(filePath.toString());
+            } finally {
+                tempDirectory.toFile().setExecutable(true);
+                FileUtils.deleteDirectory(tempDirectory.toFile());
+            }
+        } catch (final Throwable t) {
+            fail("Throwing exceptions from metadata est verbotten");
+        }
+    }
+
+    @Test
+    public void testMetadataAccessFailureHandlerWithEventHandler() throws IOException, InterruptedException {
         Assume.assumeFalse(Platform.isWindows());
 
         final String tempPathPrefix = null;
@@ -98,7 +130,21 @@ public class MetadataAccessImpl_Test {
             final ImmutableMap.Builder<String, Path> fileMapper = ImmutableMap.builder();
 
             fileMapper.put(filePath.toString(), filePath);
-            new MetadataAccessImpl(fileMapper.build()).getMetadataValue(filePath.toString());
+
+            final AtomicInteger numTimesFailureHandlerCalled = new AtomicInteger(0);
+
+            new MetadataAccessImpl(fileMapper.build(),
+                    new FailureEventListener() {
+                        @Override
+                        public void onFailure(final FailureEvent failureEvent) {
+                            numTimesFailureHandlerCalled.incrementAndGet();
+                            assertEquals(FailureEvent.FailureActivity.RecordingMetadata, failureEvent.doingWhat());
+                        }
+                    },
+                    "localhost")
+                    .getMetadataValue(filePath.toString());
+
+            assertEquals(1, numTimesFailureHandlerCalled.get());
         } finally {
             tempDirectory.toFile().setExecutable(true);
             FileUtils.deleteDirectory(tempDirectory.toFile());
