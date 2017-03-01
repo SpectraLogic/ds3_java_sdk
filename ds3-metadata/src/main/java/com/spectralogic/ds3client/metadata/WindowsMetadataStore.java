@@ -168,7 +168,14 @@ class WindowsMetadataStore extends AbstractMetadataStore {
             final StringBuilder userDisplayList = new StringBuilder();
             final Map<String, Set<Integer>> stringSetMap = new HashMap<>();
             for (final AclEntry aclEntry : aclEntries) {
-                userDisplay = aclEntry.principal().getName().split("\\\\")[1];
+                final String[] principalFields = aclEntry.principal().getName().split("\\\\");
+
+                if (principalFields.length < 2) {
+                    continue;
+                }
+
+                userDisplay = principalFields[1];
+
                 Set<Integer> newSet = stringSetMap.get(userDisplay);
                 aclEntryPermissions = aclEntry.permissions();
                 if (newSet == null) {
