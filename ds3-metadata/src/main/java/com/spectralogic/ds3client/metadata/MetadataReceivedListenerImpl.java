@@ -56,7 +56,6 @@ public class MetadataReceivedListenerImpl implements MetadataReceivedListener {
             final String actualFilePath = MetaDataUtil.getRealFilePath(localFilePath, filename);
             restoreMetaData(actualFilePath, metadata);
         } catch (final Throwable t) {
-            LOG.error("Error restoring metadata.", t);
             if (failureEventListener != null) {
                 failureEventListener.onFailure(FailureEvent.builder()
                         .doingWhat(FailureEvent.FailureActivity.RestoringMetadata)
