@@ -211,8 +211,12 @@ class WindowsMetadataStore extends AbstractMetadataStore {
 
     @Override
     public void saveOSSpecificMetadata(final Path file, final BasicFileAttributes attrs) throws IOException {
-        saveWindowsfilePermissions(file);
-        saveWindowsDescriptors(file);
-        saveFlagMetaData(file);
+        try {
+            saveWindowsfilePermissions(file);
+            saveWindowsDescriptors(file);
+            saveFlagMetaData(file);
+        } catch (final Throwable t) {
+            throw new WindowsMetadataException("Saving OS-specific metadata.", t);
+        }
     }
 }

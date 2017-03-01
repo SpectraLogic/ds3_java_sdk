@@ -17,10 +17,13 @@ package com.spectralogic.ds3client.metadata;
 
 import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3client.exceptions.AggregateException;
+import com.spectralogic.ds3client.helpers.FailureEventListener;
 import com.spectralogic.ds3client.helpers.MetadataReceivedListener;
+import com.spectralogic.ds3client.helpers.events.FailureEvent;
 import com.spectralogic.ds3client.metadata.interfaces.MetadataRestore;
 import com.spectralogic.ds3client.networking.Metadata;
 import com.spectralogic.ds3client.utils.Guard;
+import com.spectralogic.ds3client.utils.StringExtensions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,10 +34,20 @@ public class MetadataReceivedListenerImpl implements MetadataReceivedListener {
     private final static Logger LOG = LoggerFactory.getLogger(MetadataReceivedListenerImpl.class);
 
     private final String localFilePath;
-
+    private final FailureEventListener failureEventListener;
+    private final String httpEndpoint;
 
     public MetadataReceivedListenerImpl(final String localFilePath) {
+        this(localFilePath, null, null);
+    }
+
+    public MetadataReceivedListenerImpl(final String localFilePath,
+                                        final FailureEventListener failureEventListener,
+                                        final String httpEndpoint)
+    {
         this.localFilePath = localFilePath;
+        this.failureEventListener = failureEventListener;
+        this.httpEndpoint = httpEndpoint;
     }
 
     @Override
@@ -42,8 +55,15 @@ public class MetadataReceivedListenerImpl implements MetadataReceivedListener {
         try {
             final String actualFilePath = MetaDataUtil.getRealFilePath(localFilePath, filename);
             restoreMetaData(actualFilePath, metadata);
-        } catch (final IOException | InterruptedException e) {
-            throw new RuntimeException("Error restoring metadata.", e);
+        } catch (final Throwable t) {
+            if (failureEventListener != null) {
+                failureEventListener.onFailure(FailureEvent.builder()
+                        .doingWhat(FailureEvent.FailureActivity.RestoringMetadata)
+                        .withCausalException(t)
+                        .withObjectNamed(filename)
+                        .usingSystemWithEndpoint(StringExtensions.getStringOrDefault(httpEndpoint, " "))
+                        .build());
+            }
         }
     }
 
