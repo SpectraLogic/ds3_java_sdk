@@ -51,18 +51,22 @@ class WindowsMetadataRestore extends AbstractMetadataRestore {
 
     @Override
     public void restoreUserAndOwner() throws IOException {
-        if (storedOS != null && storedOS.equals(localOS)) {
+        try {
+            if (storedOS != null && storedOS.equals(localOS)) {
 
-            final String ownerSid = getMetadataProperty(metadata, KEY_OWNER);
-            final String groupSid = getMetadataProperty(metadata, KEY_GROUP);
+                final String ownerSid = getMetadataProperty(metadata, KEY_OWNER);
+                final String groupSid = getMetadataProperty(metadata, KEY_GROUP);
 
-            if (!Guard.isStringNullOrEmpty(ownerSid) && !Guard.isStringNullOrEmpty(groupSid)) {
-                setOwnerIdAndGroupId(ownerSid, groupSid);
+                if (!Guard.isStringNullOrEmpty(ownerSid) && !Guard.isStringNullOrEmpty(groupSid)) {
+                    setOwnerIdAndGroupId(ownerSid, groupSid);
+                } else {
+                    LOG.warn("Cannot determine owner or group settings for {}", this.objectName);
+                }
             } else {
-                LOG.warn("Cannot determine owner or group settings for {}", this.objectName);
+                LOG.warn("The OS settings for owner and group properties cannot be restored for {}", this.objectName);
             }
-        } else {
-            LOG.warn("The OS settings for owner and group properties cannot be restored for {}", this.objectName);
+        } catch (final Throwable t) {
+            throw new WindowsMetadataException("Restoring user and owner.", t);
         }
     }
 
@@ -72,12 +76,16 @@ class WindowsMetadataRestore extends AbstractMetadataRestore {
 
     @Override
     public void restorePermissions() throws IOException, InterruptedException {
-        if (storedOS != null && storedOS.equals(localOS)) {
-            setPermissionsForWindows();
-        } else {
-            LOG.warn("The OS settings for the file permissions cannot be restored for {}", this.objectName);
+        try {
+            if (storedOS != null && storedOS.equals(localOS)) {
+                setPermissionsForWindows();
+            } else {
+                LOG.warn("The OS settings for the file permissions cannot be restored for {}", this.objectName);
+            }
+            restoreFlags();
+        } catch (final Throwable t) {
+            throw new WindowsMetadataException("Restoring permissions.", t);
         }
-        restoreFlags();
     }
 
     private void setPermissionsForWindows() throws IOException {
