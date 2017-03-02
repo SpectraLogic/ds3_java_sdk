@@ -86,7 +86,6 @@ public class MetadataReceivedListenerImpl implements MetadataReceivedListener {
         try {
             metadataRestore.restoreUserAndOwner();
         } catch (final Throwable t) {
-             LOG.error("Could not restore owner and owner information", t);
              exceptionBuilder.add(t);
         }
 
@@ -94,7 +93,6 @@ public class MetadataReceivedListenerImpl implements MetadataReceivedListener {
         try {
             metadataRestore.restoreFileTimes();
         } catch (final Throwable t) {
-            LOG.error("Could not restore the file times", t);
             exceptionBuilder.add(t);
         }
 
@@ -102,7 +100,6 @@ public class MetadataReceivedListenerImpl implements MetadataReceivedListener {
         try {
             metadataRestore.restorePermissions();
         } catch (final Throwable t) {
-            LOG.error("Could not restore the file permissions", t);
             exceptionBuilder.add(t);
         }
 
