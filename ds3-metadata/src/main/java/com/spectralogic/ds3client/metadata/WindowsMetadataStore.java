@@ -168,7 +168,20 @@ class WindowsMetadataStore extends AbstractMetadataStore {
             final StringBuilder userDisplayList = new StringBuilder();
             final Map<String, Set<Integer>> stringSetMap = new HashMap<>();
             for (final AclEntry aclEntry : aclEntries) {
-                userDisplay = aclEntry.principal().getName().split("\\\\")[1];
+                /*
+                If a file has no Windoze dacl entries, as may happen on a network-mounted file system, there won't be a principal entry.
+                A principal is a combination of security provider, like NT AUTHORITY, and user name, e.g. NT AUTHORITY\Gracie.
+                This code is looking for the user name -- the second half of the principal. With no principal, there is no
+                second half of the principal.
+                 */
+                final String[] principalFields = aclEntry.principal().getName().split("\\\\");
+
+                if (principalFields.length < 2) {
+                    continue;
+                }
+
+                userDisplay = principalFields[1];
+
                 Set<Integer> newSet = stringSetMap.get(userDisplay);
                 aclEntryPermissions = aclEntry.permissions();
                 if (newSet == null) {
@@ -211,8 +224,12 @@ class WindowsMetadataStore extends AbstractMetadataStore {
 
     @Override
     public void saveOSSpecificMetadata(final Path file, final BasicFileAttributes attrs) throws IOException {
-        saveWindowsfilePermissions(file);
-        saveWindowsDescriptors(file);
-        saveFlagMetaData(file);
+        try {
+            saveWindowsfilePermissions(file);
+            saveWindowsDescriptors(file);
+            saveFlagMetaData(file);
+        } catch (final Throwable t) {
+            throw new WindowsMetadataException("Saving OS-specific metadata.", t);
+        }
     }
 }

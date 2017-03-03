@@ -17,7 +17,9 @@ package com.spectralogic.ds3client.metadata;
 
 
 import com.google.common.collect.ImmutableMap;
+import com.spectralogic.ds3client.helpers.FailureEventListener;
 import com.spectralogic.ds3client.helpers.MetadataAccess;
+import com.spectralogic.ds3client.helpers.events.FailureEvent;
 import com.spectralogic.ds3client.metadata.interfaces.MetadataStore;
 import com.spectralogic.ds3client.utils.Platform;
 
@@ -28,15 +30,28 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.PosixFileAttributes;
 import java.util.Map;
 
+import com.spectralogic.ds3client.utils.StringExtensions;
+
 /**
  * Implementation of MetaDataAcess Interface
  * Used to store meta data on Server
  */
 public class MetadataAccessImpl implements MetadataAccess {
     private final ImmutableMap<String, Path> fileMapper;
+    private final FailureEventListener failureEventListener;
+    private final String httpEndpoint;
 
     public MetadataAccessImpl(final ImmutableMap<String, Path> fileMapper) {
+        this(fileMapper, null, null);
+    }
+
+    public MetadataAccessImpl(final ImmutableMap<String, Path> fileMapper,
+                              final FailureEventListener failureEventListener,
+                              final String httpEndpoint)
+    {
         this.fileMapper = fileMapper;
+        this.failureEventListener = failureEventListener;
+        this.httpEndpoint = httpEndpoint;
     }
 
     @Override
@@ -44,9 +59,18 @@ public class MetadataAccessImpl implements MetadataAccess {
         final Path file = fileMapper.get(filename);
         try {
             return storeMetaData(file);
-        } catch (final IOException e) {
-            throw new RuntimeException("Error recording metadata.", e);
+        } catch (final Throwable t) {
+            if (failureEventListener != null) {
+                failureEventListener.onFailure(FailureEvent.builder()
+                        .withObjectNamed(filename)
+                        .withCausalException(t)
+                        .doingWhat(FailureEvent.FailureActivity.RecordingMetadata)
+                        .usingSystemWithEndpoint(StringExtensions.getStringOrDefault(httpEndpoint, " "))
+                        .build());
+            }
         }
+
+        return ImmutableMap.of();
     }
 
     /**

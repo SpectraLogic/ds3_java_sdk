@@ -58,7 +58,9 @@ public class FailureEvent {
 
     public enum FailureActivity {
         PuttingObject("putting object"),
-        GettingObject("getting object");
+        GettingObject("getting object"),
+        RecordingMetadata("recording metadata"),
+        RestoringMetadata("restoring metadata");
 
         private final String activityText;
 
