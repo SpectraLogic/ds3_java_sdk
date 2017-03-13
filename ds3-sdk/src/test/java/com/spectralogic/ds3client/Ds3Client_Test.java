@@ -886,6 +886,26 @@ public class Ds3Client_Test {
     }
 
     @Test
+    public void testSettingUserAgent() {
+        final String userAgent = "Gracie Eskimo";
+
+        final Ds3Client client = Ds3ClientBuilder.create("endpoint", new Credentials("access", "key"))
+                .withUserAgent(userAgent)
+                .build();
+
+        final JobNode node = new JobNode();
+        node.setEndPoint("newEndpoint");
+        node.setHttpPort(80);
+        node.setHttpsPort(443);
+
+        final Ds3Client newClient = client.newForNode(node);
+        assertThat(newClient.getConnectionDetails().getEndpoint(), is("newEndpoint:443"));
+        assertThat(newClient.getConnectionDetails().getCredentials().getClientId(), is("access"));
+        assertThat(newClient.getConnectionDetails().getCredentials().getKey(), is("key"));
+        assertThat(newClient.getConnectionDetails().getUserAgent(), is(userAgent));
+    }
+
+    @Test
     public void VerifySystemHealthSpectraS3() throws IOException {
         final String responsePayload = "<Data><MsRequiredToVerifyDataPlannerHealth>0</MsRequiredToVerifyDataPlannerHealth></Data>";
 

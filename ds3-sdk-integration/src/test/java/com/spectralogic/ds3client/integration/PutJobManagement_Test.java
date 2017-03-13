@@ -17,6 +17,7 @@ package com.spectralogic.ds3client.integration;
 
 import com.google.common.collect.Lists;
 import com.spectralogic.ds3client.Ds3Client;
+import com.spectralogic.ds3client.Ds3ClientBuilder;
 import com.spectralogic.ds3client.Ds3ClientImpl;
 import com.spectralogic.ds3client.IntValue;
 import com.spectralogic.ds3client.commands.*;
@@ -829,8 +830,16 @@ public class PutJobManagement_Test {
 
     private void transferAndCheckFileContent(final int maxNumObjectTransferAttempts,
                                              final ObjectTransferExceptionHandler objectTransferExceptionHandler)
-            throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, IOException, URISyntaxException {
-        final Ds3ClientShim ds3ClientShim = new Ds3ClientShim((Ds3ClientImpl) client);
+            throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, IOException, URISyntaxException
+    {
+        final String userAgent = "Agent Provocateur";
+
+        final Ds3Client clientWithUserAgent = Ds3ClientBuilder.fromEnv()
+                .withUserAgent(userAgent)
+                .withHttps(false)
+                .build();
+
+        final Ds3ClientShim ds3ClientShim = new Ds3ClientShim((Ds3ClientImpl) clientWithUserAgent);
 
         final String tempPathPrefix = null;
         final Path tempDirectory = Files.createTempDirectory(Paths.get("."), tempPathPrefix);

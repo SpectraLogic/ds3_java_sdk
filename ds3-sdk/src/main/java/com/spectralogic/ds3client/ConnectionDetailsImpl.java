@@ -18,6 +18,7 @@ package com.spectralogic.ds3client;
 import com.spectralogic.ds3client.models.common.Credentials;
 import com.spectralogic.ds3client.models.JobNode;
 import com.spectralogic.ds3client.networking.ConnectionDetails;
+import com.spectralogic.ds3client.utils.Guard;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,6 +26,8 @@ import java.net.URI;
 
 class ConnectionDetailsImpl implements ConnectionDetails {
     static private final Logger LOG = LoggerFactory.getLogger(ConnectionDetailsImpl.class);
+
+    private static final String DEFAULT_USER_AGENT_HEADER_VALUE = "ds3_java_sdk";
 
     static class Builder implements com.spectralogic.ds3client.utils.Builder<ConnectionDetailsImpl> {
 
@@ -37,6 +40,7 @@ class ConnectionDetailsImpl implements ConnectionDetails {
         private int connectionTimeoutInMillis = 5 * 1000;
         private int socketTimeoutInMillis = 60 * 60 * 1000;
         private boolean certificateVerification;
+        private String userAgent;
 
         private Builder(final String endpoint, final Credentials credentials) {
             this.endpoint = endpoint;
@@ -78,6 +82,11 @@ class ConnectionDetailsImpl implements ConnectionDetails {
             return this;
         }
 
+        public Builder withUserAgent(final String userAgent) {
+            this.userAgent = userAgent;
+            return this;
+        }
+
         @Override
         public ConnectionDetailsImpl build() {
             return new ConnectionDetailsImpl(this);
@@ -100,7 +109,8 @@ class ConnectionDetailsImpl implements ConnectionDetails {
             .withBufferSize(connectionDetails.getBufferSize())
             .withConnectionTimeout(connectionDetails.getConnectionTimeout())
             .withSocketTimeout(connectionDetails.getSocketTimeout())
-            .withProxy(connectionDetails.getProxy());
+            .withProxy(connectionDetails.getProxy())
+            .withUserAgent(connectionDetails.getUserAgent());
 
         return connectionBuilder.build();
     }
@@ -119,6 +129,7 @@ class ConnectionDetailsImpl implements ConnectionDetails {
     private final int connectionTimeoutInMillis;
     private final int socketTimeoutInMillis;
     private final boolean certificateVerification;
+    private final String userAgent;
 
     static Builder builder(final String uriEndpoint, final Credentials credentials) {
         return new Builder(uriEndpoint, credentials);
@@ -134,6 +145,7 @@ class ConnectionDetailsImpl implements ConnectionDetails {
         this.connectionTimeoutInMillis = builder.connectionTimeoutInMillis;
         this.certificateVerification = builder.certificateVerification;
         this.socketTimeoutInMillis = builder.socketTimeoutInMillis;
+        this.userAgent = builder.userAgent;
     }
 
     @Override
@@ -179,6 +191,11 @@ class ConnectionDetailsImpl implements ConnectionDetails {
     @Override
     public boolean isCertificateVerification() {
         return certificateVerification;
+    }
+
+    @Override
+    public String getUserAgent() {
+        return Guard.isStringNullOrEmpty(userAgent) ? DEFAULT_USER_AGENT_HEADER_VALUE : userAgent;
     }
 
     public String toString() {

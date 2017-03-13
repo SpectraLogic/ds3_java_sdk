@@ -238,6 +238,11 @@ public class NetUtils_Test {
             public boolean isCertificateVerification() {
                 return false;
             }
+
+            @Override
+            public String getUserAgent() {
+                return null;
+            }
         };
 
         final URL url = NetUtils.buildUrl(details, "/path");
