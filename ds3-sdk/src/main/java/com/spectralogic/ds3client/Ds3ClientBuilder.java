@@ -50,6 +50,7 @@ public class Ds3ClientBuilder implements Builder<Ds3Client> {
     private int connectionTimeoutInMillis = 5 * 1000;
     private int bufferSizeInBytes = 1024 * 1024;
     private int socketTimeoutInMillis = 1000 * 60 * 60;
+    private String userAgent;
 
     private Ds3ClientBuilder(final String endpoint, final Credentials credentials) throws IllegalArgumentException {
         if (Guard.isStringNullOrEmpty(endpoint)) {
@@ -189,6 +190,15 @@ public class Ds3ClientBuilder implements Builder<Ds3Client> {
     }
 
     /**
+     * The value to send in the http User-Agent header field.
+     * @param userAgent If null or empty, the User-Agent header field will contain a default value.
+     */
+    public Ds3ClientBuilder withUserAgent(final String userAgent) {
+        this.userAgent = userAgent;
+        return this;
+    }
+
+    /**
      * Returns a new Ds3Client instance.
      */
     @Override
@@ -203,7 +213,8 @@ public class Ds3ClientBuilder implements Builder<Ds3Client> {
                 .withRedirectRetries(this.retries)
                 .withBufferSize(this.bufferSizeInBytes)
                 .withConnectionTimeout(this.connectionTimeoutInMillis)
-                .withSocketTimeout(this.socketTimeoutInMillis);
+                .withSocketTimeout(this.socketTimeoutInMillis)
+                .withUserAgent(this.userAgent);
 
         final NetworkClient netClient = new NetworkClientImpl(connBuilder.build());
         return new Ds3ClientImpl(netClient);

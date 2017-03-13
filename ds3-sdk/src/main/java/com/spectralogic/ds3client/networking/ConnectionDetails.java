@@ -44,4 +44,6 @@ public interface ConnectionDetails {
      * certificate authentication.
      */
     boolean isCertificateVerification();
+
+    String getUserAgent();
 }
