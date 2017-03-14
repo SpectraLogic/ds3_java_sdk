@@ -28,6 +28,8 @@ public final class PropertyUtils {
     private static final String SDK_VERSION_PROPERTY_NAME = "version";
     private static final String PROPERTIES_FILE_NAME = "ds3_sdk.properties";
 
+    private static String versionProperty = "";
+
     private PropertyUtils() {}
 
     /**
@@ -35,7 +37,9 @@ public final class PropertyUtils {
      * @return The sdk version, if we can find one, an empty string otherwise.
      */
     public static String getSdkVersion() {
-        String versionProperty = "";
+        if ( ! Guard.isStringNullOrEmpty(versionProperty)) {
+            return versionProperty;
+        }
 
         final Properties properties = new Properties();
 
