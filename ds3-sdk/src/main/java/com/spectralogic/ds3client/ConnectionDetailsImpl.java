@@ -19,20 +19,16 @@ import com.spectralogic.ds3client.models.common.Credentials;
 import com.spectralogic.ds3client.models.JobNode;
 import com.spectralogic.ds3client.networking.ConnectionDetails;
 import com.spectralogic.ds3client.utils.Guard;
+import com.spectralogic.ds3client.utils.PropertyUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.net.URI;
-import java.util.Properties;
 
 class ConnectionDetailsImpl implements ConnectionDetails {
     static private final Logger LOG = LoggerFactory.getLogger(ConnectionDetailsImpl.class);
 
     private static final String DEFAULT_USER_AGENT_HEADER_VALUE = "ds3_java_sdk";
-    private static final String SDK_VERSION_PROPERTY_NAME = "version";
-    private static final String PROPERTIES_FILE_NAME = "ds3_sdk.properties";
 
     static class Builder implements com.spectralogic.ds3client.utils.Builder<ConnectionDetailsImpl> {
 
@@ -204,23 +200,13 @@ class ConnectionDetailsImpl implements ConnectionDetails {
     }
 
     private String getDefaultSdkVersion() {
-        String versionProperty = "";
+        final String sdkVersion = PropertyUtils.getSdkVersion();
 
-        final Properties properties = new Properties();
-
-        try (final InputStream propertiesStream = ConnectionDetailsImpl.class.getClassLoader().getResourceAsStream(PROPERTIES_FILE_NAME)) {
-            if (propertiesStream != null) {
-                properties.load(propertiesStream);
-                final String versionFromPropFile = properties.get(SDK_VERSION_PROPERTY_NAME).toString();
-                if (!Guard.isStringNullOrEmpty(versionFromPropFile)) {
-                    versionProperty = "-" + versionFromPropFile;
-                }
-            }
-        } catch (final IOException e) {
-            LOG.warn("Could not read properties file.", e);
+        if (Guard.isStringNullOrEmpty(sdkVersion)) {
+            return DEFAULT_USER_AGENT_HEADER_VALUE;
         }
 
-        return DEFAULT_USER_AGENT_HEADER_VALUE + versionProperty;
+        return DEFAULT_USER_AGENT_HEADER_VALUE + "-" + sdkVersion;
     }
 
     public String toString() {
