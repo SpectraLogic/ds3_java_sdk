@@ -33,6 +33,7 @@ import com.spectralogic.ds3client.utils.ByteArraySeekableByteChannel;
 import com.spectralogic.ds3client.utils.ResourceUtils;
 import org.junit.Before;
 import org.junit.Test;
+import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -925,7 +926,7 @@ public class Ds3Client_Test {
         final String userAgent = newClient.getConnectionDetails().getUserAgent();
         final String[] userAgentFields = userAgent.split("-");
 
-        assertThat(userAgentFields.length, is(2));
+        assertTrue(userAgentFields.length >= 2);
 
         // look for a pattern like 3.4.0, but leave open the possibility of a string like 3.4.0-SNAPSHOT
         final Pattern matchPattern = Pattern.compile("\\d+\\.\\d+\\.\\d+");
