@@ -18,6 +18,7 @@ package com.spectralogic.ds3client.utils;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
+import java.util.concurrent.atomic.AtomicReference;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,7 +29,7 @@ public final class PropertyUtils {
     private static final String SDK_VERSION_PROPERTY_NAME = "version";
     private static final String PROPERTIES_FILE_NAME = "ds3_sdk.properties";
 
-    private static String versionProperty = "";
+    private static AtomicReference<String> versionProperty = new AtomicReference<>("");
 
     private PropertyUtils() {}
 
@@ -37,8 +38,8 @@ public final class PropertyUtils {
      * @return The sdk version, if we can find one, an empty string otherwise.
      */
     public static String getSdkVersion() {
-        if ( ! Guard.isStringNullOrEmpty(versionProperty)) {
-            return versionProperty;
+        if ( ! Guard.isStringNullOrEmpty(versionProperty.get())) {
+            return versionProperty.get();
         }
 
         final Properties properties = new Properties();
@@ -48,13 +49,13 @@ public final class PropertyUtils {
                 properties.load(propertiesStream);
                 final String versionFromPropFile = properties.get(SDK_VERSION_PROPERTY_NAME).toString();
                 if (!Guard.isStringNullOrEmpty(versionFromPropFile)) {
-                    versionProperty = versionFromPropFile;
+                    versionProperty.set(versionFromPropFile);
                 }
             }
         } catch (final IOException e) {
             LOG.warn("Could not read properties file.", e);
         }
 
-        return versionProperty;
+        return versionProperty.get();
     }
 }
