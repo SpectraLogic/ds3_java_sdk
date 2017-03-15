@@ -33,6 +33,7 @@ import com.spectralogic.ds3client.utils.ByteArraySeekableByteChannel;
 import com.spectralogic.ds3client.utils.ResourceUtils;
 import org.junit.Before;
 import org.junit.Test;
+import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -44,6 +45,8 @@ import java.nio.file.StandardOpenOption;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -903,6 +906,33 @@ public class Ds3Client_Test {
         assertThat(newClient.getConnectionDetails().getCredentials().getClientId(), is("access"));
         assertThat(newClient.getConnectionDetails().getCredentials().getKey(), is("key"));
         assertThat(newClient.getConnectionDetails().getUserAgent(), is(userAgent));
+    }
+
+    @Test
+    public void testGettingDefaultUserAgent() {
+        final Ds3Client client = Ds3ClientBuilder.create("endpoint", new Credentials("access", "key"))
+                .build();
+
+        final JobNode node = new JobNode();
+        node.setEndPoint("newEndpoint");
+        node.setHttpPort(80);
+        node.setHttpsPort(443);
+
+        final Ds3Client newClient = client.newForNode(node);
+        assertThat(newClient.getConnectionDetails().getEndpoint(), is("newEndpoint:443"));
+        assertThat(newClient.getConnectionDetails().getCredentials().getClientId(), is("access"));
+        assertThat(newClient.getConnectionDetails().getCredentials().getKey(), is("key"));
+
+        final String userAgent = newClient.getConnectionDetails().getUserAgent();
+        final String[] userAgentFields = userAgent.split("-");
+
+        assertTrue(userAgentFields.length >= 2);
+
+        // look for a pattern like 3.4.0, but leave open the possibility of a string like 3.4.0-SNAPSHOT
+        final Pattern matchPattern = Pattern.compile("\\d+\\.\\d+\\.\\d+");
+        final Matcher matcher = matchPattern.matcher(userAgentFields[1]);
+
+        assertThat(matcher.find(), is(true));
     }
 
     @Test

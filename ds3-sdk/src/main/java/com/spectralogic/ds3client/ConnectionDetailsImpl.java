@@ -19,6 +19,7 @@ import com.spectralogic.ds3client.models.common.Credentials;
 import com.spectralogic.ds3client.models.JobNode;
 import com.spectralogic.ds3client.networking.ConnectionDetails;
 import com.spectralogic.ds3client.utils.Guard;
+import com.spectralogic.ds3client.utils.PropertyUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -195,7 +196,17 @@ class ConnectionDetailsImpl implements ConnectionDetails {
 
     @Override
     public String getUserAgent() {
-        return Guard.isStringNullOrEmpty(userAgent) ? DEFAULT_USER_AGENT_HEADER_VALUE : userAgent;
+        return Guard.isStringNullOrEmpty(userAgent) ? getDefaultSdkVersion() : userAgent;
+    }
+
+    private String getDefaultSdkVersion() {
+        final String sdkVersion = PropertyUtils.getSdkVersion();
+
+        if (Guard.isStringNullOrEmpty(sdkVersion)) {
+            return DEFAULT_USER_AGENT_HEADER_VALUE;
+        }
+
+        return DEFAULT_USER_AGENT_HEADER_VALUE + "-" + sdkVersion;
     }
 
     public String toString() {

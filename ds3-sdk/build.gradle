@@ -57,6 +57,8 @@ task genConfigProperties {
 
         configFile.withWriter{out ->
             out.writeLine("productionBuild=" + productionBuild.toString())
+            out.writeLine("version=" + version.toString())
+            out.writeLine("build.date=" + new Date().toString())
         }
     }
 }
