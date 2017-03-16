@@ -20,5 +20,6 @@ fi
 echo "cd ds3_java_sdk"
 cd ds3_java_sdk
 
+./gradlew jar
 ./gradlew test
 
