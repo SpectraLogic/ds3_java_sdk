@@ -27,9 +27,13 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 import java.util.UUID;
 
-public final class StrategyUtils {
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
+public final class StrategyUtils {
     private static final Logger LOG = LoggerFactory.getLogger(StrategyUtils.class);
+
+    private static final Map<JobNode, Ds3Client> jobNodeDs3ClientMap = new ConcurrentHashMap<>();
 
     public static Ds3Client getClient(final ImmutableMap<UUID, JobNode> nodeMap, final UUID nodeId, final Ds3Client mainClient) {
         final JobNode jobNode = nodeMap.get(nodeId);
@@ -39,7 +43,14 @@ public final class StrategyUtils {
             return mainClient;
         }
 
-        return mainClient.newForNode(jobNode);
+        Ds3Client ds3Client = jobNodeDs3ClientMap.get(jobNode);
+
+        if (ds3Client == null) {
+            ds3Client = mainClient.newForNode(jobNode);
+            jobNodeDs3ClientMap.put(jobNode, ds3Client);
+        }
+
+        return ds3Client;
     }
 
     public static ImmutableMap<UUID, JobNode> buildNodeMap(final Iterable<JobNode> nodes) {

@@ -90,16 +90,8 @@ public class NetworkClientImpl implements NetworkClient {
     final private HttpHost host;
 
     public NetworkClientImpl(final ConnectionDetails connectionDetails) {
-        if (connectionDetails == null) throw new AssertionError("ConnectionDetails cannot be null");
-        try {
-            this.connectionDetails = connectionDetails;
-            this.host = buildHost(connectionDetails);
-            this.client = createDefaultClient(connectionDetails);
-        } catch (final MalformedURLException e) {
-            throw new RuntimeException(e);
-        }
+        this(connectionDetails, createDefaultClient(connectionDetails));
     }
-
 
     public NetworkClientImpl(final ConnectionDetails connectionDetails, final CloseableHttpClient client) {
         if (connectionDetails == null) throw new AssertionError("ConnectionDetails cannot be null");
@@ -112,7 +104,6 @@ public class NetworkClientImpl implements NetworkClient {
             throw new RuntimeException(e);
         }
     }
-
 
     private static CloseableHttpClient createDefaultClient(final ConnectionDetails connectionDetails) {
 
