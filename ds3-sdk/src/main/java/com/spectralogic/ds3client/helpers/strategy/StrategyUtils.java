@@ -53,6 +53,10 @@ public final class StrategyUtils {
         return ds3Client;
     }
 
+    public static void transferComplete() {
+        jobNodeDs3ClientMap.clear();
+    }
+
     public static ImmutableMap<UUID, JobNode> buildNodeMap(final Iterable<JobNode> nodes) {
         final ImmutableMap.Builder<UUID, JobNode> nodeMap = ImmutableMap.builder();
         for (final JobNode node: nodes) {

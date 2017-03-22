@@ -26,6 +26,7 @@ import com.spectralogic.ds3client.helpers.events.EventRunner;
 import com.spectralogic.ds3client.helpers.events.FailureEvent;
 import com.spectralogic.ds3client.helpers.strategy.BlobStrategy;
 import com.spectralogic.ds3client.helpers.strategy.GetStreamerStrategy;
+import com.spectralogic.ds3client.helpers.strategy.StrategyUtils;
 import com.spectralogic.ds3client.helpers.util.PartialObjectHelpers;
 import com.spectralogic.ds3client.models.*;
 import com.spectralogic.ds3client.models.common.Range;
@@ -131,6 +132,8 @@ class ReadJobImpl extends JobImpl {
         } catch (final Throwable t) {
             emitFailureEvent(makeFailureEvent(FailureEvent.FailureActivity.GettingObject, t, masterObjectList.getObjects().get(0)));
             throw t;
+        } finally {
+            StrategyUtils.transferComplete();
         }
     }
 

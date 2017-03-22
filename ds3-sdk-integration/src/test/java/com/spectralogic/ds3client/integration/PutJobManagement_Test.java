@@ -1044,4 +1044,37 @@ public class PutJobManagement_Test {
             deleteAllContents(client, BUCKET_NAME);
         }
     }
+
+    @Test
+    public void testPutting15000Files() throws IOException, URISyntaxException {
+        try {
+            final String directory = "little_files/";
+
+            final List<String> fileNames = new ArrayList<>(15001);
+            fileNames.add("tape.png");
+
+            for (int i = 1; i <= 15000; ++i) {
+                fileNames.add("tape" + i + ".png");
+            }
+
+            final List<Ds3Object> objects = new ArrayList<>();
+
+            for (final String fileName : fileNames) {
+                final Path objPath = ResourceUtils.loadFileResource(directory + fileName);
+                final long fileSize = Files.size(objPath);
+                final Ds3Object obj = new Ds3Object(fileName, fileSize);
+
+                objects.add(obj);
+            }
+
+            final Ds3ClientHelpers ds3ClientHelpers = Ds3ClientHelpers.wrap(client);
+            final Ds3ClientHelpers.Job writeJob = ds3ClientHelpers.startWriteJob(BUCKET_NAME, objects);
+
+            writeJob.transfer(new FileObjectPutter(ResourceUtils.loadFileResource(directory)));
+        } catch (final org.apache.http.client.ClientProtocolException e) {
+            fail("This test makes sure that we don't run out of connections when transferring lots of small files.  Oops");
+        } finally {
+            deleteAllContents(client, BUCKET_NAME);
+        }
+    }
 }
