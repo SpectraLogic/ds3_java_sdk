@@ -1047,33 +1047,61 @@ public class PutJobManagement_Test {
 
     @Test
     public void testPutting15000Files() throws IOException, URISyntaxException {
+        final String tempPathPrefix = null;
+        Path tempDirectory = Files.createTempDirectory(Paths.get("."), tempPathPrefix);
+
         try {
-            final String directory = "little_files/";
+            final String sourceDirectory = "little_files/";
+            final String sourceFileName = "tape.png";
+
+            final Path sourceFilePath = ResourceUtils.loadFileResource(sourceDirectory + sourceFileName);
+
+            Files.copy(sourceFilePath, Paths.get(tempDirectory.toString(), sourceFileName));
 
             final List<String> fileNames = new ArrayList<>(15001);
-            fileNames.add("tape.png");
+            fileNames.add(sourceFileName);
 
             for (int i = 1; i <= 15000; ++i) {
-                fileNames.add("tape" + i + ".png");
+                final String fileName = "tape" + i + ".png";
+                fileNames.add(fileName);
+                Files.copy(sourceFilePath, Paths.get(tempDirectory.toString(), fileName));
             }
 
-            final List<Ds3Object> objects = new ArrayList<>();
+            final List<Ds3Object> ds3Objects = new ArrayList<>();
 
             for (final String fileName : fileNames) {
-                final Path objPath = ResourceUtils.loadFileResource(directory + fileName);
-                final long fileSize = Files.size(objPath);
-                final Ds3Object obj = new Ds3Object(fileName, fileSize);
+                final Path filePath = Paths.get(tempDirectory.toString(), fileName);
+                final long fileSize = Files.size(filePath);
+                final Ds3Object ds3Object = new Ds3Object(fileName, fileSize);
 
-                objects.add(obj);
+                ds3Objects.add(ds3Object);
             }
 
             final Ds3ClientHelpers ds3ClientHelpers = Ds3ClientHelpers.wrap(client);
-            final Ds3ClientHelpers.Job writeJob = ds3ClientHelpers.startWriteJob(BUCKET_NAME, objects);
+            final Ds3ClientHelpers.Job writeJob = ds3ClientHelpers.startWriteJob(BUCKET_NAME, ds3Objects);
 
-            writeJob.transfer(new FileObjectPutter(ResourceUtils.loadFileResource(directory)));
+            writeJob.transfer(new FileObjectPutter(tempDirectory));
+
+            FileUtils.deleteDirectory(tempDirectory.toFile());
+
+            tempDirectory = Files.createTempDirectory(Paths.get("."), tempPathPrefix);
+
+            final Ds3ClientHelpers.Job readJob = ds3ClientHelpers.startReadJob(BUCKET_NAME, Lists.newArrayList(
+                    new Ds3Object(sourceFileName, Files.size(sourceFilePath))));
+
+            final GetJobSpectraS3Response jobSpectraS3Response = client.getJobSpectraS3(new GetJobSpectraS3Request(readJob.getJobId()));
+
+            assertThat(jobSpectraS3Response.getMasterObjectListResult(), is(notNullValue()));
+
+            readJob.transfer(new FileObjectGetter(tempDirectory));
+
+            final File originalFile = ResourceUtils.loadFileResource(sourceDirectory + sourceFileName).toFile();
+            final File fileCopiedFromBP = Paths.get(tempDirectory.toString(), sourceFileName).toFile();
+            assertTrue(FileUtils.contentEquals(originalFile, fileCopiedFromBP));
         } catch (final org.apache.http.client.ClientProtocolException e) {
             fail("This test makes sure that we don't run out of connections when transferring lots of small files.  Oops");
         } finally {
+            FileUtils.deleteDirectory(tempDirectory.toFile());
             deleteAllContents(client, BUCKET_NAME);
         }
     }
