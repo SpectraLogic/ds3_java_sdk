@@ -69,9 +69,15 @@ public class PutStreamerStrategy extends BlobStrategy {
         }).transform(new Function<BulkObject, JobPart>() {
             @Nullable
             @Override
-            public JobPart apply(@Nullable final BulkObject input) {
+            public JobPart apply(@Nullable final BulkObject blob) {
+                return new JobPart(getClient(), blob);
 
-                return new JobPart(StrategyUtils.getClient(uuidJobNodeImmutableMap,nextChunk.getNodeId(), getClient()), input);
+                // TODO: When we get to the point where BP enables clustering, we'll want to be able to get the
+                // client connection info correct for the server on which a chunk resides. StrategyUtils.getClient
+                // appears to work to support the clustering scenario, but we don't need it right now, and holding
+                // connection info in a collection potentially exposes lifetime management issues that we haven't
+                // fully explored.
+                // return new JobPart(StrategyUtils.getClient(uuidJobNodeImmutableMap,nextChunk.getNodeId(), getClient()), input);
             }
         });
     }
