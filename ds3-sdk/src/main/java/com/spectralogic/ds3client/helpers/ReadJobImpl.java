@@ -132,8 +132,6 @@ class ReadJobImpl extends JobImpl {
         } catch (final Throwable t) {
             emitFailureEvent(makeFailureEvent(FailureEvent.FailureActivity.GettingObject, t, masterObjectList.getObjects().get(0)));
             throw t;
-        } finally {
-            StrategyUtils.transferComplete();
         }
     }
 

@@ -28,14 +28,14 @@ import java.util.List;
 import java.util.UUID;
 
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.WeakHashMap;
 
 public final class StrategyUtils {
     private static final Logger LOG = LoggerFactory.getLogger(StrategyUtils.class);
 
-    private static final Map<JobNode, Ds3Client> jobNodeDs3ClientMap = new ConcurrentHashMap<>();
+    private static final Map<JobNode, Ds3Client> jobNodeDs3ClientMap = new WeakHashMap<>();
 
-    public static Ds3Client getClient(final ImmutableMap<UUID, JobNode> nodeMap, final UUID nodeId, final Ds3Client mainClient) {
+    public synchronized static Ds3Client getClient(final ImmutableMap<UUID, JobNode> nodeMap, final UUID nodeId, final Ds3Client mainClient) {
         final JobNode jobNode = nodeMap.get(nodeId);
 
         if (jobNode == null) {
@@ -51,10 +51,6 @@ public final class StrategyUtils {
         }
 
         return ds3Client;
-    }
-
-    public static void transferComplete() {
-        jobNodeDs3ClientMap.clear();
     }
 
     public static ImmutableMap<UUID, JobNode> buildNodeMap(final Iterable<JobNode> nodes) {

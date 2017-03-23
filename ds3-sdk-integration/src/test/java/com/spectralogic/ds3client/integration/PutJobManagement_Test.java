@@ -1062,9 +1062,9 @@ public class PutJobManagement_Test {
             fileNames.add(sourceFileName);
 
             for (int i = 1; i <= 15000; ++i) {
-                final String fileName = "tape" + i + ".png";
-                fileNames.add(fileName);
-                Files.copy(sourceFilePath, Paths.get(tempDirectory.toString(), fileName));
+                final String destinationFileName = "tape" + i + ".png";
+                fileNames.add(destinationFileName);
+                Files.copy(sourceFilePath, Paths.get(tempDirectory.toString(), destinationFileName));
             }
 
             final List<Ds3Object> ds3Objects = new ArrayList<>();
