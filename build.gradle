@@ -59,6 +59,7 @@ project(':ds3-metadata') {
 project(':ds3-sdk-integration') {
     dependencies {
         compile project(':ds3-sdk')
+        compile project(':ds3-metadata')
     }
 }
 

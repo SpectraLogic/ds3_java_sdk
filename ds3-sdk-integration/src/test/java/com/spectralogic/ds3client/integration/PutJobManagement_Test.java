@@ -15,6 +15,7 @@
 
 package com.spectralogic.ds3client.integration;
 
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.spectralogic.ds3client.Ds3Client;
 import com.spectralogic.ds3client.Ds3ClientBuilder;
@@ -35,10 +36,12 @@ import com.spectralogic.ds3client.integration.test.helpers.ABMTestHelper;
 import com.spectralogic.ds3client.integration.test.helpers.Ds3ClientShimFactory;
 import com.spectralogic.ds3client.integration.test.helpers.TempStorageIds;
 import com.spectralogic.ds3client.integration.test.helpers.TempStorageUtil;
+import com.spectralogic.ds3client.metadata.MetadataAccessImpl;
 import com.spectralogic.ds3client.models.*;
 import com.spectralogic.ds3client.models.bulk.Ds3Object;
 import com.spectralogic.ds3client.networking.FailedRequestException;
 import com.spectralogic.ds3client.utils.ByteArraySeekableByteChannel;
+import com.spectralogic.ds3client.utils.Platform;
 import com.spectralogic.ds3client.utils.ResourceUtils;
 
 import com.spectralogic.ds3client.integration.test.helpers.Ds3ClientShimFactory.ClientFailureType;
@@ -60,6 +63,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicInteger;
+
 import com.spectralogic.ds3client.integration.test.helpers.Ds3ClientShim;
 
 import static com.spectralogic.ds3client.integration.Util.RESOURCE_BASE_NAME;
@@ -1042,6 +1047,61 @@ public class PutJobManagement_Test {
         } finally {
             FileUtils.deleteDirectory(tempDirectory.toFile());
             deleteAllContents(client, BUCKET_NAME);
+        }
+    }
+
+    @Test
+    public void testThatMetadataAccessDoesNotTerminateTransfer() throws IOException, URISyntaxException, InterruptedException {
+        final String tempPathPrefix = null;
+        final Path tempDirectory = Files.createTempDirectory(Paths.get("."), tempPathPrefix);
+
+        final String fileName = "Gracie.txt";
+
+        final Path filePath = Paths.get(tempDirectory.toString(), fileName);
+
+        final List<Ds3Object> ds3Objects = new ArrayList<>();
+        ds3Objects.add(new Ds3Object(fileName));
+
+        try {
+            if ( ! Platform.isWindows()) {
+                tempDirectory.toFile().setExecutable(false);
+            } else {
+                Runtime.getRuntime().exec("icacls " + tempDirectory.toString() + "/deny Everyone(RD)").waitFor();
+            }
+
+            final int maxNumBlockAllocationRetries = 3;
+            final int maxNumObjectTransferAttempts = 3;
+
+            final Ds3ClientHelpers ds3ClientHelpers = Ds3ClientHelpers.wrap(client,
+                    maxNumBlockAllocationRetries,
+                    maxNumObjectTransferAttempts);
+
+            final AtomicInteger numTimesFailureHandlerCalled = new AtomicInteger(0);
+
+            final Ds3ClientHelpers.Job writeJob = ds3ClientHelpers.startWriteJob(BUCKET_NAME, ds3Objects);
+            writeJob.withMetadata(new MetadataAccessImpl(ImmutableMap.<String, Path>builder().put(fileName, filePath).build(),
+                    new FailureEventListener() {
+                        @Override
+                        public void onFailure(final FailureEvent failureEvent) {
+                            numTimesFailureHandlerCalled.incrementAndGet();
+                            assertEquals(FailureEvent.FailureActivity.RecordingMetadata, failureEvent.doingWhat());
+                            assertEquals(client.getConnectionDetails().getEndpoint(), failureEvent.usingSystemWithEndpoint());
+                        }
+                    },
+                    client.getConnectionDetails().getEndpoint()));
+            writeJob.transfer(new FileObjectGetter(Paths.get(".")));
+
+            assertEquals(1, numTimesFailureHandlerCalled.get());
+        } finally {
+            if ( ! Platform.isWindows()) {
+                tempDirectory.toFile().setExecutable(true);
+            } else {
+                Runtime.getRuntime().exec("icacls " + tempDirectory.toString() + "/grant Everyone(RD)").waitFor();
+            }
+
+            deleteAllContents(client, BUCKET_NAME);
+            FileUtils.deleteDirectory(tempDirectory.toFile());
+            Files.delete(Paths.get(fileName));
         }
     }
 
