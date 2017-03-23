@@ -27,14 +27,17 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 import java.util.UUID;
 
-import java.util.Map;
-import java.util.WeakHashMap;
-
 public final class StrategyUtils {
     private static final Logger LOG = LoggerFactory.getLogger(StrategyUtils.class);
 
-    private static final Map<JobNode, Ds3Client> jobNodeDs3ClientMap = new WeakHashMap<>();
+    // private static final Map<JobNode, Ds3Client> jobNodeDs3ClientMap = new WeakHashMap<>();
 
+    // TODO: When we get to the point where BP enables clustering, we'll want to be able to get the
+    // client connection info correct for the server on which a chunk resides. StrategyUtils.getClient
+    // appears to work to support the clustering scenario, but we don't need it right now, and holding
+    // connection info in a collection potentially exposes lifetime management issues that we haven't
+    // fully explored.
+    /*
     public synchronized static Ds3Client getClient(final ImmutableMap<UUID, JobNode> nodeMap, final UUID nodeId, final Ds3Client mainClient) {
         final JobNode jobNode = nodeMap.get(nodeId);
 
@@ -52,6 +55,7 @@ public final class StrategyUtils {
 
         return ds3Client;
     }
+    */
 
     public static ImmutableMap<UUID, JobNode> buildNodeMap(final Iterable<JobNode> nodes) {
         final ImmutableMap.Builder<UUID, JobNode> nodeMap = ImmutableMap.builder();
