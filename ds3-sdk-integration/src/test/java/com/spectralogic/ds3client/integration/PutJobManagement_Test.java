@@ -1,16 +1,16 @@
 /*
+ * ******************************************************************************
+ *   Copyright 2014-2017 Spectra Logic Corporation. All Rights Reserved.
+ *   Licensed under the Apache License, Version 2.0 (the "License"). You may not use
+ *   this file except in compliance with the License. A copy of the License is located at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *   or in the "license" file accompanying this file.
+ *   This file is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+ *   CONDITIONS OF ANY KIND, either express or implied. See the License for the
+ *   specific language governing permissions and limitations under the License.
  * ****************************************************************************
- *    Copyright 2014-2016 Spectra Logic Corporation. All Rights Reserved.
- *    Licensed under the Apache License, Version 2.0 (the "License"). You may not use
- *    this file except in compliance with the License. A copy of the License is located at
- *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
- *    or in the "license" file accompanying this file.
- *    This file is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
- *    CONDITIONS OF ANY KIND, either express or implied. See the License for the
- *    specific language governing permissions and limitations under the License.
- *  ****************************************************************************
  */
 
 package com.spectralogic.ds3client.integration;
@@ -1093,6 +1093,67 @@ public class PutJobManagement_Test {
             deleteAllContents(client, BUCKET_NAME);
             FileUtils.deleteDirectory(tempDirectory.toFile());
             Files.delete(Paths.get(fileName));
+        }
+    }
+
+    @Test
+    public void testPutting15000Files() throws IOException, URISyntaxException {
+        final String tempPathPrefix = null;
+        Path tempDirectory = Files.createTempDirectory(Paths.get("."), tempPathPrefix);
+
+        try {
+            final String sourceDirectory = "little_files/";
+            final String sourceFileName = "tape.png";
+
+            final Path sourceFilePath = ResourceUtils.loadFileResource(sourceDirectory + sourceFileName);
+
+            Files.copy(sourceFilePath, Paths.get(tempDirectory.toString(), sourceFileName));
+
+            final List<String> fileNames = new ArrayList<>(15001);
+            fileNames.add(sourceFileName);
+
+            for (int i = 1; i <= 15000; ++i) {
+                final String destinationFileName = "tape" + i + ".png";
+                fileNames.add(destinationFileName);
+                Files.copy(sourceFilePath, Paths.get(tempDirectory.toString(), destinationFileName));
+            }
+
+            final List<Ds3Object> ds3Objects = new ArrayList<>();
+
+            for (final String fileName : fileNames) {
+                final Path filePath = Paths.get(tempDirectory.toString(), fileName);
+                final long fileSize = Files.size(filePath);
+                final Ds3Object ds3Object = new Ds3Object(fileName, fileSize);
+
+                ds3Objects.add(ds3Object);
+            }
+
+            final Ds3ClientHelpers ds3ClientHelpers = Ds3ClientHelpers.wrap(client);
+            final Ds3ClientHelpers.Job writeJob = ds3ClientHelpers.startWriteJob(BUCKET_NAME, ds3Objects);
+
+            writeJob.transfer(new FileObjectPutter(tempDirectory));
+
+            FileUtils.deleteDirectory(tempDirectory.toFile());
+
+            tempDirectory = Files.createTempDirectory(Paths.get("."), tempPathPrefix);
+
+            final Ds3ClientHelpers.Job readJob = ds3ClientHelpers.startReadJob(BUCKET_NAME, Lists.newArrayList(
+                    new Ds3Object(sourceFileName, Files.size(sourceFilePath))));
+
+            final GetJobSpectraS3Response jobSpectraS3Response = client.getJobSpectraS3(new GetJobSpectraS3Request(readJob.getJobId()));
+
+            assertThat(jobSpectraS3Response.getMasterObjectListResult(), is(notNullValue()));
+
+            readJob.transfer(new FileObjectGetter(tempDirectory));
+
+            final File originalFile = ResourceUtils.loadFileResource(sourceDirectory + sourceFileName).toFile();
+            final File fileCopiedFromBP = Paths.get(tempDirectory.toString(), sourceFileName).toFile();
+            assertTrue(FileUtils.contentEquals(originalFile, fileCopiedFromBP));
+        } catch (final org.apache.http.client.ClientProtocolException e) {
+            fail("This test makes sure that we don't run out of connections when transferring lots of small files.  Oops");
+        } finally {
+            FileUtils.deleteDirectory(tempDirectory.toFile());
+            deleteAllContents(client, BUCKET_NAME);
         }
     }
 }
