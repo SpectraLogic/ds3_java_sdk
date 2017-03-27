@@ -152,7 +152,7 @@ public class MetadataAccessImpl_Test {
                         }
                     },
                     "localhost")
-                    .getMetadataValue(filePath.toString());
+                    .getMetadataValue("forceAFailureByUsingANonExistentFileBecauseTheDockerImageRunsAsRoot");
 
             assertEquals(1, numTimesFailureHandlerCalled.get());
         } finally {
