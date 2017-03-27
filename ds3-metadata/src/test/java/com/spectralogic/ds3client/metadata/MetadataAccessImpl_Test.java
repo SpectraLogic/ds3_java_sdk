@@ -20,6 +20,7 @@ import com.spectralogic.ds3client.helpers.FailureEventListener;
 import com.spectralogic.ds3client.helpers.events.FailureEvent;
 import com.spectralogic.ds3client.utils.Platform;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.junit.Assume;
 import org.junit.Test;
 import static org.junit.Assert.assertTrue;
@@ -27,6 +28,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -36,7 +38,12 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class MetadataAccessImpl_Test {
+    private static final Logger LOG = LoggerFactory.getLogger(MetadataAccessImpl_Test.class);
+
     @Test
     public void testGettingMetadata() throws IOException, InterruptedException {
         final String tempPathPrefix = null;
@@ -133,6 +140,9 @@ public class MetadataAccessImpl_Test {
 
             final AtomicInteger numTimesFailureHandlerCalled = new AtomicInteger(0);
 
+            try (final InputStream inputStream = Runtime.getRuntime().exec("ls -lR").getInputStream()) {
+                LOG.info(IOUtils.toString(inputStream));
+            }
             new MetadataAccessImpl(fileMapper.build(),
                     new FailureEventListener() {
                         @Override
