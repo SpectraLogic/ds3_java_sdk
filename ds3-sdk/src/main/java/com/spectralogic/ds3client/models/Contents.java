@@ -20,7 +20,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import java.lang.String;
 import java.util.Date;
-import java.lang.Object;
 
 @JacksonXmlRootElement(namespace = "Data")
 public class Contents {
@@ -42,7 +41,7 @@ public class Contents {
     private long size;
 
     @JsonProperty("StorageClass")
-    private Object storageClass;
+    private String storageClass;
 
     // Constructor
     public Contents() {
@@ -96,11 +95,11 @@ public class Contents {
     }
 
 
-    public Object getStorageClass() {
+    public String getStorageClass() {
         return this.storageClass;
     }
 
-    public void setStorageClass(final Object storageClass) {
+    public void setStorageClass(final String storageClass) {
         this.storageClass = storageClass;
     }
 
