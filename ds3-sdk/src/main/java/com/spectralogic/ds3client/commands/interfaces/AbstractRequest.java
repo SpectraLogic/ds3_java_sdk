@@ -75,7 +75,7 @@ public abstract class AbstractRequest implements Ds3Request {
             this.queryParams.remove(name);
         }
         else {
-            this.queryParams.put(name, SafeStringManipulation.safeUrlEscape(param));
+            this.queryParams.put(name, SafeStringManipulation.safeQueryParamEscape(param));
         }
     }
 }
