@@ -32,11 +32,32 @@ public final class SafeStringManipulation {
             "!$'()*,&=" +   // removed ; (so it will be escaped) and added / (so it will not)
             "@:/";          // Their urlFragmentEscaper uses URL_PATH_OTHER_SAFE_CHARS_LACKING_PLUS + "+/?"+
 
+    /**
+     * Specified as query safe characters in spec https://tools.ietf.org/html/rfc3986#section-3.4
+     * with the following exceptions:
+     *  Encoding: "&", ":", "+", "=" as they have special meaning
+     *  Not Encoding: "/"
+     */
+    private static final String DS3_QUERY_PARAM_SAFE_CHARS = "-._~!$'()*,;@/";
+
     private static final Escaper DS3_URL_FRAGMENT_ESCAPER =
             new PercentEscaper(DS3_URL_PATH_FRAGMENT_SAFE_CHARS, false);
 
+    private static final Escaper DS3_QUERY_PARAM_ESCAPER =
+            new PercentEscaper(DS3_QUERY_PARAM_SAFE_CHARS, false);
+
     private SafeStringManipulation() {
         //pass
+    }
+
+    /**
+     * Percent encodes user-provided query parameter values.
+     */
+    public static <T> String safeQueryParamEscape(final T obj) {
+        if (obj == null) {
+            return null;
+        }
+        return DS3_QUERY_PARAM_ESCAPER.escape(safeToString(obj));
     }
 
     public static <T> String safeUrlEscape(final T obj) {
@@ -58,6 +79,7 @@ public final class SafeStringManipulation {
         }
         return obj.toString();
     }
+
     public static Escaper getDs3Escaper() {
         // escaped characters in DS3 path and query parameter value segments
         return DS3_URL_FRAGMENT_ESCAPER;
