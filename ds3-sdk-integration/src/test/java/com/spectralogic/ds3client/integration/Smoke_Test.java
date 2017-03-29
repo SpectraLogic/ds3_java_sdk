@@ -177,6 +177,27 @@ public class Smoke_Test {
 
     }
 
+    @Test
+    public void getBucketWithAmpersandFolderName() throws IOException, URISyntaxException {
+        final String bucketName = "test_ampersand_folder";
+        final String folderName = "test&folder/";
+        try {
+            HELPERS.ensureBucketExists(bucketName, envDataPolicyId);
+            loadBookTestDataWithPrefix(client, bucketName, folderName);
+
+            final HeadObjectResponse response = client.headObject(new HeadObjectRequest(
+                    bucketName, folderName + "beowulf.txt"));
+            assertThat(response.getStatus(),
+                    is(HeadObjectResponse.Status.EXISTS));
+
+            final GetBucketResponse getBucket = client.getBucket(new GetBucketRequest(bucketName));
+            assertThat(getBucket.getListBucketResult(), is(notNullValue()));
+            assertThat(getBucket.getListBucketResult().getObjects().size(), is(4));
+        } finally {
+            deleteAllContents(client, bucketName);
+        }
+    }
+
     private static boolean s3ObjectExists(final List<S3Object> objects, final String fileName) {
         for (final S3Object obj : objects) {
             if (obj.getName().equals(fileName)) {
