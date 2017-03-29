@@ -108,4 +108,13 @@ public class SafeString_Manipulation_Test {
         assertThat(SafeStringManipulation.safeUrlEscape("one2three+four"), is("one2three%2Bfour"));
         assertThat(SafeStringManipulation.safeUrlEscape("one two three"), is("one%20two%20three"));
     }
+
+    @Test
+    public void safeQueryParamEscape_Test() {
+        assertThat(SafeStringManipulation.safeQueryParamEscape(null), is(nullValue()));
+        assertThat(SafeStringManipulation.safeQueryParamEscape(""), is(""));
+        assertThat(SafeStringManipulation.safeQueryParamEscape("one2three+four"), is("one2three%2Bfour"));
+        assertThat(SafeStringManipulation.safeQueryParamEscape("one two three"), is("one%20two%20three"));
+        assertThat(SafeStringManipulation.safeQueryParamEscape("one&two&three"), is("one%26two%26three"));
+    }
 }
