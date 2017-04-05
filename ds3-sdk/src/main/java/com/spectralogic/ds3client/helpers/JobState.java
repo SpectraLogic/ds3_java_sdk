@@ -15,39 +15,19 @@
 
 package com.spectralogic.ds3client.helpers;
 
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableMultimap;
-import com.spectralogic.ds3client.helpers.AutoCloseableCache.ValueBuilder;
-import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.ObjectChannelBuilder;
-import com.spectralogic.ds3client.helpers.channels.RangedSeekableByteChannel;
-import com.spectralogic.ds3client.helpers.channels.WindowedChannelFactory;
 import com.spectralogic.ds3client.models.BulkObject;
 import com.spectralogic.ds3client.models.Objects;
-import com.spectralogic.ds3client.models.common.Range;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-import java.nio.channels.SeekableByteChannel;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.concurrent.atomic.AtomicInteger;
 
-class JobState implements AutoCloseable {
-
-    private static final Logger LOG = LoggerFactory.getLogger(JobState.class);
-
+public class JobState {
     private final AtomicInteger objectsRemaining;
-    private final AutoCloseableCache<String, WindowedChannelFactory> channelCache;
     private final JobPartTracker partTracker;
 
-    public JobState(
-            final ObjectChannelBuilder channelBuilder,
-            final Collection<Objects> filteredChunks,
-            final JobPartTracker partTracker,
-            final ImmutableMap<String, ImmutableMultimap<BulkObject, Range>> objectRanges) {
+    public JobState(final Collection<Objects> filteredChunks,final JobPartTracker partTracker) {
         this.objectsRemaining = new AtomicInteger(getObjectCount(filteredChunks));
-        this.channelCache = buildCache(channelBuilder, objectRanges);
         this.partTracker = partTracker.attachObjectCompletedListener(new ObjectCompletedListenerImpl());
     }
     
@@ -65,48 +45,11 @@ class JobState implements AutoCloseable {
         return result.size();
     }
 
-    private static AutoCloseableCache<String, WindowedChannelFactory> buildCache(
-            final ObjectChannelBuilder channelBuilder,
-            final ImmutableMap<String, ImmutableMultimap<BulkObject, Range>> objectRanges) {
-        return new AutoCloseableCache<>(
-            new ValueBuilder<String, WindowedChannelFactory>() {
-                @Override
-                public WindowedChannelFactory get(final String key) {
-                    try {
-                        LOG.debug("Opening channel for: {}", key);
-                        return new WindowedChannelFactory(RangedSeekableByteChannel.wrap(channelBuilder.buildChannel(key), objectRanges.get(key), key));
-                    } catch (final IOException e) {
-                        throw new RuntimeException(e);
-                    }
-                }
-            }
-        );
-    }
-
-    @Override
-    public void close() throws Exception {
-        this.channelCache.close();
-    }
-
-    public JobPartTracker getPartTracker() {
-        return partTracker;
-    }
-
     private final class ObjectCompletedListenerImpl implements ObjectCompletedListener {
         @Override
         public void objectCompleted(final String name) {
             JobState.this.objectsRemaining.decrementAndGet();
-            try {
-                LOG.debug("Closing file: {}", name);
-                JobState.this.channelCache.close(name);
-            } catch (final Exception e) {
-                throw new RuntimeException(e);
-            }
         }
-    }
-
-    public SeekableByteChannel getChannel(final String name, final long offset, final long length) {
-        return this.channelCache.get(name).get(offset, length);
     }
 
     @Override

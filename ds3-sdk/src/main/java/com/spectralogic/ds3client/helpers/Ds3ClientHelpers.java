@@ -172,6 +172,36 @@ public abstract class Ds3ClientHelpers {
             throws IOException;
 
     /**
+     * Performs a bulk put job creation request and returns an {@link WriteJobImpl} configured to perform a "streamed"
+     * transfer.  "Streamed" means that channels and blobs are read or written sequentially.
+     * You would use a streaming strategy when it is important that the source or destination channel is read or
+     * written in a predictable, sequential order while a transfer is in progress.
+     * See {@link WriteJobImpl} for information on how to write the objects for the job.
+     *
+     * @throws IOException
+     */
+    public abstract Ds3ClientHelpers.Job startWriteJobUsingStreamedBehavior(final String bucket, final Iterable<Ds3Object> objectsToWrite)
+            throws IOException;
+
+    public abstract Ds3ClientHelpers.Job startWriteJobUsingStreamedBehavior(final String bucket, final Iterable<Ds3Object> objectsToWrite, final WriteJobOptions options)
+            throws IOException;
+
+    /**
+     * Performs a bulk put job creation request and returns an {@link WriteJobImpl} configured to perform a "random access"
+     * transfer.  "Random access" means that channels and blobs are read and written in no particular order.  You would use
+     * a random access strategy when it is not important that a source or destination channel is read or written
+     * in a predictable order while a transfer is in progress.
+     * See {@link WriteJobImpl} for information on how to write the objects for the job.
+     *
+     * @throws IOException
+     */
+    public abstract Ds3ClientHelpers.Job startWriteJobUsingRandomAccessBehavior(final String bucket, final Iterable<Ds3Object> objectsToWrite)
+            throws IOException;
+
+    public abstract Ds3ClientHelpers.Job startWriteJobUsingRandomAccessBehavior(final String bucket, final Iterable<Ds3Object> objectsToWrite, final WriteJobOptions options)
+            throws IOException;
+
+    /**
      * Performs a bulk get job creation request and returns an {@link ReadJobImpl}.
      * See {@link ReadJobImpl} for information on how to read the objects for the job.
      *
@@ -186,10 +216,37 @@ public abstract class Ds3ClientHelpers {
      *
      * @throws IOException
      */
-    public abstract Ds3ClientHelpers.Job startReadJob(
-            final String bucket,
-            final Iterable<Ds3Object> objectsToRead,
-            final ReadJobOptions options)
+    public abstract Ds3ClientHelpers.Job startReadJob(final String bucket, final Iterable<Ds3Object> objectsToRead, final ReadJobOptions options)
+            throws IOException;
+
+    /**
+     * Performs a bulk get job creation request and returns an {@link ReadJobImpl} configured to perform a "streamed"
+     * transfer.  "Streamed" means that channels and blobs are read or written sequentially.
+     * You would use a streaming strategy when it is important that the source or destination channel is read or
+     * written in a predictable, sequential order while a transfer is in progress.
+     * See {@link ReadJobImpl} for information on how to read the objects for the job.
+     *
+     * @throws IOException
+     */
+    public abstract Ds3ClientHelpers.Job startReadJobUsingStreamedBehavior(final String bucket, final Iterable<Ds3Object> objectsToRead)
+            throws IOException;
+
+    public abstract Ds3ClientHelpers.Job startReadJobUsingStreamedBehavior(final String bucket, final Iterable<Ds3Object> objectsToRead, final ReadJobOptions options)
+            throws IOException;
+
+    /**
+     * Performs a bulk get job creation request and returns an {@link ReadJobImpl} configured to perform a "random access"
+     * transfer.  "Random access" means that channels and blobs are read and written in no particular order.  You would use
+     * a random access strategy when it is not important that a source or destination channel is read or written
+     * in a predictable order while a transfer is in progress.
+     * See {@link ReadJobImpl} for information on how to read the objects for the job.
+     *
+     * @throws IOException
+     */
+    public abstract Ds3ClientHelpers.Job startReadJobUsingRandomAccessBehavior(final String bucket, final Iterable<Ds3Object> objectsToRead)
+            throws IOException;
+
+    public abstract Ds3ClientHelpers.Job startReadJobUsingRandomAccessBehavior(final String bucket, final Iterable<Ds3Object> objectsToRead, final ReadJobOptions options)
             throws IOException;
 
     /**
@@ -197,32 +254,90 @@ public abstract class Ds3ClientHelpers {
      *
      * @throws IOException
      */
-    public abstract Ds3ClientHelpers.Job startReadAllJob(final String bucket)
-            throws IOException;
+    public abstract Ds3ClientHelpers.Job startReadAllJob(final String bucket) throws IOException;
 
     /**
      * Performs a bulk get job creation request for all of the objects in the given bucket and returns an {@link ReadJobImpl}.
      *
      * @throws IOException
      */
-    public abstract Ds3ClientHelpers.Job startReadAllJob(final String bucket, final ReadJobOptions options)
-            throws IOException;
+    public abstract Ds3ClientHelpers.Job startReadAllJob(final String bucket, final ReadJobOptions options) throws IOException;
 
     /**
-     * Queries job information based on job id and returns a {@link ReadJobImpl} that can resume the job.
+     * Performs a bulk get job creation request for all of the objects in the given bucket and returns an {@link ReadJobImpl}
+     * configured to perform a "streamed" transfer.  "Streamed" means that channels and blobs are read or written sequentially.
+     * You would use a streaming strategy when it is important that the source or destination channel is read or
+     * written in a predictable, sequential order while a transfer is in progress.
+     *
      * @throws IOException
-     * @throws JobRecoveryException
      */
-    public abstract Ds3ClientHelpers.Job recoverWriteJob(final UUID jobId)
-            throws IOException, JobRecoveryException;
+    public abstract Ds3ClientHelpers.Job startReadAllJobUsingStreamedBehavior(final String bucket) throws IOException;
+    public abstract Ds3ClientHelpers.Job startReadAllJobUsingStreamedBehavior(final String bucket, final ReadJobOptions options) throws IOException;
+
+    /**
+     * Performs a bulk get job creation request for all of the objects in the given bucket and returns an {@link ReadJobImpl}
+     * configured to perform a "random access" transfer.  "Random access" means that channels and blobs are read and written in no particular order.  You would use
+     * a random access strategy when it is not important that a source or destination channel is read or written
+     * in a predictable order while a transfer is in progress.
+     *
+     * @throws IOException
+     */
+    public abstract Ds3ClientHelpers.Job startReadAllJobUsingRandomAccessBehavior(final String bucket) throws IOException;
+    public abstract Ds3ClientHelpers.Job startReadAllJobUsingRandomAccessBehavior(final String bucket, final ReadJobOptions options) throws IOException;
 
     /**
      * Queries job information based on job id and returns a {@link WriteJobImpl} that can resume the job.
      * @throws IOException
      * @throws JobRecoveryException
      */
-    public abstract Ds3ClientHelpers.Job recoverReadJob(final UUID jobId)
-            throws IOException, JobRecoveryException;
+    public abstract Ds3ClientHelpers.Job recoverWriteJob(final UUID jobId) throws IOException, JobRecoveryException;
+
+    /**
+     * Queries job information based on job id and returns a {@link WriteJobImpl} that can resume the job configured to
+     * perform a "streamed" transfer.  "Streamed" means that channels and blobs are read or written sequentially.
+     * You would use a streaming strategy when it is important that the source or destination channel is read or
+     * written in a predictable, sequential order while a transfer is in progress.
+     * @throws IOException
+     * @throws JobRecoveryException
+     */
+    public abstract Ds3ClientHelpers.Job recoverWriteJobUsingStreamedBehavior(final UUID jobId) throws IOException, JobRecoveryException;
+
+    /**
+     * Queries job information based on job id and returns a {@link WriteJobImpl} that can resume the job configured to
+     * perform a "random access" transfer.  "Random access" means that channels and blobs are read and written in no particular order.  You would use
+     * a random access strategy when it is not important that a source or destination channel is read or written
+     * in a predictable order while a transfer is in progress.
+     * @throws IOException
+     * @throws JobRecoveryException
+     */
+    public abstract Ds3ClientHelpers.Job recoverWriteJobUsingRandomAccessBehavior(final UUID jobId) throws IOException, JobRecoveryException;
+
+    /**
+     * Queries job information based on job id and returns a {@link WriteJobImpl} that can resume the job.
+     * @throws IOException
+     * @throws JobRecoveryException
+     */
+    public abstract Ds3ClientHelpers.Job recoverReadJob(final UUID jobId) throws IOException, JobRecoveryException;
+
+    /**
+     * Queries job information based on job id and returns a {@link WriteJobImpl} that can resume the job configured to
+     * performed a "streamed" transfer.  "Streamed" means that channels and blobs are read or written sequentially.
+     * You would use a streaming strategy when it is important that the source or destination channel is read or
+     * written in a predictable, sequential order while a transfer is in progress.
+     * @throws IOException
+     * @throws JobRecoveryException
+     */
+    public abstract Ds3ClientHelpers.Job recoverReadJobsingStreamedBehavior(final UUID jobId) throws IOException, JobRecoveryException;
+
+    /**
+     * Queries job information based on job id and returns a {@link WriteJobImpl} that can resume the job configured to
+     * perform a "random access" transfer.  "Random access" means that channels and blobs are read and written in no particular order.  You would use
+     * a random access strategy when it is not important that a source or destination channel is read or written
+     * in a predictable order while a transfer is in progress.
+     * @throws IOException
+     * @throws JobRecoveryException
+     */
+    public abstract Ds3ClientHelpers.Job recoverReadJobUsingRandomAccessBehavior(final UUID jobId) throws IOException, JobRecoveryException;
 
     /**
      * Ensures that a bucket exists.  The the bucket does not exist, it will be created.

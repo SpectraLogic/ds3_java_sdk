@@ -18,6 +18,9 @@ package com.spectralogic.ds3client.helpers;
 import com.spectralogic.ds3client.Ds3Client;
 import com.spectralogic.ds3client.models.BulkObject;
 
+/**
+ * A class that associates a blob with the Black Pearl on which it resides.
+ */
 public class JobPart {
     private final Ds3Client client;
     private final BulkObject bulkObject;

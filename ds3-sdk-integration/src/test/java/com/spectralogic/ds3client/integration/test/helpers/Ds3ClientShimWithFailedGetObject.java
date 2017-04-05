@@ -41,7 +41,6 @@ public class Ds3ClientShimWithFailedGetObject extends Ds3ClientShim {
 
     @Override
     public Ds3Client newForNode(final JobNode node) {
-        final ConnectionDetails newConnectionDetails;
         try {
             final Ds3Client newClient = super.newForNode(node);
             return new Ds3ClientShimWithFailedGetObject((Ds3ClientImpl)newClient);

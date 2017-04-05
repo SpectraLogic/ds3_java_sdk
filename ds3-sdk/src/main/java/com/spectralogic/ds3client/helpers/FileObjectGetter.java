@@ -48,8 +48,7 @@ public class FileObjectGetter implements ObjectChannelBuilder {
         return FileChannel.open(
             objectPath,
             StandardOpenOption.WRITE,
-            StandardOpenOption.CREATE,
-            StandardOpenOption.TRUNCATE_EXISTING
+            StandardOpenOption.CREATE
         );
     }
 }

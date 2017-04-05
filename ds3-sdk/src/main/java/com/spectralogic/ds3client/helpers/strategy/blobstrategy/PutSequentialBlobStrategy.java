@@ -13,7 +13,7 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3client.helpers.strategy;
+package com.spectralogic.ds3client.helpers.strategy.blobstrategy;
 
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
@@ -22,8 +22,8 @@ import com.google.common.collect.ImmutableMap;
 import com.spectralogic.ds3client.Ds3Client;
 import com.spectralogic.ds3client.commands.spectrads3.AllocateJobChunkSpectraS3Request;
 import com.spectralogic.ds3client.commands.spectrads3.AllocateJobChunkSpectraS3Response;
-import com.spectralogic.ds3client.exceptions.Ds3NoMoreRetriesException;
 import com.spectralogic.ds3client.helpers.JobPart;
+import com.spectralogic.ds3client.helpers.strategy.transferstrategy.EventDispatcher;
 import com.spectralogic.ds3client.models.BulkObject;
 import com.spectralogic.ds3client.models.JobNode;
 import com.spectralogic.ds3client.models.MasterObjectList;
@@ -39,19 +39,22 @@ import java.util.UUID;
 import static com.spectralogic.ds3client.helpers.strategy.StrategyUtils.buildNodeMap;
 import static com.spectralogic.ds3client.helpers.strategy.StrategyUtils.filterChunks;
 
-public class PutStreamerStrategy extends BlobStrategy {
-
-    private final static Logger LOG = LoggerFactory.getLogger(PutStreamerStrategy.class);
+/**
+ * A subclass of {@link BlobStrategy} used in put transfers.
+ */
+public class PutSequentialBlobStrategy extends AbstractBlobStrategy {
+    private final static Logger LOG = LoggerFactory.getLogger(PutSequentialBlobStrategy.class);
 
     private final ImmutableMap<UUID, JobNode> uuidJobNodeImmutableMap;
     private final Iterator<Objects> filteredChunkIterator;
 
-    private int retryAfterLeft;
-
-
-
-    public PutStreamerStrategy(final Ds3Client client, final MasterObjectList masterObjectList, final int retryAfter, final int retryDelay, final ChunkEventHandler chunkEventHandler) {
-        super(client, masterObjectList, retryAfter, retryDelay, chunkEventHandler);
+    public PutSequentialBlobStrategy(final Ds3Client client,
+                                     final MasterObjectList masterObjectList,
+                                     final EventDispatcher eventDispatcher,
+                                     final ChunkAttemptRetryBehavior retryBehavior,
+                                     final ChunkAttemptRetryDelayBehavior chunkAttemptRetryDelayBehavior)
+    {
+        super(client, masterObjectList, eventDispatcher, retryBehavior, chunkAttemptRetryDelayBehavior);
         this.filteredChunkIterator = filterChunks(masterObjectList.getObjects()).iterator();
         this.uuidJobNodeImmutableMap = buildNodeMap(masterObjectList.getNodes());
     }
@@ -70,7 +73,7 @@ public class PutStreamerStrategy extends BlobStrategy {
             @Nullable
             @Override
             public JobPart apply(@Nullable final BulkObject blob) {
-                return new JobPart(getClient(), blob);
+                return new JobPart(client(), blob);
 
                 // TODO: When we get to the point where BP enables clustering, we'll want to be able to get the
                 // client connection info correct for the server on which a chunk resides. StrategyUtils.getClient
@@ -80,11 +83,6 @@ public class PutStreamerStrategy extends BlobStrategy {
                 // return new JobPart(StrategyUtils.getClient(uuidJobNodeImmutableMap,nextChunk.getNodeId(), getClient()), input);
             }
         });
-    }
-
-    @Override
-    public void blobCompleted(final BulkObject bulkObject) {
-
     }
 
     private Objects allocateChunk(final Objects filtered) throws IOException {
@@ -97,31 +95,31 @@ public class PutStreamerStrategy extends BlobStrategy {
 
     private Objects tryAllocateChunk(final Objects filtered) throws IOException {
         final AllocateJobChunkSpectraS3Response response =
-                getClient().allocateJobChunkSpectraS3(new AllocateJobChunkSpectraS3Request(filtered.getChunkId().toString()));
+                client().allocateJobChunkSpectraS3(new AllocateJobChunkSpectraS3Request(filtered.getChunkId().toString()));
 
         LOG.info("AllocatedJobChunkResponse status: {}", response.getStatus().toString());
+
         switch (response.getStatus()) {
-        case ALLOCATED:
-            retryAfterLeft = getRetryAfter(); // Reset the number of retries to the initial value
-            return response.getObjectsResult();
-        case RETRYLATER:
-            try {
-                if (getRetryAfter() != -1 && retryAfterLeft == 0) {
-                    throw new Ds3NoMoreRetriesException(getRetryAfter());
+            case ALLOCATED:
+                retryBehavior().reset();
+                return response.getObjectsResult();
+            case RETRYLATER:
+                retryBehavior().invoke();
+
+                try {
+                    chunkAttemptRetryDelayBehavior().delay(response.getRetryAfterSeconds());
+                } catch (final InterruptedException e) {
+                    throw new RuntimeException(e);
                 }
-                retryAfterLeft--;
 
-                final int retryDelay = computeDelay(response.getRetryAfterSeconds());
-                getChunkEventHandler().emitWaitingForChunksEvents(retryDelay);
-
-                LOG.debug("Will retry allocate chunk call after {} seconds", retryDelay);
-                Thread.sleep(retryDelay * 1000);
                 return null;
-            } catch (final InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-        default:
-            assert false : "This line of code should be impossible to hit."; return null;
+            default:
+                assert false : "This line of code should be impossible to hit."; return null;
         }
+    }
+
+    @Override
+    public void blobCompleted(final BulkObject bulkObject) {
+
     }
 }

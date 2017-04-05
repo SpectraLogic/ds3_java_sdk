@@ -13,22 +13,19 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3client.helpers.strategy;
+package com.spectralogic.ds3client.helpers.strategy.blobstrategy;
 
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
-import com.google.common.base.Predicates;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Iterables;
 import com.spectralogic.ds3client.Ds3Client;
 import com.spectralogic.ds3client.commands.spectrads3.GetJobChunksReadyForClientProcessingSpectraS3Request;
 import com.spectralogic.ds3client.commands.spectrads3.GetJobChunksReadyForClientProcessingSpectraS3Response;
-import com.spectralogic.ds3client.exceptions.Ds3NoMoreRetriesException;
 import com.spectralogic.ds3client.helpers.JobPart;
+import com.spectralogic.ds3client.helpers.strategy.transferstrategy.EventDispatcher;
 import com.spectralogic.ds3client.models.BulkObject;
-import com.spectralogic.ds3client.models.JobNode;
 import com.spectralogic.ds3client.models.MasterObjectList;
 import com.spectralogic.ds3client.models.Objects;
 
@@ -38,16 +35,23 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
-public class GetStreamerStrategy extends BlobStrategy {
-
+/**
+ * A subclass of {@link BlobStrategy} used in get transfers.
+ */
+public class GetSequentialBlobStrategy extends AbstractBlobStrategy {
     private final Set<UUID> processedChunks;
 
     private final Object lock = new Object();
     private final Set<String> activeBlobs = new HashSet<>();
     private ImmutableList<JobPart> outstandingJobParts;
 
-    public GetStreamerStrategy(final Ds3Client client, final MasterObjectList masterObjectList, final int retryAfter, final int retryDelay, final BlobStrategy.ChunkEventHandler chunkEventHandler) {
-        super(client, masterObjectList, retryAfter, retryDelay, chunkEventHandler);
+    public GetSequentialBlobStrategy(final Ds3Client client,
+                                     final MasterObjectList masterObjectList,
+                                     final EventDispatcher eventDispatcher,
+                                     final ChunkAttemptRetryBehavior retryBehavior,
+                                     final ChunkAttemptRetryDelayBehavior chunkAttemptRetryDelayBehavior)
+    {
+        super(client, masterObjectList, eventDispatcher, retryBehavior, chunkAttemptRetryDelayBehavior);
         this.processedChunks = new HashSet<>();
     }
 
@@ -55,8 +59,6 @@ public class GetStreamerStrategy extends BlobStrategy {
     public Iterable<JobPart> getWork() throws IOException, InterruptedException {
 
         final MasterObjectList available = getAvailable();
-
-        final ImmutableMap<UUID, JobNode> jobNodes = StrategyUtils.buildNodeMap(available.getNodes());
 
         // filter any chunks that have been processed
         final FluentIterable<Objects> chunks = FluentIterable.from(available.getObjects());
@@ -76,7 +78,7 @@ public class GetStreamerStrategy extends BlobStrategy {
                     @Nullable
                     @Override
                     public JobPart apply(@Nullable final BulkObject blob) {
-                        return new JobPart(getClient(), blob);
+                        return new JobPart(client(), blob);
 
                         // TODO: When we get to the point where BP enables clustering, we'll want to be able to get the
                         // client connection info correct for the server on which a chunk resides. StrategyUtils.getClient
@@ -112,37 +114,21 @@ public class GetStreamerStrategy extends BlobStrategy {
         return nextWorkParts;
     }
 
-    private Iterable<JobPart> getNextIterable(final FluentIterable<JobPart> jobParts) {
-        if (outstandingJobParts == null) {
-            return jobParts;
-        }
-        return Iterables.concat(outstandingJobParts, jobParts);
-    }
-
-    @Override
-    public void blobCompleted(final BulkObject bulkObject) {
-        synchronized (lock) {
-            activeBlobs.remove(bulkObject.getName());
-        }
-    }
-
     private MasterObjectList getAvailable() throws IOException, InterruptedException {
-        int retryAfterLeft = getRetryAfter();
         do {
             final GetJobChunksReadyForClientProcessingSpectraS3Response availableJobChunks =
-                    getClient().getJobChunksReadyForClientProcessingSpectraS3(new GetJobChunksReadyForClientProcessingSpectraS3Request(getMasterObjectList().getJobId().toString()));
+                    client().getJobChunksReadyForClientProcessingSpectraS3(new GetJobChunksReadyForClientProcessingSpectraS3Request(masterObjectList().getJobId().toString()));
+
             switch (availableJobChunks.getStatus()) {
                 case AVAILABLE: {
+                    retryBehavior().reset();
                     return availableJobChunks.getMasterObjectListResult();
                 }
                 case RETRYLATER: {
-                    if (retryAfterLeft == 0) {
-                        throw new Ds3NoMoreRetriesException(getRetryAfter());
-                    }
-                    retryAfterLeft--;
-                    final int secondsToDelay = computeDelay(availableJobChunks.getRetryAfterSeconds());
-                    getChunkEventHandler().emitWaitingForChunksEvents(secondsToDelay);
-                    Thread.sleep(secondsToDelay * 1000);
+                    retryBehavior().invoke();
+
+                    chunkAttemptRetryDelayBehavior().delay(availableJobChunks.getRetryAfterSeconds());
+
                     continue;
                 }
                 default:
@@ -151,4 +137,21 @@ public class GetStreamerStrategy extends BlobStrategy {
         } while(true);
     }
 
+    private Iterable<JobPart> getNextIterable(final FluentIterable<JobPart> jobParts) {
+        if (outstandingJobParts == null) {
+            return jobParts;
+        }
+        return Iterables.concat(outstandingJobParts, jobParts);
+    }
+
+    /**
+     * Emit an event when a blob is transferred.
+     * @param bulkObject The transferred blob.
+     */
+    @Override
+    public void blobCompleted(final BulkObject bulkObject) {
+        synchronized (lock) {
+            activeBlobs.remove(bulkObject.getName());
+        }
+    }
 }
