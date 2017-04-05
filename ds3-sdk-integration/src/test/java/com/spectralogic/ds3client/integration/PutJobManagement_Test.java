@@ -1819,7 +1819,6 @@ public class PutJobManagement_Test {
         }
     }
 
-    /*
     @Test
     public void testPutting15000Files() throws IOException, URISyntaxException {
         final String tempPathPrefix = null;
@@ -1880,5 +1879,4 @@ public class PutJobManagement_Test {
             deleteAllContents(client, BUCKET_NAME);
         }
     }
-    */
 }

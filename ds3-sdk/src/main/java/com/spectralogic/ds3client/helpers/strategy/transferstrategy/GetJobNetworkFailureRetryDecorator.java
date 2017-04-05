@@ -26,7 +26,7 @@ public class GetJobNetworkFailureRetryDecorator implements TransferMethod {
     private final EventDispatcher eventDispatcher;
     private final ImmutableMap<String, ImmutableMultimap<BulkObject, Range>> rangesForBlobs;
 
-    private final Map<JobPart, TransferState> transferStateMap = new HashMap<>();
+    private final Map<JobPart, TransferState> transferMethodMap = new HashMap<>();
 
     public GetJobNetworkFailureRetryDecorator(final ChannelStrategy channelStrategy,
                                               final String bucketName,
@@ -52,7 +52,7 @@ public class GetJobNetworkFailureRetryDecorator implements TransferMethod {
     }
 
     private synchronized TransferMethod getOrMakeTransferMethod(final JobPart jobPart) {
-        TransferState transferState = transferStateMap.get(jobPart);
+        TransferState transferState = transferMethodMap.get(jobPart);
 
         if (transferState != null) {
             return transferState.getTransferMethod();
@@ -60,7 +60,7 @@ public class GetJobNetworkFailureRetryDecorator implements TransferMethod {
 
         transferState = makeInitialTransferState();
 
-        transferStateMap.put(jobPart, transferState);
+        transferMethodMap.put(jobPart, transferState);
 
         return transferState.getTransferMethod();
     }
@@ -79,7 +79,7 @@ public class GetJobNetworkFailureRetryDecorator implements TransferMethod {
     }
 
     private synchronized void makeTransferMethodForPartialRetry(final JobPart jobPart, final long numBytesTransferred) {
-        final TransferState existingTransferState = transferStateMap.get(jobPart);
+        final TransferState existingTransferState = transferMethodMap.get(jobPart);
 
         ImmutableCollection<Range> ranges = initializeRanges(jobPart.getBulkObject(), existingTransferState);
         final Long numBytesToTransfer = initializeNumBytesToTransfer(existingTransferState, ranges);
@@ -98,7 +98,7 @@ public class GetJobNetworkFailureRetryDecorator implements TransferMethod {
                         destinationChannelOffset)
         );
 
-        transferStateMap.put(jobPart, newTransferState);
+        transferMethodMap.put(jobPart, newTransferState);
     }
 
     private ImmutableCollection<Range> initializeRanges(final BulkObject blob, final TransferState existingTransferState) {
