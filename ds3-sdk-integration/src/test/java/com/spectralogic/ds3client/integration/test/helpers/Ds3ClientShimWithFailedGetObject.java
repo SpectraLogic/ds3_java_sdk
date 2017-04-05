@@ -20,7 +20,6 @@ import com.spectralogic.ds3client.Ds3ClientImpl;
 import com.spectralogic.ds3client.commands.GetObjectRequest;
 import com.spectralogic.ds3client.commands.GetObjectResponse;
 import com.spectralogic.ds3client.models.JobNode;
-import com.spectralogic.ds3client.networking.ConnectionDetails;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;

@@ -29,7 +29,7 @@ import com.spectralogic.ds3client.utils.Guard;
 final class RangeHelper {
     private RangeHelper() {}
 
-    static ImmutableCollection<Range> replaceRange(final ImmutableCollection<Range> existingRanges,
+    protected static ImmutableCollection<Range> replaceRange(final ImmutableCollection<Range> existingRanges,
                                                    final long numBytesTransferred,
                                                    final long intendedNumBytesToTransfer)
     {
@@ -72,7 +72,7 @@ final class RangeHelper {
         }
     }
 
-    static long transferSizeForRanges(final ImmutableCollection<Range> existingRanges) {
+    protected static long transferSizeForRanges(final ImmutableCollection<Range> existingRanges) {
         long result = 0;
 
         if (Guard.isNullOrEmpty(existingRanges)) {

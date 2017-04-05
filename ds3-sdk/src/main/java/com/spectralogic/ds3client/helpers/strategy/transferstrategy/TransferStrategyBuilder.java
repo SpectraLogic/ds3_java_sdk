@@ -54,7 +54,6 @@ import com.spectralogic.ds3client.helpers.strategy.channelstrategy.SequentialFil
 import com.spectralogic.ds3client.helpers.strategy.channelstrategy.TruncatingChannelPreparable;
 import com.spectralogic.ds3client.models.BulkObject;
 import com.spectralogic.ds3client.models.ChecksumType;
-import com.spectralogic.ds3client.models.JobChunkClientProcessingOrderGuarantee;
 import com.spectralogic.ds3client.models.MasterObjectList;
 import com.spectralogic.ds3client.models.Objects;
 import com.spectralogic.ds3client.models.common.Range;
@@ -145,7 +144,7 @@ public final class TransferStrategyBuilder {
      * Use an instance of {@link BlobStrategy} you wish to create or retrieve blobs from a Black Pearl.  There are
      * 2 primary implementations: {@link PutSequentialBlobStrategy}; and {@link GetSequentialBlobStrategy}.  Blob
      * retrieval order is specified in the
-     * {@link com.spectralogic.ds3client.commands.spectrads3.GetBulkJobSpectraS3Request#withChunkClientProcessingOrderGuarantee(JobChunkClientProcessingOrderGuarantee)}
+     * {@link com.spectralogic.ds3client.commands.spectrads3.GetBulkJobSpectraS3Request#withChunkClientProcessingOrderGuarantee(com.spectralogic.ds3client.models.JobChunkClientProcessingOrderGuarantee)}
      * HTTP request.
      * @return The instance of this builder, with the intent that you can string together the behaviors you wish,
      * for example:

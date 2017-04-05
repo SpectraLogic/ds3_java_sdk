@@ -22,8 +22,6 @@ import com.spectralogic.ds3client.helpers.ObjectCompletedListener;
  * An {@link Observer} that enables sending event when a DS3 object transfer completes.
  */
 public class ObjectCompletedObserver extends AbstractObserver<String> {
-    private ObjectCompletedListener objectCompletedListener;
-
     /**
      * @param objectCompletedListener An {@link ObjectCompletedListener} wrapped in an event
      *                                updater.
@@ -37,8 +35,6 @@ public class ObjectCompletedObserver extends AbstractObserver<String> {
         });
 
         Preconditions.checkNotNull(objectCompletedListener, "objectCompletedListener may not be null");
-
-        this.objectCompletedListener = objectCompletedListener;
     }
 
     /**

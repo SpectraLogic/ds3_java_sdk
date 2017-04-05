@@ -881,9 +881,6 @@ public class GetJobManagement_Test {
                 }
             });
 
-            final GetJobSpectraS3Response jobSpectraS3Response = ds3ClientShim
-                    .getJobSpectraS3(new GetJobSpectraS3Request(readJob.getJobId()));
-
             readJob.transfer(new FileObjectGetter(tempDirectory));
 
             final File originalFile = ResourceUtils.loadFileResource(DIR_NAME + FILE_NAME).toFile();
@@ -1174,8 +1171,8 @@ public class GetJobManagement_Test {
     }
 
     private class UserSuppliedPutChannelStrategy implements ChannelStrategy {
-        final ChannelMonitorable channelMonitorable;
-        final ChannelStrategy wrappedPutStrategy;
+        private final ChannelMonitorable channelMonitorable;
+        private final ChannelStrategy wrappedPutStrategy;
 
         private UserSuppliedPutChannelStrategy(final Ds3ClientHelpers.ObjectChannelBuilder objectChannelBuilder,
                                                final ChannelMonitorable channelMonitorable)

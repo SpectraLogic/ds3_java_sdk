@@ -34,7 +34,7 @@ class SeekableByteChannelDecorator implements SeekableByteChannel {
         this.seekableByteChannel = seekableByteChannel;
     }
 
-    SeekableByteChannel wrappedSeekableByteChannel() {
+    protected SeekableByteChannel wrappedSeekableByteChannel() {
         return seekableByteChannel;
     }
 

@@ -19,8 +19,6 @@ import com.google.common.base.Preconditions;
 import com.spectralogic.ds3client.helpers.DataTransferredListener;
 
 public class DataTransferredObserver extends AbstractObserver<Long> {
-    private DataTransferredListener dataTransferredListener;
-
     public DataTransferredObserver(final DataTransferredListener dataTransferredListener) {
         super(new UpdateStrategy<Long>() {
             @Override
@@ -30,8 +28,6 @@ public class DataTransferredObserver extends AbstractObserver<Long> {
         });
 
         Preconditions.checkNotNull(dataTransferredListener, "dataTransferredListener may not be null.");
-
-        this.dataTransferredListener = dataTransferredListener;
     }
 
     public DataTransferredObserver(final UpdateStrategy<Long> updateStrategy) {

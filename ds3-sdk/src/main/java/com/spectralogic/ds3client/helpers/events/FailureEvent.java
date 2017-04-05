@@ -80,8 +80,6 @@ public class FailureEvent {
         private String usingSystemWithEndpoint;
         private Throwable causalException;
 
-        public Builder() { }
-
         public Builder doingWhat(final FailureActivity what) {
             this.doingWhat = what;
             return this;

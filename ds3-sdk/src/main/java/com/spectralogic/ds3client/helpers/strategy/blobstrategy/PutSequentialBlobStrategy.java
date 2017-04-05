@@ -120,6 +120,6 @@ public class PutSequentialBlobStrategy extends AbstractBlobStrategy {
 
     @Override
     public void blobCompleted(final BulkObject bulkObject) {
-
+        // Intentionally not implemented
     }
 }

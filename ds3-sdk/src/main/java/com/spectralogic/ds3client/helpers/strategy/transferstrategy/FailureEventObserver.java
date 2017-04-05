@@ -24,8 +24,6 @@ import com.spectralogic.ds3client.helpers.events.FailureEvent;
  * during a blob transfer.
  */
 public class FailureEventObserver extends AbstractObserver<FailureEvent> {
-    private FailureEventListener failureEventListener;
-
     /**
      * @param failureEventListener An instance of {@link FailureEventListener} wrapped in an event updater.
      */
@@ -38,8 +36,6 @@ public class FailureEventObserver extends AbstractObserver<FailureEvent> {
         });
 
         Preconditions.checkNotNull(failureEventListener, "failureEventListener may not be null.");
-
-        this.failureEventListener = failureEventListener;
     }
 
     /**

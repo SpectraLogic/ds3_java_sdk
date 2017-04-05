@@ -23,7 +23,6 @@ import com.spectralogic.ds3client.helpers.ChecksumListener;
  * transferred to a Black Pearl.
  */
 public class ChecksumObserver extends AbstractObserver<ChecksumEvent> {
-    private  ChecksumListener checksumListener;
 
     /**
      * @param checksumListener An instance of {@link ChecksumListener} wrapped in an event updater.
@@ -37,8 +36,6 @@ public class ChecksumObserver extends AbstractObserver<ChecksumEvent> {
               });
 
         Preconditions.checkNotNull(checksumListener, "checksumListener may not be null.");
-
-        this.checksumListener = checksumListener;
     }
 
     /**
