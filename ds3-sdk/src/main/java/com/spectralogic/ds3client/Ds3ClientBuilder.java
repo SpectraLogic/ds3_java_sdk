@@ -65,7 +65,7 @@ public class Ds3ClientBuilder implements Builder<Ds3Client> {
 
     /**
      * Returns a Builder which is used to customize the behavior of the Ds3Client library.
-     * @param endpoint The DS3 endpoint the library should connect to.
+     * @param endpoint The DS3 endpoint the client should connect to.
      * @param creds The {@link Credentials} used for connecting to a DS3 endpoint.
      * @return The Builder for the {@link Ds3ClientImpl} object.
      */
@@ -82,17 +82,17 @@ public class Ds3ClientBuilder implements Builder<Ds3Client> {
      * @throws IllegalArgumentException
      */
     public static Ds3ClientBuilder fromEnv() throws IllegalArgumentException {
-        final String endpoint = System.getenv(ENDPOINT);
+        final String endpoint = System.getenv("ENDPOINT");
         if (Guard.isStringNullOrEmpty(endpoint)) {
-            throw new IllegalArgumentException("Missing " + ENDPOINT + " environment variable");
+            throw new IllegalArgumentException("Missing ENDPOINT environment variable");
         }
-        final String accessKey = System.getenv(ACCESS_KEY);
+        final String accessKey = System.getenv("ACCESS_KEY");
         if (Guard.isStringNullOrEmpty(accessKey)) {
-            throw new IllegalArgumentException("Missing " + ACCESS_KEY + " environment variable");
+            throw new IllegalArgumentException("Missing ACCESS_KEY environment variable");
         }
-        final String secretKey = System.getenv(SECRET_KEY);
+        final String secretKey = System.getenv("SECRET_KEY");
         if (Guard.isStringNullOrEmpty(secretKey)) {
-            throw new IllegalArgumentException("Missing " + SECRET_KEY + " environment variable");
+            throw new IllegalArgumentException("Missing SECRET_KEY environment variable");
         }
 
         final Ds3ClientBuilder builder = create(endpoint, new Credentials(accessKey, secretKey));
