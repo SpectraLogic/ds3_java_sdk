@@ -47,7 +47,7 @@ public class FileObjectGetter implements ObjectChannelBuilder {
             Files.createDirectories(parentPath);
         }
 
-        if ( ! FileUtils.isRegularFile(parentPath)) {
+        if ( ! FileUtils.isRegularFile(objectPath)) {
             throw new UnrecoverableIOException(objectPath + " is not a regular file.");
         }
 
