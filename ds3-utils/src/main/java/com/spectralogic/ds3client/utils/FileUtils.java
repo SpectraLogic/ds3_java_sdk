@@ -40,17 +40,4 @@ public final class FileUtils {
         }
         return path;
     }
-
-    public static boolean isRegularFile(final Path path) {
-        if ( ! Platform.isWindows()) {
-            try {
-                final BasicFileAttributes fileAttributes = Files.readAttributes(path, BasicFileAttributes.class);
-                return !fileAttributes.isOther();
-            } catch (final IOException e) {
-                return false;
-            }
-        }
-
-        return true;
-    }
 }

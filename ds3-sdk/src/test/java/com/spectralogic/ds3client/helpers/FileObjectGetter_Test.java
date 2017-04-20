@@ -31,30 +31,6 @@ import static org.junit.Assert.assertTrue;
 
 public class FileObjectGetter_Test {
     @Test
-    public void testThatNamedPipeThrows() throws IOException, InterruptedException {
-        Assume.assumeFalse(Platform.isWindows());
-
-        final String tempPathPrefix = null;
-        final Path tempDirectory = Files.createTempDirectory(Paths.get("."), tempPathPrefix);
-
-        final String FIFO_NAME = "bFifo";
-
-        final AtomicBoolean caughtException = new AtomicBoolean(false);
-
-        try {
-            Runtime.getRuntime().exec("mkfifo " + Paths.get(tempDirectory.toString(), FIFO_NAME)).waitFor();
-            new FileObjectGetter(tempDirectory).buildChannel(FIFO_NAME);
-        } catch (final UnrecoverableIOException e) {
-            assertTrue(e.getMessage().contains(FIFO_NAME));
-            caughtException.set(true);
-        } finally {
-            FileUtils.deleteDirectory(tempDirectory.toFile());
-        }
-
-        assertTrue(caughtException.get());
-    }
-
-    @Test
     public void testThatFileReportsAsRegularOnWindows() throws IOException, InterruptedException {
         Assume.assumeTrue(Platform.isWindows());
 

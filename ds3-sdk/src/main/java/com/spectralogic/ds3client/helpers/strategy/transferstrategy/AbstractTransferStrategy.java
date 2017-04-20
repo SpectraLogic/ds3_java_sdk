@@ -120,7 +120,7 @@ abstract class AbstractTransferStrategy implements TransferStrategy {
                     }));
                 }
 
-                runTransferTasks(ImmutableList.copyOf(transferTasksListBuilder.build()));
+                runTransferTasks(transferTasksListBuilder.build());
             } catch (final IOException | RuntimeException e) {
                 throw e;
             } catch (final Exception e) {

@@ -43,10 +43,6 @@ public class FileObjectPutter implements ObjectChannelBuilder {
 
         final Path path = this.root.resolve(key);
 
-        if ( ! FileUtils.isRegularFile(path)) {
-            throw new UnrecoverableIOException(path + " is not a regular file.");
-        }
-
         return FileChannel.open(FileUtils.resolveForSymbolic(path), StandardOpenOption.READ);
     }
 }
