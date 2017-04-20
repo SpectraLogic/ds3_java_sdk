@@ -18,6 +18,7 @@ package com.spectralogic.ds3client.utils;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.attribute.BasicFileAttributes;
 
 public final class FileUtils {
     private FileUtils() {}
@@ -38,5 +39,18 @@ public final class FileUtils {
             return simLink;
         }
         return path;
+    }
+
+    public static boolean isRegularFile(final Path path) {
+        if ( ! Platform.isWindows()) {
+            try {
+                final BasicFileAttributes fileAttributes = Files.readAttributes(path, BasicFileAttributes.class);
+                return !fileAttributes.isOther();
+            } catch (final IOException e) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }

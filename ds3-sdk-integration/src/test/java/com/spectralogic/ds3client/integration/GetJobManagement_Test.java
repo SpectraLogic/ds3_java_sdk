@@ -75,6 +75,7 @@ import com.spectralogic.ds3client.utils.ResourceUtils;
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.AfterClass;
+import org.junit.Assume;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -1364,5 +1365,33 @@ public class GetJobManagement_Test {
     private interface ChunkAttemptRetryBehaviorMonitorable {
         void invoke();
         void reset();
+    }
+
+    @Test
+    public void testThatFifoIsNotProcessed() throws IOException, InterruptedException {
+        Assume.assumeFalse(Platform.isWindows());
+
+        final String tempPathPrefix = null;
+        final Path tempDirectory = Files.createTempDirectory(Paths.get("."), tempPathPrefix);
+
+        final String BEOWULF_FILE_NAME  = "beowulf.txt";
+
+        final AtomicBoolean caughtException = new AtomicBoolean(false);
+
+        try {
+            Runtime.getRuntime().exec("mkfifo " + Paths.get(tempDirectory.toString(), BEOWULF_FILE_NAME)).waitFor();
+
+            final List<Ds3Object> ds3Objects = Arrays.asList(new Ds3Object(BEOWULF_FILE_NAME));
+
+            final Ds3ClientHelpers.Job readJob = HELPERS.startReadJob(BUCKET_NAME, ds3Objects);
+            readJob.transfer(new FileObjectPutter(tempDirectory));
+        } catch (final UnrecoverableIOException e) {
+            assertTrue(e.getMessage().contains(BEOWULF_FILE_NAME));
+            caughtException.set(true);
+        } finally {
+            FileUtils.deleteDirectory(tempDirectory.toFile());
+        }
+
+        assertTrue(caughtException.get());
     }
 }

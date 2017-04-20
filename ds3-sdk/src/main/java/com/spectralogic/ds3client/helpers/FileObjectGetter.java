@@ -16,6 +16,7 @@
 package com.spectralogic.ds3client.helpers;
 
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.ObjectChannelBuilder;
+import com.spectralogic.ds3client.utils.FileUtils;
 
 import java.io.IOException;
 import java.nio.channels.FileChannel;
@@ -45,6 +46,11 @@ public class FileObjectGetter implements ObjectChannelBuilder {
         if (parentPath != null) {
             Files.createDirectories(parentPath);
         }
+
+        if ( ! FileUtils.isRegularFile(parentPath)) {
+            throw new UnrecoverableIOException(objectPath + " is not a regular file.");
+        }
+
         return FileChannel.open(
             objectPath,
             StandardOpenOption.WRITE,
