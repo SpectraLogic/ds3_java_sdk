@@ -321,4 +321,19 @@ public class Regression_Test {
             deleteAllContents(client, bucketName);
         }
     }
+
+    @Test
+    public void createJobWithQuestionMarkInObjectName() throws IOException {
+        final String bucketName = "questionMarkObjectName";
+        final List<Ds3Object> objects = Collections.singletonList(new Ds3Object("question?mark_object.txt", 0));
+
+        try {
+            HELPERS.ensureBucketExists(bucketName, envDataPolicyId);
+            final Ds3ClientHelpers.Job job = HELPERS.startWriteJob(bucketName, objects);
+
+            assertThat(job, is(notNullValue()));
+        } finally {
+            Util.deleteAllContents(client, bucketName);
+        }
+    }
 }
