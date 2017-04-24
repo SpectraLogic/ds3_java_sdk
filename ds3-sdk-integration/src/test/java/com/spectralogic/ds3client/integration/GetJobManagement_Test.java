@@ -403,10 +403,16 @@ public class GetJobManagement_Test {
             whoamiProcess.waitFor();
 
             try (final BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(whoamiProcess.getInputStream()))) {
-
                 final String userId = bufferedReader.readLine();
 
-                return userId.equals("0");
+                final String[] uidFields = userId.split("uid=");
+                if (uidFields.length > 1) {
+                    final String[] uidStrings = uidFields[1].split("\\(");
+                    if (uidStrings.length > 1) {
+                        final int uid = Integer.parseInt(uidStrings[0]);
+                        return uid == 0;
+                    }
+                }
             }
         } catch (final IOException | InterruptedException e) {
             LOG.error("Error getting user id.", e);
