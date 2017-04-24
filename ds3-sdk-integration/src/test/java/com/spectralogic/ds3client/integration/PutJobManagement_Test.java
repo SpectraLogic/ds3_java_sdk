@@ -1880,4 +1880,39 @@ public class PutJobManagement_Test {
             deleteAllContents(client, BUCKET_NAME);
         }
     }
+
+    @Test
+    public void testThatFifoIsNotProcessed() throws IOException, InterruptedException {
+        Assume.assumeFalse(Platform.isWindows());
+
+        final String tempPathPrefix = null;
+        final Path tempDirectory = Files.createTempDirectory(Paths.get("."), tempPathPrefix);
+
+        final String A_FILE_NAME = "aFile.txt";
+        final String C_FILE_NAME = "cFile.txt";
+        final String FIFO_NAME = "bFifo";
+
+        final AtomicBoolean caughtException = new AtomicBoolean(false);
+
+        try {
+            Files.createFile(Paths.get(tempDirectory.toString(), A_FILE_NAME));
+            Runtime.getRuntime().exec("mkfifo " + Paths.get(tempDirectory.toString(), FIFO_NAME)).waitFor();
+            Files.createFile(Paths.get(tempDirectory.toString(), C_FILE_NAME));
+
+            final List<Ds3Object> ds3Objects = Arrays.asList(new Ds3Object(A_FILE_NAME),
+                    new Ds3Object(FIFO_NAME),
+                    new Ds3Object(C_FILE_NAME));
+
+            final Ds3ClientHelpers.Job writeJob = HELPERS.startWriteJob(BUCKET_NAME, ds3Objects);
+            writeJob.transfer(new FileObjectPutter(tempDirectory));
+        } catch (final UnrecoverableIOException e) {
+            assertTrue(e.getMessage().contains(FIFO_NAME));
+            caughtException.set(true);
+        } finally {
+            FileUtils.deleteDirectory(tempDirectory.toFile());
+            deleteAllContents(client, BUCKET_NAME);
+        }
+
+        assertTrue(caughtException.get());
+    }
 }

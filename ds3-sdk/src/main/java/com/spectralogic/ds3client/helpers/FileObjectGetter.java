@@ -47,10 +47,14 @@ public class FileObjectGetter implements ObjectChannelBuilder {
             Files.createDirectories(parentPath);
         }
 
+        if ( ! FileUtils.isTransferablePath(objectPath)) {
+            throw new UnrecoverableIOException(objectPath + " is not a regular file.");
+        }
+
         return FileChannel.open(
-            objectPath,
-            StandardOpenOption.WRITE,
-            StandardOpenOption.CREATE
+                objectPath,
+                StandardOpenOption.WRITE,
+                StandardOpenOption.CREATE
         );
     }
 }
