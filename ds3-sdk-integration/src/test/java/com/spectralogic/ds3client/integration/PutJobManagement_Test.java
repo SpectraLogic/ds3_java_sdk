@@ -80,6 +80,7 @@ import java.nio.channels.ByteChannel;
 import java.nio.channels.Channels;
 import java.nio.channels.SeekableByteChannel;
 import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -1914,5 +1915,58 @@ public class PutJobManagement_Test {
         }
 
         assertTrue(caughtException.get());
+    }
+
+    @Test
+    public void testThatNonExistentFileDoesNotStopPutJob() throws IOException {
+        final String tempPathPrefix = null;
+        final Path tempDirectoryForFilesToPut = Files.createTempDirectory(Paths.get("."), tempPathPrefix);
+        final Path tempDirectoryForFilesToGet = Files.createTempDirectory(Paths.get("."), tempPathPrefix);
+
+        final String A_FILE_NAME = "aFile.txt";
+        final String B_FILE_NAME = "bFile.txt";
+        final String C_FILE_NAME = "cFile.txt";
+
+        final Path aFilePutPath = Files.createFile(Paths.get(tempDirectoryForFilesToPut.toString(), A_FILE_NAME));
+        final Path cFilePutPath = Files.createFile(Paths.get(tempDirectoryForFilesToPut.toString(), C_FILE_NAME));
+
+        final AtomicBoolean caughtNoSuchFileException = new AtomicBoolean(false);
+        final AtomicBoolean getJobRan = new AtomicBoolean(false);
+
+        try {
+            FileUtils.writeStringToFile(aFilePutPath.toFile(), "aFile");
+            FileUtils.writeStringToFile(cFilePutPath.toFile(), "cFile");
+
+            final int sizeOfNonExistentFile = 5;
+
+            final List<Ds3Object> ds3Objects = Arrays.asList(new Ds3Object(A_FILE_NAME, Files.size(aFilePutPath)),
+                    new Ds3Object(B_FILE_NAME, sizeOfNonExistentFile),
+                    new Ds3Object(C_FILE_NAME, Files.size(cFilePutPath)));
+
+            final Ds3ClientHelpers.Job writeJob = HELPERS.startWriteJob(BUCKET_NAME, ds3Objects);
+            writeJob.transfer(new FileObjectPutter(tempDirectoryForFilesToPut));
+        } catch (final NoSuchFileException e) {
+            caughtNoSuchFileException.set(true);
+
+            final Path aFileGetPath = Files.createFile(Paths.get(tempDirectoryForFilesToGet.toString(), A_FILE_NAME));
+            final Path cFileGetPath = Files.createFile(Paths.get(tempDirectoryForFilesToGet.toString(), C_FILE_NAME));
+
+            final List<Ds3Object> ds3Objects = Arrays.asList(new Ds3Object(A_FILE_NAME), new Ds3Object(C_FILE_NAME));
+
+            final Ds3ClientHelpers.Job readJob = HELPERS.startReadJob(BUCKET_NAME, ds3Objects);
+            readJob.transfer(new FileObjectGetter(tempDirectoryForFilesToGet));
+
+            getJobRan.set(true);
+
+            assertTrue(FileUtils.contentEquals(aFileGetPath.toFile(), aFilePutPath.toFile()));
+            assertTrue(FileUtils.contentEquals(cFileGetPath.toFile(), cFilePutPath.toFile()));
+        } finally {
+            FileUtils.deleteDirectory(tempDirectoryForFilesToGet.toFile());
+            FileUtils.deleteDirectory(tempDirectoryForFilesToPut.toFile());
+            deleteAllContents(client, BUCKET_NAME);
+        }
+
+        assertTrue(caughtNoSuchFileException.get());
+        assertTrue(getJobRan.get());
     }
 }
