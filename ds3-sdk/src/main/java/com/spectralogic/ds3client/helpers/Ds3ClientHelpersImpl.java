@@ -31,6 +31,7 @@ import com.spectralogic.ds3client.helpers.options.ReadJobOptions;
 import com.spectralogic.ds3client.helpers.options.WriteJobOptions;
 import com.spectralogic.ds3client.helpers.strategy.transferstrategy.EventDispatcher;
 import com.spectralogic.ds3client.helpers.strategy.transferstrategy.EventDispatcherImpl;
+import com.spectralogic.ds3client.helpers.strategy.transferstrategy.TransferStrategy;
 import com.spectralogic.ds3client.helpers.strategy.transferstrategy.TransferStrategyBuilder;
 import com.spectralogic.ds3client.helpers.util.PartialObjectHelpers;
 import com.spectralogic.ds3client.models.*;
@@ -162,6 +163,13 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
     }
 
     @Override
+    public Job startWriteJob(final TransferStrategy transferStrategy)
+            throws IOException
+    {
+        return new WriteJobImpl(transferStrategy);
+    }
+
+    @Override
     public Job startWriteJobUsingStreamedBehavior(final String bucket, final Iterable<Ds3Object> objectsToWrite) throws IOException {
         return startWriteJobUsingStreamedBehavior(bucket, objectsToWrite, WriteJobOptions.create());
     }
@@ -240,6 +248,11 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
                 .withRangesForBlobs(PartialObjectHelpers.mapRangesToBlob(masterObjectList.getObjects(), partialRanges));
 
         return new ReadJobImpl(transferStrategyBuilder);
+    }
+
+    @Override
+    public Job startReadJob(final TransferStrategy transferStrategy) throws IOException {
+        return new ReadJobImpl(transferStrategy);
     }
 
     @Override

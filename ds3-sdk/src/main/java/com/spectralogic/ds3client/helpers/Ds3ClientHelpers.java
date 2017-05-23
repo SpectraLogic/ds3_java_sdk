@@ -20,6 +20,7 @@ import com.google.common.collect.FluentIterable;
 import com.spectralogic.ds3client.Ds3Client;
 import com.spectralogic.ds3client.helpers.options.ReadJobOptions;
 import com.spectralogic.ds3client.helpers.options.WriteJobOptions;
+import com.spectralogic.ds3client.helpers.strategy.transferstrategy.TransferStrategy;
 import com.spectralogic.ds3client.models.Contents;
 import com.spectralogic.ds3client.models.bulk.Ds3Object;
 import com.spectralogic.ds3client.utils.Predicate;
@@ -118,6 +119,8 @@ public abstract class Ds3ClientHelpers {
          */
         void transfer(final ObjectChannelBuilder channelBuilder)
             throws IOException;
+
+        void transfer() throws IOException;
     }
 
     /**
@@ -172,6 +175,17 @@ public abstract class Ds3ClientHelpers {
             throws IOException;
 
     /**
+     * Performs a bulk put job creation request and returns a {@link WriteJobImpl}.  The reason for using this
+     * method call is to gain fine-grained control over put job behavior using a transfer strategy.  The most
+     * convenient way to create a transfer strategy is by using the {@link com.spectralogic.ds3client.helpers.strategy.transferstrategy.TransferStrategyBuilder}
+     * @param transferStrategy A strategy that provides fine-grained control over transfer behavior.
+     * @return An instance of {@link WriteJobImpl}
+     * @throws IOException
+     */
+    public abstract Ds3ClientHelpers.Job startWriteJob(final TransferStrategy transferStrategy)
+            throws IOException;
+
+    /**
      * Performs a bulk put job creation request and returns an {@link WriteJobImpl} configured to perform a "streamed"
      * transfer.  "Streamed" means that channels and blobs are read or written sequentially.
      * You would use a streaming strategy when it is important that the source or destination channel is read or
@@ -218,6 +232,18 @@ public abstract class Ds3ClientHelpers {
      */
     public abstract Ds3ClientHelpers.Job startReadJob(final String bucket, final Iterable<Ds3Object> objectsToRead, final ReadJobOptions options)
             throws IOException;
+
+    /**
+     * Performs a bulk get job creation request and returns an {@link ReadJobImpl}.
+     * The reason for using this
+     * method call is to gain fine-grained control over get job behavior using a transfer strategy.  The most
+     * convenient way to create a transfer strategy is by using the {@link com.spectralogic.ds3client.helpers.strategy.transferstrategy.TransferStrategyBuilder}
+     * @param transferStrategy A strategy that provides fine-grained control over transfer behavior.
+     * @return An instance of {@link ReadJobImpl}.
+     * @throws IOException
+     */
+    public abstract Ds3ClientHelpers.Job startReadJob(final TransferStrategy transferStrategy)
+        throws IOException;
 
     /**
      * Performs a bulk get job creation request and returns an {@link ReadJobImpl} configured to perform a "streamed"

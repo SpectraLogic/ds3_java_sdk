@@ -1022,6 +1022,42 @@ public class GetJobManagement_Test {
     }
 
     @Test
+    public void testReadJobUsingTransferStrategy() throws IOException, InterruptedException {
+        final String tempPathPrefix = null;
+        final Path tempDirectory = Files.createTempDirectory(Paths.get("."), tempPathPrefix);
+        final String fileName = "beowulf.txt";
+
+        try {
+            final List<Ds3Object> objects = Lists.newArrayList(new Ds3Object(fileName));
+
+            final GetBulkJobSpectraS3Request getBulkJobSpectraS3Request = new GetBulkJobSpectraS3Request(BUCKET_NAME, objects);
+
+            final GetBulkJobSpectraS3Response getBulkJobSpectraS3Response = client.getBulkJobSpectraS3(getBulkJobSpectraS3Request);
+
+            final MasterObjectList masterObjectList = getBulkJobSpectraS3Response.getMasterObjectList();
+
+            final TransferStrategyBuilder transferStrategyBuilder = new TransferStrategyBuilder()
+                    .withDs3Client(client)
+                    .withMasterObjectList(masterObjectList)
+                    .withChannelBuilder(new FileObjectGetter(tempDirectory))
+                    .withRangesForBlobs(PartialObjectHelpers.mapRangesToBlob(masterObjectList.getObjects(),
+                            PartialObjectHelpers.getPartialObjectsRanges(objects)));
+
+            final TransferStrategy transferStrategy = transferStrategyBuilder.makeGetTransferStrategy();
+
+            Ds3ClientHelpers.wrap(client).startReadJob(transferStrategy).transfer();
+
+            final Collection<File> filesInTempDirectory = FileUtils.listFiles(tempDirectory.toFile(), null, false);
+
+            for (final File file : filesInTempDirectory) {
+                assertEquals(fileName, file.getName());
+            }
+        } finally {
+            FileUtils.deleteDirectory(tempDirectory.toFile());
+        }
+    }
+
+    @Test
     public void testGetJobWithUserSuppliedBlobStrategy() throws IOException, InterruptedException {
         final String tempPathPrefix = null;
         final Path tempDirectory = Files.createTempDirectory(Paths.get("."), tempPathPrefix);

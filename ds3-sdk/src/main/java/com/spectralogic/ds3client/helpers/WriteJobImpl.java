@@ -15,6 +15,7 @@
 
 package com.spectralogic.ds3client.helpers;
 
+import com.google.common.base.Preconditions;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.ObjectChannelBuilder;
 import com.spectralogic.ds3client.helpers.strategy.transferstrategy.TransferStrategy;
 import com.spectralogic.ds3client.helpers.strategy.transferstrategy.TransferStrategyBuilder;
@@ -24,6 +25,11 @@ import java.io.IOException;
 public class WriteJobImpl extends JobImpl {
     private MetadataAccess metadataAccess = null;
     private ChecksumFunction checksumFunction = null;
+    private TransferStrategy transferStrategy;
+
+    public WriteJobImpl(final TransferStrategy transferStrategy) {
+        this.transferStrategy = transferStrategy;
+    }
 
     public WriteJobImpl(final TransferStrategyBuilder transferStrategyBuilder) {
         super(transferStrategyBuilder);
@@ -54,15 +60,24 @@ public class WriteJobImpl extends JobImpl {
 
     @Override
     public void transfer(final ObjectChannelBuilder channelBuilder) throws IOException {
+        if (transferStrategy != null) {
+            transfer();
+            return;
+        }
+
         super.transfer(channelBuilder);
 
         transferStrategyBuilder().withChecksumFunction(checksumFunction);
         transferStrategyBuilder().withMetadataAccess(metadataAccess);
 
-        transfer(transferStrategyBuilder().makePutTransferStrategy());
+        transferStrategy = transferStrategyBuilder().makePutTransferStrategy();
+        transfer();
     }
 
-    public void transfer(final TransferStrategy transferStrategy) throws IOException {
+    @Override
+    public void transfer() throws IOException {
+        Preconditions.checkNotNull(transferStrategy, "transferStrategy may not be null.");
+
         running = true;
         transferStrategy.transfer();
     }

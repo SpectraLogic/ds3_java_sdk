@@ -1321,6 +1321,51 @@ public class PutJobManagement_Test {
     }
 
     @Test
+    public void testWriteJobUsingTransferStrategy() throws IOException, InterruptedException, URISyntaxException {
+        final String DIR_NAME = "books/";
+        final String[] FILE_NAMES = new String[]{"beowulf.txt"};
+
+        try {
+            final Path dirPath = ResourceUtils.loadFileResource(DIR_NAME);
+
+            final List<String> bookTitles = new ArrayList<>();
+            final List<Ds3Object> objectsToWrite = new ArrayList<>();
+            for (final String book : FILE_NAMES) {
+                final Path objPath = ResourceUtils.loadFileResource(DIR_NAME + book);
+                final long bookSize = Files.size(objPath);
+                final Ds3Object obj = new Ds3Object(book, bookSize);
+
+                bookTitles.add(book);
+                objectsToWrite.add(obj);
+            }
+
+            final PutBulkJobSpectraS3Request request = new PutBulkJobSpectraS3Request(BUCKET_NAME, Lists.newArrayList(objectsToWrite));
+            final PutBulkJobSpectraS3Response putBulkJobSpectraS3Response = client.putBulkJobSpectraS3(request);
+
+            final TransferStrategyBuilder transferStrategyBuilder = new TransferStrategyBuilder()
+                    .withDs3Client(client)
+                    .withMasterObjectList(putBulkJobSpectraS3Response.getMasterObjectList())
+                    .withChannelBuilder(new FileObjectPutter(dirPath));
+
+            final TransferStrategy transferStrategy = transferStrategyBuilder.makePutTransferStrategy();
+
+            final Ds3ClientHelpers ds3ClientHelpers = Ds3ClientHelpers.wrap(client);
+
+            final Ds3ClientHelpers.Job writeJob = ds3ClientHelpers.startWriteJob(transferStrategy);
+
+            writeJob.transfer();
+
+            final Iterable<Contents> bucketContentsIterable = ds3ClientHelpers.listObjects(BUCKET_NAME);
+
+            for (final Contents bucketContents : bucketContentsIterable) {
+                assertEquals(FILE_NAMES[0], bucketContents.getKey());
+            }
+        } finally {
+            deleteAllContents(client, BUCKET_NAME);
+        }
+    }
+
+    @Test
     public void testPutJobWithUserSuppliedBlobStrategy() throws IOException, InterruptedException, URISyntaxException {
         final String DIR_NAME = "books/";
         final String[] FILE_NAMES = new String[]{"beowulf.txt"};

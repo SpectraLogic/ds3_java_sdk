@@ -32,6 +32,10 @@ abstract class JobImpl implements Job {
 
     private final TransferStrategyBuilder transferStrategyBuilder;
 
+    public JobImpl() {
+        this(null);
+    }
+
     public JobImpl(final TransferStrategyBuilder transferStrategyBuilder) {
         this.transferStrategyBuilder = transferStrategyBuilder;
     }

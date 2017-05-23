@@ -15,6 +15,7 @@
 
 package com.spectralogic.ds3client.helpers;
 
+import com.google.common.base.Preconditions;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.ObjectChannelBuilder;
 import com.spectralogic.ds3client.helpers.strategy.transferstrategy.MetaDataReceivedObserver;
 import com.spectralogic.ds3client.helpers.strategy.transferstrategy.TransferStrategy;
@@ -23,6 +24,11 @@ import com.spectralogic.ds3client.helpers.strategy.transferstrategy.TransferStra
 import java.io.IOException;
 
 class ReadJobImpl extends JobImpl {
+    private TransferStrategy transferStrategy;
+
+    public ReadJobImpl(final TransferStrategy transferStrategy) {
+        this.transferStrategy = transferStrategy;
+    }
 
     public ReadJobImpl(final TransferStrategyBuilder transferStrategyBuilder) {
         super(transferStrategyBuilder);
@@ -52,12 +58,22 @@ class ReadJobImpl extends JobImpl {
 
     @Override
     public void transfer(final ObjectChannelBuilder channelBuilder) throws IOException {
+        if (transferStrategy != null) {
+            transfer();
+            return;
+        }
+
         super.transfer(channelBuilder);
 
-        transfer(transferStrategyBuilder().makeGetTransferStrategy());
+        transferStrategy = transferStrategyBuilder().makeGetTransferStrategy();
+
+        transfer();
     }
 
-    public void transfer(final TransferStrategy transferStrategy) throws IOException {
+    @Override
+    public void transfer() throws IOException {
+        Preconditions.checkNotNull(transferStrategy, "transferStrategy may not be null.");
+
         running = true;
         transferStrategy.transfer();
     }
