@@ -526,14 +526,11 @@ public final class TransferStrategyBuilder {
         Preconditions.checkNotNull(ds3Client, "ds3Client may not be null.");
         Preconditions.checkNotNull(eventDispatcher, "eventDispatcher may not be null.");
         Preconditions.checkNotNull(masterObjectList, "masterObjectList may not be null.");
-        Preconditions.checkState( ! Guard.isStringNullOrEmpty(jobId), "jobId may not be null or an emptystring");
         Preconditions.checkNotNull(blobStrategyMaker, "blobStrategyMaker may not be null.");
         Preconditions.checkNotNull(transferMethodMaker, "transferMethodMaker may not be null.");
         Preconditions.checkNotNull(channelStrategy, "channelStrategy may not be null");
         Preconditions.checkNotNull(transferRetryDecorator, "transferRetryDecorator may not be null");
-
         Guard.throwOnNullOrEmptyString(bucketName, "bucketName may not be null or empty.");
-
         Guard.throwOnNullOrEmptyString(jobId, "jobId may not be null or empty.");
 
         maybeMakeBlobStrategy(blobStrategyMaker);
