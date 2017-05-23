@@ -120,6 +120,11 @@ public abstract class Ds3ClientHelpers {
         void transfer(final ObjectChannelBuilder channelBuilder)
             throws IOException;
 
+        /**
+         * Transfers the files in this job intended for use when you supply your own {@link TransferStrategy}.
+         * See {@link Ds3ClientHelpers#startReadJob(TransferStrategy)} and {@link Ds3ClientHelpers#startWriteJob(TransferStrategy)}.
+         * @throws IOException
+         */
         void transfer() throws IOException;
     }
 
