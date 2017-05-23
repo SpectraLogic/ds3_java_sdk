@@ -94,7 +94,7 @@ import java.util.List;
  * interface instance, calling {@link TransferStrategy#transfer()} on the TransferStrategy interface initiates
  * data movement.
  *
- * If using a {@link TransferStrategy} directly, as oppsed to going through a {@link Ds3ClientHelpers.Job}, the minimum
+ * If using a {@link TransferStrategy} directly, as opposed to going through a {@link Ds3ClientHelpers.Job}, the minimum
  * needed as configuration items in a put transfer strategy builder are:
  * <ul>
  *     <li>{@link TransferStrategyBuilder#withDs3Client(Ds3Client)}</li>

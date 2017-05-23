@@ -45,7 +45,6 @@ import static com.spectralogic.ds3client.helpers.strategy.StrategyUtils.filterCh
 public class PutSequentialBlobStrategy extends AbstractBlobStrategy {
     private final static Logger LOG = LoggerFactory.getLogger(PutSequentialBlobStrategy.class);
 
-    private final ImmutableMap<UUID, JobNode> uuidJobNodeImmutableMap;
     private final Iterator<Objects> filteredChunkIterator;
 
     public PutSequentialBlobStrategy(final Ds3Client client,
@@ -56,7 +55,6 @@ public class PutSequentialBlobStrategy extends AbstractBlobStrategy {
     {
         super(client, masterObjectList, eventDispatcher, retryBehavior, chunkAttemptRetryDelayBehavior);
         this.filteredChunkIterator = filterChunks(masterObjectList.getObjects()).iterator();
-        this.uuidJobNodeImmutableMap = buildNodeMap(masterObjectList.getNodes());
     }
 
     @Override
