@@ -19,44 +19,23 @@ import com.spectralogic.ds3client.models.BulkObject;
 import com.spectralogic.ds3client.models.Objects;
 
 import java.util.Collection;
-import java.util.HashSet;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class JobState {
-    private final AtomicInteger objectsRemaining;
-    private final JobPartTracker partTracker;
+    final int numBlobsToTransfer;
 
-    public JobState(final Collection<Objects> filteredChunks,final JobPartTracker partTracker) {
-        this.objectsRemaining = new AtomicInteger(getObjectCount(filteredChunks));
-        this.partTracker = partTracker.attachObjectCompletedListener(new ObjectCompletedListenerImpl());
-    }
-    
-    public boolean hasObjects() {
-        return this.objectsRemaining.get() > 0;
-    }
+    public JobState(final Collection<Objects> filteredChunks) {
+        int numBlobsInChunks = 0;
 
-    private static int getObjectCount(final Collection<Objects> chunks) {
-        final HashSet<String> result = new HashSet<>();
-        for (final Objects chunk : chunks) {
-            for (final BulkObject bulkObject : chunk.getObjects()) {
-                result.add(bulkObject.getName());
+        for (final Objects chunk : filteredChunks) {
+            for (final BulkObject ignored : chunk.getObjects()) {
+                ++numBlobsInChunks;
             }
         }
-        return result.size();
+
+        numBlobsToTransfer = numBlobsInChunks;
     }
 
-    private final class ObjectCompletedListenerImpl implements ObjectCompletedListener {
-        @Override
-        public void objectCompleted(final String name) {
-            JobState.this.objectsRemaining.decrementAndGet();
-        }
-    }
-
-    @Override
-    public String toString() {
-        return "JobState{" +
-                "objectsRemaining=" + objectsRemaining +
-                ", partTracker=" + partTracker +
-                '}';
+    public int numBlobsToTransfer() {
+        return numBlobsToTransfer;
     }
 }

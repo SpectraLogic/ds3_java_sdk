@@ -15,9 +15,7 @@
 
 package com.spectralogic.ds3client.helpers.strategy.transferstrategy;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.util.concurrent.Futures;
-import com.google.common.util.concurrent.ListenableFuture;
+import com.google.common.collect.Iterables;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.spectralogic.ds3client.Ds3Client;
 import com.spectralogic.ds3client.commands.spectrads3.GetBulkJobSpectraS3Request;
@@ -31,7 +29,8 @@ import com.spectralogic.ds3client.models.Objects;
 
 import java.io.IOException;
 import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,11 +43,11 @@ abstract class AbstractTransferStrategy implements TransferStrategy {
     private static final Logger LOG = LoggerFactory.getLogger(AbstractTransferStrategy.class);
 
     private final BlobStrategy blobStrategy;
-    private final JobState jobState;
     private final ListeningExecutorService executorService;
     private final EventDispatcher eventDispatcher;
     private final MasterObjectList masterObjectList;
     private final FailureEvent.FailureActivity failureActivity;
+    private final AtomicInteger totalNumBlobsToTransfer;
 
     private TransferMethod transferMethod;
 
@@ -74,7 +73,7 @@ abstract class AbstractTransferStrategy implements TransferStrategy {
                                     final FailureEvent.FailureActivity failureActivity)
     {
         this.blobStrategy = blobStrategy;
-        this.jobState = jobState;
+        totalNumBlobsToTransfer = new AtomicInteger(jobState.numBlobsToTransfer());
         this.executorService = executorService;
         this.eventDispatcher = eventDispatcher;
         this.masterObjectList = masterObjectList;
@@ -98,30 +97,36 @@ abstract class AbstractTransferStrategy implements TransferStrategy {
      */
     @Override
     public void transfer() throws IOException {
-        while (jobState.hasObjects()) {
-            transferJobParts();
-        }
+        do {
+            try {
+                final Iterable<JobPart> jobParts = blobStrategy.getWork();
+                final CountDownLatch countDownLatch = new CountDownLatch(Iterables.size(jobParts));
+                transferJobParts(jobParts, countDownLatch);
+                countDownLatch.await();
+            } catch (final InterruptedException e) {
+                LOG.info("Error getting entries from work queue.", e);
+            }
+        } while (totalNumBlobsToTransfer.get() > 0);
     }
 
-    private void transferJobParts() throws IOException {
+    private void transferJobParts(final Iterable<JobPart> jobParts, final CountDownLatch countDownLatch) throws IOException {
         try {
             try {
-                final ImmutableList.Builder<ListenableFuture<Void>> transferTasksListBuilder = ImmutableList.builder();
-
-                final Iterable<JobPart> workQueue = blobStrategy.getWork();
-
-                for (final JobPart jobPart : workQueue) {
-                    transferTasksListBuilder.add(executorService.submit(new Callable<Void>() {
+                for (final JobPart jobPart : jobParts) {
+                    executorService.submit(new Callable<Void>() {
                         @Override
                         public Void call() throws Exception {
-                            transferMethod.transferJobPart(jobPart);
-                            return null;
+                            try {
+                                transferMethod.transferJobPart(jobPart);
+                            } finally {
+                                totalNumBlobsToTransfer.decrementAndGet();
+                                countDownLatch.countDown();
+                                return null;
+                            }
                         }
-                    }));
+                    });
                 }
-
-                runTransferTasks(transferTasksListBuilder.build());
-            } catch (final IOException | RuntimeException e) {
+            } catch (final RuntimeException e) {
                 throw e;
             } catch (final Exception e) {
                 throw new RuntimeException(e);
@@ -129,29 +134,6 @@ abstract class AbstractTransferStrategy implements TransferStrategy {
         } catch (final Throwable t) {
             emitFailureEvent(makeFailureEvent(failureActivity, t, firstChunk()));
             throw t;
-        }
-    }
-
-    private void runTransferTasks(final Iterable<ListenableFuture<Void>> transferTasks) throws IOException {
-        try {
-            Futures.allAsList(transferTasks).get();
-        } catch (final InterruptedException e) {
-            throw new RuntimeException(e);
-        } catch (final ExecutionException e) {
-            // The future throws a wrapper exception, but we want don't want to expose that this was implemented with futures.
-            final Throwable cause = e.getCause();
-
-            // Throw each of the advertised thrown exceptions.
-            if (cause instanceof IOException) {
-                throw (IOException)cause;
-            }
-
-            // The rest we don't know about, so we'll just forward them.
-            if (cause instanceof RuntimeException) {
-                throw (RuntimeException)cause;
-            } else {
-                throw new RuntimeException(cause);
-            }
         }
     }
 

@@ -676,7 +676,7 @@ public final class TransferStrategyBuilder {
 
         getOrMakeJobPartTrackerForPutJob(chunksNotYetCompleted);
 
-        jobState = new JobState(chunksNotYetCompleted, jobPartTracker);
+        jobState = new JobState(chunksNotYetCompleted);
 
         return jobState;
     }
@@ -872,7 +872,7 @@ public final class TransferStrategyBuilder {
 
         getOrMakeJobPartTrackerForGetJob(chunks);
 
-        jobState = new JobState(chunks, jobPartTracker);
+        jobState = new JobState(chunks);
 
         return jobState;
     }

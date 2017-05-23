@@ -16,10 +16,7 @@
 package com.spectralogic.ds3client.helpers.strategy.blobstrategy;
 
 import com.google.common.base.Function;
-import com.google.common.base.Predicate;
 import com.google.common.collect.FluentIterable;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Iterables;
 import com.spectralogic.ds3client.Ds3Client;
 import com.spectralogic.ds3client.commands.spectrads3.GetJobChunksReadyForClientProcessingSpectraS3Request;
 import com.spectralogic.ds3client.commands.spectrads3.GetJobChunksReadyForClientProcessingSpectraS3Response;
@@ -28,22 +25,17 @@ import com.spectralogic.ds3client.helpers.strategy.transferstrategy.EventDispatc
 import com.spectralogic.ds3client.models.BulkObject;
 import com.spectralogic.ds3client.models.MasterObjectList;
 import com.spectralogic.ds3client.models.Objects;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
 
 import javax.annotation.Nullable;
 import java.io.IOException;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
 
 /**
  * A subclass of {@link BlobStrategy} used in get transfers.
  */
 public class GetSequentialBlobStrategy extends AbstractBlobStrategy {
-    private final Set<UUID> processedChunks;
-
-    private final Object lock = new Object();
-    private final Set<String> activeBlobs = new HashSet<>();
-    private ImmutableList<JobPart> outstandingJobParts;
+    private static final Logger LOG = LoggerFactory.getLogger(GetSequentialBlobStrategy.class);
 
     public GetSequentialBlobStrategy(final Ds3Client client,
                                      final MasterObjectList masterObjectList,
@@ -52,69 +44,36 @@ public class GetSequentialBlobStrategy extends AbstractBlobStrategy {
                                      final ChunkAttemptRetryDelayBehavior chunkAttemptRetryDelayBehavior)
     {
         super(client, masterObjectList, eventDispatcher, retryBehavior, chunkAttemptRetryDelayBehavior);
-        this.processedChunks = new HashSet<>();
     }
 
     @Override
-    public Iterable<JobPart> getWork() throws IOException, InterruptedException {
+    public synchronized Iterable<JobPart> getWork() throws IOException, InterruptedException {
+        LOG.info("---> Getting available blobs.");
 
-        final MasterObjectList available = getAvailable();
+        // get chunks that have blobs ready for transfer from black pearl
+        final MasterObjectList masterObjectListWithAvailableChunks = masterObjectListWithAvailableChunks();
 
-        // filter any chunks that have been processed
-        final FluentIterable<Objects> chunks = FluentIterable.from(available.getObjects());
+        final FluentIterable<Objects> chunks = FluentIterable.from(masterObjectListWithAvailableChunks.getObjects());
 
-        final ImmutableList.Builder<JobPart> filteredPartsBuilder = ImmutableList.builder();
-
-        final FluentIterable<JobPart> jobParts = chunks.filter(new Predicate<Objects>() {
-            @Override
-            public boolean apply(@Nullable final Objects input) {
-                return !processedChunks.contains(input.getChunkId());
-            }
-        }).transformAndConcat(new Function<Objects, Iterable<JobPart>>() {
+        return chunks.transformAndConcat(new Function<Objects, Iterable<? extends JobPart>>() {
             @Nullable
             @Override
-            public Iterable<JobPart> apply(@Nullable final Objects objects) {
-                return FluentIterable.from(objects.getObjects()).transform(new Function<BulkObject, JobPart>() {
-                    @Nullable
-                    @Override
-                    public JobPart apply(@Nullable final BulkObject blob) {
-                        return new JobPart(client(), blob);
-
-                        // TODO: When we get to the point where BP enables clustering, we'll want to be able to get the
-                        // client connection info correct for the server on which a chunk resides. StrategyUtils.getClient
-                        // appears to work to support the clustering scenario, but we don't need it right now, and holding
-                        // connection info in a collection potentially exposes lifetime management issues that we haven't
-                        // fully explored.
-                        // return new JobPart(StrategyUtils.getClient(jobNodes, objects.getNodeId(), getClient()), blob);
-                    }
-                });
+            public Iterable<? extends JobPart> apply(@Nullable final Objects chunk) {
+                return FluentIterable.from(chunk.getObjects())
+                        .transform(new Function<BulkObject, JobPart>() {
+                            @Nullable
+                            @Override
+                            public JobPart apply(@Nullable final BulkObject blob) {
+                                return new JobPart(client(), blob);
+                            }
+                        });
             }
         });
-
-        final FluentIterable<JobPart> nextWorkParts = FluentIterable.from(
-                getNextIterable(jobParts)
-        ).filter(new Predicate<JobPart>() {
-            @Override
-            public boolean apply(@Nullable final JobPart input) {
-                final String blobName = input.getBulkObject().getName();
-                synchronized (lock) {
-                    if (activeBlobs.contains(blobName)) {
-                        filteredPartsBuilder.add(input);
-                        return false;
-                    } else {
-                        activeBlobs.add(blobName);
-                    }
-                }
-                return true;
-            }
-        });
-
-        outstandingJobParts = filteredPartsBuilder.build();
-
-        return nextWorkParts;
     }
 
-    private MasterObjectList getAvailable() throws IOException, InterruptedException {
+    private MasterObjectList masterObjectListWithAvailableChunks() throws IOException, InterruptedException {
+        LOG.info("---> Getting blobs from black pearl.");
+
         do {
             final GetJobChunksReadyForClientProcessingSpectraS3Response availableJobChunks =
                     client().getJobChunksReadyForClientProcessingSpectraS3(new GetJobChunksReadyForClientProcessingSpectraS3Request(masterObjectList().getJobId().toString()));
@@ -137,21 +96,12 @@ public class GetSequentialBlobStrategy extends AbstractBlobStrategy {
         } while(true);
     }
 
-    private Iterable<JobPart> getNextIterable(final FluentIterable<JobPart> jobParts) {
-        if (outstandingJobParts == null) {
-            return jobParts;
-        }
-        return Iterables.concat(outstandingJobParts, jobParts);
-    }
-
     /**
      * Emit an event when a blob is transferred.
      * @param bulkObject The transferred blob.
      */
     @Override
     public void blobCompleted(final BulkObject bulkObject) {
-        synchronized (lock) {
-            activeBlobs.remove(bulkObject.getName());
-        }
+        // Intentionally not implemented
     }
 }

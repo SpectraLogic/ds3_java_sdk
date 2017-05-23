@@ -38,4 +38,11 @@ public class JobPart {
         return bulkObject;
     }
 
+    @Override
+    public String toString() {
+        return "JobPart{" +
+                "client=" + client +
+                ", bulkObject=" + bulkObject +
+                '}';
+    }
 }

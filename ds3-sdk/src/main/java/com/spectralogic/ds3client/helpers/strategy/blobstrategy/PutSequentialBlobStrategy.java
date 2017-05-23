@@ -32,6 +32,7 @@ import org.slf4j.LoggerFactory;
 import javax.annotation.Nullable;
 import java.io.IOException;
 import java.util.Iterator;
+
 import static com.spectralogic.ds3client.helpers.strategy.StrategyUtils.filterChunks;
 
 /**
@@ -40,7 +41,7 @@ import static com.spectralogic.ds3client.helpers.strategy.StrategyUtils.filterCh
 public class PutSequentialBlobStrategy extends AbstractBlobStrategy {
     private final static Logger LOG = LoggerFactory.getLogger(PutSequentialBlobStrategy.class);
 
-    private final Iterator<Objects> filteredChunkIterator;
+    private final Iterator<Objects> chunksThatContainBlobs;
 
     public PutSequentialBlobStrategy(final Ds3Client client,
                                      final MasterObjectList masterObjectList,
@@ -49,33 +50,35 @@ public class PutSequentialBlobStrategy extends AbstractBlobStrategy {
                                      final ChunkAttemptRetryDelayBehavior chunkAttemptRetryDelayBehavior)
     {
         super(client, masterObjectList, eventDispatcher, retryBehavior, chunkAttemptRetryDelayBehavior);
-        this.filteredChunkIterator = filterChunks(masterObjectList.getObjects()).iterator();
+        this.chunksThatContainBlobs = filterChunks(masterObjectList.getObjects()).iterator();
     }
 
     @Override
     public Iterable<JobPart> getWork() throws IOException, InterruptedException {
-        final Objects nextChunk = allocateChunk(filteredChunkIterator.next());
+        final Objects nextChunk = allocateChunk(chunksThatContainBlobs.next());
 
         LOG.debug("Allocating chunk: {}", nextChunk.getChunkId().toString());
-        return FluentIterable.from(nextChunk.getObjects()).filter(new Predicate<BulkObject>() {
-            @Override
-            public boolean apply(@Nullable final BulkObject input) {
-                return !input.getInCache();
-            }
-        }).transform(new Function<BulkObject, JobPart>() {
-            @Nullable
-            @Override
-            public JobPart apply(@Nullable final BulkObject blob) {
-                return new JobPart(client(), blob);
+        return FluentIterable.from(nextChunk.getObjects())
+                .filter(new Predicate<BulkObject>() {
+                    @Override
+                    public boolean apply(@Nullable final BulkObject input) {
+                        return !input.getInCache();
+                    }
+                })
+                .transform(new Function<BulkObject, JobPart>() {
+                    @Nullable
+                    @Override
+                    public JobPart apply(@Nullable final BulkObject blob) {
+                        return new JobPart(client(), blob);
 
-                // TODO: When we get to the point where BP enables clustering, we'll want to be able to get the
-                // client connection info correct for the server on which a chunk resides. StrategyUtils.getClient
-                // appears to work to support the clustering scenario, but we don't need it right now, and holding
-                // connection info in a collection potentially exposes lifetime management issues that we haven't
-                // fully explored.
-                // return new JobPart(StrategyUtils.getClient(uuidJobNodeImmutableMap,nextChunk.getNodeId(), getClient()), input);
-            }
-        });
+                        // TODO: When we get to the point where BP enables clustering, we'll want to be able to get the
+                        // client connection info correct for the server on which a chunk resides. StrategyUtils.getClient
+                        // appears to work to support the clustering scenario, but we don't need it right now, and holding
+                        // connection info in a collection potentially exposes lifetime management issues that we haven't
+                        // fully explored.
+                        // return new JobPart(StrategyUtils.getClient(uuidJobNodeImmutableMap,nextChunk.getNodeId(), getClient()), input);
+                    }
+                });
     }
 
     private Objects allocateChunk(final Objects filtered) throws IOException {
