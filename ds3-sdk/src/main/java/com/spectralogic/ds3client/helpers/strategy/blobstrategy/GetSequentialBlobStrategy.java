@@ -48,8 +48,6 @@ public class GetSequentialBlobStrategy extends AbstractBlobStrategy {
 
     @Override
     public synchronized Iterable<JobPart> getWork() throws IOException, InterruptedException {
-        LOG.info("---> Getting available blobs.");
-
         // get chunks that have blobs ready for transfer from black pearl
         final MasterObjectList masterObjectListWithAvailableChunks = masterObjectListWithAvailableChunks();
 
@@ -72,8 +70,6 @@ public class GetSequentialBlobStrategy extends AbstractBlobStrategy {
     }
 
     private MasterObjectList masterObjectListWithAvailableChunks() throws IOException, InterruptedException {
-        LOG.info("---> Getting blobs from black pearl.");
-
         do {
             final GetJobChunksReadyForClientProcessingSpectraS3Response availableJobChunks =
                     client().getJobChunksReadyForClientProcessingSpectraS3(new GetJobChunksReadyForClientProcessingSpectraS3Request(masterObjectList().getJobId().toString()));
