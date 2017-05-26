@@ -47,7 +47,7 @@ abstract class AbstractTransferStrategy implements TransferStrategy {
     private final EventDispatcher eventDispatcher;
     private final MasterObjectList masterObjectList;
     private final FailureEvent.FailureActivity failureActivity;
-    private AtomicInteger totalNumBlobsToTransfer;
+    private final AtomicInteger totalNumBlobsToTransfer;
 
     private TransferMethod transferMethod;
 
