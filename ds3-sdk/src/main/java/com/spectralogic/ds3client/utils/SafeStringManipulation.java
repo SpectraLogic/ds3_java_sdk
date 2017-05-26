@@ -35,10 +35,10 @@ public final class SafeStringManipulation {
     /**
      * Specified as query safe characters in spec https://tools.ietf.org/html/rfc3986#section-3.4
      * with the following exceptions:
-     *  Encoding: "&", ":", "+", "=" as they have special meaning
+     *  Encoding: "&", ":", "+", "=", ";" as they have special meaning
      *  Not Encoding: "/"
      */
-    private static final String DS3_QUERY_PARAM_SAFE_CHARS = "-._~!$'()*,;@/";
+    private static final String DS3_QUERY_PARAM_SAFE_CHARS = "-._~!$'()*,@/";
 
     private static final Escaper DS3_URL_FRAGMENT_ESCAPER =
             new PercentEscaper(DS3_URL_PATH_FRAGMENT_SAFE_CHARS, false);
