@@ -97,7 +97,7 @@ abstract class AbstractTransferStrategy implements TransferStrategy {
      */
     @Override
     public void transfer() throws IOException {
-        do {
+        while (totalNumBlobsToTransfer.get() > 0 && ! Thread.currentThread().isInterrupted()) {
             try {
                 final Iterable<JobPart> jobParts = blobStrategy.getWork();
                 final CountDownLatch countDownLatch = new CountDownLatch(Iterables.size(jobParts));
@@ -110,7 +110,7 @@ abstract class AbstractTransferStrategy implements TransferStrategy {
                 emitFailureEvent(makeFailureEvent(failureActivity, t, firstChunk()));
                 totalNumBlobsToTransfer.decrementAndGet();
             }
-        } while (totalNumBlobsToTransfer.get() > 0);
+        }
     }
 
     private void transferJobParts(final Iterable<JobPart> jobParts, final CountDownLatch countDownLatch) throws IOException {
