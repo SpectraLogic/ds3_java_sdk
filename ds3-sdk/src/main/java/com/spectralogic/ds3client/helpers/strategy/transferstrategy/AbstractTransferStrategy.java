@@ -31,6 +31,7 @@ import java.io.IOException;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,6 +49,8 @@ abstract class AbstractTransferStrategy implements TransferStrategy {
     private final MasterObjectList masterObjectList;
     private final FailureEvent.FailureActivity failureActivity;
     private final AtomicInteger totalNumBlobsToTransfer;
+
+    private final AtomicReference<IOException> cachedException = new AtomicReference<>();
 
     private TransferMethod transferMethod;
 
@@ -97,6 +100,8 @@ abstract class AbstractTransferStrategy implements TransferStrategy {
      */
     @Override
     public void transfer() throws IOException {
+        cachedException.set(null);
+
         while (totalNumBlobsToTransfer.get() > 0 && ! Thread.currentThread().isInterrupted()) {
             try {
                 final Iterable<JobPart> jobParts = blobStrategy.getWork();
@@ -107,8 +112,27 @@ abstract class AbstractTransferStrategy implements TransferStrategy {
                 LOG.info("Error getting entries from work queue.", e);
                 Thread.currentThread().interrupt();
             } catch (final Throwable t) {
-                emitFailureEvent(makeFailureEvent(failureActivity, t, firstChunk()));
                 totalNumBlobsToTransfer.decrementAndGet();
+                emitFailureAndSetCachedException(t);
+            }
+        }
+
+        if (cachedException.get() != null) {
+            throw cachedException.get();
+        }
+    }
+
+    private void emitFailureAndSetCachedException(final Throwable t) {
+        emitFailureEvent(makeFailureEvent(failureActivity, t, firstChunk()));
+        maybeSetCachedException(t);
+    }
+
+    private synchronized void maybeSetCachedException(final Throwable t) {
+        if (cachedException.get() == null) {
+            if (t instanceof IOException) {
+                cachedException.set((IOException)t);
+            } else {
+                cachedException.set(new IOException(t));
             }
         }
     }
@@ -119,20 +143,17 @@ abstract class AbstractTransferStrategy implements TransferStrategy {
                 @Override
                 public Void call() throws Exception {
                     try {
-                        try {
-                            transferMethod.transferJobPart(jobPart);
-                        } catch (final RuntimeException e) {
-                            throw e;
-                        } catch (final Exception e) {
-                            throw new RuntimeException(e);
-                        } finally {
-                            totalNumBlobsToTransfer.decrementAndGet();
-                            countDownLatch.countDown();
-                            return null;
-                        }
-                    } catch (final Throwable t) {
-                        emitFailureEvent(makeFailureEvent(failureActivity, t, firstChunk()));
-                        throw t;
+                        transferMethod.transferJobPart(jobPart);
+                    } catch (final RuntimeException e) {
+                        emitFailureAndSetCachedException(e);
+                        throw e;
+                    } catch (final Exception e) {
+                        emitFailureAndSetCachedException(e);
+                        throw new RuntimeException(e);
+                    } finally {
+                        totalNumBlobsToTransfer.decrementAndGet();
+                        countDownLatch.countDown();
+                        return null;
                     }
                 }
             });

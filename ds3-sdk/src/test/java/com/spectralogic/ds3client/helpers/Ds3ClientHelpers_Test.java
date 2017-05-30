@@ -245,7 +245,7 @@ public class Ds3ClientHelpers_Test {
         }
     }
     
-    private static final class StubException extends RuntimeException {
+    private static final class StubException extends IOException {
         private static final long serialVersionUID = 5121719894916333278L;
     }
 

@@ -431,10 +431,12 @@ public class GetJobManagement_Test {
         }
     }
 
-    @Test(expected = AccessControlException.class)
+    @Test
     public void testReadRetrybugWhenChannelThrowsAccessException() throws IOException, URISyntaxException, NoSuchMethodException, IllegalAccessException, InvocationTargetException {
         final String tempPathPrefix = null;
         final Path tempDirectoryPath = Files.createTempDirectory(Paths.get("."), tempPathPrefix);
+
+        final AtomicBoolean caughtException = new AtomicBoolean(false);
 
         try {
             final String DIR_NAME = "largeFiles/";
@@ -444,7 +446,7 @@ public class GetJobManagement_Test {
             final long bookSize = Files.size(objPath);
             final Ds3Object obj = new Ds3Object(FILE_NAME, bookSize);
 
-            final Ds3ClientShim ds3ClientShim = new Ds3ClientShim((Ds3ClientImpl)client);
+            final Ds3ClientShim ds3ClientShim = new Ds3ClientShim((Ds3ClientImpl) client);
 
             final int maxNumBlockAllocationRetries = 1;
             final int maxNumObjectTransferAttempts = 3;
@@ -465,9 +467,14 @@ public class GetJobManagement_Test {
                     throw new AccessControlException(key);
                 }
             });
+        } catch (final IOException e) {
+            caughtException.set(true);
+            assertTrue(e.getCause() instanceof AccessControlException);
         } finally {
             FileUtils.deleteDirectory(tempDirectoryPath.toFile());
         }
+
+        assertTrue(caughtException.get());
     }
 
     @Test
