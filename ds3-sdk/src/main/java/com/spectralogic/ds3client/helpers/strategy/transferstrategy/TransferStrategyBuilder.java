@@ -345,7 +345,7 @@ public final class TransferStrategyBuilder {
     }
 
     /**
-     * When getting portions of objects from a Black Pearl, object ranges are the mechanism used to tell the Blavk Pearl
+     * When getting portions of objects from a Black Pearl, object ranges are the mechanism used to tell the Black Pearl
      * which portions of obejcts to get.
      * @param rangesForBlobs When retrieving whole objects, you supply an empty range, e.g.:
      *                       <pre>

@@ -23,10 +23,10 @@ import java.util.Collection;
 public class JobState {
     final int numBlobsToTransfer;
 
-    public JobState(final Collection<Objects> filteredChunks) {
+    public JobState(final Collection<Objects> chunksThatContainBlobs) {
         int numBlobsInChunks = 0;
 
-        for (final Objects chunk : filteredChunks) {
+        for (final Objects chunk : chunksThatContainBlobs) {
             for (final BulkObject ignored : chunk.getObjects()) {
                 ++numBlobsInChunks;
             }
