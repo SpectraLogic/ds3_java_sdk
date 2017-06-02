@@ -20,6 +20,7 @@ import com.google.common.util.concurrent.ListeningExecutorService;
 import com.spectralogic.ds3client.Ds3Client;
 import com.spectralogic.ds3client.commands.spectrads3.GetBulkJobSpectraS3Request;
 import com.spectralogic.ds3client.commands.spectrads3.PutBulkJobSpectraS3Request;
+import com.spectralogic.ds3client.exceptions.Ds3NoMoreRetriesException;
 import com.spectralogic.ds3client.helpers.JobPart;
 import com.spectralogic.ds3client.helpers.JobState;
 import com.spectralogic.ds3client.helpers.events.FailureEvent;
@@ -108,6 +109,9 @@ abstract class AbstractTransferStrategy implements TransferStrategy {
                 final CountDownLatch countDownLatch = new CountDownLatch(Iterables.size(jobParts));
                 transferJobParts(jobParts, countDownLatch);
                 countDownLatch.await();
+            } catch (final Ds3NoMoreRetriesException e) {
+                emitFailureEvent(makeFailureEvent(failureActivity, e, firstChunk()));
+                throw e;
             } catch (final InterruptedException e) {
                 LOG.info("Error getting entries from work queue.", e);
                 Thread.currentThread().interrupt();
