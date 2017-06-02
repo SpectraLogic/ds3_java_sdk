@@ -16,6 +16,7 @@
 package com.spectralogic.ds3client.helpers;
 
 import com.google.common.base.Function;
+import com.google.common.base.Preconditions;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMultimap;
@@ -28,13 +29,15 @@ import com.spectralogic.ds3client.commands.*;
 import com.spectralogic.ds3client.commands.spectrads3.*;
 import com.spectralogic.ds3client.helpers.options.ReadJobOptions;
 import com.spectralogic.ds3client.helpers.options.WriteJobOptions;
+import com.spectralogic.ds3client.helpers.strategy.transferstrategy.EventDispatcher;
+import com.spectralogic.ds3client.helpers.strategy.transferstrategy.EventDispatcherImpl;
+import com.spectralogic.ds3client.helpers.strategy.transferstrategy.TransferStrategy;
+import com.spectralogic.ds3client.helpers.strategy.transferstrategy.TransferStrategyBuilder;
 import com.spectralogic.ds3client.helpers.util.PartialObjectHelpers;
 import com.spectralogic.ds3client.models.*;
-import com.spectralogic.ds3client.models.bulk.RequestType;
 import com.spectralogic.ds3client.models.common.Range;
 import com.spectralogic.ds3client.models.bulk.*;
 import com.spectralogic.ds3client.networking.FailedRequestException;
-import com.spectralogic.ds3client.utils.Guard;
 import com.spectralogic.ds3client.utils.collections.LazyIterable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,82 +54,96 @@ import java.util.List;
 import java.util.UUID;
 
 class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
-
-    public final static int DEFAULT_RETRY_DELAY = -1;
-    public final static int DEFAULT_RETRY_AFTER = -1;
-    public final static int DEFAULT_OBJECT_TRANSFER_ATTEMPTS = 5;
-
     private final static Logger LOG = LoggerFactory.getLogger(Ds3ClientHelpersImpl.class);
     private final static int DEFAULT_LIST_OBJECTS_RETRIES = 5;
 
     private final Ds3Client client;
-    private final int retryAfter;
-    private final int retryDelay;
-    private final int objectTransferAttempts;
+    private final int maxChunkAttempts;
+    private final int secondsBetweenChunkAttempts;
+    private final int maxObjectTransferAttempts;
     private final EventRunner eventRunner;
     private final FileSystemHelper fileSystemHelper;
 
     public Ds3ClientHelpersImpl(final Ds3Client client) {
-        this(client, DEFAULT_RETRY_AFTER);
+        this(client, TransferStrategyBuilder.DEFAULT_CHUNK_ATTEMPT_RETRY_ATTEMPTS);
     }
 
-    public Ds3ClientHelpersImpl(final Ds3Client client, final int retryAfter) {
-        this(client, retryAfter, DEFAULT_OBJECT_TRANSFER_ATTEMPTS);
+    public Ds3ClientHelpersImpl(final Ds3Client client, final int maxChunkAttempts) {
+        this(client, maxChunkAttempts, TransferStrategyBuilder.DEFAULT_OBJECT_TRANSFER_ATTEMPTS);
     }
 
-    public Ds3ClientHelpersImpl(final Ds3Client client, final int retryAfter, final int objectTransferAttempts) {
-        this(client, retryAfter, objectTransferAttempts, DEFAULT_RETRY_DELAY);
+    public Ds3ClientHelpersImpl(final Ds3Client client, final int maxChunkAttempts, final int maxObjectTransferAttempts) {
+        this(client, maxChunkAttempts, maxObjectTransferAttempts, TransferStrategyBuilder.DEFAULT_CHUNK_ATTEMPT_RETRY_INTERVAL);
     }
 
-    public Ds3ClientHelpersImpl(final Ds3Client client, final int retryAfter, final int objectTransferAttempts, final int retryDelay) {
-        this(client, retryAfter, objectTransferAttempts, retryDelay, new SameThreadEventRunner());
+    public Ds3ClientHelpersImpl(final Ds3Client client, final int maxChunkAttempts, final int maxObjectTransferAttempts, final int secondsBetweenChunkAttempts) {
+        this(client, maxChunkAttempts, maxObjectTransferAttempts, secondsBetweenChunkAttempts, new SameThreadEventRunner());
     }
 
     public Ds3ClientHelpersImpl(final Ds3Client client,
-                                final int retryAfter,
-                                final int objectTransferAttempts,
-                                final int retryDelay,
+                                final int maxChunkAttempts,
+                                final int maxObjectTransferAttempts,
+                                final int secondsBetweenChunkAttempts,
                                 final EventRunner eventRunner)
     {
-        this(client, retryAfter, objectTransferAttempts, retryDelay, eventRunner, new FileSystemHelperImpl());
+        this(client, maxChunkAttempts, maxObjectTransferAttempts, secondsBetweenChunkAttempts, eventRunner, new FileSystemHelperImpl());
     }
 
     public Ds3ClientHelpersImpl(final Ds3Client client,
-                                final int retryAfter,
-                                final int objectTransferAttempts,
-                                final int retryDelay,
+                                final int maxChunkAttempts,
+                                final int maxObjectTransferAttempts,
+                                final int secondsBetweenChunkAttempts,
                                 final EventRunner eventRunner,
                                 final FileSystemHelper fileSystemHelper)
     {
         this.client = client;
-        this.retryAfter = retryAfter;
-        this.objectTransferAttempts = objectTransferAttempts;
-        this.retryDelay = retryDelay;
+        this.maxChunkAttempts = maxChunkAttempts;
+        this.maxObjectTransferAttempts = maxObjectTransferAttempts;
+        this.secondsBetweenChunkAttempts = secondsBetweenChunkAttempts;
         this.eventRunner = eventRunner;
         this.fileSystemHelper = fileSystemHelper;
     }
 
     @Override
     public Ds3ClientHelpers.Job startWriteJob(final String bucket, final Iterable<Ds3Object> objectsToWrite)
-            throws IOException {
-        return innerStartWriteJob(bucket, objectsToWrite, WriteJobOptions.create());
+            throws IOException
+    {
+        return startWriteJob(bucket, objectsToWrite, WriteJobOptions.create());
     }
 
     @Override
     public Ds3ClientHelpers.Job startWriteJob(final String bucket,
-                                                   final Iterable<Ds3Object> objectsToWrite,
-                                                   final WriteJobOptions options)
-            throws IOException {
+                                              final Iterable<Ds3Object> objectsToWrite,
+                                              final WriteJobOptions options)
+            throws IOException
+    {
         if (options == null) {
-            return innerStartWriteJob(bucket, objectsToWrite, WriteJobOptions.create());
+            return innerStartWriteJob(bucket, objectsToWrite, WriteJobOptions.create(), makeTransferStrategyBuilder());
         }
-        return innerStartWriteJob(bucket, objectsToWrite, options);
+
+        return innerStartWriteJob(bucket, objectsToWrite, options, makeTransferStrategyBuilder());
+    }
+
+    private TransferStrategyBuilder makeTransferStrategyBuilder() {
+        final EventDispatcher eventDispatcher = new EventDispatcherImpl(eventRunner);
+
+        final TransferStrategyBuilder transferStrategyBuilder = new TransferStrategyBuilder()
+                .withDs3Client(client)
+                .withNumChunkAttemptRetries(maxChunkAttempts)
+                .withNumTransferRetries(maxObjectTransferAttempts)
+                .withChunkRetryDelayInSeconds(secondsBetweenChunkAttempts)
+                .withEventRunner(eventRunner)
+                .withEventDispatcher(eventDispatcher);
+
+        return transferStrategyBuilder;
     }
 
     private Ds3ClientHelpers.Job innerStartWriteJob(final String bucket,
-                                                         final Iterable<Ds3Object> objectsToWrite,
-                                                         final WriteJobOptions options)
-            throws IOException {
+                                                    final Iterable<Ds3Object> objectsToWrite,
+                                                    final WriteJobOptions options,
+                                                    final TransferStrategyBuilder transferStrategyBuilder)
+            throws IOException
+    {
         final PutBulkJobSpectraS3Request request = new PutBulkJobSpectraS3Request(bucket, Lists.newArrayList(objectsToWrite))
                 .withPriority(options.getPriority())
                 .withAggregating(options.isAggregating())
@@ -137,62 +154,151 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
             request.withMaxUploadSize(options.getMaxUploadSize());
         }
 
-        final PutBulkJobSpectraS3Response putBulkJobSpectraS3Response = this.client.putBulkJobSpectraS3(
-                request);
+        final PutBulkJobSpectraS3Response putBulkJobSpectraS3Response = this.client.putBulkJobSpectraS3(request);
 
+        transferStrategyBuilder.withMasterObjectList(putBulkJobSpectraS3Response.getMasterObjectList())
+                .withChecksumType(options.getChecksumType());
 
-        return new WriteJobImpl(
-                this.client,
-                putBulkJobSpectraS3Response.getMasterObjectList(),
-                this.retryAfter,
-                options.getChecksumType(),
-                this.objectTransferAttempts,
-                this.retryDelay,
-                this.eventRunner);
+        return new WriteJobImpl(transferStrategyBuilder);
     }
 
     @Override
-    public Ds3ClientHelpers.Job startReadJob(final String bucket, final Iterable<Ds3Object> objectsToRead)
-            throws IOException {
-        return innerStartReadJob(bucket, objectsToRead, ReadJobOptions.create());
+    public Job startWriteJob(final TransferStrategy transferStrategy)
+            throws IOException
+    {
+        return new WriteJobImpl(transferStrategy);
+    }
+
+    @Override
+    public Job startWriteJobUsingStreamedBehavior(final String bucket, final Iterable<Ds3Object> objectsToWrite) throws IOException {
+        return startWriteJobUsingStreamedBehavior(bucket, objectsToWrite, WriteJobOptions.create());
+    }
+
+    @Override
+    public Job startWriteJobUsingStreamedBehavior(final String bucket,
+                                                  final Iterable<Ds3Object> objectsToWrite,
+                                                  final WriteJobOptions options)
+            throws IOException
+    {
+        Preconditions.checkNotNull(options, "options may not be null.");
+
+        final TransferStrategyBuilder transferStrategyBuilder = makeTransferStrategyBuilder();
+        transferStrategyBuilder.usingStreamedTransferBehavior();
+
+        return innerStartWriteJob(bucket, objectsToWrite, options, transferStrategyBuilder);
+    }
+
+    @Override
+    public Job startWriteJobUsingRandomAccessBehavior(final String bucket, final Iterable<Ds3Object> objectsToWrite) throws IOException {
+        return startWriteJobUsingRandomAccessBehavior(bucket, objectsToWrite, WriteJobOptions.create());
+    }
+
+    @Override
+    public Job startWriteJobUsingRandomAccessBehavior(final String bucket, final Iterable<Ds3Object> objectsToWrite, final WriteJobOptions options) throws IOException {
+        Preconditions.checkNotNull(options, "options may not be null.");
+
+        final TransferStrategyBuilder transferStrategyBuilder = makeTransferStrategyBuilder();
+        transferStrategyBuilder.usingRandomAccessTransferBehavior();
+
+        return innerStartWriteJob(bucket, objectsToWrite, options, transferStrategyBuilder);
+    }
+
+    @Override
+    public Ds3ClientHelpers.Job startReadJob(final String bucket, final Iterable<Ds3Object> objectsToRead) throws IOException {
+        return startReadJob(bucket, objectsToRead, ReadJobOptions.create());
     }
 
     @Override
     public Ds3ClientHelpers.Job startReadJob(final String bucket, final Iterable<Ds3Object> objectsToRead, final ReadJobOptions options)
-            throws IOException {
+            throws IOException
+    {
+        final List<Ds3Object> objects = Lists.newArrayList(objectsToRead);
+
+        final GetBulkJobSpectraS3Request getBulkJobSpectraS3Request;
+
         if (options == null) {
-            return innerStartReadJob(bucket, objectsToRead, ReadJobOptions.create());
+            getBulkJobSpectraS3Request = makeGetBulkJobSpectraS3Request(bucket, objects, ReadJobOptions.create());
+        } else {
+            getBulkJobSpectraS3Request = makeGetBulkJobSpectraS3Request(bucket, objects, options);
         }
-        return innerStartReadJob(bucket, objectsToRead, options);
+
+        getBulkJobSpectraS3Request.withChunkClientProcessingOrderGuarantee(JobChunkClientProcessingOrderGuarantee.NONE);
+
+        return innerStartReadJob(objects, getBulkJobSpectraS3Request, makeTransferStrategyBuilder());
     }
 
-    private Ds3ClientHelpers.Job innerStartReadJob(final String bucket, final Iterable<Ds3Object> objectsToRead, final ReadJobOptions options)
-            throws IOException {
-        final List<Ds3Object> objects = Lists.newArrayList(objectsToRead);
-        final GetBulkJobSpectraS3Request getBulkJobSpectraS3Request = new GetBulkJobSpectraS3Request(bucket, objects)
-                .withChunkClientProcessingOrderGuarantee(JobChunkClientProcessingOrderGuarantee.NONE)
-                .withPriority(options.getPriority());
-        if (!Guard.isStringNullOrEmpty(options.getName())) {
-            getBulkJobSpectraS3Request.withName(options.getName());
-        }
+    private GetBulkJobSpectraS3Request makeGetBulkJobSpectraS3Request(final String bucket, final List<Ds3Object> objects, final ReadJobOptions options) {
+        return new GetBulkJobSpectraS3Request(bucket, objects)
+                .withPriority(options.getPriority())
+                .withName(options.getName());
+    }
 
+    private Ds3ClientHelpers.Job innerStartReadJob(final List<Ds3Object> objects,
+                                                   final GetBulkJobSpectraS3Request getBulkJobSpectraS3Request,
+                                                   final TransferStrategyBuilder transferStrategyBuilder)
+            throws IOException
+    {
         final GetBulkJobSpectraS3Response getBulkJobSpectraS3Response = this.client.getBulkJobSpectraS3(getBulkJobSpectraS3Request);
 
         final ImmutableMultimap<String, Range> partialRanges = PartialObjectHelpers.getPartialObjectsRanges(objects);
 
-        return new ReadJobImpl(
-                this.client,
-                getBulkJobSpectraS3Response.getMasterObjectList(),
-                partialRanges,
-                this.objectTransferAttempts,
-                this.retryAfter,
-                this.retryDelay,
-                this.eventRunner);
+        final MasterObjectList masterObjectList = getBulkJobSpectraS3Response.getMasterObjectList();
+
+        transferStrategyBuilder.withMasterObjectList(masterObjectList)
+                .withRangesForBlobs(PartialObjectHelpers.mapRangesToBlob(masterObjectList.getObjects(), partialRanges));
+
+        return new ReadJobImpl(transferStrategyBuilder);
     }
 
     @Override
-    public Ds3ClientHelpers.Job startReadAllJob(final String bucket)
-            throws IOException {
+    public Job startReadJob(final TransferStrategy transferStrategy) throws IOException {
+        return new ReadJobImpl(transferStrategy);
+    }
+
+    @Override
+    public Job startReadJobUsingStreamedBehavior(final String bucket, final Iterable<Ds3Object> objectsToRead) throws IOException {
+        return startReadJobUsingStreamedBehavior(bucket, objectsToRead, ReadJobOptions.create());
+    }
+
+    @Override
+    public Job startReadJobUsingStreamedBehavior(final String bucket, final Iterable<Ds3Object> objectsToRead, final ReadJobOptions options) throws IOException {
+        Preconditions.checkNotNull(options, "options may not be null.");
+
+        final List<Ds3Object> objects = Lists.newArrayList(objectsToRead);
+
+        final GetBulkJobSpectraS3Request getBulkJobSpectraS3Request = makeGetBulkJobSpectraS3Request(bucket, objects, options);
+
+        getBulkJobSpectraS3Request.withChunkClientProcessingOrderGuarantee(JobChunkClientProcessingOrderGuarantee.IN_ORDER);
+
+        final TransferStrategyBuilder transferStrategyBuilder = makeTransferStrategyBuilder();
+        transferStrategyBuilder.usingStreamedTransferBehavior();
+
+        return innerStartReadJob(objects, getBulkJobSpectraS3Request, transferStrategyBuilder);
+    }
+
+    @Override
+    public Job startReadJobUsingRandomAccessBehavior(final String bucket, final Iterable<Ds3Object> objectsToRead) throws IOException {
+        return startReadJobUsingRandomAccessBehavior(bucket, objectsToRead, ReadJobOptions.create());
+    }
+
+    @Override
+    public Job startReadJobUsingRandomAccessBehavior(final String bucket, final Iterable<Ds3Object> objectsToRead, final ReadJobOptions options) throws IOException {
+        Preconditions.checkNotNull(options, "options may not be null.");
+
+        final List<Ds3Object> objects = Lists.newArrayList(objectsToRead);
+
+        final GetBulkJobSpectraS3Request getBulkJobSpectraS3Request = makeGetBulkJobSpectraS3Request(bucket, objects, options);
+
+        getBulkJobSpectraS3Request.withChunkClientProcessingOrderGuarantee(JobChunkClientProcessingOrderGuarantee.NONE);
+
+        final TransferStrategyBuilder transferStrategyBuilder = makeTransferStrategyBuilder();
+        transferStrategyBuilder.usingRandomAccessTransferBehavior();
+
+        return innerStartReadJob(objects, getBulkJobSpectraS3Request, transferStrategyBuilder);
+    }
+
+    @Override
+    public Ds3ClientHelpers.Job startReadAllJob(final String bucket) throws IOException {
         return innerStartReadAllJob(bucket, ReadJobOptions.create());
     }
 
@@ -205,53 +311,48 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
         return innerStartReadAllJob(bucket, options);
     }
 
-    private Ds3ClientHelpers.Job innerStartReadAllJob(final String bucket, final ReadJobOptions options)
-            throws IOException {
-        final Iterable<Contents> contentsList = this.listObjects(bucket);
-
-        final Iterable<Ds3Object> ds3Objects = this.toDs3Iterable(contentsList, FolderNameFilter.filter());
-
-        return this.startReadJob(bucket, ds3Objects, options);
+    private Ds3ClientHelpers.Job innerStartReadAllJob(final String bucket, final ReadJobOptions options) throws IOException {
+        return this.startReadJob(bucket, makeBlobList(bucket), options);
     }
 
+    private final Iterable<Ds3Object> makeBlobList(final String bucket) throws IOException {
+        final Iterable<Contents> contentsList = listObjects(bucket);
+
+        return toDs3Iterable(contentsList, FolderNameFilter.filter());
+    }
+
+    public Ds3ClientHelpers.Job startReadAllJobUsingStreamedBehavior(final String bucket) throws IOException {
+        return startReadAllJobUsingStreamedBehavior(bucket, ReadJobOptions.create());
+    }
+
+    public Ds3ClientHelpers.Job startReadAllJobUsingStreamedBehavior(final String bucket, final ReadJobOptions options) throws IOException {
+        Preconditions.checkNotNull(options, "options may not be null.");
+
+        return startReadJobUsingStreamedBehavior(bucket, makeBlobList(bucket), options);
+    }
+
+    public Ds3ClientHelpers.Job startReadAllJobUsingRandomAccessBehavior(final String bucket) throws IOException {
+        return startReadAllJobUsingRandomAccessBehavior(bucket, ReadJobOptions.create());
+    }
+
+    public Ds3ClientHelpers.Job startReadAllJobUsingRandomAccessBehavior(final String bucket, final ReadJobOptions options) throws IOException {
+        Preconditions.checkNotNull(options, "options may not be null.");
+
+        return startReadJobUsingRandomAccessBehavior(bucket, makeBlobList(bucket), options);
+    }
+
+    // TODO Need to allow the user to pass in the checksumming information again
     @Override
     public Ds3ClientHelpers.Job recoverWriteJob(final UUID jobId) throws IOException, JobRecoveryException {
         innerVerifyJobActive(jobId);
-        final ModifyJobSpectraS3Response jobResponse = this.client.modifyJobSpectraS3(new ModifyJobSpectraS3Request(jobId.toString()));
-        if (JobRequestType.PUT != jobResponse.getMasterObjectListResult().getRequestType()) {
-            throw new JobRecoveryTypeException(
-                    RequestType.PUT.toString(),
-                    jobResponse.getMasterObjectListResult().getRequestType().toString());
-        }
-        // TODO Need to allow the user to pass in the checksumming information again
-        return new WriteJobImpl(
-                this.client,
-                jobResponse.getMasterObjectListResult(),
-                this.retryAfter,
-                ChecksumType.Type.NONE,
-                this.objectTransferAttempts,
-                this.retryDelay,
-                this.eventRunner);
-    }
 
-    @Override
-    //TODO add a partial object read recovery method.  That method will require the list of partial objects.
-    public Ds3ClientHelpers.Job recoverReadJob(final UUID jobId) throws IOException, JobRecoveryException {
-        innerVerifyJobActive(jobId);
-        final ModifyJobSpectraS3Response jobResponse = this.client.modifyJobSpectraS3(new ModifyJobSpectraS3Request(jobId.toString()));
-        if (JobRequestType.GET != jobResponse.getMasterObjectListResult().getRequestType()){
-            throw new JobRecoveryTypeException(
-                    RequestType.GET.toString(),
-                    jobResponse.getMasterObjectListResult().getRequestType().toString() );
-        }
-        return new ReadJobImpl(
-                this.client,
-                jobResponse.getMasterObjectListResult(),
-                ImmutableMultimap.<String, Range>of(),
-                this.objectTransferAttempts,
-                this.retryAfter,
-                this.retryDelay,
-                this.eventRunner);
+        final ModifyJobSpectraS3Response jobResponse = modifyJobSpectraS3Response(jobId, JobRequestType.PUT);
+
+        final TransferStrategyBuilder transferStrategyBuilder = makeTransferStrategyBuilder()
+                .withMasterObjectList(jobResponse.getMasterObjectListResult())
+                .withChecksumType(ChecksumType.Type.NONE);
+
+        return new WriteJobImpl(transferStrategyBuilder);
     }
 
     /**
@@ -269,6 +370,90 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
             }
             throw e;
         }
+    }
+
+    private ModifyJobSpectraS3Response modifyJobSpectraS3Response(final UUID jobId, final JobRequestType jobRequestType) throws IOException, JobRecoveryException {
+        final ModifyJobSpectraS3Response jobResponse = client.modifyJobSpectraS3(new ModifyJobSpectraS3Request(jobId.toString()));
+
+        if (jobRequestType != jobResponse.getMasterObjectListResult().getRequestType()) {
+            throw new JobRecoveryTypeException(jobRequestType.toString(), jobResponse.getMasterObjectListResult().getRequestType().toString());
+        }
+
+        return jobResponse;
+    }
+
+    public Ds3ClientHelpers.Job recoverWriteJobUsingStreamedBehavior(final UUID jobId) throws IOException, JobRecoveryException {
+        innerVerifyJobActive(jobId);
+
+        final ModifyJobSpectraS3Response jobResponse = modifyJobSpectraS3Response(jobId, JobRequestType.PUT);
+
+        final TransferStrategyBuilder transferStrategyBuilder = makeTransferStrategyBuilder()
+                .withMasterObjectList(jobResponse.getMasterObjectListResult())
+                .withChecksumType(ChecksumType.Type.NONE)
+                .usingStreamedTransferBehavior();
+
+        return new WriteJobImpl(transferStrategyBuilder);
+    }
+
+    public Ds3ClientHelpers.Job recoverWriteJobUsingRandomAccessBehavior(final UUID jobId) throws IOException, JobRecoveryException {
+        innerVerifyJobActive(jobId);
+
+        final ModifyJobSpectraS3Response jobResponse = modifyJobSpectraS3Response(jobId, JobRequestType.PUT);
+
+        final TransferStrategyBuilder transferStrategyBuilder = makeTransferStrategyBuilder()
+                .withMasterObjectList(jobResponse.getMasterObjectListResult())
+                .withChecksumType(ChecksumType.Type.NONE)
+                .usingRandomAccessTransferBehavior();
+
+        return new WriteJobImpl(transferStrategyBuilder);
+    }
+
+    @Override
+    //TODO add a partial object read recovery method.  That method will require the list of partial objects.
+    public Ds3ClientHelpers.Job recoverReadJob(final UUID jobId) throws IOException, JobRecoveryException {
+        innerVerifyJobActive(jobId);
+
+        final MasterObjectList masterObjectList = masterObjectListForGetJob(jobId);
+
+        final TransferStrategyBuilder transferStrategyBuilder = makeTransferStrategyBuilder()
+                .withMasterObjectList(masterObjectList)
+                .withRangesForBlobs(PartialObjectHelpers.mapRangesToBlob(masterObjectList.getObjects(), ImmutableMultimap.<String, Range>of()));
+
+        return new ReadJobImpl(transferStrategyBuilder);
+    }
+
+    private MasterObjectList masterObjectListForGetJob(final UUID jobId) throws IOException, JobRecoveryException {
+        final ModifyJobSpectraS3Response jobResponse = modifyJobSpectraS3Response(jobId, JobRequestType.GET);
+
+        return jobResponse.getMasterObjectListResult();
+    }
+
+    @Override
+    public Job recoverReadJobsingStreamedBehavior(final UUID jobId) throws IOException, JobRecoveryException {
+        innerVerifyJobActive(jobId);
+
+        final MasterObjectList masterObjectList = masterObjectListForGetJob(jobId);
+
+        final TransferStrategyBuilder transferStrategyBuilder = makeTransferStrategyBuilder()
+                .withMasterObjectList(masterObjectList)
+                .withRangesForBlobs(PartialObjectHelpers.mapRangesToBlob(masterObjectList.getObjects(), ImmutableMultimap.<String, Range>of()))
+                .usingStreamedTransferBehavior();
+
+        return new ReadJobImpl(transferStrategyBuilder);
+    }
+
+    @Override
+    public Job recoverReadJobUsingRandomAccessBehavior(final UUID jobId) throws IOException, JobRecoveryException {
+        innerVerifyJobActive(jobId);
+
+        final MasterObjectList masterObjectList = masterObjectListForGetJob(jobId);
+
+        final TransferStrategyBuilder transferStrategyBuilder = makeTransferStrategyBuilder()
+                .withMasterObjectList(masterObjectList)
+                .withRangesForBlobs(PartialObjectHelpers.mapRangesToBlob(masterObjectList.getObjects(), ImmutableMultimap.<String, Range>of()))
+                .usingRandomAccessTransferBehavior();
+
+        return new ReadJobImpl(transferStrategyBuilder);
     }
 
     @Override

@@ -174,6 +174,8 @@ public class DataIntegrity_Test {
             final SingleChecksumListener listener = new SingleChecksumListener();
 
             job.attachChecksumListener(listener);
+            job.removeChecksumListener(listener);
+            job.attachChecksumListener(listener);
 
             job.transfer(new ResourceObjectPutter("books/"));
 

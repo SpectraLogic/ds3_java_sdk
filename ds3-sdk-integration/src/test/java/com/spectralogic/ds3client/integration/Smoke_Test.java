@@ -35,6 +35,7 @@ import com.spectralogic.ds3client.networking.FailedRequestException;
 import com.spectralogic.ds3client.networking.Metadata;
 import com.spectralogic.ds3client.utils.ByteArraySeekableByteChannel;
 import com.spectralogic.ds3client.utils.ResourceUtils;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -42,6 +43,7 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.ByteBuffer;
@@ -50,6 +52,8 @@ import java.nio.channels.SeekableByteChannel;
 import java.nio.charset.Charset;
 import java.nio.file.*;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -503,6 +507,72 @@ public class Smoke_Test {
         }
     }
 
+    @Test
+    public void testRecoverWriteJobUsingStreamedBehavior() throws IOException, JobRecoveryException, URISyntaxException {
+        runWriteRecoveryTest(new RecoveryJobFactory() {
+            @Override
+            public Ds3ClientHelpers.Job makeRecoveryJob(final Ds3ClientHelpers ds3ClientHelpers, final UUID jobId) throws JobRecoveryException, IOException {
+                return ds3ClientHelpers.recoverWriteJobUsingStreamedBehavior(jobId);
+            }
+        });
+    }
+
+    private void runWriteRecoveryTest(final RecoveryJobFactory recoveryJobFactory) throws IOException, JobRecoveryException, URISyntaxException {
+        final String bucketName = "test_recover_write_job_bucket";
+        final String book1 = "beowulf.txt";
+        final String book2 = "ulysses.txt";
+
+        try {
+            HELPERS.ensureBucketExists(bucketName, envDataPolicyId);
+
+            final Path objPath1 = ResourceUtils.loadFileResource(RESOURCE_BASE_NAME + book1);
+            final Path objPath2 = ResourceUtils.loadFileResource(RESOURCE_BASE_NAME + book2);
+            final Ds3Object obj1 = new Ds3Object(book1, Files.size(objPath1));
+            final Ds3Object obj2 = new Ds3Object(book2, Files.size(objPath2));
+
+            final Map<String, Ds3Object> blobCollection = new HashMap<>();
+            blobCollection.put(book1, obj1);
+            blobCollection.put(book2, obj2);
+
+            final Ds3ClientHelpers.Job job = Ds3ClientHelpers.wrap(client).startWriteJob(bucketName, Lists.newArrayList(obj1, obj2));
+
+            final PutObjectResponse putResponse1 = client.putObject(new PutObjectRequest(
+                    job.getBucketName(),
+                    book1,
+                    new ResourceObjectPutter(RESOURCE_BASE_NAME).buildChannel(book1),
+                    job.getJobId().toString(),
+                    0,
+                    Files.size(objPath1)));
+            assertThat(putResponse1, is(notNullValue()));
+
+            // Interuption...
+            final Ds3ClientHelpers.Job recoverJob = recoveryJobFactory.makeRecoveryJob(HELPERS, job.getJobId());
+
+            recoverJob.transfer(new ResourceObjectPutter(RESOURCE_BASE_NAME));
+
+            final Iterable<Contents> bucketContentsIterable = HELPERS.listObjects(bucketName);
+            for (final Contents bucketContents : bucketContentsIterable) {
+                assertEquals(blobCollection.get(bucketContents.getKey()).getSize(), bucketContents.getSize());
+            }
+        } finally {
+            deleteAllContents(client, bucketName);
+        }
+    }
+
+    private interface RecoveryJobFactory {
+        Ds3ClientHelpers.Job makeRecoveryJob(final Ds3ClientHelpers ds3ClientHelpers, final UUID jobId) throws JobRecoveryException, IOException;
+    }
+
+    @Test
+    public void testRecoverWriteJobUsingRandomAccessBehavior() throws IOException, JobRecoveryException, URISyntaxException {
+        runWriteRecoveryTest(new RecoveryJobFactory() {
+            @Override
+            public Ds3ClientHelpers.Job makeRecoveryJob(final Ds3ClientHelpers ds3ClientHelpers, final UUID jobId) throws JobRecoveryException, IOException {
+                return ds3ClientHelpers.recoverWriteJobUsingRandomAccessBehavior(jobId);
+            }
+        });
+    }
+
     @Test (expected = JobRecoveryNotActiveException.class)
     public void testRecoverWriteJobCanceledJob() throws IOException, URISyntaxException, JobRecoveryException {
         final String bucketName = "test_canceled_recover_write_job_bucket";
@@ -724,6 +794,86 @@ public class Smoke_Test {
             }
             Files.delete(dirPath);
         }
+    }
+
+    @Test
+    public void testRecoverReadJobUsingStreamedBehavior() throws IOException, JobRecoveryException, URISyntaxException {
+        runReadRecoveryJob(new RecoveryJobFactory() {
+            @Override
+            public Ds3ClientHelpers.Job makeRecoveryJob(final Ds3ClientHelpers ds3ClientHelpers, final UUID jobId) throws JobRecoveryException, IOException {
+                return ds3ClientHelpers.recoverReadJobsingStreamedBehavior(jobId);
+            }
+        });
+    }
+
+    private void runReadRecoveryJob(final RecoveryJobFactory recoveryJobFactory) throws IOException, JobRecoveryException, URISyntaxException {
+        final String bucketName = "test_recover_read_job_bucket";
+        final String book1 = "beowulf.txt";
+        final String book2 = "ulysses.txt";
+        final Path objPath1 = ResourceUtils.loadFileResource(RESOURCE_BASE_NAME + book1);
+        final Path objPath2 = ResourceUtils.loadFileResource(RESOURCE_BASE_NAME + book2);
+        final Ds3Object obj1 = new Ds3Object(book1, Files.size(objPath1));
+        final Ds3Object obj2 = new Ds3Object(book2, Files.size(objPath2));
+
+        final Path dirPath = FileSystems.getDefault().getPath("output");
+        if (!Files.exists(dirPath)) {
+            Files.createDirectory(dirPath);
+        }
+
+        try {
+            HELPERS.ensureBucketExists(bucketName, envDataPolicyId);
+
+            final Ds3ClientHelpers.Job putJob = HELPERS.startWriteJob(bucketName, Lists.newArrayList(obj1, obj2));
+            putJob.transfer(new ResourceObjectPutter(RESOURCE_BASE_NAME));
+
+            final FileChannel channel1 = FileChannel.open(
+                    dirPath.resolve(book1),
+                    StandardOpenOption.WRITE,
+                    StandardOpenOption.CREATE,
+                    StandardOpenOption.TRUNCATE_EXISTING
+            );
+
+            final Ds3ClientHelpers.Job readJob = HELPERS.startReadJob(bucketName, Lists.newArrayList(obj1, obj2));
+            final GetObjectResponse readResponse1 = client.getObject(
+                    new GetObjectRequest(
+                            bucketName,
+                            book1,
+                            channel1,
+                            readJob.getJobId().toString(),
+                            0));
+
+            assertThat(readResponse1, is(notNullValue()));
+
+            // Interruption...
+            final Ds3ClientHelpers.Job recoverJob = recoveryJobFactory.makeRecoveryJob(HELPERS, readJob.getJobId());
+
+            recoverJob.transfer(new FileObjectGetter(dirPath));
+
+            final Map<String, Ds3Object> blobCollection = new HashMap<>();
+            blobCollection.put(book1, obj1);
+            blobCollection.put(book2, obj2);
+
+            final Collection<File> filesInTempDirectory = FileUtils.listFiles(dirPath.toFile(), null, false);
+            for (final File fileInTempDirectory : filesInTempDirectory) {
+                assertEquals(blobCollection.get(fileInTempDirectory.getName()).getSize(), fileInTempDirectory.length());
+            }
+        } finally {
+            deleteAllContents(client, bucketName);
+            for( final Path tempFile : Files.newDirectoryStream(dirPath) ){
+                Files.delete(tempFile);
+            }
+            Files.delete(dirPath);
+        }
+    }
+
+    @Test
+    public void testRecoverReadJobUsingRandomAccessBehavior() throws IOException, JobRecoveryException, URISyntaxException {
+        runReadRecoveryJob(new RecoveryJobFactory() {
+            @Override
+            public Ds3ClientHelpers.Job makeRecoveryJob(final Ds3ClientHelpers ds3ClientHelpers, final UUID jobId) throws JobRecoveryException, IOException {
+                return ds3ClientHelpers.recoverReadJobUsingRandomAccessBehavior(jobId);
+            }
+        });
     }
 
     @Test (expected = JobRecoveryNotActiveException.class)
@@ -1296,6 +1446,41 @@ public class Smoke_Test {
     @Test
     public void testQuestionMarkInObjectName() throws IOException {
         final String bucketName = "TestQuestionMarkInObjectName";
+        final String objectName = "Test?Question?Mark";
+        try {
+            HELPERS.ensureBucketExists(bucketName, envDataPolicyId);
+
+            final List<Ds3Object> objs = Lists.newArrayList(new Ds3Object(objectName, 10));
+
+            final Ds3ClientHelpers.Job job = HELPERS.startWriteJob(bucketName, objs);
+
+            job.transfer(new Ds3ClientHelpers.ObjectChannelBuilder() {
+                @Override
+                public SeekableByteChannel buildChannel(final String key) throws IOException {
+
+                    final byte[] randomData = IOUtils.toByteArray(new RandomDataInputStream(124345, 10));
+                    final ByteBuffer randomBuffer = ByteBuffer.wrap(randomData);
+
+                    final ByteArraySeekableByteChannel channel = new ByteArraySeekableByteChannel(10);
+                    channel.write(randomBuffer);
+
+                    return channel;
+                }
+            });
+
+            final GetObjectsDetailsSpectraS3Response getObjectsSpectraS3Response = client
+                    .getObjectsDetailsSpectraS3(new GetObjectsDetailsSpectraS3Request().withName(objectName));
+
+            assertThat(getObjectsSpectraS3Response.getS3ObjectListResult().getS3Objects().size(), is(1));
+
+        } finally {
+            deleteAllContents(client, bucketName);
+        }
+    }
+
+    @Test
+    public void testQuestionMarkInQueryParam() throws IOException {
+        final String bucketName = "TestQuestionMarkInQueryParam";
         final String objectName = "Test?Question?Mark";
         try {
             HELPERS.ensureBucketExists(bucketName, envDataPolicyId);

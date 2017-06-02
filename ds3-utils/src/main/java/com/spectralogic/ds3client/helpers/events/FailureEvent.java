@@ -47,18 +47,19 @@ public class FailureEvent {
         return causalException;
     }
 
-    public static FailureEvent.Builder builder() {
-        return new FailureEvent.Builder();
-    }
-
     @Override
     public String toString() {
         return "Failure " + doingWhat().getActivityText() + " with object named \"" + withObjectNamed() + "\" using system with endpoint " + usingSystemWithEndpoint();
     }
 
+    public static FailureEvent.Builder builder() {
+        return new FailureEvent.Builder();
+    }
+
     public enum FailureActivity {
         PuttingObject("putting object"),
         GettingObject("getting object"),
+        ComputingChecksum("computing checksum"),
         RecordingMetadata("recording metadata"),
         RestoringMetadata("restoring metadata");
 

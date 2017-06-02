@@ -15,12 +15,15 @@
 
 package com.spectralogic.ds3client.helpers.strategy;
 
+import com.google.common.collect.ImmutableCollection;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableMultimap;
 import com.spectralogic.ds3client.Ds3Client;
 import com.spectralogic.ds3client.models.BulkObject;
 import com.spectralogic.ds3client.models.JobNode;
 import com.spectralogic.ds3client.models.Objects;
+import com.spectralogic.ds3client.models.common.Range;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -68,13 +71,13 @@ public final class StrategyUtils {
     /**
      * Filters out chunks that have already been completed.  We will get the same chunk name back from the server, but it
      * will not have any objects in it, so we remove that from the list of objects that are returned.
-     * @param objectsList The list to be filtered
+     * @param chunks The list to be filtered
      * @return The filtered list
      */
-    public static ImmutableList<Objects> filterChunks(final Iterable<Objects> objectsList) {
+    public static ImmutableList<Objects> filterChunks(final Iterable<Objects> chunks) {
         final ImmutableList.Builder<Objects> builder = ImmutableList.builder();
-        for (final Objects objects : objectsList) {
-            final Objects filteredChunk = filterChunk(objects);
+        for (final Objects chunk : chunks) {
+            final Objects filteredChunk = filterChunk(chunk);
             if (filteredChunk.getObjects().size() > 0) {
                 builder.add(filteredChunk);
             }
@@ -82,24 +85,33 @@ public final class StrategyUtils {
         return builder.build();
     }
 
-    private static Objects filterChunk(final Objects objects) {
-        final Objects newObjects = new Objects();
-        newObjects.setChunkId(objects.getChunkId());
-        newObjects.setChunkNumber(objects.getChunkNumber());
-        newObjects.setNodeId(objects.getNodeId());
-        newObjects.setObjects(filterObjects(objects.getObjects()));
-        return newObjects;
+    private static Objects filterChunk(final Objects chunk) {
+        final Objects newChunk = new Objects();
+        newChunk.setChunkId(chunk.getChunkId());
+        newChunk.setChunkNumber(chunk.getChunkNumber());
+        newChunk.setNodeId(chunk.getNodeId());
+        newChunk.setObjects(filterObjects(chunk.getObjects()));
+        return newChunk;
     }
 
-    private static ImmutableList<BulkObject> filterObjects(final List<BulkObject> list) {
+    private static ImmutableList<BulkObject> filterObjects(final List<BulkObject> blobs) {
         final ImmutableList.Builder<BulkObject> builder = ImmutableList.builder();
-        for (final BulkObject obj : list) {
-            if (!obj.getInCache()) {
-                builder.add(obj);
+        for (final BulkObject blob : blobs) {
+            if (!blob.getInCache()) {
+                builder.add(blob);
             }
         }
         return builder.build();
     }
 
+    public static ImmutableCollection<Range> getRangesForBlob(final ImmutableMap<String, ImmutableMultimap<BulkObject, Range>> rangesForBlobs,
+                                                              final BulkObject blob) {
+        final ImmutableMultimap<BulkObject, Range> rangesForBlob = rangesForBlobs.get(blob.getName());
 
+        if (rangesForBlob != null) {
+            return rangesForBlob.get(blob);
+        }
+
+        return null;
+    }
 }

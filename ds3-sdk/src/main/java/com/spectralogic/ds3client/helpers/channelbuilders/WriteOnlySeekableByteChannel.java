@@ -68,7 +68,7 @@ public class WriteOnlySeekableByteChannel implements SeekableByteChannel {
 
     @Override
     public SeekableByteChannel truncate(final long size) throws IOException {
-        throw new NotImplementedException();
+        return this;
     }
 
     @Override

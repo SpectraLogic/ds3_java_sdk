@@ -113,4 +113,12 @@ public class Util {
         client.deleteBucket(new DeleteBucketRequest(bucketName));
     }
 
+    public static void deleteBucketContents(final Ds3Client client, final String bucketName) throws IOException {
+        final Ds3ClientHelpers helpers = Ds3ClientHelpers.wrap(client);
+
+        final Iterable<Contents> objects = helpers.listObjects(bucketName);
+        for(final Contents contents : objects) {
+            client.deleteObject(new DeleteObjectRequest(bucketName, contents.getKey()));
+        }
+    }
 }

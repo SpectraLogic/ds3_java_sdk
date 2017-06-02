@@ -36,7 +36,9 @@ import static org.junit.Assert.fail;
 public class Ds3ClientShim extends Ds3ClientImpl {
     private static Method getNetClientMethod = null;
 
-    int numRetries = 0;
+    private final int maxNumRetries;
+
+    private int numRetries = 0;
 
     static {
         try {
@@ -48,17 +50,27 @@ public class Ds3ClientShim extends Ds3ClientImpl {
         getNetClientMethod.setAccessible(true);
     }
 
-    public Ds3ClientShim(final NetworkClient netClient) {
+    public Ds3ClientShim(final NetworkClient netClient, final int maxNumRetries) {
         super(netClient);
+
+        this.maxNumRetries = maxNumRetries;
+    }
+
+    public Ds3ClientShim(final NetworkClient netClient) {
+        this(netClient, 1);
     }
 
     public Ds3ClientShim(final Ds3ClientImpl ds3ClientImpl) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
-        this((NetworkClient)getNetClientMethod.invoke(ds3ClientImpl));
+        this((NetworkClient)getNetClientMethod.invoke(ds3ClientImpl), 1);
+    }
+
+    public Ds3ClientShim(final Ds3ClientImpl ds3ClientImpl, final int maxNumRetries) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
+        this((NetworkClient)getNetClientMethod.invoke(ds3ClientImpl), maxNumRetries);
     }
 
     @Override
     public PutObjectResponse putObject(final PutObjectRequest request) throws IOException {
-        if (numRetries++ >= 1) {
+        if (numRetries++ >= maxNumRetries) {
             return super.putObject(request);
         }
 
@@ -67,7 +79,7 @@ public class Ds3ClientShim extends Ds3ClientImpl {
 
     @Override
     public GetObjectResponse getObject(final GetObjectRequest request) throws IOException {
-        if (numRetries++ >= 1) {
+        if (numRetries++ >= maxNumRetries) {
             return super.getObject(request);
         }
 

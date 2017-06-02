@@ -15,73 +15,54 @@
 
 package com.spectralogic.ds3client.helpers;
 
-import com.google.common.collect.Sets;
-import com.spectralogic.ds3client.Ds3Client;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.Job;
-import com.spectralogic.ds3client.helpers.events.EventRunner;
-import com.spectralogic.ds3client.helpers.events.FailureEvent;
-import com.spectralogic.ds3client.models.BulkObject;
-import com.spectralogic.ds3client.models.ChecksumType;
-import com.spectralogic.ds3client.models.MasterObjectList;
-import com.spectralogic.ds3client.models.Objects;
+import com.spectralogic.ds3client.helpers.strategy.transferstrategy.EventDispatcher;
+import com.spectralogic.ds3client.helpers.strategy.transferstrategy.TransferStrategyBuilder;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.Set;
 import java.util.UUID;
-
-import static com.spectralogic.ds3client.helpers.ReadJobImpl.getAllBlobApiBeans;
 
 abstract class JobImpl implements Job {
     private static final Logger LOG = LoggerFactory.getLogger(JobImpl.class);
 
-    protected final Ds3Client client;
-    protected final MasterObjectList masterObjectList;
     protected boolean running = false;
-    protected int maxParallelRequests = 10;
-    private final int objectTransferAttempts;
-    private final JobPartTrackerDecorator jobPartTracker;
-    private final EventRunner eventRunner;
-    private final Set<FailureEventListener> failureEventListeners;
-    private final Set<WaitingForChunksListener> waitingForChunksListeners;
-    private final Set<ChecksumListener> checksumListeners;
 
-    public JobImpl(final Ds3Client client,
-                   final MasterObjectList masterObjectList,
-                   final int objectTransferAttempts,
-                   final EventRunner eventRunner) {
-        this.client = client;
-        this.masterObjectList = masterObjectList;
-        this.objectTransferAttempts = objectTransferAttempts;
-        this.eventRunner = eventRunner;
-        this.failureEventListeners = Sets.newIdentityHashSet();
-        this.waitingForChunksListeners = Sets.newIdentityHashSet();
-        this.checksumListeners = Sets.newIdentityHashSet();
-        this.jobPartTracker = makeJobPartTracker(getChunks(masterObjectList), eventRunner);
+    private final TransferStrategyBuilder transferStrategyBuilder;
+
+    public JobImpl() {
+        this(null);
     }
-    
+
+    public JobImpl(final TransferStrategyBuilder transferStrategyBuilder) {
+        this.transferStrategyBuilder = transferStrategyBuilder;
+    }
+
     @Override
     public UUID getJobId() {
-        if (this.masterObjectList == null) {
+        try {
+            return transferStrategyBuilder.masterObjectList().getJobId();
+        } catch (final Throwable t) {
+            LOG.warn("Could not get job id.", t);
             return null;
         }
-        return this.masterObjectList.getJobId();
     }
 
     @Override
     public String getBucketName() {
-        if (this.masterObjectList == null) {
+        try {
+            return transferStrategyBuilder.masterObjectList().getBucketName();
+        } catch (final Throwable t) {
+            LOG.warn("Could not get bucket name.", t);
             return null;
         }
-        return this.masterObjectList.getBucketName();
     }
-    
+
     @Override
     public Job withMaxParallelRequests(final int maxParallelRequests) {
-        this.maxParallelRequests = maxParallelRequests;
+        transferStrategyBuilder.withNumConcurrentTransferThreads(maxParallelRequests);
         return this;
     }
 
@@ -89,202 +70,76 @@ abstract class JobImpl implements Job {
         if (running) throw new IllegalStateException("You cannot modify a job after calling transfer");
     }
 
-    protected void transferItem(
-            final Ds3Client client,
-            final BulkObject ds3Object,
-            final ChunkTransferrer.ItemTransferrer itemTransferrer)
-            throws IOException
-    {
-        int objectTransfersAttempted = 0;
-
-        while(true) {
-            try {
-                itemTransferrer.transferItem(client, ds3Object);
-                break;
-            } catch (final Throwable t) {
-                if (ExceptionClassifier.isUnrecoverableException(t) || ++objectTransfersAttempted >= objectTransferAttempts) {
-                    throw t;
-                }
-            }
-        }
-    }
-
-    protected EventRunner getEventRunner() {
-        return eventRunner;
-    }
-
     @Override
     public void attachChecksumListener(final ChecksumListener listener) {
         checkRunning();
-        this.checksumListeners.add(listener);
+        eventDispatcher().attachChecksumListener(listener);
     }
 
     @Override
     public void removeChecksumListener(final ChecksumListener listener) {
         checkRunning();
-        this.checksumListeners.remove(listener);
+        eventDispatcher().removeChecksumListener(listener);
     }
 
     @Override
     public void attachWaitingForChunksListener(final WaitingForChunksListener listener) {
         checkRunning();
-        this.waitingForChunksListeners.add(listener);
+        eventDispatcher().attachWaitingForChunksListener(listener);
     }
 
     @Override
     public void removeWaitingForChunksListener(final WaitingForChunksListener listener) {
         checkRunning();
-        this.waitingForChunksListeners.remove(listener);
+        eventDispatcher().removeWaitingForChunksListener(listener);
     }
 
     @Override
     public void attachFailureEventListener(final FailureEventListener listener) {
         checkRunning();
-        this.failureEventListeners.add(listener);
+        eventDispatcher().attachFailureEventListener(listener);
     }
 
     @Override
     public void removeFailureEventListener(final FailureEventListener listener) {
         checkRunning();
-        this.failureEventListeners.remove(listener);
+        eventDispatcher().removeFailureEventListener(listener);
     }
 
     @Override
     public void attachDataTransferredListener(final DataTransferredListener listener) {
         checkRunning();
-        getJobPartTracker().attachDataTransferredListener(listener);
+        eventDispatcher().attachDataTransferredListener(listener);
     }
 
     @Override
     public void removeDataTransferredListener(final DataTransferredListener listener) {
         checkRunning();
-        getJobPartTracker().removeDataTransferredListener(listener);
+        eventDispatcher().removeDataTransferredListener(listener);
     }
 
     @Override
     public void attachObjectCompletedListener(final ObjectCompletedListener listener) {
         checkRunning();
-        getJobPartTracker().attachClientObjectCompletedListener(listener);
+        eventDispatcher().attachObjectCompletedListener(listener);
     }
 
     @Override
     public void removeObjectCompletedListener(final ObjectCompletedListener listener) {
         checkRunning();
-        getJobPartTracker().removeClientObjectCompletedListener(listener);
+        eventDispatcher().removeObjectCompletedListener(listener);
     }
 
-    protected void emitFailureEvent(final FailureEvent failureEvent) {
-        for (final FailureEventListener failureEventListener : failureEventListeners) {
-            eventRunner.emitEvent(new Runnable() {
-                @Override
-                public void run() {
-                    failureEventListener.onFailure(failureEvent);
-                }
-            });
-        }
+    @Override
+    public void transfer(final Ds3ClientHelpers.ObjectChannelBuilder channelBuilder) throws IOException {
+        transferStrategyBuilder.withChannelBuilder(channelBuilder);
     }
 
-    protected FailureEvent makeFailureEvent(final FailureEvent.FailureActivity failureActivity,
-                                            final Throwable causalException,
-                                            final Objects chunk)
-    {
-        return FailureEvent.builder()
-                .doingWhat(failureActivity)
-                .withCausalException(causalException)
-                .withObjectNamed(getLabelForChunk(chunk))
-                .usingSystemWithEndpoint(client.getConnectionDetails().getEndpoint())
-                .build();
+    protected TransferStrategyBuilder transferStrategyBuilder() {
+        return transferStrategyBuilder;
     }
 
-    protected String getLabelForChunk(final Objects chunk) {
-        try {
-            return chunk.getObjects().get(0).getName();
-        } catch (final Throwable t) {
-            LOG.error("Failed to get label for chunk.", t);
-        }
-
-        return "unnamed object";
-    }
-
-    protected void emitWaitingForChunksEvents(final int retryAfter) {
-        for (final WaitingForChunksListener waitingForChunksListener : waitingForChunksListeners) {
-            eventRunner.emitEvent(new Runnable() {
-                @Override
-                public void run() {
-                    waitingForChunksListener.waiting(retryAfter);
-                }
-            });
-        }
-    }
-
-    protected void emitChecksumEvents(final BulkObject bulkObject, final ChecksumType.Type type, final String checksum) {
-        for (final ChecksumListener listener : checksumListeners) {
-            getEventRunner().emitEvent(new Runnable() {
-                @Override
-                public void run() {
-                    listener.value(bulkObject, type, checksum);
-                }
-            });
-        }
-    }
-
-    protected abstract List<Objects> getChunks(final MasterObjectList masterObjectList);
-    protected abstract JobPartTrackerDecorator makeJobPartTracker(final List<Objects> chunks, final EventRunner eventRunner);
-
-    protected JobPartTrackerDecorator getJobPartTracker() {
-        return jobPartTracker;
-    }
-
-    protected static class JobPartTrackerDecorator implements JobPartTracker {
-        private final JobPartTracker clientJobPartTracker;
-        private final JobPartTracker internalJobPartTracker;
-
-        protected JobPartTrackerDecorator(final List<Objects> chunks, final EventRunner eventRunner) {
-            clientJobPartTracker = JobPartTrackerFactory.buildPartTracker(getAllBlobApiBeans(chunks), eventRunner);
-            internalJobPartTracker = JobPartTrackerFactory.buildPartTracker(getAllBlobApiBeans(chunks), eventRunner);
-        }
-
-        @Override
-        public void completePart(final String key, final ObjectPart objectPart) {
-            // It's important to fire the internal completions -- those we set up to close channels we
-            // have opened -- before firing client-registered events.  The reason is that some clients
-            // rely upon this ordering to know that channels are closed when their event handlers run.
-            internalJobPartTracker.completePart(key, objectPart);
-            clientJobPartTracker.completePart(key, objectPart);
-        }
-
-        @Override
-        public boolean containsPart(final String key, final ObjectPart objectPart) {
-            return internalJobPartTracker.containsPart(key, objectPart) || clientJobPartTracker.containsPart(key, objectPart);
-        }
-
-        @Override
-        public JobPartTracker attachDataTransferredListener(final DataTransferredListener listener) {
-            return clientJobPartTracker.attachDataTransferredListener(listener);
-        }
-
-        @Override
-        public JobPartTracker attachObjectCompletedListener(final ObjectCompletedListener listener) {
-            internalJobPartTracker.attachObjectCompletedListener(listener);
-            return this;
-        }
-
-        @Override
-        public void removeDataTransferredListener(final DataTransferredListener listener) {
-            clientJobPartTracker.removeDataTransferredListener(listener);
-        }
-
-        @Override
-        public void removeObjectCompletedListener(final ObjectCompletedListener listener) {
-            internalJobPartTracker.removeObjectCompletedListener(listener);
-        }
-
-        protected void attachClientObjectCompletedListener(final ObjectCompletedListener listener) {
-            clientJobPartTracker.attachObjectCompletedListener(listener);
-        }
-
-        protected void removeClientObjectCompletedListener(final ObjectCompletedListener listener) {
-            clientJobPartTracker.removeObjectCompletedListener(listener);
-        }
+    protected EventDispatcher eventDispatcher() {
+        return transferStrategyBuilder.eventDispatcher();
     }
 }
