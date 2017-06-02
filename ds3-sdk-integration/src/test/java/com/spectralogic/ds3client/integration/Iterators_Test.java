@@ -15,10 +15,14 @@
 
 package com.spectralogic.ds3client.integration;
 
+import com.google.common.collect.Lists;
 import com.spectralogic.ds3client.Ds3Client;
+import com.spectralogic.ds3client.helpers.ContentPrefix;
 import com.spectralogic.ds3client.helpers.pagination.GetBucketLoaderFactory;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers;
 import com.spectralogic.ds3client.helpers.pagination.GetObjectsFullDetailsLoaderFactory;
+import com.spectralogic.ds3client.models.Contents;
+import com.spectralogic.ds3client.models.common.CommonPrefixes;
 import com.spectralogic.ds3client.utils.collections.LazyIterable;
 import com.spectralogic.ds3client.integration.test.helpers.TempStorageIds;
 import com.spectralogic.ds3client.integration.test.helpers.TempStorageUtil;
@@ -32,11 +36,14 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.UUID;
 
 import static com.spectralogic.ds3client.integration.Util.deleteAllContents;
 import static com.spectralogic.ds3client.integration.Util.loadBookTestData;
+import static com.spectralogic.ds3client.integration.Util.loadBookTestDataWithPrefix;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 
@@ -66,6 +73,34 @@ public class Iterators_Test {
         TempStorageUtil.teardown(TEST_ENV_NAME, envStorageIds, CLIENT);
         CLIENT.close();
         LOG.info("Finished test teardown...");
+    }
+
+    @Test
+    public void empty_dericty_test() throws IOException, URISyntaxException {
+        try {
+            HELPERS.ensureBucketExists(TEST_ENV_NAME, envDataPolicyId);
+            loadBookTestDataWithPrefix(CLIENT, TEST_ENV_NAME, "books/");
+            final ContentPrefix contentPrefix = Ds3ClientHelpers.wrap(CLIENT).remoteListDirectory(TEST_ENV_NAME, "books/", null, 1000);
+            final List<CommonPrefixes> commonPrefixesList = contentPrefix.commonPrefixes();
+            final LazyIterable<Contents> lazyIterable = (LazyIterable<Contents>) contentPrefix.contents();
+            final ArrayList<Contents> contents = Lists.newArrayList(lazyIterable);
+            assertThat(contents.size(), is(4));
+            assertThat(commonPrefixesList.size(), is(0));
+
+            loadBookTestDataWithPrefix(CLIENT, TEST_ENV_NAME, "books/more/");
+            final ContentPrefix anotherContentPrefix = Ds3ClientHelpers.wrap(CLIENT).remoteListDirectory(TEST_ENV_NAME, "books/", null, 1000);
+            final List<CommonPrefixes> anotherCommonPrefixesList = anotherContentPrefix.commonPrefixes();
+            final LazyIterable<Contents> anotherLazyIterable = (LazyIterable<Contents>) anotherContentPrefix.contents();
+            final ArrayList<Contents> anotherContents = Lists.newArrayList(anotherLazyIterable);
+            assertThat(anotherContents.size(), is(4));
+            assertThat(anotherCommonPrefixesList.size(), is(1));
+            assertThat(anotherCommonPrefixesList.get(0).getPrefix(), is("books/more/"));
+
+
+        }
+        finally {
+            deleteAllContents(CLIENT, TEST_ENV_NAME);
+        }
     }
 
     @Test

@@ -357,13 +357,15 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
         if (delimiter != null) {
             request.withDelimiter(delimiter);
         }
-        request.withMaxKeys(1);
+        if (nextMarker != null) {
+            request.withMarker(nextMarker);
+        }
+        //request.withMaxKeys(1);
         final GetBucketResponse response;
         final List<CommonPrefixes> commonPrefixes;
         try {
             response = this.client.getBucket(request);
             final ListBucketResult result = response.getListBucketResult();
-
             commonPrefixes = result.getCommonPrefixes();
 
         } catch (final FailedRequestException e) {
