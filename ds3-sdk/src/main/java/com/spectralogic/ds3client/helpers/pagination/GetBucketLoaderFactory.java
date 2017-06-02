@@ -25,14 +25,16 @@ public class GetBucketLoaderFactory implements LazyIterable.LazyLoaderFactory<Co
     private final String bucket;
     private final String keyPrefix;
     private final String nextMarker;
+    private final String delimiter;
     private final int maxKeys;
     private final int defaultListObjectsRetries;
 
-    public GetBucketLoaderFactory(final Ds3Client client, final String bucket, final String keyPrefix, final String nextMarker, final int maxKeys, final int defaultListObjectsRetries) {
+    public GetBucketLoaderFactory(final Ds3Client client, final String bucket, final String keyPrefix, final String delimiter, final String nextMarker, final int maxKeys, final int defaultListObjectsRetries) {
 
         this.client = client;
         this.bucket = bucket;
         this.keyPrefix = keyPrefix;
+        this.delimiter = delimiter;
         this.nextMarker = nextMarker;
         this.maxKeys = maxKeys;
         this.defaultListObjectsRetries = defaultListObjectsRetries;
@@ -40,6 +42,6 @@ public class GetBucketLoaderFactory implements LazyIterable.LazyLoaderFactory<Co
 
     @Override
     public LazyIterable.LazyLoader<Contents> create() {
-        return new GetBucketLoader(client, bucket, keyPrefix, nextMarker, maxKeys, defaultListObjectsRetries);
+        return new GetBucketLoader(client, bucket, keyPrefix, delimiter, nextMarker, maxKeys, defaultListObjectsRetries);
     }
 }

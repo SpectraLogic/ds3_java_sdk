@@ -17,6 +17,7 @@ package com.spectralogic.ds3client.helpers;
 
 import com.google.common.base.Function;
 import com.google.common.collect.FluentIterable;
+import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3client.Ds3Client;
 import com.spectralogic.ds3client.helpers.options.ReadJobOptions;
 import com.spectralogic.ds3client.helpers.options.WriteJobOptions;
@@ -320,6 +321,30 @@ public abstract class Ds3ClientHelpers {
      * @throws IOException
      */
     public abstract Iterable<Ds3Object> listObjectsForDirectory(final Path directory) throws IOException;
+
+    /**
+     * Defaults to the path delimiter of '/'
+     * Returns an Iterable of {@link Ds3Object} and a list of {@link com.spectralogic.ds3client.models.common.CommonPrefixes}
+     * @param bucket The bucket
+     * @param keyPrefix Limits the response to keys that begin with the specified prefix
+     * @param nextMarker Specifies the key to start with when listing objects
+     * @param maxKeys Sets the maximum number of keys returned in the response body.
+     * @return {@link ContentPrefix}
+     * @throws IOException
+     */
+    public abstract ContentPrefix remoteListDirectory(final String bucket, final String keyPrefix, final String nextMarker, final int maxKeys) throws IOException;
+
+    /**
+     * Returns an Iterable of {@link Ds3Object} and a list of {@link com.spectralogic.ds3client.models.common.CommonPrefixes}
+     * @param bucket The bucket
+     * @param keyPrefix Limits the response to keys that begin with the specified prefix
+     * @param delimiter Specifies a path delimiter for the S3 query
+     * @param nextMarker Specifies the key to start with when listing objects
+     * @param maxKeys Sets the maximum number of keys returned in the response body.
+     * @return {@link ContentPrefix}
+     * @throws IOException
+     */
+    public abstract ContentPrefix remoteListDirectory(final String bucket, final String keyPrefix, final String delimiter, final String nextMarker, final int maxKeys) throws IOException;
 
     /**
      * Returns an Iterable of {@link Ds3Object} that have a prefix added.

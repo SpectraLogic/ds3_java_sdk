@@ -47,6 +47,7 @@ public class Iterators_Test {
     private static final Ds3ClientHelpers HELPERS = Ds3ClientHelpers.wrap(CLIENT);
     private static final String TEST_ENV_NAME = "lazy_iterator_test";
     private static final int RETRIES = 5;
+    private static final String TEST_DELIMITER = null;
 
     private static TempStorageIds envStorageIds;
     private static UUID envDataPolicyId;
@@ -73,7 +74,7 @@ public class Iterators_Test {
         final String nextMarker = null;
         final int maxKeys = 100;
 
-        emptyTest(new GetBucketLoaderFactory(CLIENT, TEST_ENV_NAME, prefix, nextMarker, maxKeys, RETRIES));
+        emptyTest(new GetBucketLoaderFactory(CLIENT, TEST_ENV_NAME, prefix, TEST_DELIMITER, nextMarker, maxKeys, RETRIES));
     }
 
     @Test
@@ -81,7 +82,7 @@ public class Iterators_Test {
         final String prefix = "";
         final String nextMarker = null;
         final int maxKeys = 100;
-        paginate(new GetBucketLoaderFactory(CLIENT, TEST_ENV_NAME, prefix, nextMarker, maxKeys, RETRIES));
+        paginate(new GetBucketLoaderFactory(CLIENT, TEST_ENV_NAME, prefix, TEST_DELIMITER, nextMarker, maxKeys, RETRIES));
     }
 
 
@@ -90,13 +91,13 @@ public class Iterators_Test {
         final String prefix = "";
         final String nextMarker = null;
         final int maxKeys = 2;
-        paginate(new GetBucketLoaderFactory(CLIENT, TEST_ENV_NAME, prefix, nextMarker, maxKeys, RETRIES));
+        paginate(new GetBucketLoaderFactory(CLIENT, TEST_ENV_NAME, prefix, nextMarker, TEST_DELIMITER, maxKeys, RETRIES));
 
     }
 
     @Test
     public void failedRequestGetBucket() {
-        testFailedRequest(new GetBucketLoaderFactory(CLIENT, "Unknown_Bucket",null, null, 1000, 5));
+        testFailedRequest(new GetBucketLoaderFactory(CLIENT, "Unknown_Bucket",null, TEST_DELIMITER,null, 1000, 5));
     }
 
    @Test

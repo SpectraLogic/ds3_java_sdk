@@ -35,6 +35,7 @@ public class GetBucketLoader implements LazyIterable.LazyLoader<Contents> {
     private final Ds3Client client;
     private final String bucket;
     private final String prefix;
+    private final String delimiter;
     private final int maxKeys;
     private final int retryCount;
 
@@ -42,10 +43,11 @@ public class GetBucketLoader implements LazyIterable.LazyLoader<Contents> {
     private boolean truncated;
     private boolean endOfInput = false;
 
-    public GetBucketLoader(final Ds3Client client, final String bucket, final String prefix, final String nextMarker, final int maxKeys, final int retryCount) {
+    public GetBucketLoader(final Ds3Client client, final String bucket, final String prefix, final String delimiter, final String nextMarker, final int maxKeys, final int retryCount) {
         this.client = client;
         this.bucket = bucket;
         this.prefix = prefix;
+        this.delimiter = delimiter;
         this.maxKeys = maxKeys;
         this.retryCount = retryCount;
 
@@ -67,6 +69,10 @@ public class GetBucketLoader implements LazyIterable.LazyLoader<Contents> {
             }
             if (truncated) {
                 request.withMarker(nextMarker);
+            }
+
+            if (delimiter != null) {
+                request.withDelimiter(delimiter);
             }
 
             final GetBucketResponse response;

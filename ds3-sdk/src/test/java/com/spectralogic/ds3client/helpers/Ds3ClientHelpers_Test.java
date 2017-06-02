@@ -28,6 +28,7 @@ import com.spectralogic.ds3client.models.*;
 import com.spectralogic.ds3client.models.Error;
 import com.spectralogic.ds3client.models.Objects;
 import com.spectralogic.ds3client.models.bulk.Ds3Object;
+import com.spectralogic.ds3client.models.common.CommonPrefixes;
 import com.spectralogic.ds3client.networking.ConnectionDetails;
 import com.spectralogic.ds3client.networking.FailedRequestException;
 import com.spectralogic.ds3client.utils.ByteArraySeekableByteChannel;
@@ -256,6 +257,19 @@ public class Ds3ClientHelpers_Test {
         checkContents(contentList.get(0), "foo", "2cde576e5f5a613e6cee466a681f4929", "2009-10-12T17:50:30.000Z", 12);
         checkContents(contentList.get(1), "bar", "f3f98ff00be128139332bcf4b772be43", "2009-10-14T17:50:31.000Z", 12);
         checkContents(contentList.get(2), "baz", "802d45fcb9a3f7d00f1481362edc0ec9", "2009-10-18T17:50:35.000Z", 12);
+    }
+
+    @Test
+    public void testRemoteListDirectory() throws IOException {
+        final Ds3Client ds3Client = mock(Ds3Client.class);
+        Mockito.when(ds3Client.getBucket(getBucketHas(MYBUCKET, null))).thenReturn(new StubGetBucketResponse(0));
+        Mockito.when(ds3Client.getBucket(getBucketHas(MYBUCKET, "baz"))).thenReturn(new StubGetBucketResponse(1));
+        Mockito.when(ds3Client.getBucket(getBucketHas(MYBUCKET, "/foo/baz"))).thenReturn(new StubGetBucketResponse(1));
+        final ContentPrefix contentPrefix = Ds3ClientHelpers.wrap(ds3Client).remoteListDirectory(MYBUCKET, null, "/", null, 0);
+        final List<Contents> contentsList = Lists.newArrayList(contentPrefix.contents());
+        final List<CommonPrefixes> commonPrefixes = contentPrefix.commonPrefixes();
+        assertThat(commonPrefixes.size(), is(0));
+        assertThat(contentsList.size(), is(3));
     }
     
     private static void checkContents(
