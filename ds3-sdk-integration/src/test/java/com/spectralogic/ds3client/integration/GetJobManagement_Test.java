@@ -327,7 +327,7 @@ public class GetJobManagement_Test {
     }
 
     @Test(expected = AccessDeniedException.class)
-    public void testReadRetrybugFixWithUnwritableDirectory() throws IOException, URISyntaxException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, InterruptedException {
+    public void testReadRetryBugFixWithUnwritableDirectory() throws IOException, URISyntaxException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, InterruptedException {
         final String tempPathPrefix = null;
         final Path tempDirectoryPath = Files.createTempDirectory(Paths.get("."), tempPathPrefix);
 
@@ -398,24 +398,29 @@ public class GetJobManagement_Test {
             return false;
         }
 
+        BufferedReader idProcessStdOut = null;
+
         try {
-            final Process whoamiProcess = Runtime.getRuntime().exec("id | cut -d \"(\" -f 1 | cut -d \"=\" -f 2");
-            whoamiProcess.waitFor();
+            final Process idProcess = Runtime.getRuntime().exec("id");
+            idProcessStdOut = new BufferedReader(new InputStreamReader(idProcess.getInputStream()));
+            final String idProcessResult = idProcessStdOut.readLine();
+            idProcess.waitFor();
 
-            try (final BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(whoamiProcess.getInputStream()))) {
-                final String userId = bufferedReader.readLine();
+            final String[] idFields = idProcessResult.split("=");
 
-                final String[] uidFields = userId.split("uid=");
-                if (uidFields.length > 1) {
-                    final String[] uidStrings = uidFields[1].split("\\(");
-                    if (uidStrings.length > 1) {
-                        final int uid = Integer.parseInt(uidStrings[0]);
-                        return uid == 0;
-                    }
-                }
-            }
+            final String[] uidString = idFields[1].split("\\(");
+
+            return uidString[0].equals("0");
         } catch (final IOException | InterruptedException e) {
             LOG.error("Error getting user id.", e);
+        } finally {
+            try {
+                if (idProcessStdOut != null) {
+                    idProcessStdOut.close();
+                }
+            } catch (final IOException e) {
+                LOG.error("Failure closing stdout for process that gets user id.");
+            }
         }
 
         return false;
