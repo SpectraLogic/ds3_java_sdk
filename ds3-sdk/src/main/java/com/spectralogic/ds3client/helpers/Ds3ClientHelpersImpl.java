@@ -360,7 +360,7 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
         if (nextMarker != null) {
             request.withMarker(nextMarker);
         }
-        //request.withMaxKeys(1);
+        request.withMaxKeys(10);
         final GetBucketResponse response;
         final List<CommonPrefixes> commonPrefixes;
         try {

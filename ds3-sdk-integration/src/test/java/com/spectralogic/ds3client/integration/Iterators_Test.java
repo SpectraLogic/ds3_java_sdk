@@ -17,17 +17,24 @@ package com.spectralogic.ds3client.integration;
 
 import com.google.common.collect.Lists;
 import com.spectralogic.ds3client.Ds3Client;
+import com.spectralogic.ds3client.commands.GetBucketRequest;
+import com.spectralogic.ds3client.commands.GetBucketResponse;
+import com.spectralogic.ds3client.commands.PutObjectRequest;
+import com.spectralogic.ds3client.commands.spectrads3.GetBucketSpectraS3Request;
 import com.spectralogic.ds3client.helpers.ContentPrefix;
 import com.spectralogic.ds3client.helpers.pagination.GetBucketLoaderFactory;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers;
 import com.spectralogic.ds3client.helpers.pagination.GetObjectsFullDetailsLoaderFactory;
 import com.spectralogic.ds3client.models.Contents;
+import com.spectralogic.ds3client.models.ListBucketResult;
 import com.spectralogic.ds3client.models.common.CommonPrefixes;
+import com.spectralogic.ds3client.utils.ByteArraySeekableByteChannel;
 import com.spectralogic.ds3client.utils.collections.LazyIterable;
 import com.spectralogic.ds3client.integration.test.helpers.TempStorageIds;
 import com.spectralogic.ds3client.integration.test.helpers.TempStorageUtil;
 import com.spectralogic.ds3client.models.ChecksumType;
 import com.spectralogic.ds3client.networking.FailedRequestException;
+import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -80,7 +87,7 @@ public class Iterators_Test {
         try {
             HELPERS.ensureBucketExists(TEST_ENV_NAME, envDataPolicyId);
             loadBookTestDataWithPrefix(CLIENT, TEST_ENV_NAME, "books/");
-            final ContentPrefix contentPrefix = Ds3ClientHelpers.wrap(CLIENT).remoteListDirectory(TEST_ENV_NAME, "books/", null, 1000);
+            final ContentPrefix contentPrefix = Ds3ClientHelpers.wrap(CLIENT).remoteListDirectory(TEST_ENV_NAME, "books/", null, 100);
             final List<CommonPrefixes> commonPrefixesList = contentPrefix.commonPrefixes();
             final LazyIterable<Contents> lazyIterable = (LazyIterable<Contents>) contentPrefix.contents();
             final ArrayList<Contents> contents = Lists.newArrayList(lazyIterable);
@@ -96,9 +103,94 @@ public class Iterators_Test {
             assertThat(anotherCommonPrefixesList.size(), is(1));
             assertThat(anotherCommonPrefixesList.get(0).getPrefix(), is("books/more/"));
 
-
+            for (int i = 0; i < 100; i++) {
+                loadBookTestDataWithPrefix(CLIENT, TEST_ENV_NAME, "books/" + i + "/");
+            }
+            for (int i = 0; i < 20; i++) {
+                loadBookTestDataWithPrefix(CLIENT, TEST_ENV_NAME, "books/" + i);
+            }
+            final ContentPrefix bulkContentPrefix = Ds3ClientHelpers.wrap(CLIENT).remoteListDirectory(TEST_ENV_NAME, "books/", null, 84);
+            final List<CommonPrefixes> bulkCommonPrefixesList = bulkContentPrefix.commonPrefixes();
+            final LazyIterable<Contents> bulkLazyIterable = (LazyIterable<Contents>) bulkContentPrefix.contents();
+            final ArrayList<Contents> bulkContents = Lists.newArrayList(bulkLazyIterable);
+            for(CommonPrefixes c : bulkCommonPrefixesList) {
+                LOG.info(c.getPrefix());
+            }
+            //assertThat(bulkCommonPrefixesList.size(), is(101));
+            assertThat(bulkContents.size(), is(84));
         }
         finally {
+            deleteAllContents(CLIENT, TEST_ENV_NAME);
+        }
+    }
+
+    public void putString(String objectName, String objectContent) throws IOException {
+        final byte[] content = objectContent.getBytes();
+        final PutObjectRequest putObjectRequest = new PutObjectRequest(TEST_ENV_NAME, objectName, new ByteArraySeekableByteChannel(content), content.length);
+        CLIENT.putObject(putObjectRequest);
+    }
+
+    public void loopWithNextMarker(final String bucket, final String prefix, final String delimiter) throws IOException {
+        GetBucketRequest getBucketRequest = new GetBucketRequest(bucket).withPrefix(prefix).withDelimiter(delimiter).withMaxKeys(3);
+        GetBucketResponse clientBucket = CLIENT.getBucket(getBucketRequest);
+        ListBucketResult listBucketResult = clientBucket.getListBucketResult();
+        logPrefix(listBucketResult);
+        logObjects(listBucketResult);
+        final String nextMarker = listBucketResult.getNextMarker();
+        System.out.println("next marker " + nextMarker);
+        loopWithNextMarker(bucket,prefix,delimiter,nextMarker);
+    }
+
+    public void loopWithNextMarker(final String bucket, final String prefix, final String delimiter, final String marker) throws IOException {
+        if (marker == null) {
+            return;
+        }
+        GetBucketRequest getBucketRequest = new GetBucketRequest(bucket).withPrefix(prefix).withDelimiter(delimiter).withMaxKeys(3).withMarker(marker);
+        GetBucketResponse clientBucket = CLIENT.getBucket(getBucketRequest);
+        ListBucketResult listBucketResult = clientBucket.getListBucketResult();
+        logPrefix(listBucketResult);
+        logObjects(listBucketResult);
+        final String nextMarker = listBucketResult.getNextMarker();
+        System.out.println("next marker " + nextMarker);
+        loopWithNextMarker(bucket,prefix,delimiter,nextMarker);
+    }
+
+    public void logPrefix(ListBucketResult listBucketResult) {
+        for (CommonPrefixes commonPrefixes : listBucketResult.getCommonPrefixes()) {
+            System.out.println("Prefix: " + commonPrefixes.getPrefix());
+        }
+    }
+
+    public void logObjects(ListBucketResult listBucketResult) {
+        for (Contents contents : listBucketResult.getObjects()) {
+            System.out.println("Object: " + contents.getKey());
+        }
+    }
+
+    @Test
+    public void matchS3() throws IOException {
+        final String[] names = {
+                "dir/a.txt",
+                "dir/foo.txt",
+                "dir/foo1.txt",
+                "dir/foo2.txt",
+                "dir/baz/foo.txt",
+                "dir/tar/foo.txt",
+                "dir/1/foo.txt",
+                "dir/2/foo.txt",
+                "dir/3/foo.txt",
+                "dir/4/foo.txt"
+        };
+        final String content = "content";
+        try {
+            HELPERS.ensureBucketExists(TEST_ENV_NAME, envDataPolicyId);
+            for(final String s : names) {
+                putString(s, content);
+            }
+            loopWithNextMarker(TEST_ENV_NAME,"dir/", "/");
+            assertThat(true, is(true));
+
+        } finally {
             deleteAllContents(CLIENT, TEST_ENV_NAME);
         }
     }
