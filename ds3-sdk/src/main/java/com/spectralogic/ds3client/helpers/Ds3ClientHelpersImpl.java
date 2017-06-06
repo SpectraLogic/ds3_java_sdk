@@ -24,6 +24,7 @@ import com.google.common.collect.Lists;
 import com.spectralogic.ds3client.Ds3Client;
 import com.spectralogic.ds3client.helpers.events.EventRunner;
 import com.spectralogic.ds3client.helpers.events.SameThreadEventRunner;
+import com.spectralogic.ds3client.helpers.pagination.GetBucketKeyLoaderFactory;
 import com.spectralogic.ds3client.helpers.pagination.GetBucketLoaderFactory;
 import com.spectralogic.ds3client.commands.*;
 import com.spectralogic.ds3client.commands.spectrads3.*;
@@ -35,8 +36,6 @@ import com.spectralogic.ds3client.helpers.strategy.transferstrategy.TransferStra
 import com.spectralogic.ds3client.helpers.strategy.transferstrategy.TransferStrategyBuilder;
 import com.spectralogic.ds3client.helpers.util.PartialObjectHelpers;
 import com.spectralogic.ds3client.models.*;
-import com.spectralogic.ds3client.models.bulk.RequestType;
-import com.spectralogic.ds3client.models.common.CommonPrefixes;
 import com.spectralogic.ds3client.models.common.Range;
 import com.spectralogic.ds3client.models.bulk.*;
 import com.spectralogic.ds3client.networking.FailedRequestException;
@@ -530,34 +529,12 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
     }
 
     @Override
-    public ContentPrefix remoteListDirectory(final String bucket, final String keyPrefix, final String nextMarker, final int maxKeys) throws IOException {
-        return remoteListDirectory(bucket,keyPrefix,"/", nextMarker, maxKeys);
+    public Iterable<FileSystemKey> remoteListDirectory(final String bucket, final String keyPrefix, final String nextMarker, final int maxKeys) throws IOException {
+        return new LazyIterable<>(new GetBucketKeyLoaderFactory(client, bucket, keyPrefix, "/", nextMarker, maxKeys, DEFAULT_LIST_OBJECTS_RETRIES));
     }
 
-    public ContentPrefix remoteListDirectory(final String bucket, final String keyPrefix, final String delimiter, final String nextMarker, final int maxKeys) throws IOException {
-        final Iterable<Contents> contents = new LazyIterable<>(new GetBucketLoaderFactory(client, bucket, keyPrefix, delimiter, nextMarker, maxKeys, DEFAULT_LIST_OBJECTS_RETRIES));
-        final GetBucketRequest request = new GetBucketRequest(bucket);
-        if (keyPrefix != null) {
-            request.withPrefix(keyPrefix);
-        }
-        if (delimiter != null) {
-            request.withDelimiter(delimiter);
-        }
-        if (nextMarker != null) {
-            request.withMarker(nextMarker);
-        }
-        request.withMaxKeys(10);
-        final GetBucketResponse response;
-        final List<CommonPrefixes> commonPrefixes;
-        try {
-            response = this.client.getBucket(request);
-            final ListBucketResult result = response.getListBucketResult();
-            commonPrefixes = result.getCommonPrefixes();
-
-        } catch (final FailedRequestException e) {
-            throw new RuntimeException("Failed to get the list of objects due to a failed request", e);
-        }
-       return new ContentPrefix(contents, commonPrefixes);
+    public Iterable<FileSystemKey> remoteListDirectory(final String bucket, final String keyPrefix, final String delimiter, final String nextMarker, final int maxKeys) throws IOException {
+        return new LazyIterable<>(new GetBucketKeyLoaderFactory(client, bucket, keyPrefix, delimiter, nextMarker, maxKeys, DEFAULT_LIST_OBJECTS_RETRIES));
     }
 
     public Iterable<Ds3Object> addPrefixToDs3ObjectsList(final Iterable<Ds3Object> objectsList, final String prefix) {

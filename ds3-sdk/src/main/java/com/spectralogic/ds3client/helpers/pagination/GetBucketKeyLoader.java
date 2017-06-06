@@ -52,15 +52,9 @@ public class GetBucketKeyLoader implements LazyIterable.LazyLoader<FileSystemKey
         while(true) {
             final GetBucketRequest request = new GetBucketRequest(bucket);
             request.withMaxKeys(maxKeys);
-            if (prefix != null) {
-                request.withPrefix(prefix);
-            }
-            if (truncated) {
-                request.withMarker(nextMarker);
-            }
-            if (delimiter != null) {
-                request.withDelimiter(delimiter);
-            }
+            if (prefix != null) request.withPrefix(prefix);
+            if (truncated)  request.withMarker(nextMarker);
+            if (delimiter != null) request.withDelimiter(delimiter);
             GetBucketResponse response;
             try {
                 response = this.client.getBucket(request);
@@ -92,7 +86,6 @@ public class GetBucketKeyLoader implements LazyIterable.LazyLoader<FileSystemKey
                 }
                 return fileSystemKeys.build();
             }
-
         }
     }
 }

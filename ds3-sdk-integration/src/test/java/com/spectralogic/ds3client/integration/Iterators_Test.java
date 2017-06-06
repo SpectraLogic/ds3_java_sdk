@@ -26,6 +26,7 @@ import com.spectralogic.ds3client.helpers.pagination.GetBucketLoaderFactory;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers;
 import com.spectralogic.ds3client.helpers.pagination.GetObjectsFullDetailsLoaderFactory;
 import com.spectralogic.ds3client.models.Contents;
+import com.spectralogic.ds3client.models.FileSystemKey;
 import com.spectralogic.ds3client.models.ListBucketResult;
 import com.spectralogic.ds3client.models.common.CommonPrefixes;
 import com.spectralogic.ds3client.utils.ByteArraySeekableByteChannel;
@@ -83,41 +84,18 @@ public class Iterators_Test {
     }
 
     @Test
-    public void empty_dericty_test() throws IOException, URISyntaxException {
+    public void IterateWithDelimiter() throws IOException, URISyntaxException {
         try {
             HELPERS.ensureBucketExists(TEST_ENV_NAME, envDataPolicyId);
             loadBookTestDataWithPrefix(CLIENT, TEST_ENV_NAME, "books/");
-            final ContentPrefix contentPrefix = Ds3ClientHelpers.wrap(CLIENT).remoteListDirectory(TEST_ENV_NAME, "books/", null, 100);
-            final List<CommonPrefixes> commonPrefixesList = contentPrefix.commonPrefixes();
-            final LazyIterable<Contents> lazyIterable = (LazyIterable<Contents>) contentPrefix.contents();
-            final ArrayList<Contents> contents = Lists.newArrayList(lazyIterable);
-            assertThat(contents.size(), is(4));
-            assertThat(commonPrefixesList.size(), is(0));
+            Iterable<FileSystemKey>  fileSystemKeysIterator  = Ds3ClientHelpers.wrap(CLIENT).remoteListDirectory(TEST_ENV_NAME, "books/", null, 100);
+            List<FileSystemKey> fileSystemKeys = Lists.newArrayList(fileSystemKeysIterator);
+            assertThat(fileSystemKeys.size(), is(4));
 
             loadBookTestDataWithPrefix(CLIENT, TEST_ENV_NAME, "books/more/");
-            final ContentPrefix anotherContentPrefix = Ds3ClientHelpers.wrap(CLIENT).remoteListDirectory(TEST_ENV_NAME, "books/", null, 1000);
-            final List<CommonPrefixes> anotherCommonPrefixesList = anotherContentPrefix.commonPrefixes();
-            final LazyIterable<Contents> anotherLazyIterable = (LazyIterable<Contents>) anotherContentPrefix.contents();
-            final ArrayList<Contents> anotherContents = Lists.newArrayList(anotherLazyIterable);
-            assertThat(anotherContents.size(), is(4));
-            assertThat(anotherCommonPrefixesList.size(), is(1));
-            assertThat(anotherCommonPrefixesList.get(0).getPrefix(), is("books/more/"));
-
-            for (int i = 0; i < 100; i++) {
-                loadBookTestDataWithPrefix(CLIENT, TEST_ENV_NAME, "books/" + i + "/");
-            }
-            for (int i = 0; i < 20; i++) {
-                loadBookTestDataWithPrefix(CLIENT, TEST_ENV_NAME, "books/" + i);
-            }
-            final ContentPrefix bulkContentPrefix = Ds3ClientHelpers.wrap(CLIENT).remoteListDirectory(TEST_ENV_NAME, "books/", null, 84);
-            final List<CommonPrefixes> bulkCommonPrefixesList = bulkContentPrefix.commonPrefixes();
-            final LazyIterable<Contents> bulkLazyIterable = (LazyIterable<Contents>) bulkContentPrefix.contents();
-            final ArrayList<Contents> bulkContents = Lists.newArrayList(bulkLazyIterable);
-            for(CommonPrefixes c : bulkCommonPrefixesList) {
-                LOG.info(c.getPrefix());
-            }
-            //assertThat(bulkCommonPrefixesList.size(), is(101));
-            assertThat(bulkContents.size(), is(84));
+            Iterable<FileSystemKey>  anotherFileSystemKeysIterator  = Ds3ClientHelpers.wrap(CLIENT).remoteListDirectory(TEST_ENV_NAME, "books/", null, 100);
+            List<FileSystemKey> anotherFileSystemKeys = Lists.newArrayList(fileSystemKeysIterator);
+            assertThat(anotherFileSystemKeys.size(), is(5));
         }
         finally {
             deleteAllContents(CLIENT, TEST_ENV_NAME);

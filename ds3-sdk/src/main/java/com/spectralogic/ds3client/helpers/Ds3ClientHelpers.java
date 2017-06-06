@@ -23,6 +23,7 @@ import com.spectralogic.ds3client.helpers.options.ReadJobOptions;
 import com.spectralogic.ds3client.helpers.options.WriteJobOptions;
 import com.spectralogic.ds3client.helpers.strategy.transferstrategy.TransferStrategy;
 import com.spectralogic.ds3client.models.Contents;
+import com.spectralogic.ds3client.models.FileSystemKey;
 import com.spectralogic.ds3client.models.bulk.Ds3Object;
 import com.spectralogic.ds3client.utils.Predicate;
 
@@ -470,27 +471,25 @@ public abstract class Ds3ClientHelpers {
 
     /**
      * Defaults to the path delimiter of '/'
-     * Returns an Iterable of {@link Ds3Object} and a list of {@link com.spectralogic.ds3client.models.common.CommonPrefixes}
+     * Returns an Iterable of {@link FileSystemKey}
      * @param bucket The bucket
      * @param keyPrefix Limits the response to keys that begin with the specified prefix
      * @param nextMarker Specifies the key to start with when listing objects
      * @param maxKeys Sets the maximum number of keys returned in the response body.
      * @return {@link ContentPrefix}
-     * @throws IOException
      */
-    public abstract ContentPrefix remoteListDirectory(final String bucket, final String keyPrefix, final String nextMarker, final int maxKeys) throws IOException;
+    public abstract Iterable<FileSystemKey> remoteListDirectory(final String bucket, final String keyPrefix, final String nextMarker, final int maxKeys) throws IOException;
 
     /**
-     * Returns an Iterable of {@link Ds3Object} and a list of {@link com.spectralogic.ds3client.models.common.CommonPrefixes}
+     * Returns an Iterable of {@link FileSystemKey}
      * @param bucket The bucket
      * @param keyPrefix Limits the response to keys that begin with the specified prefix
      * @param delimiter Specifies a path delimiter for the S3 query
      * @param nextMarker Specifies the key to start with when listing objects
      * @param maxKeys Sets the maximum number of keys returned in the response body.
      * @return {@link ContentPrefix}
-     * @throws IOException
      */
-    public abstract ContentPrefix remoteListDirectory(final String bucket, final String keyPrefix, final String delimiter, final String nextMarker, final int maxKeys) throws IOException;
+    public abstract Iterable<FileSystemKey> remoteListDirectory(final String bucket, final String keyPrefix, final String delimiter, final String nextMarker, final int maxKeys) throws IOException;
 
     /**
      * Returns an Iterable of {@link Ds3Object} that have a prefix added.
