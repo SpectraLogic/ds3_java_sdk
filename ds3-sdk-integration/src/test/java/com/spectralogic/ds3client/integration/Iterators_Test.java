@@ -164,6 +164,7 @@ public class Iterators_Test {
     public void logObjects(ListBucketResult listBucketResult) {
         for (Contents contents : listBucketResult.getObjects()) {
             System.out.println("Object: " + contents.getKey());
+            contents.
         }
     }
 
@@ -179,7 +180,8 @@ public class Iterators_Test {
                 "dir/1/foo.txt",
                 "dir/2/foo.txt",
                 "dir/3/foo.txt",
-                "dir/4/foo.txt"
+                "dir/4/foo.txt",
+
         };
         final String content = "content";
         try {
@@ -187,6 +189,7 @@ public class Iterators_Test {
             for(final String s : names) {
                 putString(s, content);
             }
+            putString("dir/4/", "");
             loopWithNextMarker(TEST_ENV_NAME,"dir/", "/");
             assertThat(true, is(true));
 
