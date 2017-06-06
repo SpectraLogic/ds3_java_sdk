@@ -164,7 +164,6 @@ public class Iterators_Test {
     public void logObjects(ListBucketResult listBucketResult) {
         for (Contents contents : listBucketResult.getObjects()) {
             System.out.println("Object: " + contents.getKey());
-            contents.
         }
     }
 
