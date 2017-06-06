@@ -35,8 +35,6 @@ import java.io.IOException;
  * A subclass of {@link BlobStrategy} used in get transfers.
  */
 public class GetSequentialBlobStrategy extends AbstractBlobStrategy {
-    private static final Logger LOG = LoggerFactory.getLogger(GetSequentialBlobStrategy.class);
-
     public GetSequentialBlobStrategy(final Ds3Client client,
                                      final MasterObjectList masterObjectList,
                                      final EventDispatcher eventDispatcher,

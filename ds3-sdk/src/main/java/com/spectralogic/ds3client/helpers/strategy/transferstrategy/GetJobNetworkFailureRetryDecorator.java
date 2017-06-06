@@ -96,7 +96,7 @@ public class GetJobNetworkFailureRetryDecorator implements TransferMethod {
     private synchronized void makeTransferMethodForPartialRetry(final JobPart jobPart, final long numBytesTransferred) {
         final TransferState existingTransferState = transferMethodMap.get(jobPart);
 
-        ImmutableCollection<Range> ranges = initializeRanges(jobPart.getBulkObject(), existingTransferState);
+        ImmutableCollection<Range> ranges = initializeRanges(jobPart.getBlob(), existingTransferState);
         final Long numBytesToTransfer = initializeNumBytesToTransfer(existingTransferState, ranges);
         ranges = updateRanges(ranges, numBytesTransferred, numBytesToTransfer);
         final long destinationChannelOffset = existingTransferState.getDestinationChannelOffset() + numBytesTransferred;
