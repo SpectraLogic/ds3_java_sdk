@@ -20,18 +20,35 @@ import com.google.common.collect.Lists;
 import com.spectralogic.ds3client.Ds3Client;
 import com.spectralogic.ds3client.Ds3ClientBuilder;
 import com.spectralogic.ds3client.Ds3ClientImpl;
-import com.spectralogic.ds3client.IntValue;
 import com.spectralogic.ds3client.commands.*;
 import com.spectralogic.ds3client.commands.spectrads3.*;
 import com.spectralogic.ds3client.commands.spectrads3.notifications.*;
 import com.spectralogic.ds3client.exceptions.Ds3NoMoreRetriesException;
+import com.spectralogic.ds3client.helpers.ChecksumFunction;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers;
 import com.spectralogic.ds3client.helpers.FailureEventListener;
 import com.spectralogic.ds3client.helpers.FileObjectGetter;
 import com.spectralogic.ds3client.helpers.FileObjectPutter;
+import com.spectralogic.ds3client.helpers.JobPart;
 import com.spectralogic.ds3client.helpers.ObjectCompletedListener;
 import com.spectralogic.ds3client.helpers.events.FailureEvent;
+import com.spectralogic.ds3client.helpers.events.SameThreadEventRunner;
 import com.spectralogic.ds3client.helpers.options.WriteJobOptions;
+import com.spectralogic.ds3client.helpers.strategy.blobstrategy.BlobStrategy;
+import com.spectralogic.ds3client.helpers.strategy.blobstrategy.ChunkAttemptRetryBehavior;
+import com.spectralogic.ds3client.helpers.strategy.blobstrategy.ChunkAttemptRetryDelayBehavior;
+import com.spectralogic.ds3client.helpers.strategy.blobstrategy.ClientDefinedChunkAttemptRetryDelayBehavior;
+import com.spectralogic.ds3client.helpers.strategy.blobstrategy.MaxChunkAttemptsRetryBehavior;
+import com.spectralogic.ds3client.helpers.strategy.blobstrategy.PutSequentialBlobStrategy;
+import com.spectralogic.ds3client.helpers.strategy.channelstrategy.ChannelStrategy;
+import com.spectralogic.ds3client.helpers.strategy.channelstrategy.SequentialFileReaderChannelStrategy;
+import com.spectralogic.ds3client.helpers.strategy.transferstrategy.EventDispatcher;
+import com.spectralogic.ds3client.helpers.strategy.transferstrategy.EventDispatcherImpl;
+import com.spectralogic.ds3client.helpers.strategy.transferstrategy.MaxNumObjectTransferAttemptsDecorator;
+import com.spectralogic.ds3client.helpers.strategy.transferstrategy.TransferMethod;
+import com.spectralogic.ds3client.helpers.strategy.transferstrategy.TransferRetryDecorator;
+import com.spectralogic.ds3client.helpers.strategy.transferstrategy.TransferStrategy;
+import com.spectralogic.ds3client.helpers.strategy.transferstrategy.TransferStrategyBuilder;
 import com.spectralogic.ds3client.integration.test.helpers.ABMTestHelper;
 import com.spectralogic.ds3client.integration.test.helpers.Ds3ClientShimFactory;
 import com.spectralogic.ds3client.integration.test.helpers.TempStorageIds;
@@ -46,23 +63,32 @@ import com.spectralogic.ds3client.utils.ResourceUtils;
 
 import com.spectralogic.ds3client.integration.test.helpers.Ds3ClientShimFactory.ClientFailureType;
 
+import com.spectralogic.ds3client.utils.hashing.ChecksumUtils;
+import com.spectralogic.ds3client.utils.hashing.Hasher;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.junit.*;
 
+import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URISyntaxException;
 import java.nio.ByteBuffer;
+import java.nio.channels.ByteChannel;
+import java.nio.channels.Channels;
 import java.nio.channels.SeekableByteChannel;
 import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import com.spectralogic.ds3client.integration.test.helpers.Ds3ClientShim;
@@ -72,7 +98,13 @@ import static com.spectralogic.ds3client.integration.Util.deleteAllContents;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
 
+import com.spectralogic.ds3client.helpers.*;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class PutJobManagement_Test {
+    private static final Logger LOG = LoggerFactory.getLogger(PutJobManagement_Test.class);
 
     private static final Ds3Client client = Util.fromEnv();
     private static final Ds3ClientHelpers HELPERS = Ds3ClientHelpers.wrap(client);
@@ -540,6 +572,52 @@ public class PutJobManagement_Test {
     }
 
     @Test
+    public void testPutJobOptionsWithStreamingBehavior() throws IOException {
+
+        try {
+            final WriteJobOptions writeJobOptions = WriteJobOptions.create().withAggregating();
+
+            final Ds3ClientHelpers.Job jobOne = HELPERS.startWriteJobUsingStreamedBehavior(BUCKET_NAME,
+                    Lists.newArrayList(new Ds3Object("test", 2)),
+                    writeJobOptions);
+            final UUID jobOneId = jobOne.getJobId();
+
+            final Ds3ClientHelpers.Job jobTwo = HELPERS.startWriteJobUsingStreamedBehavior(BUCKET_NAME,
+                    Lists.newArrayList(new Ds3Object("test2", 2)),
+                    writeJobOptions);
+            final UUID jobTwoId = jobTwo.getJobId();
+
+            assertThat(jobOneId, is(jobTwoId));
+
+        } finally {
+            deleteAllContents(client, BUCKET_NAME);
+        }
+    }
+
+    @Test
+    public void testPutJobOptionsWithRandomAccessBehavior() throws IOException {
+
+        try {
+            final WriteJobOptions writeJobOptions = WriteJobOptions.create().withAggregating();
+
+            final Ds3ClientHelpers.Job jobOne = HELPERS.startWriteJobUsingRandomAccessBehavior(BUCKET_NAME,
+                    Lists.newArrayList(new Ds3Object("test", 2)),
+                    writeJobOptions);
+            final UUID jobOneId = jobOne.getJobId();
+
+            final Ds3ClientHelpers.Job jobTwo = HELPERS.startWriteJobUsingRandomAccessBehavior(BUCKET_NAME,
+                    Lists.newArrayList(new Ds3Object("test2", 2)),
+                    writeJobOptions);
+            final UUID jobTwoId = jobTwo.getJobId();
+
+            assertThat(jobOneId, is(jobTwoId));
+
+        } finally {
+            deleteAllContents(client, BUCKET_NAME);
+        }
+    }
+
+    @Test
     public void allocateJobChunk() throws IOException {
 
         try {
@@ -823,18 +901,22 @@ public class PutJobManagement_Test {
     @Test
     public void testWriteJobWithRetries() throws Exception {
         final int maxNumObjectTransferAttempts = 3;
+        final boolean computeChecksumWithUserSuppliedFunction = false;
+
         transferAndCheckFileContent(maxNumObjectTransferAttempts,
                 new ObjectTransferExceptionHandler() {
                     @Override
                     public boolean handleException(final Throwable t) {
+                        t.printStackTrace();
                         fail("Got unexpected exception: " + t.getMessage());
                         return false;
                     }
-                });
+                }, computeChecksumWithUserSuppliedFunction);
     }
 
     private void transferAndCheckFileContent(final int maxNumObjectTransferAttempts,
-                                             final ObjectTransferExceptionHandler objectTransferExceptionHandler)
+                                             final ObjectTransferExceptionHandler objectTransferExceptionHandler,
+                                             final boolean computeChecksumWithUserSuppliedFunction)
             throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, IOException, URISyntaxException
     {
         final String userAgent = "Agent Provocateur";
@@ -851,7 +933,7 @@ public class PutJobManagement_Test {
 
         try {
             final String DIR_NAME = "largeFiles/";
-            final String[] FILE_NAMES = new String[]{"lesmis.txt"};
+            final String[] FILE_NAMES = new String[]{"lesmis-copies.txt"};
 
             final Path dirPath = ResourceUtils.loadFileResource(DIR_NAME);
 
@@ -871,17 +953,89 @@ public class PutJobManagement_Test {
                     maxNumBlockAllocationRetries,
                     maxNumObjectTransferAttempts);
 
-            final IntValue intValue = new IntValue();
+            final AtomicInteger numTimesObjectCompletedEventCalled = new AtomicInteger(0);
+            final AtomicInteger numTimesDataTransferredEventCalled = new AtomicInteger(0);
+            final AtomicBoolean dataTransferredEventReceived = new AtomicBoolean(false);
+            final AtomicBoolean objectCompletedEventReceived = new AtomicBoolean(false);
+            final AtomicBoolean checksumEventReceived = new AtomicBoolean(false);
+            final AtomicBoolean waitingForChunksEventReceived = new AtomicBoolean(false);
+            final AtomicBoolean failureEventReceived = new AtomicBoolean(false);
+            final AtomicBoolean checksumFunctionCalled = new AtomicBoolean(false);
 
-            final Ds3ClientHelpers.Job writeJob = ds3ClientHelpers.startWriteJob(BUCKET_NAME, objects);
+            final WriteJobOptions writeJobOptions = WriteJobOptions.create()
+                    .withChecksumType(ChecksumType.Type.MD5);
+
+            final Ds3ClientHelpers.Job writeJob = ds3ClientHelpers.startWriteJob(BUCKET_NAME, objects, writeJobOptions);
+
+            if (computeChecksumWithUserSuppliedFunction) {
+                writeJob.withChecksum(new ChecksumFunction() {
+                    @Override
+                    public String compute(final BulkObject obj, final ByteChannel channel) {
+                        checksumFunctionCalled.set(true);
+                        try {
+                            final InputStream dataStream = new BufferedInputStream(Channels.newInputStream(channel));
+
+                            dataStream.mark(Integer.MAX_VALUE);
+
+                            final Hasher hasher = ChecksumUtils.getHasher(ChecksumType.Type.MD5);
+
+                            final String checksum = ChecksumUtils.hashInputStream(hasher, dataStream);
+
+                            LOG.info("Computed checksum for blob: {}", checksum);
+
+                            dataStream.reset();
+
+                            return checksum;
+                        } catch (final IOException e) {
+                            LOG.error("Error calculating checksum for: " + obj.getName(), e);
+                            fail("Error calculating checksum for: " + obj.getName());
+                        }
+
+                        return null;
+                    }
+                });
+            }
+
+            writeJob.attachFailureEventListener(new FailureEventListener() {
+                @Override
+                public void onFailure(final FailureEvent failureEvent) {
+                    failureEventReceived.set(true);
+                }
+            });
+
+            writeJob.attachChecksumListener(new ChecksumListener() {
+                @Override
+                public void value(final BulkObject obj, final ChecksumType.Type type, final String checksum) {
+                    checksumEventReceived.set(true);
+                    assertEquals("0feqCQBgdtmmgGs9pB/Huw==", checksum);
+                }
+            });
+
             writeJob.attachObjectCompletedListener(new ObjectCompletedListener() {
                 private int numCompletedObjects = 0;
 
                 @Override
                 public void objectCompleted(final String name) {
+                    objectCompletedEventReceived.set(true);
                     assertTrue(bookTitles.contains(name));
                     assertEquals(1, ++numCompletedObjects);
-                    intValue.increment();
+                    numTimesObjectCompletedEventCalled.getAndIncrement();
+                }
+            });
+
+            writeJob.attachDataTransferredListener(new DataTransferredListener() {
+                @Override
+                public void dataTransferred(final long size) {
+                    dataTransferredEventReceived.set(true);
+                    assertEquals(objects.get(0).getSize(), size);
+                    numTimesDataTransferredEventCalled.getAndIncrement();
+                }
+            });
+
+            writeJob.attachWaitingForChunksListener(new WaitingForChunksListener() {
+                @Override
+                public void waiting(final int secondsToWait) {
+                    waitingForChunksEventReceived.set(true);
                 }
             });
 
@@ -897,7 +1051,19 @@ public class PutJobManagement_Test {
                 return;
             }
 
-            assertEquals(1, intValue.getValue());
+            if (computeChecksumWithUserSuppliedFunction) {
+                assertTrue(checksumFunctionCalled.get());
+            } else {
+                assertFalse(checksumFunctionCalled.get());
+            }
+            assertTrue(dataTransferredEventReceived.get());
+            assertTrue(objectCompletedEventReceived.get());
+            assertTrue(checksumEventReceived.get());
+            assertFalse(waitingForChunksEventReceived.get());
+            assertFalse(failureEventReceived.get());
+
+            assertEquals(1, numTimesObjectCompletedEventCalled.get());
+            assertEquals(1, numTimesDataTransferredEventCalled.get());
 
             final GetBucketResponse request = ds3ClientShim.getBucket(new GetBucketRequest(BUCKET_NAME));
             final ListBucketResult result = request.getListBucketResult();
@@ -937,8 +1103,26 @@ public class PutJobManagement_Test {
     }
 
     @Test
+    public void testWriteJobWithRetriesAndUserDefinedChecksum() throws Exception {
+        final int maxNumObjectTransferAttempts = 3;
+        final boolean computeChecksumWithUserSuppliedFunction = true;
+
+        transferAndCheckFileContent(maxNumObjectTransferAttempts,
+                new ObjectTransferExceptionHandler() {
+                    @Override
+                    public boolean handleException(final Throwable t) {
+                        t.printStackTrace();
+                        fail("Got unexpected exception: " + t.getMessage());
+                        return false;
+                    }
+                }, computeChecksumWithUserSuppliedFunction);
+    }
+
+    @Test
     public void testWriteJobWithRetriesThrowsDs3NoMoreRetriesException() throws Exception {
         final int maxNumObjectTransferAttempts = 1;
+        final boolean computeChecksumWithUserSuppliedFunction = false;
+
         transferAndCheckFileContent(maxNumObjectTransferAttempts,
                 new ObjectTransferExceptionHandler() {
                     @Override
@@ -950,7 +1134,7 @@ public class PutJobManagement_Test {
 
                         return false;
                     }
-                });
+                }, computeChecksumWithUserSuppliedFunction);
     }
 
     @Test
@@ -960,7 +1144,7 @@ public class PutJobManagement_Test {
         final Path tempDirectory = Files.createTempDirectory(Paths.get("."), tempPathPrefix);
 
         try {
-            final IntValue numFailureEventsFired = new IntValue();
+            final AtomicInteger numFailureEventsFired = new AtomicInteger(0);
 
             final int maxNumObjectTransferAttempts = 1;
             final Ds3ClientHelpers.Job writeJob = createWriteJobWithObjectsReadyToTransfer(maxNumObjectTransferAttempts,
@@ -969,7 +1153,7 @@ public class PutJobManagement_Test {
             final FailureEventListener failureEventListener = new FailureEventListener() {
                 @Override
                 public void onFailure(final FailureEvent failureEvent) {
-                    numFailureEventsFired.increment();
+                    numFailureEventsFired.getAndIncrement();
                     assertEquals(FailureEvent.FailureActivity.PuttingObject, failureEvent.doingWhat());
                 }
             };
@@ -979,7 +1163,7 @@ public class PutJobManagement_Test {
             try {
                 writeJob.transfer(new FileObjectPutter(tempDirectory));
             } catch (final Ds3NoMoreRetriesException e) {
-                assertEquals(1, numFailureEventsFired.getValue());
+                assertEquals(1, numFailureEventsFired.get());
             }
         } finally {
             FileUtils.deleteDirectory(tempDirectory.toFile());
@@ -1017,13 +1201,57 @@ public class PutJobManagement_Test {
     }
 
     @Test
+    public void testFiringWaitingForChunksEventWithFailedChunkAllocation()
+            throws IOException, URISyntaxException, NoSuchMethodException, IllegalAccessException, InvocationTargetException {
+        final String tempPathPrefix = null;
+        final Path tempDirectory = Files.createTempDirectory(Paths.get("."), tempPathPrefix);
+
+        try {
+            final AtomicInteger numFailureEventsFired = new AtomicInteger(0);
+            final AtomicInteger numWaitingForChunksEventsFired = new AtomicInteger(0);
+
+            final int maxNumObjectTransferAttempts = 3;
+            final Ds3ClientHelpers.Job writeJob = createWriteJobWithObjectsReadyToTransfer(maxNumObjectTransferAttempts,
+                    ClientFailureType.ChunkAllocation);
+
+            final FailureEventListener failureEventListener = new FailureEventListener() {
+                @Override
+                public void onFailure(final FailureEvent failureEvent) {
+                    numFailureEventsFired.getAndIncrement();
+                    assertEquals(FailureEvent.FailureActivity.PuttingObject, failureEvent.doingWhat());
+                }
+            };
+
+            writeJob.attachFailureEventListener(failureEventListener);
+
+            writeJob.attachWaitingForChunksListener(new WaitingForChunksListener() {
+                @Override
+                public void waiting(final int secondsToWait) {
+                    numWaitingForChunksEventsFired.getAndIncrement();
+                }
+            });
+
+            try {
+                writeJob.transfer(new FileObjectPutter(tempDirectory));
+            } catch (final Ds3NoMoreRetriesException e) {
+                assertEquals(1, numFailureEventsFired.get());
+            }
+
+            assertEquals(maxNumObjectTransferAttempts, numWaitingForChunksEventsFired.get());
+        } finally {
+            FileUtils.deleteDirectory(tempDirectory.toFile());
+            deleteAllContents(client, BUCKET_NAME);
+        }
+    }
+
+    @Test
     public void testFiringOnFailureEventWithFailedPutObject()
             throws IOException, URISyntaxException, NoSuchMethodException, IllegalAccessException, InvocationTargetException {
         final String tempPathPrefix = null;
         final Path tempDirectory = Files.createTempDirectory(Paths.get("."), tempPathPrefix);
 
         try {
-            final IntValue numFailureEventsFired = new IntValue();
+            final AtomicInteger numFailureEventsFired = new AtomicInteger();
 
             final int maxNumObjectTransferAttempts = 1;
             final Ds3ClientHelpers.Job writeJob = createWriteJobWithObjectsReadyToTransfer(maxNumObjectTransferAttempts,
@@ -1032,7 +1260,7 @@ public class PutJobManagement_Test {
             final FailureEventListener failureEventListener = new FailureEventListener() {
                 @Override
                 public void onFailure(final FailureEvent failureEvent) {
-                    numFailureEventsFired.increment();
+                    numFailureEventsFired.incrementAndGet();
                     assertEquals(FailureEvent.FailureActivity.PuttingObject, failureEvent.doingWhat());
                 }
             };
@@ -1041,11 +1269,544 @@ public class PutJobManagement_Test {
 
             try {
                 writeJob.transfer(new FileObjectPutter(tempDirectory));
-            } catch (final RuntimeException e) {
-                assertEquals(1, numFailureEventsFired.getValue());
+            } catch (final IOException | RuntimeException e) {
+                assertEquals(1, numFailureEventsFired.get());
             }
         } finally {
             FileUtils.deleteDirectory(tempDirectory.toFile());
+            deleteAllContents(client, BUCKET_NAME);
+        }
+    }
+
+    @Test
+    public void testPutJobUsingTransferStrategy() throws IOException, InterruptedException, URISyntaxException {
+        final String DIR_NAME = "books/";
+        final String[] FILE_NAMES = new String[]{"beowulf.txt"};
+
+        try {
+            final Path dirPath = ResourceUtils.loadFileResource(DIR_NAME);
+
+            final List<String> bookTitles = new ArrayList<>();
+            final List<Ds3Object> objectsToWrite = new ArrayList<>();
+            for (final String book : FILE_NAMES) {
+                final Path objPath = ResourceUtils.loadFileResource(DIR_NAME + book);
+                final long bookSize = Files.size(objPath);
+                final Ds3Object obj = new Ds3Object(book, bookSize);
+
+                bookTitles.add(book);
+                objectsToWrite.add(obj);
+            }
+
+            final PutBulkJobSpectraS3Request request = new PutBulkJobSpectraS3Request(BUCKET_NAME, Lists.newArrayList(objectsToWrite));
+            final PutBulkJobSpectraS3Response putBulkJobSpectraS3Response = client.putBulkJobSpectraS3(request);
+
+            final TransferStrategyBuilder transferStrategyBuilder = new TransferStrategyBuilder()
+                    .withDs3Client(client)
+                    .withMasterObjectList(putBulkJobSpectraS3Response.getMasterObjectList())
+                    .withChannelBuilder(new FileObjectPutter(dirPath));
+
+            final TransferStrategy transferStrategy = transferStrategyBuilder.makePutTransferStrategy();
+
+            transferStrategy.transfer();
+
+            final Ds3ClientHelpers ds3ClientHelpers = Ds3ClientHelpers.wrap(client);
+            final Iterable<Contents> bucketContentsIterable = ds3ClientHelpers.listObjects(BUCKET_NAME);
+
+            for (final Contents bucketContents : bucketContentsIterable) {
+                assertEquals(FILE_NAMES[0], bucketContents.getKey());
+            }
+        } finally {
+            deleteAllContents(client, BUCKET_NAME);
+        }
+    }
+
+    @Test
+    public void testWriteJobUsingTransferStrategy() throws IOException, InterruptedException, URISyntaxException {
+        final String DIR_NAME = "books/";
+        final String[] FILE_NAMES = new String[]{"beowulf.txt"};
+
+        try {
+            final Path dirPath = ResourceUtils.loadFileResource(DIR_NAME);
+
+            final List<String> bookTitles = new ArrayList<>();
+            final List<Ds3Object> objectsToWrite = new ArrayList<>();
+            for (final String book : FILE_NAMES) {
+                final Path objPath = ResourceUtils.loadFileResource(DIR_NAME + book);
+                final long bookSize = Files.size(objPath);
+                final Ds3Object obj = new Ds3Object(book, bookSize);
+
+                bookTitles.add(book);
+                objectsToWrite.add(obj);
+            }
+
+            final PutBulkJobSpectraS3Request request = new PutBulkJobSpectraS3Request(BUCKET_NAME, Lists.newArrayList(objectsToWrite));
+            final PutBulkJobSpectraS3Response putBulkJobSpectraS3Response = client.putBulkJobSpectraS3(request);
+
+            final TransferStrategyBuilder transferStrategyBuilder = new TransferStrategyBuilder()
+                    .withDs3Client(client)
+                    .withMasterObjectList(putBulkJobSpectraS3Response.getMasterObjectList())
+                    .withChannelBuilder(new FileObjectPutter(dirPath));
+
+            final TransferStrategy transferStrategy = transferStrategyBuilder.makePutTransferStrategy();
+
+            final Ds3ClientHelpers ds3ClientHelpers = Ds3ClientHelpers.wrap(client);
+
+            final Ds3ClientHelpers.Job writeJob = ds3ClientHelpers.startWriteJob(transferStrategy);
+
+            writeJob.transfer();
+
+            final Iterable<Contents> bucketContentsIterable = ds3ClientHelpers.listObjects(BUCKET_NAME);
+
+            for (final Contents bucketContents : bucketContentsIterable) {
+                assertEquals(FILE_NAMES[0], bucketContents.getKey());
+            }
+        } finally {
+            deleteAllContents(client, BUCKET_NAME);
+        }
+    }
+
+    @Test
+    public void testPutJobWithUserSuppliedBlobStrategy() throws IOException, InterruptedException, URISyntaxException {
+        final String DIR_NAME = "books/";
+        final String[] FILE_NAMES = new String[]{"beowulf.txt"};
+
+        try {
+            final Path dirPath = ResourceUtils.loadFileResource(DIR_NAME);
+
+            final List<String> bookTitles = new ArrayList<>();
+            final List<Ds3Object> objectsToWrite = new ArrayList<>();
+            for (final String book : FILE_NAMES) {
+                final Path objPath = ResourceUtils.loadFileResource(DIR_NAME + book);
+                final long bookSize = Files.size(objPath);
+                final Ds3Object obj = new Ds3Object(book, bookSize);
+
+                bookTitles.add(book);
+                objectsToWrite.add(obj);
+            }
+
+            final PutBulkJobSpectraS3Request request = new PutBulkJobSpectraS3Request(BUCKET_NAME, Lists.newArrayList(objectsToWrite));
+            final PutBulkJobSpectraS3Response putBulkJobSpectraS3Response = client.putBulkJobSpectraS3(request);
+
+            final MasterObjectList masterObjectList = putBulkJobSpectraS3Response.getMasterObjectList();
+
+            final EventDispatcher eventDispatcher = new EventDispatcherImpl(new SameThreadEventRunner());
+
+            final AtomicInteger numChunkAllocationAttempts = new AtomicInteger(0);
+
+            final BlobStrategy blobStrategy = new UserSuppliedPutBlobStrategy(client,
+                    masterObjectList,
+                    eventDispatcher,
+                    new MaxChunkAttemptsRetryBehavior(5),
+                    new ClientDefinedChunkAttemptRetryDelayBehavior(1, eventDispatcher),
+                    new Monitorable() {
+                        @Override
+                        public void monitor() {
+                            numChunkAllocationAttempts.incrementAndGet();
+                        }
+                    });
+
+            final TransferStrategyBuilder transferStrategyBuilder = new TransferStrategyBuilder()
+                    .withDs3Client(client)
+                    .withMasterObjectList(masterObjectList)
+                    .withChannelBuilder(new FileObjectPutter(dirPath))
+                    .withBlobStrategy(blobStrategy);
+
+            final TransferStrategy transferStrategy = transferStrategyBuilder.makePutTransferStrategy();
+            transferStrategy.transfer();
+
+            final Ds3ClientHelpers ds3ClientHelpers = Ds3ClientHelpers.wrap(client);
+            final Iterable<Contents> bucketContentsIterable = ds3ClientHelpers.listObjects(BUCKET_NAME);
+
+            for (final Contents bucketContents : bucketContentsIterable) {
+                assertEquals(FILE_NAMES[0], bucketContents.getKey());
+            }
+
+            assertEquals(1, numChunkAllocationAttempts.get());
+        } finally {
+            deleteAllContents(client, BUCKET_NAME);
+        }
+    }
+
+    private interface Monitorable {
+        void monitor();
+    }
+
+    private class UserSuppliedPutBlobStrategy implements BlobStrategy {
+        private final BlobStrategy wrappedBlobStrategy;
+        private final Monitorable monitorable;
+
+        private UserSuppliedPutBlobStrategy(final Ds3Client client,
+                                            final MasterObjectList masterObjectList,
+                                            final EventDispatcher eventDispatcher,
+                                            final ChunkAttemptRetryBehavior retryBehavior,
+                                            final ChunkAttemptRetryDelayBehavior chunkAttemptRetryDelayBehavior,
+                                            final Monitorable monitorable)
+        {
+            this.monitorable = monitorable;
+
+            wrappedBlobStrategy = new PutSequentialBlobStrategy(client, masterObjectList, eventDispatcher, retryBehavior, chunkAttemptRetryDelayBehavior);
+        }
+
+        @Override
+        public Iterable<JobPart> getWork() throws IOException, InterruptedException {
+            monitorable.monitor();
+
+            return wrappedBlobStrategy.getWork();
+        }
+    }
+
+    @Test
+    public void testPutJobWithUserSuppliedChannelStrategy() throws IOException, InterruptedException, URISyntaxException {
+        testPutJobWithUserSuppliedChannelStrategy(new TransferStrategyBuilderModifiable() {
+            @Override
+            public TransferStrategyBuilder modify(final TransferStrategyBuilder transferStrategyBuilder) {
+                return transferStrategyBuilder;
+            }
+        });
+    }
+
+    private void testPutJobWithUserSuppliedChannelStrategy(final TransferStrategyBuilderModifiable strategyBuilderModifiable) throws IOException, InterruptedException, URISyntaxException {
+        final String DIR_NAME = "books/";
+        final String[] FILE_NAMES = new String[]{"beowulf.txt"};
+
+        try {
+            final Path dirPath = ResourceUtils.loadFileResource(DIR_NAME);
+
+            final List<String> bookTitles = new ArrayList<>();
+            final List<Ds3Object> objectsToWrite = new ArrayList<>();
+            for (final String book : FILE_NAMES) {
+                final Path objPath = ResourceUtils.loadFileResource(DIR_NAME + book);
+                final long bookSize = Files.size(objPath);
+                final Ds3Object obj = new Ds3Object(book, bookSize);
+
+                bookTitles.add(book);
+                objectsToWrite.add(obj);
+            }
+
+            final PutBulkJobSpectraS3Request request = new PutBulkJobSpectraS3Request(BUCKET_NAME, Lists.newArrayList(objectsToWrite));
+            final PutBulkJobSpectraS3Response putBulkJobSpectraS3Response = client.putBulkJobSpectraS3(request);
+
+            final MasterObjectList masterObjectList = putBulkJobSpectraS3Response.getMasterObjectList();
+
+            final AtomicInteger numTimesChannelOpened = new AtomicInteger(0);
+            final AtomicInteger numTimesChannelClosed = new AtomicInteger(0);
+
+            final Ds3ClientHelpers.ObjectChannelBuilder objectChannelBuilder = new FileObjectPutter(dirPath);
+            final ChannelStrategy channelStrategy = new UserSuppliedPutChannelStrategy(objectChannelBuilder,
+                    new ChannelMonitorable() {
+                        @Override
+                        public void acquired() {
+                            numTimesChannelOpened.incrementAndGet();
+                        }
+
+                        @Override
+                        public void released() {
+                            numTimesChannelClosed.incrementAndGet();
+                        }
+                    });
+
+            TransferStrategyBuilder transferStrategyBuilder = new TransferStrategyBuilder()
+                    .withDs3Client(client)
+                    .withMasterObjectList(masterObjectList)
+                    .withChannelStrategy(channelStrategy);
+
+            transferStrategyBuilder = strategyBuilderModifiable.modify(transferStrategyBuilder);
+
+            final TransferStrategy transferStrategy = transferStrategyBuilder.makePutTransferStrategy();
+            transferStrategy.transfer();
+
+            final Ds3ClientHelpers ds3ClientHelpers = Ds3ClientHelpers.wrap(client);
+            final Iterable<Contents> bucketContentsIterable = ds3ClientHelpers.listObjects(BUCKET_NAME);
+
+            for (final Contents bucketContents : bucketContentsIterable) {
+                assertEquals(FILE_NAMES[0], bucketContents.getKey());
+            }
+
+            assertEquals(1, numTimesChannelOpened.get());
+            assertEquals(1, numTimesChannelClosed.get());
+        } finally {
+            deleteAllContents(client, BUCKET_NAME);
+        }
+    }
+
+    private interface TransferStrategyBuilderModifiable {
+        TransferStrategyBuilder modify(final TransferStrategyBuilder transferStrategyBuilder);
+    }
+
+    private interface ChannelMonitorable {
+        void acquired();
+        void released();
+    }
+
+    private class UserSuppliedPutChannelStrategy implements ChannelStrategy {
+        private final ChannelMonitorable channelMonitorable;
+        private final ChannelStrategy wrappedPutStrategy;
+
+
+        private UserSuppliedPutChannelStrategy(final Ds3ClientHelpers.ObjectChannelBuilder objectChannelBuilder,
+                                               final ChannelMonitorable channelMonitorable)
+        {
+            this.channelMonitorable = channelMonitorable;
+            wrappedPutStrategy = new SequentialFileReaderChannelStrategy(objectChannelBuilder);
+        }
+
+        @Override
+        public SeekableByteChannel acquireChannelForBlob(final BulkObject blob) throws IOException {
+            channelMonitorable.acquired();
+            return wrappedPutStrategy.acquireChannelForBlob(blob);
+        }
+
+        @Override
+        public void releaseChannelForBlob(final SeekableByteChannel seekableByteChannel, final BulkObject blob) throws IOException {
+            channelMonitorable.released();
+            wrappedPutStrategy.releaseChannelForBlob(seekableByteChannel, blob);
+        }
+    }
+
+    @Test
+    public void testStreamingPutJobWithUserSuppliedChannelStrategy() throws IOException, InterruptedException, URISyntaxException {
+        testPutJobWithUserSuppliedChannelStrategy(new TransferStrategyBuilderModifiable() {
+            @Override
+            public TransferStrategyBuilder modify(final TransferStrategyBuilder transferStrategyBuilder) {
+                return transferStrategyBuilder.usingStreamedTransferBehavior();
+            }
+        });
+    }
+
+    @Test
+    public void testRandomAccessPutJobWithUserSuppliedChannelStrategy() throws IOException, InterruptedException, URISyntaxException {
+        testPutJobWithUserSuppliedChannelStrategy(new TransferStrategyBuilderModifiable() {
+            @Override
+            public TransferStrategyBuilder modify(final TransferStrategyBuilder transferStrategyBuilder) {
+                return transferStrategyBuilder.usingRandomAccessTransferBehavior();
+            }
+        });
+    }
+
+    @Test
+    public void testPutJobWithUserSuppliedTransferRetryDecorator() throws IOException, InterruptedException, URISyntaxException {
+        final String DIR_NAME = "books/";
+        final String[] FILE_NAMES = new String[]{"beowulf.txt"};
+
+        try {
+            final Path dirPath = ResourceUtils.loadFileResource(DIR_NAME);
+
+            final List<String> bookTitles = new ArrayList<>();
+            final List<Ds3Object> objectsToWrite = new ArrayList<>();
+            for (final String book : FILE_NAMES) {
+                final Path objPath = ResourceUtils.loadFileResource(DIR_NAME + book);
+                final long bookSize = Files.size(objPath);
+                final Ds3Object obj = new Ds3Object(book, bookSize);
+
+                bookTitles.add(book);
+                objectsToWrite.add(obj);
+            }
+
+            final AtomicInteger numTimesTransferCalled = new AtomicInteger(0);
+
+            final PutBulkJobSpectraS3Request request = new PutBulkJobSpectraS3Request(BUCKET_NAME, Lists.newArrayList(objectsToWrite));
+            final PutBulkJobSpectraS3Response putBulkJobSpectraS3Response = client.putBulkJobSpectraS3(request);
+
+            final TransferStrategyBuilder transferStrategyBuilder = new TransferStrategyBuilder()
+                    .withDs3Client(client)
+                    .withMasterObjectList(putBulkJobSpectraS3Response.getMasterObjectList())
+                    .withChannelBuilder(new FileObjectPutter(dirPath))
+                    .withTransferRetryDecorator(new UserSuppliedTransferRetryDecorator(new Monitorable() {
+                        @Override
+                        public void monitor() {
+                            numTimesTransferCalled.getAndIncrement();
+                        }
+                    }));
+
+
+            final TransferStrategy transferStrategy = transferStrategyBuilder.makePutTransferStrategy();
+
+            transferStrategy.transfer();
+
+            final Ds3ClientHelpers ds3ClientHelpers = Ds3ClientHelpers.wrap(client);
+            final Iterable<Contents> bucketContentsIterable = ds3ClientHelpers.listObjects(BUCKET_NAME);
+
+            for (final Contents bucketContents : bucketContentsIterable) {
+                assertEquals(FILE_NAMES[0], bucketContents.getKey());
+            }
+
+            assertEquals(1, numTimesTransferCalled.get());
+        } finally {
+            deleteAllContents(client, BUCKET_NAME);
+        }
+    }
+
+    private class UserSuppliedTransferRetryDecorator implements TransferRetryDecorator {
+        private final TransferRetryDecorator transferRetryDecorator;
+        private final Monitorable monitorable;
+
+        private UserSuppliedTransferRetryDecorator(final Monitorable monitorable) {
+            this.transferRetryDecorator = new MaxNumObjectTransferAttemptsDecorator(5);
+            this.monitorable = monitorable;
+        }
+
+        @Override
+        public TransferMethod wrap(final TransferMethod transferMethod) {
+            transferRetryDecorator.wrap(transferMethod);
+            return this;
+        }
+
+        @Override
+        public void transferJobPart(final JobPart jobPart) throws IOException {
+            monitorable.monitor();
+            transferRetryDecorator.transferJobPart(jobPart);
+        }
+    }
+
+    @Test
+    public void testPutJobWithUserSuppliedChunkAttemptRetryBehavior() throws IOException, InterruptedException, URISyntaxException {
+        final String DIR_NAME = "books/";
+        final String[] FILE_NAMES = new String[]{"beowulf.txt"};
+
+        try {
+            final Path dirPath = ResourceUtils.loadFileResource(DIR_NAME);
+
+            final List<String> bookTitles = new ArrayList<>();
+            final List<Ds3Object> objectsToWrite = new ArrayList<>();
+            for (final String book : FILE_NAMES) {
+                final Path objPath = ResourceUtils.loadFileResource(DIR_NAME + book);
+                final long bookSize = Files.size(objPath);
+                final Ds3Object obj = new Ds3Object(book, bookSize);
+
+                bookTitles.add(book);
+                objectsToWrite.add(obj);
+            }
+
+            final PutBulkJobSpectraS3Request request = new PutBulkJobSpectraS3Request(BUCKET_NAME, Lists.newArrayList(objectsToWrite));
+            final PutBulkJobSpectraS3Response putBulkJobSpectraS3Response = client.putBulkJobSpectraS3(request);
+
+            final AtomicInteger numTimesInvokeCalled = new AtomicInteger(0);
+            final AtomicInteger numTimesResetCalled = new AtomicInteger(0);
+
+            final TransferStrategyBuilder transferStrategyBuilder = new TransferStrategyBuilder()
+                    .withDs3Client(client)
+                    .withMasterObjectList(putBulkJobSpectraS3Response.getMasterObjectList())
+                    .withChannelBuilder(new FileObjectPutter(dirPath))
+                    .withChunkAttemptRetryBehavior(
+                            new UserSuppliedChunkAttemptRetryBehavior(new ChunkAttemptRetryBehaviorMonitorable() {
+                                @Override
+                                public void invoke() {
+                                    numTimesInvokeCalled.getAndIncrement();
+                                }
+
+                                @Override
+                                public void reset() {
+                                    numTimesResetCalled.getAndIncrement();
+                                }
+                            }));
+
+            final TransferStrategy transferStrategy = transferStrategyBuilder.makePutTransferStrategy();
+
+            transferStrategy.transfer();
+
+            final Ds3ClientHelpers ds3ClientHelpers = Ds3ClientHelpers.wrap(client);
+            final Iterable<Contents> bucketContentsIterable = ds3ClientHelpers.listObjects(BUCKET_NAME);
+
+            for (final Contents bucketContents : bucketContentsIterable) {
+                assertEquals(FILE_NAMES[0], bucketContents.getKey());
+            }
+
+            assertEquals(0, numTimesInvokeCalled.get());
+            assertEquals(1, numTimesResetCalled.get());
+        } finally {
+            deleteAllContents(client, BUCKET_NAME);
+        }
+    }
+
+    private class UserSuppliedChunkAttemptRetryBehavior implements ChunkAttemptRetryBehavior {
+        private final ChunkAttemptRetryBehaviorMonitorable chunkAttemptRetryBehaviorMonitorable;
+        private final ChunkAttemptRetryBehavior wrappedChunkAttemptRetryBehavior;
+
+        private UserSuppliedChunkAttemptRetryBehavior(final ChunkAttemptRetryBehaviorMonitorable chunkAttemptRetryBehaviorMonitorable) {
+            this.chunkAttemptRetryBehaviorMonitorable = chunkAttemptRetryBehaviorMonitorable;
+            wrappedChunkAttemptRetryBehavior = new MaxChunkAttemptsRetryBehavior(5);
+        }
+
+        @Override
+        public void invoke() throws IOException {
+            chunkAttemptRetryBehaviorMonitorable.invoke();
+            wrappedChunkAttemptRetryBehavior.invoke();
+        }
+
+        @Override
+        public void reset() {
+            chunkAttemptRetryBehaviorMonitorable.reset();
+            wrappedChunkAttemptRetryBehavior.reset();
+        }
+    }
+
+    private interface ChunkAttemptRetryBehaviorMonitorable {
+        void invoke();
+        void reset();
+    }
+
+    @Test
+    public void testPutJobUsingStreamedTransferStrategy() throws IOException, URISyntaxException {
+        final String DIR_NAME = "books/";
+        final String[] FILE_NAMES = new String[]{"beowulf.txt"};
+
+        try {
+            final Path dirPath = ResourceUtils.loadFileResource(DIR_NAME);
+
+            final List<String> bookTitles = new ArrayList<>();
+            final List<Ds3Object> objectsToWrite = new ArrayList<>();
+            for (final String book : FILE_NAMES) {
+                final Path objPath = ResourceUtils.loadFileResource(DIR_NAME + book);
+                final long bookSize = Files.size(objPath);
+                final Ds3Object obj = new Ds3Object(book, bookSize);
+
+                bookTitles.add(book);
+                objectsToWrite.add(obj);
+            }
+
+            final Ds3ClientHelpers.Job writeJob = HELPERS.startWriteJobUsingStreamedBehavior(BUCKET_NAME, objectsToWrite);
+            writeJob.transfer(new FileObjectPutter(dirPath));
+
+            final Ds3ClientHelpers ds3ClientHelpers = Ds3ClientHelpers.wrap(client);
+            final Iterable<Contents> bucketContentsIterable = ds3ClientHelpers.listObjects(BUCKET_NAME);
+
+            for (final Contents bucketContents : bucketContentsIterable) {
+                assertEquals(FILE_NAMES[0], bucketContents.getKey());
+            }
+        } finally {
+            deleteAllContents(client, BUCKET_NAME);
+        }
+    }
+
+    @Test
+    public void testPutJobUsingRandomAccessTransferStrategy() throws IOException, URISyntaxException {
+        final String DIR_NAME = "books/";
+        final String[] FILE_NAMES = new String[]{"beowulf.txt"};
+
+        try {
+            final Path dirPath = ResourceUtils.loadFileResource(DIR_NAME);
+
+            final List<String> bookTitles = new ArrayList<>();
+            final List<Ds3Object> objectsToWrite = new ArrayList<>();
+            for (final String book : FILE_NAMES) {
+                final Path objPath = ResourceUtils.loadFileResource(DIR_NAME + book);
+                final long bookSize = Files.size(objPath);
+                final Ds3Object obj = new Ds3Object(book, bookSize);
+
+                bookTitles.add(book);
+                objectsToWrite.add(obj);
+            }
+
+            final Ds3ClientHelpers.Job writeJob = HELPERS.startWriteJobUsingRandomAccessBehavior(BUCKET_NAME, objectsToWrite);
+            writeJob.transfer(new FileObjectPutter(dirPath));
+
+            final Ds3ClientHelpers ds3ClientHelpers = Ds3ClientHelpers.wrap(client);
+            final Iterable<Contents> bucketContentsIterable = ds3ClientHelpers.listObjects(BUCKET_NAME);
+
+            for (final Contents bucketContents : bucketContentsIterable) {
+                assertEquals(FILE_NAMES[0], bucketContents.getKey());
+            }
+        } finally {
             deleteAllContents(client, BUCKET_NAME);
         }
     }
@@ -1164,5 +1925,93 @@ public class PutJobManagement_Test {
             FileUtils.deleteDirectory(tempDirectory.toFile());
             deleteAllContents(client, BUCKET_NAME);
         }
+    }
+
+    @Test
+    public void testThatFifoIsNotProcessed() throws IOException, InterruptedException {
+        Assume.assumeFalse(Platform.isWindows());
+
+        final String tempPathPrefix = null;
+        final Path tempDirectory = Files.createTempDirectory(Paths.get("."), tempPathPrefix);
+
+        final String A_FILE_NAME = "aFile.txt";
+        final String C_FILE_NAME = "cFile.txt";
+        final String FIFO_NAME = "bFifo";
+
+        final AtomicBoolean caughtException = new AtomicBoolean(false);
+
+        try {
+            Files.createFile(Paths.get(tempDirectory.toString(), A_FILE_NAME));
+            Runtime.getRuntime().exec("mkfifo " + Paths.get(tempDirectory.toString(), FIFO_NAME)).waitFor();
+            Files.createFile(Paths.get(tempDirectory.toString(), C_FILE_NAME));
+
+            final List<Ds3Object> ds3Objects = Arrays.asList(new Ds3Object(A_FILE_NAME),
+                    new Ds3Object(FIFO_NAME),
+                    new Ds3Object(C_FILE_NAME));
+
+            final Ds3ClientHelpers.Job writeJob = HELPERS.startWriteJob(BUCKET_NAME, ds3Objects);
+            writeJob.transfer(new FileObjectPutter(tempDirectory));
+        } catch (final UnrecoverableIOException e) {
+            assertTrue(e.getMessage().contains(FIFO_NAME));
+            caughtException.set(true);
+        } finally {
+            FileUtils.deleteDirectory(tempDirectory.toFile());
+            deleteAllContents(client, BUCKET_NAME);
+        }
+
+        assertTrue(caughtException.get());
+    }
+
+    @Test
+    public void testThatNonExistentFileDoesNotStopPutJob() throws IOException {
+        final String tempPathPrefix = null;
+        final Path tempDirectoryForFilesToPut = Files.createTempDirectory(Paths.get("."), tempPathPrefix);
+        final Path tempDirectoryForFilesToGet = Files.createTempDirectory(Paths.get("."), tempPathPrefix);
+
+        final String A_FILE_NAME = "aFile.txt";
+        final String B_FILE_NAME = "bFile.txt";
+        final String C_FILE_NAME = "cFile.txt";
+
+        final Path aFilePutPath = Files.createFile(Paths.get(tempDirectoryForFilesToPut.toString(), A_FILE_NAME));
+        final Path cFilePutPath = Files.createFile(Paths.get(tempDirectoryForFilesToPut.toString(), C_FILE_NAME));
+
+        final AtomicBoolean caughtNoSuchFileException = new AtomicBoolean(false);
+        final AtomicBoolean getJobRan = new AtomicBoolean(false);
+
+        try {
+            FileUtils.writeStringToFile(aFilePutPath.toFile(), "aFile");
+            FileUtils.writeStringToFile(cFilePutPath.toFile(), "cFile");
+
+            final int sizeOfNonExistentFile = 5;
+
+            final List<Ds3Object> ds3Objects = Arrays.asList(new Ds3Object(A_FILE_NAME, Files.size(aFilePutPath)),
+                    new Ds3Object(B_FILE_NAME, sizeOfNonExistentFile),
+                    new Ds3Object(C_FILE_NAME, Files.size(cFilePutPath)));
+
+            final Ds3ClientHelpers.Job writeJob = HELPERS.startWriteJob(BUCKET_NAME, ds3Objects);
+            writeJob.transfer(new FileObjectPutter(tempDirectoryForFilesToPut));
+        } catch (final NoSuchFileException e) {
+            caughtNoSuchFileException.set(true);
+
+            final Path aFileGetPath = Files.createFile(Paths.get(tempDirectoryForFilesToGet.toString(), A_FILE_NAME));
+            final Path cFileGetPath = Files.createFile(Paths.get(tempDirectoryForFilesToGet.toString(), C_FILE_NAME));
+
+            final List<Ds3Object> ds3Objects = Arrays.asList(new Ds3Object(A_FILE_NAME), new Ds3Object(C_FILE_NAME));
+
+            final Ds3ClientHelpers.Job readJob = HELPERS.startReadJob(BUCKET_NAME, ds3Objects);
+            readJob.transfer(new FileObjectGetter(tempDirectoryForFilesToGet));
+
+            getJobRan.set(true);
+
+            assertTrue(FileUtils.contentEquals(aFileGetPath.toFile(), aFilePutPath.toFile()));
+            assertTrue(FileUtils.contentEquals(cFileGetPath.toFile(), cFilePutPath.toFile()));
+        } finally {
+            FileUtils.deleteDirectory(tempDirectoryForFilesToGet.toFile());
+            FileUtils.deleteDirectory(tempDirectoryForFilesToPut.toFile());
+            deleteAllContents(client, BUCKET_NAME);
+        }
+
+        assertTrue(caughtNoSuchFileException.get());
+        assertTrue(getJobRan.get());
     }
 }

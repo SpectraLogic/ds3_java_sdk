@@ -13,7 +13,7 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3client.helpers;
+package com.spectralogic.ds3client.helpers.strategy.transferstrategy;
 
 import com.google.common.collect.ImmutableCollection;
 import com.google.common.collect.ImmutableList;

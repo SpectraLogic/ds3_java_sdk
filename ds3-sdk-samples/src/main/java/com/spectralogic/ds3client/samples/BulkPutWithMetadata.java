@@ -57,7 +57,7 @@ public class BulkPutWithMetadata {
                 public Map<String, String> getMetadataValue(final String objectName) {
                     // Return a map of the metadata that you want assigned to the request object
                     final Map<String, String> metadata = new HashMap<>();
-                    metadata.put("file-format", "txt");
+                    metadata.put("File-Format", "txt");
                     return metadata;
                 }
             });

@@ -15,7 +15,7 @@
 
 allprojects {
     group = 'com.spectralogic.ds3'
-    version = '3.4.0'
+    version = '3.4.1-SNAPSHOT'
 }
 
 subprojects {
@@ -41,7 +41,7 @@ subprojects {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '3.3'
+    gradleVersion = '3.5'
 }
 
 project(':ds3-sdk') {

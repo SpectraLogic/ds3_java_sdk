@@ -32,7 +32,7 @@ public final class PartialObjectHelpers {
        //pass
     }
 
-    public static ImmutableMultimap<String, Range> getPartialObjectsRanges(final List<Ds3Object> objects) {
+    public static ImmutableMultimap<String, Range> getPartialObjectsRanges(final Iterable<Ds3Object> objects) {
         final ImmutableMultimap.Builder<String, Range> builder = ImmutableMultimap.builder();
 
         for (final Ds3Object obj : objects) {

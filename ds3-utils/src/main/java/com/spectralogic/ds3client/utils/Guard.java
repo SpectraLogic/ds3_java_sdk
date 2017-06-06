@@ -26,8 +26,20 @@ public final class Guard {
         //pass
     }
 
+    public static boolean isNotNullAndNotEmpty(final Collection<?> collection) {
+        return !isNullOrEmpty(collection);
+    }
+
     public static boolean isNullOrEmpty(final Collection<?> collection) {
         return collection == null || collection.isEmpty();
+    }
+
+    public static boolean isNotNullAndNotEmpty(final Iterable<?> iterable) {
+        return !isNullOrEmpty(iterable);
+    }
+
+    public static boolean isNullOrEmpty(final Iterable<?> iterable) {
+        return iterable == null || ! iterable.iterator().hasNext();
     }
 
     public static boolean isStringNullOrEmpty(final String str) {
@@ -38,10 +50,6 @@ public final class Guard {
         if (isStringNullOrEmpty(str)) {
             throw new IllegalArgumentException(message);
         }
-    }
-
-    public static boolean isNotNullAndNotEmpty(final Collection<?> collection) {
-        return !isNullOrEmpty(collection);
     }
 
     public static boolean isMultiMapNullOrEmpty(final Multimap<?, ?> multimap) {

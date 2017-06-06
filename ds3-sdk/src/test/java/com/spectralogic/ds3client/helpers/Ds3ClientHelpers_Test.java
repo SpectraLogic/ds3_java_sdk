@@ -209,8 +209,15 @@ public class Ds3ClientHelpers_Test {
         final PutBulkJobSpectraS3Response buildBulkPutResponse = buildBulkPutResponse();
         Mockito.when(ds3Client.putBulkJobSpectraS3(Mockito.any(PutBulkJobSpectraS3Request.class))).thenReturn(buildBulkPutResponse);
 
-        final AllocateJobChunkSpectraS3Response allocateResponse = buildAllocateResponse2();
-        Mockito.when(ds3Client.allocateJobChunkSpectraS3(hasChunkId(CHUNK_ID_1))).thenReturn(allocateResponse);
+        final AllocateJobChunkSpectraS3Response allocateResponse2 = buildAllocateResponse2();
+        final AllocateJobChunkSpectraS3Response allocateResponse3 = buildAllocateResponse3();
+
+        Mockito.when(ds3Client.allocateJobChunkSpectraS3(hasChunkId(CHUNK_ID_1))).thenReturn(allocateResponse2);
+
+        Mockito.when(ds3Client.allocateJobChunkSpectraS3(hasChunkId(CHUNK_ID_1)))
+                .thenReturn(allocateResponse2);
+        Mockito.when(ds3Client.allocateJobChunkSpectraS3(hasChunkId(CHUNK_ID_2)))
+                .thenReturn(allocateResponse3);
 
         final PutObjectResponse putResponse = mock(PutObjectResponse.class);
         Mockito.when(ds3Client.putObject(putRequestHas(MYBUCKET, "foo", jobId, 0, "foo co"))).thenThrow(new StubException());
@@ -239,7 +246,7 @@ public class Ds3ClientHelpers_Test {
         }
     }
     
-    private static final class StubException extends RuntimeException {
+    private static final class StubException extends IOException {
         private static final long serialVersionUID = 5121719894916333278L;
     }
 
