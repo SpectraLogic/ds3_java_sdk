@@ -328,6 +328,8 @@ public class GetJobManagement_Test {
 
     @Test(expected = AccessDeniedException.class)
     public void testReadRetryBugFixWithUnwritableDirectory() throws IOException, URISyntaxException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, InterruptedException {
+        Assume.assumeFalse(iAmRoot());
+
         final String tempPathPrefix = null;
         final Path tempDirectoryPath = Files.createTempDirectory(Paths.get("."), tempPathPrefix);
 
