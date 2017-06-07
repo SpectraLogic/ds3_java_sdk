@@ -30,6 +30,7 @@ import java.util.List;
 
 public class GetBucketKeyLoader<T> implements LazyIterable.LazyLoader<T>{
     private static final int DEFAULT_MAX_KEYS = 1000;
+    private final List<T> emptyList = Collections.emptyList();
     private final Ds3Client client;
     private final String bucket;
     private final String prefix;
@@ -86,9 +87,7 @@ public class GetBucketKeyLoader<T> implements LazyIterable.LazyLoader<T>{
 
     @Override
     public List<T> getNextValues() {
-        if (endOfInput) {
-            return (List<T>) Collections.emptyList();
-        }
+        if (endOfInput) { return emptyList; }
         int retryAttempt = 0;
         while (true) {
             final GetBucketRequest request = prepRequest();
