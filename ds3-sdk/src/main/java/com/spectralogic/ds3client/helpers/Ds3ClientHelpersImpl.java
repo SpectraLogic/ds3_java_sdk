@@ -71,13 +71,11 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
         @Nullable
         @Override
         public ImmutableList<FileSystemKey> apply(@Nullable final ListBucketResult result) {
-            final List<Contents> contents = result.getObjects();
-            final List<CommonPrefixes> prefixes = result.getCommonPrefixes();
             final ImmutableList.Builder<FileSystemKey> fileSystemKeys = new ImmutableList.Builder<>();
-            for(final CommonPrefixes prefix: prefixes) {
+            for(final CommonPrefixes prefix: result.getCommonPrefixes()) {
                 fileSystemKeys.add(new FileSystemKey(prefix));
             }
-            for(final Contents content : contents) {
+            for(final Contents content : result.getObjects()) {
                 fileSystemKeys.add(new FileSystemKey(content));
             }
             return fileSystemKeys.build();
@@ -566,7 +564,7 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
     }
     @Override
     public Iterable<FileSystemKey> remoteListDirectory(final String bucket, final String keyPrefix, final String nextMarker, final int maxKeys) throws IOException {
-        return remoteListDirectory(bucket,keyPrefix,nextMarker, "/", maxKeys);
+        return remoteListDirectory(bucket,keyPrefix,"/", keyPrefix, maxKeys);
     }
 
     public Iterable<FileSystemKey> remoteListDirectory(final String bucket, final String keyPrefix, final String delimiter, final String nextMarker, final int maxKeys) throws IOException {

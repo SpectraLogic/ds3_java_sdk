@@ -91,6 +91,13 @@ public class Iterators_Test {
             loadBookTestDataWithPrefix(CLIENT, TEST_ENV_NAME, "books/more/");
             final Iterable<FileSystemKey>  anotherFileSystemKeysIterator  = Ds3ClientHelpers.wrap(CLIENT).remoteListDirectory(TEST_ENV_NAME, "books/", null, 100);
             final List<FileSystemKey> anotherFileSystemKeys = Lists.newArrayList(fileSystemKeysIterator);
+            for(final FileSystemKey key : anotherFileSystemKeys) {
+                if(key.isContents()) {
+                    System.out.println("Object: " + key.toContents().getKey());
+                } else {
+                    System.out.println("Prefix: " + key.toCommonPrefixes().getPrefix());
+                }
+            }
             assertThat(anotherFileSystemKeys.size(), is(5));
         }
         finally {
