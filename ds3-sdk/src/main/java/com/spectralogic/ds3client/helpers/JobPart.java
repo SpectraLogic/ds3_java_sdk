@@ -23,26 +23,26 @@ import com.spectralogic.ds3client.models.BulkObject;
  */
 public class JobPart {
     private final Ds3Client client;
-    private final BulkObject bulkObject;
+    private final BulkObject blob;
 
-    public JobPart(final Ds3Client client, final BulkObject bulkObject) {
+    public JobPart(final Ds3Client client, final BulkObject blob) {
         this.client = client;
-        this.bulkObject = bulkObject;
+        this.blob = blob;
     }
 
     public Ds3Client getClient() {
         return client;
     }
 
-    public BulkObject getBulkObject() {
-        return bulkObject;
+    public BulkObject getBlob() {
+        return blob;
     }
 
     @Override
     public String toString() {
         return "JobPart{" +
                 "client=" + client +
-                ", bulkObject=" + bulkObject +
+                ", blob=" + blob +
                 '}';
     }
 }

@@ -61,11 +61,11 @@ public class GetJobTransferMethod implements TransferMethod {
      */
     @Override
     public void transferJobPart(final JobPart jobPart) throws IOException {
-        final SeekableByteChannel seekableByteChannel = channelStrategy.acquireChannelForBlob(jobPart.getBulkObject());
+        final SeekableByteChannel seekableByteChannel = channelStrategy.acquireChannelForBlob(jobPart.getBlob());
 
         final GetObjectResponse getObjectResponse = jobPart.getClient().getObject(makeGetObjectRequest(seekableByteChannel, jobPart));
 
-        final BulkObject blob = jobPart.getBulkObject();
+        final BulkObject blob = jobPart.getBlob();
 
         channelStrategy.releaseChannelForBlob(seekableByteChannel, blob);
 
@@ -77,7 +77,7 @@ public class GetJobTransferMethod implements TransferMethod {
     }
 
     private GetObjectRequest makeGetObjectRequest(final SeekableByteChannel seekableByteChannel, final JobPart jobPart) {
-        final BulkObject blob = jobPart.getBulkObject();
+        final BulkObject blob = jobPart.getBlob();
 
         final GetObjectRequest getObjectRequest = new GetObjectRequest(
                 bucketName,
