@@ -273,7 +273,7 @@ public class Ds3ClientHelpers_Test {
         Mockito.when(ds3Client.getBucket(getBucketHas(MYBUCKET, null))).thenReturn(new StubGetBucketResponse(0));
         Mockito.when(ds3Client.getBucket(getBucketHas(MYBUCKET, "baz"))).thenReturn(new StubGetBucketResponse(1));
         Mockito.when(ds3Client.getBucket(getBucketHas(MYBUCKET, "/foo/baz"))).thenReturn(new StubGetBucketResponse(1));
-        Iterable<FileSystemKey> fileSystemKeys = Ds3ClientHelpers.wrap(ds3Client).remoteListDirectory(MYBUCKET, null, "/", null, 0);
+        final Iterable<FileSystemKey> fileSystemKeys = Ds3ClientHelpers.wrap(ds3Client).remoteListDirectory(MYBUCKET, null, "/", null, 0);
         final List<FileSystemKey> contentsList = Lists.newArrayList(fileSystemKeys);
         assertThat(contentsList.size(), is(3));
     }
