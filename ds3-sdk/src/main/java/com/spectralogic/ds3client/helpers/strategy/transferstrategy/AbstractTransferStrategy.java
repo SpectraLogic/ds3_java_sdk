@@ -121,7 +121,7 @@ abstract class AbstractTransferStrategy implements TransferStrategy {
                     break;
                 }
 
-                final CountDownLatch countDownLatch = new CountDownLatch(Iterables.size(jobParts));
+                final CountDownLatch countDownLatch = new CountDownLatch(numJobParts);
                 transferJobParts(jobParts, countDownLatch, numBlobsRemaining);
                 countDownLatch.await();
             } catch (final Ds3NoMoreRetriesException | FailedRequestException e) {
