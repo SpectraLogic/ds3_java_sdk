@@ -72,7 +72,7 @@ public class Iterators_Test {
     }
 
     @Test
-    public void IterateWithDelimiter() throws IOException, URISyntaxException {
+    public void iterateWithDelimiter() throws IOException, URISyntaxException {
         try {
             HELPERS.ensureBucketExists(TEST_ENV_NAME, envDataPolicyId);
             loadBookTestDataWithPrefix(CLIENT, TEST_ENV_NAME, "books/");
@@ -82,7 +82,7 @@ public class Iterators_Test {
 
             loadBookTestDataWithPrefix(CLIENT, TEST_ENV_NAME, "books/more/");
             final Iterable<FileSystemKey>  anotherFileSystemKeysIterator  = Ds3ClientHelpers.wrap(CLIENT).remoteListDirectory(TEST_ENV_NAME, "books/", null, 100);
-            final List<FileSystemKey> anotherFileSystemKeys = Lists.newArrayList(fileSystemKeysIterator);
+            final List<FileSystemKey> anotherFileSystemKeys = Lists.newArrayList(anotherFileSystemKeysIterator);
             assertThat(anotherFileSystemKeys.size(), is(5));
         } finally {
             deleteAllContents(CLIENT, TEST_ENV_NAME);

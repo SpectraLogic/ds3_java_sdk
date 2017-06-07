@@ -60,7 +60,7 @@ public class GetBucketKeyLoader<T> implements LazyIterable.LazyLoader<T>{
         request.withMaxKeys(maxKeys);
         if (prefix != null) {
             request.withPrefix(prefix);
-        } ;
+        }
         if (truncated) {
             request.withMarker(nextMarker);
         } ;

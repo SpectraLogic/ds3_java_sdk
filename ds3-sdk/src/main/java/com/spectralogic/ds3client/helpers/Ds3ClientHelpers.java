@@ -470,7 +470,9 @@ public abstract class Ds3ClientHelpers {
 
 
     /**
-     * Defaults to the path delimiter of '/'
+     * The '/' character is traditionally used as a path delimiter, these methods provide '/' as a default delimiter.
+     * An S3 object like foo/bar/baz with the prefix of foo/ and the delimiter of '/' will act similar to a traditional file system
+     *  proving a common prefix for each 'directory' descending from the current folder of the prefix.
      * Returns an Iterable of {@link FileSystemKey}
      * @param bucket The bucket
      * @param keyPrefix Limits the response to keys that begin with the specified prefix
