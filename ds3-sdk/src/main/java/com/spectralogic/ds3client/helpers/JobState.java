@@ -111,15 +111,7 @@ public class JobState {
 
         @Override
         public int hashCode() {
-            int result = bucket != null ? bucket.hashCode() : 0;
-            result = 31 * result + (id != null ? id.hashCode() : 0);
-            result = 31 * result + (latest ? 1 : 0);
-            result = 31 * result + (int) (length ^ (length >>> 32));
-            result = 31 * result + (name != null ? name.hashCode() : 0);
-            result = 31 * result + (int) (offset ^ (offset >>> 32));
-            result = 31 * result + (physicalPlacement != null ? physicalPlacement.hashCode() : 0);
-            result = 31 * result + (int) (version ^ (version >>> 32));
-            return result;
+            return java.util.Objects.hash(bucket, id, latest, length, name, offset, physicalPlacement, version);
         }
 
         @Override
