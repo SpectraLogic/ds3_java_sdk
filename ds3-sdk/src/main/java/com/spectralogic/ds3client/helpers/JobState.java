@@ -25,26 +25,33 @@ import java.util.Set;
 import java.util.UUID;
 
 public class JobState {
-    final Set<BlobIdentityDecorator> blobs = Sets.newConcurrentHashSet();
+    private final Set<BlobIdentityDecorator> blobs = Sets.newConcurrentHashSet();
+
+    private final int numBlobsInJob;
 
     public JobState(final Collection<Objects> chunksThatContainBlobs) {
+        int numBlobsInChunks = 0;
+
         for (final Objects chunk : chunksThatContainBlobs) {
             for (final BulkObject blob : chunk.getObjects()) {
                 blobs.add(new BlobIdentityDecorator(blob));
+                ++numBlobsInChunks;
             }
         }
+
+        numBlobsInJob = numBlobsInChunks;
     }
 
-    public void blobTransferredOrFailed(final BulkObject blob) {
-        blobs.remove(new BlobIdentityDecorator(blob));
-    }
-
-    public boolean hasMoreBlobsToTransfer() {
-        return blobs.size() > 0;
+    public boolean blobTransferredOrFailed(final BulkObject blob) {
+        return blobs.remove(new BlobIdentityDecorator(blob));
     }
 
     public boolean contains(final BulkObject blob) {
         return blobs.contains(new BlobIdentityDecorator(blob));
+    }
+
+    public int numBlobsInJob() {
+        return numBlobsInJob;
     }
 
     /**

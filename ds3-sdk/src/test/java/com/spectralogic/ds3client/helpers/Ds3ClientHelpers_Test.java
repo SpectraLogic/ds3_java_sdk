@@ -112,11 +112,8 @@ public class Ds3ClientHelpers_Test {
         final GetBulkJobSpectraS3Response buildBulkGetResponse = buildBulkGetResponse();
         Mockito.when(ds3Client.getBulkJobSpectraS3(hasChunkOrdering(JobChunkClientProcessingOrderGuarantee.NONE))).thenReturn(buildBulkGetResponse);
 
-        final GetJobChunksReadyForClientProcessingSpectraS3Response jobChunksResponse2 = buildJobChunksResponse2();
-        final GetJobChunksReadyForClientProcessingSpectraS3Response jobChunksResponse3 = buildJobChunksResponse3();
-        Mockito.when(ds3Client.getJobChunksReadyForClientProcessingSpectraS3(hasJobId(jobId)))
-                .thenReturn(jobChunksResponse2)
-                .thenReturn(jobChunksResponse3);
+        final GetJobChunksReadyForClientProcessingSpectraS3Response jobChunksResponse = buildJobChunksResponse2();
+        Mockito.when(ds3Client.getJobChunksReadyForClientProcessingSpectraS3(hasJobId(jobId))).thenReturn(jobChunksResponse);
 
         Mockito.when(ds3Client.getObject(getRequestHas(MYBUCKET, "foo", jobId, 6))).thenThrow(new StubException());
         Mockito.when(ds3Client.getObject(getRequestHas(MYBUCKET, "baz", jobId, 6))).then(getObjectAnswer("ntents"));

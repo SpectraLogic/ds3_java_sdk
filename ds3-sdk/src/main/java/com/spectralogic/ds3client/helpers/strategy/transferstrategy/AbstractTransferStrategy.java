@@ -15,6 +15,8 @@
 
 package com.spectralogic.ds3client.helpers.strategy.transferstrategy;
 
+import com.google.common.base.Predicate;
+import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Iterables;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.spectralogic.ds3client.Ds3Client;
@@ -29,13 +31,17 @@ import com.spectralogic.ds3client.models.MasterObjectList;
 import com.spectralogic.ds3client.models.Objects;
 
 import java.io.IOException;
+import java.util.NoSuchElementException;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
 import com.spectralogic.ds3client.networking.FailedRequestException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.annotation.Nullable;
 
 /**
  * An implementation of {@link TransferStrategy} that provides a default implementation {@code transfer}
@@ -103,20 +109,27 @@ abstract class AbstractTransferStrategy implements TransferStrategy {
     public void transfer() throws IOException {
         cachedException.set(null);
 
-        while (jobState.hasMoreBlobsToTransfer() && ! Thread.currentThread().isInterrupted()) {
+        final AtomicInteger numBlobsRemaining = new AtomicInteger(jobState.numBlobsInJob());
+
+        while ( ! Thread.currentThread().isInterrupted() && numBlobsRemaining.get() > 0) {
             try {
-                final Iterable<JobPart> jobParts = blobStrategy.getWork();
+                final Iterable<JobPart> jobParts = jobPartsNotAlreadyTransferred();
+
+                final int numJobParts = Iterables.size(jobParts);
+
+                if (numJobParts <= 0) {
+                    break;
+                }
+
                 final CountDownLatch countDownLatch = new CountDownLatch(Iterables.size(jobParts));
-                transferJobParts(jobParts, countDownLatch);
+                transferJobParts(jobParts, countDownLatch, numBlobsRemaining);
                 countDownLatch.await();
             } catch (final Ds3NoMoreRetriesException | FailedRequestException e) {
-                LOG.info("---> Caught FailedRequestException");
                 emitFailureEvent(makeFailureEvent(failureActivity, e, firstChunk()));
                 throw e;
-            } catch (final InterruptedException e) {
-                LOG.info("Error getting entries from work queue.", e);
+            } catch (final InterruptedException | NoSuchElementException e) {
                 Thread.currentThread().interrupt();
-            } catch (final Throwable t) {
+            }  catch (final Throwable t) {
                 emitFailureAndSetCachedException(t);
             }
         }
@@ -124,6 +137,17 @@ abstract class AbstractTransferStrategy implements TransferStrategy {
         if (cachedException.get() != null) {
             throw cachedException.get();
         }
+    }
+
+    private Iterable<JobPart> jobPartsNotAlreadyTransferred() throws IOException, InterruptedException {
+        return FluentIterable
+                .from(blobStrategy.getWork())
+                .filter(new Predicate<JobPart>() {
+                    @Override
+                    public boolean apply(@Nullable final JobPart jobPart) {
+                        return jobState.contains(jobPart.getBlob());
+                    }
+                });
     }
 
     private void emitFailureAndSetCachedException(final Throwable t) {
@@ -141,40 +165,30 @@ abstract class AbstractTransferStrategy implements TransferStrategy {
         }
     }
 
-    private void transferJobParts(final Iterable<JobPart> jobParts, final CountDownLatch countDownLatch) throws IOException {
+    private void transferJobParts(final Iterable<JobPart> jobParts,
+                                  final CountDownLatch countDownLatch,
+                                  final AtomicInteger numBlobsTransferred) throws IOException {
         for (final JobPart jobPart : jobParts) {
-            if ( ! jobState.contains(jobPart.getBlob())) {
-                LOG.info("---> Could not find: {}", jobPart.getBlob());
-                countDownLatch.countDown();
-            } else {
-                executorService.submit(new Callable<Void>() {
-                    @Override
-                    public Void call() throws Exception {
-                        try {
-                            transferMethod.transferJobPart(jobPart);
-                        } catch (final RuntimeException e) {
-                            LOG.error("---> Caught RuntimeException", e);
-                            emitFailureAndSetCachedException(e);
-                            throw e;
-                        } catch (final Exception e) {
-                            LOG.error("---> Caught Exception", e);
-                            emitFailureAndSetCachedException(e);
-                            throw new RuntimeException(e);
-                        } finally {
-                            LOG.info("---> Transferred: {}", jobPart.getBlob());
-                            jobState.blobTransferredOrFailed(jobPart.getBlob());
-                            countDownLatch.countDown();
-                            return null;
-                        }
+            executorService.submit(new Callable<Void>() {
+                @Override
+                public Void call() throws Exception {
+                    try {
+                        transferMethod.transferJobPart(jobPart);
+                    } catch (final RuntimeException e) {
+                        emitFailureAndSetCachedException(e);
+                        throw e;
+                    } catch (final Exception e) {
+                        emitFailureAndSetCachedException(e);
+                        throw new RuntimeException(e);
+                    } finally {
+                        jobState.blobTransferredOrFailed(jobPart.getBlob());
+                        numBlobsTransferred.decrementAndGet();
+                        countDownLatch.countDown();
+                        return null;
                     }
-                });
-            }
+                }
+            });
         }
-    }
-
-    private void handleJobParrtProcessed(final CountDownLatch countDownLatch, final JobPart jobPart) {
-        jobState.blobTransferredOrFailed(jobPart.getBlob());
-        countDownLatch.countDown();
     }
 
     private void emitFailureEvent(final FailureEvent failureEvent) {
