@@ -12,6 +12,7 @@
  *   specific language governing permissions and limitations under the License.
  * ****************************************************************************
  */
+
 package com.spectralogic.ds3client.helpers.pagination;
 
 import com.google.common.base.Function;
