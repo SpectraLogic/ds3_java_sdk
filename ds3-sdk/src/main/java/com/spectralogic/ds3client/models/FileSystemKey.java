@@ -50,7 +50,7 @@ public class FileSystemKey {
     }
 
     public CommonPrefixes toCommonPrefixes() throws RuntimeException{
-       if(isContents()) {
+       if (isContents()) {
            throw new RuntimeException("Could not create CommonPrefixes");
        }
        final CommonPrefixes commonPrefixes = new CommonPrefixes();
@@ -59,7 +59,7 @@ public class FileSystemKey {
     }
 
     public Contents toContents() throws RuntimeException {
-        if(isPrefix()) {
+        if (isPrefix()) {
             throw new RuntimeException("Could not create Contents");
         }
         final Contents contents = new Contents();
