@@ -84,13 +84,13 @@ public class Iterators_Test {
         try {
             HELPERS.ensureBucketExists(TEST_ENV_NAME, envDataPolicyId);
             loadBookTestDataWithPrefix(CLIENT, TEST_ENV_NAME, "books/");
-            Iterable<FileSystemKey>  fileSystemKeysIterator  = Ds3ClientHelpers.wrap(CLIENT).remoteListDirectory(TEST_ENV_NAME, "books/", null, 100);
-            List<FileSystemKey> fileSystemKeys = Lists.newArrayList(fileSystemKeysIterator);
+            final Iterable<FileSystemKey>  fileSystemKeysIterator  = Ds3ClientHelpers.wrap(CLIENT).remoteListDirectory(TEST_ENV_NAME, "books/", null, 100);
+            final List<FileSystemKey> fileSystemKeys = Lists.newArrayList(fileSystemKeysIterator);
             assertThat(fileSystemKeys.size(), is(4));
 
             loadBookTestDataWithPrefix(CLIENT, TEST_ENV_NAME, "books/more/");
-            Iterable<FileSystemKey>  anotherFileSystemKeysIterator  = Ds3ClientHelpers.wrap(CLIENT).remoteListDirectory(TEST_ENV_NAME, "books/", null, 100);
-            List<FileSystemKey> anotherFileSystemKeys = Lists.newArrayList(fileSystemKeysIterator);
+            final Iterable<FileSystemKey>  anotherFileSystemKeysIterator  = Ds3ClientHelpers.wrap(CLIENT).remoteListDirectory(TEST_ENV_NAME, "books/", null, 100);
+            final List<FileSystemKey> anotherFileSystemKeys = Lists.newArrayList(fileSystemKeysIterator);
             assertThat(anotherFileSystemKeys.size(), is(5));
         }
         finally {

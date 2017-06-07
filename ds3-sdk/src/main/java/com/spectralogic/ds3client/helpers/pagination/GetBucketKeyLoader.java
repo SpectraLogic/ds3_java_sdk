@@ -1,5 +1,6 @@
 package com.spectralogic.ds3client.helpers.pagination;
 
+import com.google.common.base.Function;
 import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3client.Ds3Client;
 import com.spectralogic.ds3client.commands.GetBucketRequest;
@@ -17,7 +18,7 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 
-public class GetBucketKeyLoader implements LazyIterable.LazyLoader<FileSystemKey>{
+public class GetBucketKeyLoader<T> implements LazyIterable.LazyLoader<T>{
     private static final int DEFAULT_MAX_KEYS = 1000;
 
     private final Ds3Client client;
@@ -26,35 +27,36 @@ public class GetBucketKeyLoader implements LazyIterable.LazyLoader<FileSystemKey
     private final String delimiter;
     private final int maxKeys;
     private final int retryCount;
-
+    private final Function<ListBucketResult,ImmutableList<T>> function;
     private String nextMarker;
     private boolean truncated;
     private boolean endOfInput = false;
 
-    public GetBucketKeyLoader(final Ds3Client client, final String bucket, final String prefix, final String delimiter, final String nextMarker, final int maxKeys, final int retryCount) {
+    public GetBucketKeyLoader(final Ds3Client client, final String bucket, final String prefix, final String delimiter, final String nextMarker, final int maxKeys, final int retryCount, final Function<ListBucketResult, ImmutableList<T>> function) {
         this.client = client;
         this.bucket = bucket;
         this.prefix = prefix;
         this.delimiter = delimiter;
         this.nextMarker = nextMarker;
-        this.maxKeys = Math.min(maxKeys,DEFAULT_MAX_KEYS);
+        this.maxKeys = Math.min(maxKeys, DEFAULT_MAX_KEYS);
         this.retryCount = retryCount;
         this.nextMarker = nextMarker;
         this.truncated  = nextMarker != null;
+        this.function = function;
     }
 
     @Override
-    public List<FileSystemKey> getNextValues() {
+    public List<T> getNextValues() {
         if(endOfInput) {
-            return Collections.emptyList();
+            return (List<T>) Collections.emptyList();
         }
         int retryAttempt = 0;
         while(true) {
             final GetBucketRequest request = new GetBucketRequest(bucket);
             request.withMaxKeys(maxKeys);
-            if (prefix != null) request.withPrefix(prefix);
-            if (truncated)  request.withMarker(nextMarker);
-            if (delimiter != null) request.withDelimiter(delimiter);
+            if (prefix != null) { request.withPrefix(prefix); }
+            if (truncated) { request.withMarker(nextMarker); }
+            if (delimiter != null) { request.withDelimiter(delimiter); }
             GetBucketResponse response;
             try {
                 response = this.client.getBucket(request);
@@ -70,21 +72,14 @@ public class GetBucketKeyLoader implements LazyIterable.LazyLoader<FileSystemKey
                 retryAttempt++;
             } else {
                 final ListBucketResult result = response.getListBucketResult();
+
                 truncated = result.getTruncated();
                 this.nextMarker = result.getNextMarker();
                 if (Guard.isStringNullOrEmpty(nextMarker) && !truncated) {
                     endOfInput = true;
                 }
-                final List<Contents> contents = result.getObjects();
-                final List<CommonPrefixes> prefixes = result.getCommonPrefixes();
-                final ImmutableList.Builder<FileSystemKey> fileSystemKeys = new ImmutableList.Builder<>();
-                for(CommonPrefixes prefix: prefixes) {
-                    fileSystemKeys.add(new FileSystemKey(prefix));
-                }
-                for(Contents content : contents) {
-                    fileSystemKeys.add(new FileSystemKey(content));
-                }
-                return fileSystemKeys.build();
+                return function.apply(result);
+
             }
         }
     }

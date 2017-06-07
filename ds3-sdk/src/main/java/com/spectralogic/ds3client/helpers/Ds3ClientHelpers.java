@@ -469,6 +469,24 @@ public abstract class Ds3ClientHelpers {
      */
     public abstract Iterable<Ds3Object> listObjectsForDirectory(final Path directory) throws IOException;
 
+
+    /**
+     * Defaults to the path delimiter of '/'
+     * Returns an Iterable of {@link FileSystemKey}
+     * @param bucket The bucket
+     * @param keyPrefix Limits the response to keys that begin with the specified prefix
+     */
+    public abstract Iterable<FileSystemKey> remoteListDirectory(final String bucket, final String keyPrefix) throws IOException;
+
+    /**
+     * Defaults to the path delimiter of '/'
+     * Returns an Iterable of {@link FileSystemKey}
+     * @param bucket The bucket
+     * @param keyPrefix Limits the response to keys that begin with the specified prefix
+     * @param nextMarker Specifies the key to start with
+     */
+    public abstract Iterable<FileSystemKey> remoteListDirectory(final String bucket, final String keyPrefix, final String nextMarker) throws IOException;
+
     /**
      * Defaults to the path delimiter of '/'
      * Returns an Iterable of {@link FileSystemKey}
@@ -476,7 +494,6 @@ public abstract class Ds3ClientHelpers {
      * @param keyPrefix Limits the response to keys that begin with the specified prefix
      * @param nextMarker Specifies the key to start with when listing objects
      * @param maxKeys Sets the maximum number of keys returned in the response body.
-     * @return {@link ContentPrefix}
      */
     public abstract Iterable<FileSystemKey> remoteListDirectory(final String bucket, final String keyPrefix, final String nextMarker, final int maxKeys) throws IOException;
 
@@ -487,7 +504,6 @@ public abstract class Ds3ClientHelpers {
      * @param delimiter Specifies a path delimiter for the S3 query
      * @param nextMarker Specifies the key to start with when listing objects
      * @param maxKeys Sets the maximum number of keys returned in the response body.
-     * @return {@link ContentPrefix}
      */
     public abstract Iterable<FileSystemKey> remoteListDirectory(final String bucket, final String keyPrefix, final String delimiter, final String nextMarker, final int maxKeys) throws IOException;
 

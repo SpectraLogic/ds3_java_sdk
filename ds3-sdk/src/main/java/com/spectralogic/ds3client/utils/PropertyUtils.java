@@ -29,7 +29,7 @@ public final class PropertyUtils {
     private static final String SDK_VERSION_PROPERTY_NAME = "version";
     private static final String PROPERTIES_FILE_NAME = "ds3_sdk.properties";
 
-    private static AtomicReference<String> versionProperty = new AtomicReference<>("");
+    private static final AtomicReference<String> versionProperty = new AtomicReference<>("");
 
     private PropertyUtils() {}
 

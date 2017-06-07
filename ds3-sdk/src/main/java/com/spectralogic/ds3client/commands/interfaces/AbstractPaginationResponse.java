@@ -19,8 +19,8 @@ import com.spectralogic.ds3client.models.ChecksumType;
 
 public abstract class AbstractPaginationResponse extends AbstractResponse implements PaginationResponse {
 
-    private Integer pagingTruncated;
-    private Integer pagingTotalResultCount;
+    private final Integer pagingTruncated;
+    private final Integer pagingTotalResultCount;
 
     public AbstractPaginationResponse(final Integer pagingTotalResultCount, final Integer pagingTruncated, final String checksum, final ChecksumType.Type checksumType) {
         super(checksum, checksumType);
