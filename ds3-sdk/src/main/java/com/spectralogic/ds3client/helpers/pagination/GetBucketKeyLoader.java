@@ -20,6 +20,7 @@ import com.spectralogic.ds3client.commands.GetBucketRequest;
 import com.spectralogic.ds3client.commands.GetBucketResponse;
 import com.spectralogic.ds3client.models.ListBucketResult;
 import com.spectralogic.ds3client.networking.FailedRequestException;
+import com.spectralogic.ds3client.networking.FailedToGetBucketException;
 import com.spectralogic.ds3client.networking.TooManyRetriesException;
 import com.spectralogic.ds3client.utils.Guard;
 import com.spectralogic.ds3client.utils.collections.LazyIterable;
@@ -63,19 +64,19 @@ public class GetBucketKeyLoader<T> implements LazyIterable.LazyLoader<T>{
         }
         if (truncated) {
             request.withMarker(nextMarker);
-        } ;
+        }
         if (delimiter != null) {
             request.withDelimiter(delimiter);
         }
         return request;
     }
 
-    private GetBucketResponse getResponse(GetBucketRequest request, int retryAttempt) {
+    private GetBucketResponse getResponse(final GetBucketRequest request, final int retryAttempt) {
         GetBucketResponse response;
         try {
             response = this.client.getBucket(request);
         } catch (final FailedRequestException e) {
-            throw new RuntimeException("Failed to get the list of objects due to a failed request", e);
+            throw new FailedToGetBucketException("Failed to get the list of objects due to a failed request", e);
         } catch (final IOException e) {
             if (retryAttempt >= retryCount) {
                 throw new TooManyRetriesException("Failed to get the next set of objects from the getBucketKey request after " + retryCount + " retries", e);

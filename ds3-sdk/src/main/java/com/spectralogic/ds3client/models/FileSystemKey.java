@@ -65,7 +65,7 @@ public class FileSystemKey {
 
     public CommonPrefixes toCommonPrefixes() throws RuntimeException{
        if (isContents()) {
-           throw new RuntimeException("Could not create CommonPrefixes");
+           throw new UnableToConvertToCommonPrefixesException("Could not create a CommonPrefix");
        }
        final CommonPrefixes commonPrefixes = new CommonPrefixes();
        commonPrefixes.setPrefix(prefix);
@@ -74,7 +74,7 @@ public class FileSystemKey {
 
     public Contents toContents() throws RuntimeException {
         if (isPrefix()) {
-            throw new RuntimeException("Could not create Contents");
+            throw new UnabledToConvertToContentsException("Could not create a Contents");
         }
         final Contents contents = new Contents();
         contents.setETag(eTag);
