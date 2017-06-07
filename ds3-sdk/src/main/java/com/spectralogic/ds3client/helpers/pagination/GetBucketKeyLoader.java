@@ -1,14 +1,24 @@
+/*
+ * ******************************************************************************
+ *   Copyright 2014-2017 Spectra Logic Corporation. All Rights Reserved.
+ *   Licensed under the Apache License, Version 2.0 (the "License"). You may not use
+ *   this file except in compliance with the License. A copy of the License is located at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *   or in the "license" file accompanying this file.
+ *   This file is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+ *   CONDITIONS OF ANY KIND, either express or implied. See the License for the
+ *   specific language governing permissions and limitations under the License.
+ * ****************************************************************************
+ */
 package com.spectralogic.ds3client.helpers.pagination;
 
 import com.google.common.base.Function;
-import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3client.Ds3Client;
 import com.spectralogic.ds3client.commands.GetBucketRequest;
 import com.spectralogic.ds3client.commands.GetBucketResponse;
-import com.spectralogic.ds3client.models.Contents;
-import com.spectralogic.ds3client.models.FileSystemKey;
 import com.spectralogic.ds3client.models.ListBucketResult;
-import com.spectralogic.ds3client.models.common.CommonPrefixes;
 import com.spectralogic.ds3client.networking.FailedRequestException;
 import com.spectralogic.ds3client.networking.TooManyRetriesException;
 import com.spectralogic.ds3client.utils.Guard;
@@ -21,18 +31,19 @@ import java.util.List;
 public class GetBucketKeyLoader<T> implements LazyIterable.LazyLoader<T>{
     private static final int DEFAULT_MAX_KEYS = 1000;
 
+
     private final Ds3Client client;
     private final String bucket;
     private final String prefix;
     private final String delimiter;
     private final int maxKeys;
     private final int retryCount;
-    private final Function<ListBucketResult,ImmutableList<T>> function;
+    private final Function<ListBucketResult,List<T>> function;
     private String nextMarker;
     private boolean truncated;
     private boolean endOfInput = false;
 
-    public GetBucketKeyLoader(final Ds3Client client, final String bucket, final String prefix, final String delimiter, final String nextMarker, final int maxKeys, final int retryCount, final Function<ListBucketResult, ImmutableList<T>> function) {
+    public GetBucketKeyLoader(final Ds3Client client, final String bucket, final String prefix, final String delimiter, final String nextMarker, final int maxKeys, final int retryCount, final Function<ListBucketResult, List<T>> function) {
         this.client = client;
         this.bucket = bucket;
         this.prefix = prefix;
@@ -47,11 +58,11 @@ public class GetBucketKeyLoader<T> implements LazyIterable.LazyLoader<T>{
 
     @Override
     public List<T> getNextValues() {
-        if(endOfInput) {
+        if (endOfInput) {
             return (List<T>) Collections.emptyList();
         }
         int retryAttempt = 0;
-        while(true) {
+        while (true) {
             final GetBucketRequest request = new GetBucketRequest(bucket);
             request.withMaxKeys(maxKeys);
             if (prefix != null) { request.withPrefix(prefix); }

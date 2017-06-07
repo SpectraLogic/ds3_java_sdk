@@ -17,22 +17,16 @@ package com.spectralogic.ds3client.integration;
 
 import com.google.common.collect.Lists;
 import com.spectralogic.ds3client.Ds3Client;
-import com.spectralogic.ds3client.commands.GetBucketRequest;
-import com.spectralogic.ds3client.commands.GetBucketResponse;
-import com.spectralogic.ds3client.commands.PutObjectRequest;
-import com.spectralogic.ds3client.helpers.pagination.GetBucketLoaderFactory;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers;
+import com.spectralogic.ds3client.helpers.pagination.GetBucketKeyLoaderFactory;
 import com.spectralogic.ds3client.helpers.pagination.GetObjectsFullDetailsLoaderFactory;
-import com.spectralogic.ds3client.models.Contents;
-import com.spectralogic.ds3client.models.FileSystemKey;
-import com.spectralogic.ds3client.models.ListBucketResult;
-import com.spectralogic.ds3client.models.common.CommonPrefixes;
-import com.spectralogic.ds3client.utils.ByteArraySeekableByteChannel;
-import com.spectralogic.ds3client.utils.collections.LazyIterable;
 import com.spectralogic.ds3client.integration.test.helpers.TempStorageIds;
 import com.spectralogic.ds3client.integration.test.helpers.TempStorageUtil;
 import com.spectralogic.ds3client.models.ChecksumType;
+import com.spectralogic.ds3client.models.Contents;
+import com.spectralogic.ds3client.models.FileSystemKey;
 import com.spectralogic.ds3client.networking.FailedRequestException;
+import com.spectralogic.ds3client.utils.collections.LazyIterable;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -45,9 +39,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 
-import static com.spectralogic.ds3client.integration.Util.deleteAllContents;
-import static com.spectralogic.ds3client.integration.Util.loadBookTestData;
-import static com.spectralogic.ds3client.integration.Util.loadBookTestDataWithPrefix;
+import static com.spectralogic.ds3client.integration.Util.*;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 
@@ -91,16 +83,8 @@ public class Iterators_Test {
             loadBookTestDataWithPrefix(CLIENT, TEST_ENV_NAME, "books/more/");
             final Iterable<FileSystemKey>  anotherFileSystemKeysIterator  = Ds3ClientHelpers.wrap(CLIENT).remoteListDirectory(TEST_ENV_NAME, "books/", null, 100);
             final List<FileSystemKey> anotherFileSystemKeys = Lists.newArrayList(fileSystemKeysIterator);
-            for(final FileSystemKey key : anotherFileSystemKeys) {
-                if(key.isContents()) {
-                    System.out.println("Object: " + key.toContents().getKey());
-                } else {
-                    System.out.println("Prefix: " + key.toCommonPrefixes().getPrefix());
-                }
-            }
             assertThat(anotherFileSystemKeys.size(), is(5));
-        }
-        finally {
+        } finally {
             deleteAllContents(CLIENT, TEST_ENV_NAME);
         }
     }
@@ -111,7 +95,7 @@ public class Iterators_Test {
         final String nextMarker = null;
         final int maxKeys = 100;
 
-        emptyTest(new GetBucketLoaderFactory(CLIENT, TEST_ENV_NAME, prefix, TEST_DELIMITER, nextMarker, maxKeys, RETRIES));
+        emptyTest(new GetBucketKeyLoaderFactory<Contents>(CLIENT, TEST_ENV_NAME, prefix, TEST_DELIMITER, nextMarker, maxKeys, RETRIES, GetBucketKeyLoaderFactory.contentsFunction));
     }
 
     @Test
@@ -119,7 +103,7 @@ public class Iterators_Test {
         final String prefix = "";
         final String nextMarker = null;
         final int maxKeys = 100;
-        paginate(new GetBucketLoaderFactory(CLIENT, TEST_ENV_NAME, prefix, TEST_DELIMITER, nextMarker, maxKeys, RETRIES));
+        paginate(new GetBucketKeyLoaderFactory<Contents>(CLIENT, TEST_ENV_NAME, prefix, TEST_DELIMITER, nextMarker, maxKeys, RETRIES, GetBucketKeyLoaderFactory.contentsFunction));
     }
 
 
@@ -128,13 +112,13 @@ public class Iterators_Test {
         final String prefix = "";
         final String nextMarker = null;
         final int maxKeys = 2;
-        paginate(new GetBucketLoaderFactory(CLIENT, TEST_ENV_NAME, prefix, nextMarker, TEST_DELIMITER, maxKeys, RETRIES));
+        paginate(new GetBucketKeyLoaderFactory<Contents>(CLIENT, TEST_ENV_NAME, prefix, nextMarker, TEST_DELIMITER, maxKeys, RETRIES, GetBucketKeyLoaderFactory.contentsFunction));
 
     }
 
     @Test
     public void failedRequestGetBucket() {
-        testFailedRequest(new GetBucketLoaderFactory(CLIENT, "Unknown_Bucket",null, TEST_DELIMITER,null, 1000, 5));
+        testFailedRequest(new GetBucketKeyLoaderFactory<Contents>(CLIENT, "Unknown_Bucket",null, TEST_DELIMITER,null, 1000, 5, GetBucketKeyLoaderFactory.contentsFunction));
     }
 
    @Test

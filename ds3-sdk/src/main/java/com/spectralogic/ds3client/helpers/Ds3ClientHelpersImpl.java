@@ -22,23 +22,23 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Lists;
 import com.spectralogic.ds3client.Ds3Client;
+import com.spectralogic.ds3client.commands.HeadBucketRequest;
+import com.spectralogic.ds3client.commands.HeadBucketResponse;
+import com.spectralogic.ds3client.commands.PutBucketRequest;
+import com.spectralogic.ds3client.commands.spectrads3.*;
 import com.spectralogic.ds3client.helpers.events.EventRunner;
 import com.spectralogic.ds3client.helpers.events.SameThreadEventRunner;
-import com.spectralogic.ds3client.helpers.pagination.GetBucketKeyLoaderFactory;
-import com.spectralogic.ds3client.helpers.pagination.GetBucketLoaderFactory;
-import com.spectralogic.ds3client.commands.*;
-import com.spectralogic.ds3client.commands.spectrads3.*;
 import com.spectralogic.ds3client.helpers.options.ReadJobOptions;
 import com.spectralogic.ds3client.helpers.options.WriteJobOptions;
+import com.spectralogic.ds3client.helpers.pagination.GetBucketKeyLoaderFactory;
 import com.spectralogic.ds3client.helpers.strategy.transferstrategy.EventDispatcher;
 import com.spectralogic.ds3client.helpers.strategy.transferstrategy.EventDispatcherImpl;
 import com.spectralogic.ds3client.helpers.strategy.transferstrategy.TransferStrategy;
 import com.spectralogic.ds3client.helpers.strategy.transferstrategy.TransferStrategyBuilder;
 import com.spectralogic.ds3client.helpers.util.PartialObjectHelpers;
 import com.spectralogic.ds3client.models.*;
-import com.spectralogic.ds3client.models.common.CommonPrefixes;
+import com.spectralogic.ds3client.models.bulk.Ds3Object;
 import com.spectralogic.ds3client.models.common.Range;
-import com.spectralogic.ds3client.models.bulk.*;
 import com.spectralogic.ds3client.networking.FailedRequestException;
 import com.spectralogic.ds3client.utils.collections.LazyIterable;
 import org.slf4j.Logger;
@@ -66,30 +66,6 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
     private final int maxObjectTransferAttempts;
     private final EventRunner eventRunner;
     private final FileSystemHelper fileSystemHelper;
-
-    private final Function<ListBucketResult, ImmutableList<FileSystemKey>> getFileSystemKeysFunction = new Function<ListBucketResult, ImmutableList<FileSystemKey>>() {
-        @Nullable
-        @Override
-        public ImmutableList<FileSystemKey> apply(@Nullable final ListBucketResult result) {
-            final ImmutableList.Builder<FileSystemKey> fileSystemKeys = new ImmutableList.Builder<>();
-            for(final CommonPrefixes prefix: result.getCommonPrefixes()) {
-                fileSystemKeys.add(new FileSystemKey(prefix));
-            }
-            for(final Contents content : result.getObjects()) {
-                fileSystemKeys.add(new FileSystemKey(content));
-            }
-            return fileSystemKeys.build();
-        }
-    };
-
-    private final Function<ListBucketResult, ImmutableList<Contents>> getContentsFunction = new Function<ListBucketResult, ImmutableList<Contents>>() {
-        @Nullable
-        @Override
-        public ImmutableList<Contents> apply(@Nullable final ListBucketResult input) {
-            return ImmutableList.copyOf(input.getObjects());
-        }
-    };
-
 
     public Ds3ClientHelpersImpl(final Ds3Client client) {
         this(client, TransferStrategyBuilder.DEFAULT_CHUNK_ATTEMPT_RETRY_ATTEMPTS);
@@ -531,13 +507,13 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
     @Override
     public Iterable<Contents> listObjects(final String bucket, final String keyPrefix, final String nextMarker, final int maxKeys) {
 
-        return new LazyIterable<>(new GetBucketLoaderFactory(client, bucket, keyPrefix, DEFAULT_DELIMITER, nextMarker, maxKeys, DEFAULT_LIST_OBJECTS_RETRIES));
+        return this.listObjects(bucket, keyPrefix, nextMarker, maxKeys, DEFAULT_LIST_OBJECTS_RETRIES);
     }
 
     @Override
     public Iterable<Contents> listObjects(final String bucket, final String keyPrefix, final String nextMarker, final int maxKeys, final int retries) {
 
-        return new LazyIterable<>(new GetBucketKeyLoaderFactory<Contents>(client, bucket, keyPrefix, DEFAULT_DELIMITER, nextMarker, maxKeys, retries, getContentsFunction));
+        return new LazyIterable<>(new GetBucketKeyLoaderFactory<Contents>(client, bucket, keyPrefix, DEFAULT_DELIMITER, nextMarker, maxKeys, retries, GetBucketKeyLoaderFactory.contentsFunction));
     }
 
     @Override
@@ -568,7 +544,7 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
     }
 
     public Iterable<FileSystemKey> remoteListDirectory(final String bucket, final String keyPrefix, final String delimiter, final String nextMarker, final int maxKeys) throws IOException {
-        return new LazyIterable<>(new GetBucketKeyLoaderFactory<FileSystemKey>(client, bucket, keyPrefix, delimiter, nextMarker, maxKeys, DEFAULT_LIST_OBJECTS_RETRIES, getFileSystemKeysFunction));
+        return new LazyIterable<>(new GetBucketKeyLoaderFactory<FileSystemKey>(client, bucket, keyPrefix, delimiter, nextMarker, maxKeys, DEFAULT_LIST_OBJECTS_RETRIES, GetBucketKeyLoaderFactory.getFileSystemKeysFunction));
     }
 
     public Iterable<Ds3Object> addPrefixToDs3ObjectsList(final Iterable<Ds3Object> objectsList, final String prefix) {
