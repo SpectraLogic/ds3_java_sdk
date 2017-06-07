@@ -730,7 +730,6 @@ public class GetJobManagement_Test {
         }
     }
 
-
     @Test
     public void testFiringFailureHandlerWhenGettingChunks()
             throws URISyntaxException, NoSuchMethodException, InvocationTargetException, IllegalAccessException, IOException

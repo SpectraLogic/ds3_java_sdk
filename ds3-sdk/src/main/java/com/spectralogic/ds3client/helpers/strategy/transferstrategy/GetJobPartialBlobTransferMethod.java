@@ -65,7 +65,7 @@ public class GetJobPartialBlobTransferMethod implements TransferMethod {
      */
     @Override
     public void transferJobPart(final JobPart jobPart) throws IOException {
-        final BulkObject blob = jobPart.getBulkObject();
+        final BulkObject blob = jobPart.getBlob();
 
         final SeekableByteChannel seekableByteChannel = channelStrategy.acquireChannelForBlob(blob);
 
