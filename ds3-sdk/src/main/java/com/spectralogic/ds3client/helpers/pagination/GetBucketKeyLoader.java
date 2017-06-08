@@ -29,7 +29,7 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 
-public class GetBucketKeyLoader<T> implements LazyIterable.LazyLoader<T>{
+public class GetBucketKeyLoader<T> implements LazyIterable.LazyLoader<T> {
     private static final int DEFAULT_MAX_KEYS = 1000;
     private final List<T> emptyList = Collections.emptyList();
     private final Ds3Client client;
@@ -38,12 +38,12 @@ public class GetBucketKeyLoader<T> implements LazyIterable.LazyLoader<T>{
     private final String delimiter;
     private final int maxKeys;
     private final int retryCount;
-    private final Function<ListBucketResult,List<T>> function;
+    private final Function<ListBucketResult, List<T>> function;
     private String nextMarker;
     private boolean truncated;
     private boolean endOfInput = false;
 
-    public GetBucketKeyLoader(final Ds3Client client, final String bucket, final String prefix, final String delimiter, final String nextMarker, final int maxKeys, final int retryCount, final Function<ListBucketResult, List<T>> function) {
+    GetBucketKeyLoader(final Ds3Client client, final String bucket, final String prefix, final String delimiter, final String nextMarker, final int maxKeys, final int retryCount, final Function<ListBucketResult, List<T>> function) {
         this.client = client;
         this.bucket = bucket;
         this.prefix = prefix;
@@ -52,58 +52,43 @@ public class GetBucketKeyLoader<T> implements LazyIterable.LazyLoader<T>{
         this.maxKeys = Math.min(maxKeys, DEFAULT_MAX_KEYS);
         this.retryCount = retryCount;
         this.nextMarker = nextMarker;
-        this.truncated  = nextMarker != null;
+        this.truncated = nextMarker != null;
         this.function = function;
     }
 
     private GetBucketRequest prepRequest() {
         final GetBucketRequest request = new GetBucketRequest(bucket);
+        if (prefix != null) { request.withPrefix(prefix); }
+        if (truncated) { request.withMarker(nextMarker); }
+        if (delimiter != null) { request.withDelimiter(delimiter); }
         request.withMaxKeys(maxKeys);
-        if (prefix != null) {
-            request.withPrefix(prefix);
-        }
-        if (truncated) {
-            request.withMarker(nextMarker);
-        }
-        if (delimiter != null) {
-            request.withDelimiter(delimiter);
-        }
         return request;
-    }
-
-    private GetBucketResponse getResponse(final GetBucketRequest request, final int retryAttempt) {
-        GetBucketResponse response;
-        try {
-            response = this.client.getBucket(request);
-        } catch (final FailedRequestException e) {
-            throw new FailedToGetBucketException("Failed to get the list of objects due to a failed request", e);
-        } catch (final IOException e) {
-            if (retryAttempt >= retryCount) {
-                throw new TooManyRetriesException("Failed to get the next set of objects from the getBucketKey request after " + retryCount + " retries", e);
-            }
-            response = null;
-        }
-        return response;
     }
 
     @Override
     public List<T> getNextValues() {
         if (endOfInput) { return emptyList; }
         int retryAttempt = 0;
-        while (true) {
+        while (retryCount > retryAttempt) {
             final GetBucketRequest request = prepRequest();
-            final GetBucketResponse response = getResponse(request, retryAttempt);
-            if (response == null) {
+            final ListBucketResult result;
+            final GetBucketResponse response;
+            try {
+                response = this.client.getBucket(request);
+            } catch (final FailedRequestException e) {
+                throw new FailedToGetBucketException("Failed to get the list of objects due to a failed request", e);
+            } catch (final IOException e) {
                 retryAttempt++;
-            } else {
-                final ListBucketResult result = response.getListBucketResult();
-                truncated = result.getTruncated();
-                this.nextMarker = result.getNextMarker();
-                if (Guard.isStringNullOrEmpty(nextMarker) && !truncated) {
-                    endOfInput = true;
-                }
-                return function.apply(result);
+                continue;
             }
+            result = response.getListBucketResult();
+            this.truncated = result.getTruncated();
+            this.nextMarker = result.getNextMarker();
+            if (Guard.isStringNullOrEmpty(nextMarker) && !truncated) {
+                endOfInput = true;
+            }
+            return function.apply(result);
         }
+        throw new TooManyRetriesException("Failed to get the next set of objects from the getBucketKey request after " + retryCount + " retries");
     }
 }
