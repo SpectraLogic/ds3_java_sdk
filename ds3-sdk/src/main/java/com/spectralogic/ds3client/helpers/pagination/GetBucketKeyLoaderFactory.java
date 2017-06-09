@@ -23,9 +23,7 @@ import com.spectralogic.ds3client.models.FileSystemKey;
 import com.spectralogic.ds3client.models.ListBucketResult;
 import com.spectralogic.ds3client.models.common.CommonPrefixes;
 import com.spectralogic.ds3client.utils.collections.LazyIterable;
-
 import javax.annotation.Nullable;
-import java.util.List;
 
 public class GetBucketKeyLoaderFactory<T> implements LazyIterable.LazyLoaderFactory<T> {
 
