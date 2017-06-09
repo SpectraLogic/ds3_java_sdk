@@ -30,8 +30,7 @@ public class GetBucketKeyLoaderFactory<T> implements LazyIterable.LazyLoaderFact
     public static final Function<ListBucketResult, Iterable<Contents>> contentsFunction = new Function<ListBucketResult, Iterable<Contents>>() {
         @Override
         public Iterable<Contents> apply(@Nullable final ListBucketResult input) {
-
-            return FluentIterable.from(input.getObjects());
+            return input.getObjects();
         }
     };
 
