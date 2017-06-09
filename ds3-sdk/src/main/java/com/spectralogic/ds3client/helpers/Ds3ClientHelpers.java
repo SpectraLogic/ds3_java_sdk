@@ -22,6 +22,7 @@ import com.spectralogic.ds3client.helpers.options.ReadJobOptions;
 import com.spectralogic.ds3client.helpers.options.WriteJobOptions;
 import com.spectralogic.ds3client.helpers.strategy.transferstrategy.TransferStrategy;
 import com.spectralogic.ds3client.models.Contents;
+import com.spectralogic.ds3client.models.FileSystemKey;
 import com.spectralogic.ds3client.models.bulk.Ds3Object;
 import com.spectralogic.ds3client.utils.Predicate;
 
@@ -466,6 +467,46 @@ public abstract class Ds3ClientHelpers {
      * @throws IOException
      */
     public abstract Iterable<Ds3Object> listObjectsForDirectory(final Path directory) throws IOException;
+
+
+    /**
+     * The '/' character is traditionally used as a path delimiter, these methods provide '/' as a default delimiter.
+     * An S3 object like foo/bar/baz with the prefix of foo/ and the delimiter of '/' will act similar to a traditional file system
+     *  proving a common prefix for each 'directory' descending from the current folder of the prefix.
+     * Returns an Iterable of {@link FileSystemKey}
+     * @param bucket The bucket
+     * @param keyPrefix Limits the response to keys that begin with the specified prefix
+     */
+    public abstract Iterable<FileSystemKey> remoteListDirectory(final String bucket, final String keyPrefix) throws IOException;
+
+    /**
+     * Defaults to the path delimiter of '/'
+     * Returns an Iterable of {@link FileSystemKey}
+     * @param bucket The bucket
+     * @param keyPrefix Limits the response to keys that begin with the specified prefix
+     * @param nextMarker Specifies the key to start with
+     */
+    public abstract Iterable<FileSystemKey> remoteListDirectory(final String bucket, final String keyPrefix, final String nextMarker) throws IOException;
+
+    /**
+     * Defaults to the path delimiter of '/'
+     * Returns an Iterable of {@link FileSystemKey}
+     * @param bucket The bucket
+     * @param keyPrefix Limits the response to keys that begin with the specified prefix
+     * @param nextMarker Specifies the key to start with when listing objects
+     * @param maxKeys Sets the maximum number of keys returned in the response body.
+     */
+    public abstract Iterable<FileSystemKey> remoteListDirectory(final String bucket, final String keyPrefix, final String nextMarker, final int maxKeys) throws IOException;
+
+    /**
+     * Returns an Iterable of {@link FileSystemKey}
+     * @param bucket The bucket
+     * @param keyPrefix Limits the response to keys that begin with the specified prefix
+     * @param delimiter Specifies a path delimiter for the S3 query
+     * @param nextMarker Specifies the key to start with when listing objects
+     * @param maxKeys Sets the maximum number of keys returned in the response body.
+     */
+    public abstract Iterable<FileSystemKey> remoteListDirectory(final String bucket, final String keyPrefix, final String delimiter, final String nextMarker, final int maxKeys) throws IOException;
 
     /**
      * Returns an Iterable of {@link Ds3Object} that have a prefix added.

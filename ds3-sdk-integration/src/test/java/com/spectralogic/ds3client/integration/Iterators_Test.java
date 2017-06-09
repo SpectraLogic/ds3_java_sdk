@@ -15,15 +15,18 @@
 
 package com.spectralogic.ds3client.integration;
 
+import com.google.common.collect.Lists;
 import com.spectralogic.ds3client.Ds3Client;
-import com.spectralogic.ds3client.helpers.pagination.GetBucketLoaderFactory;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers;
+import com.spectralogic.ds3client.helpers.pagination.GetBucketKeyLoaderFactory;
 import com.spectralogic.ds3client.helpers.pagination.GetObjectsFullDetailsLoaderFactory;
-import com.spectralogic.ds3client.utils.collections.LazyIterable;
 import com.spectralogic.ds3client.integration.test.helpers.TempStorageIds;
 import com.spectralogic.ds3client.integration.test.helpers.TempStorageUtil;
 import com.spectralogic.ds3client.models.ChecksumType;
+import com.spectralogic.ds3client.models.Contents;
+import com.spectralogic.ds3client.models.FileSystemKey;
 import com.spectralogic.ds3client.networking.FailedRequestException;
+import com.spectralogic.ds3client.utils.collections.LazyIterable;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -33,10 +36,10 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.Iterator;
+import java.util.List;
 import java.util.UUID;
 
-import static com.spectralogic.ds3client.integration.Util.deleteAllContents;
-import static com.spectralogic.ds3client.integration.Util.loadBookTestData;
+import static com.spectralogic.ds3client.integration.Util.*;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 
@@ -47,6 +50,7 @@ public class Iterators_Test {
     private static final Ds3ClientHelpers HELPERS = Ds3ClientHelpers.wrap(CLIENT);
     private static final String TEST_ENV_NAME = "lazy_iterator_test";
     private static final int RETRIES = 5;
+    private static final String TEST_DELIMITER = null;
 
     private static TempStorageIds envStorageIds;
     private static UUID envDataPolicyId;
@@ -68,12 +72,30 @@ public class Iterators_Test {
     }
 
     @Test
+    public void iterateWithDelimiter() throws IOException, URISyntaxException {
+        try {
+            HELPERS.ensureBucketExists(TEST_ENV_NAME, envDataPolicyId);
+            loadBookTestDataWithPrefix(CLIENT, TEST_ENV_NAME, "books/");
+            final Iterable<FileSystemKey>  fileSystemKeysIterator  = Ds3ClientHelpers.wrap(CLIENT).remoteListDirectory(TEST_ENV_NAME, "books/", null, 100);
+            final List<FileSystemKey> fileSystemKeys = Lists.newArrayList(fileSystemKeysIterator);
+            assertThat(fileSystemKeys.size(), is(4));
+
+            loadBookTestDataWithPrefix(CLIENT, TEST_ENV_NAME, "books/more/");
+            final Iterable<FileSystemKey>  anotherFileSystemKeysIterator  = Ds3ClientHelpers.wrap(CLIENT).remoteListDirectory(TEST_ENV_NAME, "books/", null, 100);
+            final List<FileSystemKey> anotherFileSystemKeys = Lists.newArrayList(anotherFileSystemKeysIterator);
+            assertThat(anotherFileSystemKeys.size(), is(5));
+        } finally {
+            deleteAllContents(CLIENT, TEST_ENV_NAME);
+        }
+    }
+
+    @Test
     public void emptyGetBucket() throws IOException {
         final String prefix = "";
         final String nextMarker = null;
         final int maxKeys = 100;
 
-        emptyTest(new GetBucketLoaderFactory(CLIENT, TEST_ENV_NAME, prefix, nextMarker, maxKeys, RETRIES));
+        emptyTest(new GetBucketKeyLoaderFactory<Contents>(CLIENT, TEST_ENV_NAME, prefix, TEST_DELIMITER, nextMarker, maxKeys, RETRIES, GetBucketKeyLoaderFactory.contentsFunction));
     }
 
     @Test
@@ -81,7 +103,7 @@ public class Iterators_Test {
         final String prefix = "";
         final String nextMarker = null;
         final int maxKeys = 100;
-        paginate(new GetBucketLoaderFactory(CLIENT, TEST_ENV_NAME, prefix, nextMarker, maxKeys, RETRIES));
+        paginate(new GetBucketKeyLoaderFactory<Contents>(CLIENT, TEST_ENV_NAME, prefix, TEST_DELIMITER, nextMarker, maxKeys, RETRIES, GetBucketKeyLoaderFactory.contentsFunction));
     }
 
 
@@ -90,13 +112,13 @@ public class Iterators_Test {
         final String prefix = "";
         final String nextMarker = null;
         final int maxKeys = 2;
-        paginate(new GetBucketLoaderFactory(CLIENT, TEST_ENV_NAME, prefix, nextMarker, maxKeys, RETRIES));
+        paginate(new GetBucketKeyLoaderFactory<Contents>(CLIENT, TEST_ENV_NAME, prefix, nextMarker, TEST_DELIMITER, maxKeys, RETRIES, GetBucketKeyLoaderFactory.contentsFunction));
 
     }
 
     @Test
     public void failedRequestGetBucket() {
-        testFailedRequest(new GetBucketLoaderFactory(CLIENT, "Unknown_Bucket",null, null, 1000, 5));
+        testFailedRequest(new GetBucketKeyLoaderFactory<Contents>(CLIENT, "Unknown_Bucket",null, TEST_DELIMITER,null, 1000, 5, GetBucketKeyLoaderFactory.contentsFunction));
     }
 
    @Test

@@ -15,10 +15,7 @@
 
 package com.spectralogic.ds3client.utils.collections;
 
-import com.spectralogic.ds3client.utils.Guard;
-
 import java.util.Iterator;
-import java.util.List;
 import java.util.NoSuchElementException;
 
 /**
@@ -59,15 +56,14 @@ public class LazyIterable<T> implements Iterable<T> {
      * @param <T> The model that is returned by the iterator
      */
     public interface LazyLoader<T> {
-        List<T> getNextValues();
+        Iterable<T> getNextValues();
     }
 
     private class LazyObjectIterator<E> implements Iterator<E> {
 
         private final LazyLoader<E> iterableLoader;
 
-        private List<E> cache = null;
-        private int cachePointer;
+        private Iterator<E> cache = null;
         private boolean endOfContent = false;
 
         private LazyObjectIterator(final LazyLoader<E> iterableLoader) {
@@ -80,7 +76,7 @@ public class LazyIterable<T> implements Iterable<T> {
                 return false;
             }
 
-            if (cache == null || cachePointer == cache.size()) {
+            if (cache == null || !cache.hasNext()) {
                 loadCache();
             }
             return !endOfContent;
@@ -91,20 +87,16 @@ public class LazyIterable<T> implements Iterable<T> {
             if (endOfContent) {
                 throw new NoSuchElementException("No more content");
             }
-            if (cache == null || cachePointer >= cache.size()) {
+            if (cache == null || !cache.hasNext()) {
                 loadCache();
             }
-            final E contents = cache.get(cachePointer);
-            this.cachePointer++;
-            return contents;
+            return cache.next();
         }
 
         private void loadCache() {
-            this.cache = iterableLoader.getNextValues();
-            if (Guard.isNullOrEmpty(this.cache)) {
+            this.cache = iterableLoader.getNextValues().iterator();
+            if (!cache.hasNext()) {
                 endOfContent = true;
-            } else {
-                this.cachePointer = 0;
             }
         }
 
