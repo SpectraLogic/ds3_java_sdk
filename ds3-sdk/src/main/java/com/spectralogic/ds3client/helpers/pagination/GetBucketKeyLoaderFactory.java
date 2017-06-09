@@ -29,18 +29,18 @@ import java.util.List;
 
 public class GetBucketKeyLoaderFactory<T> implements LazyIterable.LazyLoaderFactory<T> {
 
-    public static final Function<ListBucketResult, List<Contents>> contentsFunction = new Function<ListBucketResult, List<Contents>>() {
+    public static final Function<ListBucketResult, Iterable<Contents>> contentsFunction = new Function<ListBucketResult, Iterable<Contents>>() {
         @Override
-        public List<Contents> apply(@Nullable final ListBucketResult input) {
+        public Iterable<Contents> apply(@Nullable final ListBucketResult input) {
 
-            return FluentIterable.from(input.getObjects()).toList();
+            return FluentIterable.from(input.getObjects());
         }
     };
 
-    public static final Function<ListBucketResult,List<FileSystemKey>> getFileSystemKeysFunction = new Function<ListBucketResult, List<FileSystemKey>>() {
+    public static final Function<ListBucketResult,Iterable<FileSystemKey>> getFileSystemKeysFunction = new Function<ListBucketResult, Iterable<FileSystemKey>>() {
         @Nullable
         @Override
-        public List<FileSystemKey> apply(@Nullable final ListBucketResult result) {
+        public Iterable<FileSystemKey> apply(@Nullable final ListBucketResult result) {
             final FluentIterable<FileSystemKey> contentIterable = FluentIterable.from(result.getObjects())
                     .transform(new Function<Contents, FileSystemKey>() {
                         @Override
@@ -55,8 +55,7 @@ public class GetBucketKeyLoaderFactory<T> implements LazyIterable.LazyLoaderFact
                             return new FileSystemKey(input);
                         }
                     })
-                    .append(contentIterable)
-                    .toList();
+                    .append(contentIterable);
         }
     };
 
@@ -67,9 +66,9 @@ public class GetBucketKeyLoaderFactory<T> implements LazyIterable.LazyLoaderFact
     private final String delimiter;
     private final int maxKeys;
     private final int defaultListObjectsRetries;
-    private final Function<ListBucketResult, List<T>> function;
+    private final Function<ListBucketResult, Iterable<T>> function;
 
-    public GetBucketKeyLoaderFactory(final Ds3Client client, final String bucket, final String keyPrefix, final String delimiter, final String nextMarker, final int maxKeys, final int defaultListObjectsRetries, final Function<ListBucketResult, List<T>> function) {
+    public GetBucketKeyLoaderFactory(final Ds3Client client, final String bucket, final String keyPrefix, final String delimiter, final String nextMarker, final int maxKeys, final int defaultListObjectsRetries, final Function<ListBucketResult, Iterable<T>> function) {
         this.client = client;
         this.bucket = bucket;
         this.keyPrefix = keyPrefix;

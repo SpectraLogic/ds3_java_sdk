@@ -38,12 +38,12 @@ public class GetBucketKeyLoader<T> implements LazyIterable.LazyLoader<T> {
     private final String delimiter;
     private final int maxKeys;
     private final int retryCount;
-    private final Function<ListBucketResult, List<T>> function;
+    private final Function<ListBucketResult, Iterable<T>> function;
     private String nextMarker;
     private boolean truncated;
     private boolean endOfInput = false;
 
-    GetBucketKeyLoader(final Ds3Client client, final String bucket, final String prefix, final String delimiter, final String nextMarker, final int maxKeys, final int retryCount, final Function<ListBucketResult, List<T>> function) {
+    GetBucketKeyLoader(final Ds3Client client, final String bucket, final String prefix, final String delimiter, final String nextMarker, final int maxKeys, final int retryCount, final Function<ListBucketResult, Iterable<T>> function) {
         this.client = client;
         this.bucket = bucket;
         this.prefix = prefix;
@@ -66,7 +66,7 @@ public class GetBucketKeyLoader<T> implements LazyIterable.LazyLoader<T> {
     }
 
     @Override
-    public List<T> getNextValues() {
+    public Iterable<T> getNextValues() {
         if (endOfInput) { return emptyList; }
         int retryAttempt = 0;
         while (retryCount > retryAttempt) {
