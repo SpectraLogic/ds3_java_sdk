@@ -12,8 +12,12 @@
  *   specific language governing permissions and limitations under the License.
  * ****************************************************************************
  */
-package com.spectralogic.ds3client.models;
+package com.spectralogic.ds3client.helpers.pagination;
 
+import com.spectralogic.ds3client.exceptions.UnableToConvertToCommonPrefixesException;
+import com.spectralogic.ds3client.exceptions.UnableToConvertToContentsException;
+import com.spectralogic.ds3client.models.Contents;
+import com.spectralogic.ds3client.models.User;
 import com.spectralogic.ds3client.models.common.CommonPrefixes;
 
 import java.util.Date;
@@ -74,7 +78,7 @@ public class FileSystemKey {
 
     public Contents toContents() throws RuntimeException {
         if (isPrefix()) {
-            throw new UnabledToConvertToContentsException("Could not create a Contents");
+            throw new UnableToConvertToContentsException("Could not create a Contents");
         }
         final Contents contents = new Contents();
         contents.setETag(eTag);

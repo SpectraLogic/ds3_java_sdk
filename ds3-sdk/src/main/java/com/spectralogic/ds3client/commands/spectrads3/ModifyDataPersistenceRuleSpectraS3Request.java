@@ -21,13 +21,14 @@ import com.spectralogic.ds3client.commands.interfaces.AbstractRequest;
 import com.spectralogic.ds3client.models.DataIsolationLevel;
 import java.lang.Integer;
 import com.spectralogic.ds3client.models.DataPersistenceRuleType;
+import java.util.UUID;
 import com.google.common.net.UrlEscapers;
 
 public class ModifyDataPersistenceRuleSpectraS3Request extends AbstractRequest {
 
     // Variables
     
-    private final String dataPersistenceRule;
+    private final String dataPersistenceRuleId;
 
     private DataIsolationLevel isolationLevel;
 
@@ -38,8 +39,14 @@ public class ModifyDataPersistenceRuleSpectraS3Request extends AbstractRequest {
     // Constructor
     
     
-    public ModifyDataPersistenceRuleSpectraS3Request(final String dataPersistenceRule) {
-        this.dataPersistenceRule = dataPersistenceRule;
+    public ModifyDataPersistenceRuleSpectraS3Request(final UUID dataPersistenceRuleId) {
+        this.dataPersistenceRuleId = dataPersistenceRuleId.toString();
+        
+    }
+
+    
+    public ModifyDataPersistenceRuleSpectraS3Request(final String dataPersistenceRuleId) {
+        this.dataPersistenceRuleId = dataPersistenceRuleId;
         
     }
 
@@ -72,11 +79,11 @@ public class ModifyDataPersistenceRuleSpectraS3Request extends AbstractRequest {
 
     @Override
     public String getPath() {
-        return "/_rest_/data_persistence_rule/" + dataPersistenceRule;
+        return "/_rest_/data_persistence_rule/" + dataPersistenceRuleId;
     }
     
-    public String getDataPersistenceRule() {
-        return this.dataPersistenceRule;
+    public String getDataPersistenceRuleId() {
+        return this.dataPersistenceRuleId;
     }
 
 

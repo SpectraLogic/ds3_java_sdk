@@ -18,19 +18,26 @@ package com.spectralogic.ds3client.commands.spectrads3;
 
 import com.spectralogic.ds3client.networking.HttpVerb;
 import com.spectralogic.ds3client.commands.interfaces.AbstractRequest;
+import java.util.UUID;
 import com.google.common.net.UrlEscapers;
 
 public class DeleteDataPersistenceRuleSpectraS3Request extends AbstractRequest {
 
     // Variables
     
-    private final String dataPersistenceRule;
+    private final String dataPersistenceRuleId;
 
     // Constructor
     
     
-    public DeleteDataPersistenceRuleSpectraS3Request(final String dataPersistenceRule) {
-        this.dataPersistenceRule = dataPersistenceRule;
+    public DeleteDataPersistenceRuleSpectraS3Request(final UUID dataPersistenceRuleId) {
+        this.dataPersistenceRuleId = dataPersistenceRuleId.toString();
+        
+    }
+
+    
+    public DeleteDataPersistenceRuleSpectraS3Request(final String dataPersistenceRuleId) {
+        this.dataPersistenceRuleId = dataPersistenceRuleId;
         
     }
 
@@ -42,11 +49,11 @@ public class DeleteDataPersistenceRuleSpectraS3Request extends AbstractRequest {
 
     @Override
     public String getPath() {
-        return "/_rest_/data_persistence_rule/" + dataPersistenceRule;
+        return "/_rest_/data_persistence_rule/" + dataPersistenceRuleId;
     }
     
-    public String getDataPersistenceRule() {
-        return this.dataPersistenceRule;
+    public String getDataPersistenceRuleId() {
+        return this.dataPersistenceRuleId;
     }
 
 }
