@@ -44,6 +44,9 @@ public class ActiveJob {
     @JsonProperty("CreatedAt")
     private Date createdAt;
 
+    @JsonProperty("DeadJobCleanupAllowed")
+    private boolean deadJobCleanupAllowed;
+
     @JsonProperty("ErrorMessage")
     private String errorMessage;
 
@@ -147,6 +150,15 @@ public class ActiveJob {
 
     public void setCreatedAt(final Date createdAt) {
         this.createdAt = createdAt;
+    }
+
+
+    public boolean getDeadJobCleanupAllowed() {
+        return this.deadJobCleanupAllowed;
+    }
+
+    public void setDeadJobCleanupAllowed(final boolean deadJobCleanupAllowed) {
+        this.deadJobCleanupAllowed = deadJobCleanupAllowed;
     }
 
 

@@ -26,6 +26,9 @@ import java.util.Date;
 public class TapeDrive {
 
     // Variables
+    @JsonProperty("CleaningRequired")
+    private boolean cleaningRequired;
+
     @JsonProperty("ErrorMessage")
     private String errorMessage;
 
@@ -37,6 +40,9 @@ public class TapeDrive {
 
     @JsonProperty("LastCleaned")
     private Date lastCleaned;
+
+    @JsonProperty("MfgSerialNumber")
+    private String mfgSerialNumber;
 
     @JsonProperty("PartitionId")
     private UUID partitionId;
@@ -60,6 +66,15 @@ public class TapeDrive {
 
     // Getters and Setters
     
+    public boolean getCleaningRequired() {
+        return this.cleaningRequired;
+    }
+
+    public void setCleaningRequired(final boolean cleaningRequired) {
+        this.cleaningRequired = cleaningRequired;
+    }
+
+
     public String getErrorMessage() {
         return this.errorMessage;
     }
@@ -93,6 +108,15 @@ public class TapeDrive {
 
     public void setLastCleaned(final Date lastCleaned) {
         this.lastCleaned = lastCleaned;
+    }
+
+
+    public String getMfgSerialNumber() {
+        return this.mfgSerialNumber;
+    }
+
+    public void setMfgSerialNumber(final String mfgSerialNumber) {
+        this.mfgSerialNumber = mfgSerialNumber;
     }
 
 

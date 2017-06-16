@@ -19,6 +19,7 @@ package com.spectralogic.ds3client.commands.spectrads3;
 import com.spectralogic.ds3client.networking.HttpVerb;
 import com.spectralogic.ds3client.commands.interfaces.AbstractRequest;
 import com.google.common.net.UrlEscapers;
+import java.util.UUID;
 import com.spectralogic.ds3client.models.Priority;
 
 public class RawImportAllTapesSpectraS3Request extends AbstractRequest {
@@ -26,6 +27,8 @@ public class RawImportAllTapesSpectraS3Request extends AbstractRequest {
     // Variables
     
     private final String bucketId;
+
+    private String storageDomainId;
 
     private Priority taskPriority;
 
@@ -39,6 +42,20 @@ public class RawImportAllTapesSpectraS3Request extends AbstractRequest {
 
         this.getQueryParams().put("bucket_id", bucketId);
     }
+
+    public RawImportAllTapesSpectraS3Request withStorageDomainId(final UUID storageDomainId) {
+        this.storageDomainId = storageDomainId.toString();
+        this.updateQueryParam("storage_domain_id", storageDomainId);
+        return this;
+    }
+
+
+    public RawImportAllTapesSpectraS3Request withStorageDomainId(final String storageDomainId) {
+        this.storageDomainId = storageDomainId;
+        this.updateQueryParam("storage_domain_id", storageDomainId);
+        return this;
+    }
+
 
     public RawImportAllTapesSpectraS3Request withTaskPriority(final Priority taskPriority) {
         this.taskPriority = taskPriority;
@@ -60,6 +77,11 @@ public class RawImportAllTapesSpectraS3Request extends AbstractRequest {
     
     public String getBucketId() {
         return this.bucketId;
+    }
+
+
+    public String getStorageDomainId() {
+        return this.storageDomainId;
     }
 
 
