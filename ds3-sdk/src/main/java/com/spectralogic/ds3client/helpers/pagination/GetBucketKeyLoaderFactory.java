@@ -19,7 +19,6 @@ import com.google.common.base.Function;
 import com.google.common.collect.FluentIterable;
 import com.spectralogic.ds3client.Ds3Client;
 import com.spectralogic.ds3client.models.Contents;
-import com.spectralogic.ds3client.models.FileSystemKey;
 import com.spectralogic.ds3client.models.ListBucketResult;
 import com.spectralogic.ds3client.models.common.CommonPrefixes;
 import com.spectralogic.ds3client.utils.collections.LazyIterable;

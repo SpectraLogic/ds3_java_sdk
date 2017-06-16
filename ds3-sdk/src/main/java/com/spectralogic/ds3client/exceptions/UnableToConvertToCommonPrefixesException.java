@@ -12,10 +12,10 @@
  *   specific language governing permissions and limitations under the License.
  * ****************************************************************************
  */
-package com.spectralogic.ds3client.models;
 
-public class UnabledToConvertToContentsException extends RuntimeException {
-    public UnabledToConvertToContentsException(final String s) {
+package com.spectralogic.ds3client.exceptions;
+public class UnableToConvertToCommonPrefixesException extends RuntimeException {
+    public UnableToConvertToCommonPrefixesException(final String s) {
         super(s);
     }
 }

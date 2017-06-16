@@ -30,6 +30,7 @@ import com.spectralogic.ds3client.helpers.events.EventRunner;
 import com.spectralogic.ds3client.helpers.events.SameThreadEventRunner;
 import com.spectralogic.ds3client.helpers.options.ReadJobOptions;
 import com.spectralogic.ds3client.helpers.options.WriteJobOptions;
+import com.spectralogic.ds3client.helpers.pagination.FileSystemKey;
 import com.spectralogic.ds3client.helpers.pagination.GetBucketKeyLoaderFactory;
 import com.spectralogic.ds3client.helpers.strategy.transferstrategy.EventDispatcher;
 import com.spectralogic.ds3client.helpers.strategy.transferstrategy.EventDispatcherImpl;
