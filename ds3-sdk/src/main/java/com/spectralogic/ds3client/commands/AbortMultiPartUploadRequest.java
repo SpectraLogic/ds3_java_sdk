@@ -39,7 +39,8 @@ public class AbortMultiPartUploadRequest extends AbstractRequest {
         this.objectName = objectName;
         this.uploadId = uploadId.toString();
         
-        this.getQueryParams().put("upload_id", uploadId.toString());
+        this.updateQueryParam("upload_id", uploadId);
+
     }
 
     
@@ -48,7 +49,8 @@ public class AbortMultiPartUploadRequest extends AbstractRequest {
         this.objectName = objectName;
         this.uploadId = uploadId;
         
-        this.getQueryParams().put("upload_id", UrlEscapers.urlFragmentEscaper().escape(uploadId).replace("+", "%2B"));
+        this.updateQueryParam("upload_id", uploadId);
+
     }
 
 

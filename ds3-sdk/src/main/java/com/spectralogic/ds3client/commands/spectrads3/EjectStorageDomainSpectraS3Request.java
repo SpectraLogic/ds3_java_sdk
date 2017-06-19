@@ -41,7 +41,8 @@ public class EjectStorageDomainSpectraS3Request extends AbstractRequest {
         
         this.getQueryParams().put("operation", "eject");
 
-        this.getQueryParams().put("storage_domain_id", storageDomainId.toString());
+        this.updateQueryParam("storage_domain_id", storageDomainId);
+
     }
 
     
@@ -50,7 +51,8 @@ public class EjectStorageDomainSpectraS3Request extends AbstractRequest {
         
         this.getQueryParams().put("operation", "eject");
 
-        this.getQueryParams().put("storage_domain_id", UrlEscapers.urlFragmentEscaper().escape(storageDomainId).replace("+", "%2B"));
+        this.updateQueryParam("storage_domain_id", storageDomainId);
+
     }
 
     public EjectStorageDomainSpectraS3Request withBucketId(final String bucketId) {

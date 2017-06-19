@@ -48,7 +48,8 @@ public class ImportS3TargetSpectraS3Request extends AbstractRequest {
         
         this.getQueryParams().put("operation", "import");
 
-        this.getQueryParams().put("cloud_bucket_name", UrlEscapers.urlFragmentEscaper().escape(cloudBucketName).replace("+", "%2B"));
+        this.updateQueryParam("cloud_bucket_name", cloudBucketName);
+
     }
 
     public ImportS3TargetSpectraS3Request withConflictResolutionMode(final ImportConflictResolutionMode conflictResolutionMode) {

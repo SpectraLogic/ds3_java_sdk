@@ -52,9 +52,12 @@ public class RegisterAzureTargetSpectraS3Request extends AbstractRequest {
         this.accountName = accountName;
         this.name = name;
         
-        this.getQueryParams().put("account_key", UrlEscapers.urlFragmentEscaper().escape(accountKey).replace("+", "%2B"));
-        this.getQueryParams().put("account_name", UrlEscapers.urlFragmentEscaper().escape(accountName).replace("+", "%2B"));
-        this.getQueryParams().put("name", UrlEscapers.urlFragmentEscaper().escape(name).replace("+", "%2B"));
+        this.updateQueryParam("account_key", accountKey);
+
+        this.updateQueryParam("account_name", accountName);
+
+        this.updateQueryParam("name", name);
+
     }
 
     public RegisterAzureTargetSpectraS3Request withAutoVerifyFrequencyInDays(final Integer autoVerifyFrequencyInDays) {

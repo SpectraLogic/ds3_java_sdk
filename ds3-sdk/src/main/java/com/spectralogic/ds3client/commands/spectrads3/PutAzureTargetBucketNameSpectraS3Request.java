@@ -39,9 +39,12 @@ public class PutAzureTargetBucketNameSpectraS3Request extends AbstractRequest {
         this.name = name;
         this.targetId = targetId.toString();
         
-        this.getQueryParams().put("bucket_id", bucketId);
-        this.getQueryParams().put("name", UrlEscapers.urlFragmentEscaper().escape(name).replace("+", "%2B"));
-        this.getQueryParams().put("target_id", targetId.toString());
+        this.updateQueryParam("bucket_id", bucketId);
+
+        this.updateQueryParam("name", name);
+
+        this.updateQueryParam("target_id", targetId);
+
     }
 
     
@@ -50,9 +53,12 @@ public class PutAzureTargetBucketNameSpectraS3Request extends AbstractRequest {
         this.name = name;
         this.targetId = targetId;
         
-        this.getQueryParams().put("bucket_id", bucketId);
-        this.getQueryParams().put("name", UrlEscapers.urlFragmentEscaper().escape(name).replace("+", "%2B"));
-        this.getQueryParams().put("target_id", UrlEscapers.urlFragmentEscaper().escape(targetId).replace("+", "%2B"));
+        this.updateQueryParam("bucket_id", bucketId);
+
+        this.updateQueryParam("name", name);
+
+        this.updateQueryParam("target_id", targetId);
+
     }
 
 

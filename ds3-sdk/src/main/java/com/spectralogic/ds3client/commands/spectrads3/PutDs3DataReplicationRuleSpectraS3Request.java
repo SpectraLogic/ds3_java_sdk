@@ -44,9 +44,12 @@ public class PutDs3DataReplicationRuleSpectraS3Request extends AbstractRequest {
         this.targetId = targetId.toString();
         this.type = type;
         
-        this.getQueryParams().put("data_policy_id", dataPolicyId.toString());
-        this.getQueryParams().put("target_id", targetId.toString());
-        this.getQueryParams().put("type", type.toString());
+        this.updateQueryParam("data_policy_id", dataPolicyId);
+
+        this.updateQueryParam("target_id", targetId);
+
+        this.updateQueryParam("type", type);
+
     }
 
     
@@ -55,9 +58,12 @@ public class PutDs3DataReplicationRuleSpectraS3Request extends AbstractRequest {
         this.targetId = targetId;
         this.type = type;
         
-        this.getQueryParams().put("data_policy_id", UrlEscapers.urlFragmentEscaper().escape(dataPolicyId).replace("+", "%2B"));
-        this.getQueryParams().put("target_id", UrlEscapers.urlFragmentEscaper().escape(targetId).replace("+", "%2B"));
-        this.getQueryParams().put("type", type.toString());
+        this.updateQueryParam("data_policy_id", dataPolicyId);
+
+        this.updateQueryParam("target_id", targetId);
+
+        this.updateQueryParam("type", type);
+
     }
 
     public PutDs3DataReplicationRuleSpectraS3Request withReplicateDeletes(final boolean replicateDeletes) {

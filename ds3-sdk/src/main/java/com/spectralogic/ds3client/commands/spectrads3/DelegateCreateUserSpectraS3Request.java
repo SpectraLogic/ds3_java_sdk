@@ -37,7 +37,8 @@ public class DelegateCreateUserSpectraS3Request extends AbstractRequest {
     public DelegateCreateUserSpectraS3Request(final String name) {
         this.name = name;
         
-        this.getQueryParams().put("name", UrlEscapers.urlFragmentEscaper().escape(name).replace("+", "%2B"));
+        this.updateQueryParam("name", name);
+
     }
 
     public DelegateCreateUserSpectraS3Request withId(final UUID id) {

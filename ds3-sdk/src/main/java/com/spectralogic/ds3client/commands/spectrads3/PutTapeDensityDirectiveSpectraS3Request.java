@@ -41,9 +41,12 @@ public class PutTapeDensityDirectiveSpectraS3Request extends AbstractRequest {
         this.partitionId = partitionId.toString();
         this.tapeType = tapeType;
         
-        this.getQueryParams().put("density", density.toString());
-        this.getQueryParams().put("partition_id", partitionId.toString());
-        this.getQueryParams().put("tape_type", tapeType.toString());
+        this.updateQueryParam("density", density);
+
+        this.updateQueryParam("partition_id", partitionId);
+
+        this.updateQueryParam("tape_type", tapeType);
+
     }
 
     
@@ -52,9 +55,12 @@ public class PutTapeDensityDirectiveSpectraS3Request extends AbstractRequest {
         this.partitionId = partitionId;
         this.tapeType = tapeType;
         
-        this.getQueryParams().put("density", density.toString());
-        this.getQueryParams().put("partition_id", UrlEscapers.urlFragmentEscaper().escape(partitionId).replace("+", "%2B"));
-        this.getQueryParams().put("tape_type", tapeType.toString());
+        this.updateQueryParam("density", density);
+
+        this.updateQueryParam("partition_id", partitionId);
+
+        this.updateQueryParam("tape_type", tapeType);
+
     }
 
 

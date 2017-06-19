@@ -60,10 +60,14 @@ public class RegisterDs3TargetSpectraS3Request extends AbstractRequest {
         this.dataPathEndPoint = dataPathEndPoint;
         this.name = name;
         
-        this.getQueryParams().put("admin_auth_id", UrlEscapers.urlFragmentEscaper().escape(adminAuthId).replace("+", "%2B"));
-        this.getQueryParams().put("admin_secret_key", UrlEscapers.urlFragmentEscaper().escape(adminSecretKey).replace("+", "%2B"));
-        this.getQueryParams().put("data_path_end_point", UrlEscapers.urlFragmentEscaper().escape(dataPathEndPoint).replace("+", "%2B"));
-        this.getQueryParams().put("name", UrlEscapers.urlFragmentEscaper().escape(name).replace("+", "%2B"));
+        this.updateQueryParam("admin_auth_id", adminAuthId);
+
+        this.updateQueryParam("admin_secret_key", adminSecretKey);
+
+        this.updateQueryParam("data_path_end_point", dataPathEndPoint);
+
+        this.updateQueryParam("name", name);
+
     }
 
     public RegisterDs3TargetSpectraS3Request withAccessControlReplication(final Ds3TargetAccessControlReplication accessControlReplication) {

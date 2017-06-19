@@ -36,8 +36,10 @@ public class PutGroupGroupMemberSpectraS3Request extends AbstractRequest {
         this.groupId = groupId.toString();
         this.memberGroupId = memberGroupId.toString();
         
-        this.getQueryParams().put("group_id", groupId.toString());
-        this.getQueryParams().put("member_group_id", memberGroupId.toString());
+        this.updateQueryParam("group_id", groupId);
+
+        this.updateQueryParam("member_group_id", memberGroupId);
+
     }
 
     
@@ -45,8 +47,10 @@ public class PutGroupGroupMemberSpectraS3Request extends AbstractRequest {
         this.groupId = groupId;
         this.memberGroupId = memberGroupId;
         
-        this.getQueryParams().put("group_id", UrlEscapers.urlFragmentEscaper().escape(groupId).replace("+", "%2B"));
-        this.getQueryParams().put("member_group_id", UrlEscapers.urlFragmentEscaper().escape(memberGroupId).replace("+", "%2B"));
+        this.updateQueryParam("group_id", groupId);
+
+        this.updateQueryParam("member_group_id", memberGroupId);
+
     }
 
 

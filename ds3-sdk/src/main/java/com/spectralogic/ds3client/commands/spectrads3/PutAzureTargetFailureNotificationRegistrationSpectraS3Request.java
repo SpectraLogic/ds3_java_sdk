@@ -41,7 +41,8 @@ public class PutAzureTargetFailureNotificationRegistrationSpectraS3Request exten
     public PutAzureTargetFailureNotificationRegistrationSpectraS3Request(final String notificationEndPoint) {
         this.notificationEndPoint = notificationEndPoint;
         
-        this.getQueryParams().put("notification_end_point", UrlEscapers.urlFragmentEscaper().escape(notificationEndPoint).replace("+", "%2B"));
+        this.updateQueryParam("notification_end_point", notificationEndPoint);
+
     }
 
     public PutAzureTargetFailureNotificationRegistrationSpectraS3Request withFormat(final HttpResponseFormatType format) {

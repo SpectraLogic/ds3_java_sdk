@@ -53,8 +53,10 @@ public class PutMultiPartUploadPartRequest extends AbstractRequest {
         this.size = size;
         this.channel = channel;
         
-        this.getQueryParams().put("part_number", Integer.toString(partNumber));
-        this.getQueryParams().put("upload_id", uploadId.toString());
+        this.updateQueryParam("part_number", partNumber);
+
+        this.updateQueryParam("upload_id", uploadId);
+
         this.stream = new SeekableByteChannelInputStream(channel);
     }
 
@@ -67,8 +69,10 @@ public class PutMultiPartUploadPartRequest extends AbstractRequest {
         this.size = size;
         this.channel = channel;
         
-        this.getQueryParams().put("part_number", Integer.toString(partNumber));
-        this.getQueryParams().put("upload_id", UrlEscapers.urlFragmentEscaper().escape(uploadId).replace("+", "%2B"));
+        this.updateQueryParam("part_number", partNumber);
+
+        this.updateQueryParam("upload_id", uploadId);
+
         this.stream = new SeekableByteChannelInputStream(channel);
     }
 
@@ -81,8 +85,10 @@ public class PutMultiPartUploadPartRequest extends AbstractRequest {
         this.size = size;
         this.stream = stream;
         
-        this.getQueryParams().put("part_number", Integer.toString(partNumber));
-        this.getQueryParams().put("upload_id", uploadId.toString());
+        this.updateQueryParam("part_number", partNumber);
+
+        this.updateQueryParam("upload_id", uploadId);
+
     }
 
     
@@ -94,8 +100,10 @@ public class PutMultiPartUploadPartRequest extends AbstractRequest {
         this.size = size;
         this.stream = stream;
         
-        this.getQueryParams().put("part_number", Integer.toString(partNumber));
-        this.getQueryParams().put("upload_id", UrlEscapers.urlFragmentEscaper().escape(uploadId).replace("+", "%2B"));
+        this.updateQueryParam("part_number", partNumber);
+
+        this.updateQueryParam("upload_id", uploadId);
+
     }
 
 

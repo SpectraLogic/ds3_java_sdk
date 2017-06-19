@@ -73,8 +73,10 @@ public class PutObjectRequest extends AbstractRequest {
         this.channel = channel;
         this.stream = new SeekableByteChannelInputStream(channel);
         
-        this.getQueryParams().put("job", job.toString());
-        this.getQueryParams().put("offset", Long.toString(offset));
+        this.updateQueryParam("job", job);
+
+        this.updateQueryParam("offset", offset);
+
 
     }
 
@@ -88,8 +90,10 @@ public class PutObjectRequest extends AbstractRequest {
         this.channel = channel;
         this.stream = new SeekableByteChannelInputStream(channel);
         
-        this.getQueryParams().put("job", UrlEscapers.urlFragmentEscaper().escape(job).replace("+", "%2B"));
-        this.getQueryParams().put("offset", Long.toString(offset));
+        this.updateQueryParam("job", job);
+
+        this.updateQueryParam("offset", offset);
+
 
     }
 
@@ -102,8 +106,10 @@ public class PutObjectRequest extends AbstractRequest {
         this.offset = offset;
         this.stream = stream;
         
-        this.getQueryParams().put("job", job.toString());
-        this.getQueryParams().put("offset", Long.toString(offset));
+        this.updateQueryParam("job", job);
+
+        this.updateQueryParam("offset", offset);
+
 
     }
 
@@ -116,8 +122,10 @@ public class PutObjectRequest extends AbstractRequest {
         this.offset = offset;
         this.stream = stream;
         
-        this.getQueryParams().put("job", UrlEscapers.urlFragmentEscaper().escape(job).replace("+", "%2B"));
-        this.getQueryParams().put("offset", Long.toString(offset));
+        this.updateQueryParam("job", job);
+
+        this.updateQueryParam("offset", offset);
+
 
     }
 

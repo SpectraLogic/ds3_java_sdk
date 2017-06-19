@@ -33,14 +33,16 @@ public class PutGlobalDataPolicyAclForUserSpectraS3Request extends AbstractReque
     public PutGlobalDataPolicyAclForUserSpectraS3Request(final UUID userId) {
         this.userId = userId.toString();
         
-        this.getQueryParams().put("user_id", userId.toString());
+        this.updateQueryParam("user_id", userId);
+
     }
 
     
     public PutGlobalDataPolicyAclForUserSpectraS3Request(final String userId) {
         this.userId = userId;
         
-        this.getQueryParams().put("user_id", UrlEscapers.urlFragmentEscaper().escape(userId).replace("+", "%2B"));
+        this.updateQueryParam("user_id", userId);
+
     }
 
 

@@ -48,7 +48,8 @@ public class CompleteMultiPartUploadRequest extends AbstractRequest {
         this.uploadId = uploadId.toString();
         this.requestPayload = requestPayload;
         
-        this.getQueryParams().put("upload_id", uploadId.toString());
+        this.updateQueryParam("upload_id", uploadId);
+
     }
 
     
@@ -58,7 +59,8 @@ public class CompleteMultiPartUploadRequest extends AbstractRequest {
         this.uploadId = uploadId;
         this.requestPayload = requestPayload;
         
-        this.getQueryParams().put("upload_id", UrlEscapers.urlFragmentEscaper().escape(uploadId).replace("+", "%2B"));
+        this.updateQueryParam("upload_id", uploadId);
+
     }
 
 
