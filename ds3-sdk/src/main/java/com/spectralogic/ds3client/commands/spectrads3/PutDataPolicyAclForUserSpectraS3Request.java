@@ -36,8 +36,10 @@ public class PutDataPolicyAclForUserSpectraS3Request extends AbstractRequest {
         this.dataPolicyId = dataPolicyId.toString();
         this.userId = userId.toString();
         
-        this.getQueryParams().put("data_policy_id", dataPolicyId.toString());
-        this.getQueryParams().put("user_id", userId.toString());
+        this.updateQueryParam("data_policy_id", dataPolicyId);
+
+        this.updateQueryParam("user_id", userId);
+
     }
 
     
@@ -45,8 +47,10 @@ public class PutDataPolicyAclForUserSpectraS3Request extends AbstractRequest {
         this.dataPolicyId = dataPolicyId;
         this.userId = userId;
         
-        this.getQueryParams().put("data_policy_id", UrlEscapers.urlFragmentEscaper().escape(dataPolicyId).replace("+", "%2B"));
-        this.getQueryParams().put("user_id", UrlEscapers.urlFragmentEscaper().escape(userId).replace("+", "%2B"));
+        this.updateQueryParam("data_policy_id", dataPolicyId);
+
+        this.updateQueryParam("user_id", userId);
+
     }
 
 

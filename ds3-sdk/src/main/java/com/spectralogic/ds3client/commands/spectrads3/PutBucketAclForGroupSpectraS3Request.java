@@ -40,9 +40,12 @@ public class PutBucketAclForGroupSpectraS3Request extends AbstractRequest {
         this.groupId = groupId.toString();
         this.permission = permission;
         
-        this.getQueryParams().put("bucket_id", bucketId);
-        this.getQueryParams().put("group_id", groupId.toString());
-        this.getQueryParams().put("permission", permission.toString());
+        this.updateQueryParam("bucket_id", bucketId);
+
+        this.updateQueryParam("group_id", groupId);
+
+        this.updateQueryParam("permission", permission);
+
     }
 
     
@@ -51,9 +54,12 @@ public class PutBucketAclForGroupSpectraS3Request extends AbstractRequest {
         this.groupId = groupId;
         this.permission = permission;
         
-        this.getQueryParams().put("bucket_id", bucketId);
-        this.getQueryParams().put("group_id", UrlEscapers.urlFragmentEscaper().escape(groupId).replace("+", "%2B"));
-        this.getQueryParams().put("permission", permission.toString());
+        this.updateQueryParam("bucket_id", bucketId);
+
+        this.updateQueryParam("group_id", groupId);
+
+        this.updateQueryParam("permission", permission);
+
     }
 
 

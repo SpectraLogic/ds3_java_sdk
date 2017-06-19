@@ -32,7 +32,8 @@ public class PutGroupSpectraS3Request extends AbstractRequest {
     public PutGroupSpectraS3Request(final String name) {
         this.name = name;
         
-        this.getQueryParams().put("name", UrlEscapers.urlFragmentEscaper().escape(name).replace("+", "%2B"));
+        this.updateQueryParam("name", name);
+
     }
 
 

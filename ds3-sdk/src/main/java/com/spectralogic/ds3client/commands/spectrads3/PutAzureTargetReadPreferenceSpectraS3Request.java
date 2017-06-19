@@ -40,9 +40,12 @@ public class PutAzureTargetReadPreferenceSpectraS3Request extends AbstractReques
         this.readPreference = readPreference;
         this.targetId = targetId.toString();
         
-        this.getQueryParams().put("bucket_id", bucketId);
-        this.getQueryParams().put("read_preference", readPreference.toString());
-        this.getQueryParams().put("target_id", targetId.toString());
+        this.updateQueryParam("bucket_id", bucketId);
+
+        this.updateQueryParam("read_preference", readPreference);
+
+        this.updateQueryParam("target_id", targetId);
+
     }
 
     
@@ -51,9 +54,12 @@ public class PutAzureTargetReadPreferenceSpectraS3Request extends AbstractReques
         this.readPreference = readPreference;
         this.targetId = targetId;
         
-        this.getQueryParams().put("bucket_id", bucketId);
-        this.getQueryParams().put("read_preference", readPreference.toString());
-        this.getQueryParams().put("target_id", UrlEscapers.urlFragmentEscaper().escape(targetId).replace("+", "%2B"));
+        this.updateQueryParam("bucket_id", bucketId);
+
+        this.updateQueryParam("read_preference", readPreference);
+
+        this.updateQueryParam("target_id", targetId);
+
     }
 
 

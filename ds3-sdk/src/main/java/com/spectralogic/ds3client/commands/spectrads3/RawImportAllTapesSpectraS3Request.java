@@ -40,7 +40,8 @@ public class RawImportAllTapesSpectraS3Request extends AbstractRequest {
         
         this.getQueryParams().put("operation", "import");
 
-        this.getQueryParams().put("bucket_id", bucketId);
+        this.updateQueryParam("bucket_id", bucketId);
+
     }
 
     public RawImportAllTapesSpectraS3Request withStorageDomainId(final UUID storageDomainId) {

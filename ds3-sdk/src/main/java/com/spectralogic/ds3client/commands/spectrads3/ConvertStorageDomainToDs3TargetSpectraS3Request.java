@@ -36,7 +36,8 @@ public class ConvertStorageDomainToDs3TargetSpectraS3Request extends AbstractReq
         this.storageDomain = storageDomain;
         this.convertToDs3Target = convertToDs3Target.toString();
         
-        this.getQueryParams().put("convert_to_ds3_target", convertToDs3Target.toString());
+        this.updateQueryParam("convert_to_ds3_target", convertToDs3Target);
+
     }
 
     
@@ -44,7 +45,8 @@ public class ConvertStorageDomainToDs3TargetSpectraS3Request extends AbstractReq
         this.storageDomain = storageDomain;
         this.convertToDs3Target = convertToDs3Target;
         
-        this.getQueryParams().put("convert_to_ds3_target", UrlEscapers.urlFragmentEscaper().escape(convertToDs3Target).replace("+", "%2B"));
+        this.updateQueryParam("convert_to_ds3_target", convertToDs3Target);
+
     }
 
 

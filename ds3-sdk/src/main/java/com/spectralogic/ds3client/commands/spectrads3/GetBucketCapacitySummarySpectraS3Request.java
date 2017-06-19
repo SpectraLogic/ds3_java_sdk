@@ -51,8 +51,10 @@ public class GetBucketCapacitySummarySpectraS3Request extends AbstractRequest {
         this.bucketId = bucketId;
         this.storageDomainId = storageDomainId.toString();
         
-        this.getQueryParams().put("bucket_id", bucketId);
-        this.getQueryParams().put("storage_domain_id", storageDomainId.toString());
+        this.updateQueryParam("bucket_id", bucketId);
+
+        this.updateQueryParam("storage_domain_id", storageDomainId);
+
     }
 
     
@@ -60,8 +62,10 @@ public class GetBucketCapacitySummarySpectraS3Request extends AbstractRequest {
         this.bucketId = bucketId;
         this.storageDomainId = storageDomainId;
         
-        this.getQueryParams().put("bucket_id", bucketId);
-        this.getQueryParams().put("storage_domain_id", UrlEscapers.urlFragmentEscaper().escape(storageDomainId).replace("+", "%2B"));
+        this.updateQueryParam("bucket_id", bucketId);
+
+        this.updateQueryParam("storage_domain_id", storageDomainId);
+
     }
 
     public GetBucketCapacitySummarySpectraS3Request withPoolHealth(final PoolHealth poolHealth) {

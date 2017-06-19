@@ -37,8 +37,10 @@ public class PutGlobalBucketAclForUserSpectraS3Request extends AbstractRequest {
         this.permission = permission;
         this.userId = userId.toString();
         
-        this.getQueryParams().put("permission", permission.toString());
-        this.getQueryParams().put("user_id", userId.toString());
+        this.updateQueryParam("permission", permission);
+
+        this.updateQueryParam("user_id", userId);
+
     }
 
     
@@ -46,8 +48,10 @@ public class PutGlobalBucketAclForUserSpectraS3Request extends AbstractRequest {
         this.permission = permission;
         this.userId = userId;
         
-        this.getQueryParams().put("permission", permission.toString());
-        this.getQueryParams().put("user_id", UrlEscapers.urlFragmentEscaper().escape(userId).replace("+", "%2B"));
+        this.updateQueryParam("permission", permission);
+
+        this.updateQueryParam("user_id", userId);
+
     }
 
 

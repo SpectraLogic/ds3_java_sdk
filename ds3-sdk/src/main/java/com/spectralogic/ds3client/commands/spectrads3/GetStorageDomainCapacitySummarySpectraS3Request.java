@@ -48,14 +48,16 @@ public class GetStorageDomainCapacitySummarySpectraS3Request extends AbstractReq
     public GetStorageDomainCapacitySummarySpectraS3Request(final UUID storageDomainId) {
         this.storageDomainId = storageDomainId.toString();
         
-        this.getQueryParams().put("storage_domain_id", storageDomainId.toString());
+        this.updateQueryParam("storage_domain_id", storageDomainId);
+
     }
 
     
     public GetStorageDomainCapacitySummarySpectraS3Request(final String storageDomainId) {
         this.storageDomainId = storageDomainId;
         
-        this.getQueryParams().put("storage_domain_id", UrlEscapers.urlFragmentEscaper().escape(storageDomainId).replace("+", "%2B"));
+        this.updateQueryParam("storage_domain_id", storageDomainId);
+
     }
 
     public GetStorageDomainCapacitySummarySpectraS3Request withPoolHealth(final PoolHealth poolHealth) {

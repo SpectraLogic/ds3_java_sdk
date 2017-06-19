@@ -71,9 +71,12 @@ public class RegisterS3TargetSpectraS3Request extends AbstractRequest {
         this.name = name;
         this.secretKey = secretKey;
         
-        this.getQueryParams().put("access_key", UrlEscapers.urlFragmentEscaper().escape(accessKey).replace("+", "%2B"));
-        this.getQueryParams().put("name", UrlEscapers.urlFragmentEscaper().escape(name).replace("+", "%2B"));
-        this.getQueryParams().put("secret_key", UrlEscapers.urlFragmentEscaper().escape(secretKey).replace("+", "%2B"));
+        this.updateQueryParam("access_key", accessKey);
+
+        this.updateQueryParam("name", name);
+
+        this.updateQueryParam("secret_key", secretKey);
+
     }
 
     public RegisterS3TargetSpectraS3Request withAutoVerifyFrequencyInDays(final Integer autoVerifyFrequencyInDays) {

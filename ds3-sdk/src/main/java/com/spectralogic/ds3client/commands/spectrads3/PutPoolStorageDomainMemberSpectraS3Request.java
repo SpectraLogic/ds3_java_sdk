@@ -39,8 +39,10 @@ public class PutPoolStorageDomainMemberSpectraS3Request extends AbstractRequest 
         this.poolPartitionId = poolPartitionId.toString();
         this.storageDomainId = storageDomainId.toString();
         
-        this.getQueryParams().put("pool_partition_id", poolPartitionId.toString());
-        this.getQueryParams().put("storage_domain_id", storageDomainId.toString());
+        this.updateQueryParam("pool_partition_id", poolPartitionId);
+
+        this.updateQueryParam("storage_domain_id", storageDomainId);
+
     }
 
     
@@ -48,8 +50,10 @@ public class PutPoolStorageDomainMemberSpectraS3Request extends AbstractRequest 
         this.poolPartitionId = poolPartitionId;
         this.storageDomainId = storageDomainId;
         
-        this.getQueryParams().put("pool_partition_id", UrlEscapers.urlFragmentEscaper().escape(poolPartitionId).replace("+", "%2B"));
-        this.getQueryParams().put("storage_domain_id", UrlEscapers.urlFragmentEscaper().escape(storageDomainId).replace("+", "%2B"));
+        this.updateQueryParam("pool_partition_id", poolPartitionId);
+
+        this.updateQueryParam("storage_domain_id", storageDomainId);
+
     }
 
     public PutPoolStorageDomainMemberSpectraS3Request withWritePreference(final WritePreferenceLevel writePreference) {

@@ -32,7 +32,8 @@ public class ModifyAllS3TargetsSpectraS3Request extends AbstractRequest {
     public ModifyAllS3TargetsSpectraS3Request(final Quiesced quiesced) {
         this.quiesced = quiesced;
         
-        this.getQueryParams().put("quiesced", quiesced.toString());
+        this.updateQueryParam("quiesced", quiesced);
+
     }
 
 

@@ -37,14 +37,16 @@ public class GetJobChunksReadyForClientProcessingSpectraS3Request extends Abstra
     public GetJobChunksReadyForClientProcessingSpectraS3Request(final UUID job) {
         this.job = job.toString();
         
-        this.getQueryParams().put("job", job.toString());
+        this.updateQueryParam("job", job);
+
     }
 
     
     public GetJobChunksReadyForClientProcessingSpectraS3Request(final String job) {
         this.job = job;
         
-        this.getQueryParams().put("job", UrlEscapers.urlFragmentEscaper().escape(job).replace("+", "%2B"));
+        this.updateQueryParam("job", job);
+
     }
 
     public GetJobChunksReadyForClientProcessingSpectraS3Request withJobChunk(final UUID jobChunk) {

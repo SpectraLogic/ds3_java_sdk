@@ -68,8 +68,10 @@ public class GetObjectRequest extends AbstractRequest {
         this.offset = offset;
         this.channel = channel;
         
-        this.getQueryParams().put("job", job.toString());
-        this.getQueryParams().put("offset", Long.toString(offset));
+        this.updateQueryParam("job", job);
+
+        this.updateQueryParam("offset", offset);
+
 
     }
 
@@ -81,8 +83,10 @@ public class GetObjectRequest extends AbstractRequest {
         this.offset = offset;
         this.channel = channel;
         
-        this.getQueryParams().put("job", UrlEscapers.urlFragmentEscaper().escape(job).replace("+", "%2B"));
-        this.getQueryParams().put("offset", Long.toString(offset));
+        this.updateQueryParam("job", job);
+
+        this.updateQueryParam("offset", offset);
+
 
     }
 
@@ -94,8 +98,10 @@ public class GetObjectRequest extends AbstractRequest {
         this.offset = offset;
         this.channel = Channels.newChannel(stream);
         
-        this.getQueryParams().put("job", job.toString());
-        this.getQueryParams().put("offset", Long.toString(offset));
+        this.updateQueryParam("job", job);
+
+        this.updateQueryParam("offset", offset);
+
 
     }
 
@@ -107,8 +113,10 @@ public class GetObjectRequest extends AbstractRequest {
         this.offset = offset;
         this.channel = Channels.newChannel(stream);
         
-        this.getQueryParams().put("job", UrlEscapers.urlFragmentEscaper().escape(job).replace("+", "%2B"));
-        this.getQueryParams().put("offset", Long.toString(offset));
+        this.updateQueryParam("job", job);
+
+        this.updateQueryParam("offset", offset);
+
 
     }
 

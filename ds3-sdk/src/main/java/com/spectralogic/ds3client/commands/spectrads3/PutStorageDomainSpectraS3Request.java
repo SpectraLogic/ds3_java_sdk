@@ -61,7 +61,8 @@ public class PutStorageDomainSpectraS3Request extends AbstractRequest {
     public PutStorageDomainSpectraS3Request(final String name) {
         this.name = name;
         
-        this.getQueryParams().put("name", UrlEscapers.urlFragmentEscaper().escape(name).replace("+", "%2B"));
+        this.updateQueryParam("name", name);
+
     }
 
     public PutStorageDomainSpectraS3Request withAutoEjectMediaFullThreshold(final Long autoEjectMediaFullThreshold) {
