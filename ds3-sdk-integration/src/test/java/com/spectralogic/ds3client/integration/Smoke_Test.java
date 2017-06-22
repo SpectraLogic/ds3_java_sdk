@@ -143,8 +143,8 @@ public class Smoke_Test {
             assertThat(response.getS3ObjectListResult().getS3Objects().size(), is(4));
             assertTrue(s3ObjectExists(response.getS3ObjectListResult().getS3Objects(), "beowulf.txt"));
 
-            assertThat(response.getPagingTruncated(), is(nullValue()));
-            assertThat(response.getPagingTotalResultCount(), is(nullValue()));
+            assertThat(response.getPagingTruncated(), is(0));
+            assertThat(response.getPagingTotalResultCount(), is(4));
         } finally {
             deleteAllContents(client,bucketName);
         }
