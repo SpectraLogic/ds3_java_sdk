@@ -33,6 +33,7 @@ import java.io.IOException;
 import java.security.SignatureException;
 import java.util.UUID;
 
+import static com.spectralogic.ds3client.integration.Util.assumeVersion3orLess;
 import static com.spectralogic.ds3client.integration.Util.deleteAllContents;
 import static com.spectralogic.ds3client.integration.test.helpers.TempStorageUtil.DEFAULT_USER;
 import static org.hamcrest.Matchers.is;
@@ -546,6 +547,7 @@ public class UsersAndGroups_Test {
 
     @Test
     public void getGroupGroupMembersWithPageStartMarkerUUID() throws IOException, SignatureException {
+        assumeVersion3orLess(client); //TODO update once 4.0 error code is no longer 410
 
         final GetGroupMembersSpectraS3Response getGroupMembersSpectraS3Response = client
                 .getGroupMembersSpectraS3(new GetGroupMembersSpectraS3Request()
@@ -556,6 +558,7 @@ public class UsersAndGroups_Test {
 
     @Test
     public void getGroupGroupMembersWithPageStartMarkerString() throws IOException, SignatureException {
+        assumeVersion3orLess(client); //TODO update once 4.0 error code is no longer 410
 
         final GetGroupMembersSpectraS3Response getGroupMembersSpectraS3Response = client
                 .getGroupMembersSpectraS3(new GetGroupMembersSpectraS3Request()
@@ -851,6 +854,8 @@ public class UsersAndGroups_Test {
 
     @Test
     public void getBucketAclsWithPageStartMarkerUUID() throws IOException, SignatureException {
+        assumeVersion3orLess(client); //TODO update once 4.0 error code is no longer 410
+
         final GetBucketAclsSpectraS3Response getBucketAclsSpectraS3Response = client
                 .getBucketAclsSpectraS3(new GetBucketAclsSpectraS3Request()
                         .withPageStartMarker(UUID.randomUUID()));
@@ -860,6 +865,8 @@ public class UsersAndGroups_Test {
 
     @Test
     public void getBucketAclsWithPageStartMarkerString() throws IOException, SignatureException {
+        assumeVersion3orLess(client); //TODO update once 4.0 error code is no longer 410
+
         final GetBucketAclsSpectraS3Response getBucketAclsSpectraS3Response = client
                 .getBucketAclsSpectraS3(new GetBucketAclsSpectraS3Request()
                         .withPageStartMarker(UUID.randomUUID().toString()));
@@ -1182,6 +1189,7 @@ public class UsersAndGroups_Test {
 
     @Test
     public void getDataPolicyAclsWithPageStartMarkerString() throws IOException, SignatureException {
+        assumeVersion3orLess(client); //TODO update once 4.0 error code is no longer 410
 
         final GetDataPolicyAclsSpectraS3Response getDataPolicyAclsSpectraS3Response = client
                 .getDataPolicyAclsSpectraS3(new GetDataPolicyAclsSpectraS3Request()
@@ -1192,6 +1200,7 @@ public class UsersAndGroups_Test {
 
     @Test
     public void getDataPolicyAclsWithPageStartMarkerUUID() throws IOException, SignatureException {
+        assumeVersion3orLess(client); //TODO update once 4.0 error code is no longer 410
 
         final GetDataPolicyAclsSpectraS3Response getDataPolicyAclsSpectraS3Response = client
                 .getDataPolicyAclsSpectraS3(new GetDataPolicyAclsSpectraS3Request()
