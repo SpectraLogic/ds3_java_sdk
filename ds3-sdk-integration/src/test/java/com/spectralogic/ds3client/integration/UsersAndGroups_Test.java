@@ -34,6 +34,7 @@ import java.security.SignatureException;
 import java.util.UUID;
 
 import static com.spectralogic.ds3client.integration.Util.deleteAllContents;
+import static com.spectralogic.ds3client.integration.test.helpers.TempStorageUtil.DEFAULT_USER;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.assertThat;
@@ -75,7 +76,7 @@ public class UsersAndGroups_Test {
         try {
             HELPERS.ensureBucketExists(BUCKET_NAME, dataPolicy);
             spectraUUID = client.getUserSpectraS3(
-                    new GetUserSpectraS3Request("spectra")).getSpectraUserResult().getId();
+                    new GetUserSpectraS3Request(DEFAULT_USER)).getSpectraUserResult().getId();
             administratorsUUID = client.getGroupSpectraS3(
                     new GetGroupSpectraS3Request("Administrators")).getGroupResult().getId();
         } catch (final Exception e) {
@@ -89,16 +90,16 @@ public class UsersAndGroups_Test {
         final GetUserSpectraS3Response getSpectraResponse = client
                 .getUserSpectraS3(new GetUserSpectraS3Request(spectraUUID));
 
-        assertThat(getSpectraResponse.getSpectraUserResult().getName(), is("spectra"));
+        assertThat(getSpectraResponse.getSpectraUserResult().getName(), is(DEFAULT_USER));
     }
 
     @Test
     public void getUserWithString() throws IOException, SignatureException {
 
         final GetUserSpectraS3Response getSpectraResponse = client
-                .getUserSpectraS3(new GetUserSpectraS3Request("spectra"));
+                .getUserSpectraS3(new GetUserSpectraS3Request(DEFAULT_USER));
 
-        assertThat(getSpectraResponse.getSpectraUserResult().getName(), is("spectra"));
+        assertThat(getSpectraResponse.getSpectraUserResult().getName(), is(DEFAULT_USER));
     }
 
     @Test
@@ -114,7 +115,7 @@ public class UsersAndGroups_Test {
     public void getUsersWithName() throws IOException, SignatureException {
 
         final GetUsersSpectraS3Response getUsersResponse = client.getUsersSpectraS3(
-                new GetUsersSpectraS3Request().withName("spectra"));
+                new GetUsersSpectraS3Request().withName(DEFAULT_USER));
 
         assertThat(getUsersResponse.getSpectraUserListResult(), is(notNullValue()));
     }
@@ -467,7 +468,7 @@ public class UsersAndGroups_Test {
 
         final GetGroupMembersSpectraS3Response getGroupMembersSpectraS3Response = client
                 .getGroupMembersSpectraS3(new GetGroupMembersSpectraS3Request()
-                        .withMemberUserId("spectra"));
+                        .withMemberUserId(DEFAULT_USER));
 
         assertThat(getGroupMembersSpectraS3Response.getGroupMemberListResult(), is(notNullValue()));
     }
@@ -612,7 +613,7 @@ public class UsersAndGroups_Test {
                     new PutGroupSpectraS3Request("test_group"));
 
             putUserGroupMemberSpectraS3Response = client
-                    .putUserGroupMemberSpectraS3(new PutUserGroupMemberSpectraS3Request("test_group", "spectra"));
+                    .putUserGroupMemberSpectraS3(new PutUserGroupMemberSpectraS3Request("test_group", DEFAULT_USER));
 
             assertThat(putUserGroupMemberSpectraS3Response.getGroupMemberResult(), is(notNullValue()));
 
@@ -688,7 +689,7 @@ public class UsersAndGroups_Test {
         try {
             putGlobalBucketAclForUserSpectraS3Response = client.putGlobalBucketAclForUserSpectraS3(
                     new PutGlobalBucketAclForUserSpectraS3Request(BucketAclPermission.DELETE,
-                            "spectra"));
+                            DEFAULT_USER));
 
             assertThat(putGlobalBucketAclForUserSpectraS3Response.getBucketAclResult(), is(notNullValue()));
 
@@ -789,7 +790,7 @@ public class UsersAndGroups_Test {
     @Test
     public void getBucketAclsWithUserIDString() throws IOException, SignatureException {
         final GetBucketAclsSpectraS3Response getBucketAclsSpectraS3Response = client
-                .getBucketAclsSpectraS3(new GetBucketAclsSpectraS3Request().withUserId("spectra"));
+                .getBucketAclsSpectraS3(new GetBucketAclsSpectraS3Request().withUserId(DEFAULT_USER));
 
         assertThat(getBucketAclsSpectraS3Response.getBucketAclListResult(), is(notNullValue()));
     }
@@ -912,7 +913,7 @@ public class UsersAndGroups_Test {
         PutGlobalDataPolicyAclForUserSpectraS3Response putGlobalDataPolicyAclForUserSpectraS3Response = null;
         try {
             putGlobalDataPolicyAclForUserSpectraS3Response = client.putGlobalDataPolicyAclForUserSpectraS3(
-                    new PutGlobalDataPolicyAclForUserSpectraS3Request("spectra"));
+                    new PutGlobalDataPolicyAclForUserSpectraS3Request(DEFAULT_USER));
 
             assertThat(putGlobalDataPolicyAclForUserSpectraS3Response.getDataPolicyAclResult(), is(notNullValue()));
 
@@ -971,7 +972,7 @@ public class UsersAndGroups_Test {
                 = null;
         try {
             putGlobalDataPolicyAclForUserSpectraS3Response = client.putGlobalDataPolicyAclForUserSpectraS3(
-                    new PutGlobalDataPolicyAclForUserSpectraS3Request("spectra"));
+                    new PutGlobalDataPolicyAclForUserSpectraS3Request(DEFAULT_USER));
 
             final DeleteDataPolicyAclSpectraS3Response deleteDataPolicyAclSpectraS3Response = client
                     .deleteDataPolicyAclSpectraS3(new DeleteDataPolicyAclSpectraS3Request(
@@ -998,7 +999,7 @@ public class UsersAndGroups_Test {
         try {
             putGlobalDataPolicyAclForUserSpectraS3Response = client
                     .putGlobalDataPolicyAclForUserSpectraS3(
-                    new PutGlobalDataPolicyAclForUserSpectraS3Request("spectra"));
+                    new PutGlobalDataPolicyAclForUserSpectraS3Request(DEFAULT_USER));
 
             final GetDataPolicyAclSpectraS3Response getDataPolicyAclSpectraS3Response = client
                     .getDataPolicyAclSpectraS3(new GetDataPolicyAclSpectraS3Request(
@@ -1114,7 +1115,7 @@ public class UsersAndGroups_Test {
 
         final GetDataPolicyAclsSpectraS3Response getDataPolicyAclsSpectraS3Response = client
                 .getDataPolicyAclsSpectraS3(new GetDataPolicyAclsSpectraS3Request()
-                        .withUserId("spectra"));
+                        .withUserId(DEFAULT_USER));
 
         assertThat(getDataPolicyAclsSpectraS3Response.getDataPolicyAclListResult(), is(notNullValue()));
     }
