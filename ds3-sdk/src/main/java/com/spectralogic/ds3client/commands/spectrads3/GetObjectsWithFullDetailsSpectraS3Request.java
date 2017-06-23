@@ -28,8 +28,6 @@ public class GetObjectsWithFullDetailsSpectraS3Request extends AbstractPaginatio
     
     private String bucketId;
 
-    private String folder;
-
     private boolean includePhysicalPlacement;
 
     private boolean lastPage;
@@ -59,13 +57,6 @@ public class GetObjectsWithFullDetailsSpectraS3Request extends AbstractPaginatio
     public GetObjectsWithFullDetailsSpectraS3Request withBucketId(final String bucketId) {
         this.bucketId = bucketId;
         this.updateQueryParam("bucket_id", bucketId);
-        return this;
-    }
-
-
-    public GetObjectsWithFullDetailsSpectraS3Request withFolder(final String folder) {
-        this.folder = folder;
-        this.updateQueryParam("folder", folder);
         return this;
     }
 
@@ -161,11 +152,6 @@ public class GetObjectsWithFullDetailsSpectraS3Request extends AbstractPaginatio
     
     public String getBucketId() {
         return this.bucketId;
-    }
-
-
-    public String getFolder() {
-        return this.folder;
     }
 
 

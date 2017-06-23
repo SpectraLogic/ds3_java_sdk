@@ -18,6 +18,7 @@ package com.spectralogic.ds3client.models;
 
 public enum TargetFailureType {
     IMPORT_FAILED,
+    IMPORT_INCOMPLETE,
     NOT_ONLINE,
     WRITE_FAILED,
     WRITE_INITIATE_FAILED,

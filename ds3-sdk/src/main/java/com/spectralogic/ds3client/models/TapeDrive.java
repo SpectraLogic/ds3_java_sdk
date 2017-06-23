@@ -47,6 +47,9 @@ public class TapeDrive {
     @JsonProperty("PartitionId")
     private UUID partitionId;
 
+    @JsonProperty("Quiesced")
+    private Quiesced quiesced;
+
     @JsonProperty("SerialNumber")
     private String serialNumber;
 
@@ -126,6 +129,15 @@ public class TapeDrive {
 
     public void setPartitionId(final UUID partitionId) {
         this.partitionId = partitionId;
+    }
+
+
+    public Quiesced getQuiesced() {
+        return this.quiesced;
+    }
+
+    public void setQuiesced(final Quiesced quiesced) {
+        this.quiesced = quiesced;
     }
 
 

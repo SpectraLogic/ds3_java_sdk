@@ -21,6 +21,7 @@ public enum TapeDriveType {
     LTO5,
     LTO6,
     LTO7,
+    LTO8,
     TS1140,
     TS1150
 }

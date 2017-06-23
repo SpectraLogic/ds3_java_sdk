@@ -494,6 +494,10 @@ public class Ds3ClientImpl implements Ds3Client {
         return new ClearAllCompletedJobsSpectraS3ResponseParser().response(this.netClient.getResponse(request));
     }
     @Override
+    public CloseAggregatingJobSpectraS3Response closeAggregatingJobSpectraS3(final CloseAggregatingJobSpectraS3Request request) throws IOException {
+        return new CloseAggregatingJobSpectraS3ResponseParser().response(this.netClient.getResponse(request));
+    }
+    @Override
     public GetBulkJobSpectraS3Response getBulkJobSpectraS3(final GetBulkJobSpectraS3Request request) throws IOException {
         return new GetBulkJobSpectraS3ResponseParser().response(this.netClient.getResponse(request));
     }
@@ -1224,6 +1228,10 @@ public class Ds3ClientImpl implements Ds3Client {
     @Override
     public ModifyAllTapePartitionsSpectraS3Response modifyAllTapePartitionsSpectraS3(final ModifyAllTapePartitionsSpectraS3Request request) throws IOException {
         return new ModifyAllTapePartitionsSpectraS3ResponseParser().response(this.netClient.getResponse(request));
+    }
+    @Override
+    public ModifyTapeDriveSpectraS3Response modifyTapeDriveSpectraS3(final ModifyTapeDriveSpectraS3Request request) throws IOException {
+        return new ModifyTapeDriveSpectraS3ResponseParser().response(this.netClient.getResponse(request));
     }
     @Override
     public ModifyTapePartitionSpectraS3Response modifyTapePartitionSpectraS3(final ModifyTapePartitionSpectraS3Request request) throws IOException {

@@ -20,6 +20,7 @@ public enum TapeType {
     LTO5,
     LTO6,
     LTO7,
+    LTO8,
     LTO_CLEANING_TAPE,
     TS_JC,
     TS_JY,

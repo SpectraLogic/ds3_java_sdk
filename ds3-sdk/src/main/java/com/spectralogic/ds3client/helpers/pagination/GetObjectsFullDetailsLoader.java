@@ -28,9 +28,9 @@ public class GetObjectsFullDetailsLoader implements LazyIterable.LazyLoader<Deta
 
     private final SpectraS3PaginationLoader<DetailedS3Object, GetObjectsWithFullDetailsSpectraS3Request, GetObjectsWithFullDetailsSpectraS3Response> paginator;
 
-    public GetObjectsFullDetailsLoader(final Ds3Client client, final String bucket, final String folder, final boolean includePhysicalDetails, final int pageLength, final int retryCount) {
+    public GetObjectsFullDetailsLoader(final Ds3Client client, final String bucket, final boolean includePhysicalDetails, final int pageLength, final int retryCount) {
         paginator = new SpectraS3PaginationLoader<>(
-                new GetObjectsFullDetailsPaginatingCommand(client, bucket, folder, includePhysicalDetails),
+                new GetObjectsFullDetailsPaginatingCommand(client, bucket, includePhysicalDetails),
                 pageLength,
                 retryCount);
     }
