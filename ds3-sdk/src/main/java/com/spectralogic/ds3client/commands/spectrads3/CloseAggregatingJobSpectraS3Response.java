@@ -14,20 +14,23 @@
  */
 
 // This code is auto-generated, do not modify
-package com.spectralogic.ds3client.models;
+package com.spectralogic.ds3client.commands.spectrads3;
 
-public enum PoolFailureType {
-    BLOB_READ_FAILED,
-    DATA_CHECKPOINT_FAILURE,
-    DATA_CHECKPOINT_MISSING,
-    FORMAT_FAILED,
-    IMPORT_FAILED,
-    IMPORT_INCOMPLETE,
-    IMPORT_FAILED_DUE_TO_TAKE_OWNERSHIP_FAILURE,
-    IMPORT_FAILED_DUE_TO_DATA_INTEGRITY,
-    INSPECT_FAILED,
-    QUIESCED,
-    READ_FAILED,
-    VERIFY_FAILED,
-    WRITE_FAILED
+import com.spectralogic.ds3client.models.MasterObjectList;
+import com.spectralogic.ds3client.models.ChecksumType;
+import com.spectralogic.ds3client.commands.interfaces.AbstractResponse;
+
+public class CloseAggregatingJobSpectraS3Response extends AbstractResponse {
+    
+    private final MasterObjectList masterObjectListResult;
+
+    public CloseAggregatingJobSpectraS3Response(final MasterObjectList masterObjectListResult, final String checksum, final ChecksumType.Type checksumType) {
+        super(checksum, checksumType);
+        this.masterObjectListResult = masterObjectListResult;
+    }
+
+    public MasterObjectList getMasterObjectListResult() {
+        return this.masterObjectListResult;
+    }
+
 }

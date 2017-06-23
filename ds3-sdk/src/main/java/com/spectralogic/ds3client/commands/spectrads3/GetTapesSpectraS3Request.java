@@ -62,6 +62,8 @@ public class GetTapesSpectraS3Request extends AbstractPaginationRequest {
 
     private String serialNumber;
 
+    private String sortBy;
+
     private TapeState state;
 
     private String storageDomainId;
@@ -209,6 +211,13 @@ public class GetTapesSpectraS3Request extends AbstractPaginationRequest {
     }
 
 
+    public GetTapesSpectraS3Request withSortBy(final String sortBy) {
+        this.sortBy = sortBy;
+        this.updateQueryParam("sort_by", sortBy);
+        return this;
+    }
+
+
     public GetTapesSpectraS3Request withState(final TapeState state) {
         this.state = state;
         this.updateQueryParam("state", state);
@@ -339,6 +348,11 @@ public class GetTapesSpectraS3Request extends AbstractPaginationRequest {
 
     public String getSerialNumber() {
         return this.serialNumber;
+    }
+
+
+    public String getSortBy() {
+        return this.sortBy;
     }
 
 
