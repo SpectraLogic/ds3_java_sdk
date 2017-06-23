@@ -88,7 +88,7 @@ public class PutBulkJobSpectraS3Request extends BulkRequest {
 
 
     public PutBulkJobSpectraS3Request withMaxUploadSize(final long maxUploadSize) {
-        if (maxUploadSize > MIN_UPLOAD_SIZE_IN_BYTES) {
+        if (maxUploadSize >= MIN_UPLOAD_SIZE_IN_BYTES) {
             this.getQueryParams().put("max_upload_size", Long.toString(maxUploadSize));
         } else {
             this.getQueryParams().put("max_upload_size", MAX_UPLOAD_SIZE_IN_BYTES);
