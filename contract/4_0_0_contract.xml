@@ -2640,6 +2640,23 @@
                 </ResponseCodes>
                 <Version>1.C079F9483A04E55B04DBB93A82435427</Version>
             </RequestHandler>
+            <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.job.CloseAggregatingJobRequestHandler">
+                <Request Action="MODIFY" HttpVerb="PUT" IncludeIdInPath="true" Resource="JOB" ResourceType="NON_SINGLETON">
+                    <OptionalQueryParams/>
+                    <RequiredQueryParams>
+                        <Param Name="CloseAggregatingJob" Type="void"/>
+                    </RequiredQueryParams>
+                </Request>
+                <ResponseCodes>
+                    <ResponseCode>
+                        <Code>200</Code>
+                        <ResponseTypes>
+                            <ResponseType Type="com.spectralogic.s3.server.domain.JobWithChunksApiBean"/>
+                        </ResponseTypes>
+                    </ResponseCode>
+                </ResponseCodes>
+                <Version>1.1212DC6708EBC50394B744582FAA65B4</Version>
+            </RequestHandler>
             <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.job.CreateGetJobRequestHandler">
                 <Request Action="MODIFY" HttpVerb="PUT" IncludeIdInPath="true" Operation="START_BULK_GET" Resource="BUCKET" ResourceType="NON_SINGLETON">
                     <OptionalQueryParams>
@@ -4425,7 +4442,6 @@
                 <Request Action="LIST" HttpVerb="GET" IncludeIdInPath="false" Resource="OBJECT" ResourceType="NON_SINGLETON">
                     <OptionalQueryParams>
                         <Param Name="BucketId" Type="java.util.UUID"/>
-                        <Param Name="Folder" Type="java.lang.String"/>
                         <Param Name="LastPage" Type="void"/>
                         <Param Name="Latest" Type="boolean"/>
                         <Param Name="Name" Type="java.lang.String"/>
@@ -4457,13 +4473,12 @@
                         </ResponseTypes>
                     </ResponseCode>
                 </ResponseCodes>
-                <Version>1.F5177563B1D7F1A4A055D706B82C6734</Version>
+                <Version>1.6B1C8916BB856B9EEF24DE4CB561989B</Version>
             </RequestHandler>
             <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.object.GetObjectsWithFullDetailsRequestHandler">
                 <Request Action="LIST" HttpVerb="GET" IncludeIdInPath="false" Resource="OBJECT" ResourceType="NON_SINGLETON">
                     <OptionalQueryParams>
                         <Param Name="BucketId" Type="java.util.UUID"/>
-                        <Param Name="Folder" Type="java.lang.String"/>
                         <Param Name="IncludePhysicalPlacement" Type="void"/>
                         <Param Name="LastPage" Type="void"/>
                         <Param Name="Latest" Type="boolean"/>
@@ -4486,7 +4501,7 @@
                         </ResponseTypes>
                     </ResponseCode>
                 </ResponseCodes>
-                <Version>1.B8DE45F9011916BD826DFA339DD3646B</Version>
+                <Version>1.1F6F3DD14D68AD328398FA0C8C1BA523</Version>
             </RequestHandler>
             <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.object.GetPhysicalPlacementForObjectsRequestHandler">
                 <Request Action="MODIFY" HttpVerb="PUT" IncludeIdInPath="true" Operation="GET_PHYSICAL_PLACEMENT" Resource="BUCKET" ResourceType="NON_SINGLETON">
@@ -6337,6 +6352,7 @@
                         <Param Name="PartitionId" Type="java.util.UUID"/>
                         <Param Name="PreviousState" Type="com.spectralogic.s3.common.dao.domain.tape.TapeState"/>
                         <Param Name="SerialNumber" Type="java.lang.String"/>
+                        <Param Name="SortBy" Type="java.lang.String"/>
                         <Param Name="State" Type="com.spectralogic.s3.common.dao.domain.tape.TapeState"/>
                         <Param Name="StorageDomainId" Type="java.util.UUID"/>
                         <Param Name="Type" Type="com.spectralogic.s3.common.dao.domain.tape.TapeType"/>
@@ -6352,8 +6368,14 @@
                             <ResponseType ComponentType="com.spectralogic.s3.common.dao.domain.tape.Tape" Type="array"/>
                         </ResponseTypes>
                     </ResponseCode>
+                    <ResponseCode>
+                        <Code>500</Code>
+                        <ResponseTypes>
+                            <ResponseType Type="com.spectralogic.s3.server.domain.HttpErrorResultApiBean"/>
+                        </ResponseTypes>
+                    </ResponseCode>
                 </ResponseCodes>
-                <Version>1.4614C67BE4C4B0B22F40F86B47B40D2D</Version>
+                <Version>1.0BFC9FE27D3A590769329D70A0E2E872</Version>
             </RequestHandler>
             <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.tape.ImportAllTapesRequestHandler">
                 <Request Action="BULK_MODIFY" HttpVerb="PUT" IncludeIdInPath="false" Operation="IMPORT" Resource="TAPE" ResourceType="NON_SINGLETON">
@@ -6478,6 +6500,29 @@
                 </ResponseCodes>
                 <Version>1.AD707ECC69A1E835FADE9B7B896C7C53</Version>
             </RequestHandler>
+            <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.tape.ModifyTapeDriveRequestHandler">
+                <Request Action="MODIFY" HttpVerb="PUT" IncludeIdInPath="true" Resource="TAPE_DRIVE" ResourceType="NON_SINGLETON">
+                    <OptionalQueryParams>
+                        <Param Name="Quiesced" Type="com.spectralogic.s3.common.dao.domain.shared.Quiesced"/>
+                    </OptionalQueryParams>
+                    <RequiredQueryParams/>
+                </Request>
+                <ResponseCodes>
+                    <ResponseCode>
+                        <Code>200</Code>
+                        <ResponseTypes>
+                            <ResponseType Type="com.spectralogic.s3.common.dao.domain.tape.TapeDrive"/>
+                        </ResponseTypes>
+                    </ResponseCode>
+                    <ResponseCode>
+                        <Code>400</Code>
+                        <ResponseTypes>
+                            <ResponseType Type="com.spectralogic.s3.server.domain.HttpErrorResultApiBean"/>
+                        </ResponseTypes>
+                    </ResponseCode>
+                </ResponseCodes>
+                <Version>1.2EC7C7222330CC8A26AD23348C22DFBD</Version>
+            </RequestHandler>
             <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.tape.ModifyTapePartitionRequestHandler">
                 <Request Action="MODIFY" HttpVerb="PUT" IncludeIdInPath="true" Resource="TAPE_PARTITION" ResourceType="NON_SINGLETON">
                     <OptionalQueryParams>
@@ -6569,6 +6614,7 @@
             <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.tape.RawImportAllTapesRequestHandler">
                 <Request Action="BULK_MODIFY" HttpVerb="PUT" IncludeIdInPath="false" Operation="IMPORT" Resource="TAPE" ResourceType="NON_SINGLETON">
                     <OptionalQueryParams>
+                        <Param Name="StorageDomainId" Type="java.util.UUID"/>
                         <Param Name="TaskPriority" Type="com.spectralogic.s3.common.dao.domain.ds3.BlobStoreTaskPriority"/>
                     </OptionalQueryParams>
                     <RequiredQueryParams>
@@ -6584,11 +6630,12 @@
                         </ResponseTypes>
                     </ResponseCode>
                 </ResponseCodes>
-                <Version>1.6E171A954319F5E7A916A6A47BB1BB39</Version>
+                <Version>1.7D48EAAB19465D9008EFE5C6E3C020EA</Version>
             </RequestHandler>
             <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.tape.RawImportTapeRequestHandler">
                 <Request Action="MODIFY" HttpVerb="PUT" IncludeIdInPath="true" Operation="IMPORT" Resource="TAPE" ResourceType="NON_SINGLETON">
                     <OptionalQueryParams>
+                        <Param Name="StorageDomainId" Type="java.util.UUID"/>
                         <Param Name="TaskPriority" Type="com.spectralogic.s3.common.dao.domain.ds3.BlobStoreTaskPriority"/>
                     </OptionalQueryParams>
                     <RequiredQueryParams>
@@ -6604,7 +6651,7 @@
                         </ResponseTypes>
                     </ResponseCode>
                 </ResponseCodes>
-                <Version>1.55C29670AA54CE2E07EA9C9D31E82EAC</Version>
+                <Version>1.3669C6C2F1550E1554DB9CF129DCD965</Version>
             </RequestHandler>
             <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.tape.VerifyAllTapesRequestHandler">
                 <Request Action="BULK_MODIFY" HttpVerb="PUT" IncludeIdInPath="false" Operation="VERIFY" Resource="TAPE" ResourceType="NON_SINGLETON">
@@ -7754,6 +7801,12 @@
                             <ResponseType Type="com.spectralogic.s3.server.domain.HttpErrorResultApiBean"/>
                         </ResponseTypes>
                     </ResponseCode>
+                    <ResponseCode>
+                        <Code>409</Code>
+                        <ResponseTypes>
+                            <ResponseType Type="com.spectralogic.s3.server.domain.HttpErrorResultApiBean"/>
+                        </ResponseTypes>
+                    </ResponseCode>
                 </ResponseCodes>
                 <Version>1.0FC6240C9AA47CA11A06C45AF5EED527</Version>
             </RequestHandler>
@@ -8601,7 +8654,7 @@
                             </Annotation>
                             <Annotation Name="com.spectralogic.util.bean.lang.SortBy">
                                 <AnnotationElements>
-                                    <AnnotationElement Name="Direction" Value="ASCENDING" ValueType="com.spectralogic.util.bean.lang.SortBy$Direction"/>
+                                    <AnnotationElement Name="Direction" Value="DESCENDING" ValueType="com.spectralogic.util.bean.lang.SortBy$Direction"/>
                                     <AnnotationElement Name="Value" Value="1" ValueType="java.lang.Integer"/>
                                 </AnnotationElements>
                             </Annotation>
@@ -8614,7 +8667,7 @@
                             </Annotation>
                             <Annotation Name="com.spectralogic.util.bean.lang.SortBy">
                                 <AnnotationElements>
-                                    <AnnotationElement Name="Direction" Value="ASCENDING" ValueType="com.spectralogic.util.bean.lang.SortBy$Direction"/>
+                                    <AnnotationElement Name="Direction" Value="DESCENDING" ValueType="com.spectralogic.util.bean.lang.SortBy$Direction"/>
                                     <AnnotationElement Name="Value" Value="0" ValueType="java.lang.Integer"/>
                                 </AnnotationElements>
                             </Annotation>
@@ -8743,7 +8796,7 @@
                             </Annotation>
                             <Annotation Name="com.spectralogic.util.bean.lang.SortBy">
                                 <AnnotationElements>
-                                    <AnnotationElement Name="Direction" Value="ASCENDING" ValueType="com.spectralogic.util.bean.lang.SortBy$Direction"/>
+                                    <AnnotationElement Name="Direction" Value="DESCENDING" ValueType="com.spectralogic.util.bean.lang.SortBy$Direction"/>
                                     <AnnotationElement Name="Value" Value="1" ValueType="java.lang.Integer"/>
                                 </AnnotationElements>
                             </Annotation>
@@ -8756,7 +8809,7 @@
                             </Annotation>
                             <Annotation Name="com.spectralogic.util.bean.lang.SortBy">
                                 <AnnotationElements>
-                                    <AnnotationElement Name="Direction" Value="ASCENDING" ValueType="com.spectralogic.util.bean.lang.SortBy$Direction"/>
+                                    <AnnotationElement Name="Direction" Value="DESCENDING" ValueType="com.spectralogic.util.bean.lang.SortBy$Direction"/>
                                     <AnnotationElement Name="Value" Value="0" ValueType="java.lang.Integer"/>
                                 </AnnotationElements>
                             </Annotation>
@@ -9547,8 +9600,17 @@
                             </Annotation>
                             <Annotation Name="com.spectralogic.util.bean.lang.SortBy">
                                 <AnnotationElements>
-                                    <AnnotationElement Name="Direction" Value="ASCENDING" ValueType="com.spectralogic.util.bean.lang.SortBy$Direction"/>
+                                    <AnnotationElement Name="Direction" Value="DESCENDING" ValueType="com.spectralogic.util.bean.lang.SortBy$Direction"/>
                                     <AnnotationElement Name="Value" Value="1" ValueType="java.lang.Integer"/>
+                                </AnnotationElements>
+                            </Annotation>
+                        </Annotations>
+                    </Element>
+                    <Element Name="DeadJobCleanupAllowed" Type="boolean">
+                        <Annotations>
+                            <Annotation Name="com.spectralogic.util.bean.lang.DefaultBooleanValue">
+                                <AnnotationElements>
+                                    <AnnotationElement Name="Value" Value="true" ValueType="java.lang.Boolean"/>
                                 </AnnotationElements>
                             </Annotation>
                         </Annotations>
@@ -12239,6 +12301,11 @@
                             <Property Name="Severity" Value="ALERT" ValueType="com.spectralogic.s3.common.dao.domain.shared.Severity"/>
                         </Properties>
                     </EnumConstant>
+                    <EnumConstant Name="IMPORT_INCOMPLETE">
+                        <Properties>
+                            <Property Name="Severity" Value="WARNING" ValueType="com.spectralogic.s3.common.dao.domain.shared.Severity"/>
+                        </Properties>
+                    </EnumConstant>
                     <EnumConstant Name="IMPORT_FAILED_DUE_TO_TAKE_OWNERSHIP_FAILURE">
                         <Properties>
                             <Property Name="Severity" Value="ALERT" ValueType="com.spectralogic.s3.common.dao.domain.shared.Severity"/>
@@ -12417,6 +12484,8 @@
                     <EnumConstant Name="CRITICAL"/>
                     <EnumConstant Name="WARNING"/>
                     <EnumConstant Name="ALERT"/>
+                    <EnumConstant Name="SUCCESS"/>
+                    <EnumConstant Name="INFO"/>
                 </EnumConstants>
             </Type>
             <Type Name="com.spectralogic.s3.common.dao.domain.tape.ImportExportConfiguration">
@@ -12733,6 +12802,15 @@
             </Type>
             <Type Name="com.spectralogic.s3.common.dao.domain.tape.TapeDrive">
                 <Elements>
+                    <Element Name="CleaningRequired" Type="boolean">
+                        <Annotations>
+                            <Annotation Name="com.spectralogic.util.bean.lang.DefaultBooleanValue">
+                                <AnnotationElements>
+                                    <AnnotationElement Name="Value" Value="false" ValueType="java.lang.Boolean"/>
+                                </AnnotationElements>
+                            </Annotation>
+                        </Annotations>
+                    </Element>
                     <Element Name="ErrorMessage" Type="java.lang.String">
                         <Annotations>
                             <Annotation Name="com.spectralogic.util.bean.lang.Optional">
@@ -12759,6 +12837,13 @@
                             </Annotation>
                         </Annotations>
                     </Element>
+                    <Element Name="MfgSerialNumber" Type="java.lang.String">
+                        <Annotations>
+                            <Annotation Name="com.spectralogic.util.bean.lang.Optional">
+                                <AnnotationElements/>
+                            </Annotation>
+                        </Annotations>
+                    </Element>
                     <Element Name="PartitionId" Type="java.util.UUID">
                         <Annotations>
                             <Annotation Name="com.spectralogic.util.db.lang.CascadeDelete">
@@ -12769,6 +12854,15 @@
                             <Annotation Name="com.spectralogic.util.db.lang.References">
                                 <AnnotationElements>
                                     <AnnotationElement Name="Value" Value="com.spectralogic.s3.common.dao.domain.tape.TapePartition" ValueType="java.lang.Class"/>
+                                </AnnotationElements>
+                            </Annotation>
+                        </Annotations>
+                    </Element>
+                    <Element Name="Quiesced" Type="com.spectralogic.s3.common.dao.domain.shared.Quiesced">
+                        <Annotations>
+                            <Annotation Name="com.spectralogic.util.bean.lang.DefaultEnumValue">
+                                <AnnotationElements>
+                                    <AnnotationElement Name="Value" Value="NO" ValueType="java.lang.String"/>
                                 </AnnotationElements>
                             </Annotation>
                         </Annotations>
@@ -12863,6 +12957,12 @@
                         <Properties>
                             <Property Name="CleaningTapeType" Value="LTO_CLEANING_TAPE" ValueType="com.spectralogic.s3.common.dao.domain.tape.TapeType"/>
                             <Property Name="SupportedTapeTypes" Value="[FORBIDDEN, LTO5, LTO6, LTO7, LTO_CLEANING_TAPE, UNKNOWN]" ValueType="array"/>
+                        </Properties>
+                    </EnumConstant>
+                    <EnumConstant Name="LTO8">
+                        <Properties>
+                            <Property Name="CleaningTapeType" Value="LTO_CLEANING_TAPE" ValueType="com.spectralogic.s3.common.dao.domain.tape.TapeType"/>
+                            <Property Name="SupportedTapeTypes" Value="[FORBIDDEN, LTO7, LTO8, LTO_CLEANING_TAPE, UNKNOWN]" ValueType="array"/>
                         </Properties>
                     </EnumConstant>
                     <EnumConstant Name="TS1140">
@@ -12986,7 +13086,7 @@
                     </EnumConstant>
                     <EnumConstant Name="DRIVE_CLEANED">
                         <Properties>
-                            <Property Name="Severity" Value="WARNING" ValueType="com.spectralogic.s3.common.dao.domain.shared.Severity"/>
+                            <Property Name="Severity" Value="SUCCESS" ValueType="com.spectralogic.s3.common.dao.domain.shared.Severity"/>
                         </Properties>
                     </EnumConstant>
                     <EnumConstant Name="FORMAT_FAILED">
@@ -13002,6 +13102,11 @@
                     <EnumConstant Name="IMPORT_FAILED">
                         <Properties>
                             <Property Name="Severity" Value="ALERT" ValueType="com.spectralogic.s3.common.dao.domain.shared.Severity"/>
+                        </Properties>
+                    </EnumConstant>
+                    <EnumConstant Name="IMPORT_INCOMPLETE">
+                        <Properties>
+                            <Property Name="Severity" Value="WARNING" ValueType="com.spectralogic.s3.common.dao.domain.shared.Severity"/>
                         </Properties>
                     </EnumConstant>
                     <EnumConstant Name="IMPORT_FAILED_DUE_TO_TAKE_OWNERSHIP_FAILURE">
@@ -13123,6 +13228,9 @@
                                 </AnnotationElements>
                             </Annotation>
                         </Annotations>
+                    </Element>
+                    <Element Name="SerialId" Type="java.lang.String">
+                        <Annotations/>
                     </Element>
                     <Element Name="SerialNumber" Type="java.lang.String">
                         <Annotations>
@@ -13250,6 +13358,11 @@
                     <EnumConstant Name="TAPE_DRIVE_MISSING">
                         <Properties>
                             <Property Name="Severity" Value="WARNING" ValueType="com.spectralogic.s3.common.dao.domain.shared.Severity"/>
+                        </Properties>
+                    </EnumConstant>
+                    <EnumConstant Name="TAPE_DRIVE_QUIESCED">
+                        <Properties>
+                            <Property Name="Severity" Value="INFO" ValueType="com.spectralogic.s3.common.dao.domain.shared.Severity"/>
                         </Properties>
                     </EnumConstant>
                     <EnumConstant Name="TAPE_DRIVE_TYPE_MISMATCH">
@@ -13572,6 +13685,7 @@
                     <EnumConstant Name="LTO5"/>
                     <EnumConstant Name="LTO6"/>
                     <EnumConstant Name="LTO7"/>
+                    <EnumConstant Name="LTO8"/>
                     <EnumConstant Name="LTO_CLEANING_TAPE"/>
                     <EnumConstant Name="TS_JC"/>
                     <EnumConstant Name="TS_JY"/>
@@ -13610,6 +13724,11 @@
                                     <AnnotationElement Name="Value" Value="" ValueType="java.lang.String"/>
                                 </AnnotationElements>
                             </Annotation>
+                            <Annotation Name="com.spectralogic.util.db.lang.MustMatchRegularExpression">
+                                <AnnotationElements>
+                                    <AnnotationElement Name="Value" Value="^([a-z\d]([a-z\d]|(\.(?!(\.|-)))|(-(?!\.))){0,62}){0,1}$" ValueType="java.lang.String"/>
+                                </AnnotationElements>
+                            </Annotation>
                         </Annotations>
                     </Element>
                     <Element Name="CloudBucketSuffix" Type="java.lang.String">
@@ -13617,6 +13736,11 @@
                             <Annotation Name="com.spectralogic.util.bean.lang.DefaultStringValue">
                                 <AnnotationElements>
                                     <AnnotationElement Name="Value" Value="" ValueType="java.lang.String"/>
+                                </AnnotationElements>
+                            </Annotation>
+                            <Annotation Name="com.spectralogic.util.db.lang.MustMatchRegularExpression">
+                                <AnnotationElements>
+                                    <AnnotationElement Name="Value" Value="^(([a-z\d]|(\.(?!(\.|-)))|(-(?!\.))){0,62}[a-z\d\.]){0,1}$" ValueType="java.lang.String"/>
                                 </AnnotationElements>
                             </Annotation>
                         </Annotations>
@@ -14052,6 +14176,11 @@
                                     <AnnotationElement Name="Value" Value="" ValueType="java.lang.String"/>
                                 </AnnotationElements>
                             </Annotation>
+                            <Annotation Name="com.spectralogic.util.db.lang.MustMatchRegularExpression">
+                                <AnnotationElements>
+                                    <AnnotationElement Name="Value" Value="^([a-z\d]([a-z\d]|(\.(?!(\.|-)))|(-(?!\.))){0,62}){0,1}$" ValueType="java.lang.String"/>
+                                </AnnotationElements>
+                            </Annotation>
                         </Annotations>
                     </Element>
                     <Element Name="CloudBucketSuffix" Type="java.lang.String">
@@ -14059,6 +14188,11 @@
                             <Annotation Name="com.spectralogic.util.bean.lang.DefaultStringValue">
                                 <AnnotationElements>
                                     <AnnotationElement Name="Value" Value="" ValueType="java.lang.String"/>
+                                </AnnotationElements>
+                            </Annotation>
+                            <Annotation Name="com.spectralogic.util.db.lang.MustMatchRegularExpression">
+                                <AnnotationElements>
+                                    <AnnotationElement Name="Value" Value="^(([a-z\d]|(\.(?!(\.|-)))|(-(?!\.))){0,62}[a-z\d\.]){0,1}$" ValueType="java.lang.String"/>
                                 </AnnotationElements>
                             </Annotation>
                         </Annotations>
@@ -14476,6 +14610,11 @@
                     <EnumConstant Name="IMPORT_FAILED">
                         <Properties>
                             <Property Name="Severity" Value="ALERT" ValueType="com.spectralogic.s3.common.dao.domain.shared.Severity"/>
+                        </Properties>
+                    </EnumConstant>
+                    <EnumConstant Name="IMPORT_INCOMPLETE">
+                        <Properties>
+                            <Property Name="Severity" Value="WARNING" ValueType="com.spectralogic.s3.common.dao.domain.shared.Severity"/>
                         </Properties>
                     </EnumConstant>
                     <EnumConstant Name="NOT_ONLINE">
@@ -15397,6 +15536,9 @@
                             </Annotation>
                         </Annotations>
                     </Element>
+                    <Element Name="SerialId" Type="java.lang.String">
+                        <Annotations/>
+                    </Element>
                     <Element Name="SerialNumber" Type="java.lang.String">
                         <Annotations>
                             <Annotation Name="com.spectralogic.util.bean.lang.SortBy">
@@ -15496,8 +15638,13 @@
                             </Annotation>
                         </Annotations>
                     </Element>
-                    <Element Name="EntirelyInCache" Type="boolean">
+                    <Element Name="EntirelyInCache" Type="java.lang.Boolean">
                         <Annotations>
+                            <Annotation Name="com.spectralogic.util.marshal.ExcludeFromMarshaler">
+                                <AnnotationElements>
+                                    <AnnotationElement Name="Value" Value="VALUE_IS_NULL" ValueType="com.spectralogic.util.marshal.ExcludeFromMarshaler$When"/>
+                                </AnnotationElements>
+                            </Annotation>
                             <Annotation Name="com.spectralogic.util.marshal.MarshalXmlAsAttribute">
                                 <AnnotationElements/>
                             </Annotation>
@@ -15685,8 +15832,13 @@
                             </Annotation>
                         </Annotations>
                     </Element>
-                    <Element Name="EntirelyInCache" Type="boolean">
+                    <Element Name="EntirelyInCache" Type="java.lang.Boolean">
                         <Annotations>
+                            <Annotation Name="com.spectralogic.util.marshal.ExcludeFromMarshaler">
+                                <AnnotationElements>
+                                    <AnnotationElement Name="Value" Value="VALUE_IS_NULL" ValueType="com.spectralogic.util.marshal.ExcludeFromMarshaler$When"/>
+                                </AnnotationElements>
+                            </Annotation>
                             <Annotation Name="com.spectralogic.util.marshal.MarshalXmlAsAttribute">
                                 <AnnotationElements/>
                             </Annotation>
@@ -16245,6 +16397,9 @@
                                 </AnnotationElements>
                             </Annotation>
                         </Annotations>
+                    </Element>
+                    <Element Name="SerialId" Type="java.lang.String">
+                        <Annotations/>
                     </Element>
                     <Element Name="SerialNumber" Type="java.lang.String">
                         <Annotations>
