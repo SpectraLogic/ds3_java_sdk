@@ -555,6 +555,7 @@ public class UsersAndGroups_Test {
         try {
             client.getGroupMembersSpectraS3(new GetGroupMembersSpectraS3Request()
                     .withPageStartMarker(UUID.randomUUID()));
+            fail("The above should not be found and throw exception.");
 
         } catch (final FailedRequestException e) {
             assertThat(e.getStatusCode(), is(404));
@@ -568,6 +569,7 @@ public class UsersAndGroups_Test {
         try {
             client.getGroupMembersSpectraS3(new GetGroupMembersSpectraS3Request()
                     .withPageStartMarker(UUID.randomUUID().toString()));
+            fail("The above should not be found and throw exception.");
 
         } catch (final FailedRequestException e) {
             assertThat(e.getStatusCode(), is(404));
@@ -866,6 +868,7 @@ public class UsersAndGroups_Test {
         try {
             client.getBucketAclsSpectraS3(new GetBucketAclsSpectraS3Request()
                     .withPageStartMarker(UUID.randomUUID()));
+            fail("The above should not be found and throw exception.");
 
         } catch (final FailedRequestException e) {
             assertThat(e.getStatusCode(), is(404));
@@ -879,6 +882,7 @@ public class UsersAndGroups_Test {
         try {
             client.getBucketAclsSpectraS3(new GetBucketAclsSpectraS3Request()
                     .withPageStartMarker(UUID.randomUUID().toString()));
+            fail("The above should not be found and throw exception.");
         } catch (final FailedRequestException e) {
             assertThat(e.getStatusCode(), is(404));
         }
@@ -1204,6 +1208,7 @@ public class UsersAndGroups_Test {
         try {
             client.getDataPolicyAclsSpectraS3(new GetDataPolicyAclsSpectraS3Request()
                     .withPageStartMarker(UUID.randomUUID().toString()));
+            fail("The above should not be found and throw exception.");
         } catch (final FailedRequestException e) {
             assertThat(e.getStatusCode(), is(404));
         }
@@ -1216,6 +1221,7 @@ public class UsersAndGroups_Test {
         try {
             client.getDataPolicyAclsSpectraS3(new GetDataPolicyAclsSpectraS3Request()
                     .withPageStartMarker(UUID.randomUUID()));
+            fail("The above should not be found and throw exception.");
         } catch (final FailedRequestException e) {
             assertThat(e.getStatusCode(), is(404));
         }
