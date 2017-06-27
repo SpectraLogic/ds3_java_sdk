@@ -65,10 +65,10 @@ public class Util {
         assumeThat(majorVersion, is(1));
     }
 
-    public static void assumeVersion3orLess(final Ds3Client client) throws IOException {
+    public static void assumeVersion4orHigher(final Ds3Client client) throws IOException {
         final int majorVersion = Integer.parseInt(client.getSystemInformationSpectraS3(
                 new GetSystemInformationSpectraS3Request()).getSystemInformationResult().getBuildInformation().getVersion().split("\\.")[0]);
-        assumeTrue(majorVersion <= 3);
+        assumeTrue(majorVersion >= 4);
     }
 
     public static void loadBookTestData(final Ds3Client client, final String bucketName) throws IOException, URISyntaxException {
