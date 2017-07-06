@@ -42,7 +42,7 @@ import com.spectralogic.ds3client.helpers.strategy.blobstrategy.ChunkAttemptRetr
 import com.spectralogic.ds3client.helpers.strategy.blobstrategy.ClientDefinedChunkAttemptRetryDelayBehavior;
 import com.spectralogic.ds3client.helpers.strategy.blobstrategy.ContinueForeverChunkAttemptsRetryBehavior;
 import com.spectralogic.ds3client.helpers.strategy.blobstrategy.GetSequentialBlobStrategy;
-import com.spectralogic.ds3client.helpers.strategy.blobstrategy.MasterObjectListBuilder;
+import com.spectralogic.ds3client.helpers.strategy.MasterObjectListBuilder;
 import com.spectralogic.ds3client.helpers.strategy.blobstrategy.MaxChunkAttemptsRetryBehavior;
 import com.spectralogic.ds3client.helpers.strategy.blobstrategy.PutSequentialBlobStrategy;
 import com.spectralogic.ds3client.helpers.strategy.blobstrategy.ChunkAttemptRetryBehavior;

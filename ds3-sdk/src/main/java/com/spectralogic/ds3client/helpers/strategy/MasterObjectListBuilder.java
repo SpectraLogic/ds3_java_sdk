@@ -13,11 +13,10 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3client.helpers.strategy.blobstrategy;
+package com.spectralogic.ds3client.helpers.strategy;
 
-import com.spectralogic.ds3client.helpers.strategy.ChunkFilter;
 import com.spectralogic.ds3client.models.MasterObjectList;
 
 public interface MasterObjectListBuilder {
-    MasterObjectList fromMasterObjectList(final MasterObjectList originalMasterObjectList, final ChunkFilter chunkFilter);
+    MasterObjectList fromMasterObjectList(final MasterObjectList originalMasterObjectList);
 }
