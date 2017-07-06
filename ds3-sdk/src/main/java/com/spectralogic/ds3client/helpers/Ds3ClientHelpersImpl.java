@@ -163,6 +163,10 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
         transferStrategyBuilder.withMasterObjectList(putBulkJobSpectraS3Response.getMasterObjectList())
                 .withChecksumType(options.getChecksumType());
 
+        if (options.isAggregating()) {
+            transferStrategyBuilder.withJobAggregation(objectsToWrite);
+        }
+
         return new WriteJobImpl(transferStrategyBuilder);
     }
 

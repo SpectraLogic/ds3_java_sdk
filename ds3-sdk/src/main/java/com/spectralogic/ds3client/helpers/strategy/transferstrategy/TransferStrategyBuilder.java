@@ -34,6 +34,8 @@ import com.spectralogic.ds3client.helpers.ObjectPart;
 import com.spectralogic.ds3client.helpers.events.EventRunner;
 import com.spectralogic.ds3client.helpers.events.FailureEvent;
 import com.spectralogic.ds3client.helpers.events.SameThreadEventRunner;
+import com.spectralogic.ds3client.helpers.strategy.OriginatingBlobChunkFilter;
+import com.spectralogic.ds3client.helpers.strategy.OriginatingBlobMasterObjectListBuilder;
 import com.spectralogic.ds3client.helpers.strategy.StrategyUtils;
 import com.spectralogic.ds3client.helpers.strategy.blobstrategy.BlackPearlChunkAttemptRetryDelayBehavior;
 import com.spectralogic.ds3client.helpers.strategy.blobstrategy.BlobStrategy;
@@ -354,15 +356,15 @@ public final class TransferStrategyBuilder {
             return masterObjectList;
         }
 
-        // TODO: create a new master objects list having only chunks containing blobs originally defined when the
-        // job was defined
+        Preconditions.checkNotNull(objectsInJob, "objectsInJob may not be null.");
 
-        /*
-        Preconditions.checkNotNull(masterObjectListBuilder, "masterObjectListBuilder may not be null.");
-        return masterObjectListBuilder.fromMasterObjectList(masterObjectList, );
-        */
+        if (masterObjectListBuilder == null) {
+            withMasterObjectListBuilder(new OriginatingBlobMasterObjectListBuilder(
+                    new OriginatingBlobChunkFilter(masterObjectList.getObjects(), objectsInJob)
+            ));
+        }
 
-        return masterObjectList;
+        return masterObjectListBuilder.fromMasterObjectList(masterObjectList);
     }
 
     public TransferStrategyBuilder withJobAggregation(final Iterable<Ds3Object> objectsInJob) {
