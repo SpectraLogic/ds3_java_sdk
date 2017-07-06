@@ -42,6 +42,7 @@ import com.spectralogic.ds3client.helpers.strategy.blobstrategy.ChunkAttemptRetr
 import com.spectralogic.ds3client.helpers.strategy.blobstrategy.ClientDefinedChunkAttemptRetryDelayBehavior;
 import com.spectralogic.ds3client.helpers.strategy.blobstrategy.ContinueForeverChunkAttemptsRetryBehavior;
 import com.spectralogic.ds3client.helpers.strategy.blobstrategy.GetSequentialBlobStrategy;
+import com.spectralogic.ds3client.helpers.strategy.blobstrategy.MasterObjectListBuilder;
 import com.spectralogic.ds3client.helpers.strategy.blobstrategy.MaxChunkAttemptsRetryBehavior;
 import com.spectralogic.ds3client.helpers.strategy.blobstrategy.PutSequentialBlobStrategy;
 import com.spectralogic.ds3client.helpers.strategy.blobstrategy.ChunkAttemptRetryBehavior;
@@ -56,6 +57,7 @@ import com.spectralogic.ds3client.models.BulkObject;
 import com.spectralogic.ds3client.models.ChecksumType;
 import com.spectralogic.ds3client.models.MasterObjectList;
 import com.spectralogic.ds3client.models.Objects;
+import com.spectralogic.ds3client.models.bulk.Ds3Object;
 import com.spectralogic.ds3client.models.common.Range;
 import com.spectralogic.ds3client.utils.Guard;
 import com.spectralogic.ds3client.utils.SeekableByteChannelInputStream;
@@ -139,6 +141,9 @@ public final class TransferStrategyBuilder {
     private ChunkAttemptRetryDelayBehavior chunkAttemptRetryDelayBehavior;
     private TransferBehaviorType transferBehaviorType = TransferBehaviorType.OriginalSdkTransferBehavior;
     private FailureEvent.FailureActivity failureActivity = FailureEvent.FailureActivity.PuttingObject;
+    private boolean usingJobAggregation = false;
+    private Iterable<Ds3Object> objectsInJob;
+    private MasterObjectListBuilder masterObjectListBuilder = null;
 
     /**
      * Use an instance of {@link BlobStrategy} you wish to create or retrieve blobs from a Black Pearl.  There are
@@ -341,7 +346,34 @@ public final class TransferStrategyBuilder {
     }
 
     public MasterObjectList masterObjectList() {
+        return filterChunksContainingBlobsNotOriginallyIncludedInJob();
+    }
+
+    private MasterObjectList filterChunksContainingBlobsNotOriginallyIncludedInJob() {
+        if ( ! usingJobAggregation) {
+            return masterObjectList;
+        }
+
+        // TODO: create a new master objects list having only chunks containing blobs originally defined when the
+        // job was defined
+
+        /*
+        Preconditions.checkNotNull(masterObjectListBuilder, "masterObjectListBuilder may not be null.");
+        return masterObjectListBuilder.fromMasterObjectList(masterObjectList, );
+        */
+
         return masterObjectList;
+    }
+
+    public TransferStrategyBuilder withJobAggregation(final Iterable<Ds3Object> objectsInJob) {
+        usingJobAggregation = true;
+        this.objectsInJob = objectsInJob;
+        return this;
+    }
+
+    public TransferStrategyBuilder withMasterObjectListBuilder(final MasterObjectListBuilder masterObjectListBuilder) {
+        this.masterObjectListBuilder = masterObjectListBuilder;
+        return this;
     }
 
     /**
@@ -525,7 +557,7 @@ public final class TransferStrategyBuilder {
     {
         Preconditions.checkNotNull(ds3Client, "ds3Client may not be null.");
         Preconditions.checkNotNull(eventDispatcher, "eventDispatcher may not be null.");
-        Preconditions.checkNotNull(masterObjectList, "masterObjectList may not be null.");
+        Preconditions.checkNotNull(masterObjectList(), "masterObjectList may not be null.");
         Preconditions.checkNotNull(blobStrategyMaker, "blobStrategyMaker may not be null.");
         Preconditions.checkNotNull(transferMethodMaker, "transferMethodMaker may not be null.");
         Preconditions.checkNotNull(channelStrategy, "channelStrategy may not be null");
@@ -547,7 +579,7 @@ public final class TransferStrategyBuilder {
 
     private void maybeMakeBlobStrategy(final BlobStrategyMaker blobStrategyMaker) {
         if (blobStrategy == null) {
-            blobStrategy = blobStrategyMaker.makeBlobStrategy(ds3Client, masterObjectList, eventDispatcher);
+            blobStrategy = blobStrategyMaker.makeBlobStrategy(ds3Client, masterObjectList(), eventDispatcher);
         }
     }
 
@@ -557,7 +589,7 @@ public final class TransferStrategyBuilder {
                 return new SingleThreadedTransferStrategy(blobStrategy,
                         jobState,
                         eventDispatcher,
-                        masterObjectList,
+                        masterObjectList(),
                         failureActivity)
                         .withTransferMethod(transferMethod);
 
@@ -566,7 +598,7 @@ public final class TransferStrategyBuilder {
                         jobState,
                         numConcurrentTransferThreads,
                         eventDispatcher,
-                        masterObjectList,
+                        masterObjectList(),
                         failureActivity)
                         .withTransferMethod(transferMethod);
 
@@ -662,11 +694,11 @@ public final class TransferStrategyBuilder {
             return jobState;
         }
 
-        Preconditions.checkNotNull(masterObjectList, "masterObjectList may not be null.");
+        Preconditions.checkNotNull(masterObjectList(), "masterObjectList may not be null.");
         Preconditions.checkNotNull(eventDispatcher, "eventDispatcher may not be null.");
         Preconditions.checkNotNull(eventRunner, "eventRunner may not be null.");
 
-        List<Objects> chunks = masterObjectList.getObjects();
+        List<Objects> chunks = masterObjectList().getObjects();
 
         if (chunks == null) {
             chunks = new ArrayList<>();
@@ -693,14 +725,14 @@ public final class TransferStrategyBuilder {
                     jobState,
                     numConcurrentTransferThreads,
                     eventDispatcher,
-                    masterObjectList,
+                    masterObjectList(),
                     failureActivity)
                     .withTransferMethod(transferMethod);
         } else {
             return new SingleThreadedTransferStrategy(blobStrategy,
                     jobState,
                     eventDispatcher,
-                    masterObjectList,
+                    masterObjectList(),
                     failureActivity)
                     .withTransferMethod(transferMethod);
         }
@@ -864,11 +896,11 @@ public final class TransferStrategyBuilder {
             return jobState;
         }
 
-        Preconditions.checkNotNull(masterObjectList, "masterObjectList may not be null.");
+        Preconditions.checkNotNull(masterObjectList(), "masterObjectList may not be null.");
         Preconditions.checkNotNull(eventDispatcher, "eventDispatcher may not be null.");
         Preconditions.checkNotNull(eventRunner, "eventRunner may not be null.");
 
-        final List<Objects> chunks = masterObjectList.getObjects();
+        final List<Objects> chunks = masterObjectList().getObjects();
 
         getOrMakeJobPartTrackerForGetJob(chunks);
 

@@ -81,17 +81,17 @@ public class PutSequentialBlobStrategy extends AbstractBlobStrategy {
                 });
     }
 
-    private Objects allocateChunk(final Objects filtered) throws IOException {
+    private Objects allocateChunk(final Objects chunksThatContainBlobs) throws IOException {
         Objects chunk = null;
         while (chunk == null) {
-            chunk = tryAllocateChunk(filtered);
+            chunk = tryAllocateChunk(chunksThatContainBlobs);
         }
         return chunk;
     }
 
-    private Objects tryAllocateChunk(final Objects filtered) throws IOException {
+    private Objects tryAllocateChunk(final Objects chunksThatContainBlobs) throws IOException {
         final AllocateJobChunkSpectraS3Response response =
-                client().allocateJobChunkSpectraS3(new AllocateJobChunkSpectraS3Request(filtered.getChunkId().toString()));
+                client().allocateJobChunkSpectraS3(new AllocateJobChunkSpectraS3Request(chunksThatContainBlobs.getChunkId().toString()));
 
         LOG.info("AllocatedJobChunkResponse status: {}", response.getStatus().toString());
 
