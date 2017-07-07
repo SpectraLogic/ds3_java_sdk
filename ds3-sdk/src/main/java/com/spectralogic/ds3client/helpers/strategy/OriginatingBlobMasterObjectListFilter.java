@@ -18,15 +18,15 @@ package com.spectralogic.ds3client.helpers.strategy;
 import com.google.common.collect.Lists;
 import com.spectralogic.ds3client.models.MasterObjectList;
 
-public class OriginatingBlobMasterObjectListBuilder implements MasterObjectListBuilder {
+public class OriginatingBlobMasterObjectListFilter implements MasterObjectListFilter {
     private final ChunkFilter chunkFilter;
 
-    public OriginatingBlobMasterObjectListBuilder(final ChunkFilter chunkFilter) {
+    public OriginatingBlobMasterObjectListFilter(final ChunkFilter chunkFilter) {
         this.chunkFilter = chunkFilter;
     }
 
     @Override
-    public MasterObjectList fromMasterObjectList(final MasterObjectList originalMasterObjectList) {
+    public MasterObjectList apply(final MasterObjectList originalMasterObjectList) {
         final MasterObjectList newMasterObjectList = new MasterObjectList();
 
         newMasterObjectList.setAggregating(originalMasterObjectList.getAggregating());
@@ -47,7 +47,7 @@ public class OriginatingBlobMasterObjectListBuilder implements MasterObjectListB
         newMasterObjectList.setUserId(originalMasterObjectList.getUserId());
         newMasterObjectList.setUserName(originalMasterObjectList.getUserName());
 
-        newMasterObjectList.setObjects(Lists.newArrayList(chunkFilter.apply()));
+        newMasterObjectList.setObjects(Lists.newArrayList(chunkFilter.apply(originalMasterObjectList.getObjects())));
 
         return newMasterObjectList;
     }

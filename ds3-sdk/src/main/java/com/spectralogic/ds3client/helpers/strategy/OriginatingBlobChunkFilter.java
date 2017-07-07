@@ -28,17 +28,15 @@ import java.util.Collection;
 import java.util.Set;
 
 public class OriginatingBlobChunkFilter implements ChunkFilter {
-    private final Collection<Objects> chunksFromMasterObjectList;
-    private final Iterable<Ds3Object> blobsInJobCreation;
+    private final Iterable<Ds3Object> ds3ObjectsInJobCreation;
 
-    public OriginatingBlobChunkFilter(final Collection<Objects> chunksFromMasterObjectList, final Iterable<Ds3Object> blobsInJobCreation) {
-        this.chunksFromMasterObjectList = chunksFromMasterObjectList;
-        this.blobsInJobCreation = blobsInJobCreation;
+    public OriginatingBlobChunkFilter(final Iterable<Ds3Object> ds3ObjectsInJobCreation) {
+        this.ds3ObjectsInJobCreation = ds3ObjectsInJobCreation;
     }
 
     @Override
-    public Iterable<Objects> apply() {
-        final Set<String> blobNamesFromJobCreation = FluentIterable.from(blobsInJobCreation)
+    public Iterable<Objects> apply(final Collection<Objects> chunksFromMasterObjectList) {
+        final Set<String> blobNamesFromJobCreation = FluentIterable.from(ds3ObjectsInJobCreation)
                 .transform(new Function<Ds3Object, String>() {
                     @Nullable
                     @Override

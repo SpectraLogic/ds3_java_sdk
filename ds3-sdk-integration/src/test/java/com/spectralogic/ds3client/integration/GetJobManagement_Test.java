@@ -41,6 +41,7 @@ import com.spectralogic.ds3client.helpers.WaitingForChunksListener;
 import com.spectralogic.ds3client.helpers.events.FailureEvent;
 import com.spectralogic.ds3client.helpers.events.SameThreadEventRunner;
 import com.spectralogic.ds3client.helpers.options.ReadJobOptions;
+import com.spectralogic.ds3client.helpers.strategy.NullMasterObjectListFilter;
 import com.spectralogic.ds3client.helpers.strategy.blobstrategy.BlobStrategy;
 import com.spectralogic.ds3client.helpers.strategy.blobstrategy.ChunkAttemptRetryBehavior;
 import com.spectralogic.ds3client.helpers.strategy.blobstrategy.ChunkAttemptRetryDelayBehavior;
@@ -1141,7 +1142,7 @@ public class GetJobManagement_Test {
             this.monitorable = monitorable;
 
             wrappedBlobStrategy = new GetSequentialBlobStrategy(client, masterObjectList, eventDispatcher,
-                    retryBehavior, chunkAttemptRetryDelayBehavior);
+                    retryBehavior, chunkAttemptRetryDelayBehavior, new NullMasterObjectListFilter());
         }
 
         @Override

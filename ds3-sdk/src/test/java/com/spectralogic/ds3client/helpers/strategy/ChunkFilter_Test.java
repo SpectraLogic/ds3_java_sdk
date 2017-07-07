@@ -38,8 +38,8 @@ public class ChunkFilter_Test {
 
         final Objects chunk = BlobAndChunkHelper.makeChunk(1, Arrays.asList(trixieBlob, shastaBlob, gracieBlob));
 
-        final OriginatingBlobChunkFilter originatingBlobChunkFilter = new OriginatingBlobChunkFilter(Collections.singletonList(chunk), objectsInJobCreation);
-        final Iterable<Objects> chunksWithBlobsFromJobCreation = originatingBlobChunkFilter.apply();
+        final OriginatingBlobChunkFilter originatingBlobChunkFilter = new OriginatingBlobChunkFilter(objectsInJobCreation);
+        final Iterable<Objects> chunksWithBlobsFromJobCreation = originatingBlobChunkFilter.apply(Collections.singletonList(chunk));
 
         assertEquals(1, Iterables.size(chunksWithBlobsFromJobCreation));
     }
@@ -56,8 +56,8 @@ public class ChunkFilter_Test {
 
         final Objects chunk = BlobAndChunkHelper.makeChunk(1, Arrays.asList(blob1, blob2, blob3));
 
-        final OriginatingBlobChunkFilter originatingBlobChunkFilter = new OriginatingBlobChunkFilter(Collections.singletonList(chunk), objectsInJobCreation);
-        final Iterable<Objects> chunksWithBlobsFromJobCreation = originatingBlobChunkFilter.apply();
+        final OriginatingBlobChunkFilter originatingBlobChunkFilter = new OriginatingBlobChunkFilter(objectsInJobCreation);
+        final Iterable<Objects> chunksWithBlobsFromJobCreation = originatingBlobChunkFilter.apply(Collections.singletonList(chunk));
 
         assertEquals(0, Iterables.size(chunksWithBlobsFromJobCreation));
     }
@@ -80,9 +80,10 @@ public class ChunkFilter_Test {
 
         final Objects secondChunk = BlobAndChunkHelper.makeChunk(2, Arrays.asList(twitchBlob, marblesBlob, nibblesBlob));
 
-        final OriginatingBlobChunkFilter originatingBlobChunkFilter = new OriginatingBlobChunkFilter(Arrays.asList(firstChunk, secondChunk),
-                org.apache.commons.collections4.ListUtils.union(objectsInFirstChunk, objectsInSecondChunk));
-        final Iterable<Objects> chunks = originatingBlobChunkFilter.apply();
+        final OriginatingBlobChunkFilter originatingBlobChunkFilter = new OriginatingBlobChunkFilter(
+                org.apache.commons.collections4.ListUtils.union(objectsInFirstChunk, objectsInSecondChunk)
+        );
+        final Iterable<Objects> chunks = originatingBlobChunkFilter.apply(Arrays.asList(firstChunk, secondChunk));
 
         assertEquals(2, Iterables.size(chunks));
     }
@@ -102,9 +103,8 @@ public class ChunkFilter_Test {
 
         final Objects secondChunk = BlobAndChunkHelper.makeChunk(2, Collections.singletonList(gracieBlob2));
 
-        final OriginatingBlobChunkFilter originatingBlobChunkFilter = new OriginatingBlobChunkFilter(Arrays.asList(firstChunk, secondChunk),
-                objectsInFirstChunk);
-        final Iterable<Objects> chunks = originatingBlobChunkFilter.apply();
+        final OriginatingBlobChunkFilter originatingBlobChunkFilter = new OriginatingBlobChunkFilter(objectsInFirstChunk);
+        final Iterable<Objects> chunks = originatingBlobChunkFilter.apply(Arrays.asList(firstChunk, secondChunk));
 
         assertEquals(2, Iterables.size(chunks));
     }
@@ -125,9 +125,10 @@ public class ChunkFilter_Test {
 
         final Objects chunk2 = BlobAndChunkHelper.makeChunk(2, Arrays.asList(blob1, blob2, blob3));
 
-        final OriginatingBlobChunkFilter originatingBlobChunkFilter = new OriginatingBlobChunkFilter(Arrays.asList(chunk1, chunk2),
-                ListUtils.union(objectsInFirstChunk, BlobAndChunkHelper.makeObjectsInSecondChunk()));
-        final Iterable<Objects> chunksWithBlobsFromJobCreation = originatingBlobChunkFilter.apply();
+        final OriginatingBlobChunkFilter originatingBlobChunkFilter = new OriginatingBlobChunkFilter(
+                ListUtils.union(objectsInFirstChunk, BlobAndChunkHelper.makeObjectsInSecondChunk())
+        );
+        final Iterable<Objects> chunksWithBlobsFromJobCreation = originatingBlobChunkFilter.apply(Arrays.asList(chunk1, chunk2));
 
         assertEquals(1, Iterables.size(chunksWithBlobsFromJobCreation));
     }

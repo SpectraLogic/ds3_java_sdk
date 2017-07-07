@@ -17,6 +17,6 @@ package com.spectralogic.ds3client.helpers.strategy;
 
 import com.spectralogic.ds3client.models.MasterObjectList;
 
-public interface MasterObjectListBuilder {
-    MasterObjectList fromMasterObjectList(final MasterObjectList originalMasterObjectList);
+public interface MasterObjectListFilter {
+    MasterObjectList apply(final MasterObjectList originalMasterObjectList);
 }

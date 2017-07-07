@@ -15,10 +15,11 @@
 
 package com.spectralogic.ds3client.helpers.strategy;
 
-import com.spectralogic.ds3client.models.Objects;
+import com.spectralogic.ds3client.models.MasterObjectList;
 
-import java.util.Collection;
-
-public interface ChunkFilter {
-    Iterable<Objects> apply(final Collection<Objects> chunksFromMasterObjectList);
+public class NullMasterObjectListFilter implements MasterObjectListFilter {
+    @Override
+    public MasterObjectList apply(final MasterObjectList originalMasterObjectList) {
+        return originalMasterObjectList;
+    }
 }
