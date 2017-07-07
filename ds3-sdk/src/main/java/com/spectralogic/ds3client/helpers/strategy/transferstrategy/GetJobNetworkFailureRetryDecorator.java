@@ -21,7 +21,7 @@ import com.google.common.collect.ImmutableMultimap;
 import com.spectralogic.ds3client.exceptions.ContentLengthNotMatchException;
 import com.spectralogic.ds3client.helpers.JobPart;
 import com.spectralogic.ds3client.helpers.RecoverableIOException;
-import com.spectralogic.ds3client.helpers.strategy.blobstrategy.StrategyUtils;
+import com.spectralogic.ds3client.helpers.strategy.StrategyUtils;
 import com.spectralogic.ds3client.helpers.strategy.channelstrategy.ChannelStrategy;
 import com.spectralogic.ds3client.models.BulkObject;
 import com.spectralogic.ds3client.models.common.Range;

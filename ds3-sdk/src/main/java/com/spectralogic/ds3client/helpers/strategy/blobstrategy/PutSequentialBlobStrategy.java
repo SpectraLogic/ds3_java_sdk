@@ -33,7 +33,7 @@ import javax.annotation.Nullable;
 import java.io.IOException;
 import java.util.Iterator;
 
-import static com.spectralogic.ds3client.helpers.strategy.blobstrategy.StrategyUtils.filterChunks;
+import static com.spectralogic.ds3client.helpers.strategy.StrategyUtils.filterChunks;
 
 /**
  * A subclass of {@link BlobStrategy} used in put transfers.

@@ -38,7 +38,7 @@ import com.spectralogic.ds3client.helpers.strategy.blobstrategy.ChunkFilter;
 import com.spectralogic.ds3client.helpers.strategy.blobstrategy.NullMasterObjectListFilter;
 import com.spectralogic.ds3client.helpers.strategy.blobstrategy.OriginatingBlobChunkFilter;
 import com.spectralogic.ds3client.helpers.strategy.blobstrategy.OriginatingBlobMasterObjectListFilter;
-import com.spectralogic.ds3client.helpers.strategy.blobstrategy.StrategyUtils;
+import com.spectralogic.ds3client.helpers.strategy.StrategyUtils;
 import com.spectralogic.ds3client.helpers.strategy.blobstrategy.BlackPearlChunkAttemptRetryDelayBehavior;
 import com.spectralogic.ds3client.helpers.strategy.blobstrategy.BlobStrategy;
 import com.spectralogic.ds3client.helpers.strategy.blobstrategy.BlobStrategyMaker;
