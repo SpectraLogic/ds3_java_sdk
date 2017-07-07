@@ -161,10 +161,11 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
         final PutBulkJobSpectraS3Response putBulkJobSpectraS3Response = this.client.putBulkJobSpectraS3(request);
 
         transferStrategyBuilder.withMasterObjectList(putBulkJobSpectraS3Response.getMasterObjectList())
-                .withChecksumType(options.getChecksumType());
+                .withChecksumType(options.getChecksumType())
+                .withObjectsInJob(objectsToWrite);
 
         if (options.isAggregating()) {
-            transferStrategyBuilder.withJobAggregation(objectsToWrite);
+            transferStrategyBuilder.withJobAggregation();
         }
 
         return new WriteJobImpl(transferStrategyBuilder);
@@ -254,7 +255,8 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
 
         transferStrategyBuilder
                 .withMasterObjectList(masterObjectList)
-                .withRangesForBlobs(PartialObjectHelpers.mapRangesToBlob(masterObjectList.getObjects(), partialRanges));
+                .withRangesForBlobs(PartialObjectHelpers.mapRangesToBlob(masterObjectList.getObjects(), partialRanges))
+                .withObjectsInJob(objects);
 
         return new ReadJobImpl(transferStrategyBuilder);
     }

@@ -28,7 +28,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicLong;
 
-public final class BlobAndChunkHelper {
+final class BlobAndChunkHelper {
     static final String Trixie = "Trixie";
     static final String Shasta = "Shasta";
     static final String Gracie = "Gracie";
@@ -113,6 +113,5 @@ public final class BlobAndChunkHelper {
                 left.getStatus().equals(right.getStatus()) &&
                 left.getUserId().equals(right.getUserId()) &&
                 left.getUserName().equals(right.getUserName());
-
     }
 }

@@ -47,6 +47,8 @@ public class GetSequentialBlobStrategy extends AbstractBlobStrategy {
     @Override
     public synchronized Iterable<JobPart> getWork() throws IOException, InterruptedException {
         // get chunks that have blobs ready for transfer from black pearl
+        // TODO: Need to filter the master object list to remove chunks referencing blobs from other
+        // processes.
         final MasterObjectList masterObjectListWithAvailableChunks = masterObjectListWithAvailableChunks();
 
         final FluentIterable<Objects> chunks = FluentIterable.from(masterObjectListWithAvailableChunks.getObjects());
