@@ -352,7 +352,9 @@ public final class TransferStrategyBuilder {
     }
 
     private MasterObjectList filterChunksContainingBlobsNotOriginallyIncludedInJob() {
-        if ( ! usingJobAggregation) {
+        Preconditions.checkNotNull(masterObjectList, "masterObjectList may not be null.");
+
+        if ( ! usingJobAggregation && ! masterObjectList.getAggregating()) {
             return masterObjectList;
         }
 
@@ -367,8 +369,12 @@ public final class TransferStrategyBuilder {
         return masterObjectListBuilder.fromMasterObjectList(masterObjectList);
     }
 
-    public TransferStrategyBuilder withJobAggregation(final Iterable<Ds3Object> objectsInJob) {
+    public TransferStrategyBuilder withJobAggregation() {
         usingJobAggregation = true;
+        return this;
+    }
+
+    public TransferStrategyBuilder withObjectsInJob(final Iterable<Ds3Object> objectsInJob) {
         this.objectsInJob = objectsInJob;
         return this;
     }
