@@ -148,7 +148,7 @@ public final class TransferStrategyBuilder {
     private boolean usingJobAggregation = false;
     private Iterable<Ds3Object> objectsInJob;
     private ChunkFilter chunkFilter;
-    private MasterObjectListFilter masterObjectListFilter = null;
+    private MasterObjectListFilter masterObjectListFilter;
 
     /**
      * Use an instance of {@link BlobStrategy} you wish to create or retrieve blobs from a Black Pearl.  There are
