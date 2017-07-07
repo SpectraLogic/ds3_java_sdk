@@ -15,10 +15,11 @@
 
 package com.spectralogic.ds3client.helpers;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3client.Ds3Client;
+import com.spectralogic.ds3client.commands.decorators.PutFolderRequest;
+import com.spectralogic.ds3client.commands.spectrads3.PutBulkJobSpectraS3Request;
+import com.spectralogic.ds3client.commands.spectrads3.PutBulkJobSpectraS3Response;
 import com.spectralogic.ds3client.helpers.events.SameThreadEventRunner;
 import com.spectralogic.ds3client.integration.Util;
 import com.spectralogic.ds3client.integration.test.helpers.TempStorageIds;
@@ -31,6 +32,8 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -39,17 +42,15 @@ import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
 import static com.spectralogic.ds3client.integration.Util.deleteAllContents;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 
 public class FileSystemHelper_Test {
     private static final Logger LOG = LoggerFactory.getLogger(FileSystemHelper_Test.class);
@@ -311,6 +312,34 @@ public class FileSystemHelper_Test {
         @Override
         public long getAvailableFileSpace(final Path path) throws IOException {
             throw new IOException("IOExceptionAtor");
+        }
+    }
+
+    @Test
+    public void createFolderWithSlash() throws IOException {
+        final String folderName = "FolderNameWithSlash/";
+
+        try {
+            final Ds3Object ds3Object = new Ds3Object(folderName, 0);
+            final PutBulkJobSpectraS3Response jobResponse = client.putBulkJobSpectraS3(new PutBulkJobSpectraS3Request(BUCKET_NAME, ImmutableList.of(ds3Object)));
+
+            client.putFolder(new PutFolderRequest(BUCKET_NAME, folderName, jobResponse.getMasterObjectList().getJobId()));
+        } finally {
+            deleteAllContents(client, BUCKET_NAME);
+        }
+    }
+
+    @Test
+    public void createFolderWithNoSlash() throws IOException {
+        final String folderName = "FolderNameNoSlash";
+
+        try {
+            final Ds3Object ds3Object = new Ds3Object(folderName + "/", 0);
+            final PutBulkJobSpectraS3Response jobResponse = client.putBulkJobSpectraS3(new PutBulkJobSpectraS3Request(BUCKET_NAME, ImmutableList.of(ds3Object)));
+
+            client.putFolder(new PutFolderRequest(BUCKET_NAME, folderName, jobResponse.getMasterObjectList().getJobId()));
+        } finally {
+            deleteAllContents(client, BUCKET_NAME);
         }
     }
 }
