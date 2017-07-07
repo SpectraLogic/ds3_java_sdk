@@ -382,21 +382,59 @@ public final class TransferStrategyBuilder {
         return chunkFilter;
     }
 
+    /**
+     * Call this method when you wish put jobs to combine separate put jobs into one.
+     * @return The instance of this builder, with the intent that you can string together the behaviors you wish.
+     */
     public TransferStrategyBuilder withJobAggregation() {
         usingJobAggregation = true;
         return this;
     }
 
+    /**
+     * When aggregating jobs from more than one process, it is possible that one process will see a
+     * {@link com.spectralogic.ds3client.models.MasterObjectList}
+     * that contains blobs defined in the other process.  To prevent one process from trying to transfer
+     * blobs defined in another process, we apply a filter to master object lists to eliminate blobs not
+     * originally defined in a particular process.  The {@link MasterObjectListFilter} and {@link ChunkFilter}
+     * work together to filter the chunks in a master object list.  The {@link OriginatingBlobChunkFilter}
+     * implementation uses the names of the {@link Ds3Object} originally included in job creation to know what
+     * chunks to filter.
+     * @param objectsInJob The {@link Ds3Object} originally included in job creation.
+     * @return The instance of this builder, with the intent that you can string together the behaviors you wish.
+     */
     public TransferStrategyBuilder withObjectsInJob(final Iterable<Ds3Object> objectsInJob) {
         this.objectsInJob = objectsInJob;
         return this;
     }
 
+    /**
+     * When aggregating jobs from more than one process, it is possible that one process will see a
+     * {@link com.spectralogic.ds3client.models.MasterObjectList}
+     * that contains blobs defined in the other process.  To prevent one process from trying to transfer
+     * blobs defined in another process, we apply a filter to master object lists to eliminate blobs not
+     * originally defined in a particular process.  The ChunkFilter interface implements the behavior
+     * in a {@link NullMasterObjectListFilter} filter that decides what chunks to include in the resultant
+     * master object list.
+     * @param chunkFilter An instance of {@link ChunkFilter} whose behavior you wish to decide which chunks get
+     *                    filtered.
+     * @return The instance of this builder, with the intent that you can string together the behaviors you wish.
+     */
     public TransferStrategyBuilder withChunkFilter(final ChunkFilter chunkFilter) {
         this.chunkFilter = chunkFilter;
         return this;
     }
 
+    /**
+     * When aggregating jobs from more than one process, it is possible that one process will see a
+     * {@link com.spectralogic.ds3client.models.MasterObjectList}
+     * that contains blobs defined in the other process.  To prevent one process from trying to transfer
+     * blobs defined in another process, we apply a filter to master object lists to eliminate blobs not
+     * originally defined in a particular process.
+     * @param masterObjectListFilter An instance of {@link MasterObjectListFilter} whose behavior you wish to decide which chunks get
+     *                    filtered.
+     * @return The instance of this builder, with the intent that you can string together the behaviors you wish.
+     */
     public TransferStrategyBuilder withMasterObjectListBuilder(final MasterObjectListFilter masterObjectListFilter) {
         this.masterObjectListFilter = masterObjectListFilter;
         return this;

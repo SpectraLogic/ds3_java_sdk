@@ -33,9 +33,7 @@ import java.io.IOException;
 import java.security.SignatureException;
 import java.util.UUID;
 
-import static com.spectralogic.ds3client.integration.Util.assumeVersion4orHigher;
 import static com.spectralogic.ds3client.integration.Util.deleteAllContents;
-import static com.spectralogic.ds3client.integration.test.helpers.TempStorageUtil.DEFAULT_USER;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.assertThat;
@@ -77,7 +75,7 @@ public class UsersAndGroups_Test {
         try {
             HELPERS.ensureBucketExists(BUCKET_NAME, dataPolicy);
             spectraUUID = client.getUserSpectraS3(
-                    new GetUserSpectraS3Request(DEFAULT_USER)).getSpectraUserResult().getId();
+                    new GetUserSpectraS3Request("spectra")).getSpectraUserResult().getId();
             administratorsUUID = client.getGroupSpectraS3(
                     new GetGroupSpectraS3Request("Administrators")).getGroupResult().getId();
         } catch (final Exception e) {
@@ -91,16 +89,16 @@ public class UsersAndGroups_Test {
         final GetUserSpectraS3Response getSpectraResponse = client
                 .getUserSpectraS3(new GetUserSpectraS3Request(spectraUUID));
 
-        assertThat(getSpectraResponse.getSpectraUserResult().getName(), is(DEFAULT_USER));
+        assertThat(getSpectraResponse.getSpectraUserResult().getName(), is("spectra"));
     }
 
     @Test
     public void getUserWithString() throws IOException, SignatureException {
 
         final GetUserSpectraS3Response getSpectraResponse = client
-                .getUserSpectraS3(new GetUserSpectraS3Request(DEFAULT_USER));
+                .getUserSpectraS3(new GetUserSpectraS3Request("spectra"));
 
-        assertThat(getSpectraResponse.getSpectraUserResult().getName(), is(DEFAULT_USER));
+        assertThat(getSpectraResponse.getSpectraUserResult().getName(), is("spectra"));
     }
 
     @Test
@@ -116,7 +114,7 @@ public class UsersAndGroups_Test {
     public void getUsersWithName() throws IOException, SignatureException {
 
         final GetUsersSpectraS3Response getUsersResponse = client.getUsersSpectraS3(
-                new GetUsersSpectraS3Request().withName(DEFAULT_USER));
+                new GetUsersSpectraS3Request().withName("spectra"));
 
         assertThat(getUsersResponse.getSpectraUserListResult(), is(notNullValue()));
     }
@@ -181,9 +179,6 @@ public class UsersAndGroups_Test {
 
         final GetUserSpectraS3Response getSpectraResponse = client
                 .getUserSpectraS3(new GetUserSpectraS3Request(spectraUUID));
-
-        assertThat(getSpectraResponse.getSpectraUserResult(), is(notNullValue()));
-
         final ModifyUserSpectraS3Response modifyUserSpectraS3Response = client
                 .modifyUserSpectraS3(new ModifyUserSpectraS3Request(spectraUUID)
                         .withDefaultDataPolicyId(dataPolicyId));
@@ -344,7 +339,7 @@ public class UsersAndGroups_Test {
                     .withPageStartMarker(UUID.randomUUID()));
             fail("The above should not be found and throw exception.");
         } catch (final FailedRequestException e) {
-            assertThat(e.getStatusCode(), is(404));
+            assertThat(e.getStatusCode(), is(410));
         }
     }
 
@@ -472,7 +467,7 @@ public class UsersAndGroups_Test {
 
         final GetGroupMembersSpectraS3Response getGroupMembersSpectraS3Response = client
                 .getGroupMembersSpectraS3(new GetGroupMembersSpectraS3Request()
-                        .withMemberUserId(DEFAULT_USER));
+                        .withMemberUserId("spectra"));
 
         assertThat(getGroupMembersSpectraS3Response.getGroupMemberListResult(), is(notNullValue()));
     }
@@ -550,30 +545,22 @@ public class UsersAndGroups_Test {
 
     @Test
     public void getGroupGroupMembersWithPageStartMarkerUUID() throws IOException, SignatureException {
-        assumeVersion4orHigher(client);
 
-        try {
-            client.getGroupMembersSpectraS3(new GetGroupMembersSpectraS3Request()
-                    .withPageStartMarker(UUID.randomUUID()));
-            fail("The above should not be found and throw exception.");
+        final GetGroupMembersSpectraS3Response getGroupMembersSpectraS3Response = client
+                .getGroupMembersSpectraS3(new GetGroupMembersSpectraS3Request()
+                        .withPageStartMarker(UUID.randomUUID()));
 
-        } catch (final FailedRequestException e) {
-            assertThat(e.getStatusCode(), is(404));
-        }
+        assertThat(getGroupMembersSpectraS3Response.getGroupMemberListResult(), is(notNullValue()));
     }
 
     @Test
     public void getGroupGroupMembersWithPageStartMarkerString() throws IOException, SignatureException {
-        assumeVersion4orHigher(client);
 
-        try {
-            client.getGroupMembersSpectraS3(new GetGroupMembersSpectraS3Request()
-                    .withPageStartMarker(UUID.randomUUID().toString()));
-            fail("The above should not be found and throw exception.");
+        final GetGroupMembersSpectraS3Response getGroupMembersSpectraS3Response = client
+                .getGroupMembersSpectraS3(new GetGroupMembersSpectraS3Request()
+                        .withPageStartMarker(UUID.randomUUID().toString()));
 
-        } catch (final FailedRequestException e) {
-            assertThat(e.getStatusCode(), is(404));
-        }
+        assertThat(getGroupMembersSpectraS3Response.getGroupMemberListResult(), is(notNullValue()));
     }
 
     @Test
@@ -625,7 +612,7 @@ public class UsersAndGroups_Test {
                     new PutGroupSpectraS3Request("test_group"));
 
             putUserGroupMemberSpectraS3Response = client
-                    .putUserGroupMemberSpectraS3(new PutUserGroupMemberSpectraS3Request("test_group", DEFAULT_USER));
+                    .putUserGroupMemberSpectraS3(new PutUserGroupMemberSpectraS3Request("test_group", "spectra"));
 
             assertThat(putUserGroupMemberSpectraS3Response.getGroupMemberResult(), is(notNullValue()));
 
@@ -701,7 +688,7 @@ public class UsersAndGroups_Test {
         try {
             putGlobalBucketAclForUserSpectraS3Response = client.putGlobalBucketAclForUserSpectraS3(
                     new PutGlobalBucketAclForUserSpectraS3Request(BucketAclPermission.DELETE,
-                            DEFAULT_USER));
+                            "spectra"));
 
             assertThat(putGlobalBucketAclForUserSpectraS3Response.getBucketAclResult(), is(notNullValue()));
 
@@ -802,7 +789,7 @@ public class UsersAndGroups_Test {
     @Test
     public void getBucketAclsWithUserIDString() throws IOException, SignatureException {
         final GetBucketAclsSpectraS3Response getBucketAclsSpectraS3Response = client
-                .getBucketAclsSpectraS3(new GetBucketAclsSpectraS3Request().withUserId(DEFAULT_USER));
+                .getBucketAclsSpectraS3(new GetBucketAclsSpectraS3Request().withUserId("spectra"));
 
         assertThat(getBucketAclsSpectraS3Response.getBucketAclListResult(), is(notNullValue()));
     }
@@ -863,29 +850,20 @@ public class UsersAndGroups_Test {
 
     @Test
     public void getBucketAclsWithPageStartMarkerUUID() throws IOException, SignatureException {
-        assumeVersion4orHigher(client);
+        final GetBucketAclsSpectraS3Response getBucketAclsSpectraS3Response = client
+                .getBucketAclsSpectraS3(new GetBucketAclsSpectraS3Request()
+                        .withPageStartMarker(UUID.randomUUID()));
 
-        try {
-            client.getBucketAclsSpectraS3(new GetBucketAclsSpectraS3Request()
-                    .withPageStartMarker(UUID.randomUUID()));
-            fail("The above should not be found and throw exception.");
-
-        } catch (final FailedRequestException e) {
-            assertThat(e.getStatusCode(), is(404));
-        }
+        assertThat(getBucketAclsSpectraS3Response.getBucketAclListResult(), is(notNullValue()));
     }
 
     @Test
     public void getBucketAclsWithPageStartMarkerString() throws IOException, SignatureException {
-        assumeVersion4orHigher(client);
+        final GetBucketAclsSpectraS3Response getBucketAclsSpectraS3Response = client
+                .getBucketAclsSpectraS3(new GetBucketAclsSpectraS3Request()
+                        .withPageStartMarker(UUID.randomUUID().toString()));
 
-        try {
-            client.getBucketAclsSpectraS3(new GetBucketAclsSpectraS3Request()
-                    .withPageStartMarker(UUID.randomUUID().toString()));
-            fail("The above should not be found and throw exception.");
-        } catch (final FailedRequestException e) {
-            assertThat(e.getStatusCode(), is(404));
-        }
+        assertThat(getBucketAclsSpectraS3Response.getBucketAclListResult(), is(notNullValue()));
     }
 
     @Test
@@ -934,7 +912,7 @@ public class UsersAndGroups_Test {
         PutGlobalDataPolicyAclForUserSpectraS3Response putGlobalDataPolicyAclForUserSpectraS3Response = null;
         try {
             putGlobalDataPolicyAclForUserSpectraS3Response = client.putGlobalDataPolicyAclForUserSpectraS3(
-                    new PutGlobalDataPolicyAclForUserSpectraS3Request(DEFAULT_USER));
+                    new PutGlobalDataPolicyAclForUserSpectraS3Request("spectra"));
 
             assertThat(putGlobalDataPolicyAclForUserSpectraS3Response.getDataPolicyAclResult(), is(notNullValue()));
 
@@ -993,7 +971,7 @@ public class UsersAndGroups_Test {
                 = null;
         try {
             putGlobalDataPolicyAclForUserSpectraS3Response = client.putGlobalDataPolicyAclForUserSpectraS3(
-                    new PutGlobalDataPolicyAclForUserSpectraS3Request(DEFAULT_USER));
+                    new PutGlobalDataPolicyAclForUserSpectraS3Request("spectra"));
 
             final DeleteDataPolicyAclSpectraS3Response deleteDataPolicyAclSpectraS3Response = client
                     .deleteDataPolicyAclSpectraS3(new DeleteDataPolicyAclSpectraS3Request(
@@ -1020,7 +998,7 @@ public class UsersAndGroups_Test {
         try {
             putGlobalDataPolicyAclForUserSpectraS3Response = client
                     .putGlobalDataPolicyAclForUserSpectraS3(
-                    new PutGlobalDataPolicyAclForUserSpectraS3Request(DEFAULT_USER));
+                    new PutGlobalDataPolicyAclForUserSpectraS3Request("spectra"));
 
             final GetDataPolicyAclSpectraS3Response getDataPolicyAclSpectraS3Response = client
                     .getDataPolicyAclSpectraS3(new GetDataPolicyAclSpectraS3Request(
@@ -1136,7 +1114,7 @@ public class UsersAndGroups_Test {
 
         final GetDataPolicyAclsSpectraS3Response getDataPolicyAclsSpectraS3Response = client
                 .getDataPolicyAclsSpectraS3(new GetDataPolicyAclsSpectraS3Request()
-                        .withUserId(DEFAULT_USER));
+                        .withUserId("spectra"));
 
         assertThat(getDataPolicyAclsSpectraS3Response.getDataPolicyAclListResult(), is(notNullValue()));
     }
@@ -1203,28 +1181,22 @@ public class UsersAndGroups_Test {
 
     @Test
     public void getDataPolicyAclsWithPageStartMarkerString() throws IOException, SignatureException {
-        assumeVersion4orHigher(client);
 
-        try {
-            client.getDataPolicyAclsSpectraS3(new GetDataPolicyAclsSpectraS3Request()
-                    .withPageStartMarker(UUID.randomUUID().toString()));
-            fail("The above should not be found and throw exception.");
-        } catch (final FailedRequestException e) {
-            assertThat(e.getStatusCode(), is(404));
-        }
+        final GetDataPolicyAclsSpectraS3Response getDataPolicyAclsSpectraS3Response = client
+                .getDataPolicyAclsSpectraS3(new GetDataPolicyAclsSpectraS3Request()
+                        .withPageStartMarker(UUID.randomUUID().toString()));
+
+        assertThat(getDataPolicyAclsSpectraS3Response.getDataPolicyAclListResult(), is(notNullValue()));
     }
 
     @Test
     public void getDataPolicyAclsWithPageStartMarkerUUID() throws IOException, SignatureException {
-        assumeVersion4orHigher(client);
 
-        try {
-            client.getDataPolicyAclsSpectraS3(new GetDataPolicyAclsSpectraS3Request()
-                    .withPageStartMarker(UUID.randomUUID()));
-            fail("The above should not be found and throw exception.");
-        } catch (final FailedRequestException e) {
-            assertThat(e.getStatusCode(), is(404));
-        }
+        final GetDataPolicyAclsSpectraS3Response getDataPolicyAclsSpectraS3Response = client
+                .getDataPolicyAclsSpectraS3(new GetDataPolicyAclsSpectraS3Request()
+                        .withPageStartMarker(UUID.randomUUID()));
+
+        assertThat(getDataPolicyAclsSpectraS3Response.getDataPolicyAclListResult(), is(notNullValue()));
     }
 
     @Test

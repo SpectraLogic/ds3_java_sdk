@@ -17,6 +17,11 @@ package com.spectralogic.ds3client.helpers.strategy;
 
 import com.spectralogic.ds3client.models.MasterObjectList;
 
+/**
+ * An implementation of {@link MasterObjectListFilter} that does not actually filter out ny chunks.
+ * This class exists to enable creatin an instance of {@link com.spectralogic.ds3client.helpers.strategy.blobstrategy.BlobStrategy}
+ * that need not check for null when composed with a master object list filter.
+ */
 public class NullMasterObjectListFilter implements MasterObjectListFilter {
     @Override
     public MasterObjectList apply(final MasterObjectList originalMasterObjectList) {

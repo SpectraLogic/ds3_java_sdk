@@ -15,10 +15,29 @@
 
 package com.spectralogic.ds3client.helpers.strategy;
 
+import com.spectralogic.ds3client.commands.spectrads3.GetJobChunksReadyForClientProcessingSpectraS3Request;
+import com.spectralogic.ds3client.helpers.strategy.transferstrategy.TransferStrategy;
 import com.spectralogic.ds3client.models.Objects;
 
 import java.util.Collection;
 
+/**
+ * When aggregating jobs from more than one process, it is possible that one process will see a
+ * {@link com.spectralogic.ds3client.models.MasterObjectList}
+ * that contains blobs defined in the other process.  To prevent one process from trying to transfer
+ * blobs defined in another process, we apply a filter to master object lists to eliminate blobs not
+ * originally defined in a particular process.  The ChunkFilter interface implements the behavior
+ * in a {@link NullMasterObjectListFilter} filter that decides what chunks to include in the resultant
+ * master object list.
+ */
 public interface ChunkFilter {
+    /**
+     * Filter out chunks containing blobs not originally defined in a job a process creates.
+     * @param chunksFromMasterObjectList The chunks in either a master object list returned from a call to
+     *                                   {@link com.spectralogic.ds3client.helpers.Ds3ClientHelpers.Job#startWriteJob(TransferStrategy)},
+     *                                   {@link com.spectralogic.ds3client.helpers.Ds3ClientHelpers.Job#startReadJob(TransferStrategy)},
+     *                                   or one its variants or from {@link com.spectralogic.ds3client.Ds3Client#getJobChunksReadyForClientProcessingSpectraS3(GetJobChunksReadyForClientProcessingSpectraS3Request)}
+     * @return Chunks containing blobs originally defined in a particular process.
+     */
     Iterable<Objects> apply(final Collection<Objects> chunksFromMasterObjectList);
 }

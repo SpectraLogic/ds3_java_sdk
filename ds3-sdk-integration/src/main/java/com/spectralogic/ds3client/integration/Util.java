@@ -37,7 +37,6 @@ import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assume.assumeThat;
-import static org.junit.Assume.assumeTrue;
 
 
 public class Util {
@@ -63,12 +62,6 @@ public class Util {
         final int majorVersion = Integer.parseInt(client.getSystemInformationSpectraS3(
                 new GetSystemInformationSpectraS3Request()).getSystemInformationResult().getBuildInformation().getVersion().split("\\.")[0]);
         assumeThat(majorVersion, is(1));
-    }
-
-    public static void assumeVersion4orHigher(final Ds3Client client) throws IOException {
-        final int majorVersion = Integer.parseInt(client.getSystemInformationSpectraS3(
-                new GetSystemInformationSpectraS3Request()).getSystemInformationResult().getBuildInformation().getVersion().split("\\.")[0]);
-        assumeTrue(majorVersion >= 4);
     }
 
     public static void loadBookTestData(final Ds3Client client, final String bucketName) throws IOException, URISyntaxException {

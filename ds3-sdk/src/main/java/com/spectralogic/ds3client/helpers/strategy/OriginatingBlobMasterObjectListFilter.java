@@ -17,7 +17,14 @@ package com.spectralogic.ds3client.helpers.strategy;
 
 import com.google.common.collect.Lists;
 import com.spectralogic.ds3client.models.MasterObjectList;
+import com.spectralogic.ds3client.models.bulk.Ds3Object;
 
+/**
+ * An implementation of {@link MasterObjectListFilter} that does not actually filter out ny chunks.
+ * This class exists to enable creatin an instance of {@link com.spectralogic.ds3client.helpers.strategy.blobstrategy.BlobStrategy}
+ * that need not check for null when composed with a master object list filter.  This implementation filters out chunks
+ * containing blob names not contained in the list of {@link Ds3Object} used in originally creating a job in a particular process.
+ */
 public class OriginatingBlobMasterObjectListFilter implements MasterObjectListFilter {
     private final ChunkFilter chunkFilter;
 
