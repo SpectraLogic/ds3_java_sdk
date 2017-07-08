@@ -38,6 +38,10 @@ final class BlobAndChunkHelper {
 
     static final String bucketName = "bucket";
 
+    private BlobAndChunkHelper() {
+        // Intentionally not implemented
+    }
+
     static List<Ds3Object> makeObjectsInFirstChunk() {
         final Ds3Object trixie = new Ds3Object(Trixie, 1);
         final Ds3Object shasta = new Ds3Object(Shasta, 2);
