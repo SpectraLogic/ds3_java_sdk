@@ -81,7 +81,7 @@ public class ChunkFilter_Test {
         final Objects secondChunk = BlobAndChunkHelper.makeChunk(2, Arrays.asList(twitchBlob, marblesBlob, nibblesBlob));
 
         final OriginatingBlobChunkFilter originatingBlobChunkFilter = new OriginatingBlobChunkFilter(
-                org.apache.commons.collections4.ListUtils.union(objectsInFirstChunk, objectsInSecondChunk)
+                ListUtils.union(objectsInFirstChunk, objectsInSecondChunk)
         );
         final Iterable<Objects> chunks = originatingBlobChunkFilter.apply(Arrays.asList(firstChunk, secondChunk));
 

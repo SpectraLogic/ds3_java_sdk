@@ -15,8 +15,6 @@
 
 package com.spectralogic.ds3client.helpers.strategy.blobstrategy;
 
-import com.spectralogic.ds3client.commands.spectrads3.GetJobChunksReadyForClientProcessingSpectraS3Request;
-import com.spectralogic.ds3client.helpers.strategy.transferstrategy.TransferStrategy;
 import com.spectralogic.ds3client.models.Objects;
 
 import java.util.Collection;

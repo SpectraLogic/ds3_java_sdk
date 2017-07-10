@@ -29,20 +29,20 @@ import java.util.UUID;
 import java.util.concurrent.atomic.AtomicLong;
 
 final class BlobAndChunkHelper {
-    static final String Trixie = "Trixie";
-    static final String Shasta = "Shasta";
-    static final String Gracie = "Gracie";
-    static final String Twitch = "Twitch";
-    static final String Marbles = "Marbles";
-    static final String Nibbles = "Nibbles";
+    private static final String Trixie = "Trixie";
+    private static final String Shasta = "Shasta";
+    protected static final String Gracie = "Gracie";
+    private static final String Twitch = "Twitch";
+    private static final String Marbles = "Marbles";
+    private static final String Nibbles = "Nibbles";
 
-    static final String bucketName = "bucket";
+    protected static final String bucketName = "bucket";
 
     private BlobAndChunkHelper() {
         // Intentionally not implemented
     }
 
-    static List<Ds3Object> makeObjectsInFirstChunk() {
+    protected static List<Ds3Object> makeObjectsInFirstChunk() {
         final Ds3Object trixie = new Ds3Object(Trixie, 1);
         final Ds3Object shasta = new Ds3Object(Shasta, 2);
         final Ds3Object gracie = new Ds3Object(Gracie, 3);
@@ -50,7 +50,7 @@ final class BlobAndChunkHelper {
         return Arrays.asList(trixie, shasta, gracie);
     }
 
-    static BulkObject makeBlob(final long size, final String name) {
+    protected static BulkObject makeBlob(final long size, final String name) {
         final BulkObject blob = new BulkObject();
         blob.setBucket(bucketName);
         blob.setId(UUID.randomUUID());
@@ -64,7 +64,7 @@ final class BlobAndChunkHelper {
         return blob;
     }
 
-    static Objects makeChunk(final int chunkNumber, final List<BulkObject> blobs) {
+    protected static Objects makeChunk(final int chunkNumber, final List<BulkObject> blobs) {
         final Objects chunk = new Objects();
         chunk.setChunkId(UUID.randomUUID());
         chunk.setChunkNumber(chunkNumber);
@@ -74,7 +74,7 @@ final class BlobAndChunkHelper {
         return chunk;
     }
 
-    static List<Ds3Object> makeObjectsInSecondChunk() {
+    protected static List<Ds3Object> makeObjectsInSecondChunk() {
         final Ds3Object twitch = new Ds3Object(Twitch, 4);
         final Ds3Object marbles = new Ds3Object(Marbles, 5);
         final Ds3Object nibbles = new Ds3Object(Nibbles, 6);
@@ -82,7 +82,7 @@ final class BlobAndChunkHelper {
         return Arrays.asList(twitch, marbles, nibbles);
     }
 
-    static long sizeOfObjectsInFirstChunk() {
+    protected static long sizeOfObjectsInFirstChunk() {
         final AtomicLong objectSize = new AtomicLong(0);
 
         FluentIterable.from(makeObjectsInFirstChunk())
@@ -98,7 +98,7 @@ final class BlobAndChunkHelper {
         return objectSize.get();
     }
 
-    static boolean masterObjectListsAreEqual(final MasterObjectList left, final MasterObjectList right) {
+    protected static boolean masterObjectListsAreEqual(final MasterObjectList left, final MasterObjectList right) {
         return left.getAggregating() == right.getAggregating() &&
                 left.getBucketName().equals(right.getBucketName()) &&
                 left.getCachedSizeInBytes() == right.getCachedSizeInBytes() &&
