@@ -15,10 +15,8 @@
 
 package com.spectralogic.ds3client.helpers;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.spectralogic.ds3client.Ds3Client;
+import com.spectralogic.ds3client.commands.decorators.PutFolderResponse;
 import com.spectralogic.ds3client.helpers.events.SameThreadEventRunner;
 import com.spectralogic.ds3client.integration.Util;
 import com.spectralogic.ds3client.integration.test.helpers.TempStorageIds;
@@ -31,6 +29,8 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -39,17 +39,15 @@ import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
 import static com.spectralogic.ds3client.integration.Util.deleteAllContents;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 
 public class FileSystemHelper_Test {
     private static final Logger LOG = LoggerFactory.getLogger(FileSystemHelper_Test.class);
@@ -311,6 +309,30 @@ public class FileSystemHelper_Test {
         @Override
         public long getAvailableFileSpace(final Path path) throws IOException {
             throw new IOException("IOExceptionAtor");
+        }
+    }
+
+    @Test
+    public void createFolderWithSlash() throws IOException {
+        final String folderName = "FolderNameWithSlash/";
+
+        try {
+            final PutFolderResponse response = HELPERS.createFolder(BUCKET_NAME, folderName);
+            assertNotNull(response);
+        } finally {
+            deleteAllContents(client, BUCKET_NAME);
+        }
+    }
+
+    @Test
+    public void createFolderWithNoSlash() throws IOException {
+        final String folderName = "FolderNameNoSlash";
+
+        try {
+            final PutFolderResponse response = HELPERS.createFolder(BUCKET_NAME, folderName);
+            assertNotNull(response);
+        } finally {
+            deleteAllContents(client, BUCKET_NAME);
         }
     }
 }
