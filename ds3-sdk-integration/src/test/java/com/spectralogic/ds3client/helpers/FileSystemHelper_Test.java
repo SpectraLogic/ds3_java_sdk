@@ -15,11 +15,8 @@
 
 package com.spectralogic.ds3client.helpers;
 
-import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3client.Ds3Client;
-import com.spectralogic.ds3client.commands.decorators.PutFolderRequest;
-import com.spectralogic.ds3client.commands.spectrads3.PutBulkJobSpectraS3Request;
-import com.spectralogic.ds3client.commands.spectrads3.PutBulkJobSpectraS3Response;
+import com.spectralogic.ds3client.commands.decorators.PutFolderResponse;
 import com.spectralogic.ds3client.helpers.events.SameThreadEventRunner;
 import com.spectralogic.ds3client.integration.Util;
 import com.spectralogic.ds3client.integration.test.helpers.TempStorageIds;
@@ -320,10 +317,8 @@ public class FileSystemHelper_Test {
         final String folderName = "FolderNameWithSlash/";
 
         try {
-            final Ds3Object ds3Object = new Ds3Object(folderName, 0);
-            final PutBulkJobSpectraS3Response jobResponse = client.putBulkJobSpectraS3(new PutBulkJobSpectraS3Request(BUCKET_NAME, ImmutableList.of(ds3Object)));
-
-            client.putFolder(new PutFolderRequest(BUCKET_NAME, folderName, jobResponse.getMasterObjectList().getJobId()));
+            final PutFolderResponse response = HELPERS.createFolder(BUCKET_NAME, folderName);
+            assertNotNull(response);
         } finally {
             deleteAllContents(client, BUCKET_NAME);
         }
@@ -334,10 +329,8 @@ public class FileSystemHelper_Test {
         final String folderName = "FolderNameNoSlash";
 
         try {
-            final Ds3Object ds3Object = new Ds3Object(folderName + "/", 0);
-            final PutBulkJobSpectraS3Response jobResponse = client.putBulkJobSpectraS3(new PutBulkJobSpectraS3Request(BUCKET_NAME, ImmutableList.of(ds3Object)));
-
-            client.putFolder(new PutFolderRequest(BUCKET_NAME, folderName, jobResponse.getMasterObjectList().getJobId()));
+            final PutFolderResponse response = HELPERS.createFolder(BUCKET_NAME, folderName);
+            assertNotNull(response);
         } finally {
             deleteAllContents(client, BUCKET_NAME);
         }

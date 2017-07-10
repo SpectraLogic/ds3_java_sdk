@@ -16,6 +16,7 @@
 package com.spectralogic.ds3client.commands.decorators;
 
 import com.spectralogic.ds3client.commands.PutObjectRequest;
+import com.spectralogic.ds3client.exceptions.FolderNameMissingTrailingForwardSlash;
 
 import java.util.UUID;
 
@@ -24,22 +25,22 @@ import java.util.UUID;
  * ensure the correct creation of a folder using the Put Object command.
  *
  * A folder is created by putting an object with no content, of zero size, and with the
- * content-length=0.  Also, the name of the folder must end with a slash '/'
+ * content-length=0.  Also, the name of the folder must end with a forward slash '/'.
  */
 public class PutFolderRequest {
 
     private final PutObjectRequest putObjectRequest;
 
     public PutFolderRequest(final String bucketName, final String folderName, final UUID job) {
-        putObjectRequest = new PutObjectRequest(bucketName, ensureEndsWithSlash(folderName), job, 0, 0, null);
+        validateNameEndsWithSlash(folderName);
+        putObjectRequest = new PutObjectRequest(bucketName, folderName, job, 0, 0, null);
         putObjectRequest.getHeaders().put("Content-Length", "0");
     }
 
-    private static String ensureEndsWithSlash(final String bucketName) {
-        if (bucketName.endsWith("/")) {
-            return bucketName;
+    private static void validateNameEndsWithSlash(final String folderName) {
+        if (!folderName.endsWith("/")) {
+            throw new FolderNameMissingTrailingForwardSlash(folderName);
         }
-        return bucketName + "/";
     }
 
     public PutObjectRequest getPutObjectRequest() {
