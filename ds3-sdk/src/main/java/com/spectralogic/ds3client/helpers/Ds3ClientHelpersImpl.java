@@ -28,7 +28,6 @@ import com.spectralogic.ds3client.commands.PutBucketRequest;
 import com.spectralogic.ds3client.commands.decorators.PutFolderRequest;
 import com.spectralogic.ds3client.commands.decorators.PutFolderResponse;
 import com.spectralogic.ds3client.commands.spectrads3.*;
-import com.spectralogic.ds3client.exceptions.FolderNameMissingTrailingForwardSlash;
 import com.spectralogic.ds3client.helpers.events.EventRunner;
 import com.spectralogic.ds3client.helpers.events.SameThreadEventRunner;
 import com.spectralogic.ds3client.helpers.options.ReadJobOptions;
