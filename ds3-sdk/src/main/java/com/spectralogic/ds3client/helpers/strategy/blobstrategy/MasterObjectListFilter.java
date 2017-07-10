@@ -29,9 +29,9 @@ public interface MasterObjectListFilter {
      * Filter out of a master object list chunks that have blobs not originally defined in a job defined
      * in a particular process.
      * @param originalMasterObjectList The master object list resturned from a call to
-     *                                 {@link com.spectralogic.ds3client.helpers.Ds3ClientHelpers.Job#startWriteJob(TransferStrategy)},
-     *                                  {@link com.spectralogic.ds3client.helpers.Ds3ClientHelpers.Job#startReadJob(TransferStrategy)},
-     *                                  or one its variants or from {@link com.spectralogic.ds3client.Ds3Client#getJobChunksReadyForClientProcessingSpectraS3(GetJobChunksReadyForClientProcessingSpectraS3Request)}
+     *                                 {@link com.spectralogic.ds3client.helpers.Ds3ClientHelpers.Job#startWriteJob(com.spectralogic.ds3client.helpers.strategy.transferstrategy.TransferStrategy)},
+     *                                  {@link com.spectralogic.ds3client.helpers.Ds3ClientHelpers.Job#startReadJob(com.spectralogic.ds3client.helpers.strategy.transferstrategy.TransferStrategy)},
+     *                                  or one its variants or from {@link com.spectralogic.ds3client.Ds3Client#getJobChunksReadyForClientProcessingSpectraS3(com.spectralogic.ds3client.commands.spectrads3.GetJobChunksReadyForClientProcessingSpectraS3Request)}
      * @return A master object list whose chunks contain only blobs originally defined in a particular process.
      */
     MasterObjectList apply(final MasterObjectList originalMasterObjectList);

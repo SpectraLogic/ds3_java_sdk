@@ -32,9 +32,9 @@ public interface ChunkFilter {
     /**
      * Filter out chunks containing blobs not originally defined in a job a process creates.
      * @param chunksFromMasterObjectList The chunks in either a master object list returned from a call to
-     *                                   {@link com.spectralogic.ds3client.helpers.Ds3ClientHelpers.Job#startWriteJob(TransferStrategy)},
-     *                                   {@link com.spectralogic.ds3client.helpers.Ds3ClientHelpers.Job#startReadJob(TransferStrategy)},
-     *                                   or one its variants or from {@link com.spectralogic.ds3client.Ds3Client#getJobChunksReadyForClientProcessingSpectraS3(GetJobChunksReadyForClientProcessingSpectraS3Request)}
+     *                                   {@link com.spectralogic.ds3client.helpers.Ds3ClientHelpers.Job#startWriteJob(com.spectralogic.ds3client.helpers.strategy.transferstrategy.TransferStrategy)},
+     *                                   {@link com.spectralogic.ds3client.helpers.Ds3ClientHelpers.Job#startReadJob(com.spectralogic.ds3client.helpers.strategy.transferstrategy.TransferStrategy)},
+     *                                   or one its variants or from {@link com.spectralogic.ds3client.Ds3Client#getJobChunksReadyForClientProcessingSpectraS3(com.spectralogic.ds3client.commands.spectrads3.GetJobChunksReadyForClientProcessingSpectraS3Request)}
      * @return Chunks containing blobs originally defined in a particular process.
      */
     Iterable<Objects> apply(final Collection<Objects> chunksFromMasterObjectList);
