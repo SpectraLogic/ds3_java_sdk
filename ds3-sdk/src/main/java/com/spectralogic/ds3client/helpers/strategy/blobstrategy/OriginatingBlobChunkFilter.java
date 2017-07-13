@@ -33,7 +33,7 @@ import java.util.Set;
  * that contains blobs defined in the other process.  To prevent one process from trying to transfer
  * blobs defined in another process, we apply a filter to master object lists to eliminate blobs not
  * originally defined in a particular process.  The ChunkFilter interface implements the behavior
- * in a {@link NullMasterObjectListFilter} filter that decides what chunks to include in the resultant
+ * in a {@link MasterObjectListFilter} filter that decides what chunks to include in the resultant
  * master object list.  This implementation filters out chunks containing blob names not contained in the
  * list of {@link Ds3Object} used in originally creating a job in a particular process.
  */
