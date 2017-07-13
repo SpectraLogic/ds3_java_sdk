@@ -63,7 +63,7 @@ public class OriginatingBlobChunkFilter implements ChunkFilter {
                         newChunk.setNodeId(chunk.getNodeId());
                         newChunk.setChunkNumber(chunk.getChunkNumber());
                         newChunk.setChunkId(chunk.getChunkId());
-                        newChunk.setObjects(blobsInJobCreation(blobNamesFromJobCreation, chunk.getObjects()));
+                        newChunk.setObjects(blobsInJobCreation(chunk.getObjects()));
 
                         return newChunk;
                     }
@@ -76,7 +76,7 @@ public class OriginatingBlobChunkFilter implements ChunkFilter {
                 });
     }
 
-    private List<BulkObject> blobsInJobCreation(final Set<String> blobNamesFromJobCreation, final List<BulkObject> blobsFromMasterObjectList) {
+    private List<BulkObject> blobsInJobCreation(final List<BulkObject> blobsFromMasterObjectList) {
         return FluentIterable.from(blobsFromMasterObjectList)
                 .filter(new Predicate<BulkObject>() {
                     @Override
