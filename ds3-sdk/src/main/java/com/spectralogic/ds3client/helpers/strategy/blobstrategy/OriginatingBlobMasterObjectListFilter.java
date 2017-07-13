@@ -20,10 +20,11 @@ import com.spectralogic.ds3client.models.MasterObjectList;
 import com.spectralogic.ds3client.models.bulk.Ds3Object;
 
 /**
- * An implementation of {@link MasterObjectListFilter} that does not actually filter out ny chunks.
- * This class exists to enable creatin an instance of {@link com.spectralogic.ds3client.helpers.strategy.blobstrategy.BlobStrategy}
- * that need not check for null when composed with a master object list filter.  This implementation filters out chunks
- * containing blob names not contained in the list of {@link Ds3Object} used in originally creating a job in a particular process.
+ * An implementation of {@link MasterObjectListFilter} removes from chunks blobs not originally specified in the
+ * originating job's definition.  This implementation filters out chunks
+ * containing blob names not contained in the list of {@link Ds3Object} used in originally creating a job in a
+ * particular process and removes from the master object list any chunks that contain no blobs after having
+ * applied the chunk filter.
  */
 public class OriginatingBlobMasterObjectListFilter implements MasterObjectListFilter {
     private final ChunkFilter chunkFilter;
