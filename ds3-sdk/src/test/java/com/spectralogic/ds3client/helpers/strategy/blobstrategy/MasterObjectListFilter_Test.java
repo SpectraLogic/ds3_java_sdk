@@ -196,13 +196,15 @@ public class MasterObjectListFilter_Test {
         originalMasterObjectList.setObjects(chunkList);
 
         final MasterObjectListFilter masterObjectListFilter = new OriginatingBlobMasterObjectListFilter(
-                new OriginatingBlobChunkFilter(ListUtils.union(objectsInFirstChunk, objectsInFirstChunk))
+                new OriginatingBlobChunkFilter(objectsInFirstChunk)
         );
 
         final MasterObjectList newMasterObjectList = masterObjectListFilter.apply(originalMasterObjectList);
 
         assertEquals(2, Iterables.size(newMasterObjectList.getObjects()));
-        assertTrue(BlobAndChunkHelper.masterObjectListsAreEqual(originalMasterObjectList, newMasterObjectList));
+        assertEquals(objectsInFirstChunk.size(), newMasterObjectList.getObjects().get(0).getObjects().size());
+        assertEquals(1, newMasterObjectList.getObjects().get(1).getObjects().size());
+        assertEquals(gracieBlob2, newMasterObjectList.getObjects().get(1).getObjects().get(0));
     }
 
     @Test

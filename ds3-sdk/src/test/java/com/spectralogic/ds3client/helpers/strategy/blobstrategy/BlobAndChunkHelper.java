@@ -29,7 +29,7 @@ import java.util.UUID;
 import java.util.concurrent.atomic.AtomicLong;
 
 final class BlobAndChunkHelper {
-    private static final String Trixie = "Trixie";
+    protected static final String Trixie = "Trixie";
     private static final String Shasta = "Shasta";
     protected static final String Gracie = "Gracie";
     private static final String Twitch = "Twitch";
@@ -109,13 +109,51 @@ final class BlobAndChunkHelper {
                 left.getNaked() == right.getNaked() &&
                 left.getName().equals(right.getName()) &&
                 left.getNodes().equals(right.getNodes()) &&
-                left.getObjects().equals(right.getObjects()) &&
                 left.getOriginalSizeInBytes() == right.getOriginalSizeInBytes() &&
                 left.getPriority().equals(right.getPriority()) &&
                 left.getRequestType().equals(right.getRequestType()) &&
                 left.getStartDate().equals(right.getStartDate()) &&
                 left.getStatus().equals(right.getStatus()) &&
                 left.getUserId().equals(right.getUserId()) &&
-                left.getUserName().equals(right.getUserName());
+                left.getUserName().equals(right.getUserName()) &&
+                chunksAreEqual(left.getObjects(), right.getObjects());
+    }
+
+    private static boolean chunksAreEqual(final List<Objects> leftChunks, final List<Objects> rightChunks) {
+        if (leftChunks.size() != rightChunks.size()) {
+            return false;
+        }
+
+        for (int i = 0; i < leftChunks.size(); ++i) {
+            final Objects leftChunk = leftChunks.get(i);
+            final Objects rightChunk = rightChunks.get(i);
+
+            if (leftChunk.getChunkId() != rightChunk.getChunkId() ||
+                            leftChunk.getChunkNumber() != rightChunk.getChunkNumber() ||
+                            leftChunk.getNodeId() != rightChunk.getNodeId())
+            {
+                return false;
+            }
+
+            if ( ! blobsAreEqual(leftChunk.getObjects(), rightChunk.getObjects())) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private static boolean blobsAreEqual(final List<BulkObject> leftBlobs, final List<BulkObject> rightBlobs) {
+        if (leftBlobs.size() != rightBlobs.size()) {
+            return false;
+        }
+
+        for (int i = 0; i < leftBlobs.size(); ++i) {
+            if ( ! leftBlobs.get(i).equals(rightBlobs.get(i))) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }

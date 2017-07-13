@@ -21,10 +21,10 @@ import com.google.common.collect.FluentIterable;
 import com.spectralogic.ds3client.models.BulkObject;
 import com.spectralogic.ds3client.models.Objects;
 import com.spectralogic.ds3client.models.bulk.Ds3Object;
-import org.apache.commons.collections4.SetUtils;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -57,20 +57,34 @@ public class OriginatingBlobChunkFilter implements ChunkFilter {
                 .toSet();
 
         return FluentIterable.from(chunksFromMasterObjectList)
+                .transform(new Function<Objects, Objects>() {
+                    @Nullable
+                    @Override
+                    public Objects apply(@Nullable final Objects chunk) {
+                        final Objects newChunk = new Objects();
+                        newChunk.setNodeId(chunk.getNodeId());
+                        newChunk.setChunkNumber(chunk.getChunkNumber());
+                        newChunk.setChunkId(chunk.getChunkId());
+                        newChunk.setObjects(blobsInJobCreation(blobNamesFromJobCreation, chunk.getObjects()));
+
+                        return newChunk;
+                    }
+                })
                 .filter(new Predicate<Objects>() {
                     @Override
-                    public boolean apply(@Nullable final Objects chunk) {
-                        final Set<String> blobNamesFromMasterObjectList =  FluentIterable.from(chunk.getObjects())
-                                .transform(new Function<BulkObject, String>() {
-                                    @Nullable
-                                    @Override
-                                    public String apply(@Nullable final BulkObject blob) {
-                                        return blob.getName();
-                                    }
-                                })
-                                .toSet();
-                        return SetUtils.intersection(blobNamesFromJobCreation, blobNamesFromMasterObjectList).size() > 0;
+                    public boolean apply(@Nullable final Objects newChunk) {
+                        return newChunk.getObjects().size() > 0;
                     }
                 });
+    }
+
+    private List<BulkObject> blobsInJobCreation(final Set<String> blobNamesFromJobCreation, final List<BulkObject> blobsFromMasterObjectList) {
+        return FluentIterable.from(blobsFromMasterObjectList)
+                .filter(new Predicate<BulkObject>() {
+                    @Override
+                    public boolean apply(@Nullable final BulkObject blob) {
+                        return blobNamesFromJobCreation.contains(blob.getName());
+                    }
+                }).toList();
     }
 }

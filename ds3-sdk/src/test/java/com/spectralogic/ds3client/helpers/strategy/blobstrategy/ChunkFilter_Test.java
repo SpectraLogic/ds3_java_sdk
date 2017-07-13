@@ -21,7 +21,10 @@ import com.spectralogic.ds3client.models.Objects;
 import com.spectralogic.ds3client.models.bulk.Ds3Object;
 import org.apache.commons.collections4.ListUtils;
 import org.junit.Test;
+
+import static com.spectralogic.ds3client.helpers.strategy.blobstrategy.BlobAndChunkHelper.Trixie;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -131,5 +134,34 @@ public class ChunkFilter_Test {
         final Iterable<Objects> chunksWithBlobsFromJobCreation = originatingBlobChunkFilter.apply(Arrays.asList(chunk1, chunk2));
 
         assertEquals(1, Iterables.size(chunksWithBlobsFromJobCreation));
+    }
+
+    @Test
+    public void testChunkWithBlobsFromDifferentJobs() {
+        final Ds3Object trixie = new Ds3Object(Trixie, 1);
+
+        final BulkObject trixieBlob = BlobAndChunkHelper.makeBlob(trixie.getSize(), trixie.getName());
+        final BulkObject blob2 = BlobAndChunkHelper.makeBlob(2, "2");
+        final BulkObject blob3 = BlobAndChunkHelper.makeBlob(3, "3");
+
+        final Objects chunk1 = BlobAndChunkHelper.makeChunk(1, Arrays.asList(trixieBlob, blob2, blob3));
+
+        final OriginatingBlobChunkFilter originatingBlobChunkFilter = new OriginatingBlobChunkFilter(Collections.singletonList(trixie));
+
+        final Iterable<Objects> resultingChunks = originatingBlobChunkFilter.apply(Collections.singletonList(chunk1));
+
+        assertEquals(1, Iterables.size(resultingChunks));
+
+        final Objects resultingChunk = resultingChunks.iterator().next();
+
+        assertEquals(chunk1.getChunkId(), resultingChunk.getChunkId());
+        assertEquals(chunk1.getChunkNumber(), resultingChunk.getChunkNumber());
+        assertEquals(chunk1.getNodeId(), resultingChunk.getNodeId());
+        assertFalse(chunk1.getObjects().size() == resultingChunk.getObjects().size());
+
+        assertEquals(1, resultingChunk.getObjects().size());
+
+        final BulkObject resultantBlob = resultingChunk.getObjects().get(0);
+        assertEquals(trixieBlob, resultantBlob);
     }
 }
