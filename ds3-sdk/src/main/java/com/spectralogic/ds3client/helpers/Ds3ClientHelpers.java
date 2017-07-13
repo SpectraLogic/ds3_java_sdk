@@ -18,6 +18,7 @@ package com.spectralogic.ds3client.helpers;
 import com.google.common.base.Function;
 import com.google.common.collect.FluentIterable;
 import com.spectralogic.ds3client.Ds3Client;
+import com.spectralogic.ds3client.commands.decorators.PutFolderResponse;
 import com.spectralogic.ds3client.helpers.options.ReadJobOptions;
 import com.spectralogic.ds3client.helpers.options.WriteJobOptions;
 import com.spectralogic.ds3client.helpers.strategy.transferstrategy.TransferStrategy;
@@ -580,4 +581,9 @@ public abstract class Ds3ClientHelpers {
     public abstract ObjectStorageSpaceVerificationResult objectsFromBucketWillFitInDirectory(final String bucketName,
                                                                                              final Collection<String> objectNames,
                                                                                              final Path destinationDirectory);
+
+    /**
+     * Creates a folder in the specified bucket
+     */
+    public abstract PutFolderResponse createFolder(final String bucketName, final String folderName) throws IOException;
 }
