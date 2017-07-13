@@ -38,15 +38,10 @@ import java.util.Set;
  * list of {@link Ds3Object} used in originally creating a job in a particular process.
  */
 public class OriginatingBlobChunkFilter implements ChunkFilter {
-    private final Iterable<Ds3Object> ds3ObjectsInJobCreation;
+    private final Set<String> blobNamesFromJobCreation;
 
     public OriginatingBlobChunkFilter(final Iterable<Ds3Object> ds3ObjectsInJobCreation) {
-        this.ds3ObjectsInJobCreation = ds3ObjectsInJobCreation;
-    }
-
-    @Override
-    public Iterable<Objects> apply(final Collection<Objects> chunksFromMasterObjectList) {
-        final Set<String> blobNamesFromJobCreation = FluentIterable.from(ds3ObjectsInJobCreation)
+        blobNamesFromJobCreation = FluentIterable.from(ds3ObjectsInJobCreation)
                 .transform(new Function<Ds3Object, String>() {
                     @Nullable
                     @Override
@@ -55,7 +50,10 @@ public class OriginatingBlobChunkFilter implements ChunkFilter {
                     }
                 })
                 .toSet();
+    }
 
+    @Override
+    public Iterable<Objects> apply(final Collection<Objects> chunksFromMasterObjectList) {
         return FluentIterable.from(chunksFromMasterObjectList)
                 .transform(new Function<Objects, Objects>() {
                     @Nullable
