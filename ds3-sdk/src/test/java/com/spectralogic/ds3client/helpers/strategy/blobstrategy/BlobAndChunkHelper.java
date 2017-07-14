@@ -30,11 +30,11 @@ import java.util.concurrent.atomic.AtomicLong;
 
 final class BlobAndChunkHelper {
     protected static final String Trixie = "Trixie";
-    private static final String Shasta = "Shasta";
+    protected static final String Shasta = "Shasta";
     protected static final String Gracie = "Gracie";
-    private static final String Twitch = "Twitch";
-    private static final String Marbles = "Marbles";
-    private static final String Nibbles = "Nibbles";
+    protected static final String Twitch = "Twitch";
+    protected static final String Marbles = "Marbles";
+    protected static final String Nibbles = "Nibbles";
 
     protected static final String bucketName = "bucket";
 

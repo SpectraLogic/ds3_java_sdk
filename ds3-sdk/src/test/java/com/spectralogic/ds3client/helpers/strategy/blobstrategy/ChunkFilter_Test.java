@@ -22,12 +22,18 @@ import com.spectralogic.ds3client.models.bulk.Ds3Object;
 import org.apache.commons.collections4.ListUtils;
 import org.junit.Test;
 
+import static com.spectralogic.ds3client.helpers.strategy.blobstrategy.BlobAndChunkHelper.Gracie;
+import static com.spectralogic.ds3client.helpers.strategy.blobstrategy.BlobAndChunkHelper.Marbles;
+import static com.spectralogic.ds3client.helpers.strategy.blobstrategy.BlobAndChunkHelper.Nibbles;
+import static com.spectralogic.ds3client.helpers.strategy.blobstrategy.BlobAndChunkHelper.Shasta;
 import static com.spectralogic.ds3client.helpers.strategy.blobstrategy.BlobAndChunkHelper.Trixie;
+import static com.spectralogic.ds3client.helpers.strategy.blobstrategy.BlobAndChunkHelper.Twitch;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
 public class ChunkFilter_Test {
@@ -45,6 +51,10 @@ public class ChunkFilter_Test {
         final Iterable<Objects> chunksWithBlobsFromJobCreation = originatingBlobChunkFilter.apply(Collections.singletonList(chunk));
 
         assertEquals(1, Iterables.size(chunksWithBlobsFromJobCreation));
+        assertEquals(3, chunksWithBlobsFromJobCreation.iterator().next().getObjects().size());
+        assertEquals(Trixie, chunksWithBlobsFromJobCreation.iterator().next().getObjects().get(0).getName());
+        assertEquals(Shasta, chunksWithBlobsFromJobCreation.iterator().next().getObjects().get(1).getName());
+        assertEquals(Gracie, chunksWithBlobsFromJobCreation.iterator().next().getObjects().get(2).getName());
     }
 
     @Test
@@ -89,6 +99,24 @@ public class ChunkFilter_Test {
         final Iterable<Objects> chunks = originatingBlobChunkFilter.apply(Arrays.asList(firstChunk, secondChunk));
 
         assertEquals(2, Iterables.size(chunks));
+
+        final Iterator<Objects> chunkIterator = chunks.iterator();
+
+        final Objects chunk1 = chunkIterator.next();
+        final List<BulkObject> blobsInChunk1 = chunk1.getObjects();
+
+        assertEquals(3, blobsInChunk1.size());
+        assertEquals(Trixie, chunk1.getObjects().get(0).getName());
+        assertEquals(Shasta, chunk1.getObjects().get(1).getName());
+        assertEquals(Gracie, chunk1.getObjects().get(2).getName());
+
+        final Objects chunk2 = chunkIterator.next();
+        final List<BulkObject> blobsInChunk2 = chunk2.getObjects();
+
+        assertEquals(3, blobsInChunk2.size());
+        assertEquals(Twitch, chunk2.getObjects().get(0).getName());
+        assertEquals(Marbles, chunk2.getObjects().get(1).getName());
+        assertEquals(Nibbles, chunk2.getObjects().get(2).getName());
     }
 
     @Test
@@ -110,6 +138,22 @@ public class ChunkFilter_Test {
         final Iterable<Objects> chunks = originatingBlobChunkFilter.apply(Arrays.asList(firstChunk, secondChunk));
 
         assertEquals(2, Iterables.size(chunks));
+
+        final Iterator<Objects> chunkIterator = chunks.iterator();
+
+        final Objects chunk1 = chunkIterator.next();
+        final List<BulkObject> blobsInChunk1 = chunk1.getObjects();
+
+        assertEquals(3, blobsInChunk1.size());
+        assertEquals(Trixie, chunk1.getObjects().get(0).getName());
+        assertEquals(Shasta, chunk1.getObjects().get(1).getName());
+        assertEquals(Gracie, chunk1.getObjects().get(2).getName());
+
+        final Objects chunk2 = chunkIterator.next();
+        final List<BulkObject> blobsInChunk2 = chunk2.getObjects();
+
+        assertEquals(1, blobsInChunk2.size());
+        assertEquals(Gracie, chunk2.getObjects().get(0).getName());
     }
 
     @Test
@@ -134,6 +178,10 @@ public class ChunkFilter_Test {
         final Iterable<Objects> chunksWithBlobsFromJobCreation = originatingBlobChunkFilter.apply(Arrays.asList(chunk1, chunk2));
 
         assertEquals(1, Iterables.size(chunksWithBlobsFromJobCreation));
+        assertEquals(3, chunksWithBlobsFromJobCreation.iterator().next().getObjects().size());
+        assertEquals(Trixie, chunksWithBlobsFromJobCreation.iterator().next().getObjects().get(0).getName());
+        assertEquals(Shasta, chunksWithBlobsFromJobCreation.iterator().next().getObjects().get(1).getName());
+        assertEquals(Gracie, chunksWithBlobsFromJobCreation.iterator().next().getObjects().get(2).getName());
     }
 
     @Test

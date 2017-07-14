@@ -21,6 +21,8 @@ import com.google.common.collect.FluentIterable;
 import com.spectralogic.ds3client.models.BulkObject;
 import com.spectralogic.ds3client.models.Objects;
 import com.spectralogic.ds3client.models.bulk.Ds3Object;
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
@@ -55,23 +57,37 @@ public class OriginatingBlobChunkFilter implements ChunkFilter {
     @Override
     public Iterable<Objects> apply(final Collection<Objects> chunksFromMasterObjectList) {
         return FluentIterable.from(chunksFromMasterObjectList)
-                .transform(new Function<Objects, Objects>() {
+                .transform(new Function<Objects, Pair<List<BulkObject>, Objects>>() {
                     @Nullable
                     @Override
-                    public Objects apply(@Nullable final Objects chunk) {
-                        final Objects newChunk = new Objects();
-                        newChunk.setNodeId(chunk.getNodeId());
-                        newChunk.setChunkNumber(chunk.getChunkNumber());
-                        newChunk.setChunkId(chunk.getChunkId());
-                        newChunk.setObjects(blobsInJobCreation(chunk.getObjects()));
-
-                        return newChunk;
+                    public Pair<List<BulkObject>, Objects> apply(@Nullable final Objects chunkFromMasterObjectList) {
+                        final List<BulkObject> blobsInJobCreation = blobsInJobCreation(chunkFromMasterObjectList.getObjects());
+                        return new ImmutablePair<>(blobsInJobCreation, chunkFromMasterObjectList);
                     }
                 })
-                .filter(new Predicate<Objects>() {
+                .filter(new Predicate<Pair<List<BulkObject>, Objects>>() {
                     @Override
-                    public boolean apply(@Nullable final Objects newChunk) {
-                        return newChunk.getObjects().size() > 0;
+                    public boolean apply(@Nullable final Pair<List<BulkObject>, Objects> blobsInJobCreationChunkPair) {
+                        return blobsInJobCreationChunkPair.getLeft().size() > 0;
+                    }
+                })
+                .transform(new Function<Pair<List<BulkObject>, Objects>, Objects>() {
+                    @Nullable
+                    @Override
+                    public Objects apply(@Nullable final Pair<List<BulkObject>, Objects> blobsInJobCreationChunkPair) {
+                        final Objects chunkFromMasterObjectList = blobsInJobCreationChunkPair.getRight();
+
+                        if (blobsInJobCreationChunkPair.getLeft().size() == chunkFromMasterObjectList.getObjects().size()) {
+                            return chunkFromMasterObjectList;
+                        }
+
+                        final Objects newChunk = new Objects();
+                        newChunk.setNodeId(chunkFromMasterObjectList.getNodeId());
+                        newChunk.setChunkNumber(chunkFromMasterObjectList.getChunkNumber());
+                        newChunk.setChunkId(chunkFromMasterObjectList.getChunkId());
+                        newChunk.setObjects(blobsInJobCreationChunkPair.getLeft());
+
+                        return newChunk;
                     }
                 });
     }
