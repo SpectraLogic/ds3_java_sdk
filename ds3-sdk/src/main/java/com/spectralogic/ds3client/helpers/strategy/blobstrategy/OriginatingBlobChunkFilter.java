@@ -18,6 +18,8 @@ package com.spectralogic.ds3client.helpers.strategy.blobstrategy;
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.common.collect.FluentIterable;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
 import com.spectralogic.ds3client.models.BulkObject;
 import com.spectralogic.ds3client.models.Objects;
 import com.spectralogic.ds3client.models.bulk.Ds3Object;
@@ -57,27 +59,27 @@ public class OriginatingBlobChunkFilter implements ChunkFilter {
     @Override
     public Iterable<Objects> apply(final Collection<Objects> chunksFromMasterObjectList) {
         return FluentIterable.from(chunksFromMasterObjectList)
-                .transform(new Function<Objects, Pair<List<BulkObject>, Objects>>() {
+                .transform(new Function<Objects, Pair<Iterable<BulkObject>, Objects>>() {
                     @Nullable
                     @Override
-                    public Pair<List<BulkObject>, Objects> apply(@Nullable final Objects chunkFromMasterObjectList) {
-                        final List<BulkObject> blobsInJobCreation = blobsInJobCreation(chunkFromMasterObjectList.getObjects());
+                    public Pair<Iterable<BulkObject>, Objects> apply(@Nullable final Objects chunkFromMasterObjectList) {
+                        final Iterable<BulkObject> blobsInJobCreation = blobsInJobCreation(chunkFromMasterObjectList.getObjects());
                         return new ImmutablePair<>(blobsInJobCreation, chunkFromMasterObjectList);
                     }
                 })
-                .filter(new Predicate<Pair<List<BulkObject>, Objects>>() {
+                .filter(new Predicate<Pair<Iterable<BulkObject>, Objects>>() {
                     @Override
-                    public boolean apply(@Nullable final Pair<List<BulkObject>, Objects> blobsInJobCreationChunkPair) {
-                        return blobsInJobCreationChunkPair.getLeft().size() > 0;
+                    public boolean apply(@Nullable final Pair<Iterable<BulkObject>, Objects> blobsInJobCreationChunkPair) {
+                        return Iterables.size(blobsInJobCreationChunkPair.getLeft()) > 0;
                     }
                 })
-                .transform(new Function<Pair<List<BulkObject>, Objects>, Objects>() {
+                .transform(new Function<Pair<Iterable<BulkObject>, Objects>, Objects>() {
                     @Nullable
                     @Override
-                    public Objects apply(@Nullable final Pair<List<BulkObject>, Objects> blobsInJobCreationChunkPair) {
+                    public Objects apply(@Nullable final Pair<Iterable<BulkObject>, Objects> blobsInJobCreationChunkPair) {
                         final Objects chunkFromMasterObjectList = blobsInJobCreationChunkPair.getRight();
 
-                        if (blobsInJobCreationChunkPair.getLeft().size() == chunkFromMasterObjectList.getObjects().size()) {
+                        if (Iterables.size(blobsInJobCreationChunkPair.getLeft()) == chunkFromMasterObjectList.getObjects().size()) {
                             return chunkFromMasterObjectList;
                         }
 
@@ -85,20 +87,20 @@ public class OriginatingBlobChunkFilter implements ChunkFilter {
                         newChunk.setNodeId(chunkFromMasterObjectList.getNodeId());
                         newChunk.setChunkNumber(chunkFromMasterObjectList.getChunkNumber());
                         newChunk.setChunkId(chunkFromMasterObjectList.getChunkId());
-                        newChunk.setObjects(blobsInJobCreationChunkPair.getLeft());
+                        newChunk.setObjects(Lists.newArrayList(blobsInJobCreationChunkPair.getLeft()));
 
                         return newChunk;
                     }
                 });
     }
 
-    private List<BulkObject> blobsInJobCreation(final List<BulkObject> blobsFromMasterObjectList) {
+    private Iterable<BulkObject> blobsInJobCreation(final List<BulkObject> blobsFromMasterObjectList) {
         return FluentIterable.from(blobsFromMasterObjectList)
                 .filter(new Predicate<BulkObject>() {
                     @Override
                     public boolean apply(@Nullable final BulkObject blob) {
                         return blobNamesFromJobCreation.contains(blob.getName());
                     }
-                }).toList();
+                });
     }
 }
