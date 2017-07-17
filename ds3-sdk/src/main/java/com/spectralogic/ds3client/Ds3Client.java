@@ -768,6 +768,13 @@ public interface Ds3Client extends Closeable {
 
     @ResponsePayloadModel("MasterObjectList")
     @Action("MODIFY")
+    @Resource("JOB")
+    
+    CloseAggregatingJobSpectraS3Response closeAggregatingJobSpectraS3(final CloseAggregatingJobSpectraS3Request request)
+            throws IOException;
+
+    @ResponsePayloadModel("MasterObjectList")
+    @Action("MODIFY")
     @Resource("BUCKET")
     
     GetBulkJobSpectraS3Response getBulkJobSpectraS3(final GetBulkJobSpectraS3Request request)
@@ -1998,6 +2005,13 @@ public interface Ds3Client extends Closeable {
     @Resource("TAPE_PARTITION")
     
     ModifyAllTapePartitionsSpectraS3Response modifyAllTapePartitionsSpectraS3(final ModifyAllTapePartitionsSpectraS3Request request)
+            throws IOException;
+
+    @ResponsePayloadModel("TapeDrive")
+    @Action("MODIFY")
+    @Resource("TAPE_DRIVE")
+    
+    ModifyTapeDriveSpectraS3Response modifyTapeDriveSpectraS3(final ModifyTapeDriveSpectraS3Request request)
             throws IOException;
 
     @ResponsePayloadModel("TapePartition")

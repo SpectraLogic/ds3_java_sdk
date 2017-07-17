@@ -123,22 +123,22 @@ public class Iterators_Test {
 
    @Test
     public void emptyGetObjects() throws IOException {
-        emptyTest(new GetObjectsFullDetailsLoaderFactory(CLIENT, TEST_ENV_NAME, "", 10, RETRIES, true));
+        emptyTest(new GetObjectsFullDetailsLoaderFactory(CLIENT, TEST_ENV_NAME, 10, RETRIES, true));
     }
 
     @Test
     public void singlePageGetObjectsIterator() throws IOException, URISyntaxException {
-        paginate(new GetObjectsFullDetailsLoaderFactory(CLIENT, TEST_ENV_NAME, "", 10, RETRIES, true));
+        paginate(new GetObjectsFullDetailsLoaderFactory(CLIENT, TEST_ENV_NAME, 10, RETRIES, true));
     }
 
     @Test
     public void failedGetObjectsWithFullDetails() throws IOException, URISyntaxException {
-        testFailedRequest(new GetObjectsFullDetailsLoaderFactory(CLIENT, TEST_ENV_NAME, "", 10, RETRIES, true));
+        testFailedRequest(new GetObjectsFullDetailsLoaderFactory(CLIENT, TEST_ENV_NAME, 10, RETRIES, true));
     }
 
     @Test
     public void multiPageGetObjectsWithFullDetails() throws IOException, URISyntaxException {
-        paginate(new GetObjectsFullDetailsLoaderFactory(CLIENT, TEST_ENV_NAME, "", 2, RETRIES, true));
+        paginate(new GetObjectsFullDetailsLoaderFactory(CLIENT, TEST_ENV_NAME, 2, RETRIES, true));
     }
 
     private void emptyTest(final LazyIterable.LazyLoaderFactory<?> lazyLoaderFactory) throws IOException {
