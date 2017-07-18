@@ -39,7 +39,6 @@ import java.util.Set;
 import java.util.UUID;
 
 import static com.spectralogic.ds3client.integration.Util.deleteAllContents;
-import static com.spectralogic.ds3client.integration.Util.insecureFromEnv;
 import static junit.framework.TestCase.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -79,7 +78,7 @@ public class SpectraS3PaginationLoader_Test {
             final int numObjects = 55;
             CLIENT.putBulkJobSpectraS3(new PutBulkJobSpectraS3Request(TEST_ENV_NAME, createTestList(numObjects)));
 
-            final GetObjectsFullDetailsLoaderFactory loaderFactory = new GetObjectsFullDetailsLoaderFactory(CLIENT, TEST_ENV_NAME, "", 10, RETRIES, false);
+            final GetObjectsFullDetailsLoaderFactory loaderFactory = new GetObjectsFullDetailsLoaderFactory(CLIENT, TEST_ENV_NAME, 10, RETRIES, false);
 
             final Set<String> foundItems = new HashSet<>();
 
