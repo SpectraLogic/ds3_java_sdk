@@ -23,8 +23,6 @@ import com.google.common.collect.Lists;
 import com.spectralogic.ds3client.models.BulkObject;
 import com.spectralogic.ds3client.models.Objects;
 import com.spectralogic.ds3client.models.bulk.Ds3Object;
-import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
@@ -59,27 +57,27 @@ public class OriginatingBlobChunkFilter implements ChunkFilter {
     @Override
     public Iterable<Objects> apply(final Collection<Objects> chunksFromMasterObjectList) {
         return FluentIterable.from(chunksFromMasterObjectList)
-                .transform(new Function<Objects, Pair<Iterable<BulkObject>, Objects>>() {
+                .transform(new Function<Objects, BlobsChunkPair>() {
                     @Nullable
                     @Override
-                    public Pair<Iterable<BulkObject>, Objects> apply(@Nullable final Objects chunkFromMasterObjectList) {
+                    public BlobsChunkPair apply(@Nullable final Objects chunkFromMasterObjectList) {
                         final Iterable<BulkObject> blobsInJobCreation = blobsInJobCreation(chunkFromMasterObjectList.getObjects());
-                        return new ImmutablePair<>(blobsInJobCreation, chunkFromMasterObjectList);
+                        return new BlobsChunkPair(blobsInJobCreation, chunkFromMasterObjectList);
                     }
                 })
-                .filter(new Predicate<Pair<Iterable<BulkObject>, Objects>>() {
+                .filter(new Predicate<BlobsChunkPair>() {
                     @Override
-                    public boolean apply(@Nullable final Pair<Iterable<BulkObject>, Objects> blobsInJobCreationChunkPair) {
-                        return Iterables.size(blobsInJobCreationChunkPair.getLeft()) > 0;
+                    public boolean apply(@Nullable final BlobsChunkPair blobsInJobCreationChunkPair) {
+                        return Iterables.size(blobsInJobCreationChunkPair.blobs()) > 0;
                     }
                 })
-                .transform(new Function<Pair<Iterable<BulkObject>, Objects>, Objects>() {
+                .transform(new Function<BlobsChunkPair, Objects>() {
                     @Nullable
                     @Override
-                    public Objects apply(@Nullable final Pair<Iterable<BulkObject>, Objects> blobsInJobCreationChunkPair) {
-                        final Objects chunkFromMasterObjectList = blobsInJobCreationChunkPair.getRight();
+                    public Objects apply(@Nullable final BlobsChunkPair blobsInJobCreationChunkPair) {
+                        final Objects chunkFromMasterObjectList = blobsInJobCreationChunkPair.chunk();
 
-                        if (Iterables.size(blobsInJobCreationChunkPair.getLeft()) == chunkFromMasterObjectList.getObjects().size()) {
+                        if (Iterables.size(blobsInJobCreationChunkPair.blobs()) == chunkFromMasterObjectList.getObjects().size()) {
                             return chunkFromMasterObjectList;
                         }
 
@@ -87,7 +85,7 @@ public class OriginatingBlobChunkFilter implements ChunkFilter {
                         newChunk.setNodeId(chunkFromMasterObjectList.getNodeId());
                         newChunk.setChunkNumber(chunkFromMasterObjectList.getChunkNumber());
                         newChunk.setChunkId(chunkFromMasterObjectList.getChunkId());
-                        newChunk.setObjects(Lists.newArrayList(blobsInJobCreationChunkPair.getLeft()));
+                        newChunk.setObjects(Lists.newArrayList(blobsInJobCreationChunkPair.blobs()));
 
                         return newChunk;
                     }
