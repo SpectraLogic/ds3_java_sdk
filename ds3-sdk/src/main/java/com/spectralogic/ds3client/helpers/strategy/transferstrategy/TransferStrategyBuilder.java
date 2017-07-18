@@ -414,7 +414,7 @@ public final class TransferStrategyBuilder {
      * that contains blobs defined in the other process.  To prevent one process from trying to transfer
      * blobs defined in another process, we apply a filter to master object lists to eliminate blobs not
      * originally defined in a particular process.  The ChunkFilter interface implements the behavior
-     * in a {@link NullMasterObjectListFilter} filter that decides what chunks to include in the resultant
+     * in a {@link MasterObjectListFilter} filter that decides what chunks to include in the resultant
      * master object list.
      * @param chunkFilter An instance of {@link ChunkFilter} whose behavior you wish to decide which chunks get
      *                    filtered.
