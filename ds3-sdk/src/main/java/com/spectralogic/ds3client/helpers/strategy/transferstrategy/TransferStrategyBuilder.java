@@ -366,7 +366,7 @@ public final class TransferStrategyBuilder {
 
     private MasterObjectListFilter getOrCreateMasterObjectListFilter() {
         if (masterObjectListFilter == null) {
-            withMasterObjectListBuilder(new OriginatingBlobMasterObjectListFilter(getOrCreateChunkFilter()));
+            withMasterObjectListFilter(new OriginatingBlobMasterObjectListFilter(getOrCreateChunkFilter()));
         }
 
         return masterObjectListFilter;
@@ -435,7 +435,7 @@ public final class TransferStrategyBuilder {
      *                    filtered.
      * @return The instance of this builder, with the intent that you can string together the behaviors you wish.
      */
-    public TransferStrategyBuilder withMasterObjectListBuilder(final MasterObjectListFilter masterObjectListFilter) {
+    public TransferStrategyBuilder withMasterObjectListFilter(final MasterObjectListFilter masterObjectListFilter) {
         this.masterObjectListFilter = masterObjectListFilter;
         return this;
     }
