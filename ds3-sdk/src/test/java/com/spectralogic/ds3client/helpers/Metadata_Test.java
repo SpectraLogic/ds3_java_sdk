@@ -102,9 +102,8 @@ public class Metadata_Test {
         masterObjectList.setNodes(Collections.singletonList(jobNode));
         masterObjectList.setObjects(Collections.singletonList(chunk));
 
-        final Map<String, String> metadata = new HashMap<String, String>() {
-            { put("fileType", "text"); }
-        };
+        final Map<String, String> metadata = new HashMap<>();
+        metadata.put("fileType", "text");
 
         final Ds3ClientHelpers.ObjectChannelBuilder objectChannelBuilder = new Ds3ClientHelpers.ObjectChannelBuilder() {
             @Override
