@@ -120,7 +120,7 @@ public class PutJobTransferMethod implements TransferMethod {
     }
 
     private void addMetadata(final BulkObject blob, final PutObjectRequest putObjectRequest) {
-        if (blob.getOffset() == 0 && metadataAccess != null) {
+        if (metadataAccess != null) {
             final Map<String, String> metadata = metadataAccess.getMetadataValue(blob.getName());
             if ( ! Guard.isMapNullOrEmpty(metadata)) {
                 final ImmutableMap<String, String> immutableMetadata = ImmutableMap.copyOf(metadata);
