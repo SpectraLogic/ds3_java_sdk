@@ -131,17 +131,13 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
     }
 
     private TransferStrategyBuilder makeTransferStrategyBuilder() {
-        final EventDispatcher eventDispatcher = new EventDispatcherImpl(eventRunner);
-
-        final TransferStrategyBuilder transferStrategyBuilder = new TransferStrategyBuilder()
+        return new TransferStrategyBuilder()
                 .withDs3Client(client)
                 .withNumChunkAttemptRetries(maxChunkAttempts)
                 .withNumTransferRetries(maxObjectTransferAttempts)
                 .withChunkRetryDelayInSeconds(secondsBetweenChunkAttempts)
                 .withEventRunner(eventRunner)
-                .withEventDispatcher(eventDispatcher);
-
-        return transferStrategyBuilder;
+                .withEventDispatcher(new EventDispatcherImpl(eventRunner));
     }
 
     private Ds3ClientHelpers.Job innerStartWriteJob(final String bucket,
