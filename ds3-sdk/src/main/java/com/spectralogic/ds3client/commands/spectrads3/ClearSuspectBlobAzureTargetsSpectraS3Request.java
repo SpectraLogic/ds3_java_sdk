@@ -16,10 +16,12 @@
 // This code is auto-generated, do not modify
 package com.spectralogic.ds3client.commands.spectrads3;
 
+import com.spectralogic.ds3client.commands.interfaces.AbstractIdsPayloadRequest;
 import com.spectralogic.ds3client.networking.HttpVerb;
-import com.spectralogic.ds3client.commands.interfaces.AbstractRequest;
 
-public class ClearSuspectBlobAzureTargetsSpectraS3Request extends AbstractRequest {
+import java.util.List;
+
+public class ClearSuspectBlobAzureTargetsSpectraS3Request extends AbstractIdsPayloadRequest {
 
     // Variables
     
@@ -28,8 +30,8 @@ public class ClearSuspectBlobAzureTargetsSpectraS3Request extends AbstractReques
     // Constructor
     
     
-    public ClearSuspectBlobAzureTargetsSpectraS3Request() {
-        
+    public ClearSuspectBlobAzureTargetsSpectraS3Request(final List<String> ids) {
+        super(ids);
     }
 
     public ClearSuspectBlobAzureTargetsSpectraS3Request withForce(final boolean force) {
