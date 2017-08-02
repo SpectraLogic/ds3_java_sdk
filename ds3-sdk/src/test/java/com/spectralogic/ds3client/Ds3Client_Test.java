@@ -1143,4 +1143,22 @@ public class Ds3Client_Test {
     public void createFolderWithNoSlash() throws IOException {
         new PutFolderRequest("BucketName", "FolderNameNoSlash", UUID.randomUUID());
     }
+
+    @Test
+    public void clearSuspectBlobAzureTargetsSpectraS3Test() throws IOException {
+        final String expectedRequestContent = "<Ids><Id>id1</Id><Id>id2</Id><Id>id3</Id></Ids>";
+
+        final List<String> ids = new ArrayList<>();
+        ids.add("id1");
+        ids.add("id2");
+        ids.add("id3");
+
+        final Map<String, String> queryParams = new HashMap<>();
+
+        MockNetwork
+                .expecting(HttpVerb.DELETE, "/_rest_/suspect_blob_azure_target", queryParams, expectedRequestContent)
+                .returning(204, "")
+                .asClient()
+                .clearSuspectBlobAzureTargetsSpectraS3(new ClearSuspectBlobAzureTargetsSpectraS3Request(ids));
+    }
 }
