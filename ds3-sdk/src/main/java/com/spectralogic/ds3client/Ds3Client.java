@@ -39,6 +39,7 @@ public interface Ds3Client extends Closeable {
 
     PutFolderResponse putFolder(final PutFolderRequest request)
             throws IOException;
+
     
     
     AbortMultiPartUploadResponse abortMultiPartUpload(final AbortMultiPartUploadRequest request)
