@@ -33,6 +33,8 @@ public class GetPoolsSpectraS3Request extends AbstractPaginationRequest {
 
     private String bucketId;
 
+    private String guid;
+
     private PoolHealth health;
 
     private boolean lastPage;
@@ -74,6 +76,13 @@ public class GetPoolsSpectraS3Request extends AbstractPaginationRequest {
     public GetPoolsSpectraS3Request withBucketId(final String bucketId) {
         this.bucketId = bucketId;
         this.updateQueryParam("bucket_id", bucketId);
+        return this;
+    }
+
+
+    public GetPoolsSpectraS3Request withGuid(final String guid) {
+        this.guid = guid;
+        this.updateQueryParam("guid", guid);
         return this;
     }
 
@@ -205,6 +214,11 @@ public class GetPoolsSpectraS3Request extends AbstractPaginationRequest {
 
     public String getBucketId() {
         return this.bucketId;
+    }
+
+
+    public String getGuid() {
+        return this.guid;
     }
 
 
