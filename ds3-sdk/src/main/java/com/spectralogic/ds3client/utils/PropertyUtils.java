@@ -15,7 +15,6 @@
 
 package com.spectralogic.ds3client.utils;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 import java.util.concurrent.atomic.AtomicReference;
