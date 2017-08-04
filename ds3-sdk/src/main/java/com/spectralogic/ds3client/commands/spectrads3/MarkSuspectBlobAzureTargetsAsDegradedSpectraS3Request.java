@@ -17,9 +17,11 @@
 package com.spectralogic.ds3client.commands.spectrads3;
 
 import com.spectralogic.ds3client.networking.HttpVerb;
-import com.spectralogic.ds3client.commands.interfaces.AbstractRequest;
+import com.spectralogic.ds3client.commands.interfaces.AbstractIdsPayloadRequest;
 
-public class MarkSuspectBlobAzureTargetsAsDegradedSpectraS3Request extends AbstractRequest {
+import java.util.List;
+
+public class MarkSuspectBlobAzureTargetsAsDegradedSpectraS3Request extends AbstractIdsPayloadRequest {
 
     // Variables
     
@@ -27,8 +29,8 @@ public class MarkSuspectBlobAzureTargetsAsDegradedSpectraS3Request extends Abstr
 
     // Constructor
     
-    
-    public MarkSuspectBlobAzureTargetsAsDegradedSpectraS3Request() {
+    public MarkSuspectBlobAzureTargetsAsDegradedSpectraS3Request(final List<String> ids) {
+        super(ids);
         
     }
 
