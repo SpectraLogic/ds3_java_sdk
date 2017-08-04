@@ -47,13 +47,18 @@ public final class PropertyUtils {
         try (final InputStream propertiesStream = PropertyUtils.class.getClassLoader().getResourceAsStream(PROPERTIES_FILE_NAME)) {
             if (propertiesStream != null) {
                 properties.load(propertiesStream);
-                final String versionFromPropFile = properties.get(SDK_VERSION_PROPERTY_NAME).toString();
-                if (!Guard.isStringNullOrEmpty(versionFromPropFile)) {
-                    versionProperty.set(versionFromPropFile);
+                final Object versionPropertyObject = properties.get(SDK_VERSION_PROPERTY_NAME);
+
+                if (versionPropertyObject != null) {
+                    final String versionFromPropFile = properties.get(SDK_VERSION_PROPERTY_NAME).toString();
+
+                    if ( ! Guard.isStringNullOrEmpty(versionFromPropFile)) {
+                        versionProperty.set(versionFromPropFile);
+                    }
                 }
             }
-        } catch (final IOException e) {
-            LOG.warn("Could not read properties file.", e);
+        } catch (final Throwable t) {
+            LOG.warn("Could not read properties file.", t);
         }
 
         return versionProperty.get();
