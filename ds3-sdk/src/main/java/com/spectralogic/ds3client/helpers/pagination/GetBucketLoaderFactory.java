@@ -22,6 +22,8 @@ import com.spectralogic.ds3client.utils.collections.LazyIterable;
 /**
  *  This class is a child of {@link GetBucketKeyLoaderFactory}
  *  that provides a sane default for mapping {@link com.spectralogic.ds3client.models.ListBucketResult}
+ *  "/" will be used for the delimiter, and {@link com.spectralogic.ds3client.models.ListBucketResult} will be mapped to
+ *  {@link LazyIterable.LazyLoader<Contents>} which was the old behavior.
  */
 public class GetBucketLoaderFactory extends GetBucketKeyLoaderFactory<Contents> {
 
