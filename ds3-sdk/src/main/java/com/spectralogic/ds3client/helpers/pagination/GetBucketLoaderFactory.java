@@ -19,12 +19,28 @@ import com.spectralogic.ds3client.Ds3Client;
 import com.spectralogic.ds3client.models.Contents;
 import com.spectralogic.ds3client.utils.collections.LazyIterable;
 
+/**
+ *  This class is a child of {@link GetBucketKeyLoaderFactory}
+ *  that provides a sane default for mapping {@link com.spectralogic.ds3client.models.ListBucketResult}
+ */
 public class GetBucketLoaderFactory extends GetBucketKeyLoaderFactory<Contents> {
 
+    /**
+     *
+     * @param client
+     * @param bucket
+     * @param keyPrefix
+     * @param nextMarker
+     * @param maxKeys
+     * @param defaultListObjectsRetries
+     */
     public GetBucketLoaderFactory(final Ds3Client client, final String bucket, final String keyPrefix, final String nextMarker, final int maxKeys, final int defaultListObjectsRetries) {
         super(client, bucket, keyPrefix, "/" , nextMarker, maxKeys, defaultListObjectsRetries, contentsFunction);
     }
 
+    /**
+     * @return {@link LazyIterable.LazyLoader<Contents>}
+     */
     @Override
     public LazyIterable.LazyLoader<Contents> create() {
         return super.create();
