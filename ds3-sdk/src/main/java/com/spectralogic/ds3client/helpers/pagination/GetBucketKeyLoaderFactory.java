@@ -64,6 +64,7 @@ public class GetBucketKeyLoaderFactory<T> implements LazyIterable.LazyLoaderFact
     private final int defaultListObjectsRetries;
     private final Function<ListBucketResult, Iterable<T>> function;
 
+
     public GetBucketKeyLoaderFactory(final Ds3Client client, final String bucket, final String keyPrefix, final String delimiter, final String nextMarker, final int maxKeys, final int defaultListObjectsRetries, final Function<ListBucketResult, Iterable<T>> function) {
         this.client = client;
         this.bucket = bucket;
