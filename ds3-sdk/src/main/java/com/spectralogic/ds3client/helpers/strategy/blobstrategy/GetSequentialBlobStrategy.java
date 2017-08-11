@@ -25,8 +25,6 @@ import com.spectralogic.ds3client.helpers.strategy.transferstrategy.EventDispatc
 import com.spectralogic.ds3client.models.BulkObject;
 import com.spectralogic.ds3client.models.MasterObjectList;
 import com.spectralogic.ds3client.models.Objects;
-import org.slf4j.LoggerFactory;
-import org.slf4j.Logger;
 
 import javax.annotation.Nullable;
 import java.io.IOException;
@@ -35,19 +33,23 @@ import java.io.IOException;
  * A subclass of {@link BlobStrategy} used in get transfers.
  */
 public class GetSequentialBlobStrategy extends AbstractBlobStrategy {
+    private final MasterObjectListFilter masterObjectListFilter;
+
     public GetSequentialBlobStrategy(final Ds3Client client,
                                      final MasterObjectList masterObjectList,
                                      final EventDispatcher eventDispatcher,
                                      final ChunkAttemptRetryBehavior retryBehavior,
-                                     final ChunkAttemptRetryDelayBehavior chunkAttemptRetryDelayBehavior)
+                                     final ChunkAttemptRetryDelayBehavior chunkAttemptRetryDelayBehavior,
+                                     final MasterObjectListFilter masterObjectListFilter)
     {
         super(client, masterObjectList, eventDispatcher, retryBehavior, chunkAttemptRetryDelayBehavior);
+        this.masterObjectListFilter = masterObjectListFilter;
     }
 
     @Override
     public synchronized Iterable<JobPart> getWork() throws IOException, InterruptedException {
         // get chunks that have blobs ready for transfer from black pearl
-        final MasterObjectList masterObjectListWithAvailableChunks = masterObjectListWithAvailableChunks();
+        final MasterObjectList masterObjectListWithAvailableChunks = masterObjectListFilter.apply(masterObjectListWithAvailableChunks());
 
         final FluentIterable<Objects> chunks = FluentIterable.from(masterObjectListWithAvailableChunks.getObjects());
 
