@@ -92,17 +92,11 @@ public class ModelParsing_Test {
                 "<Part><PartNumber>2</PartNumber><ETag>0c78aef83f66abc1fa1e8477f296d394</ETag></Part>" +
                 "</CompleteMultipartUpload>";
 
-        final Part part1 = new Part();
-        part1.setPartNumber(1);
-        part1.seteTag("a54357aff0632cce46d942af68356b38");
+        final ImmutableList<Part> parts = ImmutableList.of(
+                new Part(1, "a54357aff0632cce46d942af68356b38"),
+                new Part(2, "0c78aef83f66abc1fa1e8477f296d394"));
 
-        final Part part2 = new Part();
-        part2.setPartNumber(2);
-        part2.seteTag("0c78aef83f66abc1fa1e8477f296d394");
-
-        final ImmutableList<Part> parts = ImmutableList.of(part1, part2);
-        final CompleteMultipartUpload input = new CompleteMultipartUpload();
-        input.setParts(parts.asList());
+        final CompleteMultipartUpload input = new CompleteMultipartUpload(parts.asList());
 
         final String result = XmlOutput.toXml(input);
 

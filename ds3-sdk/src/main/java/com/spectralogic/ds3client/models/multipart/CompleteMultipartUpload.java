@@ -31,6 +31,10 @@ public class CompleteMultipartUpload {
         //Pass
     }
 
+    public CompleteMultipartUpload(final List<Part> parts) {
+        this.parts = parts;
+    }
+
     public List<Part> getParts() {
         return parts;
     }

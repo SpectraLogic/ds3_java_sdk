@@ -15,10 +15,7 @@
 
 package com.spectralogic.ds3client;
 
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Multimap;
-import com.google.common.collect.TreeMultimap;
+import com.google.common.collect.*;
 import com.spectralogic.ds3client.commands.*;
 import com.spectralogic.ds3client.commands.decorators.PutFolderRequest;
 import com.spectralogic.ds3client.commands.spectrads3.*;
@@ -27,7 +24,11 @@ import com.spectralogic.ds3client.exceptions.FolderNameMissingTrailingForwardSla
 import com.spectralogic.ds3client.models.*;
 import com.spectralogic.ds3client.models.Objects;
 import com.spectralogic.ds3client.models.bulk.Ds3Object;
+import com.spectralogic.ds3client.models.bulk.PartialDs3Object;
 import com.spectralogic.ds3client.models.common.Credentials;
+import com.spectralogic.ds3client.models.common.Range;
+import com.spectralogic.ds3client.models.multipart.CompleteMultipartUpload;
+import com.spectralogic.ds3client.models.multipart.Part;
 import com.spectralogic.ds3client.networking.FailedRequestException;
 import com.spectralogic.ds3client.networking.FailedRequestUsingMgmtPortException;
 import com.spectralogic.ds3client.networking.HttpVerb;
@@ -35,7 +36,6 @@ import com.spectralogic.ds3client.utils.ByteArraySeekableByteChannel;
 import com.spectralogic.ds3client.utils.ResourceUtils;
 import org.junit.Before;
 import org.junit.Test;
-import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -72,6 +72,16 @@ public class Ds3Client_Test {
         + "</MasterObjectList>";
 
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+
+    private final static String IDS_REQUEST_PAYLOAD = "<Ids><Id>id1</Id><Id>id2</Id><Id>id3</Id></Ids>";
+    private final static ImmutableList<String> IDS_REQUEST_PAYLOAD_LIST = ImmutableList.of("id1", "id2", "id3");
+
+    private static final String SIMPLE_OBJECT_REQUEST_PAYLOAD = "<Objects><Object Name=\"file1\"/><Object Name=\"file2\"/><Object Name=\"file3\"/></Objects>";
+    private static final List<Ds3Object> SIMPLE_OBJECT_LIST = Arrays.asList(
+            new Ds3Object("file1"),
+            new Ds3Object("file2"),
+            new Ds3Object("file3")
+    );
 
     @Before
     public void setTimeZone() {
@@ -531,7 +541,7 @@ public class Ds3Client_Test {
                 throws IOException;
     }
     
-    public void runBulkTest(final BulkCommand command, final BulkTestDriver driver) throws IOException {
+    private void runBulkTest(final BulkCommand command, final BulkTestDriver driver) throws IOException {
         final List<Ds3Object> objects = Arrays.asList(
             new Ds3Object("file1", 256),
             new Ds3Object("file2", 1202),
@@ -1146,19 +1156,348 @@ public class Ds3Client_Test {
 
     @Test
     public void clearSuspectBlobAzureTargetsSpectraS3Test() throws IOException {
-        final String expectedRequestContent = "<Ids><Id>id1</Id><Id>id2</Id><Id>id3</Id></Ids>";
+        MockNetwork
+                .expecting(HttpVerb.DELETE, "/_rest_/suspect_blob_azure_target", new HashMap<String, String>(), IDS_REQUEST_PAYLOAD)
+                .returning(204, "")
+                .asClient()
+                .clearSuspectBlobAzureTargetsSpectraS3(new ClearSuspectBlobAzureTargetsSpectraS3Request(IDS_REQUEST_PAYLOAD_LIST));
+    }
 
-        final List<String> ids = new ArrayList<>();
-        ids.add("id1");
-        ids.add("id2");
-        ids.add("id3");
+    @Test
+    public void clearSuspectBlobPoolsSpectraS3Test() throws IOException {
+        MockNetwork
+                .expecting(HttpVerb.DELETE, "/_rest_/suspect_blob_pool", new HashMap<String, String>(), IDS_REQUEST_PAYLOAD)
+                .returning(204, "")
+                .asClient()
+                .clearSuspectBlobPoolsSpectraS3(new ClearSuspectBlobPoolsSpectraS3Request(IDS_REQUEST_PAYLOAD_LIST));
+    }
+
+    @Test
+    public void clearSuspectBlobS3TargetsSpectraS3Test() throws IOException {
+        MockNetwork
+                .expecting(HttpVerb.DELETE, "/_rest_/suspect_blob_s3_target", new HashMap<String, String>(), IDS_REQUEST_PAYLOAD)
+                .returning(204, "")
+                .asClient()
+                .clearSuspectBlobS3TargetsSpectraS3(new ClearSuspectBlobS3TargetsSpectraS3Request(IDS_REQUEST_PAYLOAD_LIST));
+    }
+
+    @Test
+    public void clearSuspectBlobTapesSpectraS3Test() throws IOException {
+        MockNetwork
+                .expecting(HttpVerb.DELETE, "/_rest_/suspect_blob_tape", new HashMap<String, String>(), IDS_REQUEST_PAYLOAD)
+                .returning(204, "")
+                .asClient()
+                .clearSuspectBlobTapesSpectraS3(new ClearSuspectBlobTapesSpectraS3Request(IDS_REQUEST_PAYLOAD_LIST));
+    }
+
+    @Test
+    public void markSuspectBlobAzureTargetsAsDegradedSpectraS3Test() throws IOException {
+        MockNetwork
+                .expecting(HttpVerb.PUT, "/_rest_/suspect_blob_azure_target", new HashMap<String, String>(), IDS_REQUEST_PAYLOAD)
+                .returning(204, "")
+                .asClient()
+                .markSuspectBlobAzureTargetsAsDegradedSpectraS3(new MarkSuspectBlobAzureTargetsAsDegradedSpectraS3Request(IDS_REQUEST_PAYLOAD_LIST));
+    }
+
+    @Test
+    public void markSuspectBlobDs3TargetsAsDegradedSpectraS3Test() throws IOException {
+        MockNetwork
+                .expecting(HttpVerb.PUT, "/_rest_/suspect_blob_ds3_target", new HashMap<String, String>(), IDS_REQUEST_PAYLOAD)
+                .returning(204, "")
+                .asClient()
+                .markSuspectBlobDs3TargetsAsDegradedSpectraS3(new MarkSuspectBlobDs3TargetsAsDegradedSpectraS3Request(IDS_REQUEST_PAYLOAD_LIST));
+    }
+
+    @Test
+    public void markSuspectBlobPoolsAsDegradedSpectraS3Test() throws IOException {
+        MockNetwork
+                .expecting(HttpVerb.PUT, "/_rest_/suspect_blob_pool", new HashMap<String, String>(), IDS_REQUEST_PAYLOAD)
+                .returning(204, "")
+                .asClient()
+                .markSuspectBlobPoolsAsDegradedSpectraS3(new MarkSuspectBlobPoolsAsDegradedSpectraS3Request(IDS_REQUEST_PAYLOAD_LIST));
+    }
+
+    @Test
+    public void markSuspectBlobS3TargetsAsDegradedSpectraS3Test() throws IOException {
+        MockNetwork
+                .expecting(HttpVerb.PUT, "/_rest_/suspect_blob_s3_target", new HashMap<String, String>(), IDS_REQUEST_PAYLOAD)
+                .returning(204, "")
+                .asClient()
+                .markSuspectBlobS3TargetsAsDegradedSpectraS3(new MarkSuspectBlobS3TargetsAsDegradedSpectraS3Request(IDS_REQUEST_PAYLOAD_LIST));
+    }
+
+    @Test
+    public void markSuspectBlobTapesAsDegradedSpectraS3Test() throws IOException {
+        MockNetwork
+                .expecting(HttpVerb.PUT, "/_rest_/suspect_blob_tape", new HashMap<String, String>(), IDS_REQUEST_PAYLOAD)
+                .returning(204, "")
+                .asClient()
+                .markSuspectBlobTapesAsDegradedSpectraS3(new MarkSuspectBlobTapesAsDegradedSpectraS3Request(IDS_REQUEST_PAYLOAD_LIST));
+    }
+
+    @Test
+    public void completeMultiPartUploadTest() throws IOException {
+        final String expectedRequestContent = "<CompleteMultipartUpload><Part><PartNumber>1</PartNumber><ETag>7a112844c1a2327e617f530cb06dccf8</ETag></Part><Part><PartNumber>2</PartNumber><ETag>7162e29f4e40da7f521d0794b57770ba</ETag></Part></CompleteMultipartUpload>";
+        final String expectedResponse = "<CompleteMultipartUploadResult><Location>http://my-server/bucketName/object</Location><Bucket>bucketName</Bucket><Key>object</Key><ETag>b54357faf0632cce46e942fa68356b38</ETag></CompleteMultipartUploadResult>";
+
+        final List<Part> parts = new ArrayList<>();
+        parts.add(new Part(1, "7a112844c1a2327e617f530cb06dccf8"));
+        parts.add(new Part(2, "7162e29f4e40da7f521d0794b57770ba"));
+
+        final String bucketName = "bucketName";
+        final String objectName = "object";
+        final String uploadId = "VXBsb2FkIElEIGZvciA2aWWpbmcncyBteS1tb3ZpZS5tMnRzIHVwbG9hZA";
+        final String etag = "b54357faf0632cce46e942fa68356b38";
+        final String location = "http://my-server/bucketName/object";
+
+        final CompleteMultipartUpload completeMultipartUpload = new CompleteMultipartUpload(parts);
+
+        final Map<String, String> queryParams = new HashMap<>();
+        queryParams.put("upload_id", uploadId);
+
+        final Map<String, String> responseHeaders = new HashMap<>();
+        responseHeaders.put("etag", etag);
+
+        final CompleteMultiPartUploadResponse response = MockNetwork
+                .expecting(HttpVerb.POST, "/bucketName/object", queryParams, expectedRequestContent)
+                .returning(200, expectedResponse, responseHeaders)
+                .asClient()
+                .completeMultiPartUpload(new CompleteMultiPartUploadRequest(
+                        bucketName,
+                        objectName,
+                        completeMultipartUpload,
+                        uploadId));
+
+        assertThat(response.getCompleteMultipartUploadResult().getLocation(), is(location));
+        assertThat(response.getCompleteMultipartUploadResult().getBucket(), is(bucketName));
+        assertThat(response.getCompleteMultipartUploadResult().getKey(), is(objectName));
+        assertThat(response.getCompleteMultipartUploadResult().getETag(), is(etag));
+    }
+
+    @Test
+    public void putMultiPartUploadPartTest() throws IOException {
+        final String requestContent = "this is the part content";
+        final String bucketName = "bucketName";
+        final String objectName = "object";
+        final int partNumber = 2;
+        final String uploadId = "VXBsb2FkIElEIGZvciA2aWWpbmcncyBteS1tb3ZpZS5tMnRzIHVwbG9hZA";
+        final String eTag = "b54357faf0632cce46e942fa68356b38";
+
+        final Map<String, String> queryParams = new HashMap<>();
+        queryParams.put("part_number", String.valueOf(partNumber));
+        queryParams.put("upload_id", uploadId);
+
+        final Map<String, String> responseHeaders = new HashMap<>();
+        responseHeaders.put("etag", eTag);
+
+        MockNetwork
+                .expecting(HttpVerb.PUT, "/bucketName/object", queryParams, requestContent)
+                .returning(200, "", responseHeaders)
+                .asClient()
+                .putMultiPartUploadPart(new PutMultiPartUploadPartRequest(
+                        bucketName,
+                        objectName,
+                        new ByteArraySeekableByteChannel(requestContent.getBytes()),
+                        partNumber, requestContent.getBytes().length,
+                        uploadId));
+    }
+
+    @Test
+    public void getBulkJobSpectraS3WithMixedPayloadTest() throws IOException {
+        final List<Ds3Object> objects = Arrays.asList(
+                new Ds3Object("file1", 256),
+                new PartialDs3Object("file2", new Range(1202, 1402)),
+                new Ds3Object("file3", 2523)
+        );
+
+        final String bucketName = "bulkTest";
+
+        final String expectedRequestPayload = "<Objects><Object Name=\"file1\"/><Object Name=\"file2\" Offset=\"1202\" Length=\"201\"/><Object Name=\"file3\"/></Objects>";
+
+        final String xmlResponse = "<MasterObjectList BucketName=\"lib\" JobId=\"9652a41a-218a-4158-af1b-064ab9e4ef71\" Priority=\"NORMAL\" RequestType=\"PUT\" StartDate=\"2014-07-29T16:08:39.000Z\"><Nodes><Node EndPoint=\"FAILED_TO_DETERMINE_DATAPATH_IP_ADDRESS\" HttpPort=\"80\" HttpsPort=\"443\" Id=\"b18ee082-1352-11e4-945e-080027ebeb6d\"/></Nodes><Objects ChunkId=\"cfa3153f-57de-41c7-b1fb-f30fa4154232\" ChunkNumber=\"0\"><Object Name=\"file2\" InCache=\"false\" Length=\"1202\" Offset=\"0\"/><Object Name=\"file1\" InCache=\"false\" Length=\"256\" Offset=\"0\"/><Object Name=\"file3\" InCache=\"false\" Length=\"2523\" Offset=\"0\"/></Objects></MasterObjectList>";
+
+        final Map<String, String> queryParams = new HashMap<>();
+        queryParams.put("operation", "start_bulk_get");
+
+        final GetBulkJobSpectraS3Response response = MockNetwork
+                .expecting(HttpVerb.PUT, "/_rest_/bucket/" + bucketName, queryParams, expectedRequestPayload)
+                .returning(200, xmlResponse)
+                .asClient()
+                .getBulkJobSpectraS3(new GetBulkJobSpectraS3Request(bucketName, objects));
+
+        final List<Objects> objectListList = response.getMasterObjectList().getObjects();
+        assertThat(objectListList.size(), is(1));
+
+        final List<BulkObject> objectList = objectListList.get(0).getObjects();
+        assertThat(objectList.size(), is(3));
+
+        assertObjectEquals(objectList.get(0), "file2", 1202);
+        assertObjectEquals(objectList.get(1), "file1", 256);
+        assertObjectEquals(objectList.get(2), "file3", 2523);
+    }
+
+
+    @Test
+    public void verifyBulkJobSpectraS3Test() throws IOException {
+        final List<Ds3Object> objects = Arrays.asList(
+                new Ds3Object("file1"),
+                new PartialDs3Object("file2", new Range(1202, 1402)),
+                new Ds3Object("file3")
+        );
+
+        final String bucketName = "bulkTest";
+
+        final String expectedRequestPayload = "<Objects><Object Name=\"file1\"/><Object Name=\"file2\" Offset=\"1202\" Length=\"201\"/><Object Name=\"file3\"/></Objects>";
+
+        final String xmlResponse = "<MasterObjectList BucketName=\"lib\" JobId=\"9652a41a-218a-4158-af1b-064ab9e4ef71\" Priority=\"NORMAL\" RequestType=\"PUT\" StartDate=\"2014-07-29T16:08:39.000Z\"><Nodes><Node EndPoint=\"FAILED_TO_DETERMINE_DATAPATH_IP_ADDRESS\" HttpPort=\"80\" HttpsPort=\"443\" Id=\"b18ee082-1352-11e4-945e-080027ebeb6d\"/></Nodes><Objects ChunkId=\"cfa3153f-57de-41c7-b1fb-f30fa4154232\" ChunkNumber=\"0\"><Object Name=\"file2\" InCache=\"false\" Length=\"1202\" Offset=\"0\"/><Object Name=\"file1\" InCache=\"false\" Length=\"256\" Offset=\"0\"/><Object Name=\"file3\" InCache=\"false\" Length=\"2523\" Offset=\"0\"/></Objects></MasterObjectList>";
+
+        final Map<String, String> queryParams = new HashMap<>();
+        queryParams.put("operation", "start_bulk_verify");
+
+        final VerifyBulkJobSpectraS3Response response = MockNetwork
+                .expecting(HttpVerb.PUT, "/_rest_/bucket/" + bucketName, queryParams, expectedRequestPayload)
+                .returning(200, xmlResponse)
+                .asClient()
+                .verifyBulkJobSpectraS3(new VerifyBulkJobSpectraS3Request(bucketName, objects));
+
+        final List<Objects> objectListList = response.getMasterObjectListResult().getObjects();
+        assertThat(objectListList.size(), is(1));
+
+        final List<BulkObject> objectList = objectListList.get(0).getObjects();
+        assertThat(objectList.size(), is(3));
+
+        assertObjectEquals(objectList.get(0), "file2", 1202);
+        assertObjectEquals(objectList.get(1), "file1", 256);
+        assertObjectEquals(objectList.get(2), "file3", 2523);
+    }
+
+    @Test
+    public void getPhysicalPlacementForObjectsTest() throws IOException {
+        final String responsePayload = "<Data><AzureTargets/><Ds3Targets/><Pools/><S3Targets/><Tapes/></Data>";
+        final String bucketName = "BucketName";
+
+        final Map<String, String> queryParams = new HashMap<>();
+        queryParams.put("operation", "get_physical_placement");
+
+        final GetPhysicalPlacementForObjectsSpectraS3Response response = MockNetwork
+                .expecting(HttpVerb.PUT, "/_rest_/bucket/" + bucketName, queryParams, SIMPLE_OBJECT_REQUEST_PAYLOAD)
+                .returning(200, responsePayload)
+                .asClient()
+                .getPhysicalPlacementForObjectsSpectraS3(new GetPhysicalPlacementForObjectsSpectraS3Request(bucketName, SIMPLE_OBJECT_LIST));
+
+        assertThat(response.getPhysicalPlacementResult().getAzureTargets(), is(nullValue()));
+        assertThat(response.getPhysicalPlacementResult().getDs3Targets(), is(nullValue()));
+        assertThat(response.getPhysicalPlacementResult().getPools(), is(nullValue()));
+        assertThat(response.getPhysicalPlacementResult().getS3Targets(), is(nullValue()));
+        assertThat(response.getPhysicalPlacementResult().getTapes(), is(nullValue()));
+    }
+
+    @Test
+    public void getPhysicalPlacementForObjectsWithFullDetailsTest() throws IOException {
+        final String responsePayload = "<Data><Object Bucket=\"b1\" Id=\"a2897bbd-3e0b-4c0f-83d7-29e1e7669bdd\" InCache=\"false\" Latest=\"true\" Length=\"10\" Name=\"o4\" Offset=\"0\" Version=\"1\"><PhysicalPlacement><AzureTargets/><Ds3Targets/><Pools/><S3Targets/><Tapes/></PhysicalPlacement></Object></Data>";
+        final String bucketName = "BucketName";
+
+        final Map<String, String> queryParams = new HashMap<>();
+        queryParams.put("operation", "get_physical_placement");
+        queryParams.put("full_details", null);
+
+        final GetPhysicalPlacementForObjectsWithFullDetailsSpectraS3Response response = MockNetwork
+                .expecting(HttpVerb.PUT, "/_rest_/bucket/" + bucketName, queryParams, SIMPLE_OBJECT_REQUEST_PAYLOAD)
+                .returning(200, responsePayload)
+                .asClient()
+                .getPhysicalPlacementForObjectsWithFullDetailsSpectraS3(new GetPhysicalPlacementForObjectsWithFullDetailsSpectraS3Request(bucketName, SIMPLE_OBJECT_LIST));
+
+        assertThat(response.getBulkObjectListResult().getObjects().size(), is(1));
+    }
+
+    @Test
+    public void verifyPhysicalPlacementForObjectsTest() throws IOException {
+        final String responsePayload = "<Data><AzureTargets/><Ds3Targets/><Pools/><S3Targets/><Tapes><Tape><AssignedToStorageDomain>false</AssignedToStorageDomain><AvailableRawCapacity>10000</AvailableRawCapacity><BarCode>t1</BarCode><BucketId/><DescriptionForIdentification/><EjectDate/><EjectLabel/><EjectLocation/><EjectPending/><FullOfData>false</FullOfData><Id>48d30ecb-84f1-4721-9832-7aa165a1dd77</Id><LastAccessed/><LastCheckpoint/><LastModified/><LastVerified/><PartiallyVerifiedEndOfTape/><PartitionId>76343269-c32a-4cb0-aec4-57a9dccce6ea</PartitionId><PreviousState/><SerialNumber/><State>PENDING_INSPECTION</State><StorageDomainId/><TakeOwnershipPending>false</TakeOwnershipPending><TotalRawCapacity>20000</TotalRawCapacity><Type>LTO5</Type><VerifyPending/><WriteProtected>false</WriteProtected></Tape></Tapes></Data>";
+        final String bucketName = "BucketName";
+
+        final Map<String, String> queryParams = new HashMap<>();
+        queryParams.put("operation", "verify_physical_placement");
+
+        final VerifyPhysicalPlacementForObjectsSpectraS3Response response = MockNetwork
+                .expecting(HttpVerb.GET, "/_rest_/bucket/" + bucketName, queryParams, SIMPLE_OBJECT_REQUEST_PAYLOAD)
+                .returning(200, responsePayload)
+                .asClient()
+                .verifyPhysicalPlacementForObjectsSpectraS3(new VerifyPhysicalPlacementForObjectsSpectraS3Request(bucketName, SIMPLE_OBJECT_LIST));
+
+        assertThat(response.getPhysicalPlacementResult().getAzureTargets(), is(nullValue()));
+        assertThat(response.getPhysicalPlacementResult().getDs3Targets(), is(nullValue()));
+        assertThat(response.getPhysicalPlacementResult().getPools(), is(nullValue()));
+        assertThat(response.getPhysicalPlacementResult().getTapes().size(), is(1));
+    }
+
+    @Test
+    public void verifyPhysicalPlacementForObjectsWithFullDetailsTest() throws IOException {
+        final String responsePayload = "<Data><Object Bucket=\"b1\" Id=\"15ad85a5-aab6-4d85-bf33-831bcba13b8e\" InCache=\"false\" Latest=\"true\" Length=\"10\" Name=\"o1\" Offset=\"0\" Version=\"1\"><PhysicalPlacement><AzureTargets/><Ds3Targets/><Pools/><S3Targets/><Tapes><Tape><AssignedToStorageDomain>false</AssignedToStorageDomain><AvailableRawCapacity>10000</AvailableRawCapacity><BarCode>t1</BarCode><BucketId/><DescriptionForIdentification/><EjectDate/><EjectLabel/><EjectLocation/><EjectPending/><FullOfData>false</FullOfData><Id>5a7bb215-4aff-4806-b217-5fe01ade6a2c</Id><LastAccessed/><LastCheckpoint/><LastModified/><LastVerified/><PartiallyVerifiedEndOfTape/><PartitionId>2e5b25fc-546e-45b0-951e-8f3d80bb7823</PartitionId><PreviousState/><SerialNumber/><State>PENDING_INSPECTION</State><StorageDomainId/><TakeOwnershipPending>false</TakeOwnershipPending><TotalRawCapacity>20000</TotalRawCapacity><Type>LTO5</Type><VerifyPending/><WriteProtected>false</WriteProtected></Tape></Tapes></PhysicalPlacement></Object></Data>";
+        final String bucketName = "BucketName";
+
+        final Map<String, String> queryParams = new HashMap<>();
+        queryParams.put("operation", "verify_physical_placement");
+        queryParams.put("full_details", null);
+
+        final VerifyPhysicalPlacementForObjectsWithFullDetailsSpectraS3Response response = MockNetwork
+                .expecting(HttpVerb.GET, "/_rest_/bucket/" + bucketName, queryParams, SIMPLE_OBJECT_REQUEST_PAYLOAD)
+                .returning(200, responsePayload)
+                .asClient()
+                .verifyPhysicalPlacementForObjectsWithFullDetailsSpectraS3(new VerifyPhysicalPlacementForObjectsWithFullDetailsSpectraS3Request(bucketName, SIMPLE_OBJECT_LIST));
+
+        assertThat(response.getBulkObjectListResult().getObjects().size(), is(1));
+    }
+
+    @Test
+    public void ejectStorageDomainBlobsTest() throws IOException {
+        final String bucketId = "BucketId";
+        final String storageDomainId = "StorageDomainId";
+
+        final Map<String, String> queryParams = new HashMap<>();
+        queryParams.put("operation", "eject");
+        queryParams.put("blobs", null);
+        queryParams.put("bucket_id", bucketId);
+        queryParams.put("storage_domain_id", storageDomainId);
+
+        MockNetwork
+                .expecting(HttpVerb.PUT, "/_rest_/tape", queryParams, SIMPLE_OBJECT_REQUEST_PAYLOAD)
+                .returning(204, "")
+                .asClient()
+                .ejectStorageDomainBlobsSpectraS3(new EjectStorageDomainBlobsSpectraS3Request(bucketId, SIMPLE_OBJECT_LIST, storageDomainId));
+    }
+
+    @Test
+    public void replicatePutJobTest() throws IOException {
+        final String responsePayload = "<MasterObjectList Aggregating=\"false\" BucketName=\"existing_bucket\" CachedSizeInBytes=\"0\" ChunkClientProcessingOrderGuarantee=\"IN_ORDER\" CompletedSizeInBytes=\"0\" EntirelyInCache=\"false\" JobId=\"95dcda9b-26d2-4b95-87e2-36ac217d7230\" Naked=\"false\" Name=\"Replicate Untitled\" OriginalSizeInBytes=\"10\" Priority=\"NORMAL\" RequestType=\"PUT\" StartDate=\"2017-03-23T23:24:24.000Z\" Status=\"IN_PROGRESS\" UserId=\"1dc9953a-c778-4cdd-b217-2a6b325cde5e\" UserName=\"test_user\"><Nodes><Node EndPoint=\"NOT_INITIALIZED_YET\" Id=\"782ee70f-692e-4240-8ee1-c049b3a7b91e\"/></Nodes><Objects ChunkId=\"33a7ed12-d7b7-4f85-ac67-b3a2834170cc\" ChunkNumber=\"1\"><Object Id=\"eee15242-d7c1-44dc-b352-811adc6e5c0e\" InCache=\"false\" Latest=\"true\" Length=\"10\" Name=\"o1\" Offset=\"0\" Version=\"1\"/></Objects></MasterObjectList>";
+        final String requestPayload = "This is the request payload content";
+        final String bucketName = "BucketName";
+
+        final Map<String, String> queryParams = new HashMap<>();
+        queryParams.put("operation", "start_bulk_put");
+        queryParams.put("replicate", null);
+
+        final ReplicatePutJobSpectraS3Response response = MockNetwork
+                .expecting(HttpVerb.PUT, "/_rest_/bucket/" + bucketName, queryParams, requestPayload)
+                .returning(200, responsePayload)
+                .asClient()
+                .replicatePutJobSpectraS3(new ReplicatePutJobSpectraS3Request(bucketName, requestPayload));
+
+        assertThat(response.getMasterObjectListResult().getObjects().size(), is(1));
+    }
+
+    @Test
+    public void getBlobPersistenceTest() throws IOException {
+        final String responsePayload = "This is the response payload content";
+        final String requestPayload = "This is the request payload content";
 
         final Map<String, String> queryParams = new HashMap<>();
 
-        MockNetwork
-                .expecting(HttpVerb.DELETE, "/_rest_/suspect_blob_azure_target", queryParams, expectedRequestContent)
-                .returning(204, "")
+        final GetBlobPersistenceSpectraS3Response response = MockNetwork
+                .expecting(HttpVerb.GET, "/_rest_/blob_persistence", queryParams, requestPayload)
+                .returning(200, responsePayload)
                 .asClient()
-                .clearSuspectBlobAzureTargetsSpectraS3(new ClearSuspectBlobAzureTargetsSpectraS3Request(ids));
+                .getBlobPersistenceSpectraS3(new GetBlobPersistenceSpectraS3Request(requestPayload));
+
+        assertThat(response.getStringResult(), is(responsePayload));
     }
 }

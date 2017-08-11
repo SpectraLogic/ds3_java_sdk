@@ -29,6 +29,11 @@ public class Part {
         //Pass
     }
 
+    public Part(final int partNumber, final String eTag) {
+        this.partNumber = partNumber;
+        this.eTag = eTag;
+    }
+
     public int getPartNumber() {
         return partNumber;
     }
