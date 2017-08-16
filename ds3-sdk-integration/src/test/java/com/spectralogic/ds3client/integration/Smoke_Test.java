@@ -54,12 +54,7 @@ import java.nio.channels.FileChannel;
 import java.nio.channels.SeekableByteChannel;
 import java.nio.charset.Charset;
 import java.nio.file.*;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -67,9 +62,11 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.spectralogic.ds3client.integration.Util.*;
 import static com.spectralogic.ds3client.integration.test.helpers.ABMTestHelper.*;
+import static com.spectralogic.ds3client.utils.Guard.isNotNullAndNotEmpty;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 import static org.junit.Assume.assumeThat;
+import static org.junit.Assume.assumeTrue;
 
 public class Smoke_Test {
 
@@ -1675,5 +1672,20 @@ public class Smoke_Test {
         } finally {
             deleteAllContents(client, bucketName);
         }
+    }
+
+    @Test
+    public void getBlobsOnTape() throws IOException {
+        final GetTapesSpectraS3Response getTapes = client.getTapesSpectraS3(new GetTapesSpectraS3Request());
+
+        // There must be at least one tape on the BP to run this test
+        assumeTrue(isNotNullAndNotEmpty(getTapes.getTapeListResult().getTapes()));
+
+        final UUID tapeId = getTapes.getTapeListResult().getTapes().get(0).getId();
+
+        final GetBlobsOnTapeSpectraS3Response getBlobs = client
+                .getBlobsOnTapeSpectraS3(new GetBlobsOnTapeSpectraS3Request(tapeId));
+
+        assertThat(getBlobs.getBulkObjectListResult(), is(notNullValue()));
     }
 }
