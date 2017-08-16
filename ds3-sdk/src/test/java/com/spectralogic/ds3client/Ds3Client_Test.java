@@ -83,6 +83,8 @@ public class Ds3Client_Test {
             new Ds3Object("file3")
     );
 
+    private static final String SIMPLE_BULK_OBJECT_LIST_RESPONSE = "<Data><Object Bucket=\"default_bucket_name\" Id=\"161853d9-d409-4775-b4c1-ace43cb4dc57\" Latest=\"true\" Length=\"10\" Name=\"o1\" Offset=\"0\" Version=\"1\"/><Object Bucket=\"default_bucket_name\" Id=\"1022fdf0-6d5c-4fb5-83f5-031423af8a8b\" Latest=\"true\" Length=\"10\" Name=\"o2\" Offset=\"0\" Version=\"1\"/></Data>";
+
     @Before
     public void setTimeZone() {
         DATE_FORMAT.setTimeZone(TimeZone.getTimeZone("UTC"));
@@ -1499,5 +1501,75 @@ public class Ds3Client_Test {
                 .getBlobPersistenceSpectraS3(new GetBlobPersistenceSpectraS3Request(requestPayload));
 
         assertThat(response.getStringResult(), is(responsePayload));
+    }
+
+    @Test
+    public void getBlobsOnAzureTargetTest() throws IOException {
+        final String target = "Target";
+
+        final Map<String, String> queryParams = new HashMap<>();
+        queryParams.put("operation", "get_physical_placement");
+
+        MockNetwork
+                .expecting(HttpVerb.GET, "/_rest_/azure_target/" + target, queryParams, null)
+                .returning(200, SIMPLE_BULK_OBJECT_LIST_RESPONSE)
+                .asClient()
+                .getBlobsOnAzureTargetSpectraS3(new GetBlobsOnAzureTargetSpectraS3Request(target));
+    }
+
+    @Test
+    public void getBlobsOnTapeTest() throws IOException {
+        final String target = "Target";
+
+        final Map<String, String> queryParams = new HashMap<>();
+        queryParams.put("operation", "get_physical_placement");
+
+        MockNetwork
+                .expecting(HttpVerb.GET, "/_rest_/tape/" + target, queryParams, null)
+                .returning(200, SIMPLE_BULK_OBJECT_LIST_RESPONSE)
+                .asClient()
+                .getBlobsOnTapeSpectraS3(new GetBlobsOnTapeSpectraS3Request(target));
+    }
+
+    @Test
+    public void getBlobsOnS3TargetTest() throws IOException {
+        final String target = "Target";
+
+        final Map<String, String> queryParams = new HashMap<>();
+        queryParams.put("operation", "get_physical_placement");
+
+        MockNetwork
+                .expecting(HttpVerb.GET, "/_rest_/s3_target/" + target, queryParams, null)
+                .returning(200, SIMPLE_BULK_OBJECT_LIST_RESPONSE)
+                .asClient()
+                .getBlobsOnS3TargetSpectraS3(new GetBlobsOnS3TargetSpectraS3Request(target));
+    }
+
+    @Test
+    public void getBlobsOnPoolTest() throws IOException {
+        final String target = "Target";
+
+        final Map<String, String> queryParams = new HashMap<>();
+        queryParams.put("operation", "get_physical_placement");
+
+        MockNetwork
+                .expecting(HttpVerb.GET, "/_rest_/pool/" + target, queryParams, null)
+                .returning(200, SIMPLE_BULK_OBJECT_LIST_RESPONSE)
+                .asClient()
+                .getBlobsOnPoolSpectraS3(new GetBlobsOnPoolSpectraS3Request(target));
+    }
+
+    @Test
+    public void getBlobsOnDs3TargetTest() throws IOException {
+        final String target = "Target";
+
+        final Map<String, String> queryParams = new HashMap<>();
+        queryParams.put("operation", "get_physical_placement");
+
+        MockNetwork
+                .expecting(HttpVerb.GET, "/_rest_/ds3_target/" + target, queryParams, null)
+                .returning(200, SIMPLE_BULK_OBJECT_LIST_RESPONSE)
+                .asClient()
+                .getBlobsOnDs3TargetSpectraS3(new GetBlobsOnDs3TargetSpectraS3Request(target));
     }
 }

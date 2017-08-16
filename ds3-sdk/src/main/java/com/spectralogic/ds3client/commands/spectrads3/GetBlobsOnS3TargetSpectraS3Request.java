@@ -17,15 +17,6 @@
 package com.spectralogic.ds3client.commands.spectrads3;
 
 import com.spectralogic.ds3client.networking.HttpVerb;
-import com.spectralogic.ds3client.models.bulk.Ds3Object;
-import com.spectralogic.ds3client.models.bulk.Ds3ObjectList;
-import com.spectralogic.ds3client.serializer.XmlOutput;
-import com.spectralogic.ds3client.utils.Guard;
-
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
-import java.util.List;
-import java.nio.charset.Charset;
 import com.spectralogic.ds3client.commands.interfaces.AbstractRequest;
 import com.google.common.net.UrlEscapers;
 
@@ -35,40 +26,16 @@ public class GetBlobsOnS3TargetSpectraS3Request extends AbstractRequest {
     
     private final String s3Target;
 
-    private final List<Ds3Object> objects;
-    private long size = 0;
-
     // Constructor
     
     
-    public GetBlobsOnS3TargetSpectraS3Request(final List<Ds3Object> objects, final String s3Target) {
+    public GetBlobsOnS3TargetSpectraS3Request(final String s3Target) {
         this.s3Target = s3Target;
-        this.objects = objects;
         
         this.getQueryParams().put("operation", "get_physical_placement");
 
     }
 
-
-    @Override
-    public InputStream getStream() {
-        if (Guard.isNullOrEmpty(objects)) {
-            return null;
-        }
-        final Ds3ObjectList objects = new Ds3ObjectList();
-        objects.setObjects(this.objects);
-
-        final String xmlOutput = XmlOutput.toXml(objects, false);
-
-        final byte[] stringBytes = xmlOutput.getBytes(Charset.forName("UTF-8"));
-        this.size = stringBytes.length;
-        return new ByteArrayInputStream(stringBytes);
-    }
-
-    @Override
-    public long getSize() {
-        return this.size;
-    }
 
     @Override
     public HttpVerb getVerb() {
@@ -83,11 +50,5 @@ public class GetBlobsOnS3TargetSpectraS3Request extends AbstractRequest {
     public String getS3Target() {
         return this.s3Target;
     }
-
-
-    public List<Ds3Object> getObjects() {
-        return this.objects;
-    }
-
 
 }
