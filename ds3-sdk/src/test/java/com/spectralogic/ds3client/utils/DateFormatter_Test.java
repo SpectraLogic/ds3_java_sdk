@@ -19,6 +19,7 @@ package com.spectralogic.ds3client.utils;
 import org.junit.Test;
 
 import java.util.Date;
+import java.util.Locale;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -29,6 +30,16 @@ public class DateFormatter_Test {
     public void formatDate() {
         final Date date = new Date(1390414308132L);
 
-        assertThat(DateFormatter.dateToRfc882(date), is("Wed, 22 Jan 2014 18:11:48 +0000"));
+        assertThat(DateFormatter.dateToRfc822(date), is("Wed, 22 Jan 2014 18:11:48 +0000"));
+    }
+
+    @Test
+    public void formatDateMandarin() {
+        final Locale defaultLocale = Locale.getDefault();
+        Locale.setDefault(Locale.CHINESE);
+        final Date date = new Date(1390414308132L);
+
+        assertThat(DateFormatter.dateToRfc822(date), is("Wed, 22 Jan 2014 18:11:48 +0000"));
+        Locale.setDefault(defaultLocale);
     }
 }

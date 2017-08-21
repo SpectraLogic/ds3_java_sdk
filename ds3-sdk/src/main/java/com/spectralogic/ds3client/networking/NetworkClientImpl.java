@@ -271,7 +271,7 @@ public class NetworkClientImpl implements NetworkClient {
 
         private void addHeaders(final HttpRequest httpRequest) {
             // Add common headers.
-            final String date = DateFormatter.dateToRfc882();
+            final String date = DateFormatter.dateToRfc822();
             httpRequest.addHeader(HOST, NetUtils.buildHostField(NetworkClientImpl.this.connectionDetails));
             httpRequest.addHeader(DATE, date);
             httpRequest.addHeader(CONTENT_TYPE, this.ds3Request.getContentType());
