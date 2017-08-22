@@ -88,7 +88,7 @@ public class FileObjectGetter_Test {
 
     @Test
     public void testThatSymbolicLinksAreResolved() {
-        Assume.assumeTrue(Platform.isMac());
+        Assume.assumeFalse(Platform.isWindows());
         final String message = "Hello World";
         final String file = "file.txt";
         try {
