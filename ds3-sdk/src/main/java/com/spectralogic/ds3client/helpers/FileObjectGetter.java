@@ -44,7 +44,7 @@ public class FileObjectGetter implements ObjectChannelBuilder {
         final Path objectPath = this.root.resolve(key);
         final Path parentPath = objectPath.getParent();
         if (parentPath != null) {
-            Files.createDirectories(parentPath);
+            Files.createDirectories(FileUtils.resolveForSymbolic(parentPath));
         }
 
         if ( ! FileUtils.isTransferablePath(objectPath)) {
