@@ -18,9 +18,13 @@ package com.spectralogic.ds3client.helpers;
 import com.spectralogic.ds3client.utils.Platform;
 import org.apache.commons.io.FileUtils;
 import org.junit.Assume;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 
 import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.channels.SeekableByteChannel;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -28,8 +32,12 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 public class FileObjectGetter_Test {
+    @Rule
+    public TemporaryFolder temporaryFolder = new TemporaryFolder();
+
     @Test
     public void testThatNamedPipeThrows() throws IOException, InterruptedException {
         Assume.assumeFalse(Platform.isWindows());
@@ -76,5 +84,28 @@ public class FileObjectGetter_Test {
         }
 
         assertFalse(caughtException.get());
+    }
+
+    @Test
+    public void testThatSymbolicLinksAreResolved() {
+        Assume.assumeTrue(Platform.isMac());
+        final String message = "Hello World";
+        final String file = "file.txt";
+        try {
+            final Path tempDirectory = Files.createTempDirectory(Paths.get(System.getProperty("java.io.tmpdir")), "ds3");
+            final Path realDirectory = Files.createDirectory(Paths.get(tempDirectory.toString(), "dir"));
+            final Path symbolicDirectory = Paths.get(tempDirectory.toString(), "symbolic");
+            Files.createSymbolicLink(symbolicDirectory, realDirectory);
+            Files.createFile(Paths.get(realDirectory.toString(), file));
+            final ByteBuffer bb = ByteBuffer.wrap(message.getBytes());
+
+            final SeekableByteChannel getterChannel = new FileObjectGetter(symbolicDirectory).buildChannel(file);
+            getterChannel.write(bb);
+            getterChannel.close();
+            final String content = new String(Files.readAllBytes(Paths.get(realDirectory.toString(), file)));
+            assertTrue(message.equals(content));
+        } catch (final IOException e) {
+            fail("Symbolic links are not handled correctly");
+        }
     }
 }
