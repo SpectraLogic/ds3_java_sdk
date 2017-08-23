@@ -25,6 +25,8 @@ import com.spectralogic.ds3client.Ds3Client;
 import com.spectralogic.ds3client.commands.HeadBucketRequest;
 import com.spectralogic.ds3client.commands.HeadBucketResponse;
 import com.spectralogic.ds3client.commands.PutBucketRequest;
+import com.spectralogic.ds3client.commands.decorators.PutFolderRequest;
+import com.spectralogic.ds3client.commands.decorators.PutFolderResponse;
 import com.spectralogic.ds3client.commands.spectrads3.*;
 import com.spectralogic.ds3client.helpers.events.EventRunner;
 import com.spectralogic.ds3client.helpers.events.SameThreadEventRunner;
@@ -592,5 +594,29 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
     {
         return fileSystemHelper.objectsFromBucketWillFitInDirectory(this,
                 bucketName, objectNames, destinationDirectory);
+    }
+
+    /**
+     * Creates a folder in the specified bucket.
+     */
+    @Override
+    public PutFolderResponse createFolder(final String bucketName, final String folderName) throws IOException {
+        final String normalizedFolderName = ensureNameEndsWithSlash(folderName);
+        final Ds3Object ds3Object = new Ds3Object(normalizedFolderName, 0);
+        final PutBulkJobSpectraS3Response jobResponse = client
+                .putBulkJobSpectraS3(new PutBulkJobSpectraS3Request(bucketName, ImmutableList.of(ds3Object)));
+
+        return client.putFolder(new PutFolderRequest(bucketName, normalizedFolderName, jobResponse.getMasterObjectList().getJobId()));
+    }
+
+    /**
+     * Ensures that a folder names ends with a trailing forward slash. This prevents the
+     * accidental creation of zero-length files when attempting to create a folder.
+     */
+    private static String ensureNameEndsWithSlash(final String folderName) {
+        if (folderName.endsWith("/")) {
+            return folderName;
+        }
+        return folderName + "/";
     }
 }

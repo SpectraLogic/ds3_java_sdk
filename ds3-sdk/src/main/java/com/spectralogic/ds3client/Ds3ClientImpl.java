@@ -18,6 +18,8 @@ package com.spectralogic.ds3client;
 
 import java.io.IOException;
 import com.spectralogic.ds3client.commands.*;
+import com.spectralogic.ds3client.commands.decorators.PutFolderRequest;
+import com.spectralogic.ds3client.commands.decorators.PutFolderResponse;
 import com.spectralogic.ds3client.commands.parsers.*;
 import com.spectralogic.ds3client.commands.spectrads3.*;
 import com.spectralogic.ds3client.commands.spectrads3.notifications.*;
@@ -43,6 +45,12 @@ public class Ds3ClientImpl implements Ds3Client {
     @Override
     public ConnectionDetails getConnectionDetails() {
         return this.netClient.getConnectionDetails();
+    }
+
+    @Override
+    public PutFolderResponse putFolder(final PutFolderRequest request) throws IOException {
+        final PutObjectResponse response = putObject(request.getPutObjectRequest());
+        return new PutFolderResponse(response);
     }
 
     @Override
