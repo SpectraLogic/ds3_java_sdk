@@ -18,12 +18,12 @@ package com.spectralogic.ds3client.helpers;
 import com.google.common.base.Function;
 import com.google.common.collect.FluentIterable;
 import com.spectralogic.ds3client.Ds3Client;
-import com.spectralogic.ds3client.commands.decorators.PutFolderResponse;
+import com.spectralogic.ds3client.commands.PutObjectResponse;
 import com.spectralogic.ds3client.helpers.options.ReadJobOptions;
 import com.spectralogic.ds3client.helpers.options.WriteJobOptions;
+import com.spectralogic.ds3client.helpers.pagination.FileSystemKey;
 import com.spectralogic.ds3client.helpers.strategy.transferstrategy.TransferStrategy;
 import com.spectralogic.ds3client.models.Contents;
-import com.spectralogic.ds3client.helpers.pagination.FileSystemKey;
 import com.spectralogic.ds3client.models.bulk.Ds3Object;
 import com.spectralogic.ds3client.utils.Predicate;
 
@@ -585,5 +585,5 @@ public abstract class Ds3ClientHelpers {
     /**
      * Creates a folder in the specified bucket
      */
-    public abstract PutFolderResponse createFolder(final String bucketName, final String folderName) throws IOException;
+    public abstract PutObjectResponse createFolder(final String bucketName, final String folderName) throws IOException;
 }
