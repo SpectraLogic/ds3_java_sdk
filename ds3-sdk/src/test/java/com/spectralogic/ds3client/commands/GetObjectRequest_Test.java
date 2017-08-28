@@ -16,6 +16,7 @@
 package com.spectralogic.ds3client.commands;
 
 import com.spectralogic.ds3client.models.common.Range;
+import com.spectralogic.ds3client.utils.ByteArraySeekableByteChannel;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -33,7 +34,7 @@ public class GetObjectRequest_Test {
        final GetObjectRequest request = new GetObjectRequest(
                "bucketName",
                "objectName",
-               null,
+               new ByteArraySeekableByteChannel(0),
                UUID.randomUUID().toString(),
                0);
 
@@ -52,7 +53,7 @@ public class GetObjectRequest_Test {
         final GetObjectRequest request = new GetObjectRequest(
                 "bucketName",
                 "objectName",
-                null,
+                new ByteArraySeekableByteChannel(0),
                 UUID.randomUUID().toString(),
                 0);
 

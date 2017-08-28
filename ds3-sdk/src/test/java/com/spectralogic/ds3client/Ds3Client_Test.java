@@ -20,7 +20,6 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.TreeMultimap;
 import com.spectralogic.ds3client.commands.*;
-import com.spectralogic.ds3client.commands.decorators.PutFolderRequest;
 import com.spectralogic.ds3client.commands.spectrads3.*;
 import com.spectralogic.ds3client.exceptions.ContentLengthNotMatchException;
 import com.spectralogic.ds3client.exceptions.FolderNameMissingTrailingForwardSlash;
@@ -35,7 +34,6 @@ import com.spectralogic.ds3client.utils.ByteArraySeekableByteChannel;
 import com.spectralogic.ds3client.utils.ResourceUtils;
 import org.junit.Before;
 import org.junit.Test;
-import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -1137,10 +1135,5 @@ public class Ds3Client_Test {
                         resultChannel,
                         jobIdString,
                         0));
-    }
-
-    @Test (expected = FolderNameMissingTrailingForwardSlash.class)
-    public void createFolderWithNoSlash() throws IOException {
-        new PutFolderRequest("BucketName", "FolderNameNoSlash", UUID.randomUUID());
     }
 }
