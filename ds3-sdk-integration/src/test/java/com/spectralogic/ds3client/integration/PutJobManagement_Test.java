@@ -15,6 +15,7 @@
 
 package com.spectralogic.ds3client.integration;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.spectralogic.ds3client.Ds3Client;
@@ -24,50 +25,31 @@ import com.spectralogic.ds3client.commands.*;
 import com.spectralogic.ds3client.commands.spectrads3.*;
 import com.spectralogic.ds3client.commands.spectrads3.notifications.*;
 import com.spectralogic.ds3client.exceptions.Ds3NoMoreRetriesException;
-import com.spectralogic.ds3client.helpers.ChecksumFunction;
-import com.spectralogic.ds3client.helpers.Ds3ClientHelpers;
-import com.spectralogic.ds3client.helpers.FailureEventListener;
-import com.spectralogic.ds3client.helpers.FileObjectGetter;
-import com.spectralogic.ds3client.helpers.FileObjectPutter;
-import com.spectralogic.ds3client.helpers.JobPart;
-import com.spectralogic.ds3client.helpers.ObjectCompletedListener;
+import com.spectralogic.ds3client.helpers.*;
 import com.spectralogic.ds3client.helpers.events.FailureEvent;
 import com.spectralogic.ds3client.helpers.events.SameThreadEventRunner;
 import com.spectralogic.ds3client.helpers.options.WriteJobOptions;
-import com.spectralogic.ds3client.helpers.strategy.blobstrategy.BlobStrategy;
-import com.spectralogic.ds3client.helpers.strategy.blobstrategy.ChunkAttemptRetryBehavior;
-import com.spectralogic.ds3client.helpers.strategy.blobstrategy.ChunkAttemptRetryDelayBehavior;
-import com.spectralogic.ds3client.helpers.strategy.blobstrategy.ClientDefinedChunkAttemptRetryDelayBehavior;
-import com.spectralogic.ds3client.helpers.strategy.blobstrategy.MaxChunkAttemptsRetryBehavior;
-import com.spectralogic.ds3client.helpers.strategy.blobstrategy.PutSequentialBlobStrategy;
+import com.spectralogic.ds3client.helpers.strategy.blobstrategy.*;
 import com.spectralogic.ds3client.helpers.strategy.channelstrategy.ChannelStrategy;
 import com.spectralogic.ds3client.helpers.strategy.channelstrategy.SequentialFileReaderChannelStrategy;
-import com.spectralogic.ds3client.helpers.strategy.transferstrategy.EventDispatcher;
-import com.spectralogic.ds3client.helpers.strategy.transferstrategy.EventDispatcherImpl;
-import com.spectralogic.ds3client.helpers.strategy.transferstrategy.MaxNumObjectTransferAttemptsDecorator;
-import com.spectralogic.ds3client.helpers.strategy.transferstrategy.TransferMethod;
-import com.spectralogic.ds3client.helpers.strategy.transferstrategy.TransferRetryDecorator;
-import com.spectralogic.ds3client.helpers.strategy.transferstrategy.TransferStrategy;
-import com.spectralogic.ds3client.helpers.strategy.transferstrategy.TransferStrategyBuilder;
-import com.spectralogic.ds3client.integration.test.helpers.ABMTestHelper;
-import com.spectralogic.ds3client.integration.test.helpers.Ds3ClientShimFactory;
-import com.spectralogic.ds3client.integration.test.helpers.TempStorageIds;
-import com.spectralogic.ds3client.integration.test.helpers.TempStorageUtil;
+import com.spectralogic.ds3client.helpers.strategy.transferstrategy.*;
+import com.spectralogic.ds3client.integration.test.helpers.*;
+import com.spectralogic.ds3client.integration.test.helpers.Ds3ClientShimFactory.ClientFailureType;
 import com.spectralogic.ds3client.metadata.MetadataAccessImpl;
 import com.spectralogic.ds3client.models.*;
+import com.spectralogic.ds3client.models.Objects;
 import com.spectralogic.ds3client.models.bulk.Ds3Object;
 import com.spectralogic.ds3client.networking.FailedRequestException;
 import com.spectralogic.ds3client.utils.ByteArraySeekableByteChannel;
 import com.spectralogic.ds3client.utils.Platform;
 import com.spectralogic.ds3client.utils.ResourceUtils;
-
-import com.spectralogic.ds3client.integration.test.helpers.Ds3ClientShimFactory.ClientFailureType;
-
 import com.spectralogic.ds3client.utils.hashing.ChecksumUtils;
 import com.spectralogic.ds3client.utils.hashing.Hasher;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.junit.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -83,25 +65,14 @@ import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
-
-import com.spectralogic.ds3client.integration.test.helpers.Ds3ClientShim;
 
 import static com.spectralogic.ds3client.integration.Util.RESOURCE_BASE_NAME;
 import static com.spectralogic.ds3client.integration.Util.deleteAllContents;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
-
-import com.spectralogic.ds3client.helpers.*;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class PutJobManagement_Test {
     private static final Logger LOG = LoggerFactory.getLogger(PutJobManagement_Test.class);
@@ -152,6 +123,52 @@ public class PutJobManagement_Test {
             final PutObjectResponse putObjectResponse = client.putObject(new PutObjectRequest(BUCKET_NAME, "beowulf.txt",
                     beowulfChannel, Files.size(beowulfPath)));
             assertThat(putObjectResponse, is(notNullValue()));
+        } finally {
+            deleteAllContents(client, BUCKET_NAME);
+        }
+    }
+
+    @SuppressWarnings("deprecation")
+    @Test
+    public void nakedS3PutEmptyFile() throws IOException, URISyntaxException {
+        try {
+            final String fileName = "emptyFile.txt";
+
+            final ByteArraySeekableByteChannel channel = new ByteArraySeekableByteChannel(0);
+            final PutObjectResponse putObjectResponse = client.putObject(
+                    new PutObjectRequest(BUCKET_NAME, fileName, channel, 0));
+            assertThat(putObjectResponse, is(notNullValue()));
+
+            final GetBucketResponse request = client.getBucket(new GetBucketRequest(BUCKET_NAME));
+            final ListBucketResult result = request.getListBucketResult();
+
+            assertThat(result.getObjects().size(), is(1));
+            final Contents contents = result.getObjects().get(0);
+            assertThat(contents.getKey(), is(fileName));
+            assertThat(contents.getSize(), is((long) 0));
+        } finally {
+            deleteAllContents(client, BUCKET_NAME);
+        }
+    }
+
+    @SuppressWarnings("deprecation")
+    @Test
+    public void nakedS3PutFolder() throws IOException, URISyntaxException {
+        try {
+            final String fileName = "NakedS3Folder/";
+
+            final ByteArraySeekableByteChannel channel = new ByteArraySeekableByteChannel(0);
+            final PutObjectResponse putObjectResponse = client.putObject(
+                    new PutObjectRequest(BUCKET_NAME, fileName, channel, 0));
+
+            assertThat(putObjectResponse, is(notNullValue()));
+            final GetBucketResponse request = client.getBucket(new GetBucketRequest(BUCKET_NAME));
+            final ListBucketResult result = request.getListBucketResult();
+            assertThat(result.getObjects().size(), is(1));
+
+            final Contents contents = result.getObjects().get(0);
+            assertThat(contents.getKey(), is(fileName));
+            assertThat(contents.getSize(), is((long) 0));
         } finally {
             deleteAllContents(client, BUCKET_NAME);
         }
@@ -1100,6 +1117,39 @@ public class PutJobManagement_Test {
 
     private interface ObjectTransferExceptionHandler {
         boolean handleException(final Throwable t);
+    }
+
+    @Test
+    public void testWriteJobWithZeroLengthObject() throws Exception {
+
+        final Ds3Client client = Ds3ClientBuilder.fromEnv()
+                .withHttps(false)
+                .build();
+
+        final Path tempDirectory = Files.createTempDirectory(Paths.get("."), null);
+        final Path tempFile = Files.createTempFile(tempDirectory, "EmptyFile", null);
+        final String fileName = tempFile.getFileName().toString();
+
+        try {
+            final Ds3ClientHelpers ds3ClientHelpers = Ds3ClientHelpers.wrap(client);
+
+            final ImmutableList<Ds3Object> objects = ImmutableList.of(new Ds3Object(fileName, 0));
+
+            final Ds3ClientHelpers.Job writeJob = ds3ClientHelpers.startWriteJob(BUCKET_NAME, objects);
+            writeJob.transfer(new FileObjectPutter(tempDirectory));
+
+            final GetBucketResponse request = client.getBucket(new GetBucketRequest(BUCKET_NAME));
+            final ListBucketResult result = request.getListBucketResult();
+            assertThat(result.getObjects().size(), is(1));
+
+            final Contents contents = result.getObjects().get(0);
+            assertThat(contents.getKey(), is(fileName));
+            assertThat(contents.getSize(), is((long) 0));
+
+        } finally {
+            FileUtils.deleteDirectory(tempDirectory.toFile());
+            deleteAllContents(client, BUCKET_NAME);
+        }
     }
 
     @Test

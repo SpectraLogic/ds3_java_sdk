@@ -15,14 +15,11 @@
 
 package com.spectralogic.ds3client.integration;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.spectralogic.ds3client.Ds3Client;
 import com.spectralogic.ds3client.commands.*;
-import com.spectralogic.ds3client.commands.decorators.PutFolderRequest;
-import com.spectralogic.ds3client.commands.decorators.PutFolderResponse;
 import com.spectralogic.ds3client.commands.interfaces.BulkResponse;
 import com.spectralogic.ds3client.commands.spectrads3.*;
 import com.spectralogic.ds3client.helpers.*;
@@ -1652,23 +1649,6 @@ public class Smoke_Test {
             assertThat(response.getDetailedS3ObjectListResult().getDetailedS3Objects().get(1).getName(), is("sherlock_holmes.txt"));
             assertThat(response.getDetailedS3ObjectListResult().getDetailedS3Objects().get(2).getName(), is("tale_of_two_cities.txt"));
             assertThat(response.getDetailedS3ObjectListResult().getDetailedS3Objects().get(3).getName(), is("ulysses.txt"));
-        } finally {
-            deleteAllContents(client, bucketName);
-        }
-    }
-
-    @Test
-    public void createFolderWithSlash() throws IOException {
-        final String folderName = "FolderNameWithSlash/";
-        final String bucketName = "FolderNameWithSlashTestBucket";
-
-        try {
-            HELPERS.ensureBucketExists(bucketName, envDataPolicyId);
-            final Ds3Object ds3Object = new Ds3Object(folderName, 0);
-            final PutBulkJobSpectraS3Response jobResponse = client.putBulkJobSpectraS3(new PutBulkJobSpectraS3Request(bucketName, ImmutableList.of(ds3Object)));
-
-            final PutFolderResponse response = client.putFolder(new PutFolderRequest(bucketName, folderName, jobResponse.getMasterObjectList().getJobId()));
-            assertNotNull(response);
         } finally {
             deleteAllContents(client, bucketName);
         }
