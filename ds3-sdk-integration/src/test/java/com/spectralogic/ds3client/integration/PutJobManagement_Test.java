@@ -1121,11 +1121,6 @@ public class PutJobManagement_Test {
 
     @Test
     public void testWriteJobWithZeroLengthObject() throws Exception {
-
-        final Ds3Client client = Ds3ClientBuilder.fromEnv()
-                .withHttps(false)
-                .build();
-
         final Path tempDirectory = Files.createTempDirectory(Paths.get("."), null);
         final Path tempFile = Files.createTempFile(tempDirectory, "EmptyFile", null);
         final String fileName = tempFile.getFileName().toString();
