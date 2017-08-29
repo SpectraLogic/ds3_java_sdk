@@ -27,6 +27,12 @@ apply plugin: 'com.github.johnrengelman.shadow'
 
 shadowJar {
     relocate 'com.google', 'ds3fatjar.com.google'
+    relocate 'org.jetbrains', 'ds3fatjar.org.jetbrains'
+    relocate 'org.intellij', 'ds3fatjar.org.intellij'
+    relocate 'edu.umd', 'ds3fatjar.edu.emd'
+    relocate 'kotlin', 'ds3fatjar.kotlin'
+    relocate 'net.jcip', 'ds3fatjar.net.jcip'
+    relocate 'com.ctc', 'ds3fatjar.com.ctc'
     relocate 'org.apache', 'ds3fatjar.org.apache'
     relocate 'org.codehaus', 'ds3fatjar.org.codehaus'
     relocate 'com.fasterxml', 'ds3fatjar.com.fasterxml'
@@ -38,6 +44,8 @@ shadowJar {
         exclude(dependency("org.slf4j:slf4j-simple:$slf4jVersion"))
         exclude(dependency("org.apache.commons:commons-lang3:$commonslangVersion"))
     }
+
+    mergeServiceFiles()
 }
 
 artifacts {
