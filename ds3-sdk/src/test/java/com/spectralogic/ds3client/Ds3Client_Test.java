@@ -52,6 +52,7 @@ import java.util.regex.Pattern;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 
 public class Ds3Client_Test {
     private static final UUID MASTER_OBJECT_LIST_JOB_ID = UUID.fromString("1a85e743-ec8f-4789-afec-97e587a26936");
@@ -940,7 +941,7 @@ public class Ds3Client_Test {
         final String userAgent = newClient.getConnectionDetails().getUserAgent();
         final String[] userAgentFields = userAgent.split("-");
 
-        assertThat(userAgentFields.length >= 2, is(true));
+        assertThat(userAgentFields.length, is(greaterThanOrEqualTo(2)));
 
         // look for a pattern like 3.4.0, but leave open the possibility of a string like 3.4.0-SNAPSHOT
         final Pattern matchPattern = Pattern.compile("\\d+\\.\\d+\\.\\d+");

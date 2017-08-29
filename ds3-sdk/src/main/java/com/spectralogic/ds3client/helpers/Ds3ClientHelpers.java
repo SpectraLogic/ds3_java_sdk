@@ -510,6 +510,12 @@ public abstract class Ds3ClientHelpers {
     public abstract Iterable<FileSystemKey> remoteListDirectory(final String bucket, final String keyPrefix, final String delimiter, final String nextMarker, final int maxKeys) throws IOException;
 
     /**
+     *
+     * @param bucket
+     */
+    public abstract void deleteBucket(final String bucket) throws IOException;
+
+    /**
      * Returns an Iterable of {@link Ds3Object} that have a prefix added.
      */
     public abstract Iterable<Ds3Object> addPrefixToDs3ObjectsList(final Iterable<Ds3Object> objectsList, final String prefix);
@@ -586,4 +592,6 @@ public abstract class Ds3ClientHelpers {
      * Creates a folder in the specified bucket
      */
     public abstract PutFolderResponse createFolder(final String bucketName, final String folderName) throws IOException;
+
+    public abstract Ds3Client getClient();
 }
