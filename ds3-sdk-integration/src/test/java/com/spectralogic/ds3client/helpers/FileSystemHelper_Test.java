@@ -317,8 +317,7 @@ public class FileSystemHelper_Test {
         final String folderName = "FolderNameWithSlash/";
 
         try {
-            final PutObjectResponse response = HELPERS.createFolder(BUCKET_NAME, folderName);
-            assertNotNull(response);
+            HELPERS.createFolder(BUCKET_NAME, folderName);
         } finally {
             deleteAllContents(client, BUCKET_NAME);
         }
@@ -329,8 +328,7 @@ public class FileSystemHelper_Test {
         final String folderName = "FolderNameNoSlash";
 
         try {
-            final PutObjectResponse response = HELPERS.createFolder(BUCKET_NAME, folderName);
-            assertNotNull(response);
+            HELPERS.createFolder(BUCKET_NAME, folderName);
         } finally {
             deleteAllContents(client, BUCKET_NAME);
         }
