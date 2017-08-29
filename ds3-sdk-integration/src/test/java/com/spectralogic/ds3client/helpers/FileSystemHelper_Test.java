@@ -16,7 +16,6 @@
 package com.spectralogic.ds3client.helpers;
 
 import com.spectralogic.ds3client.Ds3Client;
-import com.spectralogic.ds3client.commands.decorators.PutFolderResponse;
 import com.spectralogic.ds3client.helpers.events.SameThreadEventRunner;
 import com.spectralogic.ds3client.integration.Util;
 import com.spectralogic.ds3client.integration.test.helpers.TempStorageIds;
@@ -317,8 +316,7 @@ public class FileSystemHelper_Test {
         final String folderName = "FolderNameWithSlash/";
 
         try {
-            final PutFolderResponse response = HELPERS.createFolder(BUCKET_NAME, folderName);
-            assertNotNull(response);
+            HELPERS.createFolder(BUCKET_NAME, folderName);
         } finally {
             deleteAllContents(client, BUCKET_NAME);
         }
@@ -329,8 +327,7 @@ public class FileSystemHelper_Test {
         final String folderName = "FolderNameNoSlash";
 
         try {
-            final PutFolderResponse response = HELPERS.createFolder(BUCKET_NAME, folderName);
-            assertNotNull(response);
+            HELPERS.createFolder(BUCKET_NAME, folderName);
         } finally {
             deleteAllContents(client, BUCKET_NAME);
         }

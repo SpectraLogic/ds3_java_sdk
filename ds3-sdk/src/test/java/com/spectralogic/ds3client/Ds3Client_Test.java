@@ -17,7 +17,6 @@ package com.spectralogic.ds3client;
 
 import com.google.common.collect.*;
 import com.spectralogic.ds3client.commands.*;
-import com.spectralogic.ds3client.commands.decorators.PutFolderRequest;
 import com.spectralogic.ds3client.commands.spectrads3.*;
 import com.spectralogic.ds3client.exceptions.ContentLengthNotMatchException;
 import com.spectralogic.ds3client.exceptions.FolderNameMissingTrailingForwardSlash;
@@ -1149,11 +1148,6 @@ public class Ds3Client_Test {
                         resultChannel,
                         jobIdString,
                         0));
-    }
-
-    @Test (expected = FolderNameMissingTrailingForwardSlash.class)
-    public void createFolderWithNoSlash() throws IOException {
-        new PutFolderRequest("BucketName", "FolderNameNoSlash", UUID.randomUUID());
     }
 
     @Test

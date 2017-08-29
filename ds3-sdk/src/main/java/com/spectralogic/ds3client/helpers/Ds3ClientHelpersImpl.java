@@ -25,8 +25,7 @@ import com.spectralogic.ds3client.Ds3Client;
 import com.spectralogic.ds3client.commands.HeadBucketRequest;
 import com.spectralogic.ds3client.commands.HeadBucketResponse;
 import com.spectralogic.ds3client.commands.PutBucketRequest;
-import com.spectralogic.ds3client.commands.decorators.PutFolderRequest;
-import com.spectralogic.ds3client.commands.decorators.PutFolderResponse;
+import com.spectralogic.ds3client.commands.PutObjectRequest;
 import com.spectralogic.ds3client.commands.spectrads3.*;
 import com.spectralogic.ds3client.helpers.events.EventRunner;
 import com.spectralogic.ds3client.helpers.events.SameThreadEventRunner;
@@ -34,7 +33,6 @@ import com.spectralogic.ds3client.helpers.options.ReadJobOptions;
 import com.spectralogic.ds3client.helpers.options.WriteJobOptions;
 import com.spectralogic.ds3client.helpers.pagination.FileSystemKey;
 import com.spectralogic.ds3client.helpers.pagination.GetBucketKeyLoaderFactory;
-import com.spectralogic.ds3client.helpers.strategy.transferstrategy.EventDispatcher;
 import com.spectralogic.ds3client.helpers.strategy.transferstrategy.EventDispatcherImpl;
 import com.spectralogic.ds3client.helpers.strategy.transferstrategy.TransferStrategy;
 import com.spectralogic.ds3client.helpers.strategy.transferstrategy.TransferStrategyBuilder;
@@ -43,6 +41,7 @@ import com.spectralogic.ds3client.models.*;
 import com.spectralogic.ds3client.models.bulk.Ds3Object;
 import com.spectralogic.ds3client.models.common.Range;
 import com.spectralogic.ds3client.networking.FailedRequestException;
+import com.spectralogic.ds3client.utils.ByteArraySeekableByteChannel;
 import com.spectralogic.ds3client.utils.collections.LazyIterable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -596,13 +595,22 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
      * Creates a folder in the specified bucket.
      */
     @Override
-    public PutFolderResponse createFolder(final String bucketName, final String folderName) throws IOException {
+    public void createFolder(final String bucketName, final String folderName) throws IOException {
         final String normalizedFolderName = ensureNameEndsWithSlash(folderName);
+
         final Ds3Object ds3Object = new Ds3Object(normalizedFolderName, 0);
         final PutBulkJobSpectraS3Response jobResponse = client
                 .putBulkJobSpectraS3(new PutBulkJobSpectraS3Request(bucketName, ImmutableList.of(ds3Object)));
 
-        return client.putFolder(new PutFolderRequest(bucketName, normalizedFolderName, jobResponse.getMasterObjectList().getJobId()));
+        final PutObjectRequest folderRequest = new PutObjectRequest(
+                bucketName,
+                normalizedFolderName,
+                new ByteArraySeekableByteChannel(0),
+                jobResponse.getMasterObjectList().getJobId(),
+                0,
+                0);
+
+        client.putObject(folderRequest);
     }
 
     /**
