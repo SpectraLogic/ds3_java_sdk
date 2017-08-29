@@ -29,12 +29,12 @@ shadowJar {
     relocate 'com.google', 'ds3fatjar.com.google'
     relocate 'org.jetbrains', 'ds3fatjar.org.jetbrains'
     relocate 'org.intellij', 'ds3fatjar.org.intellij'
-    relocate 'edu.umd', 'ds3fatjar.edu.emd'
+    relocate 'org.codehaus', 'ds3fatjar.org.codehaus'
     relocate 'kotlin', 'ds3fatjar.kotlin'
+    relocate 'edu.umd', 'ds3fatjar.edu.emd'
     relocate 'net.jcip', 'ds3fatjar.net.jcip'
     relocate 'com.ctc', 'ds3fatjar.com.ctc'
     relocate 'org.apache', 'ds3fatjar.org.apache'
-    relocate 'org.codehaus', 'ds3fatjar.org.codehaus'
     relocate 'com.fasterxml', 'ds3fatjar.com.fasterxml'
     dependencies {
         exclude(dependency("org.hamcrest:hamcrest-library:$hamcrestVersion"))
@@ -86,11 +86,12 @@ jar {
 jar.dependsOn genConfigProperties
 
 dependencies {
+    compile     "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     compile     "org.apache.httpcomponents:httpclient:$httpclientVersion"
-    compile     'org.codehaus.woodstox:woodstox-core-asl:4.4.1'
     compile     "com.fasterxml.jackson.datatype:jackson-datatype-jdk8:$jacksonVersion"
     compile     "com.fasterxml.jackson.dataformat:jackson-dataformat-xml:$jacksonVersion"
     compile     "com.google.guava:guava:$guavaVersion"
+    compile     'org.codehaus.woodstox:woodstox-core-asl:4.4.1'
     compile     'com.google.code.findbugs:annotations:3.0.1'
     testCompile "org.hamcrest:hamcrest-library:$hamcrestVersion"
 }

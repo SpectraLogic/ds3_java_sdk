@@ -26,6 +26,9 @@ shadowJar {
     relocate 'org.apache', 'ds3metafatjar.org.apache'
     relocate 'com.google', 'ds3metafatjar.com.google'
     relocate 'com.sun.jna', 'ds3metafatjar.net.java.dev.jna'
+    relocate 'org.jetbrains', 'ds3metafatjar.org.jetbrains'
+    relocate 'org.intellij', 'ds3metafatjar.org.intellij'
+    relocate 'org.codehaus', 'ds3metafatjar.org.codehaus'
 
     dependencies {
         exclude(project(":ds3-interfaces")) // this is being excluded since it must be used with the sdk, which already has this dependency included
