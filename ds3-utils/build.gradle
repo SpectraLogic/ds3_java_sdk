@@ -41,7 +41,7 @@ artifacts {
 }
 
 dependencies {
-    compile     "commons-codec:commons-codec:$commonscodecVersion"
-    compile     "com.google.guava:guava:$guavaVersion"
+    compile  "commons-codec:commons-codec:$commonscodecVersion"
+    compile  "com.google.guava:guava:$guavaVersion"
 }
 
