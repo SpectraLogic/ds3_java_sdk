@@ -40,7 +40,6 @@ class FileTreeWalker_Test {
 
         walk.forEach {
             listBuilder.add(it)
-            println(it.name)
         }
 
         val fileList = listBuilder.build()
