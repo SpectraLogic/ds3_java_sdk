@@ -585,5 +585,5 @@ public abstract class Ds3ClientHelpers {
     /**
      * Creates a folder in the specified bucket
      */
-    public abstract PutObjectResponse createFolder(final String bucketName, final String folderName) throws IOException;
+    public abstract void createFolder(final String bucketName, final String folderName) throws IOException;
 }

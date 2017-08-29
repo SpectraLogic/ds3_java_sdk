@@ -593,7 +593,7 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
      * Creates a folder in the specified bucket.
      */
     @Override
-    public PutObjectResponse createFolder(final String bucketName, final String folderName) throws IOException {
+    public void createFolder(final String bucketName, final String folderName) throws IOException {
         final String normalizedFolderName = ensureNameEndsWithSlash(folderName);
 
         final Ds3Object ds3Object = new Ds3Object(normalizedFolderName, 0);
@@ -608,7 +608,7 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
                 0,
                 0);
 
-        return client.putObject(folderRequest);
+        client.putObject(folderRequest);
     }
 
     /**
