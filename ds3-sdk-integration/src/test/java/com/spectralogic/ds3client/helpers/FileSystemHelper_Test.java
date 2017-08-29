@@ -16,7 +16,6 @@
 package com.spectralogic.ds3client.helpers;
 
 import com.spectralogic.ds3client.Ds3Client;
-import com.spectralogic.ds3client.commands.PutObjectResponse;
 import com.spectralogic.ds3client.helpers.events.SameThreadEventRunner;
 import com.spectralogic.ds3client.integration.Util;
 import com.spectralogic.ds3client.integration.test.helpers.TempStorageIds;
