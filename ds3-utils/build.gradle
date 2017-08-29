@@ -14,34 +14,9 @@
  * ****************************************************************************
  */
 
-buildscript {
-    repositories { jcenter() }
-    dependencies {
-        classpath 'com.github.jengelman.gradle.plugins:shadow:2.0.1'
-    }
-}
-
-apply plugin: 'com.github.johnrengelman.shadow'
-
-shadowJar {
-    relocate 'org.apache', 'ds3utilfatjar.org.apache'
-    relocate 'com.google', 'ds3utilfatjar.com.google'
-
-    dependencies {
-        exclude(dependency("org.hamcrest:hamcrest-library:$hamcrestVersion"))
-        exclude(dependency("org.mockito:mockito-core:$mockitoVersion"))
-        exclude(dependency("junit:junit:$junitVersion"))
-        exclude(dependency("org.slf4j:slf4j-api:$slf4jVersion"))
-        exclude(dependency("org.slf4j:slf4j-simple:$slf4jVersion"))
-    }
-}
-
-artifacts {
-    archives shadowJar
-}
-
 dependencies {
-    compile  "commons-codec:commons-codec:$commonscodecVersion"
-    compile  "com.google.guava:guava:$guavaVersion"
+    compile "commons-codec:commons-codec:$commonscodecVersion"
+    compile "commons-io:commons-io:$commonsioVersion"
+    compile "com.google.guava:guava:$guavaVersion"
 }
 
