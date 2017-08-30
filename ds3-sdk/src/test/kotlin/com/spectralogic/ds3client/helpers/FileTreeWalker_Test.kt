@@ -13,26 +13,38 @@
  * ****************************************************************************
  */
 
-package com.spectralogic.ds3client;
+package com.spectralogic.ds3client.helpers
 
-import com.spectralogic.ds3client.models.common.Credentials;
-import com.spectralogic.ds3client.networking.ConnectionDetails;
+import com.google.common.collect.ImmutableList
+import com.spectralogic.ds3client.models.bulk.Ds3Object
+import org.junit.Rule
+import org.junit.Test
+import org.junit.rules.TemporaryFolder
 
-public final class ConnectionFixture {
+import org.hamcrest.CoreMatchers.*
+import org.hamcrest.MatcherAssert.assertThat
 
-    public static ConnectionDetails getConnection() {
-        return getConnection(8080);
-    }
+class FileTreeWalker_Test {
 
-    public static ConnectionDetails getConnection(final int port) {
-        return ConnectionDetailsImpl.builder("localhost:" + port, new Credentials("id", "key")).build();
-    }
+    @get:Rule
+    val tempDir = TemporaryFolder()
 
-    public static ConnectionDetails getHttpConnection() {
-        return getHttpConnection(8080);
-    }
+    @Test
+    fun basicFileList() {
+        tempDir.newFile("bar")
+        tempDir.newFile("baz")
 
-    public static ConnectionDetails getHttpConnection(final int port) {
-        return ConnectionDetailsImpl.builder("http://localhost:" + port, new Credentials("id", "key")).build();
+        val walk = FileTreeWalker.walk(tempDir.root.toPath())
+
+        val listBuilder = ImmutableList.Builder<Ds3Object>()
+
+        walk.forEach {
+            listBuilder.add(it)
+        }
+
+        val fileList = listBuilder.build()
+
+        assertThat(fileList.size, `is`(2))
+
     }
 }

@@ -17,7 +17,6 @@ package com.spectralogic.ds3client.utils;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMultimap;
-import com.google.common.collect.Multimap;
 import com.spectralogic.ds3client.networking.HttpVerb;
 import com.spectralogic.ds3client.models.common.Credentials;
 import com.spectralogic.ds3client.models.common.SignatureDetails;
@@ -32,7 +31,6 @@ public class Signature_Test {
 
     /**
      * Example taken from the AWS S3 documentation site: http://docs.aws.amazon.com/AmazonS3/latest/dev/RESTAuthentication.html#ConstructingTheAuthenticationHeader
-     * @throws SignatureException
      */
     @Test
     public void getSignature() throws SignatureException {
@@ -47,7 +45,6 @@ public class Signature_Test {
 
     /**
      * Example taken from the AWS S3 documentation site: http://docs.aws.amazon.com/AmazonS3/latest/dev/RESTAuthentication.html#ConstructingTheAuthenticationHeader
-     * @throws SignatureException
      */
     @Test
     public void putSignature() throws SignatureException {

@@ -22,6 +22,7 @@ import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
 import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import com.fasterxml.jackson.dataformat.xml.JacksonXmlModule;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
+import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.spectralogic.ds3client.models.bulk.Ds3ObjectList;
 
 import java.io.IOException;
@@ -42,6 +43,8 @@ public final class XmlOutput {
         module = new JacksonXmlModule();
         module.setDefaultUseWrapper(false);
         mapper = new XmlMapper(module);
+
+        mapper.registerModule(new Jdk8Module());
         final SimpleFilterProvider filterProvider = new SimpleFilterProvider().setFailOnUnknownId(false);
         mapper.setFilterProvider(filterProvider);
         if (isProductionBuild()) {

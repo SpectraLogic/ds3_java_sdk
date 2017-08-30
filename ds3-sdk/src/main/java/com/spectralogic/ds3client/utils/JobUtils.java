@@ -24,7 +24,6 @@ import com.spectralogic.ds3client.commands.spectrads3.GetJobsSpectraS3Response;
 import com.spectralogic.ds3client.models.*;
 
 import java.io.IOException;
-import java.security.SignatureException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;

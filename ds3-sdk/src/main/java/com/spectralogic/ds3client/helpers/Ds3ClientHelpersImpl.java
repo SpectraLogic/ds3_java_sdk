@@ -15,12 +15,9 @@
 
 package com.spectralogic.ds3client.helpers;
 
-import com.google.common.base.Function;
 import com.google.common.base.Preconditions;
-import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMultimap;
-import com.google.common.collect.Lists;
 import com.spectralogic.ds3client.Ds3Client;
 import com.spectralogic.ds3client.commands.*;
 import com.spectralogic.ds3client.commands.spectrads3.*;
@@ -40,20 +37,17 @@ import com.spectralogic.ds3client.models.bulk.Ds3Object;
 import com.spectralogic.ds3client.models.common.Range;
 import com.spectralogic.ds3client.networking.FailedRequestException;
 import com.spectralogic.ds3client.utils.ByteArraySeekableByteChannel;
+import com.spectralogic.ds3client.utils.collections.StreamWrapper;
 import com.spectralogic.ds3client.utils.collections.LazyIterable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.Nullable;
 import java.io.IOException;
-import java.nio.file.FileVisitResult;
-import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.SimpleFileVisitor;
-import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Collection;
-import java.util.List;
 import java.util.UUID;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
     private final static Logger LOG = LoggerFactory.getLogger(Ds3ClientHelpersImpl.class);
@@ -147,7 +141,7 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
                                                     final TransferStrategyBuilder transferStrategyBuilder)
             throws IOException
     {
-        final PutBulkJobSpectraS3Request request = new PutBulkJobSpectraS3Request(bucket, Lists.newArrayList(objectsToWrite))
+        final PutBulkJobSpectraS3Request request = new PutBulkJobSpectraS3Request(bucket, objectsToWrite)
                 .withPriority(options.getPriority())
                 .withAggregating(options.isAggregating())
                 .withForce(options.isForce())
@@ -166,19 +160,19 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
     }
 
     @Override
-    public Job startWriteJob(final TransferStrategy transferStrategy)
+    public Ds3ClientHelpers.Job startWriteJob(final TransferStrategy transferStrategy)
             throws IOException
     {
         return new WriteJobImpl(transferStrategy);
     }
 
     @Override
-    public Job startWriteJobUsingStreamedBehavior(final String bucket, final Iterable<Ds3Object> objectsToWrite) throws IOException {
+    public Ds3ClientHelpers.Job startWriteJobUsingStreamedBehavior(final String bucket, final Iterable<Ds3Object> objectsToWrite) throws IOException {
         return startWriteJobUsingStreamedBehavior(bucket, objectsToWrite, WriteJobOptions.create());
     }
 
     @Override
-    public Job startWriteJobUsingStreamedBehavior(final String bucket,
+    public Ds3ClientHelpers.Job startWriteJobUsingStreamedBehavior(final String bucket,
                                                   final Iterable<Ds3Object> objectsToWrite,
                                                   final WriteJobOptions options)
             throws IOException
@@ -192,12 +186,12 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
     }
 
     @Override
-    public Job startWriteJobUsingRandomAccessBehavior(final String bucket, final Iterable<Ds3Object> objectsToWrite) throws IOException {
+    public Ds3ClientHelpers.Job startWriteJobUsingRandomAccessBehavior(final String bucket, final Iterable<Ds3Object> objectsToWrite) throws IOException {
         return startWriteJobUsingRandomAccessBehavior(bucket, objectsToWrite, WriteJobOptions.create());
     }
 
     @Override
-    public Job startWriteJobUsingRandomAccessBehavior(final String bucket, final Iterable<Ds3Object> objectsToWrite, final WriteJobOptions options) throws IOException {
+    public Ds3ClientHelpers.Job startWriteJobUsingRandomAccessBehavior(final String bucket, final Iterable<Ds3Object> objectsToWrite, final WriteJobOptions options) throws IOException {
         Preconditions.checkNotNull(options, "options may not be null.");
 
         final TransferStrategyBuilder transferStrategyBuilder = makeTransferStrategyBuilder();
@@ -212,10 +206,8 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
     }
 
     @Override
-    public Ds3ClientHelpers.Job startReadJob(final String bucket, final Iterable<Ds3Object> objectsToRead, final ReadJobOptions options)
-            throws IOException
-    {
-        final List<Ds3Object> objects = Lists.newArrayList(objectsToRead);
+    public Ds3ClientHelpers.Job startReadJob(final String bucket, final Iterable<Ds3Object> objects, final ReadJobOptions options)
+            throws IOException {
 
         final GetBulkJobSpectraS3Request getBulkJobSpectraS3Request;
 
@@ -230,13 +222,13 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
         return innerStartReadJob(objects, getBulkJobSpectraS3Request, makeTransferStrategyBuilder());
     }
 
-    private GetBulkJobSpectraS3Request makeGetBulkJobSpectraS3Request(final String bucket, final List<Ds3Object> objects, final ReadJobOptions options) {
+    private GetBulkJobSpectraS3Request makeGetBulkJobSpectraS3Request(final String bucket, final Iterable<Ds3Object> objects, final ReadJobOptions options) {
         return new GetBulkJobSpectraS3Request(bucket, objects)
                 .withPriority(options.getPriority())
                 .withName(options.getName());
     }
 
-    private Ds3ClientHelpers.Job innerStartReadJob(final List<Ds3Object> objects,
+    private Ds3ClientHelpers.Job innerStartReadJob(final Iterable<Ds3Object> objects,
                                                    final GetBulkJobSpectraS3Request getBulkJobSpectraS3Request,
                                                    final TransferStrategyBuilder transferStrategyBuilder)
             throws IOException
@@ -255,20 +247,18 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
     }
 
     @Override
-    public Job startReadJob(final TransferStrategy transferStrategy) throws IOException {
+    public Ds3ClientHelpers.Job startReadJob(final TransferStrategy transferStrategy) throws IOException {
         return new ReadJobImpl(transferStrategy);
     }
 
     @Override
-    public Job startReadJobUsingStreamedBehavior(final String bucket, final Iterable<Ds3Object> objectsToRead) throws IOException {
+    public Ds3ClientHelpers.Job startReadJobUsingStreamedBehavior(final String bucket, final Iterable<Ds3Object> objectsToRead) throws IOException {
         return startReadJobUsingStreamedBehavior(bucket, objectsToRead, ReadJobOptions.create());
     }
 
     @Override
-    public Job startReadJobUsingStreamedBehavior(final String bucket, final Iterable<Ds3Object> objectsToRead, final ReadJobOptions options) throws IOException {
+    public Ds3ClientHelpers.Job startReadJobUsingStreamedBehavior(final String bucket, final Iterable<Ds3Object> objects, final ReadJobOptions options) throws IOException {
         Preconditions.checkNotNull(options, "options may not be null.");
-
-        final List<Ds3Object> objects = Lists.newArrayList(objectsToRead);
 
         final GetBulkJobSpectraS3Request getBulkJobSpectraS3Request = makeGetBulkJobSpectraS3Request(bucket, objects, options);
 
@@ -281,15 +271,13 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
     }
 
     @Override
-    public Job startReadJobUsingRandomAccessBehavior(final String bucket, final Iterable<Ds3Object> objectsToRead) throws IOException {
+    public Ds3ClientHelpers.Job startReadJobUsingRandomAccessBehavior(final String bucket, final Iterable<Ds3Object> objectsToRead) throws IOException {
         return startReadJobUsingRandomAccessBehavior(bucket, objectsToRead, ReadJobOptions.create());
     }
 
     @Override
-    public Job startReadJobUsingRandomAccessBehavior(final String bucket, final Iterable<Ds3Object> objectsToRead, final ReadJobOptions options) throws IOException {
+    public Ds3ClientHelpers.Job startReadJobUsingRandomAccessBehavior(final String bucket, final Iterable<Ds3Object> objects, final ReadJobOptions options) throws IOException {
         Preconditions.checkNotNull(options, "options may not be null.");
-
-        final List<Ds3Object> objects = Lists.newArrayList(objectsToRead);
 
         final GetBulkJobSpectraS3Request getBulkJobSpectraS3Request = makeGetBulkJobSpectraS3Request(bucket, objects, options);
 
@@ -319,7 +307,7 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
         return this.startReadJob(bucket, makeBlobList(bucket), options);
     }
 
-    private final Iterable<Ds3Object> makeBlobList(final String bucket) throws IOException {
+    private Iterable<Ds3Object> makeBlobList(final String bucket) throws IOException {
         final Iterable<Contents> contentsList = listObjects(bucket);
 
         return toDs3Iterable(contentsList, FolderNameFilter.filter());
@@ -362,8 +350,7 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
     /**
      * Verifies that the specified job is active. If the job is not active, then a
      * JobRecoveryNotActiveException is thrown.
-     * @throws IOException
-     * @throws JobRecoveryNotActiveException
+     * @throws JobRecoveryNotActiveException This is thrown when the job is no longer active when a recovery is attempted
      */
     private void innerVerifyJobActive(final UUID jobId) throws IOException, JobRecoveryNotActiveException {
         try {
@@ -421,7 +408,7 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
 
         final TransferStrategyBuilder transferStrategyBuilder = makeTransferStrategyBuilder()
                 .withMasterObjectList(masterObjectList)
-                .withRangesForBlobs(PartialObjectHelpers.mapRangesToBlob(masterObjectList.getObjects(), ImmutableMultimap.<String, Range>of()));
+                .withRangesForBlobs(PartialObjectHelpers.mapRangesToBlob(masterObjectList.getObjects(), ImmutableMultimap.of()));
 
         return new ReadJobImpl(transferStrategyBuilder);
     }
@@ -433,28 +420,28 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
     }
 
     @Override
-    public Job recoverReadJobsingStreamedBehavior(final UUID jobId) throws IOException, JobRecoveryException {
+    public Ds3ClientHelpers.Job recoverReadJobsingStreamedBehavior(final UUID jobId) throws IOException, JobRecoveryException {
         innerVerifyJobActive(jobId);
 
         final MasterObjectList masterObjectList = masterObjectListForGetJob(jobId);
 
         final TransferStrategyBuilder transferStrategyBuilder = makeTransferStrategyBuilder()
                 .withMasterObjectList(masterObjectList)
-                .withRangesForBlobs(PartialObjectHelpers.mapRangesToBlob(masterObjectList.getObjects(), ImmutableMultimap.<String, Range>of()))
+                .withRangesForBlobs(PartialObjectHelpers.mapRangesToBlob(masterObjectList.getObjects(), ImmutableMultimap.of()))
                 .usingStreamedTransferBehavior();
 
         return new ReadJobImpl(transferStrategyBuilder);
     }
 
     @Override
-    public Job recoverReadJobUsingRandomAccessBehavior(final UUID jobId) throws IOException, JobRecoveryException {
+    public Ds3ClientHelpers.Job recoverReadJobUsingRandomAccessBehavior(final UUID jobId) throws IOException, JobRecoveryException {
         innerVerifyJobActive(jobId);
 
         final MasterObjectList masterObjectList = masterObjectListForGetJob(jobId);
 
         final TransferStrategyBuilder transferStrategyBuilder = makeTransferStrategyBuilder()
                 .withMasterObjectList(masterObjectList)
-                .withRangesForBlobs(PartialObjectHelpers.mapRangesToBlob(masterObjectList.getObjects(), ImmutableMultimap.<String, Range>of()))
+                .withRangesForBlobs(PartialObjectHelpers.mapRangesToBlob(masterObjectList.getObjects(), ImmutableMultimap.of()))
                 .usingRandomAccessTransferBehavior();
 
         return new ReadJobImpl(transferStrategyBuilder);
@@ -514,20 +501,12 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
     @Override
     public Iterable<Contents> listObjects(final String bucket, final String keyPrefix, final String nextMarker, final int maxKeys, final int retries) {
 
-        return new LazyIterable<>(new GetBucketKeyLoaderFactory<Contents>(client, bucket, keyPrefix, DEFAULT_DELIMITER, nextMarker, maxKeys, retries, GetBucketKeyLoaderFactory.contentsFunction));
+        return new LazyIterable<>(new GetBucketKeyLoaderFactory<>(client, bucket, keyPrefix, DEFAULT_DELIMITER, nextMarker, maxKeys, retries, GetBucketKeyLoaderFactory.contentsFunction));
     }
 
     @Override
     public Iterable<Ds3Object> listObjectsForDirectory(final Path directory) throws IOException {
-        final ImmutableList.Builder<Ds3Object> objects = ImmutableList.builder();
-        Files.walkFileTree(directory, new SimpleFileVisitor<Path>() {
-            @Override
-            public FileVisitResult visitFile(final Path file, final BasicFileAttributes attrs) throws IOException {
-                objects.add(new Ds3Object(directory.relativize(file).toString().replace("\\", "/"), Files.size(file)));
-                return FileVisitResult.CONTINUE;
-            }
-        });
-        return objects.build();
+        return FileTreeWalker.INSTANCE.walk(directory);
     }
 
     @Override
@@ -545,31 +524,26 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
     }
 
     public Iterable<FileSystemKey> remoteListDirectory(final String bucket, final String keyPrefix, final String delimiter, final String nextMarker, final int maxKeys) throws IOException {
-        return new LazyIterable<>(new GetBucketKeyLoaderFactory<FileSystemKey>(client, bucket, keyPrefix, delimiter, nextMarker, maxKeys, DEFAULT_LIST_OBJECTS_RETRIES, GetBucketKeyLoaderFactory.getFileSystemKeysFunction));
+        return new LazyIterable<>(new GetBucketKeyLoaderFactory<>(client, bucket, keyPrefix, delimiter, nextMarker, maxKeys, DEFAULT_LIST_OBJECTS_RETRIES, GetBucketKeyLoaderFactory.getFileSystemKeysFunction));
     }
 
+    @Override
+    public void deleteBucket(final String bucket) throws IOException {
+        DeleteBucket.INSTANCE.deleteBucket(this, bucket);
+    }
+
+    @Override
     public Iterable<Ds3Object> addPrefixToDs3ObjectsList(final Iterable<Ds3Object> objectsList, final String prefix) {
-        final FluentIterable<Ds3Object> objectIterable = FluentIterable.from(objectsList);
+        final Stream<Ds3Object> objectIterable = StreamSupport.stream(objectsList.spliterator(), false);
 
-        return objectIterable.transform(new Function<Ds3Object, Ds3Object>() {
-            @Nullable
-            @Override
-            public Ds3Object apply(@Nullable final Ds3Object object) {
-                return new Ds3Object( prefix + object.getName(), object.getSize());
-            }
-        });
+        return StreamWrapper.wrapStream(objectIterable.map(obj -> new Ds3Object(prefix + obj.getName(), obj.getSize())));
     }
 
+    @Override
     public Iterable<Ds3Object> removePrefixFromDs3ObjectsList(final Iterable<Ds3Object> objectsList, final String prefix) {
-        final FluentIterable<Ds3Object> objectIterable = FluentIterable.from(objectsList);
+        final Stream<Ds3Object> objectIterable = StreamSupport.stream(objectsList.spliterator(), false);
 
-        return objectIterable.transform(new Function<Ds3Object, Ds3Object>() {
-            @Nullable
-            @Override
-            public Ds3Object apply(@Nullable final Ds3Object object) {
-                return new Ds3Object(stripLeadingPath(object.getName(), prefix), object.getSize());
-            }
-        });
+        return StreamWrapper.wrapStream(objectIterable.map(obj -> new Ds3Object(stripLeadingPath(obj.getName(), prefix), obj.getSize())));
     }
 
     /**
@@ -613,6 +587,11 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
                 0);
 
         client.putObject(folderRequest);
+    }
+
+    @Override
+    public Ds3Client getClient() {
+        return client;
     }
 
     /**

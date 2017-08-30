@@ -92,7 +92,7 @@ public class MockNetwork implements NetworkClient {
     public MockNetwork returning(
             final int statusCode,
             final String responseContent) {
-        return returning(statusCode, responseContent, new HashMap<String, String>());
+        return returning(statusCode, responseContent, new HashMap<>());
     }
     
     public Ds3Client asClient() {

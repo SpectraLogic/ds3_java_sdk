@@ -30,7 +30,7 @@ import static com.spectralogic.ds3client.integration.test.helpers.ABMTestHelper.
  * and partition for use in the integration tests to avoid error if the BP does not currently
  * have a partition available for running the unit tests.
  */
-public class TempStorageUtil {
+public final class TempStorageUtil {
 
     private static final String DATA_POLICY_NAME = "_dp";
     private static final String STORAGE_DOMAIN_NAME = "_sd";

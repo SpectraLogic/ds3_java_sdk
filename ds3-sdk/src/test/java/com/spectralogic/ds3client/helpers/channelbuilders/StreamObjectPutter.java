@@ -27,7 +27,7 @@ public class StreamObjectPutter extends ObjectInputStreamBuilder {
     }
 
     @Override
-    public InputStream buildInputStream(String key) {
+    public InputStream buildInputStream(final String key) {
         return new ByteArrayInputStream(buf);
     }
 }

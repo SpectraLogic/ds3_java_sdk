@@ -100,7 +100,7 @@ public class SeekableByteChannelInputStream_Test {
         final byte[] resultBuffer = new byte[expectedBytes.length];
         final byte[] buffer = new byte[10];
         int position = 0;
-        int bytesRead = 0;
+        int bytesRead;
         while (0 < (bytesRead = inputStream.read(buffer, 5, 5))) {
             for (int i = 0; i < bytesRead; i++) {
                 resultBuffer[position] = buffer[5 + i];

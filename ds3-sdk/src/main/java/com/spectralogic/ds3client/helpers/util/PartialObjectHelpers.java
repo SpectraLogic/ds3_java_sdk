@@ -78,10 +78,9 @@ public final class PartialObjectHelpers {
 
         Range currentRange = null;
         Range nextRange;
-        final UnmodifiableIterator<Range> rangeIterator = sortedRanges.iterator();
 
-        while (rangeIterator.hasNext()) {
-            nextRange = rangeIterator.next();
+        for (final Range sortedRange : sortedRanges) {
+            nextRange = sortedRange;
             if (currentRange == null) {
                 // This will only be called on the first iteration of the loop
                 currentRange = nextRange;

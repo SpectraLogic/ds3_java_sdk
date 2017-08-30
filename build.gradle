@@ -13,45 +13,61 @@
  *  ****************************************************************************
  */
 
+buildscript {
+    ext.kotlin_version = '1.1.4-2'
+
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+    }
+}
+
+
 allprojects {
     group = 'com.spectralogic.ds3'
-    version = '3.5.1'
+    version = '3.5.2'
 }
 
 subprojects {
     apply plugin: 'maven'
     apply plugin: 'java'
+    apply plugin: 'kotlin'
     apply plugin: 'findbugs'
 
-    sourceCompatibility = JavaVersion.VERSION_1_7
+    sourceCompatibility = JavaVersion.VERSION_1_8
     repositories {
         mavenCentral()
         mavenLocal()
     }
 
     dependencies {
-        compile     'org.slf4j:slf4j-api:1.7.22'
-        testCompile ('org.mockito:mockito-core:1.10.19') {
+        compile "org.slf4j:slf4j-api:$slf4jVersion"
+        testCompile ("org.mockito:mockito-core:$mockitoVersion") {
             exclude group: 'org.hamcrest'
         }
 
-        testCompile 'junit:junit:4.12'
-        testCompile 'org.slf4j:slf4j-simple:1.7.22'
+        testCompile "junit:junit:$junitVersion"
+        testCompile "org.slf4j:slf4j-simple:$slf4jVersion"
     }
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '3.5'
+    gradleVersion = '4.1'
 }
 
 project(':ds3-sdk') {
     dependencies {
+        compile project(':ds3-interfaces')
         compile project(':ds3-utils')
     }
 }
 
 project(':ds3-metadata') {
     dependencies {
+        compile project(':ds3-interfaces')
         compile project(':ds3-utils')
     }
 }
