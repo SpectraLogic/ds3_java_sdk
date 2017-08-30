@@ -47,7 +47,7 @@ public class ResponseParserUtils_Test {
 
     @Test
     public void getRequestId_EmptyHeaders_Test() {
-        final String result = ResponseParserUtils.getRequestId(new MockedHeaders(ImmutableMap.<String, String>of()));
+        final String result = ResponseParserUtils.getRequestId(new MockedHeaders(ImmutableMap.of()));
         assertThat(result, is(nullValue()));
     }
 }

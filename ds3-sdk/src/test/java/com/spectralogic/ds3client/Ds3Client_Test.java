@@ -19,7 +19,6 @@ import com.google.common.collect.*;
 import com.spectralogic.ds3client.commands.*;
 import com.spectralogic.ds3client.commands.spectrads3.*;
 import com.spectralogic.ds3client.exceptions.ContentLengthNotMatchException;
-import com.spectralogic.ds3client.exceptions.FolderNameMissingTrailingForwardSlash;
 import com.spectralogic.ds3client.models.*;
 import com.spectralogic.ds3client.models.Objects;
 import com.spectralogic.ds3client.models.bulk.Ds3Object;
@@ -51,6 +50,7 @@ import java.util.regex.Pattern;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 
 public class Ds3Client_Test {
     private static final UUID MASTER_OBJECT_LIST_JOB_ID = UUID.fromString("1a85e743-ec8f-4789-afec-97e587a26936");
@@ -517,24 +517,12 @@ public class Ds3Client_Test {
 
     @Test
     public void createPutJobSpectraS3() throws IOException {
-        this.runBulkTest(BulkCommand.PUT, new BulkTestDriver() {
-            @Override
-            public MasterObjectList performRestCall(final Ds3Client client, final String bucket, final List<Ds3Object> objects)
-                    throws IOException {
-                return client.putBulkJobSpectraS3(new PutBulkJobSpectraS3Request(bucket, objects)).getMasterObjectList();
-            }
-        });
+        this.runBulkTest(BulkCommand.PUT, (client, bucket, objects) -> client.putBulkJobSpectraS3(new PutBulkJobSpectraS3Request(bucket, objects)).getMasterObjectList());
     }
 
     @Test
     public void createGetJobSpectraS3() throws IOException {
-        this.runBulkTest(BulkCommand.GET, new BulkTestDriver() {
-            @Override
-            public MasterObjectList performRestCall(final Ds3Client client, final String bucket, final List<Ds3Object> objects)
-                    throws IOException {
-                return client.getBulkJobSpectraS3(new GetBulkJobSpectraS3Request(bucket, objects)).getMasterObjectList();
-            }
-        });
+        this.runBulkTest(BulkCommand.GET, (client, bucket, objects) -> client.getBulkJobSpectraS3(new GetBulkJobSpectraS3Request(bucket, objects)).getMasterObjectList());
     }
     
     private interface BulkTestDriver {
@@ -542,7 +530,7 @@ public class Ds3Client_Test {
                 throws IOException;
     }
     
-    private void runBulkTest(final BulkCommand command, final BulkTestDriver driver) throws IOException {
+    private void runBulkTest(final BulkCommand command, final Ds3Client_Test.BulkTestDriver driver) throws IOException {
         final List<Ds3Object> objects = Arrays.asList(
             new Ds3Object("file1", 256),
             new Ds3Object("file2", 1202),
@@ -939,7 +927,7 @@ public class Ds3Client_Test {
         final String userAgent = newClient.getConnectionDetails().getUserAgent();
         final String[] userAgentFields = userAgent.split("-");
 
-        assertThat(userAgentFields.length >= 2, is(true));
+        assertThat(userAgentFields.length, is(greaterThanOrEqualTo(2)));
 
         // look for a pattern like 3.4.0, but leave open the possibility of a string like 3.4.0-SNAPSHOT
         final Pattern matchPattern = Pattern.compile("\\d+\\.\\d+\\.\\d+");
@@ -1153,7 +1141,7 @@ public class Ds3Client_Test {
     @Test
     public void clearSuspectBlobAzureTargetsSpectraS3Test() throws IOException {
         MockNetwork
-                .expecting(HttpVerb.DELETE, "/_rest_/suspect_blob_azure_target", new HashMap<String, String>(), IDS_REQUEST_PAYLOAD)
+                .expecting(HttpVerb.DELETE, "/_rest_/suspect_blob_azure_target", new HashMap<>(), IDS_REQUEST_PAYLOAD)
                 .returning(204, "")
                 .asClient()
                 .clearSuspectBlobAzureTargetsSpectraS3(new ClearSuspectBlobAzureTargetsSpectraS3Request(IDS_REQUEST_PAYLOAD_LIST));
@@ -1162,7 +1150,7 @@ public class Ds3Client_Test {
     @Test
     public void clearSuspectBlobPoolsSpectraS3Test() throws IOException {
         MockNetwork
-                .expecting(HttpVerb.DELETE, "/_rest_/suspect_blob_pool", new HashMap<String, String>(), IDS_REQUEST_PAYLOAD)
+                .expecting(HttpVerb.DELETE, "/_rest_/suspect_blob_pool", new HashMap<>(), IDS_REQUEST_PAYLOAD)
                 .returning(204, "")
                 .asClient()
                 .clearSuspectBlobPoolsSpectraS3(new ClearSuspectBlobPoolsSpectraS3Request(IDS_REQUEST_PAYLOAD_LIST));
@@ -1171,7 +1159,7 @@ public class Ds3Client_Test {
     @Test
     public void clearSuspectBlobS3TargetsSpectraS3Test() throws IOException {
         MockNetwork
-                .expecting(HttpVerb.DELETE, "/_rest_/suspect_blob_s3_target", new HashMap<String, String>(), IDS_REQUEST_PAYLOAD)
+                .expecting(HttpVerb.DELETE, "/_rest_/suspect_blob_s3_target", new HashMap<>(), IDS_REQUEST_PAYLOAD)
                 .returning(204, "")
                 .asClient()
                 .clearSuspectBlobS3TargetsSpectraS3(new ClearSuspectBlobS3TargetsSpectraS3Request(IDS_REQUEST_PAYLOAD_LIST));
@@ -1180,7 +1168,7 @@ public class Ds3Client_Test {
     @Test
     public void clearSuspectBlobTapesSpectraS3Test() throws IOException {
         MockNetwork
-                .expecting(HttpVerb.DELETE, "/_rest_/suspect_blob_tape", new HashMap<String, String>(), IDS_REQUEST_PAYLOAD)
+                .expecting(HttpVerb.DELETE, "/_rest_/suspect_blob_tape", new HashMap<>(), IDS_REQUEST_PAYLOAD)
                 .returning(204, "")
                 .asClient()
                 .clearSuspectBlobTapesSpectraS3(new ClearSuspectBlobTapesSpectraS3Request(IDS_REQUEST_PAYLOAD_LIST));
@@ -1189,7 +1177,7 @@ public class Ds3Client_Test {
     @Test
     public void markSuspectBlobAzureTargetsAsDegradedSpectraS3Test() throws IOException {
         MockNetwork
-                .expecting(HttpVerb.PUT, "/_rest_/suspect_blob_azure_target", new HashMap<String, String>(), IDS_REQUEST_PAYLOAD)
+                .expecting(HttpVerb.PUT, "/_rest_/suspect_blob_azure_target", new HashMap<>(), IDS_REQUEST_PAYLOAD)
                 .returning(204, "")
                 .asClient()
                 .markSuspectBlobAzureTargetsAsDegradedSpectraS3(new MarkSuspectBlobAzureTargetsAsDegradedSpectraS3Request(IDS_REQUEST_PAYLOAD_LIST));
@@ -1198,7 +1186,7 @@ public class Ds3Client_Test {
     @Test
     public void markSuspectBlobDs3TargetsAsDegradedSpectraS3Test() throws IOException {
         MockNetwork
-                .expecting(HttpVerb.PUT, "/_rest_/suspect_blob_ds3_target", new HashMap<String, String>(), IDS_REQUEST_PAYLOAD)
+                .expecting(HttpVerb.PUT, "/_rest_/suspect_blob_ds3_target", new HashMap<>(), IDS_REQUEST_PAYLOAD)
                 .returning(204, "")
                 .asClient()
                 .markSuspectBlobDs3TargetsAsDegradedSpectraS3(new MarkSuspectBlobDs3TargetsAsDegradedSpectraS3Request(IDS_REQUEST_PAYLOAD_LIST));
@@ -1207,7 +1195,7 @@ public class Ds3Client_Test {
     @Test
     public void markSuspectBlobPoolsAsDegradedSpectraS3Test() throws IOException {
         MockNetwork
-                .expecting(HttpVerb.PUT, "/_rest_/suspect_blob_pool", new HashMap<String, String>(), IDS_REQUEST_PAYLOAD)
+                .expecting(HttpVerb.PUT, "/_rest_/suspect_blob_pool", new HashMap<>(), IDS_REQUEST_PAYLOAD)
                 .returning(204, "")
                 .asClient()
                 .markSuspectBlobPoolsAsDegradedSpectraS3(new MarkSuspectBlobPoolsAsDegradedSpectraS3Request(IDS_REQUEST_PAYLOAD_LIST));
@@ -1216,7 +1204,7 @@ public class Ds3Client_Test {
     @Test
     public void markSuspectBlobS3TargetsAsDegradedSpectraS3Test() throws IOException {
         MockNetwork
-                .expecting(HttpVerb.PUT, "/_rest_/suspect_blob_s3_target", new HashMap<String, String>(), IDS_REQUEST_PAYLOAD)
+                .expecting(HttpVerb.PUT, "/_rest_/suspect_blob_s3_target", new HashMap<>(), IDS_REQUEST_PAYLOAD)
                 .returning(204, "")
                 .asClient()
                 .markSuspectBlobS3TargetsAsDegradedSpectraS3(new MarkSuspectBlobS3TargetsAsDegradedSpectraS3Request(IDS_REQUEST_PAYLOAD_LIST));
@@ -1225,7 +1213,7 @@ public class Ds3Client_Test {
     @Test
     public void markSuspectBlobTapesAsDegradedSpectraS3Test() throws IOException {
         MockNetwork
-                .expecting(HttpVerb.PUT, "/_rest_/suspect_blob_tape", new HashMap<String, String>(), IDS_REQUEST_PAYLOAD)
+                .expecting(HttpVerb.PUT, "/_rest_/suspect_blob_tape", new HashMap<>(), IDS_REQUEST_PAYLOAD)
                 .returning(204, "")
                 .asClient()
                 .markSuspectBlobTapesAsDegradedSpectraS3(new MarkSuspectBlobTapesAsDegradedSpectraS3Request(IDS_REQUEST_PAYLOAD_LIST));

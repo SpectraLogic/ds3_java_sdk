@@ -13,30 +13,23 @@
  * ****************************************************************************
  */
 
-buildscript {
-    repositories { jcenter() }
-    dependencies {
-        classpath 'com.github.jengelman.gradle.plugins:shadow:1.2.3'
+package com.spectralogic.ds3client.helpers
+
+import com.spectralogic.ds3client.models.bulk.Ds3Object
+import com.spectralogic.ds3client.utils.collections.StreamWrapper
+import java.nio.file.Files
+import java.nio.file.Path
+
+object FileTreeWalker {
+    /**
+     * Walks a file system starting at {@param startDir} and returns a Lazy Iterable with all the
+     * files represented as Ds3Objects.
+     */
+    fun walk(startDir: Path) : Iterable<Ds3Object> {
+        return StreamWrapper.wrapStream(Files.walk(startDir).map {
+            Ds3Object(startDir.relativize(it).toString().replace("\\", "/"), Files.size(it))
+        }.filter {
+            !it.name.isNullOrEmpty()
+        })
     }
-}
-
-apply plugin: 'com.github.johnrengelman.shadow'
-
-dependencies {
-    compile 'commons-io:commons-io:2.4'
-}
-
-shadowJar {
-    relocate 'org.apache', 'ds3fatjar.org.apache'
-    dependencies {
-        exclude(dependency('org.hamcrest:hamcrest-library:1.3'))
-        exclude(dependency('org.mockito:mockito-core:1.10.19'))
-        exclude(dependency('junit:junit:4.12'))
-        exclude(dependency('org.slf4j:slf4j-api:1.7.22'))
-        exclude(dependency('org.slf4j:slf4j-simple:1.7.22'))
-    }
-}
-
-artifacts {
-    archives shadowJar
 }

@@ -167,21 +167,21 @@ public class NetUtils_Test {
     @Test
     public void getPortBack() throws MalformedURLException {
         final URL url = new URL("http://localhost:8080/path");
-        int port = NetUtils.getPort(url);
+        final int port = NetUtils.getPort(url);
         assertTrue(port == 8080);
     }
 
     @Test
     public void getHttpsDefaultPort() throws MalformedURLException {
         final URL url = new URL("https://localhost/path");
-        int port = NetUtils.getPort(url);
+        final int port = NetUtils.getPort(url);
         assertTrue(port == 443);
     }
 
     @Test
     public void getHttpDefaultPort() throws MalformedURLException {
         final URL url = new URL("http://localhost/path");
-        int port = NetUtils.getPort(url);
+        final int port = NetUtils.getPort(url);
         assertTrue(port == 80);
     }
 

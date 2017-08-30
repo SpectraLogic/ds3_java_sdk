@@ -21,11 +21,15 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import com.spectralogic.ds3client.models.Priority;
 import com.spectralogic.ds3client.models.JobChunkClientProcessingOrderGuarantee;
 import com.spectralogic.ds3client.models.WriteOptimization;
+import com.spectralogic.ds3client.utils.collections.StreamWrapper;
+
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 @JacksonXmlRootElement(localName = "Objects")
 public class Ds3ObjectList {
     @JsonProperty("Object")
-    private Iterable<Ds3Object> objects;
+    private Stream<Ds3Object> objects;
 
     @JacksonXmlProperty(isAttribute = true, namespace = "", localName = "Priority")
     private Priority priority;
@@ -40,15 +44,15 @@ public class Ds3ObjectList {
     }
 
     public Ds3ObjectList(final Iterable<Ds3Object> objects) {
-        this.objects = objects;
+        this.objects = StreamSupport.stream(objects.spliterator(), false);
     }
 
     public Iterable<Ds3Object> getObjects() {
-        return objects;
+        return StreamWrapper.wrapStream(this.objects);
     }
 
     public void setObjects(final Iterable<Ds3Object> objects) {
-        this.objects = objects;
+        this.objects = StreamSupport.stream(objects.spliterator(), false);
     }
 
     public Priority getPriority() {
