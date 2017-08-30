@@ -14,9 +14,10 @@
  * ****************************************************************************
  */
 
+apply from: "$rootDir/gradle/scripts/publish.gradle"
+
 dependencies {
     compile "commons-codec:commons-codec:$commonscodecVersion"
     compile "commons-io:commons-io:$commonsioVersion"
     compile "com.google.guava:guava:$guavaVersion"
 }
-
