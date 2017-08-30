@@ -14,14 +14,17 @@
  */
 
 buildscript {
-    ext.kotlin_version = '1.1.4-2'
+    ext.kotlin_version = '1.1.4-3'
 
     repositories {
         mavenCentral()
+        jcenter()
     }
 
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.3'
+        classpath 'com.github.jengelman.gradle.plugins:shadow:2.0.1'
     }
 }
 
@@ -58,7 +61,7 @@ task wrapper(type: Wrapper) {
     gradleVersion = '4.1'
 }
 
-project(':ds3-sdk') {
+project(':ds3_java_sdk') {
     dependencies {
         compile project(':ds3-interfaces')
         compile project(':ds3-utils')
@@ -74,14 +77,14 @@ project(':ds3-metadata') {
 
 project(':ds3-sdk-integration') {
     dependencies {
-        compile project(':ds3-sdk')
+        compile project(':ds3_java_sdk')
         compile project(':ds3-metadata')
     }
 }
 
 project(':ds3-sdk-samples') {
     dependencies {
-        compile project(':ds3-sdk')
+        compile project(':ds3_java_sdk')
     }
 }
 

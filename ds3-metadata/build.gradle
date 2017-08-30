@@ -13,14 +13,9 @@
  * ****************************************************************************
  */
 
-buildscript {
-    repositories { jcenter() }
-    dependencies {
-        classpath 'com.github.jengelman.gradle.plugins:shadow:2.0.1'
-    }
-}
-
 apply plugin: 'com.github.johnrengelman.shadow'
+
+apply from: "$rootDir/gradle/scripts/publish.gradle"
 
 shadowJar {
     relocate 'org.apache', 'ds3metafatjar.org.apache'
