@@ -25,8 +25,6 @@ import com.spectralogic.ds3client.helpers.strategy.transferstrategy.EventDispatc
 import com.spectralogic.ds3client.models.BulkObject;
 import com.spectralogic.ds3client.models.MasterObjectList;
 import com.spectralogic.ds3client.models.Objects;
-import org.slf4j.LoggerFactory;
-import org.slf4j.Logger;
 
 import javax.annotation.Nullable;
 import java.io.IOException;

@@ -20,6 +20,7 @@ import com.spectralogic.ds3client.Ds3ClientBuilder;
 import com.spectralogic.ds3client.commands.DeleteBucketRequest;
 import com.spectralogic.ds3client.commands.DeleteObjectRequest;
 import com.spectralogic.ds3client.commands.spectrads3.GetSystemInformationSpectraS3Request;
+import com.spectralogic.ds3client.helpers.DeleteBucket;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers;
 import com.spectralogic.ds3client.helpers.channelbuilders.PrefixAdderObjectChannelBuilder;
 import com.spectralogic.ds3client.models.Contents;
@@ -39,7 +40,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assume.assumeThat;
 
 
-public class Util {
+public final class Util {
     private static final Logger LOG = LoggerFactory.getLogger(Util.class);
     public static final String RESOURCE_BASE_NAME = "books/";
     public static final String[] BOOKS = {"beowulf.txt", "sherlock_holmes.txt", "tale_of_two_cities.txt", "ulysses.txt"};
@@ -103,22 +104,11 @@ public class Util {
     }
 
     public static void deleteAllContents(final Ds3Client client, final String bucketName) throws IOException {
-        final Ds3ClientHelpers helpers = Ds3ClientHelpers.wrap(client);
-
-        final Iterable<Contents> objects = helpers.listObjects(bucketName);
-        for(final Contents contents : objects) {
-            client.deleteObject(new DeleteObjectRequest(bucketName, contents.getKey()));
-        }
-
-        client.deleteBucket(new DeleteBucketRequest(bucketName));
+        Ds3ClientHelpers.wrap(client).deleteBucket(bucketName);
     }
 
     public static void deleteBucketContents(final Ds3Client client, final String bucketName) throws IOException {
         final Ds3ClientHelpers helpers = Ds3ClientHelpers.wrap(client);
-
-        final Iterable<Contents> objects = helpers.listObjects(bucketName);
-        for(final Contents contents : objects) {
-            client.deleteObject(new DeleteObjectRequest(bucketName, contents.getKey()));
-        }
+        DeleteBucket.INSTANCE.deleteBucketContents(helpers, bucketName);
     }
 }

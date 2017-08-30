@@ -16,7 +16,7 @@
 buildscript {
     repositories { jcenter() }
     dependencies {
-        classpath 'com.github.jengelman.gradle.plugins:shadow:1.2.3'
+        classpath 'com.github.jengelman.gradle.plugins:shadow:2.0.1'
     }
 }
 
@@ -26,14 +26,19 @@ shadowJar {
     relocate 'org.apache', 'ds3metafatjar.org.apache'
     relocate 'com.google', 'ds3metafatjar.com.google'
     relocate 'com.sun.jna', 'ds3metafatjar.net.java.dev.jna'
+    relocate 'org.jetbrains', 'ds3metafatjar.org.jetbrains'
+    relocate 'org.intellij', 'ds3metafatjar.org.intellij'
+    relocate 'org.codehaus', 'ds3metafatjar.org.codehaus'
 
     dependencies {
-        exclude(dependency('org.hamcrest:hamcrest-library:1.3'))
-        exclude(dependency('org.mockito:mockito-core:1.10.19'))
-        exclude(dependency('junit:junit:4.12'))
-        exclude(dependency('org.slf4j:slf4j-api:1.7.22'))
-        exclude(dependency('org.slf4j:slf4j-simple:1.7.22'))
-        exclude(dependency('org.apache.commons:commons-lang3:3.0'))
+        exclude(project(":ds3-interfaces")) // this is being excluded since it must be used with the sdk, which already has this dependency included
+        exclude(project(":ds3-utils")) // this is being excluded since it must be used with the sdk, which already has this dependency included
+        exclude(dependency("org.hamcrest:hamcrest-library:$hamcrestVersion"))
+        exclude(dependency("org.mockito:mockito-core:$mockitoVersion"))
+        exclude(dependency("junit:junit:$junitVersion"))
+        exclude(dependency("org.slf4j:slf4j-api:$slf4jVersion"))
+        exclude(dependency("org.slf4j:slf4j-simple:$slf4jVersion"))
+        exclude(dependency("org.apache.commons:commons-lang3:$commonslangVersion"))
     }
 }
 
@@ -42,10 +47,10 @@ artifacts {
 }
 
 dependencies {
-    compile     group: 'net.java.dev.jna', name: 'jna-platform', version: '4.2.2'
-    compile     group: 'net.java.dev.jna', name: 'jna', version: '4.2.2'
-    compile     'commons-io:commons-io:2.4'
-    compile     'org.apache.httpcomponents:httpclient:4.5.1'
+    compile     group: 'net.java.dev.jna', name: 'jna-platform', version: "$jnaVersion"
+    compile     group: 'net.java.dev.jna', name: 'jna', version: "$jnaVersion"
+    compile     "commons-io:commons-io:$commonsioVersion"
+    compile     "org.apache.httpcomponents:httpclient:$httpclientVersion"
 
-    testCompile group: 'org.apache.commons', name: 'commons-lang3', version: '3.0'
+    testCompile group: 'org.apache.commons', name: 'commons-lang3', version: "$commonslangVersion"
 }
