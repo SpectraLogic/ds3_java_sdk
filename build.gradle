@@ -61,7 +61,7 @@ task wrapper(type: Wrapper) {
     gradleVersion = '4.1'
 }
 
-project(':ds3_java_sdk') {
+project(':ds3-sdk') {
     dependencies {
         compile project(':ds3-interfaces')
         compile project(':ds3-utils')
@@ -77,14 +77,14 @@ project(':ds3-metadata') {
 
 project(':ds3-sdk-integration') {
     dependencies {
-        compile project(':ds3_java_sdk')
+        compile project(':ds3-sdk')
         compile project(':ds3-metadata')
     }
 }
 
 project(':ds3-sdk-samples') {
     dependencies {
-        compile project(':ds3_java_sdk')
+        compile project(':ds3-sdk')
     }
 }
 

@@ -6,7 +6,7 @@ bintray {
 
     configurations = ['archives']
 
-    //dryRun = true
+    dryRun = true
     publish = true
 
     pkg {
