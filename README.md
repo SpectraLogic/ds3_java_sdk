@@ -21,8 +21,7 @@ If using Intellij, simply import the project as a Gradle project.
 
 ## Install
 
-To install the latest `ds3_java_sdk` either download the latest release jar file from the [Releases](../../releases) page or clone the repository with `git clone https://github.com/SpectraLogic/ds3_java_sdk.git`, cd to `ds3_java_sdk` and run `./gradlew clean ds3-sdk:install` to install the sdk into your local maven repository.  It is compatible with Java 7 and above.
-
+To install the latest `ds3_java_sdk` either download the latest release jar file from the [Releases](../../releases) page or clone the repository with `git clone https://github.com/SpectraLogic/ds3_java_sdk.git`, cd to `ds3_java_sdk` and run `./gradlew clean ds3-sdk:install` to install the sdk into your local maven repository.  It is compatible with Java 8.
 The SDK can also be included directly into a Maven or Gradle build. There is also a fatjar version that you can optionally use with the `all` classifier, take a look at the commented out code in the examples below.  To include the SDK  into maven add the following to the `pom.xml` file:
 
 ```xml
@@ -41,7 +40,7 @@ The SDK can also be included directly into a Maven or Gradle build. There is als
       <dependency>
         <groupId>com.spectralogic.ds3</groupId>
         <artifactId>ds3-sdk</artifactId>
-        <version>3.4.0</version>
+        <version>3.5.2</version>
         <!-- <classifier>all</classifier> -->
       </dependency>
     ...
@@ -64,8 +63,8 @@ repositories {
 
 dependencies {
     ...
-    compile 'com.spectralogic.ds3:ds3-sdk:3.4.0'
-    // compile 'com.spectralogic.ds3:ds3-sdk:3.4.0:all'
+    compile 'com.spectralogic.ds3:ds3-sdk:3.5.2'
+    // compile 'com.spectralogic.ds3:ds3-sdk:3.5.2:all'
     ...
 }
 
@@ -94,3 +93,15 @@ bridges, please see [SLF4j.org](http://www.slf4j.org/manual.html).
 In addition to unit tests in the main `ds3-sdk` module, there are additional integration tests in the `ds3-integration` module.  Please see the integration [README](ds3-sdk-integration/README.md) for details on running the tests.  To just run the SDK's unit tests use:
 
     ./gradlew clean ds3-sdk:test
+
+## Publishing
+
+Before a user can publish the SDK they must first have [Bintray](https://bintray.com/spectralogic) API credentials and access to our organization to upload.  Once a user has access they can set their credentials on the command line by issuing:
+
+```shell
+
+$ export BINTRAY_USER="userName"
+$ export BINTRAY_KEY="api_key"
+```
+
+After the credentials have been set, to publish the SDK to [Bintray](https://bintray.com/spectralogic), issue the following from the command line run: `./gradlew clean bintrayUpload`
