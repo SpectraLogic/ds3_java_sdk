@@ -35,7 +35,6 @@ public class PutJobCreatedNotificationRegistrationSpectraS3Request extends Abstr
     
     public PutJobCreatedNotificationRegistrationSpectraS3Request(final String notificationEndPoint) {
         super(notificationEndPoint);
-
         
 
     }

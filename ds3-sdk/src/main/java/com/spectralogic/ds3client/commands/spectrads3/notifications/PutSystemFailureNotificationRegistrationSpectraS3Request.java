@@ -35,7 +35,6 @@ public class PutSystemFailureNotificationRegistrationSpectraS3Request extends Ab
     
     public PutSystemFailureNotificationRegistrationSpectraS3Request(final String notificationEndPoint) {
         super(notificationEndPoint);
-
         
 
     }

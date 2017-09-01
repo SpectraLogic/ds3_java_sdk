@@ -35,7 +35,6 @@ public class PutTapeFailureNotificationRegistrationSpectraS3Request extends Abst
     
     public PutTapeFailureNotificationRegistrationSpectraS3Request(final String notificationEndPoint) {
         super(notificationEndPoint);
-
         
 
     }

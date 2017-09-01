@@ -34,6 +34,7 @@ import java.io.IOException;
 public interface Ds3Client extends Closeable {
 
     ConnectionDetails getConnectionDetails();
+
     
     
     AbortMultiPartUploadResponse abortMultiPartUpload(final AbortMultiPartUploadRequest request)
