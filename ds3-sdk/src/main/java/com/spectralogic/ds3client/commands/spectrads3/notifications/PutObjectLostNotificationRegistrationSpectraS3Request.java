@@ -35,7 +35,6 @@ public class PutObjectLostNotificationRegistrationSpectraS3Request extends Abstr
     
     public PutObjectLostNotificationRegistrationSpectraS3Request(final String notificationEndPoint) {
         super(notificationEndPoint);
-
         
 
     }

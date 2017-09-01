@@ -38,7 +38,6 @@ public class PutJobCompletedNotificationRegistrationSpectraS3Request extends Abs
     
     public PutJobCompletedNotificationRegistrationSpectraS3Request(final String notificationEndPoint) {
         super(notificationEndPoint);
-
         
 
     }

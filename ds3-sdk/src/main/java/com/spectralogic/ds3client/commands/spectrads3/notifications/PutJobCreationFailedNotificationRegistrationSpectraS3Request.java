@@ -35,7 +35,6 @@ public class PutJobCreationFailedNotificationRegistrationSpectraS3Request extend
     
     public PutJobCreationFailedNotificationRegistrationSpectraS3Request(final String notificationEndPoint) {
         super(notificationEndPoint);
-
         
 
     }

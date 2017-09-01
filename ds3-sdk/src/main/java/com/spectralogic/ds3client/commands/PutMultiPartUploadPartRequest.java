@@ -20,6 +20,8 @@ import com.spectralogic.ds3client.networking.HttpVerb;
 import com.spectralogic.ds3client.commands.interfaces.AbstractRequest;
 import java.util.UUID;
 import com.google.common.net.UrlEscapers;
+import javax.annotation.Nonnull;
+import com.google.common.base.Preconditions;
 import com.spectralogic.ds3client.utils.SeekableByteChannelInputStream;
 import java.nio.channels.SeekableByteChannel;
 import java.io.InputStream;
@@ -45,7 +47,8 @@ public class PutMultiPartUploadPartRequest extends AbstractRequest {
     // Constructor
     
     
-    public PutMultiPartUploadPartRequest(final String bucketName, final String objectName, final SeekableByteChannel channel, final int partNumber, final long size, final UUID uploadId) {
+    public PutMultiPartUploadPartRequest(final String bucketName, final String objectName, @Nonnull final SeekableByteChannel channel, final int partNumber, final long size, final UUID uploadId) {
+        Preconditions.checkNotNull(channel, "Channel may not be null.");
         this.bucketName = bucketName;
         this.objectName = objectName;
         this.partNumber = partNumber;
@@ -61,7 +64,8 @@ public class PutMultiPartUploadPartRequest extends AbstractRequest {
     }
 
     
-    public PutMultiPartUploadPartRequest(final String bucketName, final String objectName, final SeekableByteChannel channel, final int partNumber, final long size, final String uploadId) {
+    public PutMultiPartUploadPartRequest(final String bucketName, final String objectName, @Nonnull final SeekableByteChannel channel, final int partNumber, final long size, final String uploadId) {
+        Preconditions.checkNotNull(channel, "Channel may not be null.");
         this.bucketName = bucketName;
         this.objectName = objectName;
         this.partNumber = partNumber;
@@ -77,7 +81,8 @@ public class PutMultiPartUploadPartRequest extends AbstractRequest {
     }
 
     
-    public PutMultiPartUploadPartRequest(final String bucketName, final String objectName, final int partNumber, final long size, final InputStream stream, final UUID uploadId) {
+    public PutMultiPartUploadPartRequest(final String bucketName, final String objectName, final int partNumber, final long size, @Nonnull final InputStream stream, final UUID uploadId) {
+        Preconditions.checkNotNull(stream, "Stream may not be null.");
         this.bucketName = bucketName;
         this.objectName = objectName;
         this.partNumber = partNumber;
@@ -92,7 +97,8 @@ public class PutMultiPartUploadPartRequest extends AbstractRequest {
     }
 
     
-    public PutMultiPartUploadPartRequest(final String bucketName, final String objectName, final int partNumber, final long size, final InputStream stream, final String uploadId) {
+    public PutMultiPartUploadPartRequest(final String bucketName, final String objectName, final int partNumber, final long size, @Nonnull final InputStream stream, final String uploadId) {
+        Preconditions.checkNotNull(stream, "Stream may not be null.");
         this.bucketName = bucketName;
         this.objectName = objectName;
         this.partNumber = partNumber;

@@ -38,7 +38,6 @@ public class PutObjectCachedNotificationRegistrationSpectraS3Request extends Abs
     
     public PutObjectCachedNotificationRegistrationSpectraS3Request(final String notificationEndPoint) {
         super(notificationEndPoint);
-
         
 
     }
