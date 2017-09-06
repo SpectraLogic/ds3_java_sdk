@@ -1,4 +1,4 @@
-FROM greyrocksoftware/javastandalone7
+FROM greyrocksoftware/javastandalone
 
 # Set the locale
 RUN locale-gen en_US.UTF-8
