@@ -1554,4 +1554,74 @@ public class Ds3Client_Test {
                 .asClient()
                 .getBlobsOnDs3TargetSpectraS3(new GetBlobsOnDs3TargetSpectraS3Request(target));
     }
+
+    @Test (expected = IllegalArgumentException.class)
+    public void getObjectNullChannelDeprecatedConstructorTest() {
+        new GetObjectRequest("BucketName", "ObjectName", null);
+    }
+
+    @Test (expected = IllegalArgumentException.class)
+    public void getObjectNullChannelUuidConstructorTest() {
+        new GetObjectRequest("BucketName", "ObjectName", null, UUID.randomUUID(), 0);
+    }
+
+    @Test (expected = IllegalArgumentException.class)
+    public void getObjectNullChannelStringConstructorTest() {
+        new GetObjectRequest("BucketName", "ObjectName", null, "JobId", 0);
+    }
+
+    @Test (expected = IllegalArgumentException.class)
+    public void getObjectNullStreamUuidConstructorTest() {
+        new GetObjectRequest("BucketName", "ObjectName", UUID.randomUUID(), 0, null);
+    }
+
+    @Test (expected = IllegalArgumentException.class)
+    public void getObjectNullStreamStringConstructorTest() {
+        new GetObjectRequest("BucketName", "ObjectName", "JobId", 0, null);
+    }
+
+    @Test (expected = IllegalArgumentException.class)
+    public void putObjectDeprecatedConstructorTest() {
+        new PutObjectRequest("BucketName", "ObjectName", null, 0);
+    }
+
+    @Test (expected = IllegalArgumentException.class)
+    public void putObjectNullChannelUuidConstructorTest() {
+        new PutObjectRequest("BucketName", "ObjectName", null, UUID.randomUUID(),0, 0);
+    }
+
+    @Test (expected = IllegalArgumentException.class)
+    public void putObjectNullChannelStringConstructorTest() {
+        new PutObjectRequest("BucketName", "ObjectName", null, "JobId",0, 0);
+    }
+
+    @Test (expected = IllegalArgumentException.class)
+    public void putObjectNullStreamUuidConstructorTest() {
+        new PutObjectRequest("BucketName", "ObjectName", UUID.randomUUID(), 0, 0, null);
+    }
+
+    @Test (expected = IllegalArgumentException.class)
+    public void putObjectNullStreamStringConstructorTest() {
+        new PutObjectRequest("BucketName", "ObjectName", "JobId", 0, 0, null);
+    }
+
+    @Test (expected = IllegalArgumentException.class)
+    public void putMultiPartUploadNullChannelUuidConstructorTest() {
+        new PutMultiPartUploadPartRequest("BucketName", "ObjectName", null, 0, 0, UUID.randomUUID());
+    }
+
+    @Test (expected = IllegalArgumentException.class)
+    public void putMultiPartUploadNullChannelStringConstructorTest() {
+        new PutMultiPartUploadPartRequest("BucketName", "ObjectName", null, 0, 0, "UploadId");
+    }
+
+    @Test (expected = IllegalArgumentException.class)
+    public void putMultiPartUploadNullStreamUuidConstructorTest() {
+        new PutMultiPartUploadPartRequest("BucketName", "ObjectName", 0, 0, null, UUID.randomUUID());
+    }
+
+    @Test (expected = IllegalArgumentException.class)
+    public void putMultiPartUploadNullStreamStringConstructorTest() {
+        new PutMultiPartUploadPartRequest("BucketName", "ObjectName", 0, 0, null, "UploadId");
+    }
 }
