@@ -51,6 +51,7 @@ import java.util.regex.Pattern;
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.greaterThanOrEqualTo;
+import static org.junit.Assert.fail;
 
 public class Ds3Client_Test {
     private static final UUID MASTER_OBJECT_LIST_JOB_ID = UUID.fromString("1a85e743-ec8f-4789-afec-97e587a26936");
@@ -1555,73 +1556,185 @@ public class Ds3Client_Test {
                 .getBlobsOnDs3TargetSpectraS3(new GetBlobsOnDs3TargetSpectraS3Request(target));
     }
 
-    @Test (expected = IllegalArgumentException.class)
+    @Test
     public void getObjectNullChannelDeprecatedConstructorTest() {
-        new GetObjectRequest("BucketName", "ObjectName", null);
+        try {
+            new GetObjectRequest("BucketName", "ObjectName", null);
+            fail();
+        } catch (final NullPointerException e) {
+            assertThat(e.getMessage(), is("Channel may not be null."));
+        } catch (final IllegalArgumentException e) {
+            // IntelliJ IDEA throws an IllegalArgumentException if parameters are annotated as non-null are passed null values
+            assertThat(e.getMessage(), is("Argument for @Nonnull parameter 'channel' of com/spectralogic/ds3client/commands/GetObjectRequest.<init> must not be null"));
+        }
     }
 
-    @Test (expected = IllegalArgumentException.class)
+    @Test
     public void getObjectNullChannelUuidConstructorTest() {
-        new GetObjectRequest("BucketName", "ObjectName", null, UUID.randomUUID(), 0);
+        try {
+            new GetObjectRequest("BucketName", "ObjectName", null, UUID.randomUUID(), 0);
+            fail();
+        } catch (final NullPointerException e) {
+            assertThat(e.getMessage(), is("Channel may not be null."));
+        } catch (final IllegalArgumentException e) {
+            // IntelliJ IDEA throws an IllegalArgumentException if parameters are annotated as non-null are passed null values
+            assertThat(e.getMessage(), is("Argument for @Nonnull parameter 'channel' of com/spectralogic/ds3client/commands/GetObjectRequest.<init> must not be null"));
+        }
     }
 
-    @Test (expected = IllegalArgumentException.class)
+    @Test
     public void getObjectNullChannelStringConstructorTest() {
-        new GetObjectRequest("BucketName", "ObjectName", null, "JobId", 0);
+        try {
+            new GetObjectRequest("BucketName", "ObjectName", null, "JobId", 0);
+            fail();
+        } catch (final NullPointerException e) {
+            assertThat(e.getMessage(), is("Channel may not be null."));
+        } catch (final IllegalArgumentException e) {
+            // IntelliJ IDEA throws an IllegalArgumentException if parameters are annotated as non-null are passed null values
+            assertThat(e.getMessage(), is("Argument for @Nonnull parameter 'channel' of com/spectralogic/ds3client/commands/GetObjectRequest.<init> must not be null"));
+        }
     }
 
-    @Test (expected = IllegalArgumentException.class)
+    @Test
     public void getObjectNullStreamUuidConstructorTest() {
-        new GetObjectRequest("BucketName", "ObjectName", UUID.randomUUID(), 0, null);
+        try {
+            new GetObjectRequest("BucketName", "ObjectName", UUID.randomUUID(), 0, null);
+            fail();
+        } catch (final NullPointerException e) {
+            assertThat(e.getMessage(), is("Stream may not be null."));
+        } catch (final IllegalArgumentException e) {
+            // IntelliJ IDEA throws an IllegalArgumentException if parameters are annotated as non-null are passed null values
+            assertThat(e.getMessage(), is("Argument for @Nonnull parameter 'stream' of com/spectralogic/ds3client/commands/GetObjectRequest.<init> must not be null"));
+        }
     }
 
-    @Test (expected = IllegalArgumentException.class)
+    @Test
     public void getObjectNullStreamStringConstructorTest() {
-        new GetObjectRequest("BucketName", "ObjectName", "JobId", 0, null);
+        try {
+            new GetObjectRequest("BucketName", "ObjectName", "JobId", 0, null);
+            fail();
+        } catch (final NullPointerException e) {
+            assertThat(e.getMessage(), is("Stream may not be null."));
+        } catch (final IllegalArgumentException e) {
+            // IntelliJ IDEA throws an IllegalArgumentException if parameters are annotated as non-null are passed null values
+            assertThat(e.getMessage(), is("Argument for @Nonnull parameter 'stream' of com/spectralogic/ds3client/commands/GetObjectRequest.<init> must not be null"));
+        }
     }
 
-    @Test (expected = IllegalArgumentException.class)
+    @Test
     public void putObjectDeprecatedConstructorTest() {
-        new PutObjectRequest("BucketName", "ObjectName", null, 0);
+        try {
+            new PutObjectRequest("BucketName", "ObjectName", null, 0);
+            fail();
+        } catch (final NullPointerException e) {
+            assertThat(e.getMessage(), is("Channel may not be null."));
+        } catch (final IllegalArgumentException e) {
+            // IntelliJ IDEA throws an IllegalArgumentException if parameters are annotated as non-null are passed null values
+            assertThat(e.getMessage(), is("Argument for @Nonnull parameter 'channel' of com/spectralogic/ds3client/commands/PutObjectRequest.<init> must not be null"));
+        }
     }
 
-    @Test (expected = IllegalArgumentException.class)
+    @Test
     public void putObjectNullChannelUuidConstructorTest() {
-        new PutObjectRequest("BucketName", "ObjectName", null, UUID.randomUUID(),0, 0);
+        try {
+            new PutObjectRequest("BucketName", "ObjectName", null, UUID.randomUUID(),0, 0);
+            fail();
+        } catch (final NullPointerException e) {
+            assertThat(e.getMessage(), is("Channel may not be null."));
+        } catch (final IllegalArgumentException e) {
+            // IntelliJ IDEA throws an IllegalArgumentException if parameters are annotated as non-null are passed null values
+            assertThat(e.getMessage(), is("Argument for @Nonnull parameter 'channel' of com/spectralogic/ds3client/commands/PutObjectRequest.<init> must not be null"));
+        }
     }
 
-    @Test (expected = IllegalArgumentException.class)
+    @Test
     public void putObjectNullChannelStringConstructorTest() {
-        new PutObjectRequest("BucketName", "ObjectName", null, "JobId",0, 0);
+        try {
+            new PutObjectRequest("BucketName", "ObjectName", null, "JobId",0, 0);
+            fail();
+        } catch (final NullPointerException e) {
+            assertThat(e.getMessage(), is("Channel may not be null."));
+        } catch (final IllegalArgumentException e) {
+            // IntelliJ IDEA throws an IllegalArgumentException if parameters are annotated as non-null are passed null values
+            assertThat(e.getMessage(), is("Argument for @Nonnull parameter 'channel' of com/spectralogic/ds3client/commands/PutObjectRequest.<init> must not be null"));
+        }
     }
 
-    @Test (expected = IllegalArgumentException.class)
+    @Test
     public void putObjectNullStreamUuidConstructorTest() {
-        new PutObjectRequest("BucketName", "ObjectName", UUID.randomUUID(), 0, 0, null);
+        try {
+            new PutObjectRequest("BucketName", "ObjectName", UUID.randomUUID(), 0, 0, null);
+            fail();
+        } catch (final NullPointerException e) {
+            assertThat(e.getMessage(), is("Stream may not be null."));
+        } catch (final IllegalArgumentException e) {
+            // IntelliJ IDEA throws an IllegalArgumentException if parameters are annotated as non-null are passed null values
+            assertThat(e.getMessage(), is("Argument for @Nonnull parameter 'stream' of com/spectralogic/ds3client/commands/PutObjectRequest.<init> must not be null"));
+        }
     }
 
-    @Test (expected = IllegalArgumentException.class)
+    @Test
     public void putObjectNullStreamStringConstructorTest() {
-        new PutObjectRequest("BucketName", "ObjectName", "JobId", 0, 0, null);
+        try {
+            new PutObjectRequest("BucketName", "ObjectName", "JobId", 0, 0, null);
+            fail();
+        } catch (final NullPointerException e) {
+            assertThat(e.getMessage(), is("Stream may not be null."));
+        } catch (final IllegalArgumentException e) {
+            // IntelliJ IDEA throws an IllegalArgumentException if parameters are annotated as non-null are passed null values
+            assertThat(e.getMessage(), is("Argument for @Nonnull parameter 'stream' of com/spectralogic/ds3client/commands/PutObjectRequest.<init> must not be null"));
+        }
     }
 
-    @Test (expected = IllegalArgumentException.class)
+    @Test
     public void putMultiPartUploadNullChannelUuidConstructorTest() {
-        new PutMultiPartUploadPartRequest("BucketName", "ObjectName", null, 0, 0, UUID.randomUUID());
+        try {
+            new PutMultiPartUploadPartRequest("BucketName", "ObjectName", null, 0, 0, UUID.randomUUID());
+            fail();
+        } catch (final NullPointerException e) {
+            assertThat(e.getMessage(), is("Channel may not be null."));
+        } catch (final IllegalArgumentException e) {
+            // IntelliJ IDEA throws an IllegalArgumentException if parameters are annotated as non-null are passed null values
+            assertThat(e.getMessage(), is("Argument for @Nonnull parameter 'channel' of com/spectralogic/ds3client/commands/PutMultiPartUploadPartRequest.<init> must not be null"));
+        }
     }
 
-    @Test (expected = IllegalArgumentException.class)
+    @Test
     public void putMultiPartUploadNullChannelStringConstructorTest() {
-        new PutMultiPartUploadPartRequest("BucketName", "ObjectName", null, 0, 0, "UploadId");
+        try {
+            new PutMultiPartUploadPartRequest("BucketName", "ObjectName", null, 0, 0, "UploadId");
+            fail();
+        } catch (final NullPointerException e) {
+            assertThat(e.getMessage(), is("Channel may not be null."));
+        } catch (final IllegalArgumentException e) {
+            // IntelliJ IDEA throws an IllegalArgumentException if parameters are annotated as non-null are passed null values
+            assertThat(e.getMessage(), is("Argument for @Nonnull parameter 'channel' of com/spectralogic/ds3client/commands/PutMultiPartUploadPartRequest.<init> must not be null"));
+        }
     }
 
-    @Test (expected = IllegalArgumentException.class)
+    @Test
     public void putMultiPartUploadNullStreamUuidConstructorTest() {
-        new PutMultiPartUploadPartRequest("BucketName", "ObjectName", 0, 0, null, UUID.randomUUID());
+        try {
+            new PutMultiPartUploadPartRequest("BucketName", "ObjectName", 0, 0, null, UUID.randomUUID());
+            fail();
+        } catch (final NullPointerException e) {
+            assertThat(e.getMessage(), is("Stream may not be null."));
+        } catch (final IllegalArgumentException e) {
+            // IntelliJ IDEA throws an IllegalArgumentException if parameters are annotated as non-null are passed null values
+            assertThat(e.getMessage(), is("Argument for @Nonnull parameter 'stream' of com/spectralogic/ds3client/commands/PutMultiPartUploadPartRequest.<init> must not be null"));
+        }
     }
 
-    @Test (expected = IllegalArgumentException.class)
+    @Test
     public void putMultiPartUploadNullStreamStringConstructorTest() {
-        new PutMultiPartUploadPartRequest("BucketName", "ObjectName", 0, 0, null, "UploadId");
+        try {
+            new PutMultiPartUploadPartRequest("BucketName", "ObjectName", 0, 0, null, "UploadId");
+            fail();
+        } catch (final NullPointerException e) {
+            assertThat(e.getMessage(), is("Stream may not be null."));
+        } catch (final IllegalArgumentException e) {
+            // IntelliJ IDEA throws an IllegalArgumentException if parameters are annotated as non-null are passed null values
+            assertThat(e.getMessage(), is("Argument for @Nonnull parameter 'stream' of com/spectralogic/ds3client/commands/PutMultiPartUploadPartRequest.<init> must not be null"));
+        }
     }
 }
