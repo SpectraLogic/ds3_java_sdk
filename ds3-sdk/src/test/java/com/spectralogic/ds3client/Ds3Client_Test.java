@@ -51,6 +51,7 @@ import java.util.regex.Pattern;
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.greaterThanOrEqualTo;
+import static org.junit.Assert.fail;
 
 public class Ds3Client_Test {
     private static final UUID MASTER_OBJECT_LIST_JOB_ID = UUID.fromString("1a85e743-ec8f-4789-afec-97e587a26936");
@@ -1553,5 +1554,101 @@ public class Ds3Client_Test {
                 .returning(200, SIMPLE_BULK_OBJECT_LIST_RESPONSE)
                 .asClient()
                 .getBlobsOnDs3TargetSpectraS3(new GetBlobsOnDs3TargetSpectraS3Request(target));
+    }
+
+    @Test
+    public void getObjectNullChannelDeprecatedConstructorTest() {
+        testNonnullStreamChannelExceptions("Channel",
+                () -> new GetObjectRequest("BucketName", "ObjectName", null));
+    }
+
+    @Test
+    public void getObjectNullChannelUuidConstructorTest() {
+        testNonnullStreamChannelExceptions("Channel",
+                () -> new GetObjectRequest("BucketName", "ObjectName", null, UUID.randomUUID(), 0));
+    }
+
+    @Test
+    public void getObjectNullChannelStringConstructorTest() {
+        testNonnullStreamChannelExceptions("Channel",
+                () -> new GetObjectRequest("BucketName", "ObjectName", null, "JobId", 0));
+    }
+
+    @Test
+    public void getObjectNullStreamUuidConstructorTest() {
+        testNonnullStreamChannelExceptions("Stream",
+                () -> new GetObjectRequest("BucketName", "ObjectName", UUID.randomUUID(), 0, null));
+    }
+
+    @Test
+    public void getObjectNullStreamStringConstructorTest() {
+        testNonnullStreamChannelExceptions("Stream",
+                () -> new GetObjectRequest("BucketName", "ObjectName", "JobId", 0, null));
+    }
+
+    @Test
+    public void putObjectDeprecatedConstructorTest() {
+        testNonnullStreamChannelExceptions("Channel",
+                () -> new PutObjectRequest("BucketName", "ObjectName", null, 0));
+    }
+
+    @Test
+    public void putObjectNullChannelUuidConstructorTest() {
+        testNonnullStreamChannelExceptions("Channel",
+                () -> new PutObjectRequest("BucketName", "ObjectName", null, UUID.randomUUID(),0, 0));
+    }
+
+    @Test
+    public void putObjectNullChannelStringConstructorTest() {
+        testNonnullStreamChannelExceptions("Channel",
+                () -> new PutObjectRequest("BucketName", "ObjectName", null, "JobId",0, 0));
+    }
+
+    @Test
+    public void putObjectNullStreamUuidConstructorTest() {
+        testNonnullStreamChannelExceptions("Stream",
+                () -> new PutObjectRequest("BucketName", "ObjectName", UUID.randomUUID(), 0, 0, null));
+    }
+
+    @Test
+    public void putObjectNullStreamStringConstructorTest() {
+        testNonnullStreamChannelExceptions("Stream",
+                () -> new PutObjectRequest("BucketName", "ObjectName", "JobId", 0, 0, null));
+    }
+
+    @Test
+    public void putMultiPartUploadNullChannelUuidConstructorTest() {
+        testNonnullStreamChannelExceptions("Channel",
+                () -> new PutMultiPartUploadPartRequest("BucketName", "ObjectName", null, 0, 0, UUID.randomUUID()));
+    }
+
+    @Test
+    public void putMultiPartUploadNullChannelStringConstructorTest() {
+        testNonnullStreamChannelExceptions("Channel",
+                () -> new PutMultiPartUploadPartRequest("BucketName", "ObjectName", null, 0, 0, "UploadId"));
+    }
+
+    @Test
+    public void putMultiPartUploadNullStreamUuidConstructorTest() {
+        testNonnullStreamChannelExceptions("Stream",
+                () -> new PutMultiPartUploadPartRequest("BucketName", "ObjectName", 0, 0, null, UUID.randomUUID()));
+    }
+
+    @Test
+    public void putMultiPartUploadNullStreamStringConstructorTest() {
+        testNonnullStreamChannelExceptions("Stream",
+                () -> new PutMultiPartUploadPartRequest("BucketName", "ObjectName", 0, 0, null, "UploadId"));
+    }
+
+    private void testNonnullStreamChannelExceptions(final String paramName, final Runnable runnable) {
+        try {
+            runnable.run();
+            fail();
+        } catch (final NullPointerException e) {
+            assertThat(e.getMessage(), is(paramName + " may not be null."));
+        } catch (final IllegalArgumentException e) {
+            // IntelliJ IDEA throws an IllegalArgumentException if parameters are annotated as non-null are passed null values
+            assertThat(e.getMessage(), startsWith("Argument for @Nonnull parameter '" + paramName.toLowerCase() + "'"));
+        }
     }
 }
