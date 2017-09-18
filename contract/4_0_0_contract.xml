@@ -4937,6 +4937,7 @@
                     <OptionalQueryParams>
                         <Param Name="AssignedToStorageDomain" Type="boolean"/>
                         <Param Name="BucketId" Type="java.util.UUID"/>
+                        <Param Name="Guid" Type="java.lang.String"/>
                         <Param Name="Health" Type="com.spectralogic.s3.common.dao.domain.pool.PoolHealth"/>
                         <Param Name="LastPage" Type="void"/>
                         <Param Name="LastVerified" Type="java.util.Date"/>
@@ -4960,7 +4961,7 @@
                         </ResponseTypes>
                     </ResponseCode>
                 </ResponseCodes>
-                <Version>1.965E74D83E54746B6877B79D92E8768A</Version>
+                <Version>1.033F928F2F6A0DE70086DFE3C999B9B6</Version>
             </RequestHandler>
             <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.pool.ImportAllPoolsRequestHandler">
                 <Request Action="BULK_MODIFY" HttpVerb="PUT" IncludeIdInPath="false" Operation="IMPORT" Resource="POOL" ResourceType="NON_SINGLETON">
@@ -7936,7 +7937,7 @@
                         </ResponseTypes>
                     </ResponseCode>
                     <ResponseCode>
-                        <Code>410</Code>
+                        <Code>404</Code>
                         <ResponseTypes>
                             <ResponseType Type="com.spectralogic.s3.server.domain.HttpErrorResultApiBean"/>
                         </ResponseTypes>
@@ -12972,6 +12973,12 @@
                         </Properties>
                     </EnumConstant>
                     <EnumConstant Name="TS1150">
+                        <Properties>
+                            <Property Name="CleaningTapeType" Value="TS_CLEANING_TAPE" ValueType="com.spectralogic.s3.common.dao.domain.tape.TapeType"/>
+                            <Property Name="SupportedTapeTypes" Value="[FORBIDDEN, TS_CLEANING_TAPE, TS_JC, TS_JD, TS_JK, TS_JL, UNKNOWN]" ValueType="array"/>
+                        </Properties>
+                    </EnumConstant>
+                    <EnumConstant Name="TS1155">
                         <Properties>
                             <Property Name="CleaningTapeType" Value="TS_CLEANING_TAPE" ValueType="com.spectralogic.s3.common.dao.domain.tape.TapeType"/>
                             <Property Name="SupportedTapeTypes" Value="[FORBIDDEN, TS_CLEANING_TAPE, TS_JC, TS_JD, TS_JK, TS_JL, UNKNOWN]" ValueType="array"/>
