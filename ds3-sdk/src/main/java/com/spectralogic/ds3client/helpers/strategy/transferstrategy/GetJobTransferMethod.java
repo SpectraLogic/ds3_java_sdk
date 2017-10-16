@@ -29,10 +29,15 @@ import com.spectralogic.ds3client.models.common.Range;
 import java.io.IOException;
 import java.nio.channels.SeekableByteChannel;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * The HTTP GET implementation class that retrieves a blob from a Black Pearl.
  */
 public class GetJobTransferMethod implements TransferMethod {
+    private static final Logger LOG = LoggerFactory.getLogger(GetJobTransferMethod.class);
+
     private final ChannelStrategy channelStrategy;
     private final String bucketName;
     private final String jobId;
@@ -66,6 +71,8 @@ public class GetJobTransferMethod implements TransferMethod {
         final GetObjectResponse getObjectResponse = jobPart.getClient().getObject(makeGetObjectRequest(seekableByteChannel, jobPart));
 
         final BulkObject blob = jobPart.getBlob();
+
+        LOG.debug("==> transferJobPart: {}", blob);
 
         channelStrategy.releaseChannelForBlob(seekableByteChannel, blob);
 

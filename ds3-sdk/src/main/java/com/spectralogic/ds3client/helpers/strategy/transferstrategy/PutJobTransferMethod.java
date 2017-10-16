@@ -73,6 +73,8 @@ public class PutJobTransferMethod implements TransferMethod {
     public void transferJobPart(final JobPart jobPart) throws IOException {
         final BulkObject blob = jobPart.getBlob();
 
+        LOG.debug("==> Transferring: {}", blob);
+
         final SeekableByteChannel seekableByteChannel = channelStrategy.acquireChannelForBlob(blob);
 
         jobPart.getClient().putObject(makePutObjectRequest(seekableByteChannel, jobPart));

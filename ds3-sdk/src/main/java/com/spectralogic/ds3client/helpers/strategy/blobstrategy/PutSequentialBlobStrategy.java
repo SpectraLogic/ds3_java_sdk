@@ -57,19 +57,16 @@ public class PutSequentialBlobStrategy extends AbstractBlobStrategy {
     public Iterable<JobPart> getWork() throws IOException, InterruptedException {
         final Objects nextChunk = allocateChunk(chunksThatContainBlobs.next());
 
-        LOG.debug("Allocating chunk: {}", nextChunk.getChunkId().toString());
+        LOG.debug("==> Allocating chunk: {}", nextChunk.getChunkId().toString());
         return FluentIterable.from(nextChunk.getObjects())
-                .filter(new Predicate<BulkObject>() {
-                    @Override
-                    public boolean apply(@Nullable final BulkObject input) {
-                        return !input.getInCache();
-                    }
-                })
+                .filter(input -> !input.getInCache())
                 .transform(new Function<BulkObject, JobPart>() {
                     @Nullable
                     @Override
                     public JobPart apply(@Nullable final BulkObject blob) {
-                        return new JobPart(client(), blob);
+                        final JobPart jobPart = new JobPart(client(), blob);
+                        LOG.debug("==> JobPart: {}", jobPart);
+                        return jobPart;
 
                         // TODO: When we get to the point where BP enables clustering, we'll want to be able to get the
                         // client connection info correct for the server on which a chunk resides. StrategyUtils.getClient

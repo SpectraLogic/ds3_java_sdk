@@ -52,7 +52,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.BufferedInputStream;
+import java.io.DataOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
@@ -66,9 +68,12 @@ import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 
+import static com.spectralogic.ds3client.commands.spectrads3.PutBulkJobSpectraS3Request.MIN_UPLOAD_SIZE_IN_BYTES;
 import static com.spectralogic.ds3client.integration.Util.RESOURCE_BASE_NAME;
 import static com.spectralogic.ds3client.integration.Util.deleteAllContents;
 import static org.hamcrest.Matchers.*;
@@ -2058,5 +2063,72 @@ public class PutJobManagement_Test {
 
         assertTrue(caughtNoSuchFileException.get());
         assertTrue(getJobRan.get());
+    }
+
+    @Test
+    public void testStreamedPutJobWithBlobbedFile() throws Exception {
+        final int chunkSize = MIN_UPLOAD_SIZE_IN_BYTES;
+        final long biggerThanAChunkSize = chunkSize * 2L + 1024;
+
+        final int numIntsInBiggerThanAChunkSize = (int)biggerThanAChunkSize / 4;
+
+        final String originalFileName = "Gracie.bin";
+        final String movedFileName = "Gracie.bak";
+
+        try {
+            final DataOutputStream originalFileStream = new DataOutputStream(new FileOutputStream(originalFileName));
+
+            byte[] bytes = new byte[4];
+
+            for (int i = 0; i < numIntsInBiggerThanAChunkSize; ++i) {
+                bytes[0] = (byte)i;
+                bytes[1] = (byte)(i >> 8);
+                bytes[2] = (byte)(i >> 16);
+                bytes[3] = (byte)(i >> 24);
+                originalFileStream.write(bytes);
+            }
+
+            originalFileStream.close();
+
+            final Ds3Object ds3Object = new Ds3Object();
+            ds3Object.setName(originalFileName);
+            ds3Object.setSize(biggerThanAChunkSize);
+
+            final AtomicLong numBytesTransferred = new AtomicLong(0);
+
+            final WriteJobOptions writeJobOptions = WriteJobOptions.create();
+            writeJobOptions.withMaxUploadSize(chunkSize);
+
+            final Ds3ClientHelpers.Job writeJob = HELPERS.startWriteJobUsingStreamedBehavior(BUCKET_NAME, Collections.singletonList(ds3Object), writeJobOptions);
+            writeJob.attachDataTransferredListener(numBytesTransferred::addAndGet);
+
+            final CountDownLatch writeCountDownLatch = new CountDownLatch(1);
+
+            writeJob.attachObjectCompletedListener(name -> writeCountDownLatch.countDown());
+
+            writeJob.transfer(new FileObjectPutter(Paths.get(".")));
+
+            writeCountDownLatch.await();
+
+            assertEquals(biggerThanAChunkSize, numBytesTransferred.get());
+
+            Files.move(Paths.get(originalFileName), Paths.get(movedFileName));
+
+            final CountDownLatch readCountdownLatch = new CountDownLatch(1);
+
+            final Ds3ClientHelpers.Job readJob = HELPERS.startReadJob(BUCKET_NAME, Collections.singletonList(ds3Object));
+            readJob.withMaxParallelRequests(1);
+            readJob.attachObjectCompletedListener(name -> readCountdownLatch.countDown());
+            readJob.transfer(new FileObjectGetter(Paths.get(".")));
+
+            readCountdownLatch.await();
+
+            assertTrue(FileUtils.contentEquals(new File(movedFileName), new File(originalFileName)));
+        } finally {
+            deleteAllContents(client, BUCKET_NAME);
+
+            Files.deleteIfExists(Paths.get(originalFileName));
+            Files.deleteIfExists(Paths.get(movedFileName));
+        }
     }
 }
