@@ -2117,7 +2117,6 @@ public class PutJobManagement_Test {
             final CountDownLatch readCountdownLatch = new CountDownLatch(1);
 
             final Ds3ClientHelpers.Job readJob = HELPERS.startReadJob(BUCKET_NAME, Collections.singletonList(ds3Object));
-            readJob.withMaxParallelRequests(1);
             readJob.attachObjectCompletedListener(name -> readCountdownLatch.countDown());
             readJob.transfer(new FileObjectGetter(Paths.get(".")));
 

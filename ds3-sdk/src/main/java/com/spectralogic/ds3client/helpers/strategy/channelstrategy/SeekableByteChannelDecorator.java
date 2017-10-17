@@ -37,18 +37,17 @@ class SeekableByteChannelDecorator implements SeekableByteChannel {
     private final SeekableByteChannel seekableByteChannel;
     private final long initialOffset;
     private final long length;
-    private long position;
+    private long position = 0;
 
-    SeekableByteChannelDecorator(final SeekableByteChannel seekableByteChannel, final long initialOffset, final long length) {
+    SeekableByteChannelDecorator(final SeekableByteChannel seekableByteChannel, final long initialOffset, final long length) throws IOException {
         Preconditions.checkNotNull(seekableByteChannel, "seekableByteChannel may not be null.");
         Preconditions.checkArgument(initialOffset >= 0, "initialOffset must be >= 0.");
         Preconditions.checkArgument(length >= 0, "length must be >= 0.");
         this.seekableByteChannel = seekableByteChannel;
         this.initialOffset = initialOffset;
-        this.position = initialOffset;
         this.length = length;
 
-        LOG.debug("==> initialOffset: {}, position: {}, length: {}", initialOffset, position, length);
+        seekableByteChannel.position(initialOffset);
     }
 
     SeekableByteChannel wrappedSeekableByteChannel() {
@@ -59,9 +58,7 @@ class SeekableByteChannelDecorator implements SeekableByteChannel {
     public int read(final ByteBuffer dst) throws IOException {
         synchronized (lock) {
             final long remainingInChannel = length - position;
-            LOG.debug("==> remainingInChannel: {},", remainingInChannel);
             final long numBytesWeCanRead = Math.min(dst.remaining(), remainingInChannel);
-            LOG.debug("==> numBytesWeCanRead: {},", numBytesWeCanRead);
 
             if (numBytesWeCanRead <= 0) {
                 return 0;
@@ -80,8 +77,6 @@ class SeekableByteChannelDecorator implements SeekableByteChannel {
 
             position += numBytesRead;
 
-            LOG.debug("==> numBytesRead: {}, position: {}", numBytesRead, position);
-
             return numBytesRead;
         }
     }
@@ -89,14 +84,33 @@ class SeekableByteChannelDecorator implements SeekableByteChannel {
     @Override
     public int write(final ByteBuffer src) throws IOException {
         synchronized (lock) {
-            return seekableByteChannel.write(src);
+            final long remainingInChannel = length - position;
+            final long numBytesWeCanWrite = Math.min(src.remaining(), remainingInChannel);
+
+            if (numBytesWeCanWrite <= 0) {
+                return 0;
+            }
+
+            final int numBytesWritten;
+
+            if (numBytesWeCanWrite != src.remaining()) {
+                final ByteBuffer byteBuffer = ByteBuffer.wrap(new byte[(int) numBytesWeCanWrite]);
+                byteBuffer.put(src);
+                byteBuffer.flip();
+                numBytesWritten = seekableByteChannel.write(byteBuffer);
+            } else {
+                numBytesWritten = seekableByteChannel.write(src);
+            }
+
+            position += numBytesWritten;
+
+            return numBytesWritten;
         }
     }
 
     @Override
     public long position() throws IOException {
         synchronized (lock) {
-            LOG.debug("get position: {}, seekableByteChannel.position: {}", position, seekableByteChannel.position());
             return seekableByteChannel.position();
         }
     }
@@ -107,8 +121,6 @@ class SeekableByteChannelDecorator implements SeekableByteChannel {
             final long lastPossiblePosition = length - 1;
             position = Math.min(newPosition, lastPossiblePosition);
             seekableByteChannel.position(initialOffset + position);
-
-            LOG.debug("==> set position: {}, seekableByteChannel.position: {}", position, seekableByteChannel.position());
 
             return this;
         }

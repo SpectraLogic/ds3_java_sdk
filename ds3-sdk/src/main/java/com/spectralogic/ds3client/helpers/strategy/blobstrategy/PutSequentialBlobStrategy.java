@@ -57,7 +57,6 @@ public class PutSequentialBlobStrategy extends AbstractBlobStrategy {
     public Iterable<JobPart> getWork() throws IOException, InterruptedException {
         final Objects nextChunk = allocateChunk(chunksThatContainBlobs.next());
 
-        LOG.debug("==> Allocating chunk: {}", nextChunk.getChunkId().toString());
         return FluentIterable.from(nextChunk.getObjects())
                 .filter(input -> !input.getInCache())
                 .transform(new Function<BulkObject, JobPart>() {
@@ -65,7 +64,6 @@ public class PutSequentialBlobStrategy extends AbstractBlobStrategy {
                     @Override
                     public JobPart apply(@Nullable final BulkObject blob) {
                         final JobPart jobPart = new JobPart(client(), blob);
-                        LOG.debug("==> JobPart: {}", jobPart);
                         return jobPart;
 
                         // TODO: When we get to the point where BP enables clustering, we'll want to be able to get the

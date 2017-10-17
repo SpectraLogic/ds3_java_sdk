@@ -72,8 +72,6 @@ public class GetJobTransferMethod implements TransferMethod {
 
         final BulkObject blob = jobPart.getBlob();
 
-        LOG.debug("==> transferJobPart: {}", blob);
-
         channelStrategy.releaseChannelForBlob(seekableByteChannel, blob);
 
         eventDispatcher.emitChecksumEvent(blob, getObjectResponse.getChecksumType(), getObjectResponse.getChecksum());
