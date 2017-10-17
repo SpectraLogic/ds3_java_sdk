@@ -63,8 +63,7 @@ public class PutSequentialBlobStrategy extends AbstractBlobStrategy {
                     @Nullable
                     @Override
                     public JobPart apply(@Nullable final BulkObject blob) {
-                        final JobPart jobPart = new JobPart(client(), blob);
-                        return jobPart;
+                        return new JobPart(client(), blob);
 
                         // TODO: When we get to the point where BP enables clustering, we'll want to be able to get the
                         // client connection info correct for the server on which a chunk resides. StrategyUtils.getClient
