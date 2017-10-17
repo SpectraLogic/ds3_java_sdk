@@ -21,17 +21,12 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.SeekableByteChannel;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
  * An instance of {@link SeekableByteChannel} used to decorate another SeekableByteChannel in the
  * situation where we re-use the same channel for more than 1 blob.  This subclass prevents closing
  * a channel when there are other blobs still referencing the shared channel.
  */
 class SeekableByteChannelDecorator implements SeekableByteChannel {
-    private static final Logger LOG = LoggerFactory.getLogger(SeekableByteChannelDecorator.class);
-
     private final Object lock = new Object();
 
     private final SeekableByteChannel seekableByteChannel;
