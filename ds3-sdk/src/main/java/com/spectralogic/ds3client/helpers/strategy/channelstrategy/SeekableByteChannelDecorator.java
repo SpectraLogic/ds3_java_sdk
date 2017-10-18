@@ -116,8 +116,8 @@ class SeekableByteChannelDecorator implements SeekableByteChannel {
     @Override
     public SeekableByteChannel position(final long newPosition) throws IOException {
         synchronized (lock) {
-            final long lastPossiblePosition = blobLength - 1;
-            position = Math.min(newPosition, lastPossiblePosition);
+            final long greatestPossiblePosition = blobLength - 1;
+            position = Math.min(newPosition, greatestPossiblePosition);
             seekableByteChannel.position(blobOffset + position);
 
             return this;
