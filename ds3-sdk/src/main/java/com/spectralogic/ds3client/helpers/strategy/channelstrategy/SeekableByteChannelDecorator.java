@@ -35,7 +35,7 @@ class SeekableByteChannelDecorator implements SeekableByteChannel {
     private final SeekableByteChannel seekableByteChannel;
     private final long blobOffset;
     private final long blobLength;
-    private long position = 0;
+    private long nextAvailableByteOffset = 0;
 
     SeekableByteChannelDecorator(final SeekableByteChannel seekableByteChannel, final long blobOffset, final long blobLength) throws IOException {
         Preconditions.checkNotNull(seekableByteChannel, "seekableByteChannel may not be null.");
@@ -55,7 +55,7 @@ class SeekableByteChannelDecorator implements SeekableByteChannel {
     @Override
     public int read(final ByteBuffer dst) throws IOException {
         synchronized (lock) {
-            final long remainingInWindow = blobLength - position;
+            final long remainingInWindow = blobLength - nextAvailableByteOffset;
             final long numBytesWeCanRead = Math.min(dst.remaining(), remainingInWindow);
 
             if (numBytesWeCanRead <= 0) {
@@ -73,7 +73,7 @@ class SeekableByteChannelDecorator implements SeekableByteChannel {
                 numBytesRead = seekableByteChannel.read(dst);
             }
 
-            position += numBytesRead;
+            nextAvailableByteOffset += numBytesRead;
 
             return numBytesRead;
         }
@@ -82,7 +82,7 @@ class SeekableByteChannelDecorator implements SeekableByteChannel {
     @Override
     public int write(final ByteBuffer src) throws IOException {
         synchronized (lock) {
-            final long remainingInWindow = blobLength - position;
+            final long remainingInWindow = blobLength - nextAvailableByteOffset;
             final long numBytesWeCanWrite = Math.min(src.remaining(), remainingInWindow);
 
             if (numBytesWeCanWrite <= 0) {
@@ -100,7 +100,7 @@ class SeekableByteChannelDecorator implements SeekableByteChannel {
                 numBytesWritten = seekableByteChannel.write(src);
             }
 
-            position += numBytesWritten;
+            nextAvailableByteOffset += numBytesWritten;
 
             return numBytesWritten;
         }
@@ -117,8 +117,8 @@ class SeekableByteChannelDecorator implements SeekableByteChannel {
     public SeekableByteChannel position(final long newPosition) throws IOException {
         synchronized (lock) {
             final long greatestPossiblePosition = blobLength - 1;
-            position = Math.min(newPosition, greatestPossiblePosition);
-            seekableByteChannel.position(blobOffset + position);
+            nextAvailableByteOffset = Math.min(newPosition, greatestPossiblePosition);
+            seekableByteChannel.position(blobOffset + nextAvailableByteOffset);
 
             return this;
         }
