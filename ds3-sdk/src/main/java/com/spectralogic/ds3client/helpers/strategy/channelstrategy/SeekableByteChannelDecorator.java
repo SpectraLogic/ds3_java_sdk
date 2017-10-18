@@ -30,19 +30,19 @@ class SeekableByteChannelDecorator implements SeekableByteChannel {
     private final Object lock = new Object();
 
     private final SeekableByteChannel seekableByteChannel;
-    private final long initialOffset;
-    private final long length;
+    private final long blobOffset;
+    private final long blobLength;
     private long position = 0;
 
-    SeekableByteChannelDecorator(final SeekableByteChannel seekableByteChannel, final long initialOffset, final long length) throws IOException {
+    SeekableByteChannelDecorator(final SeekableByteChannel seekableByteChannel, final long blobOffset, final long blobLength) throws IOException {
         Preconditions.checkNotNull(seekableByteChannel, "seekableByteChannel may not be null.");
-        Preconditions.checkArgument(initialOffset >= 0, "initialOffset must be >= 0.");
-        Preconditions.checkArgument(length >= 0, "length must be >= 0.");
+        Preconditions.checkArgument(blobOffset >= 0, "blobOffset must be >= 0.");
+        Preconditions.checkArgument(blobLength >= 0, "length must be >= 0.");
         this.seekableByteChannel = seekableByteChannel;
-        this.initialOffset = initialOffset;
-        this.length = length;
+        this.blobOffset = blobOffset;
+        this.blobLength = blobLength;
 
-        seekableByteChannel.position(initialOffset);
+        seekableByteChannel.position(blobOffset);
     }
 
     SeekableByteChannel wrappedSeekableByteChannel() {
@@ -52,7 +52,7 @@ class SeekableByteChannelDecorator implements SeekableByteChannel {
     @Override
     public int read(final ByteBuffer dst) throws IOException {
         synchronized (lock) {
-            final long remainingInChannel = length - position;
+            final long remainingInChannel = blobLength - position;
             final long numBytesWeCanRead = Math.min(dst.remaining(), remainingInChannel);
 
             if (numBytesWeCanRead <= 0) {
@@ -79,7 +79,7 @@ class SeekableByteChannelDecorator implements SeekableByteChannel {
     @Override
     public int write(final ByteBuffer src) throws IOException {
         synchronized (lock) {
-            final long remainingInChannel = length - position;
+            final long remainingInChannel = blobLength - position;
             final long numBytesWeCanWrite = Math.min(src.remaining(), remainingInChannel);
 
             if (numBytesWeCanWrite <= 0) {
@@ -113,9 +113,9 @@ class SeekableByteChannelDecorator implements SeekableByteChannel {
     @Override
     public SeekableByteChannel position(final long newPosition) throws IOException {
         synchronized (lock) {
-            final long lastPossiblePosition = length - 1;
+            final long lastPossiblePosition = blobLength - 1;
             position = Math.min(newPosition, lastPossiblePosition);
-            seekableByteChannel.position(initialOffset + position);
+            seekableByteChannel.position(blobOffset + position);
 
             return this;
         }
