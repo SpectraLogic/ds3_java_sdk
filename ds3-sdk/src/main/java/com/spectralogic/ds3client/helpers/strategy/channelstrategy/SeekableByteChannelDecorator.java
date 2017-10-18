@@ -55,8 +55,8 @@ class SeekableByteChannelDecorator implements SeekableByteChannel {
     @Override
     public int read(final ByteBuffer dst) throws IOException {
         synchronized (lock) {
-            final long remainingInChannel = blobLength - position;
-            final long numBytesWeCanRead = Math.min(dst.remaining(), remainingInChannel);
+            final long remainingInWindow = blobLength - position;
+            final long numBytesWeCanRead = Math.min(dst.remaining(), remainingInWindow);
 
             if (numBytesWeCanRead <= 0) {
                 return 0;
@@ -82,8 +82,8 @@ class SeekableByteChannelDecorator implements SeekableByteChannel {
     @Override
     public int write(final ByteBuffer src) throws IOException {
         synchronized (lock) {
-            final long remainingInChannel = blobLength - position;
-            final long numBytesWeCanWrite = Math.min(src.remaining(), remainingInChannel);
+            final long remainingInWindow = blobLength - position;
+            final long numBytesWeCanWrite = Math.min(src.remaining(), remainingInWindow);
 
             if (numBytesWeCanWrite <= 0) {
                 return 0;
