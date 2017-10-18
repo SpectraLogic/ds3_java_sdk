@@ -25,6 +25,9 @@ import java.nio.channels.SeekableByteChannel;
  * An instance of {@link SeekableByteChannel} used to decorate another SeekableByteChannel in the
  * situation where we re-use the same channel for more than 1 blob.  This subclass prevents closing
  * a channel when there are other blobs still referencing the shared channel.
+ *
+ * This class positions the content of a blob within the bounds of a channel that may be capable
+ * of containing more than one blob.
  */
 class SeekableByteChannelDecorator implements SeekableByteChannel {
     private final Object lock = new Object();
