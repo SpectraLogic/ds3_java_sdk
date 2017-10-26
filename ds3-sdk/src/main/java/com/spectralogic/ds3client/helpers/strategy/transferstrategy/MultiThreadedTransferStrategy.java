@@ -35,10 +35,10 @@ public class MultiThreadedTransferStrategy extends AbstractTransferStrategy {
                                          final FailureEvent.FailureActivity failureActivity)
     {
         super(blobStrategy,
-              jobState,
-              MoreExecutors.listeningDecorator(Executors.newFixedThreadPool(numConcurrentTransferThreads)),
-              eventDispatcher,
-              masterObjectList,
-              failureActivity);
+                jobState,
+                () -> MoreExecutors.listeningDecorator(Executors.newFixedThreadPool(numConcurrentTransferThreads)),
+                eventDispatcher,
+                masterObjectList,
+                failureActivity);
     }
 }

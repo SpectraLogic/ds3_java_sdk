@@ -15,10 +15,8 @@
 
 package com.spectralogic.ds3client.helpers.strategy.transferstrategy;
 
-import com.google.common.base.Predicate;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Iterables;
-import com.google.common.util.concurrent.ListeningExecutorService;
 import com.spectralogic.ds3client.Ds3Client;
 import com.spectralogic.ds3client.commands.spectrads3.GetBulkJobSpectraS3Request;
 import com.spectralogic.ds3client.commands.spectrads3.PutBulkJobSpectraS3Request;
@@ -34,14 +32,13 @@ import java.io.IOException;
 import java.util.NoSuchElementException;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
 import com.spectralogic.ds3client.networking.FailedRequestException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.annotation.Nullable;
 
 /**
  * An implementation of {@link TransferStrategy} that provides a default implementation {@code transfer}
@@ -52,7 +49,7 @@ abstract class AbstractTransferStrategy implements TransferStrategy {
 
     private final BlobStrategy blobStrategy;
     private final JobState jobState;
-    private final ListeningExecutorService executorService;
+    private final ExecutorServiceFactory executorServiceFactory;
     private final EventDispatcher eventDispatcher;
     private final MasterObjectList masterObjectList;
     private final FailureEvent.FailureActivity failureActivity;
@@ -65,8 +62,9 @@ abstract class AbstractTransferStrategy implements TransferStrategy {
      * @param blobStrategy Most likely one of {@link com.spectralogic.ds3client.helpers.strategy.blobstrategy.PutSequentialBlobStrategy}
      *                     or {@link com.spectralogic.ds3client.helpers.strategy.blobstrategy.GetSequentialBlobStrategy}.
      * @param jobState An instance of {@link JobState} that keeps track of the blobs we need to process.
-     * @param executorService An instance of {@link java.util.concurrent.Executor} used to run transfers.  Streamed behavior
-     *                        uses a single-threaded executor, and random access uses a multi-threaded executor.
+     * @param executorServiceFactory Used to create an instance of an {@link ExecutorService} that runs blob transfers.
+     *                               Streamed behavior uses a single-threaded executor, and random access uses a multi-threaded
+     *                               executor.
      * @param eventDispatcher An instance of {@link EventDispatcher} used to emit events as transfers proceed.
      * @param masterObjectList The {@link MasterObjectList} returned primarily retrieved from a call to {@link Ds3Client#putBulkJobSpectraS3(PutBulkJobSpectraS3Request)}
      *                         or {@link Ds3Client#getBulkJobSpectraS3(GetBulkJobSpectraS3Request)}, used primarily
@@ -77,14 +75,14 @@ abstract class AbstractTransferStrategy implements TransferStrategy {
      */
     public AbstractTransferStrategy(final BlobStrategy blobStrategy,
                                     final JobState jobState,
-                                    final ListeningExecutorService executorService,
+                                    final ExecutorServiceFactory executorServiceFactory,
                                     final EventDispatcher eventDispatcher,
                                     final MasterObjectList masterObjectList,
                                     final FailureEvent.FailureActivity failureActivity)
     {
         this.blobStrategy = blobStrategy;
         this.jobState = jobState;
-        this.executorService = executorService;
+        this.executorServiceFactory = executorServiceFactory;
         this.eventDispatcher = eventDispatcher;
         this.masterObjectList = masterObjectList;
         this.failureActivity = failureActivity;
@@ -122,8 +120,10 @@ abstract class AbstractTransferStrategy implements TransferStrategy {
                 }
 
                 final CountDownLatch countDownLatch = new CountDownLatch(numJobParts);
-                transferJobParts(jobParts, countDownLatch, numBlobsRemaining);
+                final ExecutorService executorService = executorServiceFactory.makeExecutorService();
+                transferJobParts(jobParts, countDownLatch, numBlobsRemaining, executorService);
                 countDownLatch.await();
+                executorService.shutdown();
             } catch (final Ds3NoMoreRetriesException | FailedRequestException e) {
                 emitFailureEvent(makeFailureEvent(failureActivity, e, firstChunk()));
                 throw e;
@@ -142,12 +142,7 @@ abstract class AbstractTransferStrategy implements TransferStrategy {
     private Iterable<JobPart> jobPartsNotAlreadyTransferred() throws IOException, InterruptedException {
         return FluentIterable
                 .from(blobStrategy.getWork())
-                .filter(new Predicate<JobPart>() {
-                    @Override
-                    public boolean apply(@Nullable final JobPart jobPart) {
-                        return jobState.contains(jobPart.getBlob());
-                    }
-                });
+                .filter(jobPart -> jobState.contains(jobPart.getBlob()));
     }
 
     private void emitFailureAndSetCachedException(final Throwable t) {
@@ -167,26 +162,26 @@ abstract class AbstractTransferStrategy implements TransferStrategy {
 
     private void transferJobParts(final Iterable<JobPart> jobParts,
                                   final CountDownLatch countDownLatch,
-                                  final AtomicInteger numBlobsTransferred) throws IOException {
+                                  final AtomicInteger numBlobsTransferred,
+                                  final ExecutorService executorService) throws IOException
+    {
         for (final JobPart jobPart : jobParts) {
-            executorService.submit(new Callable<Void>() {
-                @Override
-                public Void call() throws Exception {
-                    try {
-                        transferMethod.transferJobPart(jobPart);
-                    } catch (final RuntimeException e) {
-                        emitFailureAndSetCachedException(e);
-                        throw e;
-                    } catch (final Exception e) {
-                        emitFailureAndSetCachedException(e);
-                        throw new RuntimeException(e);
-                    } finally {
-                        jobState.blobTransferredOrFailed(jobPart.getBlob());
-                        numBlobsTransferred.decrementAndGet();
-                        countDownLatch.countDown();
-                        return null;
-                    }
+            executorService.submit((Callable<Void>) () -> {
+                try {
+                    transferMethod.transferJobPart(jobPart);
+                } catch (final RuntimeException e) {
+                    emitFailureAndSetCachedException(e);
+                    throw e;
+                } catch (final Exception e) {
+                    emitFailureAndSetCachedException(e);
+                    throw new RuntimeException(e);
+                } finally {
+                    jobState.blobTransferredOrFailed(jobPart.getBlob());
+                    numBlobsTransferred.decrementAndGet();
+                    countDownLatch.countDown();
                 }
+
+                return null;
             });
         }
     }
@@ -223,6 +218,6 @@ abstract class AbstractTransferStrategy implements TransferStrategy {
 
     @Override
     public void close() throws IOException {
-        executorService.shutdown();
+        // Intentionally not implemented
     }
 }

@@ -34,10 +34,10 @@ public class SingleThreadedTransferStrategy extends AbstractTransferStrategy {
                                           final FailureEvent.FailureActivity failureActivity)
     {
         super(blobStrategy,
-              jobState,
-              MoreExecutors.listeningDecorator(Executors.newSingleThreadExecutor()),
-              eventDispatcher,
-              masterObjectList,
-              failureActivity);
+                jobState,
+                () -> MoreExecutors.listeningDecorator(Executors.newSingleThreadExecutor()),
+                eventDispatcher,
+                masterObjectList,
+                failureActivity);
     }
 }
