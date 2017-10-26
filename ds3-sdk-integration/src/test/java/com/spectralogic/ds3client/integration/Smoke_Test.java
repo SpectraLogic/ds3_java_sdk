@@ -15,6 +15,7 @@
 
 package com.spectralogic.ds3client.integration;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
@@ -28,6 +29,7 @@ import com.spectralogic.ds3client.integration.test.helpers.JobStatusHelper;
 import com.spectralogic.ds3client.integration.test.helpers.TempStorageIds;
 import com.spectralogic.ds3client.integration.test.helpers.TempStorageUtil;
 import com.spectralogic.ds3client.models.*;
+import com.spectralogic.ds3client.models.Objects;
 import com.spectralogic.ds3client.models.bulk.Ds3Object;
 import com.spectralogic.ds3client.models.bulk.PartialDs3Object;
 import com.spectralogic.ds3client.models.common.Range;
@@ -143,7 +145,7 @@ public class Smoke_Test {
             assertThat(response.getPagingTruncated(), is(0));
             assertThat(response.getPagingTotalResultCount(), is(4));
         } finally {
-            deleteAllContents(client,bucketName);
+            deleteAllContents(client, bucketName);
         }
 
     }
@@ -173,7 +175,7 @@ public class Smoke_Test {
             assertThat(response.getPagingTruncated(), is(0));
             assertThat(response.getPagingTotalResultCount(), is(4));
         } finally {
-            deleteAllContents(client,bucketName);
+            deleteAllContents(client, bucketName);
         }
 
     }
@@ -570,7 +572,7 @@ public class Smoke_Test {
         });
     }
 
-    @Test (expected = JobRecoveryNotActiveException.class)
+    @Test(expected = JobRecoveryNotActiveException.class)
     public void testRecoverWriteJobCanceledJob() throws IOException, URISyntaxException, JobRecoveryException {
         final String bucketName = "test_canceled_recover_write_job_bucket";
         final String book1 = "beowulf.txt";
@@ -606,7 +608,7 @@ public class Smoke_Test {
         }
     }
 
-    @Test (expected = JobRecoveryNotActiveException.class)
+    @Test(expected = JobRecoveryNotActiveException.class)
     public void testRecoverWriteJobDoesNotExist() throws IOException, JobRecoveryException {
         HELPERS.recoverWriteJob(UUID.randomUUID());
     }
@@ -786,7 +788,7 @@ public class Smoke_Test {
 
         } finally {
             deleteAllContents(client, bucketName);
-            for (final Path tempFile : Files.newDirectoryStream(dirPath) ){
+            for (final Path tempFile : Files.newDirectoryStream(dirPath)) {
                 Files.delete(tempFile);
             }
             Files.delete(dirPath);
@@ -856,7 +858,7 @@ public class Smoke_Test {
             }
         } finally {
             deleteAllContents(client, bucketName);
-            for( final Path tempFile : Files.newDirectoryStream(dirPath) ){
+            for (final Path tempFile : Files.newDirectoryStream(dirPath)) {
                 Files.delete(tempFile);
             }
             Files.delete(dirPath);
@@ -873,7 +875,7 @@ public class Smoke_Test {
         });
     }
 
-    @Test (expected = JobRecoveryNotActiveException.class)
+    @Test(expected = JobRecoveryNotActiveException.class)
     public void testRecoverReadJobCanceledJob() throws IOException, JobRecoveryException, URISyntaxException {
         final String bucketName = "test_canceled_recover_read_job_bucket";
         final String book1 = "beowulf.txt";
@@ -921,14 +923,14 @@ public class Smoke_Test {
             assert false;
         } finally {
             deleteAllContents(client, bucketName);
-            for (final Path tempFile : Files.newDirectoryStream(dirPath) ){
+            for (final Path tempFile : Files.newDirectoryStream(dirPath)) {
                 Files.delete(tempFile);
             }
             Files.delete(dirPath);
         }
     }
 
-    @Test (expected = JobRecoveryNotActiveException.class)
+    @Test(expected = JobRecoveryNotActiveException.class)
     public void testRecoverReadJobDoesNotExist() throws IOException, JobRecoveryException {
         HELPERS.recoverReadJob(UUID.randomUUID());
     }
@@ -1299,7 +1301,7 @@ public class Smoke_Test {
 
             final List<Ds3Object> objects = new ArrayList<>();
             long booksSize = 0;
-            for(final String book : BOOKS) {
+            for (final String book : BOOKS) {
                 final Path objPath = ResourceUtils.loadFileResource(RESOURCE_BASE_NAME + book);
                 final long bookSize = Files.size(objPath);
                 booksSize += bookSize;
@@ -1331,7 +1333,7 @@ public class Smoke_Test {
             HELPERS.ensureBucketExists(bucketName, envDataPolicyId);
 
             final List<Ds3Object> objects = new ArrayList<>();
-            for(final String book : BOOKS) {
+            for (final String book : BOOKS) {
                 final Path objPath = ResourceUtils.loadFileResource(RESOURCE_BASE_NAME + book);
                 final long bookSize = Files.size(objPath);
                 final Ds3Object obj = new Ds3Object(book, bookSize);
@@ -1629,7 +1631,7 @@ public class Smoke_Test {
             assertThat(object.getName(), is(objectName));
             assertThat(object.getType(), is(S3ObjectType.DATA));
         } finally {
-            deleteAllContents(client,bucketName);
+            deleteAllContents(client, bucketName);
         }
     }
 
@@ -1668,4 +1670,20 @@ public class Smoke_Test {
 
         assertThat(getBlobs.getBulkObjectListResult(), is(notNullValue()));
     }
+
+    @Test
+    public void bulkPutRaceCondition() throws IOException {
+        final String bulkPutExists = "BulkPutExists";
+        try {
+            HELPERS.ensureBucketExists(bulkPutExists);
+            final PutBulkJobSpectraS3Response putBulkJobSpectraS3Response = client.putBulkJobSpectraS3(new PutBulkJobSpectraS3Request(bulkPutExists, ImmutableList.of(new Ds3Object("test", 100L))));
+            final Objects object = putBulkJobSpectraS3Response.getMasterObjectList().getObjects().get(0);
+            client.allocateJobChunkSpectraS3(new AllocateJobChunkSpectraS3Request(object.getChunkId()));
+            final Ds3ClientHelpers.Job job = HELPERS.startReadAllJob(bulkPutExists);
+            job.transfer(i -> new NullChannel());
+        } finally {
+            deleteAllContents(client, bulkPutExists);
+        }
+    }
+
 }
