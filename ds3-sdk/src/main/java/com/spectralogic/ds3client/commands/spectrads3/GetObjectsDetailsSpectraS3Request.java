@@ -28,6 +28,8 @@ public class GetObjectsDetailsSpectraS3Request extends AbstractPaginationRequest
     
     private String bucketId;
 
+    private String folder;
+
     private boolean lastPage;
 
     private boolean latest;
@@ -54,6 +56,13 @@ public class GetObjectsDetailsSpectraS3Request extends AbstractPaginationRequest
     public GetObjectsDetailsSpectraS3Request withBucketId(final String bucketId) {
         this.bucketId = bucketId;
         this.updateQueryParam("bucket_id", bucketId);
+        return this;
+    }
+
+
+    public GetObjectsDetailsSpectraS3Request withFolder(final String folder) {
+        this.folder = folder;
+        this.updateQueryParam("folder", folder);
         return this;
     }
 
@@ -138,6 +147,11 @@ public class GetObjectsDetailsSpectraS3Request extends AbstractPaginationRequest
     
     public String getBucketId() {
         return this.bucketId;
+    }
+
+
+    public String getFolder() {
+        return this.folder;
     }
 
 
