@@ -35,7 +35,6 @@ public class PutTapePartitionFailureNotificationRegistrationSpectraS3Request ext
     
     public PutTapePartitionFailureNotificationRegistrationSpectraS3Request(final String notificationEndPoint) {
         super(notificationEndPoint);
-
         
 
     }

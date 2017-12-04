@@ -57,14 +57,8 @@ public class PutSequentialBlobStrategy extends AbstractBlobStrategy {
     public Iterable<JobPart> getWork() throws IOException, InterruptedException {
         final Objects nextChunk = allocateChunk(chunksThatContainBlobs.next());
 
-        LOG.debug("Allocating chunk: {}", nextChunk.getChunkId().toString());
         return FluentIterable.from(nextChunk.getObjects())
-                .filter(new Predicate<BulkObject>() {
-                    @Override
-                    public boolean apply(@Nullable final BulkObject input) {
-                        return !input.getInCache();
-                    }
-                })
+                .filter(input -> !input.getInCache())
                 .transform(new Function<BulkObject, JobPart>() {
                     @Nullable
                     @Override

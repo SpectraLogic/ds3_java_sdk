@@ -26,6 +26,8 @@ import org.slf4j.LoggerFactory;
 import com.spectralogic.ds3client.commands.interfaces.AbstractRequest;
 import java.util.UUID;
 import com.google.common.net.UrlEscapers;
+import javax.annotation.Nonnull;
+import com.google.common.base.Preconditions;
 import com.spectralogic.ds3client.models.ChecksumType;
 public class PutObjectRequest extends AbstractRequest {
 
@@ -53,7 +55,8 @@ public class PutObjectRequest extends AbstractRequest {
     
     /** @deprecated use {@link #PutObjectRequest(String, String, SeekableByteChannel, UUID, long, long)} instead */
     @Deprecated
-    public PutObjectRequest(final String bucketName, final String objectName, final SeekableByteChannel channel, final long size) {
+    public PutObjectRequest(final String bucketName, final String objectName, @Nonnull final SeekableByteChannel channel, final long size) {
+        Preconditions.checkNotNull(channel, "Channel may not be null.");
         this.bucketName = bucketName;
         this.objectName = objectName;
         this.size = size;
@@ -64,7 +67,8 @@ public class PutObjectRequest extends AbstractRequest {
     }
 
     
-    public PutObjectRequest(final String bucketName, final String objectName, final SeekableByteChannel channel, final UUID job, final long offset, final long size) {
+    public PutObjectRequest(final String bucketName, final String objectName, @Nonnull final SeekableByteChannel channel, final UUID job, final long offset, final long size) {
+        Preconditions.checkNotNull(channel, "Channel may not be null.");
         this.bucketName = bucketName;
         this.objectName = objectName;
         this.size = size;
@@ -81,7 +85,8 @@ public class PutObjectRequest extends AbstractRequest {
     }
 
     
-    public PutObjectRequest(final String bucketName, final String objectName, final SeekableByteChannel channel, final String job, final long offset, final long size) {
+    public PutObjectRequest(final String bucketName, final String objectName, @Nonnull final SeekableByteChannel channel, final String job, final long offset, final long size) {
+        Preconditions.checkNotNull(channel, "Channel may not be null.");
         this.bucketName = bucketName;
         this.objectName = objectName;
         this.size = size;
@@ -98,7 +103,8 @@ public class PutObjectRequest extends AbstractRequest {
     }
 
     
-    public PutObjectRequest(final String bucketName, final String objectName, final UUID job, final long offset, final long size, final InputStream stream) {
+    public PutObjectRequest(final String bucketName, final String objectName, final UUID job, final long offset, final long size, @Nonnull final InputStream stream) {
+        Preconditions.checkNotNull(stream, "Stream may not be null.");
         this.bucketName = bucketName;
         this.objectName = objectName;
         this.size = size;
@@ -114,7 +120,8 @@ public class PutObjectRequest extends AbstractRequest {
     }
 
     
-    public PutObjectRequest(final String bucketName, final String objectName, final String job, final long offset, final long size, final InputStream stream) {
+    public PutObjectRequest(final String bucketName, final String objectName, final String job, final long offset, final long size, @Nonnull final InputStream stream) {
+        Preconditions.checkNotNull(stream, "Stream may not be null.");
         this.bucketName = bucketName;
         this.objectName = objectName;
         this.size = size;

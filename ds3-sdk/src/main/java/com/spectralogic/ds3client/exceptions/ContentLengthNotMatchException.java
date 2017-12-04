@@ -22,7 +22,7 @@ public class ContentLengthNotMatchException extends IOException {
     private final long contentLength;
     private final long totalBytes;
     public ContentLengthNotMatchException(final String fileName, final long contentLength, final long totalBytes) {
-        super(String.format("The Content length for %s (%d) not match the number of byte read (%d)", fileName, contentLength, totalBytes));
+        super(String.format("The Content length for %s (%d) does not match the number of bytes read (%d)", fileName, contentLength, totalBytes));
 
         this.fileName = fileName;
         this.contentLength = contentLength;

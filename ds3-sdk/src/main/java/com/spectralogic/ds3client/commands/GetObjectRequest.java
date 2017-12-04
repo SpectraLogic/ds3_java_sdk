@@ -29,6 +29,8 @@ import java.util.Collection;
 import com.spectralogic.ds3client.commands.interfaces.AbstractRequest;
 import java.util.UUID;
 import com.google.common.net.UrlEscapers;
+import javax.annotation.Nonnull;
+import com.google.common.base.Preconditions;
 import com.spectralogic.ds3client.models.ChecksumType;
 
 public class GetObjectRequest extends AbstractRequest {
@@ -52,7 +54,8 @@ public class GetObjectRequest extends AbstractRequest {
     
     /** @deprecated use {@link #GetObjectRequest(String, String, WritableByteChannel, UUID, long)} instead */
     @Deprecated
-    public GetObjectRequest(final String bucketName, final String objectName, final WritableByteChannel channel) {
+    public GetObjectRequest(final String bucketName, final String objectName, @Nonnull final WritableByteChannel channel) {
+        Preconditions.checkNotNull(channel, "Channel may not be null.");
         this.bucketName = bucketName;
         this.objectName = objectName;
         this.channel = channel;
@@ -61,7 +64,8 @@ public class GetObjectRequest extends AbstractRequest {
     }
 
     
-    public GetObjectRequest(final String bucketName, final String objectName, final WritableByteChannel channel, final UUID job, final long offset) {
+    public GetObjectRequest(final String bucketName, final String objectName, @Nonnull final WritableByteChannel channel, final UUID job, final long offset) {
+        Preconditions.checkNotNull(channel, "Channel may not be null.");
         this.bucketName = bucketName;
         this.objectName = objectName;
         this.job = job.toString();
@@ -76,7 +80,8 @@ public class GetObjectRequest extends AbstractRequest {
     }
 
     
-    public GetObjectRequest(final String bucketName, final String objectName, final WritableByteChannel channel, final String job, final long offset) {
+    public GetObjectRequest(final String bucketName, final String objectName, @Nonnull final WritableByteChannel channel, final String job, final long offset) {
+        Preconditions.checkNotNull(channel, "Channel may not be null.");
         this.bucketName = bucketName;
         this.objectName = objectName;
         this.job = job;
@@ -91,7 +96,8 @@ public class GetObjectRequest extends AbstractRequest {
     }
 
     
-    public GetObjectRequest(final String bucketName, final String objectName, final UUID job, final long offset, final OutputStream stream) {
+    public GetObjectRequest(final String bucketName, final String objectName, final UUID job, final long offset, @Nonnull final OutputStream stream) {
+        Preconditions.checkNotNull(stream, "Stream may not be null.");
         this.bucketName = bucketName;
         this.objectName = objectName;
         this.job = job.toString();
@@ -106,7 +112,8 @@ public class GetObjectRequest extends AbstractRequest {
     }
 
     
-    public GetObjectRequest(final String bucketName, final String objectName, final String job, final long offset, final OutputStream stream) {
+    public GetObjectRequest(final String bucketName, final String objectName, final String job, final long offset, @Nonnull final OutputStream stream) {
+        Preconditions.checkNotNull(stream, "Stream may not be null.");
         this.bucketName = bucketName;
         this.objectName = objectName;
         this.job = job;
