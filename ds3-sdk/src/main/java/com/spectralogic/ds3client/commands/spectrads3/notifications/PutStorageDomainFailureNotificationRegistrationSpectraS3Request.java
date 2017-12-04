@@ -35,7 +35,6 @@ public class PutStorageDomainFailureNotificationRegistrationSpectraS3Request ext
     
     public PutStorageDomainFailureNotificationRegistrationSpectraS3Request(final String notificationEndPoint) {
         super(notificationEndPoint);
-
         
 
     }

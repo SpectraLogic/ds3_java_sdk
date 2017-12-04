@@ -35,7 +35,6 @@ public class PutPoolFailureNotificationRegistrationSpectraS3Request extends Abst
     
     public PutPoolFailureNotificationRegistrationSpectraS3Request(final String notificationEndPoint) {
         super(notificationEndPoint);
-
         
 
     }

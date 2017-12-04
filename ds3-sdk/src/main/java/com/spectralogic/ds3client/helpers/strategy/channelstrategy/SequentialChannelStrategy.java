@@ -88,7 +88,7 @@ public class SequentialChannelStrategy implements ChannelStrategy {
         channelPreparer.prepareChannel(blob.getName(), objectChannelBuilder);
 
         final SeekableByteChannel seekableByteChannel = channelStrategyDelegate.acquireChannelForBlob(blob);
-        final SeekableByteChannelDecorator seekableByteChannelDecorator = new SeekableByteChannelDecorator(seekableByteChannel);
+        final SeekableByteChannelDecorator seekableByteChannelDecorator = new SeekableByteChannelDecorator(seekableByteChannel, blob.getOffset(), blob.getLength());
 
         blobNameChannelMap.put(blob.getName(), seekableByteChannelDecorator);
         return seekableByteChannelDecorator;

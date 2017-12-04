@@ -35,7 +35,6 @@ public class PutDs3TargetFailureNotificationRegistrationSpectraS3Request extends
     
     public PutDs3TargetFailureNotificationRegistrationSpectraS3Request(final String notificationEndPoint) {
         super(notificationEndPoint);
-
         
 
     }

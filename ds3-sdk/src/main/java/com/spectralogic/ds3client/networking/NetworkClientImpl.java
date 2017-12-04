@@ -59,8 +59,6 @@ import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SignatureException;
-import java.security.cert.CertificateException;
-import java.security.cert.X509Certificate;
 import java.util.Map;
 
 import static com.spectralogic.ds3client.utils.Signature.canonicalizeAmzHeaders;
@@ -93,7 +91,7 @@ public class NetworkClientImpl implements NetworkClient {
         this(connectionDetails, createDefaultClient(connectionDetails));
     }
 
-    public NetworkClientImpl(final ConnectionDetails connectionDetails, final CloseableHttpClient client) {
+    private NetworkClientImpl(final ConnectionDetails connectionDetails, final CloseableHttpClient client) {
         if (connectionDetails == null) throw new AssertionError("ConnectionDetails cannot be null");
         if (client == null) throw new AssertionError("CloseableHttpClient cannot be null");
         try {
@@ -125,12 +123,7 @@ public class NetworkClientImpl implements NetworkClient {
     private static CloseableHttpClient createInsecureSslHttpClient() throws NoSuchAlgorithmException, KeyManagementException, KeyStoreException {
         final SSLContext sslContext = new SSLContextBuilder()
                 .useProtocol(INSECURE_SSL_PROTOCOL)
-                .loadTrustMaterial(null, new TrustStrategy() {
-            @Override
-            public boolean isTrusted(final X509Certificate[] chain, final String authType) throws CertificateException {
-                return true;
-            }
-        }).build();
+                .loadTrustMaterial(null, (TrustStrategy) (chain, authType) -> true).build();
         final SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(sslContext, new NoopHostnameVerifier());
 
         final Registry<ConnectionSocketFactory> socketFactoryRegistry = RegistryBuilder.<ConnectionSocketFactory>create()
@@ -215,7 +208,7 @@ public class NetworkClientImpl implements NetworkClient {
         private final ChecksumType.Type checksumType;
         private final CloseableHttpClient client;
 
-        public RequestExecutor(final CloseableHttpClient client, final HttpHost host, final Ds3Request ds3Request) throws IOException {
+        RequestExecutor(final CloseableHttpClient client, final HttpHost host, final Ds3Request ds3Request) throws IOException {
             this.client = client;
             this.ds3Request = ds3Request;
             this.host = host;
@@ -230,7 +223,7 @@ public class NetworkClientImpl implements NetworkClient {
             this.hash = this.buildHash();
         }
 
-        public CloseableHttpResponse execute() throws IOException {
+        CloseableHttpResponse execute() throws IOException {
             if (this.content != null) {
                 this.content.reset();
             }

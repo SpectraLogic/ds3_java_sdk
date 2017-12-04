@@ -38,7 +38,6 @@ public class PutObjectPersistedNotificationRegistrationSpectraS3Request extends 
     
     public PutObjectPersistedNotificationRegistrationSpectraS3Request(final String notificationEndPoint) {
         super(notificationEndPoint);
-
         
 
     }
