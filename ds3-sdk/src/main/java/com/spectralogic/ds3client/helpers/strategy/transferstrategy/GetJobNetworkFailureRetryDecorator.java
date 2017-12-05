@@ -127,18 +127,10 @@ public class GetJobNetworkFailureRetryDecorator implements TransferMethod {
 
         if (ranges == null) {
             final long numBytesTransferred = 0;
-            ranges = updateRanges(ranges, numBytesTransferred, blob.getLength());
-            ranges = adjustRangesForBlobOffset(ranges, blob);
+            ranges = adjustRangesForBlobOffset(updateRanges(ranges, numBytesTransferred, blob.getLength()), blob);
         }
 
         return ranges;
-    }
-
-    private ImmutableCollection<Range> updateRanges(final ImmutableCollection<Range> ranges,
-                                                    final long numBytesTransferred,
-                                                    final Long numBytesToTransfer)
-    {
-        return RangeHelper.replaceRange(ranges, numBytesTransferred, numBytesToTransfer);
     }
 
     private ImmutableCollection<Range> adjustRangesForBlobOffset(final ImmutableCollection<Range> ranges, final BulkObject blob) {
@@ -155,6 +147,13 @@ public class GetJobNetworkFailureRetryDecorator implements TransferMethod {
         final long blobOffset = blob.getOffset();
 
         return ImmutableList.of(new Range(firstRange.getStart() + blobOffset, firstRange.getEnd() + blobOffset));
+    }
+
+    private ImmutableCollection<Range> updateRanges(final ImmutableCollection<Range> ranges,
+                                                    final long numBytesTransferred,
+                                                    final Long numBytesToTransfer)
+    {
+        return RangeHelper.replaceRange(ranges, numBytesTransferred, numBytesToTransfer);
     }
 
     private Long initializeNumBytesToTransfer(final TransferState existingTransferState,
