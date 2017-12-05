@@ -134,11 +134,7 @@ public class GetJobNetworkFailureRetryDecorator implements TransferMethod {
     }
 
     private ImmutableCollection<Range> adjustRangesForBlobOffset(final ImmutableCollection<Range> ranges, final BulkObject blob) {
-        if (Guard.isNullOrEmpty(ranges)) {
-            return ranges;
-        }
-
-        if (ranges.size() > 1) {
+        if (Guard.isNullOrEmpty(ranges) || ranges.size() > 1) {
             return ranges;
         }
 
