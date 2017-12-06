@@ -13,7 +13,7 @@ If using Eclipse:
 * In the results that are returned install `Gradle Integration for Eclipse (4.4) 3.7.1.RELEASE` or current version.  Clicking `Install` will take you to the 'Confirm Selected Features' dialog.  (De-select the two optional Spring checkboxes on older versions).  `Gradle IDE` and `org.gradle.toolingapi.feature` should both be selected.  Accept any dialogs that popup.
 * After Gradle has been installed into eclipse and git has been installed, you should be able to clone the repo and import that project into eclipse
 
-If using Intelllij:
+If using Intellij:
 * Open Intellij and select `Import Project`
 * Find the `build.gradle` file contained at the root of the project and select it
 * Accept the defaults

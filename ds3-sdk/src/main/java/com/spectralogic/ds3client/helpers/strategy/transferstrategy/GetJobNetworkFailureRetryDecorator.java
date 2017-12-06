@@ -16,6 +16,7 @@
 package com.spectralogic.ds3client.helpers.strategy.transferstrategy;
 
 import com.google.common.collect.ImmutableCollection;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMultimap;
 import com.spectralogic.ds3client.exceptions.ContentLengthNotMatchException;
@@ -25,6 +26,7 @@ import com.spectralogic.ds3client.helpers.strategy.StrategyUtils;
 import com.spectralogic.ds3client.helpers.strategy.channelstrategy.ChannelStrategy;
 import com.spectralogic.ds3client.models.BulkObject;
 import com.spectralogic.ds3client.models.common.Range;
+import com.spectralogic.ds3client.utils.Guard;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -125,10 +127,22 @@ public class GetJobNetworkFailureRetryDecorator implements TransferMethod {
 
         if (ranges == null) {
             final long numBytesTransferred = 0;
-            ranges = updateRanges(ranges, numBytesTransferred, blob.getLength());
+            ranges = adjustRangesForBlobOffset(updateRanges(ranges, numBytesTransferred, blob.getLength()), blob);
         }
 
         return ranges;
+    }
+
+    private ImmutableCollection<Range> adjustRangesForBlobOffset(final ImmutableCollection<Range> ranges, final BulkObject blob) {
+        if (Guard.isNullOrEmpty(ranges) || ranges.size() > 1) {
+            return ranges;
+        }
+
+        final Range firstRange = ranges.iterator().next();
+
+        final long blobOffset = blob.getOffset();
+
+        return ImmutableList.of(new Range(firstRange.getStart() + blobOffset, firstRange.getEnd() + blobOffset));
     }
 
     private ImmutableCollection<Range> updateRanges(final ImmutableCollection<Range> ranges,

@@ -40,7 +40,7 @@ The SDK can also be included directly into a Maven or Gradle build. There is als
       <dependency>
         <groupId>com.spectralogic.ds3</groupId>
         <artifactId>ds3-sdk</artifactId>
-        <version>3.5.2</version>
+        <version>3.5.3</version>
         <!-- <classifier>all</classifier> -->
       </dependency>
     ...
@@ -63,8 +63,8 @@ repositories {
 
 dependencies {
     ...
-    compile 'com.spectralogic.ds3:ds3-sdk:3.5.2'
-    // compile 'com.spectralogic.ds3:ds3-sdk:3.5.2:all'
+    compile 'com.spectralogic.ds3:ds3-sdk:3.5.3'
+    // compile 'com.spectralogic.ds3:ds3-sdk:3.5.3:all'
     ...
 }
 

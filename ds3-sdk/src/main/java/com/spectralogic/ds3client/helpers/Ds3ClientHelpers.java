@@ -18,7 +18,6 @@ package com.spectralogic.ds3client.helpers;
 import com.google.common.base.Function;
 import com.google.common.collect.FluentIterable;
 import com.spectralogic.ds3client.Ds3Client;
-import com.spectralogic.ds3client.commands.PutObjectResponse;
 import com.spectralogic.ds3client.helpers.options.ReadJobOptions;
 import com.spectralogic.ds3client.helpers.options.WriteJobOptions;
 import com.spectralogic.ds3client.helpers.pagination.FileSystemKey;
