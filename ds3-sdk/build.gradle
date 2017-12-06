@@ -58,10 +58,13 @@ task genConfigProperties {
             Files.createDirectories(configPath)
         }
 
+        def gitInfo = versionDetails()
+
         configFile.withWriter{out ->
             out.writeLine("productionBuild=" + productionBuild.toString())
             out.writeLine("version=" + version.toString())
             out.writeLine("build.date=" + new Date().toString())
+            out.writeLine("git.commitHash=" + gitInfo.gitHashFull)
         }
     }
 }
