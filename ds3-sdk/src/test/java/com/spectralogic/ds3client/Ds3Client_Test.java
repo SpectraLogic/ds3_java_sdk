@@ -31,6 +31,7 @@ import com.spectralogic.ds3client.networking.FailedRequestException;
 import com.spectralogic.ds3client.networking.FailedRequestUsingMgmtPortException;
 import com.spectralogic.ds3client.networking.HttpVerb;
 import com.spectralogic.ds3client.utils.ByteArraySeekableByteChannel;
+import com.spectralogic.ds3client.utils.PropertyUtils;
 import com.spectralogic.ds3client.utils.ResourceUtils;
 import org.junit.Before;
 import org.junit.Test;
@@ -51,6 +52,7 @@ import java.util.regex.Pattern;
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.greaterThanOrEqualTo;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 public class Ds3Client_Test {
@@ -935,6 +937,13 @@ public class Ds3Client_Test {
         final Matcher matcher = matchPattern.matcher(userAgentFields[1]);
 
         assertThat(matcher.find(), is(true));
+    }
+
+    @Test
+    public void testGettingGitCommitHash() {
+        final String gitCommitHash = PropertyUtils.getGitCommitHash();
+
+        assertEquals(40, gitCommitHash.length());
     }
 
     @Test

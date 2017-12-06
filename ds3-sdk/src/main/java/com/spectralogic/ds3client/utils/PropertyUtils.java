@@ -26,9 +26,11 @@ public final class PropertyUtils {
     private static final Logger LOG = LoggerFactory.getLogger(PropertyUtils.class);
 
     private static final String SDK_VERSION_PROPERTY_NAME = "version";
+    private static final String GIT_COMMIT_HASH_PROPERTY_NAME = "git.commitHash";
     private static final String PROPERTIES_FILE_NAME = "ds3_sdk.properties";
 
     private static final AtomicReference<String> versionProperty = new AtomicReference<>("");
+    private static final AtomicReference<String> gitCommitHashProperty = new AtomicReference<>("");
 
     private PropertyUtils() {}
 
@@ -37,29 +39,47 @@ public final class PropertyUtils {
      * @return The sdk version, if we can find one, an empty string otherwise.
      */
     public static String getSdkVersion() {
-        if ( ! Guard.isStringNullOrEmpty(versionProperty.get())) {
-            return versionProperty.get();
+        return getPropertyFromPropertiesFile(SDK_VERSION_PROPERTY_NAME, versionProperty);
+    }
+
+    private static String getPropertyFromPropertiesFile(final String propertyName, final AtomicReference<String> propertyValue) {
+        if ( ! Guard.isStringNullOrEmpty(propertyValue.get())) {
+            return propertyValue.get();
         }
 
+        final String propertyFromPropertiesFile = getPropertyFromPropertiesFile(propertyName);
+
+        if ( ! Guard.isStringNullOrEmpty(propertyFromPropertiesFile)) {
+            propertyValue.set(propertyFromPropertiesFile);
+        }
+
+        return propertyValue.get();
+    }
+
+    private static String getPropertyFromPropertiesFile(final String propertyName) {
         final Properties properties = new Properties();
 
         try (final InputStream propertiesStream = PropertyUtils.class.getClassLoader().getResourceAsStream(PROPERTIES_FILE_NAME)) {
             if (propertiesStream != null) {
                 properties.load(propertiesStream);
-                final Object versionPropertyObject = properties.get(SDK_VERSION_PROPERTY_NAME);
+                final Object propertyObject = properties.get(propertyName);
 
-                if (versionPropertyObject != null) {
-                    final String versionFromPropFile = properties.get(SDK_VERSION_PROPERTY_NAME).toString();
-
-                    if ( ! Guard.isStringNullOrEmpty(versionFromPropFile)) {
-                        versionProperty.set(versionFromPropFile);
-                    }
+                if (propertyObject != null) {
+                    return properties.get(propertyName).toString();
                 }
             }
         } catch (final Throwable t) {
             LOG.warn("Could not read properties file.", t);
         }
 
-        return versionProperty.get();
+        return "";
+    }
+
+    /**
+     * Get the git commit hash from a properties file.
+     * @return The git commit hash, if we can find it, an empty string otherwise.
+     */
+    public static String getGitCommitHash() {
+        return getPropertyFromPropertiesFile(GIT_COMMIT_HASH_PROPERTY_NAME, gitCommitHashProperty);
     }
 }
