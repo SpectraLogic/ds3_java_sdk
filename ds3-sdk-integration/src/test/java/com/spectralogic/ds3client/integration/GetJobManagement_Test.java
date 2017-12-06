@@ -41,6 +41,7 @@ import com.spectralogic.ds3client.helpers.WaitingForChunksListener;
 import com.spectralogic.ds3client.helpers.events.FailureEvent;
 import com.spectralogic.ds3client.helpers.events.SameThreadEventRunner;
 import com.spectralogic.ds3client.helpers.options.ReadJobOptions;
+import com.spectralogic.ds3client.helpers.options.WriteJobOptions;
 import com.spectralogic.ds3client.helpers.strategy.blobstrategy.BlobStrategy;
 import com.spectralogic.ds3client.helpers.strategy.blobstrategy.ChunkAttemptRetryBehavior;
 import com.spectralogic.ds3client.helpers.strategy.blobstrategy.ChunkAttemptRetryDelayBehavior;
@@ -83,7 +84,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
+import java.io.DataOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -101,11 +104,15 @@ import java.security.AccessControlException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 
+import static com.spectralogic.ds3client.commands.spectrads3.PutBulkJobSpectraS3Request.MIN_UPLOAD_SIZE_IN_BYTES;
 import static com.spectralogic.ds3client.integration.Util.RESOURCE_BASE_NAME;
 import static com.spectralogic.ds3client.integration.Util.deleteAllContents;
 import static com.spectralogic.ds3client.integration.Util.deleteBucketContents;
@@ -1448,5 +1455,69 @@ public class GetJobManagement_Test {
         }
 
         assertTrue(caughtException.get());
+    }
+
+    @Test
+    public void testStreamedGetJobWithBlobbedFile() throws Exception {
+        final int chunkSize = MIN_UPLOAD_SIZE_IN_BYTES;
+        final long biggerThanAChunkSize = chunkSize * 2L + 1024;
+
+        final int numIntsInBiggerThanAChunkSize = (int)biggerThanAChunkSize / 4;
+
+        final String originalFileName = "Gracie.bin";
+        final String movedFileName = "Gracie.bak";
+
+        try {
+            final DataOutputStream originalFileStream = new DataOutputStream(new FileOutputStream(originalFileName));
+
+            byte[] bytes = new byte[4];
+
+            for (int i = 0; i < numIntsInBiggerThanAChunkSize; ++i) {
+                bytes[0] = (byte)i;
+                bytes[1] = (byte)(i >> 8);
+                bytes[2] = (byte)(i >> 16);
+                bytes[3] = (byte)(i >> 24);
+                originalFileStream.write(bytes);
+            }
+
+            originalFileStream.close();
+
+            final Ds3Object ds3Object = new Ds3Object();
+            ds3Object.setName(originalFileName);
+            ds3Object.setSize(biggerThanAChunkSize);
+
+            final AtomicLong numBytesTransferred = new AtomicLong(0);
+
+            final WriteJobOptions writeJobOptions = WriteJobOptions.create();
+            writeJobOptions.withMaxUploadSize(chunkSize);
+
+            final Ds3ClientHelpers.Job writeJob = HELPERS.startWriteJob(BUCKET_NAME, Collections.singletonList(ds3Object), writeJobOptions);
+            writeJob.attachDataTransferredListener(numBytesTransferred::addAndGet);
+
+            final CountDownLatch writeCountDownLatch = new CountDownLatch(1);
+
+            writeJob.attachObjectCompletedListener(name -> writeCountDownLatch.countDown());
+
+            writeJob.transfer(new FileObjectPutter(Paths.get(".")));
+
+            writeCountDownLatch.await();
+
+            assertEquals(biggerThanAChunkSize, numBytesTransferred.get());
+
+            Files.move(Paths.get(originalFileName), Paths.get(movedFileName));
+
+            final CountDownLatch readCountdownLatch = new CountDownLatch(1);
+
+            final Ds3ClientHelpers.Job readJob = HELPERS.startReadJobUsingStreamedBehavior(BUCKET_NAME, Collections.singletonList(ds3Object));
+            readJob.attachObjectCompletedListener(name -> readCountdownLatch.countDown());
+            readJob.transfer(new FileObjectGetter(Paths.get(".")));
+
+            readCountdownLatch.await();
+
+            assertTrue(FileUtils.contentEquals(new File(movedFileName), new File(originalFileName)));
+        } finally {
+            Files.deleteIfExists(Paths.get(originalFileName));
+            Files.deleteIfExists(Paths.get(movedFileName));
+        }
     }
 }

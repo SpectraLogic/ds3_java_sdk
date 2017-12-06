@@ -25,52 +25,124 @@ import java.nio.channels.SeekableByteChannel;
  * An instance of {@link SeekableByteChannel} used to decorate another SeekableByteChannel in the
  * situation where we re-use the same channel for more than 1 blob.  This subclass prevents closing
  * a channel when there are other blobs still referencing the shared channel.
+ *
+ * This class positions the content of a blob within the bounds of a channel that may be capable
+ * of containing more than one blob.
  */
 class SeekableByteChannelDecorator implements SeekableByteChannel {
-    private final SeekableByteChannel seekableByteChannel;
+    private final Object lock = new Object();
 
-    SeekableByteChannelDecorator(final SeekableByteChannel seekableByteChannel) {
-        Preconditions.checkNotNull(seekableByteChannel, "seekableByteChannel may not be null");
+    private final SeekableByteChannel seekableByteChannel;
+    private final long blobOffset;
+    private final long blobLength;
+    private long nextAvailableByteOffset = 0;
+
+    SeekableByteChannelDecorator(final SeekableByteChannel seekableByteChannel, final long blobOffset, final long blobLength) throws IOException {
+        Preconditions.checkNotNull(seekableByteChannel, "seekableByteChannel may not be null.");
+        Preconditions.checkArgument(blobOffset >= 0, "blobOffset must be >= 0.");
+        Preconditions.checkArgument(blobLength >= 0, "blobLength must be >= 0.");
         this.seekableByteChannel = seekableByteChannel;
+        this.blobOffset = blobOffset;
+        this.blobLength = blobLength;
+
+        seekableByteChannel.position(blobOffset);
     }
 
-    protected SeekableByteChannel wrappedSeekableByteChannel() {
+    SeekableByteChannel wrappedSeekableByteChannel() {
         return seekableByteChannel;
     }
 
     @Override
     public int read(final ByteBuffer dst) throws IOException {
-        return seekableByteChannel.read(dst);
+        synchronized (lock) {
+            final long remainingInWindow = blobLength - nextAvailableByteOffset;
+            final long numBytesWeCanRead = Math.min(dst.remaining(), remainingInWindow);
+
+            if (numBytesWeCanRead <= 0) {
+                return 0;
+            }
+
+            final int numBytesRead;
+
+            if (numBytesWeCanRead != dst.remaining()) {
+                final ByteBuffer byteBuffer = ByteBuffer.wrap(new byte[(int) numBytesWeCanRead]);
+                numBytesRead = seekableByteChannel.read(byteBuffer);
+                byteBuffer.flip();
+                dst.put(byteBuffer);
+            } else {
+                numBytesRead = seekableByteChannel.read(dst);
+            }
+
+            nextAvailableByteOffset += numBytesRead;
+
+            return numBytesRead;
+        }
     }
 
     @Override
     public int write(final ByteBuffer src) throws IOException {
-        return seekableByteChannel.write(src);
+        synchronized (lock) {
+            final long remainingInWindow = blobLength - nextAvailableByteOffset;
+            final long numBytesWeCanWrite = Math.min(src.remaining(), remainingInWindow);
+
+            if (numBytesWeCanWrite <= 0) {
+                return 0;
+            }
+
+            final int numBytesWritten;
+
+            if (numBytesWeCanWrite != src.remaining()) {
+                final ByteBuffer byteBuffer = ByteBuffer.wrap(new byte[(int) numBytesWeCanWrite]);
+                byteBuffer.put(src);
+                byteBuffer.flip();
+                numBytesWritten = seekableByteChannel.write(byteBuffer);
+            } else {
+                numBytesWritten = seekableByteChannel.write(src);
+            }
+
+            nextAvailableByteOffset += numBytesWritten;
+
+            return numBytesWritten;
+        }
     }
 
     @Override
     public long position() throws IOException {
-        return seekableByteChannel.position();
+        synchronized (lock) {
+            return seekableByteChannel.position();
+        }
     }
 
     @Override
     public SeekableByteChannel position(final long newPosition) throws IOException {
-        return seekableByteChannel.position(newPosition);
+        synchronized (lock) {
+            final long greatestPossiblePosition = blobLength - 1;
+            nextAvailableByteOffset = Math.min(newPosition, greatestPossiblePosition);
+            seekableByteChannel.position(blobOffset + nextAvailableByteOffset);
+
+            return this;
+        }
     }
 
     @Override
     public long size() throws IOException {
-        return seekableByteChannel.size();
+        synchronized (lock) {
+            return seekableByteChannel.size();
+        }
     }
 
     @Override
     public SeekableByteChannel truncate(final long size) throws IOException {
-        return seekableByteChannel.truncate(size);
+        synchronized (lock) {
+            return seekableByteChannel.truncate(size);
+        }
     }
 
     @Override
     public boolean isOpen() {
-        return seekableByteChannel.isOpen();
+        synchronized (lock) {
+            return seekableByteChannel.isOpen();
+        }
     }
 
     @Override
