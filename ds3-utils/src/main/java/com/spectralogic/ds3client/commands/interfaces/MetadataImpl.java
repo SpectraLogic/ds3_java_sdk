@@ -30,7 +30,8 @@ import static com.spectralogic.ds3client.utils.MetadataStringManipulation.toEnco
 public class MetadataImpl implements Metadata {
 
     private static final String X_AMZ_META = "x-amz-meta-";
-    final ImmutableMultimap<String, String> metadata;
+    private static final String LTFS_METADATA_PREFIX = "x-spectra-ltfs-";
+    private final ImmutableMultimap<String, String> metadata;
 
     public MetadataImpl(final Headers headers) {
         this.metadata  = genMetadata(headers);
@@ -45,15 +46,25 @@ public class MetadataImpl implements Metadata {
         final ImmutableMultimap.Builder<String, String> mapBuilder = ImmutableMultimap.builder();
 
         for (final String key : headers.keys()) {
-            if (key.startsWith(X_AMZ_META)) {
-                final String name = toDecodedString(key.substring(X_AMZ_META.length()));
+            final String keyWithoutPrefix = metadataKey(key);
 
+            if ( ! keyWithoutPrefix.isEmpty()) {
                 final List<String> values = getValues(headers, key);
-                mapBuilder.putAll(name, values);
+                mapBuilder.putAll(keyWithoutPrefix, values);
             }
         }
 
         return mapBuilder.build();
+    }
+
+    private static String metadataKey(final String key) {
+        if (key.startsWith(X_AMZ_META)) {
+            return toDecodedString(key.substring(X_AMZ_META.length()));
+        } else if (key.startsWith(LTFS_METADATA_PREFIX)) {
+            return toDecodedString(key.substring(LTFS_METADATA_PREFIX.length()));
+        }
+
+        return "";
     }
 
     private static List<String> getValues(final Headers headers, final String key) {
