@@ -68,6 +68,30 @@ public class MetadataImpl_Test {
         assertThat(value.get(2), is("value3"));
     }
 
+    @Test
+    public void getSingleValueLtfs() {
+        final String userGuid = "060a2b340101010101010f0013-000000-709e29c2d1e20085-e7610015b2a9-a854";
+        final Metadata metadata = genMetadata(new BasicHeader("x-spectra-ltfs-user.guid", userGuid));
+        final List<String> userGuids = metadata.get("user.guid");
+        assertThat(userGuids, is(notNullValue()));
+        assertFalse(userGuids.isEmpty());
+        assertThat(userGuids.size(), is(1));
+        assertThat(userGuids.get(0), is(userGuid));
+    }
+
+    @Test
+    public void getTwoValuesLtfs() {
+        final String userGuid1 = "060a2b340101010101010f0013-000000-709e29c2d1e20085-e7610015b2a9-a854";
+        final String userGuid2 = "160a2b340101010101010f0013-000000-709e29c2d1e20085-e7610015b2a9-a854";
+        final Metadata metadata = genMetadata(new BasicHeader("x-spectra-ltfs-user.guid", userGuid1 + "," + userGuid2));
+        final List<String> userGuids = metadata.get("user.guid");
+        assertThat(userGuids, is(notNullValue()));
+        assertFalse(userGuids.isEmpty());
+        assertThat(userGuids.size(), is(2));
+        assertThat(userGuids.get(0), is(userGuid1));
+        assertThat(userGuids.get(1), is(userGuid2));
+    }
+
     private Metadata genMetadata(final Header... headers) {
 
         final ImmutableMultimap.Builder<String, String> mapBuilder = ImmutableMultimap.builder();
