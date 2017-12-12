@@ -61,7 +61,7 @@ public class DetailedTapePartition {
 
     @JsonProperty("TapeTypes")
     @JacksonXmlElementWrapper(useWrapping = false)
-    private List<TapeType> tapeTypes = new ArrayList<>();
+    private List<String> tapeTypes = new ArrayList<>();
 
     // Constructor
     public DetailedTapePartition() {
@@ -160,11 +160,11 @@ public class DetailedTapePartition {
     }
 
 
-    public List<TapeType> getTapeTypes() {
+    public List<String> getTapeTypes() {
         return this.tapeTypes;
     }
 
-    public void setTapeTypes(final List<TapeType> tapeTypes) {
+    public void setTapeTypes(final List<String> tapeTypes) {
         this.tapeTypes = tapeTypes;
     }
 

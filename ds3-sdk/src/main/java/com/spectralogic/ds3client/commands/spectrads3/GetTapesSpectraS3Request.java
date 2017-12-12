@@ -23,7 +23,6 @@ import com.google.common.net.UrlEscapers;
 import java.util.Date;
 import java.util.UUID;
 import com.spectralogic.ds3client.models.TapeState;
-import com.spectralogic.ds3client.models.TapeType;
 import com.spectralogic.ds3client.models.Priority;
 
 public class GetTapesSpectraS3Request extends AbstractPaginationRequest {
@@ -66,7 +65,7 @@ public class GetTapesSpectraS3Request extends AbstractPaginationRequest {
 
     private String storageDomainId;
 
-    private TapeType type;
+    private String type;
 
     private Priority verifyPending;
 
@@ -230,7 +229,7 @@ public class GetTapesSpectraS3Request extends AbstractPaginationRequest {
     }
 
 
-    public GetTapesSpectraS3Request withType(final TapeType type) {
+    public GetTapesSpectraS3Request withType(final String type) {
         this.type = type;
         this.updateQueryParam("type", type);
         return this;
@@ -352,7 +351,7 @@ public class GetTapesSpectraS3Request extends AbstractPaginationRequest {
     }
 
 
-    public TapeType getType() {
+    public String getType() {
         return this.type;
     }
 

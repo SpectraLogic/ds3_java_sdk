@@ -97,7 +97,7 @@ public class Tape {
     private Long totalRawCapacity;
 
     @JsonProperty("Type")
-    private TapeType type;
+    private String type;
 
     @JsonProperty("VerifyPending")
     private Priority verifyPending;
@@ -319,11 +319,11 @@ public class Tape {
     }
 
 
-    public TapeType getType() {
+    public String getType() {
         return this.type;
     }
 
-    public void setType(final TapeType type) {
+    public void setType(final String type) {
         this.type = type;
     }
 

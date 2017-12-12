@@ -21,7 +21,6 @@ import com.spectralogic.ds3client.commands.interfaces.AbstractRequest;
 import com.spectralogic.ds3client.models.TapeDriveType;
 import java.util.UUID;
 import com.google.common.net.UrlEscapers;
-import com.spectralogic.ds3client.models.TapeType;
 
 public class PutTapeDensityDirectiveSpectraS3Request extends AbstractRequest {
 
@@ -31,12 +30,12 @@ public class PutTapeDensityDirectiveSpectraS3Request extends AbstractRequest {
 
     private final String partitionId;
 
-    private final TapeType tapeType;
+    private final String tapeType;
 
     // Constructor
     
     
-    public PutTapeDensityDirectiveSpectraS3Request(final TapeDriveType density, final UUID partitionId, final TapeType tapeType) {
+    public PutTapeDensityDirectiveSpectraS3Request(final TapeDriveType density, final UUID partitionId, final String tapeType) {
         this.density = density;
         this.partitionId = partitionId.toString();
         this.tapeType = tapeType;
@@ -50,7 +49,7 @@ public class PutTapeDensityDirectiveSpectraS3Request extends AbstractRequest {
     }
 
     
-    public PutTapeDensityDirectiveSpectraS3Request(final TapeDriveType density, final String partitionId, final TapeType tapeType) {
+    public PutTapeDensityDirectiveSpectraS3Request(final TapeDriveType density, final String partitionId, final String tapeType) {
         this.density = density;
         this.partitionId = partitionId;
         this.tapeType = tapeType;
@@ -84,7 +83,7 @@ public class PutTapeDensityDirectiveSpectraS3Request extends AbstractRequest {
     }
 
 
-    public TapeType getTapeType() {
+    public String getTapeType() {
         return this.tapeType;
     }
 
