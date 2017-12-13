@@ -19,6 +19,7 @@ package com.spectralogic.ds3client.models;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import java.util.UUID;
+import java.lang.String;
 
 @JacksonXmlRootElement(namespace = "Data")
 public class StorageDomainMember {
@@ -40,7 +41,7 @@ public class StorageDomainMember {
     private UUID tapePartitionId;
 
     @JsonProperty("TapeType")
-    private TapeType tapeType;
+    private String tapeType;
 
     @JsonProperty("WritePreference")
     private WritePreferenceLevel writePreference;
@@ -97,11 +98,11 @@ public class StorageDomainMember {
     }
 
 
-    public TapeType getTapeType() {
+    public String getTapeType() {
         return this.tapeType;
     }
 
-    public void setTapeType(final TapeType tapeType) {
+    public void setTapeType(final String tapeType) {
         this.tapeType = tapeType;
     }
 

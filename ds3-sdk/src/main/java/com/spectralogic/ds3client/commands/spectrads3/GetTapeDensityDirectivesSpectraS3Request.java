@@ -21,7 +21,6 @@ import com.spectralogic.ds3client.commands.interfaces.AbstractPaginationRequest;
 import com.spectralogic.ds3client.models.TapeDriveType;
 import java.util.UUID;
 import com.google.common.net.UrlEscapers;
-import com.spectralogic.ds3client.models.TapeType;
 
 public class GetTapeDensityDirectivesSpectraS3Request extends AbstractPaginationRequest {
 
@@ -39,7 +38,7 @@ public class GetTapeDensityDirectivesSpectraS3Request extends AbstractPagination
 
     private String partitionId;
 
-    private TapeType tapeType;
+    private String tapeType;
 
     // Constructor
     
@@ -108,7 +107,7 @@ public class GetTapeDensityDirectivesSpectraS3Request extends AbstractPagination
     }
 
 
-    public GetTapeDensityDirectivesSpectraS3Request withTapeType(final TapeType tapeType) {
+    public GetTapeDensityDirectivesSpectraS3Request withTapeType(final String tapeType) {
         this.tapeType = tapeType;
         this.updateQueryParam("tape_type", tapeType);
         return this;
@@ -156,7 +155,7 @@ public class GetTapeDensityDirectivesSpectraS3Request extends AbstractPagination
     }
 
 
-    public TapeType getTapeType() {
+    public String getTapeType() {
         return this.tapeType;
     }
 

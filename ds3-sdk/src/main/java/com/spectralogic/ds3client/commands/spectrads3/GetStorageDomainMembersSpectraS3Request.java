@@ -21,7 +21,6 @@ import com.spectralogic.ds3client.commands.interfaces.AbstractPaginationRequest;
 import java.util.UUID;
 import com.google.common.net.UrlEscapers;
 import com.spectralogic.ds3client.models.StorageDomainMemberState;
-import com.spectralogic.ds3client.models.TapeType;
 import com.spectralogic.ds3client.models.WritePreferenceLevel;
 
 public class GetStorageDomainMembersSpectraS3Request extends AbstractPaginationRequest {
@@ -44,7 +43,7 @@ public class GetStorageDomainMembersSpectraS3Request extends AbstractPaginationR
 
     private String tapePartitionId;
 
-    private TapeType tapeType;
+    private String tapeType;
 
     private WritePreferenceLevel writePreference;
 
@@ -143,7 +142,7 @@ public class GetStorageDomainMembersSpectraS3Request extends AbstractPaginationR
     }
 
 
-    public GetStorageDomainMembersSpectraS3Request withTapeType(final TapeType tapeType) {
+    public GetStorageDomainMembersSpectraS3Request withTapeType(final String tapeType) {
         this.tapeType = tapeType;
         this.updateQueryParam("tape_type", tapeType);
         return this;
@@ -208,7 +207,7 @@ public class GetStorageDomainMembersSpectraS3Request extends AbstractPaginationR
     }
 
 
-    public TapeType getTapeType() {
+    public String getTapeType() {
         return this.tapeType;
     }
 
