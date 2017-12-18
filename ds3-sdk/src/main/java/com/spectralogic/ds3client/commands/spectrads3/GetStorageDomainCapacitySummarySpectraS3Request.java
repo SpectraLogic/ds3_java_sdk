@@ -24,7 +24,6 @@ import com.spectralogic.ds3client.models.PoolHealth;
 import com.spectralogic.ds3client.models.PoolState;
 import com.spectralogic.ds3client.models.PoolType;
 import com.spectralogic.ds3client.models.TapeState;
-import com.spectralogic.ds3client.models.TapeType;
 
 public class GetStorageDomainCapacitySummarySpectraS3Request extends AbstractRequest {
 
@@ -40,7 +39,7 @@ public class GetStorageDomainCapacitySummarySpectraS3Request extends AbstractReq
 
     private TapeState tapeState;
 
-    private TapeType tapeType;
+    private String tapeType;
 
     // Constructor
     
@@ -88,7 +87,7 @@ public class GetStorageDomainCapacitySummarySpectraS3Request extends AbstractReq
     }
 
 
-    public GetStorageDomainCapacitySummarySpectraS3Request withTapeType(final TapeType tapeType) {
+    public GetStorageDomainCapacitySummarySpectraS3Request withTapeType(final String tapeType) {
         this.tapeType = tapeType;
         this.updateQueryParam("tape_type", tapeType);
         return this;
@@ -131,7 +130,7 @@ public class GetStorageDomainCapacitySummarySpectraS3Request extends AbstractReq
     }
 
 
-    public TapeType getTapeType() {
+    public String getTapeType() {
         return this.tapeType;
     }
 
