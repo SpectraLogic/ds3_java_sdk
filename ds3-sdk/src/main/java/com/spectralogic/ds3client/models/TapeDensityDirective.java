@@ -19,6 +19,7 @@ package com.spectralogic.ds3client.models;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import java.util.UUID;
+import java.lang.String;
 
 @JacksonXmlRootElement(namespace = "Data")
 public class TapeDensityDirective {
@@ -34,7 +35,7 @@ public class TapeDensityDirective {
     private UUID partitionId;
 
     @JsonProperty("TapeType")
-    private TapeType tapeType;
+    private String tapeType;
 
     // Constructor
     public TapeDensityDirective() {
@@ -70,11 +71,11 @@ public class TapeDensityDirective {
     }
 
 
-    public TapeType getTapeType() {
+    public String getTapeType() {
         return this.tapeType;
     }
 
-    public void setTapeType(final TapeType tapeType) {
+    public void setTapeType(final String tapeType) {
         this.tapeType = tapeType;
     }
 

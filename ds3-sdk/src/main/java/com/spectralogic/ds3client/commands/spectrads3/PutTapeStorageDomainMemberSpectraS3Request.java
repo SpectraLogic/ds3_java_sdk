@@ -20,7 +20,6 @@ import com.spectralogic.ds3client.networking.HttpVerb;
 import com.spectralogic.ds3client.commands.interfaces.AbstractRequest;
 import java.util.UUID;
 import com.google.common.net.UrlEscapers;
-import com.spectralogic.ds3client.models.TapeType;
 import com.spectralogic.ds3client.models.WritePreferenceLevel;
 
 public class PutTapeStorageDomainMemberSpectraS3Request extends AbstractRequest {
@@ -31,14 +30,14 @@ public class PutTapeStorageDomainMemberSpectraS3Request extends AbstractRequest 
 
     private final String tapePartitionId;
 
-    private final TapeType tapeType;
+    private final String tapeType;
 
     private WritePreferenceLevel writePreference;
 
     // Constructor
     
     
-    public PutTapeStorageDomainMemberSpectraS3Request(final UUID storageDomainId, final UUID tapePartitionId, final TapeType tapeType) {
+    public PutTapeStorageDomainMemberSpectraS3Request(final UUID storageDomainId, final UUID tapePartitionId, final String tapeType) {
         this.storageDomainId = storageDomainId.toString();
         this.tapePartitionId = tapePartitionId.toString();
         this.tapeType = tapeType;
@@ -52,7 +51,7 @@ public class PutTapeStorageDomainMemberSpectraS3Request extends AbstractRequest 
     }
 
     
-    public PutTapeStorageDomainMemberSpectraS3Request(final String storageDomainId, final String tapePartitionId, final TapeType tapeType) {
+    public PutTapeStorageDomainMemberSpectraS3Request(final String storageDomainId, final String tapePartitionId, final String tapeType) {
         this.storageDomainId = storageDomainId;
         this.tapePartitionId = tapePartitionId;
         this.tapeType = tapeType;
@@ -93,7 +92,7 @@ public class PutTapeStorageDomainMemberSpectraS3Request extends AbstractRequest 
     }
 
 
-    public TapeType getTapeType() {
+    public String getTapeType() {
         return this.tapeType;
     }
 

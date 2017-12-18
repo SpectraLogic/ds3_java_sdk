@@ -22,7 +22,7 @@ import com.spectralogic.ds3client.models.PoolHealth;
 import com.spectralogic.ds3client.models.PoolState;
 import com.spectralogic.ds3client.models.PoolType;
 import com.spectralogic.ds3client.models.TapeState;
-import com.spectralogic.ds3client.models.TapeType;
+import com.google.common.net.UrlEscapers;
 
 public class GetSystemCapacitySummarySpectraS3Request extends AbstractRequest {
 
@@ -36,7 +36,7 @@ public class GetSystemCapacitySummarySpectraS3Request extends AbstractRequest {
 
     private TapeState tapeState;
 
-    private TapeType tapeType;
+    private String tapeType;
 
     // Constructor
     
@@ -73,7 +73,7 @@ public class GetSystemCapacitySummarySpectraS3Request extends AbstractRequest {
     }
 
 
-    public GetSystemCapacitySummarySpectraS3Request withTapeType(final TapeType tapeType) {
+    public GetSystemCapacitySummarySpectraS3Request withTapeType(final String tapeType) {
         this.tapeType = tapeType;
         this.updateQueryParam("tape_type", tapeType);
         return this;
@@ -111,7 +111,7 @@ public class GetSystemCapacitySummarySpectraS3Request extends AbstractRequest {
     }
 
 
-    public TapeType getTapeType() {
+    public String getTapeType() {
         return this.tapeType;
     }
 
