@@ -21,7 +21,6 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import java.util.List;
 import java.util.ArrayList;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
-import java.lang.String;
 import java.util.UUID;
 
 @JacksonXmlRootElement(namespace = "TapePartition")

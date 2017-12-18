@@ -21,8 +21,6 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import java.util.Date;
 import java.util.UUID;
 import java.lang.Boolean;
-import java.lang.Long;
-import java.lang.String;
 
 @JacksonXmlRootElement(namespace = "Data")
 public class Bucket {
