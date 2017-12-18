@@ -18,7 +18,6 @@ package com.spectralogic.ds3client.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
-import java.lang.String;
 import java.util.Date;
 
 @JacksonXmlRootElement(namespace = "Data")
