@@ -48,7 +48,6 @@ public class UsersAndGroups_Test {
     private static final String BUCKET_NAME = "Users_And_Groups_Test";
     private static final String TEST_ENV_NAME = "UsersAndGroups_Test";
     private static final String USER_ID = "spectra";
-//    private static final String USER_ID = "Administrator";
     private static TempStorageIds envStorageIds;
     private static UUID spectraUUID;
     private static UUID administratorsUUID;

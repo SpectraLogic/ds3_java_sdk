@@ -35,7 +35,6 @@ public final class TempStorageUtil {
     private static final String DATA_POLICY_NAME = "_dp";
     private static final String STORAGE_DOMAIN_NAME = "_sd";
     private static final String POOL_PARTITION_NAME = "_pp";
-//    private static final String USER_ID = "Administrator";
     private static final String USER_ID = "spectra";
 
     /**
