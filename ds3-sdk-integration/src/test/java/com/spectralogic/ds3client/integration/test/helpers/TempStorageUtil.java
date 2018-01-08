@@ -35,6 +35,8 @@ public final class TempStorageUtil {
     private static final String DATA_POLICY_NAME = "_dp";
     private static final String STORAGE_DOMAIN_NAME = "_sd";
     private static final String POOL_PARTITION_NAME = "_pp";
+//    private static final String USER_ID = "Administrator";
+    private static final String USER_ID = "spectra";
 
     /**
      * Sets up a temporary data policy with a temporary storage domain and partition
@@ -102,7 +104,7 @@ public final class TempStorageUtil {
                 new PutDataPolicySpectraS3Request(testSetName + DATA_POLICY_NAME)
                         .withEndToEndCrcRequired(withEndToEndCrcRequired)
                         .withChecksumType(checksumType).withAlwaysForcePutJobCreation(true));
-        client.modifyUserSpectraS3(new ModifyUserSpectraS3Request("spectra")
+        client.modifyUserSpectraS3(new ModifyUserSpectraS3Request(USER_ID)
                 .withDefaultDataPolicyId(dataPolicyResponse.getDataPolicyResult().getId()));
         return dataPolicyResponse.getDataPolicyResult().getId();
     }
