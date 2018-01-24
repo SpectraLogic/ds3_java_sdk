@@ -22,7 +22,7 @@ public final class ExceptionClassifier {
     private ExceptionClassifier() { }
 
     public static boolean isRecoverableException(final Throwable t) {
-        if (t instanceof UnrecoverableIOException || t instanceof FileSystemException || t instanceof SecurityException) {
+        if (t instanceof UnrecoverableIOException || t instanceof FileSystemException || t instanceof SecurityException || t instanceof NoSuchMethodException) {
             return false;
         }
 
