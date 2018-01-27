@@ -81,7 +81,7 @@ jar {
     from sourceSets.main.allJava
 }
 
-jar.dependsOn genConfigProperties
+compileJava.dependsOn genConfigProperties
 
 dependencies {
     compile     "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
