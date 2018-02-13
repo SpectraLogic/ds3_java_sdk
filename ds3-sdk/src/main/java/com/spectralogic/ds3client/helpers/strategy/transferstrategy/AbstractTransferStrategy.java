@@ -15,7 +15,6 @@
 
 package com.spectralogic.ds3client.helpers.strategy.transferstrategy;
 
-import com.google.common.base.Predicate;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Iterables;
 import com.google.common.util.concurrent.ListeningExecutorService;
@@ -40,8 +39,6 @@ import java.util.concurrent.atomic.AtomicReference;
 import com.spectralogic.ds3client.networking.FailedRequestException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.annotation.Nullable;
 
 /**
  * An implementation of {@link TransferStrategy} that provides a default implementation {@code transfer}
@@ -109,9 +106,21 @@ abstract class AbstractTransferStrategy implements TransferStrategy {
     public void transfer() throws IOException {
         cachedException.set(null);
 
+        try {
+            transferAllJobBlobs();
+        } finally {
+            close();
+        }
+
+        if (cachedException.get() != null) {
+            throw cachedException.get();
+        }
+    }
+
+    private void transferAllJobBlobs() throws IOException {
         final AtomicInteger numBlobsRemaining = new AtomicInteger(jobState.numBlobsInJob());
 
-        while ( ! Thread.currentThread().isInterrupted() && numBlobsRemaining.get() > 0) {
+        while (!Thread.currentThread().isInterrupted() && numBlobsRemaining.get() > 0) {
             try {
                 final Iterable<JobPart> jobParts = jobPartsNotAlreadyTransferred();
 
@@ -129,25 +138,16 @@ abstract class AbstractTransferStrategy implements TransferStrategy {
                 throw e;
             } catch (final InterruptedException | NoSuchElementException e) {
                 Thread.currentThread().interrupt();
-            }  catch (final Throwable t) {
+            } catch (final Throwable t) {
                 emitFailureAndSetCachedException(t);
             }
-        }
-
-        if (cachedException.get() != null) {
-            throw cachedException.get();
         }
     }
 
     private Iterable<JobPart> jobPartsNotAlreadyTransferred() throws IOException, InterruptedException {
         return FluentIterable
                 .from(blobStrategy.getWork())
-                .filter(new Predicate<JobPart>() {
-                    @Override
-                    public boolean apply(@Nullable final JobPart jobPart) {
-                        return jobState.contains(jobPart.getBlob());
-                    }
-                });
+                .filter(jobPart -> jobState.contains(jobPart.getBlob()));
     }
 
     private void emitFailureAndSetCachedException(final Throwable t) {
@@ -169,24 +169,22 @@ abstract class AbstractTransferStrategy implements TransferStrategy {
                                   final CountDownLatch countDownLatch,
                                   final AtomicInteger numBlobsTransferred) throws IOException {
         for (final JobPart jobPart : jobParts) {
-            executorService.submit(new Callable<Void>() {
-                @Override
-                public Void call() throws Exception {
-                    try {
-                        transferMethod.transferJobPart(jobPart);
-                    } catch (final RuntimeException e) {
-                        emitFailureAndSetCachedException(e);
-                        throw e;
-                    } catch (final Exception e) {
-                        emitFailureAndSetCachedException(e);
-                        throw new RuntimeException(e);
-                    } finally {
-                        jobState.blobTransferredOrFailed(jobPart.getBlob());
-                        numBlobsTransferred.decrementAndGet();
-                        countDownLatch.countDown();
-                        return null;
-                    }
+            executorService.submit((Callable<Void>) () -> {
+                try {
+                    transferMethod.transferJobPart(jobPart);
+                } catch (final RuntimeException e) {
+                    emitFailureAndSetCachedException(e);
+                    throw e;
+                } catch (final Exception e) {
+                    emitFailureAndSetCachedException(e);
+                    throw new RuntimeException(e);
+                } finally {
+                    jobState.blobTransferredOrFailed(jobPart.getBlob());
+                    numBlobsTransferred.decrementAndGet();
+                    countDownLatch.countDown();
                 }
+
+                return null;
             });
         }
     }
