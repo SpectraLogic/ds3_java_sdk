@@ -26,6 +26,8 @@ import com.spectralogic.ds3client.models.BulkObject;
 import com.spectralogic.ds3client.models.ChecksumType;
 import com.spectralogic.ds3client.networking.Metadata;
 
+import java.util.UUID;
+
 /**
  * An interface to provide the ability to register for and emit events.  In prior versions of this SDK,
  * clients needed to hold an instance of a listener implementation to later unregister its receipt of events.
@@ -118,6 +120,9 @@ public interface EventDispatcher {
     void attachFailureEventListener(final FailureEventListener listener);
     void removeFailureEventListener(final FailureEventListener listener);
 
+    CanceledEventObserver attachCanceledEventObserver(final CanceledEventObserver canceledEventObserver);
+    void removeCanceledEventObserver(final CanceledEventObserver canceledEventObserver);
+
     void emitFailureEvent(final FailureEvent failureEvent);
     void emitWaitingForChunksEvents(final int secondsToDelay);
     void emitChecksumEvent(final BulkObject blob, final ChecksumType.Type type, final String checksum);
@@ -126,6 +131,7 @@ public interface EventDispatcher {
     void emitObjectCompletedEvent(final String blobName);
     void emitMetaDataReceivedEvent(final String objectName, final Metadata metadata);
     void emitBlobTransferredEvent(final BulkObject blob);
+    void emitCanceledEvent(final UUID jobId);
 
     /**
      * Emit an event when a get transfers less content than was intended.  This event is triggered by catching
