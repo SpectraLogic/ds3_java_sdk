@@ -93,6 +93,11 @@ public class PutJobManagement_Test {
     private static TempStorageIds envStorageIds;
     private static UUID envDataPolicyId;
 
+    private static final String SOURCE_DIRECTORY = "little_files/";
+    private static final String SOURCE_FILE_BASE_NAME = "tape";
+    private static final String SOURCE_FILE_EXTENSION = "png";
+    private static final String SOURCE_FILE_NAME = SOURCE_FILE_BASE_NAME + "." + SOURCE_FILE_EXTENSION;
+
     @BeforeClass
     public static void startup() throws IOException {
         envDataPolicyId = TempStorageUtil.setupDataPolicy(TEST_ENV_NAME, false, ChecksumType.Type.MD5, client);
@@ -1919,11 +1924,6 @@ public class PutJobManagement_Test {
         }
     }
 
-    private static final String SOURCE_DIRECTORY = "little_files/";
-    private static final String SOURCE_FILE_BASE_NAME = "tape";
-    private static final String SOURCE_FILE_EXTENSION = "png";
-    private static final String SOURCE_FILE_NAME = SOURCE_FILE_BASE_NAME + "." + SOURCE_FILE_EXTENSION;
-
     @Test
     public void testPutting15000Files() throws IOException, URISyntaxException {
         final String tempPathPrefix = null;
@@ -2032,10 +2032,10 @@ public class PutJobManagement_Test {
             writeJob.attachObjectCompletedListener(name -> {
                 try {
                     writeJob.cancel();
+                } catch (final FailedRequestException failedRequestException) {
+                    caughtExceptionWhileCanceling.set(false);
                 } catch (final Throwable t) {
-                    if ( ! (t instanceof FailedRequestException)) {
-                        caughtExceptionWhileCanceling.set(true);
-                    }
+                    caughtExceptionWhileCanceling.set(true);
                 } finally {
                     countDownLatch.countDown();
                 }

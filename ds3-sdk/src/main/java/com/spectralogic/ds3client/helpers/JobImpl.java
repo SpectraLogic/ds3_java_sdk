@@ -149,7 +149,7 @@ abstract class JobImpl implements Job {
         transferStrategyBuilder.withChannelBuilder(channelBuilder);
     }
 
-    TransferStrategyBuilder transferStrategyBuilder() {
+    protected TransferStrategyBuilder transferStrategyBuilder() {
         return transferStrategyBuilder;
     }
 
@@ -157,7 +157,7 @@ abstract class JobImpl implements Job {
         return transferStrategyBuilder.eventDispatcher();
     }
 
-    void cancel(final TransferStrategy transferStrategy) throws IOException {
+    protected void cancel(final TransferStrategy transferStrategy) throws IOException {
         if (transferStrategy != null) {
             transferStrategy.cancel();
         }
