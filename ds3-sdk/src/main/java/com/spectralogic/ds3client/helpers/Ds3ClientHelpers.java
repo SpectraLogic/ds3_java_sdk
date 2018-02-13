@@ -21,6 +21,7 @@ import com.spectralogic.ds3client.Ds3Client;
 import com.spectralogic.ds3client.helpers.options.ReadJobOptions;
 import com.spectralogic.ds3client.helpers.options.WriteJobOptions;
 import com.spectralogic.ds3client.helpers.pagination.FileSystemKey;
+import com.spectralogic.ds3client.helpers.strategy.transferstrategy.CanceledEventObserver;
 import com.spectralogic.ds3client.helpers.strategy.transferstrategy.TransferStrategy;
 import com.spectralogic.ds3client.models.Contents;
 import com.spectralogic.ds3client.models.bulk.Ds3Object;
@@ -127,6 +128,25 @@ public abstract class Ds3ClientHelpers {
          * @throws IOException
          */
         void transfer() throws IOException;
+
+        /**
+         * Cancels a transfer in progress in the current job.
+         * @throws IOException
+         */
+        void cancel() throws IOException;
+
+        /**
+         * Attaches a handler that fires when a job transfer in progress is canceled.
+         * @param canceledEventObserver An event notification object that carries the job UUID.
+         * @return An observer instance that can be later used for de-registration.
+         */
+        CanceledEventObserver attachCanceledEventObserver(final CanceledEventObserver canceledEventObserver);
+
+        /**
+         * Remove an event handler previously registered with a call to {@link #attachCanceledEventObserver(CanceledEventObserver)}
+         * @param canceledEventObserver An instance of {@link CanceledEventObserver} returned from a call to {@link #attachCanceledEventObserver(CanceledEventObserver)}
+         */
+        void removeCanceledEventObserver(final CanceledEventObserver canceledEventObserver);
     }
 
     /**

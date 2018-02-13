@@ -558,6 +558,7 @@ public final class TransferStrategyBuilder {
                         jobState,
                         eventDispatcher,
                         masterObjectList,
+                        ds3Client,
                         failureActivity)
                         .withTransferMethod(transferMethod);
 
@@ -567,6 +568,7 @@ public final class TransferStrategyBuilder {
                         numConcurrentTransferThreads,
                         eventDispatcher,
                         masterObjectList,
+                        ds3Client,
                         failureActivity)
                         .withTransferMethod(transferMethod);
 
@@ -694,6 +696,7 @@ public final class TransferStrategyBuilder {
                     numConcurrentTransferThreads,
                     eventDispatcher,
                     masterObjectList,
+                    ds3Client,
                     failureActivity)
                     .withTransferMethod(transferMethod);
         } else {
@@ -701,6 +704,7 @@ public final class TransferStrategyBuilder {
                     jobState,
                     eventDispatcher,
                     masterObjectList,
+                    ds3Client,
                     failureActivity)
                     .withTransferMethod(transferMethod);
         }

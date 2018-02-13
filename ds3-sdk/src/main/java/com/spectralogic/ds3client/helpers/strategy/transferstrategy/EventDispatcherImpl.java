@@ -33,6 +33,7 @@ import com.spectralogic.ds3client.networking.Metadata;
 
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 
 public class EventDispatcherImpl implements EventDispatcher {
     private final EventRunner eventRunner;
@@ -44,6 +45,7 @@ public class EventDispatcherImpl implements EventDispatcher {
     private final Set<FailureEventObserver> failureEventObservers = Sets.newIdentityHashSet();
     private final Set<MetaDataReceivedObserver> metaDataReceivedObservers = Sets.newConcurrentHashSet();
     private final Set<BlobTransferredEventObserver> blobTransferredEventObservers = Sets.newIdentityHashSet();
+    private final Set<CanceledEventObserver> canceledEventObservers = Sets.newIdentityHashSet();
 
     private final Map<DataTransferredListener, DataTransferredObserver> dataTransferredListeners = Maps.newConcurrentMap();
     private final Map<ObjectCompletedListener, ObjectCompletedObserver> objectCompletedListeners = Maps.newIdentityHashMap();
@@ -256,18 +258,25 @@ public class EventDispatcherImpl implements EventDispatcher {
     }
 
     @Override
+    public CanceledEventObserver attachCanceledEventObserver(final CanceledEventObserver canceledEventObserver) {
+        canceledEventObservers.add(canceledEventObserver);
+        return canceledEventObserver;
+    }
+
+    @Override
+    public void removeCanceledEventObserver(final CanceledEventObserver canceledEventObserver) {
+        canceledEventObservers.remove(canceledEventObserver);
+    }
+
+    @Override
     public void emitFailureEvent(final FailureEvent failureEvent) {
         emitEvents(failureEventObservers, failureEvent);
     }
 
+    @SuppressWarnings("unchecked")
     private <T> void emitEvents(final Set eventObservers, final T eventData) {
         for (final Object eventObserver : eventObservers) {
-            eventRunner.emitEvent(new Runnable() {
-                @Override
-                public void run() {
-                    ((Observer<T>)eventObserver).update(eventData);
-                }
-            });
+            eventRunner.emitEvent(() -> ((Observer<T>)eventObserver).update(eventData));
         }
     }
 
@@ -304,6 +313,11 @@ public class EventDispatcherImpl implements EventDispatcher {
     @Override
     public void emitBlobTransferredEvent(final BulkObject blob) {
         emitEvents(blobTransferredEventObservers, blob);
+    }
+
+    @Override
+    public void emitCanceledEvent(final UUID jobId) {
+        emitEvents(canceledEventObservers, jobId);
     }
 
     @Override
