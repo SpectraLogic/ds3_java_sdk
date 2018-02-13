@@ -16,7 +16,9 @@
 package com.spectralogic.ds3client.helpers;
 
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.Job;
+import com.spectralogic.ds3client.helpers.strategy.transferstrategy.CanceledEventObserver;
 import com.spectralogic.ds3client.helpers.strategy.transferstrategy.EventDispatcher;
+import com.spectralogic.ds3client.helpers.strategy.transferstrategy.TransferStrategy;
 import com.spectralogic.ds3client.helpers.strategy.transferstrategy.TransferStrategyBuilder;
 
 import org.slf4j.Logger;
@@ -131,15 +133,33 @@ abstract class JobImpl implements Job {
     }
 
     @Override
+    public CanceledEventObserver attachCanceledEventObserver(final CanceledEventObserver canceledEventObserver) {
+        checkRunning();
+        return eventDispatcher().attachCanceledEventObserver(canceledEventObserver);
+    }
+
+    @Override
+    public void removeCanceledEventObserver(final CanceledEventObserver canceledEventObserver) {
+        checkRunning();
+        eventDispatcher().removeCanceledEventObserver(canceledEventObserver);
+    }
+
+    @Override
     public void transfer(final Ds3ClientHelpers.ObjectChannelBuilder channelBuilder) throws IOException {
         transferStrategyBuilder.withChannelBuilder(channelBuilder);
     }
 
-    protected TransferStrategyBuilder transferStrategyBuilder() {
+    TransferStrategyBuilder transferStrategyBuilder() {
         return transferStrategyBuilder;
     }
 
     protected EventDispatcher eventDispatcher() {
         return transferStrategyBuilder.eventDispatcher();
+    }
+
+    void cancel(final TransferStrategy transferStrategy) throws IOException {
+        if (transferStrategy != null) {
+            transferStrategy.cancel();
+        }
     }
 }
