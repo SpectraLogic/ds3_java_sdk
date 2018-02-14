@@ -37,13 +37,13 @@ import static org.junit.Assert.assertTrue;
 
 public class Resources_Test {
     private static final String BASE_BUCKET_NAME = "putLotsaBuckets";
-    private static final int NUM_BUCKETS = 10;
+    private static final int NUM_BUCKETS = 100;
     private static final int NUM_OBJECTS = 1024;
     private static final int OBJECT_SIZE = 1024 * 10;
     private static final String BASE_FILE_NAME = "file_";
     private static final String DATA = "Gracie";
     private static final int DATA_BUFFER_SIZE = 1024;
-    private static final int NUM_THREADS = 1024;
+    private static final int NUM_THREADS = NUM_OBJECTS;
     private static final Ds3Client ds3Client = Util.fromEnv();
     private static TempStorageIds envStorageIds;
     private static final String POLICY_PREFIX = Resources_Test.class.getSimpleName();
