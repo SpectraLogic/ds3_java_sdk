@@ -35,7 +35,6 @@ import java.util.UUID;
 
 public class Resources_Test {
     private static final String BASE_BUCKET_NAME = "putLotsaBuckets";
-    private static final String BUCKET_DATA_POLICY_NAME = "Memory Test";
     private static final int NUM_BUCKETS = 10;
     private static final int NUM_OBJECTS = 1024;
     private static final int OBJECT_SIZE = 1024 * 10;
