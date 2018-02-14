@@ -62,7 +62,7 @@ public class Resources_Test {
 
     @Test
     public void putLotsaBuckets() throws IOException {
-        final ImmutableList<String> bucketNames = generateBucketNames(NUM_BUCKETS);
+        final ImmutableList<String> bucketNames = generateBucketNames();
 
         try {
             createBuckets(bucketNames);
@@ -73,10 +73,10 @@ public class Resources_Test {
         }
     }
 
-    private ImmutableList<String> generateBucketNames(final int numBucketNames) {
+    private ImmutableList<String> generateBucketNames() {
         final ImmutableList.Builder<String> bucketNameBuilder = new ImmutableList.Builder<>();
 
-        for (int i = 0; i < numBucketNames; ++i) {
+        for (int i = 0; i < NUM_BUCKETS; ++i) {
             bucketNameBuilder.add(BASE_BUCKET_NAME + "_" + i);
         }
 
