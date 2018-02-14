@@ -27,6 +27,8 @@ import org.junit.AfterClass
 import org.junit.BeforeClass
 import org.junit.Test
 import java.io.IOException
+import org.hamcrest.MatcherAssert.assertThat
+import org.hamcrest.Matchers.lessThan
 
 class ResourceTest {
     private companion object {
@@ -66,6 +68,7 @@ class ResourceTest {
         try {
             createBuckets(bucketNames)
             populateBuckets(bucketNames)
+            assertThat(Thread.activeCount(), lessThan(numThreads * 2))
         } finally {
             deleteBuckets(bucketNames)
         }
