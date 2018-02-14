@@ -27,6 +27,8 @@ import org.junit.AfterClass
 import org.junit.BeforeClass
 import org.junit.Test
 import java.io.IOException
+import org.hamcrest.MatcherAssert.assertThat
+import org.hamcrest.Matchers.lessThan
 
 class ResourceTest {
     private companion object {
@@ -66,6 +68,7 @@ class ResourceTest {
         try {
             createBuckets(bucketNames)
             populateBuckets(bucketNames)
+            assertThat(Thread.activeCount(), lessThan(numThreads * 2))
         } finally {
             deleteBuckets(bucketNames)
         }
@@ -90,7 +93,6 @@ class ResourceTest {
                             .startWriteJob(bucketName, generateDs3Objects())
                             .withMaxParallelRequests(numThreads)
                             .transfer(RepeatStringObjectChannelBuilder(objectData, objectData.length * 512, dataBufferSize.toLong()))
-
                 })
 
     }
