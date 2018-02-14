@@ -46,12 +46,11 @@ public class Resources_Test {
     private static final int NUM_THREADS = 1024;
     private static final Ds3Client ds3Client = Util.fromEnv();
     private static TempStorageIds envStorageIds;
-    private static UUID envDataPolicyId;
     private static final String POLICY_PREFIX = Resources_Test.class.getSimpleName();
 
     @BeforeClass
     public static void startup() throws IOException {
-        envDataPolicyId = TempStorageUtil.setupDataPolicy(POLICY_PREFIX, false, ChecksumType.Type.MD5, ds3Client);
+        final UUID envDataPolicyId = TempStorageUtil.setupDataPolicy(POLICY_PREFIX, false, ChecksumType.Type.MD5, ds3Client);
         envStorageIds = TempStorageUtil.setup(POLICY_PREFIX, envDataPolicyId, ds3Client);
     }
 
