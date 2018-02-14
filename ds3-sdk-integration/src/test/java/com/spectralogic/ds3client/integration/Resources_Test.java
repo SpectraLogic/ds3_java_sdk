@@ -33,6 +33,8 @@ import java.nio.ByteBuffer;
 import java.nio.channels.SeekableByteChannel;
 import java.util.UUID;
 
+import static org.junit.Assert.assertTrue;
+
 public class Resources_Test {
     private static final String BASE_BUCKET_NAME = "putLotsaBuckets";
     private static final int NUM_BUCKETS = 10;
@@ -66,6 +68,7 @@ public class Resources_Test {
         try {
             createBuckets(ds3Client, bucketNames);
             populateBuckets(Ds3ClientHelpers.wrap(ds3Client), bucketNames);
+            assertTrue(Thread.activeCount() < 2 * NUM_THREADS);
         } finally {
             deleteBuckets(Ds3ClientHelpers.wrap(ds3Client), bucketNames);
         }
