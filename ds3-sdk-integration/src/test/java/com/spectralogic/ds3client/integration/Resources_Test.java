@@ -65,11 +65,11 @@ public class Resources_Test {
         final ImmutableList<String> bucketNames = generateBucketNames(NUM_BUCKETS);
 
         try {
-            createBuckets(ds3Client, bucketNames);
-            populateBuckets(Ds3ClientHelpers.wrap(ds3Client), bucketNames);
+            createBuckets(bucketNames);
+            populateBuckets(bucketNames);
             assertTrue(Thread.activeCount() < 2 * NUM_THREADS);
         } finally {
-            deleteBuckets(Ds3ClientHelpers.wrap(ds3Client), bucketNames);
+            deleteBuckets(bucketNames);
         }
     }
 
@@ -83,17 +83,19 @@ public class Resources_Test {
         return bucketNameBuilder.build();
     }
 
-    private void createBuckets(final Ds3Client ds3Client, ImmutableList<String> bucketNames) throws IOException {
+    private void createBuckets(ImmutableList<String> bucketNames) throws IOException {
         for (final String bucketName : bucketNames) {
             ds3Client.putBucketSpectraS3(new PutBucketSpectraS3Request(bucketName));
         }
     }
 
-    private void populateBuckets(final Ds3ClientHelpers ds3ClientHelpers, final ImmutableList<String> bucketNames) throws IOException {
+    private void populateBuckets(final ImmutableList<String> bucketNames) throws IOException {
         final ImmutableList<Ds3Object> ds3Objects = generateDs3Objects();
 
         for (final String bucketName : bucketNames) {
-            final Ds3ClientHelpers.Job writeJob = ds3ClientHelpers.startWriteJob(bucketName, ds3Objects)
+            final Ds3ClientHelpers.Job writeJob = Ds3ClientHelpers
+                    .wrap(ds3Client)
+                    .startWriteJob(bucketName, ds3Objects)
                     .withMaxParallelRequests(NUM_THREADS);
             writeJob.transfer(new RepeatStringObjectChannelBuilder(DATA, DATA.length() * 512, DATA_BUFFER_SIZE));
         }
@@ -112,9 +114,9 @@ public class Resources_Test {
         return ds3ObjectBuilder.build();
     }
 
-    private void deleteBuckets(final Ds3ClientHelpers ds3ClientHelpers, final ImmutableList<String> bucketNames) {
+    private void deleteBuckets(final ImmutableList<String> bucketNames) {
         for (final String bucketName : bucketNames) {
-            DeleteBucket.INSTANCE.deleteBucket(ds3ClientHelpers, bucketName);
+            DeleteBucket.INSTANCE.deleteBucket(Ds3ClientHelpers.wrap(ds3Client), bucketName);
         }
     }
 
