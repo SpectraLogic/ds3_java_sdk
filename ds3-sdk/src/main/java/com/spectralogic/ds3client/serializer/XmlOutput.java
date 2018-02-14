@@ -17,20 +17,17 @@ package com.spectralogic.ds3client.serializer;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ser.FilterProvider;
-import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
 import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import com.fasterxml.jackson.dataformat.xml.JacksonXmlModule;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.spectralogic.ds3client.models.bulk.Ds3ObjectList;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 public final class XmlOutput {
@@ -88,13 +85,13 @@ public final class XmlOutput {
         return toXml(object, null);
     }
 
-    private static String toXml(final Object object, final FilterProvider filterProvider) {
+    private static String toXml(final Object object, final Class view) {
         try {
-            if (filterProvider == null) {
+            if (view == null) {
                 return mapper.writeValueAsString(object);
             }
             else {
-                return mapper.writer(filterProvider).writeValueAsString(object);
+                return mapper.writerWithView(view).writeValueAsString(object);
             }
         }
         catch(final JsonProcessingException e) {
@@ -104,11 +101,9 @@ public final class XmlOutput {
 
     public static String toXml(final Ds3ObjectList objects, final boolean isBulkPut) {
         if (isBulkPut) {
-            return XmlOutput.toXml(objects);
+            return XmlOutput.toXml(objects, Views.PutObject.class);
         }
-        final FilterProvider filters = new SimpleFilterProvider().addFilter("sizeFilter",
-                SimpleBeanPropertyFilter.serializeAllExcept("Size"));
-        return XmlOutput.toXml(objects, filters);
+        return XmlOutput.toXml(objects, Views.GetObject.class);
     }
 
     public static<T> T fromXml(final String xmlString, final Class<T> type) throws IOException {

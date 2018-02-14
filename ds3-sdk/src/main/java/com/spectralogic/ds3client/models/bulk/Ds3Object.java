@@ -15,15 +15,23 @@
 
 package com.spectralogic.ds3client.models.bulk;
 
-import com.fasterxml.jackson.annotation.JsonFilter;
+import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import com.spectralogic.ds3client.serializer.Views;
 
-@JsonFilter("sizeFilter")
+import java.util.UUID;
+
 public class Ds3Object  {
     @JacksonXmlProperty(isAttribute = true, localName = "Name")
     private String name;
+
+    @JsonView(Views.PutObject.class)
     @JacksonXmlProperty(isAttribute = true, localName = "Size")
     private long size;
+
+    @JsonView(Views.GetObject.class)
+    @JacksonXmlProperty(isAttribute = true, localName = "VersionId")
+    private String versionId;
 
     /**
      * This constructor is used for XML Serialization.
@@ -34,6 +42,30 @@ public class Ds3Object  {
     }
 
     /**
+     * Use this constructor when getting a version of a file from DS3.
+     * @param name The name of the object to get from DS3
+     * @param size The size of the object to get from DS3
+     * @param versionId The version ID of the object to get from DS3
+     */
+    public Ds3Object(final String name, final long size, final UUID versionId) {
+        this.name = name;
+        this.size = size;
+        this.versionId = versionId.toString();
+    }
+
+    /**
+     * Use this constructor when getting a version of a file from DS3.
+     * @param name The name of the object to get from DS3
+     * @param size The size of the object to get from DS3
+     * @param versionId The version ID of the object to get from DS3
+     */
+    public Ds3Object(final String name, final long size, final String versionId) {
+        this.name = name;
+        this.size = size;
+        this.versionId = versionId;
+    }
+
+    /**
      * Use this constructor when putting files to DS3.
      * @param name The name of the object that will be put to DS3
      * @param size The size of the object that will be put to DS3
@@ -41,6 +73,29 @@ public class Ds3Object  {
     public Ds3Object(final String name, final long size) {
         this.name = name;
         this.size = size;
+        this.versionId = null;
+    }
+
+    /**
+     * Use this constructor when getting files from DS3.
+     * @param name the name of the object to get from DS3
+     * @param versionId The version ID of the object to get from DS3
+     */
+    public Ds3Object(final String name, final UUID versionId) {
+        this.name = name;
+        this.size = 0;
+        this.versionId = versionId.toString();
+    }
+
+    /**
+     * Use this constructor when getting files from DS3.
+     * @param name the name of the object to get from DS3
+     * @param versionId The version ID of the object to get from DS3
+     */
+    public Ds3Object(final String name, final String versionId) {
+        this.name = name;
+        this.size = 0;
+        this.versionId = versionId;
     }
 
     /**
@@ -50,6 +105,7 @@ public class Ds3Object  {
     public Ds3Object(final String name) {
         this.name = name;
         this.size = 0;
+        this.versionId = null;
     }
 
     public String getName() {
@@ -80,13 +136,20 @@ public class Ds3Object  {
 
     @Override
     public boolean equals(final Object obj) {
-        if (obj instanceof Ds3Object) {
-            final Ds3Object ds3Obj = (Ds3Object) obj;
-            if (ds3Obj.getName().equals(this.getName()) &&
-                    ds3Obj.getSize() == this.getSize()) {
-                return true;
-            }
+        if (!(obj instanceof Ds3Object)) {
+            return false;
         }
-        return false;
+        final Ds3Object ds3Obj = (Ds3Object) obj;
+        return ds3Obj.getName().equals(this.getName()) &&
+                ds3Obj.getSize() == this.getSize() &&
+                ds3Obj.getVersionId().equals(this.getVersionId());
+    }
+
+    public String getVersionId() {
+        return versionId;
+    }
+
+    public void setVersionId(String versionId) {
+        this.versionId = versionId;
     }
 }

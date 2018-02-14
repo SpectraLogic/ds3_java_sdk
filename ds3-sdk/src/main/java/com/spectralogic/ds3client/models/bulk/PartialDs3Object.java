@@ -18,6 +18,8 @@ package com.spectralogic.ds3client.models.bulk;
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import com.spectralogic.ds3client.models.common.Range;
 
+import java.util.UUID;
+
 public class PartialDs3Object extends Ds3Object {
 
     @JsonUnwrapped
@@ -25,6 +27,16 @@ public class PartialDs3Object extends Ds3Object {
 
     public PartialDs3Object(final String name, final Range range) {
         super(name);
+        this.range = range;
+    }
+
+    public PartialDs3Object(final String name, final Range range, final UUID versionId) {
+        super(name, versionId);
+        this.range = range;
+    }
+
+    public PartialDs3Object(final String name, final Range range, final String versionId) {
+        super(name, versionId);
         this.range = range;
     }
 
