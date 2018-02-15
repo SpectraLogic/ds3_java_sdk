@@ -15,7 +15,6 @@
 
 package com.spectralogic.ds3client.helpers.strategy.transferstrategy;
 
-import com.google.common.util.concurrent.MoreExecutors;
 import com.spectralogic.ds3client.helpers.JobState;
 import com.spectralogic.ds3client.helpers.events.FailureEvent;
 import com.spectralogic.ds3client.helpers.strategy.blobstrategy.BlobStrategy;
@@ -35,7 +34,7 @@ public class SingleThreadedTransferStrategy extends AbstractTransferStrategy {
     {
         super(blobStrategy,
               jobState,
-              MoreExecutors.listeningDecorator(Executors.newSingleThreadExecutor()),
+              Executors.newSingleThreadExecutor(),
               eventDispatcher,
               masterObjectList,
               failureActivity);
