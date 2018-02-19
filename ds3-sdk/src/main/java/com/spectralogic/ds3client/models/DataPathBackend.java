@@ -28,11 +28,17 @@ public class DataPathBackend {
     @JsonProperty("Activated")
     private boolean activated;
 
+    @JsonProperty("AllowNewJobRequests")
+    private boolean allowNewJobRequests;
+
     @JsonProperty("AutoActivateTimeoutInMins")
     private Integer autoActivateTimeoutInMins;
 
     @JsonProperty("AutoInspect")
     private AutoInspectMode autoInspect;
+
+    @JsonProperty("CacheAvailableRetryAfterInSeconds")
+    private int cacheAvailableRetryAfterInSeconds;
 
     @JsonProperty("DefaultImportConflictResolutionMode")
     private ImportConflictResolutionMode defaultImportConflictResolutionMode;
@@ -80,6 +86,15 @@ public class DataPathBackend {
     }
 
 
+    public boolean getAllowNewJobRequests() {
+        return this.allowNewJobRequests;
+    }
+
+    public void setAllowNewJobRequests(final boolean allowNewJobRequests) {
+        this.allowNewJobRequests = allowNewJobRequests;
+    }
+
+
     public Integer getAutoActivateTimeoutInMins() {
         return this.autoActivateTimeoutInMins;
     }
@@ -95,6 +110,15 @@ public class DataPathBackend {
 
     public void setAutoInspect(final AutoInspectMode autoInspect) {
         this.autoInspect = autoInspect;
+    }
+
+
+    public int getCacheAvailableRetryAfterInSeconds() {
+        return this.cacheAvailableRetryAfterInSeconds;
+    }
+
+    public void setCacheAvailableRetryAfterInSeconds(final int cacheAvailableRetryAfterInSeconds) {
+        this.cacheAvailableRetryAfterInSeconds = cacheAvailableRetryAfterInSeconds;
     }
 
 
