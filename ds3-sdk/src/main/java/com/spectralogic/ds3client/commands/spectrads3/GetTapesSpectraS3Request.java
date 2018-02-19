@@ -65,7 +65,7 @@ public class GetTapesSpectraS3Request extends AbstractPaginationRequest {
 
     private TapeState state;
 
-    private String storageDomainId;
+    private String storageDomainMemberId;
 
     private String type;
 
@@ -224,16 +224,16 @@ public class GetTapesSpectraS3Request extends AbstractPaginationRequest {
     }
 
 
-    public GetTapesSpectraS3Request withStorageDomainId(final UUID storageDomainId) {
-        this.storageDomainId = storageDomainId.toString();
-        this.updateQueryParam("storage_domain_id", storageDomainId);
+    public GetTapesSpectraS3Request withStorageDomainMemberId(final UUID storageDomainMemberId) {
+        this.storageDomainMemberId = storageDomainMemberId.toString();
+        this.updateQueryParam("storage_domain_member_id", storageDomainMemberId);
         return this;
     }
 
 
-    public GetTapesSpectraS3Request withStorageDomainId(final String storageDomainId) {
-        this.storageDomainId = storageDomainId;
-        this.updateQueryParam("storage_domain_id", storageDomainId);
+    public GetTapesSpectraS3Request withStorageDomainMemberId(final String storageDomainMemberId) {
+        this.storageDomainMemberId = storageDomainMemberId;
+        this.updateQueryParam("storage_domain_member_id", storageDomainMemberId);
         return this;
     }
 
@@ -360,8 +360,8 @@ public class GetTapesSpectraS3Request extends AbstractPaginationRequest {
     }
 
 
-    public String getStorageDomainId() {
-        return this.storageDomainId;
+    public String getStorageDomainMemberId() {
+        return this.storageDomainMemberId;
     }
 
 

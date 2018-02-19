@@ -14,10 +14,15 @@
  */
 
 // This code is auto-generated, do not modify
-package com.spectralogic.ds3client.models;
+package com.spectralogic.ds3client.commands.spectrads3;
 
-public enum ImportConflictResolutionMode {
-    CANCEL,
-    ACCEPT_MOST_RECENT,
-    ACCEPT_EXISTING
+import com.spectralogic.ds3client.models.ChecksumType;
+import com.spectralogic.ds3client.commands.interfaces.AbstractResponse;
+
+public class StageObjectsJobSpectraS3Response extends AbstractResponse {
+    
+    public StageObjectsJobSpectraS3Response(final String checksum, final ChecksumType.Type checksumType) {
+        super(checksum, checksumType);
+    }
+
 }

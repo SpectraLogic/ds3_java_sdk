@@ -17,15 +17,23 @@
 package com.spectralogic.ds3client.commands.spectrads3;
 
 import com.spectralogic.ds3client.networking.HttpVerb;
-import com.spectralogic.ds3client.commands.interfaces.AbstractRequest;
+import com.spectralogic.ds3client.commands.interfaces.AbstractPaginationRequest;
 import java.util.UUID;
 import com.google.common.net.UrlEscapers;
 
-public class GetBlobsOnTapeSpectraS3Request extends AbstractRequest {
+public class GetBlobsOnTapeSpectraS3Request extends AbstractPaginationRequest {
 
     // Variables
     
     private final String tapeId;
+
+    private boolean lastPage;
+
+    private int pageLength;
+
+    private int pageOffset;
+
+    private String pageStartMarker;
 
     // Constructor
     
@@ -45,6 +53,45 @@ public class GetBlobsOnTapeSpectraS3Request extends AbstractRequest {
 
     }
 
+    public GetBlobsOnTapeSpectraS3Request withLastPage(final boolean lastPage) {
+        this.lastPage = lastPage;
+        if (this.lastPage) {
+            this.getQueryParams().put("last_page", null);
+        } else {
+            this.getQueryParams().remove("last_page");
+        }
+        return this;
+    }
+
+
+    public GetBlobsOnTapeSpectraS3Request withPageLength(final int pageLength) {
+        this.pageLength = pageLength;
+        this.updateQueryParam("page_length", pageLength);
+        return this;
+    }
+
+
+    public GetBlobsOnTapeSpectraS3Request withPageOffset(final int pageOffset) {
+        this.pageOffset = pageOffset;
+        this.updateQueryParam("page_offset", pageOffset);
+        return this;
+    }
+
+
+    public GetBlobsOnTapeSpectraS3Request withPageStartMarker(final UUID pageStartMarker) {
+        this.pageStartMarker = pageStartMarker.toString();
+        this.updateQueryParam("page_start_marker", pageStartMarker);
+        return this;
+    }
+
+
+    public GetBlobsOnTapeSpectraS3Request withPageStartMarker(final String pageStartMarker) {
+        this.pageStartMarker = pageStartMarker;
+        this.updateQueryParam("page_start_marker", pageStartMarker);
+        return this;
+    }
+
+
 
     @Override
     public HttpVerb getVerb() {
@@ -58,6 +105,26 @@ public class GetBlobsOnTapeSpectraS3Request extends AbstractRequest {
     
     public String getTapeId() {
         return this.tapeId;
+    }
+
+
+    public boolean getLastPage() {
+        return this.lastPage;
+    }
+
+
+    public int getPageLength() {
+        return this.pageLength;
+    }
+
+
+    public int getPageOffset() {
+        return this.pageOffset;
+    }
+
+
+    public String getPageStartMarker() {
+        return this.pageStartMarker;
     }
 
 }

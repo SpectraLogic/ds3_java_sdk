@@ -20,6 +20,7 @@ import com.spectralogic.ds3client.networking.HttpVerb;
 import com.spectralogic.ds3client.commands.interfaces.AbstractRequest;
 import java.util.UUID;
 import com.google.common.net.UrlEscapers;
+import java.lang.Integer;
 import com.spectralogic.ds3client.models.WritePreferenceLevel;
 
 public class PutTapeStorageDomainMemberSpectraS3Request extends AbstractRequest {
@@ -31,6 +32,8 @@ public class PutTapeStorageDomainMemberSpectraS3Request extends AbstractRequest 
     private final String tapePartitionId;
 
     private final String tapeType;
+
+    private Integer autoCompactionThreshold;
 
     private WritePreferenceLevel writePreference;
 
@@ -64,6 +67,13 @@ public class PutTapeStorageDomainMemberSpectraS3Request extends AbstractRequest 
 
     }
 
+    public PutTapeStorageDomainMemberSpectraS3Request withAutoCompactionThreshold(final Integer autoCompactionThreshold) {
+        this.autoCompactionThreshold = autoCompactionThreshold;
+        this.updateQueryParam("auto_compaction_threshold", autoCompactionThreshold);
+        return this;
+    }
+
+
     public PutTapeStorageDomainMemberSpectraS3Request withWritePreference(final WritePreferenceLevel writePreference) {
         this.writePreference = writePreference;
         this.updateQueryParam("write_preference", writePreference);
@@ -94,6 +104,11 @@ public class PutTapeStorageDomainMemberSpectraS3Request extends AbstractRequest 
 
     public String getTapeType() {
         return this.tapeType;
+    }
+
+
+    public Integer getAutoCompactionThreshold() {
+        return this.autoCompactionThreshold;
     }
 
 

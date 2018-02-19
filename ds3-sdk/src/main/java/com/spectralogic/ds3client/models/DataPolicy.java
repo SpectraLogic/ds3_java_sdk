@@ -67,6 +67,9 @@ public class DataPolicy {
     @JsonProperty("LtfsObjectNamingAllowed")
     private boolean ltfsObjectNamingAllowed;
 
+    @JsonProperty("MaxVersionsToKeep")
+    private int maxVersionsToKeep;
+
     @JsonProperty("Name")
     private String name;
 
@@ -206,6 +209,15 @@ public class DataPolicy {
 
     public void setLtfsObjectNamingAllowed(final boolean ltfsObjectNamingAllowed) {
         this.ltfsObjectNamingAllowed = ltfsObjectNamingAllowed;
+    }
+
+
+    public int getMaxVersionsToKeep() {
+        return this.maxVersionsToKeep;
+    }
+
+    public void setMaxVersionsToKeep(final int maxVersionsToKeep) {
+        this.maxVersionsToKeep = maxVersionsToKeep;
     }
 
 

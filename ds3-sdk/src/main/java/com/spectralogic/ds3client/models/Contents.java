@@ -18,7 +18,9 @@ package com.spectralogic.ds3client.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+import java.lang.Boolean;
 import java.util.Date;
+import java.util.UUID;
 
 @JacksonXmlRootElement(namespace = "Data")
 public class Contents {
@@ -26,6 +28,9 @@ public class Contents {
     // Variables
     @JsonProperty("ETag")
     private String eTag;
+
+    @JsonProperty("IsLatest")
+    private Boolean isLatest;
 
     @JsonProperty("Key")
     private String key;
@@ -42,6 +47,9 @@ public class Contents {
     @JsonProperty("StorageClass")
     private String storageClass;
 
+    @JsonProperty("VersionId")
+    private UUID versionId;
+
     // Constructor
     public Contents() {
         //pass
@@ -55,6 +63,15 @@ public class Contents {
 
     public void setETag(final String eTag) {
         this.eTag = eTag;
+    }
+
+
+    public Boolean getIsLatest() {
+        return this.isLatest;
+    }
+
+    public void setIsLatest(final Boolean isLatest) {
+        this.isLatest = isLatest;
     }
 
 
@@ -100,6 +117,15 @@ public class Contents {
 
     public void setStorageClass(final String storageClass) {
         this.storageClass = storageClass;
+    }
+
+
+    public UUID getVersionId() {
+        return this.versionId;
+    }
+
+    public void setVersionId(final UUID versionId) {
+        this.versionId = versionId;
     }
 
 }

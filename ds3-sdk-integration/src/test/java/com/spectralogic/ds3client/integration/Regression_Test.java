@@ -89,6 +89,7 @@ public class Regression_Test {
                     new Ds3Object("obj4 also has spaces.txt", 1024));
 
             final Ds3ClientHelpers.Job putJob = HELPERS.startWriteJob(bucketName, objects);
+            putJob.transfer(new RandomDataChannelBuilder(objects));
 
             final Iterable<Contents> objs = HELPERS.listObjects(bucketName, null, "obj3 has spaces.txt");
             boolean foundObj4 = false;
@@ -97,7 +98,7 @@ public class Regression_Test {
                 if (obj.getKey().equals("obj4 also has spaces.txt")) foundObj4 = true;
                 LOG.info("marker with spaces size: " + obj.getSize());
             }
-            assertTrue(Iterables.size(objs) == 1);
+            assertThat(Iterables.size(objs), is(1));
             assertTrue(foundObj4);
 
             final CancelJobSpectraS3Response cancelJobResponse = client
@@ -122,6 +123,7 @@ public class Regression_Test {
                     new Ds3Object("has spaces obj4.txt", 1024));
 
             final Ds3ClientHelpers.Job putJob = HELPERS.startWriteJob(bucketName, objects);
+            putJob.transfer(new RandomDataChannelBuilder(objects));
 
             final Iterable<Contents> objs = HELPERS.listObjects(bucketName, "has spaces");
             boolean foundObj2 = false;
@@ -132,7 +134,7 @@ public class Regression_Test {
                 if (obj.getKey().equals("has spaces obj2.txt")) foundObj2 = true;
                 if (obj.getKey().equals("has spaces obj4.txt")) foundObj4 = true;
             }
-            assertTrue(Iterables.size(objs) == 2);
+            assertThat(Iterables.size(objs), is(2));
             assertTrue(foundObj2);
             assertTrue(foundObj4);
 
@@ -158,6 +160,7 @@ public class Regression_Test {
                     new Ds3Object("dir 2/has spaces obj4.txt", 1024));
 
             final Ds3ClientHelpers.Job putJob = HELPERS.startWriteJob(bucketName, objects);
+            putJob.transfer(new RandomDataChannelBuilder(objects));
 
             final Iterable<Contents> dir1Objs = HELPERS.listObjects(bucketName, "dir1/");
             boolean foundObj1 = false;
@@ -168,7 +171,7 @@ public class Regression_Test {
                 if (obj.getKey().equals("dir1/obj1_no_spaces.txt")) foundObj1 = true;
                 if (obj.getKey().equals("dir1/has spaces obj2.txt")) foundObj2 = true;
             }
-            assertTrue(Iterables.size(dir1Objs) == 2);
+            assertThat(Iterables.size(dir1Objs), is(2));
             assertTrue(foundObj1);
             assertTrue(foundObj2);
 
@@ -181,7 +184,7 @@ public class Regression_Test {
                 if (obj.getKey().equals("dir 2/obj3_no_spaces.txt")) foundObj3 = true;
                 if (obj.getKey().equals("dir 2/has spaces obj4.txt")) foundObj4 = true;
             }
-            assertTrue(Iterables.size(objsDir2) == 2);
+            assertThat(Iterables.size(objsDir2), is(2));
             assertTrue(foundObj3);
             assertTrue(foundObj4);
 
@@ -206,6 +209,7 @@ public class Regression_Test {
                     new Ds3Object("dir1/dir 2/has spaces obj4.txt", 1024));
 
             final Ds3ClientHelpers.Job putJob = HELPERS.startWriteJob(bucketName, objects);
+            putJob.transfer(new RandomDataChannelBuilder(objects));
 
             final Iterable<Contents> dir1Objs = HELPERS.listObjects(bucketName, "dir1/");
             boolean foundObj1 = false;
@@ -216,7 +220,7 @@ public class Regression_Test {
                 if (obj.getKey().equals("dir1/obj1_no_spaces.txt")) foundObj1 = true;
                 if (obj.getKey().equals("dir1/has spaces obj2.txt")) foundObj2 = true;
             }
-            assertTrue(Iterables.size(dir1Objs) == 4);
+            assertThat(Iterables.size(dir1Objs), is(4));
             assertTrue(foundObj1);
             assertTrue(foundObj2);
 
@@ -229,7 +233,7 @@ public class Regression_Test {
                 if (obj.getKey().equals("dir1/dir 2/obj3_no_spaces.txt")) foundObj3 = true;
                 if (obj.getKey().equals("dir1/dir 2/has spaces obj4.txt")) foundObj4 = true;
             }
-            assertTrue(Iterables.size(objsDir2) == 2);
+            assertThat(Iterables.size(objsDir2), is(2));
             assertTrue(foundObj3);
             assertTrue(foundObj4);
 

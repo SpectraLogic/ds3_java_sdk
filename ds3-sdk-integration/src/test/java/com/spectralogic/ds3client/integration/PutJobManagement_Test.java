@@ -75,6 +75,7 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import static com.spectralogic.ds3client.commands.spectrads3.PutBulkJobSpectraS3Request.MIN_UPLOAD_SIZE_IN_BYTES;
 import static com.spectralogic.ds3client.integration.Util.RESOURCE_BASE_NAME;
+import static com.spectralogic.ds3client.integration.Util.cancelAllJobsForBucket;
 import static com.spectralogic.ds3client.integration.Util.deleteAllContents;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
@@ -192,6 +193,7 @@ public class PutJobManagement_Test {
             }
             assertThat(activeJobsUUIDs, contains(jobID));
         } finally {
+            cancelAllJobsForBucket(client, BUCKET_NAME);
             deleteAllContents(client, BUCKET_NAME);
         }
     }
@@ -210,6 +212,7 @@ public class PutJobManagement_Test {
             assertThat(jobUUIDs, contains(jobID));
 
         } finally {
+            cancelAllJobsForBucket(client, BUCKET_NAME);
             deleteAllContents(client, BUCKET_NAME);
         }
     }
@@ -230,6 +233,7 @@ public class PutJobManagement_Test {
             assertThat(response.getMasterObjectListResult().getPriority(), is(Priority.HIGH));
 
         } finally {
+            cancelAllJobsForBucket(client, BUCKET_NAME);
             deleteAllContents(client, BUCKET_NAME);
         }
     }
@@ -250,6 +254,7 @@ public class PutJobManagement_Test {
             assertThat(response.getMasterObjectListResult().getName(), is("newName"));
 
         } finally {
+            cancelAllJobsForBucket(client, BUCKET_NAME);
             deleteAllContents(client, BUCKET_NAME);
         }
     }
@@ -275,6 +280,7 @@ public class PutJobManagement_Test {
             assertThat(responseAfterModify.getMasterObjectListResult().getStartDate(), is(newDate));
 
         } finally {
+            cancelAllJobsForBucket(client, BUCKET_NAME);
             deleteAllContents(client, BUCKET_NAME);
         }
     }
@@ -543,6 +549,7 @@ public class PutJobManagement_Test {
             assertThat(chunkNames, contains(ds3Object.getName()));
 
         } finally {
+            cancelAllJobsForBucket(client, BUCKET_NAME);
             deleteAllContents(client, BUCKET_NAME);
         }
     }
@@ -568,6 +575,7 @@ public class PutJobManagement_Test {
             assertThat(getJobChunkSpectraS3Response.getObjectsResult(), is(notNullValue()));
 
         } finally {
+            cancelAllJobsForBucket(client, BUCKET_NAME);
             deleteAllContents(client, BUCKET_NAME);
         }
     }
@@ -589,6 +597,7 @@ public class PutJobManagement_Test {
             assertThat(jobOneId, is(jobTwoId));
 
         } finally {
+            cancelAllJobsForBucket(client, BUCKET_NAME);
             deleteAllContents(client, BUCKET_NAME);
         }
     }
@@ -612,6 +621,7 @@ public class PutJobManagement_Test {
             assertThat(jobOneId, is(jobTwoId));
 
         } finally {
+            cancelAllJobsForBucket(client, BUCKET_NAME);
             deleteAllContents(client, BUCKET_NAME);
         }
     }
@@ -635,6 +645,7 @@ public class PutJobManagement_Test {
             assertThat(jobOneId, is(jobTwoId));
 
         } finally {
+            cancelAllJobsForBucket(client, BUCKET_NAME);
             deleteAllContents(client, BUCKET_NAME);
         }
     }
@@ -652,6 +663,7 @@ public class PutJobManagement_Test {
             assertThat(allocateResponse.getStatus(), is(AllocateJobChunkSpectraS3Response.Status.ALLOCATED));
 
         } finally {
+            cancelAllJobsForBucket(client, BUCKET_NAME);
             deleteAllContents(client, BUCKET_NAME);
         }
     }
@@ -811,6 +823,7 @@ public class PutJobManagement_Test {
             assertThat(e.getStatusCode(), is(400));
 
         } finally {
+            cancelAllJobsForBucket(client, BUCKET_NAME);
             deleteAllContents(client, BUCKET_NAME);
         }
     }
@@ -1217,6 +1230,7 @@ public class PutJobManagement_Test {
             }
         } finally {
             FileUtils.deleteDirectory(tempDirectory.toFile());
+            cancelAllJobsForBucket(client, BUCKET_NAME);
             deleteAllContents(client, BUCKET_NAME);
         }
     }
@@ -1290,6 +1304,7 @@ public class PutJobManagement_Test {
             assertEquals(maxNumObjectTransferAttempts, numWaitingForChunksEventsFired.get());
         } finally {
             FileUtils.deleteDirectory(tempDirectory.toFile());
+            cancelAllJobsForBucket(client, BUCKET_NAME);
             deleteAllContents(client, BUCKET_NAME);
         }
     }
@@ -1324,6 +1339,7 @@ public class PutJobManagement_Test {
             }
         } finally {
             FileUtils.deleteDirectory(tempDirectory.toFile());
+            cancelAllJobsForBucket(client, BUCKET_NAME);
             deleteAllContents(client, BUCKET_NAME);
         }
     }
@@ -1366,6 +1382,7 @@ public class PutJobManagement_Test {
                 assertEquals(FILE_NAMES[0], bucketContents.getKey());
             }
         } finally {
+            cancelAllJobsForBucket(client, BUCKET_NAME);
             deleteAllContents(client, BUCKET_NAME);
         }
     }
@@ -1411,6 +1428,7 @@ public class PutJobManagement_Test {
                 assertEquals(FILE_NAMES[0], bucketContents.getKey());
             }
         } finally {
+            cancelAllJobsForBucket(client, BUCKET_NAME);
             deleteAllContents(client, BUCKET_NAME);
         }
     }
@@ -1473,6 +1491,7 @@ public class PutJobManagement_Test {
 
             assertEquals(1, numChunkAllocationAttempts.get());
         } finally {
+            cancelAllJobsForBucket(client, BUCKET_NAME);
             deleteAllContents(client, BUCKET_NAME);
         }
     }
@@ -1575,6 +1594,7 @@ public class PutJobManagement_Test {
             assertEquals(1, numTimesChannelOpened.get());
             assertEquals(1, numTimesChannelClosed.get());
         } finally {
+            cancelAllJobsForBucket(client, BUCKET_NAME);
             deleteAllContents(client, BUCKET_NAME);
         }
     }
@@ -1682,6 +1702,7 @@ public class PutJobManagement_Test {
 
             assertEquals(1, numTimesTransferCalled.get());
         } finally {
+            cancelAllJobsForBucket(client, BUCKET_NAME);
             deleteAllContents(client, BUCKET_NAME);
         }
     }
@@ -1764,6 +1785,7 @@ public class PutJobManagement_Test {
             assertEquals(0, numTimesInvokeCalled.get());
             assertEquals(1, numTimesResetCalled.get());
         } finally {
+            cancelAllJobsForBucket(client, BUCKET_NAME);
             deleteAllContents(client, BUCKET_NAME);
         }
     }
@@ -1824,6 +1846,7 @@ public class PutJobManagement_Test {
                 assertEquals(FILE_NAMES[0], bucketContents.getKey());
             }
         } finally {
+            cancelAllJobsForBucket(client, BUCKET_NAME);
             deleteAllContents(client, BUCKET_NAME);
         }
     }
@@ -1857,6 +1880,7 @@ public class PutJobManagement_Test {
                 assertEquals(FILE_NAMES[0], bucketContents.getKey());
             }
         } finally {
+            cancelAllJobsForBucket(client, BUCKET_NAME);
             deleteAllContents(client, BUCKET_NAME);
         }
     }
@@ -1973,6 +1997,7 @@ public class PutJobManagement_Test {
             fail("This test makes sure that we don't run out of connections when transferring lots of small files.  Oops");
         } finally {
             FileUtils.deleteDirectory(tempDirectory.toFile());
+            cancelAllJobsForBucket(client, BUCKET_NAME);
             deleteAllContents(client, BUCKET_NAME);
         }
     }
@@ -2006,6 +2031,7 @@ public class PutJobManagement_Test {
             caughtException.set(true);
         } finally {
             FileUtils.deleteDirectory(tempDirectory.toFile());
+            cancelAllJobsForBucket(client, BUCKET_NAME);
             deleteAllContents(client, BUCKET_NAME);
         }
 
@@ -2058,6 +2084,7 @@ public class PutJobManagement_Test {
         } finally {
             FileUtils.deleteDirectory(tempDirectoryForFilesToGet.toFile());
             FileUtils.deleteDirectory(tempDirectoryForFilesToPut.toFile());
+            cancelAllJobsForBucket(client, BUCKET_NAME);
             deleteAllContents(client, BUCKET_NAME);
         }
 
@@ -2124,6 +2151,7 @@ public class PutJobManagement_Test {
 
             assertTrue(FileUtils.contentEquals(new File(movedFileName), new File(originalFileName)));
         } finally {
+            cancelAllJobsForBucket(client, BUCKET_NAME);
             deleteAllContents(client, BUCKET_NAME);
 
             Files.deleteIfExists(Paths.get(originalFileName));

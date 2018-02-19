@@ -27,6 +27,8 @@ public class ModifyTapePartitionSpectraS3Request extends AbstractRequest {
     
     private final String tapePartition;
 
+    private boolean autoCompactionEnabled;
+
     private int minimumReadReservedDrives;
 
     private int minimumWriteReservedDrives;
@@ -40,6 +42,13 @@ public class ModifyTapePartitionSpectraS3Request extends AbstractRequest {
         this.tapePartition = tapePartition;
         
     }
+
+    public ModifyTapePartitionSpectraS3Request withAutoCompactionEnabled(final boolean autoCompactionEnabled) {
+        this.autoCompactionEnabled = autoCompactionEnabled;
+        this.updateQueryParam("auto_compaction_enabled", autoCompactionEnabled);
+        return this;
+    }
+
 
     public ModifyTapePartitionSpectraS3Request withMinimumReadReservedDrives(final int minimumReadReservedDrives) {
         this.minimumReadReservedDrives = minimumReadReservedDrives;
@@ -75,6 +84,11 @@ public class ModifyTapePartitionSpectraS3Request extends AbstractRequest {
     
     public String getTapePartition() {
         return this.tapePartition;
+    }
+
+
+    public boolean getAutoCompactionEnabled() {
+        return this.autoCompactionEnabled;
     }
 
 

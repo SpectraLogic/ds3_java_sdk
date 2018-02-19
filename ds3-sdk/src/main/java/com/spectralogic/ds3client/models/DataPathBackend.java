@@ -40,9 +40,6 @@ public class DataPathBackend {
     @JsonProperty("CacheAvailableRetryAfterInSeconds")
     private int cacheAvailableRetryAfterInSeconds;
 
-    @JsonProperty("DefaultImportConflictResolutionMode")
-    private ImportConflictResolutionMode defaultImportConflictResolutionMode;
-
     @JsonProperty("DefaultVerifyDataAfterImport")
     private Priority defaultVerifyDataAfterImport;
 
@@ -54,6 +51,9 @@ public class DataPathBackend {
 
     @JsonProperty("InstanceId")
     private UUID instanceId;
+
+    @JsonProperty("IomEnabled")
+    private boolean iomEnabled;
 
     @JsonProperty("LastHeartbeat")
     private Date lastHeartbeat;
@@ -122,15 +122,6 @@ public class DataPathBackend {
     }
 
 
-    public ImportConflictResolutionMode getDefaultImportConflictResolutionMode() {
-        return this.defaultImportConflictResolutionMode;
-    }
-
-    public void setDefaultImportConflictResolutionMode(final ImportConflictResolutionMode defaultImportConflictResolutionMode) {
-        this.defaultImportConflictResolutionMode = defaultImportConflictResolutionMode;
-    }
-
-
     public Priority getDefaultVerifyDataAfterImport() {
         return this.defaultVerifyDataAfterImport;
     }
@@ -164,6 +155,15 @@ public class DataPathBackend {
 
     public void setInstanceId(final UUID instanceId) {
         this.instanceId = instanceId;
+    }
+
+
+    public boolean getIomEnabled() {
+        return this.iomEnabled;
+    }
+
+    public void setIomEnabled(final boolean iomEnabled) {
+        this.iomEnabled = iomEnabled;
     }
 
 

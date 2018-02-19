@@ -30,6 +30,9 @@ public class SuspectBlobTape {
     @JsonProperty("Id")
     private UUID id;
 
+    @JsonProperty("ObsoletionId")
+    private UUID obsoletionId;
+
     @JsonProperty("OrderIndex")
     private int orderIndex;
 
@@ -58,6 +61,15 @@ public class SuspectBlobTape {
 
     public void setId(final UUID id) {
         this.id = id;
+    }
+
+
+    public UUID getObsoletionId() {
+        return this.obsoletionId;
+    }
+
+    public void setObsoletionId(final UUID obsoletionId) {
+        this.obsoletionId = obsoletionId;
     }
 
 

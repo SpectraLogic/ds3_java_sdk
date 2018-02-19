@@ -60,6 +60,10 @@ public class ListBucketResult {
     @JsonProperty("IsTruncated")
     private boolean truncated;
 
+    @JsonProperty("Version")
+    @JacksonXmlElementWrapper(useWrapping = false)
+    private List<Contents> versionedObjects = new ArrayList<>();
+
     // Constructor
     public ListBucketResult() {
         //pass
@@ -154,6 +158,15 @@ public class ListBucketResult {
 
     public void setTruncated(final boolean truncated) {
         this.truncated = truncated;
+    }
+
+
+    public List<Contents> getVersionedObjects() {
+        return this.versionedObjects;
+    }
+
+    public void setVersionedObjects(final List<Contents> versionedObjects) {
+        this.versionedObjects = versionedObjects;
     }
 
 }

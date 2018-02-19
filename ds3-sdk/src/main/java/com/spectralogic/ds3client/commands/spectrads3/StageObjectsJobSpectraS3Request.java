@@ -19,45 +19,65 @@ package com.spectralogic.ds3client.commands.spectrads3;
 import com.spectralogic.ds3client.networking.HttpVerb;
 import com.spectralogic.ds3client.commands.interfaces.AbstractRequest;
 import com.google.common.net.UrlEscapers;
+import com.spectralogic.ds3client.models.Priority;
 
-public class DeleteFolderRecursivelySpectraS3Request extends AbstractRequest {
+public class StageObjectsJobSpectraS3Request extends AbstractRequest {
 
     // Variables
     
-    private final String folder;
+    private final String bucketName;
 
-    private final String bucketId;
+    private String name;
+
+    private Priority priority;
 
     // Constructor
     
     
-    public DeleteFolderRecursivelySpectraS3Request(final String bucketId, final String folder) {
-        this.folder = folder;
-        this.bucketId = bucketId;
+    public StageObjectsJobSpectraS3Request(final String bucketName) {
+        this.bucketName = bucketName;
         
-        this.updateQueryParam("bucket_id", bucketId);
+        this.getQueryParams().put("operation", "start_bulk_stage");
 
-        this.getQueryParams().put("recursive", null);
     }
+
+    public StageObjectsJobSpectraS3Request withName(final String name) {
+        this.name = name;
+        this.updateQueryParam("name", name);
+        return this;
+    }
+
+
+    public StageObjectsJobSpectraS3Request withPriority(final Priority priority) {
+        this.priority = priority;
+        this.updateQueryParam("priority", priority);
+        return this;
+    }
+
 
 
     @Override
     public HttpVerb getVerb() {
-        return HttpVerb.DELETE;
+        return HttpVerb.PUT;
     }
 
     @Override
     public String getPath() {
-        return "/_rest_/folder/" + folder;
+        return "/_rest_/bucket/" + this.bucketName;
     }
     
-    public String getFolder() {
-        return this.folder;
+    public String getBucketName() {
+        return this.bucketName;
     }
 
 
-    public String getBucketId() {
-        return this.bucketId;
+    public String getName() {
+        return this.name;
+    }
+
+
+    public Priority getPriority() {
+        return this.priority;
     }
 
 }

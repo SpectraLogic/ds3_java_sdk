@@ -895,6 +895,12 @@ public interface Ds3Client extends Closeable {
     ReplicatePutJobSpectraS3Response replicatePutJobSpectraS3(final ReplicatePutJobSpectraS3Request request)
             throws IOException;
 
+    @Action("MODIFY")
+    @Resource("BUCKET")
+    
+    StageObjectsJobSpectraS3Response stageObjectsJobSpectraS3(final StageObjectsJobSpectraS3Request request)
+            throws IOException;
+
     @Action("DELETE")
     @Resource("ACTIVE_JOB")
     
