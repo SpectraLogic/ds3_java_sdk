@@ -174,22 +174,7 @@ public final class ResponseParserUtils {
         if (Guard.isStringNullOrEmpty(checksumType)) {
             return ChecksumType.Type.NONE;
         }
-        switch (checksumType) {
-            case "CRC_32":
-                return ChecksumType.Type.CRC_32;
-            case "CRC_32C":
-                return ChecksumType.Type.CRC_32C;
-            case "MD5":
-                return ChecksumType.Type.MD5;
-            case "SHA_256":
-                return ChecksumType.Type.SHA_256;
-            case "SHA_512":
-                return ChecksumType.Type.SHA_512;
-            case "":
-                return ChecksumType.Type.NONE;
-            default:
-                throw new IllegalArgumentException(String.format("Unknown value for header '%s': '%s'", BLOB_CHECKSUM_TYPE_HEADER, checksumType));
-        }
+        return ChecksumType.Type.valueOf(checksumType);
     }
 
     /**
