@@ -95,12 +95,7 @@ public final class Util {
         final Ds3ClientHelpers helpers = Ds3ClientHelpers.wrap(client);
 
         final Ds3ClientHelpers.Job job = helpers.startWriteJob(bucketName, ImmutableList.of(obj));
-        job.transfer(new Ds3ClientHelpers.ObjectChannelBuilder() {
-            @Override
-            public SeekableByteChannel buildChannel(final String key) throws IOException {
-                return FileChannel.open(filePath, StandardOpenOption.READ);
-            }
-        });
+        job.transfer(key -> FileChannel.open(filePath, StandardOpenOption.READ));
     }
 
     public static Ds3ClientHelpers.Job getLoadJob(final Ds3Client client, final String bucketName, final String resourceBaseName) throws IOException, URISyntaxException {
