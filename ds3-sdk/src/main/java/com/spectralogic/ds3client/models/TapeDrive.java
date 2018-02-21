@@ -49,6 +49,9 @@ public class TapeDrive {
     @JsonProperty("Quiesced")
     private Quiesced quiesced;
 
+    @JsonProperty("ReservedTaskType")
+    private ReservedTaskType reservedTaskType;
+
     @JsonProperty("SerialNumber")
     private String serialNumber;
 
@@ -137,6 +140,15 @@ public class TapeDrive {
 
     public void setQuiesced(final Quiesced quiesced) {
         this.quiesced = quiesced;
+    }
+
+
+    public ReservedTaskType getReservedTaskType() {
+        return this.reservedTaskType;
+    }
+
+    public void setReservedTaskType(final ReservedTaskType reservedTaskType) {
+        this.reservedTaskType = reservedTaskType;
     }
 
 

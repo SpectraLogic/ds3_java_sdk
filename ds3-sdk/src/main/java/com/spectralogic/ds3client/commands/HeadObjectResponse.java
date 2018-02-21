@@ -19,22 +19,37 @@ package com.spectralogic.ds3client.commands;
 import com.spectralogic.ds3client.commands.interfaces.AbstractResponse;
 import com.spectralogic.ds3client.networking.Metadata;
 import com.spectralogic.ds3client.models.ChecksumType;
+import com.google.common.collect.ImmutableMap;
 
 public class HeadObjectResponse extends AbstractResponse {
 
     public enum Status { EXISTS, DOESNTEXIST, UNKNOWN }
     
+    private final ImmutableMap<Long, String> blobChecksums;
+
+    private final ChecksumType.Type blobChecksumType;
+
     private final Metadata metadata;
 
     private final long objectSize;
 
     private final Status status;
 
-    public HeadObjectResponse(final Metadata metadata, final long objectSize, final Status status, final String checksum, final ChecksumType.Type checksumType) {
+    public HeadObjectResponse(final ImmutableMap<Long, String> blobChecksums, final ChecksumType.Type blobChecksumType, final Metadata metadata, final long objectSize, final Status status, final String checksum, final ChecksumType.Type checksumType) {
         super(checksum, checksumType);
+        this.blobChecksums = blobChecksums;
+        this.blobChecksumType = blobChecksumType;
         this.metadata = metadata;
         this.objectSize = objectSize;
         this.status = status;
+    }
+
+    public ImmutableMap<Long, String> getBlobChecksums() {
+        return this.blobChecksums;
+    }
+
+    public ChecksumType.Type getBlobChecksumType() {
+        return this.blobChecksumType;
     }
 
     public Metadata getMetadata() {

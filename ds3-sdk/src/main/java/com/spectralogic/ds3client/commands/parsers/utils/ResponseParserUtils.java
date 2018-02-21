@@ -17,6 +17,7 @@ package com.spectralogic.ds3client.commands.parsers.utils;
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.spectralogic.ds3client.models.ChecksumType;
 import com.spectralogic.ds3client.models.Error;
@@ -40,6 +41,9 @@ public final class ResponseParserUtils {
 
     private final static Logger LOG = LoggerFactory.getLogger(ResponseParserUtils.class);
     final public static String UTF8 = "UTF-8";
+
+    private static final String BLOB_CHECKSUM_TYPE_HEADER = "ds3-blob-checksum-type";
+    private static final String BLOB_CHECKSUM_HEADER = "ds3-blob-checksum-offset-";
 
     private ResponseParserUtils() {
         // pass
@@ -143,6 +147,74 @@ public final class ResponseParserUtils {
             final InputStream content = response.getResponseStream()) {
             IOUtils.copy(content, writer, UTF8);
             return writer.toString();
+        }
+    }
+
+    /**
+     * Retrieves the blob checksum type from the response headers. If there is no blob checksum
+     * type header, than NONE is returned. If there is more than one value for the blob checksum
+     * type header, than an illegal argument exception is thrown.
+     */
+    public static ChecksumType.Type getBlobChecksumType(final Headers headers) {
+        final List<String> types = headers.get(BLOB_CHECKSUM_TYPE_HEADER);
+        switch (types.size()) {
+            case 0:
+                return ChecksumType.Type.NONE;
+            case 1:
+                return toBlobChecksumType(types.get(0));
+            default:
+                throw new IllegalArgumentException(String.format("Response has more than one header value for '%s'", BLOB_CHECKSUM_TYPE_HEADER));
+        }
+    }
+
+    /**
+     * Converts the response header value for {@code BLOB_CHECKSUM_TYPE_HEADER} into a {@code ChecksumType.Type}
+     */
+    static ChecksumType.Type toBlobChecksumType(final String checksumType) {
+        if (Guard.isStringNullOrEmpty(checksumType)) {
+            return ChecksumType.Type.NONE;
+        }
+        return ChecksumType.Type.valueOf(checksumType);
+    }
+
+    /**
+     * Retrieves a map of blob offset to blob checksum from response headers.
+     */
+    public static ImmutableMap<Long, String> getBlobChecksumMap(final Headers headers) {
+        if (headers.keys() == null) {
+            return ImmutableMap.of();
+        }
+
+        final ImmutableMap.Builder<Long, String> builder = ImmutableMap.builder();
+        headers.keys().stream()
+                .filter(key -> key.startsWith(BLOB_CHECKSUM_HEADER))
+                .forEach(key -> builder.put(getOffsetFromHeaderKey(key), getBlobChecksumValue(key, headers)));
+
+        return builder.build();
+    }
+
+    /**
+     * Retrieves the offset from the blob checksum header key. This assumes that the
+     * provided key has the prefix {@code BLOB_CHECKSUM_HEADER} and that the postfix can be
+     * converted into a Long.
+     */
+    private static Long getOffsetFromHeaderKey(final String key) {
+        final String offset = key.substring(BLOB_CHECKSUM_HEADER.length());
+        return Long.valueOf(offset);
+    }
+
+    /**
+     * Retrieves the value from the specified header key assuming there is at most one value.
+     * If there are no values for the key, then an empty string is returned.
+     * If there is more than one value for the given key, an illegal argument exception is thrown.
+     */
+    private static String getBlobChecksumValue(final String key, final Headers headers) {
+        final List<String> values = headers.get(key);
+        switch (values.size()) {
+            case 1:
+                return values.get(0);
+            default:
+                throw new IllegalArgumentException(String.format("Expected response to have 1 value for blob checksum header '%s', but found '%d' values", key, values.size()));
         }
     }
 }
