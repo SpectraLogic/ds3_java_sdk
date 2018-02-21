@@ -16,6 +16,7 @@
 // This code is auto-generated, do not modify
 package com.spectralogic.ds3client.commands;
 
+import com.google.common.collect.ImmutableMap;
 import com.spectralogic.ds3client.commands.interfaces.AbstractResponse;
 import com.spectralogic.ds3client.networking.Metadata;
 import com.spectralogic.ds3client.models.ChecksumType;
@@ -30,11 +31,17 @@ public class HeadObjectResponse extends AbstractResponse {
 
     private final Status status;
 
-    public HeadObjectResponse(final Metadata metadata, final long objectSize, final Status status, final String checksum, final ChecksumType.Type checksumType) {
+    private final ChecksumType.Type blobChecksumType;
+    /** Maps blob start offset to blob checksum */
+    private final ImmutableMap<Long, String> blobChecksums;
+
+    public HeadObjectResponse(final Metadata metadata, final long objectSize, final Status status, final String checksum, final ChecksumType.Type checksumType, final ChecksumType.Type blobChecksumType, final ImmutableMap<Long, String> blobChecksums) {
         super(checksum, checksumType);
         this.metadata = metadata;
         this.objectSize = objectSize;
         this.status = status;
+        this.blobChecksumType = blobChecksumType;
+        this.blobChecksums = blobChecksums;
     }
 
     public Metadata getMetadata() {
@@ -49,4 +56,11 @@ public class HeadObjectResponse extends AbstractResponse {
         return this.status;
     }
 
+    public ChecksumType.Type getBlobChecksumType() {
+        return blobChecksumType;
+    }
+
+    public ImmutableMap<Long, String> getBlobChecksums() {
+        return blobChecksums;
+    }
 }

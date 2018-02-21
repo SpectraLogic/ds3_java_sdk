@@ -45,7 +45,7 @@ public class MockedHeaders implements Headers {
 
     @Override
     public Set<String> keys() {
-        return null;
+        return headerValues.keySet();
     }
 
     protected Set<String> getRealKeys() {
