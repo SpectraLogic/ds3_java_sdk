@@ -42,30 +42,6 @@ public class Ds3Object  {
     }
 
     /**
-     * Use this constructor when getting a version of a file from DS3.
-     * @param name The name of the object to get from DS3
-     * @param size The size of the object to get from DS3
-     * @param versionId The version ID of the object to get from DS3
-     */
-    public Ds3Object(final String name, final long size, final UUID versionId) {
-        this.name = name;
-        this.size = size;
-        this.versionId = versionId.toString();
-    }
-
-    /**
-     * Use this constructor when getting a version of a file from DS3.
-     * @param name The name of the object to get from DS3
-     * @param size The size of the object to get from DS3
-     * @param versionId The version ID of the object to get from DS3
-     */
-    public Ds3Object(final String name, final long size, final String versionId) {
-        this.name = name;
-        this.size = size;
-        this.versionId = versionId;
-    }
-
-    /**
      * Use this constructor when putting files to DS3.
      * @param name The name of the object that will be put to DS3
      * @param size The size of the object that will be put to DS3
@@ -124,6 +100,14 @@ public class Ds3Object  {
         this.size = size;
     }
 
+    public String getVersionId() {
+        return versionId;
+    }
+
+    public void setVersionId(String versionId) {
+        this.versionId = versionId;
+    }
+
     @Override
     public String toString() {
         return this.name + ":" + this.size;
@@ -131,7 +115,7 @@ public class Ds3Object  {
 
     @Override
     public int hashCode() {
-        return java.util.Objects.hash(this.name, this.size);
+        return java.util.Objects.hash(this.name, this.size, this.versionId);
     }
 
     @Override
@@ -143,13 +127,5 @@ public class Ds3Object  {
         return ds3Obj.getName().equals(this.getName()) &&
                 ds3Obj.getSize() == this.getSize() &&
                 ds3Obj.getVersionId().equals(this.getVersionId());
-    }
-
-    public String getVersionId() {
-        return versionId;
-    }
-
-    public void setVersionId(String versionId) {
-        this.versionId = versionId;
     }
 }

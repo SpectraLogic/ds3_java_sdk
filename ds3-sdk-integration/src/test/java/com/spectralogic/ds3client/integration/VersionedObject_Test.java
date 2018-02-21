@@ -16,11 +16,15 @@
 package com.spectralogic.ds3client.integration;
 
 import com.spectralogic.ds3client.Ds3Client;
+import com.spectralogic.ds3client.commands.GetBucketRequest;
+import com.spectralogic.ds3client.commands.GetBucketResponse;
+import com.spectralogic.ds3client.commands.spectrads3.GetBulkJobSpectraS3Request;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers;
 import com.spectralogic.ds3client.integration.test.helpers.TempStorageIds;
 import com.spectralogic.ds3client.integration.test.helpers.TempStorageUtil;
 import com.spectralogic.ds3client.models.ChecksumType;
 import com.spectralogic.ds3client.models.VersioningLevel;
+import com.spectralogic.ds3client.models.bulk.Ds3Object;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -29,9 +33,13 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import static com.spectralogic.ds3client.integration.Util.*;
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertThat;
 
 public class VersionedObject_Test {
 
@@ -40,7 +48,6 @@ public class VersionedObject_Test {
     private static final Ds3Client CLIENT = Util.fromEnv();
     private static final Ds3ClientHelpers HELPERS = Ds3ClientHelpers.wrap(CLIENT);
     private static final String TEST_ENV_NAME = "java_versioned_object_test";
-    private static final int RETRIES = 5;
 
     private static TempStorageIds envStorageIds;
     private static UUID envDataPolicyId;
@@ -79,10 +86,20 @@ public class VersionedObject_Test {
             loadTestBook(CLIENT, BOOKS[0], objectName, TEST_ENV_NAME); // putting beowulf as content
             loadTestBook(CLIENT, BOOKS[1], objectName, TEST_ENV_NAME); // putting sherlock holmes as content
 
-            // TODO Get the version of the objects
+            // Get the version of the objects
+            final GetBucketRequest getBucketRequest = new GetBucketRequest(TEST_ENV_NAME).withVersions(true);
+            final GetBucketResponse getBucketResponse = CLIENT.getBucket(getBucketRequest);
 
-            // TODO Create bulk get job with both versions of object specified
+            assertThat(getBucketResponse.getListBucketResult().getObjects().size(), is(0));
+            assertThat(getBucketResponse.getListBucketResult().getVersionedObjects().size(), is(2));
 
+            // Create bulk get job with both versions of object specified
+            final List<Ds3Object> objects = getBucketResponse.getListBucketResult().getVersionedObjects().stream()
+                    .map(obj -> new Ds3Object(obj.getKey(), obj.getVersionId()))
+                    .collect(Collectors.toList());
+
+            final GetBulkJobSpectraS3Request getBulkRequest = new GetBulkJobSpectraS3Request(TEST_ENV_NAME, objects);
+            CLIENT.getBulkJobSpectraS3(getBulkRequest);
 
         } finally {
             cancelAllJobsForBucket(CLIENT, TEST_ENV_NAME);
