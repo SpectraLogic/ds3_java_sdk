@@ -16,36 +16,40 @@
 // This code is auto-generated, do not modify
 package com.spectralogic.ds3client.commands.spectrads3;
 
+import com.spectralogic.ds3client.BulkCommand;
+import com.spectralogic.ds3client.commands.interfaces.BulkRequest;
+import com.spectralogic.ds3client.models.Priority;
+import com.spectralogic.ds3client.models.bulk.Ds3Object;
 import com.spectralogic.ds3client.networking.HttpVerb;
-import com.spectralogic.ds3client.commands.interfaces.AbstractRequest;
-import com.google.common.net.UrlEscapers;
 
-public class GetSuspectObjectsWithFullDetailsSpectraS3Request extends AbstractRequest {
+public class StageObjectsJobSpectraS3Request extends BulkRequest {
 
     // Variables
-    
-    private String bucketId;
 
-    private String storageDomain;
+    private String name;
+
+    private Priority priority;
 
     // Constructor
     
     
-    public GetSuspectObjectsWithFullDetailsSpectraS3Request() {
+    public StageObjectsJobSpectraS3Request(final String bucketName, final Iterable<Ds3Object> objects) {
+        super(bucketName, objects);
         
-        this.getQueryParams().put("full_details", null);
+        this.getQueryParams().put("operation", "start_bulk_stage");
+
     }
 
-    public GetSuspectObjectsWithFullDetailsSpectraS3Request withBucketId(final String bucketId) {
-        this.bucketId = bucketId;
-        this.updateQueryParam("bucket_id", bucketId);
+    public StageObjectsJobSpectraS3Request withName(final String name) {
+        this.name = name;
+        this.updateQueryParam("name", name);
         return this;
     }
 
 
-    public GetSuspectObjectsWithFullDetailsSpectraS3Request withStorageDomain(final String storageDomain) {
-        this.storageDomain = storageDomain;
-        this.updateQueryParam("storage_domain", storageDomain);
+    public StageObjectsJobSpectraS3Request withPriority(final Priority priority) {
+        this.priority = priority;
+        this.updateQueryParam("priority", priority);
         return this;
     }
 
@@ -53,21 +57,22 @@ public class GetSuspectObjectsWithFullDetailsSpectraS3Request extends AbstractRe
 
     @Override
     public HttpVerb getVerb() {
-        return HttpVerb.GET;
+        return HttpVerb.PUT;
     }
 
     @Override
-    public String getPath() {
-        return "/_rest_/suspect_object";
-    }
-    
-    public String getBucketId() {
-        return this.bucketId;
+    public BulkCommand getCommand() {
+        return BulkCommand.GET;
     }
 
 
-    public String getStorageDomain() {
-        return this.storageDomain;
+    public String getName() {
+        return this.name;
+    }
+
+
+    public Priority getPriority() {
+        return this.priority;
     }
 
 }

@@ -15,15 +15,18 @@
 
 package com.spectralogic.ds3client.integration;
 
+import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3client.Ds3Client;
 import com.spectralogic.ds3client.Ds3ClientBuilder;
-import com.spectralogic.ds3client.commands.DeleteBucketRequest;
-import com.spectralogic.ds3client.commands.DeleteObjectRequest;
+import com.spectralogic.ds3client.commands.spectrads3.CancelJobSpectraS3Request;
+import com.spectralogic.ds3client.commands.spectrads3.GetJobsSpectraS3Request;
+import com.spectralogic.ds3client.commands.spectrads3.GetJobsSpectraS3Response;
 import com.spectralogic.ds3client.commands.spectrads3.GetSystemInformationSpectraS3Request;
 import com.spectralogic.ds3client.helpers.DeleteBucket;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers;
 import com.spectralogic.ds3client.helpers.channelbuilders.PrefixAdderObjectChannelBuilder;
-import com.spectralogic.ds3client.models.Contents;
+import com.spectralogic.ds3client.models.Job;
+import com.spectralogic.ds3client.models.JobStatus;
 import com.spectralogic.ds3client.models.bulk.Ds3Object;
 import com.spectralogic.ds3client.utils.ResourceUtils;
 import org.slf4j.Logger;
@@ -31,8 +34,11 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.nio.channels.FileChannel;
+import java.nio.channels.SeekableByteChannel;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -79,6 +85,19 @@ public final class Util {
         LOG.info("Finished loading test data...");
     }
 
+    /**
+     * Loads a single test book to a BP with the specified object name.
+     */
+    public static void loadTestBook(final Ds3Client client, final String fileName, final String objectName, final String bucketName) throws IOException, URISyntaxException {
+        final Path filePath = ResourceUtils.loadFileResource(RESOURCE_BASE_NAME + fileName);
+        final Ds3Object obj = new Ds3Object(objectName, Files.size(filePath));
+
+        final Ds3ClientHelpers helpers = Ds3ClientHelpers.wrap(client);
+
+        final Ds3ClientHelpers.Job job = helpers.startWriteJob(bucketName, ImmutableList.of(obj));
+        job.transfer(key -> FileChannel.open(filePath, StandardOpenOption.READ));
+    }
+
     public static Ds3ClientHelpers.Job getLoadJob(final Ds3Client client, final String bucketName, final String resourceBaseName) throws IOException, URISyntaxException {
         final Ds3ClientHelpers helpers = Ds3ClientHelpers.wrap(client);
 
@@ -117,5 +136,20 @@ public final class Util {
     public static void deleteBucketContents(final Ds3Client client, final String bucketName) throws IOException {
         final Ds3ClientHelpers helpers = Ds3ClientHelpers.wrap(client);
         DeleteBucket.INSTANCE.deleteBucketContents(helpers, bucketName);
+    }
+
+    // Cancels all in-progress jobs associated with a bucket
+    public static void cancelAllJobsForBucket(final Ds3Client client, final String bucketName) {
+        try {
+            final GetJobsSpectraS3Response getJobs = client.getJobsSpectraS3(new GetJobsSpectraS3Request().withBucketId(bucketName));
+
+            for (final Job job : getJobs.getJobListResult().getJobs()) {
+                if (job.getStatus() == JobStatus.IN_PROGRESS) {
+                    client.cancelJobSpectraS3(new CancelJobSpectraS3Request(job.getJobId()));
+                }
+            }
+        } catch (final IOException e) {
+            LOG.debug("Could not cancel jobs for bucket '%s': %s", bucketName, e.getMessage());
+        }
     }
 }

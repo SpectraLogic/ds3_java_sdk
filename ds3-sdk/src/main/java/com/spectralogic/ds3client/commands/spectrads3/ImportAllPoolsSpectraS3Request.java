@@ -18,16 +18,15 @@ package com.spectralogic.ds3client.commands.spectrads3;
 
 import com.spectralogic.ds3client.networking.HttpVerb;
 import com.spectralogic.ds3client.commands.interfaces.AbstractRequest;
-import com.spectralogic.ds3client.models.ImportConflictResolutionMode;
-import java.util.UUID;
 import com.google.common.net.UrlEscapers;
+import java.util.UUID;
 import com.spectralogic.ds3client.models.Priority;
 
 public class ImportAllPoolsSpectraS3Request extends AbstractRequest {
 
     // Variables
     
-    private ImportConflictResolutionMode conflictResolutionMode;
+    private String conflictResolutionMode;
 
     private String dataPolicyId;
 
@@ -50,7 +49,7 @@ public class ImportAllPoolsSpectraS3Request extends AbstractRequest {
 
     }
 
-    public ImportAllPoolsSpectraS3Request withConflictResolutionMode(final ImportConflictResolutionMode conflictResolutionMode) {
+    public ImportAllPoolsSpectraS3Request withConflictResolutionMode(final String conflictResolutionMode) {
         this.conflictResolutionMode = conflictResolutionMode;
         this.updateQueryParam("conflict_resolution_mode", conflictResolutionMode);
         return this;
@@ -131,7 +130,7 @@ public class ImportAllPoolsSpectraS3Request extends AbstractRequest {
         return "/_rest_/pool";
     }
     
-    public ImportConflictResolutionMode getConflictResolutionMode() {
+    public String getConflictResolutionMode() {
         return this.conflictResolutionMode;
     }
 

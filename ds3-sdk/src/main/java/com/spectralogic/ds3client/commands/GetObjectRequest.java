@@ -46,6 +46,8 @@ public class GetObjectRequest extends AbstractRequest {
     private String job;
 
     private long offset;
+
+    private String versionId;
     private ImmutableCollection<Range> byteRanges = null;
     private ChecksumType checksum = ChecksumType.none();
     private ChecksumType.Type checksumType = ChecksumType.Type.NONE;
@@ -149,6 +151,20 @@ public class GetObjectRequest extends AbstractRequest {
     }
 
 
+    public GetObjectRequest withVersionId(final UUID versionId) {
+        this.versionId = versionId.toString();
+        this.updateQueryParam("version_id", versionId);
+        return this;
+    }
+
+
+    public GetObjectRequest withVersionId(final String versionId) {
+        this.versionId = versionId;
+        this.updateQueryParam("version_id", versionId);
+        return this;
+    }
+
+
 
     /**
      * Set a MD5 checksum for the request.
@@ -247,6 +263,11 @@ public class GetObjectRequest extends AbstractRequest {
 
     public long getOffset() {
         return this.offset;
+    }
+
+
+    public String getVersionId() {
+        return this.versionId;
     }
 
 

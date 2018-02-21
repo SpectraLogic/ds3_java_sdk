@@ -85,8 +85,8 @@ public class Tape {
     @JsonProperty("State")
     private TapeState state;
 
-    @JsonProperty("StorageDomainId")
-    private UUID storageDomainId;
+    @JsonProperty("StorageDomainMemberId")
+    private UUID storageDomainMemberId;
 
     @JsonProperty("TakeOwnershipPending")
     private boolean takeOwnershipPending;
@@ -290,12 +290,12 @@ public class Tape {
     }
 
 
-    public UUID getStorageDomainId() {
-        return this.storageDomainId;
+    public UUID getStorageDomainMemberId() {
+        return this.storageDomainMemberId;
     }
 
-    public void setStorageDomainId(final UUID storageDomainId) {
-        this.storageDomainId = storageDomainId;
+    public void setStorageDomainMemberId(final UUID storageDomainMemberId) {
+        this.storageDomainMemberId = storageDomainMemberId;
     }
 
 

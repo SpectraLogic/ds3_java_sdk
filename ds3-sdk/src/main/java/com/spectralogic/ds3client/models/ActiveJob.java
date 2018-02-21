@@ -79,6 +79,9 @@ public class ActiveJob {
     @JsonProperty("RequestType")
     private JobRequestType requestType;
 
+    @JsonProperty("Restore")
+    private JobRestore restore;
+
     @JsonProperty("Truncated")
     private boolean truncated;
 
@@ -257,6 +260,15 @@ public class ActiveJob {
 
     public void setRequestType(final JobRequestType requestType) {
         this.requestType = requestType;
+    }
+
+
+    public JobRestore getRestore() {
+        return this.restore;
+    }
+
+    public void setRestore(final JobRestore restore) {
+        this.restore = restore;
     }
 
 

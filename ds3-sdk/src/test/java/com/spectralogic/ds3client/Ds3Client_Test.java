@@ -1425,7 +1425,7 @@ public class Ds3Client_Test {
 
     @Test
     public void verifyPhysicalPlacementForObjectsTest() throws IOException {
-        final String responsePayload = "<Data><AzureTargets/><Ds3Targets/><Pools/><S3Targets/><Tapes><Tape><AssignedToStorageDomain>false</AssignedToStorageDomain><AvailableRawCapacity>10000</AvailableRawCapacity><BarCode>t1</BarCode><BucketId/><DescriptionForIdentification/><EjectDate/><EjectLabel/><EjectLocation/><EjectPending/><FullOfData>false</FullOfData><Id>48d30ecb-84f1-4721-9832-7aa165a1dd77</Id><LastAccessed/><LastCheckpoint/><LastModified/><LastVerified/><PartiallyVerifiedEndOfTape/><PartitionId>76343269-c32a-4cb0-aec4-57a9dccce6ea</PartitionId><PreviousState/><SerialNumber/><State>PENDING_INSPECTION</State><StorageDomainId/><TakeOwnershipPending>false</TakeOwnershipPending><TotalRawCapacity>20000</TotalRawCapacity><Type>LTO5</Type><VerifyPending/><WriteProtected>false</WriteProtected></Tape></Tapes></Data>";
+        final String responsePayload = "<Data><AzureTargets/><Ds3Targets/><Pools/><S3Targets/><Tapes><Tape><AssignedToStorageDomain>false</AssignedToStorageDomain><AvailableRawCapacity>10000</AvailableRawCapacity><BarCode>t1</BarCode><BucketId/><DescriptionForIdentification/><EjectDate/><EjectLabel/><EjectLocation/><EjectPending/><FullOfData>false</FullOfData><Id>48d30ecb-84f1-4721-9832-7aa165a1dd77</Id><LastAccessed/><LastCheckpoint/><LastModified/><LastVerified/><PartiallyVerifiedEndOfTape/><PartitionId>76343269-c32a-4cb0-aec4-57a9dccce6ea</PartitionId><PreviousState/><SerialNumber/><State>PENDING_INSPECTION</State><TakeOwnershipPending>false</TakeOwnershipPending><TotalRawCapacity>20000</TotalRawCapacity><Type>LTO5</Type><VerifyPending/><WriteProtected>false</WriteProtected></Tape></Tapes></Data>";
         final String bucketName = "BucketName";
 
         final Map<String, String> queryParams = new HashMap<>();
@@ -1445,7 +1445,7 @@ public class Ds3Client_Test {
 
     @Test
     public void verifyPhysicalPlacementForObjectsWithFullDetailsTest() throws IOException {
-        final String responsePayload = "<Data><Object Bucket=\"b1\" Id=\"15ad85a5-aab6-4d85-bf33-831bcba13b8e\" InCache=\"false\" Latest=\"true\" Length=\"10\" Name=\"o1\" Offset=\"0\" Version=\"1\"><PhysicalPlacement><AzureTargets/><Ds3Targets/><Pools/><S3Targets/><Tapes><Tape><AssignedToStorageDomain>false</AssignedToStorageDomain><AvailableRawCapacity>10000</AvailableRawCapacity><BarCode>t1</BarCode><BucketId/><DescriptionForIdentification/><EjectDate/><EjectLabel/><EjectLocation/><EjectPending/><FullOfData>false</FullOfData><Id>5a7bb215-4aff-4806-b217-5fe01ade6a2c</Id><LastAccessed/><LastCheckpoint/><LastModified/><LastVerified/><PartiallyVerifiedEndOfTape/><PartitionId>2e5b25fc-546e-45b0-951e-8f3d80bb7823</PartitionId><PreviousState/><SerialNumber/><State>PENDING_INSPECTION</State><StorageDomainId/><TakeOwnershipPending>false</TakeOwnershipPending><TotalRawCapacity>20000</TotalRawCapacity><Type>LTO5</Type><VerifyPending/><WriteProtected>false</WriteProtected></Tape></Tapes></PhysicalPlacement></Object></Data>";
+        final String responsePayload = "<Data><Object Bucket=\"b1\" Id=\"15ad85a5-aab6-4d85-bf33-831bcba13b8e\" InCache=\"false\" Latest=\"true\" Length=\"10\" Name=\"o1\" Offset=\"0\" Version=\"1\"><PhysicalPlacement><AzureTargets/><Ds3Targets/><Pools/><S3Targets/><Tapes><Tape><AssignedToStorageDomain>false</AssignedToStorageDomain><AvailableRawCapacity>10000</AvailableRawCapacity><BarCode>t1</BarCode><BucketId/><DescriptionForIdentification/><EjectDate/><EjectLabel/><EjectLocation/><EjectPending/><FullOfData>false</FullOfData><Id>5a7bb215-4aff-4806-b217-5fe01ade6a2c</Id><LastAccessed/><LastCheckpoint/><LastModified/><LastVerified/><PartiallyVerifiedEndOfTape/><PartitionId>2e5b25fc-546e-45b0-951e-8f3d80bb7823</PartitionId><PreviousState/><SerialNumber/><State>PENDING_INSPECTION</State><TakeOwnershipPending>false</TakeOwnershipPending><TotalRawCapacity>20000</TotalRawCapacity><Type>LTO5</Type><VerifyPending/><WriteProtected>false</WriteProtected></Tape></Tapes></PhysicalPlacement></Object></Data>";
         final String bucketName = "BucketName";
 
         final Map<String, String> queryParams = new HashMap<>();
@@ -1470,7 +1470,7 @@ public class Ds3Client_Test {
         queryParams.put("operation", "eject");
         queryParams.put("blobs", null);
         queryParams.put("bucket_id", bucketId);
-        queryParams.put("storage_domain_id", storageDomainId);
+        queryParams.put("storage_domain", storageDomainId);
 
         MockNetwork
                 .expecting(HttpVerb.PUT, "/_rest_/tape", queryParams, SIMPLE_OBJECT_REQUEST_PAYLOAD)
@@ -1535,11 +1535,18 @@ public class Ds3Client_Test {
         final Map<String, String> queryParams = new HashMap<>();
         queryParams.put("operation", "get_physical_placement");
 
-        MockNetwork
+        final Map<String, String> responseHeaders = new HashMap<>();
+        responseHeaders.put("page-truncated", "0");
+        responseHeaders.put("total-result-count", "2");
+
+        final GetBlobsOnTapeSpectraS3Response result = MockNetwork
                 .expecting(HttpVerb.GET, "/_rest_/tape/" + target, queryParams, null)
-                .returning(200, SIMPLE_BULK_OBJECT_LIST_RESPONSE)
+                .returning(200, SIMPLE_BULK_OBJECT_LIST_RESPONSE, responseHeaders)
                 .asClient()
                 .getBlobsOnTapeSpectraS3(new GetBlobsOnTapeSpectraS3Request(target));
+
+        assertThat(result.getPagingTruncated(), is(0));
+        assertThat(result.getPagingTotalResultCount(), is(2));
     }
 
     @Test

@@ -33,6 +33,9 @@ public class SpectraUser {
     @JsonProperty("Id")
     private UUID id;
 
+    @JsonProperty("MaxBuckets")
+    private int maxBuckets;
+
     @JsonProperty("Name")
     private String name;
 
@@ -70,6 +73,15 @@ public class SpectraUser {
 
     public void setId(final UUID id) {
         this.id = id;
+    }
+
+
+    public int getMaxBuckets() {
+        return this.maxBuckets;
+    }
+
+    public void setMaxBuckets(final int maxBuckets) {
+        this.maxBuckets = maxBuckets;
     }
 
 

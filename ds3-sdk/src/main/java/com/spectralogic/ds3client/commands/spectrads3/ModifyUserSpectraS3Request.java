@@ -29,6 +29,8 @@ public class ModifyUserSpectraS3Request extends AbstractRequest {
 
     private String defaultDataPolicyId;
 
+    private int maxBuckets;
+
     private String name;
 
     private String secretKey;
@@ -57,6 +59,13 @@ public class ModifyUserSpectraS3Request extends AbstractRequest {
     public ModifyUserSpectraS3Request withDefaultDataPolicyId(final String defaultDataPolicyId) {
         this.defaultDataPolicyId = defaultDataPolicyId;
         this.updateQueryParam("default_data_policy_id", defaultDataPolicyId);
+        return this;
+    }
+
+
+    public ModifyUserSpectraS3Request withMaxBuckets(final int maxBuckets) {
+        this.maxBuckets = maxBuckets;
+        this.updateQueryParam("max_buckets", maxBuckets);
         return this;
     }
 
@@ -93,6 +102,11 @@ public class ModifyUserSpectraS3Request extends AbstractRequest {
 
     public String getDefaultDataPolicyId() {
         return this.defaultDataPolicyId;
+    }
+
+
+    public int getMaxBuckets() {
+        return this.maxBuckets;
     }
 
 

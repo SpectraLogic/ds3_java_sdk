@@ -28,8 +28,6 @@ public class DeleteFolderRecursivelySpectraS3Request extends AbstractRequest {
 
     private final String bucketId;
 
-    private boolean rollBack;
-
     // Constructor
     
     
@@ -41,17 +39,6 @@ public class DeleteFolderRecursivelySpectraS3Request extends AbstractRequest {
 
         this.getQueryParams().put("recursive", null);
     }
-
-    public DeleteFolderRecursivelySpectraS3Request withRollBack(final boolean rollBack) {
-        this.rollBack = rollBack;
-        if (this.rollBack) {
-            this.getQueryParams().put("roll_back", null);
-        } else {
-            this.getQueryParams().remove("roll_back");
-        }
-        return this;
-    }
-
 
 
     @Override
@@ -71,11 +58,6 @@ public class DeleteFolderRecursivelySpectraS3Request extends AbstractRequest {
 
     public String getBucketId() {
         return this.bucketId;
-    }
-
-
-    public boolean getRollBack() {
-        return this.rollBack;
     }
 
 }

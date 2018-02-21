@@ -24,6 +24,9 @@ import java.util.UUID;
 public class TapePartition {
 
     // Variables
+    @JsonProperty("AutoCompactionEnabled")
+    private boolean autoCompactionEnabled;
+
     @JsonProperty("DriveType")
     private TapeDriveType driveType;
 
@@ -67,6 +70,15 @@ public class TapePartition {
 
     // Getters and Setters
     
+    public boolean getAutoCompactionEnabled() {
+        return this.autoCompactionEnabled;
+    }
+
+    public void setAutoCompactionEnabled(final boolean autoCompactionEnabled) {
+        this.autoCompactionEnabled = autoCompactionEnabled;
+    }
+
+
     public TapeDriveType getDriveType() {
         return this.driveType;
     }

@@ -73,7 +73,7 @@ public class XmlOutput_Test {
     }
 
     @Test
-    public void toXmlWithNoFilter() {
+    public void toXmlWithSize() {
         final String expectedString = "<Objects><Object Name=\"file1\" Size=\"12\"/><Object Name=\"file2\" Size=\"5022\"/></Objects>";
         final List<Ds3Object> objectList = ImmutableList.of(new Ds3Object("file1", 12), new Ds3Object("file2", 5022)).asList();
         final Ds3ObjectList ds3ObjectList = new Ds3ObjectList(objectList);
@@ -83,9 +83,19 @@ public class XmlOutput_Test {
     }
 
     @Test
-    public void toXmlWithFilter() {
+    public void toXmlWithNoSize() {
         final String expectedString = "<Objects><Object Name=\"file1\"/><Object Name=\"file2\"/></Objects>";
         final List<Ds3Object> objectList = ImmutableList.of(new Ds3Object("file1", 12), new Ds3Object("file2", 5022)).asList();
+        final Ds3ObjectList ds3ObjectList = new Ds3ObjectList(objectList);
+        final String result = XmlOutput.toXml(ds3ObjectList, false);
+
+        assertThat(result, is(expectedString));
+    }
+
+    @Test
+    public void toXmlWithVersionId() {
+        final String expectedString = "<Objects><Object Name=\"file1\" VersionId=\"version1\"/><Object Name=\"file2\" VersionId=\"version2\"/></Objects>";
+        final List<Ds3Object> objectList = ImmutableList.of(new Ds3Object("file1", "version1"), new Ds3Object("file2", "version2")).asList();
         final Ds3ObjectList ds3ObjectList = new Ds3ObjectList(objectList);
         final String result = XmlOutput.toXml(ds3ObjectList, false);
 
