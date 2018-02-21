@@ -16,16 +16,15 @@
 // This code is auto-generated, do not modify
 package com.spectralogic.ds3client.commands.spectrads3;
 
-import com.spectralogic.ds3client.networking.HttpVerb;
-import com.spectralogic.ds3client.commands.interfaces.AbstractRequest;
-import com.google.common.net.UrlEscapers;
+import com.spectralogic.ds3client.BulkCommand;
+import com.spectralogic.ds3client.commands.interfaces.BulkRequest;
 import com.spectralogic.ds3client.models.Priority;
+import com.spectralogic.ds3client.models.bulk.Ds3Object;
+import com.spectralogic.ds3client.networking.HttpVerb;
 
-public class StageObjectsJobSpectraS3Request extends AbstractRequest {
+public class StageObjectsJobSpectraS3Request extends BulkRequest {
 
     // Variables
-    
-    private final String bucketName;
 
     private String name;
 
@@ -34,8 +33,8 @@ public class StageObjectsJobSpectraS3Request extends AbstractRequest {
     // Constructor
     
     
-    public StageObjectsJobSpectraS3Request(final String bucketName) {
-        this.bucketName = bucketName;
+    public StageObjectsJobSpectraS3Request(final String bucketName, final Iterable<Ds3Object> objects) {
+        super(bucketName, objects);
         
         this.getQueryParams().put("operation", "start_bulk_stage");
 
@@ -62,12 +61,8 @@ public class StageObjectsJobSpectraS3Request extends AbstractRequest {
     }
 
     @Override
-    public String getPath() {
-        return "/_rest_/bucket/" + this.bucketName;
-    }
-    
-    public String getBucketName() {
-        return this.bucketName;
+    public BulkCommand getCommand() {
+        return BulkCommand.GET;
     }
 
 

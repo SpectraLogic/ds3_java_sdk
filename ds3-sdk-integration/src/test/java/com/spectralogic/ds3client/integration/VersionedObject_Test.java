@@ -18,7 +18,9 @@ package com.spectralogic.ds3client.integration;
 import com.spectralogic.ds3client.Ds3Client;
 import com.spectralogic.ds3client.commands.GetBucketRequest;
 import com.spectralogic.ds3client.commands.GetBucketResponse;
+import com.spectralogic.ds3client.commands.spectrads3.DeleteBucketSpectraS3Request;
 import com.spectralogic.ds3client.commands.spectrads3.GetBulkJobSpectraS3Request;
+import com.spectralogic.ds3client.commands.spectrads3.StageObjectsJobSpectraS3Request;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers;
 import com.spectralogic.ds3client.integration.test.helpers.TempStorageIds;
 import com.spectralogic.ds3client.integration.test.helpers.TempStorageUtil;
@@ -104,6 +106,36 @@ public class VersionedObject_Test {
         } finally {
             cancelAllJobsForBucket(CLIENT, TEST_ENV_NAME);
             deleteAllContents(CLIENT, TEST_ENV_NAME);
+        }
+    }
+
+    @Test
+    public void stageObjectsWithVersioning() throws IOException, URISyntaxException {
+        try {
+            HELPERS.ensureBucketExists(TEST_ENV_NAME, envDataPolicyId);
+            final String objectName = "object_with_versions";
+
+            // Put different content for object twice
+            loadTestBook(CLIENT, BOOKS[0], objectName, TEST_ENV_NAME); // putting beowulf as content
+            loadTestBook(CLIENT, BOOKS[1], objectName, TEST_ENV_NAME); // putting sherlock holmes as content
+
+            // Get the version of the objects
+            final GetBucketRequest getBucketRequest = new GetBucketRequest(TEST_ENV_NAME).withVersions(true);
+            final GetBucketResponse getBucketResponse = CLIENT.getBucket(getBucketRequest);
+
+            assertThat(getBucketResponse.getListBucketResult().getObjects().size(), is(0));
+            assertThat(getBucketResponse.getListBucketResult().getVersionedObjects().size(), is(2));
+
+            // Create bulk get job with both versions of object specified
+            final List<Ds3Object> objects = getBucketResponse.getListBucketResult().getVersionedObjects().stream()
+                    .map(obj -> new Ds3Object(obj.getKey(), obj.getVersionId()))
+                    .collect(Collectors.toList());
+
+            final StageObjectsJobSpectraS3Request stageRequest = new StageObjectsJobSpectraS3Request(TEST_ENV_NAME, objects);
+            CLIENT.stageObjectsJobSpectraS3(stageRequest);
+
+        } finally {
+            CLIENT.deleteBucketSpectraS3(new DeleteBucketSpectraS3Request(TEST_ENV_NAME).withForce(true));
         }
     }
 }
