@@ -201,12 +201,9 @@ public final class ResponseParserUtils {
         }
 
         final ImmutableMap.Builder<Long, String> builder = ImmutableMap.builder();
-
-        for (final String key : headers.keys()) {
-            if (key.startsWith(BLOB_CHECKSUM_HEADER)) {
-                builder.put(getOffsetFromHeaderKey(key), getBlobChecksumValue(key, headers));
-            }
-        }
+        headers.keys().stream()
+                .filter(key -> key.startsWith(BLOB_CHECKSUM_HEADER))
+                .forEach(key -> builder.put(getOffsetFromHeaderKey(key), getBlobChecksumValue(key, headers)));
 
         return builder.build();
     }
