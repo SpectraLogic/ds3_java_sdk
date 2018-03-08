@@ -102,17 +102,6 @@ public class XmlOutput_Test {
         assertThat(result, is(expectedString));
     }
 
-    @Test
-    public void toXmlWithPriority() {
-        final String expectedString = "<Objects Priority=\"HIGH\"><Object Name=\"file1\" Size=\"12\"/><Object Name=\"file2\" Size=\"5022\"/></Objects>";
-        final List<Ds3Object> objectList = ImmutableList.of(new Ds3Object("file1", 12), new Ds3Object("file2", 5022)).asList();
-        final Ds3ObjectList ds3ObjectList = new Ds3ObjectList(objectList);
-        ds3ObjectList.setPriority(Priority.HIGH);
-        final String result = XmlOutput.toXml(ds3ObjectList, true);
-
-        assertThat(result, is(expectedString));
-    }
-
     @Test(expected = java.io.IOException.class)
     public void fromXmlWithInvalidElementThrowsExceptionInDevBuild() throws IOException {
         assumeFalse(XmlOutput.isProductionBuild());

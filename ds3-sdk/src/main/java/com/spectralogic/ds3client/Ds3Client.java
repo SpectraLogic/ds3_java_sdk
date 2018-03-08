@@ -895,6 +895,7 @@ public interface Ds3Client extends Closeable {
     ReplicatePutJobSpectraS3Response replicatePutJobSpectraS3(final ReplicatePutJobSpectraS3Request request)
             throws IOException;
 
+    @ResponsePayloadModel("MasterObjectList")
     @Action("MODIFY")
     @Resource("BUCKET")
     

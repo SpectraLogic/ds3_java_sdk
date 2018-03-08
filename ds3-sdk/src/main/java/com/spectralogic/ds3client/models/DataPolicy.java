@@ -31,9 +31,6 @@ public class DataPolicy {
     @JsonProperty("AlwaysMinimizeSpanningAcrossMedia")
     private boolean alwaysMinimizeSpanningAcrossMedia;
 
-    @JsonProperty("AlwaysReplicateDeletes")
-    private boolean alwaysReplicateDeletes;
-
     @JsonProperty("BlobbingEnabled")
     private boolean blobbingEnabled;
 
@@ -63,9 +60,6 @@ public class DataPolicy {
 
     @JsonProperty("Id")
     private UUID id;
-
-    @JsonProperty("LtfsObjectNamingAllowed")
-    private boolean ltfsObjectNamingAllowed;
 
     @JsonProperty("MaxVersionsToKeep")
     private int maxVersionsToKeep;
@@ -101,15 +95,6 @@ public class DataPolicy {
 
     public void setAlwaysMinimizeSpanningAcrossMedia(final boolean alwaysMinimizeSpanningAcrossMedia) {
         this.alwaysMinimizeSpanningAcrossMedia = alwaysMinimizeSpanningAcrossMedia;
-    }
-
-
-    public boolean getAlwaysReplicateDeletes() {
-        return this.alwaysReplicateDeletes;
-    }
-
-    public void setAlwaysReplicateDeletes(final boolean alwaysReplicateDeletes) {
-        this.alwaysReplicateDeletes = alwaysReplicateDeletes;
     }
 
 
@@ -200,15 +185,6 @@ public class DataPolicy {
 
     public void setId(final UUID id) {
         this.id = id;
-    }
-
-
-    public boolean getLtfsObjectNamingAllowed() {
-        return this.ltfsObjectNamingAllowed;
-    }
-
-    public void setLtfsObjectNamingAllowed(final boolean ltfsObjectNamingAllowed) {
-        this.ltfsObjectNamingAllowed = ltfsObjectNamingAllowed;
     }
 
 

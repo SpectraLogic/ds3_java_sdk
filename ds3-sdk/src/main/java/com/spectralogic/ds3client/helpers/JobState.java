@@ -79,7 +79,7 @@ public class JobState {
 
         private final PhysicalPlacement physicalPlacement;
 
-        private final long version;
+        private final UUID versionId;
 
         private BlobIdentityDecorator(final BulkObject blob) {
             this.bucket = blob.getBucket();
@@ -89,7 +89,7 @@ public class JobState {
             this.name = blob.getName();
             this.offset = blob.getOffset();
             this.physicalPlacement = blob.getPhysicalPlacement();
-            this.version = blob.getVersion();
+            this.versionId = blob.getVersionId();
         }
 
         @Override
@@ -102,7 +102,7 @@ public class JobState {
             if (latest != that.latest) return false;
             if (length != that.length) return false;
             if (offset != that.offset) return false;
-            if (version != that.version) return false;
+            if (versionId != null ? !versionId.equals(that.versionId) : that.versionId != null) return false;
             if (bucket != null ? !bucket.equals(that.bucket) : that.bucket != null) return false;
             if (id != null ? !id.equals(that.id) : that.id != null) return false;
             if (name != null ? !name.equals(that.name) : that.name != null) return false;
@@ -111,7 +111,7 @@ public class JobState {
 
         @Override
         public int hashCode() {
-            return java.util.Objects.hash(bucket, id, latest, length, name, offset, physicalPlacement, version);
+            return java.util.Objects.hash(bucket, id, latest, length, name, offset, physicalPlacement, versionId);
         }
 
         @Override
