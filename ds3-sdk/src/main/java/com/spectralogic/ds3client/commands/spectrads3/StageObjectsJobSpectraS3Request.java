@@ -17,21 +17,18 @@
 package com.spectralogic.ds3client.commands.spectrads3;
 
 import com.spectralogic.ds3client.BulkCommand;
-import com.spectralogic.ds3client.commands.interfaces.BulkRequest;
-import com.spectralogic.ds3client.models.Priority;
 import com.spectralogic.ds3client.models.bulk.Ds3Object;
-import com.spectralogic.ds3client.networking.HttpVerb;
+import com.spectralogic.ds3client.commands.interfaces.BulkRequest;
+import com.google.common.net.UrlEscapers;
+import com.spectralogic.ds3client.models.Priority;
 
 public class StageObjectsJobSpectraS3Request extends BulkRequest {
 
-    // Variables
 
+    
     private String name;
 
-    private Priority priority;
-
     // Constructor
-    
     
     public StageObjectsJobSpectraS3Request(final String bucketName, final Iterable<Ds3Object> objects) {
         super(bucketName, objects);
@@ -47,32 +44,22 @@ public class StageObjectsJobSpectraS3Request extends BulkRequest {
     }
 
 
+    @Override
     public StageObjectsJobSpectraS3Request withPriority(final Priority priority) {
-        this.priority = priority;
-        this.updateQueryParam("priority", priority);
+        super.withPriority(priority);
         return this;
     }
 
 
 
-    @Override
-    public HttpVerb getVerb() {
-        return HttpVerb.PUT;
-    }
-
-    @Override
-    public BulkCommand getCommand() {
-        return BulkCommand.GET;
-    }
-
-
+    
     public String getName() {
         return this.name;
     }
 
 
-    public Priority getPriority() {
-        return this.priority;
+    @Override
+    public BulkCommand getCommand() {
+        return BulkCommand.GET;
     }
-
 }

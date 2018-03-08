@@ -28,7 +28,6 @@ import java.util.List;
 import java.nio.charset.Charset;
 import com.spectralogic.ds3client.commands.interfaces.AbstractRequest;
 import com.google.common.net.UrlEscapers;
-import java.util.UUID;
 
 public class EjectStorageDomainBlobsSpectraS3Request extends AbstractRequest {
 
@@ -130,5 +129,6 @@ public class EjectStorageDomainBlobsSpectraS3Request extends AbstractRequest {
     public String getEjectLocation() {
         return this.ejectLocation;
     }
+
 
 }

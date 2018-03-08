@@ -16,15 +16,21 @@
 // This code is auto-generated, do not modify
 package com.spectralogic.ds3client.commands.spectrads3;
 
-import com.spectralogic.ds3client.commands.interfaces.BulkResponse;
+import com.spectralogic.ds3client.models.MasterObjectList;
 import com.spectralogic.ds3client.models.ChecksumType;
 import com.spectralogic.ds3client.commands.interfaces.AbstractResponse;
-import com.spectralogic.ds3client.models.MasterObjectList;
 
-public class StageObjectsJobSpectraS3Response extends BulkResponse {
+public class StageObjectsJobSpectraS3Response extends AbstractResponse {
     
+    private final MasterObjectList masterObjectListResult;
+
     public StageObjectsJobSpectraS3Response(final MasterObjectList masterObjectListResult, final String checksum, final ChecksumType.Type checksumType) {
-        super(masterObjectListResult, checksum, checksumType);
+        super(checksum, checksumType);
+        this.masterObjectListResult = masterObjectListResult;
+    }
+
+    public MasterObjectList getMasterObjectListResult() {
+        return this.masterObjectListResult;
     }
 
 }
