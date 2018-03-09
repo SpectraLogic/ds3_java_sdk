@@ -1379,6 +1379,13 @@ public interface Ds3Client extends Closeable {
     GetPhysicalPlacementForObjectsWithFullDetailsSpectraS3Response getPhysicalPlacementForObjectsWithFullDetailsSpectraS3(final GetPhysicalPlacementForObjectsWithFullDetailsSpectraS3Request request)
             throws IOException;
 
+    @ResponsePayloadModel("S3Object")
+    @Action("BULK_MODIFY")
+    @Resource("OBJECT")
+    
+    UndeleteObjectSpectraS3Response undeleteObjectSpectraS3(final UndeleteObjectSpectraS3Request request)
+            throws IOException;
+
     @ResponsePayloadModel("PhysicalPlacement")
     @Action("SHOW")
     @Resource("BUCKET")

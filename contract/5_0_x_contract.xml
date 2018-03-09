@@ -4602,6 +4602,32 @@
         </ResponseCodes>
         <Version>1.BDA9A7110ADB2C122D0CA705B6B1D6FA</Version>
       </RequestHandler>
+      <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.object.UndeleteObjectRequestHandler">
+        <Request Action="BULK_MODIFY" HttpVerb="PUT" IncludeIdInPath="false" Resource="OBJECT" ResourceType="NON_SINGLETON">
+          <OptionalQueryParams>
+            <Param Name="VersionId" Type="java.util.UUID"/>
+          </OptionalQueryParams>
+          <RequiredQueryParams>
+            <Param Name="BucketId" Type="java.util.UUID"/>
+            <Param Name="Name" Type="java.lang.String"/>
+          </RequiredQueryParams>
+        </Request>
+        <ResponseCodes>
+          <ResponseCode>
+            <Code>200</Code>
+            <ResponseTypes>
+              <ResponseType Type="com.spectralogic.s3.common.dao.domain.ds3.S3Object"/>
+            </ResponseTypes>
+          </ResponseCode>
+          <ResponseCode>
+            <Code>404</Code>
+            <ResponseTypes>
+              <ResponseType Type="com.spectralogic.s3.server.domain.HttpErrorResultApiBean"/>
+            </ResponseTypes>
+          </ResponseCode>
+        </ResponseCodes>
+        <Version>1.94C075BD3FE76604F8ED084C9B9E4AE5</Version>
+      </RequestHandler>
       <RequestHandler Classification="spectrads3" Name="com.spectralogic.s3.server.handler.reqhandler.spectrads3.object.VerifyPhysicalPlacementForObjectsRequestHandler">
         <Request Action="SHOW" HttpVerb="GET" IncludeIdInPath="true" Operation="VERIFY_PHYSICAL_PLACEMENT" Resource="BUCKET" ResourceType="NON_SINGLETON">
           <OptionalQueryParams>
@@ -5440,6 +5466,12 @@
             <Code>200</Code>
             <ResponseTypes>
               <ResponseType Type="com.spectralogic.s3.common.dao.domain.ds3.StorageDomainMember"/>
+            </ResponseTypes>
+          </ResponseCode>
+          <ResponseCode>
+            <Code>400</Code>
+            <ResponseTypes>
+              <ResponseType Type="com.spectralogic.s3.server.domain.HttpErrorResultApiBean"/>
             </ResponseTypes>
           </ResponseCode>
         </ResponseCodes>
