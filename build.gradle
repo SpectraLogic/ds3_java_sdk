@@ -23,19 +23,20 @@ buildscript {
 
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.3'
-        classpath 'com.github.jengelman.gradle.plugins:shadow:2.0.1'
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.0'
+        classpath 'com.github.jengelman.gradle.plugins:shadow:2.0.2'
+        classpath "gradle.plugin.net.ossindex:ossindex-gradle-plugin:0.2.0-beta"
     }
 }
 
 
 plugins {
-    id "com.palantir.git-version" version "0.10.0"
+    id "com.palantir.git-version" version "0.10.1"
 }
 
 allprojects {
     group = 'com.spectralogic.ds3'
-    version = '4.0.1'
+    version = '5.0.0'
 }
 
 subprojects {
@@ -43,6 +44,7 @@ subprojects {
     apply plugin: 'java'
     apply plugin: 'kotlin'
     apply plugin: 'findbugs'
+    apply plugin: 'net.ossindex.audit'
 
     sourceCompatibility = JavaVersion.VERSION_1_8
     repositories {
@@ -62,7 +64,7 @@ subprojects {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '4.1'
+    gradleVersion = '4.6'
 }
 
 project(':ds3-sdk') {
