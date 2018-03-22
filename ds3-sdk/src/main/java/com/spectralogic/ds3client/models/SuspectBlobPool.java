@@ -40,9 +40,6 @@ public class SuspectBlobPool {
     @JsonProperty("LastAccessed")
     private Date lastAccessed;
 
-    @JsonProperty("ObsoletionId")
-    private UUID obsoletionId;
-
     @JsonProperty("PoolId")
     private UUID poolId;
 
@@ -95,15 +92,6 @@ public class SuspectBlobPool {
 
     public void setLastAccessed(final Date lastAccessed) {
         this.lastAccessed = lastAccessed;
-    }
-
-
-    public UUID getObsoletionId() {
-        return this.obsoletionId;
-    }
-
-    public void setObsoletionId(final UUID obsoletionId) {
-        this.obsoletionId = obsoletionId;
     }
 
 
