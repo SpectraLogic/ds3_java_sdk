@@ -35,6 +35,8 @@ public class ModifyTapePartitionSpectraS3Request extends AbstractRequest {
 
     private Quiesced quiesced;
 
+    private String serialNumber;
+
     // Constructor
     
     
@@ -67,6 +69,13 @@ public class ModifyTapePartitionSpectraS3Request extends AbstractRequest {
     public ModifyTapePartitionSpectraS3Request withQuiesced(final Quiesced quiesced) {
         this.quiesced = quiesced;
         this.updateQueryParam("quiesced", quiesced);
+        return this;
+    }
+
+
+    public ModifyTapePartitionSpectraS3Request withSerialNumber(final String serialNumber) {
+        this.serialNumber = serialNumber;
+        this.updateQueryParam("serial_number", serialNumber);
         return this;
     }
 
@@ -104,6 +113,11 @@ public class ModifyTapePartitionSpectraS3Request extends AbstractRequest {
 
     public Quiesced getQuiesced() {
         return this.quiesced;
+    }
+
+
+    public String getSerialNumber() {
+        return this.serialNumber;
     }
 
 }

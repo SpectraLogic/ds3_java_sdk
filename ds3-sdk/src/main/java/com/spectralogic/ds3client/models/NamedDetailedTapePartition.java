@@ -61,9 +61,6 @@ public class NamedDetailedTapePartition {
     @JsonProperty("Quiesced")
     private Quiesced quiesced;
 
-    @JsonProperty("SerialId")
-    private String serialId;
-
     @JsonProperty("SerialNumber")
     private String serialNumber;
 
@@ -177,15 +174,6 @@ public class NamedDetailedTapePartition {
 
     public void setQuiesced(final Quiesced quiesced) {
         this.quiesced = quiesced;
-    }
-
-
-    public String getSerialId() {
-        return this.serialId;
-    }
-
-    public void setSerialId(final String serialId) {
-        this.serialId = serialId;
     }
 
 
