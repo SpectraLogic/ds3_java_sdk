@@ -49,6 +49,8 @@ public class PutDataPolicySpectraS3Request extends AbstractRequest {
     private Priority defaultVerifyJobPriority;
 
     private boolean endToEndCrcRequired;
+    
+    private int maxVersionsToKeep;
 
     private Priority rebuildPriority;
 
@@ -147,6 +149,13 @@ public class PutDataPolicySpectraS3Request extends AbstractRequest {
     }
 
 
+    public PutDataPolicySpectraS3Request withMaxVersionsToKeep(final int maxVersionsToKeep) {
+        this.maxVersionsToKeep = maxVersionsToKeep;
+        this.updateQueryParam("max_versions_to_keep", maxVersionsToKeep);
+        return this;
+    }
+
+
 
     @Override
     public HttpVerb getVerb() {
@@ -221,5 +230,9 @@ public class PutDataPolicySpectraS3Request extends AbstractRequest {
     public VersioningLevel getVersioning() {
         return this.versioning;
     }
-
+    
+    public int getMaxVersionsToKeep()
+    {
+        return maxVersionsToKeep;
+    }
 }
