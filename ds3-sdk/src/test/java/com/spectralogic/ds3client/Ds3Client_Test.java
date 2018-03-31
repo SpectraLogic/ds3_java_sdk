@@ -221,7 +221,6 @@ public class Ds3Client_Test {
         beowulf.setId(UUID.fromString("e37c3ce0-12aa-4f54-87e3-42532aca0e5e"));
         beowulf.setName("beowulf.txt");
         beowulf.setType(S3ObjectType.DATA);
-        beowulf.setVersion(1);
 
         final S3Object notBeowulf = new S3Object();
         notBeowulf.setBucketId(UUID.fromString("a24d14f3-e2f0-4bfb-ab71-f99d5ef43745"));
@@ -229,7 +228,6 @@ public class Ds3Client_Test {
         notBeowulf.setId(UUID.fromString("e37c3ce0-12aa-4f54-87e3-42532aca0e5e"));
         notBeowulf.setName("notBeowulf.txt");
         notBeowulf.setType(S3ObjectType.DATA);
-        notBeowulf.setVersion(1);
 
         assertThat(objects.size(), is(4));
         assertThat(s3ObjectExists(objects, beowulf), is(true));

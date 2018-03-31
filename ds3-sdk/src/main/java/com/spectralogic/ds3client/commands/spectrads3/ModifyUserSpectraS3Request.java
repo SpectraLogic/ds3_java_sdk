@@ -32,6 +32,8 @@ public class ModifyUserSpectraS3Request extends AbstractRequest {
     private String name;
 
     private String secretKey;
+    
+    private int maxBuckets;
 
     // Constructor
     
@@ -76,6 +78,14 @@ public class ModifyUserSpectraS3Request extends AbstractRequest {
 
 
 
+    public ModifyUserSpectraS3Request withMaxBuckets(final int maxBuckets) {
+        this.maxBuckets = maxBuckets;
+        this.updateQueryParam("max_buckets", maxBuckets);
+        return this;
+    }
+
+
+
     @Override
     public HttpVerb getVerb() {
         return HttpVerb.PUT;
@@ -104,5 +114,10 @@ public class ModifyUserSpectraS3Request extends AbstractRequest {
     public String getSecretKey() {
         return this.secretKey;
     }
-
+    
+    
+    public int getMaxBuckets()
+    {
+        return maxBuckets;
+    }
 }

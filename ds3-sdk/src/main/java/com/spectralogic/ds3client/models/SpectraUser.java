@@ -40,6 +40,9 @@ public class SpectraUser {
     @JsonProperty("SecretKey")
     private String secretKey;
 
+    @JsonProperty("MaxBuckets")
+    private int maxBuckets;
+
     // Constructor
     public SpectraUser() {
         //pass
@@ -90,5 +93,15 @@ public class SpectraUser {
     public void setSecretKey(final String secretKey) {
         this.secretKey = secretKey;
     }
-
+    
+    
+    public int getMaxBuckets()
+    {
+        return maxBuckets;
+    }
+    
+    public void setMaxBuckets( final int maxBuckets )
+    {
+        this.maxBuckets = maxBuckets;
+    }
 }
