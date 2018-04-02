@@ -18,5 +18,6 @@ package com.spectralogic.ds3client.models;
 
 public enum VersioningLevel {
     NONE,
-    KEEP_LATEST
+    KEEP_LATEST,
+    KEEP_MULTIPLE_VERSIONS
 }

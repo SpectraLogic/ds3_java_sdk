@@ -32,7 +32,10 @@ public class Bucket {
 
     @JsonProperty("DataPolicyId")
     private UUID dataPolicyId;
-
+    
+    @JsonProperty("Empty")
+    private Boolean empty;
+    
     @JsonProperty("Id")
     private UUID id;
 
@@ -71,8 +74,17 @@ public class Bucket {
     public void setDataPolicyId(final UUID dataPolicyId) {
         this.dataPolicyId = dataPolicyId;
     }
-
-
+    
+    
+    public Boolean getEmpty() {
+        return this.empty;
+    }
+    
+    public void setEmpty(final Boolean empty) {
+        this.empty = empty;
+    }
+    
+    
     public UUID getId() {
         return this.id;
     }

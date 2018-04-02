@@ -54,6 +54,9 @@ public class DataPolicy {
     @JsonProperty("DefaultVerifyJobPriority")
     private Priority defaultVerifyJobPriority;
 
+    @JsonProperty("DefaultVerifyAfterWrite")
+    private boolean defaultVerifyAfterWrite;
+
     @JsonProperty("EndToEndCrcRequired")
     private boolean endToEndCrcRequired;
 
@@ -211,9 +214,20 @@ public class DataPolicy {
         return maxVersionsToKeep;
     }
     
-    
-    public void setMaxVersionsToKeep( final Integer maxVersionsToKeep )
+    public void setMaxVersionsToKeep( final int maxVersionsToKeep )
     {
         this.maxVersionsToKeep = maxVersionsToKeep;
+    }
+    
+    
+    public boolean getDefaultVerifyAfterWrite()
+    {
+        return defaultVerifyAfterWrite;
+    }
+    
+    
+    public void setDefaultVerifyAfterWrite( final boolean defaultVerifyAfterWrite )
+    {
+        this.defaultVerifyAfterWrite = defaultVerifyAfterWrite;
     }
 }

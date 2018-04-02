@@ -16,14 +16,13 @@
 // This code is auto-generated, do not modify
 package com.spectralogic.ds3client.commands.spectrads3;
 
-import com.spectralogic.ds3client.networking.HttpVerb;
+import java.util.UUID;
+
 import com.spectralogic.ds3client.commands.interfaces.AbstractRequest;
 import com.spectralogic.ds3client.models.ChecksumType;
-import java.lang.Long;
 import com.spectralogic.ds3client.models.Priority;
-import com.google.common.net.UrlEscapers;
 import com.spectralogic.ds3client.models.VersioningLevel;
-import java.util.UUID;
+import com.spectralogic.ds3client.networking.HttpVerb;
 
 public class ModifyDataPolicySpectraS3Request extends AbstractRequest {
 
@@ -35,10 +34,8 @@ public class ModifyDataPolicySpectraS3Request extends AbstractRequest {
 
     private boolean alwaysMinimizeSpanningAcrossMedia;
 
-    private boolean alwaysReplicateDeletes;
-
     private boolean blobbingEnabled;
-
+    
     private ChecksumType.Type checksumType;
 
     private Long defaultBlobSize;
@@ -48,7 +45,9 @@ public class ModifyDataPolicySpectraS3Request extends AbstractRequest {
     private Priority defaultPutJobPriority;
 
     private Priority defaultVerifyJobPriority;
-
+    
+    private boolean defaultVerifyAfterWrite;
+    
     private boolean endToEndCrcRequired;
     
     private int maxVersionsToKeep;
@@ -83,13 +82,6 @@ public class ModifyDataPolicySpectraS3Request extends AbstractRequest {
     public ModifyDataPolicySpectraS3Request withAlwaysMinimizeSpanningAcrossMedia(final boolean alwaysMinimizeSpanningAcrossMedia) {
         this.alwaysMinimizeSpanningAcrossMedia = alwaysMinimizeSpanningAcrossMedia;
         this.updateQueryParam("always_minimize_spanning_across_media", alwaysMinimizeSpanningAcrossMedia);
-        return this;
-    }
-
-
-    public ModifyDataPolicySpectraS3Request withAlwaysReplicateDeletes(final boolean alwaysReplicateDeletes) {
-        this.alwaysReplicateDeletes = alwaysReplicateDeletes;
-        this.updateQueryParam("always_replicate_deletes", alwaysReplicateDeletes);
         return this;
     }
 
@@ -150,6 +142,20 @@ public class ModifyDataPolicySpectraS3Request extends AbstractRequest {
     }
     
     
+    public ModifyDataPolicySpectraS3Request withDefaultVerifyAfterWrite( final boolean defaultVerifyAfterWrite )
+    {
+        this.defaultVerifyAfterWrite = defaultVerifyAfterWrite;
+        this.updateQueryParam( "defaultVerifyAfterWrite", defaultVerifyAfterWrite );
+        return this;
+    }
+    
+    
+    public boolean getDefaultVerifyAfterWrite()
+    {
+        return defaultVerifyAfterWrite;
+    }
+    
+    
     public ModifyDataPolicySpectraS3Request withName(final String name) {
         this.name = name;
         this.updateQueryParam("name", name);
@@ -194,11 +200,6 @@ public class ModifyDataPolicySpectraS3Request extends AbstractRequest {
 
     public boolean getAlwaysMinimizeSpanningAcrossMedia() {
         return this.alwaysMinimizeSpanningAcrossMedia;
-    }
-
-
-    public boolean getAlwaysReplicateDeletes() {
-        return this.alwaysReplicateDeletes;
     }
 
 
