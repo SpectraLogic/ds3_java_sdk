@@ -161,7 +161,7 @@ public class BulkObject {
                 && nullableEquals(this.getName(), bulkObject.getName())
                 && this.getOffset() == bulkObject.getOffset()
                 && this.getPhysicalPlacement() == bulkObject.getPhysicalPlacement()
-                && this.getVersionId().equals( bulkObject.getVersionId() );
+                && nullableEquals(this.getVersionId(), bulkObject.getVersionId());
     }
 
     /**
