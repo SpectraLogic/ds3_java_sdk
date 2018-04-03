@@ -16,12 +16,11 @@
 // This code is auto-generated, do not modify
 package com.spectralogic.ds3client.models;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
-import java.lang.String;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import java.util.UUID;
-import java.lang.Boolean;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 
 @JacksonXmlRootElement(namespace = "Data")
 public class BulkObject {
@@ -162,7 +161,7 @@ public class BulkObject {
                 && nullableEquals(this.getName(), bulkObject.getName())
                 && this.getOffset() == bulkObject.getOffset()
                 && this.getPhysicalPlacement() == bulkObject.getPhysicalPlacement()
-                && this.getVersionId() == bulkObject.getVersionId();
+                && this.getVersionId().equals( bulkObject.getVersionId() );
     }
 
     /**
