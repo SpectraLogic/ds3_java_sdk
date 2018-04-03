@@ -7,7 +7,7 @@ ENV["DS3_ENDPOINT"] = ENV["DS3_ENDPOINT"] || "sm2u-11"
 connection = Faraday.new(:url =>  "https://#{ENV["DS3_ENDPOINT"]}-mgmt.eng.sldomain.com",
                                             # Don't worry about verifying the SSL certificate.
                                             :ssl => { :verify => false }) do |conn|
-  conn.request(:basic_auth, "spectra", "spectra")
+  conn.request(:basic_auth, "Administrator", "Administrator")
   # User Ruby's net/http library
   conn.adapter(:net_http)
   # Setup for JSON requests and responses.
