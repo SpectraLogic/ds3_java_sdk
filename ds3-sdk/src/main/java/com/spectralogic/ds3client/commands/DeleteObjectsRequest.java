@@ -38,7 +38,6 @@ public class DeleteObjectsRequest extends AbstractRequest {
 
     private boolean replicate;
 
-    private boolean rollBack;
     private boolean quiet = false;
     private long size;
 
@@ -77,18 +76,6 @@ public class DeleteObjectsRequest extends AbstractRequest {
         }
         return this;
     }
-
-
-    public DeleteObjectsRequest withRollBack(final boolean rollBack) {
-        this.rollBack = rollBack;
-        if (this.rollBack) {
-            this.getQueryParams().put("roll_back", null);
-        } else {
-            this.getQueryParams().remove("roll_back");
-        }
-        return this;
-    }
-
 
 
     public DeleteObjectsRequest withQuiet(final boolean quiet) {
@@ -143,11 +130,6 @@ public class DeleteObjectsRequest extends AbstractRequest {
 
     public boolean getReplicate() {
         return this.replicate;
-    }
-
-
-    public boolean getRollBack() {
-        return this.rollBack;
     }
 
 
