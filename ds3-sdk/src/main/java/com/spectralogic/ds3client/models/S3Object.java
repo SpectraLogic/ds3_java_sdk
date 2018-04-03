@@ -45,9 +45,6 @@ public class S3Object {
     @JsonProperty("Type")
     private S3ObjectType type;
 
-    @JsonProperty("Version")
-    private long version;
-
     // Constructor
     public S3Object() {
         //pass
@@ -107,20 +104,11 @@ public class S3Object {
     public void setType(final S3ObjectType type) {
         this.type = type;
     }
-
-
-    public long getVersion() {
-        return this.version;
-    }
-
-    public void setVersion(final long version) {
-        this.version = version;
-    }
-
-
+    
+    
     @Override
     public int hashCode() {
-        return Objects.hash(bucketId, name, id, latest, creationDate, type, version);
+        return Objects.hash(bucketId, name, id, latest, creationDate, type);
     }
 
     @Override
@@ -136,7 +124,6 @@ public class S3Object {
                 && this.id.equals(s3obj.getId())
                 && this.latest == s3obj.getLatest()
                 && this.name.equals(s3obj.getName())
-                && this.type == s3obj.getType()
-                && this.version == s3obj.getVersion();
+                && this.type == s3obj.getType();
     }
 }

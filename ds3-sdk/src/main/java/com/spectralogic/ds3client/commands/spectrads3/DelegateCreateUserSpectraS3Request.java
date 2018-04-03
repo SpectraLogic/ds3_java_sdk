@@ -30,6 +30,8 @@ public class DelegateCreateUserSpectraS3Request extends AbstractRequest {
     private String id;
 
     private String secretKey;
+    
+    private int maxBuckets;
 
     // Constructor
     
@@ -59,6 +61,13 @@ public class DelegateCreateUserSpectraS3Request extends AbstractRequest {
         this.updateQueryParam("secret_key", secretKey);
         return this;
     }
+    
+    
+    public DelegateCreateUserSpectraS3Request withMaxBuckets(final int maxBuckets) {
+        this.maxBuckets = maxBuckets;
+        this.updateQueryParam("max_buckets", maxBuckets);
+        return this;
+    }
 
 
 
@@ -85,5 +94,16 @@ public class DelegateCreateUserSpectraS3Request extends AbstractRequest {
     public String getSecretKey() {
         return this.secretKey;
     }
-
+    
+    
+    public void setMaxBuckets( final int maxBuckets )
+    {
+        this.maxBuckets = maxBuckets;
+    }
+    
+    
+    public int getMaxBuckets()
+    {
+        return maxBuckets;
+    }
 }

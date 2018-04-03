@@ -74,7 +74,7 @@ public class UsersAndGroups_Test {
         try {
             HELPERS.ensureBucketExists(BUCKET_NAME, dataPolicy);
             spectraUUID = client.getUserSpectraS3(
-                    new GetUserSpectraS3Request("spectra")).getSpectraUserResult().getId();
+                    new GetUserSpectraS3Request("Administrator")).getSpectraUserResult().getId();
             administratorsUUID = client.getGroupSpectraS3(
                     new GetGroupSpectraS3Request("Administrators")).getGroupResult().getId();
         } catch (final Exception e) {
@@ -88,16 +88,16 @@ public class UsersAndGroups_Test {
         final GetUserSpectraS3Response getSpectraResponse = client
                 .getUserSpectraS3(new GetUserSpectraS3Request(spectraUUID));
 
-        assertThat(getSpectraResponse.getSpectraUserResult().getName(), is("spectra"));
+        assertThat(getSpectraResponse.getSpectraUserResult().getName(), is("Administrator"));
     }
 
     @Test
     public void getUserWithString() throws IOException, SignatureException {
 
         final GetUserSpectraS3Response getSpectraResponse = client
-                .getUserSpectraS3(new GetUserSpectraS3Request("spectra"));
+                .getUserSpectraS3(new GetUserSpectraS3Request("Administrator"));
 
-        assertThat(getSpectraResponse.getSpectraUserResult().getName(), is("spectra"));
+        assertThat(getSpectraResponse.getSpectraUserResult().getName(), is("Administrator"));
     }
 
     @Test
@@ -113,7 +113,7 @@ public class UsersAndGroups_Test {
     public void getUsersWithName() throws IOException, SignatureException {
 
         final GetUsersSpectraS3Response getUsersResponse = client.getUsersSpectraS3(
-                new GetUsersSpectraS3Request().withName("spectra"));
+                new GetUsersSpectraS3Request().withName("Administrator"));
 
         assertThat(getUsersResponse.getStatusCode(), is(200));
     }
@@ -465,7 +465,7 @@ public class UsersAndGroups_Test {
 
         final GetGroupMembersSpectraS3Response getGroupMembersSpectraS3Response = client
                 .getGroupMembersSpectraS3(new GetGroupMembersSpectraS3Request()
-                        .withMemberUserId("spectra"));
+                        .withMemberUserId("Administrator"));
 
         assertThat(getGroupMembersSpectraS3Response.getStatusCode(), is(200));
     }
@@ -610,7 +610,7 @@ public class UsersAndGroups_Test {
                     new PutGroupSpectraS3Request("test_group"));
 
             putUserGroupMemberSpectraS3Response = client
-                    .putUserGroupMemberSpectraS3(new PutUserGroupMemberSpectraS3Request("test_group", "spectra"));
+                    .putUserGroupMemberSpectraS3(new PutUserGroupMemberSpectraS3Request("test_group", "Administrator"));
 
             assertThat(putUserGroupMemberSpectraS3Response.getStatusCode(), is(201));
 
@@ -686,7 +686,7 @@ public class UsersAndGroups_Test {
         try {
             putGlobalBucketAclForUserSpectraS3Response = client.putGlobalBucketAclForUserSpectraS3(
                     new PutGlobalBucketAclForUserSpectraS3Request(BucketAclPermission.DELETE,
-                            "spectra"));
+                            "Administrator"));
 
             assertThat(putGlobalBucketAclForUserSpectraS3Response.getStatusCode(), is(201));
 
@@ -788,7 +788,7 @@ public class UsersAndGroups_Test {
     @Test
     public void getBucketAclsWithUserIDString() throws IOException, SignatureException {
         final GetBucketAclsSpectraS3Response getBucketAclsSpectraS3Response = client
-                .getBucketAclsSpectraS3(new GetBucketAclsSpectraS3Request().withUserId("spectra"));
+                .getBucketAclsSpectraS3(new GetBucketAclsSpectraS3Request().withUserId("Administrator"));
 
         assertThat(getBucketAclsSpectraS3Response.getStatusCode(), is(200));
     }
@@ -911,7 +911,7 @@ public class UsersAndGroups_Test {
         PutGlobalDataPolicyAclForUserSpectraS3Response putGlobalDataPolicyAclForUserSpectraS3Response = null;
         try {
             putGlobalDataPolicyAclForUserSpectraS3Response = client.putGlobalDataPolicyAclForUserSpectraS3(
-                    new PutGlobalDataPolicyAclForUserSpectraS3Request("spectra"));
+                    new PutGlobalDataPolicyAclForUserSpectraS3Request("Administrator"));
 
             assertThat(putGlobalDataPolicyAclForUserSpectraS3Response.getStatusCode(), is(201));
 
@@ -970,7 +970,7 @@ public class UsersAndGroups_Test {
                 = null;
         try {
             putGlobalDataPolicyAclForUserSpectraS3Response = client.putGlobalDataPolicyAclForUserSpectraS3(
-                    new PutGlobalDataPolicyAclForUserSpectraS3Request("spectra"));
+                    new PutGlobalDataPolicyAclForUserSpectraS3Request("Administrator"));
 
             final DeleteDataPolicyAclSpectraS3Response deleteDataPolicyAclSpectraS3Response = client
                     .deleteDataPolicyAclSpectraS3(new DeleteDataPolicyAclSpectraS3Request(
@@ -996,7 +996,7 @@ public class UsersAndGroups_Test {
         try {
             putGlobalDataPolicyAclForUserSpectraS3Response = client
                     .putGlobalDataPolicyAclForUserSpectraS3(
-                    new PutGlobalDataPolicyAclForUserSpectraS3Request("spectra"));
+                    new PutGlobalDataPolicyAclForUserSpectraS3Request("Administrator"));
 
             final GetDataPolicyAclSpectraS3Response getDataPolicyAclSpectraS3Response = client
                     .getDataPolicyAclSpectraS3(new GetDataPolicyAclSpectraS3Request(
@@ -1112,7 +1112,7 @@ public class UsersAndGroups_Test {
 
         final GetDataPolicyAclsSpectraS3Response getDataPolicyAclsSpectraS3Response = client
                 .getDataPolicyAclsSpectraS3(new GetDataPolicyAclsSpectraS3Request()
-                        .withUserId("spectra"));
+                        .withUserId("Administrator"));
 
         assertThat(getDataPolicyAclsSpectraS3Response.getStatusCode(), is(200));
     }

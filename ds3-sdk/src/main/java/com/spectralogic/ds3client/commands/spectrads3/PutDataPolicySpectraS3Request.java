@@ -34,8 +34,6 @@ public class PutDataPolicySpectraS3Request extends AbstractRequest {
 
     private boolean alwaysMinimizeSpanningAcrossMedia;
 
-    private boolean alwaysReplicateDeletes;
-
     private boolean blobbingEnabled;
 
     private ChecksumType.Type checksumType;
@@ -47,8 +45,12 @@ public class PutDataPolicySpectraS3Request extends AbstractRequest {
     private Priority defaultPutJobPriority;
 
     private Priority defaultVerifyJobPriority;
-
+    
+    private boolean defaultVerifyAfterWrite;
+    
     private boolean endToEndCrcRequired;
+    
+    private int maxVersionsToKeep;
 
     private Priority rebuildPriority;
 
@@ -73,13 +75,6 @@ public class PutDataPolicySpectraS3Request extends AbstractRequest {
     public PutDataPolicySpectraS3Request withAlwaysMinimizeSpanningAcrossMedia(final boolean alwaysMinimizeSpanningAcrossMedia) {
         this.alwaysMinimizeSpanningAcrossMedia = alwaysMinimizeSpanningAcrossMedia;
         this.updateQueryParam("always_minimize_spanning_across_media", alwaysMinimizeSpanningAcrossMedia);
-        return this;
-    }
-
-
-    public PutDataPolicySpectraS3Request withAlwaysReplicateDeletes(final boolean alwaysReplicateDeletes) {
-        this.alwaysReplicateDeletes = alwaysReplicateDeletes;
-        this.updateQueryParam("always_replicate_deletes", alwaysReplicateDeletes);
         return this;
     }
 
@@ -147,7 +142,28 @@ public class PutDataPolicySpectraS3Request extends AbstractRequest {
     }
 
 
-
+    public PutDataPolicySpectraS3Request withMaxVersionsToKeep(final int maxVersionsToKeep) {
+        this.maxVersionsToKeep = maxVersionsToKeep;
+        this.updateQueryParam("max_versions_to_keep", maxVersionsToKeep);
+        return this;
+    }
+    
+    
+    public PutDataPolicySpectraS3Request withDefaultVerifyAfterWrite( final boolean defaultVerifyAfterWrite )
+    {
+        this.defaultVerifyAfterWrite = defaultVerifyAfterWrite;
+        this.updateQueryParam( "defaultVerifyAfterWrite", defaultVerifyAfterWrite );
+        return this;
+    }
+    
+    
+    public boolean getDefaultVerifyAfterWrite()
+    {
+        return defaultVerifyAfterWrite;
+    }
+    
+    
+    
     @Override
     public HttpVerb getVerb() {
         return HttpVerb.POST;
@@ -170,11 +186,6 @@ public class PutDataPolicySpectraS3Request extends AbstractRequest {
 
     public boolean getAlwaysMinimizeSpanningAcrossMedia() {
         return this.alwaysMinimizeSpanningAcrossMedia;
-    }
-
-
-    public boolean getAlwaysReplicateDeletes() {
-        return this.alwaysReplicateDeletes;
     }
 
 
@@ -221,5 +232,9 @@ public class PutDataPolicySpectraS3Request extends AbstractRequest {
     public VersioningLevel getVersioning() {
         return this.versioning;
     }
-
+    
+    public int getMaxVersionsToKeep()
+    {
+        return maxVersionsToKeep;
+    }
 }

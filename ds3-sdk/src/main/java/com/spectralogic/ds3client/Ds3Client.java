@@ -1981,7 +1981,13 @@ public interface Ds3Client extends Closeable {
     
     RegenerateUserSecretKeySpectraS3Response regenerateUserSecretKeySpectraS3(final RegenerateUserSecretKeySpectraS3Request request)
             throws IOException;
-
+    
+    @ResponsePayloadModel("S3Object")
+    @Action("BULK_MODIFY")
+    @Resource("OBJECT")
+    
+    UndeleteObjectSpectraS3Response undeleteObjectSpectraS3(final UndeleteObjectSpectraS3Request request)
+            throws IOException;
     
     
     GetObjectResponse getObject(final GetObjectRequest request)

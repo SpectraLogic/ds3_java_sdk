@@ -16,12 +16,11 @@
 // This code is auto-generated, do not modify
 package com.spectralogic.ds3client.models;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
-import java.lang.String;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import java.util.UUID;
-import java.lang.Boolean;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 
 @JacksonXmlRootElement(namespace = "Data")
 public class BulkObject {
@@ -51,8 +50,8 @@ public class BulkObject {
     @JsonProperty("PhysicalPlacement")
     private PhysicalPlacement physicalPlacement;
 
-    @JacksonXmlProperty(isAttribute = true, localName = "Version")
-    private long version;
+    @JacksonXmlProperty(isAttribute = true, localName = "VersionId")
+    private UUID versionId;
 
     // Constructor
     public BulkObject() {
@@ -133,18 +132,18 @@ public class BulkObject {
     }
 
 
-    public long getVersion() {
-        return this.version;
+    public UUID getVersionId() {
+        return this.versionId;
     }
 
-    public void setVersion(final long version) {
-        this.version = version;
+    public void setVersionId(final UUID version) {
+        this.versionId = versionId;
     }
 
 
     @Override
     public int hashCode() {
-        return java.util.Objects.hash(id, inCache, latest, length, name, offset, physicalPlacement, version);
+        return java.util.Objects.hash(id, inCache, latest, length, name, offset, physicalPlacement, versionId);
     }
 
     @Override
@@ -162,7 +161,7 @@ public class BulkObject {
                 && nullableEquals(this.getName(), bulkObject.getName())
                 && this.getOffset() == bulkObject.getOffset()
                 && this.getPhysicalPlacement() == bulkObject.getPhysicalPlacement()
-                && this.getVersion() == bulkObject.getVersion();
+                && nullableEquals(this.getVersionId(), bulkObject.getVersionId());
     }
 
     /**

@@ -17,6 +17,7 @@
 package com.spectralogic.ds3client;
 
 import java.io.IOException;
+
 import com.spectralogic.ds3client.commands.*;
 import com.spectralogic.ds3client.commands.spectrads3.*;
 import com.spectralogic.ds3client.commands.spectrads3.notifications.*;
@@ -1212,6 +1213,12 @@ public class Ds3ClientImpl implements Ds3Client {
     @Override
     public RegenerateUserSecretKeySpectraS3Response regenerateUserSecretKeySpectraS3(final RegenerateUserSecretKeySpectraS3Request request) throws IOException {
         return new RegenerateUserSecretKeySpectraS3Response(this.netClient.getResponse(request));
+    }
+    @Override
+    public UndeleteObjectSpectraS3Response undeleteObjectSpectraS3( final UndeleteObjectSpectraS3Request request )
+            throws IOException
+    {
+        return new UndeleteObjectSpectraS3Response( this.netClient.getResponse( request ) );
     }
 
     @Override
