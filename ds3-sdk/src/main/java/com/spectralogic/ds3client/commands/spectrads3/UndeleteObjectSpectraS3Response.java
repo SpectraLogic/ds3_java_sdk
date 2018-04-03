@@ -50,7 +50,7 @@ public class UndeleteObjectSpectraS3Response extends AbstractResponse
                     {
                         s3ObjectResult = XmlOutput.fromXml( inputStream, S3Object.class );
                     }
-                
+                    break;
                 default:
                     assert false : "validateStatusCode should have made it impossible to reach this line";
             }
