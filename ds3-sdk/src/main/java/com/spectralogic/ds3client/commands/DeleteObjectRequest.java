@@ -29,8 +29,6 @@ public class DeleteObjectRequest extends AbstractRequest {
 
     private boolean replicate;
 
-    private boolean rollBack;
-
     // Constructor
     
     
@@ -49,18 +47,6 @@ public class DeleteObjectRequest extends AbstractRequest {
         }
         return this;
     }
-
-
-    public DeleteObjectRequest withRollBack(final boolean rollBack) {
-        this.rollBack = rollBack;
-        if (this.rollBack) {
-            this.getQueryParams().put("roll_back", null);
-        } else {
-            this.getQueryParams().remove("roll_back");
-        }
-        return this;
-    }
-
 
 
     @Override
@@ -87,9 +73,5 @@ public class DeleteObjectRequest extends AbstractRequest {
         return this.replicate;
     }
 
-
-    public boolean getRollBack() {
-        return this.rollBack;
-    }
 
 }
