@@ -16,11 +16,10 @@
 // This code is auto-generated, do not modify
 package com.spectralogic.ds3client.commands.spectrads3;
 
-import com.spectralogic.ds3client.networking.HttpVerb;
-import com.spectralogic.ds3client.commands.interfaces.AbstractPaginationRequest;
-import com.google.common.net.UrlEscapers;
 import java.util.UUID;
-import com.spectralogic.ds3client.models.WriteOptimization;
+
+import com.spectralogic.ds3client.commands.interfaces.AbstractPaginationRequest;
+import com.spectralogic.ds3client.networking.HttpVerb;
 
 public class GetStorageDomainsSpectraS3Request extends AbstractPaginationRequest {
 
@@ -48,7 +47,6 @@ public class GetStorageDomainsSpectraS3Request extends AbstractPaginationRequest
 
     private boolean secureMediaAllocation;
 
-    private WriteOptimization writeOptimization;
 
     // Constructor
     
@@ -145,14 +143,6 @@ public class GetStorageDomainsSpectraS3Request extends AbstractPaginationRequest
     }
 
 
-    public GetStorageDomainsSpectraS3Request withWriteOptimization(final WriteOptimization writeOptimization) {
-        this.writeOptimization = writeOptimization;
-        this.updateQueryParam("write_optimization", writeOptimization);
-        return this;
-    }
-
-
-
     @Override
     public HttpVerb getVerb() {
         return HttpVerb.GET;
@@ -217,9 +207,5 @@ public class GetStorageDomainsSpectraS3Request extends AbstractPaginationRequest
         return this.secureMediaAllocation;
     }
 
-
-    public WriteOptimization getWriteOptimization() {
-        return this.writeOptimization;
-    }
 
 }

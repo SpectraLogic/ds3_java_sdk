@@ -66,9 +66,6 @@ public class StorageDomain {
     @JsonProperty("VerifyPriorToAutoEject")
     private Priority verifyPriorToAutoEject;
 
-    @JsonProperty("WriteOptimization")
-    private WriteOptimization writeOptimization;
-
     // Constructor
     public StorageDomain() {
         //pass
@@ -190,15 +187,6 @@ public class StorageDomain {
 
     public void setVerifyPriorToAutoEject(final Priority verifyPriorToAutoEject) {
         this.verifyPriorToAutoEject = verifyPriorToAutoEject;
-    }
-
-
-    public WriteOptimization getWriteOptimization() {
-        return this.writeOptimization;
-    }
-
-    public void setWriteOptimization(final WriteOptimization writeOptimization) {
-        this.writeOptimization = writeOptimization;
     }
 
 }

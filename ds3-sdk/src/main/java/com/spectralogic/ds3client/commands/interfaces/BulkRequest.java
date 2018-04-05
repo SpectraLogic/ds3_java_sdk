@@ -15,18 +15,18 @@
 
 package com.spectralogic.ds3client.commands.interfaces;
 
-import com.spectralogic.ds3client.BulkCommand;
-import com.spectralogic.ds3client.networking.HttpVerb;
-import com.spectralogic.ds3client.models.Priority;
-import com.spectralogic.ds3client.models.JobChunkClientProcessingOrderGuarantee;
-import com.spectralogic.ds3client.models.WriteOptimization;
-import com.spectralogic.ds3client.models.bulk.*;
-import com.spectralogic.ds3client.serializer.XmlOutput;
-
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.util.List;
+
+import com.spectralogic.ds3client.BulkCommand;
+import com.spectralogic.ds3client.models.JobChunkClientProcessingOrderGuarantee;
+import com.spectralogic.ds3client.models.Priority;
+import com.spectralogic.ds3client.models.bulk.Ds3Object;
+import com.spectralogic.ds3client.models.bulk.Ds3ObjectList;
+import com.spectralogic.ds3client.networking.HttpVerb;
+import com.spectralogic.ds3client.serializer.XmlOutput;
 
 public abstract class BulkRequest extends AbstractRequest {
 
@@ -35,7 +35,6 @@ public abstract class BulkRequest extends AbstractRequest {
     private InputStream stream;
     private long size;
     private Priority priority;
-    private WriteOptimization writeOptimization;
     protected JobChunkClientProcessingOrderGuarantee chunkOrdering;
 
     public BulkRequest(final String bucket, final List<Ds3Object> objects) {
@@ -45,11 +44,7 @@ public abstract class BulkRequest extends AbstractRequest {
 
     public BulkRequest withPriority(final Priority priority) {
         this.priority = priority;
-        return this;
-    }
-
-    public BulkRequest withWriteOptimization(final WriteOptimization writeOptimization) {
-        this.writeOptimization = writeOptimization;
+        this.updateQueryParam( "priority", priority );
         return this;
     }
 
@@ -57,8 +52,6 @@ public abstract class BulkRequest extends AbstractRequest {
         final Ds3ObjectList objects =
                 new Ds3ObjectList();
         objects.setObjects(this.ds3Objects);
-        objects.setPriority(this.priority);
-        objects.setWriteOptimization(this.writeOptimization);
         objects.setChunkClientProcessingOrderGuarantee(this.chunkOrdering);
         
         final StringBuilder xmlOutputBuilder = new StringBuilder();
@@ -110,7 +103,4 @@ public abstract class BulkRequest extends AbstractRequest {
         return priority;
     }
 
-    public WriteOptimization getWriteOptimization() {
-        return writeOptimization;
-    }
 }

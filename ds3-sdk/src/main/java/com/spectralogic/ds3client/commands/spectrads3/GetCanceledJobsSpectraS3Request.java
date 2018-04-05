@@ -75,7 +75,6 @@ public class GetCanceledJobsSpectraS3Request extends AbstractPaginationRequest {
         return this;
     }
 
-
     public GetCanceledJobsSpectraS3Request withChunkClientProcessingOrderGuarantee(final JobChunkClientProcessingOrderGuarantee chunkClientProcessingOrderGuarantee) {
         this.chunkClientProcessingOrderGuarantee = chunkClientProcessingOrderGuarantee;
         this.updateQueryParam("chunk_client_processing_order_guarantee", chunkClientProcessingOrderGuarantee);

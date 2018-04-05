@@ -23,7 +23,6 @@ import java.lang.Long;
 import com.spectralogic.ds3client.models.LtfsFileNamingMode;
 import java.lang.Integer;
 import com.spectralogic.ds3client.models.Priority;
-import com.spectralogic.ds3client.models.WriteOptimization;
 
 public class PutStorageDomainSpectraS3Request extends AbstractRequest {
 
@@ -53,7 +52,6 @@ public class PutStorageDomainSpectraS3Request extends AbstractRequest {
 
     private Priority verifyPriorToAutoEject;
 
-    private WriteOptimization writeOptimization;
 
     // Constructor
     
@@ -141,14 +139,6 @@ public class PutStorageDomainSpectraS3Request extends AbstractRequest {
     }
 
 
-    public PutStorageDomainSpectraS3Request withWriteOptimization(final WriteOptimization writeOptimization) {
-        this.writeOptimization = writeOptimization;
-        this.updateQueryParam("write_optimization", writeOptimization);
-        return this;
-    }
-
-
-
     @Override
     public HttpVerb getVerb() {
         return HttpVerb.POST;
@@ -218,9 +208,5 @@ public class PutStorageDomainSpectraS3Request extends AbstractRequest {
         return this.verifyPriorToAutoEject;
     }
 
-
-    public WriteOptimization getWriteOptimization() {
-        return this.writeOptimization;
-    }
 
 }

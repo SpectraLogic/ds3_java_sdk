@@ -15,14 +15,13 @@
 
 package com.spectralogic.ds3client.models.bulk;
 
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
-import com.spectralogic.ds3client.models.Priority;
 import com.spectralogic.ds3client.models.JobChunkClientProcessingOrderGuarantee;
-import com.spectralogic.ds3client.models.WriteOptimization;
-
-import java.util.List;
+import com.spectralogic.ds3client.models.Priority;
 
 @JacksonXmlRootElement(localName = "Objects")
 public class Ds3ObjectList {
@@ -31,9 +30,6 @@ public class Ds3ObjectList {
 
     @JacksonXmlProperty(isAttribute = true, namespace = "", localName = "Priority")
     private Priority priority;
-
-    @JacksonXmlProperty(isAttribute = true, namespace = "", localName = "WriteOptimization")
-    private WriteOptimization writeOptimization;
 
     @JacksonXmlProperty(isAttribute = true, namespace = "", localName = "ChunkClientProcessingOrderGuarantee")
     private JobChunkClientProcessingOrderGuarantee chunkClientProcessingOrderGuarantee;
@@ -59,14 +55,6 @@ public class Ds3ObjectList {
 
     public void setPriority(final Priority priority) {
         this.priority = priority;
-    }
-
-    public WriteOptimization getWriteOptimization() {
-        return this.writeOptimization;
-    }
-
-    public void setWriteOptimization(final WriteOptimization writeOptimization) {
-        this.writeOptimization = writeOptimization;
     }
 
     public JobChunkClientProcessingOrderGuarantee getChunkClientProcessingOrderGuarantee() {
