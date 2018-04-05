@@ -15,25 +15,6 @@
 
 package com.spectralogic.ds3client;
 
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Multimap;
-import com.google.common.collect.TreeMultimap;
-import com.spectralogic.ds3client.commands.*;
-import com.spectralogic.ds3client.commands.spectrads3.*;
-import com.spectralogic.ds3client.exceptions.ContentLengthNotMatchException;
-import com.spectralogic.ds3client.models.*;
-import com.spectralogic.ds3client.models.Objects;
-import com.spectralogic.ds3client.models.bulk.Ds3Object;
-import com.spectralogic.ds3client.models.common.Credentials;
-import com.spectralogic.ds3client.networking.FailedRequestException;
-import com.spectralogic.ds3client.networking.FailedRequestUsingMgmtPortException;
-import com.spectralogic.ds3client.networking.HttpVerb;
-import com.spectralogic.ds3client.utils.ByteArraySeekableByteChannel;
-import com.spectralogic.ds3client.utils.ResourceUtils;
-import org.junit.Before;
-import org.junit.Test;
-
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.channels.FileChannel;
@@ -43,8 +24,33 @@ import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.TimeZone;
+import java.util.UUID;
 
+import org.junit.Before;
+import org.junit.Test;
+
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Multimap;
+import com.google.common.collect.TreeMultimap;
+import com.spectralogic.ds3client.commands.*;
+import com.spectralogic.ds3client.commands.spectrads3.*;
+import com.spectralogic.ds3client.exceptions.ContentLengthNotMatchException;
+import com.spectralogic.ds3client.models.*;
+import com.spectralogic.ds3client.models.bulk.Ds3Object;
+import com.spectralogic.ds3client.models.common.Credentials;
+import com.spectralogic.ds3client.networking.FailedRequestException;
+import com.spectralogic.ds3client.networking.FailedRequestUsingMgmtPortException;
+import com.spectralogic.ds3client.networking.HttpVerb;
+import com.spectralogic.ds3client.utils.ByteArraySeekableByteChannel;
+import com.spectralogic.ds3client.utils.ResourceUtils;
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 
@@ -311,10 +317,17 @@ public class Ds3Client_Test {
 
     @Test
     public void multiObjectDelete() throws IOException {
-        final List<String> objsToDelete = Lists.newArrayList("sample1.txt", "sample2.txt");
+        final Map< String, UUID > objsToDelete = new LinkedHashMap<>();
+        final UUID uuid1 = UUID.randomUUID();
+        objsToDelete.put( "sample1.txt", uuid1 );
+        final UUID uuid2 = UUID.randomUUID();
+        objsToDelete.put( "sample2.txt", uuid2 );
         final Map<String, String> queryParams = new HashMap<>();
         queryParams.put("delete", null);
-        final String payload = "<Delete><Quiet>false</Quiet><Object><Key>sample1.txt</Key></Object><Object><Key>sample2.txt</Key></Object></Delete>";
+        final String payload =
+                "<Delete><Quiet>false</Quiet><Object><Key>sample1.txt</Key><VersionId>" + uuid1.toString() +
+                        "</VersionId></Object><Object><Key>sample2.txt</Key><VersionId>" + uuid2.toString() +
+                        "</VersionId></Object></Delete>";
 
         final DeleteObjectsResponse response = MockNetwork
             .expecting(HttpVerb.POST, "/bucketName", queryParams, payload)

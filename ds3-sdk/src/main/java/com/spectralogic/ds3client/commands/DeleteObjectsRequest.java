@@ -16,23 +16,26 @@
 // This code is auto-generated, do not modify
 package com.spectralogic.ds3client.commands;
 
-import com.spectralogic.ds3client.networking.HttpVerb;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+
+import com.spectralogic.ds3client.commands.interfaces.AbstractRequest;
 import com.spectralogic.ds3client.models.Contents;
 import com.spectralogic.ds3client.models.delete.Delete;
 import com.spectralogic.ds3client.models.delete.DeleteObject;
+import com.spectralogic.ds3client.networking.HttpVerb;
 import com.spectralogic.ds3client.serializer.XmlOutput;
-
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
-import java.nio.charset.Charset;
-import com.spectralogic.ds3client.commands.interfaces.AbstractRequest;
 
 public class DeleteObjectsRequest extends AbstractRequest {
 
     // Variables
-    private final List<String> objects;
+    private final Map< String, UUID > objects;
     
     private final String bucketName;
 
@@ -44,7 +47,8 @@ public class DeleteObjectsRequest extends AbstractRequest {
     // Constructor
     
     
-    public DeleteObjectsRequest(final String bucketName, final List<String> objects) {
+    public DeleteObjectsRequest( final String bucketName, final Map< String, UUID > objects )
+    {
         this.bucketName = bucketName;
         this.objects = objects;
         
@@ -54,15 +58,17 @@ public class DeleteObjectsRequest extends AbstractRequest {
     
     public DeleteObjectsRequest(final String bucketName, final Iterable<Contents> objs) {
         this.bucketName = bucketName;
-        
+
         this.getQueryParams().put("delete", null);
         this.objects = contentsToString(objs);
     }
-
-    private static List<String> contentsToString(final Iterable<Contents> objs) {
-        final List<String> objKeyList = new ArrayList<>();
+    
+    
+    private static Map< String, UUID > contentsToString( final Iterable< Contents > objs )
+    {
+        final Map< String, UUID > objKeyList = new HashMap<>();
         for (final Contents obj : objs) {
-            objKeyList.add(obj.getKey());
+            objKeyList.put( obj.getKey(), null );
         }
         return objKeyList;
     }
@@ -89,9 +95,10 @@ public class DeleteObjectsRequest extends AbstractRequest {
         final Delete delete = new Delete();
         delete.setQuiet(quiet);
         final List<DeleteObject> deleteObjects = new ArrayList<>();
-
-        for(final String objName : objects) {
-            deleteObjects.add(new DeleteObject(objName));
+    
+        for ( Map.Entry< String, UUID > entry : objects.entrySet() )
+        {
+            deleteObjects.add( new DeleteObject( entry.getKey(), entry.getValue() ) );
         }
 
         delete.setDeleteObjectList(deleteObjects);
@@ -112,7 +119,10 @@ public class DeleteObjectsRequest extends AbstractRequest {
     public String getPath() {
         return "/" + this.bucketName;
     }
-    public List<String> getObjects() {
+    
+    
+    public Map< String, UUID > getObjects()
+    {
         return this.objects;
     }
 
