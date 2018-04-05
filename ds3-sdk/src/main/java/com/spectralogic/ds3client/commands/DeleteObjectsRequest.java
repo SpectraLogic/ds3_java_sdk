@@ -20,9 +20,11 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 import com.spectralogic.ds3client.commands.interfaces.AbstractRequest;
@@ -35,7 +37,7 @@ import com.spectralogic.ds3client.serializer.XmlOutput;
 public class DeleteObjectsRequest extends AbstractRequest {
 
     // Variables
-    private final Map< String, UUID > objects;
+    private final Map< String, Set< UUID > > objects;
     
     private final String bucketName;
 
@@ -47,26 +49,18 @@ public class DeleteObjectsRequest extends AbstractRequest {
     // Constructor
     
     
-    public DeleteObjectsRequest( final String bucketName, final Map< String, UUID > objects )
+    public DeleteObjectsRequest( final String bucketName, final Map< String, Set< UUID > > objects )
     {
         this.bucketName = bucketName;
         this.objects = objects;
         
         this.getQueryParams().put("delete", null);
     }
-
-    
-    public DeleteObjectsRequest(final String bucketName, final Iterable<Contents> objs) {
-        this.bucketName = bucketName;
-
-        this.getQueryParams().put("delete", null);
-        this.objects = contentsToString(objs);
-    }
     
     
-    private static Map< String, UUID > contentsToString( final Iterable< Contents > objs )
+    private static Map< String, Set< UUID > > contentsToString( final Iterable< Contents > objs )
     {
-        final Map< String, UUID > objKeyList = new HashMap<>();
+        final Map< String, Set< UUID > > objKeyList = new HashMap<>();
         for (final Contents obj : objs) {
             objKeyList.put( obj.getKey(), null );
         }
@@ -96,9 +90,19 @@ public class DeleteObjectsRequest extends AbstractRequest {
         delete.setQuiet(quiet);
         final List<DeleteObject> deleteObjects = new ArrayList<>();
     
-        for ( Map.Entry< String, UUID > entry : objects.entrySet() )
+        for ( Map.Entry< String, Set< UUID > > entry : objects.entrySet() )
         {
-            deleteObjects.add( new DeleteObject( entry.getKey(), entry.getValue() ) );
+            if ( null == entry.getValue() )
+            {
+                deleteObjects.add( new DeleteObject( entry.getKey(), null ) );
+            }
+            else
+            {
+                for ( UUID versionId : entry.getValue() )
+                {
+                    deleteObjects.add( new DeleteObject( entry.getKey(), versionId ) );
+                }
+            }
         }
 
         delete.setDeleteObjectList(deleteObjects);
@@ -121,7 +125,7 @@ public class DeleteObjectsRequest extends AbstractRequest {
     }
     
     
-    public Map< String, UUID > getObjects()
+    public Map< String, Set< UUID > > getObjects()
     {
         return this.objects;
     }

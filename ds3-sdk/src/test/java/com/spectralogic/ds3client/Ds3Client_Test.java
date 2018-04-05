@@ -24,15 +24,7 @@ import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.TimeZone;
-import java.util.UUID;
+import java.util.*;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -44,6 +36,7 @@ import com.spectralogic.ds3client.commands.*;
 import com.spectralogic.ds3client.commands.spectrads3.*;
 import com.spectralogic.ds3client.exceptions.ContentLengthNotMatchException;
 import com.spectralogic.ds3client.models.*;
+import com.spectralogic.ds3client.models.Objects;
 import com.spectralogic.ds3client.models.bulk.Ds3Object;
 import com.spectralogic.ds3client.models.common.Credentials;
 import com.spectralogic.ds3client.networking.FailedRequestException;
@@ -317,11 +310,11 @@ public class Ds3Client_Test {
 
     @Test
     public void multiObjectDelete() throws IOException {
-        final Map< String, UUID > objsToDelete = new LinkedHashMap<>();
+        final Map< String, Set< UUID > > objsToDelete = new LinkedHashMap<>();
         final UUID uuid1 = UUID.randomUUID();
-        objsToDelete.put( "sample1.txt", uuid1 );
+        objsToDelete.put( "sample1.txt", new HashSet<>( Collections.singletonList( uuid1 ) ) );
         final UUID uuid2 = UUID.randomUUID();
-        objsToDelete.put( "sample2.txt", uuid2 );
+        objsToDelete.put( "sample2.txt", new HashSet<>( Collections.singletonList( uuid2 ) ) );
         final Map<String, String> queryParams = new HashMap<>();
         queryParams.put("delete", null);
         final String payload =
@@ -338,7 +331,7 @@ public class Ds3Client_Test {
                 "  <Error>\n" +
                 "    <Key>sample2.txt</Key>\n" +
                 "    <Code>AccessDenied</Code>\n" +
-                "    <Message>Access Denied</Message>\n" +
+                "    <Message>Access Denied</Message>\n" + "    <VersionId>" + uuid2 + "</VersionId>\n" +
                 "  </Error>\n" +
                 "</DeleteResult>")
             .asClient()
@@ -346,7 +339,8 @@ public class Ds3Client_Test {
         assertThat(response.getDeleteResult().getDeletedObjects().size(), is(1));
         assertThat(response.getDeleteResult().getErrors().size(), is(1));
     }
-
+    
+    
     @Test(expected = FailedRequestException.class)
     public void getBadBucket() throws IOException {
         MockNetwork
