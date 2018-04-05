@@ -58,15 +58,6 @@ public class DeleteObjectsRequest extends AbstractRequest {
     }
     
     
-    private static Map< String, Set< UUID > > contentsToString( final Iterable< Contents > objs )
-    {
-        final Map< String, Set< UUID > > objKeyList = new HashMap<>();
-        for (final Contents obj : objs) {
-            objKeyList.put( obj.getKey(), null );
-        }
-        return objKeyList;
-    }
-
     public DeleteObjectsRequest withReplicate(final boolean replicate) {
         this.replicate = replicate;
         if (this.replicate) {
@@ -90,7 +81,7 @@ public class DeleteObjectsRequest extends AbstractRequest {
         delete.setQuiet(quiet);
         final List<DeleteObject> deleteObjects = new ArrayList<>();
     
-        for ( Map.Entry< String, Set< UUID > > entry : objects.entrySet() )
+        for ( final Map.Entry< String, Set< UUID > > entry : objects.entrySet() )
         {
             if ( null == entry.getValue() )
             {
@@ -98,7 +89,7 @@ public class DeleteObjectsRequest extends AbstractRequest {
             }
             else
             {
-                for ( UUID versionId : entry.getValue() )
+                for ( final UUID versionId : entry.getValue() )
                 {
                     deleteObjects.add( new DeleteObject( entry.getKey(), versionId ) );
                 }
