@@ -27,6 +27,10 @@ public class S3ObjectToDelete {
     @JsonProperty("Key")
     private String key;
 
+    // Variables
+    @JsonProperty("VersionId")
+    private String versionId;
+
     // Constructor
     public S3ObjectToDelete() {
         //pass
@@ -41,5 +45,16 @@ public class S3ObjectToDelete {
     public void setKey(final String key) {
         this.key = key;
     }
-
+    
+    
+    public String getVersionId()
+    {
+        return versionId;
+    }
+    
+    
+    public void setVersionId( final String versionId )
+    {
+        this.versionId = versionId;
+    }
 }
