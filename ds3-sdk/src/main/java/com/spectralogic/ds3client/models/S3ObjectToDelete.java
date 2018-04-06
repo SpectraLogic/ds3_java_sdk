@@ -19,6 +19,7 @@ package com.spectralogic.ds3client.models;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import java.lang.String;
+import java.util.UUID;
 
 @JacksonXmlRootElement(namespace = "Data")
 public class S3ObjectToDelete {
@@ -29,7 +30,7 @@ public class S3ObjectToDelete {
 
     // Variables
     @JsonProperty("VersionId")
-    private String versionId;
+    private UUID versionId;
 
     // Constructor
     public S3ObjectToDelete() {
@@ -47,13 +48,13 @@ public class S3ObjectToDelete {
     }
     
     
-    public String getVersionId()
+    public UUID getVersionId()
     {
         return versionId;
     }
     
     
-    public void setVersionId( final String versionId )
+    public void setVersionId( final UUID versionId )
     {
         this.versionId = versionId;
     }
