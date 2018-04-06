@@ -19,6 +19,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.spectralogic.ds3client.serializer.Views;
 
+import java.util.Objects;
 import java.util.UUID;
 
 public class Ds3Object  {
@@ -124,8 +125,8 @@ public class Ds3Object  {
             return false;
         }
         final Ds3Object ds3Obj = (Ds3Object) obj;
-        return ds3Obj.getName().equals(this.getName()) &&
+        return Objects.equals(ds3Obj.getName(), this.getName()) &&
                 ds3Obj.getSize() == this.getSize() &&
-                ds3Obj.getVersionId().equals(this.getVersionId());
+                Objects.equals(ds3Obj.versionId, this.getVersionId());
     }
 }
