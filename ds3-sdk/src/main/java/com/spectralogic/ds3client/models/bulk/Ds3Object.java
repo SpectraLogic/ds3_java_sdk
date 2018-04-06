@@ -125,7 +125,7 @@ public class Ds3Object  {
             return false;
         }
         final Ds3Object ds3Obj = (Ds3Object) obj;
-        return ds3Obj.getName().equals(this.getName()) &&
+        return Objects.equals(ds3Obj.getName(), this.getName()) &&
                 ds3Obj.getSize() == this.getSize() &&
                 Objects.equals(ds3Obj.versionId, this.getVersionId());
     }
