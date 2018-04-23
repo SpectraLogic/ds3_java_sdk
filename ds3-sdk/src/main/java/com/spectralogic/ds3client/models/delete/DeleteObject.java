@@ -2,8 +2,10 @@ package com.spectralogic.ds3client.models.delete;
 
 import java.util.UUID;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+@JsonInclude( JsonInclude.Include.NON_NULL )
 public class DeleteObject {
 
     @JsonProperty("Key")
