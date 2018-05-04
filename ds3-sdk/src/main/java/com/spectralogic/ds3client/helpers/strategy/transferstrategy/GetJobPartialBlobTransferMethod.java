@@ -92,7 +92,9 @@ public class GetJobPartialBlobTransferMethod implements TransferMethod {
                 jobId,
                 blob.getOffset());
 
-        getObjectRequest.withVersionId(blob.getVersionId());
+        if (blob.getVersionId() != null) {
+            getObjectRequest.withVersionId(blob.getVersionId());
+        }
         getObjectRequest.withByteRanges(blobRanges);
 
         return getObjectRequest;

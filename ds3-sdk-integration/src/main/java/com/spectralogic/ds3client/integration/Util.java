@@ -73,7 +73,7 @@ public final class Util {
         final GetBucketsSpectraS3Request request = new GetBucketsSpectraS3Request();
         final GetBucketsSpectraS3Response response = client.getBucketsSpectraS3(request);
 
-        for (Bucket bucket : response.getBucketListResult().getBuckets()) {
+        for (final Bucket bucket : response.getBucketListResult().getBuckets()) {
             cancelAllJobsForBucket(client, bucket.getName());
             client.deleteBucketSpectraS3(new DeleteBucketSpectraS3Request(bucket.getName()).withForce(true));
         }
