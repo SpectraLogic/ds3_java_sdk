@@ -18,13 +18,11 @@ package com.spectralogic.ds3client.integration;
 import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3client.Ds3Client;
 import com.spectralogic.ds3client.Ds3ClientBuilder;
-import com.spectralogic.ds3client.commands.spectrads3.CancelJobSpectraS3Request;
-import com.spectralogic.ds3client.commands.spectrads3.GetJobsSpectraS3Request;
-import com.spectralogic.ds3client.commands.spectrads3.GetJobsSpectraS3Response;
-import com.spectralogic.ds3client.commands.spectrads3.GetSystemInformationSpectraS3Request;
+import com.spectralogic.ds3client.commands.spectrads3.*;
 import com.spectralogic.ds3client.helpers.DeleteBucket;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers;
 import com.spectralogic.ds3client.helpers.channelbuilders.PrefixAdderObjectChannelBuilder;
+import com.spectralogic.ds3client.models.Bucket;
 import com.spectralogic.ds3client.models.Job;
 import com.spectralogic.ds3client.models.JobStatus;
 import com.spectralogic.ds3client.models.bulk.Ds3Object;
@@ -63,6 +61,22 @@ public final class Util {
         final Ds3ClientBuilder builder = Ds3ClientBuilder.fromEnv();
         builder.withCertificateVerification(false);
         return builder.build();
+    }
+
+    /**
+     * Goes through all buckets on a BP and attempts to delete them and all their contents. It cancels all active jobs
+     * associated with this bucket. Created for cleaning up after cascade failures in functional tests.
+     *
+     * USE ONLY WHEN DELETING ALL BUCKETS AND ALL CONTENT IS YOUR GOAL.
+     */
+    public static void forceCleanupBucketsOnBP(final Ds3Client client) throws IOException {
+        final GetBucketsSpectraS3Request request = new GetBucketsSpectraS3Request();
+        final GetBucketsSpectraS3Response response = client.getBucketsSpectraS3(request);
+
+        for (final Bucket bucket : response.getBucketListResult().getBuckets()) {
+            cancelAllJobsForBucket(client, bucket.getName());
+            client.deleteBucketSpectraS3(new DeleteBucketSpectraS3Request(bucket.getName()).withForce(true));
+        }
     }
 
     public static void assumeVersion1_2(final Ds3Client client) throws IOException {
