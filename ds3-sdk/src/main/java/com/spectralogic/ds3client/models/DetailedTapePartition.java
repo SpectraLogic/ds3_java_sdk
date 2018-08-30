@@ -46,6 +46,12 @@ public class DetailedTapePartition {
     @JsonProperty("LibraryId")
     private UUID libraryId;
 
+    @JsonProperty("MinimumReadReservedDrives")
+    private int minimumReadReservedDrives;
+
+    @JsonProperty("MinimumWriteReservedDrives")
+    private int minimumWriteReservedDrives;
+
     @JsonProperty("Name")
     private String name;
 
@@ -123,6 +129,24 @@ public class DetailedTapePartition {
 
     public void setLibraryId(final UUID libraryId) {
         this.libraryId = libraryId;
+    }
+
+
+    public int getMinimumReadReservedDrives() {
+        return this.minimumReadReservedDrives;
+    }
+
+    public void setMinimumReadReservedDrives(final int minimumReadReservedDrives) {
+        this.minimumReadReservedDrives = minimumReadReservedDrives;
+    }
+
+
+    public int getMinimumWriteReservedDrives() {
+        return this.minimumWriteReservedDrives;
+    }
+
+    public void setMinimumWriteReservedDrives(final int minimumWriteReservedDrives) {
+        this.minimumWriteReservedDrives = minimumWriteReservedDrives;
     }
 
 

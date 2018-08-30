@@ -27,6 +27,10 @@ public class ModifyTapePartitionSpectraS3Request extends AbstractRequest {
     
     private final String tapePartition;
 
+    private int minimumReadReservedDrives;
+
+    private int minimumWriteReservedDrives;
+
     private Quiesced quiesced;
 
     // Constructor
@@ -36,6 +40,20 @@ public class ModifyTapePartitionSpectraS3Request extends AbstractRequest {
         this.tapePartition = tapePartition;
         
     }
+
+    public ModifyTapePartitionSpectraS3Request withMinimumReadReservedDrives(final int minimumReadReservedDrives) {
+        this.minimumReadReservedDrives = minimumReadReservedDrives;
+        this.updateQueryParam("minimum_read_reserved_drives", minimumReadReservedDrives);
+        return this;
+    }
+
+
+    public ModifyTapePartitionSpectraS3Request withMinimumWriteReservedDrives(final int minimumWriteReservedDrives) {
+        this.minimumWriteReservedDrives = minimumWriteReservedDrives;
+        this.updateQueryParam("minimum_write_reserved_drives", minimumWriteReservedDrives);
+        return this;
+    }
+
 
     public ModifyTapePartitionSpectraS3Request withQuiesced(final Quiesced quiesced) {
         this.quiesced = quiesced;
@@ -57,6 +75,16 @@ public class ModifyTapePartitionSpectraS3Request extends AbstractRequest {
     
     public String getTapePartition() {
         return this.tapePartition;
+    }
+
+
+    public int getMinimumReadReservedDrives() {
+        return this.minimumReadReservedDrives;
+    }
+
+
+    public int getMinimumWriteReservedDrives() {
+        return this.minimumWriteReservedDrives;
     }
 
 

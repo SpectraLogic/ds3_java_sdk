@@ -53,6 +53,7 @@ import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 public class Ds3Client_Test {
@@ -484,15 +485,33 @@ public class Ds3Client_Test {
 
         final Map<String, String> responseHeaders = new HashMap<>();
         responseHeaders.put("x-amz-meta-key", "value");
+        responseHeaders.put("ds3-blob-checksum-type", "MD5");
+        responseHeaders.put("ds3-blob-checksum-offset-0", "4nQGNX4nyz0pi8Hvap79PQ==");
+        responseHeaders.put("ds3-blob-checksum-offset-10485760", "965Aa0/n8DlO1IwXYFh4bg==");
+        responseHeaders.put("ds3-blob-checksum-offset-20971520", "iV2OqJaXJ/jmqgRSb1HmFA==");
 
 
         final HeadObjectRequest request = new HeadObjectRequest("bucket", "obj");
 
-        MockNetwork
+        final HeadObjectResponse response = MockNetwork
                 .expecting(HttpVerb.HEAD, "/bucket/obj", null, null, null)
                 .returning(200, "", responseHeaders)
                 .asClient()
                 .headObject(request);
+
+        final ImmutableMap<Long, String> expectedBlobChecksums = ImmutableMap.of(
+                0L, "4nQGNX4nyz0pi8Hvap79PQ==",
+                10485760L, "965Aa0/n8DlO1IwXYFh4bg==",
+                20971520L, "iV2OqJaXJ/jmqgRSb1HmFA=="
+        );
+
+        assertThat(response.getBlobChecksumType(), is(ChecksumType.Type.MD5));
+        assertThat(response.getBlobChecksums().size(), is(expectedBlobChecksums.size()));
+
+        for (final Map.Entry<Long, String> entry : expectedBlobChecksums.entrySet()) {
+            assertTrue(response.getBlobChecksums().containsKey(entry.getKey()));
+            assertThat(response.getBlobChecksums().get(entry.getKey()), is(entry.getValue()));
+        }
     }
 
     @Test
