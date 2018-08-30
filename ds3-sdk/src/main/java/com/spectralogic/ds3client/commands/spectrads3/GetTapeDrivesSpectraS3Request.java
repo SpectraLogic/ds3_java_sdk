@@ -20,6 +20,7 @@ import com.spectralogic.ds3client.networking.HttpVerb;
 import com.spectralogic.ds3client.commands.interfaces.AbstractPaginationRequest;
 import java.util.UUID;
 import com.google.common.net.UrlEscapers;
+import com.spectralogic.ds3client.models.ReservedTaskType;
 import com.spectralogic.ds3client.models.TapeDriveState;
 import com.spectralogic.ds3client.models.TapeDriveType;
 
@@ -36,6 +37,8 @@ public class GetTapeDrivesSpectraS3Request extends AbstractPaginationRequest {
     private String pageStartMarker;
 
     private String partitionId;
+
+    private ReservedTaskType reservedTaskType;
 
     private String serialNumber;
 
@@ -103,6 +106,13 @@ public class GetTapeDrivesSpectraS3Request extends AbstractPaginationRequest {
     }
 
 
+    public GetTapeDrivesSpectraS3Request withReservedTaskType(final ReservedTaskType reservedTaskType) {
+        this.reservedTaskType = reservedTaskType;
+        this.updateQueryParam("reserved_task_type", reservedTaskType);
+        return this;
+    }
+
+
     public GetTapeDrivesSpectraS3Request withSerialNumber(final String serialNumber) {
         this.serialNumber = serialNumber;
         this.updateQueryParam("serial_number", serialNumber);
@@ -157,6 +167,11 @@ public class GetTapeDrivesSpectraS3Request extends AbstractPaginationRequest {
 
     public String getPartitionId() {
         return this.partitionId;
+    }
+
+
+    public ReservedTaskType getReservedTaskType() {
+        return this.reservedTaskType;
     }
 
 

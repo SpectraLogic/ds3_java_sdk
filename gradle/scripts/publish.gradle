@@ -7,7 +7,7 @@ bintray {
     configurations = ['archives']
 
     //dryRun = true
-    publish = true
+    //publish = true
 
     pkg {
         name = "$project.name"

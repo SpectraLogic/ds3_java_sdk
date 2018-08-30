@@ -30,9 +30,13 @@ public class ModifyDataPathBackendSpectraS3Request extends AbstractRequest {
     
     private boolean activated;
 
+    private boolean allowNewJobRequests;
+
     private Integer autoActivateTimeoutInMins;
 
     private AutoInspectMode autoInspect;
+
+    private int cacheAvailableRetryAfterInSeconds;
 
     private ImportConflictResolutionMode defaultImportConflictResolutionMode;
 
@@ -62,6 +66,13 @@ public class ModifyDataPathBackendSpectraS3Request extends AbstractRequest {
     }
 
 
+    public ModifyDataPathBackendSpectraS3Request withAllowNewJobRequests(final boolean allowNewJobRequests) {
+        this.allowNewJobRequests = allowNewJobRequests;
+        this.updateQueryParam("allow_new_job_requests", allowNewJobRequests);
+        return this;
+    }
+
+
     public ModifyDataPathBackendSpectraS3Request withAutoActivateTimeoutInMins(final Integer autoActivateTimeoutInMins) {
         this.autoActivateTimeoutInMins = autoActivateTimeoutInMins;
         this.updateQueryParam("auto_activate_timeout_in_mins", autoActivateTimeoutInMins);
@@ -72,6 +83,13 @@ public class ModifyDataPathBackendSpectraS3Request extends AbstractRequest {
     public ModifyDataPathBackendSpectraS3Request withAutoInspect(final AutoInspectMode autoInspect) {
         this.autoInspect = autoInspect;
         this.updateQueryParam("auto_inspect", autoInspect);
+        return this;
+    }
+
+
+    public ModifyDataPathBackendSpectraS3Request withCacheAvailableRetryAfterInSeconds(final int cacheAvailableRetryAfterInSeconds) {
+        this.cacheAvailableRetryAfterInSeconds = cacheAvailableRetryAfterInSeconds;
+        this.updateQueryParam("cache_available_retry_after_in_seconds", cacheAvailableRetryAfterInSeconds);
         return this;
     }
 
@@ -141,6 +159,11 @@ public class ModifyDataPathBackendSpectraS3Request extends AbstractRequest {
     }
 
 
+    public boolean getAllowNewJobRequests() {
+        return this.allowNewJobRequests;
+    }
+
+
     public Integer getAutoActivateTimeoutInMins() {
         return this.autoActivateTimeoutInMins;
     }
@@ -148,6 +171,11 @@ public class ModifyDataPathBackendSpectraS3Request extends AbstractRequest {
 
     public AutoInspectMode getAutoInspect() {
         return this.autoInspect;
+    }
+
+
+    public int getCacheAvailableRetryAfterInSeconds() {
+        return this.cacheAvailableRetryAfterInSeconds;
     }
 
 

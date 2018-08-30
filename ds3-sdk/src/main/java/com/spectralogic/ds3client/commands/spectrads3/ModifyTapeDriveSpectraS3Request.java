@@ -19,6 +19,7 @@ package com.spectralogic.ds3client.commands.spectrads3;
 import com.spectralogic.ds3client.networking.HttpVerb;
 import com.spectralogic.ds3client.commands.interfaces.AbstractRequest;
 import com.spectralogic.ds3client.models.Quiesced;
+import com.spectralogic.ds3client.models.ReservedTaskType;
 import java.util.UUID;
 import com.google.common.net.UrlEscapers;
 
@@ -29,6 +30,8 @@ public class ModifyTapeDriveSpectraS3Request extends AbstractRequest {
     private final String tapeDriveId;
 
     private Quiesced quiesced;
+
+    private ReservedTaskType reservedTaskType;
 
     // Constructor
     
@@ -51,6 +54,13 @@ public class ModifyTapeDriveSpectraS3Request extends AbstractRequest {
     }
 
 
+    public ModifyTapeDriveSpectraS3Request withReservedTaskType(final ReservedTaskType reservedTaskType) {
+        this.reservedTaskType = reservedTaskType;
+        this.updateQueryParam("reserved_task_type", reservedTaskType);
+        return this;
+    }
+
+
 
     @Override
     public HttpVerb getVerb() {
@@ -69,6 +79,11 @@ public class ModifyTapeDriveSpectraS3Request extends AbstractRequest {
 
     public Quiesced getQuiesced() {
         return this.quiesced;
+    }
+
+
+    public ReservedTaskType getReservedTaskType() {
+        return this.reservedTaskType;
     }
 
 }
