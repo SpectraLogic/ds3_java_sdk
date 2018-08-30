@@ -16,48 +16,50 @@
 // This code is auto-generated, do not modify
 package com.spectralogic.ds3client.commands.spectrads3;
 
-import com.spectralogic.ds3client.networking.HttpVerb;
-import com.spectralogic.ds3client.commands.interfaces.AbstractRequest;
+import com.spectralogic.ds3client.BulkCommand;
+import com.spectralogic.ds3client.models.bulk.Ds3Object;
+import com.spectralogic.ds3client.commands.interfaces.BulkRequest;
 import com.google.common.net.UrlEscapers;
+import com.spectralogic.ds3client.models.Priority;
 
-public class DeleteFolderRecursivelySpectraS3Request extends AbstractRequest {
+public class StageObjectsJobSpectraS3Request extends BulkRequest {
 
-    // Variables
+
     
-    private final String folder;
-
-    private final String bucketId;
+    private String name;
 
     // Constructor
     
-    
-    public DeleteFolderRecursivelySpectraS3Request(final String bucketId, final String folder) {
-        this.folder = folder;
-        this.bucketId = bucketId;
+    public StageObjectsJobSpectraS3Request(final String bucketName, final Iterable<Ds3Object> objects) {
+        super(bucketName, objects);
         
-        this.updateQueryParam("bucket_id", bucketId);
+        this.getQueryParams().put("operation", "start_bulk_stage");
 
-        this.getQueryParams().put("recursive", null);
+    }
+
+    public StageObjectsJobSpectraS3Request withName(final String name) {
+        this.name = name;
+        this.updateQueryParam("name", name);
+        return this;
     }
 
 
     @Override
-    public HttpVerb getVerb() {
-        return HttpVerb.DELETE;
+    public StageObjectsJobSpectraS3Request withPriority(final Priority priority) {
+        super.withPriority(priority);
+        return this;
     }
 
-    @Override
-    public String getPath() {
-        return "/_rest_/folder/" + folder;
-    }
+
+
     
-    public String getFolder() {
-        return this.folder;
+    public String getName() {
+        return this.name;
     }
 
 
-    public String getBucketId() {
-        return this.bucketId;
+    @Override
+    public BulkCommand getCommand() {
+        return BulkCommand.GET;
     }
-
 }

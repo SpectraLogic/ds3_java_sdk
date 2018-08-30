@@ -14,10 +14,23 @@
  */
 
 // This code is auto-generated, do not modify
-package com.spectralogic.ds3client.models;
+package com.spectralogic.ds3client.commands.spectrads3;
 
-public enum VersioningLevel {
-    NONE,
-    KEEP_LATEST,
-    KEEP_MULTIPLE_VERSIONS
+import com.spectralogic.ds3client.models.MasterObjectList;
+import com.spectralogic.ds3client.models.ChecksumType;
+import com.spectralogic.ds3client.commands.interfaces.AbstractResponse;
+
+public class StageObjectsJobSpectraS3Response extends AbstractResponse {
+    
+    private final MasterObjectList masterObjectListResult;
+
+    public StageObjectsJobSpectraS3Response(final MasterObjectList masterObjectListResult, final String checksum, final ChecksumType.Type checksumType) {
+        super(checksum, checksumType);
+        this.masterObjectListResult = masterObjectListResult;
+    }
+
+    public MasterObjectList getMasterObjectListResult() {
+        return this.masterObjectListResult;
+    }
+
 }

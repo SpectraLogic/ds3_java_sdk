@@ -18,6 +18,7 @@ package com.spectralogic.ds3client.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+import java.util.UUID;
 
 @JacksonXmlRootElement(namespace = "Data")
 public class DeleteObjectError {
@@ -31,6 +32,9 @@ public class DeleteObjectError {
 
     @JsonProperty("Message")
     private String message;
+
+    @JsonProperty("VersionId")
+    private UUID versionId;
 
     // Constructor
     public DeleteObjectError() {
@@ -63,6 +67,15 @@ public class DeleteObjectError {
 
     public void setMessage(final String message) {
         this.message = message;
+    }
+
+
+    public UUID getVersionId() {
+        return this.versionId;
+    }
+
+    public void setVersionId(final UUID versionId) {
+        this.versionId = versionId;
     }
 
 }

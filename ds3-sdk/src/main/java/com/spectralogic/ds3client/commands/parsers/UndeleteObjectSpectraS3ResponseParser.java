@@ -18,27 +18,25 @@ package com.spectralogic.ds3client.commands.parsers;
 
 import com.spectralogic.ds3client.commands.parsers.interfaces.AbstractResponseParser;
 import com.spectralogic.ds3client.commands.parsers.utils.ResponseParserUtils;
-import com.spectralogic.ds3client.commands.spectrads3.GetBlobsOnTapeSpectraS3Response;
-import com.spectralogic.ds3client.models.BulkObjectList;
+import com.spectralogic.ds3client.commands.spectrads3.UndeleteObjectSpectraS3Response;
+import com.spectralogic.ds3client.models.S3Object;
 import com.spectralogic.ds3client.networking.WebResponse;
 import com.spectralogic.ds3client.serializer.XmlOutput;
 import java.io.IOException;
 import java.io.InputStream;
 
-public class GetBlobsOnTapeSpectraS3ResponseParser extends AbstractResponseParser<GetBlobsOnTapeSpectraS3Response> {
+public class UndeleteObjectSpectraS3ResponseParser extends AbstractResponseParser<UndeleteObjectSpectraS3Response> {
     private final int[] expectedStatusCodes = new int[]{200};
 
     @Override
-    public GetBlobsOnTapeSpectraS3Response parseXmlResponse(final WebResponse response) throws IOException {
+    public UndeleteObjectSpectraS3Response parseXmlResponse(final WebResponse response) throws IOException {
         final int statusCode = response.getStatusCode();
-        final Integer pagingTruncated = parseIntHeader("page-truncated");
-        final Integer pagingTotalResultCount = parseIntHeader("total-result-count");
         if (ResponseParserUtils.validateStatusCode(statusCode, expectedStatusCodes)) {
             switch (statusCode) {
             case 200:
                 try (final InputStream inputStream = response.getResponseStream()) {
-                    final BulkObjectList result = XmlOutput.fromXml(inputStream, BulkObjectList.class);
-                    return new GetBlobsOnTapeSpectraS3Response(result, pagingTotalResultCount, pagingTruncated, this.getChecksum(), this.getChecksumType());
+                    final S3Object result = XmlOutput.fromXml(inputStream, S3Object.class);
+                    return new UndeleteObjectSpectraS3Response(result, this.getChecksum(), this.getChecksumType());
                 }
 
             default:

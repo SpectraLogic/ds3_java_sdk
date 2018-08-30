@@ -14,10 +14,23 @@
  */
 
 // This code is auto-generated, do not modify
-package com.spectralogic.ds3client.models;
+package com.spectralogic.ds3client.commands.spectrads3;
 
-public enum ImportConflictResolutionMode {
-    CANCEL,
-    ACCEPT_MOST_RECENT,
-    ACCEPT_EXISTING
+import com.spectralogic.ds3client.models.S3Object;
+import com.spectralogic.ds3client.models.ChecksumType;
+import com.spectralogic.ds3client.commands.interfaces.AbstractResponse;
+
+public class UndeleteObjectSpectraS3Response extends AbstractResponse {
+    
+    private final S3Object s3ObjectResult;
+
+    public UndeleteObjectSpectraS3Response(final S3Object s3ObjectResult, final String checksum, final ChecksumType.Type checksumType) {
+        super(checksum, checksumType);
+        this.s3ObjectResult = s3ObjectResult;
+    }
+
+    public S3Object getS3ObjectResult() {
+        return this.s3ObjectResult;
+    }
+
 }

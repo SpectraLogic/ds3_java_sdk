@@ -18,14 +18,14 @@ package com.spectralogic.ds3client.commands.spectrads3;
 
 import com.spectralogic.ds3client.models.BulkObjectList;
 import com.spectralogic.ds3client.models.ChecksumType;
-import com.spectralogic.ds3client.commands.interfaces.AbstractResponse;
+import com.spectralogic.ds3client.commands.interfaces.AbstractPaginationResponse;
 
-public class GetBlobsOnTapeSpectraS3Response extends AbstractResponse {
-    
+public class GetBlobsOnTapeSpectraS3Response extends AbstractPaginationResponse {
+
     private final BulkObjectList bulkObjectListResult;
 
-    public GetBlobsOnTapeSpectraS3Response(final BulkObjectList bulkObjectListResult, final String checksum, final ChecksumType.Type checksumType) {
-        super(checksum, checksumType);
+    public GetBlobsOnTapeSpectraS3Response(final BulkObjectList bulkObjectListResult, final Integer pagingTotalResultCount, final Integer pagingTruncated, final String checksum, final ChecksumType.Type checksumType) {
+        super(pagingTotalResultCount, pagingTruncated, checksum, checksumType);
         this.bulkObjectListResult = bulkObjectListResult;
     }
 

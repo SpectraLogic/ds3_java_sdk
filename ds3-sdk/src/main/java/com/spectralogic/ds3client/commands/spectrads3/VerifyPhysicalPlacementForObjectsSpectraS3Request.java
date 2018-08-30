@@ -27,7 +27,6 @@ import java.io.InputStream;
 import java.util.List;
 import java.nio.charset.Charset;
 import com.spectralogic.ds3client.commands.interfaces.AbstractRequest;
-import java.util.UUID;
 import com.google.common.net.UrlEscapers;
 
 public class VerifyPhysicalPlacementForObjectsSpectraS3Request extends AbstractRequest {
@@ -38,7 +37,7 @@ public class VerifyPhysicalPlacementForObjectsSpectraS3Request extends AbstractR
 
     private final List<Ds3Object> objects;
 
-    private String storageDomainId;
+    private String storageDomain;
     private long size = 0;
 
     // Constructor
@@ -52,16 +51,9 @@ public class VerifyPhysicalPlacementForObjectsSpectraS3Request extends AbstractR
 
     }
 
-    public VerifyPhysicalPlacementForObjectsSpectraS3Request withStorageDomainId(final UUID storageDomainId) {
-        this.storageDomainId = storageDomainId.toString();
-        this.updateQueryParam("storage_domain_id", storageDomainId);
-        return this;
-    }
-
-
-    public VerifyPhysicalPlacementForObjectsSpectraS3Request withStorageDomainId(final String storageDomainId) {
-        this.storageDomainId = storageDomainId;
-        this.updateQueryParam("storage_domain_id", storageDomainId);
+    public VerifyPhysicalPlacementForObjectsSpectraS3Request withStorageDomain(final String storageDomain) {
+        this.storageDomain = storageDomain;
+        this.updateQueryParam("storage_domain", storageDomain);
         return this;
     }
 
@@ -107,8 +99,8 @@ public class VerifyPhysicalPlacementForObjectsSpectraS3Request extends AbstractR
     }
 
 
-    public String getStorageDomainId() {
-        return this.storageDomainId;
+    public String getStorageDomain() {
+        return this.storageDomain;
     }
 
 

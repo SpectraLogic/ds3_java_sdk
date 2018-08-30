@@ -27,11 +27,15 @@ public class ModifyTapePartitionSpectraS3Request extends AbstractRequest {
     
     private final String tapePartition;
 
+    private boolean autoCompactionEnabled;
+
     private int minimumReadReservedDrives;
 
     private int minimumWriteReservedDrives;
 
     private Quiesced quiesced;
+
+    private String serialNumber;
 
     // Constructor
     
@@ -40,6 +44,13 @@ public class ModifyTapePartitionSpectraS3Request extends AbstractRequest {
         this.tapePartition = tapePartition;
         
     }
+
+    public ModifyTapePartitionSpectraS3Request withAutoCompactionEnabled(final boolean autoCompactionEnabled) {
+        this.autoCompactionEnabled = autoCompactionEnabled;
+        this.updateQueryParam("auto_compaction_enabled", autoCompactionEnabled);
+        return this;
+    }
+
 
     public ModifyTapePartitionSpectraS3Request withMinimumReadReservedDrives(final int minimumReadReservedDrives) {
         this.minimumReadReservedDrives = minimumReadReservedDrives;
@@ -62,6 +73,13 @@ public class ModifyTapePartitionSpectraS3Request extends AbstractRequest {
     }
 
 
+    public ModifyTapePartitionSpectraS3Request withSerialNumber(final String serialNumber) {
+        this.serialNumber = serialNumber;
+        this.updateQueryParam("serial_number", serialNumber);
+        return this;
+    }
+
+
 
     @Override
     public HttpVerb getVerb() {
@@ -78,6 +96,11 @@ public class ModifyTapePartitionSpectraS3Request extends AbstractRequest {
     }
 
 
+    public boolean getAutoCompactionEnabled() {
+        return this.autoCompactionEnabled;
+    }
+
+
     public int getMinimumReadReservedDrives() {
         return this.minimumReadReservedDrives;
     }
@@ -90,6 +113,11 @@ public class ModifyTapePartitionSpectraS3Request extends AbstractRequest {
 
     public Quiesced getQuiesced() {
         return this.quiesced;
+    }
+
+
+    public String getSerialNumber() {
+        return this.serialNumber;
     }
 
 }

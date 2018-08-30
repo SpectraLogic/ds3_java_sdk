@@ -895,6 +895,13 @@ public interface Ds3Client extends Closeable {
     ReplicatePutJobSpectraS3Response replicatePutJobSpectraS3(final ReplicatePutJobSpectraS3Request request)
             throws IOException;
 
+    @ResponsePayloadModel("MasterObjectList")
+    @Action("MODIFY")
+    @Resource("BUCKET")
+    
+    StageObjectsJobSpectraS3Response stageObjectsJobSpectraS3(final StageObjectsJobSpectraS3Request request)
+            throws IOException;
+
     @Action("DELETE")
     @Resource("ACTIVE_JOB")
     
@@ -1370,6 +1377,13 @@ public interface Ds3Client extends Closeable {
     @Resource("BUCKET")
     
     GetPhysicalPlacementForObjectsWithFullDetailsSpectraS3Response getPhysicalPlacementForObjectsWithFullDetailsSpectraS3(final GetPhysicalPlacementForObjectsWithFullDetailsSpectraS3Request request)
+            throws IOException;
+
+    @ResponsePayloadModel("S3Object")
+    @Action("BULK_MODIFY")
+    @Resource("OBJECT")
+    
+    UndeleteObjectSpectraS3Response undeleteObjectSpectraS3(final UndeleteObjectSpectraS3Request request)
             throws IOException;
 
     @ResponsePayloadModel("PhysicalPlacement")

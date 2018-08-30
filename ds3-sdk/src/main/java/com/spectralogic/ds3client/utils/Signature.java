@@ -91,14 +91,18 @@ public final class Signature {
         canonicalizedResource.append(path);
 
         if (queryParams != null) {
+            // canonicalize resources in alphabetical order
             if (queryParams.containsKey("delete")) {
                 canonicalizedResource.append("?delete");
+            }
+            if (queryParams.containsKey("uploads")) {
+                canonicalizedResource.append("?uploads");
             }
             if (queryParams.containsKey("versioning")) {
                 canonicalizedResource.append("?versioning=").append(queryParams.get("versioning"));
             }
-            if (queryParams.containsKey("uploads")) {
-                canonicalizedResource.append("?uploads");
+            if (queryParams.containsKey("versions")) {
+                canonicalizedResource.append("?versions");
             }
         }
         return canonicalizedResource.toString();

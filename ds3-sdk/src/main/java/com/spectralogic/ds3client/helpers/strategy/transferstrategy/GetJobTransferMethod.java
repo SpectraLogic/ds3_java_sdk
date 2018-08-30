@@ -86,6 +86,10 @@ public class GetJobTransferMethod implements TransferMethod {
                 jobId,
                 blob.getOffset());
 
+        if (jobPart.getBlob().getVersionId() != null) {
+            getObjectRequest.withVersionId(jobPart.getBlob().getVersionId());
+        }
+
         final ImmutableCollection<Range> rangesForBlob = StrategyUtils.getRangesForBlob(rangesForBlobs, blob);
 
         if (rangesForBlob != null) {

@@ -18,6 +18,8 @@ package com.spectralogic.ds3client.commands.spectrads3;
 
 import com.spectralogic.ds3client.networking.HttpVerb;
 import com.spectralogic.ds3client.commands.interfaces.AbstractRequest;
+import java.lang.Integer;
+import com.spectralogic.ds3client.models.StorageDomainMemberState;
 import com.spectralogic.ds3client.models.WritePreferenceLevel;
 import com.google.common.net.UrlEscapers;
 
@@ -26,6 +28,10 @@ public class ModifyStorageDomainMemberSpectraS3Request extends AbstractRequest {
     // Variables
     
     private final String storageDomainMember;
+
+    private Integer autoCompactionThreshold;
+
+    private StorageDomainMemberState state;
 
     private WritePreferenceLevel writePreference;
 
@@ -36,6 +42,20 @@ public class ModifyStorageDomainMemberSpectraS3Request extends AbstractRequest {
         this.storageDomainMember = storageDomainMember;
         
     }
+
+    public ModifyStorageDomainMemberSpectraS3Request withAutoCompactionThreshold(final Integer autoCompactionThreshold) {
+        this.autoCompactionThreshold = autoCompactionThreshold;
+        this.updateQueryParam("auto_compaction_threshold", autoCompactionThreshold);
+        return this;
+    }
+
+
+    public ModifyStorageDomainMemberSpectraS3Request withState(final StorageDomainMemberState state) {
+        this.state = state;
+        this.updateQueryParam("state", state);
+        return this;
+    }
+
 
     public ModifyStorageDomainMemberSpectraS3Request withWritePreference(final WritePreferenceLevel writePreference) {
         this.writePreference = writePreference;
@@ -57,6 +77,16 @@ public class ModifyStorageDomainMemberSpectraS3Request extends AbstractRequest {
     
     public String getStorageDomainMember() {
         return this.storageDomainMember;
+    }
+
+
+    public Integer getAutoCompactionThreshold() {
+        return this.autoCompactionThreshold;
+    }
+
+
+    public StorageDomainMemberState getState() {
+        return this.state;
     }
 
 

@@ -67,9 +67,6 @@ public class DetailedS3Object {
     @JsonProperty("Type")
     private S3ObjectType type;
 
-    @JsonProperty("Version")
-    private long version;
-
     // Constructor
     public DetailedS3Object() {
         //pass
@@ -200,15 +197,6 @@ public class DetailedS3Object {
 
     public void setType(final S3ObjectType type) {
         this.type = type;
-    }
-
-
-    public long getVersion() {
-        return this.version;
-    }
-
-    public void setVersion(final long version) {
-        this.version = version;
     }
 
 }
