@@ -28,7 +28,6 @@ import java.util.List;
 import java.nio.charset.Charset;
 import com.spectralogic.ds3client.commands.interfaces.AbstractRequest;
 import com.google.common.net.UrlEscapers;
-import java.util.UUID;
 
 public class EjectStorageDomainBlobsSpectraS3Request extends AbstractRequest {
 
@@ -36,7 +35,7 @@ public class EjectStorageDomainBlobsSpectraS3Request extends AbstractRequest {
     
     private final String bucketId;
 
-    private final String storageDomainId;
+    private final String storageDomain;
 
     private final List<Ds3Object> objects;
 
@@ -48,9 +47,9 @@ public class EjectStorageDomainBlobsSpectraS3Request extends AbstractRequest {
     // Constructor
     
     
-    public EjectStorageDomainBlobsSpectraS3Request(final String bucketId, final List<Ds3Object> objects, final UUID storageDomainId) {
+    public EjectStorageDomainBlobsSpectraS3Request(final String bucketId, final List<Ds3Object> objects, final String storageDomain) {
         this.bucketId = bucketId;
-        this.storageDomainId = storageDomainId.toString();
+        this.storageDomain = storageDomain;
         this.objects = objects;
         
         this.getQueryParams().put("operation", "eject");
@@ -58,22 +57,7 @@ public class EjectStorageDomainBlobsSpectraS3Request extends AbstractRequest {
         this.getQueryParams().put("blobs", null);
         this.updateQueryParam("bucket_id", bucketId);
 
-        this.updateQueryParam("storage_domain_id", storageDomainId);
-
-    }
-
-    
-    public EjectStorageDomainBlobsSpectraS3Request(final String bucketId, final List<Ds3Object> objects, final String storageDomainId) {
-        this.bucketId = bucketId;
-        this.storageDomainId = storageDomainId;
-        this.objects = objects;
-        
-        this.getQueryParams().put("operation", "eject");
-
-        this.getQueryParams().put("blobs", null);
-        this.updateQueryParam("bucket_id", bucketId);
-
-        this.updateQueryParam("storage_domain_id", storageDomainId);
+        this.updateQueryParam("storage_domain", storageDomain);
 
     }
 
@@ -127,8 +111,8 @@ public class EjectStorageDomainBlobsSpectraS3Request extends AbstractRequest {
     }
 
 
-    public String getStorageDomainId() {
-        return this.storageDomainId;
+    public String getStorageDomain() {
+        return this.storageDomain;
     }
 
 

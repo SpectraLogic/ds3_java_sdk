@@ -27,6 +27,9 @@ import java.util.UUID;
 public class DetailedTapePartition {
 
     // Variables
+    @JsonProperty("AutoCompactionEnabled")
+    private boolean autoCompactionEnabled;
+
     @JsonProperty("DriveType")
     private TapeDriveType driveType;
 
@@ -58,9 +61,6 @@ public class DetailedTapePartition {
     @JsonProperty("Quiesced")
     private Quiesced quiesced;
 
-    @JsonProperty("SerialId")
-    private String serialId;
-
     @JsonProperty("SerialNumber")
     private String serialNumber;
 
@@ -78,6 +78,15 @@ public class DetailedTapePartition {
 
     // Getters and Setters
     
+    public boolean getAutoCompactionEnabled() {
+        return this.autoCompactionEnabled;
+    }
+
+    public void setAutoCompactionEnabled(final boolean autoCompactionEnabled) {
+        this.autoCompactionEnabled = autoCompactionEnabled;
+    }
+
+
     public TapeDriveType getDriveType() {
         return this.driveType;
     }
@@ -165,15 +174,6 @@ public class DetailedTapePartition {
 
     public void setQuiesced(final Quiesced quiesced) {
         this.quiesced = quiesced;
-    }
-
-
-    public String getSerialId() {
-        return this.serialId;
-    }
-
-    public void setSerialId(final String serialId) {
-        this.serialId = serialId;
     }
 
 

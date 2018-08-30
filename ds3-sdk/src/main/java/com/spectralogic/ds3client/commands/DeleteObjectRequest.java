@@ -18,6 +18,8 @@ package com.spectralogic.ds3client.commands;
 
 import com.spectralogic.ds3client.networking.HttpVerb;
 import com.spectralogic.ds3client.commands.interfaces.AbstractRequest;
+import java.util.UUID;
+import com.google.common.net.UrlEscapers;
 
 public class DeleteObjectRequest extends AbstractRequest {
 
@@ -27,7 +29,7 @@ public class DeleteObjectRequest extends AbstractRequest {
 
     private final String objectName;
 
-    private boolean rollBack;
+    private String versionId;
 
     // Constructor
     
@@ -38,13 +40,16 @@ public class DeleteObjectRequest extends AbstractRequest {
         
     }
 
-    public DeleteObjectRequest withRollBack(final boolean rollBack) {
-        this.rollBack = rollBack;
-        if (this.rollBack) {
-            this.getQueryParams().put("roll_back", null);
-        } else {
-            this.getQueryParams().remove("roll_back");
-        }
+    public DeleteObjectRequest withVersionId(final UUID versionId) {
+        this.versionId = versionId.toString();
+        this.updateQueryParam("version_id", versionId);
+        return this;
+    }
+
+
+    public DeleteObjectRequest withVersionId(final String versionId) {
+        this.versionId = versionId;
+        this.updateQueryParam("version_id", versionId);
         return this;
     }
 
@@ -70,8 +75,8 @@ public class DeleteObjectRequest extends AbstractRequest {
     }
 
 
-    public boolean getRollBack() {
-        return this.rollBack;
+    public String getVersionId() {
+        return this.versionId;
     }
 
 }

@@ -19,45 +19,68 @@ package com.spectralogic.ds3client.commands.spectrads3;
 import com.spectralogic.ds3client.networking.HttpVerb;
 import com.spectralogic.ds3client.commands.interfaces.AbstractRequest;
 import com.google.common.net.UrlEscapers;
+import java.util.UUID;
 
-public class DeleteFolderRecursivelySpectraS3Request extends AbstractRequest {
+public class UndeleteObjectSpectraS3Request extends AbstractRequest {
 
     // Variables
     
-    private final String folder;
-
     private final String bucketId;
+
+    private final String name;
+
+    private String versionId;
 
     // Constructor
     
     
-    public DeleteFolderRecursivelySpectraS3Request(final String bucketId, final String folder) {
-        this.folder = folder;
+    public UndeleteObjectSpectraS3Request(final String bucketId, final String name) {
         this.bucketId = bucketId;
+        this.name = name;
         
         this.updateQueryParam("bucket_id", bucketId);
 
-        this.getQueryParams().put("recursive", null);
+        this.updateQueryParam("name", name);
+
     }
+
+    public UndeleteObjectSpectraS3Request withVersionId(final UUID versionId) {
+        this.versionId = versionId.toString();
+        this.updateQueryParam("version_id", versionId);
+        return this;
+    }
+
+
+    public UndeleteObjectSpectraS3Request withVersionId(final String versionId) {
+        this.versionId = versionId;
+        this.updateQueryParam("version_id", versionId);
+        return this;
+    }
+
 
 
     @Override
     public HttpVerb getVerb() {
-        return HttpVerb.DELETE;
+        return HttpVerb.PUT;
     }
 
     @Override
     public String getPath() {
-        return "/_rest_/folder/" + folder;
+        return "/_rest_/object";
     }
     
-    public String getFolder() {
-        return this.folder;
+    public String getBucketId() {
+        return this.bucketId;
     }
 
 
-    public String getBucketId() {
-        return this.bucketId;
+    public String getName() {
+        return this.name;
+    }
+
+
+    public String getVersionId() {
+        return this.versionId;
     }
 
 }

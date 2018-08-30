@@ -18,14 +18,13 @@ package com.spectralogic.ds3client.commands.spectrads3;
 
 import com.spectralogic.ds3client.networking.HttpVerb;
 import com.spectralogic.ds3client.commands.interfaces.AbstractRequest;
-import java.util.UUID;
 import com.google.common.net.UrlEscapers;
 
 public class EjectStorageDomainSpectraS3Request extends AbstractRequest {
 
     // Variables
     
-    private final String storageDomainId;
+    private final String storageDomain;
 
     private String bucketId;
 
@@ -36,22 +35,12 @@ public class EjectStorageDomainSpectraS3Request extends AbstractRequest {
     // Constructor
     
     
-    public EjectStorageDomainSpectraS3Request(final UUID storageDomainId) {
-        this.storageDomainId = storageDomainId.toString();
+    public EjectStorageDomainSpectraS3Request(final String storageDomain) {
+        this.storageDomain = storageDomain;
         
         this.getQueryParams().put("operation", "eject");
 
-        this.updateQueryParam("storage_domain_id", storageDomainId);
-
-    }
-
-    
-    public EjectStorageDomainSpectraS3Request(final String storageDomainId) {
-        this.storageDomainId = storageDomainId;
-        
-        this.getQueryParams().put("operation", "eject");
-
-        this.updateQueryParam("storage_domain_id", storageDomainId);
+        this.updateQueryParam("storage_domain", storageDomain);
 
     }
 
@@ -87,8 +76,8 @@ public class EjectStorageDomainSpectraS3Request extends AbstractRequest {
         return "/_rest_/tape";
     }
     
-    public String getStorageDomainId() {
-        return this.storageDomainId;
+    public String getStorageDomain() {
+        return this.storageDomain;
     }
 
 

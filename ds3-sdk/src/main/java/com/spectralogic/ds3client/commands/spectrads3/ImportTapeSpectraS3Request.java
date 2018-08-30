@@ -18,7 +18,6 @@ package com.spectralogic.ds3client.commands.spectrads3;
 
 import com.spectralogic.ds3client.networking.HttpVerb;
 import com.spectralogic.ds3client.commands.interfaces.AbstractRequest;
-import com.spectralogic.ds3client.models.ImportConflictResolutionMode;
 import java.util.UUID;
 import com.google.common.net.UrlEscapers;
 import com.spectralogic.ds3client.models.Priority;
@@ -28,8 +27,6 @@ public class ImportTapeSpectraS3Request extends AbstractRequest {
     // Variables
     
     private final String tapeId;
-
-    private ImportConflictResolutionMode conflictResolutionMode;
 
     private String dataPolicyId;
 
@@ -60,13 +57,6 @@ public class ImportTapeSpectraS3Request extends AbstractRequest {
         this.getQueryParams().put("operation", "import");
 
     }
-
-    public ImportTapeSpectraS3Request withConflictResolutionMode(final ImportConflictResolutionMode conflictResolutionMode) {
-        this.conflictResolutionMode = conflictResolutionMode;
-        this.updateQueryParam("conflict_resolution_mode", conflictResolutionMode);
-        return this;
-    }
-
 
     public ImportTapeSpectraS3Request withDataPolicyId(final UUID dataPolicyId) {
         this.dataPolicyId = dataPolicyId.toString();
@@ -144,11 +134,6 @@ public class ImportTapeSpectraS3Request extends AbstractRequest {
     
     public String getTapeId() {
         return this.tapeId;
-    }
-
-
-    public ImportConflictResolutionMode getConflictResolutionMode() {
-        return this.conflictResolutionMode;
     }
 
 

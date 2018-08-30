@@ -17,7 +17,6 @@ package com.spectralogic.ds3client.integration;
 
 import com.google.common.collect.ImmutableList;
 import com.spectralogic.ds3client.Ds3Client;
-import com.spectralogic.ds3client.commands.spectrads3.PutBulkJobSpectraS3Request;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers;
 import com.spectralogic.ds3client.helpers.pagination.GetObjectsFullDetailsLoaderFactory;
 import com.spectralogic.ds3client.integration.test.helpers.TempStorageIds;
@@ -76,7 +75,10 @@ public class SpectraS3PaginationLoader_Test {
             // test setup
             HELPERS.ensureBucketExists(TEST_ENV_NAME);
             final int numObjects = 55;
-            CLIENT.putBulkJobSpectraS3(new PutBulkJobSpectraS3Request(TEST_ENV_NAME, createTestList(numObjects)));
+
+            final List<Ds3Object> objects = createTestList(numObjects);
+            final Ds3ClientHelpers.Job putJob = HELPERS.startWriteJob(TEST_ENV_NAME, objects);
+            putJob.transfer(new RandomDataChannelBuilder(objects));
 
             final GetObjectsFullDetailsLoaderFactory loaderFactory = new GetObjectsFullDetailsLoaderFactory(CLIENT, TEST_ENV_NAME, 10, RETRIES, false);
 

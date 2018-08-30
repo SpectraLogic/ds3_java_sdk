@@ -19,6 +19,7 @@ import com.spectralogic.ds3client.Ds3Client;
 import com.spectralogic.ds3client.commands.spectrads3.*;
 import com.spectralogic.ds3client.models.ChecksumType;
 import com.spectralogic.ds3client.models.PoolType;
+import com.spectralogic.ds3client.models.VersioningLevel;
 
 import java.io.IOException;
 import java.util.UUID;
@@ -104,6 +105,25 @@ public final class TempStorageUtil {
                 new PutDataPolicySpectraS3Request(testSetName + DATA_POLICY_NAME)
                         .withEndToEndCrcRequired(withEndToEndCrcRequired)
                         .withChecksumType(checksumType).withAlwaysForcePutJobCreation(true));
+        client.modifyUserSpectraS3(new ModifyUserSpectraS3Request(DEFAULT_USER)
+                .withDefaultDataPolicyId(dataPolicyResponse.getDataPolicyResult().getId()));
+        return dataPolicyResponse.getDataPolicyResult().getId();
+    }
+
+    /**
+     * Creates a Data Policy with the specified checksum type, end-to-end crc, and versioning
+     */
+    public static UUID setupDataPolicy(
+            final String testSetName,
+            final boolean withEndToEndCrcRequired,
+            final ChecksumType.Type checksumType,
+            final VersioningLevel versioningLevel,
+            final Ds3Client client) throws IOException {
+        final PutDataPolicySpectraS3Response dataPolicyResponse = client.putDataPolicySpectraS3(
+                new PutDataPolicySpectraS3Request(testSetName + DATA_POLICY_NAME)
+                        .withEndToEndCrcRequired(withEndToEndCrcRequired)
+                        .withChecksumType(checksumType).withAlwaysForcePutJobCreation(true)
+                        .withVersioning(versioningLevel));
         client.modifyUserSpectraS3(new ModifyUserSpectraS3Request(DEFAULT_USER)
                 .withDefaultDataPolicyId(dataPolicyResponse.getDataPolicyResult().getId()));
         return dataPolicyResponse.getDataPolicyResult().getId();

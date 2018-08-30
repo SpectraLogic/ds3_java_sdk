@@ -63,7 +63,7 @@ public class Metadata_Test {
         blob1.setLatest(true);
         blob1.setLength(2);
         blob1.setOffset(0);
-        blob1.setVersion(1);
+        blob1.setVersionId(UUID.randomUUID());
         blob1.setName(fileName);
 
         final BulkObject blob2 = new BulkObject();
@@ -73,7 +73,7 @@ public class Metadata_Test {
         blob2.setLatest(true);
         blob2.setLength(2);
         blob2.setOffset(2);
-        blob2.setVersion(1);
+        blob2.setVersionId(UUID.randomUUID());
         blob2.setName(fileName);
 
         final Objects chunk = new Objects();

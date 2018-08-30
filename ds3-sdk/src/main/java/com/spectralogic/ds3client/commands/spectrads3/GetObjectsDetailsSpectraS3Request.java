@@ -28,6 +28,8 @@ public class GetObjectsDetailsSpectraS3Request extends AbstractPaginationRequest
     
     private String bucketId;
 
+    private long endDate;
+
     private boolean lastPage;
 
     private boolean latest;
@@ -40,9 +42,9 @@ public class GetObjectsDetailsSpectraS3Request extends AbstractPaginationRequest
 
     private String pageStartMarker;
 
-    private S3ObjectType type;
+    private long startDate;
 
-    private long version;
+    private S3ObjectType type;
 
     // Constructor
     
@@ -54,6 +56,13 @@ public class GetObjectsDetailsSpectraS3Request extends AbstractPaginationRequest
     public GetObjectsDetailsSpectraS3Request withBucketId(final String bucketId) {
         this.bucketId = bucketId;
         this.updateQueryParam("bucket_id", bucketId);
+        return this;
+    }
+
+
+    public GetObjectsDetailsSpectraS3Request withEndDate(final long endDate) {
+        this.endDate = endDate;
+        this.updateQueryParam("end_date", endDate);
         return this;
     }
 
@@ -111,16 +120,16 @@ public class GetObjectsDetailsSpectraS3Request extends AbstractPaginationRequest
     }
 
 
-    public GetObjectsDetailsSpectraS3Request withType(final S3ObjectType type) {
-        this.type = type;
-        this.updateQueryParam("type", type);
+    public GetObjectsDetailsSpectraS3Request withStartDate(final long startDate) {
+        this.startDate = startDate;
+        this.updateQueryParam("start_date", startDate);
         return this;
     }
 
 
-    public GetObjectsDetailsSpectraS3Request withVersion(final long version) {
-        this.version = version;
-        this.updateQueryParam("version", version);
+    public GetObjectsDetailsSpectraS3Request withType(final S3ObjectType type) {
+        this.type = type;
+        this.updateQueryParam("type", type);
         return this;
     }
 
@@ -138,6 +147,11 @@ public class GetObjectsDetailsSpectraS3Request extends AbstractPaginationRequest
     
     public String getBucketId() {
         return this.bucketId;
+    }
+
+
+    public long getEndDate() {
+        return this.endDate;
     }
 
 
@@ -171,13 +185,13 @@ public class GetObjectsDetailsSpectraS3Request extends AbstractPaginationRequest
     }
 
 
-    public S3ObjectType getType() {
-        return this.type;
+    public long getStartDate() {
+        return this.startDate;
     }
 
 
-    public long getVersion() {
-        return this.version;
+    public S3ObjectType getType() {
+        return this.type;
     }
 
 }

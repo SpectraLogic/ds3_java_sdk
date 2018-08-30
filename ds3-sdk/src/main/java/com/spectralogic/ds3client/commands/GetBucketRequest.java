@@ -34,6 +34,8 @@ public class GetBucketRequest extends AbstractRequest {
 
     private String prefix;
 
+    private boolean versions;
+
     // Constructor
     
     
@@ -66,6 +68,17 @@ public class GetBucketRequest extends AbstractRequest {
     public GetBucketRequest withPrefix(final String prefix) {
         this.prefix = prefix;
         this.updateQueryParam("prefix", prefix);
+        return this;
+    }
+
+
+    public GetBucketRequest withVersions(final boolean versions) {
+        this.versions = versions;
+        if (this.versions) {
+            this.getQueryParams().put("versions", null);
+        } else {
+            this.getQueryParams().remove("versions");
+        }
         return this;
     }
 
@@ -103,6 +116,11 @@ public class GetBucketRequest extends AbstractRequest {
 
     public String getPrefix() {
         return this.prefix;
+    }
+
+
+    public boolean getVersions() {
+        return this.versions;
     }
 
 }

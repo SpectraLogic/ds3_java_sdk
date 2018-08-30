@@ -86,7 +86,7 @@ public class Ds3Client_Test {
             new Ds3Object("file3")
     );
 
-    private static final String SIMPLE_BULK_OBJECT_LIST_RESPONSE = "<Data><Object Bucket=\"default_bucket_name\" Id=\"161853d9-d409-4775-b4c1-ace43cb4dc57\" Latest=\"true\" Length=\"10\" Name=\"o1\" Offset=\"0\" Version=\"1\"/><Object Bucket=\"default_bucket_name\" Id=\"1022fdf0-6d5c-4fb5-83f5-031423af8a8b\" Latest=\"true\" Length=\"10\" Name=\"o2\" Offset=\"0\" Version=\"1\"/></Data>";
+    private static final String SIMPLE_BULK_OBJECT_LIST_RESPONSE = "<Data><Object Bucket=\"default_bucket_name\" Id=\"161853d9-d409-4775-b4c1-ace43cb4dc57\" Latest=\"true\" Length=\"10\" Name=\"o1\" Offset=\"0\" VersionId=\"acd23f8b-00a6-4812-9cc9-9be8ebc6e0df\"/><Object Bucket=\"default_bucket_name\" Id=\"1022fdf0-6d5c-4fb5-83f5-031423af8a8b\" Latest=\"true\" Length=\"10\" Name=\"o2\" Offset=\"0\" VersionId=\"2af042b1-4543-4e88-a4f9-554570fcf50d\"/></Data>";
 
     @Before
     public void setTimeZone() {
@@ -221,7 +221,7 @@ public class Ds3Client_Test {
         queryParams.put("bucket_id", bucketId);
 
         final String stringResponse = "<Data>" +
-                "<S3Object><BucketId>a24d14f3-e2f0-4bfb-ab71-f99d5ef43745</BucketId><CreationDate>2015-09-21T20:06:47.694Z</CreationDate><Id>e37c3ce0-12aa-4f54-87e3-42532aca0e5e</Id><Name>beowulf.txt</Name><Type>DATA</Type><Version>1</Version></S3Object><S3Object><BucketId>a24d14f3-e2f0-4bfb-ab71-f99d5ef43745</BucketId><CreationDate>2015-09-21T20:06:47.779Z</CreationDate><Id>dc628815-c723-4c4e-b68b-5f5d10f38af5</Id><Name>sherlock_holmes.txt</Name><Type>DATA</Type><Version>1</Version></S3Object><S3Object><BucketId>a24d14f3-e2f0-4bfb-ab71-f99d5ef43745</BucketId><CreationDate>2015-09-21T20:06:47.772Z</CreationDate><Id>4f6985fd-fbae-4421-ba27-66fdb96187c5</Id><Name>tale_of_two_cities.txt</Name><Type>DATA</Type><Version>1</Version></S3Object><S3Object><BucketId>a24d14f3-e2f0-4bfb-ab71-f99d5ef43745</BucketId><CreationDate>2015-09-21T20:06:47.696Z</CreationDate><Id>82c18910-fadb-4461-a152-bf714ae91b55</Id><Name>ulysses.txt</Name><Type>DATA</Type><Version>1</Version></S3Object></Data>";
+                "<S3Object><BucketId>a24d14f3-e2f0-4bfb-ab71-f99d5ef43745</BucketId><CreationDate>2015-09-21T20:06:47.694Z</CreationDate><Id>e37c3ce0-12aa-4f54-87e3-42532aca0e5e</Id><Name>beowulf.txt</Name><Type>DATA</Type></S3Object><S3Object><BucketId>a24d14f3-e2f0-4bfb-ab71-f99d5ef43745</BucketId><CreationDate>2015-09-21T20:06:47.779Z</CreationDate><Id>dc628815-c723-4c4e-b68b-5f5d10f38af5</Id><Name>sherlock_holmes.txt</Name><Type>DATA</Type></S3Object><S3Object><BucketId>a24d14f3-e2f0-4bfb-ab71-f99d5ef43745</BucketId><CreationDate>2015-09-21T20:06:47.772Z</CreationDate><Id>4f6985fd-fbae-4421-ba27-66fdb96187c5</Id><Name>tale_of_two_cities.txt</Name><Type>DATA</Type></S3Object><S3Object><BucketId>a24d14f3-e2f0-4bfb-ab71-f99d5ef43745</BucketId><CreationDate>2015-09-21T20:06:47.696Z</CreationDate><Id>82c18910-fadb-4461-a152-bf714ae91b55</Id><Name>ulysses.txt</Name><Type>DATA</Type></S3Object></Data>";
 
         final ImmutableMap<String, String> responseHeaders = ImmutableMap.of(
                 "page-truncated", "0",
@@ -241,7 +241,6 @@ public class Ds3Client_Test {
         beowulf.setId(UUID.fromString("e37c3ce0-12aa-4f54-87e3-42532aca0e5e"));
         beowulf.setName("beowulf.txt");
         beowulf.setType(S3ObjectType.DATA);
-        beowulf.setVersion(1);
 
         final S3Object notBeowulf = new S3Object();
         notBeowulf.setBucketId(UUID.fromString("a24d14f3-e2f0-4bfb-ab71-f99d5ef43745"));
@@ -249,7 +248,6 @@ public class Ds3Client_Test {
         notBeowulf.setId(UUID.fromString("e37c3ce0-12aa-4f54-87e3-42532aca0e5e"));
         notBeowulf.setName("notBeowulf.txt");
         notBeowulf.setType(S3ObjectType.DATA);
-        notBeowulf.setVersion(1);
 
         assertThat(objects.size(), is(4));
         assertThat(s3ObjectExists(objects, beowulf), is(true));
@@ -1407,7 +1405,7 @@ public class Ds3Client_Test {
 
     @Test
     public void getPhysicalPlacementForObjectsWithFullDetailsTest() throws IOException {
-        final String responsePayload = "<Data><Object Bucket=\"b1\" Id=\"a2897bbd-3e0b-4c0f-83d7-29e1e7669bdd\" InCache=\"false\" Latest=\"true\" Length=\"10\" Name=\"o4\" Offset=\"0\" Version=\"1\"><PhysicalPlacement><AzureTargets/><Ds3Targets/><Pools/><S3Targets/><Tapes/></PhysicalPlacement></Object></Data>";
+        final String responsePayload = "<Data><Object Bucket=\"b1\" Id=\"a2897bbd-3e0b-4c0f-83d7-29e1e7669bdd\" InCache=\"false\" Latest=\"true\" Length=\"10\" Name=\"o4\" Offset=\"0\" VersionId=\"2af042b1-4543-4e88-a4f9-554570fcf50d\"><PhysicalPlacement><AzureTargets/><Ds3Targets/><Pools/><S3Targets/><Tapes/></PhysicalPlacement></Object></Data>";
         final String bucketName = "BucketName";
 
         final Map<String, String> queryParams = new HashMap<>();
@@ -1425,7 +1423,7 @@ public class Ds3Client_Test {
 
     @Test
     public void verifyPhysicalPlacementForObjectsTest() throws IOException {
-        final String responsePayload = "<Data><AzureTargets/><Ds3Targets/><Pools/><S3Targets/><Tapes><Tape><AssignedToStorageDomain>false</AssignedToStorageDomain><AvailableRawCapacity>10000</AvailableRawCapacity><BarCode>t1</BarCode><BucketId/><DescriptionForIdentification/><EjectDate/><EjectLabel/><EjectLocation/><EjectPending/><FullOfData>false</FullOfData><Id>48d30ecb-84f1-4721-9832-7aa165a1dd77</Id><LastAccessed/><LastCheckpoint/><LastModified/><LastVerified/><PartiallyVerifiedEndOfTape/><PartitionId>76343269-c32a-4cb0-aec4-57a9dccce6ea</PartitionId><PreviousState/><SerialNumber/><State>PENDING_INSPECTION</State><StorageDomainId/><TakeOwnershipPending>false</TakeOwnershipPending><TotalRawCapacity>20000</TotalRawCapacity><Type>LTO5</Type><VerifyPending/><WriteProtected>false</WriteProtected></Tape></Tapes></Data>";
+        final String responsePayload = "<Data><AzureTargets/><Ds3Targets/><Pools/><S3Targets/><Tapes><Tape><AssignedToStorageDomain>false</AssignedToStorageDomain><AvailableRawCapacity>10000</AvailableRawCapacity><BarCode>t1</BarCode><BucketId/><DescriptionForIdentification/><EjectDate/><EjectLabel/><EjectLocation/><EjectPending/><FullOfData>false</FullOfData><Id>48d30ecb-84f1-4721-9832-7aa165a1dd77</Id><LastAccessed/><LastCheckpoint/><LastModified/><LastVerified/><PartiallyVerifiedEndOfTape/><PartitionId>76343269-c32a-4cb0-aec4-57a9dccce6ea</PartitionId><PreviousState/><SerialNumber/><State>PENDING_INSPECTION</State><TakeOwnershipPending>false</TakeOwnershipPending><TotalRawCapacity>20000</TotalRawCapacity><Type>LTO5</Type><VerifyPending/><WriteProtected>false</WriteProtected></Tape></Tapes></Data>";
         final String bucketName = "BucketName";
 
         final Map<String, String> queryParams = new HashMap<>();
@@ -1445,7 +1443,7 @@ public class Ds3Client_Test {
 
     @Test
     public void verifyPhysicalPlacementForObjectsWithFullDetailsTest() throws IOException {
-        final String responsePayload = "<Data><Object Bucket=\"b1\" Id=\"15ad85a5-aab6-4d85-bf33-831bcba13b8e\" InCache=\"false\" Latest=\"true\" Length=\"10\" Name=\"o1\" Offset=\"0\" Version=\"1\"><PhysicalPlacement><AzureTargets/><Ds3Targets/><Pools/><S3Targets/><Tapes><Tape><AssignedToStorageDomain>false</AssignedToStorageDomain><AvailableRawCapacity>10000</AvailableRawCapacity><BarCode>t1</BarCode><BucketId/><DescriptionForIdentification/><EjectDate/><EjectLabel/><EjectLocation/><EjectPending/><FullOfData>false</FullOfData><Id>5a7bb215-4aff-4806-b217-5fe01ade6a2c</Id><LastAccessed/><LastCheckpoint/><LastModified/><LastVerified/><PartiallyVerifiedEndOfTape/><PartitionId>2e5b25fc-546e-45b0-951e-8f3d80bb7823</PartitionId><PreviousState/><SerialNumber/><State>PENDING_INSPECTION</State><StorageDomainId/><TakeOwnershipPending>false</TakeOwnershipPending><TotalRawCapacity>20000</TotalRawCapacity><Type>LTO5</Type><VerifyPending/><WriteProtected>false</WriteProtected></Tape></Tapes></PhysicalPlacement></Object></Data>";
+        final String responsePayload = "<Data><Object Bucket=\"b1\" Id=\"15ad85a5-aab6-4d85-bf33-831bcba13b8e\" InCache=\"false\" Latest=\"true\" Length=\"10\" Name=\"o1\" Offset=\"0\" VersionId=\"2af042b1-4543-4e88-a4f9-554570fcf50d\"><PhysicalPlacement><AzureTargets/><Ds3Targets/><Pools/><S3Targets/><Tapes><Tape><AssignedToStorageDomain>false</AssignedToStorageDomain><AvailableRawCapacity>10000</AvailableRawCapacity><BarCode>t1</BarCode><BucketId/><DescriptionForIdentification/><EjectDate/><EjectLabel/><EjectLocation/><EjectPending/><FullOfData>false</FullOfData><Id>5a7bb215-4aff-4806-b217-5fe01ade6a2c</Id><LastAccessed/><LastCheckpoint/><LastModified/><LastVerified/><PartiallyVerifiedEndOfTape/><PartitionId>2e5b25fc-546e-45b0-951e-8f3d80bb7823</PartitionId><PreviousState/><SerialNumber/><State>PENDING_INSPECTION</State><TakeOwnershipPending>false</TakeOwnershipPending><TotalRawCapacity>20000</TotalRawCapacity><Type>LTO5</Type><VerifyPending/><WriteProtected>false</WriteProtected></Tape></Tapes></PhysicalPlacement></Object></Data>";
         final String bucketName = "BucketName";
 
         final Map<String, String> queryParams = new HashMap<>();
@@ -1470,7 +1468,7 @@ public class Ds3Client_Test {
         queryParams.put("operation", "eject");
         queryParams.put("blobs", null);
         queryParams.put("bucket_id", bucketId);
-        queryParams.put("storage_domain_id", storageDomainId);
+        queryParams.put("storage_domain", storageDomainId);
 
         MockNetwork
                 .expecting(HttpVerb.PUT, "/_rest_/tape", queryParams, SIMPLE_OBJECT_REQUEST_PAYLOAD)
@@ -1481,7 +1479,7 @@ public class Ds3Client_Test {
 
     @Test
     public void replicatePutJobTest() throws IOException {
-        final String responsePayload = "<MasterObjectList Aggregating=\"false\" BucketName=\"existing_bucket\" CachedSizeInBytes=\"0\" ChunkClientProcessingOrderGuarantee=\"IN_ORDER\" CompletedSizeInBytes=\"0\" EntirelyInCache=\"false\" JobId=\"95dcda9b-26d2-4b95-87e2-36ac217d7230\" Naked=\"false\" Name=\"Replicate Untitled\" OriginalSizeInBytes=\"10\" Priority=\"NORMAL\" RequestType=\"PUT\" StartDate=\"2017-03-23T23:24:24.000Z\" Status=\"IN_PROGRESS\" UserId=\"1dc9953a-c778-4cdd-b217-2a6b325cde5e\" UserName=\"test_user\"><Nodes><Node EndPoint=\"NOT_INITIALIZED_YET\" Id=\"782ee70f-692e-4240-8ee1-c049b3a7b91e\"/></Nodes><Objects ChunkId=\"33a7ed12-d7b7-4f85-ac67-b3a2834170cc\" ChunkNumber=\"1\"><Object Id=\"eee15242-d7c1-44dc-b352-811adc6e5c0e\" InCache=\"false\" Latest=\"true\" Length=\"10\" Name=\"o1\" Offset=\"0\" Version=\"1\"/></Objects></MasterObjectList>";
+        final String responsePayload = "<MasterObjectList Aggregating=\"false\" BucketName=\"existing_bucket\" CachedSizeInBytes=\"0\" ChunkClientProcessingOrderGuarantee=\"IN_ORDER\" CompletedSizeInBytes=\"0\" EntirelyInCache=\"false\" JobId=\"95dcda9b-26d2-4b95-87e2-36ac217d7230\" Naked=\"false\" Name=\"Replicate Untitled\" OriginalSizeInBytes=\"10\" Priority=\"NORMAL\" RequestType=\"PUT\" StartDate=\"2017-03-23T23:24:24.000Z\" Status=\"IN_PROGRESS\" UserId=\"1dc9953a-c778-4cdd-b217-2a6b325cde5e\" UserName=\"test_user\"><Nodes><Node EndPoint=\"NOT_INITIALIZED_YET\" Id=\"782ee70f-692e-4240-8ee1-c049b3a7b91e\"/></Nodes><Objects ChunkId=\"33a7ed12-d7b7-4f85-ac67-b3a2834170cc\" ChunkNumber=\"1\"><Object Id=\"eee15242-d7c1-44dc-b352-811adc6e5c0e\" InCache=\"false\" Latest=\"true\" Length=\"10\" Name=\"o1\" Offset=\"0\" VersionId=\"2af042b1-4543-4e88-a4f9-554570fcf50d\"/></Objects></MasterObjectList>";
         final String requestPayload = "This is the request payload content";
         final String bucketName = "BucketName";
 
@@ -1535,11 +1533,18 @@ public class Ds3Client_Test {
         final Map<String, String> queryParams = new HashMap<>();
         queryParams.put("operation", "get_physical_placement");
 
-        MockNetwork
+        final Map<String, String> responseHeaders = new HashMap<>();
+        responseHeaders.put("page-truncated", "0");
+        responseHeaders.put("total-result-count", "2");
+
+        final GetBlobsOnTapeSpectraS3Response result = MockNetwork
                 .expecting(HttpVerb.GET, "/_rest_/tape/" + target, queryParams, null)
-                .returning(200, SIMPLE_BULK_OBJECT_LIST_RESPONSE)
+                .returning(200, SIMPLE_BULK_OBJECT_LIST_RESPONSE, responseHeaders)
                 .asClient()
                 .getBlobsOnTapeSpectraS3(new GetBlobsOnTapeSpectraS3Request(target));
+
+        assertThat(result.getPagingTruncated(), is(0));
+        assertThat(result.getPagingTotalResultCount(), is(2));
     }
 
     @Test

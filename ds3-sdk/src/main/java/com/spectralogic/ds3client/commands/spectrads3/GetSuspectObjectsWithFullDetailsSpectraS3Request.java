@@ -19,7 +19,6 @@ package com.spectralogic.ds3client.commands.spectrads3;
 import com.spectralogic.ds3client.networking.HttpVerb;
 import com.spectralogic.ds3client.commands.interfaces.AbstractRequest;
 import com.google.common.net.UrlEscapers;
-import java.util.UUID;
 
 public class GetSuspectObjectsWithFullDetailsSpectraS3Request extends AbstractRequest {
 
@@ -27,7 +26,7 @@ public class GetSuspectObjectsWithFullDetailsSpectraS3Request extends AbstractRe
     
     private String bucketId;
 
-    private String storageDomainId;
+    private String storageDomain;
 
     // Constructor
     
@@ -44,16 +43,9 @@ public class GetSuspectObjectsWithFullDetailsSpectraS3Request extends AbstractRe
     }
 
 
-    public GetSuspectObjectsWithFullDetailsSpectraS3Request withStorageDomainId(final UUID storageDomainId) {
-        this.storageDomainId = storageDomainId.toString();
-        this.updateQueryParam("storage_domain_id", storageDomainId);
-        return this;
-    }
-
-
-    public GetSuspectObjectsWithFullDetailsSpectraS3Request withStorageDomainId(final String storageDomainId) {
-        this.storageDomainId = storageDomainId;
-        this.updateQueryParam("storage_domain_id", storageDomainId);
+    public GetSuspectObjectsWithFullDetailsSpectraS3Request withStorageDomain(final String storageDomain) {
+        this.storageDomain = storageDomain;
+        this.updateQueryParam("storage_domain", storageDomain);
         return this;
     }
 
@@ -74,8 +66,8 @@ public class GetSuspectObjectsWithFullDetailsSpectraS3Request extends AbstractRe
     }
 
 
-    public String getStorageDomainId() {
-        return this.storageDomainId;
+    public String getStorageDomain() {
+        return this.storageDomain;
     }
 
 }

@@ -19,7 +19,6 @@ package com.spectralogic.ds3client.commands.spectrads3;
 import com.spectralogic.ds3client.networking.HttpVerb;
 import com.spectralogic.ds3client.commands.interfaces.AbstractRequest;
 import com.google.common.net.UrlEscapers;
-import com.spectralogic.ds3client.models.ImportConflictResolutionMode;
 import java.util.UUID;
 import com.spectralogic.ds3client.models.Priority;
 
@@ -30,8 +29,6 @@ public class ImportS3TargetSpectraS3Request extends AbstractRequest {
     private final String s3Target;
 
     private final String cloudBucketName;
-
-    private ImportConflictResolutionMode conflictResolutionMode;
 
     private String dataPolicyId;
 
@@ -51,13 +48,6 @@ public class ImportS3TargetSpectraS3Request extends AbstractRequest {
         this.updateQueryParam("cloud_bucket_name", cloudBucketName);
 
     }
-
-    public ImportS3TargetSpectraS3Request withConflictResolutionMode(final ImportConflictResolutionMode conflictResolutionMode) {
-        this.conflictResolutionMode = conflictResolutionMode;
-        this.updateQueryParam("conflict_resolution_mode", conflictResolutionMode);
-        return this;
-    }
-
 
     public ImportS3TargetSpectraS3Request withDataPolicyId(final UUID dataPolicyId) {
         this.dataPolicyId = dataPolicyId.toString();
@@ -112,11 +102,6 @@ public class ImportS3TargetSpectraS3Request extends AbstractRequest {
 
     public String getCloudBucketName() {
         return this.cloudBucketName;
-    }
-
-
-    public ImportConflictResolutionMode getConflictResolutionMode() {
-        return this.conflictResolutionMode;
     }
 
 

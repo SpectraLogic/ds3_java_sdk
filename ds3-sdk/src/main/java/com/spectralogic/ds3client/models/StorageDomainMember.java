@@ -24,6 +24,9 @@ import java.util.UUID;
 public class StorageDomainMember {
 
     // Variables
+    @JsonProperty("AutoCompactionThreshold")
+    private Integer autoCompactionThreshold;
+
     @JsonProperty("Id")
     private UUID id;
 
@@ -52,6 +55,15 @@ public class StorageDomainMember {
 
     // Getters and Setters
     
+    public Integer getAutoCompactionThreshold() {
+        return this.autoCompactionThreshold;
+    }
+
+    public void setAutoCompactionThreshold(final Integer autoCompactionThreshold) {
+        this.autoCompactionThreshold = autoCompactionThreshold;
+    }
+
+
     public UUID getId() {
         return this.id;
     }

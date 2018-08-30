@@ -18,27 +18,25 @@ package com.spectralogic.ds3client.commands.parsers;
 
 import com.spectralogic.ds3client.commands.parsers.interfaces.AbstractResponseParser;
 import com.spectralogic.ds3client.commands.parsers.utils.ResponseParserUtils;
-import com.spectralogic.ds3client.commands.spectrads3.GetBlobsOnTapeSpectraS3Response;
-import com.spectralogic.ds3client.models.BulkObjectList;
+import com.spectralogic.ds3client.commands.spectrads3.StageObjectsJobSpectraS3Response;
+import com.spectralogic.ds3client.models.MasterObjectList;
 import com.spectralogic.ds3client.networking.WebResponse;
 import com.spectralogic.ds3client.serializer.XmlOutput;
 import java.io.IOException;
 import java.io.InputStream;
 
-public class GetBlobsOnTapeSpectraS3ResponseParser extends AbstractResponseParser<GetBlobsOnTapeSpectraS3Response> {
+public class StageObjectsJobSpectraS3ResponseParser extends AbstractResponseParser<StageObjectsJobSpectraS3Response> {
     private final int[] expectedStatusCodes = new int[]{200};
 
     @Override
-    public GetBlobsOnTapeSpectraS3Response parseXmlResponse(final WebResponse response) throws IOException {
+    public StageObjectsJobSpectraS3Response parseXmlResponse(final WebResponse response) throws IOException {
         final int statusCode = response.getStatusCode();
-        final Integer pagingTruncated = parseIntHeader("page-truncated");
-        final Integer pagingTotalResultCount = parseIntHeader("total-result-count");
         if (ResponseParserUtils.validateStatusCode(statusCode, expectedStatusCodes)) {
             switch (statusCode) {
             case 200:
                 try (final InputStream inputStream = response.getResponseStream()) {
-                    final BulkObjectList result = XmlOutput.fromXml(inputStream, BulkObjectList.class);
-                    return new GetBlobsOnTapeSpectraS3Response(result, pagingTotalResultCount, pagingTruncated, this.getChecksum(), this.getChecksumType());
+                    final MasterObjectList result = XmlOutput.fromXml(inputStream, MasterObjectList.class);
+                    return new StageObjectsJobSpectraS3Response(result, this.getChecksum(), this.getChecksumType());
                 }
 
             default:

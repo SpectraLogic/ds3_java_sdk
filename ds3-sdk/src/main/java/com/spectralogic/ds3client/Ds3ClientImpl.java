@@ -570,6 +570,10 @@ public class Ds3ClientImpl implements Ds3Client {
         return new ReplicatePutJobSpectraS3ResponseParser().response(this.netClient.getResponse(request));
     }
     @Override
+    public StageObjectsJobSpectraS3Response stageObjectsJobSpectraS3(final StageObjectsJobSpectraS3Request request) throws IOException {
+        return new StageObjectsJobSpectraS3ResponseParser().response(this.netClient.getResponse(request));
+    }
+    @Override
     public TruncateActiveJobSpectraS3Response truncateActiveJobSpectraS3(final TruncateActiveJobSpectraS3Request request) throws IOException {
         return new TruncateActiveJobSpectraS3ResponseParser().response(this.netClient.getResponse(request));
     }
@@ -852,6 +856,10 @@ public class Ds3ClientImpl implements Ds3Client {
     @Override
     public GetPhysicalPlacementForObjectsWithFullDetailsSpectraS3Response getPhysicalPlacementForObjectsWithFullDetailsSpectraS3(final GetPhysicalPlacementForObjectsWithFullDetailsSpectraS3Request request) throws IOException {
         return new GetPhysicalPlacementForObjectsWithFullDetailsSpectraS3ResponseParser().response(this.netClient.getResponse(request));
+    }
+    @Override
+    public UndeleteObjectSpectraS3Response undeleteObjectSpectraS3(final UndeleteObjectSpectraS3Request request) throws IOException {
+        return new UndeleteObjectSpectraS3ResponseParser().response(this.netClient.getResponse(request));
     }
     @Override
     public VerifyPhysicalPlacementForObjectsSpectraS3Response verifyPhysicalPlacementForObjectsSpectraS3(final VerifyPhysicalPlacementForObjectsSpectraS3Request request) throws IOException {
