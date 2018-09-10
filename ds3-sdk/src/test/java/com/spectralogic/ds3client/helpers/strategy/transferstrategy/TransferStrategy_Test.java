@@ -174,8 +174,9 @@ public class TransferStrategy_Test {
         new Thread(() -> {
             try {
                 transferStrategy.cancel();
-            } catch (final Throwable t) {
-                System.out.println();
+            } catch (final IOException e) {
+                System.out.println(e.getMessage());
+                assert(false);
             }
         }).start();
 
