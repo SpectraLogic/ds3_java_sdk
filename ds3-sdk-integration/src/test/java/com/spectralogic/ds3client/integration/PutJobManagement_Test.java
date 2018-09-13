@@ -2054,15 +2054,18 @@ public class PutJobManagement_Test {
             final AtomicBoolean cancelHandlerCalled = new AtomicBoolean(false);
             final CountDownLatch countDownLatch = new CountDownLatch(1);
 
-            writeJob.attachObjectCompletedListener(name -> {
-                try {
-                    writeJob.cancel();
-                } catch (final FailedRequestException failedRequestException) {
-                    caughtExceptionWhileCanceling.set(false);
-                } catch (final Throwable t) {
-                    caughtExceptionWhileCanceling.set(true);
-                } finally {
-                    countDownLatch.countDown();
+            final AtomicBoolean hasBeenCancelled = new AtomicBoolean(false);
+            writeJob.attachDataTransferredListener(dataTransferred -> {
+                if(hasBeenCancelled.compareAndSet(false, true)) {
+                    new Thread(() -> {
+                        try {
+                            writeJob.cancel();
+                        } catch (IOException e) {
+                            fail();
+                        } finally {
+                            countDownLatch.countDown();
+                        }
+                    }).start();
                 }
             });
 

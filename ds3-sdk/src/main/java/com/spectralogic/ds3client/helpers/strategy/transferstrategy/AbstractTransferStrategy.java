@@ -135,17 +135,18 @@ abstract class AbstractTransferStrategy implements TransferStrategy {
 
                 final int numJobParts = Iterables.size(jobParts);
 
-                if (numJobParts == 0) {
+                if (numJobParts <= 0) {
                     break;
                 }
 
-                final CountDownLatch countDownLatch = new CountDownLatch(numJobParts);
-                transferJobParts(jobParts, countDownLatch, numBlobsRemaining, cancellationCheck);
-                countDownLatch.await();
+                final CountDownLatch jobPartsCompleteLatch = new CountDownLatch(numJobParts);
+                transferJobParts(jobParts, jobPartsCompleteLatch, numBlobsRemaining, cancellationCheck);
+                jobPartsCompleteLatch.await();
             } catch (final Ds3NoMoreRetriesException | FailedRequestException e) {
                 emitFailureEvent(makeFailureEvent(failureActivity, e, firstChunk()));
                 throw e;
             } catch (final InterruptedException | NoSuchElementException e) {
+                LOG.warn("Thread was interrupted");
                 Thread.currentThread().interrupt();
             } catch (final Throwable t) {
                 emitFailureAndSetCachedException(t);
@@ -181,13 +182,13 @@ abstract class AbstractTransferStrategy implements TransferStrategy {
     }
 
     private void transferJobParts(final Iterable<JobPart> jobParts,
-                                  final CountDownLatch countDownLatch,
+                                  final CountDownLatch jobPartsCompleteLatch,
                                   final AtomicInteger numBlobsTransferred,
                                   final BooleanSupplier cancellationCheck) {
         for (final JobPart jobPart : jobParts) {
             if (executorService.isShutdown()) {
                 LOG.debug("Executor service is shut down, decrementing countdown latch");
-                countDownLatch.countDown();
+                jobPartsCompleteLatch.countDown();
             } else {
                 executorService.execute(() -> {
                     try {
@@ -203,7 +204,7 @@ abstract class AbstractTransferStrategy implements TransferStrategy {
                     } finally {
                         jobState.blobTransferredOrFailed(jobPart.getBlob());
                         numBlobsTransferred.decrementAndGet();
-                        countDownLatch.countDown();
+                        jobPartsCompleteLatch.countDown();
                     }
                 });
             }
@@ -245,7 +246,9 @@ abstract class AbstractTransferStrategy implements TransferStrategy {
         canceled = true;
         executorService.shutdown();
         try {
-            executorService.awaitTermination(10000, TimeUnit.MILLISECONDS);
+            if(!executorService.awaitTermination(10, TimeUnit.SECONDS)) {
+                executorService.shutdownNow();
+            };
         } catch (final InterruptedException e) {
             executorService.shutdownNow();
         }
