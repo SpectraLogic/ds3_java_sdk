@@ -32,9 +32,9 @@ import com.spectralogic.ds3client.models.Objects;
 import java.io.IOException;
 import java.util.NoSuchElementException;
 import java.util.UUID;
-import java.util.concurrent.Callable;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.BooleanSupplier;
@@ -42,7 +42,6 @@ import java.util.function.BooleanSupplier;
 import com.spectralogic.ds3client.networking.FailedRequestException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 
 /**
  * An implementation of {@link TransferStrategy} that provides a default implementation {@code transfer}
@@ -127,25 +126,22 @@ abstract class AbstractTransferStrategy implements TransferStrategy {
     }
 
     private void transferAllJobBlobs() throws IOException {
-        final BooleanSupplier cancelationCheck = () -> ! canceled;
+        final BooleanSupplier cancellationCheck = () -> !canceled;
         final AtomicInteger numBlobsRemaining = new AtomicInteger(jobState.numBlobsInJob());
 
-        while ( ! Thread.currentThread().isInterrupted() && cancelationCheck.getAsBoolean() && numBlobsRemaining.get() > 0) {
+        while (!Thread.currentThread().isInterrupted() && cancellationCheck.getAsBoolean() && numBlobsRemaining.get() > 0) {
             try {
-                final Iterable<JobPart> jobParts = jobPartsNotAlreadyTransferred(cancelationCheck);
+                final Iterable<JobPart> jobParts = jobPartsNotAlreadyTransferred(cancellationCheck);
 
                 final int numJobParts = Iterables.size(jobParts);
 
                 if (numJobParts == 0) {
                     break;
-                } else if (numJobParts < 0) {
-                    LOG.error("Had negative number of job parts");
-                    return;
                 }
 
-                final CountDownLatch jobCompletionWait = new CountDownLatch(1);
-                transferJobParts(jobParts, jobCompletionWait, numBlobsRemaining, cancelationCheck);
-                jobCompletionWait.await();
+                final CountDownLatch countDownLatch = new CountDownLatch(numJobParts);
+                transferJobParts(jobParts, countDownLatch, numBlobsRemaining, cancellationCheck);
+                countDownLatch.await();
             } catch (final Ds3NoMoreRetriesException | FailedRequestException e) {
                 emitFailureEvent(makeFailureEvent(failureActivity, e, firstChunk()));
                 throw e;
@@ -158,15 +154,15 @@ abstract class AbstractTransferStrategy implements TransferStrategy {
     }
 
 
-    private Iterable<JobPart> jobPartsNotAlreadyTransferred(final BooleanSupplier transferPredicate) throws IOException, InterruptedException {
+    private Iterable<JobPart> jobPartsNotAlreadyTransferred(final BooleanSupplier cancellationCheck) throws IOException, InterruptedException {
         // If we've been canceled, bail
-        if ( ! transferPredicate.getAsBoolean()) {
+        if ( ! cancellationCheck.getAsBoolean()) {
             return FluentIterable.of();
         }
 
         return FluentIterable
                 .from(blobStrategy.getWork())
-                .filter(jobPart -> jobState.contains(jobPart.getBlob()) && transferPredicate.getAsBoolean());
+                .filter(jobPart -> jobState.contains(jobPart.getBlob()) && cancellationCheck.getAsBoolean());
     }
 
     private void emitFailureAndSetCachedException(final Throwable t) {
@@ -187,44 +183,31 @@ abstract class AbstractTransferStrategy implements TransferStrategy {
     private void transferJobParts(final Iterable<JobPart> jobParts,
                                   final CountDownLatch countDownLatch,
                                   final AtomicInteger numBlobsTransferred,
-                                  final BooleanSupplier transferPredicate)
-    {
-        final AtomicInteger numJobPartsToTransfer = new AtomicInteger(Iterables.size(jobParts));
-
+                                  final BooleanSupplier cancellationCheck) {
         for (final JobPart jobPart : jobParts) {
             if (executorService.isShutdown()) {
                 LOG.debug("Executor service is shut down, decrementing countdown latch");
                 countDownLatch.countDown();
             } else {
-                maybeSubmitJobPartTransfer(countDownLatch, numBlobsTransferred, transferPredicate, numJobPartsToTransfer, jobPart);
+                executorService.execute(() -> {
+                    try {
+                        if (cancellationCheck.getAsBoolean()) {
+                            transferMethod.transferJobPart(jobPart);
+                        }
+                    } catch (final RuntimeException e) {
+                        emitFailureAndSetCachedException(e);
+                        throw e;
+                    } catch (final Exception e) {
+                        emitFailureAndSetCachedException(e);
+                        throw new RuntimeException(e);
+                    } finally {
+                        jobState.blobTransferredOrFailed(jobPart.getBlob());
+                        numBlobsTransferred.decrementAndGet();
+                        countDownLatch.countDown();
+                    }
+                });
             }
         }
-    }
-
-    private void maybeSubmitJobPartTransfer(final CountDownLatch countDownLatch, final AtomicInteger numBlobsTransferred, final BooleanSupplier transferPredicate, final AtomicInteger numJobPartsToTransfer, final JobPart jobPart) {
-        executorService.submit((Callable<Void>) () -> {
-            try {
-                if ( ! transferPredicate.getAsBoolean()) {
-                    countDownLatch.countDown();
-                } else {
-                    transferMethod.transferJobPart(jobPart);
-                }
-            } catch (final RuntimeException e) {
-                emitFailureAndSetCachedException(e);
-                throw e;
-            } catch (final Exception e) {
-                emitFailureAndSetCachedException(e);
-                throw new RuntimeException(e);
-            } finally {
-                jobState.blobTransferredOrFailed(jobPart.getBlob());
-                numBlobsTransferred.decrementAndGet();
-                if (numJobPartsToTransfer.decrementAndGet() <= 0) {
-                    countDownLatch.countDown();
-                }
-            }
-
-            return null;
-        });
     }
 
     private void emitFailureEvent(final FailureEvent failureEvent) {
@@ -261,6 +244,11 @@ abstract class AbstractTransferStrategy implements TransferStrategy {
     public void close() {
         canceled = true;
         executorService.shutdown();
+        try {
+            executorService.awaitTermination(10000, TimeUnit.MILLISECONDS);
+        } catch (final InterruptedException e) {
+            executorService.shutdownNow();
+        }
     }
 
     @Override
