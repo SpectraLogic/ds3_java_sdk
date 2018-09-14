@@ -14,7 +14,7 @@
  */
 
 buildscript {
-    ext.kotlin_version = '1.1.51'
+    ext.kotlin_version = '1.2.70'
 
     repositories {
         mavenCentral()
@@ -36,7 +36,7 @@ plugins {
 
 allprojects {
     group = 'com.spectralogic.ds3'
-    version = '5.0.3'
+    version = '5.0.4'
 }
 
 subprojects {

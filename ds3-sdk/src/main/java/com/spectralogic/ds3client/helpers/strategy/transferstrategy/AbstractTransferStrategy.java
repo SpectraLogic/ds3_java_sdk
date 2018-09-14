@@ -18,6 +18,7 @@ package com.spectralogic.ds3client.helpers.strategy.transferstrategy;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Iterables;
 import com.spectralogic.ds3client.Ds3Client;
+import com.spectralogic.ds3client.commands.spectrads3.CancelJobSpectraS3Request;
 import com.spectralogic.ds3client.commands.spectrads3.GetBulkJobSpectraS3Request;
 import com.spectralogic.ds3client.commands.spectrads3.PutBulkJobSpectraS3Request;
 import com.spectralogic.ds3client.exceptions.Ds3NoMoreRetriesException;
@@ -30,10 +31,13 @@ import com.spectralogic.ds3client.models.Objects;
 
 import java.io.IOException;
 import java.util.NoSuchElementException;
+import java.util.UUID;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.BooleanSupplier;
 
 import com.spectralogic.ds3client.networking.FailedRequestException;
 import org.slf4j.Logger;
@@ -51,9 +55,11 @@ abstract class AbstractTransferStrategy implements TransferStrategy {
     private final ExecutorService executorService;
     private final EventDispatcher eventDispatcher;
     private final MasterObjectList masterObjectList;
+    private final Ds3Client ds3Client;
     private final FailureEvent.FailureActivity failureActivity;
 
     private final AtomicReference<IOException> cachedException = new AtomicReference<>();
+    private volatile boolean canceled = false;
 
     private TransferMethod transferMethod;
 
@@ -76,6 +82,7 @@ abstract class AbstractTransferStrategy implements TransferStrategy {
                                     final ExecutorService executorService,
                                     final EventDispatcher eventDispatcher,
                                     final MasterObjectList masterObjectList,
+                                    final Ds3Client ds3Client,
                                     final FailureEvent.FailureActivity failureActivity)
     {
         this.blobStrategy = blobStrategy;
@@ -83,6 +90,7 @@ abstract class AbstractTransferStrategy implements TransferStrategy {
         this.executorService = executorService;
         this.eventDispatcher = eventDispatcher;
         this.masterObjectList = masterObjectList;
+        this.ds3Client = ds3Client;
         this.failureActivity = failureActivity;
     }
 
@@ -104,6 +112,7 @@ abstract class AbstractTransferStrategy implements TransferStrategy {
     @Override
     public void transfer() throws IOException {
         cachedException.set(null);
+        // Keep going, unless we've been canceled
 
         try {
             transferAllJobBlobs();
@@ -117,11 +126,12 @@ abstract class AbstractTransferStrategy implements TransferStrategy {
     }
 
     private void transferAllJobBlobs() throws IOException {
+        final BooleanSupplier cancellationCheck = () -> !canceled;
         final AtomicInteger numBlobsRemaining = new AtomicInteger(jobState.numBlobsInJob());
 
-        while (!Thread.currentThread().isInterrupted() && numBlobsRemaining.get() > 0) {
+        while (!Thread.currentThread().isInterrupted() && cancellationCheck.getAsBoolean() && numBlobsRemaining.get() > 0) {
             try {
-                final Iterable<JobPart> jobParts = jobPartsNotAlreadyTransferred();
+                final Iterable<JobPart> jobParts = jobPartsNotAlreadyTransferred(cancellationCheck);
 
                 final int numJobParts = Iterables.size(jobParts);
 
@@ -129,13 +139,14 @@ abstract class AbstractTransferStrategy implements TransferStrategy {
                     break;
                 }
 
-                final CountDownLatch countDownLatch = new CountDownLatch(numJobParts);
-                transferJobParts(jobParts, countDownLatch, numBlobsRemaining);
-                countDownLatch.await();
+                final CountDownLatch jobPartsCompleteLatch = new CountDownLatch(numJobParts);
+                transferJobParts(jobParts, jobPartsCompleteLatch, numBlobsRemaining, cancellationCheck);
+                jobPartsCompleteLatch.await();
             } catch (final Ds3NoMoreRetriesException | FailedRequestException e) {
                 emitFailureEvent(makeFailureEvent(failureActivity, e, firstChunk()));
                 throw e;
             } catch (final InterruptedException | NoSuchElementException e) {
+                LOG.warn("Thread was interrupted");
                 Thread.currentThread().interrupt();
             } catch (final Throwable t) {
                 emitFailureAndSetCachedException(t);
@@ -144,10 +155,15 @@ abstract class AbstractTransferStrategy implements TransferStrategy {
     }
 
 
-    private Iterable<JobPart> jobPartsNotAlreadyTransferred() throws IOException, InterruptedException {
+    private Iterable<JobPart> jobPartsNotAlreadyTransferred(final BooleanSupplier cancellationCheck) throws IOException, InterruptedException {
+        // If we've been canceled, bail
+        if ( ! cancellationCheck.getAsBoolean()) {
+            return FluentIterable.of();
+        }
+
         return FluentIterable
                 .from(blobStrategy.getWork())
-                .filter(jobPart -> jobState.contains(jobPart.getBlob()));
+                .filter(jobPart -> jobState.contains(jobPart.getBlob()) && cancellationCheck.getAsBoolean());
     }
 
     private void emitFailureAndSetCachedException(final Throwable t) {
@@ -166,24 +182,32 @@ abstract class AbstractTransferStrategy implements TransferStrategy {
     }
 
     private void transferJobParts(final Iterable<JobPart> jobParts,
-                                  final CountDownLatch countDownLatch,
-                                  final AtomicInteger numBlobsTransferred) throws IOException {
+                                  final CountDownLatch jobPartsCompleteLatch,
+                                  final AtomicInteger numBlobsTransferred,
+                                  final BooleanSupplier cancellationCheck) {
         for (final JobPart jobPart : jobParts) {
-            executorService.execute(() -> {
-                try {
-                    transferMethod.transferJobPart(jobPart);
-                } catch (final RuntimeException e) {
-                    emitFailureAndSetCachedException(e);
-                    throw e;
-                } catch (final Exception e) {
-                    emitFailureAndSetCachedException(e);
-                    throw new RuntimeException(e);
-                } finally {
-                    jobState.blobTransferredOrFailed(jobPart.getBlob());
-                    numBlobsTransferred.decrementAndGet();
-                    countDownLatch.countDown();
-                }
-            });
+            if (executorService.isShutdown()) {
+                LOG.debug("Executor service is shut down, decrementing countdown latch");
+                jobPartsCompleteLatch.countDown();
+            } else {
+                executorService.execute(() -> {
+                    try {
+                        if (cancellationCheck.getAsBoolean()) {
+                            transferMethod.transferJobPart(jobPart);
+                        }
+                    } catch (final RuntimeException e) {
+                        emitFailureAndSetCachedException(e);
+                        throw e;
+                    } catch (final Exception e) {
+                        emitFailureAndSetCachedException(e);
+                        throw new RuntimeException(e);
+                    } finally {
+                        jobState.blobTransferredOrFailed(jobPart.getBlob());
+                        numBlobsTransferred.decrementAndGet();
+                        jobPartsCompleteLatch.countDown();
+                    }
+                });
+            }
         }
     }
 
@@ -218,7 +242,24 @@ abstract class AbstractTransferStrategy implements TransferStrategy {
     }
 
     @Override
-    public void close() throws IOException {
+    public void close() {
+        canceled = true;
         executorService.shutdown();
+        try {
+            if(!executorService.awaitTermination(10, TimeUnit.SECONDS)) {
+                executorService.shutdownNow();
+            };
+        } catch (final InterruptedException e) {
+            executorService.shutdownNow();
+        }
     }
+
+    @Override
+    public void cancel() throws IOException {
+        close();
+        final UUID jobId = masterObjectList.getJobId();
+        ds3Client.cancelJobSpectraS3(new CancelJobSpectraS3Request(jobId));
+        eventDispatcher.emitCanceledEvent(jobId);
+    }
+
 }

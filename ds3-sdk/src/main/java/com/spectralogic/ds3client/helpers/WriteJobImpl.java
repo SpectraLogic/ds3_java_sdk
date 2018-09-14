@@ -81,5 +81,10 @@ public class WriteJobImpl extends JobImpl {
         running = true;
         transferStrategy.transfer();
     }
+
+    @Override
+    public void cancel() throws IOException {
+        cancel(transferStrategy);
+    }
 }
 

@@ -17,6 +17,7 @@ package com.spectralogic.ds3client.integration;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.spectralogic.ds3client.Ds3Client;
 import com.spectralogic.ds3client.Ds3ClientBuilder;
@@ -29,6 +30,7 @@ import com.spectralogic.ds3client.helpers.*;
 import com.spectralogic.ds3client.helpers.events.FailureEvent;
 import com.spectralogic.ds3client.helpers.events.SameThreadEventRunner;
 import com.spectralogic.ds3client.helpers.options.WriteJobOptions;
+import com.spectralogic.ds3client.helpers.pagination.GetBucketKeyLoaderFactory;
 import com.spectralogic.ds3client.helpers.strategy.blobstrategy.*;
 import com.spectralogic.ds3client.helpers.strategy.channelstrategy.ChannelStrategy;
 import com.spectralogic.ds3client.helpers.strategy.channelstrategy.SequentialFileReaderChannelStrategy;
@@ -43,6 +45,7 @@ import com.spectralogic.ds3client.networking.FailedRequestException;
 import com.spectralogic.ds3client.utils.ByteArraySeekableByteChannel;
 import com.spectralogic.ds3client.utils.Platform;
 import com.spectralogic.ds3client.utils.ResourceUtils;
+import com.spectralogic.ds3client.utils.collections.LazyIterable;
 import com.spectralogic.ds3client.utils.hashing.ChecksumUtils;
 import com.spectralogic.ds3client.utils.hashing.Hasher;
 import org.apache.commons.io.FileUtils;
@@ -90,6 +93,11 @@ public class PutJobManagement_Test {
     private static final String TEST_ENV_NAME = "PutJobManagement_Test";
     private static TempStorageIds envStorageIds;
     private static UUID envDataPolicyId;
+
+    private static final String SOURCE_DIRECTORY = "little_files/";
+    private static final String SOURCE_FILE_BASE_NAME = "tape";
+    private static final String SOURCE_FILE_EXTENSION = "png";
+    private static final String SOURCE_FILE_NAME = SOURCE_FILE_BASE_NAME + "." + SOURCE_FILE_EXTENSION;
 
     @BeforeClass
     public static void startup() throws IOException {
@@ -1946,31 +1954,7 @@ public class PutJobManagement_Test {
         Path tempDirectory = Files.createTempDirectory(Paths.get("."), tempPathPrefix);
 
         try {
-            final String sourceDirectory = "little_files/";
-            final String sourceFileName = "tape.png";
-
-            final Path sourceFilePath = ResourceUtils.loadFileResource(sourceDirectory + sourceFileName);
-
-            Files.copy(sourceFilePath, Paths.get(tempDirectory.toString(), sourceFileName));
-
-            final List<String> fileNames = new ArrayList<>(15001);
-            fileNames.add(sourceFileName);
-
-            for (int i = 1; i <= 15000; ++i) {
-                final String destinationFileName = "tape" + i + ".png";
-                fileNames.add(destinationFileName);
-                Files.copy(sourceFilePath, Paths.get(tempDirectory.toString(), destinationFileName));
-            }
-
-            final List<Ds3Object> ds3Objects = new ArrayList<>();
-
-            for (final String fileName : fileNames) {
-                final Path filePath = Paths.get(tempDirectory.toString(), fileName);
-                final long fileSize = Files.size(filePath);
-                final Ds3Object ds3Object = new Ds3Object(fileName, fileSize);
-
-                ds3Objects.add(ds3Object);
-            }
+            final ImmutableList<Ds3Object> ds3Objects = copyFilesAndGenerateDsObjects(tempDirectory);
 
             final Ds3ClientHelpers ds3ClientHelpers = Ds3ClientHelpers.wrap(client);
             final Ds3ClientHelpers.Job writeJob = ds3ClientHelpers.startWriteJob(BUCKET_NAME, ds3Objects);
@@ -1982,7 +1966,7 @@ public class PutJobManagement_Test {
             tempDirectory = Files.createTempDirectory(Paths.get("."), tempPathPrefix);
 
             final Ds3ClientHelpers.Job readJob = ds3ClientHelpers.startReadJob(BUCKET_NAME, Lists.newArrayList(
-                    new Ds3Object(sourceFileName, Files.size(sourceFilePath))));
+                    new Ds3Object(SOURCE_FILE_NAME, Files.size(sourceFilePath()))));
 
             final GetJobSpectraS3Response jobSpectraS3Response = client.getJobSpectraS3(new GetJobSpectraS3Request(readJob.getJobId()));
 
@@ -1990,15 +1974,139 @@ public class PutJobManagement_Test {
 
             readJob.transfer(new FileObjectGetter(tempDirectory));
 
-            final File originalFile = ResourceUtils.loadFileResource(sourceDirectory + sourceFileName).toFile();
-            final File fileCopiedFromBP = Paths.get(tempDirectory.toString(), sourceFileName).toFile();
+            final File originalFile = ResourceUtils.loadFileResource(SOURCE_DIRECTORY + SOURCE_FILE_NAME).toFile();
+            final File fileCopiedFromBP = Paths.get(tempDirectory.toString(), SOURCE_FILE_NAME).toFile();
             assertTrue(FileUtils.contentEquals(originalFile, fileCopiedFromBP));
         } catch (final org.apache.http.client.ClientProtocolException e) {
-            fail("This test makes sure that we don't run out of connections when transferring lots of small files.  Oops");
+            fail("This test makes sure that we don't run out of connections when transferring lots of small files.  Oops.");
         } finally {
             FileUtils.deleteDirectory(tempDirectory.toFile());
             cancelAllJobsForBucket(client, BUCKET_NAME);
             deleteAllContents(client, BUCKET_NAME);
+        }
+    }
+
+    private Path sourceFilePath() throws IOException, URISyntaxException {
+        return ResourceUtils.loadFileResource(SOURCE_DIRECTORY + SOURCE_FILE_NAME);
+    }
+
+    private ImmutableList<Ds3Object> copyFilesAndGenerateDsObjects(final Path destinationDirectory) throws IOException, URISyntaxException {
+        final Path sourceFilePath = ResourceUtils.loadFileResource(SOURCE_DIRECTORY + SOURCE_FILE_NAME);
+
+        final ImmutableList<String> fileNames = generateFileNames(SOURCE_FILE_BASE_NAME, SOURCE_FILE_EXTENSION, 15000);
+        copyFiles(sourceFilePath, destinationDirectory, fileNames);
+
+        return generateDs3Objects(destinationDirectory, fileNames);
+    }
+
+    private ImmutableList<String> generateFileNames(final String baseFileName, final String baseFileExtension, final int numFileNames) {
+        final ImmutableList.Builder<String> listBuilder = ImmutableList.builder();
+
+        listBuilder.add(baseFileName + "." + baseFileExtension);
+
+        for (int i = 1; i < numFileNames; ++i) {
+            listBuilder.add(baseFileName + i + "." + baseFileExtension);
+        }
+
+        return listBuilder.build();
+    }
+
+    private void copyFiles(final Path sourceFilePath, final Path destinationDirectory, final ImmutableList<String> fileNames) throws IOException {
+        for (final String fileName : fileNames) {
+            Files.copy(sourceFilePath, Paths.get(destinationDirectory.toString(), fileName));
+        }
+    }
+
+    private ImmutableList<Ds3Object> generateDs3Objects(final Path destinationDirectory, final ImmutableList<String> fileNames) throws IOException {
+        final ImmutableList.Builder<Ds3Object> listBuilder = ImmutableList.builder();
+
+        for (final String fileName : fileNames) {
+            final Path filePath = Paths.get(destinationDirectory.toString(), fileName);
+            final long fileSize = Files.size(filePath);
+            final Ds3Object ds3Object = new Ds3Object(fileName, fileSize);
+
+            listBuilder.add(ds3Object);
+        }
+
+        return listBuilder.build();
+    }
+
+    @Test
+    public void testCancelingJob() throws URISyntaxException, InterruptedException {
+        final String tempPathPrefix = null;
+        Path tempDirectory;
+
+        try {
+            tempDirectory = Files.createTempDirectory(Paths.get("."), tempPathPrefix);
+        } catch (final IOException e) {
+            fail("Could not create temp folder.");
+            return;
+        }
+
+        try {
+            final ImmutableList<Ds3Object> ds3Objects = copyFilesAndGenerateDsObjects(tempDirectory);
+
+            final Ds3ClientHelpers ds3ClientHelpers = Ds3ClientHelpers.wrap(client);
+
+            final Ds3ClientHelpers.Job writeJob = ds3ClientHelpers.startWriteJob(BUCKET_NAME, ds3Objects);
+
+            final AtomicBoolean caughtExceptionWhileCanceling = new AtomicBoolean(false);
+            final AtomicBoolean cancelHandlerCalled = new AtomicBoolean(false);
+            final CountDownLatch countDownLatch = new CountDownLatch(1);
+
+            final AtomicBoolean hasBeenCancelled = new AtomicBoolean(false);
+            writeJob.attachDataTransferredListener(dataTransferred -> {
+                if(hasBeenCancelled.compareAndSet(false, true)) {
+                    new Thread(() -> {
+                        try {
+                            writeJob.cancel();
+                        } catch (IOException e) {
+                            fail();
+                        } finally {
+                            countDownLatch.countDown();
+                        }
+                    }).start();
+                }
+            });
+
+            writeJob.attachCanceledEventObserver(new CanceledEventObserver(eventData -> {
+                cancelHandlerCalled.set(true);
+                assertEquals(writeJob.getJobId(), eventData);
+            }));
+
+            writeJob.transfer(new FileObjectPutter(tempDirectory));
+
+            countDownLatch.await();
+
+            assertFalse(caughtExceptionWhileCanceling.get());
+            assertTrue(cancelHandlerCalled.get());
+
+            final String prefix = "";
+            final String nextMarker = null;
+            final int maxKeys = 15000;
+            final String delimiter = null;
+            final int numRetries = 5;
+
+            final GetBucketKeyLoaderFactory<Contents> getBucketKeyLoaderFactory = new GetBucketKeyLoaderFactory<>(client, BUCKET_NAME, prefix, delimiter, nextMarker, maxKeys, numRetries, GetBucketKeyLoaderFactory.contentsFunction);
+            final LazyIterable<?> iterable = new LazyIterable<>(getBucketKeyLoaderFactory);
+            final int numThingsInBucket = Iterables.size(iterable);
+
+            assertTrue(numThingsInBucket < maxKeys);
+
+            final GetCanceledJobSpectraS3Response getCanceledJobSpectraS3Response = client.getCanceledJobSpectraS3(new GetCanceledJobSpectraS3Request(writeJob.getJobId().toString()));
+            final CanceledJob canceledJob = getCanceledJobSpectraS3Response.getCanceledJobResult();
+            assertEquals(writeJob.getJobId(), canceledJob.getId());
+        } catch (final org.apache.http.client.ClientProtocolException e) {
+            fail("This test makes sure that we don't run out of connections when transferring lots of small files.  Oops.");
+        } catch (final IOException e) {
+            fail("IOException from something other than job cancelation.");
+        } finally {
+            try {
+                FileUtils.deleteDirectory(tempDirectory.toFile());
+                deleteAllContents(client, BUCKET_NAME);
+            } catch (final IOException e) {
+                LOG.error("Failure cleaning up.", e);
+            }
         }
     }
 

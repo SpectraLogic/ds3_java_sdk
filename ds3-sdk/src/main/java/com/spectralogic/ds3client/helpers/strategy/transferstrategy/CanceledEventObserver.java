@@ -1,6 +1,6 @@
 /*
  * ****************************************************************************
- *    Copyright 2014-2017 Spectra Logic Corporation. All Rights Reserved.
+ *    Copyright 2014-2018 Spectra Logic Corporation. All Rights Reserved.
  *    Licensed under the Apache License, Version 2.0 (the "License"). You may not use
  *    this file except in compliance with the License. A copy of the License is located at
  *
@@ -15,23 +15,11 @@
 
 package com.spectralogic.ds3client.helpers.strategy.transferstrategy;
 
-import java.io.Closeable;
-import java.io.IOException;
+import java.util.UUID;
 
-/**
- * Define the contract for concrete classes that implement data movement.
- */
-public interface TransferStrategy extends Closeable {
-    /**
-     * Perform data movement according to the properties you specify in {@link TransferStrategyBuilder}.
-     * @throws IOException
-     */
-    void transfer() throws IOException;
-
-    /**
-     * Cancel a transfer in progress.  This is a cooperative activity, meaning that transfers
-     * in progress are allowed to complete and are not forcefully canceled.
-     * @throws IOException
-     */
-    void cancel() throws IOException;
+public class CanceledEventObserver extends AbstractObserver<UUID> {
+    public CanceledEventObserver(final UpdateStrategy<UUID> updateStrategy) {
+        super(updateStrategy);
+    }
 }
+
