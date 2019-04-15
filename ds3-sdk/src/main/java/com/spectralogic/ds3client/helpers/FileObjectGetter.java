@@ -33,6 +33,7 @@ public class FileObjectGetter implements ObjectChannelBuilder {
 
     /**
      * Creates a new FileObjectGetter to retrieve files from a remote DS3 system to the local file system.
+     *
      * @param root The {@code root} directory of the local file system for all files being transferred.
      */
     public FileObjectGetter(final Path root) {
@@ -47,14 +48,24 @@ public class FileObjectGetter implements ObjectChannelBuilder {
             Files.createDirectories(FileUtils.resolveForSymbolic(parentPath));
         }
 
-        if ( ! FileUtils.isTransferablePath(objectPath)) {
+        if (!FileUtils.isTransferablePath(objectPath)) {
             throw new UnrecoverableIOException(objectPath + " is not a regular file.");
         }
 
-        return FileChannel.open(
-                objectPath,
-                StandardOpenOption.WRITE,
-                StandardOpenOption.CREATE
-        );
+        synchronized (objectPath.toString().intern()) {
+            if (Files.notExists(objectPath)) {
+                Files.createDirectories(objectPath.getParent());
+                return FileChannel.open(
+                        objectPath,
+                        StandardOpenOption.SPARSE,
+                        StandardOpenOption.WRITE,
+                        StandardOpenOption.CREATE_NEW
+                );
+            }
+            return FileChannel.open(
+                    objectPath,
+                    StandardOpenOption.WRITE
+            );
+        }
     }
 }
