@@ -125,7 +125,7 @@ public class Metadata_Test {
     @Test
     public void escapedMetadataWithSpaces() throws IOException {
         final String stringWithSpaces = "percent encoded space";
-        final String escapedWithSpaces = MetadataStringManipulation.toEncodedString(stringWithSpaces);
+        final String escapedWithSpaces = MetadataStringManipulation.toEncodedKeyString(stringWithSpaces);
 
         final Metadata metadata = processMetadataRequest(
                 "metadataBucket",
@@ -145,7 +145,7 @@ public class Metadata_Test {
 
     @Test
     public void escapedMetadataWithSymbols() throws IOException {
-        final String escapedWithSymbols = MetadataStringManipulation.toEncodedString(STRING_WITH_SYMBOLS);
+        final String escapedWithSymbols = MetadataStringManipulation.toEncodedKeyString(STRING_WITH_SYMBOLS);
 
         final Metadata metadata = processMetadataRequest(
                 "metadataBucket",
