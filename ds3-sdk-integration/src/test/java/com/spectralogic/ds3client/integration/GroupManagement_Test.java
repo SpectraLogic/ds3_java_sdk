@@ -58,7 +58,7 @@ public class GroupManagement_Test {
     }
 
     @Test
-    public void createDeleteGroup_Test() throws IOException, SignatureException {
+    public void createDeleteGroupTest() throws IOException, SignatureException {
         final String groupName = "create_delete_group_sdk_test";
 
         try {
@@ -77,7 +77,7 @@ public class GroupManagement_Test {
     }
 
     @Test
-    public void createDataPolicyForGroup_Test() throws IOException, SignatureException {
+    public void createDataPolicyForGroupTest() throws IOException, SignatureException {
         final String groupName = "create_data_policy_for_group_g";
         final String dataPolicyName = "create_data_policy_for_group_dp";
         UUID aclId = null;
@@ -118,7 +118,7 @@ public class GroupManagement_Test {
     }
 
     @Test
-    public void createGroupGroupMember_Test() throws IOException, SignatureException {
+    public void createGroupGroupMemberTest() throws IOException, SignatureException {
         final String parentGroupName = "create_group_group_member_parent";
         final String childGroupName = "create_group_group_member_child";
 
@@ -159,7 +159,7 @@ public class GroupManagement_Test {
     }
 
     @Test
-    public void createBucketAclForGroup_Test() throws IOException, SignatureException {
+    public void createBucketAclForGroupTest() throws IOException, SignatureException {
         final String bucketName = "create_bucket_acl_for_group_b";
         final String groupName = "create_bucket_acl_for_group_g";
 

@@ -935,7 +935,7 @@ public class Smoke_Test {
 
     @Test
     public void putDirectory() throws IOException {
-        assumeVersion1_2(client);
+        assumeVersionOneDotTwo(client);
 
         final String bucketName = "putDir";
 
@@ -967,7 +967,7 @@ public class Smoke_Test {
 
     @Test
     public void putDirectoryWithOtherObjects() throws IOException {
-        assumeVersion1_2(client);
+        assumeVersionOneDotTwo(client);
 
         final String bucketName = "mixedPutDir";
 
