@@ -53,7 +53,7 @@ public class PosixMetadataRestore_Test {
     private final File file  = new File(getClass().getClassLoader().getResource("LoremIpsum.txt").getFile());
 
     @Test
-    public  void restoreFileTimes_Test() throws Exception{
+    public  void restoreFileTimesTest() throws Exception{
         final BasicHeader basicHeader[] = new BasicHeader[3];
         final BasicFileAttributes attr = Files.readAttributes(file.toPath(), BasicFileAttributes.class);
         basicHeader[0] = new BasicHeader(MetadataKeyConstants.METADATA_PREFIX + MetadataKeyConstants.KEY_CREATION_TIME, String.valueOf(attr.creationTime().toMillis()));

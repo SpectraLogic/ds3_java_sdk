@@ -59,7 +59,7 @@ public final class Util {
         return builder.build();
     }
 
-    public static void assumeVersion1_2(final Ds3Client client) throws IOException {
+    public static void assumeVersionOneDotTwo(final Ds3Client client) throws IOException {
         final int majorVersion = Integer.parseInt(client.getSystemInformationSpectraS3(
                 new GetSystemInformationSpectraS3Request()).getSystemInformationResult().getBuildInformation().getVersion().split("\\.")[0]);
         assumeThat(majorVersion, is(1));

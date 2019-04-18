@@ -933,7 +933,7 @@ public class Ds3Client_Test {
     }
 
     @Test
-    public void VerifySystemHealthSpectraS3() throws IOException {
+    public void verifySystemHealthSpectraS3() throws IOException {
         final String responsePayload = "<Data><MsRequiredToVerifyDataPlannerHealth>0</MsRequiredToVerifyDataPlannerHealth></Data>";
 
         final VerifySystemHealthSpectraS3Response response = MockNetwork

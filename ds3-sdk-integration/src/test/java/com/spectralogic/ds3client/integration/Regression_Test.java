@@ -243,7 +243,7 @@ public class Regression_Test {
 
     @Test
     public void emptyObjectTest() throws IOException {
-        Util.assumeVersion1_2(client);
+        Util.assumeVersionOneDotTwo(client);
         final String bucketName = "emptyObject";
         final List<Ds3Object> objects = Collections.singletonList(new Ds3Object("obj1.txt", 0));
 

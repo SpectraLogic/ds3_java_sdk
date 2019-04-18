@@ -53,7 +53,7 @@ public class MetadataStringManipulation_Test {
     }
 
     @Test
-    public void encodedKeyPattern_Test() {
+    public void encodedKeyPatternTest() {
         assertTrue(isEncodedSafeKeyChars(""));
         assertTrue(isEncodedSafeKeyChars("abc123"));
         assertTrue(isEncodedSafeKeyChars("!#$&'*-.~^_`|%"));
@@ -81,7 +81,7 @@ public class MetadataStringManipulation_Test {
     }
 
     @Test
-    public void encodedValuePattern_Test() {
+    public void encodedValuePatternTest() {
         assertTrue(isEncodedSafeValueChars(""));
         assertTrue(isEncodedSafeValueChars("abc123"));
         assertTrue(isEncodedSafeValueChars("!#$&'*-.~^_`|,=%"));
@@ -109,14 +109,14 @@ public class MetadataStringManipulation_Test {
     }
 
     @Test
-    public void encodeDecode_NullString_Test() {
+    public void encodeDecodeNullStringTest() {
         assertThat(toEncodedKeyString(null), is(nullValue()));
         assertThat(toEncodedValueString(null), is(nullValue()));
         assertThat(toDecodedString(null), is(nullValue()));
     }
 
     @Test
-    public void encodeDecode_WithSpaces_Test() {
+    public void encodeDecodeWithSpacesTest() {
         final String encodedKey = toEncodedKeyString(STRING_WITH_SPACES);
         assertTrue(isEncodedSafeKeyChars(encodedKey));
         assertThat(toDecodedString(encodedKey), is(STRING_WITH_SPACES));
@@ -127,7 +127,7 @@ public class MetadataStringManipulation_Test {
     }
 
     @Test
-    public void encodeDecode_WithSymbols_Test() {
+    public void encodeDecodeWithSymbolsTest() {
         final String encodedKey = toEncodedKeyString(STRING_WITH_SYMBOLS);
         assertTrue(isEncodedSafeKeyChars(encodedKey));
         assertThat(toDecodedString(encodedKey), is(STRING_WITH_SYMBOLS));
@@ -138,7 +138,7 @@ public class MetadataStringManipulation_Test {
     }
 
     @Test
-    public void encodeDecode_WithUnicodeSymbols_Test() {
+    public void encodeDecodeWithUnicodeSymbolsTest() {
         final String encodedKey = toEncodedKeyString(STRING_WITH_SYMBOLS_UNICODE);
         assertTrue(isEncodedSafeKeyChars(encodedKey));
         assertThat(toDecodedString(encodedKey), is(STRING_WITH_SYMBOLS_UNICODE));
@@ -149,7 +149,7 @@ public class MetadataStringManipulation_Test {
     }
 
     @Test
-    public void encodeDecode_SpaceAndPlus_Test() {
+    public void encodeDecodeSpaceAndPlusTest() {
         final String plusSpace = " +";
 
         final String encodedKey = toEncodedKeyString(plusSpace);
@@ -162,7 +162,7 @@ public class MetadataStringManipulation_Test {
     }
 
     @Test
-    public void encodeDecode_Range_Test() {
+    public void encodeDecodeRangeTest() {
         final String range = "Range=bytes=0-10,110-120";
 
         final String encodedValue = toEncodedValueString(range);
@@ -172,7 +172,7 @@ public class MetadataStringManipulation_Test {
     }
 
     @Test
-    public void decodedDecode_LowerCase_Test() {
+    public void decodedDecodeLowerCaseTest() {
         final String encodedToLowerKey = toEncodedKeyString(STRING_WITH_SYMBOLS).toLowerCase();
         assertTrue(isEncodedSafeKeyChars(encodedToLowerKey));
         assertThat(toDecodedString(encodedToLowerKey), is(STRING_WITH_SYMBOLS));
@@ -183,7 +183,7 @@ public class MetadataStringManipulation_Test {
     }
 
     @Test
-    public void encodeDecode_DoubleEncoding_Test() {
+    public void encodeDecodeDoubleEncodingTest() {
         final String encoded1Key = toEncodedKeyString(STRING_WITH_SYMBOLS);
         final String encoded2Key = toEncodedKeyString(encoded1Key);
         assertTrue(isEncodedSafeKeyChars(encoded1Key));

@@ -54,7 +54,7 @@ public class JobPartTracker_Test {
     }
 
     @Test
-    public void TrackerEventsForward()
+    public void trackerEventsForward()
     {
         final MockObjectPartTracker fooTracker = new MockObjectPartTracker("foo", Arrays.asList(false, true));
         final MockObjectPartTracker barTracker = new MockObjectPartTracker("bar", Arrays.asList(true, false));

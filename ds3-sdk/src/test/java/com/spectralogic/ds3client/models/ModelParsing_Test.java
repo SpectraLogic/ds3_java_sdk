@@ -30,7 +30,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 public class ModelParsing_Test {
 
     @Test
-    public void listBucketResult_Parse_Test() throws IOException {
+    public void listBucketResultParseTest() throws IOException {
         final String input = "<ListBucketResult><Contents><ETag>test</ETag><Key>movies/movie1.mov</Key><LastModified/>" +
                 "<Owner><DisplayName>jason</DisplayName><ID>04531ac9-6639-4bee-8c09-9c8f0fbdbdcb</ID></Owner>" +
                 "<Size>0</Size><StorageClass/></Contents><Contents><ETag/><Key>movies/movie2.mov</Key><LastModified/>" +
@@ -49,7 +49,7 @@ public class ModelParsing_Test {
     }
 
     @Test
-    public void listBucketResult_CommonPrefixes_Test() throws IOException {
+    public void listBucketResultCommonPrefixesTest() throws IOException {
         final String input = "<ListBucketResult>" +
                 "<CommonPrefixes><Prefix>movies/</Prefix></CommonPrefixes>" +
                 "<CommonPrefixes><Prefix>scores/</Prefix></CommonPrefixes>" +
@@ -68,7 +68,7 @@ public class ModelParsing_Test {
     }
 
     @Test
-    public void completeMultipartUpload_Parse_Test() throws IOException {
+    public void completeMultipartUploadParseTest() throws IOException {
         final String input = "<CompleteMultipartUpload>" +
                 "<Part><PartNumber>1</PartNumber><ETag>a54357aff0632cce46d942af68356b38</ETag></Part>" +
                 "<Part><PartNumber>2</PartNumber><ETag>0c78aef83f66abc1fa1e8477f296d394</ETag></Part>" +
@@ -86,7 +86,7 @@ public class ModelParsing_Test {
     }
 
     @Test
-    public void completeMultipartUpload_ToString_Test() {
+    public void completeMultipartUploadToStringTest() {
         final String expected = "<CompleteMultipartUpload>" +
                 "<Part><PartNumber>1</PartNumber><ETag>a54357aff0632cce46d942af68356b38</ETag></Part>" +
                 "<Part><PartNumber>2</PartNumber><ETag>0c78aef83f66abc1fa1e8477f296d394</ETag></Part>" +

@@ -26,7 +26,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 public class ResponseParserUtils_Test {
 
     @Test
-    public void getRequestId_Test() {
+    public void getRequestIdTest() {
         final String requestId = "123";
         final ImmutableMap<String, String> headers = ImmutableMap.of(
                 "x-amz-request-id", requestId,
@@ -37,7 +37,7 @@ public class ResponseParserUtils_Test {
     }
 
     @Test
-    public void getRequestId_WithoutRequestId_Test() {
+    public void getRequestIdWithoutRequestIdTest() {
         final ImmutableMap<String, String> headers = ImmutableMap.of(
                 "Content-Type", "Text/xml");
 
@@ -46,7 +46,7 @@ public class ResponseParserUtils_Test {
     }
 
     @Test
-    public void getRequestId_EmptyHeaders_Test() {
+    public void getRequestIdEmptyHeadersTest() {
         final String result = ResponseParserUtils.getRequestId(new MockedHeaders(ImmutableMap.of()));
         assertThat(result, is(nullValue()));
     }

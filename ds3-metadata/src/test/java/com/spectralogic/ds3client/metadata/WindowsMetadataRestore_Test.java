@@ -56,7 +56,7 @@ public class WindowsMetadataRestore_Test {
     }
     
     @Test
-    public void restoreFileTimes_Test() throws Exception {
+    public void restoreFileTimesTest() throws Exception {
         final BasicHeader basicHeader[] = new BasicHeader[3];
 
         final Path filePath = ResourceUtils.loadFileResource(FILE_NAME);
@@ -75,7 +75,7 @@ public class WindowsMetadataRestore_Test {
 
 
     @Test
-    public void restoreUserAndOwner_Test() throws Exception {
+    public void restoreUserAndOwnerTest() throws Exception {
         final ImmutableMap.Builder<String, String> metadataMap = new ImmutableMap.Builder<>();
         final WindowsMetadataStore windowsMetadataStore = new WindowsMetadataStore(metadataMap);
         final Class aClass = WindowsMetadataStore.class;
@@ -117,7 +117,7 @@ public class WindowsMetadataRestore_Test {
 
 
     @Test
-    public void restorePermissions_Test() throws NoSuchMethodException, IOException, URISyntaxException, InvocationTargetException, IllegalAccessException, InterruptedException {
+    public void restorePermissionsTest() throws NoSuchMethodException, IOException, URISyntaxException, InvocationTargetException, IllegalAccessException, InterruptedException {
         final ImmutableMap.Builder<String, String> mMetadataMap = new ImmutableMap.Builder<>();
         final WindowsMetadataStore windowsMetadataStore = new WindowsMetadataStore(mMetadataMap);
         final Class aClass = WindowsMetadataStore.class;
