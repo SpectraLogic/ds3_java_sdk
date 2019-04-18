@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.Set;
 
 import static com.spectralogic.ds3client.utils.MetadataStringManipulation.toDecodedString;
-import static com.spectralogic.ds3client.utils.MetadataStringManipulation.toEncodedString;
+import static com.spectralogic.ds3client.utils.MetadataStringManipulation.toEncodedKeyString;
 
 public class MetadataImpl implements Metadata {
 
@@ -85,7 +85,7 @@ public class MetadataImpl implements Metadata {
     @Override
     public List<String> get(final String name) {
         //Only ASCII chars are lower cased, do not search for key with non-ASCII symbols lower cased
-        final String lowerCasedName = toDecodedString(toEncodedString(name).toLowerCase());
+        final String lowerCasedName = toDecodedString(toEncodedKeyString(name).toLowerCase());
         return metadata.get(lowerCasedName).asList();
     }
 
