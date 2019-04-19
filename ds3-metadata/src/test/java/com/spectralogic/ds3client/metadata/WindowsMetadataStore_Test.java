@@ -38,7 +38,7 @@ public class WindowsMetadataStore_Test {
     private final WindowsMetadataStore windowsMetadataStore = new WindowsMetadataStore(mMetadataMap);
 
     @Test
-    public void saveCreationTimeMetaData_Test() throws IOException {
+    public void saveCreationTimeMetaDataTest() throws IOException {
         final BasicFileAttributes attr = Files.readAttributes(file.toPath(), BasicFileAttributes.class);
         final long creationTime = attr.creationTime().toMillis();
         windowsMetadataStore.saveCreationTimeMetaData(attr);
@@ -46,7 +46,7 @@ public class WindowsMetadataStore_Test {
     }
 
     @Test
-    public void saveAccessTimeMetaData_Test() throws IOException {
+    public void saveAccessTimeMetaDataTest() throws IOException {
         final BasicFileAttributes attr = Files.readAttributes(file.toPath(), BasicFileAttributes.class);
         final long lastAccessTime = attr.lastAccessTime().toMillis();
         windowsMetadataStore.saveAccessTimeMetaData(attr);
@@ -55,7 +55,7 @@ public class WindowsMetadataStore_Test {
 
 
     @Test
-    public void saveLastModifiedTime_Test() throws IOException {
+    public void saveLastModifiedTimeTest() throws IOException {
         final BasicFileAttributes attr = Files.readAttributes(file.toPath(), BasicFileAttributes.class);
         final long lastModifiedTime = attr.lastModifiedTime().toMillis();
         windowsMetadataStore.saveLastModifiedTime(attr);
@@ -63,14 +63,14 @@ public class WindowsMetadataStore_Test {
     }
 
     @Test
-    public void saveOSMetaData_Test() throws IOException {
+    public void saveOSMetaDataTest() throws IOException {
         final String localOSName = MetaDataUtil.getOS();
         windowsMetadataStore.saveOSMetaData(localOSName);
         Assert.assertEquals(mMetadataMap.build().get(METADATA_PREFIX + MetadataKeyConstants.KEY_OS), String.valueOf(localOSName));
     }
 
     @Test
-    public void saveWinDescriptor_Test() throws Exception {
+    public void saveWinDescriptorTest() throws Exception {
         if (MetaDataUtil.getOS().contains("Windows")) {
             final Class aClass = WindowsMetadataStore.class;
             final Method method = aClass.getDeclaredMethod("saveWindowsDescriptors", new Class[]{Path.class});
@@ -83,7 +83,7 @@ public class WindowsMetadataStore_Test {
     }
 
     @Test
-    public void saveFlagMetadata_Test() throws Exception {
+    public void saveFlagMetadataTest() throws Exception {
         if (MetaDataUtil.getOS().contains("Windows")) {
             final Class aClass = WindowsMetadataStore.class;
             final Method method = aClass.getDeclaredMethod("saveFlagMetaData", new Class[]{Path.class});
@@ -94,7 +94,7 @@ public class WindowsMetadataStore_Test {
     }
 
     @Test
-    public void saveWindowsfilePermissions_Test() throws Exception {
+    public void saveWindowsFilePermissionsTest() throws Exception {
         if (MetaDataUtil.getOS().contains("Windows")) {
             final Class aClass = WindowsMetadataStore.class;
             final Method method = aClass.getDeclaredMethod("saveWindowsfilePermissions", new Class[]{Path.class});

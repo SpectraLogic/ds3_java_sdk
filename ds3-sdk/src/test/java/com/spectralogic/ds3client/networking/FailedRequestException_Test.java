@@ -33,46 +33,46 @@ public class FailedRequestException_Test {
     }
 
     @Test
-    public void buildRequestIdMessage_Test() {
+    public void buildRequestIdMessageTest() {
         final String result = buildRequestIdMessage("123");
         assertThat(result, is("for request #123"));
     }
 
     @Test
-    public void buildRequestIdMessage_EmptyId_Test() {
+    public void buildRequestIdMessageEmptyIdTest() {
         final String result = buildRequestIdMessage("");
         assertThat(result, is("for unknown request"));
     }
 
     @Test
-    public void buildRequestIdMessage_NullId_Test() {
+    public void buildRequestIdMessageNullIdTest() {
         final String result = buildRequestIdMessage(null);
         assertThat(result, is("for unknown request"));
     }
 
     @Test
-    public void buildExceptionMessage_NullErrorAndRequestId_Test() {
+    public void buildExceptionMessageNullErrorAndRequestIdTest() {
         final String expected = "Expected a status code of 200, 203 but got 400 for unknown request. Could not parse the response for additional information.";
         final String result = buildExceptionMessage(null, ImmutableList.of(200, 203), 400, null);
         assertThat(result, is(expected));
     }
 
     @Test
-    public void buildExceptionMessage_NullError_Test() {
+    public void buildExceptionMessageNullErrorTest() {
         final String expected = "Expected a status code of 200, 203 but got 400 for request #123. Could not parse the response for additional information.";
         final String result = buildExceptionMessage(null, ImmutableList.of(200, 203), 400, "123");
         assertThat(result, is(expected));
     }
 
     @Test
-    public void buildExceptionMessage_NullRequestId_Test() {
+    public void buildExceptionMessageNullRequestIdTest() {
         final String expected = "Expected a status code of 200, 203 but got 400 for unknown request. Error message: \"Error message\"";
         final String result = buildExceptionMessage(createTestError(), ImmutableList.of(200, 203), 400, null);
         assertThat(result, is(expected));
     }
 
     @Test
-    public void buildExceptionMessage_Test() {
+    public void buildExceptionMessageTest() {
         final String expected = "Expected a status code of 200, 203 but got 400 for request #123. Error message: \"Error message\"";
         final String result = buildExceptionMessage(createTestError(), ImmutableList.of(200, 203), 400, "123");
         assertThat(result, is(expected));

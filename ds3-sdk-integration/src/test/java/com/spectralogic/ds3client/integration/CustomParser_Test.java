@@ -95,7 +95,7 @@ public class CustomParser_Test {
     }
 
     @Test
-    public void getObjectCustomParser_Test() throws IOException, URISyntaxException {
+    public void getObjectCustomParserTest() throws IOException, URISyntaxException {
         final Ds3Object object = new Ds3Object(OBJ_NAME);
         final GetBulkJobSpectraS3Response getBulkJobSpectraS3Response = client
                 .getBulkJobSpectraS3(new GetBulkJobSpectraS3Request(BUCKET_NAME, Lists.newArrayList(object)));
@@ -137,7 +137,7 @@ public class CustomParser_Test {
 
     @SuppressWarnings("deprecation")
     @Test (expected = FailedRequestException.class)
-    public void getObjectCustomParserNoObject_Test() throws IOException{
+    public void getObjectCustomParserNoObjectTest() throws IOException{
         final String objectName = "doesNotExistObject";
 
         final GetObjectRequest request = new GetObjectRequest(
