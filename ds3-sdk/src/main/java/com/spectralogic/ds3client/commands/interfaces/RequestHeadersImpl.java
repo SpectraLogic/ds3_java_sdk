@@ -23,7 +23,8 @@ import java.util.Map;
 import java.util.Set;
 
 import static com.spectralogic.ds3client.utils.MetadataStringManipulation.toDecodedString;
-import static com.spectralogic.ds3client.utils.MetadataStringManipulation.toEncodedString;
+import static com.spectralogic.ds3client.utils.MetadataStringManipulation.toEncodedKeyString;
+import static com.spectralogic.ds3client.utils.MetadataStringManipulation.toEncodedValueString;
 
 /**
  * Implementation of request headers which percent encodes key and values.
@@ -37,7 +38,7 @@ public class RequestHeadersImpl implements RequestHeaders {
      */
     @Override
     public void put(final String key, final String value) {
-        headers.put(toEncodedString(key), toEncodedString(value));
+        headers.put(toEncodedKeyString(key), toEncodedValueString(value));
     }
 
     /**
@@ -47,7 +48,7 @@ public class RequestHeadersImpl implements RequestHeaders {
     @Override
     public Collection<String> get(final String key) {
         final ImmutableList.Builder<String> builder = ImmutableList.builder();
-        for (final String value : headers.get(toEncodedString(key))) {
+        for (final String value : headers.get(toEncodedKeyString(key))) {
             builder.add(toDecodedString(value));
         }
         return builder.build();
@@ -67,7 +68,7 @@ public class RequestHeadersImpl implements RequestHeaders {
      */
     @Override
     public boolean containsKey(final String key) {
-        return headers.containsKey(toEncodedString(key));
+        return headers.containsKey(toEncodedKeyString(key));
     }
 
     /**
@@ -76,7 +77,7 @@ public class RequestHeadersImpl implements RequestHeaders {
      */
     @Override
     public Collection<String> removeAll(final String key) {
-        return headers.removeAll(toEncodedString(key));
+        return headers.removeAll(toEncodedKeyString(key));
     }
 
     /**
