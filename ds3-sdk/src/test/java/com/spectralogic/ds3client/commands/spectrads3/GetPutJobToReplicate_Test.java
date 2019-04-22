@@ -28,7 +28,7 @@ import java.io.IOException;
 public class GetPutJobToReplicate_Test {
 
     @Test
-    public void getPutJobToReplicate_ProcessResponse_Test() throws IOException {
+    public void getPutJobToReplicateProcessResponseTest() throws IOException {
         final String responsePayload = "Some response payload";
         final ImmutableMap<String, String> emptyMap = ImmutableMap.of();
         final WebResponse webResponse = new MockedWebResponse(responsePayload, 200, emptyMap);

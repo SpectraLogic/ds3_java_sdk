@@ -41,7 +41,7 @@ public class MACMetadataRestore_Test {
     private final File file = new File(getClass().getClassLoader().getResource("LoremIpsum.txt").getFile());
 
     @Test
-    public void restoreFileTimes_Test() throws Exception {
+    public void restoreFileTimesTest() throws Exception {
 
         if (Platform.isMac()) {
             final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yy:HH:mm");

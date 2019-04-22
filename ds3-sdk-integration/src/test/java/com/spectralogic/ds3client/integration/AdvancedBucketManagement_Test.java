@@ -60,7 +60,7 @@ public class AdvancedBucketManagement_Test {
     }
 
     @Test
-    public void createDeleteDataPolicy_Test() throws IOException, SignatureException {
+    public void createDeleteDataPolicyTest() throws IOException, SignatureException {
         final String dataPolicyName = "ds3_java_sdk_create_delete_data_policy";
 
         try {
@@ -86,7 +86,7 @@ public class AdvancedBucketManagement_Test {
     }
 
     @Test
-    public void createDeleteEmptyStorageDomain_Test() throws IOException, SignatureException {
+    public void createDeleteEmptyStorageDomainTest() throws IOException, SignatureException {
         final String storageDomainName = "create_delete_empty_storage_domain";
 
         try {
@@ -104,7 +104,7 @@ public class AdvancedBucketManagement_Test {
     }
 
     @Test
-    public void createDeletePoolPartition_Test() throws IOException, SignatureException {
+    public void createDeletePoolPartitionTest() throws IOException, SignatureException {
         final String poolPartitionName = "create_delete_pool_partition";
 
         try {
@@ -130,7 +130,7 @@ public class AdvancedBucketManagement_Test {
     }
 
     @Test
-    public void createPoolStorageDomainMember_Test() throws IOException, SignatureException {
+    public void createPoolStorageDomainMemberTest() throws IOException, SignatureException {
         final String storageDomainName = "create_pool_storage_domain_member_sd";
         final String poolPartitionName = "create_pool_storage_domain_member_pp";
         UUID storageDomainMemberId = null;
@@ -172,7 +172,7 @@ public class AdvancedBucketManagement_Test {
     }
 
     @Test
-    public void createBucketSpectraS3_Test() throws IOException, SignatureException {
+    public void createBucketSpectraS3Test() throws IOException, SignatureException {
         final String bucketName = "create_bucket_spectra_s3";
         try {
             final PutBucketSpectraS3Response response = client
@@ -186,7 +186,7 @@ public class AdvancedBucketManagement_Test {
     }
 
     @Test
-    public void createBucketSpectraS3_WithDataPolicy_Test() throws IOException, SignatureException {
+    public void createBucketSpectraS3WithDataPolicyTest() throws IOException, SignatureException {
         final String bucketName = "create_bucket_spectra_s3";
         final String dataPolicyName = "create_bucket_spectra_s3_data_policy";
         final String storageDomainName = "create_bucket_spectra_s3_storage_domain";
@@ -244,7 +244,7 @@ public class AdvancedBucketManagement_Test {
     }
 
     @Test
-    public void putDuplicateObjects_VersioningKeepLatest_Test() throws IOException,
+    public void putDuplicateObjectsVersioningKeepLatestTest() throws IOException,
             SignatureException, URISyntaxException {
         final String bucketName = "duplicate_object_versioning_keep_latest";
         final String dataPolicyName = "duplicate_object_versioning_keep_latest_dp";
@@ -316,7 +316,7 @@ public class AdvancedBucketManagement_Test {
     }
 
     @Test
-    public void putDuplicateObjects_VersioningNone_Test() throws IOException,
+    public void putDuplicateObjectsVersioningNoneTest() throws IOException,
             SignatureException, URISyntaxException {
         final String bucketName = "duplicate_object_versioning_none";
         final String dataPolicyName = "duplicate_object_versioning_none_dp";
