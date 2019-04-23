@@ -1,6 +1,6 @@
 /*
  * ******************************************************************************
- *   Copyright 2014-2017 Spectra Logic Corporation. All Rights Reserved.
+ *   Copyright 2014-2019 Spectra Logic Corporation. All Rights Reserved.
  *   Licensed under the Apache License, Version 2.0 (the "License"). You may not use
  *   this file except in compliance with the License. A copy of the License is located at
  *
@@ -36,25 +36,25 @@ public class RequestHeadersImpl_Test {
     }
 
     @Test (expected = NullPointerException.class)
-    public void put_Null_Test() {
+    public void putNullTest() {
         final RequestHeaders rh = getTestRequestHeaders();
         rh.put(null, null);
     }
 
     @Test (expected = NullPointerException.class)
-    public void put_NullValue_Test() {
+    public void putNullValueTest() {
         final RequestHeaders rh = getTestRequestHeaders();
         rh.put("Key", null);
     }
 
     @Test (expected = NullPointerException.class)
-    public void put_NullKey_Test() {
+    public void putNullKeyTest() {
         final RequestHeaders rh = getTestRequestHeaders();
         rh.put(null, "Value");
     }
 
     @Test
-    public void put_PercentEncoding_Test() {
+    public void putPercentEncodingTest() {
         final RequestHeaders rh = getTestRequestHeaders();
         rh.put("Key With Space", "Val With Space");
         final Multimap<String, String> result = rh.getMultimap();
@@ -62,13 +62,13 @@ public class RequestHeadersImpl_Test {
     }
 
     @Test (expected = NullPointerException.class)
-    public void get_Null_Test() {
+    public void getNullTest() {
         final RequestHeaders rh = getTestRequestHeaders();
         rh.get(null);
     }
 
     @Test
-    public void get_Test() {
+    public void getTest() {
         final RequestHeaders rh = getTestRequestHeaders();
         assertThat(rh.get("").size(), is(0));
         assertThat(rh.get("Key One").size(), is(2));
@@ -77,17 +77,17 @@ public class RequestHeadersImpl_Test {
     }
 
     @Test
-    public void size_Test() {
+    public void sizeTest() {
         assertThat(getTestRequestHeaders().size(), is(3));
     }
 
     @Test (expected = NullPointerException.class)
-    public void containsKey_NullString_Test() {
+    public void containsKeyNullStringTest() {
         assertFalse(getTestRequestHeaders().containsKey(null));
     }
 
     @Test
-    public void containsKey_Test() {
+    public void containsKeyTest() {
         final RequestHeaders rh = getTestRequestHeaders();
 
         System.out.println(rh.keySet());
@@ -100,13 +100,13 @@ public class RequestHeadersImpl_Test {
     }
 
     @Test (expected = NullPointerException.class)
-    public void removeAll_Null_Test() {
+    public void removeAllNullTest() {
         final RequestHeaders rh = getTestRequestHeaders();
         assertThat(rh.removeAll(null).size(), is(0));
     }
 
     @Test
-    public void removeAll_Test() {
+    public void removeAllTest() {
         final RequestHeaders rh = getTestRequestHeaders();
 
         assertThat(rh.removeAll("").size(), is(0));
@@ -123,7 +123,7 @@ public class RequestHeadersImpl_Test {
     }
 
     @Test
-    public void entries_Test() {
+    public void entriesTest() {
         final Collection<Map.Entry<String, String>> result = getTestRequestHeaders().entries();
         assertThat(result.size(), is(3));
 
@@ -142,7 +142,7 @@ public class RequestHeadersImpl_Test {
     }
 
     @Test
-    public void getMultimap_Test() {
+    public void getMultimapTest() {
         final Multimap result = getTestRequestHeaders().getMultimap();
         assertThat(result.size(), is(3));
 
@@ -152,7 +152,7 @@ public class RequestHeadersImpl_Test {
     }
 
     @Test
-    public void keySet_Test() {
+    public void keySetTest() {
         final Set<String> result = getTestRequestHeaders().keySet();
         assertThat(result.size(), is(2));
         assertThat(result, hasItem("Key One"));

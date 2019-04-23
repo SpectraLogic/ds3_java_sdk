@@ -1,6 +1,6 @@
 /*
  * ******************************************************************************
- *   Copyright 2014-2017 Spectra Logic Corporation. All Rights Reserved.
+ *   Copyright 2014-2019 Spectra Logic Corporation. All Rights Reserved.
  *   Licensed under the Apache License, Version 2.0 (the "License"). You may not use
  *   this file except in compliance with the License. A copy of the License is located at
  *
@@ -82,7 +82,7 @@ public class ObjectStreamBuilder_Test {
     }
 
     @Test
-    public void objectInputStreamBuilder_Test() throws IOException, URISyntaxException {
+    public void objectInputStreamBuilderTest() throws IOException, URISyntaxException {
         //Verify that the object was transferred correctly to the BP in beforeRunningTestMethod
         final GetObjectDetailsSpectraS3Request objectDetailsRequest =
                 new GetObjectDetailsSpectraS3Request(OBJ_NAME, BUCKET_NAME);
@@ -93,7 +93,7 @@ public class ObjectStreamBuilder_Test {
     }
 
     @Test
-    public void objectOutputStreamBuilder_Test() throws IOException, URISyntaxException {
+    public void objectOutputStreamBuilderTest() throws IOException, URISyntaxException {
         //Retrieve the object on the BP using ObjectOutputStreamBuilder and verify contents
         final Ds3Object obj = new Ds3Object(OBJ_NAME, OBJ_BYTES.length);
         final Ds3ClientHelpers.Job job = HELPERS.startReadJob(BUCKET_NAME, Lists.newArrayList(obj));

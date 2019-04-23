@@ -1,6 +1,6 @@
 /*
  * ******************************************************************************
- *   Copyright 2014-2017 Spectra Logic Corporation. All Rights Reserved.
+ *   Copyright 2014-2019 Spectra Logic Corporation. All Rights Reserved.
  *   Licensed under the Apache License, Version 2.0 (the "License"). You may not use
  *   this file except in compliance with the License. A copy of the License is located at
  *
@@ -41,7 +41,7 @@ public class MACMetadataRestore_Test {
     private final File file = new File(getClass().getClassLoader().getResource("LoremIpsum.txt").getFile());
 
     @Test
-    public void restoreFileTimes_Test() throws Exception {
+    public void restoreFileTimesTest() throws Exception {
 
         if (Platform.isMac()) {
             final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yy:HH:mm");

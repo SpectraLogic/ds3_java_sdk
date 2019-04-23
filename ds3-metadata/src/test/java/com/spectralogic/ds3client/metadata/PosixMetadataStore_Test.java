@@ -1,6 +1,6 @@
 /*
  * ******************************************************************************
- *   Copyright 2014-2017 Spectra Logic Corporation. All Rights Reserved.
+ *   Copyright 2014-2019 Spectra Logic Corporation. All Rights Reserved.
  *   Licensed under the Apache License, Version 2.0 (the "License"). You may not use
  *   this file except in compliance with the License. A copy of the License is located at
  *
@@ -38,7 +38,7 @@ public class PosixMetadataStore_Test {
     private final PosixMetadataStore posixMetadataStore = new PosixMetadataStore(mMetadataMap);
 
     @Test
-    public void saveCreationTimeMetaData_Test() throws IOException {
+    public void saveCreationTimeMetaDataTest() throws IOException {
         final BasicFileAttributes attr = Files.readAttributes(file.toPath(), BasicFileAttributes.class);
         final long creationTime = attr.creationTime().toMillis();
         posixMetadataStore.saveCreationTimeMetaData(attr);
@@ -46,7 +46,7 @@ public class PosixMetadataStore_Test {
     }
 
     @Test
-    public void saveAccessTimeMetaData_Test() throws IOException {
+    public void saveAccessTimeMetaDataTest() throws IOException {
         final BasicFileAttributes attr = Files.readAttributes(file.toPath(), BasicFileAttributes.class);
         final long lastAccessTime = attr.lastAccessTime().toMillis();
         posixMetadataStore.saveAccessTimeMetaData(attr);
@@ -55,7 +55,7 @@ public class PosixMetadataStore_Test {
 
 
     @Test
-    public void saveLastModifiedTime_Test() throws IOException {
+    public void saveLastModifiedTimeTest() throws IOException {
         final BasicFileAttributes attr = Files.readAttributes(file.toPath(), BasicFileAttributes.class);
         final long lastModifiedTime = attr.lastModifiedTime().toMillis();
         posixMetadataStore.saveLastModifiedTime(attr);
@@ -63,7 +63,7 @@ public class PosixMetadataStore_Test {
     }
 
     @Test
-    public void saveOSMetaData_Test() throws IOException {
+    public void saveOSMetaDataTest() throws IOException {
         final String localOSName = MetaDataUtil.getOS();
         posixMetadataStore.saveOSMetaData(localOSName);
         Assert.assertEquals(mMetadataMap.build().get(MetadataKeyConstants.METADATA_PREFIX + MetadataKeyConstants.KEY_OS), String.valueOf(localOSName));

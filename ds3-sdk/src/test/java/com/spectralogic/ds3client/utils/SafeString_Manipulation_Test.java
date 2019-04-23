@@ -1,6 +1,6 @@
 /*
  * ******************************************************************************
- *   Copyright 2014-2017 Spectra Logic Corporation. All Rights Reserved.
+ *   Copyright 2014-2019 Spectra Logic Corporation. All Rights Reserved.
  *   Licensed under the Apache License, Version 2.0 (the "License"). You may not use
  *   this file except in compliance with the License. A copy of the License is located at
  *
@@ -26,13 +26,13 @@ import static org.hamcrest.MatcherAssert.assertThat;
 public class SafeString_Manipulation_Test {
 
     @Test
-    public void safeToString_Int_Test() {
+    public void safeToStringIntTest() {
         final int myInt = 5;
         assertThat(SafeStringManipulation.safeToString(myInt), is("5"));
     }
 
     @Test
-    public void safeToString_Integer_Test() {
+    public void safeToStringIntegerTest() {
         final Integer nullInt = null;
         assertThat(SafeStringManipulation.safeToString(nullInt), is(nullValue()));
 
@@ -41,13 +41,13 @@ public class SafeString_Manipulation_Test {
     }
 
     @Test
-    public void safeToString_Boolean_Test() {
+    public void safeToStringBooleanTest() {
         final boolean myBoolean = true;
         assertThat(SafeStringManipulation.safeToString(myBoolean), is("true"));
     }
 
     @Test
-    public void safeToString_Double_Test() {
+    public void safeToStringDoubleTest() {
         final double myDouble = 2.1;
         assertThat(SafeStringManipulation.safeToString(myDouble), is("2.1"));
 
@@ -59,7 +59,7 @@ public class SafeString_Manipulation_Test {
     }
 
     @Test
-    public void safeToString_Long_Test() {
+    public void safeToStringLongTest() {
         final long myLong = 3;
         assertThat(SafeStringManipulation.safeToString(myLong), is("3"));
 
@@ -71,7 +71,7 @@ public class SafeString_Manipulation_Test {
     }
 
     @Test
-    public void safeToString_String_Test() {
+    public void safeToStringStringTest() {
         final String nullString = null;
         assertThat(SafeStringManipulation.safeToString(nullString), is(nullValue()));
 
@@ -80,7 +80,7 @@ public class SafeString_Manipulation_Test {
     }
 
     @Test
-    public void safeToString_Date_Test() {
+    public void safeToStringDateTest() {
         final Date nullDate = null;
         assertThat(SafeStringManipulation.safeToString(nullDate), is(nullValue()));
 
@@ -93,7 +93,7 @@ public class SafeString_Manipulation_Test {
     }
 
     @Test
-    public void safeToString_Enum_Test() {
+    public void safeToStringEnumTest() {
         final TestEnum nullEnum = null;
         assertThat(SafeStringManipulation.safeToString(nullEnum), is(nullValue()));
 
@@ -102,7 +102,7 @@ public class SafeString_Manipulation_Test {
     }
 
     @Test
-    public void safeUrlEscape_Test() {
+    public void safeUrlEscapeTest() {
         assertThat(SafeStringManipulation.safeUrlEscape(null), is(nullValue()));
         assertThat(SafeStringManipulation.safeUrlEscape(""), is(""));
         assertThat(SafeStringManipulation.safeUrlEscape("one2three+four"), is("one2three%2Bfour"));
@@ -110,7 +110,7 @@ public class SafeString_Manipulation_Test {
     }
 
     @Test
-    public void safeQueryParamEscape_Test() {
+    public void safeQueryParamEscapeTest() {
         assertThat(SafeStringManipulation.safeQueryParamEscape(null), is(nullValue()));
         assertThat(SafeStringManipulation.safeQueryParamEscape(""), is(""));
         assertThat(SafeStringManipulation.safeQueryParamEscape("one2three+four"), is("one2three%2Bfour"));

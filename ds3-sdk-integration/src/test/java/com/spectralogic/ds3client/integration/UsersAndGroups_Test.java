@@ -1,6 +1,6 @@
 /*
  * ******************************************************************************
- *   Copyright 2014-2017 Spectra Logic Corporation. All Rights Reserved.
+ *   Copyright 2014-2019 Spectra Logic Corporation. All Rights Reserved.
  *   Licensed under the Apache License, Version 2.0 (the "License"). You may not use
  *   this file except in compliance with the License. A copy of the License is located at
  *
@@ -177,7 +177,7 @@ public class UsersAndGroups_Test {
     }
 
     @Test
-    public void ModifyUserDefaultDataPolicy() throws IOException, SignatureException {
+    public void modifyUserDefaultDataPolicy() throws IOException, SignatureException {
 
         final GetUserSpectraS3Response getSpectraResponse = client
                 .getUserSpectraS3(new GetUserSpectraS3Request(spectraUUID));
@@ -192,7 +192,7 @@ public class UsersAndGroups_Test {
     }
 
     @Test
-    public void ModifyUserName() throws IOException, SignatureException {
+    public void modifyUserName() throws IOException, SignatureException {
 
         final GetUserSpectraS3Response getSpectraResponse = client
                 .getUserSpectraS3(new GetUserSpectraS3Request(spectraUUID));
@@ -207,7 +207,7 @@ public class UsersAndGroups_Test {
 
 
     @Test
-    public void ModifyUserNameAndDataPolicy() throws IOException, SignatureException {
+    public void modifyUserNameAndDataPolicy() throws IOException, SignatureException {
 
         final GetUserSpectraS3Response getSpectraResponse = client
                 .getUserSpectraS3(new GetUserSpectraS3Request(spectraUUID));
@@ -221,7 +221,7 @@ public class UsersAndGroups_Test {
     }
 
     @Test
-    public void RegenerateUserSecretKey() throws IOException, SignatureException {
+    public void megenerateUserSecretKey() throws IOException, SignatureException {
         try {
             client.regenerateUserSecretKeySpectraS3(
                     new RegenerateUserSecretKeySpectraS3Request(UUID.randomUUID()));

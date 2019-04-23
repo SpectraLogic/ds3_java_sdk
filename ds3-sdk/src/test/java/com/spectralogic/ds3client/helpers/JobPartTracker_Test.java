@@ -1,6 +1,6 @@
 /*
  * ******************************************************************************
- *   Copyright 2014-2017 Spectra Logic Corporation. All Rights Reserved.
+ *   Copyright 2014-2019 Spectra Logic Corporation. All Rights Reserved.
  *   Licensed under the Apache License, Version 2.0 (the "License"). You may not use
  *   this file except in compliance with the License. A copy of the License is located at
  *
@@ -54,7 +54,7 @@ public class JobPartTracker_Test {
     }
 
     @Test
-    public void TrackerEventsForward()
+    public void trackerEventsForward()
     {
         final MockObjectPartTracker fooTracker = new MockObjectPartTracker("foo", Arrays.asList(false, true));
         final MockObjectPartTracker barTracker = new MockObjectPartTracker("bar", Arrays.asList(true, false));

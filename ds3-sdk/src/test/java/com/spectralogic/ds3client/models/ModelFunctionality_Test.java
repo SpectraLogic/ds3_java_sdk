@@ -1,6 +1,6 @@
 /*
  * ******************************************************************************
- *   Copyright 2014-2017 Spectra Logic Corporation. All Rights Reserved.
+ *   Copyright 2014-2019 Spectra Logic Corporation. All Rights Reserved.
  *   Licensed under the Apache License, Version 2.0 (the "License"). You may not use
  *   this file except in compliance with the License. A copy of the License is located at
  *
@@ -23,7 +23,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 public class ModelFunctionality_Test {
 
     @Test
-    public void bulkObjectEqualsEmptyObjects_Test() {
+    public void bulkObjectEqualsEmptyObjectsTest() {
         final BulkObject obj1 = new BulkObject();
         final BulkObject obj2 = new BulkObject();
 
@@ -31,7 +31,7 @@ public class ModelFunctionality_Test {
     }
 
     @Test
-    public void bulkObjectNullableEquals_Test() {
+    public void bulkObjectNullableEqualsTest() {
         assertThat(BulkObject.nullableEquals(null, null), is(true));
         assertThat(BulkObject.nullableEquals("1", null), is(false));
         assertThat(BulkObject.nullableEquals("1", "1"), is(true));

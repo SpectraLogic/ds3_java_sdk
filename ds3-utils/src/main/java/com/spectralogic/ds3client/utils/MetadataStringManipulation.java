@@ -1,6 +1,6 @@
 /*
  * ******************************************************************************
- *   Copyright 2014-2017 Spectra Logic Corporation. All Rights Reserved.
+ *   Copyright 2014-2019 Spectra Logic Corporation. All Rights Reserved.
  *   Licensed under the Apache License, Version 2.0 (the "License"). You may not use
  *   this file except in compliance with the License. A copy of the License is located at
  *
@@ -31,15 +31,17 @@ public final class MetadataStringManipulation {
 
     /**
      * List of printable US-ASCII characters that do not need percent encoding.
-     * Includes separators equals "=" and comma ",": not encoded for use in creating Range header
-     * Excludes separators: "(" | ")" | "<" | ">" | "@" | ";" | ":" | "\" | <"> | "/" | "[" | "]" | "?" | "{" | "}"
-     * Excludes Percent "%": not considered safe because it is used in percent encoding
-     * Excludes Plus "+": not considered safe because its interpreted as space during decoding
+     * Following the spec https://tools.ietf.org/html/rfc2616#page-31 for Message Headers
      */
-    private static final String HTTP_HEADER_SAFE_CHARS = "!#$&'*-.~^_`|,=";
+    private static final String HTTP_HEADER_KEY_SAFE_CHARS = "!#$&'*-.~^_`|";
+    private static final String HTTP_HEADER_VALUE_SAFE_CHARS = "()<>@,;:\"/\\[]?={}" + HTTP_HEADER_KEY_SAFE_CHARS;
 
-    private static final Escaper HTTP_HEADER_ESCAPER =
-            new PercentEscaper(HTTP_HEADER_SAFE_CHARS, false);
+
+    private static final Escaper HTTP_HEADER_KEY_ESCAPER =
+            new PercentEscaper(HTTP_HEADER_KEY_SAFE_CHARS, false);
+
+    private static final Escaper HTTP_HEADER_VALUE_ESCAPER =
+            new PercentEscaper(HTTP_HEADER_VALUE_SAFE_CHARS, false);
 
     private MetadataStringManipulation() {
         //pass
@@ -47,15 +49,29 @@ public final class MetadataStringManipulation {
 
     /**
      * Percent encodes non-alpha-numeric characters within the specified string
-     * excluding the symbols listed in {@link #HTTP_HEADER_SAFE_CHARS} using UTF-8
+     * excluding the symbols listed in {@link #HTTP_HEADER_KEY_SAFE_CHARS} using UTF-8
      */
-    public static String toEncodedString(final String str) {
+    public static String toEncodedKeyString(final String str) {
         if (str == null) {
             return null;
         }
 
         final String strUtf8 = new String(str.getBytes(StandardCharsets.UTF_8), StandardCharsets.UTF_8);
-        return getMetadataEscaper().escape(strUtf8);
+        return getMetadataKeyEscaper().escape(strUtf8);
+    }
+
+
+    /**
+     * Percent encodes non-alpha-numeric characters within the specified string
+     * excluding the symbols listed in {@link #HTTP_HEADER_VALUE_SAFE_CHARS} using UTF-8
+     */
+    public static String toEncodedValueString(final String str) {
+        if (str == null) {
+            return null;
+        }
+
+        final String strUtf8 = new String(str.getBytes(StandardCharsets.UTF_8), StandardCharsets.UTF_8);
+        return getMetadataValueEscaper().escape(strUtf8);
     }
 
     /**
@@ -73,7 +89,11 @@ public final class MetadataStringManipulation {
         }
     }
 
-    private static Escaper getMetadataEscaper() {
-        return HTTP_HEADER_ESCAPER;
+    private static Escaper getMetadataKeyEscaper() {
+        return HTTP_HEADER_KEY_ESCAPER;
+    }
+
+    private static Escaper getMetadataValueEscaper() {
+        return HTTP_HEADER_VALUE_ESCAPER;
     }
 }
