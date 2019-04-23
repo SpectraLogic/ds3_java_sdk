@@ -56,8 +56,9 @@ public class FileObjectGetter implements ObjectChannelBuilder {
             throw new UnrecoverableIOException(objectPath + " is not a regular file.");
         }
 
+        final Lock lock = striped.get(key);
         try {
-            striped.get(key).lock();
+            lock.lock();
             if (Files.notExists(objectPath)) {
                 Files.createDirectories(objectPath.getParent());
                 return FileChannel.open(
@@ -68,7 +69,7 @@ public class FileObjectGetter implements ObjectChannelBuilder {
                 );
             }
         } finally {
-            striped.get(key).unlock();
+            lock.unlock();
         }
         return FileChannel.open(
                 objectPath,
