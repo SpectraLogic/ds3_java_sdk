@@ -23,9 +23,9 @@ buildscript {
 
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.0'
-        classpath 'com.github.jengelman.gradle.plugins:shadow:2.0.2'
-        classpath "gradle.plugin.net.ossindex:ossindex-gradle-plugin:0.2.0-beta"
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.4'
+        classpath 'com.github.jengelman.gradle.plugins:shadow:4.0.2'
+        classpath 'com.github.ben-manes:gradle-versions-plugin:0.21.0'
     }
 }
 
@@ -36,15 +36,15 @@ plugins {
 
 allprojects {
     group = 'com.spectralogic.ds3'
-    version = '5.0.4'
+    version = '5.0.5'
 }
 
 subprojects {
+    apply plugin: 'com.github.ben-manes.versions'
     apply plugin: 'maven'
     apply plugin: 'java'
     apply plugin: 'kotlin'
     apply plugin: 'findbugs'
-    apply plugin: 'net.ossindex.audit'
 
     sourceCompatibility = JavaVersion.VERSION_1_8
     repositories {
