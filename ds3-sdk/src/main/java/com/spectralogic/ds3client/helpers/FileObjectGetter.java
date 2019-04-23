@@ -15,6 +15,7 @@
 
 package com.spectralogic.ds3client.helpers;
 
+import com.google.common.util.concurrent.Striped;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers.ObjectChannelBuilder;
 import com.spectralogic.ds3client.utils.FileUtils;
 
@@ -24,19 +25,23 @@ import java.nio.channels.SeekableByteChannel;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
+import java.util.concurrent.locks.Lock;
 
 /**
  * Writes files to the local file system preserving the path.
  */
 public class FileObjectGetter implements ObjectChannelBuilder {
     private final Path root;
+    private final Striped<Lock> striped;
 
     /**
      * Creates a new FileObjectGetter to retrieve files from a remote DS3 system to the local file system.
+     *
      * @param root The {@code root} directory of the local file system for all files being transferred.
      */
     public FileObjectGetter(final Path root) {
         this.root = root;
+        this.striped = Striped.lazyWeakLock(10);
     }
 
     @Override
@@ -47,14 +52,28 @@ public class FileObjectGetter implements ObjectChannelBuilder {
             Files.createDirectories(FileUtils.resolveForSymbolic(parentPath));
         }
 
-        if ( ! FileUtils.isTransferablePath(objectPath)) {
+        if (!FileUtils.isTransferablePath(objectPath)) {
             throw new UnrecoverableIOException(objectPath + " is not a regular file.");
         }
 
+        final Lock lock = striped.get(key);
+        try {
+            lock.lock();
+            if (Files.notExists(objectPath)) {
+                Files.createDirectories(objectPath.getParent());
+                return FileChannel.open(
+                        objectPath,
+                        StandardOpenOption.SPARSE,
+                        StandardOpenOption.WRITE,
+                        StandardOpenOption.CREATE_NEW
+                );
+            }
+        } finally {
+            lock.unlock();
+        }
         return FileChannel.open(
                 objectPath,
-                StandardOpenOption.WRITE,
-                StandardOpenOption.CREATE
+                StandardOpenOption.WRITE
         );
     }
 }
