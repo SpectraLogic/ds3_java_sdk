@@ -1,6 +1,6 @@
 /*
  * ******************************************************************************
- *   Copyright 2014-2019 Spectra Logic Corporation. All Rights Reserved.
+ *   Copyright 2014-2017 Spectra Logic Corporation. All Rights Reserved.
  *   Licensed under the Apache License, Version 2.0 (the "License"). You may not use
  *   this file except in compliance with the License. A copy of the License is located at
  *
@@ -48,6 +48,10 @@ public class Ds3ClientImpl implements Ds3Client {
     @Override
     public AbortMultiPartUploadResponse abortMultiPartUpload(final AbortMultiPartUploadRequest request) throws IOException {
         return new AbortMultiPartUploadResponseParser().response(this.netClient.getResponse(request));
+    }
+    @Override
+    public CompleteBlobResponse completeBlob(final CompleteBlobRequest request) throws IOException {
+        return new CompleteBlobResponseParser().response(this.netClient.getResponse(request));
     }
     @Override
     public CompleteMultiPartUploadResponse completeMultiPartUpload(final CompleteMultiPartUploadRequest request) throws IOException {

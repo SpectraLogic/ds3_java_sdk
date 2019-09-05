@@ -1,6 +1,6 @@
 /*
  * ******************************************************************************
- *   Copyright 2014-2019 Spectra Logic Corporation. All Rights Reserved.
+ *   Copyright 2014-2017 Spectra Logic Corporation. All Rights Reserved.
  *   Licensed under the Apache License, Version 2.0 (the "License"). You may not use
  *   this file except in compliance with the License. A copy of the License is located at
  *
@@ -21,6 +21,7 @@ import com.spectralogic.ds3client.commands.interfaces.AbstractRequest;
 import com.google.common.net.UrlEscapers;
 import java.lang.Integer;
 import com.spectralogic.ds3client.models.TargetReadPreferenceType;
+import com.spectralogic.ds3client.models.CloudNamingMode;
 import com.spectralogic.ds3client.models.S3Region;
 
 public class RegisterS3TargetSpectraS3Request extends AbstractRequest {
@@ -44,6 +45,8 @@ public class RegisterS3TargetSpectraS3Request extends AbstractRequest {
     private TargetReadPreferenceType defaultReadPreference;
 
     private boolean https;
+
+    private CloudNamingMode namingMode;
 
     private int offlineDataStagingWindowInTb;
 
@@ -117,6 +120,13 @@ public class RegisterS3TargetSpectraS3Request extends AbstractRequest {
     public RegisterS3TargetSpectraS3Request withHttps(final boolean https) {
         this.https = https;
         this.updateQueryParam("https", https);
+        return this;
+    }
+
+
+    public RegisterS3TargetSpectraS3Request withNamingMode(final CloudNamingMode namingMode) {
+        this.namingMode = namingMode;
+        this.updateQueryParam("naming_mode", namingMode);
         return this;
     }
 
@@ -237,6 +247,11 @@ public class RegisterS3TargetSpectraS3Request extends AbstractRequest {
 
     public boolean getHttps() {
         return this.https;
+    }
+
+
+    public CloudNamingMode getNamingMode() {
+        return this.namingMode;
     }
 
 

@@ -1,6 +1,6 @@
 /*
  * ******************************************************************************
- *   Copyright 2014-2019 Spectra Logic Corporation. All Rights Reserved.
+ *   Copyright 2014-2017 Spectra Logic Corporation. All Rights Reserved.
  *   Licensed under the Apache License, Version 2.0 (the "License"). You may not use
  *   this file except in compliance with the License. A copy of the License is located at
  *
@@ -19,9 +19,11 @@ package com.spectralogic.ds3client.models;
 public enum S3Region {
     GOV_CLOUD,
     US_EAST_1,
+    US_EAST_2,
     US_WEST_1,
     US_WEST_2,
     EU_WEST_1,
+    EU_WEST_2,
     EU_CENTRAL_1,
     AP_SOUTH_1,
     AP_SOUTHEAST_1,
@@ -29,5 +31,6 @@ public enum S3Region {
     AP_NORTHEAST_1,
     AP_NORTHEAST_2,
     SA_EAST_1,
-    CN_NORTH_1
+    CN_NORTH_1,
+    CA_CENTRAL_1
 }

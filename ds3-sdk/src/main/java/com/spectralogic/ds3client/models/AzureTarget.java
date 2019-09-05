@@ -1,6 +1,6 @@
 /*
  * ******************************************************************************
- *   Copyright 2014-2019 Spectra Logic Corporation. All Rights Reserved.
+ *   Copyright 2014-2017 Spectra Logic Corporation. All Rights Reserved.
  *   Licensed under the Apache License, Version 2.0 (the "License"). You may not use
  *   this file except in compliance with the License. A copy of the License is located at
  *
@@ -54,6 +54,9 @@ public class AzureTarget {
 
     @JsonProperty("Name")
     private String name;
+
+    @JsonProperty("NamingMode")
+    private CloudNamingMode namingMode;
 
     @JsonProperty("PermitGoingOutOfSync")
     private boolean permitGoingOutOfSync;
@@ -158,6 +161,15 @@ public class AzureTarget {
 
     public void setName(final String name) {
         this.name = name;
+    }
+
+
+    public CloudNamingMode getNamingMode() {
+        return this.namingMode;
+    }
+
+    public void setNamingMode(final CloudNamingMode namingMode) {
+        this.namingMode = namingMode;
     }
 
 

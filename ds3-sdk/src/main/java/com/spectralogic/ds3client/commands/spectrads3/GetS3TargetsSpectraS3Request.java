@@ -1,6 +1,6 @@
 /*
  * ******************************************************************************
- *   Copyright 2014-2019 Spectra Logic Corporation. All Rights Reserved.
+ *   Copyright 2014-2017 Spectra Logic Corporation. All Rights Reserved.
  *   Licensed under the Apache License, Version 2.0 (the "License"). You may not use
  *   this file except in compliance with the License. A copy of the License is located at
  *
@@ -20,6 +20,7 @@ import com.spectralogic.ds3client.networking.HttpVerb;
 import com.spectralogic.ds3client.commands.interfaces.AbstractPaginationRequest;
 import com.google.common.net.UrlEscapers;
 import com.spectralogic.ds3client.models.TargetReadPreferenceType;
+import com.spectralogic.ds3client.models.CloudNamingMode;
 import java.util.UUID;
 import com.spectralogic.ds3client.models.Quiesced;
 import com.spectralogic.ds3client.models.S3Region;
@@ -40,6 +41,8 @@ public class GetS3TargetsSpectraS3Request extends AbstractPaginationRequest {
     private boolean lastPage;
 
     private String name;
+
+    private CloudNamingMode namingMode;
 
     private int pageLength;
 
@@ -104,6 +107,13 @@ public class GetS3TargetsSpectraS3Request extends AbstractPaginationRequest {
     public GetS3TargetsSpectraS3Request withName(final String name) {
         this.name = name;
         this.updateQueryParam("name", name);
+        return this;
+    }
+
+
+    public GetS3TargetsSpectraS3Request withNamingMode(final CloudNamingMode namingMode) {
+        this.namingMode = namingMode;
+        this.updateQueryParam("naming_mode", namingMode);
         return this;
     }
 
@@ -202,6 +212,11 @@ public class GetS3TargetsSpectraS3Request extends AbstractPaginationRequest {
 
     public String getName() {
         return this.name;
+    }
+
+
+    public CloudNamingMode getNamingMode() {
+        return this.namingMode;
     }
 
 
