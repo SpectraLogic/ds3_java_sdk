@@ -16,11 +16,10 @@
 // This code is auto-generated, do not modify
 package com.spectralogic.ds3client.commands;
 
-import com.google.common.collect.ImmutableMap;
 import com.spectralogic.ds3client.commands.interfaces.AbstractResponse;
-import com.spectralogic.ds3client.models.ChecksumType;
 import com.spectralogic.ds3client.networking.Metadata;
-
+import com.spectralogic.ds3client.models.ChecksumType;
+import com.google.common.collect.ImmutableMap;
 import java.time.ZonedDateTime;
 import java.util.UUID;
 
@@ -32,24 +31,24 @@ public class HeadObjectResponse extends AbstractResponse {
 
     private final ChecksumType.Type blobChecksumType;
 
+    private final ZonedDateTime creationDate;
+
     private final Metadata metadata;
 
     private final long objectSize;
 
     private final Status status;
 
-    private final ZonedDateTime creationDate;
-
     private final UUID versionId;
 
-    public HeadObjectResponse(final ImmutableMap<Long, String> blobChecksums, final ChecksumType.Type blobChecksumType, final Metadata metadata, final long objectSize, final Status status, final String checksum, final ChecksumType.Type checksumType, final ZonedDateTime creationDate, final UUID versionId) {
+    public HeadObjectResponse(final ImmutableMap<Long, String> blobChecksums, final ChecksumType.Type blobChecksumType, final ZonedDateTime creationDate, final Metadata metadata, final long objectSize, final Status status, final UUID versionId, final String checksum, final ChecksumType.Type checksumType) {
         super(checksum, checksumType);
         this.blobChecksums = blobChecksums;
         this.blobChecksumType = blobChecksumType;
+        this.creationDate = creationDate;
         this.metadata = metadata;
         this.objectSize = objectSize;
         this.status = status;
-        this.creationDate = creationDate;
         this.versionId = versionId;
     }
 
@@ -59,6 +58,10 @@ public class HeadObjectResponse extends AbstractResponse {
 
     public ChecksumType.Type getBlobChecksumType() {
         return this.blobChecksumType;
+    }
+
+    public ZonedDateTime getCreationDate() {
+        return this.creationDate;
     }
 
     public Metadata getMetadata() {
@@ -73,11 +76,8 @@ public class HeadObjectResponse extends AbstractResponse {
         return this.status;
     }
 
-    public ZonedDateTime getCreationDate() {
-        return this.creationDate;
-    }
-
     public UUID getVersionId() {
         return this.versionId;
     }
+
 }
