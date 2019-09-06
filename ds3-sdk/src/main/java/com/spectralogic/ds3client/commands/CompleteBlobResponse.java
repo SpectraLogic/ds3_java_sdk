@@ -14,16 +14,15 @@
  */
 
 // This code is auto-generated, do not modify
-package com.spectralogic.ds3client.models;
+package com.spectralogic.ds3client.commands;
 
-public enum TapeDriveType {
-    UNKNOWN,
-    LTO5,
-    LTO6,
-    LTO7,
-    LTO8,
-    TS1140,
-    TS1150,
-    TS1155,
-    TS1160
+import com.spectralogic.ds3client.models.ChecksumType;
+import com.spectralogic.ds3client.commands.interfaces.AbstractResponse;
+
+public class CompleteBlobResponse extends AbstractResponse {
+    
+    public CompleteBlobResponse(final String checksum, final ChecksumType.Type checksumType) {
+        super(checksum, checksumType);
+    }
+
 }

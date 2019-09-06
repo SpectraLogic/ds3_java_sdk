@@ -40,6 +40,8 @@ public class PutBulkJobSpectraS3Request extends BulkRequest {
 
     private String name;
 
+    private boolean preAllocateJobSpace;
+
     private boolean verifyAfterWrite;
 
     // Constructor
@@ -111,6 +113,17 @@ public class PutBulkJobSpectraS3Request extends BulkRequest {
     }
 
 
+    public PutBulkJobSpectraS3Request withPreAllocateJobSpace(final boolean preAllocateJobSpace) {
+        this.preAllocateJobSpace = preAllocateJobSpace;
+        if (this.preAllocateJobSpace) {
+            this.getQueryParams().put("pre_allocate_job_space", null);
+        } else {
+            this.getQueryParams().remove("pre_allocate_job_space");
+        }
+        return this;
+    }
+
+
     @Override
     public PutBulkJobSpectraS3Request withPriority(final Priority priority) {
         super.withPriority(priority);
@@ -154,6 +167,11 @@ public class PutBulkJobSpectraS3Request extends BulkRequest {
 
     public String getName() {
         return this.name;
+    }
+
+
+    public boolean getPreAllocateJobSpace() {
+        return this.preAllocateJobSpace;
     }
 
 

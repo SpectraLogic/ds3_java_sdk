@@ -21,6 +21,7 @@ import com.spectralogic.ds3client.commands.interfaces.AbstractRequest;
 import com.google.common.net.UrlEscapers;
 import java.lang.Integer;
 import com.spectralogic.ds3client.models.TargetReadPreferenceType;
+import com.spectralogic.ds3client.models.CloudNamingMode;
 import com.spectralogic.ds3client.models.Quiesced;
 import com.spectralogic.ds3client.models.S3Region;
 
@@ -45,6 +46,8 @@ public class ModifyS3TargetSpectraS3Request extends AbstractRequest {
     private boolean https;
 
     private String name;
+
+    private CloudNamingMode namingMode;
 
     private int offlineDataStagingWindowInTb;
 
@@ -128,6 +131,13 @@ public class ModifyS3TargetSpectraS3Request extends AbstractRequest {
     public ModifyS3TargetSpectraS3Request withName(final String name) {
         this.name = name;
         this.updateQueryParam("name", name);
+        return this;
+    }
+
+
+    public ModifyS3TargetSpectraS3Request withNamingMode(final CloudNamingMode namingMode) {
+        this.namingMode = namingMode;
+        this.updateQueryParam("naming_mode", namingMode);
         return this;
     }
 
@@ -262,6 +272,11 @@ public class ModifyS3TargetSpectraS3Request extends AbstractRequest {
 
     public String getName() {
         return this.name;
+    }
+
+
+    public CloudNamingMode getNamingMode() {
+        return this.namingMode;
     }
 
 

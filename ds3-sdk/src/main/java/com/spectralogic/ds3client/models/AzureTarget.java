@@ -55,6 +55,9 @@ public class AzureTarget {
     @JsonProperty("Name")
     private String name;
 
+    @JsonProperty("NamingMode")
+    private CloudNamingMode namingMode;
+
     @JsonProperty("PermitGoingOutOfSync")
     private boolean permitGoingOutOfSync;
 
@@ -158,6 +161,15 @@ public class AzureTarget {
 
     public void setName(final String name) {
         this.name = name;
+    }
+
+
+    public CloudNamingMode getNamingMode() {
+        return this.namingMode;
+    }
+
+    public void setNamingMode(final CloudNamingMode namingMode) {
+        this.namingMode = namingMode;
     }
 
 

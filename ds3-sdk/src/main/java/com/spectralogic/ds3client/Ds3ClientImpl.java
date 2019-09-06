@@ -50,6 +50,10 @@ public class Ds3ClientImpl implements Ds3Client {
         return new AbortMultiPartUploadResponseParser().response(this.netClient.getResponse(request));
     }
     @Override
+    public CompleteBlobResponse completeBlob(final CompleteBlobRequest request) throws IOException {
+        return new CompleteBlobResponseParser().response(this.netClient.getResponse(request));
+    }
+    @Override
     public CompleteMultiPartUploadResponse completeMultiPartUpload(final CompleteMultiPartUploadRequest request) throws IOException {
         return new CompleteMultiPartUploadResponseParser().response(this.netClient.getResponse(request));
     }

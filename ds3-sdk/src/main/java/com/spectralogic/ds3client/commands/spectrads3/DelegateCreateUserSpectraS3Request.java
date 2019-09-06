@@ -27,6 +27,8 @@ public class DelegateCreateUserSpectraS3Request extends AbstractRequest {
     
     private final String name;
 
+    private String defaultDataPolicyId;
+
     private String id;
 
     private int maxBuckets;
@@ -42,6 +44,20 @@ public class DelegateCreateUserSpectraS3Request extends AbstractRequest {
         this.updateQueryParam("name", name);
 
     }
+
+    public DelegateCreateUserSpectraS3Request withDefaultDataPolicyId(final UUID defaultDataPolicyId) {
+        this.defaultDataPolicyId = defaultDataPolicyId.toString();
+        this.updateQueryParam("default_data_policy_id", defaultDataPolicyId);
+        return this;
+    }
+
+
+    public DelegateCreateUserSpectraS3Request withDefaultDataPolicyId(final String defaultDataPolicyId) {
+        this.defaultDataPolicyId = defaultDataPolicyId;
+        this.updateQueryParam("default_data_policy_id", defaultDataPolicyId);
+        return this;
+    }
+
 
     public DelegateCreateUserSpectraS3Request withId(final UUID id) {
         this.id = id.toString();
@@ -84,6 +100,11 @@ public class DelegateCreateUserSpectraS3Request extends AbstractRequest {
     
     public String getName() {
         return this.name;
+    }
+
+
+    public String getDefaultDataPolicyId() {
+        return this.defaultDataPolicyId;
     }
 
 

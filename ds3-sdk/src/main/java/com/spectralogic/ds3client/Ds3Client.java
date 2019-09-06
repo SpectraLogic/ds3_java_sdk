@@ -42,6 +42,11 @@ public interface Ds3Client extends Closeable {
 
     
     
+    CompleteBlobResponse completeBlob(final CompleteBlobRequest request)
+            throws IOException;
+
+    
+    
     CompleteMultiPartUploadResponse completeMultiPartUpload(final CompleteMultiPartUploadRequest request)
             throws IOException;
 
