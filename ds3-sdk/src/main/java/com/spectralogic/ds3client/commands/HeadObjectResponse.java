@@ -16,10 +16,13 @@
 // This code is auto-generated, do not modify
 package com.spectralogic.ds3client.commands;
 
-import com.spectralogic.ds3client.commands.interfaces.AbstractResponse;
-import com.spectralogic.ds3client.networking.Metadata;
-import com.spectralogic.ds3client.models.ChecksumType;
 import com.google.common.collect.ImmutableMap;
+import com.spectralogic.ds3client.commands.interfaces.AbstractResponse;
+import com.spectralogic.ds3client.models.ChecksumType;
+import com.spectralogic.ds3client.networking.Metadata;
+
+import java.time.ZonedDateTime;
+import java.util.UUID;
 
 public class HeadObjectResponse extends AbstractResponse {
 
@@ -35,13 +38,19 @@ public class HeadObjectResponse extends AbstractResponse {
 
     private final Status status;
 
-    public HeadObjectResponse(final ImmutableMap<Long, String> blobChecksums, final ChecksumType.Type blobChecksumType, final Metadata metadata, final long objectSize, final Status status, final String checksum, final ChecksumType.Type checksumType) {
+    private final ZonedDateTime creationDate;
+
+    private final UUID versionId;
+
+    public HeadObjectResponse(final ImmutableMap<Long, String> blobChecksums, final ChecksumType.Type blobChecksumType, final Metadata metadata, final long objectSize, final Status status, final String checksum, final ChecksumType.Type checksumType, final ZonedDateTime creationDate, final UUID versionId) {
         super(checksum, checksumType);
         this.blobChecksums = blobChecksums;
         this.blobChecksumType = blobChecksumType;
         this.metadata = metadata;
         this.objectSize = objectSize;
         this.status = status;
+        this.creationDate = creationDate;
+        this.versionId = versionId;
     }
 
     public ImmutableMap<Long, String> getBlobChecksums() {
@@ -64,4 +73,11 @@ public class HeadObjectResponse extends AbstractResponse {
         return this.status;
     }
 
+    public ZonedDateTime getCreationDate() {
+        return this.creationDate;
+    }
+
+    public UUID getVersionId() {
+        return this.versionId;
+    }
 }

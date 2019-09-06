@@ -16,15 +16,18 @@
 // This code is auto-generated, do not modify
 package com.spectralogic.ds3client.commands.parsers;
 
-import com.spectralogic.ds3client.commands.interfaces.MetadataImpl;
-import com.spectralogic.ds3client.networking.Metadata;
 import com.google.common.collect.ImmutableMap;
-import com.spectralogic.ds3client.models.ChecksumType;
 import com.spectralogic.ds3client.commands.HeadObjectResponse;
+import com.spectralogic.ds3client.commands.interfaces.MetadataImpl;
 import com.spectralogic.ds3client.commands.parsers.interfaces.AbstractResponseParser;
 import com.spectralogic.ds3client.commands.parsers.utils.ResponseParserUtils;
+import com.spectralogic.ds3client.models.ChecksumType;
+import com.spectralogic.ds3client.networking.Metadata;
 import com.spectralogic.ds3client.networking.WebResponse;
+
 import java.io.IOException;
+import java.time.ZonedDateTime;
+import java.util.UUID;
 
 import static com.spectralogic.ds3client.commands.parsers.utils.ResponseParserUtils.*;
 
@@ -41,10 +44,12 @@ public class HeadObjectResponseParser extends AbstractResponseParser<HeadObjectR
             case 200:
                 final ChecksumType.Type blobChecksumType = getBlobChecksumType(response.getHeaders());
                 final ImmutableMap<Long, String> blobChecksumMap = getBlobChecksumMap(response.getHeaders());
-                return new HeadObjectResponse(blobChecksumMap, blobChecksumType, metadata, objectSize, HeadObjectResponse.Status.EXISTS, this.getChecksum(), this.getChecksumType());
+                final ZonedDateTime creationDate = getCreationDate(response.getHeaders());
+                final UUID versionId = getVersionId(response.getHeaders());
+                return new HeadObjectResponse(blobChecksumMap, blobChecksumType, metadata, objectSize, HeadObjectResponse.Status.EXISTS, this.getChecksum(), this.getChecksumType(), creationDate, versionId);
 
             case 404:
-                return new HeadObjectResponse(ImmutableMap.of(), ChecksumType.Type.NONE, metadata, objectSize, HeadObjectResponse.Status.DOESNTEXIST, this.getChecksum(), this.getChecksumType());
+                return new HeadObjectResponse(ImmutableMap.of(), ChecksumType.Type.NONE, metadata, objectSize, HeadObjectResponse.Status.DOESNTEXIST, this.getChecksum(), this.getChecksumType(), null, null);
 
             default:
                 assert false: "validateStatusCode should have made it impossible to reach this line";

@@ -35,7 +35,9 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
+import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.UUID;
 
 public final class ResponseParserUtils {
 
@@ -44,6 +46,8 @@ public final class ResponseParserUtils {
 
     private static final String BLOB_CHECKSUM_TYPE_HEADER = "ds3-blob-checksum-type";
     private static final String BLOB_CHECKSUM_HEADER = "ds3-blob-checksum-offset-";
+    private static final String VERSION_ID_HEADER = "version-id";
+    private static final String CREATION_DATE_HEADER = "creation-date";
 
     private ResponseParserUtils() {
         // pass
@@ -147,6 +151,42 @@ public final class ResponseParserUtils {
             final InputStream content = response.getResponseStream()) {
             IOUtils.copy(content, writer, UTF8);
             return writer.toString();
+        }
+    }
+
+    /**
+     * Retrieves the version id from the response headers. If there is no version id header,
+     * then null is returned. This is used in HeadObject response parsing.
+     * @param headers The http response headers from the BP.
+     * @return The version id if one exists.
+     */
+    public static UUID getVersionId(final Headers headers)  {
+        final List<String> versions = headers.get(VERSION_ID_HEADER);
+        switch (versions.size()) {
+            case 0:
+                return null;
+            case 1:
+                return UUID.fromString(versions.get(0));
+            default:
+                throw new IllegalArgumentException(String.format("Response has more than one header value for '%s'", VERSION_ID_HEADER));
+        }
+    }
+
+    /**
+     * Retrieves the creation date from the response headers. If there is no creation date header,
+     * then null is returned. This is used in HeadObject response parsing.
+     * @param headers The http response headers from the BP.
+     * @return The creation date if one exists.
+     */
+    public static ZonedDateTime getCreationDate(final Headers headers) {
+        final List<String> dates = headers.get(CREATION_DATE_HEADER);
+        switch (dates.size()) {
+            case 0:
+                return null;
+            case 1:
+                return ZonedDateTime.parse(dates.get(0));
+            default:
+                throw new IllegalArgumentException(String.format("Response has more than one header value for '%s'", CREATION_DATE_HEADER));
         }
     }
 
