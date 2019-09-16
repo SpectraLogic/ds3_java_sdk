@@ -36,7 +36,7 @@ plugins {
 
 allprojects {
     group = 'com.spectralogic.ds3'
-    version = '5.0.5'
+    version = '5.1.2'
 }
 
 subprojects {
