@@ -48,9 +48,10 @@ class SeekableByteChannelDecorator implements SeekableByteChannel {
         seekableByteChannel.position(blobOffset);
     }
 
-    SeekableByteChannel wrappedSeekableByteChannel() {
+    public SeekableByteChannel wrappedSeekableByteChannel() {
         return seekableByteChannel;
     }
+
 
     @Override
     public int read(final ByteBuffer dst) throws IOException {
