@@ -65,22 +65,6 @@ public class PutMultiPartUploadPartRequest extends AbstractRequest {
     }
 
 
-//    public PutMultiPartUploadPartRequest(final String bucketName, final String objectName, @Nonnull final ReadOnlySeekableByteChannel channel, final int partNumber, final long size, final String uploadId) {
-//        Preconditions.checkNotNull(channel, "Channel may not be null.");
-//        this.bucketName = bucketName;
-//        this.objectName = objectName;
-//        this.partNumber = partNumber;
-//        this.uploadId = uploadId;
-//        this.size = size;
-//        this.channel = channel;
-//
-//        this.updateQueryParam("part_number", partNumber);
-//
-//        this.updateQueryParam("upload_id", uploadId);
-//
-//        this.stream = new ReadOnlySeekableByteChannelInputStream(channel);
-//    }
-
     public PutMultiPartUploadPartRequest(final String bucketName, final String objectName, @Nonnull final SeekableByteChannel channel, final int partNumber, final long size, final String uploadId) {
         Preconditions.checkNotNull(channel, "Channel may not be null.");
         this.bucketName = bucketName;
