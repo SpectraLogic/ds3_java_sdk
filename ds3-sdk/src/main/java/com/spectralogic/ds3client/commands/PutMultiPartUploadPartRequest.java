@@ -16,13 +16,11 @@
 // This code is auto-generated, do not modify
 package com.spectralogic.ds3client.commands;
 
-import com.spectralogic.ds3client.helpers.channelbuilders.ReadOnlySeekableByteChannel;
 import com.spectralogic.ds3client.networking.HttpVerb;
 import com.spectralogic.ds3client.commands.interfaces.AbstractRequest;
 import java.util.UUID;
 import javax.annotation.Nonnull;
 import com.google.common.base.Preconditions;
-import com.spectralogic.ds3client.utils.ReadOnlySeekableByteChannelInputStream;
 import com.spectralogic.ds3client.utils.SeekableByteChannelInputStream;
 import java.nio.channels.SeekableByteChannel;
 import java.io.InputStream;
