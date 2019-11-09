@@ -16,7 +16,6 @@
 package com.spectralogic.ds3client.helpers.strategy.channelstrategy;
 
 import com.google.common.base.Preconditions;
-import com.spectralogic.ds3client.helpers.channelbuilders.ReadOnlySeekableByteChannel;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
