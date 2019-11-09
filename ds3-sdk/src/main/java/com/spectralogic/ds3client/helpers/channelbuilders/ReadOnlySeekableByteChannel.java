@@ -25,8 +25,8 @@ import java.nio.channels.SeekableByteChannel;
 public class ReadOnlySeekableByteChannel implements SeekableByteChannel {
 
     private final ReadableByteChannel channel;
-    private int size = 0;
-    private int position = 0;
+    private long size = 0;
+    private long position = 0;
 
     public ReadOnlySeekableByteChannel(final ReadableByteChannel channel) {
         this.channel = channel;
@@ -40,7 +40,7 @@ public class ReadOnlySeekableByteChannel implements SeekableByteChannel {
     public int read(final ByteBuffer dst) throws IOException {
         size = channel.read(dst);
         position += size;
-        return size;
+        return Long.valueOf(size).intValue();
     }
 
     @Override
@@ -55,6 +55,9 @@ public class ReadOnlySeekableByteChannel implements SeekableByteChannel {
 
     @Override
     public SeekableByteChannel position(final long newPosition) throws IOException {
+        if (position == 0 || newPosition == 0) {
+            this.position = newPosition;
+        }
         if (newPosition == this.position) {
             return this;
         }

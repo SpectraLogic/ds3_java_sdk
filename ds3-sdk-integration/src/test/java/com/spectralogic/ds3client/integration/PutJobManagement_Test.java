@@ -27,6 +27,7 @@ import com.spectralogic.ds3client.commands.spectrads3.*;
 import com.spectralogic.ds3client.commands.spectrads3.notifications.*;
 import com.spectralogic.ds3client.exceptions.Ds3NoMoreRetriesException;
 import com.spectralogic.ds3client.helpers.*;
+import com.spectralogic.ds3client.helpers.channelbuilders.ObjectInputStreamBuilder;
 import com.spectralogic.ds3client.helpers.events.FailureEvent;
 import com.spectralogic.ds3client.helpers.events.SameThreadEventRunner;
 import com.spectralogic.ds3client.helpers.options.WriteJobOptions;
@@ -57,6 +58,7 @@ import org.slf4j.LoggerFactory;
 import java.io.BufferedInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -1846,6 +1848,51 @@ public class PutJobManagement_Test {
 
             final Ds3ClientHelpers.Job writeJob = HELPERS.startWriteJobUsingStreamedBehavior(BUCKET_NAME, objectsToWrite);
             writeJob.transfer(new FileObjectPutter(dirPath));
+
+            final Ds3ClientHelpers ds3ClientHelpers = Ds3ClientHelpers.wrap(client);
+            final Iterable<Contents> bucketContentsIterable = ds3ClientHelpers.listObjects(BUCKET_NAME);
+
+            for (final Contents bucketContents : bucketContentsIterable) {
+                assertEquals(FILE_NAMES[0], bucketContents.getKey());
+            }
+        } finally {
+            cancelAllJobsForBucket(client, BUCKET_NAME);
+            deleteAllContents(client, BUCKET_NAME);
+        }
+    }
+
+    public class StreamObjectPutter extends ObjectInputStreamBuilder {
+        final InputStream _is;
+
+        public StreamObjectPutter(final InputStream is) {
+            _is = is;
+        }
+
+        @Override
+        public InputStream buildInputStream(final String key) {
+            return _is;
+        }
+    }
+
+    @Test
+    public void testPutJobUsingStreamedTransferStrategyAboveChunk() throws IOException, URISyntaxException {
+        final String DIR_NAME = "books/";
+        final String[] FILE_NAMES = new String[]{"Paw-3.1.9.zip"};
+
+        try {
+            final Path dirPath = ResourceUtils.loadFileResource(DIR_NAME);
+
+            final List<Ds3Object> objectsToWrite = new ArrayList<>();
+            for (final String book : FILE_NAMES) {
+                final Path objPath = ResourceUtils.loadFileResource(DIR_NAME + book);
+                final long bookSize = Files.size(objPath);
+                final Ds3Object obj = new Ds3Object(book, bookSize);
+
+                objectsToWrite.add(obj);
+            }
+
+            final Ds3ClientHelpers.Job writeJob = HELPERS.startWriteJobUsingStreamedBehavior(BUCKET_NAME, objectsToWrite, WriteJobOptions.create());
+            writeJob.transfer(new StreamObjectPutter(new FileInputStream(dirPath.resolve("Paw-3.1.9.zip").toFile())));
 
             final Ds3ClientHelpers ds3ClientHelpers = Ds3ClientHelpers.wrap(client);
             final Iterable<Contents> bucketContentsIterable = ds3ClientHelpers.listObjects(BUCKET_NAME);
