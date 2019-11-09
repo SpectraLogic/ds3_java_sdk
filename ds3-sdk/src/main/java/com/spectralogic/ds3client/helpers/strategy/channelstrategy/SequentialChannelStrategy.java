@@ -18,7 +18,10 @@ package com.spectralogic.ds3client.helpers.strategy.channelstrategy;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.SetMultimap;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers;
+import com.spectralogic.ds3client.helpers.channelbuilders.ReadOnlySeekableByteChannel;
 import com.spectralogic.ds3client.models.BulkObject;
+import com.spectralogic.ds3client.models.JobRequestType;
+import com.spectralogic.ds3client.models.MasterObjectList;
 
 import java.io.IOException;
 import java.nio.channels.SeekableByteChannel;
@@ -40,6 +43,7 @@ public class SequentialChannelStrategy implements ChannelStrategy {
     private final ChannelStrategy channelStrategyDelegate;
     private final Ds3ClientHelpers.ObjectChannelBuilder objectChannelBuilder;
     private final ChannelPreparable channelPreparer;
+    private final MasterObjectList masterObjectList;
 
     /**
      * @param channelStrategy The instance of {@link ChannelStrategy} that holds the 1 channel reference a blob needs
@@ -51,12 +55,14 @@ public class SequentialChannelStrategy implements ChannelStrategy {
      *                        either {@link TruncatingChannelPreparable} or {@link NullChannelPreparable}.
      */
     public SequentialChannelStrategy(final ChannelStrategy channelStrategy,
-                                     final Ds3ClientHelpers.ObjectChannelBuilder objectChannelBuilder,
-                                     final ChannelPreparable channelPreparer)
+            final Ds3ClientHelpers.ObjectChannelBuilder objectChannelBuilder,
+            final ChannelPreparable channelPreparer,
+            final MasterObjectList masterObjectList)
     {
         channelStrategyDelegate = channelStrategy;
         this.objectChannelBuilder = objectChannelBuilder;
         this.channelPreparer = channelPreparer;
+        this.masterObjectList = masterObjectList;
     }
 
     /**
@@ -109,10 +115,19 @@ public class SequentialChannelStrategy implements ChannelStrategy {
 
             blobNameOffsetMap.remove(blobName, blob.getOffset());
 
-            if (blobNameOffsetMap.get(blobName).size() == 0) {
+            final Long maximumOffset = masterObjectList.getObjects().stream()
+                    .flatMap(objects -> objects.getObjects().stream())
+                    .filter(bulkObject -> bulkObject.getName().equals(blobName))
+                    .map(bulkObject -> bulkObject.getOffset())
+                    .max(Long::compareTo).orElseGet(() -> blob.getOffset());
+
+            final boolean isReadOnly = ((SeekableByteChannelDecorator) seekableByteChannel).wrappedSeekableByteChannel() instanceof ReadOnlySeekableByteChannel;
+
+            if (blobNameOffsetMap.get(blobName).size() == 0 && (blob.getOffset() == maximumOffset || !(isReadOnly))) {
                 blobNameChannelMap.remove(blobName);
                 channelStrategyDelegate.releaseChannelForBlob(((SeekableByteChannelDecorator)seekableByteChannel).wrappedSeekableByteChannel(), blob);
             }
+
         }
     }
 }

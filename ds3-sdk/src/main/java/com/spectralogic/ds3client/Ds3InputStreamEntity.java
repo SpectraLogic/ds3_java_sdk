@@ -39,18 +39,14 @@ public class Ds3InputStreamEntity extends InputStreamEntity {
         this.bufferSize = bufferSize;
     }
 
-    public long getBufferSize() {
-        return bufferSize;
-    }
-
     @Override
     public void writeTo(final OutputStream outStream) throws IOException {
         final long startTime = PerformanceUtils.getCurrentTime();
         final long totalBytes = IOUtils.copy(this.getContent(), outStream, bufferSize, path, true);
         final long endTime = PerformanceUtils.getCurrentTime();
-
-        if (this.getContentLength() != -1 && totalBytes != this.getContentLength()) {
-            throw new ContentLengthNotMatchException(path, this.getContentLength(), totalBytes);
+        final long length = this.getContentLength();
+        if (length != -1 && totalBytes != length) {
+            throw new ContentLengthNotMatchException(path, length, totalBytes);
         }
 
         PerformanceUtils.logMbps(startTime, endTime, totalBytes, path, true);

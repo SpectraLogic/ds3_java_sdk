@@ -19,7 +19,6 @@ package com.spectralogic.ds3client.commands;
 import com.spectralogic.ds3client.networking.HttpVerb;
 import com.spectralogic.ds3client.commands.interfaces.AbstractRequest;
 import java.util.UUID;
-import com.google.common.net.UrlEscapers;
 import javax.annotation.Nonnull;
 import com.google.common.base.Preconditions;
 import com.spectralogic.ds3client.utils.SeekableByteChannelInputStream;
@@ -63,7 +62,7 @@ public class PutMultiPartUploadPartRequest extends AbstractRequest {
         this.stream = new SeekableByteChannelInputStream(channel);
     }
 
-    
+
     public PutMultiPartUploadPartRequest(final String bucketName, final String objectName, @Nonnull final SeekableByteChannel channel, final int partNumber, final long size, final String uploadId) {
         Preconditions.checkNotNull(channel, "Channel may not be null.");
         this.bucketName = bucketName;

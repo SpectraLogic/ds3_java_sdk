@@ -39,7 +39,7 @@ public class SeekableByteChannelInputStream extends InputStream {
             return -1;
         }
     }
-    
+
     @Override
     public int read(final byte[] b, final int off, final int len) throws IOException {
         final ByteBuffer buffer = ByteBuffer.wrap(b);
@@ -52,18 +52,18 @@ public class SeekableByteChannelInputStream extends InputStream {
             return -1;
         }
     }
-    
+
     @Override
     public long skip(final long n) throws IOException {
         this.seekableByteChannel.position(this.seekableByteChannel.position() + n);
         return this.seekableByteChannel.position();
     }
-    
+
     @Override
     public boolean markSupported() {
         return true;
     }
-    
+
     @Override
     public void mark(final int readlimit) {
         try {
@@ -72,13 +72,13 @@ public class SeekableByteChannelInputStream extends InputStream {
             throw new RuntimeException(e);
         }
     }
-    
+
     @Override
     public void reset() throws IOException {
         this.seekableByteChannel.position(this.markPosition);
         this.markPosition = 0;
     }
-    
+
     @Override
     public void close() throws IOException {
         this.seekableByteChannel.close();

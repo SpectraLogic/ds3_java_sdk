@@ -475,26 +475,13 @@ public final class TransferStrategyBuilder {
         getOrMakeTransferRetryDecorator();
 
         return makeTransferStrategy(
-                new BlobStrategyMaker() {
-                    @Override
-                    public BlobStrategy makeBlobStrategy(final Ds3Client client,
-                                                         final MasterObjectList masterObjectList,
-                                                         final EventDispatcher eventDispatcher)
-                    {
-                        return new PutSequentialBlobStrategy(ds3Client,
-                                masterObjectList,
-                                eventDispatcher,
-                                getOrMakeChunkAttemptRetryBehavior(),
-                                getOrMakeChunkAllocationRetryDelayBehavior()
-                        );
-                    }
-                },
-                new TransferMethodMaker() {
-                    @Override
-                    public TransferMethod makeTransferMethod() {
-                        return makePutTransferMethod();
-                    }
-                });
+                (client, masterObjectList, eventDispatcher) -> new PutSequentialBlobStrategy(ds3Client,
+                        masterObjectList,
+                        eventDispatcher,
+                        getOrMakeChunkAttemptRetryBehavior(),
+                        getOrMakeChunkAllocationRetryDelayBehavior()
+                ),
+                this::makePutTransferMethod);
     }
 
     private void maybeMakeStreamedPutChannelStrategy() {
@@ -502,7 +489,7 @@ public final class TransferStrategyBuilder {
             Preconditions.checkNotNull(channelBuilder, "channelBuilder my not be null");
 
             channelStrategy = new SequentialChannelStrategy(new SequentialFileReaderChannelStrategy(channelBuilder),
-                    channelBuilder, new NullChannelPreparable());
+                    channelBuilder, new NullChannelPreparable(), masterObjectList);
         }
     }
 
@@ -823,22 +810,12 @@ public final class TransferStrategyBuilder {
         getOrMakeTransferRetryDecorator();
 
         return makeTransferStrategy(
-                new BlobStrategyMaker() {
-                    @Override
-                    public BlobStrategy makeBlobStrategy(final Ds3Client client, final MasterObjectList masterObjectList, final EventDispatcher eventDispatcher) {
-                        return new GetSequentialBlobStrategy(ds3Client,
-                                masterObjectList,
-                                eventDispatcher,
-                                getOrMakeChunkAttemptRetryBehavior(),
-                                getOrMakeChunkAllocationRetryDelayBehavior());
-                    }
-                },
-                new TransferMethodMaker() {
-                    @Override
-                    public TransferMethod makeTransferMethod() {
-                        return makeGetTransferMethod();
-                    }
-                });
+                (client, masterObjectList, eventDispatcher) -> new GetSequentialBlobStrategy(ds3Client,
+                        masterObjectList,
+                        eventDispatcher,
+                        getOrMakeChunkAttemptRetryBehavior(),
+                        getOrMakeChunkAllocationRetryDelayBehavior()),
+                this::makeGetTransferMethod);
     }
 
     private void maybeMakeSequentialGetChannelStrategy() {
@@ -846,7 +823,7 @@ public final class TransferStrategyBuilder {
             Preconditions.checkNotNull(channelBuilder, "channelBuilder my not be null");
 
             channelStrategy = new SequentialChannelStrategy(new SequentialFileWriterChannelStrategy(channelBuilder),
-                    channelBuilder, new TruncatingChannelPreparable());
+                    channelBuilder, new TruncatingChannelPreparable(), masterObjectList);
         }
     }
 
