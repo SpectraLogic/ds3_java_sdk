@@ -49,15 +49,6 @@ class SeekableByteChannelDecorator implements SeekableByteChannel {
         seekableByteChannel.position(blobOffset);
     }
 
-    SeekableByteChannelDecorator(final ReadOnlySeekableByteChannel seekableByteChannel, final long blobOffset, final long blobLength) throws IOException {
-        Preconditions.checkNotNull(seekableByteChannel, "seekableByteChannel may not be null.");
-        Preconditions.checkArgument(blobOffset >= 0, "blobOffset must be >= 0.");
-        Preconditions.checkArgument(blobLength >= 0, "blobLength must be >= 0.");
-        this.seekableByteChannel = seekableByteChannel;
-        this.blobOffset = blobOffset;
-        this.blobLength = blobLength;
-    }
-
     public SeekableByteChannel wrappedSeekableByteChannel() {
         return seekableByteChannel;
     }
