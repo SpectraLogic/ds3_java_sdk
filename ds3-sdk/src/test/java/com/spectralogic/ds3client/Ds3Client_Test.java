@@ -45,6 +45,8 @@ import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.Month;
+import java.time.ZoneId;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -480,6 +482,7 @@ public class Ds3Client_Test {
 
     @Test
     public void headObjectWithMetadata() throws IOException {
+        final UUID versionId = UUID.randomUUID();
 
         final Map<String, String> responseHeaders = new HashMap<>();
         responseHeaders.put("x-amz-meta-key", "value");
@@ -487,6 +490,8 @@ public class Ds3Client_Test {
         responseHeaders.put("ds3-blob-checksum-offset-0", "4nQGNX4nyz0pi8Hvap79PQ==");
         responseHeaders.put("ds3-blob-checksum-offset-10485760", "965Aa0/n8DlO1IwXYFh4bg==");
         responseHeaders.put("ds3-blob-checksum-offset-20971520", "iV2OqJaXJ/jmqgRSb1HmFA==");
+        responseHeaders.put("creation-date", "2019-07-11T20:35:47.000Z");
+        responseHeaders.put("version-id", versionId.toString());
 
 
         final HeadObjectRequest request = new HeadObjectRequest("bucket", "obj");
@@ -510,6 +515,15 @@ public class Ds3Client_Test {
             assertTrue(response.getBlobChecksums().containsKey(entry.getKey()));
             assertThat(response.getBlobChecksums().get(entry.getKey()), is(entry.getValue()));
         }
+
+        assertThat(response.getVersionId(), is(versionId));
+        assertThat(response.getCreationDate().getYear(), is(2019));
+        assertThat(response.getCreationDate().getMonth(), is(Month.JULY));
+        assertThat(response.getCreationDate().getDayOfMonth(), is(11));
+        assertThat(response.getCreationDate().getHour(), is(20));
+        assertThat(response.getCreationDate().getMinute(), is(35));
+        assertThat(response.getCreationDate().getSecond(), is(47));
+        assertThat(response.getCreationDate().getZone(), is(ZoneId.of("Z")));
     }
 
     @Test

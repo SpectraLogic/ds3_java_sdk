@@ -20,6 +20,8 @@ import com.spectralogic.ds3client.commands.interfaces.MetadataImpl;
 import com.spectralogic.ds3client.networking.Metadata;
 import com.google.common.collect.ImmutableMap;
 import com.spectralogic.ds3client.models.ChecksumType;
+import java.time.ZonedDateTime;
+import java.util.UUID;
 import com.spectralogic.ds3client.commands.HeadObjectResponse;
 import com.spectralogic.ds3client.commands.parsers.interfaces.AbstractResponseParser;
 import com.spectralogic.ds3client.commands.parsers.utils.ResponseParserUtils;
@@ -41,10 +43,12 @@ public class HeadObjectResponseParser extends AbstractResponseParser<HeadObjectR
             case 200:
                 final ChecksumType.Type blobChecksumType = getBlobChecksumType(response.getHeaders());
                 final ImmutableMap<Long, String> blobChecksumMap = getBlobChecksumMap(response.getHeaders());
-                return new HeadObjectResponse(blobChecksumMap, blobChecksumType, metadata, objectSize, HeadObjectResponse.Status.EXISTS, this.getChecksum(), this.getChecksumType());
+                final ZonedDateTime creationDate = getCreationDate(response.getHeaders());
+                final UUID versionId = getVersionId(response.getHeaders());
+                return new HeadObjectResponse(blobChecksumMap, blobChecksumType, creationDate, metadata, objectSize, HeadObjectResponse.Status.EXISTS, versionId, this.getChecksum(), this.getChecksumType());
 
             case 404:
-                return new HeadObjectResponse(ImmutableMap.of(), ChecksumType.Type.NONE, metadata, objectSize, HeadObjectResponse.Status.DOESNTEXIST, this.getChecksum(), this.getChecksumType());
+                return new HeadObjectResponse(ImmutableMap.of(), ChecksumType.Type.NONE, null, metadata, objectSize, HeadObjectResponse.Status.DOESNTEXIST, null, this.getChecksum(), this.getChecksumType());
 
             default:
                 assert false: "validateStatusCode should have made it impossible to reach this line";

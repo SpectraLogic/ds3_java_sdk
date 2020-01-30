@@ -18,12 +18,15 @@ package com.spectralogic.ds3client.commands.parsers.utils;
 import com.google.common.collect.ImmutableMap;
 import com.spectralogic.ds3client.MockedHeaders;
 import com.spectralogic.ds3client.models.ChecksumType;
-import com.spectralogic.ds3client.networking.Headers;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.time.Month;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Map;
+import java.util.UUID;
 
 import static com.spectralogic.ds3client.commands.parsers.utils.ResponseParserUtils.*;
 import static org.hamcrest.CoreMatchers.is;
@@ -124,5 +127,36 @@ public class ResponseParserUtils_Test {
     public void getBlobChecksumTypeTest() {
         final ChecksumType.Type result = getBlobChecksumType(new MockedHeaders(TEST_RESPONSE_HEADERS));
         assertThat(result, is(ChecksumType.Type.MD5));
+    }
+
+    @Test
+    public void getCreationDateTest() {
+        final ImmutableMap<String, String> headers = ImmutableMap.of(
+                "creation-date", "2019-07-11T20:35:47.000Z",
+                "version-id", "eec64ea6-8434-492f-a068-ef516da801a3"
+        );
+
+        final ZonedDateTime result = getCreationDate(new MockedHeaders(headers));
+
+        assertThat(result.getYear(), is(2019));
+        assertThat(result.getMonth(), is(Month.JULY));
+        assertThat(result.getDayOfMonth(), is(11));
+        assertThat(result.getHour(), is(20));
+        assertThat(result.getMinute(), is(35));
+        assertThat(result.getSecond(), is(47));
+        assertThat(result.getZone(), is(ZoneId.of("Z")));
+    }
+
+    @Test
+    public void getVersionIdTest() {
+        final UUID versionId = UUID.fromString("eec64ea6-8434-492f-a068-ef516da801a3");
+
+        final ImmutableMap<String, String> headers = ImmutableMap.of(
+                "creation-date", "2019-07-11T20:35:47.000Z",
+                "version-id", versionId.toString()
+        );
+
+        final UUID result = getVersionId(new MockedHeaders(headers));
+        assertThat(result, is(versionId));
     }
 }
