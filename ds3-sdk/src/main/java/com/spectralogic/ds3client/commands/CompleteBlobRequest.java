@@ -33,6 +33,8 @@ public class CompleteBlobRequest extends AbstractRequest {
 
     private final String job;
 
+    private long size;
+
     // Constructor
     
     
@@ -60,6 +62,13 @@ public class CompleteBlobRequest extends AbstractRequest {
         this.updateQueryParam("job", job);
 
     }
+
+    public CompleteBlobRequest withSize(final long size) {
+        this.size = size;
+        this.updateQueryParam("size", size);
+        return this;
+    }
+
 
 
     @Override
@@ -89,6 +98,11 @@ public class CompleteBlobRequest extends AbstractRequest {
 
     public String getJob() {
         return this.job;
+    }
+
+
+    public long getSize() {
+        return this.size;
     }
 
 }

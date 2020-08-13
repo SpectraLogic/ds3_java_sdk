@@ -14,69 +14,39 @@
  */
 
 // This code is auto-generated, do not modify
-package com.spectralogic.ds3client.commands;
+package com.spectralogic.ds3client.commands.spectrads3;
 
 import com.spectralogic.ds3client.networking.HttpVerb;
 import com.spectralogic.ds3client.commands.interfaces.AbstractRequest;
-import java.util.UUID;
 import com.google.common.net.UrlEscapers;
 
-public class HeadObjectRequest extends AbstractRequest {
+public class GetBucketChangesNotificationRegistrationSpectraS3Request extends AbstractRequest {
 
     // Variables
     
-    private final String bucketName;
-
-    private final String objectName;
-
-    private String versionId;
+    private final String bucketChangesNotificationRegistration;
 
     // Constructor
     
     
-    public HeadObjectRequest(final String bucketName, final String objectName) {
-        this.bucketName = bucketName;
-        this.objectName = objectName;
+    public GetBucketChangesNotificationRegistrationSpectraS3Request(final String bucketChangesNotificationRegistration) {
+        this.bucketChangesNotificationRegistration = bucketChangesNotificationRegistration;
         
     }
-
-    public HeadObjectRequest withVersionId(final UUID versionId) {
-        this.versionId = versionId.toString();
-        this.updateQueryParam("version_id", versionId);
-        return this;
-    }
-
-
-    public HeadObjectRequest withVersionId(final String versionId) {
-        this.versionId = versionId;
-        this.updateQueryParam("version_id", versionId);
-        return this;
-    }
-
 
 
     @Override
     public HttpVerb getVerb() {
-        return HttpVerb.HEAD;
+        return HttpVerb.GET;
     }
 
     @Override
     public String getPath() {
-        return "/" + this.bucketName + "/" + this.objectName;
+        return "/_rest_/bucket_changes_notification_registration/" + bucketChangesNotificationRegistration;
     }
     
-    public String getBucketName() {
-        return this.bucketName;
-    }
-
-
-    public String getObjectName() {
-        return this.objectName;
-    }
-
-
-    public String getVersionId() {
-        return this.versionId;
+    public String getBucketChangesNotificationRegistration() {
+        return this.bucketChangesNotificationRegistration;
     }
 
 }

@@ -18,6 +18,7 @@ package com.spectralogic.ds3client.commands.spectrads3;
 
 import com.spectralogic.ds3client.networking.HttpVerb;
 import com.spectralogic.ds3client.commands.interfaces.AbstractRequest;
+import com.spectralogic.ds3client.models.Priority;
 import com.spectralogic.ds3client.models.Quiesced;
 import com.spectralogic.ds3client.models.ReservedTaskType;
 import java.util.UUID;
@@ -28,6 +29,8 @@ public class ModifyTapeDriveSpectraS3Request extends AbstractRequest {
     // Variables
     
     private final String tapeDriveId;
+
+    private Priority minimumTaskPriority;
 
     private Quiesced quiesced;
 
@@ -46,6 +49,13 @@ public class ModifyTapeDriveSpectraS3Request extends AbstractRequest {
         this.tapeDriveId = tapeDriveId;
         
     }
+
+    public ModifyTapeDriveSpectraS3Request withMinimumTaskPriority(final Priority minimumTaskPriority) {
+        this.minimumTaskPriority = minimumTaskPriority;
+        this.updateQueryParam("minimum_task_priority", minimumTaskPriority);
+        return this;
+    }
+
 
     public ModifyTapeDriveSpectraS3Request withQuiesced(final Quiesced quiesced) {
         this.quiesced = quiesced;
@@ -74,6 +84,11 @@ public class ModifyTapeDriveSpectraS3Request extends AbstractRequest {
     
     public String getTapeDriveId() {
         return this.tapeDriveId;
+    }
+
+
+    public Priority getMinimumTaskPriority() {
+        return this.minimumTaskPriority;
     }
 
 

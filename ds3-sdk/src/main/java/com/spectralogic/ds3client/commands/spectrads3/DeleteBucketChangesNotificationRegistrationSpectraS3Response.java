@@ -14,12 +14,15 @@
  */
 
 // This code is auto-generated, do not modify
-package com.spectralogic.ds3client.models;
+package com.spectralogic.ds3client.commands.spectrads3;
 
-public enum S3InitialDataPlacementPolicy {
-    STANDARD,
-    REDUCED_REDUNDANCY,
-    STANDARD_IA,
-    GLACIER,
-    DEEP_ARCHIVE
+import com.spectralogic.ds3client.models.ChecksumType;
+import com.spectralogic.ds3client.commands.interfaces.AbstractResponse;
+
+public class DeleteBucketChangesNotificationRegistrationSpectraS3Response extends AbstractResponse {
+    
+    public DeleteBucketChangesNotificationRegistrationSpectraS3Response(final String checksum, final ChecksumType.Type checksumType) {
+        super(checksum, checksumType);
+    }
+
 }

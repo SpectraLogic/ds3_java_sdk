@@ -67,6 +67,8 @@ public class ModifyS3TargetSpectraS3Request extends AbstractRequest {
 
     private S3Region region;
 
+    private boolean restrictedAccess;
+
     private String secretKey;
 
     private int stagedDataExpirationInDays;
@@ -205,6 +207,13 @@ public class ModifyS3TargetSpectraS3Request extends AbstractRequest {
     }
 
 
+    public ModifyS3TargetSpectraS3Request withRestrictedAccess(final boolean restrictedAccess) {
+        this.restrictedAccess = restrictedAccess;
+        this.updateQueryParam("restricted_access", restrictedAccess);
+        return this;
+    }
+
+
     public ModifyS3TargetSpectraS3Request withSecretKey(final String secretKey) {
         this.secretKey = secretKey;
         this.updateQueryParam("secret_key", secretKey);
@@ -322,6 +331,11 @@ public class ModifyS3TargetSpectraS3Request extends AbstractRequest {
 
     public S3Region getRegion() {
         return this.region;
+    }
+
+
+    public boolean getRestrictedAccess() {
+        return this.restrictedAccess;
     }
 
 
