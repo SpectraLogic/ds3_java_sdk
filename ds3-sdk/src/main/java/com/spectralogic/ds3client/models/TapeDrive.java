@@ -43,6 +43,9 @@ public class TapeDrive {
     @JsonProperty("MfgSerialNumber")
     private String mfgSerialNumber;
 
+    @JsonProperty("MinimumTaskPriority")
+    private Priority minimumTaskPriority;
+
     @JsonProperty("PartitionId")
     private UUID partitionId;
 
@@ -122,6 +125,15 @@ public class TapeDrive {
 
     public void setMfgSerialNumber(final String mfgSerialNumber) {
         this.mfgSerialNumber = mfgSerialNumber;
+    }
+
+
+    public Priority getMinimumTaskPriority() {
+        return this.minimumTaskPriority;
+    }
+
+    public void setMinimumTaskPriority(final Priority minimumTaskPriority) {
+        this.minimumTaskPriority = minimumTaskPriority;
     }
 
 

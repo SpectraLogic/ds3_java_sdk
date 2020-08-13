@@ -43,6 +43,8 @@ public class GetObjectRequest extends AbstractRequest {
 
     private final String objectName;
 
+    private boolean cachedOnly;
+
     private String job;
 
     private long offset;
@@ -127,6 +129,17 @@ public class GetObjectRequest extends AbstractRequest {
         this.updateQueryParam("offset", offset);
 
 
+    }
+
+
+    public GetObjectRequest withCachedOnly(final boolean cachedOnly) {
+        this.cachedOnly = cachedOnly;
+        if (this.cachedOnly) {
+            this.getQueryParams().put("cached_only", null);
+        } else {
+            this.getQueryParams().remove("cached_only");
+        }
+        return this;
     }
 
 
@@ -253,6 +266,11 @@ public class GetObjectRequest extends AbstractRequest {
 
     public String getObjectName() {
         return this.objectName;
+    }
+
+
+    public boolean getCachedOnly() {
+        return this.cachedOnly;
     }
 
 

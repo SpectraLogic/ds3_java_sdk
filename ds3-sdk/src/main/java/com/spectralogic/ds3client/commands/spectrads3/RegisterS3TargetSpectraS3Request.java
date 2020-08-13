@@ -64,6 +64,8 @@ public class RegisterS3TargetSpectraS3Request extends AbstractRequest {
 
     private S3Region region;
 
+    private boolean restrictedAccess;
+
     private int stagedDataExpirationInDays;
 
     // Constructor
@@ -187,6 +189,13 @@ public class RegisterS3TargetSpectraS3Request extends AbstractRequest {
     }
 
 
+    public RegisterS3TargetSpectraS3Request withRestrictedAccess(final boolean restrictedAccess) {
+        this.restrictedAccess = restrictedAccess;
+        this.updateQueryParam("restricted_access", restrictedAccess);
+        return this;
+    }
+
+
     public RegisterS3TargetSpectraS3Request withStagedDataExpirationInDays(final int stagedDataExpirationInDays) {
         this.stagedDataExpirationInDays = stagedDataExpirationInDays;
         this.updateQueryParam("staged_data_expiration_in_days", stagedDataExpirationInDays);
@@ -292,6 +301,11 @@ public class RegisterS3TargetSpectraS3Request extends AbstractRequest {
 
     public S3Region getRegion() {
         return this.region;
+    }
+
+
+    public boolean getRestrictedAccess() {
+        return this.restrictedAccess;
     }
 
 

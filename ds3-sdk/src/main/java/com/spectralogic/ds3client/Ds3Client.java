@@ -965,6 +965,13 @@ public interface Ds3Client extends Closeable {
     PutAzureTargetFailureNotificationRegistrationSpectraS3Response putAzureTargetFailureNotificationRegistrationSpectraS3(final PutAzureTargetFailureNotificationRegistrationSpectraS3Request request)
             throws IOException;
 
+    @ResponsePayloadModel("BucketChangesNotificationRegistration")
+    @Action("CREATE")
+    @Resource("BUCKET_CHANGES_NOTIFICATION_REGISTRATION")
+    
+    PutBucketChangesNotificationRegistrationSpectraS3Response putBucketChangesNotificationRegistrationSpectraS3(final PutBucketChangesNotificationRegistrationSpectraS3Request request)
+            throws IOException;
+
     @ResponsePayloadModel("Ds3TargetFailureNotificationRegistration")
     @Action("CREATE")
     @Resource("DS3_TARGET_FAILURE_NOTIFICATION_REGISTRATION")
@@ -1063,6 +1070,12 @@ public interface Ds3Client extends Closeable {
             throws IOException;
 
     @Action("DELETE")
+    @Resource("BUCKET_CHANGES_NOTIFICATION_REGISTRATION")
+    
+    DeleteBucketChangesNotificationRegistrationSpectraS3Response deleteBucketChangesNotificationRegistrationSpectraS3(final DeleteBucketChangesNotificationRegistrationSpectraS3Request request)
+            throws IOException;
+
+    @Action("DELETE")
     @Resource("DS3_TARGET_FAILURE_NOTIFICATION_REGISTRATION")
     
     DeleteDs3TargetFailureNotificationRegistrationSpectraS3Response deleteDs3TargetFailureNotificationRegistrationSpectraS3(final DeleteDs3TargetFailureNotificationRegistrationSpectraS3Request request)
@@ -1152,6 +1165,27 @@ public interface Ds3Client extends Closeable {
     @Resource("AZURE_TARGET_FAILURE_NOTIFICATION_REGISTRATION")
     
     GetAzureTargetFailureNotificationRegistrationsSpectraS3Response getAzureTargetFailureNotificationRegistrationsSpectraS3(final GetAzureTargetFailureNotificationRegistrationsSpectraS3Request request)
+            throws IOException;
+
+    @ResponsePayloadModel("BucketChangesNotificationRegistration")
+    @Action("SHOW")
+    @Resource("BUCKET_CHANGES_NOTIFICATION_REGISTRATION")
+    
+    GetBucketChangesNotificationRegistrationSpectraS3Response getBucketChangesNotificationRegistrationSpectraS3(final GetBucketChangesNotificationRegistrationSpectraS3Request request)
+            throws IOException;
+
+    @ResponsePayloadModel("BucketChangesNotificationRegistrationList")
+    @Action("LIST")
+    @Resource("BUCKET_CHANGES_NOTIFICATION_REGISTRATION")
+    
+    GetBucketChangesNotificationRegistrationsSpectraS3Response getBucketChangesNotificationRegistrationsSpectraS3(final GetBucketChangesNotificationRegistrationsSpectraS3Request request)
+            throws IOException;
+
+    @ResponsePayloadModel("BucketHistoryEventList")
+    @Action("LIST")
+    @Resource("BUCKET_HISTORY")
+    
+    GetBucketHistorySpectraS3Response getBucketHistorySpectraS3(final GetBucketHistorySpectraS3Request request)
             throws IOException;
 
     @ResponsePayloadModel("Ds3TargetFailureNotificationRegistration")

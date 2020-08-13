@@ -85,6 +85,9 @@ public class S3Target {
     @JsonProperty("Region")
     private S3Region region;
 
+    @JsonProperty("RestrictedAccess")
+    private boolean restrictedAccess;
+
     @JsonProperty("SecretKey")
     private String secretKey;
 
@@ -278,6 +281,15 @@ public class S3Target {
 
     public void setRegion(final S3Region region) {
         this.region = region;
+    }
+
+
+    public boolean getRestrictedAccess() {
+        return this.restrictedAccess;
+    }
+
+    public void setRestrictedAccess(final boolean restrictedAccess) {
+        this.restrictedAccess = restrictedAccess;
     }
 
 

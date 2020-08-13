@@ -16,10 +16,9 @@
 // This code is auto-generated, do not modify
 package com.spectralogic.ds3client.models;
 
-public enum S3InitialDataPlacementPolicy {
-    STANDARD,
-    REDUCED_REDUNDANCY,
-    STANDARD_IA,
-    GLACIER,
-    DEEP_ARCHIVE
+public enum BucketHistoryEventType {
+    DELETE,
+    MARK_LATEST,
+    UNMARK_LATEST,
+    CREATE
 }
