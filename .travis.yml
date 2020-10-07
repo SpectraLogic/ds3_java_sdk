@@ -2,3 +2,4 @@ language: java
 jdk:
   - oraclejdk8
 script: ./gradlew -S clean jar ds3-sdk:test ds3-utils:test ds3-metadata:test
+dist: trusty
