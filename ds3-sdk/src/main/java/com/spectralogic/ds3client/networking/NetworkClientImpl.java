@@ -60,6 +60,7 @@ import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SignatureException;
 import java.util.Map;
+import java.util.concurrent.Semaphore;
 
 import static com.spectralogic.ds3client.utils.Signature.canonicalizeAmzHeaders;
 import static com.spectralogic.ds3client.utils.Signature.canonicalizeResource;
@@ -86,6 +87,7 @@ public class NetworkClientImpl implements NetworkClient {
 
     final private CloseableHttpClient client;
     final private HttpHost host;
+    final private Semaphore clientLock;
 
     public NetworkClientImpl(final ConnectionDetails connectionDetails) {
         this(connectionDetails, createDefaultClient(connectionDetails));
@@ -98,6 +100,7 @@ public class NetworkClientImpl implements NetworkClient {
             this.connectionDetails = connectionDetails;
             this.host = buildHost(connectionDetails);
             this.client = client;
+            this.clientLock = new Semaphore(MAX_CONNECTION_PER_ROUTE);
         } catch (final MalformedURLException e) {
             throw new RuntimeException(e);
         }
@@ -229,11 +232,16 @@ public class NetworkClientImpl implements NetworkClient {
             }
 
             final HttpRequest httpRequest = this.buildHttpRequest();
-            this.addHeaders(httpRequest);
+            clientLock.acquireUninterruptibly();
             try {
-                return client.execute(this.host, httpRequest, this.getContext());
-            } catch (final javax.net.ssl.SSLHandshakeException e) {
-                throw new InvalidCertificate("The certificate on black pearl is not a strong certificate and the request is being aborted.  Configure with the insecure option to perform the request.", e);
+                this.addHeaders(httpRequest);
+                try {
+                    return client.execute(this.host, httpRequest, this.getContext());
+                } catch (final javax.net.ssl.SSLHandshakeException e) {
+                    throw new InvalidCertificate("The certificate on black pearl is not a strong certificate and the request is being aborted.  Configure with the insecure option to perform the request.", e);
+                }
+            } finally {
+                clientLock.release();
             }
         }
 
