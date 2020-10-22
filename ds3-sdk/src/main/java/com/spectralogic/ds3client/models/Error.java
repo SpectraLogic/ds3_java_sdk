@@ -20,9 +20,11 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 
+import java.io.Serializable;
+
 @JacksonXmlRootElement(namespace = "Error")
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Error {
+public class Error implements Serializable {
 
     // Variables
     @JsonProperty("Code")
