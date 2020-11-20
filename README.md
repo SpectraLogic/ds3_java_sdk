@@ -1,7 +1,7 @@
 ds3_java_sdk
 ============
 
-[![Build Status](https://travis-ci.org/SpectraLogic/ds3_java_sdk.svg)](https://travis-ci.org/SpectraLogic/ds3_java_sdk)
+[![Build Status](https://travis-ci.com/SpectraLogic/ds3_java_sdk.svg)](https://travis-ci.com/SpectraLogic/ds3_java_sdk)
 <a href="https://scan.coverity.com/projects/4624">
   <img alt="Coverity Scan Build Status"
        src="https://scan.coverity.com/projects/4624/badge.svg"/>
