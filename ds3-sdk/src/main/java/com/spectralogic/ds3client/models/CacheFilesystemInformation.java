@@ -36,6 +36,9 @@ public class CacheFilesystemInformation {
     @JacksonXmlElementWrapper(useWrapping = false)
     private List<CacheEntryInformation> entries = new ArrayList<>();
 
+    @JsonProperty("JobLockedCacheInBytes")
+    private long jobLockedCacheInBytes;
+
     @JsonProperty("Summary")
     private String summary;
 
@@ -79,6 +82,15 @@ public class CacheFilesystemInformation {
 
     public void setEntries(final List<CacheEntryInformation> entries) {
         this.entries = entries;
+    }
+
+
+    public long getJobLockedCacheInBytes() {
+        return this.jobLockedCacheInBytes;
+    }
+
+    public void setJobLockedCacheInBytes(final long jobLockedCacheInBytes) {
+        this.jobLockedCacheInBytes = jobLockedCacheInBytes;
     }
 
 

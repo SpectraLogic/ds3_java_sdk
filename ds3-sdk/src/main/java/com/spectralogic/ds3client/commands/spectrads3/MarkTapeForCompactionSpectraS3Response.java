@@ -14,32 +14,23 @@
  */
 
 // This code is auto-generated, do not modify
-package com.spectralogic.ds3client.models;
+package com.spectralogic.ds3client.commands.spectrads3;
 
-public enum TapeFailureType {
-    BAR_CODE_CHANGED,
-    BAR_CODE_DUPLICATE,
-    BLOB_READ_FAILED,
-    DATA_CHECKPOINT_FAILURE,
-    DATA_CHECKPOINT_FAILURE_DUE_TO_READ_ONLY,
-    DATA_CHECKPOINT_MISSING,
-    DELAYED_OWNERSHIP_FAILURE,
-    DRIVE_CLEAN_FAILED,
-    DRIVE_CLEANED,
-    ENCRYPTION_ERROR,
-    FORMAT_FAILED,
-    GET_TAPE_INFORMATION_FAILED,
-    HARDWARE_ERROR,
-    IMPORT_FAILED,
-    IMPORT_INCOMPLETE,
-    IMPORT_FAILED_DUE_TO_TAKE_OWNERSHIP_FAILURE,
-    IMPORT_FAILED_DUE_TO_DATA_INTEGRITY,
-    INCOMPATIBLE,
-    INSPECT_FAILED,
-    QUIESCING_DRIVE,
-    READ_FAILED,
-    REIMPORT_REQUIRED,
-    SERIAL_NUMBER_MISMATCH,
-    VERIFY_FAILED,
-    WRITE_FAILED
+import com.spectralogic.ds3client.models.Tape;
+import com.spectralogic.ds3client.models.ChecksumType;
+import com.spectralogic.ds3client.commands.interfaces.AbstractResponse;
+
+public class MarkTapeForCompactionSpectraS3Response extends AbstractResponse {
+    
+    private final Tape tapeResult;
+
+    public MarkTapeForCompactionSpectraS3Response(final Tape tapeResult, final String checksum, final ChecksumType.Type checksumType) {
+        super(checksum, checksumType);
+        this.tapeResult = tapeResult;
+    }
+
+    public Tape getTapeResult() {
+        return this.tapeResult;
+    }
+
 }

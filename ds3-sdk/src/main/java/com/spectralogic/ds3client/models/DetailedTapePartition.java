@@ -30,6 +30,12 @@ public class DetailedTapePartition {
     @JsonProperty("AutoCompactionEnabled")
     private boolean autoCompactionEnabled;
 
+    @JsonProperty("AutoQuiesceEnabled")
+    private boolean autoQuiesceEnabled;
+
+    @JsonProperty("DriveIdleTimeoutInMinutes")
+    private Integer driveIdleTimeoutInMinutes;
+
     @JsonProperty("DriveType")
     private TapeDriveType driveType;
 
@@ -84,6 +90,24 @@ public class DetailedTapePartition {
 
     public void setAutoCompactionEnabled(final boolean autoCompactionEnabled) {
         this.autoCompactionEnabled = autoCompactionEnabled;
+    }
+
+
+    public boolean getAutoQuiesceEnabled() {
+        return this.autoQuiesceEnabled;
+    }
+
+    public void setAutoQuiesceEnabled(final boolean autoQuiesceEnabled) {
+        this.autoQuiesceEnabled = autoQuiesceEnabled;
+    }
+
+
+    public Integer getDriveIdleTimeoutInMinutes() {
+        return this.driveIdleTimeoutInMinutes;
+    }
+
+    public void setDriveIdleTimeoutInMinutes(final Integer driveIdleTimeoutInMinutes) {
+        this.driveIdleTimeoutInMinutes = driveIdleTimeoutInMinutes;
     }
 
 

@@ -1258,6 +1258,10 @@ public class Ds3ClientImpl implements Ds3Client {
         return new InspectTapeSpectraS3ResponseParser().response(this.netClient.getResponse(request));
     }
     @Override
+    public MarkTapeForCompactionSpectraS3Response markTapeForCompactionSpectraS3(final MarkTapeForCompactionSpectraS3Request request) throws IOException {
+        return new MarkTapeForCompactionSpectraS3ResponseParser().response(this.netClient.getResponse(request));
+    }
+    @Override
     public ModifyAllTapePartitionsSpectraS3Response modifyAllTapePartitionsSpectraS3(final ModifyAllTapePartitionsSpectraS3Request request) throws IOException {
         return new ModifyAllTapePartitionsSpectraS3ResponseParser().response(this.netClient.getResponse(request));
     }
