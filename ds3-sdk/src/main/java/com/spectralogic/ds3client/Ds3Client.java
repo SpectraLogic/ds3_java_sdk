@@ -2050,6 +2050,13 @@ public interface Ds3Client extends Closeable {
     InspectTapeSpectraS3Response inspectTapeSpectraS3(final InspectTapeSpectraS3Request request)
             throws IOException;
 
+    @ResponsePayloadModel("Tape")
+    @Action("MODIFY")
+    @Resource("TAPE")
+    
+    MarkTapeForCompactionSpectraS3Response markTapeForCompactionSpectraS3(final MarkTapeForCompactionSpectraS3Request request)
+            throws IOException;
+
     @Action("BULK_MODIFY")
     @Resource("TAPE_PARTITION")
     

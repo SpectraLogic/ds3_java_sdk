@@ -40,6 +40,9 @@ public class TapeDrive {
     @JsonProperty("LastCleaned")
     private Date lastCleaned;
 
+    @JsonProperty("MaxFailedTapes")
+    private Integer maxFailedTapes;
+
     @JsonProperty("MfgSerialNumber")
     private String mfgSerialNumber;
 
@@ -116,6 +119,15 @@ public class TapeDrive {
 
     public void setLastCleaned(final Date lastCleaned) {
         this.lastCleaned = lastCleaned;
+    }
+
+
+    public Integer getMaxFailedTapes() {
+        return this.maxFailedTapes;
+    }
+
+    public void setMaxFailedTapes(final Integer maxFailedTapes) {
+        this.maxFailedTapes = maxFailedTapes;
     }
 
 
