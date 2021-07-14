@@ -51,10 +51,7 @@ import java.nio.channels.FileChannel;
 import java.nio.channels.SeekableByteChannel;
 import java.nio.charset.Charset;
 import java.nio.file.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -378,6 +375,14 @@ public class Smoke_Test {
         }
     }
 
+    private Map< String, Set< UUID >> objectsToMap(final Iterable<Contents> objs) {
+        Map<String, Set<UUID>> objMap = new HashMap<>();
+        for (Contents next : objs) {
+            objMap.put(next.getKey(), null);
+        }
+        return objMap;
+    }
+
     @Test
     public void multiObjectDeleteNotQuiet() throws IOException, URISyntaxException {
         final String bucketName = "multi_object_delete";
@@ -388,7 +393,7 @@ public class Smoke_Test {
 
             final Iterable<Contents> objs = HELPERS.listObjects(bucketName);
             final DeleteObjectsResponse response = client
-                    .deleteObjects(new DeleteObjectsRequest(bucketName, objs).withQuiet(false));
+                    .deleteObjects(new DeleteObjectsRequest(bucketName, objectsToMap(objs)).withQuiet(false));
             assertThat(response, is(notNullValue()));
             assertThat(response.getDeleteResult(), is(notNullValue()));
             assertThat(response.getDeleteResult().getDeletedObjects().size(), is(4));
@@ -410,7 +415,7 @@ public class Smoke_Test {
 
             final Iterable<Contents> objs = HELPERS.listObjects(bucketName);
             final DeleteObjectsResponse response = client
-                    .deleteObjects(new DeleteObjectsRequest(bucketName, objs).withQuiet(true));
+                    .deleteObjects(new DeleteObjectsRequest(bucketName, objectsToMap(objs)).withQuiet(true));
             assertThat(response, is(notNullValue()));
             assertThat(response.getDeleteResult(), is(notNullValue()));
             assertThat(response.getDeleteResult().getDeletedObjects().size(), is(0));
@@ -429,7 +434,11 @@ public class Smoke_Test {
         try {
             HELPERS.ensureBucketExists(bucketName, envDataPolicyId);
 
-            final List<String> objList = Lists.newArrayList("badObj1.txt", "badObj2.txt", "badObj3.txt");
+            final Map<String, Set<UUID>> objList = new HashMap<>();
+            objList.put("badObj1.txt", null);
+            objList.put("badObj2.txt", null);
+            objList.put("badObj3.txt", null);
+
             final DeleteObjectsResponse response = client
                     .deleteObjects(new DeleteObjectsRequest(bucketName, objList));
             assertThat(response, is(notNullValue()));

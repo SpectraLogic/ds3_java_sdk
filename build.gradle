@@ -15,7 +15,7 @@
 
 allprojects {
     group = 'com.spectralogic.ds3'
-    version = '3.2.8-COMPAT-4'
+    version = '3.2.8-COMPAT-5'
 }
 
 subprojects {
@@ -23,7 +23,7 @@ subprojects {
     apply plugin: 'java'
     apply plugin: 'findbugs'
 
-    sourceCompatibility = JavaVersion.VERSION_1_7
+    sourceCompatibility = JavaVersion.VERSION_1_8
     repositories {
         mavenCentral()
         mavenLocal()
@@ -41,7 +41,7 @@ subprojects {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '3.1'
+    gradleVersion = '4.6'
 }
 
 project(':ds3-sdk-integration') {
