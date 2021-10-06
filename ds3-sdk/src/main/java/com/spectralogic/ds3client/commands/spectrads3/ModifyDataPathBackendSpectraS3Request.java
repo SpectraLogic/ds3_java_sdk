@@ -41,7 +41,11 @@ public class ModifyDataPathBackendSpectraS3Request extends AbstractRequest {
 
     private boolean defaultVerifyDataPriorToImport;
 
+    private double iomCacheLimitationPercent;
+
     private boolean iomEnabled;
+
+    private int maxAggregatedBlobsPerChunk;
 
     private Integer partiallyVerifyLastPercentOfTapes;
 
@@ -107,9 +111,23 @@ public class ModifyDataPathBackendSpectraS3Request extends AbstractRequest {
     }
 
 
+    public ModifyDataPathBackendSpectraS3Request withIomCacheLimitationPercent(final double iomCacheLimitationPercent) {
+        this.iomCacheLimitationPercent = iomCacheLimitationPercent;
+        this.updateQueryParam("iom_cache_limitation_percent", iomCacheLimitationPercent);
+        return this;
+    }
+
+
     public ModifyDataPathBackendSpectraS3Request withIomEnabled(final boolean iomEnabled) {
         this.iomEnabled = iomEnabled;
         this.updateQueryParam("iom_enabled", iomEnabled);
+        return this;
+    }
+
+
+    public ModifyDataPathBackendSpectraS3Request withMaxAggregatedBlobsPerChunk(final int maxAggregatedBlobsPerChunk) {
+        this.maxAggregatedBlobsPerChunk = maxAggregatedBlobsPerChunk;
+        this.updateQueryParam("max_aggregated_blobs_per_chunk", maxAggregatedBlobsPerChunk);
         return this;
     }
 
@@ -188,8 +206,18 @@ public class ModifyDataPathBackendSpectraS3Request extends AbstractRequest {
     }
 
 
+    public double getIomCacheLimitationPercent() {
+        return this.iomCacheLimitationPercent;
+    }
+
+
     public boolean getIomEnabled() {
         return this.iomEnabled;
+    }
+
+
+    public int getMaxAggregatedBlobsPerChunk() {
+        return this.maxAggregatedBlobsPerChunk;
     }
 
 
