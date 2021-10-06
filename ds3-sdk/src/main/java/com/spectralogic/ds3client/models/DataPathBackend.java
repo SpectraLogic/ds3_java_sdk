@@ -52,11 +52,17 @@ public class DataPathBackend {
     @JsonProperty("InstanceId")
     private UUID instanceId;
 
+    @JsonProperty("IomCacheLimitationPercent")
+    private double iomCacheLimitationPercent;
+
     @JsonProperty("IomEnabled")
     private boolean iomEnabled;
 
     @JsonProperty("LastHeartbeat")
     private Date lastHeartbeat;
+
+    @JsonProperty("MaxAggregatedBlobsPerChunk")
+    private int maxAggregatedBlobsPerChunk;
 
     @JsonProperty("PartiallyVerifyLastPercentOfTapes")
     private Integer partiallyVerifyLastPercentOfTapes;
@@ -158,6 +164,15 @@ public class DataPathBackend {
     }
 
 
+    public double getIomCacheLimitationPercent() {
+        return this.iomCacheLimitationPercent;
+    }
+
+    public void setIomCacheLimitationPercent(final double iomCacheLimitationPercent) {
+        this.iomCacheLimitationPercent = iomCacheLimitationPercent;
+    }
+
+
     public boolean getIomEnabled() {
         return this.iomEnabled;
     }
@@ -173,6 +188,15 @@ public class DataPathBackend {
 
     public void setLastHeartbeat(final Date lastHeartbeat) {
         this.lastHeartbeat = lastHeartbeat;
+    }
+
+
+    public int getMaxAggregatedBlobsPerChunk() {
+        return this.maxAggregatedBlobsPerChunk;
+    }
+
+    public void setMaxAggregatedBlobsPerChunk(final int maxAggregatedBlobsPerChunk) {
+        this.maxAggregatedBlobsPerChunk = maxAggregatedBlobsPerChunk;
     }
 
 

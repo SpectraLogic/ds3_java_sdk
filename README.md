@@ -91,3 +91,20 @@ bridges, please see [SLF4j.org](http://www.slf4j.org/manual.html).
 In addition to unit tests in the main `ds3-sdk` module, there are additional integration tests in the `ds3-integration` module.  Please see the integration [README](ds3-sdk-integration/README.md) for details on running the tests.  To just run the SDK's unit tests use:
 
     ./gradlew clean ds3-sdk:test
+
+## Creating a New Release
+
+Update the version of the SDK before creating a new release. The format is `<major>.<minor>.<patch>`, where the 
+`<major>.<minor>` numbers must match the version of BP. The `<patch>` is an incrementing number that increments with 
+each SDK release for a given major/minor release.
+
+The build number is specified in the `build.gradle` file:
+
+```
+allprojects {
+    group = 'com.spectralogic.ds3'
+    version = '5.4.0'
+}
+```
+
+When a release is created in github, it is automatically published on [jitpack.io](https://jitpack.io/#SpectraLogic/ds3_java_sdk).
