@@ -26,42 +26,50 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import com.spectralogic.ds3client.commands.interfaces.AbstractRequest;
 
 public class DeleteObjectsRequest extends AbstractRequest {
 
     // Variables
-    private final List<String> objects;
-    
+    private final List<DeleteObject> objects;
+
     private final String bucketName;
     private boolean quiet = false;
     private long size;
 
     // Constructor
-    
-    
+
+
     public DeleteObjectsRequest(final String bucketName, final List<String> objects) {
         this.bucketName = bucketName;
-        this.objects = objects;
-        
+
         this.getQueryParams().put("delete", null);
+        this.objects = namesToDeleteObjects(objects);
     }
 
-    
-    public DeleteObjectsRequest(final String bucketName, final Iterable<Contents> objs) {
+
+    public DeleteObjectsRequest(final String bucketName, final Iterable<Contents> objects) {
         this.bucketName = bucketName;
-        
+
         this.getQueryParams().put("delete", null);
-        this.objects = contentsToString(objs);
+        this.objects = contentsToDeleteObjects(objects);
     }
 
-    private static List<String> contentsToString(final Iterable<Contents> objs) {
-        final List<String> objKeyList = new ArrayList<>();
-        for (final Contents obj : objs) {
-            objKeyList.add(obj.getKey());
+    private static List<DeleteObject> contentsToDeleteObjects(final Iterable<Contents> objects) {
+        final List<DeleteObject> objectsToDelete = new ArrayList<>();
+        for (final Contents obj : objects) {
+            objectsToDelete.add(new DeleteObject(obj.getKey(), obj.getVersionId()));
         }
-        return objKeyList;
+        return objectsToDelete;
+    }
+
+    private static List<DeleteObject> namesToDeleteObjects(final Iterable<String> objNames) {
+        final List<DeleteObject> objectsToDelete = new ArrayList<>();
+        for (final String objName : objNames) {
+            objectsToDelete.add(new DeleteObject(objName));
+        }
+        return objectsToDelete;
     }
 
 
@@ -75,16 +83,10 @@ public class DeleteObjectsRequest extends AbstractRequest {
 
         final Delete delete = new Delete();
         delete.setQuiet(quiet);
-        final List<DeleteObject> deleteObjects = new ArrayList<>();
-
-        for(final String objName : objects) {
-            deleteObjects.add(new DeleteObject(objName));
-        }
-
-        delete.setDeleteObjectList(deleteObjects);
+        delete.setDeleteObjectList(objects);
 
         final String xmlOutput = XmlOutput.toXml(delete);
-        final byte[] stringBytes = xmlOutput.getBytes(Charset.forName("UTF-8"));
+        final byte[] stringBytes = xmlOutput.getBytes(StandardCharsets.UTF_8);
         this.size = stringBytes.length;
 
         return new ByteArrayInputStream(stringBytes);
@@ -99,7 +101,7 @@ public class DeleteObjectsRequest extends AbstractRequest {
     public String getPath() {
         return "/" + this.bucketName;
     }
-    public List<String> getObjects() {
+    public List<DeleteObject> getObjects() {
         return this.objects;
     }
 
@@ -109,7 +111,7 @@ public class DeleteObjectsRequest extends AbstractRequest {
     }
 
 
-    
+
     public String getBucketName() {
         return this.bucketName;
     }
