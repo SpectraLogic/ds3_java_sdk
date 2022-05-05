@@ -15,15 +15,27 @@
 
 package com.spectralogic.ds3client.models.delete;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.util.UUID;
+
+@JsonInclude( JsonInclude.Include.NON_NULL )
 public class DeleteObject {
 
     @JsonProperty("Key")
     private String key;
 
-    public DeleteObject(final String key) {
+    @JsonProperty("VersionId")
+    private UUID versionId;
+
+    public DeleteObject(final String key, final UUID versionId) {
         this.key = key;
+        this.versionId = versionId;
+    }
+
+    public DeleteObject(final String key) {
+        this(key, null);
     }
 
     public String getKey() {
@@ -32,5 +44,17 @@ public class DeleteObject {
 
     public void setKey(final String key) {
         this.key = key;
+    }
+
+
+    public UUID getVersionId()
+    {
+        return versionId;
+    }
+
+
+    public void setVersionId( final UUID versionId )
+    {
+        this.versionId = versionId;
     }
 }
