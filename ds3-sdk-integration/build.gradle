@@ -14,9 +14,12 @@
  */
 
 dependencies {
-    compile "commons-codec:commons-codec:$commonscodecVersion"
-    compile "junit:junit:$junitVersion"
-    testCompile "org.hamcrest:hamcrest-library:$hamcrestVersion"
-    testCompile group: 'org.apache.commons', name: 'commons-lang3', version: "$commonslangVersion"
+    implementation "commons-io:commons-io:$commonsioVersion"
+    implementation "commons-codec:commons-codec:$commonscodecVersion"
+    implementation "org.apache.httpcomponents:httpclient:$httpclientVersion"
+    implementation "com.google.guava:guava:$guavaVersion"
+    implementation "junit:junit:$junitVersion"
+    testImplementation "org.hamcrest:hamcrest-library:$hamcrestVersion"
+    testImplementation group: 'org.apache.commons', name: 'commons-lang3', version: "$commonslangVersion"
 }
 

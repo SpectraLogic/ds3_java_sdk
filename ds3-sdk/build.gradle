@@ -69,13 +69,13 @@ task genConfigProperties {
     }
 }
 
-task zip(type: Zip) {
-  from configurations.runtime.allArtifacts.files
-  from configurations.runtime
-  into (project.name + "-" + project.version)
-}
+//task zip(type: Zip) {
+//  from configurations.runtime.allArtifacts.files
+//  from configurations.runtime
+//  into (project.name + "-" + project.version)
+//}
 
-zip.dependsOn jar
+//zip.dependsOn jar
 
 jar {
     from sourceSets.main.allJava
@@ -85,12 +85,13 @@ jar.dependsOn genConfigProperties
 shadowJar.dependsOn genConfigProperties
 
 dependencies {
-    compile     "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    compile     "org.apache.httpcomponents:httpclient:$httpclientVersion"
-    compile     "com.fasterxml.jackson.datatype:jackson-datatype-jdk8:$jacksonVersion"
-    compile     "com.fasterxml.jackson.dataformat:jackson-dataformat-xml:$jacksonVersion"
-    compile     "com.google.guava:guava:$guavaVersion"
-    compile     'org.codehaus.woodstox:woodstox-core-asl:4.4.1'
-    compile     'com.google.code.findbugs:annotations:3.0.1'
-    testCompile "org.hamcrest:hamcrest-library:$hamcrestVersion"
+    implementation     "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    implementation     "commons-io:commons-io:$commonsioVersion"
+    implementation     "org.apache.httpcomponents:httpclient:$httpclientVersion"
+    implementation     "com.fasterxml.jackson.datatype:jackson-datatype-jdk8:$jacksonVersion"
+    implementation     "com.fasterxml.jackson.dataformat:jackson-dataformat-xml:$jacksonVersion"
+    implementation     "com.google.guava:guava:$guavaVersion"
+    implementation     'org.codehaus.woodstox:woodstox-core-asl:4.4.1'
+    implementation     'com.google.code.findbugs:annotations:3.0.1'
+    testImplementation "org.hamcrest:hamcrest-library:$hamcrestVersion"
 }

@@ -42,10 +42,12 @@ artifacts {
 }
 
 dependencies {
-    compile     group: 'net.java.dev.jna', name: 'jna-platform', version: "$jnaVersion"
-    compile     group: 'net.java.dev.jna', name: 'jna', version: "$jnaVersion"
-    compile     "commons-io:commons-io:$commonsioVersion"
-    compile     "org.apache.httpcomponents:httpclient:$httpclientVersion"
+    implementation     group: 'net.java.dev.jna', name: 'jna-platform', version: "$jnaVersion"
+    implementation     group: 'net.java.dev.jna', name: 'jna', version: "$jnaVersion"
+    implementation     "commons-io:commons-io:$commonsioVersion"
+    implementation     "org.apache.httpcomponents:httpclient:$httpclientVersion"
+    implementation     "com.google.guava:guava:$guavaVersion"
 
-    testCompile group: 'org.apache.commons', name: 'commons-lang3', version: "$commonslangVersion"
+
+    testImplementation group: 'org.apache.commons', name: 'commons-lang3', version: "$commonslangVersion"
 }

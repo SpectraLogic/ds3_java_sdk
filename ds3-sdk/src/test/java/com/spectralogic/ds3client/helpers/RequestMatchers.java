@@ -34,6 +34,7 @@ import java.util.UUID;
 
 import static org.mockito.Matchers.argThat;
 
+
 public final class RequestMatchers {
     public static GetBulkJobSpectraS3Request hasChunkOrdering(final JobChunkClientProcessingOrderGuarantee chunkOrdering) {
         return argThat(new TypeSafeMatcher<GetBulkJobSpectraS3Request>() {

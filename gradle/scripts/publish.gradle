@@ -13,26 +13,24 @@
  * ****************************************************************************
  */
 
-apply plugin: 'com.jfrog.bintray'
-
-bintray {
-    user = System.getenv('BINTRAY_USER')
-    key = System.getenv('BINTRAY_KEY')
-
-    configurations = ['archives']
-
-    //dryRun = true
-    //publish = true
-
-    pkg {
-        name = "$project.name"
-        repo = "ds3"
-        userOrg = "spectralogic"
-        websiteUrl = "https://github.com/SpectraLogic/ds3_java_sdk"
-        vcsUrl = "https://github.com/SpectraLogic/ds3_java_sdk.git"
-        licenses = ['Apache-2.0']
-        version {
-            name = "$project.version"
-        }
-    }
-}
+//bintray {
+//    user = System.getenv('BINTRAY_USER')
+//    key = System.getenv('BINTRAY_KEY')
+//
+//    configurations = ['archives']
+//
+//    //dryRun = true
+//    //publish = true
+//
+//    pkg {
+//        name = "$project.name"
+//        repo = "ds3"
+//        userOrg = "spectralogic"
+//        websiteUrl = "https://github.com/SpectraLogic/ds3_java_sdk"
+//        vcsUrl = "https://github.com/SpectraLogic/ds3_java_sdk.git"
+//        licenses = ['Apache-2.0']
+//        version {
+//            name = "$project.version"
+//        }
+//    }
+//}
