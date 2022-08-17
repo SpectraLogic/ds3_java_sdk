@@ -1,6 +1,6 @@
 /*
  * ******************************************************************************
- *   Copyright 2014-2019 Spectra Logic Corporation. All Rights Reserved.
+ *   Copyright 2014-2022 Spectra Logic Corporation. All Rights Reserved.
  *   Licensed under the Apache License, Version 2.0 (the "License"). You may not use
  *   this file except in compliance with the License. A copy of the License is located at
  *
@@ -23,16 +23,14 @@ import com.spectralogic.ds3client.commands.spectrads3.GetBulkJobSpectraS3Request
 import com.spectralogic.ds3client.commands.spectrads3.GetJobChunksReadyForClientProcessingSpectraS3Request;
 import com.spectralogic.ds3client.models.JobChunkClientProcessingOrderGuarantee;
 import org.apache.commons.io.IOUtils;
-import org.hamcrest.Description;
-import org.hamcrest.TypeSafeMatcher;
-import org.mockito.ArgumentMatcher;
+import org.hamcrest.*;
 
 import java.io.IOException;
 import java.nio.channels.Channels;
 import java.nio.channels.SeekableByteChannel;
-import java.util.UUID;
+import java.util.*;
 
-import static org.mockito.Matchers.argThat;
+import static org.mockito.hamcrest.MockitoHamcrest.*;
 
 
 public final class RequestMatchers {
@@ -212,22 +210,34 @@ public final class RequestMatchers {
             throw new RuntimeException(e);
         }
     }
-    
+
     public static GetBucketRequest getBucketHas(final String bucket, final String marker) {
-        return argThat(new ArgumentMatcher<GetBucketRequest>() {
-            @Override
-            public boolean matches(final Object argument) {
-                if (!(argument instanceof GetBucketRequest)) {
-                    return false;
-                }
-                final GetBucketRequest getBucketRequest = ((GetBucketRequest)argument);
-                return
-                        getBucketRequest.getBucketName().equals(bucket)
-                        && (marker == null
+        return argThat(new GetBucketRequestMatcher(bucket, marker));
+    }
+
+    private static final class GetBucketRequestMatcher extends BaseMatcher<GetBucketRequest> {
+        private final String bucket;
+        private final String marker;
+        public GetBucketRequestMatcher(final String bucket, final String marker) {
+            this.bucket = bucket;
+            this.marker = marker;
+        }
+        @Override
+        public boolean matches(Object argument) {
+            if (!(argument instanceof GetBucketRequest)) {
+                return false;
+            }
+            final GetBucketRequest getBucketRequest = ((GetBucketRequest)argument);
+            return
+                    getBucketRequest.getBucketName().equals(bucket)
+                            && (marker == null
                             ? null == getBucketRequest.getMarker()
                             : marker.equals(getBucketRequest.getMarker()));
 
-            }
-        });
+        }
+        @Override
+        public void describeTo(Description description) {
+            description.appendText("getBucketRequest matches");
+        }
     }
 }
