@@ -19,7 +19,7 @@ dependencies {
     implementation "org.apache.httpcomponents:httpclient:$httpclientVersion"
     implementation "com.google.guava:guava:$guavaVersion"
     implementation "junit:junit:$junitVersion"
-    testImplementation "org.hamcrest:hamcrest-library:$hamcrestVersion"
+    testImplementation "org.hamcrest:hamcrest:$hamcrestVersion"
     testImplementation group: 'org.apache.commons', name: 'commons-lang3', version: "$commonslangVersion"
 }
 

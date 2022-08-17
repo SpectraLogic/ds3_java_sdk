@@ -32,7 +32,7 @@ shadowJar {
     relocate 'org.apache', 'ds3fatjar.org.apache'
     relocate 'com.fasterxml', 'ds3fatjar.com.fasterxml'
     dependencies {
-        exclude(dependency("org.hamcrest:hamcrest-library:$hamcrestVersion"))
+        exclude(dependency("org.hamcrest:hamcrest:$hamcrestVersion"))
         exclude(dependency("org.mockito:mockito-core:$mockitoVersion"))
         exclude(dependency("junit:junit:$junitVersion"))
         exclude(dependency("org.slf4j:slf4j-api:$slf4jVersion"))
@@ -93,5 +93,5 @@ dependencies {
     implementation     "com.google.guava:guava:$guavaVersion"
     implementation     'org.codehaus.woodstox:woodstox-core-asl:4.4.1'
     implementation     'com.google.code.findbugs:annotations:3.0.1'
-    testImplementation "org.hamcrest:hamcrest-library:$hamcrestVersion"
+    testImplementation "org.hamcrest:hamcrest:$hamcrestVersion"
 }
