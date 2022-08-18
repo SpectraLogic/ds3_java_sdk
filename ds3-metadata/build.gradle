@@ -15,8 +15,6 @@
 
 apply plugin: 'com.github.johnrengelman.shadow'
 
-apply from: "$rootDir/gradle/scripts/publish.gradle"
-
 shadowJar {
     relocate 'org.apache', 'ds3metafatjar.org.apache'
     relocate 'com.google', 'ds3metafatjar.com.google'

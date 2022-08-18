@@ -18,8 +18,6 @@ import java.nio.file.Path
 
 apply plugin: 'com.github.johnrengelman.shadow'
 
-apply from: "$rootDir/gradle/scripts/publish.gradle"
-
 shadowJar {
     relocate 'com.google', 'ds3fatjar.com.google'
     relocate 'org.jetbrains', 'ds3fatjar.org.jetbrains'

@@ -14,8 +14,6 @@
  * ****************************************************************************
  */
 
-apply from: "$rootDir/gradle/scripts/publish.gradle"
-
 dependencies {
     implementation "commons-codec:commons-codec:$commonscodecVersion"
     implementation "commons-io:commons-io:$commonsioVersion"
