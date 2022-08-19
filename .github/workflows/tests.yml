@@ -3,6 +3,7 @@ name: DS3 Java SDK Tests
 on:
   pull_request:
     types: [opened, synchronize, reopened]
+  workflow_dispatch:
 
 jobs:
   build:
