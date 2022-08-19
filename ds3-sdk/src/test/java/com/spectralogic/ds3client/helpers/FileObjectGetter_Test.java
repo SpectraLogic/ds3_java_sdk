@@ -44,7 +44,7 @@ public class FileObjectGetter_Test {
 
         final String tempPathPrefix = null;
         final Path tempDirectory = Files.createTempDirectory(Paths.get("."), tempPathPrefix);
-
+        tempDirectory.toFile().deleteOnExit();
         final String FIFO_NAME = "bFifo";
 
         final AtomicBoolean caughtException = new AtomicBoolean(false);
@@ -55,8 +55,6 @@ public class FileObjectGetter_Test {
         } catch (final UnrecoverableIOException e) {
             assertTrue(e.getMessage().contains(FIFO_NAME));
             caughtException.set(true);
-        } finally {
-            FileUtils.deleteDirectory(tempDirectory.toFile());
         }
 
         assertTrue(caughtException.get());
