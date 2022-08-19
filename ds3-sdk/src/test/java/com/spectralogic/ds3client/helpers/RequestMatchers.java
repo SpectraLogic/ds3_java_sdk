@@ -23,14 +23,16 @@ import com.spectralogic.ds3client.commands.spectrads3.GetBulkJobSpectraS3Request
 import com.spectralogic.ds3client.commands.spectrads3.GetJobChunksReadyForClientProcessingSpectraS3Request;
 import com.spectralogic.ds3client.models.JobChunkClientProcessingOrderGuarantee;
 import org.apache.commons.io.IOUtils;
-import org.hamcrest.*;
+import org.hamcrest.BaseMatcher;
+import org.hamcrest.Description;
+import org.hamcrest.TypeSafeMatcher;
 
 import java.io.IOException;
 import java.nio.channels.Channels;
 import java.nio.channels.SeekableByteChannel;
-import java.util.*;
+import java.util.UUID;
 
-import static org.mockito.hamcrest.MockitoHamcrest.*;
+import static org.mockito.hamcrest.MockitoHamcrest.argThat;
 
 
 public final class RequestMatchers {
