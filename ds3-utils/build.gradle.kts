@@ -1,6 +1,6 @@
 /*
  * ******************************************************************************
- *   Copyright 2014-2019 Spectra Logic Corporation. All Rights Reserved.
+ *   Copyright 2002 Spectra Logic Corporation. All Rights Reserved.
  *   Licensed under the Apache License, Version 2.0 (the "License"). You may not use
  *   this file except in compliance with the License. A copy of the License is located at
  *
@@ -13,26 +13,16 @@
  * ****************************************************************************
  */
 
-apply plugin: 'com.jfrog.bintray'
+plugins {
+    `ds3-java-sdk-library-convention`
+}
 
-bintray {
-    user = System.getenv('BINTRAY_USER')
-    key = System.getenv('BINTRAY_KEY')
+dependencies {
+    api(project(":ds3-interfaces"))
 
-    configurations = ['archives']
+    implementation(libs.commonsCodec)
+    implementation(libs.commonsIo)
+    implementation(libs.guava)
 
-    //dryRun = true
-    //publish = true
-
-    pkg {
-        name = "$project.name"
-        repo = "ds3"
-        userOrg = "spectralogic"
-        websiteUrl = "https://github.com/SpectraLogic/ds3_java_sdk"
-        vcsUrl = "https://github.com/SpectraLogic/ds3_java_sdk.git"
-        licenses = ['Apache-2.0']
-        version {
-            name = "$project.version"
-        }
-    }
+    testImplementation(libs.junit)
 }

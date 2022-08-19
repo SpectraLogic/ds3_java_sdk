@@ -1,6 +1,6 @@
 /*
  * ******************************************************************************
- *   Copyright 2014-2019 Spectra Logic Corporation. All Rights Reserved.
+ *   Copyright 2002 Spectra Logic Corporation. All Rights Reserved.
  *   Licensed under the Apache License, Version 2.0 (the "License"). You may not use
  *   this file except in compliance with the License. A copy of the License is located at
  *
@@ -13,10 +13,10 @@
  * ****************************************************************************
  */
 
-apply plugin: 'application'
+plugins {
+    `kotlin-dsl`
+}
 
-mainClassName = 'com.spectralogic.ds3client.samples.PartialObjectGetExample'
-
-dependencies {
-    compile "org.slf4j:slf4j-simple:$slf4jVersion"
+repositories {
+    mavenCentral()
 }

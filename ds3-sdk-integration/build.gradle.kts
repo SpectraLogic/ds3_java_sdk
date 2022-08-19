@@ -1,7 +1,6 @@
-
 /*
  * ******************************************************************************
- *   Copyright 2014-2019 Spectra Logic Corporation. All Rights Reserved.
+ *   Copyright 2002 Spectra Logic Corporation. All Rights Reserved.
  *   Licensed under the Apache License, Version 2.0 (the "License"). You may not use
  *   this file except in compliance with the License. A copy of the License is located at
  *
@@ -14,10 +13,22 @@
  * ****************************************************************************
  */
 
-apply from: "$rootDir/gradle/scripts/publish.gradle"
+plugins {
+    `ds3-java-sdk-internal-convention`
+}
 
 dependencies {
-    compile "commons-codec:commons-codec:$commonscodecVersion"
-    compile "commons-io:commons-io:$commonsioVersion"
-    compile "com.google.guava:guava:$guavaVersion"
+    implementation(project(":ds3-utils"))
+    implementation(project(":ds3-sdk"))
+
+    implementation(libs.commonsIo)
+    implementation(libs.guava)
+    implementation(libs.slf4jApi)
+    implementation(libs.hamcrest)
+    implementation(libs.junit)
+
+    testImplementation(project(":ds3-metadata"))
+
+    testImplementation(libs.httpclient)
+    testImplementation(libs.commonsLang)
 }

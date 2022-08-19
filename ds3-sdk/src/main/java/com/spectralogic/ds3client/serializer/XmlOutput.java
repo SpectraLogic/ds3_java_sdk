@@ -1,6 +1,6 @@
 /*
  * ******************************************************************************
- *   Copyright 2014-2019 Spectra Logic Corporation. All Rights Reserved.
+ *   Copyright 2014-2022 Spectra Logic Corporation. All Rights Reserved.
  *   Licensed under the Apache License, Version 2.0 (the "License"). You may not use
  *   this file except in compliance with the License. A copy of the License is located at
  *
@@ -20,6 +20,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import com.fasterxml.jackson.dataformat.xml.JacksonXmlModule;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
+import com.fasterxml.jackson.dataformat.xml.deser.FromXmlParser;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.spectralogic.ds3client.models.bulk.Ds3ObjectList;
 import org.slf4j.Logger;
@@ -28,7 +29,6 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
-
 
 public final class XmlOutput {
     private static final JacksonXmlModule module;
@@ -40,6 +40,9 @@ public final class XmlOutput {
         module = new JacksonXmlModule();
         module.setDefaultUseWrapper(false);
         mapper = new XmlMapper(module);
+        // we must treat <tag/> as having nil value - see discussion at
+        // https://github.com/SpectraLogic/ds3_java_sdk/pull/595
+        mapper.configure(FromXmlParser.Feature.EMPTY_ELEMENT_AS_NULL, true);
 
         mapper.registerModule(new Jdk8Module());
         final SimpleFilterProvider filterProvider = new SimpleFilterProvider().setFailOnUnknownId(false);

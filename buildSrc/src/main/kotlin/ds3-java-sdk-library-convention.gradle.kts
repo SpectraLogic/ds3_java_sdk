@@ -1,6 +1,6 @@
 /*
  * ******************************************************************************
- *   Copyright 2014-2019 Spectra Logic Corporation. All Rights Reserved.
+ *   Copyright 2002 Spectra Logic Corporation. All Rights Reserved.
  *   Licensed under the Apache License, Version 2.0 (the "License"). You may not use
  *   this file except in compliance with the License. A copy of the License is located at
  *
@@ -13,10 +13,15 @@
  * ****************************************************************************
  */
 
-dependencies {
-    compile "commons-codec:commons-codec:$commonscodecVersion"
-    compile "junit:junit:$junitVersion"
-    testCompile "org.hamcrest:hamcrest-library:$hamcrestVersion"
-    testCompile group: 'org.apache.commons', name: 'commons-lang3', version: "$commonslangVersion"
+plugins {
+    `java-library`
 }
 
+group = "com.spectralogic.ds3"
+version = "5.4.1"
+
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(8))
+    }
+}

@@ -15,5 +15,5 @@ If using Eclipse:
 
 If using Intellij:
 * Open Intellij and select `Import Project`
-* Find the `build.gradle` file contained at the root of the project and select it
+* Find the `settings.gradle.kts` file contained at the root of the project and select it
 * Accept the defaults
