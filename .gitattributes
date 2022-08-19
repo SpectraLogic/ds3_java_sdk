@@ -1,2 +1,4 @@
 *.txt text
 
+# Override default behavior: BAT files always have CRLF line endings.
+*.bat text eol=crlf

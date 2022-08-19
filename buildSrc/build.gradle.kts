@@ -1,7 +1,6 @@
-
 /*
  * ******************************************************************************
- *   Copyright 2014-2019 Spectra Logic Corporation. All Rights Reserved.
+ *   Copyright 2002 Spectra Logic Corporation. All Rights Reserved.
  *   Licensed under the Apache License, Version 2.0 (the "License"). You may not use
  *   this file except in compliance with the License. A copy of the License is located at
  *
@@ -14,8 +13,10 @@
  * ****************************************************************************
  */
 
-dependencies {
-    implementation "commons-codec:commons-codec:$commonscodecVersion"
-    implementation "commons-io:commons-io:$commonsioVersion"
-    implementation "com.google.guava:guava:$guavaVersion"
+plugins {
+    `kotlin-dsl`
+}
+
+repositories {
+    mavenCentral()
 }

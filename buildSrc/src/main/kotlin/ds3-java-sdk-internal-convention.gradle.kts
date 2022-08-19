@@ -1,6 +1,6 @@
 /*
  * ******************************************************************************
- *   Copyright 2014-2019 Spectra Logic Corporation. All Rights Reserved.
+ *   Copyright 2002 Spectra Logic Corporation. All Rights Reserved.
  *   Licensed under the Apache License, Version 2.0 (the "License"). You may not use
  *   this file except in compliance with the License. A copy of the License is located at
  *
@@ -13,5 +13,12 @@
  * ****************************************************************************
  */
 
-include 'ds3-sdk-integration', 'ds3-sdk', 'ds3-sdk-samples', 'ds3-interfaces', 'ds3-metadata', 'ds3-utils'
-rootProject.name = 'ds3-java-sdk'
+plugins {
+    `java`
+}
+
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(8))
+    }
+}

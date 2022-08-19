@@ -98,13 +98,11 @@ Update the version of the SDK before creating a new release. The format is `<maj
 `<major>.<minor>` numbers must match the version of BP. The `<patch>` is an incrementing number that increments with 
 each SDK release for a given major/minor release.
 
-The build number is specified in the `build.gradle` file:
+The build number is specified in the `buildSrc/src/main/kotlin/ds3-java-sdk-library-convention.gradle.kts` file:
 
 ```
-allprojects {
-    group = 'com.spectralogic.ds3'
-    version = '5.4.0'
-}
+group = "com.spectralogic.ds3"
+version = "5.4.1"
 ```
 
 When a release is created in github, it is automatically published on [jitpack.io](https://jitpack.io/#SpectraLogic/ds3_java_sdk).
