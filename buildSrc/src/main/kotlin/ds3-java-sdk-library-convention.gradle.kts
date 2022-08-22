@@ -16,6 +16,7 @@
 plugins {
     id("ds3-java-sdk-internal-convention")
     `java-library`
+    id("org.owasp.dependencycheck")
 }
 
 group = "com.spectralogic.ds3"

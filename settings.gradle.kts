@@ -73,6 +73,7 @@ dependencyResolutionManagement {
             plugin("gitVersionPlugin", "com.palantir.git-version").versionRef("git-version-plugin")
             plugin("kotlinJvmPlugin", "org.jetbrains.kotlin.jvm").versionRef("kotlin")
             plugin("shadowPlugin", "com.github.johnrengelman.shadow").versionRef("shadow-plugin")
+            // Looking for the owasp dependency check plug-in? It lives in buildSrc/build.gradle.kts
         }
     }
 }
