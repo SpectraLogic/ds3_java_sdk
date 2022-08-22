@@ -14,14 +14,9 @@
  */
 
 plugins {
+    id("ds3-java-sdk-internal-convention")
     `java-library`
 }
 
 group = "com.spectralogic.ds3"
 version = "5.4.1"
-
-java {
-    toolchain {
-        languageVersion.set(JavaLanguageVersion.of(8))
-    }
-}
