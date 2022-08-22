@@ -16,8 +16,8 @@
 package com.spectralogic.ds3client.metadata;
 
 import com.google.common.collect.ImmutableMap;
-import com.spectralogic.ds3client.metadata.jna.Advapi32;
 import com.spectralogic.ds3client.utils.Guard;
+import com.sun.jna.platform.win32.Advapi32;
 import com.sun.jna.platform.win32.WinNT;
 import com.sun.jna.ptr.PointerByReference;
 import org.slf4j.Logger;
@@ -96,20 +96,23 @@ class WindowsMetadataStore extends AbstractMetadataStore {
      * @return dacl string
      */
     private String getDaclString(final WinNT.ACL acl) {
-        final WinNT.ACCESS_ACEStructure[] aceStructures = acl.getACEStructures();
+        final WinNT.ACE_HEADER[] aceHeaders = acl.getACEs();
         final StringBuilder daclStringBuffer = new StringBuilder();
-        for (final WinNT.ACCESS_ACEStructure aceStructure : aceStructures) {
+        for (final WinNT.ACE_HEADER aceHeader : aceHeaders) {
             daclStringBuffer.append("(");
-            if (aceStructure.AceType == 0) {
+            if (aceHeader.AceType == 0) {
                 daclStringBuffer.append("A;");
-            } else if (aceStructure.AceType == 1) {
+            } else if (aceHeader.AceType == 1) {
                 daclStringBuffer.append("D;");
-            } else if (aceStructure.AceType == 2) {
+            } else if (aceHeader.AceType == 2) {
                 daclStringBuffer.append("AU;");
             }
-            daclStringBuffer.append("0x").append(Integer.toHexString(aceStructure.AceFlags)).append(";");
-            daclStringBuffer.append("0x").append(Integer.toHexString(aceStructure.Mask)).append(";;;");
-            daclStringBuffer.append(aceStructure.getSidString()).append(")");
+            daclStringBuffer.append("0x").append(Integer.toHexString(aceHeader.AceFlags)).append(";");
+            if (aceHeader instanceof WinNT.ACCESS_ACEStructure) {
+                WinNT.ACCESS_ACEStructure accessACEStructure = (WinNT.ACCESS_ACEStructure) aceHeader;
+                daclStringBuffer.append("0x").append(Integer.toHexString(accessACEStructure.Mask)).append(";;;");
+                daclStringBuffer.append(accessACEStructure.getSidString()).append(")");
+            }
         }
         return daclStringBuffer.toString();
     }
