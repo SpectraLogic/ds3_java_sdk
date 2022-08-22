@@ -53,7 +53,8 @@ dependencies {
 val versionDetails: groovy.lang.Closure<com.palantir.gradle.gitversion.VersionDetails> by extra
 
 val genConfigProperties by tasks.registering(WriteProperties::class,) {
-    group = "build"
+    group = BasePlugin.BUILD_GROUP
+    description = "Create properties file with build information."
     val getProdBuild = { value: String? -> value ?: "false" }
     val gitDetails = versionDetails()
     property("productionBuild", getProdBuild(System.getenv("productionBuild")))
@@ -87,6 +88,8 @@ tasks.named<com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar>("shadowJ
 }
 
 val allProjectJars by tasks.registering(Zip::class) {
+    group = "distribution"
+    description = "Create zip file containing all SDK jars and its dependencies."
     archiveFileName.set(project.name + "-" + project.version + ".zip")
     destinationDirectory.set(layout.buildDirectory.dir("dist"))
     from(configurations.runtimeClasspath)
