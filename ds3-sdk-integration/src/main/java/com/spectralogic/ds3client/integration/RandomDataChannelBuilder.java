@@ -33,7 +33,7 @@ import java.util.Map;
 public class RandomDataChannelBuilder implements Ds3ClientHelpers.ObjectChannelBuilder {
 
     private static final int seed = 12345;
-    private final Map<String, Long> objectMap = new HashMap();
+    private final Map<String, Long> objectMap = new HashMap<>();
 
     public RandomDataChannelBuilder() {
     }

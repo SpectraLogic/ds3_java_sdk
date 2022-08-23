@@ -29,6 +29,7 @@ import static org.junit.Assert.fail;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -45,7 +46,7 @@ public class MetadataAccessImpl_Test {
     private static final Logger LOG = LoggerFactory.getLogger(MetadataAccessImpl_Test.class);
 
     @Test
-    public void testGettingMetadata() throws IOException, InterruptedException {
+    public void testGettingMetadata() throws IOException {
         final String tempPathPrefix = null;
         final Path tempDirectory = Files.createTempDirectory(Paths.get("."), tempPathPrefix);
 
@@ -93,7 +94,7 @@ public class MetadataAccessImpl_Test {
     }
 
     @Test
-    public void testMetadataAccessFailureHandler() throws IOException, InterruptedException {
+    public void testMetadataAccessFailureHandler() {
         Assume.assumeFalse(Platform.isWindows());
 
         try {
@@ -121,7 +122,7 @@ public class MetadataAccessImpl_Test {
     }
 
     @Test
-    public void testMetadataAccessFailureHandlerWithEventHandler() throws IOException, InterruptedException {
+    public void testMetadataAccessFailureHandlerWithEventHandler() throws IOException {
         Assume.assumeFalse(Platform.isWindows());
 
         final String tempPathPrefix = null;
@@ -141,7 +142,7 @@ public class MetadataAccessImpl_Test {
             final AtomicInteger numTimesFailureHandlerCalled = new AtomicInteger(0);
 
             try (final InputStream inputStream = Runtime.getRuntime().exec("ls -lR").getInputStream()) {
-                LOG.info(IOUtils.toString(inputStream));
+                LOG.info(IOUtils.toString(inputStream, Charset.defaultCharset()) );
             }
             new MetadataAccessImpl(fileMapper.build(),
                     new FailureEventListener() {

@@ -16,9 +16,9 @@
 package com.spectralogic.ds3client.metadata;
 
 import com.google.common.collect.ImmutableList;
-import com.spectralogic.ds3client.metadata.jna.Advapi32;
 import com.spectralogic.ds3client.networking.Metadata;
 import com.spectralogic.ds3client.utils.Guard;
+import com.sun.jna.platform.win32.Advapi32;
 import com.sun.jna.platform.win32.WinNT;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

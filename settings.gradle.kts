@@ -38,7 +38,7 @@ dependencyResolutionManagement {
             version("hamcrest", "2.2")
             version("httpclient", "4.5.13")
             version("jackson", "2.13.3")
-            version("jna", "4.5.1")
+            version("jna", "5.12.1")
             version("junit", "4.13.2")
             version("mockito", "4.7.0")
             version("shadow-plugin", "7.1.2")
@@ -73,6 +73,7 @@ dependencyResolutionManagement {
             plugin("gitVersionPlugin", "com.palantir.git-version").versionRef("git-version-plugin")
             plugin("kotlinJvmPlugin", "org.jetbrains.kotlin.jvm").versionRef("kotlin")
             plugin("shadowPlugin", "com.github.johnrengelman.shadow").versionRef("shadow-plugin")
+            // Looking for the owasp dependency check plug-in? It lives in buildSrc/build.gradle.kts
         }
     }
 }

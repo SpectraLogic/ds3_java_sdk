@@ -20,3 +20,7 @@ plugins {
 repositories {
     mavenCentral()
 }
+
+dependencies {
+    implementation("org.owasp:dependency-check-gradle:7.1.2")
+}
