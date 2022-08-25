@@ -67,8 +67,6 @@ dependencyResolutionManagement {
             library("mockitoCore", "org.mockito", "mockito-core").withoutVersion()
             library("slf4jSimple", "org.slf4j", "slf4j-simple").versionRef("slf4j")
 
-            //bundle("groovy", listOf("groovy-core", "groovy-json", "groovy-nio"))
-
             // gradle plugins
             plugin("gitVersionPlugin", "com.palantir.git-version").versionRef("git-version-plugin")
             plugin("kotlinJvmPlugin", "org.jetbrains.kotlin.jvm").versionRef("kotlin")
