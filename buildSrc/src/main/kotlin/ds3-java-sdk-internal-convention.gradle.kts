@@ -31,6 +31,10 @@ tasks.compileJava {
     }
 }
 
+tasks.test {
+    useJUnitPlatform()
+}
+
 tasks.jacocoTestReport {
     dependsOn(tasks.test) // report depends on running tests first
     reports {

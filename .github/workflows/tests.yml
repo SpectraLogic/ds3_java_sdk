@@ -34,4 +34,4 @@ jobs:
       - name: Compile and assemble main project with Temurin JDK ${{ matrix.test-jdk-version }}
         run: ./gradlew clean assemble
       - name: Test with Temurin JDK ${{ matrix.test-jdk-version }}
-        run: ./gradlew -S :ds3-sdk:test :ds3-utils:test :ds3-metadata:test
+        run: ./gradlew -S test

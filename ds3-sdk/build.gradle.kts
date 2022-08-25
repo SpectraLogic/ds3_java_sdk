@@ -44,9 +44,11 @@ dependencies {
     testImplementation(platform(libs.mockitoBom))
 
     testImplementation(libs.junit)
-    testImplementation(libs.mockitoCore)
+    testImplementation(libs.junitJupiterApi)
     testImplementation(libs.hamcrest)
+    testImplementation(libs.mockitoCore)
 
+    testRuntimeOnly(libs.junitVintageEngine)
     testRuntimeOnly(libs.slf4jSimple)
 }
 
