@@ -16,11 +16,20 @@
 plugins {
     id("ds3-java-sdk-internal-convention")
     `java-library`
+    `maven-publish`
     id("org.owasp.dependencycheck")
 }
 
 group = "com.spectralogic.ds3"
 version = "5.4.1"
+
+publishing {
+    publications {
+        create<MavenPublication>("ProjectPublication") {
+            from(components["java"])
+        }
+    }
+}
 
 dependencyCheck {
     // fail the build if any vulnerable dependencies are identified (CVSS score > 0)
