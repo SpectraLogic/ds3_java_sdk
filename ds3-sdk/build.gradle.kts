@@ -28,8 +28,7 @@ dependencies {
     implementation(platform(libs.jacksonBom))
 
     api(project(":ds3-interfaces"))
-
-    implementation(project(":ds3-utils"))
+    api(project(":ds3-utils"))
 
     implementation(libs.kotlinStdLib)
     implementation(libs.commonsIo)
