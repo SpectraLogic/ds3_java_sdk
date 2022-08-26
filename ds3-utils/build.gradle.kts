@@ -25,4 +25,8 @@ dependencies {
     implementation(libs.guava)
 
     testImplementation(libs.junit)
+    testImplementation(libs.junitJupiterApi)
+
+    testRuntimeOnly(libs.junitVintageEngine)
+    testRuntimeOnly(libs.slf4jSimple)
 }

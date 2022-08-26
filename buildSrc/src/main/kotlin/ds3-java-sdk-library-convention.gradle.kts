@@ -21,3 +21,8 @@ plugins {
 
 group = "com.spectralogic.ds3"
 version = "5.4.1"
+
+dependencyCheck {
+    // fail the build if any vulnerable dependencies are identified (CVSS score > 0)
+    failBuildOnCVSS = 0f;
+}

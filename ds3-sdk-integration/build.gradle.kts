@@ -26,9 +26,30 @@ dependencies {
     implementation(libs.slf4jApi)
     implementation(libs.hamcrest)
     implementation(libs.junit)
+    implementation(libs.junitJupiterApi)
 
     testImplementation(project(":ds3-metadata"))
 
     testImplementation(libs.httpclient)
     testImplementation(libs.commonsLang)
+
+    testRuntimeOnly(libs.junitVintageEngine)
 }
+
+
+sourceSets {
+    create("integrationTest") {
+        compileClasspath += sourceSets.main.get().output
+        runtimeClasspath += sourceSets.main.get().output
+    }
+}
+
+val integrationTest = task<Test>("integrationTest") {
+    description = "Run integration tests."
+    group = "verification"
+    testClassesDirs = sourceSets["integrationTest"].output.classesDirs
+    classpath = sourceSets["integrationTest"].runtimeClasspath
+    shouldRunAfter("test")
+}
+
+tasks.check { dependsOn(integrationTest) }

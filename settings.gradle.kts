@@ -40,6 +40,7 @@ dependencyResolutionManagement {
             version("jackson", "2.13.3")
             version("jna", "5.12.1")
             version("junit", "4.13.2")
+            version("junit-jupiter", "5.9.0")
             version("mockito", "4.7.0")
             version("shadow-plugin", "7.1.2")
             version("slf4j", "1.7.36")
@@ -63,11 +64,11 @@ dependencyResolutionManagement {
             library("commonsLang", "org.apache.commons","commons-lang3").versionRef("commons-lang")
             library("hamcrest", "org.hamcrest", "hamcrest").versionRef("hamcrest")
             library("junit", "junit", "junit").versionRef("junit")
+            library("junitJupiterApi", "org.junit.jupiter", "junit-jupiter-api").versionRef("junit-jupiter")
+            library("junitVintageEngine", "org.junit.vintage", "junit-vintage-engine").versionRef("junit-jupiter")
             library("mockitoBom", "org.mockito", "mockito-bom").versionRef("mockito")
             library("mockitoCore", "org.mockito", "mockito-core").withoutVersion()
             library("slf4jSimple", "org.slf4j", "slf4j-simple").versionRef("slf4j")
-
-            //bundle("groovy", listOf("groovy-core", "groovy-json", "groovy-nio"))
 
             // gradle plugins
             plugin("gitVersionPlugin", "com.palantir.git-version").versionRef("git-version-plugin")

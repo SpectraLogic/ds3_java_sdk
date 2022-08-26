@@ -14,14 +14,14 @@ To run the integrations tests you must be at the root of the project `ds3_java_s
 
 To execute only the unit tests (no device connection required):
 
-    ./gradlew clean ds3-sdk:test    
+    ./gradlew clean test    
 
 To execute only the integration tests:
     
-    ./gradlew clean ds3-sdk-integration:test
+    ./gradlew clean integrationTest
     
 To run both the integration tests and the unit tests execute:
 
-    ./gradlew clean test    
+    ./gradlew clean test integrationTest
 
 The integration tests **should** clean up after themselves.  If they do not, that is considered an error.
