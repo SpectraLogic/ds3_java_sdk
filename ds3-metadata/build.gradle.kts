@@ -23,8 +23,7 @@ plugins {
 
 dependencies {
     api(project(":ds3-interfaces"))
-
-    implementation(project(":ds3-utils"))
+    api(project(":ds3-utils"))
 
     implementation(libs.guava)
     implementation(libs.jna)
