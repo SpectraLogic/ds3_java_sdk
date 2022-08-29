@@ -14,25 +14,26 @@
  */
 
 plugins {
-    id("ds3-java-sdk-internal-convention")
-    id("ds3-java-sdk-version")
-    `java-library`
+    `ds3-java-sdk-version`
     `maven-publish`
-    id("org.owasp.dependencycheck")
+    `java-platform`
 }
 
-group = "com.spectralogic.ds3"
-version = "5.4.1"
+description = "The ds3-bom generates a Bill of Materials (BOM) for the published DS3 SDK artifacts."
 
-publishing {
-    publications {
-        create<MavenPublication>("ProjectPublication") {
-            from(components["java"])
-        }
+dependencies {
+    constraints {
+        api(project(":ds3-interfaces"))
+        api(project(":ds3-utils"))
+        api(project(":ds3-metadata"))
+        api(project(":ds3-sdk"))
     }
 }
 
-dependencyCheck {
-    // fail the build if any vulnerable dependencies are identified (CVSS score > 0)
-    failBuildOnCVSS = 0f;
+publishing {
+    publications {
+        create<MavenPublication>("Ds3Bom") {
+            from(components["javaPlatform"])
+        }
+    }
 }

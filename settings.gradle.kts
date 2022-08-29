@@ -21,6 +21,7 @@ include("ds3-sdk")
 include("ds3-metadata")
 include("ds3-sdk-samples")
 include("ds3-sdk-integration")
+include("ds3-bom")
 
 dependencyResolutionManagement {
     repositories {
