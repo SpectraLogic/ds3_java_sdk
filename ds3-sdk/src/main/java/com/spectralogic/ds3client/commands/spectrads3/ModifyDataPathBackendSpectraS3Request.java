@@ -49,11 +49,15 @@ public class ModifyDataPathBackendSpectraS3Request extends AbstractRequest {
 
     private Integer partiallyVerifyLastPercentOfTapes;
 
+    private boolean poolSafetyEnabled;
+
     private UnavailableMediaUsagePolicy unavailableMediaPolicy;
 
     private int unavailablePoolMaxJobRetryInMins;
 
     private int unavailableTapePartitionMaxJobRetryInMins;
+
+    private boolean verifyCheckpointBeforeRead;
 
     // Constructor
     
@@ -139,6 +143,13 @@ public class ModifyDataPathBackendSpectraS3Request extends AbstractRequest {
     }
 
 
+    public ModifyDataPathBackendSpectraS3Request withPoolSafetyEnabled(final boolean poolSafetyEnabled) {
+        this.poolSafetyEnabled = poolSafetyEnabled;
+        this.updateQueryParam("pool_safety_enabled", poolSafetyEnabled);
+        return this;
+    }
+
+
     public ModifyDataPathBackendSpectraS3Request withUnavailableMediaPolicy(final UnavailableMediaUsagePolicy unavailableMediaPolicy) {
         this.unavailableMediaPolicy = unavailableMediaPolicy;
         this.updateQueryParam("unavailable_media_policy", unavailableMediaPolicy);
@@ -156,6 +167,13 @@ public class ModifyDataPathBackendSpectraS3Request extends AbstractRequest {
     public ModifyDataPathBackendSpectraS3Request withUnavailableTapePartitionMaxJobRetryInMins(final int unavailableTapePartitionMaxJobRetryInMins) {
         this.unavailableTapePartitionMaxJobRetryInMins = unavailableTapePartitionMaxJobRetryInMins;
         this.updateQueryParam("unavailable_tape_partition_max_job_retry_in_mins", unavailableTapePartitionMaxJobRetryInMins);
+        return this;
+    }
+
+
+    public ModifyDataPathBackendSpectraS3Request withVerifyCheckpointBeforeRead(final boolean verifyCheckpointBeforeRead) {
+        this.verifyCheckpointBeforeRead = verifyCheckpointBeforeRead;
+        this.updateQueryParam("verify_checkpoint_before_read", verifyCheckpointBeforeRead);
         return this;
     }
 
@@ -226,6 +244,11 @@ public class ModifyDataPathBackendSpectraS3Request extends AbstractRequest {
     }
 
 
+    public boolean getPoolSafetyEnabled() {
+        return this.poolSafetyEnabled;
+    }
+
+
     public UnavailableMediaUsagePolicy getUnavailableMediaPolicy() {
         return this.unavailableMediaPolicy;
     }
@@ -238,6 +261,11 @@ public class ModifyDataPathBackendSpectraS3Request extends AbstractRequest {
 
     public int getUnavailableTapePartitionMaxJobRetryInMins() {
         return this.unavailableTapePartitionMaxJobRetryInMins;
+    }
+
+
+    public boolean getVerifyCheckpointBeforeRead() {
+        return this.verifyCheckpointBeforeRead;
     }
 
 }

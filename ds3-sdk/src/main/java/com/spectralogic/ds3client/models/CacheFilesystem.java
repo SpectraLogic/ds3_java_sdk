@@ -33,6 +33,9 @@ public class CacheFilesystem {
     @JsonProperty("BurstThreshold")
     private double burstThreshold;
 
+    @JsonProperty("CacheSafetyEnabled")
+    private boolean cacheSafetyEnabled;
+
     @JsonProperty("Id")
     private UUID id;
 
@@ -79,6 +82,15 @@ public class CacheFilesystem {
 
     public void setBurstThreshold(final double burstThreshold) {
         this.burstThreshold = burstThreshold;
+    }
+
+
+    public boolean getCacheSafetyEnabled() {
+        return this.cacheSafetyEnabled;
+    }
+
+    public void setCacheSafetyEnabled(final boolean cacheSafetyEnabled) {
+        this.cacheSafetyEnabled = cacheSafetyEnabled;
     }
 
 

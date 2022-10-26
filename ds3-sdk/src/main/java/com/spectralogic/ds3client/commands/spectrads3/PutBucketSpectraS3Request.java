@@ -31,6 +31,8 @@ public class PutBucketSpectraS3Request extends AbstractRequest {
 
     private String id;
 
+    private boolean protectedFlag;
+
     private String userId;
 
     // Constructor
@@ -67,6 +69,13 @@ public class PutBucketSpectraS3Request extends AbstractRequest {
     public PutBucketSpectraS3Request withId(final String id) {
         this.id = id;
         this.updateQueryParam("id", id);
+        return this;
+    }
+
+
+    public PutBucketSpectraS3Request withProtected(final boolean protectedFlag) {
+        this.protectedFlag = protectedFlag;
+        this.updateQueryParam("protected", protectedFlag);
         return this;
     }
 
@@ -108,6 +117,11 @@ public class PutBucketSpectraS3Request extends AbstractRequest {
 
     public String getId() {
         return this.id;
+    }
+
+
+    public boolean getProtected() {
+        return this.protectedFlag;
     }
 
 

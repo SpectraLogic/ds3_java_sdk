@@ -33,25 +33,25 @@ public class DeleteObjectsRequest extends AbstractRequest {
 
     // Variables
     private final List<DeleteObject> objects;
-
+    
     private final String bucketName;
     private boolean quiet = false;
     private long size;
 
     // Constructor
-
-
+    
+    
     public DeleteObjectsRequest(final String bucketName, final List<String> objects) {
         this.bucketName = bucketName;
-
+        
         this.getQueryParams().put("delete", null);
         this.objects = namesToDeleteObjects(objects);
     }
 
-
+    
     public DeleteObjectsRequest(final String bucketName, final Iterable<Contents> objects) {
         this.bucketName = bucketName;
-
+        
         this.getQueryParams().put("delete", null);
         this.objects = contentsToDeleteObjects(objects);
     }
@@ -111,7 +111,7 @@ public class DeleteObjectsRequest extends AbstractRequest {
     }
 
 
-
+    
     public String getBucketName() {
         return this.bucketName;
     }

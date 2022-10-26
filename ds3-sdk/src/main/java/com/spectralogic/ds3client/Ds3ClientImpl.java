@@ -1114,6 +1114,10 @@ public class Ds3ClientImpl implements Ds3Client {
         return new CancelOnlineTapeSpectraS3ResponseParser().response(this.netClient.getResponse(request));
     }
     @Override
+    public CancelTestTapeDriveSpectraS3Response cancelTestTapeDriveSpectraS3(final CancelTestTapeDriveSpectraS3Request request) throws IOException {
+        return new CancelTestTapeDriveSpectraS3ResponseParser().response(this.netClient.getResponse(request));
+    }
+    @Override
     public CancelVerifyOnAllTapesSpectraS3Response cancelVerifyOnAllTapesSpectraS3(final CancelVerifyOnAllTapesSpectraS3Request request) throws IOException {
         return new CancelVerifyOnAllTapesSpectraS3ResponseParser().response(this.netClient.getResponse(request));
     }
@@ -1124,6 +1128,10 @@ public class Ds3ClientImpl implements Ds3Client {
     @Override
     public CleanTapeDriveSpectraS3Response cleanTapeDriveSpectraS3(final CleanTapeDriveSpectraS3Request request) throws IOException {
         return new CleanTapeDriveSpectraS3ResponseParser().response(this.netClient.getResponse(request));
+    }
+    @Override
+    public PutDriveDumpSpectraS3Response putDriveDumpSpectraS3(final PutDriveDumpSpectraS3Request request) throws IOException {
+        return new PutDriveDumpSpectraS3ResponseParser().response(this.netClient.getResponse(request));
     }
     @Override
     public PutTapeDensityDirectiveSpectraS3Response putTapeDensityDirectiveSpectraS3(final PutTapeDensityDirectiveSpectraS3Request request) throws IOException {
@@ -1292,6 +1300,10 @@ public class Ds3ClientImpl implements Ds3Client {
     @Override
     public RawImportTapeSpectraS3Response rawImportTapeSpectraS3(final RawImportTapeSpectraS3Request request) throws IOException {
         return new RawImportTapeSpectraS3ResponseParser().response(this.netClient.getResponse(request));
+    }
+    @Override
+    public TestTapeDriveSpectraS3Response testTapeDriveSpectraS3(final TestTapeDriveSpectraS3Request request) throws IOException {
+        return new TestTapeDriveSpectraS3ResponseParser().response(this.netClient.getResponse(request));
     }
     @Override
     public VerifyAllTapesSpectraS3Response verifyAllTapesSpectraS3(final VerifyAllTapesSpectraS3Request request) throws IOException {

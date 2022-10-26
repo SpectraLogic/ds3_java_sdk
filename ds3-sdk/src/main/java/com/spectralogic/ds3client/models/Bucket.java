@@ -47,6 +47,9 @@ public class Bucket {
     @JsonProperty("Name")
     private String name;
 
+    @JsonProperty("Protected")
+    private boolean protectedFlag;
+
     @JsonProperty("UserId")
     private UUID userId;
 
@@ -117,6 +120,15 @@ public class Bucket {
 
     public void setName(final String name) {
         this.name = name;
+    }
+
+
+    public boolean getProtected() {
+        return this.protectedFlag;
+    }
+
+    public void setProtected(final boolean protectedFlag) {
+        this.protectedFlag = protectedFlag;
     }
 
 

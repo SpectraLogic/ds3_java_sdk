@@ -18,6 +18,7 @@ package com.spectralogic.ds3client.models;
 
 public enum ReservedTaskType {
     ANY,
+    MAINTENANCE,
     READ,
     WRITE
 }

@@ -79,6 +79,9 @@ public class Tape {
     @JsonProperty("PreviousState")
     private TapeState previousState;
 
+    @JsonProperty("Role")
+    private TapeRole role;
+
     @JsonProperty("SerialNumber")
     private String serialNumber;
 
@@ -269,6 +272,15 @@ public class Tape {
 
     public void setPreviousState(final TapeState previousState) {
         this.previousState = previousState;
+    }
+
+
+    public TapeRole getRole() {
+        return this.role;
+    }
+
+    public void setRole(final TapeRole role) {
+        this.role = role;
     }
 
 

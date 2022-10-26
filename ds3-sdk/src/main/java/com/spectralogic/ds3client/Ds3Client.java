@@ -1807,6 +1807,13 @@ public interface Ds3Client extends Closeable {
     CancelOnlineTapeSpectraS3Response cancelOnlineTapeSpectraS3(final CancelOnlineTapeSpectraS3Request request)
             throws IOException;
 
+    @ResponsePayloadModel("TapeDrive")
+    @Action("MODIFY")
+    @Resource("TAPE_DRIVE")
+    
+    CancelTestTapeDriveSpectraS3Response cancelTestTapeDriveSpectraS3(final CancelTestTapeDriveSpectraS3Request request)
+            throws IOException;
+
     @ResponsePayloadModel("TapeFailureList")
     @Action("BULK_MODIFY")
     @Resource("TAPE")
@@ -1826,6 +1833,13 @@ public interface Ds3Client extends Closeable {
     @Resource("TAPE_DRIVE")
     
     CleanTapeDriveSpectraS3Response cleanTapeDriveSpectraS3(final CleanTapeDriveSpectraS3Request request)
+            throws IOException;
+
+    @ResponsePayloadModel("TapeDrive")
+    @Action("MODIFY")
+    @Resource("TAPE_DRIVE")
+    
+    PutDriveDumpSpectraS3Response putDriveDumpSpectraS3(final PutDriveDumpSpectraS3Request request)
             throws IOException;
 
     @ResponsePayloadModel("TapeDensityDirective")
@@ -2109,6 +2123,13 @@ public interface Ds3Client extends Closeable {
     @Resource("TAPE")
     
     RawImportTapeSpectraS3Response rawImportTapeSpectraS3(final RawImportTapeSpectraS3Request request)
+            throws IOException;
+
+    @ResponsePayloadModel("TapeDrive")
+    @Action("MODIFY")
+    @Resource("TAPE_DRIVE")
+    
+    TestTapeDriveSpectraS3Response testTapeDriveSpectraS3(final TestTapeDriveSpectraS3Request request)
             throws IOException;
 
     @ResponsePayloadModel("TapeFailureList")

@@ -19,6 +19,7 @@ package com.spectralogic.ds3client.commands.spectrads3;
 import com.spectralogic.ds3client.networking.HttpVerb;
 import com.spectralogic.ds3client.commands.interfaces.AbstractRequest;
 import com.google.common.net.UrlEscapers;
+import com.spectralogic.ds3client.models.TapeRole;
 import com.spectralogic.ds3client.models.TapeState;
 import java.util.UUID;
 
@@ -31,6 +32,8 @@ public class ModifyTapeSpectraS3Request extends AbstractRequest {
     private String ejectLabel;
 
     private String ejectLocation;
+
+    private TapeRole role;
 
     private TapeState state;
 
@@ -58,6 +61,13 @@ public class ModifyTapeSpectraS3Request extends AbstractRequest {
     public ModifyTapeSpectraS3Request withEjectLocation(final String ejectLocation) {
         this.ejectLocation = ejectLocation;
         this.updateQueryParam("eject_location", ejectLocation);
+        return this;
+    }
+
+
+    public ModifyTapeSpectraS3Request withRole(final TapeRole role) {
+        this.role = role;
+        this.updateQueryParam("role", role);
         return this;
     }
 
@@ -92,6 +102,11 @@ public class ModifyTapeSpectraS3Request extends AbstractRequest {
 
     public String getEjectLocation() {
         return this.ejectLocation;
+    }
+
+
+    public TapeRole getRole() {
+        return this.role;
     }
 
 

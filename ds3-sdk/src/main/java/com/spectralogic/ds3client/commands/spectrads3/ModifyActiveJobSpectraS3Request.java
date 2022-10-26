@@ -31,9 +31,13 @@ public class ModifyActiveJobSpectraS3Request extends AbstractRequest {
 
     private Date createdAt;
 
+    private boolean deadJobCleanupAllowed;
+
     private String name;
 
     private Priority priority;
+
+    private boolean protectedFlag;
 
     // Constructor
     
@@ -56,6 +60,13 @@ public class ModifyActiveJobSpectraS3Request extends AbstractRequest {
     }
 
 
+    public ModifyActiveJobSpectraS3Request withDeadJobCleanupAllowed(final boolean deadJobCleanupAllowed) {
+        this.deadJobCleanupAllowed = deadJobCleanupAllowed;
+        this.updateQueryParam("dead_job_cleanup_allowed", deadJobCleanupAllowed);
+        return this;
+    }
+
+
     public ModifyActiveJobSpectraS3Request withName(final String name) {
         this.name = name;
         this.updateQueryParam("name", name);
@@ -66,6 +77,13 @@ public class ModifyActiveJobSpectraS3Request extends AbstractRequest {
     public ModifyActiveJobSpectraS3Request withPriority(final Priority priority) {
         this.priority = priority;
         this.updateQueryParam("priority", priority);
+        return this;
+    }
+
+
+    public ModifyActiveJobSpectraS3Request withProtected(final boolean protectedFlag) {
+        this.protectedFlag = protectedFlag;
+        this.updateQueryParam("protected", protectedFlag);
         return this;
     }
 
@@ -91,6 +109,11 @@ public class ModifyActiveJobSpectraS3Request extends AbstractRequest {
     }
 
 
+    public boolean getDeadJobCleanupAllowed() {
+        return this.deadJobCleanupAllowed;
+    }
+
+
     public String getName() {
         return this.name;
     }
@@ -98,6 +121,11 @@ public class ModifyActiveJobSpectraS3Request extends AbstractRequest {
 
     public Priority getPriority() {
         return this.priority;
+    }
+
+
+    public boolean getProtected() {
+        return this.protectedFlag;
     }
 
 }
