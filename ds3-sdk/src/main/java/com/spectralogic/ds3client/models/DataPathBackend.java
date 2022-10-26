@@ -67,6 +67,9 @@ public class DataPathBackend {
     @JsonProperty("PartiallyVerifyLastPercentOfTapes")
     private Integer partiallyVerifyLastPercentOfTapes;
 
+    @JsonProperty("PoolSafetyEnabled")
+    private boolean poolSafetyEnabled;
+
     @JsonProperty("UnavailableMediaPolicy")
     private UnavailableMediaUsagePolicy unavailableMediaPolicy;
 
@@ -75,6 +78,9 @@ public class DataPathBackend {
 
     @JsonProperty("UnavailableTapePartitionMaxJobRetryInMins")
     private int unavailableTapePartitionMaxJobRetryInMins;
+
+    @JsonProperty("VerifyCheckpointBeforeRead")
+    private boolean verifyCheckpointBeforeRead;
 
     // Constructor
     public DataPathBackend() {
@@ -209,6 +215,15 @@ public class DataPathBackend {
     }
 
 
+    public boolean getPoolSafetyEnabled() {
+        return this.poolSafetyEnabled;
+    }
+
+    public void setPoolSafetyEnabled(final boolean poolSafetyEnabled) {
+        this.poolSafetyEnabled = poolSafetyEnabled;
+    }
+
+
     public UnavailableMediaUsagePolicy getUnavailableMediaPolicy() {
         return this.unavailableMediaPolicy;
     }
@@ -233,6 +248,15 @@ public class DataPathBackend {
 
     public void setUnavailableTapePartitionMaxJobRetryInMins(final int unavailableTapePartitionMaxJobRetryInMins) {
         this.unavailableTapePartitionMaxJobRetryInMins = unavailableTapePartitionMaxJobRetryInMins;
+    }
+
+
+    public boolean getVerifyCheckpointBeforeRead() {
+        return this.verifyCheckpointBeforeRead;
+    }
+
+    public void setVerifyCheckpointBeforeRead(final boolean verifyCheckpointBeforeRead) {
+        this.verifyCheckpointBeforeRead = verifyCheckpointBeforeRead;
     }
 
 }

@@ -70,6 +70,9 @@ public class ActiveJob {
     @JsonProperty("Priority")
     private Priority priority;
 
+    @JsonProperty("Protected")
+    private boolean protectedFlag;
+
     @JsonProperty("Rechunked")
     private Date rechunked;
 
@@ -233,6 +236,15 @@ public class ActiveJob {
 
     public void setPriority(final Priority priority) {
         this.priority = priority;
+    }
+
+
+    public boolean getProtected() {
+        return this.protectedFlag;
+    }
+
+    public void setProtected(final boolean protectedFlag) {
+        this.protectedFlag = protectedFlag;
     }
 
 

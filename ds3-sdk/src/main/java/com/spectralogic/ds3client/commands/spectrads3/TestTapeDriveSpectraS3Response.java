@@ -14,35 +14,23 @@
  */
 
 // This code is auto-generated, do not modify
-package com.spectralogic.ds3client.models;
+package com.spectralogic.ds3client.commands.spectrads3;
 
-public enum RestOperationType {
-    ALLOCATE,
-    CANCEL_EJECT,
-    CANCEL_FORMAT,
-    CANCEL_IMPORT,
-    CANCEL_ONLINE,
-    CANCEL_TEST,
-    CANCEL_VERIFY,
-    CLEAN,
-    COMPACT,
-    DEALLOCATE,
-    DUMP,
-    EJECT,
-    FORMAT,
-    GET_PHYSICAL_PLACEMENT,
-    IMPORT,
-    INSPECT,
-    MARK_FOR_COMPACTION,
-    ONLINE,
-    PAIR_BACK,
-    REGENERATE_SECRET_KEY,
-    START_BULK_GET,
-    START_BULK_PUT,
-    START_BULK_STAGE,
-    START_BULK_VERIFY,
-    TEST,
-    VERIFY,
-    VERIFY_SAFE_TO_START_BULK_PUT,
-    VERIFY_PHYSICAL_PLACEMENT
+import com.spectralogic.ds3client.models.TapeDrive;
+import com.spectralogic.ds3client.models.ChecksumType;
+import com.spectralogic.ds3client.commands.interfaces.AbstractResponse;
+
+public class TestTapeDriveSpectraS3Response extends AbstractResponse {
+    
+    private final TapeDrive tapeDriveResult;
+
+    public TestTapeDriveSpectraS3Response(final TapeDrive tapeDriveResult, final String checksum, final ChecksumType.Type checksumType) {
+        super(checksum, checksumType);
+        this.tapeDriveResult = tapeDriveResult;
+    }
+
+    public TapeDrive getTapeDriveResult() {
+        return this.tapeDriveResult;
+    }
+
 }

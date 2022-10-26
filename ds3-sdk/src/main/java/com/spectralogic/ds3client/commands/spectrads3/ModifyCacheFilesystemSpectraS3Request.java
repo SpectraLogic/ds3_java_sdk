@@ -33,6 +33,8 @@ public class ModifyCacheFilesystemSpectraS3Request extends AbstractRequest {
 
     private double burstThreshold;
 
+    private boolean cacheSafetyEnabled;
+
     private Long maxCapacityInBytes;
 
     // Constructor
@@ -60,6 +62,13 @@ public class ModifyCacheFilesystemSpectraS3Request extends AbstractRequest {
     public ModifyCacheFilesystemSpectraS3Request withBurstThreshold(final double burstThreshold) {
         this.burstThreshold = burstThreshold;
         this.updateQueryParam("burst_threshold", burstThreshold);
+        return this;
+    }
+
+
+    public ModifyCacheFilesystemSpectraS3Request withCacheSafetyEnabled(final boolean cacheSafetyEnabled) {
+        this.cacheSafetyEnabled = cacheSafetyEnabled;
+        this.updateQueryParam("cache_safety_enabled", cacheSafetyEnabled);
         return this;
     }
 
@@ -99,6 +108,11 @@ public class ModifyCacheFilesystemSpectraS3Request extends AbstractRequest {
 
     public double getBurstThreshold() {
         return this.burstThreshold;
+    }
+
+
+    public boolean getCacheSafetyEnabled() {
+        return this.cacheSafetyEnabled;
     }
 
 

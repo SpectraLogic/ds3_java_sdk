@@ -31,9 +31,13 @@ public class GetBulkJobSpectraS3Request extends BulkRequest {
 
     private JobChunkClientProcessingOrderGuarantee chunkClientProcessingOrderGuarantee;
 
+    private boolean deadJobCleanupAllowed;
+
     private boolean implicitJobIdResolution;
 
     private String name;
+
+    private boolean protectedFlag;
 
     // Constructor
     
@@ -54,6 +58,13 @@ public class GetBulkJobSpectraS3Request extends BulkRequest {
     public GetBulkJobSpectraS3Request withChunkClientProcessingOrderGuarantee(final JobChunkClientProcessingOrderGuarantee chunkClientProcessingOrderGuarantee) {
         this.chunkClientProcessingOrderGuarantee = chunkClientProcessingOrderGuarantee;
         this.updateQueryParam("chunk_client_processing_order_guarantee", chunkClientProcessingOrderGuarantee);
+        return this;
+    }
+
+
+    public GetBulkJobSpectraS3Request withDeadJobCleanupAllowed(final boolean deadJobCleanupAllowed) {
+        this.deadJobCleanupAllowed = deadJobCleanupAllowed;
+        this.updateQueryParam("dead_job_cleanup_allowed", deadJobCleanupAllowed);
         return this;
     }
 
@@ -79,6 +90,13 @@ public class GetBulkJobSpectraS3Request extends BulkRequest {
     }
 
 
+    public GetBulkJobSpectraS3Request withProtected(final boolean protectedFlag) {
+        this.protectedFlag = protectedFlag;
+        this.updateQueryParam("protected", protectedFlag);
+        return this;
+    }
+
+
 
     
     public boolean getAggregating() {
@@ -91,6 +109,11 @@ public class GetBulkJobSpectraS3Request extends BulkRequest {
     }
 
 
+    public boolean getDeadJobCleanupAllowed() {
+        return this.deadJobCleanupAllowed;
+    }
+
+
     public boolean getImplicitJobIdResolution() {
         return this.implicitJobIdResolution;
     }
@@ -98,6 +121,11 @@ public class GetBulkJobSpectraS3Request extends BulkRequest {
 
     public String getName() {
         return this.name;
+    }
+
+
+    public boolean getProtected() {
+        return this.protectedFlag;
     }
 
 
