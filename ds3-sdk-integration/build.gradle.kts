@@ -36,7 +36,6 @@ dependencies {
     testRuntimeOnly(libs.junitVintageEngine)
 }
 
-
 sourceSets {
     create("integrationTest") {
         compileClasspath += sourceSets.main.get().output
@@ -51,5 +50,8 @@ val integrationTest = task<Test>("integrationTest") {
     classpath = sourceSets["integrationTest"].runtimeClasspath
     shouldRunAfter("test")
 }
+
+configurations["integrationTestImplementation"].extendsFrom(configurations.testImplementation.get())
+configurations["integrationTestRuntimeOnly"].extendsFrom(configurations.testRuntimeOnly.get())
 
 tasks.check { dependsOn(integrationTest) }
