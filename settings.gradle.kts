@@ -38,7 +38,7 @@ dependencyResolutionManagement {
             version("guava", "31.1-jre")
             version("hamcrest", "2.2")
             version("httpclient", "4.5.13")
-            version("jackson", "2.13.3")
+            version("jackson", "2.13.4.20221013")
             version("jna", "5.12.1")
             version("junit", "4.13.2")
             version("junit-jupiter", "5.9.0")
