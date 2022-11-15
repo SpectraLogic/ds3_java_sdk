@@ -20,5 +20,5 @@ cd ds3_java_sdk
 git rev-parse HEAD
 
 ./gradlew jar
-./gradlew test
+./gradlew test integrationTest
 
