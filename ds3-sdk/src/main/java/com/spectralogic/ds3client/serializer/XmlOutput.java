@@ -54,34 +54,13 @@ public final class XmlOutput {
         }
     }
 
+    /**
+     * Determines if this is a production build. A build is production by default, and only non-production when the
+     * production build environment variable is false.
+     */
     protected static boolean isProductionBuild() {
         String productionBuild = System.getenv(PRODUCTION_BUILD);
-        if (productionBuild != null) {
-            return productionBuild.equals("true");
-        }
-
-        final Properties props = new Properties();
-        final InputStream input = XmlOutput.class.getClassLoader().getResourceAsStream("ds3_sdk.properties");
-        if (input == null) {
-            LOG.error("Could not find property file.");
-        }
-        else {
-            try {
-                props.load(input);
-                productionBuild = (String) props.get(PRODUCTION_BUILD);
-                if (productionBuild != null && productionBuild.equals("true")) {
-                    return true;
-                }
-                else {
-                    LOG.error("Unknown productionBuild value[{}].  Defaulting to false for unknown XML elements.", productionBuild);
-                }
-            } catch (final IOException e) {
-                LOG.error("Failed to load property file: {}", e);
-            }
-        }
-
-        return false;
-
+        return productionBuild == null || !productionBuild.equals("false");
     }
 
     public static String toXml(final Object object) {
