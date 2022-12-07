@@ -35,4 +35,5 @@ publishing {
 dependencyCheck {
     // fail the build if any vulnerable dependencies are identified (CVSS score > 0)
     failBuildOnCVSS = 0f;
+    suppressionFile = "project_files/owasp/dependency-check-suppression.xml"
 }
