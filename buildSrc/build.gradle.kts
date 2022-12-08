@@ -22,5 +22,5 @@ repositories {
 }
 
 dependencies {
-    implementation("org.owasp:dependency-check-gradle:7.1.2")
+    implementation("org.owasp:dependency-check-gradle:7.3.2")
 }
