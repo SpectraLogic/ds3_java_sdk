@@ -127,7 +127,7 @@ public class NetworkClientImpl implements NetworkClient {
         final SSLContext sslContext = new SSLContextBuilder()
                 .setProtocol(INSECURE_SSL_PROTOCOL)
                 .loadTrustMaterial(null, (TrustStrategy) (chain, authType) -> true).build();
-        final SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(sslContext, new NoopHostnameVerifier());
+        final SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(sslContext, new String[]{ INSECURE_SSL_PROTOCOL }, null, new NoopHostnameVerifier());
 
         final Registry<ConnectionSocketFactory> socketFactoryRegistry = RegistryBuilder.<ConnectionSocketFactory>create()
                 .register("http", PlainConnectionSocketFactory.getSocketFactory())
