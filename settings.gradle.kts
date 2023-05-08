@@ -13,6 +13,10 @@
  * ****************************************************************************
  */
 
+plugins {
+    id("org.gradle.toolchains.foojay-resolver-convention").version("0.5.0")
+}
+
 rootProject.name = "ds3-java-sdk"
 
 include("ds3-interfaces")
