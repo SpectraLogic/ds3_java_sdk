@@ -16,6 +16,7 @@
 plugins {
     `java`
     `jacoco`
+    id("com.github.ben-manes.versions")
 }
 
 tasks.compileJava {

@@ -19,7 +19,6 @@ import java.time.Instant
 @Suppress("DSL_SCOPE_VIOLATION")
 plugins {
     `ds3-java-sdk-library-convention`
-    alias(libs.plugins.kotlinJvmPlugin)
     alias(libs.plugins.shadowPlugin)
     alias(libs.plugins.gitVersionPlugin)
 }

@@ -14,8 +14,9 @@
  */
 
 plugins {
-    id("ds3-java-sdk-internal-convention")
     id("ds3-java-sdk-version")
+    id("ds3-java-sdk-internal-convention")
+    id("org.jetbrains.kotlin.jvm")
     `java-library`
     `maven-publish`
     id("org.owasp.dependencycheck")

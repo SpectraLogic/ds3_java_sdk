@@ -31,7 +31,7 @@ dependencies {
     implementation(libs.slf4jApi)
 
     testImplementation(libs.commonsIo)
-    testImplementation(libs.commonsLang)
+    testImplementation(libs.commonsLang3)
     testImplementation(libs.junit)
     testImplementation(libs.junitJupiterApi)
     testImplementation(libs.httpclient)
@@ -56,7 +56,7 @@ tasks.named<com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar>("shadowJ
         exclude(dependency(libs.mockitoCore.get().toString()))
         exclude(dependency(libs.junit.get().toString()))
         exclude(dependency(libs.junitJupiterApi.get().toString()))
-        exclude(dependency(libs.commonsLang.get().toString()))
+        exclude(dependency(libs.commonsLang3.get().toString()))
     }
     dependsOn(tasks.jar)
 }
