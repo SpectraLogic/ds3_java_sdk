@@ -19,6 +19,8 @@ plugins {
     id("org.jetbrains.kotlin.jvm")
     `java-library`
     `maven-publish`
+    id("ds3-java-sdk-publishing-common-convention")
+    signing
     id("org.owasp.dependencycheck")
 }
 
@@ -31,12 +33,25 @@ kotlin {
     }
 }
 
+java {
+    withJavadocJar()
+    withSourcesJar()
+}
+
 publishing {
     publications {
-        create<MavenPublication>("ProjectPublication") {
+        create<MavenPublication>("Project") {
             from(components["java"])
         }
     }
+}
+
+signing {
+    setRequired({
+        (extra["isReleaseVersion"] as Boolean) && gradle.taskGraph.hasTask("publishProjectPublicationToOSSRHRepository")
+    })
+    useGpgCmd()
+    sign(publishing.publications["Project"])
 }
 
 dependencyCheck {

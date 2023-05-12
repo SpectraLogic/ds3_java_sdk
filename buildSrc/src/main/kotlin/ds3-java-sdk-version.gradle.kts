@@ -18,3 +18,5 @@ val catalogs = extensions
 
 group = "com.spectralogic.ds3"
 version = catalogs.named("libs").findVersion("ds3SdkVersion").get().requiredVersion
+
+extra["isReleaseVersion"] = !version.toString().endsWith("SNAPSHOT")

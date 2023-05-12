@@ -16,6 +16,8 @@
 plugins {
     `ds3-java-sdk-version`
     `maven-publish`
+    `ds3-java-sdk-publishing-common-convention`
+    signing
     `java-platform`
 }
 
@@ -36,4 +38,12 @@ publishing {
             from(components["javaPlatform"])
         }
     }
+}
+
+signing {
+    setRequired({
+        (extra["isReleaseVersion"] as Boolean) && gradle.taskGraph.hasTask("publishProjectPublicationToOSSRHRepository")
+    })
+    useGpgCmd()
+    sign(publishing.publications["Ds3Bom"])
 }
