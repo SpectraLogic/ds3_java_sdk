@@ -14,19 +14,44 @@
  */
 
 plugins {
-    id("ds3-java-sdk-internal-convention")
     id("ds3-java-sdk-version")
+    id("ds3-java-sdk-internal-convention")
+    id("org.jetbrains.kotlin.jvm")
     `java-library`
     `maven-publish`
+    id("ds3-java-sdk-publishing-common-convention")
+    signing
     id("org.owasp.dependencycheck")
+}
+
+kotlin {
+    jvmToolchain {
+        (this as JavaToolchainSpec).apply {
+            languageVersion.set(JavaLanguageVersion.of("8"))
+            vendor.set(JvmVendorSpec.ADOPTIUM)
+        }
+    }
+}
+
+java {
+    withJavadocJar()
+    withSourcesJar()
 }
 
 publishing {
     publications {
-        create<MavenPublication>("ProjectPublication") {
+        create<MavenPublication>("Project") {
             from(components["java"])
         }
     }
+}
+
+signing {
+    setRequired({
+        (extra["isReleaseVersion"] as Boolean) && gradle.taskGraph.hasTask("publishProjectPublicationToOSSRHRepository")
+    })
+    useGpgCmd()
+    sign(publishing.publications["Project"])
 }
 
 dependencyCheck {
