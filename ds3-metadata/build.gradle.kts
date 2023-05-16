@@ -18,6 +18,10 @@ plugins {
     alias(libs.plugins.shadowPlugin)
 }
 
+description = "This module holds the classes for converting file system " +
+    "metadata to BlackPearl object store metadata so you can preserve and " +
+    "restore file times and OS specific metadata."
+
 dependencies {
     api(project(":ds3-interfaces"))
     api(project(":ds3-utils"))

@@ -21,7 +21,7 @@ plugins {
     `java-platform`
 }
 
-description = "The ds3-bom generates a Bill of Materials (BOM) for the published DS3 SDK artifacts."
+description = "The DS3 Java SDK Bill of Materials."
 
 dependencies {
     constraints {

@@ -74,6 +74,7 @@ val augmentPom = tasks.register("augmentPom") {
         pub.pom {
             name.set("${project.group}:${project.name}")
             url.set("https://github.com/SpectraLogic/ds3_java_sdk")
+            description.set("${project.description}")
             licenses {
                 license {
                     name.set("The Apache License, Version 2.0")
