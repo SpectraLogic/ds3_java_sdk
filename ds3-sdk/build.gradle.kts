@@ -21,6 +21,9 @@ plugins {
     alias(libs.plugins.gitVersionPlugin)
 }
 
+description = "The BlackPearl SDK module holds the classes used to " +
+    "communicate with the BlackPearl dataport."
+
 dependencies {
     implementation(platform(libs.jacksonBom))
 

@@ -17,6 +17,9 @@ plugins {
     `ds3-java-sdk-library-convention`
 }
 
+description = "This module holds classes for utilities used to manage files and " +
+    "metadata."
+
 dependencies {
     api(project(":ds3-interfaces"))
 

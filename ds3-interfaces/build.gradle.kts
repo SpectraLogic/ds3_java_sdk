@@ -13,6 +13,9 @@
  * ****************************************************************************
  */
 
+description = "The interfaces module holds the interfaces for headers and " +
+    "metadata."
+
 plugins {
     `ds3-java-sdk-library-convention`
 }
