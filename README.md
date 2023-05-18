@@ -63,10 +63,6 @@ dependencies {
 
 Versions prior to 5.6.0 are available on [jitpack.io](https://jitpack.io/#SpectraLogic/ds3_java_sdk) under different maven coordinates. Unfortunately, the 5.6.0 version on jitpack.io is a pre-release version and is missing important fixes, and it is recommended that the artifacts on Maven Central are used going forward. To access versions earlier than 5.6.0, please see the instructions at https://jitpack.io/#SpectraLogic/ds3_java_sdk.
 
-## Javadoc
-
-The latest javadoc is located at [http://spectralogic.github.io/ds3_java_sdk/javadoc/](http://spectralogic.github.io/ds3_java_sdk/javadoc/)
-
 ## Contributing
 
 If you would like to contribute to the source code, sign the [Contributors Agreement](https://developer.spectralogic.com/contributors-agreement/) and make sure that your source conforms to our [Java Style Guide](https://github.com/SpectraLogic/spectralogic.github.com/wiki/Java-Style-Guide).  For an overview of how we use Github, please review our [Github Workflow](https://github.com/SpectraLogic/spectralogic.github.com/wiki/Github-Workflow).
