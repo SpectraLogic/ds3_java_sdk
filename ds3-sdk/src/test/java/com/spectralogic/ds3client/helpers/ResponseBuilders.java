@@ -15,6 +15,7 @@
 
 package com.spectralogic.ds3client.helpers;
 
+import com.google.common.base.Charsets;
 import com.spectralogic.ds3client.commands.GetObjectRequest;
 import com.spectralogic.ds3client.commands.GetObjectResponse;
 import com.spectralogic.ds3client.commands.HeadBucketResponse;
@@ -180,7 +181,7 @@ public final class ResponseBuilders {
     }
 
     private static <T extends WritableByteChannel> T writeToChannel(final String contents, final T channel) {
-        final Writer writer = Channels.newWriter(channel, StandardCharsets.UTF_8);
+        final Writer writer = Channels.newWriter(channel, Charsets.UTF_8.name());
         try {
             writer.write(contents);
             writer.flush();

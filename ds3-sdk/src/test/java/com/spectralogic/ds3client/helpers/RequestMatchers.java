@@ -15,6 +15,7 @@
 
 package com.spectralogic.ds3client.helpers;
 
+import com.google.common.base.Charsets;
 import com.spectralogic.ds3client.commands.GetBucketRequest;
 import com.spectralogic.ds3client.commands.GetObjectRequest;
 import com.spectralogic.ds3client.commands.PutObjectRequest;
@@ -56,7 +57,7 @@ public final class RequestMatchers {
                 describe(item.getChunkClientProcessingOrderGuarantee(), mismatchDescription);
             }
 
-            private static void describe(
+            private void describe(
                     final JobChunkClientProcessingOrderGuarantee chunkOrdering,
                     final Description description) {
                 description
@@ -85,7 +86,7 @@ public final class RequestMatchers {
                 describeRequest(UUID.fromString(item.getJob()), mismatchDescription);
             }
 
-            private static void describeRequest(final UUID jobIdValue, final Description description) {
+            private void describeRequest(final UUID jobIdValue, final Description description) {
                 description
                     .appendText("GetAvailableJobChunksRequest with job id: ")
                     .appendValue(jobIdValue);
@@ -112,7 +113,7 @@ public final class RequestMatchers {
                 describeRequest(UUID.fromString(item.getJobChunkId()), mismatchDescription);
             }
 
-            private static void describeRequest(final UUID chunkIdValue, final Description description) {
+            private void describeRequest(final UUID chunkIdValue, final Description description) {
                 description
                     .appendText("AllocateJobChunkResponse with chunk id: ")
                     .appendValue(chunkIdValue);
@@ -208,7 +209,7 @@ public final class RequestMatchers {
     private static String channelToString(final SeekableByteChannel channel) {
         try {
             channel.position(0);
-            return IOUtils.toString(Channels.newReader(channel, StandardCharsets.UTF_8));
+            return IOUtils.toString(Channels.newReader(channel, Charsets.UTF_8.name()));
         } catch (final IOException e) {
             throw new RuntimeException(e);
         }

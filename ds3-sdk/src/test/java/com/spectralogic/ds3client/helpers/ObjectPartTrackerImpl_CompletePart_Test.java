@@ -25,6 +25,7 @@ import org.junit.runners.Parameterized.Parameters;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -70,13 +71,13 @@ public class ObjectPartTrackerImpl_CompletePart_Test {
                 new ObjectPart(0L, 100L),
                 new ObjectPart(200L, 100L)
             ) },
-            new Object[] { "completely before", false, List.of(new ObjectPart(0L, 99L))},
-            new Object[] { "just before", false, List.of(new ObjectPart(0L, 100L))},
-            new Object[] { "overlapping before", false, List.of(new ObjectPart(50L, 100L))},
-            new Object[] { "overlapping both", false, List.of(new ObjectPart(50L, 200L))},
-            new Object[] { "overlapping after", false, List.of(new ObjectPart(150L, 100L))},
-            new Object[] { "just after", false, List.of(new ObjectPart(200L, 100L))},
-            new Object[] { "completely after", false, List.of(new ObjectPart(201L, 99L))}
+            new Object[] { "completely before", false, Collections.singletonList(new ObjectPart(0L, 99L))},
+            new Object[] { "just before", false, Collections.singletonList(new ObjectPart(0L, 100L))},
+            new Object[] { "overlapping before", false, Collections.singletonList(new ObjectPart(50L, 100L))},
+            new Object[] { "overlapping both", false, Collections.singletonList(new ObjectPart(50L, 200L))},
+            new Object[] { "overlapping after", false, Collections.singletonList(new ObjectPart(150L, 100L))},
+            new Object[] { "just after", false, Collections.singletonList(new ObjectPart(200L, 100L))},
+            new Object[] { "completely after", false, Collections.singletonList(new ObjectPart(201L, 99L))}
         );
     }
 
@@ -124,7 +125,7 @@ public class ObjectPartTrackerImpl_CompletePart_Test {
     }
 
     private void checkFailure() {
-        final ObjectPartTracker tracker = new ObjectPartTrackerImpl(this.name, List.of(new ObjectPart(100L, 100L)), new SameThreadEventRunner());
+        final ObjectPartTracker tracker = new ObjectPartTrackerImpl(this.name, Collections.singletonList(new ObjectPart(100L, 100L)), new SameThreadEventRunner());
         try {
             tracker.completePart(this.parts.iterator().next());
             Assert.fail();

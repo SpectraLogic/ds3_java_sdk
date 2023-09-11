@@ -18,6 +18,7 @@ package com.spectralogic.ds3client.helpers.channels;
 import com.spectralogic.ds3client.helpers.TruncateNotAllowedException;
 import com.spectralogic.ds3client.utils.ByteArraySeekableByteChannel;
 
+import org.apache.commons.io.Charsets;
 import org.apache.commons.io.IOUtils;
 import org.junit.Test;
 
@@ -251,7 +252,7 @@ public class WindowedSeekableByteChannel_Test {
     }
 
     private static void writeToChannel(final String string, final SeekableByteChannel channel) throws IOException {
-        final Writer writer = Channels.newWriter(channel, StandardCharsets.UTF_8);
+        final Writer writer = Channels.newWriter(channel, Charsets.UTF_8.name());
         writer.write(string);
         writer.flush();
     }
@@ -264,6 +265,6 @@ public class WindowedSeekableByteChannel_Test {
     }
 
     private static String channelToString(final SeekableByteChannel channel) throws IOException {
-        return IOUtils.toString(Channels.newReader(channel, StandardCharsets.UTF_8));
+        return IOUtils.toString(Channels.newReader(channel, Charsets.UTF_8.name()));
     }
 }

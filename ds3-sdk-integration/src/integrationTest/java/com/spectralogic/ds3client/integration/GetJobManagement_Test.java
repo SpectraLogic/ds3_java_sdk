@@ -236,7 +236,7 @@ public class GetJobManagement_Test {
                     maxNumBlockAllocationRetries,
                     maxNumObjectTransferAttempts);
 
-            final Ds3ClientHelpers.Job readJob = ds3ClientHelpers.startReadJob(BUCKET_NAME, List.of(obj));
+            final Ds3ClientHelpers.Job readJob = ds3ClientHelpers.startReadJob(BUCKET_NAME, Collections.singletonList(obj));
 
             final AtomicBoolean dataTransferredEventReceived = new AtomicBoolean(false);
             final AtomicBoolean objectCompletedEventReceived = new AtomicBoolean(false);
@@ -367,7 +367,7 @@ public class GetJobManagement_Test {
                     maxNumBlockAllocationRetries,
                     maxNumObjectTransferAttempts);
 
-            final Ds3ClientHelpers.Job readJob = ds3ClientHelpers.startReadJob(BUCKET_NAME, List.of(obj));
+            final Ds3ClientHelpers.Job readJob = ds3ClientHelpers.startReadJob(BUCKET_NAME, Collections.singletonList(obj));
 
             final GetJobSpectraS3Response jobSpectraS3Response = ds3ClientShim
                     .getJobSpectraS3(new GetJobSpectraS3Request(readJob.getJobId()));
@@ -468,7 +468,7 @@ public class GetJobManagement_Test {
                     maxNumBlockAllocationRetries,
                     maxNumObjectTransferAttempts);
 
-            final Ds3ClientHelpers.Job readJob = ds3ClientHelpers.startReadJob(BUCKET_NAME, List.of(obj));
+            final Ds3ClientHelpers.Job readJob = ds3ClientHelpers.startReadJob(BUCKET_NAME, Collections.singletonList(obj));
 
             final GetJobSpectraS3Response jobSpectraS3Response = ds3ClientShim
                     .getJobSpectraS3(new GetJobSpectraS3Request(readJob.getJobId()));
@@ -512,7 +512,7 @@ public class GetJobManagement_Test {
                     maxNumBlockAllocationRetries,
                     maxNumObjectTransferAttempts);
 
-            final Ds3ClientHelpers.Job readJob = ds3ClientHelpers.startReadJob(BUCKET_NAME, List.of(obj));
+            final Ds3ClientHelpers.Job readJob = ds3ClientHelpers.startReadJob(BUCKET_NAME, Collections.singletonList(obj));
 
             final GetJobSpectraS3Response jobSpectraS3Response = ds3ClientShim
                     .getJobSpectraS3(new GetJobSpectraS3Request(readJob.getJobId()));
@@ -786,7 +786,7 @@ public class GetJobManagement_Test {
                 maxNumBlockAllocationRetries,
                 maxNumObjectTransferAttempts);
 
-        return ds3ClientHelpers.startReadJob(BUCKET_NAME, List.of(obj));
+        return ds3ClientHelpers.startReadJob(BUCKET_NAME, Collections.singletonList(obj));
     }
 
     @Test
@@ -857,7 +857,7 @@ public class GetJobManagement_Test {
                     maxNumBlockAllocationRetries,
                     maxNumObjectTransferAttempts);
 
-            final Ds3ClientHelpers.Job readJob = readJobStarter.startReadJob(ds3ClientHelpers, BUCKET_NAME, List.of(obj));
+            final Ds3ClientHelpers.Job readJob = readJobStarter.startReadJob(ds3ClientHelpers, BUCKET_NAME, Collections.singletonList(obj));
 
             final AtomicBoolean dataTransferredEventReceived = new AtomicBoolean(false);
             final AtomicBoolean objectCompletedEventReceived = new AtomicBoolean(false);
@@ -1440,7 +1440,7 @@ public class GetJobManagement_Test {
         try {
             Runtime.getRuntime().exec("mkfifo " + Paths.get(tempDirectory.toString(), BEOWULF_FILE_NAME)).waitFor();
 
-            final List<Ds3Object> ds3Objects = List.of(new Ds3Object(BEOWULF_FILE_NAME));
+            final List<Ds3Object> ds3Objects = Collections.singletonList(new Ds3Object(BEOWULF_FILE_NAME));
 
             final Ds3ClientHelpers.Job readJob = HELPERS.startReadJob(BUCKET_NAME, ds3Objects);
             readJob.transfer(new FileObjectPutter(tempDirectory));

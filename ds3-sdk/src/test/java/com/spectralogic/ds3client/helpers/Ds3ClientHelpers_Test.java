@@ -530,7 +530,7 @@ public class Ds3ClientHelpers_Test {
                 "2014-09-17T13:03:54.000Z",
                 UUID.fromString("57919d2d-448c-4e2a-8886-0413af22243e"),
                 "spectra",
-                List.of(basicNode(nodeId, "black-pearl")),
+                Collections.singletonList(basicNode(nodeId, "black-pearl")),
                 Arrays.asList(chunks)
         );
     }

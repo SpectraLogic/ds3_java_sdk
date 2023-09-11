@@ -17,6 +17,7 @@ package com.spectralogic.ds3client.helpers.channels;
 
 import com.spectralogic.ds3client.utils.ByteArraySeekableByteChannel;
 
+import org.apache.commons.io.Charsets;
 import org.apache.commons.io.IOUtils;
 import org.junit.Test;
 
@@ -33,13 +34,13 @@ public class WindowedChannelFactory_Test {
     @Test
     public void getReturnsWindow() throws Exception {
         try (final ByteArraySeekableByteChannel channel = new ByteArraySeekableByteChannel()) {
-            final Writer writer = Channels.newWriter(channel, StandardCharsets.UTF_8);
+            final Writer writer = Channels.newWriter(channel, Charsets.UTF_8.name());
             writer.write("0123456789");
             writer.close();
             
             try (final WindowedChannelFactory windowedChannelFactory = new WindowedChannelFactory(channel)) {
                 try (final SeekableByteChannel window = windowedChannelFactory.get(2L, 6L)) {
-                    assertThat(IOUtils.toString(Channels.newReader(window, StandardCharsets.UTF_8)), is("234567"));
+                    assertThat(IOUtils.toString(Channels.newReader(window, Charsets.UTF_8.name())), is("234567"));
                 }
             }
         }
