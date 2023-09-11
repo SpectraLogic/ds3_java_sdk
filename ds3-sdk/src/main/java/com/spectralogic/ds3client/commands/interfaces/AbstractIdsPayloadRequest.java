@@ -26,7 +26,7 @@ import java.util.List;
 
 /**
  * Abstract class that handles request payload of ids, in format:
- * <ids><id>id1</id><id>id2</id>...</ids>
+ * {@code <ids><id>id1</id><id>id2</id>...</ids>}
  */
 public abstract class AbstractIdsPayloadRequest extends AbstractRequest {
 

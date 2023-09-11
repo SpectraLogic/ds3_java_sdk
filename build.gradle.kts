@@ -13,12 +13,7 @@
  * ****************************************************************************
  */
 
-plugins {
-    `kotlin-dsl`
-}
-
-dependencies {
-    implementation(libs.kotlinJvmPlugin)
-    implementation(libs.owaspDepCheckPlugin)
-    implementation(libs.versionsPlugin)
+tasks.wrapper {
+    // to upgrade the gradle wrapper, bump the version below and run ./gradlew wrapper twice
+    gradleVersion = "8.1.1"
 }

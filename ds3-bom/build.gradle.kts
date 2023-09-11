@@ -16,10 +16,12 @@
 plugins {
     `ds3-java-sdk-version`
     `maven-publish`
+    `ds3-java-sdk-publishing-common-convention`
+    signing
     `java-platform`
 }
 
-description = "The ds3-bom generates a Bill of Materials (BOM) for the published DS3 SDK artifacts."
+description = "The DS3 Java SDK Bill of Materials."
 
 dependencies {
     constraints {
@@ -36,4 +38,12 @@ publishing {
             from(components["javaPlatform"])
         }
     }
+}
+
+signing {
+    setRequired({
+        (extra["isReleaseVersion"] as Boolean) && gradle.taskGraph.hasTask("publishProjectPublicationToOSSRHRepository")
+    })
+    useGpgCmd()
+    sign(publishing.publications["Ds3Bom"])
 }

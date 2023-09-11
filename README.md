@@ -1,13 +1,10 @@
 ds3_java_sdk
 ============
 
-[![Build Status](https://travis-ci.com/SpectraLogic/ds3_java_sdk.svg)](https://travis-ci.com/SpectraLogic/ds3_java_sdk)
-<a href="https://scan.coverity.com/projects/4624">
-  <img alt="Coverity Scan Build Status"
-       src="https://scan.coverity.com/projects/4624/badge.svg"/>
-</a>
-[ ![Download](https://api.bintray.com/packages/spectralogic/ds3/ds3-sdk/images/download.svg) ](https://bintray.com/spectralogic/ds3/ds3-sdk/_latestVersion)
-[![Apache V2 License](http://img.shields.io/badge/license-Apache%20V2-blue.svg)](https://github.com/SpectraLogic/ds3_java_sdk/blob/master/LICENSE.md) [![Open Hub project report for ds3_java_sdk](https://www.openhub.net/p/ds3_java_sdk/widgets/project_thin_badge.gif)](https://www.openhub.net/p/ds3_java_sdk?ref=sample)
+[![Latest release](https://img.shields.io/github/release/SpectraLogic/ds3_java_sdk.svg)](https://github.com/SpectraLogic/ds3_java_sdk/releases/latest)
+[![Maven Central](https://img.shields.io/maven-central/v/com.spectralogic.ds3/ds3-bom.svg)](https://search.maven.org/artifact/com.spectralogic.ds3/ds3-bom)
+[![Apache V2 License](http://img.shields.io/badge/license-Apache%20V2-blue.svg)](https://github.com/SpectraLogic/ds3_java_sdk/blob/master/LICENSE.md)
+[![Open Hub project report for ds3_java_sdk](https://www.openhub.net/p/ds3_java_sdk/widgets/project_thin_badge.gif)](https://www.openhub.net/p/ds3_java_sdk?ref=sample)
 
 ## Contact Us
 
@@ -21,57 +18,53 @@ If using Intellij, simply import the project as a Gradle project.
 
 ## Install
 
-To install the latest `ds3_java_sdk` either download the latest release jar file from the [Releases](../../releases) page or clone the repository with `git clone https://github.com/SpectraLogic/ds3_java_sdk.git`, cd to `ds3_java_sdk` and run `./gradlew clean ds3-sdk:install` to install the sdk into your local maven repository.  It is compatible with Java 8.
+To install the latest `ds3_java_sdk` either download the latest release jar file from the [Releases](../../releases) page or clone the repository with `git clone https://github.com/SpectraLogic/ds3_java_sdk.git`, cd to `ds3_java_sdk` and run `./gradlew clean ds3-sdk:install` to install the sdk into your local maven repository.  It is compatible with Java 8 and is additionally tested against Java 11 and 17.
 
-The SDK can also be included directly into a Maven or Gradle build. There is also a fatjar version that you can optionally use with the `all` classifier, take a look at the commented out code in the examples below.  To include the SDK  into maven add the following to the `pom.xml` file:
+Starting with the 5.6.0 release, the SDK is available on [Maven Central](https://central.sonatype.com/namespace/com.spectralogic.ds3) and can be included directly into a Maven or Gradle build. There is also a fatjar version that you can optionally use with the `all` classifier, take a look at the commented out code in the examples below.  To include the SDK  into maven add the following to the `pom.xml` file:
 
 ```xml
-
 <project>
-  ...
-  <repositories>
-		<repository>
-		    <id>jitpack.io</id>
-		    <url>https://jitpack.io</url>
-		</repository>
-	</repositories>
   ...
     <dependencies>
       ...
       <dependency>
-	      <groupId>com.github.spectralogic</groupId>
-	      <artifactId>ds3_java_sdk</artifactId>
+	      <groupId>com.spectralogic.ds3</groupId>
+	      <artifactId>ds3-sdk</artifactId>
 	      <version>Tag</version>
         <!-- <classifier>all</classifier> -->
 	</dependency>
     ...
     </dependencies>
 </project>
-
 ```
 
-To include the sdk into Gradle include the following in the `build.gradle` file:
+To include the sdk into Gradle include the following in the `build.gradle.kts` file:
+
+```kotlin
+dependencies {
+    implementation(platform("com.spectralogic.ds3:ds3-bom:Tag"))
+    implementation("com.spectralogic.ds3:ds3-sdk")
+    //implementation("com.spectralogic.ds3:ds3-sdk::all")
+}
+```
+
+or in the `build.gradle` file:
 
 ```groovy
 
-allprojects {
-		repositories {
-			...
-			maven { url 'https://jitpack.io' }
-		}
-}
-
 dependencies {
-    implementation 'com.github.spectralogic:ds3_java_sdk:Tag'
-    implementation 'com.github.spectralogic:ds3_java_sdk:Tag:all'
+    implementation platform('com.spectralogic.ds3:ds3-bom:Tag')
+    implementation 'com.spectralogic.ds3:ds3-sdk'
+    //implementation 'com.spectralogic.ds3:ds3-sdk::all'
 }
-
 ```
-## Javadoc
 
-The latest javadoc is located at [http://spectralogic.github.io/ds3_java_sdk/javadoc/](http://spectralogic.github.io/ds3_java_sdk/javadoc/)
+### Previous versions
+
+Versions prior to 5.6.0 are available on [jitpack.io](https://jitpack.io/#SpectraLogic/ds3_java_sdk) under different maven coordinates. Unfortunately, the 5.6.0 version on jitpack.io is a pre-release version and is missing important fixes, and it is recommended that the artifacts on Maven Central are used going forward. To access versions earlier than 5.6.0, please see the instructions at https://jitpack.io/#SpectraLogic/ds3_java_sdk.
 
 ## Contributing
+
 If you would like to contribute to the source code, sign the [Contributors Agreement](https://developer.spectralogic.com/contributors-agreement/) and make sure that your source conforms to our [Java Style Guide](https://github.com/SpectraLogic/spectralogic.github.com/wiki/Java-Style-Guide).  For an overview of how we use Github, please review our [Github Workflow](https://github.com/SpectraLogic/spectralogic.github.com/wiki/Github-Workflow).
 
 ## Examples
@@ -98,11 +91,14 @@ Update the version of the SDK before creating a new release. The format is `<maj
 `<major>.<minor>` numbers must match the version of BP. The `<patch>` is an incrementing number that increments with 
 each SDK release for a given major/minor release.
 
-The version is specified in the `buildSrc/src/main/kotlin/ds3-java-sdk-version.gradle.kts` file:
+The version is specified in `libs.versions.toml`:
 
 ```
-group = "com.spectralogic.ds3"
-version = "5.4.1"
+[versions]
+#
+# project version
+#
+ds3SdkVersion = "5.6.1"
 ```
 
-When a release is created in github, it is automatically published on [jitpack.io](https://jitpack.io/#SpectraLogic/ds3_java_sdk).
+Once released, increment the minor version and add the suffix "-SNAPSHOT" to prepare for the next development cycle.
