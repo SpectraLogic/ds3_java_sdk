@@ -21,6 +21,7 @@ import com.spectralogic.ds3client.serializer.XmlOutput;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 /**
@@ -41,7 +42,7 @@ public abstract class AbstractIdsPayloadRequest extends AbstractRequest {
     public InputStream getStream() {
         final Ids requestPayload = new Ids(ids);
         final String xmlOutput = XmlOutput.toXml(requestPayload);
-        final byte[] stringBytes = xmlOutput.getBytes(Charset.forName("UTF-8"));
+        final byte[] stringBytes = xmlOutput.getBytes(StandardCharsets.UTF_8);
         this.size = stringBytes.length;
 
         return new ByteArrayInputStream(stringBytes);

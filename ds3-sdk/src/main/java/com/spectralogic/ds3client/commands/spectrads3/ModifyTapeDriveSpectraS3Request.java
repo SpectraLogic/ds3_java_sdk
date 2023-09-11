@@ -23,7 +23,6 @@ import com.spectralogic.ds3client.models.Priority;
 import com.spectralogic.ds3client.models.Quiesced;
 import com.spectralogic.ds3client.models.ReservedTaskType;
 import java.util.UUID;
-import com.google.common.net.UrlEscapers;
 
 public class ModifyTapeDriveSpectraS3Request extends AbstractRequest {
 

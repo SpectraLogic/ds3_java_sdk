@@ -105,7 +105,7 @@ public class MockNetwork implements NetworkClient {
         assertThat(request.getVerb(), is(this.verb));
         assertThat(request.getPath(), is(this.path));
         if (this.queryParams != null) {
-            this.assertMapsEqual(this.queryParams, request.getQueryParams());
+            MockNetwork.assertMapsEqual(this.queryParams, request.getQueryParams());
         }
         
         if(this.requestHeaders != null){
@@ -128,7 +128,7 @@ public class MockNetwork implements NetworkClient {
         return new MockedWebResponse(this.responseContent, this.statusCode, this.headers);
     }
 
-    private void assertMapsEqual(final Map<String, String> expectedMap, final Map<String, String> actualMap) {
+    private static void assertMapsEqual(final Map<String, String> expectedMap, final Map<String, String> actualMap) {
         assertThat(actualMap, is(notNullValue()));
         assertThat(actualMap.size(), is(expectedMap.size()));
         for (final Map.Entry<String, String> entry : expectedMap.entrySet()) {

@@ -716,7 +716,7 @@ public final class TransferStrategyBuilder {
         return jobPartTracker;
     }
 
-    private ImmutableList<BulkObject> getBlobs(final List<Objects> chunks) {
+    private static ImmutableList<BulkObject> getBlobs(final List<Objects> chunks) {
         final ImmutableList.Builder<BulkObject> builder = ImmutableList.builder();
         for (final Objects objects : chunks) {
             builder.addAll(objects.getObjects());
@@ -725,7 +725,8 @@ public final class TransferStrategyBuilder {
     }
 
     private void makeDefaultChecksumFunction() {
-        final ChecksumFunction newChecksumFunction = new ChecksumFunction() {
+
+        checksumFunction = new ChecksumFunction() {
             @Override
             public String compute(final BulkObject obj, final ByteChannel channel) {
                 String checksum = null;
@@ -756,8 +757,6 @@ public final class TransferStrategyBuilder {
                 return checksum;
             }
         };
-
-        checksumFunction = newChecksumFunction;
     }
 
     private TransferStrategy makeRandomAccessPutTransferStrategy() {

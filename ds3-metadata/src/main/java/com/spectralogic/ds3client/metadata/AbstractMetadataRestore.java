@@ -86,10 +86,10 @@ abstract class AbstractMetadataRestore implements MetadataRestore {
      * @param lastModifiedTime modified time got from server
      * @param lastAccessedTime last aceess time got from server
      */
-    private void setFileTimes(final String filePath,
-                              final String creationTime,
-                              final String lastModifiedTime,
-                              final String lastAccessedTime)
+    private static void setFileTimes(final String filePath,
+            final String creationTime,
+            final String lastModifiedTime,
+            final String lastAccessedTime)
         throws IOException
     {
         final BasicFileAttributeView attributes = Files.getFileAttributeView(Paths.get(filePath), BasicFileAttributeView.class);

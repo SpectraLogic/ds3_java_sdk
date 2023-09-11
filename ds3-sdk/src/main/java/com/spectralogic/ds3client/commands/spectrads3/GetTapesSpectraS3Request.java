@@ -19,7 +19,6 @@ package com.spectralogic.ds3client.commands.spectrads3;
 import com.spectralogic.ds3client.networking.HttpVerb;
 import com.spectralogic.ds3client.commands.interfaces.AbstractPaginationRequest;
 import java.lang.Long;
-import com.google.common.net.UrlEscapers;
 import java.util.Date;
 import java.util.UUID;
 import com.spectralogic.ds3client.models.TapeState;

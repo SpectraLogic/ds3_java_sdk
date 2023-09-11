@@ -73,12 +73,12 @@ public class MetadataReceivedListenerImpl implements MetadataReceivedListener {
      * @param objectName name of the file to be restored
      * @param metadata   metadata which needs to be set on local file
      */
-    private void restoreMetaData(final String objectName, final Metadata metadata) throws IOException, InterruptedException {
+    private static void restoreMetaData(final String objectName, final Metadata metadata) throws IOException, InterruptedException {
 
         final ImmutableList.Builder<Throwable> exceptionBuilder = ImmutableList.builder();
 
         //get metadatarestore on the basis of os
-        final MetadataRestore metadataRestore = new MetadataRestoreFactory().getOSSpecificMetadataRestore(metadata, objectName);
+        final MetadataRestore metadataRestore = MetadataRestoreFactory.getOSSpecificMetadataRestore(metadata, objectName);
         //restore os name
         metadataRestore.restoreOSName();
 

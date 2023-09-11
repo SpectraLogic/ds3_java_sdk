@@ -236,7 +236,7 @@ public class GetJobManagement_Test {
                     maxNumBlockAllocationRetries,
                     maxNumObjectTransferAttempts);
 
-            final Ds3ClientHelpers.Job readJob = ds3ClientHelpers.startReadJob(BUCKET_NAME, Arrays.asList(obj));
+            final Ds3ClientHelpers.Job readJob = ds3ClientHelpers.startReadJob(BUCKET_NAME, List.of(obj));
 
             final AtomicBoolean dataTransferredEventReceived = new AtomicBoolean(false);
             final AtomicBoolean objectCompletedEventReceived = new AtomicBoolean(false);
@@ -367,7 +367,7 @@ public class GetJobManagement_Test {
                     maxNumBlockAllocationRetries,
                     maxNumObjectTransferAttempts);
 
-            final Ds3ClientHelpers.Job readJob = ds3ClientHelpers.startReadJob(BUCKET_NAME, Arrays.asList(obj));
+            final Ds3ClientHelpers.Job readJob = ds3ClientHelpers.startReadJob(BUCKET_NAME, List.of(obj));
 
             final GetJobSpectraS3Response jobSpectraS3Response = ds3ClientShim
                     .getJobSpectraS3(new GetJobSpectraS3Request(readJob.getJobId()));
@@ -392,7 +392,7 @@ public class GetJobManagement_Test {
         }
     }
 
-    private void disableWritePermissionForRoot(final String fileOrDirName) {
+    private static void disableWritePermissionForRoot(final String fileOrDirName) {
         try {
             if (iAmRoot()) {
                 Runtime.getRuntime().exec("chattr +i " + fileOrDirName).waitFor();
@@ -402,7 +402,7 @@ public class GetJobManagement_Test {
         }
     }
 
-    private boolean iAmRoot() {
+    private static boolean iAmRoot() {
         if ( ! Platform.isLinux()) {
             return false;
         }
@@ -435,7 +435,7 @@ public class GetJobManagement_Test {
         return false;
     }
 
-    private void enableWritePermissionForRoot(final String fileOrDirName) {
+    private static void enableWritePermissionForRoot(final String fileOrDirName) {
         try {
             if (iAmRoot()) {
                 Runtime.getRuntime().exec("chattr -i " + fileOrDirName).waitFor();
@@ -468,7 +468,7 @@ public class GetJobManagement_Test {
                     maxNumBlockAllocationRetries,
                     maxNumObjectTransferAttempts);
 
-            final Ds3ClientHelpers.Job readJob = ds3ClientHelpers.startReadJob(BUCKET_NAME, Arrays.asList(obj));
+            final Ds3ClientHelpers.Job readJob = ds3ClientHelpers.startReadJob(BUCKET_NAME, List.of(obj));
 
             final GetJobSpectraS3Response jobSpectraS3Response = ds3ClientShim
                     .getJobSpectraS3(new GetJobSpectraS3Request(readJob.getJobId()));
@@ -512,7 +512,7 @@ public class GetJobManagement_Test {
                     maxNumBlockAllocationRetries,
                     maxNumObjectTransferAttempts);
 
-            final Ds3ClientHelpers.Job readJob = ds3ClientHelpers.startReadJob(BUCKET_NAME, Arrays.asList(obj));
+            final Ds3ClientHelpers.Job readJob = ds3ClientHelpers.startReadJob(BUCKET_NAME, List.of(obj));
 
             final GetJobSpectraS3Response jobSpectraS3Response = ds3ClientShim
                     .getJobSpectraS3(new GetJobSpectraS3Request(readJob.getJobId()));
@@ -532,8 +532,7 @@ public class GetJobManagement_Test {
     private static class FailingChannelBuilder implements Ds3ClientHelpers.ObjectChannelBuilder {
         @Override
         public SeekableByteChannel buildChannel(final String key) throws IOException {
-            final String filePath = key;
-            final SeekableByteChannel seekableByteChannel = Files.newByteChannel(Paths.get(filePath),
+            final SeekableByteChannel seekableByteChannel = Files.newByteChannel(Paths.get(key),
                     StandardOpenOption.WRITE, StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.CREATE,
                     StandardOpenOption.DELETE_ON_CLOSE);
             return new SeekableByteChannelWrapper(seekableByteChannel);
@@ -769,7 +768,7 @@ public class GetJobManagement_Test {
         }
     }
 
-    private Ds3ClientHelpers.Job createReadJobWithObjectsReadyToTransfer(final Ds3ClientShimFactory.ClientFailureType clientFailureType)
+    private static Ds3ClientHelpers.Job createReadJobWithObjectsReadyToTransfer(final Ds3ClientShimFactory.ClientFailureType clientFailureType)
             throws IOException, URISyntaxException, NoSuchMethodException, IllegalAccessException, InvocationTargetException
     {
         final String DIR_NAME = "largeFiles/";
@@ -787,9 +786,7 @@ public class GetJobManagement_Test {
                 maxNumBlockAllocationRetries,
                 maxNumObjectTransferAttempts);
 
-        final Ds3ClientHelpers.Job readJob = ds3ClientHelpers.startReadJob(BUCKET_NAME, Arrays.asList(obj));
-
-        return readJob;
+        return ds3ClientHelpers.startReadJob(BUCKET_NAME, List.of(obj));
     }
 
     @Test
@@ -840,7 +837,7 @@ public class GetJobManagement_Test {
         Ds3ClientHelpers.Job startReadJob(final Ds3ClientHelpers ds3ClientHelpers, final String bucketName, Iterable<Ds3Object> objectsToread) throws IOException;
     }
 
-    private void doReadJobWithJobStarter(final ReadJobStarter readJobStarter) throws IOException, URISyntaxException, NoSuchMethodException, IllegalAccessException, InvocationTargetException {
+    private static void doReadJobWithJobStarter(final ReadJobStarter readJobStarter) throws IOException, URISyntaxException, NoSuchMethodException, IllegalAccessException, InvocationTargetException {
         final String tempPathPrefix = null;
         final Path tempDirectory = Files.createTempDirectory(Paths.get("."), tempPathPrefix);
 
@@ -860,7 +857,7 @@ public class GetJobManagement_Test {
                     maxNumBlockAllocationRetries,
                     maxNumObjectTransferAttempts);
 
-            final Ds3ClientHelpers.Job readJob = readJobStarter.startReadJob(ds3ClientHelpers, BUCKET_NAME, Arrays.asList(obj));
+            final Ds3ClientHelpers.Job readJob = readJobStarter.startReadJob(ds3ClientHelpers, BUCKET_NAME, List.of(obj));
 
             final AtomicBoolean dataTransferredEventReceived = new AtomicBoolean(false);
             final AtomicBoolean objectCompletedEventReceived = new AtomicBoolean(false);
@@ -1134,7 +1131,7 @@ public class GetJobManagement_Test {
         void monitor();
     }
 
-    private class UserSuppliedPutBlobStrategy implements BlobStrategy {
+    private static class UserSuppliedPutBlobStrategy implements BlobStrategy {
         private final BlobStrategy wrappedBlobStrategy;
         private final Monitorable monitorable;
 
@@ -1169,7 +1166,7 @@ public class GetJobManagement_Test {
         });
     }
 
-    private void testGetJobWithUserSuppliedChannelStrategy(final TransferStrategyBuilderModifiable transferStrategyBuilderModifiable) throws IOException, InterruptedException {
+    private static void testGetJobWithUserSuppliedChannelStrategy(final TransferStrategyBuilderModifiable transferStrategyBuilderModifiable) throws IOException, InterruptedException {
         final String tempPathPrefix = null;
         final Path tempDirectory = Files.createTempDirectory(Paths.get("."), tempPathPrefix);
         final String fileName = "beowulf.txt";
@@ -1233,7 +1230,7 @@ public class GetJobManagement_Test {
         void released();
     }
 
-    private class UserSuppliedPutChannelStrategy implements ChannelStrategy {
+    private static class UserSuppliedPutChannelStrategy implements ChannelStrategy {
         private final ChannelMonitorable channelMonitorable;
         private final ChannelStrategy wrappedPutStrategy;
 
@@ -1325,7 +1322,7 @@ public class GetJobManagement_Test {
         }
     }
 
-    private class UserSuppliedTransferRetryDecorator implements TransferRetryDecorator {
+    private static class UserSuppliedTransferRetryDecorator implements TransferRetryDecorator {
         private final TransferRetryDecorator transferRetryDecorator;
         private final Monitorable monitorable;
 
@@ -1402,7 +1399,7 @@ public class GetJobManagement_Test {
         }
     }
 
-    private class UserSuppliedChunkAttemptRetryBehavior implements ChunkAttemptRetryBehavior {
+    private static class UserSuppliedChunkAttemptRetryBehavior implements ChunkAttemptRetryBehavior {
         private final ChunkAttemptRetryBehaviorMonitorable chunkAttemptRetryBehaviorMonitorable;
         private final ChunkAttemptRetryBehavior wrappedChunkAttemptRetryBehavior;
 
@@ -1443,7 +1440,7 @@ public class GetJobManagement_Test {
         try {
             Runtime.getRuntime().exec("mkfifo " + Paths.get(tempDirectory.toString(), BEOWULF_FILE_NAME)).waitFor();
 
-            final List<Ds3Object> ds3Objects = Arrays.asList(new Ds3Object(BEOWULF_FILE_NAME));
+            final List<Ds3Object> ds3Objects = List.of(new Ds3Object(BEOWULF_FILE_NAME));
 
             final Ds3ClientHelpers.Job readJob = HELPERS.startReadJob(BUCKET_NAME, ds3Objects);
             readJob.transfer(new FileObjectPutter(tempDirectory));

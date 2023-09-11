@@ -30,6 +30,7 @@ import org.hamcrest.TypeSafeMatcher;
 import java.io.IOException;
 import java.nio.channels.Channels;
 import java.nio.channels.SeekableByteChannel;
+import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 
 import static org.mockito.hamcrest.MockitoHamcrest.argThat;
@@ -55,7 +56,7 @@ public final class RequestMatchers {
                 describe(item.getChunkClientProcessingOrderGuarantee(), mismatchDescription);
             }
 
-            private void describe(
+            private static void describe(
                     final JobChunkClientProcessingOrderGuarantee chunkOrdering,
                     final Description description) {
                 description
@@ -84,7 +85,7 @@ public final class RequestMatchers {
                 describeRequest(UUID.fromString(item.getJob()), mismatchDescription);
             }
 
-            private void describeRequest(final UUID jobIdValue, final Description description) {
+            private static void describeRequest(final UUID jobIdValue, final Description description) {
                 description
                     .appendText("GetAvailableJobChunksRequest with job id: ")
                     .appendValue(jobIdValue);
@@ -111,7 +112,7 @@ public final class RequestMatchers {
                 describeRequest(UUID.fromString(item.getJobChunkId()), mismatchDescription);
             }
 
-            private void describeRequest(final UUID chunkIdValue, final Description description) {
+            private static void describeRequest(final UUID chunkIdValue, final Description description) {
                 description
                     .appendText("AllocateJobChunkResponse with chunk id: ")
                     .appendValue(chunkIdValue);
@@ -207,7 +208,7 @@ public final class RequestMatchers {
     private static String channelToString(final SeekableByteChannel channel) {
         try {
             channel.position(0);
-            return IOUtils.toString(Channels.newReader(channel, "UTF-8"));
+            return IOUtils.toString(Channels.newReader(channel, StandardCharsets.UTF_8));
         } catch (final IOException e) {
             throw new RuntimeException(e);
         }

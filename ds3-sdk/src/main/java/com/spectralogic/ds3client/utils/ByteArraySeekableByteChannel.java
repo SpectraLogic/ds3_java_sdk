@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.SeekableByteChannel;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
 public class ByteArraySeekableByteChannel implements SeekableByteChannel {
@@ -101,7 +102,7 @@ public class ByteArraySeekableByteChannel implements SeekableByteChannel {
     
     @Override
     public String toString() {
-        return this.toString(Charset.forName("UTF-8"));
+        return this.toString(StandardCharsets.UTF_8);
     }
     
     public String toString(final Charset charset) {

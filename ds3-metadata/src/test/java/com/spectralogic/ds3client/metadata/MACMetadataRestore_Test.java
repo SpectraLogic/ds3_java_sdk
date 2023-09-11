@@ -62,7 +62,7 @@ public class MACMetadataRestore_Test {
     }
 
 
-    private Metadata genMetadata(final Header... headers) {
+    private static Metadata genMetadata(final Header... headers) {
 
         final ImmutableMultimap.Builder<String, String> mapBuilder = ImmutableMultimap.builder();
         for (final Header header : headers) {

@@ -40,6 +40,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -98,7 +99,7 @@ public class FileSystemHelper_Test {
                 maxNumObjectTransferAttempts);
 
         final ObjectStorageSpaceVerificationResult result = ds3ClientHelpers.objectsFromBucketWillFitInDirectory(
-                "bad bucket name", Arrays.asList(new String[] {}), Paths.get("."));
+                "bad bucket name", Collections.emptyList(), Paths.get("."));
 
         assertEquals(ObjectStorageSpaceVerificationResult.VerificationStatus.BucketDoesNotExist, result.getVerificationStatus());
         assertEquals(0, result.getRequiredSpace());
@@ -119,7 +120,7 @@ public class FileSystemHelper_Test {
 
         try {
             final ObjectStorageSpaceVerificationResult result = ds3ClientHelpers.objectsFromBucketWillFitInDirectory(
-                    "bad bucket name", Arrays.asList(new String[]{}), textFile);
+                    "bad bucket name", Collections.emptyList(), textFile);
 
             assertEquals(ObjectStorageSpaceVerificationResult.VerificationStatus.PathIsNotADirectory, result.getVerificationStatus());
             assertEquals(0, result.getRequiredSpace());
@@ -143,7 +144,7 @@ public class FileSystemHelper_Test {
         FileUtils.deleteDirectory(directory.toFile());
 
         final ObjectStorageSpaceVerificationResult result = ds3ClientHelpers.objectsFromBucketWillFitInDirectory(
-                "bad bucket name", Arrays.asList(new String[]{}), directory);
+                "bad bucket name", Collections.emptyList(), directory);
 
         assertEquals(ObjectStorageSpaceVerificationResult.VerificationStatus.PathDoesNotExist, result.getVerificationStatus());
         assertEquals(0, result.getRequiredSpace());
@@ -165,7 +166,7 @@ public class FileSystemHelper_Test {
             // Deny write data access to everyone, making the directory unwritable
             Runtime.getRuntime().exec("icacls dir /deny Everyone:(WD)").waitFor();
         } else {
-            Runtime.getRuntime().exec("chmod -w " + directory.toString()).waitFor();
+            Runtime.getRuntime().exec("chmod -w " + directory).waitFor();
             final Process lsProcess = Runtime.getRuntime().exec("ls -l");
             lsProcess.waitFor();
             try (final BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(lsProcess.getInputStream()))) {
@@ -180,7 +181,7 @@ public class FileSystemHelper_Test {
 
         try {
             final ObjectStorageSpaceVerificationResult result = ds3ClientHelpers.objectsFromBucketWillFitInDirectory(
-                    "bad bucket name", Arrays.asList(new String[]{}), directory);
+                    "bad bucket name", Collections.emptyList(), directory);
 
             LOG.info(result.toString());
 
@@ -194,7 +195,7 @@ public class FileSystemHelper_Test {
                 // Grant write data access to everyone, making the directory writable, so we can delete it.
                 Runtime.getRuntime().exec("icacls dir /grant Everyone:(WD)").waitFor();
             } else {
-                Runtime.getRuntime().exec("chmod +w " + directory.toString()).waitFor();
+                Runtime.getRuntime().exec("chmod +w " + directory).waitFor();
             }
 
             FileUtils.deleteDirectory(directory.toFile());
@@ -221,8 +222,8 @@ public class FileSystemHelper_Test {
         void verifyResult(final ObjectStorageSpaceVerificationResult result, final long totalRequiredSize);
     }
 
-    private void putObjectThenRunVerification(final FileSystemHelper fileSystemHelper,
-                                              final ResultVerifier resultVerifier)
+    private static void putObjectThenRunVerification(final FileSystemHelper fileSystemHelper,
+            final ResultVerifier resultVerifier)
                                               throws IOException, URISyntaxException
     {
         try {

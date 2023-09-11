@@ -549,7 +549,7 @@ public abstract class Ds3ClientHelpers {
      * that will be applied before converting.
      */
     @SafeVarargs
-    public final Iterable<Ds3Object> toDs3Iterable(final Iterable<Contents> objects, final Predicate<Contents>... filters) {
+    public static Iterable<Ds3Object> toDs3Iterable(final Iterable<Contents> objects, final Predicate<Contents>... filters) {
 
         FluentIterable<Contents> fluentIterable = FluentIterable.from(objects).filter(input -> input != null);
 
@@ -561,13 +561,7 @@ public abstract class Ds3ClientHelpers {
             }
         }
 
-        return fluentIterable.transform(new Function<Contents, Ds3Object>() {
-            @Nullable
-            @Override
-            public Ds3Object apply(@Nullable final Contents input) {
-                return new Ds3Object(input.getKey(), input.getSize());
-            }
-        });
+        return fluentIterable.transform(new ContentsDs3ObjectFunction());
     }
 
     /**
@@ -608,4 +602,12 @@ public abstract class Ds3ClientHelpers {
      * Returns the client being wrapped
      */
     public abstract Ds3Client getClient();
+
+    private static class ContentsDs3ObjectFunction implements Function<Contents, Ds3Object> {
+        @Nullable
+        @Override
+        public Ds3Object apply(@Nullable final Contents input) {
+            return new Ds3Object(input.getKey(), input.getSize());
+        }
+    }
 }

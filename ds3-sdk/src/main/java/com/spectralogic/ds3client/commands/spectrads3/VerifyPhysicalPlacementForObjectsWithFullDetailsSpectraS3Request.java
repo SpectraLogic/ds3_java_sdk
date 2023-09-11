@@ -24,10 +24,10 @@ import com.spectralogic.ds3client.utils.Guard;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.nio.charset.Charset;
 import com.spectralogic.ds3client.commands.interfaces.AbstractRequest;
-import com.google.common.net.UrlEscapers;
 
 public class VerifyPhysicalPlacementForObjectsWithFullDetailsSpectraS3Request extends AbstractRequest {
 
@@ -70,7 +70,7 @@ public class VerifyPhysicalPlacementForObjectsWithFullDetailsSpectraS3Request ex
 
         final String xmlOutput = XmlOutput.toXml(objects, false);
 
-        final byte[] stringBytes = xmlOutput.getBytes(Charset.forName("UTF-8"));
+        final byte[] stringBytes = xmlOutput.getBytes(StandardCharsets.UTF_8);
         this.size = stringBytes.length;
         return new ByteArrayInputStream(stringBytes);
     }

@@ -15,6 +15,7 @@
 
 package com.spectralogic.ds3client.utils;
 
+import com.google.common.base.Utf8;
 import com.google.common.escape.Escaper;
 import com.google.common.net.PercentEscaper;
 import org.apache.commons.codec.CharEncoding;

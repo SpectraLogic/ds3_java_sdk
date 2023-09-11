@@ -133,7 +133,7 @@ public class GetJobNetworkFailureRetryDecorator implements TransferMethod {
         return ranges;
     }
 
-    private ImmutableCollection<Range> adjustRangesForBlobOffset(final ImmutableCollection<Range> ranges, final BulkObject blob) {
+    private static ImmutableCollection<Range> adjustRangesForBlobOffset(final ImmutableCollection<Range> ranges, final BulkObject blob) {
         if (Guard.isNullOrEmpty(ranges) || ranges.size() > 1) {
             return ranges;
         }
@@ -145,15 +145,15 @@ public class GetJobNetworkFailureRetryDecorator implements TransferMethod {
         return ImmutableList.of(new Range(firstRange.getStart() + blobOffset, firstRange.getEnd() + blobOffset));
     }
 
-    private ImmutableCollection<Range> updateRanges(final ImmutableCollection<Range> ranges,
-                                                    final long numBytesTransferred,
-                                                    final Long numBytesToTransfer)
+    private static ImmutableCollection<Range> updateRanges(final ImmutableCollection<Range> ranges,
+            final long numBytesTransferred,
+            final Long numBytesToTransfer)
     {
         return RangeHelper.replaceRange(ranges, numBytesTransferred, numBytesToTransfer);
     }
 
-    private Long initializeNumBytesToTransfer(final TransferState existingTransferState,
-                                              final ImmutableCollection<Range> ranges)
+    private static Long initializeNumBytesToTransfer(final TransferState existingTransferState,
+            final ImmutableCollection<Range> ranges)
     {
         Long numBytesToTransfer = existingTransferState.getNumBytesToTransfer();
 
@@ -164,7 +164,7 @@ public class GetJobNetworkFailureRetryDecorator implements TransferMethod {
         return numBytesToTransfer;
     }
 
-    private class TransferState {
+    private static class TransferState {
         private final ImmutableCollection<Range> ranges;
         private final Long numBytesToTransfer;
         private final Long destinationChannelOffset;

@@ -99,7 +99,7 @@ public class SpectraS3PaginationLoader_Test {
         }
     }
 
-    private List<Ds3Object> createTestList(final int numObjects) {
+    private static List<Ds3Object> createTestList(final int numObjects) {
         final ImmutableList.Builder<Ds3Object> builder = ImmutableList.builder();
         for (int i = 0; i < numObjects; i++) {
             builder.add(new Ds3Object("obj." + i, i+1));

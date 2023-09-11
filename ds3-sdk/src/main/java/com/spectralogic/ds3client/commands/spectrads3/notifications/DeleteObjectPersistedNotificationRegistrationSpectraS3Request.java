@@ -43,7 +43,7 @@ public class DeleteObjectPersistedNotificationRegistrationSpectraS3Request exten
 
     @Override
     public String getPath() {
-        return "/_rest_/object_persisted_notification_registration/" + this.getNotificationId().toString();
+        return "/_rest_/object_persisted_notification_registration/" + this.getNotificationId();
     }
 
     

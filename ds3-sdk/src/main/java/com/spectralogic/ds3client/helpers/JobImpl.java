@@ -157,7 +157,7 @@ abstract class JobImpl implements Job {
         return transferStrategyBuilder.eventDispatcher();
     }
 
-    protected void cancel(final TransferStrategy transferStrategy) throws IOException {
+    protected static void cancel(final TransferStrategy transferStrategy) throws IOException {
         if (transferStrategy != null) {
             transferStrategy.cancel();
         }

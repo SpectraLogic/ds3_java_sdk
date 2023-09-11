@@ -31,7 +31,7 @@ public class MetadataRestoreFactory_Test {
         final Metadata metadata = null;
         final String filePath = ".";
 
-        final MetadataRestore metadataRestorer = new MetadataRestoreFactory().getOSSpecificMetadataRestore(metadata, filePath);
+        final MetadataRestore metadataRestorer = MetadataRestoreFactory.getOSSpecificMetadataRestore(metadata, filePath);
 
         assertEquals(MACMetadataRestore.class, metadataRestorer.getClass());
     }
@@ -43,7 +43,7 @@ public class MetadataRestoreFactory_Test {
         final Metadata metadata = null;
         final String filePath = ".";
 
-        final MetadataRestore metadataRestorer = new MetadataRestoreFactory().getOSSpecificMetadataRestore(metadata, filePath);
+        final MetadataRestore metadataRestorer = MetadataRestoreFactory.getOSSpecificMetadataRestore(metadata, filePath);
 
         assertEquals(WindowsMetadataRestore.class, metadataRestorer.getClass());
     }
@@ -55,7 +55,7 @@ public class MetadataRestoreFactory_Test {
         final Metadata metadata = null;
         final String filePath = ".";
 
-        final MetadataRestore metadataRestorer = new MetadataRestoreFactory().getOSSpecificMetadataRestore(metadata, filePath);
+        final MetadataRestore metadataRestorer = MetadataRestoreFactory.getOSSpecificMetadataRestore(metadata, filePath);
 
         assertEquals(PosixMetadataRestore.class, metadataRestorer.getClass());
     }

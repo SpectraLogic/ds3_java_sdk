@@ -44,7 +44,7 @@ public class GetDs3TargetFailureNotificationRegistrationSpectraS3Request extends
 
     @Override
     public String getPath() {
-        return "/_rest_/ds3_target_failure_notification_registration/" + this.getNotificationId().toString();
+        return "/_rest_/ds3_target_failure_notification_registration/" + this.getNotificationId();
     }
 
     }

@@ -28,12 +28,7 @@ public class FailureEventObserver extends AbstractObserver<FailureEvent> {
      * @param failureEventListener An instance of {@link FailureEventListener} wrapped in an event updater.
      */
     public FailureEventObserver(final FailureEventListener failureEventListener) {
-        super(new UpdateStrategy<FailureEvent>() {
-            @Override
-            public void update(final FailureEvent eventData) {
-                failureEventListener.onFailure(eventData);
-            }
-        });
+        super(new FailureEventUpdateStrategy(failureEventListener));
 
         Preconditions.checkNotNull(failureEventListener, "failureEventListener may not be null.");
     }
@@ -44,5 +39,18 @@ public class FailureEventObserver extends AbstractObserver<FailureEvent> {
      */
     public FailureEventObserver(final UpdateStrategy<FailureEvent> updateStrategy) {
         super(updateStrategy);
+    }
+
+    private static class FailureEventUpdateStrategy implements UpdateStrategy<FailureEvent> {
+        private final FailureEventListener failureEventListener;
+
+        public FailureEventUpdateStrategy(final FailureEventListener failureEventListener) {
+            this.failureEventListener = failureEventListener;
+        }
+
+        @Override
+        public void update(final FailureEvent eventData) {
+            failureEventListener.onFailure(eventData);
+        }
     }
 }

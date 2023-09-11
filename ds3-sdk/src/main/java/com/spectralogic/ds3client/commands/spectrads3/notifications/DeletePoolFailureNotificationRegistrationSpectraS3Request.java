@@ -43,7 +43,7 @@ public class DeletePoolFailureNotificationRegistrationSpectraS3Request extends A
 
     @Override
     public String getPath() {
-        return "/_rest_/pool_failure_notification_registration/" + this.getNotificationId().toString();
+        return "/_rest_/pool_failure_notification_registration/" + this.getNotificationId();
     }
 
     

@@ -28,12 +28,7 @@ public class ChecksumObserver extends AbstractObserver<ChecksumEvent> {
      * @param checksumListener An instance of {@link ChecksumListener} wrapped in an event updater.
      */
     public ChecksumObserver(final ChecksumListener checksumListener) {
-        super(new UpdateStrategy<ChecksumEvent>() {
-                  @Override
-                  public void update(final ChecksumEvent eventData) {
-                      checksumListener.value(eventData.getBlob(), eventData.getChecksumType(), eventData.getChecksum());
-                  }
-              });
+        super(new ChecksumEventUpdateStrategy(checksumListener));
 
         Preconditions.checkNotNull(checksumListener, "checksumListener may not be null.");
     }
@@ -44,5 +39,18 @@ public class ChecksumObserver extends AbstractObserver<ChecksumEvent> {
      */
     public ChecksumObserver(final UpdateStrategy<ChecksumEvent> updateStrategy) {
         super(updateStrategy);
+    }
+
+    private static class ChecksumEventUpdateStrategy implements UpdateStrategy<ChecksumEvent> {
+        private final ChecksumListener checksumListener;
+
+        public ChecksumEventUpdateStrategy(final ChecksumListener checksumListener) {
+            this.checksumListener = checksumListener;
+        }
+
+        @Override
+        public void update(final ChecksumEvent eventData) {
+            checksumListener.value(eventData.getBlob(), eventData.getChecksumType(), eventData.getChecksum());
+        }
     }
 }

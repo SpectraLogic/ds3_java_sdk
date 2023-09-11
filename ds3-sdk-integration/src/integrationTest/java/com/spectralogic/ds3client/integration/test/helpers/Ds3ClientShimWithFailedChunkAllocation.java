@@ -47,7 +47,7 @@ public class Ds3ClientShimWithFailedChunkAllocation extends Ds3ClientShim {
         return allocateJobChunkSpectraS3Response;
     }
 
-    private Map<String, String> makeFailingResponseHeaders() {
+    private static Map<String, String> makeFailingResponseHeaders() {
         final Map<String, String> headers = new HashMap<>();
         headers.put("content-NONE", "text/xml");
         headers.put("Retry-After", "1");

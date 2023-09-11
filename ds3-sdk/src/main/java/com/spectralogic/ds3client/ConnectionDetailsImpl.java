@@ -117,8 +117,7 @@ class ConnectionDetailsImpl implements ConnectionDetails {
     }
 
     private static String buildAuthority(final JobNode node, final ConnectionDetails connectionDetails) {
-        return node.getEndPoint() + ":" + Integer.toString(
-                connectionDetails.isHttps() ? node.getHttpsPort() : node.getHttpPort());
+        return node.getEndPoint() + ":" + (connectionDetails.isHttps() ? node.getHttpsPort() : node.getHttpPort());
     }
 
     private final String endpoint;
@@ -199,7 +198,7 @@ class ConnectionDetailsImpl implements ConnectionDetails {
         return Guard.isStringNullOrEmpty(userAgent) ? getDefaultSdkVersion() : userAgent;
     }
 
-    private String getDefaultSdkVersion() {
+    private static String getDefaultSdkVersion() {
         final String sdkVersion = PropertyUtils.getSdkVersion();
 
         if (Guard.isStringNullOrEmpty(sdkVersion)) {

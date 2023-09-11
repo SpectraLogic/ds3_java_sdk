@@ -16,7 +16,6 @@
 package com.spectralogic.ds3client.helpers.strategy.blobstrategy;
 
 import com.google.common.base.Function;
-import com.google.common.base.Predicate;
 import com.google.common.collect.FluentIterable;
 import com.spectralogic.ds3client.Ds3Client;
 import com.spectralogic.ds3client.commands.spectrads3.AllocateJobChunkSpectraS3Request;

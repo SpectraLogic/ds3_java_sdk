@@ -100,23 +100,43 @@ class ObjectPartTrackerImpl implements ObjectPartTracker {
     
     private void onDataTransferred(final long size) {
         for (final DataTransferredListener listener : this.dataTransferredListeners) {
-            eventRunner.emitEvent(new Runnable() {
-                @Override
-                public void run() {
-                    listener.dataTransferred(size);
-                }
-            });
+            eventRunner.emitEvent(new DataTransferredRunnable(listener, size));
         }
     }
     
     private void onObjectCompleted() {
         for (final ObjectCompletedListener listener : this.objectCompletedListeners) {
-            eventRunner.emitEvent(new Runnable() {
-                @Override
-                public void run() {
-                    listener.objectCompleted(name);
-                }
-            });
+            eventRunner.emitEvent(new ObjectCompletedRunnable(listener, name));
+        }
+    }
+
+    private static class ObjectCompletedRunnable implements Runnable {
+        private final ObjectCompletedListener listener;
+        private final String name;
+
+        public ObjectCompletedRunnable(final ObjectCompletedListener listener, final String name) {
+            this.listener = listener;
+            this.name = name;
+        }
+
+        @Override
+        public void run() {
+            listener.objectCompleted(name);
+        }
+    }
+
+    private static class DataTransferredRunnable implements Runnable {
+        private final DataTransferredListener listener;
+        private final long size;
+
+        public DataTransferredRunnable(final DataTransferredListener listener, final long size) {
+            this.listener = listener;
+            this.size = size;
+        }
+
+        @Override
+        public void run() {
+            listener.dataTransferred(size);
         }
     }
 }

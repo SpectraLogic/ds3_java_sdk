@@ -35,7 +35,7 @@ dependencyResolutionManagement {
             version("commons-lang", "3.12.0")
             version("findbugs", "3.0.1")
             version("git-version-plugin", "0.12.2") // stuck on this version until we move from building with java 8
-            version("guava", "31.1-jre")
+            version("guava", "32.1.2-jre")
             version("hamcrest", "2.2")
             version("httpclient", "4.5.13")
             version("jackson", "2.14.1")

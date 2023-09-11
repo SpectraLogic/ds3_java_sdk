@@ -227,7 +227,7 @@ abstract class AbstractTransferStrategy implements TransferStrategy {
                 .build();
     }
 
-    private String labelForChunk(final Objects chunk) {
+    private static String labelForChunk(final Objects chunk) {
         try {
             return chunk.getObjects().get(0).getName();
         } catch (final Throwable t) {
@@ -248,7 +248,7 @@ abstract class AbstractTransferStrategy implements TransferStrategy {
         try {
             if(!executorService.awaitTermination(10, TimeUnit.SECONDS)) {
                 executorService.shutdownNow();
-            };
+            }
         } catch (final InterruptedException e) {
             executorService.shutdownNow();
         }

@@ -44,7 +44,7 @@ public class GetObjectPersistedNotificationRegistrationSpectraS3Request extends 
 
     @Override
     public String getPath() {
-        return "/_rest_/object_persisted_notification_registration/" + this.getNotificationId().toString();
+        return "/_rest_/object_persisted_notification_registration/" + this.getNotificationId();
     }
 
     }

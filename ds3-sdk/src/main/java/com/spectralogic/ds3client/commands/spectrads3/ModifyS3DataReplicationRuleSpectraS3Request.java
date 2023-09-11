@@ -20,7 +20,6 @@ import com.spectralogic.ds3client.networking.HttpVerb;
 import com.spectralogic.ds3client.commands.interfaces.AbstractRequest;
 import com.spectralogic.ds3client.models.S3InitialDataPlacementPolicy;
 import com.spectralogic.ds3client.models.DataReplicationRuleType;
-import com.google.common.net.UrlEscapers;
 
 public class ModifyS3DataReplicationRuleSpectraS3Request extends AbstractRequest {
 

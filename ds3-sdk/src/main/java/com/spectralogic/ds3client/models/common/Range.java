@@ -65,9 +65,7 @@ public final class Range implements Comparable<Range> {
     public boolean equals(final Object obj) {
         if (obj instanceof Range) {
             final Range range = (Range) obj;
-            if (range.start == this.start && range.end == this.end) {
-                return true;
-            }
+            return range.start == this.start && range.end == this.end;
         }
         return false;
     }

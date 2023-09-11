@@ -44,7 +44,7 @@ public class GetPoolFailureNotificationRegistrationSpectraS3Request extends Abst
 
     @Override
     public String getPath() {
-        return "/_rest_/pool_failure_notification_registration/" + this.getNotificationId().toString();
+        return "/_rest_/pool_failure_notification_registration/" + this.getNotificationId();
     }
 
     }
