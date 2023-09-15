@@ -22,9 +22,8 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import com.spectralogic.ds3client.serializer.XmlOutput;
 import java.nio.charset.Charset;
-import com.spectralogic.ds3client.commands.interfaces.AbstractRequest;
-
 import java.nio.charset.StandardCharsets;
+import com.spectralogic.ds3client.commands.interfaces.AbstractRequest;
 import java.util.UUID;
 
 public class CompleteMultiPartUploadRequest extends AbstractRequest {

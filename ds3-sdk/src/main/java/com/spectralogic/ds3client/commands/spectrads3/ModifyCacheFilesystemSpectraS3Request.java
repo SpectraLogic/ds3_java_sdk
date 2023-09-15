@@ -36,6 +36,8 @@ public class ModifyCacheFilesystemSpectraS3Request extends AbstractRequest {
 
     private Long maxCapacityInBytes;
 
+    private boolean needsReconcile;
+
     // Constructor
     
     
@@ -79,6 +81,13 @@ public class ModifyCacheFilesystemSpectraS3Request extends AbstractRequest {
     }
 
 
+    public ModifyCacheFilesystemSpectraS3Request withNeedsReconcile(final boolean needsReconcile) {
+        this.needsReconcile = needsReconcile;
+        this.updateQueryParam("needs_reconcile", needsReconcile);
+        return this;
+    }
+
+
 
     @Override
     public HttpVerb getVerb() {
@@ -117,6 +126,11 @@ public class ModifyCacheFilesystemSpectraS3Request extends AbstractRequest {
 
     public Long getMaxCapacityInBytes() {
         return this.maxCapacityInBytes;
+    }
+
+
+    public boolean getNeedsReconcile() {
+        return this.needsReconcile;
     }
 
 }

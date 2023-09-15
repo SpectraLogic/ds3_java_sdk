@@ -18,7 +18,6 @@ package com.spectralogic.ds3client.commands.spectrads3;
 
 import com.spectralogic.ds3client.networking.HttpVerb;
 import com.spectralogic.ds3client.commands.interfaces.AbstractPaginationRequest;
-
 import java.util.Date;
 import com.spectralogic.ds3client.models.FeatureKeyType;
 import java.util.UUID;

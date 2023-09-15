@@ -18,7 +18,6 @@ package com.spectralogic.ds3client.commands.spectrads3;
 
 import com.spectralogic.ds3client.networking.HttpVerb;
 import com.spectralogic.ds3client.commands.interfaces.AbstractPaginationRequest;
-
 import java.lang.Integer;
 import com.spectralogic.ds3client.models.TargetReadPreferenceType;
 import java.util.UUID;

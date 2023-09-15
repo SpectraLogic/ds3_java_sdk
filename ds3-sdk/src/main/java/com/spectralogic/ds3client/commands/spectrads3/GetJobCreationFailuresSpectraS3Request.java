@@ -18,17 +18,18 @@ package com.spectralogic.ds3client.commands.spectrads3;
 
 import com.spectralogic.ds3client.networking.HttpVerb;
 import com.spectralogic.ds3client.commands.interfaces.AbstractPaginationRequest;
+import java.util.Date;
 import java.util.UUID;
 
-public class GetBucketHistorySpectraS3Request extends AbstractPaginationRequest {
+public class GetJobCreationFailuresSpectraS3Request extends AbstractPaginationRequest {
 
     // Variables
     
-    private String bucketId;
+    private Date date;
+
+    private String errorMessage;
 
     private boolean lastPage;
-
-    private long minSequenceNumber;
 
     private int pageLength;
 
@@ -36,21 +37,30 @@ public class GetBucketHistorySpectraS3Request extends AbstractPaginationRequest 
 
     private String pageStartMarker;
 
+    private String userName;
+
     // Constructor
     
     
-    public GetBucketHistorySpectraS3Request() {
+    public GetJobCreationFailuresSpectraS3Request() {
         
     }
 
-    public GetBucketHistorySpectraS3Request withBucketId(final String bucketId) {
-        this.bucketId = bucketId;
-        this.updateQueryParam("bucket_id", bucketId);
+    public GetJobCreationFailuresSpectraS3Request withDate(final Date date) {
+        this.date = date;
+        this.updateQueryParam("date", date);
         return this;
     }
 
 
-    public GetBucketHistorySpectraS3Request withLastPage(final boolean lastPage) {
+    public GetJobCreationFailuresSpectraS3Request withErrorMessage(final String errorMessage) {
+        this.errorMessage = errorMessage;
+        this.updateQueryParam("error_message", errorMessage);
+        return this;
+    }
+
+
+    public GetJobCreationFailuresSpectraS3Request withLastPage(final boolean lastPage) {
         this.lastPage = lastPage;
         if (this.lastPage) {
             this.getQueryParams().put("last_page", null);
@@ -61,37 +71,37 @@ public class GetBucketHistorySpectraS3Request extends AbstractPaginationRequest 
     }
 
 
-    public GetBucketHistorySpectraS3Request withMinSequenceNumber(final long minSequenceNumber) {
-        this.minSequenceNumber = minSequenceNumber;
-        this.updateQueryParam("min_sequence_number", minSequenceNumber);
-        return this;
-    }
-
-
-    public GetBucketHistorySpectraS3Request withPageLength(final int pageLength) {
+    public GetJobCreationFailuresSpectraS3Request withPageLength(final int pageLength) {
         this.pageLength = pageLength;
         this.updateQueryParam("page_length", pageLength);
         return this;
     }
 
 
-    public GetBucketHistorySpectraS3Request withPageOffset(final int pageOffset) {
+    public GetJobCreationFailuresSpectraS3Request withPageOffset(final int pageOffset) {
         this.pageOffset = pageOffset;
         this.updateQueryParam("page_offset", pageOffset);
         return this;
     }
 
 
-    public GetBucketHistorySpectraS3Request withPageStartMarker(final UUID pageStartMarker) {
+    public GetJobCreationFailuresSpectraS3Request withPageStartMarker(final UUID pageStartMarker) {
         this.pageStartMarker = pageStartMarker.toString();
         this.updateQueryParam("page_start_marker", pageStartMarker);
         return this;
     }
 
 
-    public GetBucketHistorySpectraS3Request withPageStartMarker(final String pageStartMarker) {
+    public GetJobCreationFailuresSpectraS3Request withPageStartMarker(final String pageStartMarker) {
         this.pageStartMarker = pageStartMarker;
         this.updateQueryParam("page_start_marker", pageStartMarker);
+        return this;
+    }
+
+
+    public GetJobCreationFailuresSpectraS3Request withUserName(final String userName) {
+        this.userName = userName;
+        this.updateQueryParam("user_name", userName);
         return this;
     }
 
@@ -104,21 +114,21 @@ public class GetBucketHistorySpectraS3Request extends AbstractPaginationRequest 
 
     @Override
     public String getPath() {
-        return "/_rest_/bucket_history";
+        return "/_rest_/job_creation_failed";
     }
     
-    public String getBucketId() {
-        return this.bucketId;
+    public Date getDate() {
+        return this.date;
+    }
+
+
+    public String getErrorMessage() {
+        return this.errorMessage;
     }
 
 
     public boolean getLastPage() {
         return this.lastPage;
-    }
-
-
-    public long getMinSequenceNumber() {
-        return this.minSequenceNumber;
     }
 
 
@@ -134,6 +144,11 @@ public class GetBucketHistorySpectraS3Request extends AbstractPaginationRequest 
 
     public String getPageStartMarker() {
         return this.pageStartMarker;
+    }
+
+
+    public String getUserName() {
+        return this.userName;
     }
 
 }

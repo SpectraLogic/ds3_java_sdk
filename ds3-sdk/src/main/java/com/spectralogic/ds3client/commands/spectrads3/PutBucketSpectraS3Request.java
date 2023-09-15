@@ -18,7 +18,6 @@ package com.spectralogic.ds3client.commands.spectrads3;
 
 import com.spectralogic.ds3client.networking.HttpVerb;
 import com.spectralogic.ds3client.commands.interfaces.AbstractRequest;
-
 import java.util.UUID;
 
 public class PutBucketSpectraS3Request extends AbstractRequest {

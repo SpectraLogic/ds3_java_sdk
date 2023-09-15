@@ -18,28 +18,21 @@ package com.spectralogic.ds3client.commands.parsers;
 
 import com.spectralogic.ds3client.commands.parsers.interfaces.AbstractResponseParser;
 import com.spectralogic.ds3client.commands.parsers.utils.ResponseParserUtils;
-import com.spectralogic.ds3client.commands.spectrads3.GetJobToReplicateSpectraS3Response;
+import com.spectralogic.ds3client.commands.spectrads3.DeleteJobCreationFailureSpectraS3Response;
 import com.spectralogic.ds3client.networking.WebResponse;
-import com.spectralogic.ds3client.serializer.XmlOutput;
 import java.io.IOException;
-import java.io.InputStream;
-import java.lang.String;
-import java.nio.charset.StandardCharsets;
-import org.apache.commons.io.IOUtils;
 
-public class GetJobToReplicateSpectraS3ResponseParser extends AbstractResponseParser<GetJobToReplicateSpectraS3Response> {
-    private final int[] expectedStatusCodes = new int[]{200};
+public class DeleteJobCreationFailureSpectraS3ResponseParser extends AbstractResponseParser<DeleteJobCreationFailureSpectraS3Response> {
+    private final int[] expectedStatusCodes = new int[]{204};
 
     @Override
-    public GetJobToReplicateSpectraS3Response parseXmlResponse(final WebResponse response) throws IOException {
+    public DeleteJobCreationFailureSpectraS3Response parseXmlResponse(final WebResponse response) throws IOException {
         final int statusCode = response.getStatusCode();
         if (ResponseParserUtils.validateStatusCode(statusCode, expectedStatusCodes)) {
             switch (statusCode) {
-            case 200:
-                try (final InputStream inputStream = response.getResponseStream()) {
-                    final String result = IOUtils.toString(inputStream, StandardCharsets.UTF_8);
-                    return new GetJobToReplicateSpectraS3Response(result, this.getChecksum(), this.getChecksumType());
-                }
+            case 204:
+                //There is no payload, return an empty response handler
+                return new DeleteJobCreationFailureSpectraS3Response(this.getChecksum(), this.getChecksumType());
 
             default:
                 assert false: "validateStatusCode should have made it impossible to reach this line";

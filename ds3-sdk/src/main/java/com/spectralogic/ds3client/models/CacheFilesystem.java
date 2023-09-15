@@ -45,6 +45,9 @@ public class CacheFilesystem {
     @JsonProperty("MaxPercentUtilizationOfFilesystem")
     private Double maxPercentUtilizationOfFilesystem;
 
+    @JsonProperty("NeedsReconcile")
+    private boolean needsReconcile;
+
     @JsonProperty("NodeId")
     private UUID nodeId;
 
@@ -118,6 +121,15 @@ public class CacheFilesystem {
 
     public void setMaxPercentUtilizationOfFilesystem(final Double maxPercentUtilizationOfFilesystem) {
         this.maxPercentUtilizationOfFilesystem = maxPercentUtilizationOfFilesystem;
+    }
+
+
+    public boolean getNeedsReconcile() {
+        return this.needsReconcile;
+    }
+
+    public void setNeedsReconcile(final boolean needsReconcile) {
+        this.needsReconcile = needsReconcile;
     }
 
 

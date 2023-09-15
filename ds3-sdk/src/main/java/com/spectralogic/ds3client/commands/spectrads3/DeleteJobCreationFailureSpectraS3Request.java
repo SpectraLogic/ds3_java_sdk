@@ -18,68 +18,34 @@ package com.spectralogic.ds3client.commands.spectrads3;
 
 import com.spectralogic.ds3client.networking.HttpVerb;
 import com.spectralogic.ds3client.commands.interfaces.AbstractRequest;
-import java.util.UUID;
 
-public class UndeleteObjectSpectraS3Request extends AbstractRequest {
+public class DeleteJobCreationFailureSpectraS3Request extends AbstractRequest {
 
     // Variables
     
-    private final String bucketId;
-
-    private final String name;
-
-    private String versionId;
+    private final String jobCreationFailed;
 
     // Constructor
     
     
-    public UndeleteObjectSpectraS3Request(final String bucketId, final String name) {
-        this.bucketId = bucketId;
-        this.name = name;
+    public DeleteJobCreationFailureSpectraS3Request(final String jobCreationFailed) {
+        this.jobCreationFailed = jobCreationFailed;
         
-        this.updateQueryParam("bucket_id", bucketId);
-
-        this.updateQueryParam("name", name);
-
     }
-
-    public UndeleteObjectSpectraS3Request withVersionId(final UUID versionId) {
-        this.versionId = versionId.toString();
-        this.updateQueryParam("version_id", versionId);
-        return this;
-    }
-
-
-    public UndeleteObjectSpectraS3Request withVersionId(final String versionId) {
-        this.versionId = versionId;
-        this.updateQueryParam("version_id", versionId);
-        return this;
-    }
-
 
 
     @Override
     public HttpVerb getVerb() {
-        return HttpVerb.PUT;
+        return HttpVerb.DELETE;
     }
 
     @Override
     public String getPath() {
-        return "/_rest_/object";
+        return "/_rest_/job_creation_failed/" + jobCreationFailed;
     }
     
-    public String getBucketId() {
-        return this.bucketId;
-    }
-
-
-    public String getName() {
-        return this.name;
-    }
-
-
-    public String getVersionId() {
-        return this.versionId;
+    public String getJobCreationFailed() {
+        return this.jobCreationFailed;
     }
 
 }

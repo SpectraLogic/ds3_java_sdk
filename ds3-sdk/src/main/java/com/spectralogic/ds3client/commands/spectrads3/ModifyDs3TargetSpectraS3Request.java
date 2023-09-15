@@ -19,7 +19,6 @@ package com.spectralogic.ds3client.commands.spectrads3;
 import com.spectralogic.ds3client.networking.HttpVerb;
 import com.spectralogic.ds3client.commands.interfaces.AbstractRequest;
 import com.spectralogic.ds3client.models.Ds3TargetAccessControlReplication;
-
 import java.lang.Integer;
 import com.spectralogic.ds3client.models.TargetReadPreferenceType;
 import com.spectralogic.ds3client.models.Quiesced;

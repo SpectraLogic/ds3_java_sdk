@@ -20,9 +20,8 @@ import com.spectralogic.ds3client.networking.HttpVerb;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
-
 import com.spectralogic.ds3client.utils.Guard;
+import java.nio.charset.StandardCharsets;
 import com.spectralogic.ds3client.commands.interfaces.AbstractRequest;
 import com.spectralogic.ds3client.models.Priority;
 

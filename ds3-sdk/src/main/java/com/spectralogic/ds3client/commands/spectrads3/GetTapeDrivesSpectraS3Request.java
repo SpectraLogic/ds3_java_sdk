@@ -20,7 +20,6 @@ import com.spectralogic.ds3client.networking.HttpVerb;
 import com.spectralogic.ds3client.commands.interfaces.AbstractPaginationRequest;
 import com.spectralogic.ds3client.models.Priority;
 import java.util.UUID;
-
 import com.spectralogic.ds3client.models.ReservedTaskType;
 import com.spectralogic.ds3client.models.TapeDriveState;
 import com.spectralogic.ds3client.models.TapeDriveType;
