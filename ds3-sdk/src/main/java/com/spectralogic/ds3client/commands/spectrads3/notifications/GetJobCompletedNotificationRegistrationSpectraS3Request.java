@@ -44,7 +44,7 @@ public class GetJobCompletedNotificationRegistrationSpectraS3Request extends Abs
 
     @Override
     public String getPath() {
-        return "/_rest_/job_completed_notification_registration/" + this.getNotificationId().toString();
+        return "/_rest_/job_completed_notification_registration/" + this.getNotificationId();
     }
 
     }

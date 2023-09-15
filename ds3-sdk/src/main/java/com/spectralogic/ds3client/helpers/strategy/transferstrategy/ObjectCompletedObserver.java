@@ -27,12 +27,7 @@ public class ObjectCompletedObserver extends AbstractObserver<String> {
      *                                updater.
      */
     public ObjectCompletedObserver(final ObjectCompletedListener objectCompletedListener) {
-        super(new UpdateStrategy<String>() {
-            @Override
-            public void update(final String eventData) {
-                objectCompletedListener.objectCompleted(eventData);
-            }
-        });
+        super(new StringUpdateStrategy(objectCompletedListener));
 
         Preconditions.checkNotNull(objectCompletedListener, "objectCompletedListener may not be null");
     }
@@ -43,5 +38,18 @@ public class ObjectCompletedObserver extends AbstractObserver<String> {
      */
     public ObjectCompletedObserver(final UpdateStrategy<String> updateStrategy) {
         super(updateStrategy);
+    }
+
+    private static class StringUpdateStrategy implements UpdateStrategy<String> {
+        private final ObjectCompletedListener objectCompletedListener;
+
+        public StringUpdateStrategy(final ObjectCompletedListener objectCompletedListener) {
+            this.objectCompletedListener = objectCompletedListener;
+        }
+
+        @Override
+        public void update(final String eventData) {
+            objectCompletedListener.objectCompleted(eventData);
+        }
     }
 }

@@ -44,7 +44,7 @@ public class NotificationCleanupTestHelper {
             client.deleteObjectCachedNotificationRegistrationSpectraS3(
                     new DeleteObjectCachedNotificationRegistrationSpectraS3Request(id));
         } catch (final IOException e) {
-            LOG.error("Object Cached Notification Registration was not deleted as expected: " + id.toString());
+            LOG.error("Object Cached Notification Registration was not deleted as expected: " + id);
         }
     }
 
@@ -62,7 +62,7 @@ public class NotificationCleanupTestHelper {
             client.deleteJobCompletedNotificationRegistrationSpectraS3(
                     new DeleteJobCompletedNotificationRegistrationSpectraS3Request(id));
         } catch (final IOException e) {
-            LOG.error("Job Completed Notification Registration was not deleted as expected: " + id.toString());
+            LOG.error("Job Completed Notification Registration was not deleted as expected: " + id);
         }
     }
 
@@ -80,7 +80,7 @@ public class NotificationCleanupTestHelper {
             client.deleteJobCreatedNotificationRegistrationSpectraS3(
                     new DeleteJobCreatedNotificationRegistrationSpectraS3Request(id));
         } catch (final IOException e) {
-            LOG.error("Job Created Notification Registration was not deleted as expected: " + id.toString());
+            LOG.error("Job Created Notification Registration was not deleted as expected: " + id);
         }
     }
 
@@ -98,7 +98,7 @@ public class NotificationCleanupTestHelper {
             client.deleteObjectLostNotificationRegistrationSpectraS3(
                     new DeleteObjectLostNotificationRegistrationSpectraS3Request(id));
         } catch (final IOException e) {
-            LOG.error("Object Lost Notification Registration was not deleted as expected: " + id.toString());
+            LOG.error("Object Lost Notification Registration was not deleted as expected: " + id);
         }
     }
 
@@ -116,7 +116,7 @@ public class NotificationCleanupTestHelper {
             client.deleteObjectPersistedNotificationRegistrationSpectraS3(
                     new DeleteObjectPersistedNotificationRegistrationSpectraS3Request(id));
         } catch (final IOException e) {
-            LOG.error("Object Persisted Notification Registration was not deleted as expected: " + id.toString());
+            LOG.error("Object Persisted Notification Registration was not deleted as expected: " + id);
         }
     }
 
@@ -134,7 +134,7 @@ public class NotificationCleanupTestHelper {
             client.deleteTapePartitionFailureNotificationRegistrationSpectraS3(
                     new DeleteTapePartitionFailureNotificationRegistrationSpectraS3Request(id));
         } catch (final IOException e) {
-            LOG.error("Tape Partition Failure Notification Registration was not deleted as expected: " + id.toString());
+            LOG.error("Tape Partition Failure Notification Registration was not deleted as expected: " + id);
         }
     }
 
@@ -152,7 +152,7 @@ public class NotificationCleanupTestHelper {
             client.deleteTapeFailureNotificationRegistrationSpectraS3(
                     new DeleteTapeFailureNotificationRegistrationSpectraS3Request(id));
         } catch (final IOException e) {
-            LOG.error("Tape Failure Notification Registration was not deleted as expected: " + id.toString());
+            LOG.error("Tape Failure Notification Registration was not deleted as expected: " + id);
         }
     }
 }

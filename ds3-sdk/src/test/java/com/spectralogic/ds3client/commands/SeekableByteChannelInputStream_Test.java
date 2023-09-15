@@ -95,7 +95,7 @@ public class SeekableByteChannelInputStream_Test {
         Mockito.verifyNoMoreInteractions(mockChannel);
     }
 
-    private void readAndVerify(final InputStream inputStream, final byte[] expectedBytes)
+    private static void readAndVerify(final InputStream inputStream, final byte[] expectedBytes)
             throws IOException, URISyntaxException {
         final byte[] resultBuffer = new byte[expectedBytes.length];
         final byte[] buffer = new byte[10];

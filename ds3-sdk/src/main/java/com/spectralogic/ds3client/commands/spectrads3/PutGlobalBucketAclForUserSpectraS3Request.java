@@ -20,7 +20,6 @@ import com.spectralogic.ds3client.networking.HttpVerb;
 import com.spectralogic.ds3client.commands.interfaces.AbstractRequest;
 import com.spectralogic.ds3client.models.BucketAclPermission;
 import java.util.UUID;
-import com.google.common.net.UrlEscapers;
 
 public class PutGlobalBucketAclForUserSpectraS3Request extends AbstractRequest {
 

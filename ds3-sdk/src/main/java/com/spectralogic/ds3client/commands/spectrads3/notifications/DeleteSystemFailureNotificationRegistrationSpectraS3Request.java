@@ -43,7 +43,7 @@ public class DeleteSystemFailureNotificationRegistrationSpectraS3Request extends
 
     @Override
     public String getPath() {
-        return "/_rest_/system_failure_notification_registration/" + this.getNotificationId().toString();
+        return "/_rest_/system_failure_notification_registration/" + this.getNotificationId();
     }
 
     

@@ -19,7 +19,6 @@ package com.spectralogic.ds3client.commands;
 import com.spectralogic.ds3client.networking.HttpVerb;
 import com.spectralogic.ds3client.commands.interfaces.AbstractRequest;
 import java.util.UUID;
-import com.google.common.net.UrlEscapers;
 
 public class DeleteObjectRequest extends AbstractRequest {
 

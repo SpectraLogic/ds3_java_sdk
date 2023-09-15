@@ -148,7 +148,7 @@ public class WindowsMetadataRestore_Test {
         windowsMetadataRestore.restorePermissions();
     }
 
-    private Metadata genMetadata(final Header... headers) {
+    private static Metadata genMetadata(final Header... headers) {
         final ImmutableMultimap.Builder<String, String> mapBuilder = ImmutableMultimap.builder();
         for (final Header header : headers) {
             mapBuilder.put(header.getName(), header.getValue());

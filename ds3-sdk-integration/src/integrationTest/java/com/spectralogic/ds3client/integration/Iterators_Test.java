@@ -141,7 +141,7 @@ public class Iterators_Test {
         paginate(new GetObjectsFullDetailsLoaderFactory(CLIENT, TEST_ENV_NAME, 2, RETRIES, true));
     }
 
-    private void emptyTest(final LazyIterable.LazyLoaderFactory<?> lazyLoaderFactory) throws IOException {
+    private static void emptyTest(final LazyIterable.LazyLoaderFactory<?> lazyLoaderFactory) throws IOException {
         HELPERS.ensureBucketExists(TEST_ENV_NAME, envDataPolicyId);
         try {
             final LazyIterable<?> iterable = new LazyIterable<>(lazyLoaderFactory);
@@ -154,7 +154,7 @@ public class Iterators_Test {
         }
     }
 
-    private void paginate(final LazyIterable.LazyLoaderFactory<?> loaderFactory) throws IOException, URISyntaxException {
+    private static void paginate(final LazyIterable.LazyLoaderFactory<?> loaderFactory) throws IOException, URISyntaxException {
         HELPERS.ensureBucketExists(TEST_ENV_NAME, envDataPolicyId);
         loadBookTestData(CLIENT, TEST_ENV_NAME);
         try {
@@ -176,7 +176,7 @@ public class Iterators_Test {
         }
     }
 
-    private void testFailedRequest(final LazyIterable.LazyLoaderFactory<?> loaderFactory) {
+    private static void testFailedRequest(final LazyIterable.LazyLoaderFactory<?> loaderFactory) {
         final LazyIterable<?> iterable = new LazyIterable<>(loaderFactory);
         final Iterator<?> iterator = iterable.iterator();
 

@@ -21,7 +21,7 @@ import com.spectralogic.ds3client.metadata.interfaces.MetadataStore;
 
 public class MetadataStoreFactory
 {
-    public MetadataStore getOsSpecificMetadataStore(final ImmutableMap.Builder<String, String> metadataMap) {
+    public static MetadataStore getOsSpecificMetadataStore(final ImmutableMap.Builder<String, String> metadataMap) {
         if(MetaDataUtil.getOS().contains("Windows")) {
             return new WindowsMetadataStore(metadataMap);
         }

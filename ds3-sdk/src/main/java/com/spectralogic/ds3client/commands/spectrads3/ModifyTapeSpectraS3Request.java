@@ -18,7 +18,6 @@ package com.spectralogic.ds3client.commands.spectrads3;
 
 import com.spectralogic.ds3client.networking.HttpVerb;
 import com.spectralogic.ds3client.commands.interfaces.AbstractRequest;
-import com.google.common.net.UrlEscapers;
 import com.spectralogic.ds3client.models.TapeRole;
 import com.spectralogic.ds3client.models.TapeState;
 import java.util.UUID;

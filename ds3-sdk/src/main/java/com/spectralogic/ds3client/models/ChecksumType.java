@@ -18,6 +18,7 @@ package com.spectralogic.ds3client.models;
 
 import org.apache.commons.codec.binary.Base64;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 public abstract class ChecksumType {
 
@@ -85,7 +86,7 @@ public abstract class ChecksumType {
 
         @Override
         public <T, E extends Throwable> T match(final MatchHandler<T, E> handler) throws E {
-            return handler.value(this.hash.getBytes(Charset.forName("UTF-8")));
+            return handler.value(this.hash.getBytes(StandardCharsets.UTF_8));
         }
     }
 }

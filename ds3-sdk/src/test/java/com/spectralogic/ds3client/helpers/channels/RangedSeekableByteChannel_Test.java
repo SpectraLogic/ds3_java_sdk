@@ -24,6 +24,7 @@ import org.junit.Test;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
@@ -36,8 +37,8 @@ public class RangedSeekableByteChannel_Test {
         final String firstPartialBlob = "First blob text";
         final String secondPartialBlob = "Second Blob text";
 
-        final ByteBuffer firstBlobData = ByteBuffer.wrap(firstPartialBlob.getBytes(Charset.forName("UTF-8")));
-        final ByteBuffer secondBlobData = ByteBuffer.wrap(secondPartialBlob.getBytes(Charset.forName("UTF-8")));
+        final ByteBuffer firstBlobData = ByteBuffer.wrap(firstPartialBlob.getBytes(StandardCharsets.UTF_8));
+        final ByteBuffer secondBlobData = ByteBuffer.wrap(secondPartialBlob.getBytes(StandardCharsets.UTF_8));
 
         final ImmutableMultimap.Builder<BulkObject, Range> builder = ImmutableMultimap.builder();
 
@@ -77,8 +78,8 @@ public class RangedSeekableByteChannel_Test {
         final String firstPartialBlob = "First blob text";
         final String secondPartialBlob = "Second Blob text";
 
-        final ByteBuffer firstBlobData = ByteBuffer.wrap(firstPartialBlob.getBytes(Charset.forName("UTF-8")));
-        final ByteBuffer secondBlobData = ByteBuffer.wrap(secondPartialBlob.getBytes(Charset.forName("UTF-8")));
+        final ByteBuffer firstBlobData = ByteBuffer.wrap(firstPartialBlob.getBytes(StandardCharsets.UTF_8));
+        final ByteBuffer secondBlobData = ByteBuffer.wrap(secondPartialBlob.getBytes(StandardCharsets.UTF_8));
 
         final ImmutableMultimap.Builder<BulkObject, Range> builder = ImmutableMultimap.builder();
 

@@ -38,19 +38,9 @@ public class GetBucketKeyLoaderFactory<T> implements LazyIterable.LazyLoaderFact
         @Override
         public Iterable<FileSystemKey> apply(@Nullable final ListBucketResult result) {
             final FluentIterable<FileSystemKey> contentIterable = FluentIterable.from(result.getObjects())
-                    .transform(new Function<Contents, FileSystemKey>() {
-                        @Override
-                        public FileSystemKey apply(@Nullable final Contents input) {
-                            return new FileSystemKey(input);
-                        }
-                    });
+                    .transform(new ContentsFileSystemKeyFunction());
             return FluentIterable.from(result.getCommonPrefixes())
-                    .transform( new Function<CommonPrefixes, FileSystemKey>() {
-                        @Override
-                        public FileSystemKey apply(@Nullable final CommonPrefixes input) {
-                            return new FileSystemKey(input);
-                        }
-                    })
+                    .transform(new CommonPrefixesFileSystemKeyFunction())
                     .append(contentIterable);
         }
     };
@@ -79,5 +69,19 @@ public class GetBucketKeyLoaderFactory<T> implements LazyIterable.LazyLoaderFact
     @Override
     public LazyIterable.LazyLoader<T> create() {
         return new GetBucketKeyLoader<>(client, bucket, keyPrefix, delimiter, nextMarker, maxKeys, defaultListObjectsRetries, function);
+    }
+
+    private static class ContentsFileSystemKeyFunction implements Function<Contents, FileSystemKey> {
+        @Override
+        public FileSystemKey apply(@Nullable final Contents input) {
+            return new FileSystemKey(input);
+        }
+    }
+
+    private static class CommonPrefixesFileSystemKeyFunction implements Function<CommonPrefixes, FileSystemKey> {
+        @Override
+        public FileSystemKey apply(@Nullable final CommonPrefixes input) {
+            return new FileSystemKey(input);
+        }
     }
 }

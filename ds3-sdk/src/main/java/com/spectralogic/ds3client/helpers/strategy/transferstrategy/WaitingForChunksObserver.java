@@ -25,17 +25,25 @@ import com.spectralogic.ds3client.helpers.WaitingForChunksListener;
  */
 public class WaitingForChunksObserver extends AbstractObserver<Integer> {
     public WaitingForChunksObserver(final WaitingForChunksListener waitingForChunksListener) {
-        super(new UpdateStrategy<Integer>() {
-            @Override
-            public void update(final Integer eventData) {
-                waitingForChunksListener.waiting(eventData);
-            }
-        });
+        super(new IntegerUpdateStrategy(waitingForChunksListener));
 
         Preconditions.checkNotNull(waitingForChunksListener, "waitingForChunksListener may not be null.");
     }
 
     public WaitingForChunksObserver(final UpdateStrategy<Integer> updateStrategy) {
         super(updateStrategy);
+    }
+
+    private static class IntegerUpdateStrategy implements UpdateStrategy<Integer> {
+        private final WaitingForChunksListener waitingForChunksListener;
+
+        public IntegerUpdateStrategy(final WaitingForChunksListener waitingForChunksListener) {
+            this.waitingForChunksListener = waitingForChunksListener;
+        }
+
+        @Override
+        public void update(final Integer eventData) {
+            waitingForChunksListener.waiting(eventData);
+        }
     }
 }

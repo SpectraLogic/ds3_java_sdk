@@ -44,7 +44,7 @@ public class GetObjectLostNotificationRegistrationSpectraS3Request extends Abstr
 
     @Override
     public String getPath() {
-        return "/_rest_/object_lost_notification_registration/" + this.getNotificationId().toString();
+        return "/_rest_/object_lost_notification_registration/" + this.getNotificationId();
     }
 
     }

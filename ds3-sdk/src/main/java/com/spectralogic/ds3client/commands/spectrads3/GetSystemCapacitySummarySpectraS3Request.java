@@ -22,7 +22,6 @@ import com.spectralogic.ds3client.models.PoolHealth;
 import com.spectralogic.ds3client.models.PoolState;
 import com.spectralogic.ds3client.models.PoolType;
 import com.spectralogic.ds3client.models.TapeState;
-import com.google.common.net.UrlEscapers;
 
 public class GetSystemCapacitySummarySpectraS3Request extends AbstractRequest {
 

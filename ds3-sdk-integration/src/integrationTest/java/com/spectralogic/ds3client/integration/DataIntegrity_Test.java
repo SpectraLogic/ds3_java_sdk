@@ -371,7 +371,7 @@ public class DataIntegrity_Test {
         }
     }
 
-    private class MultiFileChecksumListener implements ChecksumListener {
+    private static class MultiFileChecksumListener implements ChecksumListener {
 
         private final Map<String, String> checksumMap;
 
@@ -389,7 +389,7 @@ public class DataIntegrity_Test {
         }
     }
 
-    private class SingleChecksumListener implements ChecksumListener {
+    private static class SingleChecksumListener implements ChecksumListener {
 
         public String getChecksum() {
             return checksum;
@@ -403,7 +403,7 @@ public class DataIntegrity_Test {
         }
     }
 
-    public void sendAndVerifySingleFile(final String bucketName, final String fileName, final long seed, final int length) throws IOException {
+    public static void sendAndVerifySingleFile(final String bucketName, final String fileName, final long seed, final int length) throws IOException {
         try {
             HELPERS.ensureBucketExists(bucketName, envDataPolicyId);
 

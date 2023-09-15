@@ -41,7 +41,7 @@ public class HeadersImpl_Test {
         assertTrue(value.isEmpty());
     }
 
-    public Headers genHeaders(final Header... headers) {
+    public static Headers genHeaders(final Header... headers) {
         return new HeadersImpl(headers);
     }
 }

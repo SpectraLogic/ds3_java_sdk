@@ -77,7 +77,7 @@ public class TransferStrategy_Test {
         assertEquals(4, numTimesTransferCalled.get());
     }
 
-    private class ContinuallyReturnFailingBlobStrategy implements BlobStrategy {
+    private static class ContinuallyReturnFailingBlobStrategy implements BlobStrategy {
         private final AtomicBoolean getWorkCalledAlready = new AtomicBoolean(false);
 
         @Override
@@ -89,7 +89,7 @@ public class TransferStrategy_Test {
             return Arrays.asList(remainingChunkWithFailingBlob());
         }
 
-        private JobPart[] firstChunkWithFailingBlob() {
+        private static JobPart[] firstChunkWithFailingBlob() {
             final BulkObject blob1 = new BulkObject(); blob1.setName(BLOB1);
             final BulkObject blob2 = new BulkObject(); blob2.setName(BLOB2);
 
@@ -99,7 +99,7 @@ public class TransferStrategy_Test {
             };
         }
 
-        private JobPart[] remainingChunkWithFailingBlob() {
+        private static JobPart[] remainingChunkWithFailingBlob() {
             final BulkObject blob2 = new BulkObject(); blob2.setName(BLOB2);
             final BulkObject blob3 = new BulkObject(); blob3.setName(BLOB3);
             final BulkObject blob4 = new BulkObject(); blob4.setName(BLOB4);
@@ -112,7 +112,7 @@ public class TransferStrategy_Test {
         }
     }
 
-    private List<Objects> chunksWithBlobs() {
+    private static List<Objects> chunksWithBlobs() {
         final BulkObject blob1 = new BulkObject(); blob1.setName(BLOB1); blob1.setInCache(false);
         final BulkObject blob2 = new BulkObject(); blob2.setName(BLOB2); blob2.setInCache(false);
         final BulkObject blob3 = new BulkObject(); blob3.setName(BLOB3); blob3.setInCache(false);
@@ -127,7 +127,7 @@ public class TransferStrategy_Test {
         return Arrays.asList(chunk1, chunk2);
     }
 
-    private MasterObjectList masterObjectList() {
+    private static MasterObjectList masterObjectList() {
         final MasterObjectList masterObjectList = new MasterObjectList();
         masterObjectList.setObjects(chunksWithBlobs());
         masterObjectList.setJobId(UUID.randomUUID());
@@ -136,9 +136,9 @@ public class TransferStrategy_Test {
         return masterObjectList;
     }
 
-    private TransferMethod transferMethod(final Set<String> blobsTransferredSuccessfully,
-                                          final Set<String> blobsThatFailed,
-                                          final AtomicInteger numTimesTransferCalled)
+    private static TransferMethod transferMethod(final Set<String> blobsTransferredSuccessfully,
+            final Set<String> blobsThatFailed,
+            final AtomicInteger numTimesTransferCalled)
     {
         return jobPart -> {
             numTimesTransferCalled.incrementAndGet();

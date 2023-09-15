@@ -16,11 +16,7 @@
 package com.spectralogic.ds3client.models.bulk;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
-import com.spectralogic.ds3client.models.Priority;
-import com.spectralogic.ds3client.models.JobChunkClientProcessingOrderGuarantee;
-import com.spectralogic.ds3client.models.WriteOptimization;
 import com.spectralogic.ds3client.utils.collections.StreamWrapper;
 
 import java.util.stream.Stream;

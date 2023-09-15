@@ -118,7 +118,7 @@ public class PutJobManagement_Test {
         client.close();
     }
 
-    private long getCacheBytesAvailable() throws IOException {
+    private static long getCacheBytesAvailable() throws IOException {
         long cacheAvailableBytes = 0;
         final List<CacheFilesystemInformation> cacheFilesystemInformationList = client.getCacheStateSpectraS3(
                 new GetCacheStateSpectraS3Request()).getCacheInformationResult().getFilesystems();
@@ -959,9 +959,9 @@ public class PutJobManagement_Test {
                 }, computeChecksumWithUserSuppliedFunction);
     }
 
-    private void transferAndCheckFileContent(final int maxNumObjectTransferAttempts,
-                                             final ObjectTransferExceptionHandler objectTransferExceptionHandler,
-                                             final boolean computeChecksumWithUserSuppliedFunction)
+    private static void transferAndCheckFileContent(final int maxNumObjectTransferAttempts,
+            final ObjectTransferExceptionHandler objectTransferExceptionHandler,
+            final boolean computeChecksumWithUserSuppliedFunction)
             throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, IOException, URISyntaxException
     {
         final String userAgent = "Agent Provocateur";
@@ -1245,8 +1245,8 @@ public class PutJobManagement_Test {
         }
     }
 
-    Ds3ClientHelpers.Job createWriteJobWithObjectsReadyToTransfer(final int maxNumObjectTransferAttempts,
-                                                                  final ClientFailureType clientFailureType)
+    static Ds3ClientHelpers.Job createWriteJobWithObjectsReadyToTransfer(final int maxNumObjectTransferAttempts,
+            final ClientFailureType clientFailureType)
             throws IOException, URISyntaxException, NoSuchMethodException, IllegalAccessException, InvocationTargetException {
         final String DIR_NAME = "largeFiles/";
         final String[] FILE_NAMES = new String[]{"lesmis-copies.txt"};
@@ -1269,9 +1269,7 @@ public class PutJobManagement_Test {
                 maxNumBlockAllocationRetries,
                 maxNumObjectTransferAttempts);
 
-        final Ds3ClientHelpers.Job writeJob = ds3ClientHelpers.startWriteJob(BUCKET_NAME, objects);
-
-        return writeJob;
+        return ds3ClientHelpers.startWriteJob(BUCKET_NAME, objects);
     }
 
     @Test
@@ -1510,7 +1508,7 @@ public class PutJobManagement_Test {
         void monitor();
     }
 
-    private class UserSuppliedPutBlobStrategy implements BlobStrategy {
+    private static class UserSuppliedPutBlobStrategy implements BlobStrategy {
         private final BlobStrategy wrappedBlobStrategy;
         private final Monitorable monitorable;
 
@@ -1544,7 +1542,7 @@ public class PutJobManagement_Test {
         });
     }
 
-    private void testPutJobWithUserSuppliedChannelStrategy(final TransferStrategyBuilderModifiable strategyBuilderModifiable) throws IOException, InterruptedException, URISyntaxException {
+    private static void testPutJobWithUserSuppliedChannelStrategy(final TransferStrategyBuilderModifiable strategyBuilderModifiable) throws IOException, InterruptedException, URISyntaxException {
         final String DIR_NAME = "books/";
         final String[] FILE_NAMES = new String[]{"beowulf.txt"};
 
@@ -1618,7 +1616,7 @@ public class PutJobManagement_Test {
         void released();
     }
 
-    private class UserSuppliedPutChannelStrategy implements ChannelStrategy {
+    private static class UserSuppliedPutChannelStrategy implements ChannelStrategy {
         private final ChannelMonitorable channelMonitorable;
         private final ChannelStrategy wrappedPutStrategy;
 
@@ -1717,7 +1715,7 @@ public class PutJobManagement_Test {
         }
     }
 
-    private class UserSuppliedTransferRetryDecorator implements TransferRetryDecorator {
+    private static class UserSuppliedTransferRetryDecorator implements TransferRetryDecorator {
         private final TransferRetryDecorator transferRetryDecorator;
         private final Monitorable monitorable;
 
@@ -1800,7 +1798,7 @@ public class PutJobManagement_Test {
         }
     }
 
-    private class UserSuppliedChunkAttemptRetryBehavior implements ChunkAttemptRetryBehavior {
+    private static class UserSuppliedChunkAttemptRetryBehavior implements ChunkAttemptRetryBehavior {
         private final ChunkAttemptRetryBehaviorMonitorable chunkAttemptRetryBehaviorMonitorable;
         private final ChunkAttemptRetryBehavior wrappedChunkAttemptRetryBehavior;
 
@@ -1861,7 +1859,7 @@ public class PutJobManagement_Test {
         }
     }
 
-    public class StreamObjectPutter extends ObjectInputStreamBuilder {
+    public static class StreamObjectPutter extends ObjectInputStreamBuilder {
         final InputStream _is;
 
         public StreamObjectPutter(final InputStream is) {
@@ -1956,7 +1954,7 @@ public class PutJobManagement_Test {
             if ( ! Platform.isWindows()) {
                 tempDirectory.toFile().setExecutable(false);
             } else {
-                Runtime.getRuntime().exec("icacls " + tempDirectory.toString() + "/deny Everyone(RD)").waitFor();
+                Runtime.getRuntime().exec("icacls " + tempDirectory + "/deny Everyone(RD)").waitFor();
             }
 
             final int maxNumBlockAllocationRetries = 3;
@@ -1986,7 +1984,7 @@ public class PutJobManagement_Test {
             if ( ! Platform.isWindows()) {
                 tempDirectory.toFile().setExecutable(true);
             } else {
-                Runtime.getRuntime().exec("icacls " + tempDirectory.toString() + "/grant Everyone(RD)").waitFor();
+                Runtime.getRuntime().exec("icacls " + tempDirectory + "/grant Everyone(RD)").waitFor();
             }
 
             deleteAllContents(client, BUCKET_NAME);
@@ -2033,11 +2031,11 @@ public class PutJobManagement_Test {
         }
     }
 
-    private Path sourceFilePath() throws IOException, URISyntaxException {
+    private static Path sourceFilePath() throws IOException, URISyntaxException {
         return ResourceUtils.loadFileResource(SOURCE_DIRECTORY + SOURCE_FILE_NAME);
     }
 
-    private ImmutableList<Ds3Object> copyFilesAndGenerateDsObjects(final Path destinationDirectory) throws IOException, URISyntaxException {
+    private static ImmutableList<Ds3Object> copyFilesAndGenerateDsObjects(final Path destinationDirectory) throws IOException, URISyntaxException {
         final Path sourceFilePath = ResourceUtils.loadFileResource(SOURCE_DIRECTORY + SOURCE_FILE_NAME);
 
         final ImmutableList<String> fileNames = generateFileNames(SOURCE_FILE_BASE_NAME, SOURCE_FILE_EXTENSION, 15000);
@@ -2046,7 +2044,7 @@ public class PutJobManagement_Test {
         return generateDs3Objects(destinationDirectory, fileNames);
     }
 
-    private ImmutableList<String> generateFileNames(final String baseFileName, final String baseFileExtension, final int numFileNames) {
+    private static ImmutableList<String> generateFileNames(final String baseFileName, final String baseFileExtension, final int numFileNames) {
         final ImmutableList.Builder<String> listBuilder = ImmutableList.builder();
 
         listBuilder.add(baseFileName + "." + baseFileExtension);
@@ -2058,13 +2056,13 @@ public class PutJobManagement_Test {
         return listBuilder.build();
     }
 
-    private void copyFiles(final Path sourceFilePath, final Path destinationDirectory, final ImmutableList<String> fileNames) throws IOException {
+    private static void copyFiles(final Path sourceFilePath, final Path destinationDirectory, final ImmutableList<String> fileNames) throws IOException {
         for (final String fileName : fileNames) {
             Files.copy(sourceFilePath, Paths.get(destinationDirectory.toString(), fileName));
         }
     }
 
-    private ImmutableList<Ds3Object> generateDs3Objects(final Path destinationDirectory, final ImmutableList<String> fileNames) throws IOException {
+    private static ImmutableList<Ds3Object> generateDs3Objects(final Path destinationDirectory, final ImmutableList<String> fileNames) throws IOException {
         final ImmutableList.Builder<Ds3Object> listBuilder = ImmutableList.builder();
 
         for (final String fileName : fileNames) {
@@ -2079,7 +2077,7 @@ public class PutJobManagement_Test {
     }
 
     @Test
-    public void testCancelingJob() throws URISyntaxException, InterruptedException {
+    public static void testCancelingJob() throws URISyntaxException, InterruptedException {
         final String tempPathPrefix = null;
         Path tempDirectory;
 

@@ -20,7 +20,6 @@ import com.spectralogic.ds3client.networking.HttpVerb;
 import com.spectralogic.ds3client.commands.interfaces.AbstractRequest;
 import com.spectralogic.ds3client.models.Priority;
 import java.util.UUID;
-import com.google.common.net.UrlEscapers;
 
 public class VerifyTapeSpectraS3Request extends AbstractRequest {
 

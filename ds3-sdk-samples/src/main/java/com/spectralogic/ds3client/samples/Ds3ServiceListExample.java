@@ -26,7 +26,6 @@ import com.spectralogic.ds3client.networking.FailedRequestException;
 import com.spectralogic.ds3client.networking.FailedRequestUsingMgmtPortException;
 
 import java.io.IOException;
-import java.net.UnknownHostException;
 import java.security.SignatureException;
 import java.net.UnknownHostException;
 

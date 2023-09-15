@@ -21,7 +21,6 @@ import com.spectralogic.ds3client.commands.interfaces.AbstractRequest;
 import java.lang.Integer;
 import com.spectralogic.ds3client.models.StorageDomainMemberState;
 import com.spectralogic.ds3client.models.WritePreferenceLevel;
-import com.google.common.net.UrlEscapers;
 
 public class ModifyStorageDomainMemberSpectraS3Request extends AbstractRequest {
 

@@ -15,7 +15,6 @@
 
 package com.spectralogic.ds3client.helpers.strategy.transferstrategy;
 
-import com.google.common.util.concurrent.MoreExecutors;
 import com.spectralogic.ds3client.Ds3Client;
 import com.spectralogic.ds3client.helpers.JobState;
 import com.spectralogic.ds3client.helpers.events.FailureEvent;

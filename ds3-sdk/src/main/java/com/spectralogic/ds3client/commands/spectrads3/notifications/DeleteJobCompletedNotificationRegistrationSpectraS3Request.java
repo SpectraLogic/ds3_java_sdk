@@ -43,7 +43,7 @@ public class DeleteJobCompletedNotificationRegistrationSpectraS3Request extends 
 
     @Override
     public String getPath() {
-        return "/_rest_/job_completed_notification_registration/" + this.getNotificationId().toString();
+        return "/_rest_/job_completed_notification_registration/" + this.getNotificationId();
     }
 
     

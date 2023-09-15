@@ -20,7 +20,6 @@ import com.google.common.collect.SetMultimap;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers;
 import com.spectralogic.ds3client.helpers.channelbuilders.ReadOnlySeekableByteChannel;
 import com.spectralogic.ds3client.models.BulkObject;
-import com.spectralogic.ds3client.models.JobRequestType;
 import com.spectralogic.ds3client.models.MasterObjectList;
 
 import java.io.IOException;

@@ -44,7 +44,7 @@ public class GetJobCreationFailedNotificationRegistrationSpectraS3Request extend
 
     @Override
     public String getPath() {
-        return "/_rest_/job_creation_failed_notification_registration/" + this.getNotificationId().toString();
+        return "/_rest_/job_creation_failed_notification_registration/" + this.getNotificationId();
     }
 
     }

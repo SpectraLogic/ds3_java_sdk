@@ -18,14 +18,13 @@ package com.spectralogic.ds3client.commands.interfaces;
 import com.spectralogic.ds3client.BulkCommand;
 import com.spectralogic.ds3client.networking.HttpVerb;
 import com.spectralogic.ds3client.models.Priority;
-import com.spectralogic.ds3client.models.JobChunkClientProcessingOrderGuarantee;
-import com.spectralogic.ds3client.models.WriteOptimization;
 import com.spectralogic.ds3client.models.bulk.*;
 import com.spectralogic.ds3client.serializer.XmlOutput;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 public abstract class BulkRequest extends AbstractRequest {
 
@@ -58,7 +57,7 @@ public abstract class BulkRequest extends AbstractRequest {
             xmlOutputBuilder.append(XmlOutput.toXml(objects, false));
         }
 
-        final byte[] stringBytes = xmlOutputBuilder.toString().getBytes(Charset.forName("UTF-8"));
+        final byte[] stringBytes = xmlOutputBuilder.toString().getBytes(StandardCharsets.UTF_8);
         this.size = stringBytes.length;
         return new ByteArrayInputStream(stringBytes);
     }

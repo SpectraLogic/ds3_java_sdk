@@ -220,7 +220,7 @@ class Ds3ClientHelpersImpl extends Ds3ClientHelpers {
         return innerStartReadJob(objects, getBulkJobSpectraS3Request, makeTransferStrategyBuilder());
     }
 
-    private GetBulkJobSpectraS3Request makeGetBulkJobSpectraS3Request(final String bucket, final Iterable<Ds3Object> objects, final ReadJobOptions options) {
+    private static GetBulkJobSpectraS3Request makeGetBulkJobSpectraS3Request(final String bucket, final Iterable<Ds3Object> objects, final ReadJobOptions options) {
         return new GetBulkJobSpectraS3Request(bucket, objects)
                 .withPriority(options.getPriority())
                 .withName(options.getName());

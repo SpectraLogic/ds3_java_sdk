@@ -43,7 +43,7 @@ public class DeleteStorageDomainFailureNotificationRegistrationSpectraS3Request 
 
     @Override
     public String getPath() {
-        return "/_rest_/storage_domain_failure_notification_registration/" + this.getNotificationId().toString();
+        return "/_rest_/storage_domain_failure_notification_registration/" + this.getNotificationId();
     }
 
     

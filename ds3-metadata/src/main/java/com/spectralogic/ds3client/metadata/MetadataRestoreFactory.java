@@ -21,7 +21,7 @@ import com.spectralogic.ds3client.utils.Platform;
 
 
 public class MetadataRestoreFactory {
-    public MetadataRestore getOSSpecificMetadataRestore(final Metadata metadata, final String filePath) {
+    public static MetadataRestore getOSSpecificMetadataRestore(final Metadata metadata, final String filePath) {
         final String localOS = MetaDataUtil.getOS();
         
         if (Platform.isWindows()) {

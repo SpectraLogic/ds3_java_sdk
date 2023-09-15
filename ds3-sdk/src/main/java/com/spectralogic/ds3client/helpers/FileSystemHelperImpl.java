@@ -137,9 +137,9 @@ class FileSystemHelperImpl implements FileSystemHelper {
         return new ObjectStorageSpaceVerificationResult(verificationStatus, requiredSpace, availableSpace, ioException);
     }
 
-    private long getRequiredSpaceForObjects(final Ds3ClientHelpers helpers,
-                                            final String bucketName,
-                                            final Collection<String> objectNames)
+    private static long getRequiredSpaceForObjects(final Ds3ClientHelpers helpers,
+            final String bucketName,
+            final Collection<String> objectNames)
                                             throws IOException
     {
         long result = 0;

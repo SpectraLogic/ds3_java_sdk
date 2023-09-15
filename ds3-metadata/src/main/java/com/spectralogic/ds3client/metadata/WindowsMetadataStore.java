@@ -28,6 +28,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.AclEntry;
@@ -95,7 +96,7 @@ class WindowsMetadataStore extends AbstractMetadataStore {
      * @param acl acl got from jna
      * @return dacl string
      */
-    private String getDaclString(final WinNT.ACL acl) {
+    private static String getDaclString(final WinNT.ACL acl) {
         final WinNT.ACE_HEADER[] aceHeaders = acl.getACEs();
         final StringBuilder daclStringBuffer = new StringBuilder();
         for (final WinNT.ACE_HEADER aceHeader : aceHeaders) {
@@ -129,7 +130,7 @@ class WindowsMetadataStore extends AbstractMetadataStore {
             final ProcessBuilder processBuilder = new ProcessBuilder("attrib", file.toString());
             final Process process = processBuilder.start();
             try (final BufferedReader reader =
-                    new BufferedReader(new InputStreamReader(process.getInputStream(), Charset.forName("UTF-8")))) {
+                    new BufferedReader(new InputStreamReader(process.getInputStream(), StandardCharsets.UTF_8))) {
                 final String flagWindows = reader.readLine();
                 if (Guard.isStringNullOrEmpty(flagWindows)) {
                     LOG.error("The flagWindows string was null");

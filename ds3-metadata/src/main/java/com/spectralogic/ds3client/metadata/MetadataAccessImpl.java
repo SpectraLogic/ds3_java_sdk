@@ -77,11 +77,11 @@ public class MetadataAccessImpl implements MetadataAccess {
      * @param file local path of file
      * @return map builder containing the data to be stored on server
      */
-    private ImmutableMap<String, String> storeMetaData(final Path file) throws IOException {
+    private static ImmutableMap<String, String> storeMetaData(final Path file) throws IOException {
         final ImmutableMap.Builder<String, String> builder = ImmutableMap.builder();
 
         //get metadata store based on os type
-        final MetadataStore metadataStore = new MetadataStoreFactory().getOsSpecificMetadataStore(builder);
+        final MetadataStore metadataStore = MetadataStoreFactory.getOsSpecificMetadataStore(builder);
         metadataStore.saveOSMetaData(MetaDataUtil.getOS());
 
         final BasicFileAttributes attr = Files.readAttributes(file, BasicFileAttributes.class);

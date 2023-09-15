@@ -28,6 +28,7 @@ import java.net.URISyntaxException;
 import java.nio.ByteBuffer;
 import java.nio.channels.SeekableByteChannel;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -42,7 +43,7 @@ public class FileObjectPutter_Test {
     final private static Logger LOG = LoggerFactory.getLogger(FileObjectPutter_Test.class);
 
     final private static String testString = "This is some test data.";
-    final private static byte[] testData = testString.getBytes(Charset.forName("UTF-8"));
+    final private static byte[] testData = testString.getBytes(StandardCharsets.UTF_8);
 
     /**
      * This test cannot run on Windows without extra privileges
@@ -99,7 +100,7 @@ public class FileObjectPutter_Test {
             final Path symLinkPath = tempDir.resolve("sym_" + tempPath.getFileName().toString());
             final Path relPath = Paths.get("..", getParentDir(tempPath), tempPath.getFileName().toString());
 
-            LOG.info("Creating symlink from " + symLinkPath.toString() + " to " + relPath.toString());
+            LOG.info("Creating symlink from " + symLinkPath + " to " + relPath);
 
             Files.createSymbolicLink(symLinkPath, relPath);
             getFileWithPutter(tempDir, symLinkPath);
@@ -110,14 +111,14 @@ public class FileObjectPutter_Test {
         }
     }
 
-    private void getFileWithPutter(final Path dir, final Path file) throws IOException {
+    private static void getFileWithPutter(final Path dir, final Path file) throws IOException {
              try {
                 final FileObjectPutter putter = new FileObjectPutter(dir);
                 try (final SeekableByteChannel newChannel = putter.buildChannel(file.getFileName().toString())) {
                     assertThat(newChannel, is(notNullValue()));
                     final ByteBuffer buff = ByteBuffer.allocate(testData.length);
                     assertThat(newChannel.read(buff), is(testData.length));
-                    assertThat(new String(buff.array(), Charset.forName("UTF-8")), is(testString));
+                    assertThat(new String(buff.array(), StandardCharsets.UTF_8), is(testString));
                 }
             } finally {
                 Files.deleteIfExists(file);
