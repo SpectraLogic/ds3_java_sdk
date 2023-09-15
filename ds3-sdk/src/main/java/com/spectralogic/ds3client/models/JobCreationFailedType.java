@@ -16,16 +16,6 @@
 // This code is auto-generated, do not modify
 package com.spectralogic.ds3client.models;
 
-public enum TapeDriveType {
-    UNKNOWN,
-    LTO5,
-    LTO6,
-    LTO7,
-    LTO8,
-    LTO9,
-    TS1140,
-    TS1150,
-    TS1155,
-    TS1160,
-    TS1170
+public enum JobCreationFailedType {
+    TAPES_MUST_BE_ONLINED
 }

@@ -2077,7 +2077,7 @@ public class PutJobManagement_Test {
     }
 
     @Test
-    public static void testCancelingJob() throws URISyntaxException, InterruptedException {
+    public void testCancelingJob() throws URISyntaxException, InterruptedException {
         final String tempPathPrefix = null;
         Path tempDirectory;
 

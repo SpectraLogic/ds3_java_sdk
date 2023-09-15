@@ -19,7 +19,6 @@ package com.spectralogic.ds3client.commands.spectrads3;
 import com.spectralogic.ds3client.networking.HttpVerb;
 import com.spectralogic.ds3client.commands.interfaces.AbstractRequest;
 import java.lang.Long;
-
 import com.spectralogic.ds3client.models.LtfsFileNamingMode;
 import java.lang.Integer;
 import com.spectralogic.ds3client.models.Priority;

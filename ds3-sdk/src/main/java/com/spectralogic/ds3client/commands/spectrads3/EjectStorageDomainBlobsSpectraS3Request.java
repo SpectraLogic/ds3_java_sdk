@@ -24,9 +24,9 @@ import com.spectralogic.ds3client.utils.Guard;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import com.spectralogic.ds3client.commands.interfaces.AbstractRequest;
 
 public class EjectStorageDomainBlobsSpectraS3Request extends AbstractRequest {

@@ -514,6 +514,10 @@ public class Ds3ClientImpl implements Ds3Client {
         return new VerifyBulkJobSpectraS3ResponseParser().response(this.netClient.getResponse(request));
     }
     @Override
+    public DeleteJobCreationFailureSpectraS3Response deleteJobCreationFailureSpectraS3(final DeleteJobCreationFailureSpectraS3Request request) throws IOException {
+        return new DeleteJobCreationFailureSpectraS3ResponseParser().response(this.netClient.getResponse(request));
+    }
+    @Override
     public GetActiveJobSpectraS3Response getActiveJobSpectraS3(final GetActiveJobSpectraS3Request request) throws IOException {
         return new GetActiveJobSpectraS3ResponseParser().response(this.netClient.getResponse(request));
     }
@@ -548,6 +552,10 @@ public class Ds3ClientImpl implements Ds3Client {
     @Override
     public GetJobChunksReadyForClientProcessingSpectraS3Response getJobChunksReadyForClientProcessingSpectraS3(final GetJobChunksReadyForClientProcessingSpectraS3Request request) throws IOException {
         return new GetJobChunksReadyForClientProcessingSpectraS3ResponseParser().response(this.netClient.getResponse(request));
+    }
+    @Override
+    public GetJobCreationFailuresSpectraS3Response getJobCreationFailuresSpectraS3(final GetJobCreationFailuresSpectraS3Request request) throws IOException {
+        return new GetJobCreationFailuresSpectraS3ResponseParser().response(this.netClient.getResponse(request));
     }
     @Override
     public GetJobSpectraS3Response getJobSpectraS3(final GetJobSpectraS3Request request) throws IOException {

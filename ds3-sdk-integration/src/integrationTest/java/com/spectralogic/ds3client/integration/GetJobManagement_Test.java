@@ -74,12 +74,7 @@ import com.spectralogic.ds3client.networking.Metadata;
 import com.spectralogic.ds3client.utils.Platform;
 import com.spectralogic.ds3client.utils.ResourceUtils;
 import org.apache.commons.io.FileUtils;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Assume;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

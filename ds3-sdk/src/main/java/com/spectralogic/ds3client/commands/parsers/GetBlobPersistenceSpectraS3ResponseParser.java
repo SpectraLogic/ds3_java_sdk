@@ -20,7 +20,7 @@ import com.spectralogic.ds3client.commands.parsers.interfaces.AbstractResponsePa
 import com.spectralogic.ds3client.commands.parsers.utils.ResponseParserUtils;
 import com.spectralogic.ds3client.commands.spectrads3.GetBlobPersistenceSpectraS3Response;
 import com.spectralogic.ds3client.networking.WebResponse;
-
+import com.spectralogic.ds3client.serializer.XmlOutput;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.String;
