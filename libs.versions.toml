@@ -24,10 +24,10 @@ commonsLang3Version = "3.12.0"
 commonsCodecVersion = "1.15"
 commonsIoVersion = "2.11.0"
 findbugsVersion = "3.0.1"
-guavaVersion = "31.1-jre"
+guavaVersion = "32.1.2-jre"
 hamcrestVersion = "2.2"
 httpclientVersion = "4.5.13"
-jacksonVersion = "2.14.2"
+jacksonVersion = "2.15.2"
 jnaVersion = "5.12.1"
 junitJupiterVersion = "5.9.0"
 junitVersion = "4.13.2"
@@ -70,10 +70,10 @@ slf4jSimple = { group = "org.slf4j", name = "slf4j-simple", version.ref = "slf4j
 # plugins used in buildSrc/
 #
 kotlinJvmPlugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlinVersion" }
-owaspDepCheckPlugin = { group = "org.owasp", name = "dependency-check-gradle", version = "8.1.2" }
-versionsPlugin = { group = "com.github.ben-manes", name = "gradle-versions-plugin", version = "0.46.0" }
+owaspDepCheckPlugin = { group = "org.owasp", name = "dependency-check-gradle", version = "8.4.0" }
+versionsPlugin = { group = "com.github.ben-manes", name = "gradle-versions-plugin", version = "0.47.0" }
 
 [plugins]
-gradleDepVers = { id = "com.github.ben-manes.versions", version = "0.46.0" }
+gradleDepVers = { id = "com.github.ben-manes.versions", version = "0.47.0" }
 gitVersionPlugin = { id = "com.palantir.git-version", version = "0.12.2" } # stuck on this version until we move from building with java 8
 shadowPlugin = { id = "com.github.johnrengelman.shadow", version = "7.1.2" }
