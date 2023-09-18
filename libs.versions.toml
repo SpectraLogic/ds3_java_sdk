@@ -16,7 +16,7 @@
 #
 # project version
 #
-ds3SdkVersion = "5.6.2"
+ds3SdkVersion = "5.6.3-SNAPSHOT"
 #
 # dependency versions
 #
@@ -27,7 +27,7 @@ findbugsVersion = "3.0.1"
 guavaVersion = "32.1.2-jre"
 hamcrestVersion = "2.2"
 httpclientVersion = "4.5.13"
-jacksonVersion = "2.14.3"
+jacksonVersion = "2.14.3" # stuck on 2.14.x until we move away from Java 8 as a minimum supported version
 jnaVersion = "5.12.1"
 junitJupiterVersion = "5.9.0"
 junitVersion = "4.13.2"
