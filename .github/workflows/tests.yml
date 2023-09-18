@@ -15,7 +15,7 @@ jobs:
           distribution: 'temurin'
           java-version: '8'
           check-latest: true
-      - run: ./gradlew clean classes testClasses integrationTestClasses --refresh-dependencies
+      - run: ./gradlew clean classes testClasses integrationTestClasses shadowJar --refresh-dependencies
   test:
     name: Test with multiple Temurin JDK versions
     strategy:
