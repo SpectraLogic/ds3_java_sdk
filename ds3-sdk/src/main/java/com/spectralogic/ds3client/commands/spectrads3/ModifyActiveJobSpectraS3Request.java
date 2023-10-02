@@ -19,7 +19,6 @@ package com.spectralogic.ds3client.commands.spectrads3;
 import com.spectralogic.ds3client.networking.HttpVerb;
 import com.spectralogic.ds3client.commands.interfaces.AbstractRequest;
 import java.util.Date;
-import com.google.common.net.UrlEscapers;
 import com.spectralogic.ds3client.models.Priority;
 import java.util.UUID;
 

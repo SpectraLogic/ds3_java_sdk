@@ -32,7 +32,6 @@ import com.spectralogic.ds3client.models.bulk.Ds3Object;
 import com.spectralogic.ds3client.networking.ConnectionDetails;
 import com.spectralogic.ds3client.networking.FailedRequestException;
 import com.spectralogic.ds3client.utils.ByteArraySeekableByteChannel;
-import org.hamcrest.Matchers;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -531,7 +530,7 @@ public class Ds3ClientHelpers_Test {
                 "2014-09-17T13:03:54.000Z",
                 UUID.fromString("57919d2d-448c-4e2a-8886-0413af22243e"),
                 "spectra",
-                Arrays.asList(basicNode(nodeId, "black-pearl")),
+                Collections.singletonList(basicNode(nodeId, "black-pearl")),
                 Arrays.asList(chunks)
         );
     }

@@ -19,7 +19,6 @@ package com.spectralogic.ds3client.commands.spectrads3;
 import com.spectralogic.ds3client.networking.HttpVerb;
 import com.spectralogic.ds3client.commands.interfaces.AbstractRequest;
 import java.lang.Long;
-import com.google.common.net.UrlEscapers;
 
 public class ModifyCacheFilesystemSpectraS3Request extends AbstractRequest {
 
@@ -36,6 +35,8 @@ public class ModifyCacheFilesystemSpectraS3Request extends AbstractRequest {
     private boolean cacheSafetyEnabled;
 
     private Long maxCapacityInBytes;
+
+    private boolean needsReconcile;
 
     // Constructor
     
@@ -80,6 +81,13 @@ public class ModifyCacheFilesystemSpectraS3Request extends AbstractRequest {
     }
 
 
+    public ModifyCacheFilesystemSpectraS3Request withNeedsReconcile(final boolean needsReconcile) {
+        this.needsReconcile = needsReconcile;
+        this.updateQueryParam("needs_reconcile", needsReconcile);
+        return this;
+    }
+
+
 
     @Override
     public HttpVerb getVerb() {
@@ -118,6 +126,11 @@ public class ModifyCacheFilesystemSpectraS3Request extends AbstractRequest {
 
     public Long getMaxCapacityInBytes() {
         return this.maxCapacityInBytes;
+    }
+
+
+    public boolean getNeedsReconcile() {
+        return this.needsReconcile;
     }
 
 }

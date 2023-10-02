@@ -23,7 +23,7 @@ import java.nio.channels.SeekableByteChannel;
 public class RepeatStringObjectChannelBuilder implements Ds3ClientHelpers.ObjectChannelBuilder {
     private final int bufferSize;
     private final long sizeOfFiles;
-    private String inputDataHeader;
+    private final String inputDataHeader;
 
     public RepeatStringObjectChannelBuilder(final String inputDataHeader, final int bufferSize, final long sizeOfFile) {
         this.bufferSize = bufferSize;

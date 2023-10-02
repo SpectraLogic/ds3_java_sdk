@@ -25,7 +25,6 @@ import com.spectralogic.ds3client.commands.spectrads3.GetBulkJobSpectraS3Request
 import com.spectralogic.ds3client.commands.spectrads3.GetBulkJobSpectraS3Response;
 import com.spectralogic.ds3client.exceptions.ContentLengthNotMatchException;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers;
-import com.spectralogic.ds3client.helpers.channelbuilders.ObjectInputStreamBuilder;
 import com.spectralogic.ds3client.integration.test.helpers.TempStorageIds;
 import com.spectralogic.ds3client.integration.test.helpers.TempStorageUtil;
 import com.spectralogic.ds3client.models.ChecksumType;
@@ -80,13 +79,7 @@ public class CustomParser_Test {
         final Ds3Object obj = new Ds3Object(OBJ_NAME, OBJ_BYTES.length);
         final Ds3ClientHelpers.Job job = HELPERS.startWriteJob(BUCKET_NAME, Lists.newArrayList(obj));
 
-        job.transfer(new ObjectInputStreamBuilder() {
-
-            @Override
-            public InputStream buildInputStream(final String key) {
-                return new ByteArrayInputStream(OBJ_BYTES);
-            }
-        });
+        job.transfer(new ObjectInputStreamBuilder());
     }
 
     @After
@@ -108,30 +101,7 @@ public class CustomParser_Test {
                 0,
                 stream);
 
-        client.getObject(request, new Function<GetObjectCustomParserParameters, GetObjectResponse>() {
-            @Override
-            public GetObjectResponse apply(final GetObjectCustomParserParameters getObjectParserParams) {
-                final WebResponse webResponse = getObjectParserParams.getWebResponse();
-                final  long objectSize = getSizeFromHeaders(webResponse.getHeaders());
-                try (final InputStream responseStream = webResponse.getResponseStream()) {
-                    final long totalBytes = IOUtils.copy(
-                            responseStream,
-                            getObjectParserParams.getDestinationChannel(),
-                            getObjectParserParams.getBufferSize(),
-                            getObjectParserParams.getObjectName(),
-                            false);
-                    getObjectParserParams.getDestinationChannel().close();
-
-                    if (objectSize != -1 && totalBytes != objectSize) {
-                        throw new ContentLengthNotMatchException(getObjectParserParams.getObjectName(), objectSize, totalBytes);
-                    }
-
-                } catch (final IOException e) {
-                    fail();
-                }
-                return null;
-            }
-        });
+        client.getObject(request, new GetObjectCustomParserParametersGetObjectResponseFunction());
         assertThat(stream.toByteArray(), is(OBJ_BYTES));
     }
 
@@ -146,11 +116,46 @@ public class CustomParser_Test {
                 new NullChannel());
 
         //Get object that does not exist
-        client.getObject(request, new Function<GetObjectCustomParserParameters, GetObjectResponse>() {
-            @Override
-            public GetObjectResponse apply(final GetObjectCustomParserParameters getObjectParserParams) {
-                return null;
+        client.getObject(request, new NullGetObjectCustomParserParametersGetObjectResponseFunction());
+    }
+
+    private static class ObjectInputStreamBuilder extends com.spectralogic.ds3client.helpers.channelbuilders.ObjectInputStreamBuilder {
+
+        @Override
+        public InputStream buildInputStream(final String key) {
+            return new ByteArrayInputStream(OBJ_BYTES);
+        }
+    }
+
+    private static class GetObjectCustomParserParametersGetObjectResponseFunction implements Function<GetObjectCustomParserParameters, GetObjectResponse> {
+        @Override
+        public GetObjectResponse apply(final GetObjectCustomParserParameters getObjectParserParams) {
+            final WebResponse webResponse = getObjectParserParams.getWebResponse();
+            final  long objectSize = getSizeFromHeaders(webResponse.getHeaders());
+            try (final InputStream responseStream = webResponse.getResponseStream()) {
+                final long totalBytes = IOUtils.copy(
+                        responseStream,
+                        getObjectParserParams.getDestinationChannel(),
+                        getObjectParserParams.getBufferSize(),
+                        getObjectParserParams.getObjectName(),
+                        false);
+                getObjectParserParams.getDestinationChannel().close();
+
+                if (objectSize != -1 && totalBytes != objectSize) {
+                    throw new ContentLengthNotMatchException(getObjectParserParams.getObjectName(), objectSize, totalBytes);
+                }
+
+            } catch (final IOException e) {
+                fail();
             }
-        });
+            return null;
+        }
+    }
+
+    private static class NullGetObjectCustomParserParametersGetObjectResponseFunction implements Function<GetObjectCustomParserParameters, GetObjectResponse> {
+        @Override
+        public GetObjectResponse apply(final GetObjectCustomParserParameters getObjectParserParams) {
+            return null;
+        }
     }
 }

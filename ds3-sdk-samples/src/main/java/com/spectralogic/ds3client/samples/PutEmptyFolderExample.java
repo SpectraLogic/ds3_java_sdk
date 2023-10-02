@@ -19,8 +19,6 @@ import com.spectralogic.ds3client.Ds3Client;
 import com.spectralogic.ds3client.Ds3ClientBuilder;
 import com.spectralogic.ds3client.commands.PutObjectRequest;
 import com.spectralogic.ds3client.commands.PutObjectResponse;
-import com.spectralogic.ds3client.commands.spectrads3.GetBucketSpectraS3Request;
-import com.spectralogic.ds3client.commands.spectrads3.GetBucketSpectraS3Response;
 import com.spectralogic.ds3client.helpers.Ds3ClientHelpers;
 import com.spectralogic.ds3client.models.Contents;
 import com.spectralogic.ds3client.networking.FailedRequestException;

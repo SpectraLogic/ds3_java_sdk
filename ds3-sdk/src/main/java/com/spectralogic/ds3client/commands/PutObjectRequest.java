@@ -25,7 +25,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.spectralogic.ds3client.commands.interfaces.AbstractRequest;
 import java.util.UUID;
-import com.google.common.net.UrlEscapers;
 import javax.annotation.Nonnull;
 import com.google.common.base.Preconditions;
 import com.spectralogic.ds3client.models.ChecksumType;

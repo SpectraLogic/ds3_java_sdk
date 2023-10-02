@@ -31,7 +31,7 @@ dependencies {
     testImplementation(project(":ds3-metadata"))
 
     testImplementation(libs.httpclient)
-    testImplementation(libs.commonsLang)
+    testImplementation(libs.commonsLang3)
 
     testRuntimeOnly(libs.junitVintageEngine)
 }

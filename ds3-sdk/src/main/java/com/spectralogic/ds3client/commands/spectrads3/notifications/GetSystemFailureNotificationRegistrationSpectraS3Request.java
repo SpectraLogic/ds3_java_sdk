@@ -44,7 +44,7 @@ public class GetSystemFailureNotificationRegistrationSpectraS3Request extends Ab
 
     @Override
     public String getPath() {
-        return "/_rest_/system_failure_notification_registration/" + this.getNotificationId().toString();
+        return "/_rest_/system_failure_notification_registration/" + this.getNotificationId();
     }
 
     }

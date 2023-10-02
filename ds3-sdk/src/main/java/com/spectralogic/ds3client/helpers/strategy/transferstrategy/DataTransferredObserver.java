@@ -20,17 +20,25 @@ import com.spectralogic.ds3client.helpers.DataTransferredListener;
 
 public class DataTransferredObserver extends AbstractObserver<Long> {
     public DataTransferredObserver(final DataTransferredListener dataTransferredListener) {
-        super(new UpdateStrategy<Long>() {
-            @Override
-            public void update(final Long eventData) {
-                dataTransferredListener.dataTransferred(eventData);
-            }
-        });
+        super(new LongUpdateStrategy(dataTransferredListener));
 
         Preconditions.checkNotNull(dataTransferredListener, "dataTransferredListener may not be null.");
     }
 
     public DataTransferredObserver(final UpdateStrategy<Long> updateStrategy) {
         super(updateStrategy);
+    }
+
+    private static class LongUpdateStrategy implements UpdateStrategy<Long> {
+        private final DataTransferredListener dataTransferredListener;
+
+        public LongUpdateStrategy(final DataTransferredListener dataTransferredListener) {
+            this.dataTransferredListener = dataTransferredListener;
+        }
+
+        @Override
+        public void update(final Long eventData) {
+            dataTransferredListener.dataTransferred(eventData);
+        }
     }
 }

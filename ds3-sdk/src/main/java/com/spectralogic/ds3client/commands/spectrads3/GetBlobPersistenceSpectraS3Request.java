@@ -21,6 +21,7 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.nio.charset.Charset;
 import com.spectralogic.ds3client.utils.Guard;
+import java.nio.charset.StandardCharsets;
 import com.spectralogic.ds3client.commands.interfaces.AbstractRequest;
 
 public class GetBlobPersistenceSpectraS3Request extends AbstractRequest {
@@ -53,7 +54,7 @@ public class GetBlobPersistenceSpectraS3Request extends AbstractRequest {
         if (Guard.isStringNullOrEmpty(requestPayload)) {
             return null;
         }
-        final byte[] stringBytes = requestPayload.getBytes(Charset.forName("UTF-8"));
+        final byte[] stringBytes = requestPayload.getBytes(StandardCharsets.UTF_8);
         this.size = stringBytes.length;
         return new ByteArrayInputStream(stringBytes);
     }

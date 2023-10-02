@@ -77,7 +77,7 @@ class MACMetadataRestore extends PosixMetadataRestore {
      * @param objectName   path of the object where we need to restore
      * @param creationTime creation time got from server
      */
-    private void restoreCreationTimeMAC(final String objectName, final String creationTime)  throws IOException, InterruptedException {
+    private static void restoreCreationTimeMAC(final String objectName, final String creationTime)  throws IOException, InterruptedException {
             final ProcessBuilder processBuilder = new ProcessBuilder("touch", "-t", getDate(Long.parseLong(creationTime), "YYYYMMddHHmm"), objectName);
             final Process process = processBuilder.start();
             //Wait to get exit value
@@ -94,7 +94,7 @@ class MACMetadataRestore extends PosixMetadataRestore {
      * @param objectName   path of the object where we need to restore
      * @param modifiedTime modified time need to restore
      */
-    private void restoreModifiedTimeMAC(final String objectName, final String modifiedTime) throws IOException, InterruptedException {
+    private static void restoreModifiedTimeMAC(final String objectName, final String modifiedTime) throws IOException, InterruptedException {
         final ProcessBuilder processBuilder = new ProcessBuilder("touch", "-mt", getDate(Long.parseLong(modifiedTime), "YYYYMMddHHmm"), objectName);
         final Process process = processBuilder.start();
 

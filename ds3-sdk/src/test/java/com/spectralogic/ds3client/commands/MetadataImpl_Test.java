@@ -92,7 +92,7 @@ public class MetadataImpl_Test {
         assertThat(userGuids.get(1), is(userGuid2));
     }
 
-    private Metadata genMetadata(final Header... headers) {
+    private static Metadata genMetadata(final Header... headers) {
 
         final ImmutableMultimap.Builder<String, String> mapBuilder = ImmutableMultimap.builder();
         for (final Header header : headers) {

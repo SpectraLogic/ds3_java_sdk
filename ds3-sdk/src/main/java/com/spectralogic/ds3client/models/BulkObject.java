@@ -168,7 +168,7 @@ public class BulkObject {
      * Tests if two objects are equal, and handles the case if either or both objects are null
      */
     protected static boolean nullableEquals(final Object obj1, final Object obj2) {
-        return obj1 == null && obj2 == null || obj1 != null && obj2 != null && obj1.equals(obj2);
+        return obj1 == null && obj2 == null || obj1 != null && obj1.equals(obj2);
     }
 
     @Override

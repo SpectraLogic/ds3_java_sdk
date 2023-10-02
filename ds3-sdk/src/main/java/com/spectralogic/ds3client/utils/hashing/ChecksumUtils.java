@@ -38,7 +38,7 @@ public final class ChecksumUtils {
             case CRC_32C:
                 return new CRC32CHasher();
             default:
-                throw new RuntimeException("Unknown checksum type " + checksumType.toString());
+                throw new RuntimeException("Unknown checksum type " + checksumType);
         }
     }
 

@@ -149,7 +149,6 @@ public final class TransferStrategyBuilder {
      * @return The instance of this builder, with the intent that you can string together the behaviors you wish,
      * for example:
      * <pre>
-     *     {@code
      *     final PutBulkJobSpectraS3Request request = new PutBulkJobSpectraS3Request(BUCKET_NAME, Lists.newArrayList(objectsToWrite));
      *     final PutBulkJobSpectraS3Response putBulkJobSpectraS3Response = client.putBulkJobSpectraS3(request);
      *
@@ -163,9 +162,9 @@ public final class TransferStrategyBuilder {
      *                                                                       masterObjectList,
      *                                                                       eventDispatcher,
      *                                                                       new MaxChunkAttemptsRetryBehavior(5),
-     *                                                                       new ClientDefinedChunkAttemptRetryDelayBehavior(1, eventDispatcher),
+     *                                                                       new ClientDefinedChunkAttemptRetryDelayBehavior(1, eventDispatcher,
      *                                                                           new Monitorable() {
-     *                                                                               @Override
+     *                                                                               &#64;Override
      *                                                                                   public void monitor() {
      *                                                                                       numChunkAllocationAttempts.incrementAndGet();
      *                                                                                   }
@@ -227,8 +226,8 @@ public final class TransferStrategyBuilder {
     /**
      * The transfer function to use when putting an object to a Black Pearl when the value in
      * {@link TransferStrategyBuilder#withChecksumType(ChecksumType.Type)} is not
-     * {@link ChecksumType.None}.  This builder will make a checksum function of the correct type
-     * if you specify a checksum type other than {@link ChecksumType.None} but do not specify a
+     * {@link com.spectralogic.ds3client.models.ChecksumType.Type#NONE}.  This builder will make a checksum function of the correct type
+     * if you specify a checksum type other than {@link com.spectralogic.ds3client.models.ChecksumType.Type#NONE} but do not specify a
      * checksum function.
      * @return The instance of this builder, with the intent that you can string together the behaviors you wish.
      */
@@ -238,7 +237,7 @@ public final class TransferStrategyBuilder {
     }
 
     /**
-     * The {@link ChecksumType.None} you would like to compute and include in the payload sent to a
+     * The {@link com.spectralogic.ds3client.models.ChecksumType.Type#NONE} you would like to compute and include in the payload sent to a
      * Black Pearl when putting an object.
      * @return The instance of this builder, with the intent that you can string together the behaviors you wish.
      */
@@ -716,7 +715,7 @@ public final class TransferStrategyBuilder {
         return jobPartTracker;
     }
 
-    private ImmutableList<BulkObject> getBlobs(final List<Objects> chunks) {
+    private static ImmutableList<BulkObject> getBlobs(final List<Objects> chunks) {
         final ImmutableList.Builder<BulkObject> builder = ImmutableList.builder();
         for (final Objects objects : chunks) {
             builder.addAll(objects.getObjects());
@@ -725,7 +724,8 @@ public final class TransferStrategyBuilder {
     }
 
     private void makeDefaultChecksumFunction() {
-        final ChecksumFunction newChecksumFunction = new ChecksumFunction() {
+
+        checksumFunction = new ChecksumFunction() {
             @Override
             public String compute(final BulkObject obj, final ByteChannel channel) {
                 String checksum = null;
@@ -756,8 +756,6 @@ public final class TransferStrategyBuilder {
                 return checksum;
             }
         };
-
-        checksumFunction = newChecksumFunction;
     }
 
     private TransferStrategy makeRandomAccessPutTransferStrategy() {

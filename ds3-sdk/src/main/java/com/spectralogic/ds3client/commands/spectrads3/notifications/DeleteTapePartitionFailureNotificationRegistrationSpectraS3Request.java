@@ -43,7 +43,7 @@ public class DeleteTapePartitionFailureNotificationRegistrationSpectraS3Request 
 
     @Override
     public String getPath() {
-        return "/_rest_/tape_partition_failure_notification_registration/" + this.getNotificationId().toString();
+        return "/_rest_/tape_partition_failure_notification_registration/" + this.getNotificationId();
     }
 
     

@@ -59,7 +59,7 @@ public class LazyIterable<T> implements Iterable<T> {
         Iterable<T> getNextValues();
     }
 
-    private class LazyObjectIterator<E> implements Iterator<E> {
+    private static class LazyObjectIterator<E> implements Iterator<E> {
 
         private final LazyLoader<E> iterableLoader;
 

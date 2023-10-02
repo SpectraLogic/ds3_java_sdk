@@ -53,7 +53,7 @@ public class RangeHelperImpl_Test {
         }
     }
 
-    private ImmutableCollection<Range> makeSomeRanges() {
+    private static ImmutableCollection<Range> makeSomeRanges() {
         final Range firstRange = Range.byLength(10, 10000);
         final Range secondRange = Range.byLength(20000, 15000);
         final Range thirdRange = Range.byLength(40000, 20000);
@@ -64,7 +64,7 @@ public class RangeHelperImpl_Test {
                 .build();
     }
 
-    private long numBytesToTransfer(final ImmutableCollection<Range> ranges, final int numRanges) {
+    private static long numBytesToTransfer(final ImmutableCollection<Range> ranges, final int numRanges) {
         long result = 0;
         int currentRange = 0;
 

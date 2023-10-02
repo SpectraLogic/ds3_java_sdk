@@ -15,6 +15,7 @@
 
 package com.spectralogic.ds3client.helpers;
 
+import com.google.common.base.Charsets;
 import com.spectralogic.ds3client.commands.GetBucketRequest;
 import com.spectralogic.ds3client.commands.GetObjectRequest;
 import com.spectralogic.ds3client.commands.PutObjectRequest;
@@ -30,6 +31,7 @@ import org.hamcrest.TypeSafeMatcher;
 import java.io.IOException;
 import java.nio.channels.Channels;
 import java.nio.channels.SeekableByteChannel;
+import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 
 import static org.mockito.hamcrest.MockitoHamcrest.argThat;
@@ -207,7 +209,7 @@ public final class RequestMatchers {
     private static String channelToString(final SeekableByteChannel channel) {
         try {
             channel.position(0);
-            return IOUtils.toString(Channels.newReader(channel, "UTF-8"));
+            return IOUtils.toString(Channels.newReader(channel, Charsets.UTF_8.name()));
         } catch (final IOException e) {
             throw new RuntimeException(e);
         }

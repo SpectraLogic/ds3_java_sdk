@@ -158,7 +158,7 @@ final class Crc32c implements Checksum {
     crc = 0;
   }
 
-  private long updateByte(final byte newByte, final long crc) {
+  private static long updateByte(final byte newByte, final long crc) {
     final byte b = (byte) (newByte & BYTE_MASK);
     final int index = (int) ((crc ^ b) & BYTE_MASK);
     return (CRC_TABLE[index] ^ (crc >> 8)) & LONG_MASK;

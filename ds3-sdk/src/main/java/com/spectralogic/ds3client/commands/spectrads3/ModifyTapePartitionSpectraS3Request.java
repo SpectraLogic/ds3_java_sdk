@@ -20,7 +20,6 @@ import com.spectralogic.ds3client.networking.HttpVerb;
 import com.spectralogic.ds3client.commands.interfaces.AbstractRequest;
 import java.lang.Integer;
 import com.spectralogic.ds3client.models.Quiesced;
-import com.google.common.net.UrlEscapers;
 
 public class ModifyTapePartitionSpectraS3Request extends AbstractRequest {
 

@@ -1,0 +1,79 @@
+#
+# ******************************************************************************
+#   Copyright 2022 Spectra Logic Corporation. All Rights Reserved.
+#   Licensed under the Apache License, Version 2.0 (the "License"). You may not use
+#   this file except in compliance with the License. A copy of the License is located at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+#   or in the "license" file accompanying this file.
+#   This file is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+#   CONDITIONS OF ANY KIND, either express or implied. See the License for the
+#   specific language governing permissions and limitations under the License.
+# ****************************************************************************
+#
+[versions]
+#
+# project version
+#
+ds3SdkVersion = "5.6.3-SNAPSHOT"
+#
+# dependency versions
+#
+commonsLang3Version = "3.12.0"
+commonsCodecVersion = "1.15"
+commonsIoVersion = "2.11.0"
+findbugsVersion = "3.0.1"
+guavaVersion = "32.1.2-jre"
+hamcrestVersion = "2.2"
+httpclientVersion = "4.5.13"
+jacksonVersion = "2.14.3" # stuck on 2.14.x until we move away from Java 8 as a minimum supported version
+jnaVersion = "5.12.1"
+junitJupiterVersion = "5.9.0"
+junitVersion = "4.13.2"
+kotlinVersion = "1.6.10"
+mockitoVersion = "4.7.0"
+slf4jVersion = "1.7.36"
+woodstoxVersion = "4.4.1"
+
+[libraries]
+commonsCodec = { group = "commons-codec", name = "commons-codec", version.ref = "commonsCodecVersion" }
+commonsIo = { group = "commons-io", name = "commons-io", version.ref = "commonsIoVersion" }
+findbugs = { group = "com.google.code.findbugs", name = "annotations", version.ref = "findbugsVersion" }
+guava = { group = "com.google.guava", name = "guava", version.ref = "guavaVersion" }
+httpclient = { group = "org.apache.httpcomponents", name = "httpclient", version.ref = "httpclientVersion" }
+jacksonBom = { group = "com.fasterxml.jackson", name = "jackson-bom", version.ref = "jacksonVersion" }
+## jackson version controlled by jackson-bom
+jacksonDatatypeJdk8 = { group = "com.fasterxml.jackson.datatype", name="jackson-datatype-jdk8" }
+jacksonDataformatXml = { group = "com.fasterxml.jackson.dataformat", name = "jackson-dataformat-xml" }
+## end jackson-bom controlled dependencies
+jna = { group = "net.java.dev.jna", name = "jna", version.ref = "jnaVersion" }
+jnaPlatform = { group = "net.java.dev.jna", name = "jna-platform", version.ref = "jnaVersion" }
+kotlinBom = { group = "org.jetbrains.kotlin", name = "kotlin-bom", version.ref = "kotlinVersion" }
+## kotlin version controlled by kotlin-bom
+kotlinStdLib = { group = "org.jetbrains.kotlin", name = "kotlin-stdlib" }
+## end kotlin-bom controlled dependencies
+slf4jApi = { group = "org.slf4j", name = "slf4j-api", version.ref = "slf4jVersion" }
+woodstoxCoreAsl = { group = "org.codehaus.woodstox", name = "woodstox-core-asl", version.ref = "woodstoxVersion" }
+#
+# test only libraries
+#
+commonsLang3 = { group = "org.apache.commons",name = "commons-lang3", version.ref = "commonsLang3Version" }
+hamcrest = { group = "org.hamcrest", name = "hamcrest", version.ref = "hamcrestVersion" }
+junit = { group = "junit", name = "junit", version.ref = "junitVersion"}
+junitJupiterApi = { group = "org.junit.jupiter", name = "junit-jupiter-api", version.ref = "junitJupiterVersion" }
+junitVintageEngine = { group = "org.junit.vintage", name = "junit-vintage-engine", version.ref = "junitJupiterVersion" }
+mockitoBom = { group = "org.mockito", name = "mockito-bom", version.ref = "mockitoVersion" }
+mockitoCore = { group = "org.mockito", name = "mockito-core" }
+slf4jSimple = { group = "org.slf4j", name = "slf4j-simple", version.ref = "slf4jVersion" }
+#
+# plugins used in buildSrc/
+#
+kotlinJvmPlugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlinVersion" }
+owaspDepCheckPlugin = { group = "org.owasp", name = "dependency-check-gradle", version = "8.4.0" }
+versionsPlugin = { group = "com.github.ben-manes", name = "gradle-versions-plugin", version = "0.47.0" }
+
+[plugins]
+gradleDepVers = { id = "com.github.ben-manes.versions", version = "0.47.0" }
+gitVersionPlugin = { id = "com.palantir.git-version", version = "0.12.2" } # stuck on this version until we move from building with java 8
+shadowPlugin = { id = "com.github.johnrengelman.shadow", version = "7.1.2" }

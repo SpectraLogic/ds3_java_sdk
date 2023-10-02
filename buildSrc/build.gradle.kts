@@ -17,10 +17,8 @@ plugins {
     `kotlin-dsl`
 }
 
-repositories {
-    mavenCentral()
-}
-
 dependencies {
-    implementation("org.owasp:dependency-check-gradle:7.3.2")
+    implementation(libs.kotlinJvmPlugin)
+    implementation(libs.owaspDepCheckPlugin)
+    implementation(libs.versionsPlugin)
 }

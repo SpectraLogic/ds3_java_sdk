@@ -50,6 +50,7 @@ import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.channels.SeekableByteChannel;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
 import java.util.*;
 import java.util.concurrent.CountDownLatch;
@@ -514,7 +515,7 @@ public class Smoke_Test {
         });
     }
 
-    private void runWriteRecoveryTest(final RecoveryJobFactory recoveryJobFactory) throws IOException, JobRecoveryException, URISyntaxException {
+    private static void runWriteRecoveryTest(final RecoveryJobFactory recoveryJobFactory) throws IOException, JobRecoveryException, URISyntaxException {
         final String bucketName = "test_recover_write_job_bucket";
         final String book1 = "beowulf.txt";
         final String book2 = "ulysses.txt";
@@ -803,7 +804,7 @@ public class Smoke_Test {
         });
     }
 
-    private void runReadRecoveryJob(final RecoveryJobFactory recoveryJobFactory) throws IOException, JobRecoveryException, URISyntaxException {
+    private static void runReadRecoveryJob(final RecoveryJobFactory recoveryJobFactory) throws IOException, JobRecoveryException, URISyntaxException {
         final String bucketName = "test_recover_read_job_bucket";
         final String book1 = "beowulf.txt";
         final String book2 = "ulysses.txt";
@@ -973,7 +974,7 @@ public class Smoke_Test {
 
         try {
 
-            final byte[] content = "I'm text with some more data so that it gets flushed to the output cache.".getBytes(Charset.forName("UTF-8"));
+            final byte[] content = "I'm text with some more data so that it gets flushed to the output cache.".getBytes(StandardCharsets.UTF_8);
 
             final List<Ds3Object> objs = Lists.newArrayList(new Ds3Object("dir/"), new Ds3Object("obj.txt", content.length));
 
@@ -1204,7 +1205,7 @@ public class Smoke_Test {
 
         final String bucketName = "partialGetOnBook";
         final Path filePath = Files.createTempFile("ds3", FILE_NAME);
-        LOG.info("TempFile for partial get of book: " + filePath.toAbsolutePath().toString());
+        LOG.info("TempFile for partial get of book: " + filePath.toAbsolutePath());
 
         try {
 
@@ -1233,9 +1234,9 @@ public class Smoke_Test {
             final Path expectedResultPath = Paths.get(Smoke_Test.class.getResource("/largeFiles/output").toURI());
 
             assertThat(Files.size(filePath), is(200L));
-            final String partialFile = new String(Files.readAllBytes(filePath), Charset.forName("UTF-8"));
-            final String expectedResult = new String(Files.readAllBytes(expectedResultPath), Charset.forName("UTF-8"));
-            assertThat(partialFile, is(expectedResult.substring(0, expectedResult.length())));
+            final String partialFile = new String(Files.readAllBytes(filePath), StandardCharsets.UTF_8);
+            final String expectedResult = new String(Files.readAllBytes(expectedResultPath), StandardCharsets.UTF_8);
+            assertThat(partialFile, is(expectedResult));
         } finally {
             deleteAllContents(client, bucketName);
             Files.delete(filePath);

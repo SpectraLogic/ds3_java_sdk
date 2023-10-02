@@ -30,12 +30,7 @@ public class MetaDataReceivedObserver extends AbstractObserver<MetadataEvent> {
      *                                 updater.
      */
     public MetaDataReceivedObserver(final MetadataReceivedListener metadataReceivedListener) {
-        super(new UpdateStrategy<MetadataEvent>() {
-            @Override
-            public void update(final MetadataEvent eventData) {
-                metadataReceivedListener.metadataReceived(eventData.getObjectName(), eventData.getMetadata());
-            }
-        });
+        super(new MetadataEventUpdateStrategy(metadataReceivedListener));
 
         Preconditions.checkNotNull(metadataReceivedListener, "metadataReceivedListener may not be null.");
 
@@ -67,5 +62,18 @@ public class MetaDataReceivedObserver extends AbstractObserver<MetadataEvent> {
         int result = super.hashCode();
         result = 31 * result + (metadataReceivedListener != null ? metadataReceivedListener.hashCode() : 0);
         return result;
+    }
+
+    private static class MetadataEventUpdateStrategy implements UpdateStrategy<MetadataEvent> {
+        private final MetadataReceivedListener metadataReceivedListener;
+
+        public MetadataEventUpdateStrategy(final MetadataReceivedListener metadataReceivedListener) {
+            this.metadataReceivedListener = metadataReceivedListener;
+        }
+
+        @Override
+        public void update(final MetadataEvent eventData) {
+            metadataReceivedListener.metadataReceived(eventData.getObjectName(), eventData.getMetadata());
+        }
     }
 }

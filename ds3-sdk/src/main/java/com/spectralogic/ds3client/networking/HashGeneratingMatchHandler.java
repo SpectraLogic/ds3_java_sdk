@@ -21,6 +21,7 @@ import com.spectralogic.ds3client.utils.hashing.*;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 class HashGeneratingMatchHandler implements ChecksumType.MatchHandler<String, IOException> {
     private static final int READ_BUFFER_SIZE = 1024;
@@ -51,7 +52,7 @@ class HashGeneratingMatchHandler implements ChecksumType.MatchHandler<String, IO
 
     @Override
     public String value(final byte[] hash) throws IOException {
-        return new String(hash, Charset.forName("UTF-8"));
+        return new String(hash, StandardCharsets.UTF_8);
     }
     
     private String hashInputStream(final Hasher digest, final InputStream stream) throws IOException {
@@ -71,14 +72,14 @@ class HashGeneratingMatchHandler implements ChecksumType.MatchHandler<String, IO
         return digest.digest();
     }
 
-    private Hasher getHasher(final ChecksumType.Type checksumType) {
+    private static Hasher getHasher(final ChecksumType.Type checksumType) {
         switch (checksumType) {
             case MD5: return new MD5Hasher();
             case SHA_256: return new SHA256Hasher();
             case SHA_512: return new SHA512Hasher();
             case CRC_32: return new CRC32Hasher();
             case CRC_32C: return new CRC32CHasher();
-            default: throw new RuntimeException("Unknown checksum type " + checksumType.toString());
+            default: throw new RuntimeException("Unknown checksum type " + checksumType);
         }
     }
 }

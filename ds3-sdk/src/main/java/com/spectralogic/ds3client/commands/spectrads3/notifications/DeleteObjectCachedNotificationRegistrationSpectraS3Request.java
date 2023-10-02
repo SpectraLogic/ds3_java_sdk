@@ -43,7 +43,7 @@ public class DeleteObjectCachedNotificationRegistrationSpectraS3Request extends 
 
     @Override
     public String getPath() {
-        return "/_rest_/object_cached_notification_registration/" + this.getNotificationId().toString();
+        return "/_rest_/object_cached_notification_registration/" + this.getNotificationId();
     }
 
     

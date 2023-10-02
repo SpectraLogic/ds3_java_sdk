@@ -26,8 +26,8 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.List;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import com.spectralogic.ds3client.commands.interfaces.AbstractRequest;
-import com.google.common.net.UrlEscapers;
 
 public class EjectStorageDomainBlobsSpectraS3Request extends AbstractRequest {
 
@@ -86,7 +86,7 @@ public class EjectStorageDomainBlobsSpectraS3Request extends AbstractRequest {
 
         final String xmlOutput = XmlOutput.toXml(objects, false);
 
-        final byte[] stringBytes = xmlOutput.getBytes(Charset.forName("UTF-8"));
+        final byte[] stringBytes = xmlOutput.getBytes(StandardCharsets.UTF_8);
         this.size = stringBytes.length;
         return new ByteArrayInputStream(stringBytes);
     }

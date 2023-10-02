@@ -17,12 +17,14 @@ package com.spectralogic.ds3client.helpers.channels;
 
 import com.spectralogic.ds3client.utils.ByteArraySeekableByteChannel;
 
+import org.apache.commons.io.Charsets;
 import org.apache.commons.io.IOUtils;
 import org.junit.Test;
 
 import java.io.Writer;
 import java.nio.channels.Channels;
 import java.nio.channels.SeekableByteChannel;
+import java.nio.charset.StandardCharsets;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -32,13 +34,13 @@ public class WindowedChannelFactory_Test {
     @Test
     public void getReturnsWindow() throws Exception {
         try (final ByteArraySeekableByteChannel channel = new ByteArraySeekableByteChannel()) {
-            final Writer writer = Channels.newWriter(channel, "UTF-8");
+            final Writer writer = Channels.newWriter(channel, Charsets.UTF_8.name());
             writer.write("0123456789");
             writer.close();
             
             try (final WindowedChannelFactory windowedChannelFactory = new WindowedChannelFactory(channel)) {
                 try (final SeekableByteChannel window = windowedChannelFactory.get(2L, 6L)) {
-                    assertThat(IOUtils.toString(Channels.newReader(window, "UTF-8")), is("234567"));
+                    assertThat(IOUtils.toString(Channels.newReader(window, Charsets.UTF_8.name())), is("234567"));
                 }
             }
         }

@@ -91,7 +91,7 @@ class PosixMetadataRestore extends AbstractMetadataRestore {
      * @param filePath    path of the file
      * @param permissions permissions got from the blackperl server
      */
-    private void setPermissionsLnx(final String filePath, final String permissions) throws IOException {
+    private static void setPermissionsLnx(final String filePath, final String permissions) throws IOException {
         final Path file = Paths.get(filePath);
         final Set<PosixFilePermission> perms =
                 PosixFilePermissions.fromString(permissions);

@@ -13,5 +13,10 @@
  * ****************************************************************************
  */
 
+val catalogs = extensions
+    .getByType<VersionCatalogsExtension>()
+
 group = "com.spectralogic.ds3"
-version = "5.6.0"
+version = catalogs.named("libs").findVersion("ds3SdkVersion").get().requiredVersion
+
+extra["isReleaseVersion"] = !version.toString().endsWith("SNAPSHOT")

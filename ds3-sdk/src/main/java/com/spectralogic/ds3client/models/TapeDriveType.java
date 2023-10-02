@@ -26,5 +26,6 @@ public enum TapeDriveType {
     TS1140,
     TS1150,
     TS1155,
-    TS1160
+    TS1160,
+    TS1170
 }

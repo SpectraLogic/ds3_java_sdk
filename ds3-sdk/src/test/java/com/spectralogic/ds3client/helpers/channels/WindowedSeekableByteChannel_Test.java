@@ -18,6 +18,7 @@ package com.spectralogic.ds3client.helpers.channels;
 import com.spectralogic.ds3client.helpers.TruncateNotAllowedException;
 import com.spectralogic.ds3client.utils.ByteArraySeekableByteChannel;
 
+import org.apache.commons.io.Charsets;
 import org.apache.commons.io.IOUtils;
 import org.junit.Test;
 
@@ -27,6 +28,7 @@ import java.nio.ByteBuffer;
 import java.nio.channels.Channels;
 import java.nio.channels.SeekableByteChannel;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -91,7 +93,7 @@ public class WindowedSeekableByteChannel_Test {
         try (final ByteArraySeekableByteChannel channel = new ByteArraySeekableByteChannel()) {
             final Object lock = new Object();
             try (final WindowedSeekableByteChannel window = new WindowedSeekableByteChannel(channel, lock, 2L, 7L)) {
-                final ByteBuffer buffer = Charset.forName("UTF-8").encode("0123456789");
+                final ByteBuffer buffer = StandardCharsets.UTF_8.encode("0123456789");
                 buffer.position(1);
                 assertThat(window.write(buffer), is(7));
                 assertThat(window.position(), is(7L));
@@ -122,14 +124,14 @@ public class WindowedSeekableByteChannel_Test {
                 assertThat(window.position(), is(3L));
                 assertThat(buffer.position(), is(3));
                 assertThat(buffer.limit(), is(3));
-                assertThat(new String(bytes, 0, 3, Charset.forName("UTF-8")), is("bbb"));
+                assertThat(new String(bytes, 0, 3, StandardCharsets.UTF_8), is("bbb"));
 
                 buffer.limit(10);
                 assertThat(window.read(buffer), is(4));
                 assertThat(window.position(), is(7L));
                 assertThat(buffer.position(), is(7));
                 assertThat(buffer.limit(), is(10));
-                assertThat(new String(bytes, 3, 4, Charset.forName("UTF-8")), is("cccc"));
+                assertThat(new String(bytes, 3, 4, StandardCharsets.UTF_8), is("cccc"));
             }
         }
     }
@@ -139,11 +141,11 @@ public class WindowedSeekableByteChannel_Test {
         try (final ByteArraySeekableByteChannel channel = new ByteArraySeekableByteChannel()) {
             final Object lock = new Object();
             try (final WindowedSeekableByteChannel window = new WindowedSeekableByteChannel(channel, lock, 2L, 7L)) {
-                ByteBuffer buffer = Charset.forName("UTF-8").encode("bbb");
+                ByteBuffer buffer = StandardCharsets.UTF_8.encode("bbb");
                 assertThat(window.write(buffer), is(3));
                 assertThat(buffer.position(), is(3));
 
-                buffer = Charset.forName("UTF-8").encode("cccc");
+                buffer = StandardCharsets.UTF_8.encode("cccc");
                 assertThat(window.write(buffer), is(4));
                 assertThat(buffer.position(), is(4));
 
@@ -250,7 +252,7 @@ public class WindowedSeekableByteChannel_Test {
     }
 
     private static void writeToChannel(final String string, final SeekableByteChannel channel) throws IOException {
-        final Writer writer = Channels.newWriter(channel, "UTF-8");
+        final Writer writer = Channels.newWriter(channel, Charsets.UTF_8.name());
         writer.write(string);
         writer.flush();
     }
@@ -263,6 +265,6 @@ public class WindowedSeekableByteChannel_Test {
     }
 
     private static String channelToString(final SeekableByteChannel channel) throws IOException {
-        return IOUtils.toString(Channels.newReader(channel, "UTF-8"));
+        return IOUtils.toString(Channels.newReader(channel, Charsets.UTF_8.name()));
     }
 }

@@ -795,6 +795,12 @@ public interface Ds3Client extends Closeable {
     VerifyBulkJobSpectraS3Response verifyBulkJobSpectraS3(final VerifyBulkJobSpectraS3Request request)
             throws IOException;
 
+    @Action("DELETE")
+    @Resource("JOB_CREATION_FAILED")
+    
+    DeleteJobCreationFailureSpectraS3Response deleteJobCreationFailureSpectraS3(final DeleteJobCreationFailureSpectraS3Request request)
+            throws IOException;
+
     @ResponsePayloadModel("ActiveJob")
     @Action("SHOW")
     @Resource("ACTIVE_JOB")
@@ -856,6 +862,13 @@ public interface Ds3Client extends Closeable {
     @Resource("JOB_CHUNK")
     
     GetJobChunksReadyForClientProcessingSpectraS3Response getJobChunksReadyForClientProcessingSpectraS3(final GetJobChunksReadyForClientProcessingSpectraS3Request request)
+            throws IOException;
+
+    @ResponsePayloadModel("JobCreationFailedList")
+    @Action("LIST")
+    @Resource("JOB_CREATION_FAILED")
+    
+    GetJobCreationFailuresSpectraS3Response getJobCreationFailuresSpectraS3(final GetJobCreationFailuresSpectraS3Request request)
             throws IOException;
 
     @ResponsePayloadModel("MasterObjectList")

@@ -53,9 +53,7 @@ public class PartialDs3Object extends Ds3Object {
     public boolean equals(final Object obj) {
         if (obj instanceof PartialDs3Object) {
             final PartialDs3Object partialDs3Object = (PartialDs3Object) obj;
-            if (super.equals(obj) && this.getRange().equals(partialDs3Object.getRange())) {
-                return true;
-            }
+            return super.equals(obj) && this.getRange().equals(partialDs3Object.getRange());
         }
         return false;
     }

@@ -22,9 +22,9 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import com.spectralogic.ds3client.serializer.XmlOutput;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import com.spectralogic.ds3client.commands.interfaces.AbstractRequest;
 import java.util.UUID;
-import com.google.common.net.UrlEscapers;
 
 public class CompleteMultiPartUploadRequest extends AbstractRequest {
 
@@ -86,7 +86,7 @@ public class CompleteMultiPartUploadRequest extends AbstractRequest {
 
         final String xmlOutput = XmlOutput.toXml(requestPayload);
 
-        final byte[] stringBytes = xmlOutput.getBytes(Charset.forName("UTF-8"));
+        final byte[] stringBytes = xmlOutput.getBytes(StandardCharsets.UTF_8);
         this.size = stringBytes.length;
         return new ByteArrayInputStream(stringBytes);
     }
