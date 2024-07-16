@@ -70,7 +70,7 @@ slf4jSimple = { group = "org.slf4j", name = "slf4j-simple", version.ref = "slf4j
 # plugins used in buildSrc/
 #
 kotlinJvmPlugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlinVersion" }
-owaspDepCheckPlugin = { group = "org.owasp", name = "dependency-check-gradle", version = "8.4.0" }
+owaspDepCheckPlugin = { group = "org.owasp", name = "dependency-check-gradle", version = "10.0.3" }
 versionsPlugin = { group = "com.github.ben-manes", name = "gradle-versions-plugin", version = "0.47.0" }
 
 [plugins]
