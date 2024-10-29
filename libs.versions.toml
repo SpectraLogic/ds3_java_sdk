@@ -22,7 +22,7 @@ ds3SdkVersion = "5.6.3-SNAPSHOT"
 #
 commonsLang3Version = "3.12.0"
 commonsCodecVersion = "1.15"
-commonsIoVersion = "2.11.0"
+commonsIoVersion = "2.17.0"
 findbugsVersion = "3.0.1"
 guavaVersion = "32.1.2-jre"
 hamcrestVersion = "2.2"
@@ -70,7 +70,7 @@ slf4jSimple = { group = "org.slf4j", name = "slf4j-simple", version.ref = "slf4j
 # plugins used in buildSrc/
 #
 kotlinJvmPlugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlinVersion" }
-owaspDepCheckPlugin = { group = "org.owasp", name = "dependency-check-gradle", version = "10.0.3" }
+owaspDepCheckPlugin = { group = "org.owasp", name = "dependency-check-gradle", version = "10.0.3" } # stuck on this version until we move from building with java 8
 versionsPlugin = { group = "com.github.ben-manes", name = "gradle-versions-plugin", version = "0.47.0" }
 
 [plugins]
