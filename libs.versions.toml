@@ -16,7 +16,7 @@
 #
 # project version
 #
-ds3SdkVersion = "5.6.3"
+ds3SdkVersion = "5.6.4-SNAPSHOT"
 #
 # dependency versions
 #
