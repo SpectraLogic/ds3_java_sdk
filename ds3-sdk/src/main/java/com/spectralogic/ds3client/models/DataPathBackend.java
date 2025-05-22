@@ -64,6 +64,9 @@ public class DataPathBackend {
     @JsonProperty("MaxAggregatedBlobsPerChunk")
     private int maxAggregatedBlobsPerChunk;
 
+    @JsonProperty("MaxNumberOfConcurrentJobs")
+    private int maxNumberOfConcurrentJobs;
+
     @JsonProperty("PartiallyVerifyLastPercentOfTapes")
     private Integer partiallyVerifyLastPercentOfTapes;
 
@@ -203,6 +206,15 @@ public class DataPathBackend {
 
     public void setMaxAggregatedBlobsPerChunk(final int maxAggregatedBlobsPerChunk) {
         this.maxAggregatedBlobsPerChunk = maxAggregatedBlobsPerChunk;
+    }
+
+
+    public int getMaxNumberOfConcurrentJobs() {
+        return this.maxNumberOfConcurrentJobs;
+    }
+
+    public void setMaxNumberOfConcurrentJobs(final int maxNumberOfConcurrentJobs) {
+        this.maxNumberOfConcurrentJobs = maxNumberOfConcurrentJobs;
     }
 
 

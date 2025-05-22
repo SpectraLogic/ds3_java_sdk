@@ -33,6 +33,9 @@ public class DetailedTapePartition {
     @JsonProperty("AutoQuiesceEnabled")
     private boolean autoQuiesceEnabled;
 
+    @JsonProperty("AvailableStorageCapacity")
+    private long availableStorageCapacity;
+
     @JsonProperty("DriveIdleTimeoutInMinutes")
     private Integer driveIdleTimeoutInMinutes;
 
@@ -73,9 +76,26 @@ public class DetailedTapePartition {
     @JsonProperty("State")
     private TapePartitionState state;
 
+    @JsonProperty("TapeCount")
+    private int tapeCount;
+
+    @JsonProperty("TapeStateSummaries")
+    @JacksonXmlElementWrapper(useWrapping = true)
+    private List<TapeStateSummaryApiBean> tapeStateSummaries = new ArrayList<>();
+
+    @JsonProperty("TapeTypeSummaries")
+    @JacksonXmlElementWrapper(useWrapping = true)
+    private List<TapeTypeSummaryApiBean> tapeTypeSummaries = new ArrayList<>();
+
     @JsonProperty("TapeTypes")
     @JacksonXmlElementWrapper(useWrapping = false)
     private List<String> tapeTypes = new ArrayList<>();
+
+    @JsonProperty("TotalStorageCapacity")
+    private long totalStorageCapacity;
+
+    @JsonProperty("UsedStorageCapacity")
+    private long usedStorageCapacity;
 
     // Constructor
     public DetailedTapePartition() {
@@ -99,6 +119,15 @@ public class DetailedTapePartition {
 
     public void setAutoQuiesceEnabled(final boolean autoQuiesceEnabled) {
         this.autoQuiesceEnabled = autoQuiesceEnabled;
+    }
+
+
+    public long getAvailableStorageCapacity() {
+        return this.availableStorageCapacity;
+    }
+
+    public void setAvailableStorageCapacity(final long availableStorageCapacity) {
+        this.availableStorageCapacity = availableStorageCapacity;
     }
 
 
@@ -219,12 +248,57 @@ public class DetailedTapePartition {
     }
 
 
+    public int getTapeCount() {
+        return this.tapeCount;
+    }
+
+    public void setTapeCount(final int tapeCount) {
+        this.tapeCount = tapeCount;
+    }
+
+
+    public List<TapeStateSummaryApiBean> getTapeStateSummaries() {
+        return this.tapeStateSummaries;
+    }
+
+    public void setTapeStateSummaries(final List<TapeStateSummaryApiBean> tapeStateSummaries) {
+        this.tapeStateSummaries = tapeStateSummaries;
+    }
+
+
+    public List<TapeTypeSummaryApiBean> getTapeTypeSummaries() {
+        return this.tapeTypeSummaries;
+    }
+
+    public void setTapeTypeSummaries(final List<TapeTypeSummaryApiBean> tapeTypeSummaries) {
+        this.tapeTypeSummaries = tapeTypeSummaries;
+    }
+
+
     public List<String> getTapeTypes() {
         return this.tapeTypes;
     }
 
     public void setTapeTypes(final List<String> tapeTypes) {
         this.tapeTypes = tapeTypes;
+    }
+
+
+    public long getTotalStorageCapacity() {
+        return this.totalStorageCapacity;
+    }
+
+    public void setTotalStorageCapacity(final long totalStorageCapacity) {
+        this.totalStorageCapacity = totalStorageCapacity;
+    }
+
+
+    public long getUsedStorageCapacity() {
+        return this.usedStorageCapacity;
+    }
+
+    public void setUsedStorageCapacity(final long usedStorageCapacity) {
+        this.usedStorageCapacity = usedStorageCapacity;
     }
 
 }
