@@ -34,6 +34,8 @@ public class GetTapesSpectraS3Request extends AbstractPaginationRequest {
 
     private String barCode;
 
+    private String bucket;
+
     private String bucketId;
 
     private String ejectLabel;
@@ -54,6 +56,8 @@ public class GetTapesSpectraS3Request extends AbstractPaginationRequest {
 
     private Date partiallyVerifiedEndOfTape;
 
+    private String partition;
+
     private String partitionId;
 
     private TapeState previousState;
@@ -63,6 +67,8 @@ public class GetTapesSpectraS3Request extends AbstractPaginationRequest {
     private String sortBy;
 
     private TapeState state;
+
+    private String storageDomain;
 
     private String storageDomainMemberId;
 
@@ -96,6 +102,13 @@ public class GetTapesSpectraS3Request extends AbstractPaginationRequest {
     public GetTapesSpectraS3Request withBarCode(final String barCode) {
         this.barCode = barCode;
         this.updateQueryParam("bar_code", barCode);
+        return this;
+    }
+
+
+    public GetTapesSpectraS3Request withBucket(final String bucket) {
+        this.bucket = bucket;
+        this.updateQueryParam("bucket", bucket);
         return this;
     }
 
@@ -181,6 +194,13 @@ public class GetTapesSpectraS3Request extends AbstractPaginationRequest {
     }
 
 
+    public GetTapesSpectraS3Request withPartition(final String partition) {
+        this.partition = partition;
+        this.updateQueryParam("partition", partition);
+        return this;
+    }
+
+
     public GetTapesSpectraS3Request withPartitionId(final UUID partitionId) {
         this.partitionId = partitionId.toString();
         this.updateQueryParam("partition_id", partitionId);
@@ -219,6 +239,13 @@ public class GetTapesSpectraS3Request extends AbstractPaginationRequest {
     public GetTapesSpectraS3Request withState(final TapeState state) {
         this.state = state;
         this.updateQueryParam("state", state);
+        return this;
+    }
+
+
+    public GetTapesSpectraS3Request withStorageDomain(final String storageDomain) {
+        this.storageDomain = storageDomain;
+        this.updateQueryParam("storage_domain", storageDomain);
         return this;
     }
 
@@ -284,6 +311,11 @@ public class GetTapesSpectraS3Request extends AbstractPaginationRequest {
     }
 
 
+    public String getBucket() {
+        return this.bucket;
+    }
+
+
     public String getBucketId() {
         return this.bucketId;
     }
@@ -334,6 +366,11 @@ public class GetTapesSpectraS3Request extends AbstractPaginationRequest {
     }
 
 
+    public String getPartition() {
+        return this.partition;
+    }
+
+
     public String getPartitionId() {
         return this.partitionId;
     }
@@ -356,6 +393,11 @@ public class GetTapesSpectraS3Request extends AbstractPaginationRequest {
 
     public TapeState getState() {
         return this.state;
+    }
+
+
+    public String getStorageDomain() {
+        return this.storageDomain;
     }
 
 

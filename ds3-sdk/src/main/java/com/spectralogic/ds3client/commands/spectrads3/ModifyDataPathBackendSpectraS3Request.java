@@ -47,6 +47,8 @@ public class ModifyDataPathBackendSpectraS3Request extends AbstractRequest {
 
     private int maxAggregatedBlobsPerChunk;
 
+    private int maxNumberOfConcurrentJobs;
+
     private Integer partiallyVerifyLastPercentOfTapes;
 
     private boolean poolSafetyEnabled;
@@ -132,6 +134,13 @@ public class ModifyDataPathBackendSpectraS3Request extends AbstractRequest {
     public ModifyDataPathBackendSpectraS3Request withMaxAggregatedBlobsPerChunk(final int maxAggregatedBlobsPerChunk) {
         this.maxAggregatedBlobsPerChunk = maxAggregatedBlobsPerChunk;
         this.updateQueryParam("max_aggregated_blobs_per_chunk", maxAggregatedBlobsPerChunk);
+        return this;
+    }
+
+
+    public ModifyDataPathBackendSpectraS3Request withMaxNumberOfConcurrentJobs(final int maxNumberOfConcurrentJobs) {
+        this.maxNumberOfConcurrentJobs = maxNumberOfConcurrentJobs;
+        this.updateQueryParam("max_number_of_concurrent_jobs", maxNumberOfConcurrentJobs);
         return this;
     }
 
@@ -236,6 +245,11 @@ public class ModifyDataPathBackendSpectraS3Request extends AbstractRequest {
 
     public int getMaxAggregatedBlobsPerChunk() {
         return this.maxAggregatedBlobsPerChunk;
+    }
+
+
+    public int getMaxNumberOfConcurrentJobs() {
+        return this.maxNumberOfConcurrentJobs;
     }
 
 
