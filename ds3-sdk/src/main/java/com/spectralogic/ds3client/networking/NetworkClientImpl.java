@@ -93,7 +93,7 @@ public class NetworkClientImpl implements NetworkClient {
         this(connectionDetails, createDefaultClient(connectionDetails));
     }
 
-    private NetworkClientImpl(final ConnectionDetails connectionDetails, final CloseableHttpClient client) {
+    public NetworkClientImpl(final ConnectionDetails connectionDetails, final CloseableHttpClient client) {
         if (connectionDetails == null) throw new AssertionError("ConnectionDetails cannot be null");
         if (client == null) throw new AssertionError("CloseableHttpClient cannot be null");
         try {

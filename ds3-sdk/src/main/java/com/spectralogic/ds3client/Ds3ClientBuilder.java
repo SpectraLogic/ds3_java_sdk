@@ -40,6 +40,7 @@ public class Ds3ClientBuilder implements Builder<Ds3Client> {
     static final private String ACCESS_KEY = "DS3_ACCESS_KEY";
     static final private String SECRET_KEY = "DS3_SECRET_KEY";
 
+    private NetworkClient networkClient;
     final private String endpoint;
     final private Credentials credentials;
 
@@ -199,10 +200,21 @@ public class Ds3ClientBuilder implements Builder<Ds3Client> {
     }
 
     /**
+     * Set a custom NetworkClient implementation.  If this is set, all other connection parameters will be ignored.
+     */
+    public Ds3ClientBuilder withNetworkClient(final NetworkClient networkClient) {
+        this.networkClient = networkClient;
+        return this;
+    }
+
+    /**
      * Returns a new Ds3Client instance.
      */
     @Override
     public Ds3Client build() {
+        if (this.networkClient != null) {
+            return new Ds3ClientImpl(this.networkClient);
+        }
         LOG.info("Making connection details for endpoint [{}] using this authorization id [{}]",
                 this.endpoint, this.credentials.getClientId());
         final ConnectionDetailsImpl.Builder connBuilder = ConnectionDetailsImpl
