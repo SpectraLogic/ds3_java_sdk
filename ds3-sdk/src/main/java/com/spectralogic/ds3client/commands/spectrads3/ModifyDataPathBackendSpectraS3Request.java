@@ -31,6 +31,8 @@ public class ModifyDataPathBackendSpectraS3Request extends AbstractRequest {
 
     private boolean allowNewJobRequests;
 
+    private boolean alwaysRollback;
+
     private Integer autoActivateTimeoutInMins;
 
     private AutoInspectMode autoInspect;
@@ -78,6 +80,13 @@ public class ModifyDataPathBackendSpectraS3Request extends AbstractRequest {
     public ModifyDataPathBackendSpectraS3Request withAllowNewJobRequests(final boolean allowNewJobRequests) {
         this.allowNewJobRequests = allowNewJobRequests;
         this.updateQueryParam("allow_new_job_requests", allowNewJobRequests);
+        return this;
+    }
+
+
+    public ModifyDataPathBackendSpectraS3Request withAlwaysRollback(final boolean alwaysRollback) {
+        this.alwaysRollback = alwaysRollback;
+        this.updateQueryParam("always_rollback", alwaysRollback);
         return this;
     }
 
@@ -205,6 +214,11 @@ public class ModifyDataPathBackendSpectraS3Request extends AbstractRequest {
 
     public boolean getAllowNewJobRequests() {
         return this.allowNewJobRequests;
+    }
+
+
+    public boolean getAlwaysRollback() {
+        return this.alwaysRollback;
     }
 
 

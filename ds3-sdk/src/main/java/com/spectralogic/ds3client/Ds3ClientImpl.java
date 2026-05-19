@@ -1070,6 +1070,10 @@ public class Ds3ClientImpl implements Ds3Client {
         return new ForceFeatureKeyValidationSpectraS3ResponseParser().response(this.netClient.getResponse(request));
     }
     @Override
+    public GetAbmConfigSpectraS3Response getAbmConfigSpectraS3(final GetAbmConfigSpectraS3Request request) throws IOException {
+        return new GetAbmConfigSpectraS3ResponseParser().response(this.netClient.getResponse(request));
+    }
+    @Override
     public GetFeatureKeysSpectraS3Response getFeatureKeysSpectraS3(final GetFeatureKeysSpectraS3Request request) throws IOException {
         return new GetFeatureKeysSpectraS3ResponseParser().response(this.netClient.getResponse(request));
     }

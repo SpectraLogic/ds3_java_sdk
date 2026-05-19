@@ -15,6 +15,8 @@ jobs:
           distribution: 'temurin'
           java-version: '8'
           check-latest: true
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v3
       - run: ./gradlew clean classes testClasses integrationTestClasses shadowJar --refresh-dependencies
   test:
     name: Test with multiple Temurin JDK versions
@@ -29,8 +31,9 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: ${{ matrix.test-jdk-version }}
-          cache: 'gradle'
           check-latest: true
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v3
       - name: Compile and assemble main project with Temurin JDK ${{ matrix.test-jdk-version }}
         run: ./gradlew clean assemble
       - name: Test with Temurin JDK ${{ matrix.test-jdk-version }}

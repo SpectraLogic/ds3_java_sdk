@@ -1,6 +1,6 @@
 /*
  * ******************************************************************************
- *   Copyright 2002 Spectra Logic Corporation. All Rights Reserved.
+ *   Copyright 2014-2019 Spectra Logic Corporation. All Rights Reserved.
  *   Licensed under the Apache License, Version 2.0 (the "License"). You may not use
  *   this file except in compliance with the License. A copy of the License is located at
  *
@@ -13,12 +13,31 @@
  * ****************************************************************************
  */
 
-plugins {
-    `kotlin-dsl`
-}
+// This code is auto-generated, do not modify
+package com.spectralogic.ds3client.commands.spectrads3;
 
-dependencies {
-    implementation(libs.kotlinJvmPlugin)
-    implementation(libs.owaspDepCheckPlugin)
-    implementation(libs.gradleVersionsPlugin)
-}
+import com.spectralogic.ds3client.networking.HttpVerb;
+import com.spectralogic.ds3client.commands.interfaces.AbstractRequest;
+
+public class GetAbmConfigSpectraS3Request extends AbstractRequest {
+
+    // Variables
+    
+    // Constructor
+    
+    
+    public GetAbmConfigSpectraS3Request() {
+        
+    }
+
+
+    @Override
+    public HttpVerb getVerb() {
+        return HttpVerb.GET;
+    }
+
+    @Override
+    public String getPath() {
+        return "/_rest_/abm_config";
+    }
+    }

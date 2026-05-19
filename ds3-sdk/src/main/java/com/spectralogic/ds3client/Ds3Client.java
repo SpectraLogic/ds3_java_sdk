@@ -1729,6 +1729,13 @@ public interface Ds3Client extends Closeable {
     ForceFeatureKeyValidationSpectraS3Response forceFeatureKeyValidationSpectraS3(final ForceFeatureKeyValidationSpectraS3Request request)
             throws IOException;
 
+    @ResponsePayloadModel("AbmConfigApiBean")
+    @Action("LIST")
+    @Resource("ABM_CONFIG")
+    
+    GetAbmConfigSpectraS3Response getAbmConfigSpectraS3(final GetAbmConfigSpectraS3Request request)
+            throws IOException;
+
     @ResponsePayloadModel("FeatureKeyList")
     @Action("LIST")
     @Resource("FEATURE_KEY")
