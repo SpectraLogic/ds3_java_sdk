@@ -20,5 +20,5 @@ plugins {
 dependencies {
     implementation(libs.kotlinJvmPlugin)
     implementation(libs.owaspDepCheckPlugin)
-    implementation(libs.versionsPlugin)
+    implementation(libs.gradleVersionsPlugin)
 }
