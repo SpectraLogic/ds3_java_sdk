@@ -25,6 +25,9 @@ import java.util.Date;
 public class Tape {
 
     // Variables
+    @JsonProperty("AllowRollback")
+    private boolean allowRollback;
+
     @JsonProperty("AssignedToStorageDomain")
     private boolean assignedToStorageDomain;
 
@@ -113,6 +116,15 @@ public class Tape {
 
     // Getters and Setters
     
+    public boolean getAllowRollback() {
+        return this.allowRollback;
+    }
+
+    public void setAllowRollback(final boolean allowRollback) {
+        this.allowRollback = allowRollback;
+    }
+
+
     public boolean getAssignedToStorageDomain() {
         return this.assignedToStorageDomain;
     }

@@ -31,6 +31,9 @@ public class DataPathBackend {
     @JsonProperty("AllowNewJobRequests")
     private boolean allowNewJobRequests;
 
+    @JsonProperty("AlwaysRollback")
+    private boolean alwaysRollback;
+
     @JsonProperty("AutoActivateTimeoutInMins")
     private Integer autoActivateTimeoutInMins;
 
@@ -107,6 +110,15 @@ public class DataPathBackend {
 
     public void setAllowNewJobRequests(final boolean allowNewJobRequests) {
         this.allowNewJobRequests = allowNewJobRequests;
+    }
+
+
+    public boolean getAlwaysRollback() {
+        return this.alwaysRollback;
+    }
+
+    public void setAlwaysRollback(final boolean alwaysRollback) {
+        this.alwaysRollback = alwaysRollback;
     }
 
 
