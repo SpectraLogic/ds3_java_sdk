@@ -156,6 +156,9 @@ public final class Util {
         try {
             final GetJobsSpectraS3Response getJobs = client.getJobsSpectraS3(new GetJobsSpectraS3Request().withBucketId(bucketName));
 
+            if (getJobs.getJobListResult() == null || getJobs.getJobListResult().getJobs() == null) {
+                return;
+            }
             for (final Job job : getJobs.getJobListResult().getJobs()) {
                 if (job.getStatus() == JobStatus.IN_PROGRESS) {
                     client.cancelJobSpectraS3(new CancelJobSpectraS3Request(job.getJobId()));
