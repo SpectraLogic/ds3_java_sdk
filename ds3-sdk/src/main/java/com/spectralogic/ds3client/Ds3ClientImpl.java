@@ -46,24 +46,12 @@ public class Ds3ClientImpl implements Ds3Client {
     }
 
     @Override
-    public AbortMultiPartUploadResponse abortMultiPartUpload(final AbortMultiPartUploadRequest request) throws IOException {
-        return new AbortMultiPartUploadResponseParser().response(this.netClient.getResponse(request));
-    }
-    @Override
     public CompleteBlobResponse completeBlob(final CompleteBlobRequest request) throws IOException {
         return new CompleteBlobResponseParser().response(this.netClient.getResponse(request));
     }
     @Override
-    public CompleteMultiPartUploadResponse completeMultiPartUpload(final CompleteMultiPartUploadRequest request) throws IOException {
-        return new CompleteMultiPartUploadResponseParser().response(this.netClient.getResponse(request));
-    }
-    @Override
     public PutBucketResponse putBucket(final PutBucketRequest request) throws IOException {
         return new PutBucketResponseParser().response(this.netClient.getResponse(request));
-    }
-    @Override
-    public PutMultiPartUploadPartResponse putMultiPartUploadPart(final PutMultiPartUploadPartRequest request) throws IOException {
-        return new PutMultiPartUploadPartResponseParser().response(this.netClient.getResponse(request));
     }
     @Override
     public PutObjectResponse putObject(final PutObjectRequest request) throws IOException {
@@ -96,18 +84,6 @@ public class Ds3ClientImpl implements Ds3Client {
     @Override
     public HeadObjectResponse headObject(final HeadObjectRequest request) throws IOException {
         return new HeadObjectResponseParser().response(this.netClient.getResponse(request));
-    }
-    @Override
-    public InitiateMultiPartUploadResponse initiateMultiPartUpload(final InitiateMultiPartUploadRequest request) throws IOException {
-        return new InitiateMultiPartUploadResponseParser().response(this.netClient.getResponse(request));
-    }
-    @Override
-    public ListMultiPartUploadPartsResponse listMultiPartUploadParts(final ListMultiPartUploadPartsRequest request) throws IOException {
-        return new ListMultiPartUploadPartsResponseParser().response(this.netClient.getResponse(request));
-    }
-    @Override
-    public ListMultiPartUploadsResponse listMultiPartUploads(final ListMultiPartUploadsRequest request) throws IOException {
-        return new ListMultiPartUploadsResponseParser().response(this.netClient.getResponse(request));
     }
     @Override
     public PutBucketAclForGroupSpectraS3Response putBucketAclForGroupSpectraS3(final PutBucketAclForGroupSpectraS3Request request) throws IOException {
@@ -186,6 +162,14 @@ public class Ds3ClientImpl implements Ds3Client {
         return new ModifyBucketSpectraS3ResponseParser().response(this.netClient.getResponse(request));
     }
     @Override
+    public PutCacheThrottleRuleSpectraS3Response putCacheThrottleRuleSpectraS3(final PutCacheThrottleRuleSpectraS3Request request) throws IOException {
+        return new PutCacheThrottleRuleSpectraS3ResponseParser().response(this.netClient.getResponse(request));
+    }
+    @Override
+    public DeleteCacheThrottleRuleSpectraS3Response deleteCacheThrottleRuleSpectraS3(final DeleteCacheThrottleRuleSpectraS3Request request) throws IOException {
+        return new DeleteCacheThrottleRuleSpectraS3ResponseParser().response(this.netClient.getResponse(request));
+    }
+    @Override
     public ForceFullCacheReclaimSpectraS3Response forceFullCacheReclaimSpectraS3(final ForceFullCacheReclaimSpectraS3Request request) throws IOException {
         return new ForceFullCacheReclaimSpectraS3ResponseParser().response(this.netClient.getResponse(request));
     }
@@ -202,8 +186,20 @@ public class Ds3ClientImpl implements Ds3Client {
         return new GetCacheStateSpectraS3ResponseParser().response(this.netClient.getResponse(request));
     }
     @Override
+    public GetCacheThrottleRuleSpectraS3Response getCacheThrottleRuleSpectraS3(final GetCacheThrottleRuleSpectraS3Request request) throws IOException {
+        return new GetCacheThrottleRuleSpectraS3ResponseParser().response(this.netClient.getResponse(request));
+    }
+    @Override
+    public GetCacheThrottleRulesSpectraS3Response getCacheThrottleRulesSpectraS3(final GetCacheThrottleRulesSpectraS3Request request) throws IOException {
+        return new GetCacheThrottleRulesSpectraS3ResponseParser().response(this.netClient.getResponse(request));
+    }
+    @Override
     public ModifyCacheFilesystemSpectraS3Response modifyCacheFilesystemSpectraS3(final ModifyCacheFilesystemSpectraS3Request request) throws IOException {
         return new ModifyCacheFilesystemSpectraS3ResponseParser().response(this.netClient.getResponse(request));
+    }
+    @Override
+    public ModifyCacheThrottleRuleSpectraS3Response modifyCacheThrottleRuleSpectraS3(final ModifyCacheThrottleRuleSpectraS3Request request) throws IOException {
+        return new ModifyCacheThrottleRuleSpectraS3ResponseParser().response(this.netClient.getResponse(request));
     }
     @Override
     public GetBucketCapacitySummarySpectraS3Response getBucketCapacitySummarySpectraS3(final GetBucketCapacitySummarySpectraS3Request request) throws IOException {
@@ -558,8 +554,16 @@ public class Ds3ClientImpl implements Ds3Client {
         return new GetJobCreationFailuresSpectraS3ResponseParser().response(this.netClient.getResponse(request));
     }
     @Override
+    public GetJobEntriesSpectraS3Response getJobEntriesSpectraS3(final GetJobEntriesSpectraS3Request request) throws IOException {
+        return new GetJobEntriesSpectraS3ResponseParser().response(this.netClient.getResponse(request));
+    }
+    @Override
     public GetJobSpectraS3Response getJobSpectraS3(final GetJobSpectraS3Request request) throws IOException {
         return new GetJobSpectraS3ResponseParser().response(this.netClient.getResponse(request));
+    }
+    @Override
+    public GetJobSummarySpectraS3Response getJobSummarySpectraS3(final GetJobSummarySpectraS3Request request) throws IOException {
+        return new GetJobSummarySpectraS3ResponseParser().response(this.netClient.getResponse(request));
     }
     @Override
     public GetJobToReplicateSpectraS3Response getJobToReplicateSpectraS3(final GetJobToReplicateSpectraS3Request request) throws IOException {

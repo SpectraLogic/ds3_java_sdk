@@ -25,6 +25,9 @@ import java.util.Date;
 public class TapeDrive {
 
     // Variables
+    @JsonProperty("CharacterizationVer")
+    private String characterizationVer;
+
     @JsonProperty("CleaningRequired")
     private boolean cleaningRequired;
 
@@ -77,6 +80,15 @@ public class TapeDrive {
 
     // Getters and Setters
     
+    public String getCharacterizationVer() {
+        return this.characterizationVer;
+    }
+
+    public void setCharacterizationVer(final String characterizationVer) {
+        this.characterizationVer = characterizationVer;
+    }
+
+
     public boolean getCleaningRequired() {
         return this.cleaningRequired;
     }

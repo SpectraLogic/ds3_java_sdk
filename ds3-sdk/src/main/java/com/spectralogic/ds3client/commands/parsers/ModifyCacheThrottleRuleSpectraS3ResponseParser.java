@@ -16,27 +16,27 @@
 // This code is auto-generated, do not modify
 package com.spectralogic.ds3client.commands.parsers;
 
-import com.spectralogic.ds3client.commands.CompleteMultiPartUploadResponse;
 import com.spectralogic.ds3client.commands.parsers.interfaces.AbstractResponseParser;
 import com.spectralogic.ds3client.commands.parsers.utils.ResponseParserUtils;
-import com.spectralogic.ds3client.models.CompleteMultipartUploadResult;
+import com.spectralogic.ds3client.commands.spectrads3.ModifyCacheThrottleRuleSpectraS3Response;
+import com.spectralogic.ds3client.models.CacheThrottleRule;
 import com.spectralogic.ds3client.networking.WebResponse;
 import com.spectralogic.ds3client.serializer.XmlOutput;
 import java.io.IOException;
 import java.io.InputStream;
 
-public class CompleteMultiPartUploadResponseParser extends AbstractResponseParser<CompleteMultiPartUploadResponse> {
+public class ModifyCacheThrottleRuleSpectraS3ResponseParser extends AbstractResponseParser<ModifyCacheThrottleRuleSpectraS3Response> {
     private final int[] expectedStatusCodes = new int[]{200};
 
     @Override
-    public CompleteMultiPartUploadResponse parseXmlResponse(final WebResponse response) throws IOException {
+    public ModifyCacheThrottleRuleSpectraS3Response parseXmlResponse(final WebResponse response) throws IOException {
         final int statusCode = response.getStatusCode();
         if (ResponseParserUtils.validateStatusCode(statusCode, expectedStatusCodes)) {
             switch (statusCode) {
             case 200:
                 try (final InputStream inputStream = response.getResponseStream()) {
-                    final CompleteMultipartUploadResult result = XmlOutput.fromXml(inputStream, CompleteMultipartUploadResult.class);
-                    return new CompleteMultiPartUploadResponse(result, this.getChecksum(), this.getChecksumType());
+                    final CacheThrottleRule result = XmlOutput.fromXml(inputStream, CacheThrottleRule.class);
+                    return new ModifyCacheThrottleRuleSpectraS3Response(result, this.getChecksum(), this.getChecksumType());
                 }
 
             default:

@@ -18,65 +18,31 @@ package com.spectralogic.ds3client.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
-import java.util.Date;
-import java.util.UUID;
+import java.util.List;
+import java.util.ArrayList;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 
 @JacksonXmlRootElement(namespace = "Data")
-public class MultiPartUpload {
+public class CacheThrottleRuleList {
 
     // Variables
-    @JsonProperty("Initiated")
-    private Date initiated;
-
-    @JsonProperty("Key")
-    private String key;
-
-    @JsonProperty("Owner")
-    private User owner;
-
-    @JsonProperty("UploadId")
-    private UUID uploadId;
+    @JsonProperty("CacheThrottleRule")
+    @JacksonXmlElementWrapper(useWrapping = false)
+    private List<CacheThrottleRule> cacheThrottleRules = new ArrayList<>();
 
     // Constructor
-    public MultiPartUpload() {
+    public CacheThrottleRuleList() {
         //pass
     }
 
     // Getters and Setters
     
-    public Date getInitiated() {
-        return this.initiated;
+    public List<CacheThrottleRule> getCacheThrottleRules() {
+        return this.cacheThrottleRules;
     }
 
-    public void setInitiated(final Date initiated) {
-        this.initiated = initiated;
-    }
-
-
-    public String getKey() {
-        return this.key;
-    }
-
-    public void setKey(final String key) {
-        this.key = key;
-    }
-
-
-    public User getOwner() {
-        return this.owner;
-    }
-
-    public void setOwner(final User owner) {
-        this.owner = owner;
-    }
-
-
-    public UUID getUploadId() {
-        return this.uploadId;
-    }
-
-    public void setUploadId(final UUID uploadId) {
-        this.uploadId = uploadId;
+    public void setCacheThrottleRules(final List<CacheThrottleRule> cacheThrottleRules) {
+        this.cacheThrottleRules = cacheThrottleRules;
     }
 
 }

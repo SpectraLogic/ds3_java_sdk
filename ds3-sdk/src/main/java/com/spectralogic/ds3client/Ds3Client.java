@@ -37,27 +37,12 @@ public interface Ds3Client extends Closeable {
 
     
     
-    AbortMultiPartUploadResponse abortMultiPartUpload(final AbortMultiPartUploadRequest request)
-            throws IOException;
-
-    
-    
     CompleteBlobResponse completeBlob(final CompleteBlobRequest request)
             throws IOException;
 
     
     
-    CompleteMultiPartUploadResponse completeMultiPartUpload(final CompleteMultiPartUploadRequest request)
-            throws IOException;
-
-    
-    
     PutBucketResponse putBucket(final PutBucketRequest request)
-            throws IOException;
-
-    
-    
-    PutMultiPartUploadPartResponse putMultiPartUploadPart(final PutMultiPartUploadPartRequest request)
             throws IOException;
 
     
@@ -98,21 +83,6 @@ public interface Ds3Client extends Closeable {
     
     
     HeadObjectResponse headObject(final HeadObjectRequest request)
-            throws IOException;
-
-    
-    
-    InitiateMultiPartUploadResponse initiateMultiPartUpload(final InitiateMultiPartUploadRequest request)
-            throws IOException;
-
-    
-    
-    ListMultiPartUploadPartsResponse listMultiPartUploadParts(final ListMultiPartUploadPartsRequest request)
-            throws IOException;
-
-    
-    
-    ListMultiPartUploadsResponse listMultiPartUploads(final ListMultiPartUploadsRequest request)
             throws IOException;
 
     @ResponsePayloadModel("BucketAcl")
@@ -245,6 +215,19 @@ public interface Ds3Client extends Closeable {
     ModifyBucketSpectraS3Response modifyBucketSpectraS3(final ModifyBucketSpectraS3Request request)
             throws IOException;
 
+    @ResponsePayloadModel("CacheThrottleRule")
+    @Action("CREATE")
+    @Resource("CACHE_THROTTLE_RULE")
+    
+    PutCacheThrottleRuleSpectraS3Response putCacheThrottleRuleSpectraS3(final PutCacheThrottleRuleSpectraS3Request request)
+            throws IOException;
+
+    @Action("DELETE")
+    @Resource("CACHE_THROTTLE_RULE")
+    
+    DeleteCacheThrottleRuleSpectraS3Response deleteCacheThrottleRuleSpectraS3(final DeleteCacheThrottleRuleSpectraS3Request request)
+            throws IOException;
+
     @Action("BULK_MODIFY")
     @Resource("CACHE_FILESYSTEM")
     
@@ -272,11 +255,32 @@ public interface Ds3Client extends Closeable {
     GetCacheStateSpectraS3Response getCacheStateSpectraS3(final GetCacheStateSpectraS3Request request)
             throws IOException;
 
+    @ResponsePayloadModel("CacheThrottleRule")
+    @Action("SHOW")
+    @Resource("CACHE_THROTTLE_RULE")
+    
+    GetCacheThrottleRuleSpectraS3Response getCacheThrottleRuleSpectraS3(final GetCacheThrottleRuleSpectraS3Request request)
+            throws IOException;
+
+    @ResponsePayloadModel("CacheThrottleRuleList")
+    @Action("LIST")
+    @Resource("CACHE_THROTTLE_RULE")
+    
+    GetCacheThrottleRulesSpectraS3Response getCacheThrottleRulesSpectraS3(final GetCacheThrottleRulesSpectraS3Request request)
+            throws IOException;
+
     @ResponsePayloadModel("CacheFilesystem")
     @Action("MODIFY")
     @Resource("CACHE_FILESYSTEM")
     
     ModifyCacheFilesystemSpectraS3Response modifyCacheFilesystemSpectraS3(final ModifyCacheFilesystemSpectraS3Request request)
+            throws IOException;
+
+    @ResponsePayloadModel("CacheThrottleRule")
+    @Action("MODIFY")
+    @Resource("CACHE_THROTTLE_RULE")
+    
+    ModifyCacheThrottleRuleSpectraS3Response modifyCacheThrottleRuleSpectraS3(final ModifyCacheThrottleRuleSpectraS3Request request)
             throws IOException;
 
     @ResponsePayloadModel("CapacitySummaryContainer")
@@ -871,11 +875,25 @@ public interface Ds3Client extends Closeable {
     GetJobCreationFailuresSpectraS3Response getJobCreationFailuresSpectraS3(final GetJobCreationFailuresSpectraS3Request request)
             throws IOException;
 
+    @ResponsePayloadModel("JobEntryList")
+    @Action("LIST")
+    @Resource("JOB_CHUNK_DAO")
+    
+    GetJobEntriesSpectraS3Response getJobEntriesSpectraS3(final GetJobEntriesSpectraS3Request request)
+            throws IOException;
+
     @ResponsePayloadModel("MasterObjectList")
     @Action("SHOW")
     @Resource("JOB")
     
     GetJobSpectraS3Response getJobSpectraS3(final GetJobSpectraS3Request request)
+            throws IOException;
+
+    @ResponsePayloadModel("JobSummaryApiBean")
+    @Action("SHOW")
+    @Resource("JOB")
+    
+    GetJobSummarySpectraS3Response getJobSummarySpectraS3(final GetJobSummarySpectraS3Request request)
             throws IOException;
 
     @ResponsePayloadModel("String")

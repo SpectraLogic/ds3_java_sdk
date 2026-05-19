@@ -20,6 +20,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import java.util.Date;
 import java.util.UUID;
+import java.util.List;
+import java.util.ArrayList;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 
 @JacksonXmlRootElement(namespace = "Data")
 public class BlobStoreTaskInformation {
@@ -37,8 +40,18 @@ public class BlobStoreTaskInformation {
     @JsonProperty("DriveId")
     private UUID driveId;
 
+    @JsonProperty("DurationInProgress")
+    private Duration durationInProgress;
+
+    @JsonProperty("DurationScheduled")
+    private Duration durationScheduled;
+
     @JsonProperty("Id")
     private long id;
+
+    @JsonProperty("JobIds")
+    @JacksonXmlElementWrapper(useWrapping = true)
+    private List<UUID> jobIds = new ArrayList<>();
 
     @JsonProperty("Name")
     private String name;
@@ -104,12 +117,39 @@ public class BlobStoreTaskInformation {
     }
 
 
+    public Duration getDurationInProgress() {
+        return this.durationInProgress;
+    }
+
+    public void setDurationInProgress(final Duration durationInProgress) {
+        this.durationInProgress = durationInProgress;
+    }
+
+
+    public Duration getDurationScheduled() {
+        return this.durationScheduled;
+    }
+
+    public void setDurationScheduled(final Duration durationScheduled) {
+        this.durationScheduled = durationScheduled;
+    }
+
+
     public long getId() {
         return this.id;
     }
 
     public void setId(final long id) {
         this.id = id;
+    }
+
+
+    public List<UUID> getJobIds() {
+        return this.jobIds;
+    }
+
+    public void setJobIds(final List<UUID> jobIds) {
+        this.jobIds = jobIds;
     }
 
 

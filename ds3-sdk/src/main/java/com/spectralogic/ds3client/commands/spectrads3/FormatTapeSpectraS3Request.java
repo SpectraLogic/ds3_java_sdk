@@ -26,6 +26,8 @@ public class FormatTapeSpectraS3Request extends AbstractRequest {
     
     private final String tapeId;
 
+    private boolean characterize;
+
     private boolean force;
 
     // Constructor
@@ -45,6 +47,17 @@ public class FormatTapeSpectraS3Request extends AbstractRequest {
         this.getQueryParams().put("operation", "format");
 
     }
+
+    public FormatTapeSpectraS3Request withCharacterize(final boolean characterize) {
+        this.characterize = characterize;
+        if (this.characterize) {
+            this.getQueryParams().put("characterize", null);
+        } else {
+            this.getQueryParams().remove("characterize");
+        }
+        return this;
+    }
+
 
     public FormatTapeSpectraS3Request withForce(final boolean force) {
         this.force = force;
@@ -70,6 +83,11 @@ public class FormatTapeSpectraS3Request extends AbstractRequest {
     
     public String getTapeId() {
         return this.tapeId;
+    }
+
+
+    public boolean getCharacterize() {
+        return this.characterize;
     }
 
 

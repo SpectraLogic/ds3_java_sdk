@@ -1265,73 +1265,6 @@ public class Ds3Client_Test {
     }
 
     @Test
-    public void completeMultiPartUploadTest() throws IOException {
-        final String expectedRequestContent = "<CompleteMultipartUpload><Part><PartNumber>1</PartNumber><ETag>7a112844c1a2327e617f530cb06dccf8</ETag></Part><Part><PartNumber>2</PartNumber><ETag>7162e29f4e40da7f521d0794b57770ba</ETag></Part></CompleteMultipartUpload>";
-        final String expectedResponse = "<CompleteMultipartUploadResult><Location>http://my-server/bucketName/object</Location><Bucket>bucketName</Bucket><Key>object</Key><ETag>b54357faf0632cce46e942fa68356b38</ETag></CompleteMultipartUploadResult>";
-
-        final List<Part> parts = new ArrayList<>();
-        parts.add(new Part(1, "7a112844c1a2327e617f530cb06dccf8"));
-        parts.add(new Part(2, "7162e29f4e40da7f521d0794b57770ba"));
-
-        final String bucketName = "bucketName";
-        final String objectName = "object";
-        final String uploadId = "VXBsb2FkIElEIGZvciA2aWWpbmcncyBteS1tb3ZpZS5tMnRzIHVwbG9hZA";
-        final String etag = "b54357faf0632cce46e942fa68356b38";
-        final String location = "http://my-server/bucketName/object";
-
-        final CompleteMultipartUpload completeMultipartUpload = new CompleteMultipartUpload(parts);
-
-        final Map<String, String> queryParams = new HashMap<>();
-        queryParams.put("upload_id", uploadId);
-
-        final Map<String, String> responseHeaders = new HashMap<>();
-        responseHeaders.put("etag", etag);
-
-        final CompleteMultiPartUploadResponse response = MockNetwork
-                .expecting(HttpVerb.POST, "/bucketName/object", queryParams, expectedRequestContent)
-                .returning(200, expectedResponse, responseHeaders)
-                .asClient()
-                .completeMultiPartUpload(new CompleteMultiPartUploadRequest(
-                        bucketName,
-                        objectName,
-                        completeMultipartUpload,
-                        uploadId));
-
-        assertThat(response.getCompleteMultipartUploadResult().getLocation(), is(location));
-        assertThat(response.getCompleteMultipartUploadResult().getBucket(), is(bucketName));
-        assertThat(response.getCompleteMultipartUploadResult().getKey(), is(objectName));
-        assertThat(response.getCompleteMultipartUploadResult().getETag(), is(etag));
-    }
-
-    @Test
-    public void putMultiPartUploadPartTest() throws IOException {
-        final String requestContent = "this is the part content";
-        final String bucketName = "bucketName";
-        final String objectName = "object";
-        final int partNumber = 2;
-        final String uploadId = "VXBsb2FkIElEIGZvciA2aWWpbmcncyBteS1tb3ZpZS5tMnRzIHVwbG9hZA";
-        final String eTag = "b54357faf0632cce46e942fa68356b38";
-
-        final Map<String, String> queryParams = new HashMap<>();
-        queryParams.put("part_number", String.valueOf(partNumber));
-        queryParams.put("upload_id", uploadId);
-
-        final Map<String, String> responseHeaders = new HashMap<>();
-        responseHeaders.put("etag", eTag);
-
-        MockNetwork
-                .expecting(HttpVerb.PUT, "/bucketName/object", queryParams, requestContent)
-                .returning(200, "", responseHeaders)
-                .asClient()
-                .putMultiPartUploadPart(new PutMultiPartUploadPartRequest(
-                        bucketName,
-                        objectName,
-                        new ByteArraySeekableByteChannel(requestContent.getBytes()),
-                        partNumber, requestContent.getBytes().length,
-                        uploadId));
-    }
-
-    @Test
     public void getBulkJobSpectraS3WithMixedPayloadTest() throws IOException {
         final List<Ds3Object> objects = Arrays.asList(
                 new Ds3Object("file1", 256),
@@ -1665,30 +1598,6 @@ public class Ds3Client_Test {
     public void putObjectNullStreamStringConstructorTest() {
         testNonnullStreamChannelExceptions("Stream",
                 () -> new PutObjectRequest("BucketName", "ObjectName", "JobId", 0, 0, null));
-    }
-
-    @Test
-    public void putMultiPartUploadNullChannelUuidConstructorTest() {
-        testNonnullStreamChannelExceptions("Channel",
-                () -> new PutMultiPartUploadPartRequest("BucketName", "ObjectName", null, 0, 0, UUID.randomUUID()));
-    }
-
-    @Test
-    public void putMultiPartUploadNullChannelStringConstructorTest() {
-        testNonnullStreamChannelExceptions("Channel",
-                () -> new PutMultiPartUploadPartRequest("BucketName", "ObjectName", null, 0, 0, "UploadId"));
-    }
-
-    @Test
-    public void putMultiPartUploadNullStreamUuidConstructorTest() {
-        testNonnullStreamChannelExceptions("Stream",
-                () -> new PutMultiPartUploadPartRequest("BucketName", "ObjectName", 0, 0, null, UUID.randomUUID()));
-    }
-
-    @Test
-    public void putMultiPartUploadNullStreamStringConstructorTest() {
-        testNonnullStreamChannelExceptions("Stream",
-                () -> new PutMultiPartUploadPartRequest("BucketName", "ObjectName", 0, 0, null, "UploadId"));
     }
 
     private static void testNonnullStreamChannelExceptions(final String paramName, final Runnable runnable) {

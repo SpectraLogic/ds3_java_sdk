@@ -14,23 +14,38 @@
  */
 
 // This code is auto-generated, do not modify
-package com.spectralogic.ds3client.commands;
+package com.spectralogic.ds3client.commands.spectrads3;
 
-import com.spectralogic.ds3client.models.InitiateMultipartUploadResult;
-import com.spectralogic.ds3client.models.ChecksumType;
-import com.spectralogic.ds3client.commands.interfaces.AbstractResponse;
+import com.spectralogic.ds3client.networking.HttpVerb;
+import com.spectralogic.ds3client.commands.interfaces.AbstractRequest;
 
-public class InitiateMultiPartUploadResponse extends AbstractResponse {
+public class DeleteCacheThrottleRuleSpectraS3Request extends AbstractRequest {
+
+    // Variables
     
-    private final InitiateMultipartUploadResult initiateMultipartUploadResult;
+    private final String cacheThrottleRule;
 
-    public InitiateMultiPartUploadResponse(final InitiateMultipartUploadResult initiateMultipartUploadResult, final String checksum, final ChecksumType.Type checksumType) {
-        super(checksum, checksumType);
-        this.initiateMultipartUploadResult = initiateMultipartUploadResult;
+    // Constructor
+    
+    
+    public DeleteCacheThrottleRuleSpectraS3Request(final String cacheThrottleRule) {
+        this.cacheThrottleRule = cacheThrottleRule;
+        
     }
 
-    public InitiateMultipartUploadResult getInitiateMultipartUploadResult() {
-        return this.initiateMultipartUploadResult;
+
+    @Override
+    public HttpVerb getVerb() {
+        return HttpVerb.DELETE;
+    }
+
+    @Override
+    public String getPath() {
+        return "/_rest_/cache_throttle_rule/" + cacheThrottleRule;
+    }
+    
+    public String getCacheThrottleRule() {
+        return this.cacheThrottleRule;
     }
 
 }

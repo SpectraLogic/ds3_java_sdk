@@ -16,7 +16,7 @@
 // This code is auto-generated, do not modify
 package com.spectralogic.ds3client.models;
 
-public enum JobRestore {
+public enum IomType {
     NO,
     YES,
     PERMANENT_ONLY

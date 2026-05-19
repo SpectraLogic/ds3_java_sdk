@@ -14,9 +14,23 @@
  */
 
 // This code is auto-generated, do not modify
-package com.spectralogic.ds3client.models;
+package com.spectralogic.ds3client.commands.spectrads3;
 
-public enum JobCreationFailedType {
-    DATA_UNAVAILABLE,
-    TAPES_MUST_BE_ONLINED
+import com.spectralogic.ds3client.models.CacheThrottleRule;
+import com.spectralogic.ds3client.models.ChecksumType;
+import com.spectralogic.ds3client.commands.interfaces.AbstractResponse;
+
+public class ModifyCacheThrottleRuleSpectraS3Response extends AbstractResponse {
+    
+    private final CacheThrottleRule cacheThrottleRuleResult;
+
+    public ModifyCacheThrottleRuleSpectraS3Response(final CacheThrottleRule cacheThrottleRuleResult, final String checksum, final ChecksumType.Type checksumType) {
+        super(checksum, checksumType);
+        this.cacheThrottleRuleResult = cacheThrottleRuleResult;
+    }
+
+    public CacheThrottleRule getCacheThrottleRuleResult() {
+        return this.cacheThrottleRuleResult;
+    }
+
 }

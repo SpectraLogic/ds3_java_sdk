@@ -23,6 +23,8 @@ public class FormatAllTapesSpectraS3Request extends AbstractRequest {
 
     // Variables
     
+    private boolean characterize;
+
     private boolean force;
 
     // Constructor
@@ -33,6 +35,17 @@ public class FormatAllTapesSpectraS3Request extends AbstractRequest {
         this.getQueryParams().put("operation", "format");
 
     }
+
+    public FormatAllTapesSpectraS3Request withCharacterize(final boolean characterize) {
+        this.characterize = characterize;
+        if (this.characterize) {
+            this.getQueryParams().put("characterize", null);
+        } else {
+            this.getQueryParams().remove("characterize");
+        }
+        return this;
+    }
+
 
     public FormatAllTapesSpectraS3Request withForce(final boolean force) {
         this.force = force;
@@ -56,6 +69,11 @@ public class FormatAllTapesSpectraS3Request extends AbstractRequest {
         return "/_rest_/tape";
     }
     
+    public boolean getCharacterize() {
+        return this.characterize;
+    }
+
+
     public boolean getForce() {
         return this.force;
     }
