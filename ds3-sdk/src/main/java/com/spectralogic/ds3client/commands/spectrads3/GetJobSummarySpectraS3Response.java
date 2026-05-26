@@ -14,23 +14,23 @@
  */
 
 // This code is auto-generated, do not modify
-package com.spectralogic.ds3client.commands;
+package com.spectralogic.ds3client.commands.spectrads3;
 
-import com.spectralogic.ds3client.models.ListPartsResult;
+import com.spectralogic.ds3client.models.JobSummaryApiBean;
 import com.spectralogic.ds3client.models.ChecksumType;
 import com.spectralogic.ds3client.commands.interfaces.AbstractResponse;
 
-public class ListMultiPartUploadPartsResponse extends AbstractResponse {
+public class GetJobSummarySpectraS3Response extends AbstractResponse {
     
-    private final ListPartsResult listPartsResult;
+    private final JobSummaryApiBean jobSummaryApiBeanResult;
 
-    public ListMultiPartUploadPartsResponse(final ListPartsResult listPartsResult, final String checksum, final ChecksumType.Type checksumType) {
+    public GetJobSummarySpectraS3Response(final JobSummaryApiBean jobSummaryApiBeanResult, final String checksum, final ChecksumType.Type checksumType) {
         super(checksum, checksumType);
-        this.listPartsResult = listPartsResult;
+        this.jobSummaryApiBeanResult = jobSummaryApiBeanResult;
     }
 
-    public ListPartsResult getListPartsResult() {
-        return this.listPartsResult;
+    public JobSummaryApiBean getJobSummaryApiBeanResult() {
+        return this.jobSummaryApiBeanResult;
     }
 
 }

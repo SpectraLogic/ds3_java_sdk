@@ -14,15 +14,38 @@
  */
 
 // This code is auto-generated, do not modify
-package com.spectralogic.ds3client.commands;
+package com.spectralogic.ds3client.commands.spectrads3;
 
-import com.spectralogic.ds3client.models.ChecksumType;
-import com.spectralogic.ds3client.commands.interfaces.AbstractResponse;
+import com.spectralogic.ds3client.networking.HttpVerb;
+import com.spectralogic.ds3client.commands.interfaces.AbstractRequest;
 
-public class AbortMultiPartUploadResponse extends AbstractResponse {
+public class GetCacheThrottleRuleSpectraS3Request extends AbstractRequest {
+
+    // Variables
     
-    public AbortMultiPartUploadResponse(final String checksum, final ChecksumType.Type checksumType) {
-        super(checksum, checksumType);
+    private final String cacheThrottleRule;
+
+    // Constructor
+    
+    
+    public GetCacheThrottleRuleSpectraS3Request(final String cacheThrottleRule) {
+        this.cacheThrottleRule = cacheThrottleRule;
+        
+    }
+
+
+    @Override
+    public HttpVerb getVerb() {
+        return HttpVerb.GET;
+    }
+
+    @Override
+    public String getPath() {
+        return "/_rest_/cache_throttle_rule/" + cacheThrottleRule;
+    }
+    
+    public String getCacheThrottleRule() {
+        return this.cacheThrottleRule;
     }
 
 }

@@ -16,27 +16,29 @@
 // This code is auto-generated, do not modify
 package com.spectralogic.ds3client.commands.parsers;
 
-import com.spectralogic.ds3client.commands.ListMultiPartUploadsResponse;
 import com.spectralogic.ds3client.commands.parsers.interfaces.AbstractResponseParser;
 import com.spectralogic.ds3client.commands.parsers.utils.ResponseParserUtils;
-import com.spectralogic.ds3client.models.ListMultiPartUploadsResult;
+import com.spectralogic.ds3client.commands.spectrads3.GetCacheThrottleRulesSpectraS3Response;
+import com.spectralogic.ds3client.models.CacheThrottleRuleList;
 import com.spectralogic.ds3client.networking.WebResponse;
 import com.spectralogic.ds3client.serializer.XmlOutput;
 import java.io.IOException;
 import java.io.InputStream;
 
-public class ListMultiPartUploadsResponseParser extends AbstractResponseParser<ListMultiPartUploadsResponse> {
+public class GetCacheThrottleRulesSpectraS3ResponseParser extends AbstractResponseParser<GetCacheThrottleRulesSpectraS3Response> {
     private final int[] expectedStatusCodes = new int[]{200};
 
     @Override
-    public ListMultiPartUploadsResponse parseXmlResponse(final WebResponse response) throws IOException {
+    public GetCacheThrottleRulesSpectraS3Response parseXmlResponse(final WebResponse response) throws IOException {
         final int statusCode = response.getStatusCode();
+        final Integer pagingTruncated = parseIntHeader("page-truncated");
+        final Integer pagingTotalResultCount = parseIntHeader("total-result-count");
         if (ResponseParserUtils.validateStatusCode(statusCode, expectedStatusCodes)) {
             switch (statusCode) {
             case 200:
                 try (final InputStream inputStream = response.getResponseStream()) {
-                    final ListMultiPartUploadsResult result = XmlOutput.fromXml(inputStream, ListMultiPartUploadsResult.class);
-                    return new ListMultiPartUploadsResponse(result, this.getChecksum(), this.getChecksumType());
+                    final CacheThrottleRuleList result = XmlOutput.fromXml(inputStream, CacheThrottleRuleList.class);
+                    return new GetCacheThrottleRulesSpectraS3Response(result, pagingTotalResultCount, pagingTruncated, this.getChecksum(), this.getChecksumType());
                 }
 
             default:

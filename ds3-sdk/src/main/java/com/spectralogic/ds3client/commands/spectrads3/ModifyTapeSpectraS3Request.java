@@ -28,6 +28,8 @@ public class ModifyTapeSpectraS3Request extends AbstractRequest {
     
     private final String tapeId;
 
+    private boolean allowRollback;
+
     private String ejectLabel;
 
     private String ejectLocation;
@@ -49,6 +51,13 @@ public class ModifyTapeSpectraS3Request extends AbstractRequest {
         this.tapeId = tapeId;
         
     }
+
+    public ModifyTapeSpectraS3Request withAllowRollback(final boolean allowRollback) {
+        this.allowRollback = allowRollback;
+        this.updateQueryParam("allow_rollback", allowRollback);
+        return this;
+    }
+
 
     public ModifyTapeSpectraS3Request withEjectLabel(final String ejectLabel) {
         this.ejectLabel = ejectLabel;
@@ -91,6 +100,11 @@ public class ModifyTapeSpectraS3Request extends AbstractRequest {
     
     public String getTapeId() {
         return this.tapeId;
+    }
+
+
+    public boolean getAllowRollback() {
+        return this.allowRollback;
     }
 
 

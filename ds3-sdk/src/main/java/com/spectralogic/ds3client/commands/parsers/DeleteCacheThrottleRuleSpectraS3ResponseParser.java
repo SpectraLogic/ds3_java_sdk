@@ -16,28 +16,23 @@
 // This code is auto-generated, do not modify
 package com.spectralogic.ds3client.commands.parsers;
 
-import com.spectralogic.ds3client.commands.InitiateMultiPartUploadResponse;
 import com.spectralogic.ds3client.commands.parsers.interfaces.AbstractResponseParser;
 import com.spectralogic.ds3client.commands.parsers.utils.ResponseParserUtils;
-import com.spectralogic.ds3client.models.InitiateMultipartUploadResult;
+import com.spectralogic.ds3client.commands.spectrads3.DeleteCacheThrottleRuleSpectraS3Response;
 import com.spectralogic.ds3client.networking.WebResponse;
-import com.spectralogic.ds3client.serializer.XmlOutput;
 import java.io.IOException;
-import java.io.InputStream;
 
-public class InitiateMultiPartUploadResponseParser extends AbstractResponseParser<InitiateMultiPartUploadResponse> {
-    private final int[] expectedStatusCodes = new int[]{200};
+public class DeleteCacheThrottleRuleSpectraS3ResponseParser extends AbstractResponseParser<DeleteCacheThrottleRuleSpectraS3Response> {
+    private final int[] expectedStatusCodes = new int[]{204};
 
     @Override
-    public InitiateMultiPartUploadResponse parseXmlResponse(final WebResponse response) throws IOException {
+    public DeleteCacheThrottleRuleSpectraS3Response parseXmlResponse(final WebResponse response) throws IOException {
         final int statusCode = response.getStatusCode();
         if (ResponseParserUtils.validateStatusCode(statusCode, expectedStatusCodes)) {
             switch (statusCode) {
-            case 200:
-                try (final InputStream inputStream = response.getResponseStream()) {
-                    final InitiateMultipartUploadResult result = XmlOutput.fromXml(inputStream, InitiateMultipartUploadResult.class);
-                    return new InitiateMultiPartUploadResponse(result, this.getChecksum(), this.getChecksumType());
-                }
+            case 204:
+                //There is no payload, return an empty response handler
+                return new DeleteCacheThrottleRuleSpectraS3Response(this.getChecksum(), this.getChecksumType());
 
             default:
                 assert false: "validateStatusCode should have made it impossible to reach this line";

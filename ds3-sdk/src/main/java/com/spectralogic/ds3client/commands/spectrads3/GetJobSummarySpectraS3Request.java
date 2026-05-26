@@ -14,67 +14,59 @@
  */
 
 // This code is auto-generated, do not modify
-package com.spectralogic.ds3client.commands;
+package com.spectralogic.ds3client.commands.spectrads3;
 
 import com.spectralogic.ds3client.networking.HttpVerb;
 import com.spectralogic.ds3client.commands.interfaces.AbstractRequest;
 import java.util.UUID;
 
-public class AbortMultiPartUploadRequest extends AbstractRequest {
+public class GetJobSummarySpectraS3Request extends AbstractRequest {
 
     // Variables
     
-    private final String bucketName;
-
-    private final String objectName;
-
-    private final String uploadId;
+    private final String jobId;
 
     // Constructor
     
     
-    public AbortMultiPartUploadRequest(final String bucketName, final String objectName, final UUID uploadId) {
-        this.bucketName = bucketName;
-        this.objectName = objectName;
-        this.uploadId = uploadId.toString();
+    public GetJobSummarySpectraS3Request(final UUID jobId) {
+        this.jobId = jobId.toString();
         
-        this.updateQueryParam("upload_id", uploadId);
-
+        this.getQueryParams().put("summary", null);
     }
 
     
-    public AbortMultiPartUploadRequest(final String bucketName, final String objectName, final String uploadId) {
-        this.bucketName = bucketName;
-        this.objectName = objectName;
-        this.uploadId = uploadId;
+    public GetJobSummarySpectraS3Request(final String jobId) {
+        this.jobId = jobId;
         
-        this.updateQueryParam("upload_id", uploadId);
-
+        this.getQueryParams().put("summary", null);
     }
 
 
     @Override
     public HttpVerb getVerb() {
-        return HttpVerb.DELETE;
+        return HttpVerb.GET;
     }
 
     @Override
     public String getPath() {
-        return "/" + this.bucketName + "/" + this.objectName;
+        return "/_rest_/job/" + jobId;
     }
     
-    public String getBucketName() {
-        return this.bucketName;
+    public String getJobId() {
+        return this.jobId;
     }
 
 
-    public String getObjectName() {
-        return this.objectName;
+    @Override
+    public int hashCode() {
+        return jobId.hashCode();
     }
 
-
-    public String getUploadId() {
-        return this.uploadId;
+    @Override
+    public boolean equals(final Object obj) {
+        if (! (obj instanceof GetJobSummarySpectraS3Request)) return false;
+        final GetJobSummarySpectraS3Request other = (GetJobSummarySpectraS3Request) obj;
+        return other.getJobId().equals(this.getJobId());
     }
-
 }

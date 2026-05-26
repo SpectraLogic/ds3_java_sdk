@@ -55,6 +55,9 @@ public class ActiveJob {
     @JsonProperty("ImplicitJobIdResolution")
     private boolean implicitJobIdResolution;
 
+    @JsonProperty("Restore")
+    private IomType iomType;
+
     @JsonProperty("MinimizeSpanningAcrossMedia")
     private boolean minimizeSpanningAcrossMedia;
 
@@ -81,9 +84,6 @@ public class ActiveJob {
 
     @JsonProperty("RequestType")
     private JobRequestType requestType;
-
-    @JsonProperty("Restore")
-    private JobRestore restore;
 
     @JsonProperty("Truncated")
     private boolean truncated;
@@ -194,6 +194,15 @@ public class ActiveJob {
     }
 
 
+    public IomType getIomType() {
+        return this.iomType;
+    }
+
+    public void setIomType(final IomType iomType) {
+        this.iomType = iomType;
+    }
+
+
     public boolean getMinimizeSpanningAcrossMedia() {
         return this.minimizeSpanningAcrossMedia;
     }
@@ -272,15 +281,6 @@ public class ActiveJob {
 
     public void setRequestType(final JobRequestType requestType) {
         this.requestType = requestType;
-    }
-
-
-    public JobRestore getRestore() {
-        return this.restore;
-    }
-
-    public void setRestore(final JobRestore restore) {
-        this.restore = restore;
     }
 
 

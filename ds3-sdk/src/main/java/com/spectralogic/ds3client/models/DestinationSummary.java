@@ -1,0 +1,86 @@
+/*
+ * ******************************************************************************
+ *   Copyright 2014-2019 Spectra Logic Corporation. All Rights Reserved.
+ *   Licensed under the Apache License, Version 2.0 (the "License"). You may not use
+ *   this file except in compliance with the License. A copy of the License is located at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *   or in the "license" file accompanying this file.
+ *   This file is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+ *   CONDITIONS OF ANY KIND, either express or implied. See the License for the
+ *   specific language governing permissions and limitations under the License.
+ * ****************************************************************************
+ */
+
+// This code is auto-generated, do not modify
+package com.spectralogic.ds3client.models;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+import java.util.List;
+import java.util.ArrayList;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
+import java.util.UUID;
+
+@JacksonXmlRootElement(namespace = "Data")
+public class DestinationSummary {
+
+    // Variables
+    @JsonProperty("CompletedChunks")
+    @JacksonXmlElementWrapper(useWrapping = true)
+    private List<Objects> completedChunks = new ArrayList<>();
+
+    @JsonProperty("Id")
+    private UUID id;
+
+    @JsonProperty("IncompleteChunks")
+    @JacksonXmlElementWrapper(useWrapping = true)
+    private List<Objects> incompleteChunks = new ArrayList<>();
+
+    @JsonProperty("Name")
+    private String name;
+
+    // Constructor
+    public DestinationSummary() {
+        //pass
+    }
+
+    // Getters and Setters
+    
+    public List<Objects> getCompletedChunks() {
+        return this.completedChunks;
+    }
+
+    public void setCompletedChunks(final List<Objects> completedChunks) {
+        this.completedChunks = completedChunks;
+    }
+
+
+    public UUID getId() {
+        return this.id;
+    }
+
+    public void setId(final UUID id) {
+        this.id = id;
+    }
+
+
+    public List<Objects> getIncompleteChunks() {
+        return this.incompleteChunks;
+    }
+
+    public void setIncompleteChunks(final List<Objects> incompleteChunks) {
+        this.incompleteChunks = incompleteChunks;
+    }
+
+
+    public String getName() {
+        return this.name;
+    }
+
+    public void setName(final String name) {
+        this.name = name;
+    }
+
+}

@@ -18,52 +18,31 @@ package com.spectralogic.ds3client.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
-import java.util.Date;
+import java.util.List;
+import java.util.ArrayList;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 
 @JacksonXmlRootElement(namespace = "Data")
-public class MultiPartUploadPart {
+public class JobEntryList {
 
     // Variables
-    @JsonProperty("ETag")
-    private String eTag;
-
-    @JsonProperty("LastModified")
-    private Date lastModified;
-
-    @JsonProperty("PartNumber")
-    private int partNumber;
+    @JsonProperty("JobEntry")
+    @JacksonXmlElementWrapper(useWrapping = false)
+    private List<JobEntry> jobEntries = new ArrayList<>();
 
     // Constructor
-    public MultiPartUploadPart() {
+    public JobEntryList() {
         //pass
     }
 
     // Getters and Setters
     
-    public String getETag() {
-        return this.eTag;
+    public List<JobEntry> getJobEntries() {
+        return this.jobEntries;
     }
 
-    public void setETag(final String eTag) {
-        this.eTag = eTag;
-    }
-
-
-    public Date getLastModified() {
-        return this.lastModified;
-    }
-
-    public void setLastModified(final Date lastModified) {
-        this.lastModified = lastModified;
-    }
-
-
-    public int getPartNumber() {
-        return this.partNumber;
-    }
-
-    public void setPartNumber(final int partNumber) {
-        this.partNumber = partNumber;
+    public void setJobEntries(final List<JobEntry> jobEntries) {
+        this.jobEntries = jobEntries;
     }
 
 }

@@ -18,5 +18,6 @@ package com.spectralogic.ds3client.models;
 
 public enum CacheEntryState {
     ALLOCATED,
-    IN_CACHE
+    IN_CACHE,
+    PENDING_DELETE
 }

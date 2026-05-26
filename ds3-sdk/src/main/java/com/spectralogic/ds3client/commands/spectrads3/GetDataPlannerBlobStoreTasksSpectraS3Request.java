@@ -18,12 +18,15 @@ package com.spectralogic.ds3client.commands.spectrads3;
 
 import com.spectralogic.ds3client.networking.HttpVerb;
 import com.spectralogic.ds3client.commands.interfaces.AbstractRequest;
+import java.util.UUID;
 
 public class GetDataPlannerBlobStoreTasksSpectraS3Request extends AbstractRequest {
 
     // Variables
     
     private boolean fullDetails;
+
+    private String job;
 
     // Constructor
     
@@ -43,6 +46,20 @@ public class GetDataPlannerBlobStoreTasksSpectraS3Request extends AbstractReques
     }
 
 
+    public GetDataPlannerBlobStoreTasksSpectraS3Request withJob(final UUID job) {
+        this.job = job.toString();
+        this.updateQueryParam("job", job);
+        return this;
+    }
+
+
+    public GetDataPlannerBlobStoreTasksSpectraS3Request withJob(final String job) {
+        this.job = job;
+        this.updateQueryParam("job", job);
+        return this;
+    }
+
+
 
     @Override
     public HttpVerb getVerb() {
@@ -56,6 +73,11 @@ public class GetDataPlannerBlobStoreTasksSpectraS3Request extends AbstractReques
     
     public boolean getFullDetails() {
         return this.fullDetails;
+    }
+
+
+    public String getJob() {
+        return this.job;
     }
 
 }

@@ -14,23 +14,23 @@
  */
 
 // This code is auto-generated, do not modify
-package com.spectralogic.ds3client.commands;
+package com.spectralogic.ds3client.commands.spectrads3;
 
-import com.spectralogic.ds3client.models.CompleteMultipartUploadResult;
+import com.spectralogic.ds3client.models.JobEntryList;
 import com.spectralogic.ds3client.models.ChecksumType;
-import com.spectralogic.ds3client.commands.interfaces.AbstractResponse;
+import com.spectralogic.ds3client.commands.interfaces.AbstractPaginationResponse;
 
-public class CompleteMultiPartUploadResponse extends AbstractResponse {
-    
-    private final CompleteMultipartUploadResult completeMultipartUploadResult;
+public class GetJobEntriesSpectraS3Response extends AbstractPaginationResponse {
 
-    public CompleteMultiPartUploadResponse(final CompleteMultipartUploadResult completeMultipartUploadResult, final String checksum, final ChecksumType.Type checksumType) {
-        super(checksum, checksumType);
-        this.completeMultipartUploadResult = completeMultipartUploadResult;
+    private final JobEntryList jobEntryListResult;
+
+    public GetJobEntriesSpectraS3Response(final JobEntryList jobEntryListResult, final Integer pagingTotalResultCount, final Integer pagingTruncated, final String checksum, final ChecksumType.Type checksumType) {
+        super(pagingTotalResultCount, pagingTruncated, checksum, checksumType);
+        this.jobEntryListResult = jobEntryListResult;
     }
 
-    public CompleteMultipartUploadResult getCompleteMultipartUploadResult() {
-        return this.completeMultipartUploadResult;
+    public JobEntryList getJobEntryListResult() {
+        return this.jobEntryListResult;
     }
 
 }

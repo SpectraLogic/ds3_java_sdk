@@ -40,6 +40,9 @@ public class Tape {
     @JsonProperty("BucketId")
     private UUID bucketId;
 
+    @JsonProperty("CharacterizationVer")
+    private String characterizationVer;
+
     @JsonProperty("DescriptionForIdentification")
     private String descriptionForIdentification;
 
@@ -158,6 +161,15 @@ public class Tape {
 
     public void setBucketId(final UUID bucketId) {
         this.bucketId = bucketId;
+    }
+
+
+    public String getCharacterizationVer() {
+        return this.characterizationVer;
+    }
+
+    public void setCharacterizationVer(final String characterizationVer) {
+        this.characterizationVer = characterizationVer;
     }
 
 

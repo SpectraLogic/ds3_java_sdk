@@ -16,23 +16,28 @@
 // This code is auto-generated, do not modify
 package com.spectralogic.ds3client.commands.parsers;
 
-import com.spectralogic.ds3client.commands.PutMultiPartUploadPartResponse;
 import com.spectralogic.ds3client.commands.parsers.interfaces.AbstractResponseParser;
 import com.spectralogic.ds3client.commands.parsers.utils.ResponseParserUtils;
+import com.spectralogic.ds3client.commands.spectrads3.PutCacheThrottleRuleSpectraS3Response;
+import com.spectralogic.ds3client.models.CacheThrottleRule;
 import com.spectralogic.ds3client.networking.WebResponse;
+import com.spectralogic.ds3client.serializer.XmlOutput;
 import java.io.IOException;
+import java.io.InputStream;
 
-public class PutMultiPartUploadPartResponseParser extends AbstractResponseParser<PutMultiPartUploadPartResponse> {
-    private final int[] expectedStatusCodes = new int[]{200};
+public class PutCacheThrottleRuleSpectraS3ResponseParser extends AbstractResponseParser<PutCacheThrottleRuleSpectraS3Response> {
+    private final int[] expectedStatusCodes = new int[]{201};
 
     @Override
-    public PutMultiPartUploadPartResponse parseXmlResponse(final WebResponse response) throws IOException {
+    public PutCacheThrottleRuleSpectraS3Response parseXmlResponse(final WebResponse response) throws IOException {
         final int statusCode = response.getStatusCode();
         if (ResponseParserUtils.validateStatusCode(statusCode, expectedStatusCodes)) {
             switch (statusCode) {
-            case 200:
-                //There is no payload, return an empty response handler
-                return new PutMultiPartUploadPartResponse(this.getChecksum(), this.getChecksumType());
+            case 201:
+                try (final InputStream inputStream = response.getResponseStream()) {
+                    final CacheThrottleRule result = XmlOutput.fromXml(inputStream, CacheThrottleRule.class);
+                    return new PutCacheThrottleRuleSpectraS3Response(result, this.getChecksum(), this.getChecksumType());
+                }
 
             default:
                 assert false: "validateStatusCode should have made it impossible to reach this line";
