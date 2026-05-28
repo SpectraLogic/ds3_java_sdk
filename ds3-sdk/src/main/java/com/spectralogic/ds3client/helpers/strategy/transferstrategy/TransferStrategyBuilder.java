@@ -35,16 +35,7 @@ import com.spectralogic.ds3client.helpers.events.EventRunner;
 import com.spectralogic.ds3client.helpers.events.FailureEvent;
 import com.spectralogic.ds3client.helpers.events.SameThreadEventRunner;
 import com.spectralogic.ds3client.helpers.strategy.StrategyUtils;
-import com.spectralogic.ds3client.helpers.strategy.blobstrategy.BlackPearlChunkAttemptRetryDelayBehavior;
-import com.spectralogic.ds3client.helpers.strategy.blobstrategy.BlobStrategy;
-import com.spectralogic.ds3client.helpers.strategy.blobstrategy.BlobStrategyMaker;
-import com.spectralogic.ds3client.helpers.strategy.blobstrategy.ChunkAttemptRetryDelayBehavior;
-import com.spectralogic.ds3client.helpers.strategy.blobstrategy.ClientDefinedChunkAttemptRetryDelayBehavior;
-import com.spectralogic.ds3client.helpers.strategy.blobstrategy.ContinueForeverChunkAttemptsRetryBehavior;
-import com.spectralogic.ds3client.helpers.strategy.blobstrategy.GetSequentialBlobStrategy;
-import com.spectralogic.ds3client.helpers.strategy.blobstrategy.MaxChunkAttemptsRetryBehavior;
-import com.spectralogic.ds3client.helpers.strategy.blobstrategy.PutSequentialBlobStrategy;
-import com.spectralogic.ds3client.helpers.strategy.blobstrategy.ChunkAttemptRetryBehavior;
+import com.spectralogic.ds3client.helpers.strategy.blobstrategy.*;
 import com.spectralogic.ds3client.helpers.strategy.channelstrategy.ChannelStrategy;
 import com.spectralogic.ds3client.helpers.strategy.channelstrategy.NullChannelPreparable;
 import com.spectralogic.ds3client.helpers.strategy.channelstrategy.RandomAccessChannelStrategy;
@@ -142,7 +133,7 @@ public final class TransferStrategyBuilder {
 
     /**
      * Use an instance of {@link BlobStrategy} you wish to create or retrieve blobs from a Black Pearl.  There are
-     * 2 primary implementations: {@link PutSequentialBlobStrategy}; and {@link GetSequentialBlobStrategy}.  Blob
+     * 2 primary implementations: {@link PutBlobStrategy}; and {@link GetSequentialBlobStrategy}.  Blob
      * retrieval order is specified in the
      * {@link com.spectralogic.ds3client.commands.spectrads3.GetBulkJobSpectraS3Request#withChunkClientProcessingOrderGuarantee(com.spectralogic.ds3client.models.JobChunkClientProcessingOrderGuarantee)}
      * HTTP request.
@@ -474,11 +465,12 @@ public final class TransferStrategyBuilder {
         getOrMakeTransferRetryDecorator();
 
         return makeTransferStrategy(
-                (client, masterObjectList, eventDispatcher) -> new PutSequentialBlobStrategy(ds3Client,
+                (client, masterObjectList, eventDispatcher) -> new PutBlobStrategy(ds3Client,
                         masterObjectList,
                         eventDispatcher,
                         getOrMakeChunkAttemptRetryBehavior(),
-                        getOrMakeChunkAllocationRetryDelayBehavior()
+                        getOrMakeChunkAllocationRetryDelayBehavior(),
+                        true
                 ),
                 this::makePutTransferMethod);
     }
@@ -605,12 +597,12 @@ public final class TransferStrategyBuilder {
                                                          final MasterObjectList masterObjectList,
                                                          final EventDispatcher eventDispatcher)
                     {
-                        return new PutSequentialBlobStrategy(ds3Client,
+                        return new PutBlobStrategy(ds3Client,
                                 masterObjectList,
                                 eventDispatcher,
                                 getOrMakeChunkAttemptRetryBehavior(),
-                                getOrMakeChunkAllocationRetryDelayBehavior()
-                                );
+                                getOrMakeChunkAllocationRetryDelayBehavior(),
+                                false);
                     }
                 },
                 new TransferMethodMaker() {
@@ -769,11 +761,12 @@ public final class TransferStrategyBuilder {
                                                          final MasterObjectList masterObjectList,
                                                          final EventDispatcher eventDispatcher)
                     {
-                        return new PutSequentialBlobStrategy(ds3Client,
+                        return new PutBlobStrategy(ds3Client,
                                 masterObjectList,
                                 eventDispatcher,
                                 getOrMakeChunkAttemptRetryBehavior(),
-                                getOrMakeChunkAllocationRetryDelayBehavior()
+                                getOrMakeChunkAllocationRetryDelayBehavior(),
+                                false
                         );
                     }
                 },

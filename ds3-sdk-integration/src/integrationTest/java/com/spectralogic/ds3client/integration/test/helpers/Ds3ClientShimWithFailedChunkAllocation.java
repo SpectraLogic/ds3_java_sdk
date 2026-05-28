@@ -50,7 +50,7 @@ public class Ds3ClientShimWithFailedChunkAllocation extends Ds3ClientShim {
     private static Map<String, String> makeFailingResponseHeaders() {
         final Map<String, String> headers = new HashMap<>();
         headers.put("content-NONE", "text/xml");
-        headers.put("Retry-After", "1");
+        headers.put("Retry-After", "0");
 
         return headers;
     }
@@ -61,7 +61,7 @@ public class Ds3ClientShimWithFailedChunkAllocation extends Ds3ClientShim {
     {
         final GetJobChunksReadyForClientProcessingSpectraS3Response getJobChunksReadyForClientProcessingSpectraS3Response =
                 new GetJobChunksReadyForClientProcessingSpectraS3ResponseParser()
-                        .parseXmlResponse(new MockedWebResponse("A response", 307, makeFailingResponseHeaders()));
+                        .parseXmlResponse(new MockedWebResponse("<MasterObjectList><Objects/></MasterObjectList>", 200, makeFailingResponseHeaders()));
 
         return getJobChunksReadyForClientProcessingSpectraS3Response;
     }

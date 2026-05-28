@@ -42,7 +42,7 @@ public class GetJobChunksReadyForClientProcessingSpectraS3ResponseParser extends
                     if (isNullOrEmpty(result.getObjects())) {
                         return new GetJobChunksReadyForClientProcessingSpectraS3Response(result, parseRetryAfter(response), GetJobChunksReadyForClientProcessingSpectraS3Response.Status.RETRYLATER, this.getChecksum(), this.getChecksumType());
                     }
-                    return new GetJobChunksReadyForClientProcessingSpectraS3Response(result, 0, GetJobChunksReadyForClientProcessingSpectraS3Response.Status.AVAILABLE, this.getChecksum(), this.getChecksumType());
+                    return new GetJobChunksReadyForClientProcessingSpectraS3Response(result, parseRetryAfter(response), GetJobChunksReadyForClientProcessingSpectraS3Response.Status.AVAILABLE, this.getChecksum(), this.getChecksumType());
                 }
 
             default:
