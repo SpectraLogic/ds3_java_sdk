@@ -20,6 +20,8 @@ plugins {
     signing
 }
 
+var mavenCentralPrepDir = rootProject.layout.buildDirectory.dir("deployment/central/")
+
 publishing {
     repositories {
         maven {
@@ -38,17 +40,7 @@ publishing {
         }
         maven {
             name = "OSSRH"
-            val releasesOssrhRepoUrl = "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/"
-            val snapshotsOssrhRepoUrl = "https://s01.oss.sonatype.org/content/repositories/snapshots/"
-            url = uri(if (extra["isReleaseVersion"] as Boolean) releasesOssrhRepoUrl else snapshotsOssrhRepoUrl)
-            credentials {
-                username = extra.has("ossrhUsername").let {
-                    if (it) extra.get("ossrhUsername") as String else null
-                }
-                password = extra.has("ossrhPassword").let {
-                    if (it) extra.get("ossrhPassword") as String else null
-                }
-            }
+            url = uri(mavenCentralPrepDir)
         }
     }
 }
@@ -61,12 +53,38 @@ tasks.register("publishToInternalRepository") {
     })
 }
 
-tasks.register("publishToSonatypeOSSRH") {
+var prepareMavenCentralPayload = tasks.register("prepareMavenCentralPayload") {
     group = "publishing"
-    description = "Publishes all Maven publications to Sonatype's OSSRH repository."
+    description = "Generate files for payload to submit to maven central."
     dependsOn(tasks.withType<PublishToMavenRepository>().matching {
         it.repository == publishing.repositories["OSSRH"]
     })
+    doLast {
+        // remove maven metadata, as it is only used in the local repository and
+        // not published to maven central
+        delete(fileTree(mavenCentralPrepDir) {
+            include("**/maven-metadata.xml*")
+        })
+    }
+}
+
+tasks.register<Tar>("generateMavenCentralPayload") {
+    // see https://central.sonatype.org/publish/publish-portal-upload/
+    group = "publishing"
+    description = "Create .tar.gz payload for submission to maven central."
+    archiveBaseName.set("ds3-java-sdk-maven-central")
+    archiveVersion.set("${version}")
+    archiveExtension.set("tar.gz")
+    compression = Compression.GZIP
+    from(mavenCentralPrepDir) {
+        include("**/*")
+    }
+    destinationDirectory.set(mavenCentralPrepDir.get().asFile.parentFile)
+    dependsOn(prepareMavenCentralPayload)
+}
+
+tasks.clean {
+    delete(mavenCentralPrepDir.get().asFile.parentFile)
 }
 
 val augmentPom = tasks.register("augmentPom") {
