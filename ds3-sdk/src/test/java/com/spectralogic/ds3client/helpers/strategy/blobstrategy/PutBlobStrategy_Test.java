@@ -109,34 +109,53 @@ public class PutBlobStrategy_Test {
     @Test
     public void testGetWorkRetryLater() throws IOException, InterruptedException {
         final Ds3Client client = mock(Ds3Client.class);
-        final MasterObjectList mol = mock(MasterObjectList.class);
-        final EventDispatcher eventDispatcher = mock(EventDispatcher.class);
+        final MasterObjectList mol = new MasterObjectList();
+        mol.setJobId(UUID.randomUUID());
         final ChunkAttemptRetryBehavior retryBehavior = mock(ChunkAttemptRetryBehavior.class);
         final ChunkAttemptRetryDelayBehavior retryDelayBehavior = mock(ChunkAttemptRetryDelayBehavior.class);
 
-        final UUID jobId = UUID.randomUUID();
-        when(mol.getJobId()).thenReturn(jobId);
-
         final int retryAfterSeconds = 10;
-        final GetJobChunksReadyForClientProcessingSpectraS3Response retryLaterResponse = new GetJobChunksReadyForClientProcessingSpectraS3Response(
-                null, retryAfterSeconds, GetJobChunksReadyForClientProcessingSpectraS3Response.Status.RETRYLATER, null, null);
+        final MasterObjectList emptyMol = new MasterObjectList();
 
-        final MasterObjectList molResult = mock(MasterObjectList.class);
-        when(molResult.getObjects()).thenReturn(Lists.newArrayList());
-        final GetJobChunksReadyForClientProcessingSpectraS3Response availableResponse = new GetJobChunksReadyForClientProcessingSpectraS3Response(
-                molResult, 0, GetJobChunksReadyForClientProcessingSpectraS3Response.Status.AVAILABLE, null, null);
+        when(client.getJobChunksReadyForClientProcessingSpectraS3(any()))
+                .thenReturn(new GetJobChunksReadyForClientProcessingSpectraS3Response(null, retryAfterSeconds, GetJobChunksReadyForClientProcessingSpectraS3Response.Status.RETRYLATER, null, null))
+                .thenReturn(new GetJobChunksReadyForClientProcessingSpectraS3Response(emptyMol, 0, GetJobChunksReadyForClientProcessingSpectraS3Response.Status.AVAILABLE, null, null));
 
-        when(client.getJobChunksReadyForClientProcessingSpectraS3(any(GetJobChunksReadyForClientProcessingSpectraS3Request.class)))
-                .thenReturn(retryLaterResponse)
-                .thenReturn(availableResponse);
+        final PutBlobStrategy strategy = new PutBlobStrategy(client, mol, mock(EventDispatcher.class), retryBehavior, retryDelayBehavior, new JobState(emptyMol.getObjects()), false);
 
-        final PutBlobStrategy strategy = new PutBlobStrategy(client, mol, eventDispatcher, retryBehavior, retryDelayBehavior, new JobState(molResult.getObjects()), false);
+        assertThat(Lists.newArrayList(strategy.getWork()).isEmpty(), is(true));
 
-        final List<JobPart> work = Lists.newArrayList(strategy.getWork());
-
-        assertThat(work.isEmpty(), is(true));
         verify(retryBehavior).invoke();
         verify(retryDelayBehavior).delay(retryAfterSeconds);
+        verify(retryBehavior).reset();
+    }
+
+    @Test
+    public void testGetWorkAvailableWithNoWork() throws IOException, InterruptedException {
+        final Ds3Client client = mock(Ds3Client.class);
+        final MasterObjectList mol = new MasterObjectList();
+        mol.setJobId(UUID.randomUUID());
+        final ChunkAttemptRetryBehavior retryBehavior = mock(ChunkAttemptRetryBehavior.class);
+        final ChunkAttemptRetryDelayBehavior retryDelayBehavior = mock(ChunkAttemptRetryDelayBehavior.class);
+
+        final BulkObject blob = new BulkObject();
+        blob.setId(UUID.randomUUID());
+        blob.setInCache(false);
+        final Objects chunk = new Objects();
+        chunk.setObjects(Lists.newArrayList(blob));
+        final MasterObjectList molWithWork = new MasterObjectList();
+        molWithWork.setObjects(Lists.newArrayList(chunk));
+
+        when(client.getJobChunksReadyForClientProcessingSpectraS3(any()))
+                .thenReturn(new GetJobChunksReadyForClientProcessingSpectraS3Response(new MasterObjectList(), 0, GetJobChunksReadyForClientProcessingSpectraS3Response.Status.AVAILABLE, null, null))
+                .thenReturn(new GetJobChunksReadyForClientProcessingSpectraS3Response(molWithWork, 0, GetJobChunksReadyForClientProcessingSpectraS3Response.Status.AVAILABLE, null, null));
+
+        final PutBlobStrategy strategy = new PutBlobStrategy(client, mol, mock(EventDispatcher.class), retryBehavior, retryDelayBehavior, new JobState(molWithWork.getObjects()), false);
+
+        assertThat(Lists.newArrayList(strategy.getWork()).size(), is(1));
+
+        verify(retryBehavior).invoke();
+        verify(retryDelayBehavior).delay(1);
         verify(retryBehavior).reset();
     }
 

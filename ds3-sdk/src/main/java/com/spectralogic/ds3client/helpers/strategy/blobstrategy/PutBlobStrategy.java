@@ -91,7 +91,7 @@ public class PutBlobStrategy extends AbstractBlobStrategy {
             }
 
             retryBehavior().invoke();
-            chunkAttemptRetryDelayBehavior().delay(response.getRetryAfterSeconds());
+            chunkAttemptRetryDelayBehavior().delay(response.getRetryAfterSeconds() > 0 ? response.getRetryAfterSeconds() : 1);
         } while (true);
     }
 }
