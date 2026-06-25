@@ -470,6 +470,7 @@ public final class TransferStrategyBuilder {
                         eventDispatcher,
                         getOrMakeChunkAttemptRetryBehavior(),
                         getOrMakeChunkAllocationRetryDelayBehavior(),
+                        getOrMakeJobStateForPutJob(),
                         true
                 ),
                 this::makePutTransferMethod);
@@ -602,6 +603,7 @@ public final class TransferStrategyBuilder {
                                 eventDispatcher,
                                 getOrMakeChunkAttemptRetryBehavior(),
                                 getOrMakeChunkAllocationRetryDelayBehavior(),
+                                getOrMakeJobStateForPutJob(),
                                 false);
                     }
                 },
@@ -766,6 +768,7 @@ public final class TransferStrategyBuilder {
                                 eventDispatcher,
                                 getOrMakeChunkAttemptRetryBehavior(),
                                 getOrMakeChunkAllocationRetryDelayBehavior(),
+                                getOrMakeJobStateForPutJob(),
                                 false
                         );
                     }

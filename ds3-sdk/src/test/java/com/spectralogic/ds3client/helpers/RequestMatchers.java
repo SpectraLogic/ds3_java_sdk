@@ -94,32 +94,6 @@ public final class RequestMatchers {
         });
     }
 
-    public static AllocateJobChunkSpectraS3Request hasChunkId(final UUID chunkId) {
-        return argThat(new TypeSafeMatcher<AllocateJobChunkSpectraS3Request>() {
-            @Override
-            public void describeTo(final Description description) {
-                describeRequest(chunkId, description);
-            }
-
-            @Override
-            protected boolean matchesSafely(final AllocateJobChunkSpectraS3Request item) {
-                return chunkId.equals(UUID.fromString(item.getJobChunkId()));
-            }
-            
-            @Override
-            protected void describeMismatchSafely(
-                    final AllocateJobChunkSpectraS3Request item,
-                    final Description mismatchDescription) {
-                describeRequest(UUID.fromString(item.getJobChunkId()), mismatchDescription);
-            }
-
-            private void describeRequest(final UUID chunkIdValue, final Description description) {
-                description
-                    .appendText("AllocateJobChunkResponse with chunk id: ")
-                    .appendValue(chunkIdValue);
-            }
-        });
-    }
 
     public static GetObjectRequest getRequestHas(final String bucket, final String key, final UUID jobId, final long offset) {
         return argThat(new TypeSafeMatcher<GetObjectRequest>() {

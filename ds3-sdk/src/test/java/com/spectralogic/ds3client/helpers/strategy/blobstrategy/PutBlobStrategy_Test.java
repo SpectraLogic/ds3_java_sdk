@@ -5,6 +5,7 @@ import com.spectralogic.ds3client.Ds3Client;
 import com.spectralogic.ds3client.commands.spectrads3.GetJobChunksReadyForClientProcessingSpectraS3Request;
 import com.spectralogic.ds3client.commands.spectrads3.GetJobChunksReadyForClientProcessingSpectraS3Response;
 import com.spectralogic.ds3client.helpers.JobPart;
+import com.spectralogic.ds3client.helpers.JobState;
 import com.spectralogic.ds3client.helpers.strategy.transferstrategy.EventDispatcher;
 import com.spectralogic.ds3client.models.BulkObject;
 import com.spectralogic.ds3client.models.MasterObjectList;
@@ -54,7 +55,7 @@ public class PutBlobStrategy_Test {
         when(client.getJobChunksReadyForClientProcessingSpectraS3(any(GetJobChunksReadyForClientProcessingSpectraS3Request.class)))
                 .thenReturn(realResponse);
 
-        final PutBlobStrategy strategy = new PutBlobStrategy(client, mol, eventDispatcher, retryBehavior, retryDelayBehavior, false);
+        final PutBlobStrategy strategy = new PutBlobStrategy(client, mol, eventDispatcher, retryBehavior, retryDelayBehavior, new JobState(molResult.getObjects()), false);
 
         final List<JobPart> work = Lists.newArrayList(strategy.getWork());
 
@@ -96,7 +97,7 @@ public class PutBlobStrategy_Test {
         when(client.getJobChunksReadyForClientProcessingSpectraS3(any(GetJobChunksReadyForClientProcessingSpectraS3Request.class)))
                 .thenReturn(realResponse);
 
-        final PutBlobStrategy strategy = new PutBlobStrategy(client, mol, eventDispatcher, retryBehavior, retryDelayBehavior, true);
+        final PutBlobStrategy strategy = new PutBlobStrategy(client, mol, eventDispatcher, retryBehavior, retryDelayBehavior, new JobState(molResult.getObjects()), true);
 
         final List<JobPart> work = Lists.newArrayList(strategy.getWork());
 
@@ -129,7 +130,7 @@ public class PutBlobStrategy_Test {
                 .thenReturn(retryLaterResponse)
                 .thenReturn(availableResponse);
 
-        final PutBlobStrategy strategy = new PutBlobStrategy(client, mol, eventDispatcher, retryBehavior, retryDelayBehavior, false);
+        final PutBlobStrategy strategy = new PutBlobStrategy(client, mol, eventDispatcher, retryBehavior, retryDelayBehavior, new JobState(molResult.getObjects()), false);
 
         final List<JobPart> work = Lists.newArrayList(strategy.getWork());
 
@@ -170,7 +171,7 @@ public class PutBlobStrategy_Test {
         when(client.getJobChunksReadyForClientProcessingSpectraS3(any(GetJobChunksReadyForClientProcessingSpectraS3Request.class)))
                 .thenReturn(response);
 
-        final PutBlobStrategy strategy = new PutBlobStrategy(client, mol, eventDispatcher, retryBehavior, retryDelayBehavior, false);
+        final PutBlobStrategy strategy = new PutBlobStrategy(client, mol, eventDispatcher, retryBehavior, retryDelayBehavior, new JobState(molResult.getObjects()), false);
 
         final List<JobPart> work = Lists.newArrayList(strategy.getWork());
 
@@ -187,14 +188,16 @@ public class PutBlobStrategy_Test {
         final ChunkAttemptRetryBehavior retryBehavior = mock(ChunkAttemptRetryBehavior.class);
         final ChunkAttemptRetryDelayBehavior retryDelayBehavior = mock(ChunkAttemptRetryDelayBehavior.class);
 
-        final PutBlobStrategy strategy = new PutBlobStrategy(client, mol, eventDispatcher, retryBehavior, retryDelayBehavior, false);
+        final PutBlobStrategy strategy = new PutBlobStrategy(client, mol, eventDispatcher, retryBehavior, retryDelayBehavior, new JobState(mol.getObjects()), false);
         strategy.blobCompleted(new BulkObject());
 
         // We expect an interaction in the constructor of AbstractBlobStrategy
         verify(eventDispatcher).attachBlobTransferredEventObserver(any());
-        
+
+        verify(mol).getObjects();
+
         // No other interactions
-        verifyNoInteractions(client, mol, retryBehavior, retryDelayBehavior);
+        verifyNoMoreInteractions(client, mol, retryBehavior, retryDelayBehavior);
     }
     @Test
     public void testGetWorkEmptyResponse() throws IOException, InterruptedException {
@@ -216,7 +219,7 @@ public class PutBlobStrategy_Test {
         when(client.getJobChunksReadyForClientProcessingSpectraS3(any(GetJobChunksReadyForClientProcessingSpectraS3Request.class)))
                 .thenReturn(response);
 
-        final PutBlobStrategy strategy = new PutBlobStrategy(client, mol, eventDispatcher, retryBehavior, retryDelayBehavior, false);
+        final PutBlobStrategy strategy = new PutBlobStrategy(client, mol, eventDispatcher, retryBehavior, retryDelayBehavior, new JobState(molResult.getObjects()), false);
 
         final List<JobPart> work = Lists.newArrayList(strategy.getWork());
 

@@ -36,7 +36,9 @@ import static com.spectralogic.ds3client.helpers.strategy.StrategyUtils.filterCh
 
 /**
  * A subclass of {@link BlobStrategy} used in put transfers.
+ * @deprecated Use {@link PutBlobStrategy} instead
  */
+@Deprecated
 public class PutSequentialBlobStrategy extends AbstractBlobStrategy {
     private final static Logger LOG = LoggerFactory.getLogger(PutSequentialBlobStrategy.class);
 

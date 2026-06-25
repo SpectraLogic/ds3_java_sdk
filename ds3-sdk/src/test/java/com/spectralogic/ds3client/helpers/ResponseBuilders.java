@@ -73,20 +73,7 @@ public final class ResponseBuilders {
         when(response.getRetryAfterSeconds()).thenReturn(retryAfterInSeconds);
         return response;
     }
-    
-    public static AllocateJobChunkSpectraS3Response allocated(final Objects chunk) {
-        final AllocateJobChunkSpectraS3Response response = mock(AllocateJobChunkSpectraS3Response.class);
-        when(response.getStatus()).thenReturn(AllocateJobChunkSpectraS3Response.Status.ALLOCATED);
-        when(response.getObjectsResult()).thenReturn(chunk);
-        return response;
-    }
-    
-    public static AllocateJobChunkSpectraS3Response retryAllocateLater(final int retryAfterInSeconds) {
-        final AllocateJobChunkSpectraS3Response response = mock(AllocateJobChunkSpectraS3Response.class);
-        when(response.getStatus()).thenReturn(AllocateJobChunkSpectraS3Response.Status.RETRYLATER);
-        when(response.getRetryAfterSeconds()).thenReturn(retryAfterInSeconds);
-        return response;
-    }
+
     
     public static MasterObjectList jobResponse(
             final UUID jobId,

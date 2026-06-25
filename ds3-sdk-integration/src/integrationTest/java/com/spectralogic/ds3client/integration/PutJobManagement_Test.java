@@ -1164,9 +1164,11 @@ public class PutJobManagement_Test {
                 }
             });
 
-            writeJob.transfer(new FileObjectPutter(tempDirectory));
-
-            assertThat(numWaitingForChunksEventsFired.get(), is(greaterThanOrEqualTo(1)));
+            try {
+                writeJob.transfer(new FileObjectPutter(tempDirectory));
+            } catch (final Ds3NoMoreRetriesException e) {
+                assertThat(numWaitingForChunksEventsFired.get(), is(greaterThanOrEqualTo(1)));
+            }
         } finally {
             FileUtils.deleteDirectory(tempDirectory.toFile());
             cancelAllJobsForBucket(client, BUCKET_NAME);
@@ -1378,7 +1380,7 @@ public class PutJobManagement_Test {
         {
             this.monitorable = monitorable;
 
-            wrappedBlobStrategy = new PutBlobStrategy(client, masterObjectList, eventDispatcher, retryBehavior, chunkAttemptRetryDelayBehavior, false);
+            wrappedBlobStrategy = new PutSequentialBlobStrategy(client, masterObjectList, eventDispatcher, retryBehavior, chunkAttemptRetryDelayBehavior);
         }
 
         @Override

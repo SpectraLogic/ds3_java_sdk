@@ -18,6 +18,7 @@ package com.spectralogic.ds3client.helpers;
 import com.spectralogic.ds3client.Ds3Client;
 import com.spectralogic.ds3client.commands.spectrads3.AllocateJobChunkSpectraS3Request;
 import com.spectralogic.ds3client.commands.spectrads3.AllocateJobChunkSpectraS3Response;
+import com.spectralogic.ds3client.commands.spectrads3.GetJobChunksReadyForClientProcessingSpectraS3Response;
 import com.spectralogic.ds3client.helpers.strategy.transferstrategy.TransferStrategy;
 import com.spectralogic.ds3client.helpers.strategy.transferstrategy.TransferStrategyBuilder;
 import com.spectralogic.ds3client.models.BulkObject;
@@ -31,7 +32,11 @@ import com.spectralogic.ds3client.models.Objects;
 import com.spectralogic.ds3client.models.Priority;
 import com.spectralogic.ds3client.utils.ByteArraySeekableByteChannel;
 import org.junit.Test;
+
+import static com.spectralogic.ds3client.helpers.ResponseBuilders.availableJobChunks;
 import static org.junit.Assert.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+
 import org.mockito.Mockito;
 
 import java.io.IOException;
@@ -112,13 +117,10 @@ public class Metadata_Test {
             }
         };
 
-        final AllocateJobChunkSpectraS3Response allocateJobChunkSpectraS3Response = new AllocateJobChunkSpectraS3Response(
-                chunk, 0, AllocateJobChunkSpectraS3Response.Status.ALLOCATED, "checksum", ChecksumType.Type.NONE
-        );
-
         final Ds3Client ds3Client = Mockito.mock(Ds3Client.class);
-        Mockito.when(ds3Client.allocateJobChunkSpectraS3(Mockito.any(AllocateJobChunkSpectraS3Request.class)))
-                .thenReturn(allocateJobChunkSpectraS3Response);
+        final GetJobChunksReadyForClientProcessingSpectraS3Response availableChunks = availableJobChunks(masterObjectList);
+        Mockito.when(ds3Client.getJobChunksReadyForClientProcessingSpectraS3(any()))
+                .thenReturn(availableChunks);
 
         final AtomicInteger numBlobsForWhichWeGotMetadata = new AtomicInteger(0);
 

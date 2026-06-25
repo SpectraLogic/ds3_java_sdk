@@ -17,9 +17,7 @@ package com.spectralogic.ds3client.integration.test.helpers;
 
 import com.spectralogic.ds3client.Ds3Client;
 import com.spectralogic.ds3client.commands.spectrads3.*;
-import com.spectralogic.ds3client.models.ChecksumType;
-import com.spectralogic.ds3client.models.PoolType;
-import com.spectralogic.ds3client.models.VersioningLevel;
+import com.spectralogic.ds3client.models.*;
 
 import java.io.IOException;
 import java.util.UUID;
@@ -51,29 +49,33 @@ public final class TempStorageUtil {
             final UUID dataPolicyId,
             final Ds3Client client) throws IOException {
         //Create storage domain
-        final PutStorageDomainSpectraS3Response storageDomainResponse = createStorageDomain(
+        final StorageDomain storageDomain = createStorageDomain(
                 testSetName + STORAGE_DOMAIN_NAME,
-                client);
+                client,
+                false);
 
         //Create pool partition
-        final PutPoolPartitionSpectraS3Response poolPartitionResponse = createPoolPartition(
+        final PoolPartition poolPartition = createPoolPartition(
                 testSetName + POOL_PARTITION_NAME,
                 PoolType.ONLINE,
-                client);
+                client,
+                false);
 
         //Create storage domain member linking pool partition to storage domain
-        final PutPoolStorageDomainMemberSpectraS3Response memberResponse = createPoolStorageDomainMember(
-                storageDomainResponse.getStorageDomainResult().getId(),
-                poolPartitionResponse.getPoolPartitionResult().getId(),
-                client);
-        final UUID storageDomainMemberId = memberResponse.getStorageDomainMemberResult().getId();
+        final StorageDomainMember storageDomainMember = createPoolStorageDomainMember(
+                storageDomain.getId(),
+                poolPartition.getId(),
+                client,
+                false);
+        final UUID storageDomainMemberId = storageDomainMember.getId();
 
         //create data persistence rule
-        final PutDataPersistenceRuleSpectraS3Response dataPersistenceResponse = createDataPersistenceRule(
+        final DataPersistenceRule dataPersistenceRule = createDataPersistenceRule(
                 dataPolicyId,
-                storageDomainResponse.getStorageDomainResult().getId(),
-                client);
-        final UUID dataPersistenceRuleId = dataPersistenceResponse.getDataPersistenceRuleResult().getDataPolicyId();
+                storageDomain.getId(),
+                client,
+                false);
+        final UUID dataPersistenceRuleId = dataPersistenceRule.getDataPolicyId();
 
         return new TempStorageIds(storageDomainMemberId, dataPersistenceRuleId);
     }
@@ -101,6 +103,14 @@ public final class TempStorageUtil {
             final boolean withEndToEndCrcRequired,
             final ChecksumType.Type checksumType,
             final Ds3Client client) throws IOException {
+        try {
+            return client.getDataPolicySpectraS3(
+                    new GetDataPolicySpectraS3Request(testSetName + DATA_POLICY_NAME)).getDataPolicyResult().getId();
+        } catch (final IOException e) {
+            // Pass: Expected data policy to not exist
+        }
+
+
         final PutDataPolicySpectraS3Response dataPolicyResponse = client.putDataPolicySpectraS3(
                 new PutDataPolicySpectraS3Request(testSetName + DATA_POLICY_NAME)
                         .withEndToEndCrcRequired(withEndToEndCrcRequired)
@@ -119,6 +129,13 @@ public final class TempStorageUtil {
             final ChecksumType.Type checksumType,
             final VersioningLevel versioningLevel,
             final Ds3Client client) throws IOException {
+        try {
+            return client.getDataPolicySpectraS3(
+                    new GetDataPolicySpectraS3Request(testSetName + DATA_POLICY_NAME)).getDataPolicyResult().getId();
+        } catch (final IOException e) {
+            // Pass: Expected data policy to not exist
+        }
+
         final PutDataPolicySpectraS3Response dataPolicyResponse = client.putDataPolicySpectraS3(
                 new PutDataPolicySpectraS3Request(testSetName + DATA_POLICY_NAME)
                         .withEndToEndCrcRequired(withEndToEndCrcRequired)

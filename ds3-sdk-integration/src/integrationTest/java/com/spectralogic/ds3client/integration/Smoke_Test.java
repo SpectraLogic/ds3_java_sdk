@@ -630,29 +630,33 @@ public class Smoke_Test {
                     client);
 
             //Create storage domain
-            final PutStorageDomainSpectraS3Response storageDomainResponse = createStorageDomain(
+            final StorageDomain storageDomain = createStorageDomain(
                     storageDomainName,
-                    client);
+                    client,
+                    true);
 
             //Create pool partition
-            final PutPoolPartitionSpectraS3Response poolPartitionResponse = createPoolPartition(
+            final PoolPartition poolPartition = createPoolPartition(
                     poolPartitionName,
                     PoolType.ONLINE,
-                    client);
+                    client,
+                    true);
 
             //Create storage domain member linking pool partition to storage domain
-            final PutPoolStorageDomainMemberSpectraS3Response memberResponse = createPoolStorageDomainMember(
-                    storageDomainResponse.getStorageDomainResult().getId(),
-                    poolPartitionResponse.getPoolPartitionResult().getId(),
-                    client);
-            storageDomainMemberId = memberResponse.getStorageDomainMemberResult().getId();
+            final StorageDomainMember storageDomainMember = createPoolStorageDomainMember(
+                    storageDomain.getId(),
+                    poolPartition.getId(),
+                    client,
+                    true);
+            storageDomainMemberId = storageDomainMember.getId();
 
             //create data persistence rule
-            final PutDataPersistenceRuleSpectraS3Response dataPersistenceResponse = createDataPersistenceRule(
+            final DataPersistenceRule dataPersistenceRule = createDataPersistenceRule(
                     dataPolicyResponse.getDataPolicyResult().getId(),
-                    storageDomainResponse.getStorageDomainResult().getId(),
-                    client);
-            dataPersistenceRuleId = dataPersistenceResponse.getDataPersistenceRuleResult().getDataPolicyId();
+                    storageDomain.getId(),
+                    client,
+                    true);
+            dataPersistenceRuleId = dataPersistenceRule.getDataPolicyId();
 
             //Create bucket with data policy
             client.putBucketSpectraS3(new PutBucketSpectraS3Request(bucketName)

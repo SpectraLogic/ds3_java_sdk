@@ -50,6 +50,10 @@ public class JobState {
         return blobs.contains(new BlobIdentityDecorator(blob));
     }
 
+    public boolean isEmpty() {
+        return blobs.isEmpty();
+    }
+
     public int numBlobsInJob() {
         return numBlobsInJob;
     }

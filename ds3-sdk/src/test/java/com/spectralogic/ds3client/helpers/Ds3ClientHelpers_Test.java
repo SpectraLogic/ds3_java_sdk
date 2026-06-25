@@ -144,15 +144,21 @@ public class Ds3ClientHelpers_Test {
 
         final PutBulkJobSpectraS3Response bulkPutResponse = buildBulkPutResponse();
         Mockito.when(ds3Client.putBulkJobSpectraS3(any(PutBulkJobSpectraS3Request.class))).thenReturn(bulkPutResponse);
-        
-        final AllocateJobChunkSpectraS3Response allocateResponse1 = buildAllocateResponse1();
-        final AllocateJobChunkSpectraS3Response allocateResponse2 = buildAllocateResponse2();
-        final AllocateJobChunkSpectraS3Response allocateResponse3 = buildAllocateResponse3();
-        Mockito.when(ds3Client.allocateJobChunkSpectraS3(hasChunkId(CHUNK_ID_1)))
-            .thenReturn(allocateResponse1)
-            .thenReturn(allocateResponse2);
-        Mockito.when(ds3Client.allocateJobChunkSpectraS3(hasChunkId(CHUNK_ID_2)))
-            .thenReturn(allocateResponse3);
+
+        final MasterObjectList chunk1ReadyMol = new MasterObjectList();
+        chunk1ReadyMol.setObjects(Collections.singletonList(chunk1(false)));
+
+        final MasterObjectList chunk2ReadyMol = new MasterObjectList();
+        chunk2ReadyMol.setObjects(ImmutableList.of(chunk1(true), chunk2(false)));
+
+        final GetJobChunksReadyForClientProcessingSpectraS3Response response1 = retryGetAvailableAfter(1);
+        final GetJobChunksReadyForClientProcessingSpectraS3Response response2 = availableJobChunks(chunk1ReadyMol);
+        final GetJobChunksReadyForClientProcessingSpectraS3Response response3 = availableJobChunks(chunk2ReadyMol);
+
+        Mockito.when(ds3Client.getJobChunksReadyForClientProcessingSpectraS3(any()))
+            .thenReturn(response1)
+            .thenReturn(response2)
+            .thenReturn(response3);
 
         final PutObjectResponse response = mock(PutObjectResponse.class);
         Mockito.when(ds3Client.putObject(putRequestHas(MYBUCKET, "foo", jobId, 0, "foo co"))).thenReturn(response);
@@ -209,15 +215,9 @@ public class Ds3ClientHelpers_Test {
         final PutBulkJobSpectraS3Response buildBulkPutResponse = buildBulkPutResponse();
         Mockito.when(ds3Client.putBulkJobSpectraS3(any(PutBulkJobSpectraS3Request.class))).thenReturn(buildBulkPutResponse);
 
-        final AllocateJobChunkSpectraS3Response allocateResponse2 = buildAllocateResponse2();
-        final AllocateJobChunkSpectraS3Response allocateResponse3 = buildAllocateResponse3();
-
-        Mockito.when(ds3Client.allocateJobChunkSpectraS3(hasChunkId(CHUNK_ID_1))).thenReturn(allocateResponse2);
-
-        Mockito.when(ds3Client.allocateJobChunkSpectraS3(hasChunkId(CHUNK_ID_1)))
-                .thenReturn(allocateResponse2);
-        Mockito.when(ds3Client.allocateJobChunkSpectraS3(hasChunkId(CHUNK_ID_2)))
-                .thenReturn(allocateResponse3);
+        final GetJobChunksReadyForClientProcessingSpectraS3Response availableChunks = availableJobChunks(buildBulkPutResponse.getMasterObjectList());
+        Mockito.when(ds3Client.getJobChunksReadyForClientProcessingSpectraS3(any()))
+                .thenReturn(availableChunks);
 
         final PutObjectResponse putResponse = mock(PutObjectResponse.class);
         Mockito.when(ds3Client.putObject(putRequestHas(MYBUCKET, "foo", jobId, 0, "foo co"))).thenThrow(new StubException());
@@ -500,18 +500,6 @@ public class Ds3ClientHelpers_Test {
         ));
     }
 
-    private static AllocateJobChunkSpectraS3Response buildAllocateResponse1() {
-        return retryAllocateLater(1);
-    }
-    
-    private static AllocateJobChunkSpectraS3Response buildAllocateResponse2() {
-        return allocated(chunk1(false));
-    }
-    
-    private static AllocateJobChunkSpectraS3Response buildAllocateResponse3() {
-        return allocated(chunk2(false));
-    }
-
     private static MasterObjectList buildJobResponse(
             final JobRequestType requestType,
             final JobChunkClientProcessingOrderGuarantee chunkOrdering,
@@ -615,9 +603,9 @@ public class Ds3ClientHelpers_Test {
                 .putBulkJobSpectraS3(any(PutBulkJobSpectraS3Request.class)))
                 .thenReturn(bulkPutResponse);
 
-        final AllocateJobChunkSpectraS3Response allocateResponse1 = buildAllocateResponse1();
-        Mockito.when(ds3Client.allocateJobChunkSpectraS3(hasChunkId(CHUNK_ID_1)))
-                .thenReturn(allocateResponse1);
+        final GetJobChunksReadyForClientProcessingSpectraS3Response response1 = retryGetAvailableAfter(1);
+        Mockito.when(ds3Client.getJobChunksReadyForClientProcessingSpectraS3(any()))
+                .thenReturn(response1);
 
         final PutObjectResponse response = mock(PutObjectResponse.class);
         Mockito.when(ds3Client.putObject(putRequestHas(MYBUCKET, "foo", jobId, 0, "foo co"))).thenReturn(response);

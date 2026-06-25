@@ -20,6 +20,8 @@ import com.spectralogic.ds3client.networking.HttpVerb;
 import com.spectralogic.ds3client.commands.interfaces.AbstractRequest;
 import java.util.UUID;
 
+/** @deprecated Use {@link GetJobChunksReadyForClientProcessingSpectraS3Request} instead */
+@Deprecated
 public class AllocateJobChunkSpectraS3Request extends AbstractRequest {
 
     // Variables

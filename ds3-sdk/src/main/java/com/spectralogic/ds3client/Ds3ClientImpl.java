@@ -466,6 +466,8 @@ public class Ds3ClientImpl implements Ds3Client {
         return new VerifyUserIsMemberOfGroupSpectraS3ResponseParser().response(this.netClient.getResponse(request));
     }
     @Override
+    /** @deprecated Use {@link #getJobChunksReadyForClientProcessingSpectraS3(GetJobChunksReadyForClientProcessingSpectraS3Request)} instead */
+    @Deprecated
     public AllocateJobChunkSpectraS3Response allocateJobChunkSpectraS3(final AllocateJobChunkSpectraS3Request request) throws IOException {
         return new AllocateJobChunkSpectraS3ResponseParser().response(this.netClient.getResponse(request));
     }
