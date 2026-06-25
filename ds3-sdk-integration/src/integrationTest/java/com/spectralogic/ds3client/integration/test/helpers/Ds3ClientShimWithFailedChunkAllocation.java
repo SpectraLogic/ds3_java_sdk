@@ -17,10 +17,7 @@ package com.spectralogic.ds3client.integration.test.helpers;
 
 import com.spectralogic.ds3client.Ds3ClientImpl;
 import com.spectralogic.ds3client.MockedWebResponse;
-import com.spectralogic.ds3client.commands.parsers.AllocateJobChunkSpectraS3ResponseParser;
 import com.spectralogic.ds3client.commands.parsers.GetJobChunksReadyForClientProcessingSpectraS3ResponseParser;
-import com.spectralogic.ds3client.commands.spectrads3.AllocateJobChunkSpectraS3Request;
-import com.spectralogic.ds3client.commands.spectrads3.AllocateJobChunkSpectraS3Response;
 import com.spectralogic.ds3client.commands.spectrads3.GetJobChunksReadyForClientProcessingSpectraS3Request;
 import com.spectralogic.ds3client.commands.spectrads3.GetJobChunksReadyForClientProcessingSpectraS3Response;
 
@@ -36,21 +33,11 @@ public class Ds3ClientShimWithFailedChunkAllocation extends Ds3ClientShim {
         super(ds3ClientImpl);
     }
 
-    @Override
-    public AllocateJobChunkSpectraS3Response allocateJobChunkSpectraS3(final AllocateJobChunkSpectraS3Request request)
-            throws IOException
-    {
-        final AllocateJobChunkSpectraS3Response allocateJobChunkSpectraS3Response =
-                new AllocateJobChunkSpectraS3ResponseParser()
-                        .parseXmlResponse(new MockedWebResponse("A response", 307, makeFailingResponseHeaders()));
-
-        return allocateJobChunkSpectraS3Response;
-    }
 
     private static Map<String, String> makeFailingResponseHeaders() {
         final Map<String, String> headers = new HashMap<>();
         headers.put("content-NONE", "text/xml");
-        headers.put("Retry-After", "1");
+        headers.put("Retry-After", "0");
 
         return headers;
     }
@@ -61,7 +48,7 @@ public class Ds3ClientShimWithFailedChunkAllocation extends Ds3ClientShim {
     {
         final GetJobChunksReadyForClientProcessingSpectraS3Response getJobChunksReadyForClientProcessingSpectraS3Response =
                 new GetJobChunksReadyForClientProcessingSpectraS3ResponseParser()
-                        .parseXmlResponse(new MockedWebResponse("A response", 307, makeFailingResponseHeaders()));
+                        .parseXmlResponse(new MockedWebResponse("<MasterObjectList><Objects/></MasterObjectList>", 200, makeFailingResponseHeaders()));
 
         return getJobChunksReadyForClientProcessingSpectraS3Response;
     }

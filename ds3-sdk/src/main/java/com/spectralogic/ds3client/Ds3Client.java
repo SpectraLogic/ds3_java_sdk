@@ -732,6 +732,8 @@ public interface Ds3Client extends Closeable {
     @Action("MODIFY")
     @Resource("JOB_CHUNK")
     
+    /** @deprecated Use {@link #getJobChunksReadyForClientProcessingSpectraS3(GetJobChunksReadyForClientProcessingSpectraS3Request)} instead */
+    @Deprecated
     AllocateJobChunkSpectraS3Response allocateJobChunkSpectraS3(final AllocateJobChunkSpectraS3Request request)
             throws IOException;
 

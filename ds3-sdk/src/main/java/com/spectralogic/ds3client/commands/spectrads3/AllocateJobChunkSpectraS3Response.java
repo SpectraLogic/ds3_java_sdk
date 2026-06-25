@@ -20,6 +20,8 @@ import com.spectralogic.ds3client.models.Objects;
 import com.spectralogic.ds3client.models.ChecksumType;
 import com.spectralogic.ds3client.commands.interfaces.AbstractResponse;
 
+/** @deprecated Use {@link GetJobChunksReadyForClientProcessingSpectraS3Response} instead */
+@Deprecated
 public class AllocateJobChunkSpectraS3Response extends AbstractResponse {
 
     public enum Status { ALLOCATED, RETRYLATER }

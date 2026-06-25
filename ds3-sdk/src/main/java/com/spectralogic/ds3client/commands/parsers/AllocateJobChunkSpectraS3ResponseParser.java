@@ -26,6 +26,8 @@ import com.spectralogic.ds3client.serializer.XmlOutput;
 import java.io.IOException;
 import java.io.InputStream;
 
+/** @deprecated Use {@link GetJobChunksReadyForClientProcessingSpectraS3ResponseParser} instead */
+@Deprecated
 public class AllocateJobChunkSpectraS3ResponseParser extends AbstractResponseParser<AllocateJobChunkSpectraS3Response> {
     private final int[] expectedStatusCodes = new int[]{200, 307, 503};
 

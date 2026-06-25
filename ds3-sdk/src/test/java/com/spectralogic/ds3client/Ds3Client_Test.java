@@ -684,9 +684,11 @@ public class Ds3Client_Test {
 
         final Map<String, String> queryParams = new HashMap<>();
         queryParams.put("job", MASTER_OBJECT_LIST_JOB_ID.toString());
+        final Map<String, String> headers = new HashMap<>();
+        headers.put("retry-after", "10");
         final GetJobChunksReadyForClientProcessingSpectraS3Response response = MockNetwork
             .expecting(HttpVerb.GET, "/_rest_/job_chunk", queryParams, null)
-            .returning(200, MASTER_OBJECT_LIST_XML)
+            .returning(200, MASTER_OBJECT_LIST_XML, headers)
             .asClient()
             .getJobChunksReadyForClientProcessingSpectraS3(new GetJobChunksReadyForClientProcessingSpectraS3Request(MASTER_OBJECT_LIST_JOB_ID.toString()));
         

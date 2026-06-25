@@ -23,6 +23,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.UUID;
 
 import static org.apache.http.util.TextUtils.isEmpty;
@@ -162,14 +163,19 @@ public final class ABMTestHelper {
      * partition with the same name does not currently exist. If a partition
      * already exists with the specified name, an error is thrown.
      */
-    public static PutPoolPartitionSpectraS3Response createPoolPartition(
+    public static PoolPartition createPoolPartition(
             final String poolPartitionName,
             final PoolType poolType,
-            final Ds3Client client) throws IOException {
+            final Ds3Client client,
+            boolean failIfAlreadyExists) throws IOException {
         //Check if pool partition already exists
         try {
-            client.getPoolPartitionSpectraS3(new GetPoolPartitionSpectraS3Request(poolPartitionName));
-            fail("Pool partition already exists, terminating to prevent conflict: " + poolPartitionName);
+            final GetPoolPartitionSpectraS3Response getPoolPartition = client.getPoolPartitionSpectraS3(
+                    new GetPoolPartitionSpectraS3Request(poolPartitionName));
+            if (failIfAlreadyExists) {
+                fail("Pool partition already exists, terminating to prevent conflict: " + poolPartitionName);
+            }
+            return getPoolPartition.getPoolPartitionResult();
         } catch (final IOException e) {
             //Pass: expected pool partition to not exist
         }
@@ -177,7 +183,7 @@ public final class ABMTestHelper {
         //Create the pool partition
         return client.putPoolPartitionSpectraS3(new PutPoolPartitionSpectraS3Request(
                 poolPartitionName,
-                poolType));
+                poolType)).getPoolPartitionResult();
     }
 
     /**
@@ -212,19 +218,24 @@ public final class ABMTestHelper {
      * Creates a storage domain if one does not already exist with the specified name. If a
      * storage domain already exists with the specified name, an error is thrown.
      */
-    public static PutStorageDomainSpectraS3Response createStorageDomain(
+    public static StorageDomain createStorageDomain(
             final String storageDomainName,
-            final Ds3Client client) throws IOException {
+            final Ds3Client client,
+            boolean failIfAlreadyExists) throws IOException {
         //Check if storage domain already exists
         try {
-            client.getStorageDomainSpectraS3(new GetStorageDomainSpectraS3Request(storageDomainName));
-            fail("Storage domain already exists, terminating to prevent conflict: " + storageDomainName);
+            final GetStorageDomainSpectraS3Response getStorageDomain = client.getStorageDomainSpectraS3(
+                    new GetStorageDomainSpectraS3Request(storageDomainName));
+            if (failIfAlreadyExists) {
+                fail("Storage domain already exists, terminating to prevent conflict: " + storageDomainName);
+            }
+            return getStorageDomain.getStorageDomainResult();
         } catch (final IOException e) {
             //Pass: expected storage domain to not exist
         }
 
         //Create the storage domain
-        return client.putStorageDomainSpectraS3(new PutStorageDomainSpectraS3Request(storageDomainName));
+        return client.putStorageDomainSpectraS3(new PutStorageDomainSpectraS3Request(storageDomainName)).getStorageDomainResult();
     }
 
     /**
@@ -260,17 +271,23 @@ public final class ABMTestHelper {
      * storage domain and pool partition. If a storage domain member already exists,an
      * error is thrown.
      */
-    public static PutPoolStorageDomainMemberSpectraS3Response createPoolStorageDomainMember(
+    public static StorageDomainMember createPoolStorageDomainMember(
             final UUID storageDomainId,
             final UUID poolPartitionId,
-            final Ds3Client client) throws IOException {
+            final Ds3Client client,
+            boolean failIfAlreadyExists) throws IOException {
         //Check if storage domain member already exists between specified storage domain and pool partition
         try {
             final GetStorageDomainMembersSpectraS3Response getMembers = client.getStorageDomainMembersSpectraS3(
                     new GetStorageDomainMembersSpectraS3Request()
                             .withPoolPartitionId(poolPartitionId.toString())
                             .withStorageDomainId(storageDomainId.toString()));
-            assertThat(getMembers.getStorageDomainMemberListResult().getStorageDomainMembers().size(), is(0));
+            if (failIfAlreadyExists) {
+                assertThat(getMembers.getStorageDomainMemberListResult().getStorageDomainMembers().size(), is(0));
+            }
+            if (!getMembers.getStorageDomainMemberListResult().getStorageDomainMembers().isEmpty()) {
+                return getMembers.getStorageDomainMemberListResult().getStorageDomainMembers().get(0);
+            }
         } catch (final IOException e) {
             //Pass: expected storage domain member to not exist
         }
@@ -278,7 +295,7 @@ public final class ABMTestHelper {
         //Create the storage domain
         return client.putPoolStorageDomainMemberSpectraS3(new PutPoolStorageDomainMemberSpectraS3Request(
                 poolPartitionId.toString(),
-                storageDomainId.toString()));
+                storageDomainId.toString())).getStorageDomainMemberResult();
     }
 
     /**
@@ -315,23 +332,29 @@ public final class ABMTestHelper {
      * Creates a data persistence rule to link the specified data policy and storage domain,
      * if said rule does not already exist.
      */
-    public static PutDataPersistenceRuleSpectraS3Response createDataPersistenceRule(
+    public static DataPersistenceRule createDataPersistenceRule(
             final UUID dataPolicyId,
             final UUID storageDomainId,
-            final Ds3Client client) throws IOException {
+            final Ds3Client client,
+            boolean failIfAlreadyExists) throws IOException {
         //Check if data persistence rule already exists
         final GetDataPersistenceRulesSpectraS3Response response = client.getDataPersistenceRulesSpectraS3(
                 new GetDataPersistenceRulesSpectraS3Request()
                         .withDataPolicyId(dataPolicyId.toString())
                         .withStorageDomainId(storageDomainId.toString()));
-        assertThat(response.getDataPersistenceRuleListResult().getDataPersistenceRules().size(), is(0));
+        if (failIfAlreadyExists) {
+            assertThat(response.getDataPersistenceRuleListResult().getDataPersistenceRules().size(), is(0));
+        }
+        if (!response.getDataPersistenceRuleListResult().getDataPersistenceRules().isEmpty()) {
+            return response.getDataPersistenceRuleListResult().getDataPersistenceRules().get(0);
+        }
 
         //Create the data persistence rule
         return client.putDataPersistenceRuleSpectraS3(new PutDataPersistenceRuleSpectraS3Request(
                 dataPolicyId.toString(),
                 DataIsolationLevel.STANDARD,
                 storageDomainId.toString(),
-                DataPersistenceRuleType.PERMANENT));
+                DataPersistenceRuleType.PERMANENT)).getDataPersistenceRuleResult();
     }
 
     /**
