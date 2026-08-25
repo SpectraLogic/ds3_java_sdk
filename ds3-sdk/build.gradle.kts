@@ -38,19 +38,7 @@ dependencies {
     implementation(libs.jacksonDataformatXml)
     implementation(libs.slf4jApi)
     implementation(libs.findbugs)
-    // NOTE: do not add org.codehaus.woodstox:woodstox-core-asl back here.
-    //
-    // jackson-dataformat-xml already brings com.fasterxml.woodstox:woodstox-core with a
-    // matching stax2-api, and both Woodstox artifacts publish classes in com.ctc.wstx.*.
-    // Declaring both put two Woodstox generations on the classpath: shadowJar merged them
-    // (the ASL 4.4.1 classes won), while stax2-api resolved UP to 4.2.1 because the
-    // fasterxml woodstox requires it. ASL 4.4.1 is compiled against stax2-api 3.x, so
-    // CompactStartElement.getAttributes() calls
-    //     EmptyIterator.getInstance():EmptyIterator
-    // which does not exist in stax2-api 4.2.1 (it returns Iterator<T> there). Every
-    // consumer of the StAX *event* API then died with NoSuchMethodError -- notably the
-    // AWS SDK's XmlDomParser, which broke S3 target registration in BlackPearl. Jackson
-    // itself uses the streaming API, so the SDK's own tests never noticed.
+    
 
     testImplementation(platform(libs.mockitoBom))
 
