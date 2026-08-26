@@ -34,7 +34,6 @@ junitVersion = "4.13.2"
 kotlinVersion = "1.6.10"
 mockitoVersion = "4.7.0"
 slf4jVersion = "1.7.36"
-woodstoxVersion = "4.4.1"
 
 [libraries]
 commonsCodec = { group = "commons-codec", name = "commons-codec", version.ref = "commonsCodecVersion" }
@@ -52,7 +51,6 @@ jnaPlatform = { group = "net.java.dev.jna", name = "jna-platform", version.ref =
 kotlinStdLib = { group = "org.jetbrains.kotlin", name = "kotlin-stdlib", version.ref = "kotlinVersion" }
 ## end kotlin-bom controlled dependencies
 slf4jApi = { group = "org.slf4j", name = "slf4j-api", version.ref = "slf4jVersion" }
-woodstoxCoreAsl = { group = "org.codehaus.woodstox", name = "woodstox-core-asl", version.ref = "woodstoxVersion" }
 #
 # test only libraries
 #
