@@ -27,6 +27,12 @@ public class TapeLibrary {
     @JsonProperty("Id")
     private UUID id;
 
+    @JsonProperty("LibraryHealthStatus")
+    private LibraryHealthStatus libraryHealthStatus;
+
+    @JsonProperty("LibraryHealthStatusMessage")
+    private String libraryHealthStatusMessage;
+
     @JsonProperty("ManagementUrl")
     private String managementUrl;
 
@@ -49,6 +55,24 @@ public class TapeLibrary {
 
     public void setId(final UUID id) {
         this.id = id;
+    }
+
+
+    public LibraryHealthStatus getLibraryHealthStatus() {
+        return this.libraryHealthStatus;
+    }
+
+    public void setLibraryHealthStatus(final LibraryHealthStatus libraryHealthStatus) {
+        this.libraryHealthStatus = libraryHealthStatus;
+    }
+
+
+    public String getLibraryHealthStatusMessage() {
+        return this.libraryHealthStatusMessage;
+    }
+
+    public void setLibraryHealthStatusMessage(final String libraryHealthStatusMessage) {
+        this.libraryHealthStatusMessage = libraryHealthStatusMessage;
     }
 
 

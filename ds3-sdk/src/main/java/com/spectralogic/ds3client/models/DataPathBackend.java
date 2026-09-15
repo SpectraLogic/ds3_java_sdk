@@ -40,6 +40,9 @@ public class DataPathBackend {
     @JsonProperty("AutoInspect")
     private AutoInspectMode autoInspect;
 
+    @JsonProperty("AutomaticTapeDecommissionEnabled")
+    private boolean automaticTapeDecommissionEnabled;
+
     @JsonProperty("CacheAvailableRetryAfterInSeconds")
     private int cacheAvailableRetryAfterInSeconds;
 
@@ -75,6 +78,18 @@ public class DataPathBackend {
 
     @JsonProperty("PoolSafetyEnabled")
     private boolean poolSafetyEnabled;
+
+    @JsonProperty("StopDriveIoWhenImpaired")
+    private boolean stopDriveIoWhenImpaired;
+
+    @JsonProperty("TapeDecommissionThreshold")
+    private int tapeDecommissionThreshold;
+
+    @JsonProperty("TapeRetireEnabled")
+    private boolean tapeRetireEnabled;
+
+    @JsonProperty("TapeRetireThreshold")
+    private int tapeRetireThreshold;
 
     @JsonProperty("UnavailableMediaPolicy")
     private UnavailableMediaUsagePolicy unavailableMediaPolicy;
@@ -137,6 +152,15 @@ public class DataPathBackend {
 
     public void setAutoInspect(final AutoInspectMode autoInspect) {
         this.autoInspect = autoInspect;
+    }
+
+
+    public boolean getAutomaticTapeDecommissionEnabled() {
+        return this.automaticTapeDecommissionEnabled;
+    }
+
+    public void setAutomaticTapeDecommissionEnabled(final boolean automaticTapeDecommissionEnabled) {
+        this.automaticTapeDecommissionEnabled = automaticTapeDecommissionEnabled;
     }
 
 
@@ -245,6 +269,42 @@ public class DataPathBackend {
 
     public void setPoolSafetyEnabled(final boolean poolSafetyEnabled) {
         this.poolSafetyEnabled = poolSafetyEnabled;
+    }
+
+
+    public boolean getStopDriveIoWhenImpaired() {
+        return this.stopDriveIoWhenImpaired;
+    }
+
+    public void setStopDriveIoWhenImpaired(final boolean stopDriveIoWhenImpaired) {
+        this.stopDriveIoWhenImpaired = stopDriveIoWhenImpaired;
+    }
+
+
+    public int getTapeDecommissionThreshold() {
+        return this.tapeDecommissionThreshold;
+    }
+
+    public void setTapeDecommissionThreshold(final int tapeDecommissionThreshold) {
+        this.tapeDecommissionThreshold = tapeDecommissionThreshold;
+    }
+
+
+    public boolean getTapeRetireEnabled() {
+        return this.tapeRetireEnabled;
+    }
+
+    public void setTapeRetireEnabled(final boolean tapeRetireEnabled) {
+        this.tapeRetireEnabled = tapeRetireEnabled;
+    }
+
+
+    public int getTapeRetireThreshold() {
+        return this.tapeRetireThreshold;
+    }
+
+    public void setTapeRetireThreshold(final int tapeRetireThreshold) {
+        this.tapeRetireThreshold = tapeRetireThreshold;
     }
 
 

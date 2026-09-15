@@ -16,8 +16,8 @@
 // This code is auto-generated, do not modify
 package com.spectralogic.ds3client.models;
 
-public enum TapeRole {
-    NORMAL,
-    TEST,
-    DECOMMISSIONED
+public enum DlmStatus {
+    OK,
+    IMPAIRED,
+    NO_COMMUNICATION
 }
