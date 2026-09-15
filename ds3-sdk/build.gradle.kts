@@ -38,7 +38,7 @@ dependencies {
     implementation(libs.jacksonDataformatXml)
     implementation(libs.slf4jApi)
     implementation(libs.findbugs)
-    implementation(libs.woodstoxCoreAsl)
+    
 
     testImplementation(platform(libs.mockitoBom))
 
