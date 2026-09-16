@@ -37,6 +37,8 @@ public class ModifyDataPathBackendSpectraS3Request extends AbstractRequest {
 
     private AutoInspectMode autoInspect;
 
+    private boolean automaticTapeDecommissionEnabled;
+
     private int cacheAvailableRetryAfterInSeconds;
 
     private Priority defaultVerifyDataAfterImport;
@@ -54,6 +56,14 @@ public class ModifyDataPathBackendSpectraS3Request extends AbstractRequest {
     private Integer partiallyVerifyLastPercentOfTapes;
 
     private boolean poolSafetyEnabled;
+
+    private boolean stopDriveIoWhenImpaired;
+
+    private int tapeDecommissionThreshold;
+
+    private boolean tapeRetireEnabled;
+
+    private int tapeRetireThreshold;
 
     private UnavailableMediaUsagePolicy unavailableMediaPolicy;
 
@@ -101,6 +111,13 @@ public class ModifyDataPathBackendSpectraS3Request extends AbstractRequest {
     public ModifyDataPathBackendSpectraS3Request withAutoInspect(final AutoInspectMode autoInspect) {
         this.autoInspect = autoInspect;
         this.updateQueryParam("auto_inspect", autoInspect);
+        return this;
+    }
+
+
+    public ModifyDataPathBackendSpectraS3Request withAutomaticTapeDecommissionEnabled(final boolean automaticTapeDecommissionEnabled) {
+        this.automaticTapeDecommissionEnabled = automaticTapeDecommissionEnabled;
+        this.updateQueryParam("automatic_tape_decommission_enabled", automaticTapeDecommissionEnabled);
         return this;
     }
 
@@ -164,6 +181,34 @@ public class ModifyDataPathBackendSpectraS3Request extends AbstractRequest {
     public ModifyDataPathBackendSpectraS3Request withPoolSafetyEnabled(final boolean poolSafetyEnabled) {
         this.poolSafetyEnabled = poolSafetyEnabled;
         this.updateQueryParam("pool_safety_enabled", poolSafetyEnabled);
+        return this;
+    }
+
+
+    public ModifyDataPathBackendSpectraS3Request withStopDriveIoWhenImpaired(final boolean stopDriveIoWhenImpaired) {
+        this.stopDriveIoWhenImpaired = stopDriveIoWhenImpaired;
+        this.updateQueryParam("stop_drive_io_when_impaired", stopDriveIoWhenImpaired);
+        return this;
+    }
+
+
+    public ModifyDataPathBackendSpectraS3Request withTapeDecommissionThreshold(final int tapeDecommissionThreshold) {
+        this.tapeDecommissionThreshold = tapeDecommissionThreshold;
+        this.updateQueryParam("tape_decommission_threshold", tapeDecommissionThreshold);
+        return this;
+    }
+
+
+    public ModifyDataPathBackendSpectraS3Request withTapeRetireEnabled(final boolean tapeRetireEnabled) {
+        this.tapeRetireEnabled = tapeRetireEnabled;
+        this.updateQueryParam("tape_retire_enabled", tapeRetireEnabled);
+        return this;
+    }
+
+
+    public ModifyDataPathBackendSpectraS3Request withTapeRetireThreshold(final int tapeRetireThreshold) {
+        this.tapeRetireThreshold = tapeRetireThreshold;
+        this.updateQueryParam("tape_retire_threshold", tapeRetireThreshold);
         return this;
     }
 
@@ -232,6 +277,11 @@ public class ModifyDataPathBackendSpectraS3Request extends AbstractRequest {
     }
 
 
+    public boolean getAutomaticTapeDecommissionEnabled() {
+        return this.automaticTapeDecommissionEnabled;
+    }
+
+
     public int getCacheAvailableRetryAfterInSeconds() {
         return this.cacheAvailableRetryAfterInSeconds;
     }
@@ -274,6 +324,26 @@ public class ModifyDataPathBackendSpectraS3Request extends AbstractRequest {
 
     public boolean getPoolSafetyEnabled() {
         return this.poolSafetyEnabled;
+    }
+
+
+    public boolean getStopDriveIoWhenImpaired() {
+        return this.stopDriveIoWhenImpaired;
+    }
+
+
+    public int getTapeDecommissionThreshold() {
+        return this.tapeDecommissionThreshold;
+    }
+
+
+    public boolean getTapeRetireEnabled() {
+        return this.tapeRetireEnabled;
+    }
+
+
+    public int getTapeRetireThreshold() {
+        return this.tapeRetireThreshold;
     }
 
 

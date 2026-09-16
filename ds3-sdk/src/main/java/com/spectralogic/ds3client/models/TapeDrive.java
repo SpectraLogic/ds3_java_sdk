@@ -31,6 +31,12 @@ public class TapeDrive {
     @JsonProperty("CleaningRequired")
     private boolean cleaningRequired;
 
+    @JsonProperty("DlmStatus")
+    private DlmStatus dlmStatus;
+
+    @JsonProperty("DlmStatusMessage")
+    private String dlmStatusMessage;
+
     @JsonProperty("ErrorMessage")
     private String errorMessage;
 
@@ -95,6 +101,24 @@ public class TapeDrive {
 
     public void setCleaningRequired(final boolean cleaningRequired) {
         this.cleaningRequired = cleaningRequired;
+    }
+
+
+    public DlmStatus getDlmStatus() {
+        return this.dlmStatus;
+    }
+
+    public void setDlmStatus(final DlmStatus dlmStatus) {
+        this.dlmStatus = dlmStatus;
+    }
+
+
+    public String getDlmStatusMessage() {
+        return this.dlmStatusMessage;
+    }
+
+    public void setDlmStatusMessage(final String dlmStatusMessage) {
+        this.dlmStatusMessage = dlmStatusMessage;
     }
 
 

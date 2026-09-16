@@ -29,6 +29,8 @@ public class RawImportTapeSpectraS3Request extends AbstractRequest {
 
     private final String bucketId;
 
+    private boolean computeChecksums;
+
     private String storageDomainId;
 
     private Priority taskPriority;
@@ -56,6 +58,13 @@ public class RawImportTapeSpectraS3Request extends AbstractRequest {
         this.updateQueryParam("bucket_id", bucketId);
 
     }
+
+    public RawImportTapeSpectraS3Request withComputeChecksums(final boolean computeChecksums) {
+        this.computeChecksums = computeChecksums;
+        this.updateQueryParam("compute_checksums", computeChecksums);
+        return this;
+    }
+
 
     public RawImportTapeSpectraS3Request withStorageDomainId(final UUID storageDomainId) {
         this.storageDomainId = storageDomainId.toString();
@@ -96,6 +105,11 @@ public class RawImportTapeSpectraS3Request extends AbstractRequest {
 
     public String getBucketId() {
         return this.bucketId;
+    }
+
+
+    public boolean getComputeChecksums() {
+        return this.computeChecksums;
     }
 
 
